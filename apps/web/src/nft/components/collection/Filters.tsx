@@ -30,7 +30,7 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
     () => getSortDropdownOptions(setSortBy, hasRarity ?? false),
-    [hasRarity, setSortBy],
+    [hasRarity, setSortBy]
   )
 
   return (

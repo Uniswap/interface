@@ -22,7 +22,7 @@ i18n
         return enUsLocale
       }
       return import(`./i18n/locales/translations/${language}.json`)
-    }),
+    })
   )
   .on('failedLoading', (language, namespace, msg) => {
     logger.error(new Error(`Error loading language ${language} ${namespace}: ${msg}`), {

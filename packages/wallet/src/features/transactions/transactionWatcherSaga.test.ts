@@ -2,10 +2,10 @@ import { faker } from '@faker-js/faker'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { call, delay } from 'redux-saga/effects'
-import { PollingInterval } from 'uniswap/src/constants/misc'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { sleep } from 'utilities/src/time/timing'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import { fetchMoonpayTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import {
@@ -123,10 +123,10 @@ describe(watchTransaction, () => {
     })
       .provide([
         [call(getProvider, chainId), receiptProvider],
-        [call(attemptCancelTransaction, txDetailsPending, cancelRequest), true],
+        [call(attemptCancelTransaction, txDetailsPending), true],
       ])
       .dispatch(cancelTransaction({ chainId, id, address: from, cancelRequest }))
-      .call(attemptCancelTransaction, txDetailsPending, cancelRequest)
+      .call(attemptCancelTransaction, txDetailsPending)
       .silentRun()
   })
 
@@ -166,7 +166,7 @@ describe(watchFiatOnRampTransaction, () => {
             address: staleTx.from,
             id: staleTx.id,
             chainId: staleTx.chainId,
-          }),
+          })
         )
         // watcher should stop tracking
         .not.call.fn(sleep)

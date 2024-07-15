@@ -24,7 +24,7 @@ export function useUSDTokenUpdater(isFiatInput: boolean, exactAmount: string, ex
       const stablecoinAmount = supportedChainId
         ? tryParseCurrencyAmount(
             exactAmountUSD,
-            getChain({ chainId: supportedChainId }).spotPriceStablecoinAmount.currency,
+            getChain({ chainId: supportedChainId }).spotPriceStablecoinAmount.currency
           )
         : undefined
 

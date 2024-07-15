@@ -30,7 +30,11 @@ export function Skeleton({ children, contrast, disabled }: SkeletonProps): JSX.E
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateX: interpolate(xPosition.value, [0, 1], [layout ? -layout.width : 0, layout ? layout.width : 0]),
+        translateX: interpolate(
+          xPosition.value,
+          [0, 1],
+          [layout ? -layout.width : 0, layout ? layout.width : 0]
+        ),
       },
     ],
   }))
@@ -44,10 +48,11 @@ export function Skeleton({ children, contrast, disabled }: SkeletonProps): JSX.E
       <Flex
         opacity={0}
         testID="shimmer-placeholder"
-        onLayout={(event: { nativeEvent: { layout: SetStateAction<LayoutRectangle | null | undefined> } }): void => {
+        onLayout={(event: {
+          nativeEvent: { layout: SetStateAction<LayoutRectangle | null | undefined> }
+        }): void => {
           setLayout(event.nativeEvent.layout)
-        }}
-      >
+        }}>
         {children}
       </Flex>
     )
@@ -61,8 +66,7 @@ export function Skeleton({ children, contrast, disabled }: SkeletonProps): JSX.E
         width: layout.width,
         height: layout.height,
       }}
-      testID="shimmer"
-    >
+      testID="shimmer">
       <Flex grow backgroundColor={contrast ? '$neutral2' : '$surface3'} overflow="hidden" />
       <Reanimated.View style={[StyleSheet.absoluteFill, animatedStyle]}>
         <MaskedView
@@ -74,8 +78,7 @@ export function Skeleton({ children, contrast, disabled }: SkeletonProps): JSX.E
               start={{ x: 0, y: 0 }}
             />
           }
-          style={StyleSheet.absoluteFill}
-        >
+          style={StyleSheet.absoluteFill}>
           <Flex backgroundColor="$surface2" style={StyleSheet.absoluteFill} />
         </MaskedView>
       </Reanimated.View>

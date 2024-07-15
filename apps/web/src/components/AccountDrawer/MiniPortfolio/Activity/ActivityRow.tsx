@@ -26,10 +26,7 @@ const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
 const StyledTimestamp = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.neutral2};
   font-variant: small;
-  font-feature-settings:
-    'tnum' on,
-    'lnum' on,
-    'ss02' on;
+  font-feature-settings: 'tnum' on, 'lnum' on, 'ss02' on;
 `
 
 function StatusIndicator({ activity: { status, timestamp, offchainOrderDetails } }: { activity: Activity }) {
@@ -49,18 +46,8 @@ function StatusIndicator({ activity: { status, timestamp, offchainOrderDetails }
 }
 
 export function ActivityRow({ activity }: { activity: Activity }) {
-  const {
-    chainId,
-    title,
-    descriptor,
-    logos,
-    otherAccount,
-    currencies,
-    hash,
-    prefixIconSrc,
-    suffixIconSrc,
-    offchainOrderDetails,
-  } = activity
+  const { chainId, title, descriptor, logos, otherAccount, currencies, hash, prefixIconSrc, offchainOrderDetails } =
+    activity
 
   const openOffchainActivityModal = useOpenOffchainActivityModal()
 
@@ -95,7 +82,6 @@ export function ActivityRow({ activity }: { activity: Activity }) {
           <Row gap="4px">
             {prefixIconSrc && <img height="14px" width="14px" src={prefixIconSrc} alt="" />}
             <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
-            {suffixIconSrc && <img height="14px" width="14px" src={suffixIconSrc} alt="" />}
           </Row>
         }
         descriptor={

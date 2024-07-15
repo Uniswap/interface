@@ -36,7 +36,12 @@ interface EncryptParams {
   additionalData?: string
 }
 // encrypts and returns the cipher text
-export async function encrypt({ plaintext, encryptionKey, iv, additionalData }: EncryptParams): Promise<string> {
+export async function encrypt({
+  plaintext,
+  encryptionKey,
+  iv,
+  additionalData,
+}: EncryptParams): Promise<string> {
   const encoder = new TextEncoder()
   const ciphertext = await crypto.subtle.encrypt(
     {
@@ -45,7 +50,7 @@ export async function encrypt({ plaintext, encryptionKey, iv, additionalData }: 
       additionalData: encoder.encode(additionalData),
     },
     encryptionKey,
-    encoder.encode(plaintext),
+    encoder.encode(plaintext)
   )
   return new Uint8Array(ciphertext).toString()
 }
@@ -75,7 +80,7 @@ export async function decrypt({
         additionalData: encoder.encode(additionalData),
       },
       encryptionKey,
-      ciphertext,
+      ciphertext
     )
     return decoder.decode(result)
   } catch (error) {
@@ -97,7 +102,10 @@ export async function convertBase64SeedToCryptoKey(keyBase64: string): Promise<C
   return window.crypto.subtle.importKey('raw', bytes, AES_GCM_PARAMS, true, ['encrypt', 'decrypt'])
 }
 
-export async function getEncryptionKeyFromPassword(password: string, secretPayload: SecretPayload): Promise<CryptoKey> {
+export async function getEncryptionKeyFromPassword(
+  password: string,
+  secretPayload: SecretPayload
+): Promise<CryptoKey> {
   const { name, iterations, hash } = secretPayload
   const salt = decodeFromStorage(secretPayload.salt)
   const pbkdf2Params = { salt, name, iterations, hash }
@@ -106,10 +114,13 @@ export async function getEncryptionKeyFromPassword(password: string, secretPaylo
     new TextEncoder().encode(password),
     PBKDF2_PARAMS.name,
     false,
-    ['deriveKey'],
+    ['deriveKey']
   )
 
   // TODO: This should use Argon2 like ToB recommended for the mobile app
   // https://github.com/Uniswap/universe/blob/main/apps/mobile/ios/EncryptionHelper.swift
-  return crypto.subtle.deriveKey(pbkdf2Params, keyMaterial, AES_GCM_PARAMS, true, ['encrypt', 'decrypt'])
+  return crypto.subtle.deriveKey(pbkdf2Params, keyMaterial, AES_GCM_PARAMS, true, [
+    'encrypt',
+    'decrypt',
+  ])
 }

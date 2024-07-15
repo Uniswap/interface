@@ -1,15 +1,7 @@
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
-import { useAccount } from 'hooks/useAccount'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import { useMemo } from 'react'
-import {
-  PortfolioTokenBalancePartsFragment,
-  QuickTokenBalancePartsFragment,
-  useQuickTokenBalancesWebQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { currencyKeyFromGraphQL } from 'utils/currencyKey'
 
 /**
@@ -17,25 +9,10 @@ import { currencyKeyFromGraphQL } from 'utils/currencyKey'
  */
 export function useTokenBalances({ cacheOnly }: { cacheOnly?: boolean } = {}): {
   balanceMap: TokenBalances
-  balanceList: readonly (QuickTokenBalancePartsFragment | PortfolioTokenBalancePartsFragment | undefined)[]
+  balanceList: readonly (PortfolioTokenBalancePartsFragment | undefined)[]
   loading: boolean
 } {
-  const account = useAccount()
-  const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
-
-  // Quick result is always available at pageload, but never refetched when stale
-  const quickQueryResult = useQuickTokenBalancesWebQuery({
-    variables: {
-      ownerAddress: account.address ?? '',
-      chains: GQL_MAINNET_CHAINS_MUTABLE,
-    },
-    skip: !account.address || !multichainUXEnabled,
-    fetchPolicy: 'cache-first',
-  })
-  // Full query result is not available at pageload, but is refetched when needed in UI
-  const fullQueryResult = useTokenBalancesQuery({ cacheOnly })
-  const { data, loading } = fullQueryResult.data ? fullQueryResult : quickQueryResult
-
+  const { data, loading } = useTokenBalancesQuery({ cacheOnly })
   return useMemo(() => {
     const balanceList = data?.portfolios?.[0]?.tokenBalances ?? []
     const balanceMap =

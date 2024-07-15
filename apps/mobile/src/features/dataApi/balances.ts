@@ -17,6 +17,8 @@ export function useBalances(currencies: CurrencyId[] | undefined): PortfolioBala
       return null
     }
 
-    return currencies.map((id: CurrencyId) => balances[id] ?? null).filter((x): x is PortfolioBalance => Boolean(x))
+    return currencies
+      .map((id: CurrencyId) => balances[id] ?? null)
+      .filter((x): x is PortfolioBalance => Boolean(x))
   }, [balances, currencies])
 }

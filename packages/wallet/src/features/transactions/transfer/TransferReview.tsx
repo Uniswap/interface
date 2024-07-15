@@ -17,7 +17,10 @@ import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccountAddressWithThrow, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import {
+  useActiveAccountAddressWithThrow,
+  useActiveAccountWithThrow,
+} from 'wallet/src/features/wallet/hooks'
 
 interface TransferFormProps {
   derivedTransferInfo: DerivedTransferInfo
@@ -67,7 +70,11 @@ export function TransferReview({
   const { blockingWarning } = warnings
 
   const actionButtonDisabled =
-    !!blockingWarning || !gasFee.value || !!gasFee.error || !txRequest || account.type === AccountType.Readonly
+    !!blockingWarning ||
+    !gasFee.value ||
+    !!gasFee.error ||
+    !txRequest ||
+    account.type === AccountType.Readonly
 
   const actionButtonProps = {
     disabled: actionButtonDisabled,
@@ -76,7 +83,9 @@ export function TransferReview({
     onPress: onReviewSubmit,
   }
 
-  const transferWarning = warnings.warnings.find((warning) => warning.severity >= WarningSeverity.Medium)
+  const transferWarning = warnings.warnings.find(
+    (warning) => warning.severity >= WarningSeverity.Medium
+  )
 
   const formattedCurrencyAmount = formatCurrencyAmount({
     value: currencyAmounts[CurrencyField.INPUT],

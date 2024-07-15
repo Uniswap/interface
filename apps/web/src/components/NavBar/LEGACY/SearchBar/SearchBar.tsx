@@ -110,8 +110,8 @@ export function SearchBar() {
   const placeholderText = isMobileOrTablet
     ? t('common.search.label')
     : shouldDisableNFTRoutes
-      ? t('common.searchTokens')
-      : t('common.searchTokensNFT')
+    ? t('common.searchTokens')
+    : t('common.searchTokensNFT')
 
   const handleKeyPress = useCallback(
     (event: KeyboardEvent) => {
@@ -121,7 +121,7 @@ export function SearchBar() {
         !isOpen && toggleOpen()
       }
     },
-    [isOpen],
+    [isOpen]
   )
 
   useEffect(() => {
@@ -161,7 +161,7 @@ export function SearchBar() {
           className={clsx(
             styles.nftSearchBar,
             !isOpen && !isMobile && magicalGradientOnHover,
-            isMobileOrTablet && (isOpen ? styles.visible : styles.hidden),
+            isMobileOrTablet && (isOpen ? styles.visible : styles.hidden)
           )}
           borderRadius={isOpen || isMobileOrTablet ? undefined : '16'}
           borderTopRightRadius={isOpen && !isMobile ? '16' : undefined}

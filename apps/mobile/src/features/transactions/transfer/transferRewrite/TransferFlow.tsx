@@ -11,7 +11,10 @@ import {
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { SwapFormContextProvider, SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
+import {
+  SwapFormContextProvider,
+  SwapFormState,
+} from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { TransactionModal } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { getFocusOnCurrencyFieldFromInitialState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
@@ -34,8 +37,7 @@ export function TransferFlow(): JSX.Element {
       modalName={ModalName.Send}
       openWalletRestoreModal={openWalletRestoreModal}
       walletNeedsRestore={walletNeedsRestore}
-      onClose={onClose}
-    >
+      onClose={onClose}>
       <TransferContextsContainer>
         <CurrentScreen screen={screen} setScreen={setScreen} />
       </TransferContextsContainer>
@@ -97,7 +99,7 @@ function TransferContextsContainer({ children }: { children?: ReactNode }): JSX.
             tradeProtocolPreference: TradeProtocolPreference.Default,
           }
         : undefined,
-    [initialState],
+    [initialState]
   )
 
   return (

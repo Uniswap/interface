@@ -21,7 +21,12 @@ export function captureException(error: unknown, captureContext?: CaptureContext
  * @param extraArgs Key/value pairs to enrich logging and allow filtering.
  *                  More info here: https://docs.sentry.io/platforms/react-native/enriching-events/context/
  */
-export function captureMessage(level: SeverityLevel, context: string, message: string, ...extraArgs: unknown[]): void {
+export function captureMessage(
+  level: SeverityLevel,
+  context: string,
+  message: string,
+  ...extraArgs: unknown[]
+): void {
   SentryReact.captureMessage(message, {
     level,
     tags: { webContext: context },

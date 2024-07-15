@@ -18,7 +18,7 @@ describe('PoolDetailsHeader', () => {
           name: 'USD Coin',
           decimals: 6,
         },
-      }),
+      })
     )
     store.dispatch(
       addSerializedToken({
@@ -29,7 +29,7 @@ describe('PoolDetailsHeader', () => {
           name: 'Wrapped Ether',
           decimals: 18,
         },
-      }),
+      })
     )
   })
 
@@ -75,10 +75,10 @@ describe('PoolDetailsHeader', () => {
     expect(asFragment()).toMatchSnapshot()
 
     const usdcLink = document.querySelector(
-      'a[href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"]',
+      'a[href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"]'
     )
     const wethLink = document.querySelector(
-      'a[href="/explore/tokens/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"]',
+      'a[href="/explore/tokens/ethereum/0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2"]'
     )
     expect(usdcLink?.textContent).toBe('USDC')
     expect(wethLink?.textContent).toBe('WETH')

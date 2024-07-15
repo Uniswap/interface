@@ -28,7 +28,7 @@ export const migration3 = (state: PersistAppStateV3 | undefined) => {
       const chainIdKey = Number(chainId) as InterfaceChainId
       if (state.user.tokens?.[chainIdKey]?.[address]) {
         state.user.tokens[chainIdKey][address] = serializeToken(
-          new Token(chainIdKey, address, 6, 'USDC.e', 'Bridged USDC'),
+          new Token(chainIdKey, address, 6, 'USDC.e', 'Bridged USDC')
         )
       }
     }
@@ -38,7 +38,7 @@ export const migration3 = (state: PersistAppStateV3 | undefined) => {
       '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
       6,
       'USDbC',
-      'USD Base Coin',
+      'USD Base Coin'
     )
     if (state.user.tokens?.[UniverseChainId.Base]?.[USDbC_BASE.address]) {
       state.user.tokens[UniverseChainId.Base][USDbC_BASE.address] = serializeToken(USDbC_BASE)

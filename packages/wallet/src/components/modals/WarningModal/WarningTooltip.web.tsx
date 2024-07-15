@@ -18,7 +18,10 @@ export function WarningTooltip({
   return (
     <Flex row shrink alignItems="center" gap="$spacing4">
       {triggerPlacement === 'end' && children}
-      <Tooltip delay={{ close: TOOLTIP_CLOSE_MS, open: 0 }} placement={placement} restMs={TOOLTIP_REST_MS}>
+      <Tooltip
+        delay={{ close: TOOLTIP_CLOSE_MS, open: 0 }}
+        placement={placement}
+        restMs={TOOLTIP_REST_MS}>
         <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
         <Tooltip.Content maxWidth="100%" mx="$spacing24">
           <Flex row alignItems="center" gap="$spacing8">

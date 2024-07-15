@@ -10,7 +10,9 @@ describe(AccountDetails, () => {
   })
 
   it('renders without error with chevron', () => {
-    const tree = renderWithProviders(<AccountDetails chevron address={ACCOUNT.address} iconSize={50} />)
+    const tree = renderWithProviders(
+      <AccountDetails chevron address={ACCOUNT.address} iconSize={50} />
+    )
 
     expect(tree.toJSON()).toMatchSnapshot()
   })

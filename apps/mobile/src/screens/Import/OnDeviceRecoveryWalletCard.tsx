@@ -1,7 +1,10 @@
 import React, { useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
-import { RecoveryWalletInfo, useOnDeviceRecoveryData } from 'src/screens/Import/useOnDeviceRecoveryData'
+import {
+  RecoveryWalletInfo,
+  useOnDeviceRecoveryData,
+} from 'src/screens/Import/useOnDeviceRecoveryData'
 import { Button, Flex, FlexProps, Loader, Text, TouchableArea } from 'ui/src'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { NumberType } from 'utilities/src/format/types'
@@ -37,7 +40,9 @@ export function OnDeviceRecoveryWalletCard({
   const { recoveryWalletInfos, significantRecoveryWalletInfos, totalBalance, loading } =
     useOnDeviceRecoveryData(mnemonicId)
 
-  const targetWalletInfos = showAllWallets ? recoveryWalletInfos.slice(0, 1) : significantRecoveryWalletInfos
+  const targetWalletInfos = showAllWallets
+    ? recoveryWalletInfos.slice(0, 1)
+    : significantRecoveryWalletInfos
   const firstWalletInfo = targetWalletInfos[0]
   const remainingWalletCount = targetWalletInfos.length - 1
 
@@ -61,8 +66,7 @@ export function OnDeviceRecoveryWalletCard({
         borderColor="$surface2"
         borderWidth={1}
         gap="$spacing16"
-        p="$spacing12"
-      >
+        p="$spacing12">
         <Flex centered row gap="$spacing12">
           <AccountIcon address={firstWalletInfo.address} size={iconSizes.icon36} />
           <Flex fill py={!remainingWalletCount ? fonts.body3.lineHeight / 2 : undefined}>
@@ -92,8 +96,7 @@ export function OnDeviceRecoveryWalletCard({
           py="$spacing8"
           theme="secondary"
           width="100%"
-          onPress={() => onPressViewRecoveryPhrase()}
-        >
+          onPress={() => onPressViewRecoveryPhrase()}>
           <Text color="$neutral2" variant="buttonLabel4">
             {t('onboarding.import.onDeviceRecovery.wallet.button')}
           </Text>
@@ -113,6 +116,10 @@ export function OnDeviceRecoveryWalletCardLoader({
   totalCount: number
 }): JSX.Element {
   return (
-    <Loader.Box height={120} opacity={1 - (LOADING_MIN_OPACITY_SUBTRACT * (index + 1)) / totalCount} {...cardProps} />
+    <Loader.Box
+      height={120}
+      opacity={1 - (LOADING_MIN_OPACITY_SUBTRACT * (index + 1)) / totalCount}
+      {...cardProps}
+    />
   )
 }

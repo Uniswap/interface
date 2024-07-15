@@ -3,7 +3,7 @@ import { BIPS_BASE } from 'constants/misc'
 
 export function computeFiatValuePriceImpact(
   fiatValueInput: number | undefined | null,
-  fiatValueOutput: number | undefined | null,
+  fiatValueOutput: number | undefined | null
 ): Percent | undefined {
   if (!fiatValueOutput || !fiatValueInput) {
     return undefined

@@ -6,7 +6,7 @@ import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { Button, Flex, Text } from 'ui/src'
 import { DiamondExclamation } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useDebounce } from 'utilities/src/time/timing'
 import {
   PASSWORD_VALIDATION_DEBOUNCE_MS,
@@ -42,7 +42,8 @@ export function CloudBackupPasswordForm({
     currentStrength: passwordStrength,
   })
 
-  const isButtonDisabled = !!error || password.length === 0 || (!isConfirmation && !isStrongPassword)
+  const isButtonDisabled =
+    !!error || password.length === 0 || (!isConfirmation && !isStrongPassword)
 
   const onPasswordChangeText = (newPassword: string): void => {
     if (isConfirmation && newPassword === password) {
@@ -118,7 +119,7 @@ export function CloudBackupPasswordForm({
           </Flex>
         )}
       </Flex>
-      <Button disabled={isButtonDisabled} testID={TestID.Next} onPress={onPressNext}>
+      <Button disabled={isButtonDisabled} testID={ElementName.Next} onPress={onPressNext}>
         {t('common.button.continue')}
       </Button>
     </>

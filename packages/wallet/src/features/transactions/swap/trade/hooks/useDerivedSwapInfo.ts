@@ -3,7 +3,6 @@ import { useMemo } from 'react'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useSetTradeSlippage } from 'wallet/src/features/transactions/swap/trade/hooks/useSetTradeSlippage'
@@ -11,8 +10,12 @@ import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/
 import { useTradingApiTrade } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { getWrapType, isWrapAction } from 'wallet/src/features/transactions/swap/utils'
-import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 /** Returns information derived from the current swap state */
@@ -33,11 +36,13 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const activeAccount = useActiveAccount()
 
   const currencyInInfo = useCurrencyInfo(
-    currencyAssetIn ? buildCurrencyId(currencyAssetIn.chainId, currencyAssetIn.address) : undefined,
+    currencyAssetIn ? buildCurrencyId(currencyAssetIn.chainId, currencyAssetIn.address) : undefined
   )
 
   const currencyOutInfo = useCurrencyInfo(
-    currencyAssetOut ? buildCurrencyId(currencyAssetOut.chainId, currencyAssetOut.address) : undefined,
+    currencyAssetOut
+      ? buildCurrencyId(currencyAssetOut.chainId, currencyAssetOut.address)
+      : undefined
   )
 
   const currencies = useMemo(() => {
@@ -53,7 +58,10 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const chainId = currencyIn?.chainId ?? currencyOut?.chainId ?? UniverseChainId.Mainnet
 
   const { balance: tokenInBalance } = useOnChainCurrencyBalance(currencyIn, activeAccount?.address)
-  const { balance: tokenOutBalance } = useOnChainCurrencyBalance(currencyOut, activeAccount?.address)
+  const { balance: tokenOutBalance } = useOnChainCurrencyBalance(
+    currencyOut,
+    activeAccount?.address
+  )
 
   const isExactIn = exactCurrencyField === CurrencyField.INPUT
   const wrapType = getWrapType(currencyIn, currencyOut)
@@ -87,22 +95,35 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   const tradingApiTrade = useTradingApiTrade(tradeParams)
 
   // Calculate auto slippage tolerance for trade. If customSlippageTolerance is undefined, then the Trade slippage is set to the calculated value.
-  const { trade, autoSlippageTolerance } = useSetTradeSlippage(tradingApiTrade, customSlippageTolerance)
+  const { trade, autoSlippageTolerance } = useSetTradeSlippage(
+    tradingApiTrade,
+    customSlippageTolerance
+  )
 
   const currencyAmounts = useMemo(
     () =>
       shouldGetQuote
         ? {
             [CurrencyField.INPUT]:
-              exactCurrencyField === CurrencyField.INPUT ? amountSpecified : trade.trade?.inputAmount,
+              exactCurrencyField === CurrencyField.INPUT
+                ? amountSpecified
+                : trade.trade?.inputAmount,
             [CurrencyField.OUTPUT]:
-              exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : trade.trade?.outputAmount,
+              exactCurrencyField === CurrencyField.OUTPUT
+                ? amountSpecified
+                : trade.trade?.outputAmount,
           }
         : {
             [CurrencyField.INPUT]: amountSpecified,
             [CurrencyField.OUTPUT]: amountSpecified,
           },
-    [shouldGetQuote, exactCurrencyField, amountSpecified, trade.trade?.inputAmount, trade.trade?.outputAmount],
+    [
+      shouldGetQuote,
+      exactCurrencyField,
+      amountSpecified,
+      trade.trade?.inputAmount,
+      trade.trade?.outputAmount,
+    ]
   )
 
   const inputCurrencyUSDValue = useUSDCValue(currencyAmounts[CurrencyField.INPUT])

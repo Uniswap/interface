@@ -2,10 +2,10 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, Tooltip } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { isMobileApp } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function AddressFooter({
   connectedAccountAddress,
@@ -20,7 +20,8 @@ export function AddressFooter({
 
   const currentAccountAddress = connectedAccountAddress || activeAccountAddress
 
-  const showWarning = connectedAccountAddress && !areAddressesEqual(connectedAccountAddress, activeAccountAddress)
+  const showWarning =
+    connectedAccountAddress && !areAddressesEqual(connectedAccountAddress, activeAccountAddress)
 
   return (
     <Flex grow px="$spacing8">
@@ -32,8 +33,7 @@ export function AddressFooter({
             </Text>
             {showWarning && <TooltipWarning />}
           </Flex>
-        }
-      >
+        }>
         <AddressDisplay
           hideAddressInSubtitle
           address={currentAccountAddress}
@@ -60,8 +60,7 @@ const TooltipWarning = (): JSX.Element => {
           borderColor="$surface3"
           borderRadius="$rounded16"
           borderWidth={1}
-          p="$spacing12"
-        >
+          p="$spacing12">
           <Text variant="body4">{t('dapp.request.warning.notActive.title')}</Text>
           <Text color="$neutral2" variant="body4">
             {t('dapp.request.warning.notActive.message')}

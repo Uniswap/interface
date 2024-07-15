@@ -104,7 +104,7 @@ export const SuggestionRow = ({
   const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
   const warning = useTokenWarning(
     isToken ? suggestion.address : undefined,
-    isToken ? supportedChainIdFromGQLChain(suggestion.chain) : UniverseChainId.Mainnet,
+    isToken ? supportedChainIdFromGQLChain(suggestion.chain) : UniverseChainId.Mainnet
   )
 
   const handleClick = useCallback(() => {

@@ -5,7 +5,9 @@ import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { useAppDispatch, useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { FiatOnRampCtaButton } from 'src/components/fiatOnRamp/CtaButton'
 import { FiatOnRampAmountSection } from 'src/features/fiatOnRamp/FiatOnRampAmountSection'
+import { FiatOnRampConnectingView } from 'src/features/fiatOnRamp/FiatOnRampConnecting'
 import { FiatOnRampTokenSelectorModal } from 'src/features/fiatOnRamp/FiatOnRampTokenSelector'
+import { ServiceProviderLogoStyles } from 'src/features/fiatOnRamp/constants'
 import { useMoonpayFiatOnRamp, useMoonpaySupportedTokens } from 'src/features/fiatOnRamp/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
@@ -15,23 +17,21 @@ import { TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
-import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { openUri } from 'uniswap/src/utils/linking'
 import { NumberType } from 'utilities/src/format/types'
 import { useTimeout } from 'utilities/src/time/timing'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { useLocalFiatToUSDConverter } from 'wallet/src/features/fiatCurrency/hooks'
 import { useMoonpayFiatCurrencySupportInfo } from 'wallet/src/features/fiatOnRamp/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
+import { openUri } from 'wallet/src/utils/linking'
 
 const MOONPAY_UNSUPPORTED_REGION_HELP_URL =
   'https://support.uniswap.org/hc/en-us/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-'
@@ -56,8 +56,7 @@ export function FiatOnRampModal(): JSX.Element {
       renderBehindTopInset
       backgroundColor={colors.surface1.get()}
       name={ModalName.FiatOnRamp}
-      onClose={onClose}
-    >
+      onClose={onClose}>
       <FiatOnRampContent onClose={onClose} />
     </BottomSheetModal>
   )
@@ -72,7 +71,8 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
 
   const [showConnectingToMoonpayScreen, setShowConnectingToMoonpayScreen] = useState(false)
 
-  const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } = useShouldShowNativeKeyboard()
+  const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
+    useShouldShowNativeKeyboard()
 
   const [selection, setSelection] = useState<TextInputProps['selection']>()
 
@@ -84,7 +84,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
 
   // We hardcode ETH as the starting currency
   const ethCurrencyInfo = useCurrencyInfo(
-    buildCurrencyId(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Mainnet)),
+    buildCurrencyId(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Mainnet))
   )
 
   const [currency, setCurrency] = useState<FiatOnRampCurrency>({
@@ -92,7 +92,8 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
     moonpayCurrencyCode: 'eth',
   })
 
-  const { appFiatCurrencySupportedInMoonpay, moonpaySupportedFiatCurrency } = useMoonpayFiatCurrencySupportInfo()
+  const { appFiatCurrencySupportedInMoonpay, moonpaySupportedFiatCurrency } =
+    useMoonpayFiatCurrencySupportInfo()
 
   // We only support predefined amounts for certain currencies.
   // If the user's app fiat currency is not supported in Moonpay,
@@ -144,10 +145,11 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
       }
     },
     // setTimeout would be called inside this hook, only when delay >= 0
-    showConnectingToMoonpayScreen ? CONNECTING_TIMEOUT : -1,
+    showConnectingToMoonpayScreen ? CONNECTING_TIMEOUT : -1
   )
 
-  const buttonEnabled = !isLoading && (!eligible || (!isError && fiatOnRampHostUrl && quoteCurrencyAmountReady))
+  const buttonEnabled =
+    !isLoading && (!eligible || (!isError && fiatOnRampHostUrl && quoteCurrencyAmountReady))
 
   const fiatToUSDConverter = useLocalFiatToUSDConverter()
 
@@ -205,8 +207,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
               gap="$spacing16"
               pb="$spacing16"
               px="$spacing24"
-              width="100%"
-            >
+              width="100%">
               <HandleBar backgroundColor="none" />
               <Text variant="subheading1">{t('common.button.buy')}</Text>
               <FiatOnRampAmountSection
@@ -241,8 +242,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
                 position="absolute"
                 px="$spacing24"
                 right={0}
-                onLayout={onDecimalPadLayout}
-              >
+                onLayout={onDecimalPadLayout}>
                 {!showNativeKeyboard && (
                   <DecimalPadLegacy
                     resetSelection={resetSelection}
@@ -298,8 +298,7 @@ function FiatOnRampContent({ onClose }: { onClose: () => void }): JSX.Element {
               height={ServiceProviderLogoStyles.icon.height}
               justifyContent="center"
               style={styles.moonpayLogoWrapper}
-              width={ServiceProviderLogoStyles.icon.width}
-            >
+              width={ServiceProviderLogoStyles.icon.width}>
               <MoonpayLogo
                 height={ServiceProviderLogoStyles.icon.height}
                 width={ServiceProviderLogoStyles.icon.width}

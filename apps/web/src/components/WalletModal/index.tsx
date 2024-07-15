@@ -8,18 +8,18 @@ import { Option } from 'components/WalletModal/Option'
 import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
 import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
 import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
-import { useIsUniExtensionAvailable, useUniswapWalletOptions } from 'hooks/useUniswapWalletOptions'
+import { useUniswapWalletOptions } from 'hooks/useUniswapWalletOptions'
 import { Trans } from 'i18n'
 import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 import { Text } from 'ui/src'
 
-const Wrapper = styled.div<{ isUniExtensionAvailable?: boolean }>`
+const Wrapper = styled.div`
   ${flexColumnNoWrap};
   background-color: ${({ theme }) => theme.surface1};
   width: 100%;
-  padding: ${({ isUniExtensionAvailable }) => (isUniExtensionAvailable ? 0 : 14)}px 16px 16px;
+  padding: 14px 16px 16px;
   flex: 1;
   gap: 16px;
 `
@@ -49,10 +49,9 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const showMoonpayText = useShowMoonpayText()
   const showUniswapWalletOptions = useUniswapWalletOptions()
   const connectors = useOrderedConnections(showUniswapWalletOptions)
-  const isUniExtensionAvailable = useIsUniExtensionAvailable()
 
   return (
-    <Wrapper data-testid="wallet-modal" isUniExtensionAvailable={isUniExtensionAvailable}>
+    <Wrapper data-testid="wallet-modal">
       <ConnectionErrorView />
       <AutoRow justify="space-between" width="100%">
         <ThemedText.SubHeader>Connect a wallet</ThemedText.SubHeader>

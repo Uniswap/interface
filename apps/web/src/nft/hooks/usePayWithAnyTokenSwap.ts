@@ -14,7 +14,7 @@ import {
 export default function usePayWithAnyTokenSwap(
   trade?: InterfaceTrade | undefined,
   allowance?: Allowance,
-  allowedSlippage?: Percent,
+  allowedSlippage?: Percent
 ) {
   const setTokenTradeInput = useTokenInput((state) => state.setTokenTradeInput)
   const hasRoutes = isClassicTrade(trade) && trade.routes

@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-imports */
+
 import { render as RNRender, RenderOptions, RenderResult } from '@testing-library/react-native'
 import { PropsWithChildren } from 'react'
 import { TamaguiProvider } from 'ui/src'
@@ -11,7 +13,10 @@ import 'uniswap/src/i18n/i18n'
  * @param preloadedState and store
  * @returns `ui` wrapped with providers
  */
-export function renderWithProviders(ui: React.ReactElement, renderOptions: RenderOptions = {}): RenderResult {
+export function renderWithProviders(
+  ui: React.ReactElement,
+  renderOptions: RenderOptions = {}
+): RenderResult {
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return <TamaguiProvider config={tamaguiConfig}>{children}</TamaguiProvider>
   }

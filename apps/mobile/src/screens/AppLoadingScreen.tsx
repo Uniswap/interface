@@ -12,7 +12,10 @@ import {
   NotificationPermission,
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
-import { RecoveryWalletInfo, useOnDeviceRecoveryData } from 'src/screens/Import/useOnDeviceRecoveryData'
+import {
+  RecoveryWalletInfo,
+  useOnDeviceRecoveryData,
+} from 'src/screens/Import/useOnDeviceRecoveryData'
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
@@ -45,19 +48,21 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
 
   const importAccounts = useCallback(
     async (mnemonicId: string, recoveryWalletInfos: RecoveryWalletInfo[]) => {
-      const accountsToImport = recoveryWalletInfos.map((addressInfo, index): SignerMnemonicAccount => {
-        return {
-          type: AccountType.SignerMnemonic,
-          mnemonicId,
-          name: t('onboarding.wallet.defaultName', { number: index + 1 }),
-          address: addressInfo.address,
-          derivationIndex: addressInfo.derivationIndex,
-          timeImportedMs: dayjs().valueOf(),
+      const accountsToImport = recoveryWalletInfos.map(
+        (addressInfo, index): SignerMnemonicAccount => {
+          return {
+            type: AccountType.SignerMnemonic,
+            mnemonicId,
+            name: t('onboarding.wallet.defaultName', { number: index + 1 }),
+            address: addressInfo.address,
+            derivationIndex: addressInfo.derivationIndex,
+            timeImportedMs: dayjs().valueOf(),
+          }
         }
-      })
+      )
       setRecoveredImportedAccounts(accountsToImport)
     },
-    [setRecoveredImportedAccounts],
+    [setRecoveredImportedAccounts]
   )
 
   const finishRecovery = useCallback(
@@ -96,7 +101,7 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
           entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
         })
       } else {
-        await finishOnboarding({ importType: ImportType.OnDeviceRecovery })
+        await finishOnboarding(ImportType.OnDeviceRecovery)
         dispatch(setFinishedOnboarding({ finishedOnboarding: true }))
       }
     },
@@ -109,7 +114,7 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
       isBiometricAuthEnabled,
       navigation,
       notificationOSPermission,
-    ],
+    ]
   )
 
   return {
@@ -126,7 +131,7 @@ export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
   const appLoadingTimeoutMs = onDeviceRecoveryConfig.get(
     'appLoadingTimeoutMs',
     FALLBACK_APP_LOADING_TIMEOUT_MS,
-    isNumber,
+    isNumber
   )
   const maxMnemonicsToLoad = onDeviceRecoveryConfig.getValue('maxMnemonicsToLoad', 20) as number
 
@@ -159,7 +164,11 @@ export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
       if (!finished) {
         setFinished(true)
         navigateToLanding()
-        logger.warn('AppLoadingScreen', 'useTimeout', `Loading timeout triggered after ${appLoadingTimeoutMs}ms`)
+        logger.warn(
+          'AppLoadingScreen',
+          'useTimeout',
+          `Loading timeout triggered after ${appLoadingTimeoutMs}ms`
+        )
       }
     }, appLoadingTimeoutMs)
     return () => clearTimeout(timeout)

@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutAnimation } from 'react-native'
 import { Flex, isWeb, useSporeColors } from 'ui/src'
 import { zIndices } from 'ui/src/theme'
-import { SuggestedTokenSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
@@ -20,6 +19,7 @@ import { TokenSelectorSendList } from 'wallet/src/components/TokenSelector/Token
 import { TokenSelectorSwapInputList } from 'wallet/src/components/TokenSelector/TokenSelectorSwapInputList'
 import { TokenSelectorSwapOutputList } from 'wallet/src/components/TokenSelector/TokenSelectorSwapOutputList'
 import { useFilterCallbacks } from 'wallet/src/components/TokenSelector/hooks'
+import { SuggestedTokenSection, TokenSection } from 'wallet/src/components/TokenSelector/types'
 import PasteButton from 'wallet/src/components/buttons/PasteButton'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
@@ -45,7 +45,11 @@ export interface TokenSelectorProps {
   chainId?: WalletChainId
   isSurfaceReady?: boolean
   onClose: () => void
-  onSelectCurrency: (currency: Currency, currencyField: CurrencyField, context: SearchContext) => void
+  onSelectCurrency: (
+    currency: Currency,
+    currencyField: CurrencyField,
+    context: SearchContext
+  ) => void
   variation: TokenSelectorVariation
 }
 
@@ -60,7 +64,10 @@ function TokenSelectorContent({
 }: TokenSelectorProps): JSX.Element {
   const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
 
-  const { onChangeChainFilter, onChangeText, searchFilter, chainFilter } = useFilterCallbacks(chainId ?? null, flow)
+  const { onChangeChainFilter, onChangeText, searchFilter, chainFilter } = useFilterCallbacks(
+    chainId ?? null,
+    flow
+  )
   const debouncedSearchFilter = useDebounce(searchFilter)
 
   const [hasClipboardString, setHasClipboardString] = useState(false)
@@ -86,7 +93,11 @@ function TokenSelectorContent({
       : undefined
 
   const onSelectCurrencyCallback = useCallback(
-    (currencyInfo: CurrencyInfo, section: SuggestedTokenSection | TokenSection, index: number): void => {
+    (
+      currencyInfo: CurrencyInfo,
+      section: SuggestedTokenSection | TokenSection,
+      index: number
+    ): void => {
       const searchContext: SearchContext = {
         category: section.title,
         query: debouncedSearchFilter ?? undefined,
@@ -96,7 +107,7 @@ function TokenSelectorContent({
 
       onSelectCurrency(currencyInfo.currency, currencyField, searchContext)
     },
-    [currencyField, onSelectCurrency, debouncedSearchFilter],
+    [currencyField, onSelectCurrency, debouncedSearchFilter]
   )
 
   const handlePaste = async (): Promise<void> => {
@@ -149,9 +160,19 @@ function TokenSelectorContent({
           />
         )
       case TokenSelectorVariation.BalancesAndPopular:
-        return <TokenSelectorSwapInputList chainFilter={chainFilter} onSelectCurrency={onSelectCurrencyCallback} />
+        return (
+          <TokenSelectorSwapInputList
+            chainFilter={chainFilter}
+            onSelectCurrency={onSelectCurrencyCallback}
+          />
+        )
       case TokenSelectorVariation.SuggestedAndFavoritesAndPopular:
-        return <TokenSelectorSwapOutputList chainFilter={chainFilter} onSelectCurrency={onSelectCurrencyCallback} />
+        return (
+          <TokenSelectorSwapOutputList
+            chainFilter={chainFilter}
+            onSelectCurrency={onSelectCurrencyCallback}
+          />
+        )
     }
   }, [
     searchInFocus,
@@ -169,8 +190,7 @@ function TokenSelectorContent({
         <Flex
           borderBottomColor={isWeb ? '$surface3' : undefined}
           borderBottomWidth={isWeb ? '$spacing1' : undefined}
-          py="$spacing8"
-        >
+          py="$spacing8">
           <SearchTextInput
             autoFocus={isWeb}
             backgroundColor={isWeb ? '$surface1' : '$surface2'}
@@ -195,7 +215,9 @@ function TokenSelectorContent({
                   includeAllNetworks
                   selectedChain={chainFilter}
                   onDismiss={() => Keyboard.dismiss()}
-                  onPressAnimation={() => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)}
+                  onPressAnimation={() =>
+                    LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)
+                  }
                   onPressChain={onChangeChainFilter}
                 />
               </Flex>
@@ -231,8 +253,7 @@ function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
       backgroundColor={colors.surface1.get()}
       name={ModalName.TokenSelector}
       snapPoints={['65%', '100%']}
-      onClose={props.onClose}
-    >
+      onClose={props.onClose}>
       <TokenSelectorModalContent {...props} />
     </BottomSheetModal>
   )

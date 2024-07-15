@@ -32,10 +32,16 @@ export function stopFetchingCloudStorageBackups(): Promise<void> {
   return RNCloudStorageBackupsManager.stopFetchingCloudStorageBackups()
 }
 
-export function backupMnemonicToCloudStorage(mnemonicId: string, password: string): Promise<boolean> {
+export function backupMnemonicToCloudStorage(
+  mnemonicId: string,
+  password: string
+): Promise<boolean> {
   return RNCloudStorageBackupsManager.backupMnemonicToCloudStorage(mnemonicId, password)
 }
 
-export function restoreMnemonicFromCloudStorage(mnemonicId: string, password: string): Promise<boolean> {
+export function restoreMnemonicFromCloudStorage(
+  mnemonicId: string,
+  password: string
+): Promise<boolean> {
   return RNCloudStorageBackupsManager.restoreMnemonicFromCloudStorage(mnemonicId, password)
 }

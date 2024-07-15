@@ -21,9 +21,8 @@ import {
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Check, RotatableChevron, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { WCEventType, WCRequestOutcome, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { formatDappURL } from 'utilities/src/format/urls'
@@ -62,10 +61,13 @@ const SitePermissions = (): JSX.Element => {
       borderRadius="$rounded16"
       borderWidth={1}
       minHeight={44}
-      p="$spacing12"
-    >
+      p="$spacing12">
       <Flex centered row justifyContent="space-between">
-        <Text $short={{ variant: 'body3' }} allowFontScaling={false} color="$neutral2" variant="body3">
+        <Text
+          $short={{ variant: 'body3' }}
+          allowFontScaling={false}
+          color="$neutral2"
+          variant="body3">
           {t('walletConnect.permissions.title')}
         </Text>
       </Flex>
@@ -77,8 +79,7 @@ const SitePermissions = (): JSX.Element => {
             allowFontScaling={false}
             color="$neutral1"
             flexGrow={1}
-            variant={infoTextSize}
-          >
+            variant={infoTextSize}>
             {t('walletConnect.permissions.option.viewWalletAddress')}
           </Text>
         </Flex>
@@ -89,8 +90,7 @@ const SitePermissions = (): JSX.Element => {
             allowFontScaling={false}
             color="$neutral1"
             flexGrow={1}
-            variant={infoTextSize}
-          >
+            variant={infoTextSize}>
             {t('walletConnect.permissions.option.viewTokenBalances')}
           </Text>
         </Flex>
@@ -101,8 +101,7 @@ const SitePermissions = (): JSX.Element => {
             allowFontScaling={false}
             color="$neutral1"
             flexGrow={1}
-            variant={infoTextSize}
-          >
+            variant={infoTextSize}>
             {t('walletConnect.permissions.option.transferAssets')}
           </Text>
         </Flex>
@@ -115,8 +114,18 @@ const NetworksRow = ({ chains }: { chains: WalletChainId[] }): JSX.Element => {
   const { t } = useTranslation()
 
   return (
-    <Flex row shrink alignItems="center" justifyContent="space-between" px="$spacing8" py="$spacing8">
-      <Text $short={{ variant: 'body3' }} allowFontScaling={false} color="$neutral2" variant="body3">
+    <Flex
+      row
+      shrink
+      alignItems="center"
+      justifyContent="space-between"
+      px="$spacing8"
+      py="$spacing8">
+      <Text
+        $short={{ variant: 'body3' }}
+        allowFontScaling={false}
+        color="$neutral2"
+        variant="body3">
         {t('walletConnect.permissions.networks')}
       </Text>
       <NetworkLogos chains={chains} size={iconSizes.icon16} />
@@ -138,10 +147,16 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
   }, [setModalState])
 
   return (
-    <TouchableArea disabled={!accountIsSwitchable} m="$none" testID={TestID.WCDappSwitchAccount} onPress={onPress}>
+    <TouchableArea
+      disabled={!accountIsSwitchable}
+      m="$none"
+      testID={ElementName.WCDappSwitchAccount}
+      onPress={onPress}>
       <Flex row justifyContent="space-between">
         <AddressFooter activeAccountAddress={activeAddress} />
-        {accountIsSwitchable && <RotatableChevron color="$neutral2" direction="down" height={16} width={16} />}
+        {accountIsSwitchable && (
+          <RotatableChevron color="$neutral2" direction="down" height={16} width={16} />
+        )}
       </Flex>
     </TouchableArea>
   )
@@ -155,7 +170,9 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
   const activeAccount = useActiveAccountWithThrow()
   const didOpenFromDeepLink = useAppSelector(selectDidOpenFromDeepLink)
 
-  const [modalState, setModalState] = useState<PendingConnectionModalState>(PendingConnectionModalState.Hidden)
+  const [modalState, setModalState] = useState<PendingConnectionModalState>(
+    PendingConnectionModalState.Hidden
+  )
 
   const onPressSettleConnection = useCallback(
     async (approved: boolean) => {
@@ -191,7 +208,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
               namespaces,
             },
             account: activeAddress,
-          }),
+          })
         )
 
         dispatch(
@@ -202,7 +219,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
             dappName: session.peer.metadata.name,
             imageUrl: session.peer.metadata.icons[0] ?? null,
             hideDelay: 3 * ONE_SECOND_MS,
-          }),
+          })
         )
       } else {
         await wcWeb3Wallet.rejectSession({
@@ -217,7 +234,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         returnToPreviousApp()
       }
     },
-    [activeAddress, dispatch, onClose, pendingSession, didOpenFromDeepLink],
+    [activeAddress, dispatch, onClose, pendingSession, didOpenFromDeepLink]
   )
 
   const dappName = pendingSession.dapp.name || pendingSession.dapp.url || ''
@@ -230,8 +247,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
         scrollDownButtonText={t('walletConnect.pending.button.scrollDown')}
         onClose={onClose}
         onConfirm={(): Promise<void> => onPressSettleConnection(true)}
-        onReject={(): Promise<void> => onPressSettleConnection(false)}
-      >
+        onReject={(): Promise<void> => onPressSettleConnection(false)}>
         <PendingConnectionModalContent
           activeAddress={activeAddress}
           dappName={dappName}

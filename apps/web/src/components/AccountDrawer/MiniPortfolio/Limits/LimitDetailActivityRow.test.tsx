@@ -58,7 +58,7 @@ describe('LimitDetailActivityRow', () => {
         order={{ ...mockOrder, offchainOrderDetails: undefined }}
         onToggleSelect={jest.fn()}
         selected={false}
-      />,
+      />
     )
     expect(container.firstChild?.firstChild?.firstChild).toBeNull()
   })
@@ -69,14 +69,14 @@ describe('LimitDetailActivityRow', () => {
         onToggleSelect={jest.fn()}
         selected={false}
         order={{ ...mockOrder, offchainOrderDetails: { ...mockOrderDetails, swapInfo: undefined as any } }}
-      />,
+      />
     )
     expect(container.firstChild?.firstChild?.firstChild).toBeNull()
   })
 
   it('should render with valid details', () => {
     const { container } = render(
-      <LimitDetailActivityRow onToggleSelect={jest.fn()} selected={false} order={mockOrder} />,
+      <LimitDetailActivityRow onToggleSelect={jest.fn()} selected={false} order={mockOrder} />
     )
     expect(container.firstChild).toMatchSnapshot()
     expect(screen.getByText('when 0.00042 WETH/DAI')).toBeInTheDocument()

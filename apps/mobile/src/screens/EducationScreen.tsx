@@ -17,7 +17,7 @@ export function EducationScreen({
         importType,
         entryPoint,
       }),
-    [entryPoint, importType, type],
+    [entryPoint, importType, type]
   )
 
   return (

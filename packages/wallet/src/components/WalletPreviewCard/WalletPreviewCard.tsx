@@ -16,8 +16,7 @@ interface Props {
   hideSelectionCircle?: boolean
 }
 
-// Some preview cards do not have a name (no unitag), so we need to set a default height to keep their height consistent.
-export const WALLET_PREVIEW_CARD_HEIGHT = 72
+export const ADDRESS_WRAPPER_HEIGHT = 36
 
 export default function WalletPreviewCard({
   address,
@@ -37,17 +36,16 @@ export default function WalletPreviewCard({
       borderColor={selected ? '$surface3' : '$surface2'}
       borderRadius="$rounded20"
       borderWidth={1}
-      height={WALLET_PREVIEW_CARD_HEIGHT}
-      p="$spacing12"
+      px="$spacing16"
+      py="$spacing16"
       shadowColor={selected ? '$shadowColor' : '$transparent'}
       shadowOpacity={0.05}
       shadowRadius={selected ? '$spacing8' : '$none'}
       onPress={(): void => onSelect(address)}
-      {...rest}
-    >
-      <Flex fill row alignContent="center" alignItems="center" justifyContent="space-between">
+      {...rest}>
+      <Flex row alignItems="center" justifyContent="space-between">
         <AddressDisplay address={address} captionVariant="body2" size={iconSizes.icon36} />
-        <Flex row gap="$spacing8" px="$spacing4">
+        <Flex row gap="$spacing8">
           {Boolean(balance) && (
             <Text color="$neutral2" variant="body3">
               {balanceFormatted}

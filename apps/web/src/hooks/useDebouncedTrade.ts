@@ -2,6 +2,7 @@ import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { routingPreferencesAtom } from 'components/Settings/MultipleRoutingOptions'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
+import useAutoRouterSupported from 'hooks/useAutoRouterSupported'
 import useDebounce from 'hooks/useDebounce'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
@@ -23,7 +24,7 @@ export function useDebouncedTrade(
   routerPreferenceOverride?: RouterPreference.X,
   account?: string,
   inputTax?: Percent,
-  outputTax?: Percent,
+  outputTax?: Percent
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -37,7 +38,7 @@ export function useDebouncedTrade(
   routerPreferenceOverride?: RouterPreference.API,
   account?: string,
   inputTax?: Percent,
-  outputTax?: Percent,
+  outputTax?: Percent
 ): {
   state: TradeState
   trade?: ClassicTrade
@@ -59,7 +60,7 @@ export function useDebouncedTrade(
   routerPreferenceOverride?: RouterPreference,
   account?: string,
   inputTax?: Percent,
-  outputTax?: Percent,
+  outputTax?: Percent
 ): {
   state: TradeState
   trade?: InterfaceTrade
@@ -67,10 +68,11 @@ export function useDebouncedTrade(
   swapQuoteLatency?: number
 } {
   const { chainId } = useAccount()
+  const autoRouterSupported = useAutoRouterSupported()
 
   const inputs = useMemo<[CurrencyAmount<Currency> | undefined, Currency | undefined]>(
     () => [amountSpecified, otherCurrency],
-    [amountSpecified, otherCurrency],
+    [amountSpecified, otherCurrency]
   )
   const isDebouncing = useDebounce(inputs, DEBOUNCE_TIME) !== inputs
 
@@ -83,7 +85,7 @@ export function useDebouncedTrade(
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
     return Boolean(
       (amountSpecified.currency.isNative && weth?.equals(otherCurrency)) ||
-        (otherCurrency.isNative && weth?.equals(amountSpecified.currency)),
+        (otherCurrency.isNative && weth?.equals(amountSpecified.currency))
     )
   }, [amountSpecified, chainId, otherCurrency])
 
@@ -92,7 +94,7 @@ export function useDebouncedTrade(
   const multipleRouteOptionsRoutingPreference = useAtomValue(routingPreferencesAtom)
   const routingPreference = multipleRouteOptionsEnabled ? multipleRouteOptionsRoutingPreference : undefined
 
-  const skipBothFetches = isWrap
+  const skipBothFetches = !autoRouterSupported || isWrap
   const skipRoutingFetch = skipBothFetches || isDebouncing
 
   const skipPreviewTradeFetch = skipBothFetches || isPreviewTradeDebouncing
@@ -103,7 +105,7 @@ export function useDebouncedTrade(
     amountSpecified,
     otherCurrency,
     inputTax,
-    outputTax,
+    outputTax
   )
   const routingApiTradeResult = useRoutingAPITrade(
     skipRoutingFetch,
@@ -114,7 +116,7 @@ export function useDebouncedTrade(
     account,
     routingPreference?.protocols,
     inputTax,
-    outputTax,
+    outputTax
   )
 
   return previewTradeResult.currentTrade && !routingApiTradeResult.currentTrade

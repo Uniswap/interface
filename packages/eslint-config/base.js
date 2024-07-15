@@ -10,6 +10,14 @@ module.exports = {
     sourceType: 'module',
   },
   rules: {
+    'prettier/prettier': [
+      'error',
+      {
+        semi: false,
+        singleQuote: true,
+        printWidth: 120,
+      },
+    ],
     'import/no-unused-modules': ['error', { unusedExports: true }],
     'object-shorthand': ['error', 'always'],
     'unused-imports/no-unused-imports': 'error',
@@ -63,6 +71,11 @@ module.exports = {
       },
       extends: ['plugin:cypress/recommended'],
       plugins: ['cypress'],
+    },
+    {
+      files: ['*'],
+      plugins: ['prettier'],
+      extends: ['plugin:prettier/recommended'],
     },
   ],
 }

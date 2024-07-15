@@ -77,7 +77,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
       account.chainId &&
       (SUBSCRIPTION_CHAINIDS as unknown as InterfaceChainId[]).includes(account.chainId)
       ? undefined
-      : account.chainId,
+      : account.chainId
   )
   const supportedChain = useSupportedChainId(account.chainId)
   const hasPending = pendingTransactions.length > 0
@@ -114,10 +114,10 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
             }
             return receipt
           }),
-        retryOptions,
+        retryOptions
       )
     },
-    [account.isConnected, blockTimestamp, provider, removeTransaction, supportedChain],
+    [account.isConnected, blockTimestamp, provider, removeTransaction, supportedChain]
   )
 
   useEffect(() => {

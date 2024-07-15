@@ -23,10 +23,12 @@ export function SwapRateRatio({
   const [showInverseRate, setShowInverseRate] = useState(initialInverse)
 
   const latestPrice = trade?.executionPrice
-  const latestUSDPrice = useUSDCPrice(showInverseRate ? latestPrice?.quoteCurrency : latestPrice?.baseCurrency)
+  const latestUSDPrice = useUSDCPrice(
+    showInverseRate ? latestPrice?.quoteCurrency : latestPrice?.baseCurrency
+  )
   const latestFiatPriceFormatted = convertFiatAmountFormatted(
     latestUSDPrice?.toSignificant(),
-    NumberType.FiatTokenPrice,
+    NumberType.FiatTokenPrice
   )
   const latestRate = trade && getRateToDisplay(formatter, trade, showInverseRate)
   const isPrimary = styling === 'primary'
@@ -41,8 +43,7 @@ export function SwapRateRatio({
         adjustsFontSizeToFit
         color={isPrimary ? '$neutral1' : '$neutral2'}
         numberOfLines={1}
-        variant={isPrimary ? 'body3' : 'body4'}
-      >
+        variant={isPrimary ? 'body3' : 'body4'}>
         {latestRate}
         <Text color={isPrimary ? '$neutral1' : '$neutral3'} variant={isPrimary ? 'body3' : 'body4'}>
           {latestUSDPrice && ` (${latestFiatPriceFormatted})`}

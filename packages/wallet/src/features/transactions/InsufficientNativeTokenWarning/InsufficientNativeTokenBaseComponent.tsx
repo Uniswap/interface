@@ -8,16 +8,22 @@ import { useInsufficientNativeTokenWarning } from 'wallet/src/features/transacti
 export function InsufficientNativeTokenBaseComponent({
   parsedInsufficentNativeTokenWarning,
 }: {
-  parsedInsufficentNativeTokenWarning: NonNullable<ReturnType<typeof useInsufficientNativeTokenWarning>>
+  parsedInsufficentNativeTokenWarning: NonNullable<
+    ReturnType<typeof useInsufficientNativeTokenWarning>
+  >
 }): JSX.Element | null {
   const { nativeCurrency, networkColors, networkName, flow } = parsedInsufficentNativeTokenWarning
 
   const currencySymbol = nativeCurrency.symbol
 
-  const shouldShowNetworkName = nativeCurrency.symbol === 'ETH' && nativeCurrency.chainId !== UniverseChainId.Mainnet
+  const shouldShowNetworkName =
+    nativeCurrency.symbol === 'ETH' && nativeCurrency.chainId !== UniverseChainId.Mainnet
 
   const textComponentWithNetworkColor = (
-    <Text style={{ color: networkColors.foreground }} variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT} />
+    <Text
+      style={{ color: networkColors.foreground }}
+      variant={INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT}
+    />
   )
 
   return (
@@ -27,8 +33,7 @@ export function InsufficientNativeTokenBaseComponent({
       backgroundColor={isWeb ? '$surface2' : undefined}
       borderRadius="$rounded12"
       gap="$spacing8"
-      p={isWeb ? '$spacing16' : '$none'}
-    >
+      p={isWeb ? '$spacing16' : '$none'}>
       {isWeb && (
         <Flex>
           <AlertTriangle color="$neutral2" size="$icon.16" />

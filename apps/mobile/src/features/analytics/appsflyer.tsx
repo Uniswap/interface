@@ -1,6 +1,6 @@
 import appsFlyer from 'react-native-appsflyer'
 import { config } from 'uniswap/src/config'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment'
+import { isBetaEnv, isDevEnv } from 'uniswap/src/utils/env'
 import { logger } from 'utilities/src/logger/logger'
 
 export function initAppsFlyer(): void {
@@ -20,6 +20,6 @@ export function initAppsFlyer(): void {
     },
     (error) => {
       logger.error(error, { tags: { file: 'appsflyer', function: 'initAppsFlyer' } })
-    },
+    }
   )
 }

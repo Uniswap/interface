@@ -21,7 +21,7 @@ if (UNISWAP_GATEWAY_DNS_URL === undefined) {
 async function fetchStatuses(
   orders: UniswapXOrderDetails[],
   filter: (order: UniswapXOrderDetails) => boolean,
-  path: (hashes: string[]) => string,
+  path: (hashes: string[]) => string
 ): Promise<UniswapXBackendOrder[]> {
   const hashes = orders.filter(filter).map((order) => order.orderHash)
   if (!hashes || hashes.length === 0) {
@@ -37,7 +37,7 @@ async function fetchLimitStatuses(account: string, orders: UniswapXOrderDetails[
   return fetchStatuses(
     orders,
     (order) => order.type === SignatureType.SIGN_LIMIT,
-    (hashes) => `/limit-orders?swapper=${account}&orderHashes=${hashes}`,
+    (hashes) => `/limit-orders?swapper=${account}&orderHashes=${hashes}`
   )
 }
 
@@ -45,7 +45,7 @@ async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[
   return fetchStatuses(
     orders,
     (order) => order.type === SignatureType.SIGN_UNISWAPX_ORDER || order.type === SignatureType.SIGN_UNISWAPX_V2_ORDER,
-    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}&orderType=${OffchainOrderType.DUTCH_V1_AND_V2}`,
+    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}&orderType=${OffchainOrderType.DUTCH_V1_AND_V2}`
   )
 }
 

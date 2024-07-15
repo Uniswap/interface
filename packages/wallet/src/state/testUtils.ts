@@ -10,10 +10,16 @@ export const getAllKeysOfNestedObject = (obj: Record<string, unknown>, prefix = 
       return [...res]
     }
 
-    if (typeof (obj as Record<string, unknown>)[el] === 'object' && (obj as Record<string, unknown>)[el] !== null) {
+    if (
+      typeof (obj as Record<string, unknown>)[el] === 'object' &&
+      (obj as Record<string, unknown>)[el] !== null
+    ) {
       return [
         ...res,
-        ...getAllKeysOfNestedObject((obj as Record<string, unknown>)[el] as Record<string, unknown>, prefix + el + '.'),
+        ...getAllKeysOfNestedObject(
+          (obj as Record<string, unknown>)[el] as Record<string, unknown>,
+          prefix + el + '.'
+        ),
       ]
     }
 

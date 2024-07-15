@@ -7,7 +7,10 @@ import { render } from 'src/test/test-utils'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
 const setOptionsSpy = jest.fn()
-const routeProp = { params: {} } as RouteProp<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
+const routeProp = { params: {} } as RouteProp<
+  OnboardingStackParamList,
+  OnboardingScreens.RestoreCloudBackup
+>
 
 describe(RestoreCloudBackupScreen, () => {
   it('renders correctly', () => {
@@ -26,7 +29,7 @@ describe(RestoreCloudBackupScreen, () => {
           >
         }
         route={routeProp}
-      />,
+      />
     ).toJSON()
 
     expect(tree).toMatchSnapshot()

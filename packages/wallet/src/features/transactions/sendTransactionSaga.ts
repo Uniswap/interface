@@ -15,7 +15,10 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'wallet/src/features/transactions/types'
-import { createTransactionId, getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
+import {
+  createTransactionId,
+  getSerializableTransactionRequest,
+} from 'wallet/src/features/transactions/utils'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
@@ -39,7 +42,11 @@ export function* sendTransaction(params: SendTransactionParams) {
   const { chainId, account, options } = params
   const request = options.request
 
-  logger.debug('sendTransaction', '', `Sending tx on ${UNIVERSE_CHAIN_INFO[chainId].label} to ${request.to}`)
+  logger.debug(
+    'sendTransaction',
+    '',
+    `Sending tx on ${UNIVERSE_CHAIN_INFO[chainId].label} to ${request.to}`
+  )
 
   if (account.type === AccountType.Readonly) {
     throw new Error('Account must support signing')
@@ -54,7 +61,7 @@ export function* sendTransaction(params: SendTransactionParams) {
     request,
     account,
     provider,
-    signerManager,
+    signerManager
   )
   logger.debug('sendTransaction', '', 'Tx submitted:', transactionResponse.hash)
 
@@ -67,7 +74,7 @@ export async function signAndSendTransaction(
   request: providers.TransactionRequest,
   account: Account,
   provider: providers.Provider,
-  signerManager: SignerManager,
+  signerManager: SignerManager
 ): Promise<{
   transactionResponse: providers.TransactionResponse
   populatedRequest: providers.TransactionRequest
@@ -84,7 +91,7 @@ export async function signAndSendTransaction(
 function* addTransaction(
   { chainId, typeInfo, account, options, txId, analytics }: SendTransactionParams,
   hash: string,
-  populatedRequest: providers.TransactionRequest,
+  populatedRequest: providers.TransactionRequest
 ) {
   const id = txId ?? createTransactionId()
   const request = getSerializableTransactionRequest(populatedRequest, chainId)

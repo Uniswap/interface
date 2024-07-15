@@ -8,7 +8,7 @@ function getChainIdFromFormattedString(item: string): number | null {
 }
 
 export function getSupportedChainIdsFromWalletConnectSession(
-  session?: SessionTypes.Struct,
+  session?: SessionTypes.Struct
 ): SupportedInterfaceChainId[] {
   if (!session?.namespaces) {
     return []

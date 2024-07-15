@@ -10,7 +10,12 @@ import {
 import { BlurView } from 'expo-blur'
 import React, { ComponentProps, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { BackHandler, Keyboard, StyleProp, StyleSheet, ViewStyle } from 'react-native'
-import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
+import Animated, {
+  Extrapolate,
+  interpolate,
+  useAnimatedStyle,
+  useSharedValue,
+} from 'react-native-reanimated'
 import { Flex, useDeviceInsets, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, spacing } from 'ui/src/theme'
@@ -106,7 +111,7 @@ function BottomSheetModalContents({
 
   const snapPoints = useMemo(
     () => providedSnapPoints ?? (fullScreen ? ['100%'] : undefined),
-    [providedSnapPoints, fullScreen],
+    [providedSnapPoints, fullScreen]
   )
 
   useModalBackHandler(modalRef, isDismissible && dismissOnBackPress)
@@ -125,7 +130,9 @@ function BottomSheetModalContents({
 
   const animatedPosition = providedAnimatedPosition ?? internalAnimatedPosition
 
-  const backgroundColorValue = blurredBackground ? colors.transparent.val : backgroundColor ?? colors.surface1.get()
+  const backgroundColorValue = blurredBackground
+    ? colors.transparent.val
+    : backgroundColor ?? colors.surface1.get()
 
   const renderBackdrop = useCallback(
     (props: BottomSheetBackdropProps) => (
@@ -137,7 +144,7 @@ function BottomSheetModalContents({
         pressBehavior={isDismissible ? 'close' : 'none'}
       />
     ),
-    [blurredBackground, hideScrim, isDismissible],
+    [blurredBackground, hideScrim, isDismissible]
   )
 
   const renderHandleBar = useCallback(
@@ -158,7 +165,7 @@ function BottomSheetModalContents({
         />
       )
     },
-    [backgroundColorValue, hideHandlebar, renderBehindTopInset],
+    [backgroundColorValue, hideHandlebar, renderBehindTopInset]
   )
 
   const animatedBorderRadius = useAnimatedStyle(() => {
@@ -166,7 +173,7 @@ function BottomSheetModalContents({
       animatedPosition.value,
       [0, insets.top],
       [0, borderRadius ?? borderRadii.rounded24],
-      Extrapolate.CLAMP,
+      Extrapolate.CLAMP
     )
     return { borderTopLeftRadius: interpolatedRadius, borderTopRightRadius: interpolatedRadius }
   })
@@ -175,13 +182,17 @@ function BottomSheetModalContents({
     () => (
       <Animated.View style={[blurViewStyle.base, animatedBorderRadius]}>
         {isIOS ? (
-          <BlurView intensity={90} style={blurViewStyle.base} tint={isDarkMode ? 'dark' : 'light'} />
+          <BlurView
+            intensity={90}
+            style={blurViewStyle.base}
+            tint={isDarkMode ? 'dark' : 'light'}
+          />
         ) : (
           <Flex fill backgroundColor="$surface2" />
         )}
       </Animated.View>
     ),
-    [isDarkMode, animatedBorderRadius],
+    [isDarkMode, animatedBorderRadius]
   )
 
   // onAnimate is called when the sheet is about to animate to a new position.
@@ -204,7 +215,7 @@ function BottomSheetModalContents({
         setTimeout(() => setIsSheetReady(true), 50)
       }
     },
-    [hideKeyboardOnDismiss, hideKeyboardOnSwipeDown, isSheetReady],
+    [hideKeyboardOnDismiss, hideKeyboardOnSwipeDown, isSheetReady]
   )
 
   // on screens < xs (iPhone SE), assume no rounded corners on screen and remove rounded corners from fullscreen modal
@@ -224,7 +235,9 @@ function BottomSheetModalContents({
 
   const bottomSheetViewStyles: StyleProp<ViewStyle> = [{ backgroundColor: backgroundColorValue }]
 
-  const handleBarHeight = hideHandlebar ? 0 : spacing.spacing12 + spacing.spacing16 + spacing.spacing4
+  const handleBarHeight = hideHandlebar
+    ? 0
+    : spacing.spacing12 + spacing.spacing16 + spacing.spacing4
   let fullContentHeight = dimensions.fullHeight - insets.top - handleBarHeight
 
   if (renderBehindTopInset) {
@@ -262,8 +275,7 @@ function BottomSheetModalContents({
       stackBehavior={stackBehavior}
       topInset={renderBehindTopInset ? 0 : insets.top}
       onAnimate={onAnimate}
-      onDismiss={onClose}
-    >
+      onDismiss={onClose}>
       <Trace logImpression modal={name}>
         <BottomSheetContextProvider isSheetReady={isSheetReady}>
           {overrideInnerContainer ? (
@@ -306,7 +318,7 @@ export function BottomSheetDetachedModal({
     (props: BottomSheetHandleProps) => {
       return <HandleBar {...props} backgroundColor={backgroundColor} hidden={hideHandlebar} />
     },
-    [backgroundColor, hideHandlebar],
+    [backgroundColor, hideHandlebar]
   )
 
   const backgroundStyle = hideHandlebar
@@ -331,10 +343,11 @@ export function BottomSheetDetachedModal({
       stackBehavior={stackBehavior}
       style={bottomSheetStyle.detached}
       topInset={insets.top}
-      onDismiss={onClose}
-    >
+      onDismiss={onClose}>
       <Trace logImpression modal={name}>
-        <BottomSheetView style={fullScreen ? { height: fullContentHeight } : undefined}>{children}</BottomSheetView>
+        <BottomSheetView style={fullScreen ? { height: fullContentHeight } : undefined}>
+          {children}
+        </BottomSheetView>
       </Trace>
     </BaseModal>
   )
@@ -360,6 +373,8 @@ const blurViewStyle = StyleSheet.create({
   },
 })
 
-export function BottomSheetTextInput(props: ComponentProps<typeof GorhomBottomSheetTextInput>): JSX.Element {
+export function BottomSheetTextInput(
+  props: ComponentProps<typeof GorhomBottomSheetTextInput>
+): JSX.Element {
   return <GorhomBottomSheetTextInput {...props} />
 }

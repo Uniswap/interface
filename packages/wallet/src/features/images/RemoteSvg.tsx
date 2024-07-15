@@ -41,5 +41,7 @@ export const RemoteSvg = ({
   if (!svg) {
     return <View />
   }
-  return <SvgXml height={height} style={{ backgroundColor, borderRadius }} width={width} xml={svg} />
+  return (
+    <SvgXml height={height} style={{ backgroundColor, borderRadius }} width={width} xml={svg} />
+  )
 }

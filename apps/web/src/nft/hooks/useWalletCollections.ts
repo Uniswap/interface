@@ -58,8 +58,8 @@ export const useWalletCollections = create<WalletCollectionState>()(
           return { displayAssets: filterWalletAssets(walletAssets, listFilter) }
         }),
     }),
-    { name: 'useWalletCollections' },
-  ),
+    { name: 'useWalletCollections' }
+  )
 )
 
 const filterWalletAssets = (walletAssets: WalletAsset[], listFilter: string) => {

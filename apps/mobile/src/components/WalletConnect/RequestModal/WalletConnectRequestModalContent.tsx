@@ -16,19 +16,20 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import { iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { EthMethod, isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 const MAX_MODAL_MESSAGE_HEIGHT = 200
 
-const isPotentiallyUnsafe = (request: WalletConnectRequest): boolean => request.type !== EthMethod.PersonalSign
+const isPotentiallyUnsafe = (request: WalletConnectRequest): boolean =>
+  request.type !== EthMethod.PersonalSign
 
 export const methodCostsGas = (request: WalletConnectRequest): request is TransactionRequest =>
   request.type === EthMethod.EthSendTransaction
@@ -92,7 +93,11 @@ export function WalletConnectRequestModalContent({
     <>
       <ClientDetails permitInfo={permitInfo} request={request} />
       <Flex pt="$spacing8">
-        <Flex backgroundColor="$surface2" borderColor="$surface3" borderRadius="$rounded16" borderWidth={1}>
+        <Flex
+          backgroundColor="$surface2"
+          borderColor="$surface3"
+          borderRadius="$rounded16"
+          borderWidth={1}>
           {!permitInfo && (
             <SectionContainer style={requestMessageStyle}>
               <RequestDetails request={request} />
@@ -101,7 +106,11 @@ export function WalletConnectRequestModalContent({
         </Flex>
 
         <Flex gap="$spacing8" mb="$spacing12" pt="$spacing20" px="$spacing4">
-          <NetworkFeeFooter chainId={chainId} gasFeeUSD={hasGasFee ? gasFeeUSD : '0'} showNetworkLogo={hasGasFee} />
+          <NetworkFeeFooter
+            chainId={chainId}
+            gasFeeUSD={hasGasFee ? gasFeeUSD : '0'}
+            showNetworkLogo={hasGasFee}
+          />
           <AddressFooter activeAccountAddress={request.account} />
         </Flex>
 
@@ -119,7 +128,11 @@ export function WalletConnectRequestModalContent({
           <BaseCard.InlineErrorState
             backgroundColor="$DEP_accentWarningSoft"
             icon={
-              <AlertTriangle color={colors.DEP_accentWarning.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+              <AlertTriangle
+                color={colors.DEP_accentWarning.val}
+                height={iconSizes.icon16}
+                width={iconSizes.icon16}
+              />
             }
             textColor="$DEP_accentWarning"
             title={t('walletConnect.request.error.network')}
@@ -171,7 +184,11 @@ function WarningSection({
   if (!isTransactionRequest(request)) {
     return (
       <Flex centered row alignSelf="center" gap="$spacing8">
-        <AlertTriangle color={colors.DEP_accentWarning.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+        <AlertTriangle
+          color={colors.DEP_accentWarning.val}
+          height={iconSizes.icon16}
+          width={iconSizes.icon16}
+        />
         <Text color="$neutral2" fontStyle="italic" variant="body3">
           {t('walletConnect.request.warning.general.message')}
         </Text>

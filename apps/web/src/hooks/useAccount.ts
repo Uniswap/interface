@@ -7,8 +7,8 @@ import { UseAccountReturnType as UseAccountReturnTypeWagmi, useAccount as useAcc
 type ReplaceChainId<T> = T extends { chainId: number }
   ? Omit<T, 'chainId'> & { chainId: SupportedInterfaceChainId | undefined }
   : T extends { chainId: number | undefined }
-    ? Omit<T, 'chainId'> & { chainId: SupportedInterfaceChainId | undefined }
-    : T
+  ? Omit<T, 'chainId'> & { chainId: SupportedInterfaceChainId | undefined }
+  : T
 
 type UseAccountReturnType = ReplaceChainId<UseAccountReturnTypeWagmi>
 
@@ -22,6 +22,6 @@ export function useAccount(): UseAccountReturnType {
       ...rest,
       chainId: supportedChainId,
     }),
-    [rest, supportedChainId],
+    [rest, supportedChainId]
   )
 }

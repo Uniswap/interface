@@ -33,7 +33,13 @@ export function _Arrow({ size = 24, color = '#000000', direction = 'e' }: Props)
   }
 
   return (
-    <ArrowDown color={color} height={size} strokeWidth={2} style={{ transform: [{ rotate: degree }] }} width={size} />
+    <ArrowDown
+      color={color}
+      height={size}
+      strokeWidth={2}
+      style={{ transform: [{ rotate: degree }] }}
+      width={size}
+    />
   )
 }
 

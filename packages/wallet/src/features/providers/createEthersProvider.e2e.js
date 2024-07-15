@@ -3,6 +3,7 @@
  * Replaces `createEthersProvider.ts` when RN_SRC_EXT=e2e.js at runtime
  */
 import { JsonRpcProvider } from '@ethersproject/providers'
+import { WalletChainId } from 'uniswap/src/types/chains'
 
 export function createEthersProvider(chainId) {
   if (chainId === ChainId.Mainnet) {
@@ -23,7 +24,9 @@ class TestProvider extends JsonRpcProvider {
       return block
     } catch (e) {
       if (e.reason === 'missing response') {
-        throw new Error('Hardhat node is not running. Start it with `yarn hardhat`. [original error: ' + e)
+        throw new Error(
+          'Hardhat node is not running. Start it with `yarn hardhat`. [original error: ' + e
+        )
       }
       throw e
     }

@@ -20,7 +20,7 @@ export function* createAccounts({ accounts }: CreateAccountsParams) {
     'createAccountsSaga',
     'createAccount',
     'New accounts created:',
-    accounts.map((acc) => acc.address).join(','),
+    accounts.map((acc) => acc.address).join(',')
   )
 }
 

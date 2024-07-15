@@ -3,35 +3,18 @@ import { parseEther } from 'ethers/lib/utils'
 import { GenieCollection, WalletAsset } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
-import {
-  Chain,
-  NftAsset,
-  useNftBalanceQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { NftAsset, useNftBalanceQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-type UseNftBalanceParams = {
-  ownerAddress: string
-  collectionFilters?: string[]
-  assetsFilter?: { address: string; tokenId: string }[]
-  first?: number
-  after?: string
-  last?: number
-  before?: string
-  skip?: boolean
-  chains?: Chain[]
-}
-
-export function useNftBalance({
-  ownerAddress,
-  collectionFilters,
-  assetsFilter,
-  first,
-  after,
-  last,
-  before,
-  skip = false,
-  chains,
-}: UseNftBalanceParams) {
+export function useNftBalance(
+  ownerAddress: string,
+  collectionFilters?: string[],
+  assetsFilter?: { address: string; tokenId: string }[],
+  first?: number,
+  after?: string,
+  last?: number,
+  before?: string,
+  skip = false
+) {
   const { data, loading, fetchMore } = useNftBalanceQuery({
     variables: {
       ownerAddress,
@@ -43,7 +26,6 @@ export function useNftBalance({
           : {
               addresses: collectionFilters,
             },
-      chains,
       first,
       after,
       last,
@@ -60,7 +42,7 @@ export function useNftBalance({
           after: data?.nftBalances?.pageInfo?.endCursor,
         },
       }),
-    [data?.nftBalances?.pageInfo?.endCursor, fetchMore],
+    [data?.nftBalances?.pageInfo?.endCursor, fetchMore]
   )
 
   const walletAssets: WalletAsset[] | undefined = data?.nftBalances?.edges?.map((queryAsset) => {
@@ -103,7 +85,6 @@ export function useNftBalance({
       date_acquired: queryAsset.node.lastPrice?.timestamp?.toString(),
       sellOrders: asset?.listings?.edges.map((edge: any) => edge.node),
       floor_sell_order_price: asset?.listings?.edges?.[0]?.node?.price?.value,
-      chain: asset.chain,
     }
   })
   return useMemo(() => ({ walletAssets, hasNext, loadMore, loading }), [hasNext, loadMore, loading, walletAssets])

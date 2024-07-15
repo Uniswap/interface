@@ -31,12 +31,11 @@ exports[`renders wallet preview card 1`] = `
       "borderTopRightRadius": 20,
       "borderTopWidth": 1,
       "flexDirection": "column",
-      "height": 72,
       "opacity": 1,
-      "paddingBottom": 12,
-      "paddingLeft": 12,
-      "paddingRight": 12,
-      "paddingTop": 12,
+      "paddingBottom": 16,
+      "paddingLeft": 16,
+      "paddingRight": 16,
+      "paddingTop": 16,
       "shadowColor": "rgb(0,0,0)",
       "shadowOffset": {
         "height": 0,
@@ -55,9 +54,7 @@ exports[`renders wallet preview card 1`] = `
   <View
     style={
       {
-        "alignContent": "center",
         "alignItems": "center",
-        "flex": 1,
         "flexDirection": "row",
         "justifyContent": "space-between",
       }
@@ -193,8 +190,6 @@ exports[`renders wallet preview card 1`] = `
         {
           "flexDirection": "row",
           "gap": 8,
-          "paddingLeft": 4,
-          "paddingRight": 4,
         }
       }
     >

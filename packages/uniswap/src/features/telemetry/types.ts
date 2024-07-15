@@ -42,10 +42,14 @@ import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { ImportType } from 'uniswap/src/types/onboarding'
-import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
-import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
+import {
+  EthMethod,
+  UwULinkMethod,
+  WCEventType,
+  WCRequestOutcome,
+} from 'uniswap/src/types/walletConnect'
 import { WidgetEvent, WidgetType } from 'uniswap/src/types/widgets'
 import { WrapType } from 'uniswap/src/types/wrap'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
@@ -73,7 +77,6 @@ export type SearchResultContextProperties = {
 }
 
 type OnboardingCompletedProps = {
-  flow?: ExtensionOnboardingFlow
   wallet_type: ImportType
   accounts_imported_count: number
   wallets_imported: string[]
@@ -96,7 +99,7 @@ export type SwapTradeBaseProperties = {
   quoteId?: string
 } & ITraceContext
 
-type BaseSwapTransactionResultProperties = {
+type SwapTransactionResultProperties = {
   time_to_swap?: number
   time_to_swap_since_first_input?: number
   address?: string
@@ -117,18 +120,6 @@ type BaseSwapTransactionResultProperties = {
   protocol?: Protocol
   transactedUSDValue?: number
 }
-
-// TODO(WEB-4345): Update to use trading api enum rather than hardcoded strings
-type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties & {
-  routing: 'CLASSIC'
-}
-
-type UniswapXTransactionResultProperties = BaseSwapTransactionResultProperties & {
-  routing: 'DUTCH_V2' | 'DUTCH_LIMIT'
-  order_hash: string
-}
-
-type FailedUniswapXOrderResultProperties = Omit<UniswapXTransactionResultProperties, 'hash'>
 
 type TransferProperties = {
   chainId: WalletChainId
@@ -192,15 +183,10 @@ type InterfaceTokenSelectedProperties = {
 
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {
-  [ExtensionEventName.OnboardingLoad]: undefined
-  [ExtensionEventName.SidebarLoad]: { locked: boolean }
-  [ExtensionEventName.SidebarClosed]: undefined
-  [ExtensionEventName.ChangeLockedState]: { locked: boolean; location: 'background' | 'sidebar' }
+  [ExtensionEventName.ExtensionLoad]: undefined
   [ExtensionEventName.DappConnect]: DappContextProperties
   [ExtensionEventName.DappConnectRequest]: DappContextProperties
   [ExtensionEventName.DappChangeChain]: Omit<DappContextProperties, 'connectedAddresses'>
-  [ExtensionEventName.DappTroubleConnecting]: Pick<DappContextProperties, 'dappUrl'>
-  [ExtensionEventName.PasswordChanged]: undefined
   [ExtensionEventName.ProviderDirectMethodRequest]: WindowEthereumRequestProperties
   [ExtensionEventName.ExtensionEthMethodRequest]: WindowEthereumRequestProperties
   [ExtensionEventName.DeprecatedMethodRequest]: WindowEthereumRequestProperties
@@ -416,6 +402,7 @@ export type UniverseEventProperties = {
     url: string
   }
   [MobileEventName.TokenDetailsOtherChainButtonPressed]: ITraceContext
+  [MobileEventName.WalletAdded]: OnboardingCompletedProps & ITraceContext
   [MobileEventName.WalletConnectSheetCompleted]: {
     request_type: WCEventType
     eth_method?: EthMethod | UwULinkMethod
@@ -528,10 +515,8 @@ export type UniverseEventProperties = {
   [SharedEventName.NAVBAR_CLICKED]: undefined
   [SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED]: undefined
   [SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED]: SwapPriceUpdateActionProperties
-  [SwapEventName.SWAP_TRANSACTION_COMPLETED]:
-    | ClassicSwapTransactionResultProperties
-    | UniswapXTransactionResultProperties
-  [SwapEventName.SWAP_TRANSACTION_FAILED]: ClassicSwapTransactionResultProperties | FailedUniswapXOrderResultProperties
+  [SwapEventName.SWAP_TRANSACTION_COMPLETED]: SwapTransactionResultProperties
+  [SwapEventName.SWAP_TRANSACTION_FAILED]: SwapTransactionResultProperties
   [SwapEventName.SWAP_DETAILS_EXPANDED]: ITraceContext | undefined
   [SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED]: ITraceContext
   [SwapEventName.SWAP_QUOTE_RECEIVED]: {
@@ -601,23 +586,13 @@ export type UniverseEventProperties = {
           field: CurrencyField
         })
     | InterfaceTokenSelectedProperties
-  [WalletEventName.TokenVisibilityChanged]: { currencyId: string; visible: boolean }
   [WalletEventName.TransferSubmitted]: TransferProperties
-  [WalletEventName.WalletAdded]: OnboardingCompletedProps & ITraceContext
-  [WalletEventName.WalletRemoved]: { wallets_removed: Address[] } & ITraceContext
   [WalletEventName.TransferCompleted]: TransferProperties
   [WalletEventName.ExploreSearchCancel]: {
     query: string
   }
   [WalletEventName.NetworkFilterSelected]: ITraceContext & {
     chain: UniverseChainId | 'All'
-  }
-  [WalletEventName.NFTVisibilityChanged]: {
-    tokenId?: string
-    chainId?: WalletChainId
-    contractAddress?: Address
-    isSpam?: boolean
-    visible: boolean
   }
   [WalletEventName.NFTsLoaded]: {
     shown: number
@@ -651,7 +626,6 @@ export type UniverseEventProperties = {
       }
   ) &
     SwapTradeBaseProperties
-  [WalletEventName.ViewRecoveryPhrase]: undefined
   // Please sort new values by EventName type!
 }
 

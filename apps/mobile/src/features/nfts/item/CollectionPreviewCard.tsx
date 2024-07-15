@@ -6,7 +6,10 @@ import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes, imageSizes, spacing } from 'ui/src/theme'
-import { Currency, NftItemScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  Currency,
+  NftItemScreenQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
@@ -35,7 +38,8 @@ export function CollectionPreviewCard({
     return <Loader.Box borderRadius="$rounded16" height={spacing.spacing60} />
   }
 
-  const isViewableCollection = !shouldDisableLink && Boolean(collection || fallbackData?.contractAddress)
+  const isViewableCollection =
+    !shouldDisableLink && Boolean(collection || fallbackData?.contractAddress)
 
   return (
     <TouchableArea hapticFeedback disabled={!isViewableCollection} onPress={onPress}>
@@ -47,11 +51,14 @@ export function CollectionPreviewCard({
         gap="$spacing8"
         justifyContent="space-between"
         px="$spacing12"
-        py="$spacing12"
-      >
+        py="$spacing12">
         <Flex row shrink alignItems="center" gap="$spacing12" overflow="hidden">
           {collection?.image?.url ? (
-            <Flex borderRadius="$roundedFull" height={imageSizes.image40} overflow="hidden" width={imageSizes.image40}>
+            <Flex
+              borderRadius="$roundedFull"
+              height={imageSizes.image40}
+              overflow="hidden"
+              width={imageSizes.image40}>
               <NFTViewer squareGridView maxHeight={spacing.spacing60} uri={collection.image.url} />
             </Flex>
           ) : null}
@@ -65,7 +72,11 @@ export function CollectionPreviewCard({
                 </Text>
               </Flex>
               {collection?.isVerified && (
-                <VerifiedIcon color={colors.accent1.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
+                <VerifiedIcon
+                  color={colors.accent1.get()}
+                  height={iconSizes.icon16}
+                  width={iconSizes.icon16}
+                />
               )}
             </Flex>
             {collection?.markets?.[0]?.floorPrice && (
@@ -87,7 +98,12 @@ export function CollectionPreviewCard({
           </Flex>
         </Flex>
         {isViewableCollection ? (
-          <RotatableChevron color="$neutral1" direction="end" height={iconSizes.icon24} width={iconSizes.icon24} />
+          <RotatableChevron
+            color="$neutral1"
+            direction="end"
+            height={iconSizes.icon24}
+            width={iconSizes.icon24}
+          />
         ) : null}
       </Flex>
     </TouchableArea>

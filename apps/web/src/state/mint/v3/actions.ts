@@ -11,7 +11,7 @@ export enum Bound {
 }
 
 export const typeInput = createAction<{ field: Field; typedValue: string; noLiquidity: boolean }>(
-  'mintV3/typeInputMint',
+  'mintV3/typeInputMint'
 )
 export const typeStartPriceInput = createAction<{ typedValue: string }>('mintV3/typeStartPriceInput')
 export const typeLeftRangeInput = createAction<{ typedValue: string }>('mintV3/typeLeftRangeInput')

@@ -30,13 +30,17 @@ export function useTokenAndFiatDisplayAmounts({
   isFiatMode,
 }: FormattedDisplayAmountsProps): string {
   const appFiatCurrency = useAppFiatCurrencyInfo()
-  const { convertFiatAmountFormatted, formatCurrencyAmount, addFiatSymbolToNumber } = useLocalizationContext()
+  const { convertFiatAmountFormatted, formatCurrencyAmount, addFiatSymbolToNumber } =
+    useLocalizationContext()
 
   const formattedCurrencyAmount = currencyAmount
     ? formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })
     : ''
 
-  const formattedFiatValue: string = convertFiatAmountFormatted(usdValue?.toExact(), NumberType.FiatTokenQuantity)
+  const formattedFiatValue: string = convertFiatAmountFormatted(
+    usdValue?.toExact(),
+    NumberType.FiatTokenQuantity
+  )
 
   // In fiat mode, show equivalent token amount. In token mode, show equivalent fiat amount
   return useMemo((): string => {

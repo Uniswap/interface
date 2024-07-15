@@ -9,7 +9,11 @@ export type SvgData = {
   aspectRatio: number
 }
 
-export async function fetchSVG(uri: string, autoplay: boolean, signal?: AbortSignal): Promise<SvgData> {
+export async function fetchSVG(
+  uri: string,
+  autoplay: boolean,
+  signal?: AbortSignal
+): Promise<SvgData> {
   const res = await fetch(uri, { signal })
   const text = await res.text()
 
@@ -26,7 +30,8 @@ export async function fetchSVG(uri: string, autoplay: boolean, signal?: AbortSig
 
   let aspectRatio = FALLBACK_ASPECT_RATIO
   try {
-    aspectRatio = viewboxHeight && viewboxWidth ? +viewboxWidth / +viewboxHeight : FALLBACK_ASPECT_RATIO
+    aspectRatio =
+      viewboxHeight && viewboxWidth ? +viewboxWidth / +viewboxHeight : FALLBACK_ASPECT_RATIO
   } catch (e) {
     logger.debug('images/utils', 'fetchSVG', 'Could not calculate aspect ratio ' + e)
   }

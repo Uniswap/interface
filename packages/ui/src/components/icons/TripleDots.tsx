@@ -6,27 +6,27 @@ import { createIcon } from '../factories/createIcon'
 export const [TripleDots, AnimatedTripleDots] = createIcon({
   name: 'TripleDots',
   getIcon: (props) => (
-    <Svg stroke="currentColor" fill="currentColor" viewBox="0 0 18 4" {...props}>
+    <Svg fill="currentColor" stroke="currentColor" viewBox="0 0 18 4" {...props}>
       <Path
         d="M9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
-        strokeWidth="2"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        stroke="currentColor"
+        strokeWidth="2"
       />
       <Path
         d="M16 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
-        strokeWidth="2"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        stroke="currentColor"
+        strokeWidth="2"
       />
       <Path
         d="M2 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
-        strokeWidth="2"
+        stroke="currentColor"
         strokeLinecap="round"
         strokeLinejoin="round"
-        stroke="currentColor"
+        strokeWidth="2"
       />
     </Svg>
   ),

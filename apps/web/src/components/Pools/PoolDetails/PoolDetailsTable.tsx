@@ -44,9 +44,9 @@ export function PoolDetailsTableTab({
       positions?.filter(
         (position) =>
           Pool.getAddress(position.pool.token0, position.pool.token1, position.pool.fee).toLowerCase() ===
-          poolAddress.toLowerCase(),
+          poolAddress.toLowerCase()
       ) ?? [],
-    [poolAddress, positions],
+    [poolAddress, positions]
   )
   return (
     <Column gap="lg">

@@ -11,11 +11,13 @@ export function useOnToggleShowRecipientSelector(dispatch: React.Dispatch<AnyAct
   }, [dispatch])
 }
 
-export function useSetShowRecipientSelector(dispatch: React.Dispatch<AnyAction>): (show: boolean) => void {
+export function useSetShowRecipientSelector(
+  dispatch: React.Dispatch<AnyAction>
+): (show: boolean) => void {
   return useCallback(
     (show: boolean) => {
       dispatch(setShowRecipientSelector(show))
     },
-    [dispatch],
+    [dispatch]
   )
 }

@@ -23,7 +23,7 @@ export default function useENSName(address?: string): { ENSName: string | null; 
   const resolverAddress = useMainnetSingleCallResult(registrarContract, 'resolver', ensNodeArgument, NEVER_RELOAD)
   const resolverAddressResult = resolverAddress.result?.[0]
   const resolverContract = useENSResolverContract(
-    resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined,
+    resolverAddressResult && !isZero(resolverAddressResult) ? resolverAddressResult : undefined
   )
   const nameCallRes = useMainnetSingleCallResult(resolverContract, 'name', ensNodeArgument, NEVER_RELOAD)
   const name = nameCallRes.result?.[0]
@@ -41,6 +41,6 @@ export default function useENSName(address?: string): { ENSName: string | null; 
       ENSName: changed ? null : checkedName,
       loading,
     }),
-    [changed, checkedName, loading],
+    [changed, checkedName, loading]
   )
 }

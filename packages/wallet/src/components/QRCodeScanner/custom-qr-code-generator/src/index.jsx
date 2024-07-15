@@ -1,11 +1,11 @@
 // Component logic from: https://github.com/awesomejerry/react-native-qrcode-svg
 // Custom matric renderer from: https://github.com/awesomejerry/react-native-qrcode-svg/pull/139/files
 
-import { useMemo } from 'react'
+import React, { useMemo } from 'react'
 import Svg, { Defs, G, LinearGradient, Path, Rect, Stop } from 'react-native-svg'
-import { useMedia } from 'ui/src'
 import genMatrix from 'wallet/src/components/QRCodeScanner/custom-qr-code-generator/src/genMatrix.js'
 import transformMatrixIntoPath from 'wallet/src/components/QRCodeScanner/custom-qr-code-generator/src/transformMatrixIntoCirclePath.js'
+import { useMedia } from 'ui/src'
 
 const QREyes = ({ x = -1, y = -1, fillColor, size }) => (
   <G transform={`scale(${size / 120})`} x={x} y={y}>
@@ -78,8 +78,7 @@ const QRCode = ({
       ref={getRef}
       height={size}
       viewBox={[-quietZone, -quietZone, size + quietZone * 2, size + quietZone * 2].join(' ')}
-      width={size}
-    >
+      width={size}>
       <Defs>
         <LinearGradient
           gradientTransform="rotate(45)"
@@ -87,8 +86,7 @@ const QRCode = ({
           x1={gradientDirection[0]}
           x2={gradientDirection[2]}
           y1={gradientDirection[0]}
-          y2={gradientDirection[2]}
-        >
+          y2={gradientDirection[2]}>
           <Stop offset="0" stopColor={color} stopOpacity="1" />
           <Stop offset="1" stopColor={linearGradient[1]} stopOpacity="1" />
           <Stop offset="1" stopColor={linearGradient[2]} stopOpacity="1" />

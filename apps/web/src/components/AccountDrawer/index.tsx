@@ -2,17 +2,13 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import DefaultMenu from 'components/AccountDrawer/DefaultMenu'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ScrollBarStyles } from 'components/Common'
-import { Web3StatusRef } from 'components/Web3Status'
 import { useWindowSize } from 'hooks/screenSize'
 import useDisableScrolling from 'hooks/useDisableScrolling'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
-import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
-import { useAtom } from 'jotai'
 import { useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { useGesture } from 'react-use-gesture'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
@@ -20,11 +16,9 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isMobile } from 'utilities/src/platform'
 
 const DRAWER_WIDTH_XL = '390px'
-export const DRAWER_WIDTH = '320px'
+const DRAWER_WIDTH = '320px'
 const DRAWER_MARGIN = '8px'
 const DRAWER_OFFSET = '10px'
-
-export const MODAL_WIDTH = '368px'
 
 const ScrimBackground = styled.div<{ $open: boolean; $maxWidth?: number; $zIndex?: number }>`
   z-index: ${({ $zIndex }) => $zIndex ?? Z_INDEX.modalBackdrop};
@@ -77,7 +71,7 @@ const AccountDrawerScrollWrapper = styled.div`
   border-radius: 12px;
 `
 
-const Container = styled.div<{ isUniExtensionAvailable?: boolean }>`
+const Container = styled.div`
   display: flex;
   flex-direction: row;
   height: calc(100% - 2 * ${DRAWER_MARGIN});
@@ -86,8 +80,6 @@ const Container = styled.div<{ isUniExtensionAvailable?: boolean }>`
   right: ${DRAWER_MARGIN};
   top: ${DRAWER_MARGIN};
   z-index: ${Z_INDEX.fixed};
-
-  ${({ isUniExtensionAvailable }) => isUniExtensionAvailable && ExtensionContainerStyles}
 
   @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
     height: 100%;
@@ -99,17 +91,8 @@ const Container = styled.div<{ isUniExtensionAvailable?: boolean }>`
   }
 `
 
-const ExtensionContainerStyles = css`
-  height: auto;
-  max-height: calc(100% - ${({ theme }) => theme.navHeight + 16}px);
-  right: 24px;
-  top: ${({ theme }) => theme.navHeight}px;
-  ${ScrollBarStyles}
-`
-
-const AccountDrawerWrapper = styled.div<{ open: boolean; isUniExtensionAvailable?: boolean }>`
-  margin-right: ${({ open, isUniExtensionAvailable }) =>
-    open ? 0 : '-' + (isUniExtensionAvailable ? MODAL_WIDTH : DRAWER_WIDTH)};
+const AccountDrawerWrapper = styled.div<{ open: boolean }>`
+  margin-right: ${({ open }) => (open ? 0 : '-' + DRAWER_WIDTH)};
   height: 100%;
   overflow: hidden;
 
@@ -143,21 +126,6 @@ const AccountDrawerWrapper = styled.div<{ open: boolean; isUniExtensionAvailable
 
   box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   transition: margin-right ${({ theme }) => theme.transition.duration.medium};
-
-  ${({ isUniExtensionAvailable }) => isUniExtensionAvailable && ExtensionDrawerWrapperStyles}
-`
-
-const ExtensionDrawerWrapperStyles = css<{ open: boolean }>`
-  height: max-content;
-  width: ${MODAL_WIDTH};
-  max-width: ${MODAL_WIDTH};
-  border-radius: 20px;
-  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
-  transform: scale(${({ open }) => (open ? 1 : 0.96)});
-  transform-origin: top right;
-  opacity: ${({ open }) => (open ? 1 : 0)};
-  transition: ${({ theme }) => `transform ${theme.transition.duration.fast} ${theme.transition.timing.inOut},
-    opacity ${theme.transition.duration.fast} ${theme.transition.timing.inOut}`};
 `
 
 const CloseIcon = styled(ChevronsRight).attrs({ size: 24 })`
@@ -187,22 +155,6 @@ function AccountDrawer() {
   const accountDrawer = useAccountDrawer()
   const wasAccountDrawerOpen = usePrevious(accountDrawer.isOpen)
   const scrollRef = useRef<HTMLDivElement>(null)
-  const modalRef = useRef<HTMLDivElement>(null)
-  const isUniExtensionAvailable = useIsUniExtensionAvailable()
-  const [web3StatusRef] = useAtom(Web3StatusRef)
-
-  useOnClickOutside(
-    modalRef,
-    () => {
-      if (isUniExtensionAvailable) {
-        accountDrawer.close()
-      }
-    },
-    // Prevents quick close & re-open when tapping the Web3Status
-    // stopPropagation does not work here
-    web3StatusRef ? [web3StatusRef] : [],
-  )
-
   useEffect(() => {
     if (wasAccountDrawerOpen && !accountDrawer.isOpen) {
       scrollRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
@@ -274,8 +226,8 @@ function AccountDrawer() {
   })
 
   return (
-    <Container isUniExtensionAvailable={isUniExtensionAvailable}>
-      {accountDrawer.isOpen && !isUniExtensionAvailable && (
+    <Container>
+      {accountDrawer.isOpen && (
         <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'close' }}>
           <CloseDrawer onClick={accountDrawer.close} data-testid="close-account-drawer">
             <CloseIcon />
@@ -284,9 +236,6 @@ function AccountDrawer() {
       )}
       <Scrim onClick={accountDrawer.close} $open={accountDrawer.isOpen} />
       <AccountDrawerWrapper
-        isUniExtensionAvailable={isUniExtensionAvailable}
-        ref={modalRef}
-        data-testid="account-drawer"
         open={accountDrawer.isOpen}
         {...(isMobile
           ? {

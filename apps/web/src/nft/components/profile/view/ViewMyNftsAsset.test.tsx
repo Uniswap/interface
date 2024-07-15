@@ -12,7 +12,7 @@ describe('NftCard', () => {
         mediaShouldBePlaying={false}
         setCurrentTokenPlayingMedia={() => undefined}
         hideDetails={false}
-      />,
+      />
     )
     expect(asFragment()).toMatchSnapshot()
   })

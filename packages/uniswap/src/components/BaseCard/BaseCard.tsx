@@ -1,6 +1,14 @@
 import { ComponentProps, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ColorTokens, Flex, FlexProps, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import {
+  ColorTokens,
+  Flex,
+  FlexProps,
+  Text,
+  TouchableArea,
+  useIsDarkMode,
+  useSporeColors,
+} from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { opacify } from 'ui/src/theme'
@@ -22,10 +30,11 @@ export function Shadow({ children, ...rest }: FlexProps): JSX.Element {
       shadowOpacity={0.0075}
       shadowRadius={10}
       style={
-        hasBackgroundColor ? undefined : { backgroundColor: opacify(isDarkMode ? 10 : 100, colors.sporeWhite.val) }
+        hasBackgroundColor
+          ? undefined
+          : { backgroundColor: opacify(isDarkMode ? 10 : 100, colors.sporeWhite.val) }
       }
-      {...rest}
-    >
+      {...rest}>
       {children}
     </Flex>
   )
@@ -47,8 +56,7 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
       px="$spacing16"
       py="$spacing12"
       onPress={onPress}
-      {...buttonProps}
-    >
+      {...buttonProps}>
       <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between">
         <Flex gap="$spacing4">
           <Flex row alignItems="center" gap="$spacing8">
@@ -61,7 +69,13 @@ function Header({ title, subtitle, onPress, icon, ...buttonProps }: HeaderProps)
               title
             )}
           </Flex>
-          {subtitle ? typeof subtitle === 'string' ? <Text variant="subheading1">{subtitle}</Text> : subtitle : null}
+          {subtitle ? (
+            typeof subtitle === 'string' ? (
+              <Text variant="subheading1">{subtitle}</Text>
+            ) : (
+              subtitle
+            )
+          ) : null}
         </Flex>
         <RotatableChevron color="$neutral2" direction="end" height={20} />
       </Flex>
@@ -135,7 +149,13 @@ type ErrorStateProps = {
 
 function ErrorState(props: ErrorStateProps): JSX.Element {
   const { t } = useTranslation()
-  const { title, description = t('common.card.error.description'), retryButtonLabel, onRetry, icon } = props
+  const {
+    title,
+    description = t('common.card.error.description'),
+    retryButtonLabel,
+    onRetry,
+    icon,
+  } = props
   return (
     <Flex centered grow gap="$spacing24" p="$spacing12" width="100%">
       <Flex centered gap="$spacing16">
@@ -190,11 +210,15 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
       gap="$spacing24"
       justifyContent="space-between"
       p="$spacing12"
-      width="100%"
-    >
+      width="100%">
       <Flex row shrink alignItems="center" gap="$spacing8">
         {icon}
-        <Text color={textColor} ellipsizeMode="tail" numberOfLines={1} textAlign="center" variant="subheading2">
+        <Text
+          color={textColor}
+          ellipsizeMode="tail"
+          numberOfLines={1}
+          textAlign="center"
+          variant="subheading2">
           {title}
         </Text>
       </Flex>

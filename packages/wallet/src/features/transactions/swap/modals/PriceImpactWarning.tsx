@@ -5,7 +5,10 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
 
-export function PriceImpactWarning({ children, warning }: PropsWithChildren<{ warning: Warning }>): JSX.Element {
+export function PriceImpactWarning({
+  children,
+  warning,
+}: PropsWithChildren<{ warning: Warning }>): JSX.Element {
   const { t } = useTranslation()
 
   const caption = warning.message

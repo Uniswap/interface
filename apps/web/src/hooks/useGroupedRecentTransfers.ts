@@ -6,21 +6,18 @@ export function useGroupedRecentTransfers(account?: string) {
 
   return useMemo(
     () => ({
-      transfers: recentTransfers?.reduce(
-        (acc, transfer) => {
-          const address = transfer.recipient
-          if (acc[address]) {
-            acc[address]++
-          } else {
-            acc[address] = 1
-          }
-          return acc
-        },
-        {} as { [address: string]: number },
-      ),
+      transfers: recentTransfers?.reduce((acc, transfer) => {
+        const address = transfer.recipient
+        if (acc[address]) {
+          acc[address]++
+        } else {
+          acc[address] = 1
+        }
+        return acc
+      }, {} as { [address: string]: number }),
       loading,
     }),
 
-    [loading, recentTransfers],
+    [loading, recentTransfers]
   )
 }

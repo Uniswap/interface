@@ -108,7 +108,7 @@ export default function FiatOnrampModal() {
           colorCode: theme.accent1,
           defaultCurrencyCode: getDefaultCurrencyCode(
             tokenAddress,
-            chain?.backendChain.chain ?? queryChain?.backendChain.chain ?? accountChainInfo?.backendChain.chain,
+            chain?.backendChain.chain ?? queryChain?.backendChain.chain ?? accountChainInfo?.backendChain.chain
           ),
           redirectUrl: swapUrl,
           walletAddresses: JSON.stringify(
@@ -117,8 +117,8 @@ export default function FiatOnrampModal() {
                 ...acc,
                 [currencyCode]: account.address,
               }),
-              {},
-            ),
+              {}
+            )
           ),
         }),
       })

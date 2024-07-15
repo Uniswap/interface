@@ -7,10 +7,7 @@ import { MetaTagInjectorInput } from 'shared-cloud/metatags'
 export class MetaTagInjector implements HTMLRewriterElementContentHandlers {
   static SELECTOR = 'head'
 
-  constructor(
-    private input: MetaTagInjectorInput,
-    private request: Request,
-  ) {}
+  constructor(private input: MetaTagInjectorInput, private request: Request) {}
 
   append(element: Element, attribute: string, content: string) {
     // without adding data-rh="true", react-helmet-async doesn't overwrite existing metatags

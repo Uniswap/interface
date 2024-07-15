@@ -94,7 +94,7 @@ export default function useClassicAutoSlippageTolerance(trade?: ClassicTrade): P
       ? JSBI.multiply(nativeGasPrice, JSBI.BigInt(gasEstimate))
       : undefined
   const gasCostUSD = useUSDPrice(
-    nativeCurrency && nativeGasCost ? CurrencyAmount.fromRawAmount(nativeCurrency, nativeGasCost) : undefined,
+    nativeCurrency && nativeGasCost ? CurrencyAmount.fromRawAmount(nativeCurrency, nativeGasCost) : undefined
   )
   const gasCostStablecoinAmount = useStablecoinAmountFromFiatValue(gasCostUSD.data)
 

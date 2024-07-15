@@ -14,7 +14,6 @@ import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
-  NavigateToNftCollectionArgs,
   NavigateToNftItemArgs,
   NavigateToSendFlowArgs,
   NavigateToSwapFlowArgs,
@@ -33,7 +32,6 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
   const navigateToAccountActivityList = useNavigateToHomepageTab(HomeScreenTabIndex.Activity)
   const navigateToAccountTokenList = useNavigateToHomepageTab(HomeScreenTabIndex.Tokens)
   const navigateToBuyOrReceiveWithEmptyWallet = useNavigateToBuyOrReceiveWithEmptyWallet()
-  const navigateToNftCollection = useNavigateToNftCollection()
   const navigateToNftDetails = useNavigateToNftDetails()
   const navigateToReceive = useNavigateToReceive()
   const navigateToSend = useNavigateToSend()
@@ -47,13 +45,11 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
-      navigateToNftCollection={navigateToNftCollection}
       navigateToNftDetails={navigateToNftDetails}
       navigateToReceive={navigateToReceive}
       navigateToSend={navigateToSend}
       navigateToSwapFlow={navigateToSwapFlow}
-      navigateToTokenDetails={navigateToTokenDetails}
-    >
+      navigateToTokenDetails={navigateToTokenDetails}>
       {children}
     </WalletNavigationProvider>
   )
@@ -117,7 +113,9 @@ function useNavigateToReceive(): () => void {
   const dispatch = useAppDispatch()
 
   return useCallback((): void => {
-    dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
+    dispatch(
+      openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+    )
   }, [dispatch])
 }
 
@@ -129,7 +127,7 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
       const initialSendState = getNavigateToSendFlowArgsInitialState(args)
       dispatch(openModal({ name: ModalName.Send, initialState: initialSendState }))
     },
-    [dispatch],
+    [dispatch]
   )
 }
 
@@ -142,7 +140,7 @@ function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
       dispatch(closeModal({ name: ModalName.Swap }))
       dispatch(openModal({ name: ModalName.Swap, initialState }))
     },
-    [dispatch],
+    [dispatch]
   )
 }
 
@@ -157,7 +155,7 @@ function useNavigateToTokenDetails(): (currencyId: string) => void {
         appNavigation.navigate(MobileScreens.TokenDetails, { currencyId })
       }
     },
-    [appNavigation],
+    [appNavigation]
   )
 }
 
@@ -174,20 +172,7 @@ function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
         fallbackData,
       })
     },
-    [navigation],
-  )
-}
-
-function useNavigateToNftCollection(): (args: NavigateToNftCollectionArgs) => void {
-  const navigation = useAppStackNavigation()
-
-  return useCallback(
-    ({ collectionAddress }: NavigateToNftCollectionArgs): void => {
-      navigation.navigate(MobileScreens.NFTCollection, {
-        collectionAddress,
-      })
-    },
-    [navigation],
+    [navigation]
   )
 }
 
@@ -210,7 +195,7 @@ function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
         openModal({
           name: ModalName.WalletConnectScan,
           initialState: ScannerModalState.WalletQr,
-        }),
+        })
       )
     }
   }, [dispatch, forAggregatorEnabled, moonpayFiatOnRampEligible])

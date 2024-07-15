@@ -10,7 +10,11 @@ import { WrapType } from 'wallet/src/features/transactions/types'
 // and when a txn confirms it ll replace this toast.
 export const TRANSACTION_PENDING_NOTIFICATION_DELAY = 12 * ONE_SECOND_MS
 
-export function SwapPendingNotification({ notification }: { notification: SwapPendingNotificationType }): JSX.Element {
+export function SwapPendingNotification({
+  notification,
+}: {
+  notification: SwapPendingNotificationType
+}): JSX.Element {
   const { t } = useTranslation()
 
   const notificationText = getNotificationText(notification.wrapType, t)

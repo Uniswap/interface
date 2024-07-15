@@ -34,7 +34,7 @@ export function FiatOnRampCurrencyModal({
       <ContentWrapper>
         <PaddedColumn>
           <RowBetween>
-            <Text variant="subheading1">
+            <Text variant="body3">
               <Trans i18nKey="common.selectToken.label" />
             </Text>
             <CloseIcon data-testid="FiatOnRampCurrencyModal-close" onClick={onDismiss} />

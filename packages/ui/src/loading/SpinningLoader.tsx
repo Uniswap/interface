@@ -32,9 +32,14 @@ export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderPro
         justifyContent="center"
         marginEnd={2}
         marginStart={2}
-        width={16}
-      >
-        <Flex borderRadius="$roundedFull" height={8} minHeight={8} minWidth={8} position="relative" width={8}>
+        width={16}>
+        <Flex
+          borderRadius="$roundedFull"
+          height={8}
+          minHeight={8}
+          minWidth={8}
+          position="relative"
+          width={8}>
           <Flex
             backgroundColor="transparent"
             borderBottomColor="transparent"

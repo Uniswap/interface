@@ -11,7 +11,13 @@ type Props = {
   color?: ColorTokens
 } & Omit<FlexProps, 'direction'>
 
-function _RotatableChevron({ color, width = 24, height = 24, direction = 'start', ...rest }: Props): JSX.Element {
+function _RotatableChevron({
+  color,
+  width = 24,
+  height = 24,
+  direction = 'start',
+  ...rest
+}: Props): JSX.Element {
   let degree: string
   switch (direction) {
     case 'start':

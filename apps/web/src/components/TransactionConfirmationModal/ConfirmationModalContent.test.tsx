@@ -11,7 +11,7 @@ describe('ConfirmationModalContent', () => {
         topContent={() => <div>topContent</div>}
         bottomContent={() => <div>bottomContent</div>}
         headerContent={() => <div data-testid="confirmation-modal-chain-icon">headerContent</div>}
-      />,
+      />
     )
     expect(screen.getByTestId('confirmation-modal-chain-icon')).toBeInTheDocument()
   })
@@ -23,7 +23,7 @@ describe('ConfirmationModalContent', () => {
         onDismiss={jest.fn()}
         topContent={() => <div>topContent</div>}
         bottomContent={() => <div>bottomContent</div>}
-      />,
+      />
     )
     expect(screen.queryByTestId('confirmation-modal-chain-icon')).not.toBeInTheDocument()
   })

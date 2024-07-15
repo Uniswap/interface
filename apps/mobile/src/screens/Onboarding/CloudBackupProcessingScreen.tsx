@@ -5,7 +5,10 @@ import { Screen } from 'src/components/layout/Screen'
 import { CloudBackupProcessingAnimation } from 'src/features/CloudBackup/CloudBackupProcessingAnimation'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
-type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupCloudProcessing>
+type Props = NativeStackScreenProps<
+  OnboardingStackParamList,
+  OnboardingScreens.BackupCloudProcessing
+>
 
 /** Screen to perform secure recovery phrase backup to Cloud  */
 export function CloudBackupProcessingScreen({

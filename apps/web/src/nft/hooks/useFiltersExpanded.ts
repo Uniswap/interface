@@ -16,10 +16,10 @@ const useFiltersExpandedStore = create<State>()(
             isExpanded: expanded,
           })),
       }),
-      { name: 'useFiltersExpanded' },
+      { name: 'useFiltersExpanded' }
     ),
-    { name: 'useFiltersExpanded' },
-  ),
+    { name: 'useFiltersExpanded' }
+  )
 )
 
 export const useFiltersExpanded = (): [boolean, (expanded: boolean) => void] => {

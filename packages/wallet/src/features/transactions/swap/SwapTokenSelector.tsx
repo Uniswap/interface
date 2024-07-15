@@ -3,7 +3,6 @@ import { useCallback } from 'react'
 import { isWeb } from 'ui/src'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import {
   TokenSelector,
   TokenSelectorModal,
@@ -13,9 +12,13 @@ import {
 import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
-import { SwapFormState, useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
+import {
+  SwapFormState,
+  useSwapFormContext,
+} from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
+import { currencyAddress } from 'wallet/src/utils/currencyId'
 
 export function SwapTokenSelector(): JSX.Element {
   const swapContext = useSwapFormContext()
@@ -81,7 +84,7 @@ export function SwapTokenSelector(): JSX.Element {
       // Hide screen when done selecting.
       onHideTokenSelector()
     },
-    [exactCurrencyField, input, onHideTokenSelector, output, updateSwapForm],
+    [exactCurrencyField, input, onHideTokenSelector, output, updateSwapForm]
   )
 
   const props: TokenSelectorProps = {

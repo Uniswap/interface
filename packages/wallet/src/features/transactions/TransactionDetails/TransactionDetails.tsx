@@ -24,7 +24,6 @@ interface TransactionDetailsProps {
   banner?: ReactNode
   chainId: WalletChainId
   gasFee: GasFeeResult
-  preUniswapXGasFeeUSD?: number
   showExpandedChildren?: boolean
   swapFeeInfo?: SwapFeeInfo
   showWarning?: boolean
@@ -42,7 +41,6 @@ export function TransactionDetails({
   showExpandedChildren,
   chainId,
   gasFee,
-  preUniswapXGasFeeUSD,
   swapFeeInfo,
   showWarning,
   warning,
@@ -78,8 +76,7 @@ export function TransactionDetails({
             borderRadius="$rounded16"
             gap="$spacing8"
             px="$spacing16"
-            py="$spacing8"
-          >
+            py="$spacing8">
             <AlertTriangle color={warningColor?.text} size="$icon.16" />
             <Flex fill py="$spacing2">
               <Text color={warningColor.text} variant="body3">
@@ -90,7 +87,11 @@ export function TransactionDetails({
         </TouchableArea>
       )}
       {gasFee.error && (
-        <Flex backgroundColor="$DEP_accentCriticalSoft" borderRadius="$rounded16" mb="$spacing12" p="$spacing12">
+        <Flex
+          backgroundColor="$DEP_accentCriticalSoft"
+          borderRadius="$rounded16"
+          mb="$spacing12"
+          p="$spacing12">
           <Text color="$statusCritical">{t('swap.warning.expectedFailure')}</Text>
         </Flex>
       )}
@@ -104,15 +105,22 @@ export function TransactionDetails({
             justifyContent="center"
             pb="$spacing4"
             pt="$spacing8"
-            onPress={onPressToggleShowChildren}
-          >
+            onPress={onPressToggleShowChildren}>
             <Text color="$neutral3" variant="body3">
               {showChildren ? t('swap.details.action.less') : t('swap.details.action.more')}
             </Text>
             {showChildren ? (
-              <AnglesMinimize color={colors.neutral3.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
+              <AnglesMinimize
+                color={colors.neutral3.get()}
+                height={iconSizes.icon20}
+                width={iconSizes.icon20}
+              />
             ) : (
-              <AnglesMaximize color={colors.neutral3.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
+              <AnglesMaximize
+                color={colors.neutral3.get()}
+                height={iconSizes.icon20}
+                width={iconSizes.icon20}
+              />
             )}
           </TouchableArea>
           <Separator />
@@ -122,12 +130,7 @@ export function TransactionDetails({
         {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
         {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
         {displaySwapFeeInfo && <SwapFee swapFeeInfo={swapFeeInfo} />}
-        <NetworkFee
-          chainId={chainId}
-          gasFee={gasFee}
-          preUniswapXGasFeeUSD={preUniswapXGasFeeUSD}
-          transactionUSDValue={transactionUSDValue}
-        />
+        <NetworkFee chainId={chainId} gasFee={gasFee} transactionUSDValue={transactionUSDValue} />
         {AccountDetails}
       </Flex>
     </Flex>

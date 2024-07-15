@@ -41,7 +41,6 @@
     "ios:beta": "react-native run-ios --configuration Beta",
     "ios:bundle": "react-native bundle --entry-file='index.js' --bundle-output='./ios/main.jsbundle' --dev=false --platform='ios' --assets-dest='./ios'",
     "ios:release": "react-native run-ios --configuration Release",
-    "format": "../../scripts/prettier.sh",
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx --max-warnings=0",
     "lint:fix": "eslint . --ext .js,.jsx,.ts,.tsx --fix",
     "start": "NODE_ENV=development react-native start",

@@ -2,7 +2,10 @@ import { createContext, ReactNode, useContext } from 'react'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getSwapPrefilledState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
-import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
 import { getSendPrefilledState } from 'wallet/src/features/transactions/transfer/getSendPrefilledState'
 
 type NavigateToTransactionFlowTransactionState = {
@@ -31,46 +34,51 @@ export type NavigateToSendFlowArgs =
   | undefined
 
 function isNavigateToTransactionFlowArgsInitialState(
-  args: NavigateToSwapFlowArgs | NavigateToSendFlowArgs,
+  args: NavigateToSwapFlowArgs | NavigateToSendFlowArgs
 ): args is NavigateToTransactionFlowTransactionState {
-  return Boolean(args && (args as NavigateToTransactionFlowTransactionState).initialState !== undefined)
+  return Boolean(
+    args && (args as NavigateToTransactionFlowTransactionState).initialState !== undefined
+  )
 }
 
-function isNavigateToSwapFlowArgsPartialState(args: NavigateToSwapFlowArgs): args is NavigateToSwapFlowPartialState {
+function isNavigateToSwapFlowArgsPartialState(
+  args: NavigateToSwapFlowArgs
+): args is NavigateToSwapFlowPartialState {
   return Boolean(args && (args as NavigateToSwapFlowPartialState).currencyAddress !== undefined)
 }
 
-function isNavigateToSendFlowArgsPartialState(args: NavigateToSendFlowArgs): args is NavigateToSendFlowPartialState {
+function isNavigateToSendFlowArgsPartialState(
+  args: NavigateToSendFlowArgs
+): args is NavigateToSendFlowPartialState {
   return Boolean(args && (args as NavigateToSendFlowPartialState).chainId !== undefined)
 }
 
-export function getNavigateToSwapFlowArgsInitialState(args: NavigateToSwapFlowArgs): TransactionState | undefined {
+export function getNavigateToSwapFlowArgsInitialState(
+  args: NavigateToSwapFlowArgs
+): TransactionState | undefined {
   return isNavigateToTransactionFlowArgsInitialState(args)
     ? args.initialState
     : isNavigateToSwapFlowArgsPartialState(args)
-      ? getSwapPrefilledState(args)
-      : undefined
+    ? getSwapPrefilledState(args)
+    : undefined
 }
 
-export function getNavigateToSendFlowArgsInitialState(args: NavigateToSendFlowArgs): TransactionState | undefined {
+export function getNavigateToSendFlowArgsInitialState(
+  args: NavigateToSendFlowArgs
+): TransactionState | undefined {
   return isNavigateToTransactionFlowArgsInitialState(args)
     ? args.initialState
     : isNavigateToSendFlowArgsPartialState(args)
-      ? getSendPrefilledState(args)
-      : undefined
+    ? getSendPrefilledState(args)
+    : undefined
 }
 
 export type NavigateToNftItemArgs = {
   owner?: Address
   address: Address
   tokenId: string
-  chainId?: WalletChainId
   isSpam?: boolean
   fallbackData?: NFTItem
-}
-
-export type NavigateToNftCollectionArgs = {
-  collectionAddress: Address
 }
 
 export type ShareTokenArgs = {
@@ -88,7 +96,6 @@ export type WalletNavigationContextState = {
   // Action that should be taken when the user presses the "Buy crypto" or "Receive tokens" button when they open the Send flow with an empty wallet.
   navigateToBuyOrReceiveWithEmptyWallet: () => void
   navigateToNftDetails: (args: NavigateToNftItemArgs) => void
-  navigateToNftCollection: (args: NavigateToNftCollectionArgs) => void
   navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void
   navigateToTokenDetails: (currencyId: string) => void
   navigateToReceive: () => void
@@ -97,7 +104,9 @@ export type WalletNavigationContextState = {
   handleShareToken: (args: ShareTokenArgs) => void
 }
 
-export const WalletNavigationContext = createContext<WalletNavigationContextState | undefined>(undefined)
+export const WalletNavigationContext = createContext<WalletNavigationContextState | undefined>(
+  undefined
+)
 
 export function WalletNavigationProvider({
   children,
@@ -105,7 +114,9 @@ export function WalletNavigationProvider({
 }: {
   children: ReactNode
 } & WalletNavigationContextState): JSX.Element {
-  return <WalletNavigationContext.Provider value={props}>{children}</WalletNavigationContext.Provider>
+  return (
+    <WalletNavigationContext.Provider value={props}>{children}</WalletNavigationContext.Provider>
+  )
 }
 
 export const useWalletNavigation = (): WalletNavigationContextState => {

@@ -6,7 +6,7 @@ describe('CountryListRow', () => {
   it('should render', () => {
     const clickHandler = jest.fn()
     const { container } = render(
-      <CountryListRow country={US} selectedCountry={undefined} onClick={clickHandler} style={{}} />,
+      <CountryListRow country={US} selectedCountry={undefined} onClick={clickHandler} style={{}} />
     )
     screen.getByText('United States').click()
     expect(clickHandler).toHaveBeenCalledTimes(1)

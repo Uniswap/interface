@@ -32,7 +32,9 @@ type TxFixtures<T extends ClassicTransactionDetails> = {
   finalizedTxAction: ReturnType<typeof finalizeTransaction>
 }
 
-export const getTxFixtures = <T extends ClassicTransactionDetails>(transaction?: T): TxFixtures<T> => {
+export const getTxFixtures = <T extends ClassicTransactionDetails>(
+  transaction?: T
+): TxFixtures<T> => {
   const txBase = merge(
     {},
     transactionDetails({
@@ -41,7 +43,7 @@ export const getTxFixtures = <T extends ClassicTransactionDetails>(transaction?:
         request: ethersTransactionRequest(),
       },
     }),
-    transaction,
+    transaction
   )
 
   // Transaction flow

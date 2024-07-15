@@ -12,7 +12,7 @@ export interface SplitOptions {
 
 export function splitHiddenTokens(
   tokenBalances: readonly (PortfolioTokenBalancePartsFragment | undefined)[],
-  { hideSmallBalances = true, hideSpam = true }: SplitOptions = {},
+  { hideSmallBalances = true, hideSpam = true }: SplitOptions = {}
 ) {
   const visibleTokens: PortfolioTokenBalancePartsFragment[] = []
   const hiddenTokens: PortfolioTokenBalancePartsFragment[] = []

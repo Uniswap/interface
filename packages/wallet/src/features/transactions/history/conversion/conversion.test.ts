@@ -1,6 +1,4 @@
 /* eslint-disable max-lines */
-import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
-import { DAI } from 'uniswap/src/constants/tokens'
 import {
   Chain,
   Currency,
@@ -11,6 +9,8 @@ import {
   TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
+import { DAI } from 'wallet/src/constants/tokens'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
 import parseApproveTransaction from 'wallet/src/features/transactions/history/conversion/parseApproveTransaction'
@@ -243,7 +243,6 @@ describe(parseNFTMintTransaction, () => {
         collectionName: 'collection_name',
         imageURL: 'image_url',
         tokenId: 'token_id',
-        address: 'nft_contract_address',
       },
       purchaseCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       purchaseCurrencyAmountRaw: '1000000000000000000',
@@ -259,7 +258,6 @@ describe(parseNFTMintTransaction, () => {
         collectionName: 'collection_name',
         imageURL: 'image_url',
         tokenId: 'token_id',
-        address: 'nft_contract_address',
       },
       purchaseCurrencyId: `1-${getNativeAddress(UniverseChainId.Mainnet)}`,
       purchaseCurrencyAmountRaw: '1000000000000000000',
@@ -345,7 +343,6 @@ describe(parseReceiveTransaction, () => {
         collectionName: 'collection_name',
         imageURL: 'image_url',
         tokenId: 'token_id',
-        address: 'nft_contract_address',
       },
     })
   })
@@ -398,7 +395,6 @@ describe(parseSendTransaction, () => {
         collectionName: 'collection_name',
         imageURL: 'image_url',
         tokenId: 'token_id',
-        address: 'nft_contract_address',
       },
     })
   })
@@ -507,7 +503,6 @@ describe(parseTradeTransaction, () => {
         collectionName: 'collection_name',
         imageURL: 'image_url',
         tokenId: 'asset_name',
-        address: 'nft_contract_address',
       },
       purchaseCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       purchaseCurrencyAmountRaw: '1000000000000000000',
@@ -523,7 +518,6 @@ describe(parseTradeTransaction, () => {
         collectionName: 'collection_name',
         imageURL: 'image_url',
         tokenId: 'asset_name',
-        address: 'nft_contract_address',
       },
       purchaseCurrencyId: `1-${ERC20_ASSET_ADDRESS}`,
       purchaseCurrencyAmountRaw: '1000000000000000000',

@@ -91,7 +91,9 @@ export const useModalContent = ({
         description: (
           <Trans
             components={{
-              highlight: <Text color="$statusCritical" maxFontSizeMultiplier={1.4} variant="body3" />,
+              highlight: (
+                <Text color="$statusCritical" maxFontSizeMultiplier={1.4} variant="body3" />
+              ),
             }}
             i18nKey="account.recoveryPhrase.remove.final.description"
             values={{ cloudProviderName: getCloudProviderName() }}
@@ -105,8 +107,10 @@ export const useModalContent = ({
     // removing mnemonic account
     if (account?.type === AccountType.SignerMnemonic && currentStep === RemoveWalletStep.Final) {
       const associatedAccountNames = concatStrings(
-        associatedAccounts.filter((aa): aa is Account => aa.address !== account?.address).map((aa) => aa.name ?? ''),
-        t('common.endAdornment'),
+        associatedAccounts
+          .filter((aa): aa is Account => aa.address !== account?.address)
+          .map((aa) => aa.name ?? ''),
+        t('common.endAdornment')
       )
 
       return {
@@ -158,5 +162,13 @@ export const useModalContent = ({
         actionButtonTheme: 'secondary',
       }
     }
-  }, [account, associatedAccounts, currentStep, displayName, isRemovingRecoveryPhrase, isReplacing, t])
+  }, [
+    account,
+    associatedAccounts,
+    currentStep,
+    displayName,
+    isRemovingRecoveryPhrase,
+    isReplacing,
+    t,
+  ])
 }

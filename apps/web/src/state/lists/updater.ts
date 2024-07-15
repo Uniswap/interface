@@ -29,7 +29,7 @@ export default function Updater(): null {
     }
     DEFAULT_INACTIVE_LIST_URLS.forEach((url) => {
       fetchList(url, false).catch((error) =>
-        logger.debug('lists/updater', 'Updater', 'interval list fetching error', error),
+        logger.debug('lists/updater', 'Updater', 'interval list fetching error', error)
       )
     })
   }, [fetchList, isWindowVisible])
@@ -47,7 +47,7 @@ export default function Updater(): null {
       const list = lists[listUrl]
       if (!list.current && !list.loadingRequestId && !list.error) {
         fetchList(listUrl).catch((error) =>
-          logger.debug('lists/updater', 'Updater', 'list added fetching error', error),
+          logger.debug('lists/updater', 'Updater', 'list added fetching error', error)
         )
       }
     })
@@ -55,7 +55,7 @@ export default function Updater(): null {
       const list = lists[listUrl]
       if (!list || (!list.current && !list.loadingRequestId && !list.error)) {
         fetchList(listUrl, /* isUnsupportedList= */ true).catch((error) =>
-          logger.debug('lists/updater', 'Updater', 'list added fetching error', error),
+          logger.debug('lists/updater', 'Updater', 'list added fetching error', error)
         )
       }
     })

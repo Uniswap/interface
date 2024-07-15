@@ -32,7 +32,7 @@ function useTicksFromSubgraph(
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
   skip = 0,
-  chainId: InterfaceChainId,
+  chainId: InterfaceChainId
 ) {
   const poolAddress =
     currencyA && currencyB && feeAmount
@@ -41,7 +41,7 @@ function useTicksFromSubgraph(
           currencyB?.wrapped,
           feeAmount,
           undefined,
-          chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined,
+          chainId ? V3_CORE_FACTORY_ADDRESSES[chainId] : undefined
         )
       : undefined
   const supportedChainId = useSupportedChainId(chainId)
@@ -63,7 +63,7 @@ function useAllV3Ticks(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
-  chainId: InterfaceChainId,
+  chainId: InterfaceChainId
 ): {
   isLoading: boolean
   error: unknown
@@ -94,7 +94,7 @@ export function usePoolActiveLiquidity(
   currencyA: Currency | undefined,
   currencyB: Currency | undefined,
   feeAmount: FeeAmount | undefined,
-  chainId?: InterfaceChainId,
+  chainId?: InterfaceChainId
 ): {
   isLoading: boolean
   error: any

@@ -285,7 +285,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
   const getPoolPosition = useCallback(
     (asset: GenieAsset) => {
       const assetInBag = itemsInBag.some(
-        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address,
+        (item) => asset.tokenId === item.asset.tokenId && asset.address === item.asset.address
       )
 
       if (asset.marketplace === Markets.Sudoswap) {
@@ -303,14 +303,14 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
             .findIndex((item) => item.asset.tokenId === asset.tokenId)
         : itemsInBag.filter((item) => isInSameMarketplaceCollection(asset, item.asset)).length
     },
-    [itemsInBag],
+    [itemsInBag]
   )
 
   const calculatePrice = useCallback(
     (asset: GenieAsset) => {
       return calcPoolPrice(asset, getPoolPosition(asset))
     },
-    [getPoolPosition],
+    [getPoolPosition]
   )
 
   const collectionAssets = useMemo(() => {
@@ -324,7 +324,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
       (asset) =>
         asset.marketplace &&
         isPooledMarket(asset.marketplace) &&
-        (asset.priceInfo.ETHPrice = calculatePrice(asset) ?? '0'),
+        (asset.priceInfo.ETHPrice = calculatePrice(asset) ?? '0')
     )
 
     if (sortBy === SortBy.HighToLow || sortBy === SortBy.LowToHigh) {
@@ -371,7 +371,7 @@ export const CollectionNfts = ({ contractAddress, collectionStats, rarityVerifie
 
   const sortDropDownOptions: DropDownOption[] = useMemo(
     () => getSortDropdownOptions(setSortBy, hasRarity),
-    [hasRarity, setSortBy],
+    [hasRarity, setSortBy]
   )
 
   useEffect(() => {

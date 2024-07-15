@@ -19,13 +19,13 @@ export function useKeyboardLayout(): KeyboardLayout {
         }),
         Keyboard.addListener('keyboardDidHide', (e: KeyboardEvent) => {
           setKeyboardPosition(e.endCoordinates.screenY)
-        }),
+        })
       )
     } else {
       keyboardListeners.push(
         Keyboard.addListener('keyboardWillChangeFrame', (e: KeyboardEvent) => {
           setKeyboardPosition(e.endCoordinates.screenY)
-        }),
+        })
       )
     }
 

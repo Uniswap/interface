@@ -33,7 +33,7 @@ describe('SwapDetails.tsx', () => {
         }}
         showAcceptChanges={false}
         onAcceptChanges={jest.fn()}
-      />,
+      />
     )
     expect(asFragment()).toMatchSnapshot()
 
@@ -42,8 +42,8 @@ describe('SwapDetails.tsx', () => {
 
     expect(
       screen.getByText(
-        `If the price moves so that you will receive less than ${formattedAmount} ${tradeMinAmount.currency.symbol}, your transaction will revert.`,
-      ),
+        `If the price moves so that you will receive less than ${formattedAmount} ${tradeMinAmount.currency.symbol}, your transaction will revert.`
+      )
     ).toBeInTheDocument()
     expect(screen.getByText('The impact your trade has on the market price of this pool.')).toBeInTheDocument()
     expect(screen.getByText('The maximum price movement before your transaction will revert.')).toBeInTheDocument()
@@ -70,7 +70,7 @@ describe('SwapDetails.tsx', () => {
         }}
         showAcceptChanges={true}
         onAcceptChanges={mockAcceptChanges}
-      />,
+      />
     )
     const showAcceptChanges = screen.getByTestId('show-accept-changes')
     expect(showAcceptChanges).toBeInTheDocument()
@@ -98,7 +98,7 @@ describe('SwapDetails.tsx', () => {
         }}
         showAcceptChanges={false}
         onAcceptChanges={jest.fn()}
-      />,
+      />
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('Finalizing quote...')).toBeInTheDocument()
@@ -124,7 +124,7 @@ describe('SwapDetails.tsx', () => {
         }}
         showAcceptChanges={false}
         onAcceptChanges={jest.fn()}
-      />,
+      />
     )
     expect(screen.getByText('Limit price')).toBeInTheDocument()
     expect(screen.getByText('Expiry')).toBeInTheDocument()
@@ -132,8 +132,8 @@ describe('SwapDetails.tsx', () => {
     expect(screen.getByText('Network cost')).toBeInTheDocument()
     expect(
       screen.getByText(
-        'Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.',
-      ),
+        'Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.'
+      )
     ).toBeInTheDocument()
   })
 

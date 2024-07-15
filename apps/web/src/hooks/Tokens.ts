@@ -35,7 +35,7 @@ type Maybe<T> = T | undefined
 // reduce token map into standard address <-> Token mapping, optionally include user added tokens
 function useTokensFromMap(
   tokenMap: TokenAddressMap,
-  chainId: Maybe<InterfaceChainId>,
+  chainId: Maybe<InterfaceChainId>
 ): { [address: string]: TokenFromList } {
   return useMemo(() => {
     if (!chainId) {
@@ -66,7 +66,7 @@ export function useFallbackListTokens(chainId: Maybe<InterfaceChainId>): { [addr
           },
           // must make a copy because reduce modifies the map, and we do not
           // want to make a copy in every iteration
-          { ...tokensFromMap },
+          { ...tokensFromMap }
         )
     )
   }, [tokensFromMap, userAddedTokens])
@@ -96,7 +96,7 @@ export function useCurrencyInfo(address?: string, chainId?: InterfaceChainId, sk
 export function useCurrencyInfo(
   addressOrCurrency?: string | Currency,
   chainId?: InterfaceChainId,
-  skip?: boolean,
+  skip?: boolean
 ): Maybe<CurrencyInfo> {
   const { chainId: connectedChainId } = useAccount()
   const fallbackListTokens = useFallbackListTokens(chainId ?? connectedChainId)
@@ -105,8 +105,8 @@ export function useCurrencyInfo(
     typeof addressOrCurrency === 'string'
       ? addressOrCurrency
       : addressOrCurrency?.isNative
-        ? NATIVE_CHAIN_ID
-        : addressOrCurrency?.address
+      ? NATIVE_CHAIN_ID
+      : addressOrCurrency?.address
   const chainIdWithFallback =
     (typeof addressOrCurrency === 'string' ? chainId : addressOrCurrency?.chainId) ?? connectedChainId
 
@@ -123,7 +123,7 @@ export function useCurrencyInfo(
     ? COMMON_BASES[chainIdWithFallback]?.find(
         (base) =>
           (base.currency.isNative && isNative) ||
-          (base.currency.isToken && isSameAddress(base.currency.address, address)),
+          (base.currency.isToken && isSameAddress(base.currency.address, address))
       )
     : undefined
 
@@ -165,18 +165,16 @@ export function useCurrencyInfo(
 }
 
 export function useToken(tokenAddress?: string, chainId?: SupportedInterfaceChainId): Maybe<Token> {
-  const formattedAddress = isAddress(tokenAddress)
   const { chainId: connectedChainId } = useAccount()
-  const currency = useCurrency(formattedAddress ? formattedAddress : undefined, chainId ?? connectedChainId)
+  const currency = useCurrency(tokenAddress, chainId ?? connectedChainId)
   // Some chains are not supported by the backend, so we need to fetch token
   // details directly from the blockchain.
   const networkToken = useTokenFromActiveNetwork(
-    formattedAddress ? formattedAddress : undefined,
-    getChain({ chainId: chainId ?? connectedChainId })?.backendChain.backendSupported,
+    tokenAddress,
+    getChain({ chainId: chainId ?? connectedChainId })?.backendChain.backendSupported
   )
-
   return useMemo(() => {
-    if (currency && currency.isToken) {
+    if (currency && currency instanceof Token) {
       return currency
     }
     return networkToken
@@ -190,9 +188,9 @@ function parseStringOrBytes32(str: string | undefined, bytes32: string | undefin
   return str && str.length > 0
     ? str
     : // need to check for proper bytes string and valid terminator
-      bytes32 && BYTES32_REGEX.test(bytes32) && arrayify(bytes32)[31] === 0
-      ? parseBytes32String(bytes32)
-      : defaultValue
+    bytes32 && BYTES32_REGEX.test(bytes32) && arrayify(bytes32)[31] === 0
+    ? parseBytes32String(bytes32)
+    : defaultValue
 }
 
 const UNKNOWN_TOKEN_NAME = 'Unknown Token'
@@ -219,17 +217,17 @@ function useTokenFromActiveNetwork(tokenAddress: string | undefined, skip?: bool
 
   const isLoading = useMemo(
     () => decimals.loading || symbol.loading || tokenName.loading,
-    [decimals.loading, symbol.loading, tokenName.loading],
+    [decimals.loading, symbol.loading, tokenName.loading]
   )
   const parsedDecimals = useMemo(() => decimals?.result?.[0] ?? DEFAULT_ERC20_DECIMALS, [decimals.result])
 
   const parsedSymbol = useMemo(
     () => parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], UNKNOWN_TOKEN_SYMBOL),
-    [symbol.result, symbolBytes32.result],
+    [symbol.result, symbolBytes32.result]
   )
   const parsedName = useMemo(
     () => parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], UNKNOWN_TOKEN_NAME),
-    [tokenName.result, tokenNameBytes32.result],
+    [tokenName.result, tokenNameBytes32.result]
   )
 
   return useMemo(() => {

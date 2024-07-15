@@ -1,6 +1,11 @@
 import { PayloadAction } from '@reduxjs/toolkit'
 import { setTag } from '@sentry/react-native'
-import { closeModal, CloseModalParams, openModal, OpenModalParams } from 'src/features/modals/modalSlice'
+import {
+  closeModal,
+  CloseModalParams,
+  openModal,
+  OpenModalParams,
+} from 'src/features/modals/modalSlice'
 import { takeEvery } from 'typed-redux-saga'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 

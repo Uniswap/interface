@@ -13,7 +13,7 @@ export interface Analytics {
     transportProvider: ApplicationTransport,
     allowed: boolean,
     initHash?: string,
-    userIdGetter?: () => Promise<string>,
+    userIdGetter?: () => Promise<string>
   ): Promise<void>
   setAllowAnalytics(allowed: boolean): Promise<void>
   sendEvent(eventName: string, eventProperties: Record<string, unknown>): void
@@ -26,7 +26,7 @@ export const analytics: Analytics = {
     _transportProvider: ApplicationTransport,
     _allowed: boolean,
     _initHash?: string,
-    _userIdGetter?: () => Promise<string>,
+    _userIdGetter?: () => Promise<string>
   ): Promise<void> {
     throw new NotImplementedError('initAnalytics')
   },

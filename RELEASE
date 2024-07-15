@@ -1,50 +1,9 @@
-IPFS hash of the deployment:
-- CIDv0: `QmaNrzdiCZfezB1GYBZprZVoAh4KGsaZjzVH9qSmDCvZDv`
-- CIDv1: `bafybeifs3vfz27oqei35fu5fg6pfgzz3eacp3rdyhg7lvm5mp63iiauomu`
+Expanded network support — we now support ZKsync!
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Better multi-network warnings — provides clear warnings when a user doesn’t have enough base asset on a network to pay gas and complete a transaction.
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Other changes:
 
-IPFS gateways:
-- https://bafybeifs3vfz27oqei35fu5fg6pfgzz3eacp3rdyhg7lvm5mp63iiauomu.ipfs.dweb.link/
-- https://bafybeifs3vfz27oqei35fu5fg6pfgzz3eacp3rdyhg7lvm5mp63iiauomu.ipfs.cf-ipfs.com/
-- [ipfs://QmaNrzdiCZfezB1GYBZprZVoAh4KGsaZjzVH9qSmDCvZDv/](ipfs://QmaNrzdiCZfezB1GYBZprZVoAh4KGsaZjzVH9qSmDCvZDv/)
-
-## 5.39.0 (2024-07-10)
-
-
-### Features
-
-* **web:** [ext-gtm] make drawer a modal when uni extension is installed (#9560) 9f17d08
-* **web:** [ext-gtm] remove extra miniport content when extension is connected (#9678) e78e6d8
-* **web:** activity Row for FOR transactions (#9874) cea60c1
-* **web:** add error state for FOR connection modal (#9597) 5bd5da8
-* **web:** deeplinks for extension (#9782) 9c8c5bf
-* **web:** empty wallet state (#9641) 67e82cc
-* **web:** fiat on ramp design polish (#9860) 40ba8bc
-* **web:** FOR transaction status polling (#9793) 147db24
-* **web:** open FOR widget in onClick (#9826) 5658b80
-* **web:** redux slice for FOR transactions (#9575) 5985d7c
-* **web:** reorganize fiat on ramp components (incl. snapshots) (#9625) 60d8ebe
-
-
-### Bug Fixes
-
-* **web:** avoid datadog duplicate logs and slowdowns in web test (#9626) 2031800
-* **web:** fix incorrect isToken check (#9765) 7ef1d18
-* **web:** fix rive not loading in prod (#9856) 681219d
-* **web:** memoize FOR transactions to avoid rerenders - hotfix staging (#9917) e4d272e
-* **web:** Show chart error state if priceHistory is an empty array [staging] (#9926) 4dc66f3
-* **web:** use sentence case miniP (#9759) 79ce461
-* **web:** useSyncChainQuery for input currencies without chain param (#9521) 565c985
-
-
-### Continuous Integration
-
-* **web:** update sitemaps fd342d7
-
-
+- Onboarding improvements
+- Better handling of larger numbers
+- Various bug fixes and performance improvements

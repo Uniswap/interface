@@ -530,7 +530,7 @@ type ThemeButtonRef = HTMLButtonElement
 
 export const ThemeButton = forwardRef<ThemeButtonRef, ThemeButtonProps>(function ThemeButton(
   { children, ...rest },
-  ref,
+  ref
 ) {
   return (
     <BaseThemeButton {...rest} ref={ref}>

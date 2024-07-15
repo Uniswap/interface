@@ -1,42 +1,42 @@
 import dayjs from 'dayjs'
 import { useTranslation } from 'react-i18next'
-import { Button, ContextMenu, Flex, Separator, Text, TouchableArea, isWeb } from 'ui/src'
-import { TripleDots, UniswapX } from 'ui/src/components/icons'
+import { Button, Flex, Separator, Text, TouchableArea } from 'ui/src'
+import { CopyAlt, TripleDots } from 'ui/src/components/icons'
+import { iconSizes } from 'ui/src/theme'
+import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
-import { AssetType } from 'wallet/src/entities/assets'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
-import { FORMAT_DATE_TIME_MEDIUM, useFormattedDateTime } from 'wallet/src/features/language/localizedDayjs'
-import { ApproveTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/ApproveTransactionDetails'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import {
+  FORMAT_DATE_TIME_MEDIUM,
+  useFormattedDateTime,
+} from 'wallet/src/features/language/localizedDayjs'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
+import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { HeaderLogo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/HeaderLogo'
-import { NftTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/NftTransactionDetails'
-import { OnRampTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/OnRampTransactionDetails'
 import { SwapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/SwapTransactionDetails'
-import { TransactionDetailsInfoRows } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsInfoRows'
-import { TransferTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransferTransactionDetails'
-import { WrapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/WrapTransactionDetails'
 import {
   isApproveTransactionInfo,
   isFiatPurchaseTransactionInfo,
   isNFTApproveTransactionInfo,
   isNFTMintTransactionInfo,
   isNFTTradeTransactionInfo,
-  isOnRampPurchaseTransactionInfo,
-  isOnRampTransferTransactionInfo,
   isReceiveTokenTransactionInfo,
   isSendTokenTransactionInfo,
   isSwapTransactionInfo,
-  isUnknownTransactionInfo,
   isWCConfirmTransactionInfo,
   isWrapTransactionInfo,
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
-import { useTransactionActions } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActions'
+import { useTransactionActionsCancelModals } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActionsCancelModals'
+import { useFormattedCurrencyAmountAndUSDValue } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
 import { getTransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/utils'
-import { TransactionDetails, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
-import { getIsCancelable } from 'wallet/src/features/transactions/utils'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { TransactionDetails } from 'wallet/src/features/transactions/types'
+import { useAppDispatch } from 'wallet/src/state'
+import { setClipboard } from 'wallet/src/utils/clipboard'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
+import { ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 type TransactionDetailsModalProps = {
   authTrigger?: AuthTrigger
@@ -44,170 +44,183 @@ type TransactionDetailsModalProps = {
   transactionDetails: TransactionDetails
 }
 
-export function TransactionDetailsHeader({
-  transactionDetails,
-  transactionActions,
-}: {
-  transactionDetails: TransactionDetails
-  transactionActions: ReturnType<typeof useTransactionActions>
-}): JSX.Element {
-  const { t } = useTranslation()
-
-  const dateString = useFormattedDateTime(dayjs(transactionDetails.addedTime), FORMAT_DATE_TIME_MEDIUM)
-  const title = getTransactionSummaryTitle(transactionDetails, t)
-
-  const { menuItems, openActionsModal } = transactionActions
-
-  return (
-    <Flex centered row justifyContent="space-between">
-      <Flex centered row gap="$spacing12">
-        <HeaderLogo transactionDetails={transactionDetails} />
-        <Flex flexDirection="column">
-          <Flex centered row gap="$spacing4" justifyContent="flex-start">
-            {(transactionDetails.routing === Routing.DUTCH_V2 ||
-              transactionDetails.routing === Routing.DUTCH_LIMIT) && <UniswapX size="$icon.16" />}
-            <Text variant="body2">{title}</Text>
-          </Flex>
-          <Text color="$neutral2" variant="body4">
-            {dateString}
-          </Text>
-        </Flex>
-      </Flex>
-      {isWeb ? (
-        <ContextMenu closeOnClick itemId={transactionDetails.id} menuOptions={menuItems} onLeftClick>
-          <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing4">
-            <TripleDots color="$neutral2" size="$icon.20" />
-          </TouchableArea>
-        </ContextMenu>
-      ) : (
-        <TouchableArea onPress={openActionsModal}>
-          <TripleDots color="$neutral2" size="$icon.20" />
-        </TouchableArea>
-      )}
-    </Flex>
-  )
-}
-
-export function TransactionDetailsContent({
-  transactionDetails,
-  onClose,
-}: {
-  transactionDetails: TransactionDetails
-  onClose: () => void
-}): JSX.Element | null {
-  const { typeInfo } = transactionDetails
-
-  const getContentComponent = (): JSX.Element | null => {
-    if (isApproveTransactionInfo(typeInfo)) {
-      return <ApproveTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else if (isFiatPurchaseTransactionInfo(typeInfo)) {
-      return <></>
-    } else if (isNFTApproveTransactionInfo(typeInfo)) {
-      return <NftTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else if (isNFTMintTransactionInfo(typeInfo)) {
-      return <NftTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else if (isNFTTradeTransactionInfo(typeInfo)) {
-      return <NftTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else if (isReceiveTokenTransactionInfo(typeInfo) || isSendTokenTransactionInfo(typeInfo)) {
-      return (
-        <TransferTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-      )
-    } else if (isSwapTransactionInfo(typeInfo)) {
-      return <SwapTransactionDetails typeInfo={typeInfo} onClose={onClose} />
-    } else if (isWCConfirmTransactionInfo(typeInfo)) {
-      return <></>
-    } else if (isWrapTransactionInfo(typeInfo)) {
-      return <WrapTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else if (isOnRampPurchaseTransactionInfo(typeInfo) || isOnRampTransferTransactionInfo(typeInfo)) {
-      return <OnRampTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else {
-      return null
-    }
-  }
-
-  const contentComponent = getContentComponent()
-  if (contentComponent === null) {
-    return null
-  }
-  return <Flex>{contentComponent}</Flex>
-}
-
-const isNFTActivity = (typeInfo: TransactionTypeInfo): boolean => {
-  const isTransferNft =
-    (isReceiveTokenTransactionInfo(typeInfo) || isSendTokenTransactionInfo(typeInfo)) &&
-    typeInfo.assetType !== AssetType.Currency
-  const isNft =
-    isTransferNft ||
-    isNFTApproveTransactionInfo(typeInfo) ||
-    isNFTMintTransactionInfo(typeInfo) ||
-    isNFTTradeTransactionInfo(typeInfo)
-  return isNft
-}
-
-export function TransactionDetailsModal({
+const TransactionDetailsHeader = ({
   authTrigger,
   onClose,
   transactionDetails,
-}: TransactionDetailsModalProps): JSX.Element {
+}: TransactionDetailsModalProps): JSX.Element => {
   const { t } = useTranslation()
-  const { typeInfo } = transactionDetails
 
-  // Hide both separators if it's an Nft transaction. Hide top separator if it's an unknown type transaction.
-  const isNftTransaction = isNFTActivity(typeInfo)
-  const hideTopSeparator = isNftTransaction || isUnknownTransactionInfo(typeInfo)
-  const hideBottomSeparator = isNftTransaction
-
-  const { type } = useActiveAccountWithThrow()
-  const readonly = type === AccountType.Readonly
-  const isCancelable = !readonly && getIsCancelable(transactionDetails)
-
-  const transactionActions = useTransactionActions({
+  const { openActionsModal, renderModals } = useTransactionActionsCancelModals({
     authTrigger,
     onNavigateAway: onClose,
     transaction: transactionDetails,
   })
 
-  const { openCancelModal, renderModals } = transactionActions
+  const dateString = useFormattedDateTime(
+    dayjs(transactionDetails.addedTime),
+    FORMAT_DATE_TIME_MEDIUM
+  )
+  const title = getTransactionSummaryTitle(transactionDetails, t)
 
-  const buttons: JSX.Element[] = []
-  if (isCancelable) {
-    buttons.push(
-      <Button
-        backgroundColor="$DEP_accentCriticalSoft"
-        color="$statusCritical"
-        size="small"
-        theme="secondary"
-        onPress={openCancelModal}
-      >
-        {t('transaction.action.cancel.button')}
-      </Button>,
-    )
+  return (
+    <>
+      <Flex centered row justifyContent="space-between">
+        <Flex centered row gap="$spacing12">
+          <HeaderLogo transactionDetails={transactionDetails} />
+          <Flex flexDirection="column">
+            <Text variant="body2">{title}</Text>
+            <Text variant="body4">{dateString}</Text>
+          </Flex>
+        </Flex>
+        <TouchableArea onPress={openActionsModal}>
+          <TripleDots color="$neutral2" size="$icon.24" />
+        </TouchableArea>
+      </Flex>
+      {renderModals()}
+    </>
+  )
+}
+
+const TransactionDetailsContent = ({
+  transactionDetails,
+}: {
+  transactionDetails: TransactionDetails
+}): JSX.Element => {
+  const { typeInfo } = transactionDetails
+
+  const getContentComponent = (): JSX.Element => {
+    if (isApproveTransactionInfo(typeInfo)) {
+      return <></>
+    } else if (isFiatPurchaseTransactionInfo(typeInfo)) {
+      return <></>
+    } else if (isNFTApproveTransactionInfo(typeInfo)) {
+      return <></>
+    } else if (isNFTMintTransactionInfo(typeInfo)) {
+      return <></>
+    } else if (isNFTTradeTransactionInfo(typeInfo)) {
+      return <></>
+    } else if (isReceiveTokenTransactionInfo(typeInfo)) {
+      return <></>
+    } else if (isSendTokenTransactionInfo(typeInfo)) {
+      return <></>
+    } else if (isSwapTransactionInfo(typeInfo)) {
+      return <SwapTransactionDetails typeInfo={typeInfo} />
+    } else if (isWCConfirmTransactionInfo(typeInfo)) {
+      return <></>
+    } else if (isWrapTransactionInfo(typeInfo)) {
+      return <></>
+    } else {
+      return <></>
+    }
   }
-  if (isWeb) {
-    buttons.push(
-      <Button size="small" theme="secondary" onPress={onClose}>
-        {t('common.button.close')}
-      </Button>,
+
+  return (
+    <Flex flexDirection="column" p="$spacing8">
+      {getContentComponent()}
+    </Flex>
+  )
+}
+
+const TransactionDetailsInfoRows = ({
+  transactionDetails,
+}: {
+  transactionDetails: TransactionDetails
+}): JSX.Element => {
+  const { t } = useTranslation()
+  const dispatch = useAppDispatch()
+  const { value: networkFeeValue } = useNetworkFee(transactionDetails)
+
+  const onPressCopy = async (): Promise<void> => {
+    if (!transactionDetails.hash) {
+      return
+    }
+
+    await setClipboard(transactionDetails.hash)
+    dispatch(
+      pushNotification({
+        type: AppNotificationType.Copied,
+        copyType: CopyNotificationType.TransactionId,
+      })
     )
   }
 
   return (
-    <>
-      <BottomSheetModal isDismissible alignment="top" name={ModalName.TransactionDetails} onClose={onClose}>
-        <Flex gap="$spacing12" pb={isWeb ? '$none' : '$spacing12'} px={isWeb ? '$none' : '$spacing24'}>
-          <TransactionDetailsHeader transactionActions={transactionActions} transactionDetails={transactionDetails} />
-          {!hideTopSeparator && <Separator />}
-          <TransactionDetailsContent transactionDetails={transactionDetails} onClose={onClose} />
-          {!hideBottomSeparator && <Separator />}
-          <TransactionDetailsInfoRows transactionDetails={transactionDetails} />
-          {buttons.length > 0 && (
-            <Flex gap="$spacing8" pt="$spacing8">
-              {buttons}
-            </Flex>
-          )}
+    <Flex p="$spacing8">
+      <Flex centered row justifyContent="space-between" py="$spacing4">
+        <Text variant="body4">{t('transaction.details.networkFee')}</Text>
+        <Flex row gap="$spacing4">
+          <NetworkLogo chainId={transactionDetails.chainId} size={iconSizes.icon16} />
+          <Text variant="body4">{networkFeeValue}</Text>
         </Flex>
-      </BottomSheetModal>
-      {renderModals()}
-    </>
+      </Flex>
+      <Flex centered row justifyContent="space-between">
+        <Text variant="body4">{t('transaction.details.transactionId')}</Text>
+        <Flex row gap="$spacing4">
+          <Text variant="body4">{shortenHash(transactionDetails.hash)}</Text>
+          <TouchableArea onPress={onPressCopy}>
+            <CopyAlt color="$neutral3" size="$icon.16" />
+          </TouchableArea>
+        </Flex>
+      </Flex>
+    </Flex>
   )
+}
+
+export const TransactionDetailsModal = ({
+  authTrigger,
+  onClose,
+  transactionDetails,
+}: TransactionDetailsModalProps): JSX.Element => {
+  const { t } = useTranslation()
+  return (
+    <BottomSheetModal
+      hideHandlebar
+      isDismissible
+      alignment="top"
+      name={ModalName.TransactionDetails}
+      onClose={onClose}>
+      <Flex gap="$spacing12" px="$spacing12">
+        <TransactionDetailsHeader
+          authTrigger={authTrigger}
+          transactionDetails={transactionDetails}
+          onClose={onClose}
+        />
+        <Separator />
+        <TransactionDetailsContent transactionDetails={transactionDetails} />
+        <Separator />
+        <TransactionDetailsInfoRows transactionDetails={transactionDetails} />
+        <Button size="small" theme="secondary" onPress={onClose}>
+          <Text>{t('common.button.close')}</Text>
+        </Button>
+      </Flex>
+    </BottomSheetModal>
+  )
+}
+
+function shortenHash(hash: string | undefined, chars: NumberRange<1, 20> = 4): string {
+  if (!hash) {
+    return ''
+  }
+  return `${hash.substring(0, chars + 2)}...${hash.substring(hash.length - chars)}`
+}
+
+function useNetworkFee(transactionDetails: TransactionDetails): {
+  value: string
+  amount: string
+} {
+  const formatter = useLocalizationContext()
+
+  const currencyId = transactionDetails.networkFee
+    ? buildCurrencyId(transactionDetails.chainId, transactionDetails.networkFee.tokenAddress)
+    : undefined
+  const currencyInfo = useCurrencyInfo(currencyId)
+
+  return useFormattedCurrencyAmountAndUSDValue({
+    currency: currencyInfo?.currency,
+    currencyAmountRaw: transactionDetails.networkFee?.quantity,
+    valueType: ValueType.Exact,
+    formatter,
+    isApproximateAmount: false,
+  })
 }

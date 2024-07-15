@@ -53,8 +53,7 @@ export function MnemonicDisplay(props: MnemonicDisplayProps): JSX.Element {
         // until the height is measured
         display={height ? 'flex' : 'none'}
         gap="$spacing8"
-        p="$spacing16"
-      >
+        p="$spacing16">
         <GraduationCap color="$neutral2" size="$icon.20" />
         <Flex shrink>
           <Text color="$neutral2" variant="body4">

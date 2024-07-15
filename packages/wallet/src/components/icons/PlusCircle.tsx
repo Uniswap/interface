@@ -17,8 +17,7 @@ export function PlusCircle(): JSX.Element {
       shadowColor={isDarkMode ? '$shadowColor' : '$surface3'}
       shadowOffset={{ width: 0, height: 0 }}
       shadowRadius={10}
-      width={iconSizes.icon40}
-    >
+      width={iconSizes.icon40}>
       <Plus color="$neutral2" size="$icon.16" strokeWidth={2} />
     </Flex>
   )

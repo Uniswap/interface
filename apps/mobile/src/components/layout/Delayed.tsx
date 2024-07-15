@@ -13,7 +13,10 @@ type Props = {
 }
 
 /** HOC to delay rendering a component by some time in ms. */
-export const Delayed = ({ children, waitBeforeShow = Delay.Short }: PropsWithChildren<Props>): JSX.Element | null => {
+export const Delayed = ({
+  children,
+  waitBeforeShow = Delay.Short,
+}: PropsWithChildren<Props>): JSX.Element | null => {
   const [isShown, setIsShown] = useReducer(() => true, false)
 
   useTimeout(setIsShown, waitBeforeShow)

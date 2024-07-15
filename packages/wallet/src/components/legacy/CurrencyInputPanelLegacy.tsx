@@ -1,11 +1,16 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { NativeSyntheticEvent, TextInput, TextInputProps, TextInputSelectionChangeEventData } from 'react-native'
+import {
+  NativeSyntheticEvent,
+  TextInput,
+  TextInputProps,
+  TextInputSelectionChangeEventData,
+} from 'react-native'
 import { Flex, FlexProps, SpaceTokens, Text, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTokenButton'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
@@ -56,7 +61,7 @@ interface DynamicSwapPanelPaddingValues {
 
 const getSwapPanelPaddingValues = (
   isOutputBox: boolean,
-  hasCurrencyValue: boolean,
+  hasCurrencyValue: boolean
 ): { outerPadding: DynamicSwapPanelPaddingValues; innerPadding: DynamicSwapPanelPaddingValues } => {
   const outerPadding: DynamicSwapPanelPaddingValues = hasCurrencyValue
     ? {
@@ -114,11 +119,16 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
   const inputRef = useRef<TextInput>(null)
   const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
 
-  const insufficientBalanceWarning = warnings.find((warning) => warning.type === WarningLabel.InsufficientFunds)
+  const insufficientBalanceWarning = warnings.find(
+    (warning) => warning.type === WarningLabel.InsufficientFunds
+  )
 
   const showInsufficientBalanceWarning = insufficientBalanceWarning && !isOutput
 
-  const formattedFiatValue = convertFiatAmountFormatted(usdValue?.toExact(), NumberType.FiatTokenQuantity)
+  const formattedFiatValue = convertFiatAmountFormatted(
+    usdValue?.toExact(),
+    NumberType.FiatTokenQuantity
+  )
   const formattedCurrencyAmount = currencyAmount
     ? formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })
     : ''
@@ -138,7 +148,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
   const { onLayout, fontSize, onSetFontSize } = useDynamicFontSizing(
     MAX_CHAR_PIXEL_WIDTH,
     MAX_INPUT_FONT_SIZE,
-    MIN_INPUT_FONT_SIZE,
+    MIN_INPUT_FONT_SIZE
   )
 
   // Handle native numpad keyboard input
@@ -147,7 +157,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
       onSetFontSize(newAmount)
       onSetExactAmount(newAmount)
     },
-    [onSetFontSize, onSetExactAmount],
+    [onSetFontSize, onSetExactAmount]
   )
 
   // This is needed to ensure that the text resizes when modified from outside the component (e.g. custom numpad)
@@ -166,7 +176,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
       onSetMax(amount)
       onChangeText(amount)
     },
-    [onChangeText, onSetMax],
+    [onChangeText, onSetMax]
   )
 
   const onSelectionChange = useCallback(
@@ -174,13 +184,14 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
       nativeEvent: {
         selection: { start, end },
       },
-    }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => selectionChange && selectionChange(start, end),
-    [selectionChange],
+    }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) =>
+      selectionChange && selectionChange(start, end),
+    [selectionChange]
   )
 
   const paddingStyles = useMemo(
     () => getSwapPanelPaddingValues(isOutput, Boolean(currencyInfo)),
-    [isOutput, currencyInfo],
+    [isOutput, currencyInfo]
   )
 
   const handleToggleFiatInput = useCallback(() => {
@@ -201,8 +212,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
         alignItems="center"
         justifyContent={!currencyInfo ? 'center' : 'space-between'}
         pb={innerPaddingBottom}
-        pt={innerPaddingTop}
-      >
+        pt={innerPaddingTop}>
         {isFiatInput && (
           <Text
             allowFontScaling
@@ -210,13 +220,19 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
             fontSize={fontSize}
             height={fontSize}
             lineHeight={fontSize}
-            mr="$spacing2"
-          >
+            mr="$spacing2">
             {fiatCurrencySymbol}
           </Text>
         )}
         {currencyInfo && (
-          <Flex fill grow row alignItems="center" height={MAX_INPUT_FONT_SIZE} overflow="hidden" onLayout={onLayout}>
+          <Flex
+            fill
+            grow
+            row
+            alignItems="center"
+            height={MAX_INPUT_FONT_SIZE}
+            overflow="hidden"
+            onLayout={onLayout}>
             <AmountInput
               ref={inputRef}
               autoFocus={autoFocus ?? focus}
@@ -239,7 +255,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               py="$none"
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
               showSoftInputOnFocus={showSoftInputOnFocus}
-              testID={isOutput ? TestID.AmountInputOut : TestID.AmountInputIn}
+              testID={isOutput ? ElementName.AmountInputOut : ElementName.AmountInputIn}
               value={value}
               onChangeText={onChangeText}
               onPressIn={onPressIn}
@@ -248,11 +264,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
           </Flex>
         )}
         <Flex row alignItems="center" pl="$spacing8">
-          <SelectTokenButton
-            selectedCurrencyInfo={currencyInfo}
-            testID={TestID.TokenSelectorToggle}
-            onPress={onShowTokenSelector}
-          />
+          <SelectTokenButton selectedCurrencyInfo={currencyInfo} onPress={onShowTokenSelector} />
         </Flex>
       </Flex>
 
@@ -266,7 +278,9 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
             </Flex>
           </TouchableArea>
           <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
-            <Text color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'} variant="subheading2">
+            <Text
+              color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'}
+              variant="subheading2">
               {t('swap.form.balance')}:{' '}
               {formatCurrencyAmount({
                 value: currencyBalance,

@@ -5,7 +5,6 @@ import { validColor, zIndices } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { BottomSheetContextProvider } from 'uniswap/src/components/modals/BottomSheetContext'
 import { BottomSheetModalProps } from 'uniswap/src/components/modals/BottomSheetModalProps'
-import { useUpdateScrollLock } from 'uniswap/src/components/modals/ScrollLock'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 export type WebBottomSheetProps = Pick<
@@ -73,9 +72,9 @@ function WebTopSheetModal({
 }: WebBottomSheetProps): JSX.Element {
   const [isMounted, setIsMounted] = useState(false)
 
-  useEffect(() => setIsMounted(true), [])
-
-  useUpdateScrollLock({ isModalOpen })
+  useEffect(() => {
+    setIsMounted(true)
+  }, [])
 
   return (
     <Portal zIndex={zIndices.modal}>
@@ -87,8 +86,7 @@ function WebTopSheetModal({
         position="absolute"
         {...(isModalOpen && {
           pointerEvents: 'auto',
-        })}
-      >
+        })}>
         {/* backdrop */}
         <Flex
           animation="300ms"
@@ -117,8 +115,7 @@ function WebTopSheetModal({
             isMounted && {
               opacity: 1,
               y: 0,
-            })}
-        >
+            })}>
           {/*
             To keep this consistent with how the `BottomSheetModal` works on native mobile, we only mount the children when the modal is open.
             It is critical for the modal to work this way or else it breaks existing assumptions throughout our codebase about when components are mounted / unmounted.
@@ -150,8 +147,6 @@ function WebBottomSheetModal({
     setFullyClosed(false)
   }
 
-  useUpdateScrollLock({ isModalOpen })
-
   // Not the greatest, we are syncing 200 here to 200ms animation
   // TODO(EXT-745): Add Tamagui onFullyClosed callback and replace here
   useEffect(() => {
@@ -181,8 +176,7 @@ function WebBottomSheetModal({
           snapPoints={fullScreen || !isBottomAligned ? [100] : undefined}
           onOpenChange={(open: boolean): void => {
             !open && onClose?.()
-          }}
-        >
+          }}>
           <Sheet.Overlay
             backgroundColor="$black"
             enterStyle={{ opacity: 0 }}
@@ -198,18 +192,18 @@ function WebBottomSheetModal({
             backgroundColor="$transparent"
             flex={1}
             height={fullScreen || !isBottomAligned ? '100%' : undefined}
-            justifyContent={alignment === 'center' ? 'center' : alignment === 'top' ? 'flex-start' : 'flex-end'}
+            justifyContent={
+              alignment === 'center' ? 'center' : alignment === 'top' ? 'flex-start' : 'flex-end'
+            }
             maxWidth={maxWidth}
             p={padding}
-            pointerEvents="none"
-          >
+            pointerEvents="none">
             <Flex
               backgroundColor={backgroundColor ? validColor(backgroundColor) : '$surface1'}
               borderRadius="$rounded24"
               p="$spacing12"
               pointerEvents="auto"
-              width="100%"
-            >
+              width="100%">
               {/*
                 To keep this consistent with how the `BottomSheetModal` works on native mobile, we only mount the children when the modal is open.
                 It is critical for the modal to work this way or else it breaks existing assumptions throughout our codebase about when components are mounted / unmounted.

@@ -131,7 +131,7 @@ function useFormattedProposalCreatedLogs(
   contract: Contract | null,
   indices: number[][],
   fromBlock?: number,
-  toBlock?: number,
+  toBlock?: number
 ): FormattedProposalLog[] | undefined {
   // create filters for ProposalCreated events
   const filter = useMemo(() => {
@@ -419,13 +419,13 @@ export function useDelegateCallback(): (delegatee: string | undefined) => undefi
           })
       })
     },
-    [account.address, addTransaction, account.chainId, provider, uniContract],
+    [account.address, addTransaction, account.chainId, provider, uniContract]
   )
 }
 
 export function useVoteCallback(): (
   proposalId: string | undefined,
-  voteOption: VoteOption,
+  voteOption: VoteOption
 ) => undefined | Promise<string> {
   const account = useAccount()
   const latestGovernanceContract = useLatestGovernanceContract()
@@ -452,7 +452,7 @@ export function useVoteCallback(): (
           })
       })
     },
-    [account.address, addTransaction, latestGovernanceContract, account.chainId],
+    [account.address, addTransaction, latestGovernanceContract, account.chainId]
   )
 }
 
@@ -480,7 +480,7 @@ export function useQueueCallback(): (proposalId: string | undefined) => undefine
           })
       })
     },
-    [account.address, addTransaction, latestGovernanceContract, account.chainId],
+    [account.address, addTransaction, latestGovernanceContract, account.chainId]
   )
 }
 
@@ -508,12 +508,12 @@ export function useExecuteCallback(): (proposalId: string | undefined) => undefi
           })
       })
     },
-    [account.address, addTransaction, latestGovernanceContract, account.chainId],
+    [account.address, addTransaction, latestGovernanceContract, account.chainId]
   )
 }
 
 export function useCreateProposalCallback(): (
-  createProposalData: CreateProposalData | undefined,
+  createProposalData: CreateProposalData | undefined
 ) => undefined | Promise<string> {
   const account = useAccount()
   const latestGovernanceContract = useLatestGovernanceContract()
@@ -544,7 +544,7 @@ export function useCreateProposalCallback(): (
           })
       })
     },
-    [account.address, addTransaction, latestGovernanceContract, account.chainId],
+    [account.address, addTransaction, latestGovernanceContract, account.chainId]
   )
 }
 

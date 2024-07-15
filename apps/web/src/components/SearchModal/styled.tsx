@@ -5,7 +5,6 @@ import { RowBetween } from 'components/Row'
 import styled from 'styled-components'
 
 export const PaddedColumn = styled(AutoColumn)`
-  position: relative;
   padding: 20px;
 `
 

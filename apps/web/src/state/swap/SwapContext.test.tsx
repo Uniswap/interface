@@ -1,11 +1,10 @@
 import { Percent } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
 import { nativeOnChain } from 'constants/tokens'
-import { SwapForm } from 'pages/Swap/SwapForm'
 import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import { SwapAndLimitContext, SwapInfo } from 'state/swap/types'
-import { render, screen } from 'test-utils/render'
+import { render } from 'test-utils/render'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
@@ -25,7 +24,7 @@ describe('Swap Context', () => {
     render(
       <SwapContextProvider>
         <TestComponent />
-      </SwapContextProvider>,
+      </SwapContextProvider>
     )
 
     expect(swapContext).toEqual({
@@ -72,7 +71,7 @@ describe('SwapAndLimitContext', () => {
     render(
       <SwapAndLimitContextProvider>
         <TestComponent />
-      </SwapAndLimitContextProvider>,
+      </SwapAndLimitContextProvider>
     )
 
     expect(swapAndLimitContext).toEqual({
@@ -89,29 +88,7 @@ describe('SwapAndLimitContext', () => {
       setCurrencyState: expect.any(Function),
       currentTab: SwapTab.Swap,
       setCurrentTab: expect.any(Function),
-      chainId: 1,
-      pageChainId: undefined,
-      isSwapAndLimitContext: true,
-    })
-  })
-
-  describe('SwapForm', () => {
-    test('multichain ux disabled', () => {
-      render(
-        <SwapAndLimitContextProvider initialChainId={UniverseChainId.Optimism}>
-          <SwapForm />
-        </SwapAndLimitContextProvider>,
-      )
-      expect(screen.getByText('Connect to Optimism')).toBeInTheDocument()
-    })
-
-    test('multichain ux enabled', () => {
-      render(
-        <SwapAndLimitContextProvider multichainUXEnabled initialChainId={UniverseChainId.Optimism}>
-          <SwapForm />
-        </SwapAndLimitContextProvider>,
-      )
-      expect(screen.getByTestId('swap-button')).toBeInTheDocument()
+      chainId: undefined,
     })
   })
 })
@@ -141,13 +118,12 @@ describe('Combined contexts', () => {
           chainId: UniverseChainId.Mainnet,
           currentTab: SwapTab.Swap,
           setCurrentTab: expect.any(Function),
-          isSwapAndLimitContext: true,
         }}
       >
         <SwapContextProvider>
           <TestComponent />
         </SwapContextProvider>
-      </SwapAndLimitContext.Provider>,
+      </SwapAndLimitContext.Provider>
     )
 
     // @ts-ignore rendering TestComponent sets derivedSwapInfo value

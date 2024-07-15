@@ -33,7 +33,11 @@ export function SettingsViewSeedPhraseScreen({
       <BackHeader alignment="center" px="$spacing16">
         <Text variant="body1">{t('settings.setting.recoveryPhrase.title')}</Text>
       </BackHeader>
-      <SeedPhraseDisplay mnemonicId={mnemonicId} walletNeedsRestore={walletNeedsRestore} onDismiss={navigateBack} />
+      <SeedPhraseDisplay
+        mnemonicId={mnemonicId}
+        walletNeedsRestore={walletNeedsRestore}
+        onDismiss={navigateBack}
+      />
     </Screen>
   )
 }

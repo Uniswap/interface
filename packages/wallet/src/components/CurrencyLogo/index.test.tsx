@@ -12,6 +12,8 @@ it('renders a currency logo without network logo', () => {
 })
 
 it('renders a currency logo with network logo', () => {
-  const tree = renderWithProviders(<CurrencyLogo currencyInfo={arbitrumDaiCurrencyInfo()} size={20} />)
+  const tree = renderWithProviders(
+    <CurrencyLogo currencyInfo={arbitrumDaiCurrencyInfo()} size={20} />
+  )
   expect(tree).toMatchSnapshot()
 })

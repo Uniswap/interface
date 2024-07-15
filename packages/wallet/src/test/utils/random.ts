@@ -19,7 +19,9 @@
  *
  * @typeparam T Type of the enum object (will be automatically inferred from the provided argument).
  */
-export const randomEnumValue = <T extends Record<string, string | number>>(enumObj: T): T[keyof T] => {
+export const randomEnumValue = <T extends Record<string, string | number>>(
+  enumObj: T
+): T[keyof T] => {
   // If enum has different types for keys and values (keys are always strings,
   // values can be strings or numbers), we need to filter out the keys
   const keys = Object.keys(enumObj).filter((key) => isNaN(Number(key)))

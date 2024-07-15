@@ -30,7 +30,7 @@ export function PreferenceMenu() {
         handleExitMenu()
       }
     },
-    [handleExitMenu, setIsOpen],
+    [handleExitMenu, setIsOpen]
   )
 
   return (

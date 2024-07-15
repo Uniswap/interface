@@ -5,16 +5,14 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { createNewInMemoryCache } from 'uniswap/src/data/cache'
 import { REQUEST_SOURCE } from 'uniswap/src/data/constants'
 
-export const TRADING_API_HEADERS = {
-  'Content-Type': 'application/json',
-  'X-API-KEY': config.tradingApiKey,
-  'x-request-source': REQUEST_SOURCE,
-  Origin: uniswapUrls.requestOriginUrl,
-} as const
-
 const restLink = new RestLink({
   uri: uniswapUrls.tradingApiUrl,
-  headers: TRADING_API_HEADERS,
+  headers: {
+    'Content-Type': 'application/json',
+    'X-API-KEY': config.tradingApiKey,
+    'x-request-source': REQUEST_SOURCE,
+    Origin: uniswapUrls.requestOriginUrl,
+  },
 })
 
 export const TradingApiApolloClient = new ApolloClient({

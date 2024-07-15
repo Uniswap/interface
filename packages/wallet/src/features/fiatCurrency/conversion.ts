@@ -1,9 +1,12 @@
 import { useCallback, useMemo } from 'react'
-import { PollingInterval } from 'uniswap/src/constants/misc'
-import { Currency, useConvertQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  Currency,
+  useConvertQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { FiatNumberType } from 'utilities/src/format/types'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { getFiatCurrencyCode, useAppFiatCurrency } from 'wallet/src/features/fiatCurrency/hooks'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
@@ -76,18 +79,18 @@ const mapFiatCurrencyToServerCurrency: Record<FiatCurrency, SupportedServerCurre
 }
 
 export interface FiatConverter {
-  convertFiatAmount: (amount: number) => { amount: number; currency: FiatCurrency }
+  convertFiatAmount: (amount?: number) => { amount: number; currency: FiatCurrency }
   convertFiatAmountFormatted: (
     fromAmount: Maybe<number | string>,
     numberType: FiatNumberType,
-    placeholder?: string,
+    placeholder?: string
   ) => string
 }
 
 // Temporary function for feature turned off
-function convertFiatAmountDefault(amount: number): { amount: number; currency: FiatCurrency } {
+function convertFiatAmountDefault(_amount?: number): { amount: number; currency: FiatCurrency } {
   return {
-    amount,
+    amount: 1,
     currency: FiatCurrency.UnitedStatesDollar,
   }
 }
@@ -120,10 +123,12 @@ export function useFiatConverter({
   const conversion = latestConversion || prevConversion
   const conversionRate = conversion?.convert?.value
   const conversionCurrency = conversion?.convert?.currency
-  const outputCurrency = conversionCurrency ? mapServerCurrencyToFiatCurrency[conversionCurrency] : undefined
+  const outputCurrency = conversionCurrency
+    ? mapServerCurrencyToFiatCurrency[conversionCurrency]
+    : undefined
 
   const convertFiatAmountInner = useCallback(
-    (amount: number): { amount: number; currency: FiatCurrency } => {
+    (amount = 1): { amount: number; currency: FiatCurrency } => {
       const defaultResult = { amount, currency: FiatCurrency.UnitedStatesDollar }
 
       if (SOURCE_CURRENCY === toCurrency || !conversionRate || !outputCurrency) {
@@ -135,7 +140,7 @@ export function useFiatConverter({
         currency: outputCurrency,
       }
     },
-    [conversionRate, outputCurrency, toCurrency],
+    [conversionRate, outputCurrency, toCurrency]
   )
   const convertFiatAmountFormattedInner = useCallback(
     (fromAmount: Maybe<number | string>, numberType: FiatNumberType, placeholder = '-'): string => {
@@ -154,7 +159,7 @@ export function useFiatConverter({
         placeholder,
       })
     },
-    [convertFiatAmountInner, formatNumberOrString],
+    [convertFiatAmountInner, formatNumberOrString]
   )
 
   return useMemo(
@@ -162,6 +167,6 @@ export function useFiatConverter({
       convertFiatAmount: featureEnabled ? convertFiatAmountInner : convertFiatAmountDefault,
       convertFiatAmountFormatted: convertFiatAmountFormattedInner,
     }),
-    [convertFiatAmountFormattedInner, convertFiatAmountInner, featureEnabled],
+    [convertFiatAmountFormattedInner, convertFiatAmountInner, featureEnabled]
   )
 }

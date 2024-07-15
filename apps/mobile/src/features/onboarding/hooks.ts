@@ -29,12 +29,12 @@ export function useCompleteOnboardingCallback({
 
   return async () => {
     // Run all shared onboarding completion logic
-    await finishOnboarding({ importType })
+    await finishOnboarding(importType)
 
     // Send appsflyer event for mobile attribution
     if (entryPoint === OnboardingEntryPoint.FreshInstallOrReplace) {
       sendAppsFlyerEvent(MobileAppsFlyerEvents.OnboardingCompleted, { importType }).catch((error) =>
-        logger.debug('hooks', 'useCompleteOnboardingCallback', error),
+        logger.debug('hooks', 'useCompleteOnboardingCallback', error)
       )
     }
 

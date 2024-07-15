@@ -1,6 +1,6 @@
 import { AnyAction } from '@reduxjs/toolkit'
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
 import {
   INITIAL_TRANSACTION_STATE,

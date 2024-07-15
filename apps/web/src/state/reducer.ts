@@ -5,7 +5,6 @@ import { PersistConfig, persistReducer } from 'redux-persist'
 import application from 'state/application/reducer'
 import burn from 'state/burn/reducer'
 import burnV3 from 'state/burn/v3/reducer'
-import fiatOnRampTransactions from 'state/fiatOnRampTransactions/reducer'
 import lists from 'state/lists/reducer'
 import logs from 'state/logs/slice'
 import { INDEXED_DB_REDUX_TABLE_NAME, customCreateMigrate, migrations } from 'state/migrations'
@@ -18,14 +17,13 @@ import transactions from 'state/transactions/reducer'
 import user from 'state/user/reducer'
 import wallets from 'state/wallets/reducer'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
-import { isDevEnv } from 'utilities/src/environment'
+import { isDevEnv } from 'uniswap/src/utils/env'
 
 const persistedReducers = {
   user,
   transactions,
   signatures,
   lists,
-  fiatOnRampTransactions,
 }
 
 const appReducer = combineReducers({

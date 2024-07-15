@@ -38,7 +38,7 @@ it('renders a relative change', () => {
   const tree = renderer.create(
     <TamaguiProvider>
       <RelativeChange change={12} />
-    </TamaguiProvider>,
+    </TamaguiProvider>
   )
   expect(tree).toMatchSnapshot()
 })
@@ -47,7 +47,7 @@ it('renders placeholders without a change', () => {
   const tree = renderer.create(
     <TamaguiProvider>
       <RelativeChange />
-    </TamaguiProvider>,
+    </TamaguiProvider>
   )
   expect(tree).toMatchSnapshot()
 })
@@ -56,7 +56,7 @@ it('renders placeholders with absolute change', () => {
   const tree = renderer.create(
     <TamaguiProvider>
       <RelativeChange absoluteChange={100} change={12} />
-    </TamaguiProvider>,
+    </TamaguiProvider>
   )
   expect(tree).toMatchSnapshot()
 })

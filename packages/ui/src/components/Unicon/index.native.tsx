@@ -2,7 +2,11 @@ import { Canvas, Circle, Group, Path } from '@shopify/react-native-skia'
 import { memo } from 'react'
 import { IconPaths, Icons } from 'ui/src/components/Unicon/UniconSVGs'
 import { UniconProps } from 'ui/src/components/Unicon/types'
-import { getUniconColors, getUniconsDeterministicHash, isValidEthAddress } from 'ui/src/components/Unicon/utils'
+import {
+  getUniconColors,
+  getUniconsDeterministicHash,
+  isValidEthAddress,
+} from 'ui/src/components/Unicon/utils'
 import { Flex } from 'ui/src/components/layout'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 
@@ -44,7 +48,12 @@ export function _Unicon({ address, size = 32 }: UniconProps): JSX.Element | null
   return (
     <Flex style={{ width: size, height: size }}>
       <Canvas style={{ width: size, height: size }}>
-        <Circle color={color + `${isDarkMode ? '29' : '1F'}`} cx={size / 2} cy={size / 2} r={size / 2} />
+        <Circle
+          color={color + `${isDarkMode ? '29' : '1F'}`}
+          cx={size / 2}
+          cy={size / 2}
+          r={size / 2}
+        />
         <Group transform={[{ translateX: translateAmount }, { translateY: translateAmount }]}>
           <Group transform={[{ scale: scaleValue }]}>
             {/* This is the shape generation code */}

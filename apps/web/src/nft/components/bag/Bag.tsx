@@ -136,14 +136,14 @@ const Bag = () => {
   const isSellingAssets = sellAssets.length > 0
 
   const shouldRenderEmptyState = Boolean(
-    (!isProfilePage && !isBuyingAssets && bagStatus === BagStatus.ADDING_TO_BAG) || (isProfilePage && !isSellingAssets),
+    (!isProfilePage && !isBuyingAssets && bagStatus === BagStatus.ADDING_TO_BAG) || (isProfilePage && !isSellingAssets)
   )
 
   const eventProperties = useMemo(
     () => ({
       ...formatAssetEventProperties(itemsInBag.map((item) => item.asset)),
     }),
-    [itemsInBag],
+    [itemsInBag]
   )
 
   if (!bagExpanded || !isNFTPage) {

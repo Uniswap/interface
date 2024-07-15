@@ -1,8 +1,20 @@
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import { TabButton } from 'components/AccountDrawer/MiniPortfolio/shared'
+import Column from 'components/Column'
+import { TimeForwardIcon } from 'components/Icons/TimeForward'
+import Row from 'components/Row'
 import { Plural, Trans, t } from 'i18n'
-import { Clock } from 'react-feather'
-import { useTheme } from 'styled-components'
+import { ChevronRight } from 'react-feather'
+import styled, { useTheme } from 'styled-components'
+import { ClickableStyle, ThemedText } from 'theme/components'
+
+const Container = styled.button`
+  border-radius: 16px;
+  border: none;
+  background: ${({ theme }) => theme.surface2};
+  padding: 12px 16px;
+  margin-top: 12px;
+  ${ClickableStyle}
+`
 
 function getExtraWarning(openLimitOrders: any[]) {
   if (openLimitOrders.length >= 100) {
@@ -28,25 +40,27 @@ export function OpenLimitOrdersButton({
   const { openLimitOrders } = useOpenLimitOrders(account)
   const theme = useTheme()
   const extraWarning = getExtraWarning(openLimitOrders)
-
   if (!openLimitOrders || openLimitOrders.length < 1) {
     return null
   }
-
   return (
-    <TabButton
-      text={
-        <Plural
-          value={openLimitOrders.length}
-          one={t('limit.open.one')}
-          other={t('limit.open.count', { count: openLimitOrders.length })}
-        />
-      }
-      icon={<Clock fill={theme.neutral2} color={theme.surface2} size="20px" />}
-      extraWarning={extraWarning}
-      onClick={openLimitsMenu}
-      disabled={disabled}
-      className={className}
-    />
+    <Container onClick={openLimitsMenu} disabled={disabled} className={className}>
+      <Row justify="space-between" align="center">
+        <Row gap="md">
+          <TimeForwardIcon />
+          <Column>
+            <ThemedText.SubHeader textAlign="start">
+              <Plural
+                value={openLimitOrders.length}
+                one={t('limit.open.one')}
+                other={t('limit.open.count', { count: openLimitOrders.length })}
+              />
+            </ThemedText.SubHeader>
+            {extraWarning && <ThemedText.LabelMicro>{extraWarning}</ThemedText.LabelMicro>}
+          </Column>
+        </Row>
+        <ChevronRight color={theme.neutral1} />
+      </Row>
+    </Container>
   )
 }

@@ -51,7 +51,7 @@ describe('Web3Provider', () => {
         peer_wallet_agent: '(Injected)',
       })
       expect(first(mocked(sendAnalyticsEvent).mock.invocationCallOrder)).toBeGreaterThan(
-        last(mocked(setUserProperty).mock.invocationCallOrder),
+        last(mocked(setUserProperty).mock.invocationCallOrder)
       )
     })
 

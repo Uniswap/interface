@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { useNavigation } from '@react-navigation/core'
 import { default as React, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -23,7 +24,16 @@ import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricName, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { getFullAppVersion } from 'src/utils/version'
-import { Button, Flex, IconProps, Text, TouchableArea, useDeviceInsets, useIsDarkMode, useSporeColors } from 'ui/src'
+import {
+  Button,
+  Flex,
+  IconProps,
+  Text,
+  TouchableArea,
+  useDeviceInsets,
+  useIsDarkMode,
+  useSporeColors,
+} from 'ui/src'
 import { AVATARS_DARK, AVATARS_LIGHT } from 'ui/src/assets'
 import BookOpenIcon from 'ui/src/assets/icons/book-open.svg'
 import ContrastIcon from 'ui/src/assets/icons/contrast.svg'
@@ -59,7 +69,11 @@ import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
-import { AccountType, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import {
+  AccountType,
+  BackupType,
+  SignerMnemonicAccount,
+} from 'wallet/src/features/wallet/accounts/types'
 import {
   useAccounts,
   useHideSmallBalancesSetting,
@@ -84,7 +98,8 @@ export function SettingsScreen(): JSX.Element {
   const currencyConversionEnabled = useFeatureFlag(FeatureFlags.CurrencyConversion)
 
   // check if device supports biometric authentication, if not, hide option
-  const { touchId: isTouchIdSupported, faceId: isFaceIdSupported } = useDeviceSupportsBiometricAuth()
+  const { touchId: isTouchIdSupported, faceId: isFaceIdSupported } =
+    useDeviceSupportsBiometricAuth()
 
   const biometricsMethod = useBiometricName(isTouchIdSupported)
   const currentAppearanceSetting = useCurrentAppearanceSetting()
@@ -136,8 +151,8 @@ export function SettingsScreen(): JSX.Element {
               currentAppearanceSetting === 'system'
                 ? t('settings.setting.appearance.option.device.title')
                 : currentAppearanceSetting === 'dark'
-                  ? t('settings.setting.appearance.option.dark.title')
-                  : t('settings.setting.appearance.option.light.title'),
+                ? t('settings.setting.appearance.option.dark.title')
+                : t('settings.setting.appearance.option.light.title'),
             icon: <ContrastIcon {...svgProps} />,
           },
 
@@ -184,10 +199,15 @@ export function SettingsScreen(): JSX.Element {
           ...(deviceSupportsBiometrics
             ? [
                 {
-                  screen: MobileScreens.SettingsBiometricAuth as MobileScreens.SettingsBiometricAuth,
+                  screen:
+                    MobileScreens.SettingsBiometricAuth as MobileScreens.SettingsBiometricAuth,
                   isHidden: !isTouchIdSupported && !isFaceIdSupported,
                   text: isAndroid ? t('settings.setting.biometrics.title') : biometricsMethod,
-                  icon: isTouchIdSupported ? <FingerprintIcon {...svgProps} /> : <FaceIdIcon {...svgProps} />,
+                  icon: isTouchIdSupported ? (
+                    <FingerprintIcon {...svgProps} />
+                  ) : (
+                    <FaceIdIcon {...svgProps} />
+                  ),
                 },
               ]
             : []),
@@ -202,8 +222,8 @@ export function SettingsScreen(): JSX.Element {
             screen: walletNeedsRestore
               ? MobileScreens.OnboardingStack
               : hasCloudBackup
-                ? MobileScreens.SettingsCloudBackupStatus
-                : MobileScreens.SettingsCloudBackupPasswordCreate,
+              ? MobileScreens.SettingsCloudBackupStatus
+              : MobileScreens.SettingsCloudBackupPasswordCreate,
             screenProps: walletNeedsRestore
               ? {
                   screen: OnboardingScreens.RestoreCloudBackupLoading,
@@ -236,7 +256,7 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: MobileScreens.WebView,
             screenProps: {
-              uriLink: uniswapUrls.helpUrl,
+              uriLink: uniswapUrls.helpArticleUrls.walletHelp,
               headerTitle: t('settings.action.help'),
             },
             text: t('settings.action.help'),
@@ -303,7 +323,9 @@ export function SettingsScreen(): JSX.Element {
 
   const renderItem = ({
     item,
-  }: ListRenderItemInfo<SettingsSectionItem | SettingsSectionItemComponent>): JSX.Element | null => {
+  }: ListRenderItemInfo<
+    SettingsSectionItem | SettingsSectionItemComponent
+  >): JSX.Element | null => {
     if (item.isHidden) {
       return null
     }
@@ -314,7 +336,9 @@ export function SettingsScreen(): JSX.Element {
   }
 
   return (
-    <HeaderScrollScreen alwaysShowCenterElement centerElement={<Text variant="body1">{t('settings.title')}</Text>}>
+    <HeaderScrollScreen
+      alwaysShowCenterElement
+      centerElement={<Text variant="body1">{t('settings.title')}</Text>}>
       <Flex pb={insets.bottom - spacing.spacing16} pt="$spacing12" px="$spacing24">
         <SectionList
           ItemSeparatorComponent={renderItemSeparator}
@@ -351,8 +375,7 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
         navigation.goBack()
         dispatch(resetWallet())
         dispatch(setFinishedOnboarding({ finishedOnboarding: false }))
-      }}
-    >
+      }}>
       <Flex row alignItems="center" justifyContent="space-between" py="$spacing4">
         <Flex row alignItems="center">
           <Flex centered height={32} width={32}>
@@ -362,7 +385,12 @@ function OnboardingRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
             Onboarding
           </Text>
         </Flex>
-        <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon24} width={iconSizes.icon24} />
+        <RotatableChevron
+          color="$neutral3"
+          direction="end"
+          height={iconSizes.icon24}
+          width={iconSizes.icon24}
+        />
       </Flex>
     </TouchableArea>
   )
@@ -406,35 +434,43 @@ function WalletSettings(): JSX.Element {
           {t('settings.section.wallet.title')}
         </Text>
       </Flex>
-      {allAccounts.slice(0, showAll ? allAccounts.length : DEFAULT_ACCOUNTS_TO_DISPLAY).map((account) => {
-        const isViewOnlyWallet = account.type === AccountType.Readonly
+      {allAccounts
+        .slice(0, showAll ? allAccounts.length : DEFAULT_ACCOUNTS_TO_DISPLAY)
+        .map((account) => {
+          const isViewOnlyWallet = account.type === AccountType.Readonly
 
-        return (
-          <TouchableArea
-            key={account.address}
-            pl="$spacing4"
-            py="$spacing12"
-            onPress={(): void => handleNavigation(account.address)}
-          >
-            <Flex row alignItems="center" justifyContent="space-between">
-              <AddressDisplay
-                showIconBackground
-                address={account.address}
-                captionVariant="subheading2"
-                showViewOnlyBadge={isViewOnlyWallet}
-                showViewOnlyLabel={isViewOnlyWallet}
-                size={iconSizes.icon40}
-                variant="body1"
-              />
-              <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon24} width={iconSizes.icon24} />
-            </Flex>
-          </TouchableArea>
-        )
-      })}
+          return (
+            <TouchableArea
+              key={account.address}
+              pl="$spacing4"
+              py="$spacing12"
+              onPress={(): void => handleNavigation(account.address)}>
+              <Flex row alignItems="center" justifyContent="space-between">
+                <AddressDisplay
+                  showIconBackground
+                  address={account.address}
+                  captionVariant="subheading2"
+                  showViewOnlyBadge={isViewOnlyWallet}
+                  showViewOnlyLabel={isViewOnlyWallet}
+                  size={iconSizes.icon40}
+                  variant="body1"
+                />
+                <RotatableChevron
+                  color="$neutral3"
+                  direction="end"
+                  height={iconSizes.icon24}
+                  width={iconSizes.icon24}
+                />
+              </Flex>
+            </TouchableArea>
+          )
+        })}
       {allAccounts.length > DEFAULT_ACCOUNTS_TO_DISPLAY && (
         <Button theme="tertiary" onPress={toggleViewAll}>
           <Text color="$neutral1" variant="buttonLabel4">
-            {showAll ? t('settings.section.wallet.button.viewLess') : t('settings.section.wallet.button.viewAll')}
+            {showAll
+              ? t('settings.section.wallet.button.viewLess')
+              : t('settings.section.wallet.button.viewAll')}
           </Text>
         </Button>
       )}
@@ -454,13 +490,18 @@ function FooterSettings(): JSX.Element {
           setShowSignature(false)
         }
       : (): void => undefined,
-    SIGNATURE_VISIBLE_DURATION,
+    SIGNATURE_VISIBLE_DURATION
   )
 
   return (
     <Flex gap="$spacing12">
       {showSignature ? (
-        <AnimatedFlex alignItems="center" entering={FadeInDown} exiting={FadeOutUp} gap="$none" mt="$spacing16">
+        <AnimatedFlex
+          alignItems="center"
+          entering={FadeInDown}
+          exiting={FadeOutUp}
+          gap="$none"
+          mt="$spacing16">
           <Flex gap="$spacing4">
             <Text color="$neutral3" textAlign="center" variant="body2">
               {t('settings.footer')}
@@ -480,8 +521,7 @@ function FooterSettings(): JSX.Element {
         variant="body2"
         onLongPress={(): void => {
           setShowSignature(true)
-        }}
-      >
+        }}>
         {t('settings.version', { appVersion: getFullAppVersion() })}
       </Text>
     </Flex>

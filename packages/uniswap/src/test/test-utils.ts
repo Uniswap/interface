@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-imports */
+
 import { renderWithProviders } from 'uniswap/src/test/render'
 
 // re-export everything

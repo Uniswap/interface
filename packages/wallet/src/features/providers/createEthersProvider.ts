@@ -8,7 +8,7 @@ import { getInfuraChainName } from 'wallet/src/features/providers/utils'
 // Should use ProviderManager for provider access unless being accessed outside of ProviderManagerContext (e.g., Apollo initialization)
 export function createEthersProvider(
   chainId: WalletChainId,
-  rpcType: RPCType = RPCType.Public,
+  rpcType: RPCType = RPCType.Public
 ): ethersProviders.JsonRpcProvider | null {
   try {
     if (rpcType === RPCType.Private) {

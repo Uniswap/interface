@@ -22,7 +22,10 @@
  * console.log(strings); // ["hello", "hello"]
  * ```
  */
-export const createArray = <T, L extends number>(length: L, factory: (index: number) => T): ArrayOfLength<L, T> => {
+export const createArray = <T, L extends number>(
+  length: L,
+  factory: (index: number) => T
+): ArrayOfLength<L, T> => {
   const result = []
   for (let i = 0; i < length; i++) {
     result.push(factory(i))

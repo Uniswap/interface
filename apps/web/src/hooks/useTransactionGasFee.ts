@@ -70,7 +70,7 @@ export enum GasSpeed {
 export function useTransactionGasFee(
   tx?: TransactionRequest,
   speed: GasSpeed = GasSpeed.Urgent,
-  skip: boolean = !tx,
+  skip: boolean = !tx
 ): GasFeeResult {
   const gasFeeFetcher = useGasFeeQuery(tx, skip)
   const { data, isLoading } = useAsyncData(gasFeeFetcher)

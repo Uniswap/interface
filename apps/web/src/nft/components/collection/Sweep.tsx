@@ -21,8 +21,7 @@ const SweepContainer = styled.div`
   border-radius: 12px;
   background-color: ${({ theme }) => theme.surface1};
   justify-content: space-between;
-  background:
-    linear-gradient(${({ theme }) => theme.surface1}, ${({ theme }) => theme.surface1}) padding-box,
+  background: linear-gradient(${({ theme }) => theme.surface1}, ${({ theme }) => theme.surface1}) padding-box,
     linear-gradient(to right, #4673fa, #9646fa) border-box;
   border: 2px solid transparent;
 `
@@ -126,8 +125,8 @@ const NftHolder = styled.div<{ index: number; src?: string }>`
     index === 0
       ? 'translate(-50%, -50%) rotate(-4.42deg)'
       : index === 1
-        ? 'translate(-50%, -50%) rotate(-14.01deg)'
-        : 'translate(-50%, -50%) rotate(10.24deg)'};
+      ? 'translate(-50%, -50%) rotate(-14.01deg)'
+      : 'translate(-50%, -50%) rotate(10.24deg)'};
   z-index: ${({ index }) => 3 - index};
 `
 
@@ -207,7 +206,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
     }
 
     const sudoSwapAssetsInJointCollections = jointCollections.filter(
-      (sweepAsset) => sweepAsset.marketplace === Markets.Sudoswap && !sweepAsset.susFlag,
+      (sweepAsset) => sweepAsset.marketplace === Markets.Sudoswap && !sweepAsset.susFlag
     )
 
     jointCollections.forEach((asset) => {
@@ -217,7 +216,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
             asset,
             sudoSwapAssetsInJointCollections
               .filter((sweepAsset) => isInSameSudoSwapPool(asset, sweepAsset))
-              .findIndex((sweepAsset) => sweepAsset.tokenId === asset.tokenId),
+              .findIndex((sweepAsset) => sweepAsset.tokenId === asset.tokenId)
           )
           asset.priceInfo.ETHPrice = poolPrice ?? '0'
         } else {
@@ -238,7 +237,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
     })
 
     let validAssets = jointCollections.filter(
-      (asset) => BigNumber.from(asset.priceInfo.ETHPrice).gt(0) && !asset.susFlag,
+      (asset) => BigNumber.from(asset.priceInfo.ETHPrice).gt(0) && !asset.susFlag
     )
 
     validAssets = validAssets.slice(
@@ -247,15 +246,15 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
         collectionAssets?.length ?? 0,
         sudoSwapAssets?.length ?? 0,
         nftxAssets?.length ?? 0,
-        nft20Assets?.length ?? 0,
-      ),
+        nft20Assets?.length ?? 0
+      )
     )
 
     return {
       sortedAssets: validAssets,
       sortedAssetsTotalEth: validAssets.reduce(
         (total, asset) => total.add(BigNumber.from(asset.priceInfo.ETHPrice)),
-        BigNumber.from(0),
+        BigNumber.from(0)
       ),
     }
   }, [collectionAssets, sudoSwapAssets, nftxAssets, nft20Assets])
@@ -267,7 +266,7 @@ export const Sweep = ({ contractAddress, minPrice, maxPrice }: SweepProps) => {
 
     const sweepEthPrice = sweepItemsInBag.reduce(
       (total, asset) => total.add(BigNumber.from(asset.priceInfo.ETHPrice)),
-      BigNumber.from(0),
+      BigNumber.from(0)
     )
 
     return { sweepItemsInBag, sweepEthPrice }
@@ -460,7 +459,7 @@ function useSweepFetcherParams(
   contractAddress: string,
   market: Markets.Sudoswap | Markets.NFTX | Markets.NFT20 | 'others',
   minPrice: string,
-  maxPrice: string,
+  maxPrice: string
 ): SweepFetcherParams {
   const traits = useCollectionFilters((state) => state.traits)
   const markets = useCollectionFilters((state) => state.markets)

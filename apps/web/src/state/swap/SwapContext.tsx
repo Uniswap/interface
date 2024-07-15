@@ -9,17 +9,17 @@ import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 export function SwapAndLimitContextProvider({
   children,
-  initialChainId,
+  chainId,
   initialInputCurrency,
   initialOutputCurrency,
   multichainUXEnabled,
 }: PropsWithChildren<{
-  initialChainId?: InterfaceChainId
+  chainId?: InterfaceChainId
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
   multichainUXEnabled?: boolean
 }>) {
-  const [selectedChainId, setSelectedChainId] = useState<InterfaceChainId | undefined | null>(initialChainId)
+  const [selectedChainId, setSelectedChainId] = useState<InterfaceChainId | undefined | null>(chainId)
   const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
 
   const [currencyState, setCurrencyState] = useState<CurrencyState>({
@@ -32,7 +32,7 @@ export function SwapAndLimitContextProvider({
       inputCurrency: initialInputCurrency,
       outputCurrency: initialOutputCurrency,
     }),
-    [initialInputCurrency, initialOutputCurrency],
+    [initialInputCurrency, initialOutputCurrency]
   )
 
   const account = useAccount()
@@ -59,20 +59,23 @@ export function SwapAndLimitContextProvider({
   const previousPrefilledState = usePrevious(prefilledState)
 
   useEffect(() => {
+    if (multichainUXEnabled) {
+      return
+    }
     const combinedCurrencyState = { ...currencyState, ...prefilledState }
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== account.chainId
     const prefilledInputChanged = Boolean(
       previousPrefilledState?.inputCurrency
         ? !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
-        : prefilledState.inputCurrency,
+        : prefilledState.inputCurrency
     )
     const prefilledOutputChanged = Boolean(
       previousPrefilledState?.outputCurrency
         ? !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
-        : prefilledState.outputCurrency,
+        : prefilledState.outputCurrency
     )
 
-    if ((!multichainUXEnabled && chainChanged) || prefilledInputChanged || prefilledOutputChanged) {
+    if (chainChanged || prefilledInputChanged || prefilledOutputChanged) {
       setCurrencyState({
         inputCurrency: combinedCurrencyState.inputCurrency ?? undefined,
         outputCurrency: combinedCurrencyState.outputCurrency ?? undefined,
@@ -88,10 +91,10 @@ export function SwapAndLimitContextProvider({
   ])
 
   useEffect(() => {
-    if (initialChainId) {
-      setSelectedChainId(initialChainId)
+    if (chainId) {
+      setSelectedChainId(chainId)
     }
-  }, [initialChainId, setSelectedChainId])
+  }, [chainId, setSelectedChainId])
 
   const value = useMemo(() => {
     return {
@@ -101,12 +104,10 @@ export function SwapAndLimitContextProvider({
       currentTab,
       setCurrentTab,
       prefilledState,
-      initialChainId,
-      chainId: (multichainUXEnabled ? selectedChainId : account.chainId) ?? undefined,
+      chainId: (multichainUXEnabled ? selectedChainId : chainId) ?? undefined,
       multichainUXEnabled,
-      isSwapAndLimitContext: true,
     }
-  }, [initialChainId, account.chainId, selectedChainId, currencyState, currentTab, prefilledState, multichainUXEnabled])
+  }, [chainId, currencyState, currentTab, multichainUXEnabled, prefilledState, selectedChainId])
 
   return <SwapAndLimitContext.Provider value={value}>{children}</SwapAndLimitContext.Provider>
 }

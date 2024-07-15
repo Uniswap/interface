@@ -1,7 +1,13 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { ProposalTypes, SessionTypes } from '@walletconnect/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
-import { DappInfo, EthMethod, EthSignMethod, EthTransaction, UwULinkMethod } from 'uniswap/src/types/walletConnect'
+import {
+  DappInfo,
+  EthMethod,
+  EthSignMethod,
+  EthTransaction,
+  UwULinkMethod,
+} from 'uniswap/src/types/walletConnect'
 
 export type WalletConnectPendingSession = {
   id: string
@@ -58,7 +64,9 @@ export interface UwuLinkErc20Request extends BaseRequest {
 
 export type WalletConnectRequest = SignRequest | TransactionRequest | UwuLinkErc20Request
 
-export const isTransactionRequest = (request: WalletConnectRequest): request is TransactionRequest =>
+export const isTransactionRequest = (
+  request: WalletConnectRequest
+): request is TransactionRequest =>
   request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send
 
 export interface WalletConnectState {
@@ -83,7 +91,10 @@ const slice = createSlice({
   name: 'walletConnect',
   initialState: initialWalletConnectState,
   reducers: {
-    addSession: (state, action: PayloadAction<{ account: string; wcSession: WalletConnectSession }>) => {
+    addSession: (
+      state,
+      action: PayloadAction<{ account: string; wcSession: WalletConnectSession }>
+    ) => {
       const { wcSession, account } = action.payload
       state.byAccount[account] ??= { sessions: {} }
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
@@ -91,7 +102,10 @@ const slice = createSlice({
       state.pendingSession = null
     },
 
-    updateSession: (state, action: PayloadAction<{ account: string; wcSession: WalletConnectSession }>) => {
+    updateSession: (
+      state,
+      action: PayloadAction<{ account: string; wcSession: WalletConnectSession }>
+    ) => {
       const { wcSession, account } = action.payload
       const wcAccount = state.byAccount[account]
       if (wcAccount) {
@@ -121,7 +135,10 @@ const slice = createSlice({
       })
     },
 
-    addPendingSession: (state, action: PayloadAction<{ wcSession: WalletConnectPendingSession }>) => {
+    addPendingSession: (
+      state,
+      action: PayloadAction<{ wcSession: WalletConnectPendingSession }>
+    ) => {
       const { wcSession } = action.payload
       state.pendingSession = wcSession
     },
@@ -130,14 +147,22 @@ const slice = createSlice({
       state.pendingSession = null
     },
 
-    addRequest: (state, action: PayloadAction<{ request: WalletConnectRequest; account: string }>) => {
+    addRequest: (
+      state,
+      action: PayloadAction<{ request: WalletConnectRequest; account: string }>
+    ) => {
       const { request } = action.payload
       state.pendingRequests.push(request)
     },
 
-    removeRequest: (state, action: PayloadAction<{ requestInternalId: string; account: string }>) => {
+    removeRequest: (
+      state,
+      action: PayloadAction<{ requestInternalId: string; account: string }>
+    ) => {
       const { requestInternalId } = action.payload
-      state.pendingRequests = state.pendingRequests.filter((req) => req.internalId !== requestInternalId)
+      state.pendingRequests = state.pendingRequests.filter(
+        (req) => req.internalId !== requestInternalId
+      )
     },
 
     setDidOpenFromDeepLink: (state, action: PayloadAction<boolean | undefined>) => {

@@ -26,10 +26,14 @@ import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import i18n from 'uniswap/src/i18n/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
-import { NFTCollectionSearchResult, SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
+import {
+  NFTCollectionSearchResult,
+  SearchResultType,
+  TokenSearchResult,
+} from 'wallet/src/features/search/SearchResult'
+import { getValidAddress } from 'wallet/src/utils/addresses'
 
 const ICON_SIZE = '$icon.24'
 const ICON_COLOR = '$neutral2'
@@ -104,7 +108,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   const validAddress: Address | undefined = useMemo(
     () => getValidAddress(searchQuery, true, false) ?? undefined,
-    [searchQuery],
+    [searchQuery]
   )
 
   const countTokenResults = tokenResults?.length ?? 0
@@ -112,7 +116,9 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
   const countWalletResults = walletSearchResults.length
   const countTotalResults = countTokenResults + countNftCollectionResults + countWalletResults
 
-  const prefixTokenMatch = tokenResults?.find((res: TokenSearchResult) => isPrefixTokenMatch(res, searchQuery))
+  const prefixTokenMatch = tokenResults?.find((res: TokenSearchResult) =>
+    isPrefixTokenMatch(res, searchQuery)
+  )
 
   const hasVerifiedNFTResults = Boolean(nftCollectionResults?.some((res) => res.isVerified))
 
@@ -120,14 +126,18 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     return searchQuery.includes('.')
   }, [searchQuery])
 
-  const showWalletSectionFirst = isUsernameSearch && (exactUnitagMatch || (exactENSMatch && !prefixTokenMatch))
+  const showWalletSectionFirst =
+    isUsernameSearch && (exactUnitagMatch || (exactENSMatch && !prefixTokenMatch))
   const showNftCollectionsBeforeTokens = hasVerifiedNFTResults && !tokenResults?.length
 
   const sortedSearchResults: SearchResultOrHeader[] = useMemo(() => {
     // Format results arrays with header, and handle empty results
-    const nftsWithHeader = nftCollectionResults?.length ? [NFTHeaderItem, ...nftCollectionResults] : []
+    const nftsWithHeader = nftCollectionResults?.length
+      ? [NFTHeaderItem, ...nftCollectionResults]
+      : []
     const tokensWithHeader = tokenResults?.length ? [TokenHeaderItem, ...tokenResults] : []
-    const walletsWithHeader = walletSearchResults.length > 0 ? [WalletHeaderItem, ...walletSearchResults] : []
+    const walletsWithHeader =
+      walletSearchResults.length > 0 ? [WalletHeaderItem, ...walletSearchResults] : []
 
     let searchResultItems: SearchResultOrHeader[] = []
 
@@ -205,8 +215,9 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
               ? undefined
               : props.index +
                 1 -
-                sortedSearchResults.slice(0, props.index + 1).filter((item) => item.type === SEARCH_RESULT_HEADER_KEY)
-                  .length
+                sortedSearchResults
+                  .slice(0, props.index + 1)
+                  .filter((item) => item.type === SEARCH_RESULT_HEADER_KEY).length
           return renderSearchItem({
             ...props,
             searchContext: {
@@ -254,7 +265,7 @@ export const renderSearchItem = ({
       logger.warn(
         'SearchResultsSection',
         'renderSearchItem',
-        `Found invalid list item in search results: ${JSON.stringify(searchResult)}`,
+        `Found invalid list item in search results: ${JSON.stringify(searchResult)}`
       )
       return null
   }

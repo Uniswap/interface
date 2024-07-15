@@ -36,7 +36,7 @@ const formatAnalyticsEventProperties = (
   currency: Currency,
   searchQuery: string,
   isAddressSearch: string | false,
-  portfolioBalanceUsd: number | undefined,
+  portfolioBalanceUsd: number | undefined
 ) => ({
   token_symbol: currency?.symbol,
   token_chain_id: currency?.chainId,

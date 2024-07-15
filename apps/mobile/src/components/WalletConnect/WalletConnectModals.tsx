@@ -17,11 +17,15 @@ import { Flex, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
-import { useActiveAccount, useActiveAccountAddressWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import {
+  useActiveAccount,
+  useActiveAccountAddressWithThrow,
+  useSignerAccounts,
+} from 'wallet/src/features/wallet/hooks'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function WalletConnectModals(): JSX.Element {
   const activeAccount = useActiveAccount()
@@ -65,7 +69,10 @@ export function WalletConnectModals(): JSX.Element {
         <WalletConnectModal initialScreenState={modalState.initialState} onClose={onCloseWCModal} />
       )}
       {pendingSession ? (
-        <PendingConnectionModal pendingSession={pendingSession} onClose={onClosePendingConnection} />
+        <PendingConnectionModal
+          pendingSession={pendingSession}
+          onClose={onClosePendingConnection}
+        />
       ) : null}
       {currRequest ? <RequestModal currRequest={currRequest} /> : null}
     </>
@@ -85,11 +92,13 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
 
   // TODO: Move returnToPreviousApp() call to onClose but ensure it is not called twice
   const onClose = (): void => {
-    dispatch(removeRequest({ requestInternalId: currRequest.internalId, account: activeAccountAddress }))
+    dispatch(
+      removeRequest({ requestInternalId: currRequest.internalId, account: activeAccountAddress })
+    )
   }
 
   const isRequestFromSignerAccount = signerAccounts.some((account) =>
-    areAddressesEqual(account.address, currRequest.account),
+    areAddressesEqual(account.address, currRequest.account)
   )
 
   if (!isRequestFromSignerAccount) {
@@ -98,15 +107,23 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         caption={t('walletConnect.request.warning.message')}
         closeText={t('common.button.dismiss')}
         icon={
-          <EyeIcon color={colors.neutral2.get()} height={iconSizes.icon24} strokeWidth={1.5} width={iconSizes.icon24} />
+          <EyeIcon
+            color={colors.neutral2.get()}
+            height={iconSizes.icon24}
+            strokeWidth={1.5}
+            width={iconSizes.icon24}
+          />
         }
         modalName={ModalName.WCViewOnlyWarning}
         severity={WarningSeverity.None}
         title={t('walletConnect.request.warning.title')}
         onCancel={onClose}
-        onClose={onClose}
-      >
-        <Flex alignSelf="stretch" backgroundColor="$surface2" borderRadius="$rounded16" p="$spacing16">
+        onClose={onClose}>
+        <Flex
+          alignSelf="stretch"
+          backgroundColor="$surface2"
+          borderRadius="$rounded16"
+          p="$spacing16">
           <AccountDetails address={currRequest.account} iconSize={iconSizes.icon24} />
         </Flex>
       </WarningModal>

@@ -38,7 +38,7 @@ type CancelOrdersDialogProps = Partial<Omit<DialogProps, 'isVisible' | 'onCancel
 
 function useCancelOrdersDialogContent(
   state: CancellationState,
-  orders: UniswapXOrderDetails[],
+  orders: UniswapXOrderDetails[]
 ): { title?: JSX.Element; icon: JSX.Element } {
   const theme = useTheme()
   switch (state) {
@@ -86,7 +86,7 @@ export function CancelOrdersDialog(
     cancelState: CancellationState
     cancelTxHash?: string
     onConfirm: () => void
-  },
+  }
 ) {
   const { orders, cancelState, cancelTxHash, onConfirm, onCancel } = props
 
@@ -95,7 +95,7 @@ export function CancelOrdersDialog(
   const gasEstimate = useCancelOrdersGasEstimate(orders)
   if (
     [CancellationState.PENDING_SIGNATURE, CancellationState.PENDING_CONFIRMATION, CancellationState.CANCELLED].includes(
-      cancelState,
+      cancelState
     )
   ) {
     const cancelSubmitted =

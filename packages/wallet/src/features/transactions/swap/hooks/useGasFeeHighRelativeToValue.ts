@@ -3,7 +3,7 @@ import { useMemo } from 'react'
 
 export function useGasFeeHighRelativeToValue(
   gasFeeUSD: string | undefined,
-  value: Maybe<CurrencyAmount<Currency>>,
+  value: Maybe<CurrencyAmount<Currency>>
 ): boolean {
   return useMemo(() => {
     if (!value) {

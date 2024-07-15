@@ -3,8 +3,8 @@ import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { Language } from 'ui/src/components/icons'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { opacify } from 'uniswap/src/utils/colors'
 import { SettingsLanguageModalProps } from 'wallet/src/components/settings/language/SettingsLanguageModalProps'
+import { opacify } from 'wallet/src/utils/colors'
 
 export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): JSX.Element {
   const colors = useSporeColors()
@@ -17,8 +17,7 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
           <Flex
             borderRadius="$rounded12"
             p="$spacing12"
-            style={{ backgroundColor: opacify(10, colors.DEP_blue300.val) }}
-          >
+            style={{ backgroundColor: opacify(10, colors.DEP_blue300.val) }}>
             <Language color="$DEP_blue300" size="$icon.24" strokeWidth={1.5} />
           </Flex>
         </Flex>

@@ -31,8 +31,7 @@ export function NetworkOption({
           backgroundColor="$neutral3"
           borderRadius={6}
           height={NETWORK_OPTION_ICON_SIZE}
-          width={NETWORK_OPTION_ICON_SIZE}
-        >
+          width={NETWORK_OPTION_ICON_SIZE}>
           <Ellipsis color={colors.sporeWhite.val} size="$icon.12" />
         </Flex>
         <Text color="$neutral1" variant="body2">

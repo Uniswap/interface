@@ -36,7 +36,7 @@ export function useOrder(orderHash: string): UniswapXOrderDetails | undefined {
     if (
       !order ||
       ![SignatureType.SIGN_UNISWAPX_ORDER, SignatureType.SIGN_UNISWAPX_V2_ORDER, SignatureType.SIGN_LIMIT].includes(
-        order.type as SignatureType,
+        order.type as SignatureType
       )
     ) {
       return undefined
@@ -56,7 +56,7 @@ export function useAddOrder() {
       expiry: number,
       swapInfo: UniswapXOrderDetails['swapInfo'],
       encodedOrder: string,
-      offchainOrderType: OffchainOrderType,
+      offchainOrderType: OffchainOrderType
     ) => {
       dispatch(
         addSignature({
@@ -70,10 +70,10 @@ export function useAddOrder() {
           status: UniswapXOrderStatus.OPEN,
           addedTime: Date.now(),
           encodedOrder,
-        }),
+        })
       )
     },
-    [dispatch],
+    [dispatch]
   )
 }
 

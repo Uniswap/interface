@@ -67,13 +67,13 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
         getLooksRareNonce,
         collectionsRequiringApproval,
         listings,
-      }),
+      })
     )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])
   const [openSection, toggleOpenSection] = useReducer(
     (s) => (s === Section.APPROVE ? Section.SIGN : Section.APPROVE),
-    Section.APPROVE,
+    Section.APPROVE
   )
   const nativeCurrency = useNativeCurrency(account.chainId)
   const parsedAmount = tryParseCurrencyAmount(totalEthListingValue.toString(), nativeCurrency)
@@ -85,12 +85,12 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
 
   const allCollectionsApproved = useMemo(
     () => collectionsRequiringApproval.every((collection) => collection.status === ListingStatus.APPROVED),
-    [collectionsRequiringApproval],
+    [collectionsRequiringApproval]
   )
 
   const allListingsApproved = useMemo(
     () => listings.every((listing) => listing.status === ListingStatus.APPROVED),
-    [listings],
+    [listings]
   )
 
   const signListings = async () => {

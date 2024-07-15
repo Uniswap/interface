@@ -76,8 +76,7 @@ function FavoriteWalletCard({
             setIsEditing(true)
           }
         }}
-        {...rest}
-      >
+        {...rest}>
         <TouchableArea
           hapticFeedback
           activeOpacity={isEditing ? 1 : undefined}
@@ -93,8 +92,7 @@ function FavoriteWalletCard({
           }}
           onPressIn={async (): Promise<void> => {
             await preload(address)
-          }}
-        >
+          }}>
           <BaseCard.Shadow>
             <Flex row gap="$spacing4" justifyContent="space-between">
               <Flex row shrink alignItems="center" gap="$spacing8">

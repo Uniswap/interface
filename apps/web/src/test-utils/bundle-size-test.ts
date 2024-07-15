@@ -29,7 +29,7 @@ const entryGzipSize = report.reduce(
     acc +
     // only collect the entry point size to keep things simple
     (r.isInitialByEntrypoint?.main ? r.gzipSize || 0 : 0),
-  0,
+  0
 )
 
 // somewhat arbitrary, just a bit above where we are currently (6/12/2024)

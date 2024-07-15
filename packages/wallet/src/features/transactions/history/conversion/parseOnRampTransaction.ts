@@ -1,4 +1,4 @@
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { getAddressFromAsset } from 'wallet/src/features/transactions/history/utils'
 import {
   OnRampPurchaseInfo,
@@ -10,7 +10,7 @@ import {
 } from 'wallet/src/features/transactions/types'
 
 export default function parseOnRampTransaction(
-  transaction: NonNullable<TransactionListQueryResponse>,
+  transaction: NonNullable<TransactionListQueryResponse>
 ): OnRampPurchaseInfo | OnRampTransferInfo | undefined {
   let change
   if (transaction.details.__typename === TransactionDetailsType.Transaction) {

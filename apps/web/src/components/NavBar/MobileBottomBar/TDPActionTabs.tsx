@@ -51,7 +51,7 @@ export function TDPActionTabs() {
       }
       navigate(href)
     },
-    [account, currencyChainId, switchChain, navigate],
+    [account, currencyChainId, switchChain, navigate]
   )
 
   const tabs: TabItem[] = [
@@ -72,7 +72,7 @@ export function TDPActionTabs() {
     },
   ]
   return (
-    <Row justify="space-between">
+    <Row justify="space-around">
       {tabs.map((tab) => (
         <TDPActionPill key={tab.label} onClick={() => toActionLink(tab.href)} $color={tokenColor}>
           {tab.icon}

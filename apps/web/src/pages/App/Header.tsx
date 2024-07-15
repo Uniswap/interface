@@ -8,8 +8,6 @@ import { memo } from 'react'
 import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const AppHeader = styled.div`
   grid-area: ${GRID_AREAS.HEADER};
@@ -39,7 +37,6 @@ export const Header = memo(function Header() {
   const isHeaderTransparent = !isScrolledDown && !isBagExpanded
   const renderUkBanner = useRenderUkBanner()
   const extensionEligible = useMobileAppPromoBannerEligible()
-  const isLegacyNav = !useFeatureFlag(FeatureFlags.NavRefresh)
 
   return (
     <AppHeader id="AppHeader">
@@ -48,7 +45,7 @@ export const Header = memo(function Header() {
         {renderUkBanner && <UkBanner />}
       </Banners>
       <NavOnScroll
-        $hide={!isExplorePage && !isLegacyNav && scrollDirection === ScrollDirection.DOWN}
+        $hide={!isExplorePage && scrollDirection === ScrollDirection.DOWN}
         $transparent={isHeaderTransparent}
       >
         <Navbar blur={isHeaderTransparent} />

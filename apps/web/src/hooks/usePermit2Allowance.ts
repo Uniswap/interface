@@ -47,7 +47,7 @@ export type Allowance =
 export default function usePermit2Allowance(
   amount?: CurrencyAmount<Token>,
   spender?: string,
-  tradeFillType?: TradeFillType,
+  tradeFillType?: TradeFillType
 ): Allowance {
   const account = useAccount()
   const token = amount?.currency
@@ -55,7 +55,7 @@ export default function usePermit2Allowance(
   const { tokenAllowance, isSyncing: isApprovalSyncing } = useTokenAllowance(
     token,
     account.address,
-    permit2AddressForChain,
+    permit2AddressForChain
   )
   const updateTokenAllowance = useUpdateTokenAllowance(amount, permit2AddressForChain)
   const revokeTokenAllowance = useRevokeTokenAllowance(token, permit2AddressForChain)
@@ -94,7 +94,7 @@ export default function usePermit2Allowance(
   const [now, setNow] = useState(Date.now() + AVERAGE_L1_BLOCK_TIME)
   useInterval(
     useCallback(() => setNow((Date.now() + AVERAGE_L1_BLOCK_TIME) / 1000), []),
-    AVERAGE_L1_BLOCK_TIME,
+    AVERAGE_L1_BLOCK_TIME
   )
 
   const [signature, setSignature] = useState<PermitSignature>()

@@ -133,8 +133,8 @@ export const MarketplaceRow = ({
   const [listPrice, setListPrice] = useState<number | undefined>(
     () =>
       asset.newListings?.find((listing) =>
-        expandMarketplaceRows ? listing.marketplace.name === selectedMarkets?.[0].name : !!listing.price,
-      )?.price,
+        expandMarketplaceRows ? listing.marketplace.name === selectedMarkets?.[0].name : !!listing.price
+      )?.price
   )
   const [globalOverride, setGlobalOverride] = useState(false)
 
@@ -147,7 +147,7 @@ export const MarketplaceRow = ({
         setAssetListPrice(asset, price, marketplace)
       }
     },
-    [asset, selectedMarkets, setAssetListPrice, setGlobalPrice, showGlobalPrice],
+    [asset, selectedMarkets, setAssetListPrice, setGlobalPrice, showGlobalPrice]
   )
 
   const fees = useMemo(() => {
@@ -171,7 +171,7 @@ export const MarketplaceRow = ({
     setGlobalOverride,
     listPrice,
     globalPrice,
-    globalPriceMethod,
+    globalPriceMethod
   )
 
   // When in Same Price Mode and not overriding, update local price when global price changes

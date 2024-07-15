@@ -7,7 +7,9 @@ type UnitagUpdaterContextType = {
 
 const UnitagUpdaterContext = createContext<UnitagUpdaterContextType | null>(null)
 
-export function UnitagUpdaterContextProvider({ children }: PropsWithChildren<unknown>): JSX.Element {
+export function UnitagUpdaterContextProvider({
+  children,
+}: PropsWithChildren<unknown>): JSX.Element {
   const [refetchUnitagsCounter, setRefetchUnitagsCounter] = useState(0)
 
   const triggerRefetchUnitags = (): void => {

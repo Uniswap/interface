@@ -55,7 +55,8 @@ function Footer(): JSX.Element {
 
 export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
-  const { setSelectedQuote, quotesSections, baseCurrencyInfo, serviceProviders } = useFiatOnRampContext()
+  const { setSelectedQuote, quotesSections, baseCurrencyInfo, serviceProviders } =
+    useFiatOnRampContext()
 
   const renderItem = ({ item }: ListRenderItemInfo<FORQuote>): JSX.Element => {
     const onPress = (): void => {
@@ -68,7 +69,10 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
     return (
       <Flex px="$spacing12" py="$spacing8">
         {baseCurrencyInfo && (
-          <FORQuoteItem serviceProvider={getServiceProviderForQuote(item, serviceProviders)} onPress={onPress} />
+          <FORQuoteItem
+            serviceProvider={getServiceProviderForQuote(item, serviceProviders)}
+            onPress={onPress}
+          />
         )}
       </Flex>
     )
@@ -81,7 +85,11 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
   }): JSX.Element => (
     <Flex px="$spacing12">
       {type === InitialQuoteSelection.Best ? null : type === InitialQuoteSelection.MostRecent ? (
-        <SectionHeader Icon={TimePast} iconColor="$neutral3" title={t('fiatOnRamp.quote.type.recent')} />
+        <SectionHeader
+          Icon={TimePast}
+          iconColor="$neutral3"
+          title={t('fiatOnRamp.quote.type.recent')}
+        />
       ) : (
         <Flex centered row gap="$spacing12" my="$spacing12">
           <Separator />
@@ -98,7 +106,13 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
     <Screen edges={['top']}>
       <HandleBar backgroundColor="none" />
       <Flex height="100%">
-        <Flex row alignItems="center" justifyContent="space-between" pb="$spacing16" pt="$spacing12" px="$spacing16">
+        <Flex
+          row
+          alignItems="center"
+          justifyContent="space-between"
+          pb="$spacing16"
+          pt="$spacing12"
+          px="$spacing16">
           <BackButton />
           <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
             {t('fiatOnRamp.checkout.title')}

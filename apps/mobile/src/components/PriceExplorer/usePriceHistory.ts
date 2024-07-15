@@ -2,15 +2,15 @@ import { maxBy } from 'lodash'
 import { Dispatch, SetStateAction, useCallback, useMemo, useRef, useState } from 'react'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { TLineChartData } from 'react-native-wagmi-charts'
-import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   HistoryDuration,
   TimestampedAmount,
   useTokenPriceHistoryQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
+import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 export type TokenSpotData = {
@@ -29,7 +29,7 @@ export type PriceNumberOfDigits = {
 export function useTokenPriceHistory(
   currencyId: string,
   onCompleted?: () => void,
-  initialDuration: HistoryDuration = HistoryDuration.Day,
+  initialDuration: HistoryDuration = HistoryDuration.Day
 ): Omit<
   GqlResult<{
     priceHistory?: TLineChartData
@@ -86,7 +86,7 @@ export function useTokenPriceHistory(
             relativeChange: spotRelativeChange,
           }
         : undefined,
-    [price, spotValue, spotRelativeChange],
+    [price, spotValue, spotRelativeChange]
   )
 
   const formattedPriceHistory = useMemo(() => {
@@ -102,7 +102,7 @@ export function useTokenPriceHistory(
       priceHistory: formattedPriceHistory,
       spot,
     }),
-    [formattedPriceHistory, spot],
+    [formattedPriceHistory, spot]
   )
 
   const numberOfDigits = useMemo(() => {
@@ -139,6 +139,6 @@ export function useTokenPriceHistory(
       numberOfDigits,
       onCompleted,
     }),
-    [data, duration, networkStatus, priceData, retry, onCompleted, numberOfDigits],
+    [data, duration, networkStatus, priceData, retry, onCompleted, numberOfDigits]
   )
 }

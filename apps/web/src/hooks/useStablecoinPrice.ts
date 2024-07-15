@@ -20,7 +20,7 @@ export default function useStablecoinPrice(currency?: Currency): Price<Currency,
     TradeType.EXACT_OUTPUT,
     amountOut,
     currency,
-    INTERNAL_ROUTER_PREFERENCE_PRICE,
+    INTERNAL_ROUTER_PREFERENCE_PRICE
   )
   const price = useMemo(() => {
     if (!currency || !stablecoin) {

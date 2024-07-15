@@ -21,7 +21,7 @@ describe('pool price bar', () => {
 
   it('handles undefined price', () => {
     render(
-      <PoolPriceBar currencies={currencies} price={undefined} noLiquidity={false} poolTokenPercentage={undefined} />,
+      <PoolPriceBar currencies={currencies} price={undefined} noLiquidity={false} poolTokenPercentage={undefined} />
     )
 
     expect(screen.getByTestId('currency-b-price').textContent).toBe('-')

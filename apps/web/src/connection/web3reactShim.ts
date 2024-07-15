@@ -14,6 +14,6 @@ export function useWeb3React() {
       chainId: account.chainId ?? UniverseChainId.Mainnet,
       provider,
     }),
-    [account.address, account.chainId, provider],
+    [account.address, account.chainId, provider]
   )
 }

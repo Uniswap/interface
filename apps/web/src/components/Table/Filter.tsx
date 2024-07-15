@@ -76,7 +76,7 @@ export function Filter<T extends string>({
         setFilters([...activeFilter, filter])
       }
     },
-    [activeFilter, setFilters],
+    [activeFilter, setFilters]
   )
   // Need to put the modal in a Portal when on mobile to show over promo banner
   const Wrapper = isMobile ? Portal : Fragment

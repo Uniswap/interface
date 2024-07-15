@@ -28,7 +28,10 @@ export function useBiometricCheck(): void {
   useAsyncData(triggerBiometricCheck)
 
   useAppStateTrigger('background', 'active', async () => {
-    if (requiredForAppAccess && authenticationStatus !== BiometricAuthenticationStatus.Authenticated) {
+    if (
+      requiredForAppAccess &&
+      authenticationStatus !== BiometricAuthenticationStatus.Authenticated
+    ) {
       await trigger()
     }
   })
@@ -66,7 +69,10 @@ export function useBiometricCheck(): void {
 
   useAppStateTrigger('active', 'inactive', () => {
     hideSplashScreen() // In case of a race condition where splash screen is not hidden, we want to hide when FaceID forces an app state change
-    if (requiredForAppAccess && authenticationStatus !== BiometricAuthenticationStatus.Authenticating) {
+    if (
+      requiredForAppAccess &&
+      authenticationStatus !== BiometricAuthenticationStatus.Authenticating
+    ) {
       setIsLockScreenVisible(true)
     }
   })

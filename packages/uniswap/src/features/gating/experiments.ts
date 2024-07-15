@@ -8,5 +8,8 @@ export enum Experiments {
 }
 
 export type ExperimentProperties = {
-  [Experiments.ArbitrumXV2OpenOrders]: 'priceImprovementBps' | 'forceOpenOrders' | 'deadlineBufferSecs'
+  [Experiments.ArbitrumXV2OpenOrders]:
+    | 'priceImprovementBps'
+    | 'forceOpenOrders'
+    | 'deadlineBufferSecs'
 }

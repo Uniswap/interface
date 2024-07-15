@@ -12,7 +12,8 @@ interface NativeMnemonicConfirmationProps {
   onConfirmComplete: () => void
 }
 
-const NativeMnemonicConfirmation = requireNativeComponent<NativeMnemonicConfirmationProps>('MnemonicConfirmation')
+const NativeMnemonicConfirmation =
+  requireNativeComponent<NativeMnemonicConfirmationProps>('MnemonicConfirmation')
 
 type MnemonicConfirmationProps = ViewProps & {
   mnemonicId: Address

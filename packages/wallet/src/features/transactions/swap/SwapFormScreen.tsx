@@ -3,13 +3,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LayoutChangeEvent, StyleSheet, TextInputProps } from 'react-native'
-import { AnimatePresence, Flex, Text, TouchableArea, isWeb, useIsShortMobileDevice, useSporeColors } from 'ui/src'
+import {
+  AnimatePresence,
+  Flex,
+  Text,
+  TouchableArea,
+  isWeb,
+  useIsShortMobileDevice,
+  useSporeColors,
+} from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
@@ -17,8 +24,14 @@ import { NumberType } from 'utilities/src/format/types'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useSyncFiatAndTokenAmountUpdater } from 'wallet/src/features/transactions/hooks/useSyncFiatAndTokenAmountUpdater'
-import { CurrencyInputPanel, CurrencyInputPanelRef } from 'wallet/src/features/transactions/swap/CurrencyInputPanel'
-import { DecimalPadInput, DecimalPadInputRef } from 'wallet/src/features/transactions/swap/DecimalPadInput'
+import {
+  CurrencyInputPanel,
+  CurrencyInputPanelRef,
+} from 'wallet/src/features/transactions/swap/CurrencyInputPanel'
+import {
+  DecimalPadInput,
+  DecimalPadInputRef,
+} from 'wallet/src/features/transactions/swap/DecimalPadInput'
 import { GasAndWarningRows } from 'wallet/src/features/transactions/swap/GasAndWarningRows'
 import { SwapArrowButton } from 'wallet/src/features/transactions/swap/SwapArrowButton'
 import { SwapFormButton } from 'wallet/src/features/transactions/swap/SwapFormButton'
@@ -152,20 +165,31 @@ function SwapFormContent(): JSX.Element {
       [CurrencyField.INPUT]: inputSelectionRef,
       [CurrencyField.OUTPUT]: outputSelectionRef,
     }),
-    [inputSelectionRef, outputSelectionRef],
+    [inputSelectionRef, outputSelectionRef]
   )
 
   const resetSelection = useCallback(
-    ({ start, end, currencyField }: { start: number; end?: number; currencyField?: CurrencyField }) => {
+    ({
+      start,
+      end,
+      currencyField,
+    }: {
+      start: number
+      end?: number
+      currencyField?: CurrencyField
+    }) => {
       // Update refs first to have the latest selection state available in the DecimalPadInput
       // component and properly update disabled keys of the decimal pad.
       // We reset the native selection on the next tick because we need to wait for the native input to be updated.
       // This is needed because of the combination of state (delayed update) + ref (instant update) to improve performance.
 
       const _currencyField = currencyField ?? decimalPadControlledField
-      const selectionRef = _currencyField === CurrencyField.INPUT ? inputSelectionRef : outputSelectionRef
+      const selectionRef =
+        _currencyField === CurrencyField.INPUT ? inputSelectionRef : outputSelectionRef
       const inputFieldRef =
-        _currencyField === CurrencyField.INPUT ? inputRef.current?.textInputRef : outputRef.current?.textInputRef
+        _currencyField === CurrencyField.INPUT
+          ? inputRef.current?.textInputRef
+          : outputRef.current?.textInputRef
 
       selectionRef.current = { start, end }
 
@@ -175,7 +199,7 @@ function SwapFormContent(): JSX.Element {
         }, 0)
       }
     },
-    [decimalPadControlledField],
+    [decimalPadControlledField]
   )
 
   const moveCursorToEnd = useCallback(
@@ -186,8 +210,8 @@ function SwapFormContent(): JSX.Element {
         decimalPadControlledField === derivedCurrencyField
           ? formattedDerivedValueRef
           : _isFiatMode
-            ? exactAmountFiatRef
-            : exactAmountTokenRef
+          ? exactAmountFiatRef
+          : exactAmountTokenRef
 
       resetSelection({
         start: amountRef.current.length,
@@ -201,7 +225,7 @@ function SwapFormContent(): JSX.Element {
       exactAmountTokenRef,
       isFiatMode,
       resetSelection,
-    ],
+    ]
   )
 
   const maxDecimals = isFiatMode
@@ -224,7 +248,7 @@ function SwapFormContent(): JSX.Element {
         focusOnCurrencyField: decimalPadControlledField,
       })
     },
-    [decimalPadControlledField, isFiatMode, maxDecimals, updateSwapForm],
+    [decimalPadControlledField, isFiatMode, maxDecimals, updateSwapForm]
   )
 
   const [decimalPadReady, setDecimalPadReady] = useState(false)
@@ -259,7 +283,7 @@ function SwapFormContent(): JSX.Element {
       inputSelectionRef.current = { start, end }
       decimalPadRef.current?.updateDisabledKeys()
     },
-    [amountUpdatedTimeRef],
+    [amountUpdatedTimeRef]
   )
 
   const onOutputSelectionChange = useCallback(
@@ -271,7 +295,7 @@ function SwapFormContent(): JSX.Element {
       outputSelectionRef.current = { start, end }
       decimalPadRef.current?.updateDisabledKeys()
     },
-    [amountUpdatedTimeRef],
+    [amountUpdatedTimeRef]
   )
 
   const onFocusInput = useCallback(
@@ -279,7 +303,7 @@ function SwapFormContent(): JSX.Element {
       updateSwapForm({
         focusOnCurrencyField: CurrencyField.INPUT,
       }),
-    [updateSwapForm],
+    [updateSwapForm]
   )
 
   const onFocusOutput = useCallback(
@@ -287,7 +311,7 @@ function SwapFormContent(): JSX.Element {
       updateSwapForm({
         focusOnCurrencyField: CurrencyField.OUTPUT,
       }),
-    [updateSwapForm],
+    [updateSwapForm]
   )
 
   const onShowTokenSelectorInput = useCallback((): void => {
@@ -315,7 +339,7 @@ function SwapFormContent(): JSX.Element {
             exactAmountToken: amount,
             exactCurrencyField: CurrencyField.INPUT,
           }),
-    [isFiatMode, updateSwapForm],
+    [isFiatMode, updateSwapForm]
   )
 
   const onSetExactAmountOutput = useCallback(
@@ -331,7 +355,7 @@ function SwapFormContent(): JSX.Element {
             exactAmountToken: amount,
             exactCurrencyField: CurrencyField.OUTPUT,
           }),
-    [isFiatMode, updateSwapForm],
+    [isFiatMode, updateSwapForm]
   )
 
   const onSetMax = useCallback(
@@ -349,7 +373,7 @@ function SwapFormContent(): JSX.Element {
         decimalPadRef.current?.updateDisabledKeys()
       }, 0)
     },
-    [moveCursorToEnd, updateSwapForm],
+    [moveCursorToEnd, updateSwapForm]
   )
 
   // Reset selection based the new input value (token, or fiat), and toggle fiat mode
@@ -364,7 +388,7 @@ function SwapFormContent(): JSX.Element {
       // We want this update to happen on the next tick, after the input value is updated.
       setTimeout(() => moveCursorToEnd({ overrideIsFiatMode: newIsFiatMode }), 0)
     },
-    [isFiatMode, moveCursorToEnd, updateSwapForm],
+    [isFiatMode, moveCursorToEnd, updateSwapForm]
   )
 
   const onSwitchCurrencies = useCallback(() => {
@@ -372,8 +396,8 @@ function SwapFormContent(): JSX.Element {
     const newExactCurrencyField = exactOutputWouldFailIfCurrenciesSwitched
       ? CurrencyField.INPUT
       : exactFieldIsInput
-        ? CurrencyField.OUTPUT
-        : CurrencyField.INPUT
+      ? CurrencyField.OUTPUT
+      : CurrencyField.INPUT
     updateSwapForm({
       exactCurrencyField: newExactCurrencyField,
       focusOnCurrencyField: newExactCurrencyField,
@@ -422,7 +446,8 @@ function SwapFormContent(): JSX.Element {
   const exactValue = isFiatMode ? exactAmountFiat : exactAmountToken
   const exactValueRef = isFiatMode ? exactAmountFiatRef : exactAmountTokenRef
 
-  const decimalPadValueRef = decimalPadControlledField === exactCurrencyField ? exactValueRef : formattedDerivedValueRef
+  const decimalPadValueRef =
+    decimalPadControlledField === exactCurrencyField ? exactValueRef : formattedDerivedValueRef
 
   const containerShadowProps = {
     shadowColor: colors.surface3.val,
@@ -458,22 +483,28 @@ function SwapFormContent(): JSX.Element {
 
   return (
     <Flex grow gap="$spacing8" justifyContent="space-between">
-      <Flex animation="quick" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }} gap="$spacing2" grow={isWeb}>
+      <Flex
+        animation="quick"
+        enterStyle={{ opacity: 0 }}
+        exitStyle={{ opacity: 0 }}
+        gap="$spacing2"
+        grow={isWeb}>
         <Trace section={SectionName.CurrencyInputPanel}>
           <Flex
             {...inputShadowProps}
             shrink
             animateOnly={['backgroundColor', 'opacity', 'shadowOpacity']}
             animation="quick"
-            backgroundColor={isWeb || focusOnCurrencyField === CurrencyField.INPUT ? '$surface1' : '$surface2'}
+            backgroundColor={
+              isWeb || focusOnCurrencyField === CurrencyField.INPUT ? '$surface1' : '$surface2'
+            }
             borderColor="$surface3"
             borderRadius="$rounded20"
             borderWidth={1}
             grow={showWebInputTokenSelector}
             opacity={showWebOutputTokenSelector ? WEB_CURRENCY_PANEL_INACTIVE_OPACITY : 1}
             overflow="hidden"
-            pb={currencies[CurrencyField.INPUT] ? '$spacing4' : '$none'}
-          >
+            pb={currencies[CurrencyField.INPUT] ? '$spacing4' : '$none'}>
             {showWebInputTokenSelector ? (
               <SwapTokenSelector />
             ) : (
@@ -501,7 +532,11 @@ function SwapFormContent(): JSX.Element {
           </Flex>
         </Trace>
 
-        {showSwitchCurrencies ? <SwitchCurrenciesButton onSwitchCurrencies={onSwitchCurrencies} /> : <Flex />}
+        {showSwitchCurrencies ? (
+          <SwitchCurrenciesButton onSwitchCurrencies={onSwitchCurrencies} />
+        ) : (
+          <Flex />
+        )}
 
         {!showWebInputTokenSelector && (
           <>
@@ -511,7 +546,9 @@ function SwapFormContent(): JSX.Element {
                 shrink
                 animateOnly={['backgroundColor', 'opacity', 'shadowOpacity']}
                 animation="quick"
-                backgroundColor={isWeb || focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface1' : '$surface2'}
+                backgroundColor={
+                  isWeb || focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface1' : '$surface2'
+                }
                 borderColor="$surface3"
                 borderRadius="$rounded20"
                 borderWidth={1}
@@ -519,8 +556,7 @@ function SwapFormContent(): JSX.Element {
                 opacity={showWebInputTokenSelector ? WEB_CURRENCY_PANEL_INACTIVE_OPACITY : 1}
                 overflow="hidden"
                 position="relative"
-                pt={currencies[CurrencyField.OUTPUT] ? '$spacing4' : '$none'}
-              >
+                pt={currencies[CurrencyField.OUTPUT] ? '$spacing4' : '$none'}>
                 {showWebOutputTokenSelector ? (
                   <Flex grow>
                     <SwapTokenSelector />
@@ -563,8 +599,7 @@ function SwapFormContent(): JSX.Element {
                       borderTopWidth={1}
                       gap="$spacing8"
                       px="$spacing12"
-                      py="$spacing12"
-                    >
+                      py="$spacing12">
                       <InfoCircleFilled color={colors.DEP_accentWarning.val} size="$icon.20" />
                       <Text color="$DEP_accentWarning" variant="subheading2">
                         {t('swap.form.warning.restore')}
@@ -585,7 +620,10 @@ function SwapFormContent(): JSX.Element {
                 <Flex pt={isShortMobileDevice ? '$spacing8' : '$spacing12'}>
                   <AnimatePresence>
                     {showWarning && (
-                      <FoTWarningRow currencies={currencies} outputTokenHasBuyTax={outputTokenHasBuyTax} />
+                      <FoTWarningRow
+                        currencies={currencies}
+                        outputTokenHasBuyTax={outputTokenHasBuyTax}
+                      />
                     )}
                   </AnimatePresence>
                   {!showWarning && <GasAndWarningRows renderEmptyRows={!isWeb} />}
@@ -604,7 +642,11 @@ function SwapFormContent(): JSX.Element {
           putting it inside this container in order to avoid any overflows while the `DecimalPad`
           is automatically resizing to find the right size for the screen.
           */}
-          <Flex fill mt={isShortMobileDevice ? '$spacing2' : '$spacing8'} onLayout={onBottomScreenLayout} />
+          <Flex
+            fill
+            mt={isShortMobileDevice ? '$spacing2' : '$spacing8'}
+            onLayout={onBottomScreenLayout}
+          />
           <Flex
             $short={{ gap: '$none' }}
             animation="quick"
@@ -613,8 +655,7 @@ function SwapFormContent(): JSX.Element {
             left={0}
             opacity={decimalPadReady ? 1 : 0}
             position="absolute"
-            right={0}
-          >
+            right={0}>
             <Flex grow justifyContent="flex-end">
               <DecimalPadInput
                 ref={decimalPadRef}
@@ -634,7 +675,11 @@ function SwapFormContent(): JSX.Element {
   )
 }
 
-const SwitchCurrenciesButton = ({ onSwitchCurrencies }: { onSwitchCurrencies: () => void }): JSX.Element => {
+const SwitchCurrenciesButton = ({
+  onSwitchCurrencies,
+}: {
+  onSwitchCurrencies: () => void
+}): JSX.Element => {
   const isShortMobileDevice = useIsShortMobileDevice()
   const smallOrRegular = isShortMobileDevice ? 'small' : 'regular'
 
@@ -654,13 +699,12 @@ const SwitchCurrenciesButton = ({ onSwitchCurrencies }: { onSwitchCurrencies: ()
               )
             ) / 2
           }
-          position="absolute"
-        >
+          position="absolute">
           <Trace logPress element={ElementName.SwitchCurrenciesButton}>
             <SwapArrowButton
               backgroundColor="$surface1"
               size={SWAP_DIRECTION_BUTTON_SIZE.size[smallOrRegular]}
-              testID={TestID.SwitchCurrenciesButton}
+              testID={ElementName.SwitchCurrenciesButton}
               onPress={onSwitchCurrencies}
             />
           </Trace>

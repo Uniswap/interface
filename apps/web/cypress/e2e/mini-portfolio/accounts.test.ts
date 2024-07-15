@@ -1,7 +1,5 @@
 import { getTestSelector } from '../../utils'
 
-const HAYDEN_ADDRESS = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
-
 describe('Mini Portfolio account drawer', () => {
   beforeEach(() => {
     const portfolioSpy = cy.spy().as('portfolioSpy')
@@ -74,7 +72,7 @@ describe('Mini Portfolio account drawer', () => {
   it('refetches balances when account changes', () => {
     cy.hardhat().then((hardhat) => {
       const accountA = hardhat.wallets[0].address
-      const accountB = HAYDEN_ADDRESS
+      const accountB = hardhat.wallets[1].address
 
       // Opens the account drawer
       cy.get(getTestSelector('web3-status-connected')).click()
@@ -100,13 +98,14 @@ describe('Mini Portfolio account drawer', () => {
   })
 
   it('fetches ENS name', () => {
+    const haydenAccount = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
     const haydenENS = 'hayden.eth'
 
     // Opens the account drawer
     cy.get(getTestSelector('web3-status-connected')).click()
 
     // Simulate wallet changing to Hayden's account
-    cy.window().then((win) => win.ethereum.emit('accountsChanged', [HAYDEN_ADDRESS]))
+    cy.window().then((win) => win.ethereum.emit('accountsChanged', [haydenAccount]))
 
     // Hayden's ENS name should be shown
     cy.contains(haydenENS).should('exist')
@@ -122,7 +121,7 @@ describe('Mini Portfolio account drawer', () => {
     cy.get(getTestSelector('web3-status-connected')).click()
 
     // Simulate wallet changing to Hayden's account
-    cy.window().then((win) => win.ethereum.emit('accountsChanged', [HAYDEN_ADDRESS]))
+    cy.window().then((win) => win.ethereum.emit('accountsChanged', [haydenAccount]))
 
     // Hayden's ENS name should be shown
     cy.contains(haydenENS).should('exist')

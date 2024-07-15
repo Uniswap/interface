@@ -14,7 +14,10 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { promiseMinDelay } from 'utilities/src/time/timing'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
+import {
+  EditAccountAction,
+  editAccountActions,
+} from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccountIfExists } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch } from 'wallet/src/state'
@@ -78,7 +81,7 @@ export function CloudBackupProcessingAnimation({
             type: EditAccountAction.AddBackupMethod,
             address: accountAddress,
             backupMethod: BackupType.Cloud,
-          }),
+          })
         )
       } else {
         addBackupMethod(BackupType.Cloud)
@@ -99,10 +102,19 @@ export function CloudBackupProcessingAnimation({
             style: 'default',
             onPress: onErrorPress,
           },
-        ],
+        ]
       )
     }
-  }, [accountAddress, activeAccount, addBackupMethod, dispatch, mnemonicId, onErrorPress, password, t])
+  }, [
+    accountAddress,
+    activeAccount,
+    addBackupMethod,
+    dispatch,
+    mnemonicId,
+    onErrorPress,
+    password,
+    t,
+  ])
 
   /**
    * Delays cloud backup to avoid android oauth consent screen blocking navigation transition
@@ -112,7 +124,7 @@ export function CloudBackupProcessingAnimation({
       return navigation.addListener('transitionEnd', async () => {
         await backup()
       })
-    }, [backup, navigation]),
+    }, [backup, navigation])
   )
 
   const iconSize = iconSizes.icon40

@@ -8,7 +8,7 @@ const useMachineTimeMs = (updateInterval: number): number => {
     useCallback(() => {
       setNow(Date.now())
     }, []),
-    updateInterval,
+    updateInterval
   )
   return now
 }

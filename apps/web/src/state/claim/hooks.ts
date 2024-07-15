@@ -36,7 +36,7 @@ function fetchClaimMapping(): Promise<ClaimAddressMapping> {
   return (
     FETCH_CLAIM_MAPPING_PROMISE ??
     (FETCH_CLAIM_MAPPING_PROMISE = fetch(
-      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/mapping.json`,
+      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/mapping.json`
     )
       .then((res) => res.json())
       .catch((error) => {
@@ -51,7 +51,7 @@ function fetchClaimFile(key: string): Promise<{ [address: string]: UserClaimData
   return (
     FETCH_CLAIM_FILE_PROMISES[key] ??
     (FETCH_CLAIM_FILE_PROMISES[key] = fetch(
-      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/${key}.json`,
+      `https://raw.githubusercontent.com/Uniswap/mrkl-drop-data-chunks/final/chunks/${key}.json`
     )
       .then((res) => res.json())
       .catch((error) => {
@@ -120,7 +120,7 @@ function useUserClaimData(account: string | null | undefined): UserClaimData | n
             ...claimInfo,
             [account]: accountClaimInfo,
           }
-        }),
+        })
       )
       .catch(() => {
         setClaimInfo((claimInfo) => {

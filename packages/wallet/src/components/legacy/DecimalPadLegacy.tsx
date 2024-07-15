@@ -10,7 +10,20 @@ enum KeyAction {
   Delete = 'delete',
 }
 
-export type KeyLabel = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '.' | ',' | '0' | 'backspace'
+export type KeyLabel =
+  | '1'
+  | '2'
+  | '3'
+  | '4'
+  | '5'
+  | '6'
+  | '7'
+  | '8'
+  | '9'
+  | '.'
+  | ','
+  | '0'
+  | 'backspace'
 
 type KeyProps = {
   action: KeyAction
@@ -109,7 +122,7 @@ export function _DecimalPad({
             setValue={setValue}
             value={value}
           />
-        ),
+        )
       )}
     </AnimatedFlex>
   )
@@ -146,7 +159,8 @@ function KeyButton({
   // should only be deleting/inserting at position 2 of "5.13"
   // except in the case where start === 0 then also just treat it as start of the non-prefixed string (to avoid -1 index)
   const prefixLength = hasCurrencyPrefix ? 1 : 0
-  const start = selection && selection.start > 0 && hasCurrencyPrefix ? selection.start - 1 : selection?.start
+  const start =
+    selection && selection.start > 0 && hasCurrencyPrefix ? selection.start - 1 : selection?.start
   const end = selection?.end && hasCurrencyPrefix ? selection.end - 1 : selection?.end
 
   // TODO(MOB-140): in USD mode, prevent user from typing in more than 2 decimals
@@ -210,8 +224,7 @@ function KeyButton({
       testID={'decimal-pad-' + label}
       width={index % 3 === 1 ? '50%' : '25%'}
       onLongPress={onLongPress}
-      onPress={onPress}
-    >
+      onPress={onPress}>
       {label === 'backspace' ? (
         I18nManager.isRTL ? (
           <RightArrow color={isDisabled ? '$neutral3' : '$neutral1'} size={32} />

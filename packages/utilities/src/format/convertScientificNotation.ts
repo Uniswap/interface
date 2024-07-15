@@ -17,14 +17,17 @@ export function convertScientificNotationToNumber(value: string): string {
       x *= Math.pow(10, decimalPlaces)
     }
     try {
-      convertedValue = JSBI.multiply(JSBI.BigInt(x), JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(e))).toString()
+      convertedValue = JSBI.multiply(
+        JSBI.BigInt(x),
+        JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(e))
+      ).toString()
     } catch (error) {
       // If the numbers can't be converted to BigInts then just do regular arithmetic (i.e. when the exponent is negative)
       logger.debug(
         'convertScientificNotation',
         'convertScientificNotationToNumber',
         'BigInt arithmetic unsuccessful',
-        e,
+        e
       )
       convertedValue = (x * Math.pow(10, e)).toString()
     }

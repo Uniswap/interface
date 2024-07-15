@@ -13,7 +13,7 @@ export enum MnemonicValidationError {
 export function translateMnemonicErrorMessage(
   error: MnemonicValidationError,
   invalidWord: string | undefined,
-  t: AppTFunction,
+  t: AppTFunction
 ): string {
   switch (error) {
     case MnemonicValidationError.InvalidPhrase:

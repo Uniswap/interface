@@ -1,4 +1,10 @@
-import { AllowanceProvider, AllowanceTransfer, MaxUint160, permit2Address, PermitSingle } from '@uniswap/permit2-sdk'
+import {
+  AllowanceProvider,
+  AllowanceTransfer,
+  MaxUint160,
+  permit2Address,
+  PermitSingle,
+} from '@uniswap/permit2-sdk'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import dayjs from 'dayjs'
@@ -16,7 +22,11 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { signTypedData } from 'wallet/src/features/wallet/signing/signing'
 
 const PERMIT2_SIG_VALIDITY_TIME = 30 // minutes
-function getPermitStruct(tokenAddress: string, nonce: number, universalRouterAddress: string): PermitSingle {
+function getPermitStruct(
+  tokenAddress: string,
+  nonce: number,
+  universalRouterAddress: string
+): PermitSingle {
   return {
     details: {
       token: tokenAddress,
@@ -46,11 +56,15 @@ async function getPermit2PermitSignature(
   account: Account,
   tokenAddress: string,
   chainId: WalletChainId,
-  tokenInAmount: string,
+  tokenInAmount: string
 ): Promise<PermitSignatureInfo | undefined> {
   try {
     if (account.type === AccountType.Readonly) {
-      logger.debug('usePermit2PermitSignature', 'getPermit2Signature', 'Cannot sign with a view-only wallet')
+      logger.debug(
+        'usePermit2PermitSignature',
+        'getPermit2Signature',
+        'Cannot sign with a view-only wallet'
+      )
       return
     }
 
@@ -68,7 +82,11 @@ async function getPermit2PermitSignature(
     }
 
     const permitMessage = getPermitStruct(tokenAddress, nonce, universalRouterAddress)
-    const { domain, types, values } = AllowanceTransfer.getPermitData(permitMessage, permit2Address(chainId), chainId)
+    const { domain, types, values } = AllowanceTransfer.getPermitData(
+      permitMessage,
+      permit2Address(chainId),
+      chainId
+    )
 
     const signature = await signTypedData(
       domain,
@@ -77,7 +95,7 @@ async function getPermit2PermitSignature(
       // alternative would be to modify the sdk to use type aliases over interfaces
       { ...values },
       account,
-      signerManager,
+      signerManager
     )
     return {
       signature,
@@ -93,7 +111,7 @@ async function getPermit2PermitSignature(
 
 export function usePermit2Signature(
   currencyInAmount: Maybe<CurrencyAmount<Currency>>,
-  skip?: boolean,
+  skip?: boolean
 ): {
   isLoading: boolean
   data: PermitSignatureInfo | undefined
@@ -114,7 +132,7 @@ export function usePermit2Signature(
       account,
       currencyIn.address,
       currencyIn.chainId,
-      currencyInAmount.quotient.toString(),
+      currencyInAmount.quotient.toString()
     )
   }, [account, currencyIn, currencyInAmount?.quotient, provider, signerManager, skip])
 
@@ -125,7 +143,7 @@ export function usePermit2Signature(
 export function usePermit2SignatureWithData(
   currencyInAmount: Maybe<CurrencyAmount<Currency>>,
   permitData: Maybe<Permit>,
-  skip?: boolean,
+  skip?: boolean
 ): {
   isLoading: boolean
   signature: string | undefined
@@ -147,7 +165,7 @@ export function usePermit2SignatureWithData(
       types as Record<string, TypedDataField[]>,
       values as Record<string, unknown>,
       account,
-      signerManager,
+      signerManager
     )
   }, [account, currencyIn, domain, provider, signerManager, skip, types, values])
 

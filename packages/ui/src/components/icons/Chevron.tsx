@@ -6,8 +6,14 @@ import { createIcon } from '../factories/createIcon'
 export const [Chevron, AnimatedChevron] = createIcon({
   name: 'Chevron',
   getIcon: (props) => (
-    <Svg stroke="currentColor" viewBox="0 0 24 24" fill="none" {...props}>
-      <Path d="M15 6L9 12L15 18" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" stroke="currentColor" />
+    <Svg fill="none" stroke="currentColor" viewBox="0 0 24 24" {...props}>
+      <Path
+        d="M15 6L9 12L15 18"
+        stroke="currentColor"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        strokeWidth="3"
+      />
     </Svg>
   ),
 })

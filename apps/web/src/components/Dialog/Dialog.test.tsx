@@ -35,7 +35,7 @@ describe('<Dialog />', () => {
         body={mockBody}
         onCancel={mockOnCancel}
         buttonsConfig={mockButtonsConfig}
-      />,
+      />
     )
 
     expect(document.body).toMatchSnapshot()
@@ -58,7 +58,7 @@ describe('<Dialog />', () => {
         body={mockBody}
         onCancel={mockOnCancel}
         buttonsConfig={mockButtonsConfig}
-      />,
+      />
     )
 
     fireEvent.click(screen.getByTestId('Dialog-closeButton'))
@@ -75,7 +75,7 @@ describe('<Dialog />', () => {
         body={mockBody}
         onCancel={mockOnCancel}
         buttonsConfig={mockButtonsConfig}
-      />,
+      />
     )
 
     fireEvent.click(screen.getByText('Left Button'))
@@ -92,7 +92,7 @@ describe('<Dialog />', () => {
         body={mockBody}
         onCancel={mockOnCancel}
         buttonsConfig={mockButtonsConfig}
-      />,
+      />
     )
 
     fireEvent.click(screen.getByText('Right Button'))
@@ -109,7 +109,7 @@ describe('<Dialog />', () => {
         description={mockDescription}
         body={mockBody}
         onCancel={mockOnCancel}
-      />,
+      />
     )
     expect(screen.queryByText('Left Button')).not.toBeInTheDocument()
     expect(screen.queryByText('Right Button')).not.toBeInTheDocument()
@@ -134,7 +134,7 @@ describe('<Dialog />', () => {
         description={mockDescription}
         body={mockBody}
         onCancel={mockOnCancel}
-      />,
+      />
     )
 
     expect(document.body).toMatchSnapshot()

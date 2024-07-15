@@ -8,7 +8,7 @@ export function getContract(
   address: string,
   ABI: ContractInterface,
   provider: JsonRpcProvider,
-  account?: string,
+  account?: string
 ): Contract {
   if (!isAddress(address) || address === AddressZero) {
     throw Error(`Invalid 'address' parameter '${address}'.`)

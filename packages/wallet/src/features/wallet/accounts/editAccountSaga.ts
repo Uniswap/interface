@@ -4,7 +4,10 @@ import { unique } from 'utilities/src/primitives/array'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
-import { editAccount as editInStore, removeAccounts as removeAccountsInStore } from 'wallet/src/features/wallet/slice'
+import {
+  editAccount as editInStore,
+  removeAccounts as removeAccountsInStore,
+} from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
@@ -104,7 +107,14 @@ function* editAccount(params: EditAccountParams) {
 
 function* renameAccount(params: RenameParams, account: Account) {
   const { newName } = params
-  logger.debug('editAccountSaga', 'renameAccount', 'Renaming account', account.address, 'to ', newName)
+  logger.debug(
+    'editAccountSaga',
+    'renameAccount',
+    'Renaming account',
+    account.address,
+    'to ',
+    newName
+  )
   yield* put(
     editInStore({
       address: account.address,
@@ -112,7 +122,7 @@ function* renameAccount(params: RenameParams, account: Account) {
         ...account,
         name: newName,
       },
-    }),
+    })
   )
 }
 
@@ -134,7 +144,7 @@ function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
 
   const accounts = yield* appSelect(selectAccounts)
   const mnemonicAccounts = Object.values(accounts).filter(
-    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === account.mnemonicId,
+    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === account.mnemonicId
   )
 
   const updatedBackups: BackupType[] = unique([...(account.backups ?? []), backupMethod])
@@ -147,16 +157,16 @@ function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
             ...mnemonicAccount,
             backups: updatedBackups,
           },
-        }),
+        })
       )
-    }),
+    })
   )
 
   logger.debug(
     'editAccountSaga',
     'addBackupMethod',
     'Adding backup method',
-    mnemonicAccounts.map((a) => a.address),
+    mnemonicAccounts.map((a) => a.address)
   )
 }
 
@@ -170,7 +180,7 @@ function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account)
 
   const accounts = yield* appSelect(selectAccounts)
   const mnemonicAccounts = Object.values(accounts).filter(
-    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === account.mnemonicId,
+    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === account.mnemonicId
   )
 
   const updatedBackups = account.backups?.filter((backup) => backup !== backupMethod)
@@ -184,16 +194,16 @@ function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account)
             ...mnemonicAccount,
             backups: updatedBackups,
           },
-        }),
+        })
       )
-    }),
+    })
   )
 
   logger.debug(
     'editAccountSaga',
     'removeBackupMethod',
     'Removing backup method',
-    mnemonicAccounts.map((a) => a.address),
+    mnemonicAccounts.map((a) => a.address)
   )
 }
 

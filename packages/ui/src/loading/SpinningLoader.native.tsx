@@ -30,7 +30,7 @@ export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderPro
         duration: 1000,
         easing: Easing.bezier(0.83, 0, 0.17, 1),
       }),
-      -1,
+      -1
     )
     return () => cancelAnimation(rotation)
   }, [rotation])

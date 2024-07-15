@@ -1,18 +1,35 @@
-import React, { useCallback, useMemo } from 'react'
+import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ImageBackground, ImageSourcePropType, StyleProp, StyleSheet, ViewStyle, VirtualizedList } from 'react-native'
-import { Flex, useIsDarkMode } from 'ui/src'
+import {
+  ImageBackground,
+  ImageSourcePropType,
+  StyleProp,
+  StyleSheet,
+  ViewStyle,
+  VirtualizedList,
+} from 'react-native'
+import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } from 'ui/src/assets'
 import { ArrowDownCircle, Buy as BuyIcon, PaperStack } from 'ui/src/components/icons'
 import { borderRadii } from 'ui/src/theme'
-import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { useCexTransferProviders } from 'wallet/src/features/fiatOnRamp/api'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+
+interface ActionCardItem {
+  title: string
+  blurb: string
+  icon: JSX.Element
+  elementName: ElementNameType
+  backgroundImage?: ImageSourcePropType
+  badgeText?: string
+  onPress?: () => void
+}
 
 enum ActionOption {
   Buy = 'Buy',
@@ -30,7 +47,11 @@ type WalletEmptyStateProps = {
   onPressBuy?: () => void
 }
 
-export function PortfolioEmptyState({ onPressReceive, onPressImport, onPressBuy }: WalletEmptyStateProps): JSX.Element {
+export function PortfolioEmptyState({
+  onPressReceive,
+  onPressImport,
+  onPressBuy,
+}: WalletEmptyStateProps): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 
@@ -39,17 +60,6 @@ export function PortfolioEmptyState({ onPressReceive, onPressImport, onPressBuy 
   const cexTransferEnabled = useFeatureFlag(FeatureFlags.CexTransfers)
   const cexTransferProviders = useCexTransferProviders(cexTransferEnabled)
 
-  const BackgroundImageWrapperCallback = useCallback(
-    ({ children }: { children: React.ReactNode }) => {
-      return (
-        <BackgroundImage image={isDarkMode ? CRYPTO_PURCHASE_BACKGROUND_DARK : CRYPTO_PURCHASE_BACKGROUND_LIGHT}>
-          {children}
-        </BackgroundImage>
-      )
-    },
-    [isDarkMode],
-  )
-
   const options: { [key in ActionOption]: ActionCardItem } = useMemo(
     () => ({
       [ActionOption.Buy]: {
@@ -57,8 +67,10 @@ export function PortfolioEmptyState({ onPressReceive, onPressImport, onPressBuy 
         blurb: t('home.tokens.empty.action.buy.description'),
         elementName: ElementName.EmptyStateBuy,
         icon: <BuyIcon color="$accent1" size="$icon.28" />,
+        backgroundImage: isDarkMode
+          ? CRYPTO_PURCHASE_BACKGROUND_DARK
+          : CRYPTO_PURCHASE_BACKGROUND_LIGHT,
         onPress: onPressBuy,
-        BackgroundImageWrapperCallback,
       },
       [ActionOption.Receive]: {
         title: t('home.tokens.empty.action.receive.title'),
@@ -66,7 +78,9 @@ export function PortfolioEmptyState({ onPressReceive, onPressImport, onPressBuy 
         elementName: ElementName.EmptyStateReceive,
         icon:
           cexTransferProviders.length > 0 ? (
-            <OverlappingLogos logos={cexTransferProviders.map((provider) => provider.logos.lightLogo)} />
+            <OverlappingLogos
+              logos={cexTransferProviders.map((provider) => provider.logos.lightLogo)}
+            />
           ) : (
             <ArrowDownCircle color="$accent1" size="$icon.28" />
           ),
@@ -80,12 +94,14 @@ export function PortfolioEmptyState({ onPressReceive, onPressImport, onPressBuy 
         onPress: onPressImport,
       },
     }),
-    [t, onPressBuy, BackgroundImageWrapperCallback, cexTransferProviders, onPressReceive, onPressImport],
+    [t, isDarkMode, onPressBuy, cexTransferProviders, onPressReceive, onPressImport]
   )
 
   // Order options based on view only status, and wether we have a valid buy handler
   const sortedOptions =
-    isViewOnly && onPressImport ? [options.Import] : [...(onPressBuy ? [options.Buy] : []), options.Receive]
+    isViewOnly && onPressImport
+      ? [options.Import]
+      : [...(onPressBuy ? [options.Buy] : []), options.Receive]
 
   return (
     <Flex gap="$spacing8">
@@ -96,17 +112,51 @@ export function PortfolioEmptyState({ onPressReceive, onPressImport, onPressBuy 
   )
 }
 
-const BackgroundImage = ({
+const ActionCard = ({
+  title,
+  blurb,
+  onPress,
+  icon,
+  elementName,
+  backgroundImage,
+}: ActionCardItem): JSX.Element => (
+  <Trace logPress element={elementName}>
+    <TouchableArea
+      backgroundColor={backgroundImage ? undefined : '$surface1'}
+      borderColor="$surface3"
+      borderRadius="$rounded24"
+      borderWidth={1}
+      onPress={onPress}>
+      <BackgroundWrapper backgroundImage={backgroundImage}>
+        <Flex centered shrink alignContent="center" gap="$spacing4" px="$spacing20" py="$spacing12">
+          {icon}
+          <Flex centered shrink alignContent="center">
+            <Text textAlign="center" variant="buttonLabel3">
+              {title}
+            </Text>
+            <Text color="$neutral2" textAlign="center" variant="body3">
+              {blurb}
+            </Text>
+          </Flex>
+        </Flex>
+      </BackgroundWrapper>
+    </TouchableArea>
+  </Trace>
+)
+
+const BackgroundWrapper = ({
   children,
-  image,
+  backgroundImage,
 }: {
   children: React.ReactNode
-  image: ImageSourcePropType
+  backgroundImage?: ImageSourcePropType
 }): JSX.Element => {
-  return (
-    <ImageBackground borderRadius={borderRadii.rounded24} source={image}>
+  return backgroundImage !== undefined ? (
+    <ImageBackground borderRadius={borderRadii.rounded24} source={backgroundImage}>
       {children}
     </ImageBackground>
+  ) : (
+    <Flex>{children}</Flex>
   )
 }
 
@@ -120,8 +170,7 @@ function ReceiveCryptoIcon(): JSX.Element {
       style={{
         ...styles.iconContainer,
         borderRadius: borderRadii.roundedFull,
-      }}
-    >
+      }}>
       <ArrowDownCircle
         color="$accent1"
         style={{
@@ -146,8 +195,7 @@ function ServiceProviderLogo({ uri }: { uri: string }): JSX.Element {
       borderWidth={2}
       enterStyle={{ opacity: 0 }}
       exitStyle={{ opacity: 0 }}
-      style={styles.iconContainer}
-    >
+      style={styles.iconContainer}>
       <ImageUri
         imageStyle={{
           borderRadius: borderRadii.rounded8,

@@ -2,7 +2,7 @@ import React from 'react'
 import { Flex, TouchableArea } from 'ui/src'
 import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { iconSizes } from 'ui/src/theme'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 type Props = {
   onPress: () => void
@@ -12,7 +12,12 @@ type Props = {
 
 export function SendButton({ onPress, color, size = iconSizes.icon24 }: Props): JSX.Element {
   return (
-    <TouchableArea hapticFeedback hitSlop={16} p="$spacing4" testID={TestID.Send} onPress={onPress}>
+    <TouchableArea
+      hapticFeedback
+      hitSlop={16}
+      p="$spacing4"
+      testID={ElementName.Send}
+      onPress={onPress}>
       <Flex centered row gap="$spacing8">
         <SendIcon color={color} height={size} width={size} />
       </Flex>

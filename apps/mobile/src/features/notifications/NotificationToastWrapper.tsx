@@ -17,7 +17,11 @@ export function NotificationToastWrapper(): JSX.Element | null {
   return <NotificationToastRouter notification={notification} />
 }
 
-function NotificationToastRouter({ notification }: { notification: AppNotification }): JSX.Element | null {
+function NotificationToastRouter({
+  notification,
+}: {
+  notification: AppNotification
+}): JSX.Element | null {
   // Insert Mobile-only notifications here.
   // Shared wallet notifications should go in SharedNotificationToastRouter.
   switch (notification.type) {

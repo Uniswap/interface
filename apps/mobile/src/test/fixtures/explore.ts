@@ -1,7 +1,7 @@
 import { TokenItemData } from 'src/components/explore/TokenItem'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { token } from 'wallet/src/test/fixtures'
 import { createFixture } from 'wallet/src/test/utils'
 

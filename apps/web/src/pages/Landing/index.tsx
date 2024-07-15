@@ -44,7 +44,7 @@ export default function Landing() {
           disconnect()
         }
       },
-      isExitAnimationEnabled ? TRANSITION_DURATIONS.slow : TRANSITION_DURATIONS.fast,
+      isExitAnimationEnabled ? TRANSITION_DURATIONS.slow : TRANSITION_DURATIONS.fast
     )
     return () => clearTimeout(timeoutId)
   }, [

@@ -4,7 +4,7 @@ import { closeAllModals } from 'src/features/modals/modalSlice'
 
 // Helpers to preload profile data, and dismiss modals and navigate
 export const useNavigateToProfileTab = (
-  address: string | undefined,
+  address: string | undefined
 ): {
   onPressIn: () => Promise<void>
   onPress: () => void

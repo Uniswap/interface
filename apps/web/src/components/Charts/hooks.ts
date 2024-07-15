@@ -18,6 +18,6 @@ export function useHeaderDateFormatter() {
       }
       return new Date(time * 1000).toLocaleString(locale, headerTimeFormatOptions)
     },
-    [locale],
+    [locale]
   )
 }

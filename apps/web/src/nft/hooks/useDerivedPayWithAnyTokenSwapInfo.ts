@@ -7,7 +7,7 @@ import { isClassicTrade } from 'state/routing/utils'
 
 export default function useDerivedPayWithAnyTokenSwapInfo(
   inputCurrency?: Currency,
-  parsedOutputAmount?: CurrencyAmount<NativeCurrency | Token>,
+  parsedOutputAmount?: CurrencyAmount<NativeCurrency | Token>
 ): {
   state: TradeState
   trade?: ClassicTrade
@@ -18,7 +18,7 @@ export default function useDerivedPayWithAnyTokenSwapInfo(
     TradeType.EXACT_OUTPUT,
     parsedOutputAmount,
     inputCurrency ?? undefined,
-    RouterPreference.API,
+    RouterPreference.API
   )
 
   const allowedSlippage = useAutoSlippageTolerance(isClassicTrade(trade) ? trade : undefined)

@@ -25,8 +25,8 @@ export function usePriceImpact(trade?: ClassicTrade): PriceImpact | undefined {
       priceImpactWarning === 'error'
         ? theme.critical
         : priceImpactWarning === 'warning'
-          ? theme.deprecated_accentWarning
-          : undefined
+        ? theme.deprecated_accentWarning
+        : undefined
 
     return marketPriceImpact && priceImpactWarning && warningColor
       ? {

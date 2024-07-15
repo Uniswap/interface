@@ -3,16 +3,25 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { put } from 'typed-redux-saga'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
-import { getValidAddress } from 'uniswap/src/utils/addresses'
-import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
-import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
+import { getValidAddress } from 'wallet/src/utils/addresses'
+import { currencyIdToAddress, currencyIdToChain } from 'wallet/src/utils/currencyId'
 
 export function* handleSwapLink(url: URL) {
   try {
-    const { inputChain, inputAddress, outputChain, outputAddress, exactCurrencyField, exactAmountToken } =
-      parseAndValidateSwapParams(url)
+    const {
+      inputChain,
+      inputAddress,
+      outputChain,
+      outputAddress,
+      exactCurrencyField,
+      exactAmountToken,
+    } = parseAndValidateSwapParams(url)
 
     const inputAsset: CurrencyAsset = {
       address: inputAddress,
@@ -90,11 +99,15 @@ const parseAndValidateSwapParams = (url: URL) => {
     throw new Error('Invalid swap amount')
   }
 
-  if (!currencyField || (currencyField.toLowerCase() !== 'input' && currencyField.toLowerCase() !== 'output')) {
+  if (
+    !currencyField ||
+    (currencyField.toLowerCase() !== 'input' && currencyField.toLowerCase() !== 'output')
+  ) {
     throw new Error('Invalid currencyField. Must be either `input` or `output`')
   }
 
-  const exactCurrencyField = currencyField.toLowerCase() === 'output' ? CurrencyField.OUTPUT : CurrencyField.INPUT
+  const exactCurrencyField =
+    currencyField.toLowerCase() === 'output' ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
   return {
     inputChain,

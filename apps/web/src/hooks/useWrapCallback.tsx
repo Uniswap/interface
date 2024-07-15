@@ -9,7 +9,6 @@ import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo, useState } from 'react'
 import { useCurrencyBalance } from 'state/connection/hooks'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
@@ -28,7 +27,7 @@ enum WrapInputError {
 }
 
 export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputError }) {
-  const { chainId } = useSwapAndLimitContext()
+  const { chainId } = useAccount()
   const native = useNativeCurrency(chainId)
   const wrapped = native?.wrapped
 
@@ -56,16 +55,15 @@ export function WrapErrorText({ wrapInputError }: { wrapInputError: WrapInputErr
 export default function useWrapCallback(
   inputCurrency: Currency | undefined | null,
   outputCurrency: Currency | undefined | null,
-  typedValue: string | undefined,
+  typedValue: string | undefined
 ): { wrapType: WrapType; execute?: () => Promise<string | undefined>; inputError?: WrapInputError } {
   const account = useAccount()
-  const { chainId } = useSwapAndLimitContext()
-  const wethContract = useWETHContract(true, chainId)
+  const wethContract = useWETHContract()
   const balance = useCurrencyBalance(account.address, inputCurrency ?? undefined)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(
     () => tryParseCurrencyAmount(typedValue, inputCurrency ?? undefined),
-    [inputCurrency, typedValue],
+    [inputCurrency, typedValue]
   )
   const addTransaction = useTransactionAdder()
 
@@ -77,10 +75,10 @@ export default function useWrapCallback(
   }
 
   return useMemo(() => {
-    if (!wethContract || !chainId || !inputCurrency || !outputCurrency) {
+    if (!wethContract || !account.chainId || !inputCurrency || !outputCurrency) {
       return NOT_APPLICABLE
     }
-    const weth = WRAPPED_NATIVE_CURRENCY[chainId]
+    const weth = WRAPPED_NATIVE_CURRENCY[account.chainId]
     if (!weth) {
       return NOT_APPLICABLE
     }
@@ -106,7 +104,7 @@ export default function useWrapCallback(
                 trace({ name: 'Wrap', op: 'swap.wrap' }, async (trace) => {
                   const network = await wethContract.provider.getNetwork()
                   if (
-                    network.chainId !== chainId ||
+                    network.chainId !== account.chainId ||
                     wethContract.address !== WRAPPED_NATIVE_CURRENCY[network.chainId]?.address
                   ) {
                     sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_INVALIDATED, {
@@ -122,13 +120,13 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     throw error
                   }
                   const txReceipt = await trace.child({ name: 'Deposit', op: 'wallet.send_transaction' }, () =>
-                    wethContract.deposit({ value: `0x${inputAmount.quotient.toString(16)}` }),
+                    wethContract.deposit({ value: `0x${inputAmount.quotient.toString(16)}` })
                   )
                   addTransaction(txReceipt, {
                     type: TransactionType.WRAP,
                     unwrapped: false,
                     currencyAmountRaw: inputAmount?.quotient.toString(),
-                    chainId,
+                    chainId: account.chainId,
                   })
                   sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                     ...eventProperties,
@@ -140,8 +138,8 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
         inputError: sufficientBalance
           ? undefined
           : hasInputAmount
-            ? WrapInputError.INSUFFICIENT_NATIVE_BALANCE
-            : WrapInputError.ENTER_NATIVE_AMOUNT,
+          ? WrapInputError.INSUFFICIENT_NATIVE_BALANCE
+          : WrapInputError.ENTER_NATIVE_AMOUNT,
       }
     } else if (weth.equals(inputCurrency) && outputCurrency.isNative) {
       return {
@@ -152,13 +150,13 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                 trace({ name: 'Wrap', op: 'swap.wrap' }, async (trace) => {
                   try {
                     const txReceipt = await trace.child({ name: 'Withdraw', op: 'wallet.send_transaction' }, () =>
-                      wethContract.withdraw(`0x${inputAmount.quotient.toString(16)}`),
+                      wethContract.withdraw(`0x${inputAmount.quotient.toString(16)}`)
                     )
                     addTransaction(txReceipt, {
                       type: TransactionType.WRAP,
                       unwrapped: true,
                       currencyAmountRaw: inputAmount?.quotient.toString(),
-                      chainId,
+                      chainId: account.chainId,
                     })
                     sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                       ...eventProperties,
@@ -174,11 +172,11 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
         inputError: sufficientBalance
           ? undefined
           : hasInputAmount
-            ? WrapInputError.INSUFFICIENT_WRAPPED_BALANCE
-            : WrapInputError.ENTER_WRAPPED_AMOUNT,
+          ? WrapInputError.INSUFFICIENT_WRAPPED_BALANCE
+          : WrapInputError.ENTER_WRAPPED_AMOUNT,
       }
     } else {
       return NOT_APPLICABLE
     }
-  }, [wethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  }, [wethContract, account.chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
 }

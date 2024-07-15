@@ -137,7 +137,7 @@ export const TokenDetailsHeader = () => {
   const explorerUrl = getExplorerLink(
     currency.chainId,
     address,
-    currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN,
+    currency.isNative ? ExplorerDataType.NATIVE : ExplorerDataType.TOKEN
   )
 
   const { homepageUrl, twitterName } = tokenQuery.data?.token?.project ?? {}

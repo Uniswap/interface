@@ -18,5 +18,5 @@ export default createReducer<BurnState>(initialState, (builder) =>
       independentField: field,
       typedValue,
     }
-  }),
+  })
 )

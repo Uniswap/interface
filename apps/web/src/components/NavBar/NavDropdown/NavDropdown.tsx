@@ -73,7 +73,7 @@ export function NavDropdown({ children, width, dropdownRef, isOpen }: NavDropdow
               backgroundColor="$scrim"
               style={{ backdropFilter: 'blur(4px)' }}
             />
-            <Popover.Sheet.Frame borderTopLeftRadius="$rounded16" borderTopRightRadius="$rounded16">
+            <Popover.Sheet.Frame style={{ borderRadius: `16px 16px 0 0` }}>
               <Popover.Sheet.ScrollView>
                 <Row width="full" justify="center" mt={2}>
                   <Popover.Sheet.Handle width={32} height={4} backgroundColor="$surface3" />

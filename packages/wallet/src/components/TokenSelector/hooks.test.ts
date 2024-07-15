@@ -2,13 +2,8 @@
 import { ApolloError } from '@apollo/client'
 import { toIncludeSameMembers } from 'jest-extended'
 import { PreloadedState } from 'redux'
-import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
-import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/utils'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import {
   useAllCommonBaseCurrencies,
   useCommonTokensOptions,
@@ -20,6 +15,10 @@ import {
   usePortfolioBalancesForAddressById,
   usePortfolioTokenOptions,
 } from 'wallet/src/components/TokenSelector/hooks'
+import { createEmptyBalanceOption } from 'wallet/src/components/TokenSelector/utils'
+import { BRIDGED_BASE_ADDRESSES } from 'wallet/src/constants/addresses'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import { tokenProjectToCurrencyInfos } from 'wallet/src/features/dataApi/utils'
 import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
 import { SharedState } from 'wallet/src/state/reducer'
 import {
@@ -41,6 +40,7 @@ import {
 } from 'wallet/src/test/fixtures'
 import { act, createArray, renderHook, waitFor } from 'wallet/src/test/test-utils'
 import { portfolioBalancesById, queryResolvers } from 'wallet/src/test/utils'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 expect.extend({ toIncludeSameMembers })
 

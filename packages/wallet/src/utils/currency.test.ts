@@ -1,4 +1,4 @@
-import { DAI, USDC } from 'uniswap/src/constants/tokens'
+import { DAI, USDC } from 'wallet/src/constants/tokens'
 import { mockLocalizedFormatter, noOpFunction } from 'wallet/src/test/mocks/utils'
 import { getCurrencyDisplayText, getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 

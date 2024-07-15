@@ -1,4 +1,8 @@
-import { TransactionReceipt, TransactionRequest, TransactionResponse } from '@ethersproject/providers'
+import {
+  TransactionReceipt,
+  TransactionRequest,
+  TransactionResponse,
+} from '@ethersproject/providers'
 import { BigNumber, Transaction } from 'ethers'
 import { faker } from 'wallet/src/test/shared'
 import { createFixture } from 'wallet/src/test/utils'

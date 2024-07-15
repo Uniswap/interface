@@ -11,7 +11,7 @@ import { useContractManager, useProvider } from 'wallet/src/features/wallet/cont
 export function useContract<T extends Contract = Contract>(
   chainId: WalletChainId,
   addressOrAddressMap: string | { [chainId: number]: string } | undefined,
-  ABI: ContractInterface,
+  ABI: ContractInterface
 ): T | null {
   const provider = useProvider(chainId)
   const contractsManager = useContractManager()

@@ -9,7 +9,11 @@ import { TimeRangeGroup } from 'src/components/PriceExplorer/TimeRangeGroup'
 import { CURSOR_INNER_SIZE, CURSOR_SIZE } from 'src/components/PriceExplorer/constants'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
-import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
+import {
+  PriceNumberOfDigits,
+  TokenSpotData,
+  useTokenPriceHistory,
+} from 'src/components/PriceExplorer/usePriceHistory'
 import { Loader } from 'src/components/loading'
 import { Flex, HapticFeedback } from 'ui/src'
 import { spacing } from 'ui/src/theme'
@@ -32,7 +36,11 @@ function PriceTextSection({ loading, numberOfDigits, spotPrice }: PriceTextProps
 
   return (
     <Flex mx={mx}>
-      <PriceExplorerAnimatedNumber currency={currency} numberOfDigits={numberOfDigits} price={price} />
+      <PriceExplorerAnimatedNumber
+        currency={currency}
+        numberOfDigits={numberOfDigits}
+        price={price}
+      />
       <Flex row gap="$spacing4">
         <RelativeChangeText loading={loading} />
         <DatetimeText loading={loading} />
@@ -60,8 +68,9 @@ export const PriceExplorer = memo(function PriceExplorer({
     useTokenPriceHistory(currencyId)
 
   const { convertFiatAmount } = useLocalizationContext()
-  const conversionRate = convertFiatAmount(1).amount
-  const shouldShowAnimatedDot = selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour
+  const conversionRate = convertFiatAmount().amount
+  const shouldShowAnimatedDot =
+    selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour
   const additionalPadding = shouldShowAnimatedDot ? 40 : 0
 
   const { lastPricePoint, convertedPriceHistory } = useMemo(() => {
@@ -84,7 +93,10 @@ export const PriceExplorer = memo(function PriceExplorer({
     )
   }, [data, convertedSpotValue])
 
-  if (!loading && (!convertedPriceHistory || (!convertedSpot && selectedDuration === HistoryDuration.Day))) {
+  if (
+    !loading &&
+    (!convertedPriceHistory || (!convertedSpot && selectedDuration === HistoryDuration.Day))
+  ) {
     // Propagate retry up while refetching, if available
     const refetchAndRetry = (): void => {
       if (refetch) {
@@ -115,7 +127,9 @@ export const PriceExplorer = memo(function PriceExplorer({
   }
 
   return (
-    <LineChartProvider data={convertedPriceHistory ?? []} onCurrentIndexChange={HapticFeedback.light}>
+    <LineChartProvider
+      data={convertedPriceHistory ?? []}
+      onCurrentIndexChange={HapticFeedback.light}>
       <Flex gap="$spacing8" overflow="hidden">
         <PriceTextSection
           loading={loading}

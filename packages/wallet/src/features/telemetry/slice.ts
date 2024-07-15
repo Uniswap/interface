@@ -35,7 +35,10 @@ export const slice = createSlice({
       sendAnalyticsEvent(SharedEventName.HEARTBEAT)
       state.lastHeartbeat = Date.now()
     },
-    recordBalancesReport: (state, { payload: { totalBalance } }: PayloadAction<{ totalBalance: number }>) => {
+    recordBalancesReport: (
+      state,
+      { payload: { totalBalance } }: PayloadAction<{ totalBalance: number }>
+    ) => {
       state.lastBalancesReport = Date.now()
       state.lastBalancesReportValue = totalBalance
     },
@@ -73,7 +76,7 @@ export function shouldReportBalances(
   lastBalancesReport: number | undefined,
   lastBalancesReportValue: number | undefined,
   signerAccountAddresses: string[],
-  signerAccountValues: number[],
+  signerAccountValues: number[]
 ): boolean {
   const currentBalance = signerAccountValues.reduce((a, b) => a + b, 0)
 
@@ -84,5 +87,6 @@ export function shouldReportBalances(
   return validAccountInfo && (didWalletGetFunded || balanceReportDue)
 }
 
-export const { recordHeartbeat, recordBalancesReport, recordWalletFunded, setAllowAnalytics } = slice.actions
+export const { recordHeartbeat, recordBalancesReport, recordWalletFunded, setAllowAnalytics } =
+  slice.actions
 export const { reducer: telemetryReducer } = slice

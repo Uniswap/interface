@@ -31,8 +31,7 @@ export function FiatOnRampCountryPicker({
         pl="$spacing8"
         pr="$spacing4"
         py="$spacing2"
-        onPress={onPress}
-      >
+        onPress={onPress}>
         <Flex row shrink alignItems="center" flex={0} gap="$spacing2">
           <Flex borderRadius="$roundedFull" overflow="hidden">
             {isWeb ? (

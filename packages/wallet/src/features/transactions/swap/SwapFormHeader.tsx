@@ -4,7 +4,7 @@ import { Keyboard } from 'react-native'
 import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { Eye, Settings, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
@@ -21,7 +21,8 @@ export function SwapFormHeader(): JSX.Element {
   const account = useActiveAccountWithThrow()
 
   const { onClose } = useTransactionModalContext()
-  const { updateSwapForm, customSlippageTolerance, derivedSwapInfo, tradeProtocolPreference } = useSwapFormContext()
+  const { updateSwapForm, customSlippageTolerance, derivedSwapInfo, tradeProtocolPreference } =
+    useSwapFormContext()
 
   const [showSwapSettingsModal, setShowSettingsModal] = useState(false)
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
@@ -41,14 +42,14 @@ export function SwapFormHeader(): JSX.Element {
         customSlippageTolerance: newCustomeSlippageTolerance,
       })
     },
-    [updateSwapForm],
+    [updateSwapForm]
   )
 
   const setTradeProtocolPreference = useCallback(
     (newProtocolPreference: TradeProtocolPreference) => {
       updateSwapForm({ tradeProtocolPreference: newProtocolPreference })
     },
-    [updateSwapForm],
+    [updateSwapForm]
   )
 
   const onCloseSettingsModal = useCallback(() => setShowSettingsModal(false), [])
@@ -65,18 +66,16 @@ export function SwapFormHeader(): JSX.Element {
         mt={isWeb ? '$spacing4' : '$spacing8'}
         pl={isWeb ? '$none' : '$spacing12'}
         pr={isWeb ? '$spacing4' : customSlippageTolerance ? '$spacing4' : '$spacing16'}
-        testID={TestID.SwapFormHeader}
-      >
+        testID={ElementName.SwapFormHeader}>
         {isWeb && (
-          <TouchableArea hapticFeedback testID={TestID.SwapSettings} onPress={onClose}>
+          <TouchableArea hapticFeedback testID={ElementName.SwapSettings} onPress={onClose}>
             <Flex
               centered
               row
               backgroundColor={isWeb ? undefined : '$surface2'}
               borderRadius="$roundedFull"
               px="$spacing4"
-              py="$spacing4"
-            >
+              py="$spacing4">
               <X color={colors.neutral2.get()} size={iconSizes.icon24} />
             </Flex>
           </TouchableArea>
@@ -92,8 +91,7 @@ export function SwapFormHeader(): JSX.Element {
               justifyContent="center"
               px="$spacing8"
               py="$spacing4"
-              onPress={onPressViewOnlyModal}
-            >
+              onPress={onPressViewOnlyModal}>
               <Flex row alignItems="center" gap="$spacing4">
                 <Eye color={colors.neutral2.get()} size={iconSizes.icon16} />
                 <Text color="$neutral2" variant="buttonLabel3">
@@ -104,7 +102,10 @@ export function SwapFormHeader(): JSX.Element {
           )}
 
           {!isViewOnlyWallet && (
-            <TouchableArea hapticFeedback testID={TestID.SwapSettings} onPress={onPressSwapSettings}>
+            <TouchableArea
+              hapticFeedback
+              testID={ElementName.SwapSettings}
+              onPress={onPressSwapSettings}>
               <Flex
                 centered
                 row
@@ -112,8 +113,7 @@ export function SwapFormHeader(): JSX.Element {
                 borderRadius="$roundedFull"
                 gap="$spacing4"
                 px={customSlippageTolerance ? '$spacing8' : '$spacing4'}
-                py="$spacing4"
-              >
+                py="$spacing4">
                 {customSlippageTolerance ? (
                   <Text color="$neutral2" variant="buttonLabel4">
                     {t('swap.form.slippage', {
@@ -121,7 +121,10 @@ export function SwapFormHeader(): JSX.Element {
                     })}
                   </Text>
                 ) : null}
-                <Settings color={colors.neutral2.get()} size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />
+                <Settings
+                  color={colors.neutral2.get()}
+                  size={isWeb ? iconSizes.icon20 : iconSizes.icon24}
+                />
               </Flex>
             </TouchableArea>
           )}

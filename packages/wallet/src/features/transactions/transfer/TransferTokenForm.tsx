@@ -12,8 +12,7 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { TransferArrowButton } from 'wallet/src/components/buttons/TransferArrowButton'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
@@ -30,7 +29,7 @@ import { useUSDTokenUpdater } from 'wallet/src/features/transactions/swap/trade/
 import { transactionStateActions } from 'wallet/src/features/transactions/transactionState/transactionState'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { TransferFormSpeedbumps } from 'wallet/src/features/transactions/transfer/TransferFormWarnings'
-import { useSetShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
+import { useOnToggleShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/transfer/hooks/useShowSendNetworkNotification'
 import {
   DerivedTransferInfo,
@@ -90,7 +89,13 @@ export function TransferTokenForm({
   } = derivedTransferInfo
 
   const currencyIn = currencyInInfo?.currency
-  useUSDTokenUpdater(dispatch, isFiatInput, exactAmountToken, exactAmountFiat, currencyIn ?? undefined)
+  useUSDTokenUpdater(
+    dispatch,
+    isFiatInput,
+    exactAmountToken,
+    exactAmountFiat,
+    currencyIn ?? undefined
+  )
 
   useShowSendNetworkNotification({ chainId: currencyIn?.chainId })
 
@@ -104,16 +109,17 @@ export function TransferTokenForm({
     hasWarning: false,
   })
 
-  const { onShowTokenSelector } = useTokenSelectorActionHandlers(dispatch, TokenSelectorFlow.Transfer)
+  const { onShowTokenSelector } = useTokenSelectorActionHandlers(
+    dispatch,
+    TokenSelectorFlow.Transfer
+  )
   const { onSetExactAmount, onSetMax } = useTokenFormActionHandlers(dispatch)
-  const onSetShowRecipientSelector = useSetShowRecipientSelector(dispatch)
+  const onToggleShowRecipientSelector = useOnToggleShowRecipientSelector(dispatch)
 
-  const onShowRecipientSelector = useCallback(() => {
-    onSetShowRecipientSelector(true)
-  }, [onSetShowRecipientSelector])
-
-  const { isBlocked: isActiveBlocked, isBlockedLoading: isActiveBlockedLoading } = useIsBlockedActiveAddress()
-  const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlocked(recipient)
+  const { isBlocked: isActiveBlocked, isBlockedLoading: isActiveBlockedLoading } =
+    useIsBlockedActiveAddress()
+  const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } =
+    useIsBlocked(recipient)
   const isBlocked = isActiveBlocked || isRecipientBlocked
   const isBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
 
@@ -163,7 +169,7 @@ export function TransferTokenForm({
     (start: number, end?: number) => {
       setInputSelection({ start, end: end ?? start })
     },
-    [setInputSelection],
+    [setInputSelection]
   )
 
   const previsFiatInput = usePrevious(isFiatInput)
@@ -197,7 +203,14 @@ export function TransferTokenForm({
       start: newPositionFromStartWithPrefix,
       end: newPositionFromStartWithPrefix,
     })
-  }, [isFiatInput, previsFiatInput, inputSelection, setInputSelection, exactAmountToken, exactAmountFiat])
+  }, [
+    isFiatInput,
+    previsFiatInput,
+    inputSelection,
+    setInputSelection,
+    exactAmountToken,
+    exactAmountFiat,
+  ])
 
   const onTransferWarningClick = (): void => {
     Keyboard.dismiss()
@@ -206,7 +219,9 @@ export function TransferTokenForm({
 
   const { onToggleFiatInput } = useTokenFormActionHandlers(dispatch)
 
-  const transferWarning = warnings.warnings.find((warning) => warning.severity >= WarningSeverity.Low)
+  const transferWarning = warnings.warnings.find(
+    (warning) => warning.severity >= WarningSeverity.Low
+  )
   const transferWarningColor = getAlertColor(transferWarning?.severity)
 
   const TRANSFER_DIRECTION_BUTTON_SIZE = iconSizes.icon20
@@ -221,7 +236,11 @@ export function TransferTokenForm({
           caption={transferWarning.message}
           confirmText={t('common.button.close')}
           icon={
-            <SendWarningIcon color={transferWarningColor.text} height={iconSizes.icon24} width={iconSizes.icon24} />
+            <SendWarningIcon
+              color={transferWarningColor.text}
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
+            />
           }
           modalName={ModalName.SendWarning}
           severity={transferWarning.severity}
@@ -244,8 +263,7 @@ export function TransferTokenForm({
           // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
           exiting={isWeb ? undefined : FadeOut}
           gap="$spacing2"
-          onLayout={onInputPanelLayout}
-        >
+          onLayout={onInputPanelLayout}>
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={fullHeight / 4} />
           ) : (
@@ -263,9 +281,13 @@ export function TransferTokenForm({
                 warnings={warnings.warnings}
                 onPressIn={(): void => setCurrencyFieldFocused(true)}
                 onSelectionChange={
-                  showNativeKeyboard ? undefined : (start, end): void => setInputSelection({ start, end })
+                  showNativeKeyboard
+                    ? undefined
+                    : (start, end): void => setInputSelection({ start, end })
                 }
-                onSetExactAmount={(value): void => onSetExactAmount(CurrencyField.INPUT, value, isFiatInput)}
+                onSetExactAmount={(value): void =>
+                  onSetExactAmount(CurrencyField.INPUT, value, isFiatInput)
+                }
                 onSetMax={(amount): void => {
                   onSetMax(amount)
                   setCurrencyFieldFocused(false)
@@ -284,9 +306,11 @@ export function TransferTokenForm({
                 TRANSFER_DIRECTION_BUTTON_INNER_PADDING +
                 TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH
               }
-              style={StyleSheet.absoluteFill}
-            >
-              <Flex alignItems="center" bottom={TRANSFER_DIRECTION_BUTTON_SIZE / 2} position="absolute">
+              style={StyleSheet.absoluteFill}>
+              <Flex
+                alignItems="center"
+                bottom={TRANSFER_DIRECTION_BUTTON_SIZE / 2}
+                position="absolute">
                 <TransferArrowButton disabled backgroundColor="$surface2" p="$spacing8" />
               </Flex>
             </Flex>
@@ -299,10 +323,12 @@ export function TransferTokenForm({
               borderBottomRightRadius={transferWarning || isBlocked ? '$none' : '$rounded20'}
               borderTopLeftRadius="$rounded20"
               borderTopRightRadius="$rounded20"
-              justifyContent="center"
-            >
+              justifyContent="center">
               {recipient && (
-                <RecipientInputPanel recipientAddress={recipient} onShowRecipientSelector={onShowRecipientSelector} />
+                <RecipientInputPanel
+                  recipientAddress={recipient}
+                  onToggleShowRecipientSelector={onToggleShowRecipientSelector}
+                />
               )}
               {walletNeedsRestore && (
                 <TouchableArea disabled={!openWalletRestoreModal} onPress={onRestorePress}>
@@ -318,8 +344,7 @@ export function TransferTokenForm({
                     borderTopWidth={1}
                     gap="$spacing8"
                     px="$spacing12"
-                    py="$spacing12"
-                  >
+                    py="$spacing12">
                     <InfoCircleFilled
                       color={colors.DEP_accentWarning.val}
                       height={iconSizes.icon20}
@@ -344,8 +369,7 @@ export function TransferTokenForm({
                   borderBottomRightRadius="$rounded16"
                   gap="$spacing8"
                   px="$spacing16"
-                  py="$spacing12"
-                >
+                  py="$spacing12">
                   <SendWarningIcon
                     color={transferWarningColor.text}
                     height={iconSizes.icon16}
@@ -385,8 +409,7 @@ export function TransferTokenForm({
           opacity={isLayoutPending ? 0 : 1}
           position="absolute"
           right={0}
-          onLayout={onDecimalPadLayout}
-        >
+          onLayout={onDecimalPadLayout}>
           {!isWeb && !nftIn && !showNativeKeyboard && (
             <DecimalPadLegacy
               hasCurrencyPrefix={isFiatInput}
@@ -406,9 +429,8 @@ export function TransferTokenForm({
             // Override opacity only for view-only wallets
             opacity={isViewOnlyWallet ? 0.4 : undefined}
             size="large"
-            testID={TestID.ReviewTransfer}
-            onPress={onPressReview}
-          >
+            testID={ElementName.ReviewTransfer}
+            onPress={onPressReview}>
             {t('send.button.review')}
           </Button>
         </AnimatedFlex>

@@ -17,7 +17,9 @@ interface Props {
   size?: number
 }
 
-export function PendingNotificationBadge({ size = LOADING_SPINNER_SIZE }: Props): JSX.Element | null {
+export function PendingNotificationBadge({
+  size = LOADING_SPINNER_SIZE,
+}: Props): JSX.Element | null {
   const colors = useSporeColors()
   const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
   const notifications = useAppSelector(selectActiveAccountNotifications)
@@ -38,10 +40,12 @@ export function PendingNotificationBadge({ size = LOADING_SPINNER_SIZE }: Props)
 
   /*************** Pending in-app txn  **************/
 
-  const swapPendingNotificationActive = currentNotification?.type === AppNotificationType.SwapPending
+  const swapPendingNotificationActive =
+    currentNotification?.type === AppNotificationType.SwapPending
   const pendingTransactionCount = (sortedPendingTransactions ?? []).length
   const txPendingLongerThanLimit =
-    sortedPendingTransactions?.[0] && Date.now() - sortedPendingTransactions[0].addedTime > PENDING_TX_TIME_LIMIT
+    sortedPendingTransactions?.[0] &&
+    Date.now() - sortedPendingTransactions[0].addedTime > PENDING_TX_TIME_LIMIT
 
   // If a transaction has been pending for longer than 5 mins, then don't show the pending icon anymore
   // Dont show the loader if the swap pending toast is on screen
@@ -61,7 +65,12 @@ export function PendingNotificationBadge({ size = LOADING_SPINNER_SIZE }: Props)
 
   if (hasNotifications) {
     return (
-      <Flex backgroundColor="$accent1" borderRadius="$roundedFull" height={iconSizes.icon8} width={iconSizes.icon8} />
+      <Flex
+        backgroundColor="$accent1"
+        borderRadius="$roundedFull"
+        height={iconSizes.icon8}
+        width={iconSizes.icon8}
+      />
     )
   }
 

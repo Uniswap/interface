@@ -51,8 +51,7 @@ function _Trace<EventName extends keyof UniverseEventProperties | undefined>({
       logKeyPress={logKeyPress}
       logPress={logPress}
       properties={typedProps}
-      {...rest}
-    >
+      {...rest}>
       {children}
     </UntypedTrace>
   )

@@ -43,7 +43,7 @@ export function ExternalProfileScreen({
       { key: SectionName.ProfileNftsTab, title: t('home.nfts.title') },
       { key: SectionName.ProfileActivityTab, title: t('home.activity.title') },
     ],
-    [t],
+    [t]
   )
 
   const containerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -51,7 +51,7 @@ export function ExternalProfileScreen({
       ...TAB_STYLES.tabListInner,
       paddingBottom: insets.bottom + TAB_STYLES.tabListInner.paddingBottom,
     }),
-    [insets.bottom],
+    [insets.bottom]
   )
 
   const emptyComponentStyle = useMemo<StyleProp<ViewStyle>>(
@@ -60,7 +60,7 @@ export function ExternalProfileScreen({
       paddingHorizontal: spacing.spacing36,
       paddingBottom: insets.bottom,
     }),
-    [insets.bottom],
+    [insets.bottom]
   )
 
   const sharedProps = useMemo<TabContentProps>(
@@ -69,7 +69,7 @@ export function ExternalProfileScreen({
       loadingContainerStyle: containerStyle,
       emptyComponentStyle,
     }),
-    [containerStyle, emptyComponentStyle],
+    [containerStyle, emptyComponentStyle]
   )
 
   const renderTab = useCallback(
@@ -93,7 +93,12 @@ export function ExternalProfileScreen({
           )
         case SectionName.ProfileNftsTab:
           return (
-            <NftsTab isExternalProfile containerProps={sharedProps} owner={address} renderedInModal={renderedInModal} />
+            <NftsTab
+              isExternalProfile
+              containerProps={sharedProps}
+              owner={address}
+              renderedInModal={renderedInModal}
+            />
           )
         case SectionName.ProfileTokensTab:
           return (
@@ -107,7 +112,7 @@ export function ExternalProfileScreen({
       }
       return null
     },
-    [address, sharedProps, renderedInModal],
+    [address, sharedProps, renderedInModal]
   )
 
   const renderTabBar = useCallback(
@@ -133,7 +138,7 @@ export function ExternalProfileScreen({
         />
       )
     },
-    [colors.surface1, colors.surface3, tabIndex, tabs],
+    [colors.surface1, colors.surface3, tabIndex, tabs]
   )
 
   const traceProperties = useMemo(
@@ -142,13 +147,17 @@ export function ExternalProfileScreen({
       walletName: displayName?.name,
       displayNameType: displayName?.type ? DisplayNameType[displayName.type] : undefined,
     }),
-    [address, displayName?.name, displayName?.type],
+    [address, displayName?.name, displayName?.type]
   )
 
   return (
     <ExploreModalAwareView>
       <Screen noInsets>
-        <Trace directFromPage logImpression properties={traceProperties} screen={MobileScreens.ExternalProfile}>
+        <Trace
+          directFromPage
+          logImpression
+          properties={traceProperties}
+          screen={MobileScreens.ExternalProfile}>
           <Flex grow gap="$spacing16">
             <ProfileHeader address={address} />
             <TraceTabView

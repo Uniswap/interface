@@ -22,7 +22,7 @@ export function useShowSendNetworkNotification({ chainId }: { chainId?: WalletCh
           type: AppNotificationType.NetworkChanged,
           chainId,
           flow: 'send',
-        }),
+        })
       )
     }, ONE_SECOND_MS / 2)
   }, [chainId, prevChainId, dispatch])

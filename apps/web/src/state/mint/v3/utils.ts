@@ -27,7 +27,7 @@ export function tryParsePrice(baseToken?: Token, quoteToken?: Token, value?: str
     baseToken,
     quoteToken,
     JSBI.multiply(JSBI.BigInt(10 ** decimals), JSBI.BigInt(10 ** baseToken.decimals)),
-    JSBI.multiply(withoutDecimals, JSBI.BigInt(10 ** quoteToken.decimals)),
+    JSBI.multiply(withoutDecimals, JSBI.BigInt(10 ** quoteToken.decimals))
   )
 }
 
@@ -35,7 +35,7 @@ export function tryParseTick(
   baseToken?: Token,
   quoteToken?: Token,
   feeAmount?: FeeAmount,
-  value?: string,
+  value?: string
 ): number | undefined {
   if (!baseToken || !quoteToken || !feeAmount || !value) {
     return undefined

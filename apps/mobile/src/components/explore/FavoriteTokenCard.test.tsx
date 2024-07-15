@@ -6,7 +6,13 @@ import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { Language } from 'wallet/src/features/language/constants'
-import { SAMPLE_CURRENCY_ID_1, amount, ethToken, tokenProject, tokenProjectMarket } from 'wallet/src/test/fixtures'
+import {
+  SAMPLE_CURRENCY_ID_1,
+  amount,
+  ethToken,
+  tokenProject,
+  tokenProjectMarket,
+} from 'wallet/src/test/fixtures'
 import { queryResolvers } from 'wallet/src/test/utils'
 
 const mockedNavigation = {

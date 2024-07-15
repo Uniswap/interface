@@ -9,7 +9,7 @@ import { InterfaceTrade } from 'state/routing/types'
 export function tradeMeaningfullyDiffers(
   currentTrade: InterfaceTrade,
   newTrade: InterfaceTrade,
-  slippage: Percent,
+  slippage: Percent
 ): boolean {
   return (
     currentTrade.tradeType !== newTrade.tradeType ||

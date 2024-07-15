@@ -24,6 +24,6 @@ export const getExploreDescription = (path?: string) => {
     `Discover and research tokens on {{network}}. Explore top pools. View real-time prices, trading volume, TVL, charts, and transaction data.`,
     {
       network: capitalize(network),
-    },
+    }
   )
 }

@@ -46,8 +46,7 @@ export default function PasteButton({
       borderRadius="$rounded12"
       p="$spacing8"
       onPress={onPressButton}
-      onPressIn={beforePress}
-    >
+      onPressIn={beforePress}>
       <Flex centered row gap="$spacing4">
         <Text color="$accent1" variant="buttonLabel4">
           {label}

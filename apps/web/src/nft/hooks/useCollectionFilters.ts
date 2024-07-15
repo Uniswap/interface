@@ -107,6 +107,6 @@ export const useCollectionFilters = create<CollectionFilters>()(
       toggleShowFullTraitName: ({ shouldShow, trait_value, trait_type }) =>
         set(() => ({ showFullTraitName: { shouldShow, trait_value, trait_type } })),
     }),
-    { name: 'useCollectionTraits' },
-  ),
+    { name: 'useCollectionTraits' }
+  )
 )

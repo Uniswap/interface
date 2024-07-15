@@ -30,13 +30,12 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, fonts } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { opacify } from 'uniswap/src/utils/colors'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
 import { prepareSwapFormState } from 'wallet/src/features/transactions/swap/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { opacify } from 'wallet/src/utils/colors'
 
 export const NAV_BAR_HEIGHT_XS = 52
 export const NAV_BAR_HEIGHT_SM = 72
@@ -58,7 +57,11 @@ export function NavBar(): JSX.Element {
 
   return (
     <>
-      <Flex opacity={isDarkMode ? 1 : 0.3} overflow="hidden" pointerEvents="none" style={StyleSheet.absoluteFill}>
+      <Flex
+        opacity={isDarkMode ? 1 : 0.3}
+        overflow="hidden"
+        pointerEvents="none"
+        style={StyleSheet.absoluteFill}>
         <LinearGradient
           colors={[opacify(50, colors.sporeBlack.val), opacify(0, colors.sporeBlack.val)]}
           end={[0, 0.8]}
@@ -76,8 +79,7 @@ export function NavBar(): JSX.Element {
         pointerEvents="box-none"
         position="absolute"
         right={0}
-        style={{ paddingBottom: insets.bottom }}
-      >
+        style={{ paddingBottom: insets.bottom }}>
         <Flex
           fill
           row
@@ -86,8 +88,7 @@ export function NavBar(): JSX.Element {
           justifyContent="space-between"
           mb={isAndroid ? '$spacing8' : '$none'}
           mx="$spacing24"
-          pointerEvents="auto"
-        >
+          pointerEvents="auto">
           <ExploreTabBarButton />
           <SwapFAB />
         </Flex>
@@ -118,7 +119,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
       openModal({
         name: ModalName.Swap,
         initialState: prepareSwapFormState({ inputCurrencyId }),
-      }),
+      })
     )
 
     await HapticFeedback.impact()
@@ -150,8 +151,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
           shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
           shadowOpacity={isDarkMode ? 0.6 : 0.4}
           shadowRadius={borderRadii.rounded20}
-          style={[animatedStyle]}
-        >
+          style={[animatedStyle]}>
           <Flex
             borderRadius="$rounded32"
             bottom={0}
@@ -160,11 +160,20 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
             pointerEvents="auto"
             position="absolute"
             right={0}
-            top={0}
-          >
-            <LinearGradient colors={['#F160F9', '#E14EE9']} end={[0, 1]} height="100%" start={[0, 0]} width="100%" />
+            top={0}>
+            <LinearGradient
+              colors={['#F160F9', '#E14EE9']}
+              end={[0, 1]}
+              height="100%"
+              start={[0, 0]}
+              width="100%"
+            />
           </Flex>
-          <Text allowFontScaling={false} color="$sporeWhite" numberOfLines={1} variant="buttonLabel2">
+          <Text
+            allowFontScaling={false}
+            color="$sporeWhite"
+            numberOfLines={1}
+            variant="buttonLabel2">
             {t('common.button.swap')}
           </Text>
         </AnimatedFlex>
@@ -221,9 +230,10 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
       hapticFeedback
       activeOpacity={1}
       style={[styles.searchBar, { borderRadius: borderRadii.roundedFull }]}
-      onPress={onPress}
-    >
-      <TapGestureHandler testID={TestID.SearchTokensAndWallets} onGestureEvent={onGestureEvent}>
+      onPress={onPress}>
+      <TapGestureHandler
+        testID={ElementName.SearchTokensAndWallets}
+        onGestureEvent={onGestureEvent}>
         <AnimatedFlex borderRadius="$roundedFull" overflow="hidden" style={animatedStyle}>
           <BlurView intensity={isIOS ? 100 : 0}>
             <Flex
@@ -239,8 +249,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
               shadowColor={isDarkMode ? '$surface2' : '$neutral3'}
               shadowOffset={SWAP_BUTTON_SHADOW_OFFSET}
               shadowOpacity={isDarkMode ? 0.6 : 0.4}
-              shadowRadius={borderRadii.rounded20}
-            >
+              shadowRadius={borderRadii.rounded20}>
               <Search color="$neutral2" size="$icon.24" />
               <Text
                 allowFontScaling={false}
@@ -248,8 +257,7 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
                 numberOfLines={1}
                 pr="$spacing48"
                 style={{ lineHeight: fonts.body1.lineHeight }}
-                variant="body1"
-              >
+                variant="body1">
                 {t('common.input.search')}
               </Text>
             </Flex>

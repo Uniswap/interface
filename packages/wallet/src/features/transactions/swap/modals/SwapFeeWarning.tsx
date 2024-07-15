@@ -3,11 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { openUri } from 'uniswap/src/utils/linking'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
+import { openUri } from 'wallet/src/utils/linking'
 
-export function SwapFeeWarning({ noFee, children }: PropsWithChildren<{ noFee: boolean }>): JSX.Element {
+export function SwapFeeWarning({
+  noFee,
+  children,
+}: PropsWithChildren<{ noFee: boolean }>): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
@@ -15,7 +18,9 @@ export function SwapFeeWarning({ noFee, children }: PropsWithChildren<{ noFee: b
     await openUri(uniswapUrls.helpArticleUrls.swapFeeInfo)
   }
 
-  const caption = noFee ? t('swap.warning.uniswapFee.message.default') : t('swap.warning.uniswapFee.message.included')
+  const caption = noFee
+    ? t('swap.warning.uniswapFee.message.default')
+    : t('swap.warning.uniswapFee.message.included')
 
   return (
     <WarningInfo
@@ -35,8 +40,7 @@ export function SwapFeeWarning({ noFee, children }: PropsWithChildren<{ noFee: b
         severity: WarningSeverity.None,
         title: t('swap.warning.uniswapFee.title'),
       }}
-      tooltipProps={{ text: caption, placement: 'top' }}
-    >
+      tooltipProps={{ text: caption, placement: 'top' }}>
       {children}
     </WarningInfo>
   )

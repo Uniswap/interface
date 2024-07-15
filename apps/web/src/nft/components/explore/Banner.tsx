@@ -91,7 +91,7 @@ const Banner = () => {
 
   const { data: trendingCollections } = useTrendingCollections(
     TRENDING_COLLECTION_SIZE + EXCLUDED_COLLECTIONS.length,
-    HistoryDuration.Day,
+    HistoryDuration.Day
   )
 
   const collections = useMemo(() => {
@@ -108,7 +108,7 @@ const Banner = () => {
       }
       setActiveCollectionIdx((idx) => calculateCardIndex(idx + direction, collections.length))
     },
-    [collections],
+    [collections]
   )
 
   return (

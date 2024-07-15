@@ -46,7 +46,9 @@ export function useShouldShowNativeKeyboard(): {
   const isLayoutPending = containerHeight === undefined || decimalPadY === undefined
 
   // If decimal pad renders below the input panel, we need to show the native keyboard
-  const showNativeKeyboard = isLayoutPending ? false : containerHeight + MIN_INPUT_DECIMAL_PAD_GAP > decimalPadY
+  const showNativeKeyboard = isLayoutPending
+    ? false
+    : containerHeight + MIN_INPUT_DECIMAL_PAD_GAP > decimalPadY
 
   return {
     onInputPanelLayout,
@@ -54,7 +56,8 @@ export function useShouldShowNativeKeyboard(): {
     isLayoutPending,
     showNativeKeyboard,
     // can be used to imitate flexGrow=1 for the input panel
-    maxContentHeight: isLayoutPending || showNativeKeyboard ? undefined : decimalPadY - MIN_INPUT_DECIMAL_PAD_GAP,
+    maxContentHeight:
+      isLayoutPending || showNativeKeyboard ? undefined : decimalPadY - MIN_INPUT_DECIMAL_PAD_GAP,
   }
 }
 
@@ -75,7 +78,7 @@ export function useNativeComponentKey(autoUpdate = true): {
         return
       }
       setKey(getNativeComponentKey())
-    }, [autoUpdate]),
+    }, [autoUpdate])
   )
 
   const triggerUpdate = useCallback(() => {

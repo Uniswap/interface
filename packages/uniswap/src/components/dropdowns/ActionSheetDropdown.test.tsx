@@ -14,7 +14,7 @@ jest.mock('react-native', () => {
   const MockedView = actualReactNative.View
 
   MockedView.prototype.measureInWindow = (
-    callback: (x: number, y: number, width: number, height: number) => void,
+    callback: (x: number, y: number, width: number, height: number) => void
   ): void => {
     // Provide mock measurements
     const mockX = 0

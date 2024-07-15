@@ -87,7 +87,7 @@ export const ProposalActionDetail = ({
             id="currency-input"
             currencySearchFilters={CREATE_PROPOSAL_CURRENCY_SEARCH_FILTERS}
           />
-        ) : null,
+        ) : null
       )}
     </ProposalActionDetailContainer>
   )

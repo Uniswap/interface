@@ -38,8 +38,7 @@ export function TooltipInfoButton({
           Keyboard.dismiss()
           setShowModal(true)
         }}
-        {...rest}
-      >
+        {...rest}>
         <InfoCircle
           color={colors.neutral2.get()}
           height={size ?? DEFAULT_ICON_SIZE}
@@ -54,8 +53,7 @@ export function TooltipInfoButton({
           icon={modalIcon}
           modalName={ModalName.TooltipContent}
           title={modalTitle}
-          onClose={(): void => setShowModal(false)}
-        >
+          onClose={(): void => setShowModal(false)}>
           {modalContent ?? null}
         </WarningModal>
       )}

@@ -1,10 +1,10 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { Token } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency } from 'uniswap/src/features/dataApi/utils'
+import { buildCurrency } from 'wallet/src/features/dataApi/utils'
 import { useExactOutputWillFail } from 'wallet/src/features/transactions/swap/hooks/useExactOutputWillFail'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { SAMPLE_CURRENCY_ID_1 } from 'wallet/src/test/fixtures'
+import { SAMPLE_CURRENCY_ID_1 } from 'wallet/src/test/fixtures/constants'
 
 describe('useExactOutputWillFail', () => {
   const createToken = (buyFeeBps?: string, sellFeeBps?: string): Token =>

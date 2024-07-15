@@ -9,7 +9,6 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
 import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
-import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 
 interface Props {
   onSelectCurrency: (currency: FiatOnRampCurrency) => void
@@ -32,10 +31,9 @@ function TokenOptionItemWrapper({
     // we need to convert to TokenOption without quantity and balanceUSD
     // to use in Token Selector
     () => (currencyInfo ? { currencyInfo, quantity: 0, balanceUSD: 0 } : null),
-    [currencyInfo],
+    [currencyInfo]
   )
   const onPress = useCallback(() => onSelectCurrency?.(currency), [currency, onSelectCurrency])
-  const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(currencyInfo?.currencyId)
 
   if (!option) {
     return null
@@ -43,17 +41,21 @@ function TokenOptionItemWrapper({
 
   return (
     <TokenOptionItem
-      dismissWarningCallback={dismissWarningCallback}
       option={option}
       showNetworkPill={currencyInfo?.currency.chainId !== UniverseChainId.Mainnet}
       showWarnings={true}
-      tokenWarningDismissed={tokenWarningDismissed}
       onPress={onPress}
     />
   )
 }
 
-function _TokenFiatOnRampList({ onSelectCurrency, error, onRetry, list, loading }: Props): JSX.Element {
+function _TokenFiatOnRampList({
+  onSelectCurrency,
+  error,
+  onRetry,
+  list,
+  loading,
+}: Props): JSX.Element {
   const { t } = useTranslation()
 
   const flatListRef = useRef(null)
@@ -62,7 +64,7 @@ function _TokenFiatOnRampList({ onSelectCurrency, error, onRetry, list, loading 
     ({ item: currency }: ListRenderItemInfo<FiatOnRampCurrency>) => {
       return <TokenOptionItemWrapper currency={currency} onSelectCurrency={onSelectCurrency} />
     },
-    [onSelectCurrency],
+    [onSelectCurrency]
   )
 
   if (error) {

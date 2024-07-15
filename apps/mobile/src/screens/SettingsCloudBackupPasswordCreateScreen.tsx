@@ -9,12 +9,14 @@ import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPas
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { OSDynamicCloudIcon } from 'ui/src/components/icons'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 
-type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsCloudBackupPasswordCreate>
+type Props = NativeStackScreenProps<
+  SettingsStackParamList,
+  MobileScreens.SettingsCloudBackupPasswordCreate
+>
 
 // This screen is visited when no iCloud backup exists (checked from settings)
 export function SettingsCloudBackupPasswordCreateScreen({
@@ -57,7 +59,9 @@ export function SettingsCloudBackupPasswordCreateScreen({
         </Flex>
         <CloudBackupPasswordForm navigateToNextScreen={navigateToNextScreen} />
         {showCloudBackupInfoModal && (
-          <BottomSheetModal backgroundColor={colors.surface2.get()} name={ModalName.CloudBackupInfo}>
+          <BottomSheetModal
+            backgroundColor={colors.surface2.get()}
+            name={ModalName.CloudBackupInfo}>
             <Flex px="$spacing16" py="$spacing12">
               <Flex centered gap="$spacing16">
                 <Flex backgroundColor="$accentSoft" borderRadius="$rounded12" p="$spacing12">
@@ -78,7 +82,10 @@ export function SettingsCloudBackupPasswordCreateScreen({
                 <Button fill theme="tertiary" onPress={(): void => navigation.goBack()}>
                   {t('common.button.cancel')}
                 </Button>
-                <Button fill testID={TestID.Confirm} onPress={(): void => setShowCloudBackupInfoModal(false)}>
+                <Button
+                  fill
+                  testID={ElementName.Confirm}
+                  onPress={(): void => setShowCloudBackupInfoModal(false)}>
                   {t('common.button.continue')}
                 </Button>
               </Flex>

@@ -13,7 +13,11 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { amounts } from 'wallet/src/test/fixtures/gql/amounts'
-import { get24hPriceChange, getLatestPrice, priceHistory } from 'wallet/src/test/fixtures/gql/history'
+import {
+  get24hPriceChange,
+  getLatestPrice,
+  priceHistory,
+} from 'wallet/src/test/fixtures/gql/history'
 import { GQL_CHAINS, image } from 'wallet/src/test/fixtures/gql/misc'
 import {
   DAI,
@@ -84,9 +88,11 @@ type TokenProjectMarketOptions = {
   priceHistory: (TimestampedAmount | undefined)[]
 }
 
-export const tokenProjectMarket = createFixture<TokenProjectMarket, TokenProjectMarketOptions>(() => ({
-  priceHistory: priceHistory({ duration: HistoryDuration.Week, size: 7 }),
-}))(({ priceHistory: history }) => ({
+export const tokenProjectMarket = createFixture<TokenProjectMarket, TokenProjectMarketOptions>(
+  () => ({
+    priceHistory: priceHistory({ duration: HistoryDuration.Week, size: 7 }),
+  })
+)(({ priceHistory: history }) => ({
   __typename: 'TokenProjectMarket',
   id: faker.datatype.uuid(),
   priceHistory: history,
@@ -135,7 +141,7 @@ export const usdcTokenProject = createFixture<TokenProject, TokenProjectOptions>
       token({ sdkToken: USDBC_BASE, market: tokenMarket() }),
       token({ sdkToken: USDC_OPTIMISM }),
     ],
-  }),
+  })
 )
 
 /**
@@ -149,7 +155,9 @@ const ethProject = tokenProject({
 })
 
 export const ethToken = createFixture<Token>()(() => token({ sdkToken: ETH, project: ethProject }))
-export const wethToken = createFixture<Token>()(() => token({ sdkToken: WETH, project: ethProject }))
+export const wethToken = createFixture<Token>()(() =>
+  token({ sdkToken: WETH, project: ethProject })
+)
 
 const daiProject = tokenProject({
   name: 'Dai Stablecoin',
@@ -165,6 +173,12 @@ const usdcProject = tokenProject({
   isSpam: false,
 })
 
-export const usdcToken = createFixture<Token>()(() => token({ sdkToken: USDC, project: usdcProject }))
-export const usdcBaseToken = createFixture<Token>()(() => token({ sdkToken: USDBC_BASE, project: usdcProject }))
-export const usdcArbitrumToken = createFixture<Token>()(() => token({ sdkToken: USDC_ARBITRUM, project: usdcProject }))
+export const usdcToken = createFixture<Token>()(() =>
+  token({ sdkToken: USDC, project: usdcProject })
+)
+export const usdcBaseToken = createFixture<Token>()(() =>
+  token({ sdkToken: USDBC_BASE, project: usdcProject })
+)
+export const usdcArbitrumToken = createFixture<Token>()(() =>
+  token({ sdkToken: USDC_ARBITRUM, project: usdcProject })
+)

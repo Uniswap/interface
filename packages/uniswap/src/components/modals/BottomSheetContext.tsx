@@ -21,7 +21,7 @@ export function BottomSheetContextProvider({
     (): BottomSheetContextState => ({
       isSheetReady,
     }),
-    [isSheetReady],
+    [isSheetReady]
   )
 
   return <BottomSheetContext.Provider value={state}>{children}</BottomSheetContext.Provider>

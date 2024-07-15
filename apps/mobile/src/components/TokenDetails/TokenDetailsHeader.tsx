@@ -1,12 +1,12 @@
 import React from 'react'
 import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
 import {
   SafetyLevel,
   TokenDetailsScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import WarningIcon from 'wallet/src/components/icons/WarningIcon'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 
 export interface TokenDetailsHeaderProps {
   data?: TokenDetailsScreenQuery
@@ -31,14 +31,23 @@ export function TokenDetailsHeader({
         url={tokenProject?.logoUrl ?? undefined}
       />
       <Flex row alignItems="center" gap="$spacing8">
-        <Text color="$neutral1" loading={loading} numberOfLines={1} style={flexStyles.shrink} variant="subheading1">
+        <Text
+          color="$neutral1"
+          loading={loading}
+          numberOfLines={1}
+          style={flexStyles.shrink}
+          variant="subheading1">
           {tokenProject?.name ?? '—'}
         </Text>
         {/* Suppress warning icon on low warning level */}
         {(tokenProject?.safetyLevel === SafetyLevel.StrongWarning ||
           tokenProject?.safetyLevel === SafetyLevel.Blocked) && (
           <TouchableArea onPress={onPressWarningIcon}>
-            <WarningIcon safetyLevel={tokenProject?.safetyLevel} size="$icon.20" strokeColorOverride="neutral3" />
+            <WarningIcon
+              safetyLevel={tokenProject?.safetyLevel}
+              size="$icon.20"
+              strokeColorOverride="neutral3"
+            />
           </TouchableArea>
         )}
       </Flex>

@@ -13,7 +13,7 @@ export function BottomSheetDetachedModal(_: BottomSheetModalProps): JSX.Element 
 }
 
 export function BottomSheetTextInput(
-  _: ComponentProps<typeof GorhomBottomSheetTextInput | typeof TextInput>,
+  _: ComponentProps<typeof GorhomBottomSheetTextInput | typeof TextInput>
 ): JSX.Element {
   throw new NotImplementedError('See `.native.tsx` and `.web.tsx` files.')
 }

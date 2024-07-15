@@ -31,7 +31,8 @@ const Clipboard: IClipboard = {
       const base64Encoding = await blobToBase64(blob)
 
       // extract base64 encoding from result string
-      const formattedEncoding = typeof base64Encoding === 'string' ? base64Encoding.split(',')[1] : null
+      const formattedEncoding =
+        typeof base64Encoding === 'string' ? base64Encoding.split(',')[1] : null
 
       // if valid result, copy to clipboard
       if (formattedEncoding) {

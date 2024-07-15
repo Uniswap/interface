@@ -15,7 +15,7 @@ export function useTransferERC20Callback(
   tokenAddress?: Address,
   amountInWei?: string,
   transferTxWithGasSettings?: providers.TransactionRequest,
-  onSubmit?: () => void,
+  onSubmit?: () => void
 ): (() => void) | null {
   const account = useActiveAccount()
 
@@ -32,7 +32,7 @@ export function useTransferERC20Callback(
         }
       : undefined,
     transferTxWithGasSettings,
-    onSubmit,
+    onSubmit
   )
 }
 
@@ -44,7 +44,7 @@ export function useTransferNFTCallback(
   tokenAddress?: Address,
   tokenId?: string,
   txRequest?: providers.TransactionRequest,
-  onSubmit?: () => void,
+  onSubmit?: () => void
 ): (() => void) | null {
   const account = useActiveAccount()
 
@@ -61,7 +61,7 @@ export function useTransferNFTCallback(
         }
       : undefined,
     txRequest,
-    onSubmit,
+    onSubmit
   )
 }
 
@@ -69,7 +69,7 @@ export function useTransferNFTCallback(
 function useTransferCallback(
   transferTokenParams?: TransferTokenParams,
   txRequest?: providers.TransactionRequest,
-  onSubmit?: () => void,
+  onSubmit?: () => void
 ): null | (() => void) {
   const dispatch = useAppDispatch()
 

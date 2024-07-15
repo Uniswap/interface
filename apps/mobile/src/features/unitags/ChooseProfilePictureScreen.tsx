@@ -11,8 +11,8 @@ import { UnitagName } from 'src/features/unitags/UnitagName'
 import { Button, Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
@@ -94,7 +94,7 @@ export function ChooseProfilePictureScreen({
       {
         source,
         hasENSAddress: !!ensName,
-      },
+      }
     )
     setIsClaiming(false)
     setClaimError(attemptClaimError)
@@ -115,8 +115,7 @@ export function ChooseProfilePictureScreen({
   return (
     <SafeKeyboardOnboardingScreen
       subtitle={t('unitags.onboarding.profile.subtitle')}
-      title={t('unitags.onboarding.profile.title')}
-    >
+      title={t('unitags.onboarding.profile.title')}>
       <Flex centered gap="$spacing20" mt="$spacing24">
         <Flex mt="$spacing48" onPress={avatarSelectionHandler}>
           <Flex px="$spacing4">
@@ -129,9 +128,11 @@ export function ChooseProfilePictureScreen({
             p="$spacing4"
             position="absolute"
             right={-spacing.spacing2}
-            testID={TestID.Edit}
-          >
-            <Flex backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'} borderRadius="$roundedFull" p={8}>
+            testID={ElementName.Edit}>
+            <Flex
+              backgroundColor={isDarkMode ? '$neutral3' : '$neutral2'}
+              borderRadius="$roundedFull"
+              p={8}>
               <Pen color={isDarkMode ? '$neutral1' : '$surface1'} size={iconSizes.icon16} />
             </Flex>
           </Flex>
@@ -148,10 +149,9 @@ export function ChooseProfilePictureScreen({
       <Button
         disabled={!!claimError || isClaiming}
         size="medium"
-        testID={TestID.Continue}
+        testID={ElementName.Continue}
         theme="primary"
-        onPress={onPressContinue}
-      >
+        onPress={onPressContinue}>
         {isClaiming ? (
           <Flex height={fonts.buttonLabel1.lineHeight}>
             <ActivityIndicator color={colors.sporeWhite.val} />
@@ -173,9 +173,28 @@ export function ChooseProfilePictureScreen({
   )
 }
 
-function ProfilePicture({ address, imageUri }: { address: Maybe<Address>; imageUri?: string }): JSX.Element {
+function ProfilePicture({
+  address,
+  imageUri,
+}: {
+  address: Maybe<Address>
+  imageUri?: string
+}): JSX.Element {
   if (address) {
-    return <UnitagProfilePicture address={address} size={imageSizes.image100} unitagAvatarUri={imageUri} />
+    return (
+      <UnitagProfilePicture
+        address={address}
+        size={imageSizes.image100}
+        unitagAvatarUri={imageUri}
+      />
+    )
   }
-  return <Flex borderRadius="$roundedFull" height={imageSizes.image100} overflow="hidden" width={imageSizes.image100} />
+  return (
+    <Flex
+      borderRadius="$roundedFull"
+      height={imageSizes.image100}
+      overflow="hidden"
+      width={imageSizes.image100}
+    />
+  )
 }

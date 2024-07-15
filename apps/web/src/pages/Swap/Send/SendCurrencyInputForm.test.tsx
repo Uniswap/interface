@@ -20,7 +20,6 @@ const mockSwapAndLimitContextValue = {
   setCurrencyState: jest.fn(),
   currentTab: SwapTab.Limit,
   setCurrentTab: jest.fn(),
-  isSwapAndLimitContext: true,
 }
 
 const mockedSendContextDefault: SendContextType = {
@@ -76,7 +75,7 @@ describe('SendCurrencyInputform', () => {
         <SendContext.Provider value={mockedSendContextDefault}>
           <SendCurrencyInputForm />
         </SendContext.Provider>
-      </SwapAndLimitContext.Provider>,
+      </SwapAndLimitContext.Provider>
     )
     expect(await screen.getByPlaceholderText('0')).toBeVisible()
     expect(screen.getByText('0 DAI')).toBeVisible()
@@ -90,7 +89,7 @@ describe('SendCurrencyInputform', () => {
         <SendContext.Provider value={mockedSendContextFiatInput}>
           <SendCurrencyInputForm />
         </SendContext.Provider>
-      </SwapAndLimitContext.Provider>,
+      </SwapAndLimitContext.Provider>
     )
     await waitFor(() => {
       expect(screen.getByDisplayValue('1000')).toBeVisible()
@@ -106,7 +105,7 @@ describe('SendCurrencyInputform', () => {
         <SendContext.Provider value={mockedSendContextTokenInput}>
           <SendCurrencyInputForm />
         </SendContext.Provider>
-      </SwapAndLimitContext.Provider>,
+      </SwapAndLimitContext.Provider>
     )
     await waitFor(() => {
       expect(screen.getByDisplayValue('1')).toBeVisible()

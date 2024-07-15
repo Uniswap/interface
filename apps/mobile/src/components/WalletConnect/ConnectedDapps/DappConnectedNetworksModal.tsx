@@ -23,7 +23,10 @@ interface DappConnectedNetworkModalProps {
   onClose: () => void
 }
 
-export function DappConnectedNetworkModal({ session, onClose }: DappConnectedNetworkModalProps): JSX.Element {
+export function DappConnectedNetworkModal({
+  session,
+  onClose,
+}: DappConnectedNetworkModalProps): JSX.Element {
   const { t } = useTranslation()
   const address = useActiveAccountAddressWithThrow()
   const dispatch = useAppDispatch()
@@ -49,7 +52,7 @@ export function DappConnectedNetworkModal({ session, onClose }: DappConnectedNet
           event: WalletConnectEvent.Disconnected,
           imageUrl: dapp.icon,
           hideDelay: 3 * ONE_SECOND_MS,
-        }),
+        })
       )
       onClose()
     } catch (error) {
@@ -74,7 +77,13 @@ export function DappConnectedNetworkModal({ session, onClose }: DappConnectedNet
           </Text>
         </Flex>
         <Flex row>
-          <Flex grow borderColor="$surface3" borderRadius="$rounded12" borderWidth={1} gap="$spacing16" p="$spacing16">
+          <Flex
+            grow
+            borderColor="$surface3"
+            borderRadius="$rounded12"
+            borderWidth={1}
+            gap="$spacing16"
+            p="$spacing16">
             {session.chains.map((chainId) => (
               <Flex key={chainId} row alignItems="center" justifyContent="space-between">
                 <NetworkLogo chainId={chainId} size={iconSizes.icon24} />

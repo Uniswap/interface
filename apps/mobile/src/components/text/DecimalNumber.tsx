@@ -24,13 +24,18 @@ export function DecimalNumber({
 }: DecimalNumberProps): JSX.Element {
   const [pre, post] = formattedNumber.split(separator)
 
-  const decimalPartColor = number === undefined || number >= decimalThreshold ? '$neutral3' : '$neutral1'
+  const decimalPartColor =
+    number === undefined || number >= decimalThreshold ? '$neutral3' : '$neutral1'
 
   return (
     <Text loading={loading} loadingPlaceholderText="0000.00" variant={variant} {...rest}>
       {pre}
       {post && (
-        <Text color={decimalPartColor} fontSize={rest.fontSize} fontWeight={rest.fontWeight} variant={variant}>
+        <Text
+          color={decimalPartColor}
+          fontSize={rest.fontSize}
+          fontWeight={rest.fontWeight}
+          variant={variant}>
           {separator}
           {post}
         </Text>

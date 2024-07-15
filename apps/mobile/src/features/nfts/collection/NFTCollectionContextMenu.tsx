@@ -10,9 +10,8 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
-import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { getNftCollectionUrl, getTwitterLink } from 'wallet/src/utils/linking'
+import { getNftCollectionUrl, getTwitterLink, openUri } from 'wallet/src/utils/linking'
 
 type MenuOption = {
   title: string
@@ -103,16 +102,14 @@ export function NFTCollectionContextMenu({
       dropdownMenuMode={true}
       onPress={async (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>): Promise<void> => {
         await menuActions[e.nativeEvent.index]?.action()
-      }}
-    >
+      }}>
       <TouchableArea
         hapticFeedback
         backgroundColor={showButtonOutline ? '$scrim' : '$transparent'}
         borderRadius="$roundedFull"
         style={{ padding: ICON_PADDING }}
         onLongPress={disableOnPress}
-        onPress={disableOnPress}
-      >
+        onPress={disableOnPress}>
         <Flex centered grow height={ICON_SIZE} width={ICON_SIZE}>
           <TripleDot color={iconColor} size={3.5} />
         </Flex>

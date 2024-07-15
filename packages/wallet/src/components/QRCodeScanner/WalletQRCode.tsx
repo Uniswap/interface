@@ -1,12 +1,12 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, isWeb, useMedia, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 import { QRCodeDisplay } from 'wallet/src/components/QRCodeScanner/QRCode'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { NetworkLogos } from 'wallet/src/components/network/NetworkLogos'
+import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 
 export function WalletQRCode({ address }: { address: Address }): JSX.Element | null {
   const colors = useSporeColors()
@@ -26,8 +26,7 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
       justifyContent={isWeb ? 'flex-start' : 'center'}
       mb="$spacing8"
       px={isWeb ? '$spacing16' : '$spacing60'}
-      py={isWeb ? '$spacing60' : '$spacing24'}
-    >
+      py={isWeb ? '$spacing60' : '$spacing24'}>
       <Flex py="$spacing12">
         <AddressDisplay
           includeUnitagSuffix

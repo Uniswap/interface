@@ -16,35 +16,47 @@ import { BlurredImageBackground } from 'src/features/nfts/item/BlurredImageBackg
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
 import { NFTTraitList } from 'src/features/nfts/item/traits'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
-import { Flex, HapticFeedback, Text, Theme, TouchableArea, getTokenValue, passesContrast, useSporeColors } from 'ui/src'
+import {
+  Flex,
+  HapticFeedback,
+  Text,
+  Theme,
+  TouchableArea,
+  getTokenValue,
+  passesContrast,
+  useSporeColors,
+} from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   NftActivityType,
   NftItemScreenQuery,
   useNftItemScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { MIN_COLOR_CONTRAST_THRESHOLD, useNearestThemeColorFromImageUri } from 'uniswap/src/utils/colors'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { PollingInterval } from 'wallet/src/constants/misc'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
 import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 import { setClipboardImage } from 'wallet/src/utils/clipboard'
+import {
+  MIN_COLOR_CONTRAST_THRESHOLD,
+  useNearestThemeColorFromImageUri,
+} from 'wallet/src/utils/colors'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
 
@@ -101,16 +113,18 @@ function NFTItemScreenContents({
   const name = useMemo(() => asset?.name ?? fallbackData?.name, [asset?.name, fallbackData?.name])
   const description = useMemo(
     () => asset?.description ?? fallbackData?.description,
-    [asset?.description, fallbackData?.description],
+    [asset?.description, fallbackData?.description]
   )
   const imageUrl = useMemo(
     () => asset?.image?.url ?? fallbackData?.imageUrl,
-    [asset?.image?.url, fallbackData?.imageUrl],
+    [asset?.image?.url, fallbackData?.imageUrl]
   )
   const imageHeight = asset?.image?.dimensions?.height
   const imageWidth = asset?.image?.dimensions?.width
   const imageDimensionsExist = imageHeight && imageWidth
-  const imageDimensions = imageDimensionsExist ? { height: imageHeight, width: imageWidth } : undefined
+  const imageDimensions = imageDimensionsExist
+    ? { height: imageHeight, width: imageWidth }
+    : undefined
   const imageAspectRatio = imageDimensions ? imageDimensions.width / imageDimensions.height : 1
   const onPressCollection = (): void => {
     const collectionAddress = asset?.nftContract?.address ?? fallbackData?.contractAddress
@@ -121,7 +135,7 @@ function NFTItemScreenContents({
 
   // Disable navigation to profile if user owns NFT or invalid owner
   const disableProfileNavigation = Boolean(
-    owner && (areAddressesEqual(owner, activeAccountAddress) || !isAddress(owner)),
+    owner && (areAddressesEqual(owner, activeAccountAddress) || !isAddress(owner))
   )
 
   const onPressOwner = (): void => {
@@ -163,7 +177,10 @@ function NFTItemScreenContents({
   const { colorLight, colorDark } = useNearestThemeColorFromImageUri(imageUrl)
   // check if colorLight passes contrast against card bg color, if not use fallback
   const accentTextColor = useMemo(() => {
-    if (colorLight && passesContrast(colorLight, colors.surface1.val, MIN_COLOR_CONTRAST_THRESHOLD)) {
+    if (
+      colorLight &&
+      passesContrast(colorLight, colors.surface1.val, MIN_COLOR_CONTRAST_THRESHOLD)
+    ) {
       return colorLight
     }
     return colors.neutral2.val
@@ -176,28 +193,32 @@ function NFTItemScreenContents({
       pushNotification({
         type: AppNotificationType.Copied,
         copyType: CopyNotificationType.Image,
-      }),
+      })
     )
   }
 
   const rightElement = useMemo(
     () => <RightElement asset={asset} isSpam={isSpam} owner={owner} />,
-    [asset, isSpam, owner],
+    [asset, isSpam, owner]
   )
 
   return (
     <>
-      {isIOS ? <StatusBar translucent backgroundColor="transparent" barStyle="light-content" /> : null}
+      {isIOS ? (
+        <StatusBar translucent backgroundColor="transparent" barStyle="light-content" />
+      ) : null}
       <Trace
         directFromPage
         logImpression={!!traceProperties}
         properties={traceProperties}
-        screen={MobileScreens.NFTItem}
-      >
+        screen={MobileScreens.NFTItem}>
         <ExploreModalAwareView>
           <>
             {isIOS ? (
-              <BlurredImageBackground backgroundColor={colorDark ?? colorsDark.surface2} imageUri={imageUrl} />
+              <BlurredImageBackground
+                backgroundColor={colorDark ?? colorsDark.surface2}
+                imageUri={imageUrl}
+              />
             ) : (
               <Flex backgroundColor="$surface2" style={StyleSheet.absoluteFill} />
             )}
@@ -211,8 +232,7 @@ function NFTItemScreenContents({
                     maxHeight={getTokenValue('$icon.40')}
                     maxWidth={getTokenValue('$icon.40')}
                     ml="$spacing16"
-                    overflow="hidden"
-                  >
+                    overflow="hidden">
                     <NFTViewer autoplay imageDimensions={imageDimensions} uri={imageUrl} />
                   </Flex>
                 ) : (
@@ -222,18 +242,21 @@ function NFTItemScreenContents({
                 )
               }
               renderedInModal={inModal}
-              rightElement={rightElement}
-            >
+              rightElement={rightElement}>
               {/* Content wrapper */}
-              <Flex backgroundColor="$transparent" gap="$spacing24" mb="$spacing48" mt="$spacing8" pb="$spacing48">
+              <Flex
+                backgroundColor="$transparent"
+                gap="$spacing24"
+                mb="$spacing48"
+                mt="$spacing8"
+                pb="$spacing48">
                 <Flex
                   gap="$spacing12"
                   px="$spacing24"
                   shadowColor="$sporeBlack"
                   shadowOffset={{ width: 0, height: 16 }}
                   shadowOpacity={0.2}
-                  shadowRadius={16}
-                >
+                  shadowRadius={16}>
                   <Flex centered borderRadius="$rounded16" overflow="hidden">
                     {nftLoading ? (
                       <Flex aspectRatio={imageAspectRatio} width="100%">
@@ -249,11 +272,16 @@ function NFTItemScreenContents({
                         />
                       </TouchableArea>
                     ) : (
-                      <Flex aspectRatio={1} style={{ backgroundColor: colorsDark.surface2 }} width="100%">
+                      <Flex
+                        aspectRatio={1}
+                        style={{ backgroundColor: colorsDark.surface2 }}
+                        width="100%">
                         <BaseCard.ErrorState
                           retryButtonLabel={t('common.button.retry')}
                           title={t('tokens.nfts.details.error.load.title')}
-                          onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> => refetch?.()}
+                          onRetry={(): Promise<ApolloQueryResult<NftItemScreenQuery>> =>
+                            refetch?.()
+                          }
                         />
                       </Flex>
                     )}
@@ -287,7 +315,11 @@ function NFTItemScreenContents({
                       <Loader.Box height={fonts.body2.lineHeight} mb="$spacing4" repeat={3} />
                     </Flex>
                   ) : description ? (
-                    <LongMarkdownText color={colors.neutral1.val} initialDisplayedLines={3} text={description || '-'} />
+                    <LongMarkdownText
+                      color={colors.neutral1.val}
+                      initialDisplayedLines={3}
+                      text={description || '-'}
+                    />
                   ) : null}
                 </Flex>
 
@@ -341,7 +373,10 @@ function NFTItemScreenContents({
                       color={accentTextColor}
                       title={t('tokens.nfts.details.owner')}
                       valueComponent={
-                        <TouchableArea disabled={disableProfileNavigation} hitSlop={16} onPress={onPressOwner}>
+                        <TouchableArea
+                          disabled={disableProfileNavigation}
+                          hitSlop={16}
+                          onPress={onPressOwner}>
                           <AddressDisplay
                             address={owner}
                             hideAddressInSubtitle={true}
@@ -396,7 +431,15 @@ function AssetMetadata({
   )
 }
 
-function RightElement({ asset, owner, isSpam }: { asset: GQLNftAsset; owner?: string; isSpam?: boolean }): JSX.Element {
+function RightElement({
+  asset,
+  owner,
+  isSpam,
+}: {
+  asset: GQLNftAsset
+  owner?: string
+  isSpam?: boolean
+}): JSX.Element {
   const colors = useSporeColors()
 
   const { menuActions, onContextMenuPress, onlyShare } = useNFTContextMenu({
@@ -408,16 +451,28 @@ function RightElement({ asset, owner, isSpam }: { asset: GQLNftAsset; owner?: st
   })
 
   return (
-    <Flex alignItems="center" height={iconSizes.icon40} justifyContent="center" width={iconSizes.icon40}>
+    <Flex
+      alignItems="center"
+      height={iconSizes.icon40}
+      justifyContent="center"
+      width={iconSizes.icon40}>
       {menuActions.length > 0 ? (
         onlyShare ? (
           <TouchableOpacity hitSlop={24} onPress={menuActions[0]?.onPress}>
-            <ShareIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
+            <ShareIcon
+              color={colors.neutral1.get()}
+              height={iconSizes.icon24}
+              width={iconSizes.icon24}
+            />
           </TouchableOpacity>
         ) : (
           <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
             <TouchableArea p="$spacing16">
-              <EllipsisIcon color={colors.neutral1.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
+              <EllipsisIcon
+                color={colors.neutral1.get()}
+                height={iconSizes.icon16}
+                width={iconSizes.icon16}
+              />
             </TouchableArea>
           </ContextMenu>
         )

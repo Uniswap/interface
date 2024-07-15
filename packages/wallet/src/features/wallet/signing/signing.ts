@@ -2,18 +2,18 @@
 
 import { ethers, TypedDataDomain, TypedDataField, Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
-import { ensureLeading0x } from 'uniswap/src/utils/addresses'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { EthTypedMessage } from 'wallet/src/features/wallet/signing/types'
+import { ensureLeading0x } from 'wallet/src/utils/addresses'
 
 // https://docs.ethers.io/v5/api/signer/#Signer--signing-methods
 export async function signMessage(
   message: string,
   account: Account,
   signerManager: SignerManager,
-  provider?: ethers.providers.JsonRpcProvider,
+  provider?: ethers.providers.JsonRpcProvider
 ): Promise<string> {
   // Mobile code does not explicitly connect to provider,
   // Web needs to connect to provider to ensure correct chain
@@ -32,7 +32,7 @@ export async function signTypedData(
   value: Record<string, unknown>,
   account: Account,
   signerManager: SignerManager,
-  provider?: ethers.providers.JsonRpcProvider,
+  provider?: ethers.providers.JsonRpcProvider
 ): Promise<string> {
   // Mobile code does not explicitly connect to provider,
   // Web needs to connect to provider to ensure correct chain
@@ -53,7 +53,7 @@ export async function signTypedDataMessage(
   message: string,
   account: Account,
   signerManager: SignerManager,
-  provider?: ethers.providers.JsonRpcProvider,
+  provider?: ethers.providers.JsonRpcProvider
 ): Promise<string> {
   const parsedData: EthTypedMessage = JSON.parse(message)
   // ethers computes EIP712Domain type for you, so we should not pass it in directly
@@ -61,5 +61,12 @@ export async function signTypedDataMessage(
   // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
   delete parsedData.types.EIP712Domain
 
-  return signTypedData(parsedData.domain, parsedData.types, parsedData.message, account, signerManager, provider)
+  return signTypedData(
+    parsedData.domain,
+    parsedData.types,
+    parsedData.message,
+    account,
+    signerManager,
+    provider
+  )
 }

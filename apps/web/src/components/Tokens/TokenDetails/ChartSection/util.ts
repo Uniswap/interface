@@ -46,7 +46,7 @@ const CHART_DURATION_STALE_THRESHOLD_MAP: Record<ChartType, Partial<Record<Histo
 export function checkDataQuality(
   data: { time: number }[],
   chartType: ChartType,
-  duration: HistoryDuration,
+  duration: HistoryDuration
 ): DataQuality {
   if (data.length < 3) {
     return DataQuality.INVALID

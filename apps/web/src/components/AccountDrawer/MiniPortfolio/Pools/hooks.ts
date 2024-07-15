@@ -30,7 +30,7 @@ type ContractMap<T extends BaseContract> = { [key: number]: T }
 export function useContractMultichain<T extends BaseContract>(
   addressMap: AddressMap,
   ABI: any,
-  chainIds?: InterfaceChainId[],
+  chainIds?: InterfaceChainId[]
 ): ContractMap<T> {
   const account = useAccount()
   const { provider: walletProvider } = useWeb3React()
@@ -48,8 +48,8 @@ export function useContractMultichain<T extends BaseContract>(
         walletProvider && account.chainId === chainId
           ? walletProvider
           : isSupportedChain(chainId)
-            ? RPC_PROVIDERS[chainId]
-            : undefined
+          ? RPC_PROVIDERS[chainId]
+          : undefined
       if (provider) {
         acc[chainId] = getContract(addressMap[chainId] ?? '', ABI, provider) as T
       }
@@ -91,7 +91,7 @@ export function usePoolPriceMap(positions: PositionInfo[] | undefined) {
         }
         return acc
       }, {}) ?? {},
-    [data?.tokens],
+    [data?.tokens]
   )
 
   return { priceMap, pricesLoading: loading && !data }

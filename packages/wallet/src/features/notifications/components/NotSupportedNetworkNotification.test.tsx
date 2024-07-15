@@ -5,7 +5,9 @@ import { renderWithProviders } from 'wallet/src/test/render'
 describe(NotSupportedNetworkNotification, () => {
   it('renders without error', () => {
     const tree = renderWithProviders(
-      <NotSupportedNetworkNotification notification={{ type: AppNotificationType.NotSupportedNetwork }} />,
+      <NotSupportedNetworkNotification
+        notification={{ type: AppNotificationType.NotSupportedNetwork }}
+      />
     )
 
     expect(tree).toMatchSnapshot()

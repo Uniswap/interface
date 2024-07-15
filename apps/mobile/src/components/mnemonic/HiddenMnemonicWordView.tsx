@@ -14,8 +14,7 @@ export function HiddenMnemonicWordView(): JSX.Element {
       height="40%"
       mt="$spacing16"
       px="$spacing32"
-      py="$spacing24"
-    >
+      py="$spacing24">
       <Flex grow justifyContent="space-between">
         <HiddenWordViewColumn />
       </Flex>

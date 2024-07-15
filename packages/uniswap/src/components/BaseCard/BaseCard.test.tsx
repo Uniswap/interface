@@ -48,7 +48,9 @@ describe(BaseCard.Header, () => {
     })
 
     it('renders custom subtitle component if component is passed', () => {
-      const { queryByTestId } = render(<BaseCard.Header subtitle={<Flex testID="custom-subtitle" />} title={title} />)
+      const { queryByTestId } = render(
+        <BaseCard.Header subtitle={<Flex testID="custom-subtitle" />} title={title} />
+      )
 
       expect(queryByTestId('custom-subtitle')).toBeTruthy()
     })
@@ -56,7 +58,9 @@ describe(BaseCard.Header, () => {
 
   describe('icon', () => {
     it('renders icon if icon is passed', () => {
-      const { queryByTestId } = render(<BaseCard.Header icon={<Flex testID="custom-icon" />} title={title} />)
+      const { queryByTestId } = render(
+        <BaseCard.Header icon={<Flex testID="custom-icon" />} title={title} />
+      )
 
       expect(queryByTestId('custom-icon')).toBeTruthy()
     })
@@ -65,7 +69,9 @@ describe(BaseCard.Header, () => {
   describe('onPress', () => {
     it('calls onPress if onPress is passed and title is pressed', () => {
       const onPress = jest.fn()
-      const { getByTestId } = render(<BaseCard.Header testID="header" title={title} onPress={onPress} />)
+      const { getByTestId } = render(
+        <BaseCard.Header testID="header" title={title} onPress={onPress} />
+      )
 
       expect(onPress).toHaveBeenCalledTimes(0)
 
@@ -91,7 +97,7 @@ describe(BaseCard.EmptyState, () => {
 
   it('renders icon when icon is passed', () => {
     const { queryByTestId } = render(
-      <BaseCard.EmptyState description="description" icon={<Flex testID="custom-icon" />} />,
+      <BaseCard.EmptyState description="description" icon={<Flex testID="custom-icon" />} />
     )
 
     expect(queryByTestId('custom-icon')).toBeTruthy()
@@ -105,7 +111,9 @@ describe(BaseCard.EmptyState, () => {
 
   describe('button', () => {
     it('renders button when buttonLabel is passed', () => {
-      const { queryByText } = render(<BaseCard.EmptyState buttonLabel="buttonLabel" description="description" />)
+      const { queryByText } = render(
+        <BaseCard.EmptyState buttonLabel="buttonLabel" description="description" />
+      )
 
       expect(queryByText('buttonLabel')).toBeTruthy()
     })
@@ -113,7 +121,11 @@ describe(BaseCard.EmptyState, () => {
     it('calls onPress when button is pressed', () => {
       const onPress = jest.fn()
       const { getByText } = render(
-        <BaseCard.EmptyState buttonLabel="buttonLabel" description="description" onPress={onPress} />,
+        <BaseCard.EmptyState
+          buttonLabel="buttonLabel"
+          description="description"
+          onPress={onPress}
+        />
       )
 
       expect(onPress).toHaveBeenCalledTimes(0)
@@ -127,7 +139,10 @@ describe(BaseCard.EmptyState, () => {
   describe('additional button', () => {
     it('renders additional button when additionalButtonLabel is passed', () => {
       const { queryByText } = render(
-        <BaseCard.EmptyState additionalButtonLabel="additionalButtonLabel" description="description" />,
+        <BaseCard.EmptyState
+          additionalButtonLabel="additionalButtonLabel"
+          description="description"
+        />
       )
 
       expect(queryByText('additionalButtonLabel')).toBeTruthy()
@@ -140,7 +155,7 @@ describe(BaseCard.EmptyState, () => {
           additionalButtonLabel="additionalButtonLabel"
           description="description"
           onPressAdditional={onPressAdditional}
-        />,
+        />
       )
 
       expect(onPressAdditional).toHaveBeenCalledTimes(0)
@@ -174,7 +189,7 @@ describe(BaseCard.ErrorState, () => {
   describe('retry button', () => {
     it('renders retry button when retryButtonLabel is passed', () => {
       const { queryByText } = render(
-        <BaseCard.ErrorState description="description" retryButtonLabel="retryButtonLabel" />,
+        <BaseCard.ErrorState description="description" retryButtonLabel="retryButtonLabel" />
       )
 
       expect(queryByText('retryButtonLabel')).toBeTruthy()
@@ -183,7 +198,11 @@ describe(BaseCard.ErrorState, () => {
     it('calls onRetry when retry button is pressed', () => {
       const onRetry = jest.fn()
       const { getByText } = render(
-        <BaseCard.ErrorState description="description" retryButtonLabel="retryButtonLabel" onRetry={onRetry} />,
+        <BaseCard.ErrorState
+          description="description"
+          retryButtonLabel="retryButtonLabel"
+          onRetry={onRetry}
+        />
       )
 
       expect(onRetry).toHaveBeenCalledTimes(0)
@@ -196,7 +215,7 @@ describe(BaseCard.ErrorState, () => {
 
   it('renders icon when icon is passed', () => {
     const { queryByTestId } = render(
-      <BaseCard.ErrorState description="description" icon={<Flex testID="custom-icon" />} />,
+      <BaseCard.ErrorState description="description" icon={<Flex testID="custom-icon" />} />
     )
 
     expect(queryByTestId('custom-icon')).toBeTruthy()
@@ -238,7 +257,9 @@ describe(BaseCard.InlineErrorState, () => {
     })
 
     it('renders custom retry button when retryButtonLabel is passed', () => {
-      const { queryByText } = render(<BaseCard.InlineErrorState retryButtonLabel="custom-label" onRetry={jest.fn()} />)
+      const { queryByText } = render(
+        <BaseCard.InlineErrorState retryButtonLabel="custom-label" onRetry={jest.fn()} />
+      )
 
       expect(queryByText('custom-label')).toBeTruthy()
     })
@@ -263,7 +284,9 @@ describe(BaseCard.InlineErrorState, () => {
     })
 
     it('renders custom icon when icon is passed', () => {
-      const { queryByTestId } = render(<BaseCard.InlineErrorState icon={<Flex testID="custom-icon" />} />)
+      const { queryByTestId } = render(
+        <BaseCard.InlineErrorState icon={<Flex testID="custom-icon" />} />
+      )
 
       expect(queryByTestId('custom-icon')).toBeTruthy()
     })

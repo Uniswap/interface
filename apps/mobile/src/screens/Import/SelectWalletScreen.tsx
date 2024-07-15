@@ -8,7 +8,6 @@ import { Button, Flex, Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useSelectWalletScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -65,7 +64,9 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
       }))
       .filter(isImportableAccount)
 
-    const accountsWithBalance = filteredAccounts?.filter((address) => address.balance && address.balance > 0)
+    const accountsWithBalance = filteredAccounts?.filter(
+      (address) => address.balance && address.balance > 0
+    )
 
     if (accountsWithBalance?.length) {
       return accountsWithBalance
@@ -94,7 +95,10 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
     await selectImportedAccounts(selectedAddresses)
 
     navigation.navigate({
-      name: params?.importType === ImportType.Restore ? OnboardingScreens.Notifications : OnboardingScreens.Backup,
+      name:
+        params?.importType === ImportType.Restore
+          ? OnboardingScreens.Notifications
+          : OnboardingScreens.Backup,
       params,
       merge: true,
     })
@@ -114,7 +118,9 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
 
   return (
     <>
-      <OnboardingScreen subtitle={!showError ? subtitle : undefined} title={!showError ? title : ''}>
+      <OnboardingScreen
+        subtitle={!showError ? subtitle : undefined}
+        title={!showError ? title : ''}>
         {showError ? (
           <BaseCard.ErrorState
             retryButtonLabel={t('common.button.retry')}
@@ -138,7 +144,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
                     hideSelectionCircle={isOnlyOneAccount}
                     name={ElementName.WalletCard}
                     selected={selectedAddresses.includes(ownerAddress)}
-                    testID={`${TestID.WalletCard}-${i + 1}`}
+                    testID={`${ElementName.WalletCard}-${i + 1}`}
                     onSelect={toggleAddressSelection}
                   />
                 )
@@ -148,10 +154,11 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         )}
         <Flex opacity={showError ? 0 : 1}>
           <Button
-            disabled={isImportingAccounts || isLoading || !!showError || selectedAddresses.length === 0}
-            testID={TestID.Next}
-            onPress={onSubmit}
-          >
+            disabled={
+              isImportingAccounts || isLoading || !!showError || selectedAddresses.length === 0
+            }
+            testID={ElementName.Next}
+            onPress={onSubmit}>
             {t('common.button.continue')}
           </Button>
         </Flex>

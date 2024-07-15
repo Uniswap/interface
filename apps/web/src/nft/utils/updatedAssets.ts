@@ -18,7 +18,7 @@ export const getTotalNftValue = (nfts: UpdatedGenieAsset[]): BigNumber => {
     nfts.reduce(
       (ethTotal, nft) =>
         ethTotal.add(BigNumber.from(nft.updatedPriceInfo ? nft.updatedPriceInfo.ETHPrice : nft.priceInfo.ETHPrice)),
-      BigNumber.from(0),
+      BigNumber.from(0)
     )
   )
 }

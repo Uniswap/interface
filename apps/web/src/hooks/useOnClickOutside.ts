@@ -20,7 +20,7 @@ function nodeContainsClick<T extends HTMLElement>(node: RefObject<T | undefined>
 export function useOnClickOutside<T extends HTMLElement>(
   node: RefObject<T | undefined>,
   handler: undefined | (() => void),
-  ignoredNodes: Array<RefObject<HTMLElement | undefined>> = [],
+  ignoredNodes: Array<RefObject<HTMLElement | undefined>> = []
 ) {
   const handlerRef = useRef<undefined | (() => void)>(handler)
 

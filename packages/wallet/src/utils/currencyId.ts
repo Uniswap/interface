@@ -1,10 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
-import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { getNativeAddress, getWrappedNativeAddress } from 'wallet/src/constants/addresses'
+import { toSupportedChainId } from 'wallet/src/features/chains/utils'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export function currencyId(currency: Currency): CurrencyId {
   return buildCurrencyId(currency.chainId, currencyAddress(currency))
@@ -44,7 +44,10 @@ export function getCurrencyAddressForAnalytics(currency: Currency): string {
   return currency.address
 }
 
-export const isNativeCurrencyAddress = (chainId: WalletChainId, address: Maybe<Address>): boolean => {
+export const isNativeCurrencyAddress = (
+  chainId: WalletChainId,
+  address: Maybe<Address>
+): boolean => {
   if (!address) {
     return true
   }
@@ -61,7 +64,9 @@ export function currencyIdToAddress(_currencyId: string): Address {
   return currencyIdParts[1]
 }
 
-function isPolygonChain(chainId: number): chainId is UniverseChainId.Polygon | UniverseChainId.PolygonMumbai {
+function isPolygonChain(
+  chainId: number
+): chainId is UniverseChainId.Polygon | UniverseChainId.PolygonMumbai {
   return chainId === UniverseChainId.PolygonMumbai || chainId === UniverseChainId.Polygon
 }
 
@@ -83,7 +88,11 @@ export function currencyIdToGraphQLAddress(_currencyId?: string): Address | null
   }
 
   // backend only expects `null` for the native asset, except Polygon & Celo
-  if (isNativeCurrencyAddress(chainId, address) && !isPolygonChain(chainId) && !isCeloChain(chainId)) {
+  if (
+    isNativeCurrencyAddress(chainId, address) &&
+    !isPolygonChain(chainId) &&
+    !isCeloChain(chainId)
+  ) {
     return null
   }
 

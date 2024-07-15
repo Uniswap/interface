@@ -17,7 +17,12 @@ type Props = {
   request: SignRequest
 }
 
-export function KidSuperCheckinModal({ onClose, onConfirm, onReject, request }: Props): JSX.Element {
+export function KidSuperCheckinModal({
+  onClose,
+  onConfirm,
+  onReject,
+  request,
+}: Props): JSX.Element {
   const { t } = useTranslation()
 
   return (
@@ -31,8 +36,7 @@ export function KidSuperCheckinModal({ onClose, onConfirm, onReject, request }: 
       scrollDownButtonText={t('walletConnect.request.button.scrollDown')}
       onClose={onClose}
       onConfirm={onConfirm}
-      onReject={onReject}
-    >
+      onReject={onReject}>
       <KidSuperCheckinModalContent request={request} />
     </ModalWithOverlay>
   )
@@ -41,7 +45,9 @@ export function KidSuperCheckinModal({ onClose, onConfirm, onReject, request }: 
 function useUniswapCafeLogo(): string | undefined {
   const isDarkMode = useIsDarkMode()
   const uwuLinkContractAllowlist = useUwuLinkContractAllowlist()
-  const logos = uwuLinkContractAllowlist.tokenRecipients.find((recipient) => recipient.name === 'Uniswap Cafe')?.logo
+  const logos = uwuLinkContractAllowlist.tokenRecipients.find(
+    (recipient) => recipient.name === 'Uniswap Cafe'
+  )?.logo
 
   if (!logos) {
     return
@@ -69,8 +75,7 @@ function KidSuperCheckinModalContent({ request }: { request: SignRequest }): JSX
           borderWidth={1}
           gap="$spacing12"
           px="$spacing24"
-          py="$spacing24"
-        >
+          py="$spacing24">
           <RequestDetailsContent request={request} />
         </Flex>
       </Flex>

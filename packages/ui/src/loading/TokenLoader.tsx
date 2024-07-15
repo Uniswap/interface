@@ -10,7 +10,12 @@ interface TokenLoaderProps {
 
 export function TokenLoader({ opacity, withPrice = false }: TokenLoaderProps): JSX.Element {
   return (
-    <Flex alignItems="flex-start" flexDirection="row" justifyContent="space-between" opacity={opacity} py="$spacing8">
+    <Flex
+      alignItems="flex-start"
+      flexDirection="row"
+      justifyContent="space-between"
+      opacity={opacity}
+      py="$spacing8">
       <Flex grow row alignItems="center" gap="$spacing12" overflow="hidden">
         <Flex
           backgroundColor="$neutral3"
@@ -20,7 +25,12 @@ export function TokenLoader({ opacity, withPrice = false }: TokenLoaderProps): J
         />
 
         <Flex grow alignItems="flex-start">
-          <Text loading="no-shimmer" loadingPlaceholderText="Token Full Name" numberOfLines={1} variant="body1" />
+          <Text
+            loading="no-shimmer"
+            loadingPlaceholderText="Token Full Name"
+            numberOfLines={1}
+            variant="body1"
+          />
           <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
             <Text
               loading="no-shimmer"
@@ -33,9 +43,19 @@ export function TokenLoader({ opacity, withPrice = false }: TokenLoaderProps): J
 
         {withPrice && (
           <Flex alignItems="flex-end">
-            <Text loading="no-shimmer" loadingPlaceholderText="$XX.XX" numberOfLines={1} variant="body1" />
+            <Text
+              loading="no-shimmer"
+              loadingPlaceholderText="$XX.XX"
+              numberOfLines={1}
+              variant="body1"
+            />
             <Flex row alignItems="center" gap="$spacing8" minHeight={20}>
-              <Text loading="no-shimmer" loadingPlaceholderText="X.XX%" numberOfLines={1} variant="subheading2" />
+              <Text
+                loading="no-shimmer"
+                loadingPlaceholderText="X.XX%"
+                numberOfLines={1}
+                variant="subheading2"
+              />
             </Flex>
           </Flex>
         )}

@@ -1,21 +1,24 @@
-import { permit2Address } from '@uniswap/permit2-sdk'
+import { providers } from 'ethers'
 import { call, select } from 'typed-redux-saga'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { RPCType } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
-import { ValidatedSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { makeSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
-import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
+import {
+  SendTransactionParams,
+  sendTransaction,
+} from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
-import { submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import { tradeToTransactionInfo } from 'wallet/src/features/transactions/swap/utils'
-import { wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
-import { ApproveTransactionInfo, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import {
+  TransactionStatus,
+  TransactionType,
+  TransactionTypeInfo,
+} from 'wallet/src/features/transactions/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -23,82 +26,61 @@ import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export type SwapParams = {
   txId?: string
-  account: SignerMnemonicAccount
+  account: Account
   analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
-  swapTxContext: ValidatedSwapTxContext
-  onSubmit: () => void
-  onFailure: () => void
+  approveTxRequest?: providers.TransactionRequest
+  swapTxRequest: providers.TransactionRequest
+  swapTypeInfo: ReturnType<typeof tradeToTransactionInfo>
 }
 
 export function* approveAndSwap(params: SwapParams) {
   try {
-    const { swapTxContext, account, txId, analytics, onSubmit, onFailure } = params
-    const { trade, routing, approveTxRequest } = swapTxContext
-    const isUniswapX = routing === Routing.DUTCH_V2
-    const { address } = account
-
-    const chainId = swapTxContext.trade.inputAmount.currency.chainId
-
-    // MEV protection is not needed for UniswapX approval and/or wrap transactions.
-    const submitViaPrivateRpc = !isUniswapX && (yield* call(shouldSubmitViaPrivateRpc, chainId))
-    let nonce = yield* call(getNonceForApproveAndSwap, address, chainId, submitViaPrivateRpc)
-
-    // For classic swaps, trigger UI changes immediately after click
-    if (!isUniswapX) {
-      onSubmit()
+    const { account, approveTxRequest, swapTxRequest, txId, analytics, swapTypeInfo } = params
+    if (!swapTxRequest.chainId || !swapTxRequest.to || (approveTxRequest && !approveTxRequest.to)) {
+      throw new Error('approveAndSwap received incomplete transaction request details')
     }
+    const { chainId } = swapTxRequest
+    const submitViaPrivateRpc = yield* call(shouldSubmitViaPrivateRpc, chainId)
+    const nonce = yield* call(
+      getNonceForApproveAndSwap,
+      account.address,
+      chainId,
+      submitViaPrivateRpc
+    )
 
-    let approveTxHash: string | undefined
-    // Approval Logic
-    if (approveTxRequest) {
-      const typeInfo: ApproveTransactionInfo = {
+    if (approveTxRequest && approveTxRequest.to) {
+      const typeInfo: TransactionTypeInfo = {
         type: TransactionType.Approve,
         tokenAddress: approveTxRequest.to,
-        spender: permit2Address(chainId),
+        spender: swapTxRequest.to,
       }
 
-      const options = { request: approveTxRequest, submitViaPrivateRpc }
-      const sendTransactionParams = { chainId, account, options, typeInfo, analytics }
-      // TODO(WEB-4406) - Refactor the approval submission's rpc call latency to not delay wrap submission
-      approveTxHash = (yield* call(sendTransaction, sendTransactionParams)).transactionResponse.hash
-      nonce++
-    }
-
-    const typeInfo = tradeToTransactionInfo(swapTxContext.trade)
-    // Swap Logic - UniswapX
-    if (isUniswapX) {
-      const { orderParams, wrapTxRequest } = swapTxContext
-
-      let wrapTxHash: string | undefined
-      // Wrap Logic - UniswapX Eth-input
-      if (wrapTxRequest) {
-        const inputCurrencyAmount = trade.inputAmount
-        const wrapResponse = yield* wrap({ txRequest: { ...wrapTxRequest, nonce }, account, inputCurrencyAmount })
-        wrapTxHash = wrapResponse?.transactionResponse.hash
-      }
-
-      const submitOrderParams = {
-        txId,
+      const sendTransactionParams: SendTransactionParams = {
         chainId,
-        orderParams,
-        approveTxHash,
-        wrapTxHash,
         account,
+        options: { request: approveTxRequest, submitViaPrivateRpc },
         typeInfo,
         analytics,
-        onSubmit,
-        onFailure,
       }
-      yield* call(submitUniswapXOrder, submitOrderParams)
-    }
-    // Swap Logic - Classic
-    else {
-      const { txRequest: swapTxRequest } = swapTxContext
-      const request = { ...swapTxRequest, nonce }
-      const options = { request, submitViaPrivateRpc }
-      const sendTransactionParams = { txId, chainId, account, options, typeInfo, analytics }
+
       yield* call(sendTransaction, sendTransactionParams)
     }
+
+    const request = {
+      ...swapTxRequest,
+      nonce: approveTxRequest ? nonce + 1 : undefined,
+    }
+
+    const sendTransactionParams: SendTransactionParams = {
+      txId,
+      chainId,
+      account,
+      options: { request, submitViaPrivateRpc },
+      typeInfo: swapTypeInfo,
+      analytics,
+    }
+
+    yield* call(sendTransaction, sendTransactionParams)
   } catch (error) {
     logger.error(error, {
       tags: { file: 'swapSaga', function: 'approveAndSwap' },
@@ -114,7 +96,11 @@ export const {
   actions: swapActions,
 } = createMonitoredSaga<SwapParams>(approveAndSwap, 'swap')
 
-function* getNonceForApproveAndSwap(address: Address, chainId: number, submitViaPrivateRpc: boolean) {
+function* getNonceForApproveAndSwap(
+  address: Address,
+  chainId: number,
+  submitViaPrivateRpc: boolean
+) {
   const rpcType = submitViaPrivateRpc ? RPCType.Private : RPCType.Public
   const provider = yield* call(getProvider, chainId, rpcType)
   const nonce = yield* call([provider, provider.getTransactionCount], address, 'pending')
@@ -150,6 +136,6 @@ function* getPendingPrivateTxCount(address: Address, chainId: number) {
       tx.chainId === chainId &&
       tx.status === TransactionStatus.Pending &&
       isClassic(tx) &&
-      Boolean(tx.options.submitViaPrivateRpc),
+      Boolean(tx.options.submitViaPrivateRpc)
   ).length
 }

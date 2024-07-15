@@ -5,7 +5,7 @@ import AssetLogo, { AssetLogoBaseProps } from 'components/Logo/AssetLogo'
 export default function CurrencyLogo(
   props: AssetLogoBaseProps & {
     currency?: Currency | null
-  },
+  }
 ) {
   return (
     <AssetLogo

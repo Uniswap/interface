@@ -22,6 +22,6 @@ export const useIsCollectionLoading = create<State>()(
           return { isCollectionStatsLoading }
         }),
     }),
-    { name: 'useIsCollectionLoading' },
-  ),
+    { name: 'useIsCollectionLoading' }
+  )
 )

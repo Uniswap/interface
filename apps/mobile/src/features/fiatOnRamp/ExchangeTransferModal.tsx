@@ -21,8 +21,7 @@ export function ExchangeTransferModal(): JSX.Element | null {
       hideKeyboardOnDismiss
       renderBehindTopInset
       name={ModalName.ExchangeTransferModal}
-      onClose={onClose}
-    >
+      onClose={onClose}>
       <ExchangeTransferConnecting serviceProvider={serviceProvider} onClose={onClose} />
     </BottomSheetModal>
   ) : null

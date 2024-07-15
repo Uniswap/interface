@@ -26,8 +26,7 @@ export function LockScreenModal(): JSX.Element | null {
       presentationStyle="fullScreen"
       showCloseButton={false}
       transparent={false}
-      width="100%"
-    >
+      width="100%">
       <TouchableArea onPress={(): Promise<void> => trigger()}>
         <SplashScreen />
       </TouchableArea>

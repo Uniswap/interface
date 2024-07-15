@@ -19,7 +19,7 @@ describe('PoolDetailsHeader', () => {
           name: 'USD Coin',
           decimals: 6,
         },
-      }),
+      })
     )
     store.dispatch(
       addSerializedToken({
@@ -30,7 +30,7 @@ describe('PoolDetailsHeader', () => {
           name: 'Wrapped Ether',
           decimals: 18,
         },
-      }),
+      })
     )
   })
 
@@ -40,7 +40,7 @@ describe('PoolDetailsHeader', () => {
         address={usdcWethPoolAddress}
         chainId={UniverseChainId.Mainnet}
         tokens={[validBEPoolToken0, validBEPoolToken1]}
-      />,
+      />
     )
     expect(asFragment()).toMatchSnapshot()
 
@@ -52,7 +52,7 @@ describe('PoolDetailsHeader', () => {
 
   it('renders link for token address', async () => {
     const { asFragment } = render(
-      <PoolDetailsLink address={USDC_MAINNET.address} chainId={UniverseChainId.Mainnet} tokens={[validBEPoolToken0]} />,
+      <PoolDetailsLink address={USDC_MAINNET.address} chainId={UniverseChainId.Mainnet} tokens={[validBEPoolToken0]} />
     )
     expect(asFragment()).toMatchSnapshot()
 

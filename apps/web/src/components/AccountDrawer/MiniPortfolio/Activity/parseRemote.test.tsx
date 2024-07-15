@@ -181,7 +181,7 @@ describe('parseRemote', () => {
           ...swapOrderTokenChanges,
           TokenTransfer: [mockTokenTransferOutPartsFragment],
         },
-        jest.fn().mockReturnValue('100'),
+        jest.fn().mockReturnValue('100')
       )
       expect(result).toEqual(undefined)
     })
@@ -195,7 +195,7 @@ describe('parseRemote', () => {
           ...swapOrderTokenChanges,
           TokenTransfer: [],
         }, // no token changes
-        jest.fn().mockReturnValue('100'),
+        jest.fn().mockReturnValue('100')
       )
       expect(result).toEqual(undefined)
     })
@@ -204,7 +204,7 @@ describe('parseRemote', () => {
       const result = offchainOrderDetailsFromGraphQLTransactionActivity(
         { ...MockSwapOrder, details: { ...mockTransactionDetailsPartsFragment, __typename: 'TransactionDetails' } },
         swapOrderTokenChanges,
-        jest.fn().mockReturnValue('100'),
+        jest.fn().mockReturnValue('100')
       )
       expect(result).toEqual({
         chainId: 1,

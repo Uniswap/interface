@@ -13,9 +13,8 @@ import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ManualPageViewScreen, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
@@ -91,8 +90,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
       return (
         <OnboardingScreen
           subtitle={t('onboarding.recoveryPhrase.view.subtitle')}
-          title={t('onboarding.recoveryPhrase.view.title')}
-        >
+          title={t('onboarding.recoveryPhrase.view.title')}>
           {showScreenShotWarningModal && (
             <WarningModal
               caption={t('onboarding.recoveryPhrase.warning.screenshot.message')}
@@ -104,15 +102,21 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
           )}
           <Flex grow justifyContent="space-between">
             <Flex grow>
-              {seedWarningAcknowledged ? <MnemonicDisplay mnemonicId={mnemonicId} /> : <HiddenMnemonicWordView />}
+              {seedWarningAcknowledged ? (
+                <MnemonicDisplay mnemonicId={mnemonicId} />
+              ) : (
+                <HiddenMnemonicWordView />
+              )}
             </Flex>
             <Flex justifyContent="flex-end">
-              <Button testID={TestID.Next} onPress={nextView}>
+              <Button testID={ElementName.Next} onPress={nextView}>
                 {t('common.button.continue')}
               </Button>
             </Flex>
           </Flex>
-          {!seedWarningAcknowledged && <SeedWarningModal onPress={(): void => setSeedWarningAcknowledged(true)} />}
+          {!seedWarningAcknowledged && (
+            <SeedWarningModal onPress={(): void => setSeedWarningAcknowledged(true)} />
+          )}
         </OnboardingScreen>
       )
     case View.SeedPhraseConfirm:
@@ -123,8 +127,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               ? t('onboarding.recoveryPhrase.confirm.subtitle.combined')
               : t('onboarding.recoveryPhrase.confirm.subtitle.default')
           }
-          title={media.short ? undefined : t('onboarding.recoveryPhrase.confirm.title')}
-        >
+          title={media.short ? undefined : t('onboarding.recoveryPhrase.confirm.title')}>
           <Flex grow pointerEvents={continueButtonEnabled ? 'none' : 'auto'} pt="$spacing12">
             <MnemonicConfirmation
               mnemonicId={mnemonicId}
@@ -132,7 +135,10 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
             />
           </Flex>
           <Flex justifyContent="flex-end">
-            <Button disabled={!continueButtonEnabled} testID={TestID.Continue} onPress={onValidationSuccessful}>
+            <Button
+              disabled={!continueButtonEnabled}
+              testID={ElementName.Continue}
+              onPress={onValidationSuccessful}>
               {t('common.button.continue')}
             </Button>
           </Flex>
@@ -151,11 +157,14 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
       backgroundColor={colors.surface1.get()}
       hideHandlebar={true}
       isDismissible={false}
-      name={ModalName.SeedPhraseWarningModal}
-    >
+      name={ModalName.SeedPhraseWarningModal}>
       <Flex centered gap="$spacing16" pb="$spacing24" pt="$spacing24" px="$spacing24">
         <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
-          <LockIcon color={colors.neutral1.val} height={iconSizes.icon24} width={iconSizes.icon24} />
+          <LockIcon
+            color={colors.neutral1.val}
+            height={iconSizes.icon24}
+            width={iconSizes.icon24}
+          />
         </Flex>
         <Text color="$neutral1" variant="body1">
           {t('onboarding.recoveryPhrase.warning.final.title')}
@@ -163,7 +172,13 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
         <Text color="$neutral2" textAlign="center" variant="body2">
           {t('onboarding.recoveryPhrase.warning.final.message')}
         </Text>
-        <Button flexGrow={1} mt="$spacing16" testID={TestID.Confirm} theme="primary" width="100%" onPress={onPress}>
+        <Button
+          flexGrow={1}
+          mt="$spacing16"
+          testID={ElementName.Confirm}
+          theme="primary"
+          width="100%"
+          onPress={onPress}>
           {t('onboarding.recoveryPhrase.warning.final.button')}
         </Button>
       </Flex>

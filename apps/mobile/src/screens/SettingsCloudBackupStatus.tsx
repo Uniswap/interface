@@ -12,15 +12,21 @@ import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biomet
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import Checkmark from 'ui/src/assets/icons/check.svg'
 import { iconSizes } from 'ui/src/theme'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { AccountType, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import {
+  EditAccountAction,
+  editAccountActions,
+} from 'wallet/src/features/wallet/accounts/editAccountSaga'
+import {
+  AccountType,
+  BackupType,
+  SignerMnemonicAccount,
+} from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsCloudBackupStatus>
@@ -38,7 +44,7 @@ export function SettingsCloudBackupStatus({
   const mnemonicId = (accounts[address] as SignerMnemonicAccount)?.mnemonicId
   const backups = useCloudBackups(mnemonicId)
   const associatedAccounts = Object.values(accounts).filter(
-    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === mnemonicId,
+    (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === mnemonicId
   )
 
   const [showBackupDeleteWarning, setShowBackupDeleteWarning] = useState(false)
@@ -58,7 +64,7 @@ export function SettingsCloudBackupStatus({
           type: EditAccountAction.RemoveBackupMethod,
           address,
           backupMethod: BackupType.Cloud,
-        }),
+        })
       )
       setShowBackupDeleteWarning(false)
       navigation.navigate(MobileScreens.Settings)
@@ -69,7 +75,7 @@ export function SettingsCloudBackupStatus({
       Alert.alert(
         t('settings.setting.backup.error.title', { cloudProviderName: getCloudProviderName() }),
         t('settings.setting.backup.error.message.short'),
-        [{ text: t('common.button.ok'), style: 'default' }],
+        [{ text: t('common.button.ok'), style: 'default' }]
       )
     }
   }
@@ -109,7 +115,11 @@ export function SettingsCloudBackupStatus({
                 </Text>
 
                 {/* @TODO: [MOB-249] Add non-backed up state once we have more options on this page  */}
-                <Checkmark color={colors.statusSuccess.val} height={iconSizes.icon24} width={iconSizes.icon24} />
+                <Checkmark
+                  color={colors.statusSuccess.val}
+                  height={iconSizes.icon24}
+                  width={iconSizes.icon24}
+                />
               </Flex>
               {googleDriveEmail && (
                 <Text color="$neutral3" variant="buttonLabel4">
@@ -120,12 +130,11 @@ export function SettingsCloudBackupStatus({
           </Flex>
         </Flex>
         <Button
-          testID={TestID.Remove}
+          testID={ElementName.Remove}
           theme="detrimental"
           onPress={(): void => {
             setShowBackupDeleteWarning(true)
-          }}
-        >
+          }}>
           {t('settings.setting.backup.status.action.delete')}
         </Button>
       </Flex>
@@ -142,8 +151,7 @@ export function SettingsCloudBackupStatus({
           onClose={(): void => {
             setShowBackupDeleteWarning(false)
           }}
-          onConfirm={onConfirmDeleteBackup}
-        >
+          onConfirm={onConfirmDeleteBackup}>
           {associatedAccounts.length > 1 && (
             <Flex>
               <Text textAlign="left" variant="subheading2">

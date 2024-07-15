@@ -27,7 +27,7 @@ export class PersistedStorage {
     return chrome.storage[this.area].set({ [key]: value })
   }
 
-  removeItem(key: string | string[]): Promise<void> {
+  removeItem(key: string): Promise<void> {
     return chrome.storage[this.area].remove(key)
   }
 

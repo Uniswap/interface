@@ -25,7 +25,7 @@ function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddress
       .reduce<{ [chainId: string]: true }>((memo, value) => {
         memo[value] = true
         return memo
-      }, {}),
+      }, {})
   ).map((id) => parseInt(id))
 
   return chainIds.reduce<Mutable<TokenAddressMap>>((memo, chainId) => {

@@ -37,7 +37,7 @@ const SectionTitle = ({ title }: { title: string }): JSX.Element => (
 export const FeedTab = memo(
   forwardRef<FlatList<unknown>, TabProps>(function _FeedTab(
     { containerProps, scrollHandler, headerHeight, refreshing, onRefresh },
-    ref,
+    ref
   ) {
     const { t } = useTranslation()
     const dispatch = useAppDispatch()
@@ -58,19 +58,19 @@ export const FeedTab = memo(
         <Loader.Transaction />,
         SectionTitle,
         undefined,
-        undefined,
+        undefined
       )
     }, [])
 
-    const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } = useFormattedTransactionDataForFeed(
-      watchedWalletsList,
-      hideSpamTokens,
-    )
+    const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } =
+      useFormattedTransactionDataForFeed(watchedWalletsList, hideSpamTokens)
 
     const onPressReceive = (): void => {
       // in case we received a pending session from a previous scan after closing modal
       dispatch(removePendingSession())
-      dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
+      dispatch(
+        openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+      )
     }
 
     const errorCard = (
@@ -104,7 +104,9 @@ export const FeedTab = memo(
     const refreshControl = useMemo(() => {
       return (
         <RefreshControl
-          progressViewOffset={insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)}
+          progressViewOffset={
+            insets.top + (isAndroid && headerHeight ? headerHeight + TAB_BAR_HEIGHT : 0)
+          }
           refreshing={refreshing ?? false}
           tintColor={colors.neutral3.get()}
           onRefresh={onRefresh}
@@ -145,5 +147,5 @@ export const FeedTab = memo(
         />
       </Flex>
     )
-  }),
+  })
 )

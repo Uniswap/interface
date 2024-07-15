@@ -39,7 +39,7 @@ export const tokenTransfer = createFixture<TokenTransfer>()(() => ({
  */
 
 export const erc20ApproveAssetChange = createFixture<TokenApproval>()(() =>
-  tokenApproval({ asset: daiToken(), tokenStandard: TokenStandard.Erc20 }),
+  tokenApproval({ asset: daiToken(), tokenStandard: TokenStandard.Erc20 })
 )
 
 export const erc20TokenTransferOut = createFixture<TokenTransfer>()(() =>
@@ -48,9 +48,9 @@ export const erc20TokenTransferOut = createFixture<TokenTransfer>()(() =>
     tokenStandard: TokenStandard.Erc20,
     direction: TransactionDirection.Out,
     transactedValue: amount({ value: 1, currency: Currency.Usd }),
-  }),
+  })
 )
 
 export const erc20TransferIn = createFixture<TokenTransfer>()(() =>
-  erc20TokenTransferOut({ direction: TransactionDirection.In }),
+  erc20TokenTransferOut({ direction: TransactionDirection.In })
 )

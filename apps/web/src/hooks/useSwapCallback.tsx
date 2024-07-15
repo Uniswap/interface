@@ -1,11 +1,10 @@
 import { Percent, TradeType } from '@uniswap/sdk-core'
 import { FlatFeeOptions } from '@uniswap/universal-router-sdk'
 import { FeeOptions } from '@uniswap/v3-sdk'
-import { SupportedInterfaceChainId, useSupportedChainId } from 'constants/chains'
+import { useSupportedChainId } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
 import { useAccount } from 'hooks/useAccount'
 import { PermitSignature } from 'hooks/usePermitAllowance'
-import useSelectChain from 'hooks/useSelectChain'
 import { useUniswapXSwapCallback } from 'hooks/useUniswapXSwapCallback'
 import { useUniversalRouterSwapCallback } from 'hooks/useUniversalRouter'
 import { useCallback } from 'react'
@@ -47,13 +46,13 @@ export function useSwapCallback(
   trade: InterfaceTrade | undefined, // trade to execute, required
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }, // usd values for amount in and out, and the fee value, logged for analytics
   allowedSlippage: Percent, // in bips
-  permitSignature: PermitSignature | undefined,
+  permitSignature: PermitSignature | undefined
 ) {
   const addTransaction = useTransactionAdder()
   const addOrder = useAddOrder()
   const account = useAccount()
-  const supportedConnectedChainId = useSupportedChainId(account.chainId)
-  const { chainId: swapChainId } = useSwapAndLimitContext()
+  const { chainId } = useSwapAndLimitContext()
+  const supportedChainId = useSupportedChainId(chainId)
 
   const uniswapXSwapCallback = useUniswapXSwapCallback({
     trade: isUniswapXTrade(trade) ? trade : undefined,
@@ -68,25 +67,22 @@ export function useSwapCallback(
       slippageTolerance: allowedSlippage,
       permit: permitSignature,
       ...getUniversalRouterFeeFields(trade),
-    },
+    }
   )
 
-  const selectChain = useSelectChain()
   const swapCallback = isUniswapXTrade(trade) ? uniswapXSwapCallback : universalRouterSwapCallback
 
   return useCallback(async () => {
     if (!trade) {
       throw new Error('missing trade')
-    } else if (!account.isConnected || !account.address) {
-      throw new Error('wallet must be connected to swap')
-    } else if (!swapChainId) {
-      throw new Error('missing swap chainId')
-    } else if (!supportedConnectedChainId || supportedConnectedChainId !== swapChainId) {
-      const correctChain = await selectChain(swapChainId)
-      if (!correctChain) {
-        throw new Error('wallet must be connected to correct chain to swap')
-      }
     }
+    if (!account.address || !account.chainId) {
+      throw new Error('wallet must be connected to swap')
+    }
+    if (!supportedChainId) {
+      throw new Error('unsupported chain')
+    }
+
     const result = await swapCallback()
 
     const swapInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo = {
@@ -115,11 +111,11 @@ export function useSwapCallback(
         addOrder(
           account.address,
           result.response.orderHash,
-          supportedConnectedChainId as SupportedInterfaceChainId, // satisfies type-checker; already checked & switched chain above if !supportedConnectedChainId
+          supportedChainId,
           result.response.deadline,
           swapInfo as UniswapXOrderDetails['swapInfo'],
           result.response.encodedOrder,
-          isUniswapXTrade(trade) ? trade.offchainOrderType : OffchainOrderType.DUTCH_AUCTION, // satisfying type-checker; isUniswapXTrade should always be true
+          isUniswapXTrade(trade) ? trade.offchainOrderType : OffchainOrderType.DUTCH_AUCTION // satisfying type-checker; isUniswapXTrade should always be true
         )
         break
       default:
@@ -129,14 +125,12 @@ export function useSwapCallback(
     return result
   }, [
     account.address,
-    account.isConnected,
+    account.chainId,
     addOrder,
     addTransaction,
     allowedSlippage,
-    selectChain,
-    supportedConnectedChainId,
+    supportedChainId,
     swapCallback,
-    swapChainId,
     trade,
   ])
 }

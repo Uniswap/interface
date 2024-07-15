@@ -10,7 +10,7 @@ const config: CodegenConfig = {
   overwrite: true,
   schema: 'src/data/graphql/uniswap-data-api/schema.graphql',
   // pulls every graphql files in a single config
-  documents: ['../../apps/{mobile,extension}/src/**/*.graphql', '../../packages/{wallet,uniswap}/src/**/*.graphql'],
+  documents: ['../../apps/{mobile,stretch}/src/**/*.graphql', '../../packages/{wallet,uniswap}/src/**/*.graphql'],
   generates: {
     // generates a single output for every app and package
     'src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts': {
@@ -19,8 +19,8 @@ const config: CodegenConfig = {
         withHooks: true,
         maybeValue: 'T | undefined',
       },
-    },
-  },
+    }
+  }
 }
 
 export default config

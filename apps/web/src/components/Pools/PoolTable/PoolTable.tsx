@@ -153,7 +153,7 @@ export function TopPoolTable() {
 
   const { topPools, loading, errorV3, errorV2 } = useTopPools(
     { sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc },
-    chain.id,
+    chain.id
   )
   const combinedError =
     errorV2 && errorV3
@@ -239,7 +239,7 @@ export function PoolsTable({
           },
         }
       }) ?? [],
-    [chainId, filterString, pools],
+    [chainId, filterString, pools]
   )
 
   const showLoadingSkeleton = loading || !!error

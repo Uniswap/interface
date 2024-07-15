@@ -65,16 +65,18 @@ describe('SortButton', () => {
             },
             {
               title: 'Price increase (24H)',
-              systemIcon: orderBy === ClientTokensOrderBy.PriceChangePercentage24hDesc ? 'checkmark' : '',
+              systemIcon:
+                orderBy === ClientTokensOrderBy.PriceChangePercentage24hDesc ? 'checkmark' : '',
               orderBy: ClientTokensOrderBy.PriceChangePercentage24hDesc,
             },
             {
               title: 'Price decrease (24H)',
-              systemIcon: orderBy === ClientTokensOrderBy.PriceChangePercentage24hAsc ? 'checkmark' : '',
+              systemIcon:
+                orderBy === ClientTokensOrderBy.PriceChangePercentage24hAsc ? 'checkmark' : '',
               orderBy: ClientTokensOrderBy.PriceChangePercentage24hAsc,
             },
           ],
-        }),
+        })
       )
     })
   })

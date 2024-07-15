@@ -22,6 +22,6 @@ export function useLocationLinkProps(locale: SupportedLocale | null): {
               search: stringify({ ...qs, lng: locale }),
             },
           },
-    [location, qs, locale],
+    [location, qs, locale]
   )
 }

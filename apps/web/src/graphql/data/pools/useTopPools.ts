@@ -30,8 +30,8 @@ export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
             ? 1
             : -1
           : a.oneDayApr.greaterThan(b.oneDayApr)
-            ? 1
-            : -1
+          ? 1
+          : -1
       default:
         return sortState.sortDirection === OrderDirection.Desc ? b.tvl - a.tvl : a.tvl - b.tvl
     }
@@ -104,7 +104,7 @@ function useFilteredPools(pools: TablePool[]) {
           poolNameIncludesFilterString
         )
       }),
-    [lowercaseFilterString, pools],
+    [lowercaseFilterString, pools]
   )
 }
 

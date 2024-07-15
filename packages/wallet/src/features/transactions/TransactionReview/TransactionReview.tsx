@@ -11,7 +11,6 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -85,7 +84,7 @@ export function TransactionReview({
 
   const formattedInputFiatValue = convertFiatAmountFormatted(
     inputCurrencyUSDValue?.toExact(),
-    NumberType.FiatTokenQuantity,
+    NumberType.FiatTokenQuantity
   )
 
   return (
@@ -97,8 +96,7 @@ export function TransactionReview({
         entering={FadeInUp}
         // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
         exiting={isWeb ? undefined : FadeOut}
-        gap="$spacing4"
-      >
+        gap="$spacing4">
         {currencyInInfo ? (
           <Flex centered gap={innerGap}>
             <Flex centered gap={amountAndEquivalentValueGap}>
@@ -117,7 +115,7 @@ export function TransactionReview({
                 px="$spacing16"
                 py="$none"
                 showSoftInputOnFocus={false}
-                testID={TestID.AmountInputOut}
+                testID="amount-input-in"
                 textAlign="center"
                 value={formattedAmountIn}
               />
@@ -140,15 +138,25 @@ export function TransactionReview({
             <NFTTransfer asset={nftIn} nftSize={fullHeight / 5} />
           </Flex>
         ) : null}
-        <TransferArrowButton disabled backgroundColor="$transparent" borderColor="$transparent" p={arrowPadding} />
+        <TransferArrowButton
+          disabled
+          backgroundColor="$transparent"
+          borderColor="$transparent"
+          p={arrowPadding}
+        />
         {recipient ? (
           <Flex centered gap="$spacing12">
             <Text color="$neutral2" variant="body1">
               {/* TODO gary to come back and fix this later. More complicated with nested components */}
-              {t('common.text.recipient')}
+              {t('send.review.summary.to')}
             </Text>
             <Flex centered gap="$spacing8">
-              <AddressDisplay hideAddressInSubtitle address={recipient} size={24} variant="heading2" />
+              <AddressDisplay
+                hideAddressInSubtitle
+                address={recipient}
+                size={24}
+                variant="heading2"
+              />
               <RecipientPrevTransfers recipient={recipient} />
             </Flex>
           </Flex>
@@ -159,8 +167,7 @@ export function TransactionReview({
         // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
         exiting={isWeb ? undefined : FadeOut}
         gap="$spacing12"
-        justifyContent="flex-end"
-      >
+        justifyContent="flex-end">
         {transactionDetails}
         <Flex row gap="$spacing8">
           <Button icon={<BackArrow />} size="large" theme="tertiary" onPress={onPrev} />
@@ -169,8 +176,7 @@ export function TransactionReview({
             disabled={actionButtonProps.disabled}
             size="large"
             testID={actionButtonProps.name}
-            onPress={actionButtonProps.onPress}
-          >
+            onPress={actionButtonProps.onPress}>
             {actionButtonProps.label}
           </Button>
         </Flex>

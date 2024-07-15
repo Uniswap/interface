@@ -1,18 +1,22 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { call, delay } from 'typed-redux-saga'
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import {
   PortfolioBalancesDocument,
   PortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
-import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'wallet/src/utils/currencyId'
+import {
+  buildCurrencyId,
+  buildNativeCurrencyId,
+  buildWrappedNativeCurrencyId,
+} from 'wallet/src/utils/currencyId'
 
 type CurrencyIdToBalance = Record<CurrencyId, number>
 
@@ -74,7 +78,9 @@ export function* refetchGQLQueries({
 }
 
 // based on transaction data, determine which currencies we expect to see a balance update on
-function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails): Set<CurrencyId> | undefined {
+function getCurrenciesWithExpectedUpdates(
+  transaction: TransactionDetails
+): Set<CurrencyId> | undefined {
   const currenciesWithBalToUpdate: Set<CurrencyId> = new Set()
   const txChainId = transaction.chainId
 
@@ -91,7 +97,9 @@ function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails): Set<
       currenciesWithBalToUpdate.add(transaction.typeInfo.outputCurrencyId.toLowerCase())
       break
     case TransactionType.Send:
-      currenciesWithBalToUpdate.add(buildCurrencyId(txChainId, transaction.typeInfo.tokenAddress).toLowerCase())
+      currenciesWithBalToUpdate.add(
+        buildCurrencyId(txChainId, transaction.typeInfo.tokenAddress).toLowerCase()
+      )
       break
     case TransactionType.Wrap:
       currenciesWithBalToUpdate.add(buildWrappedNativeCurrencyId(txChainId))
@@ -117,7 +125,7 @@ function readBalancesFromCache({
 
   const currencyIdToBalance: CurrencyIdToBalance = Array.from(currencyIdsToUpdate).reduce(
     (currIdToBal, currencyId) => ({ ...currIdToBal, [currencyId]: 0 }), // assume 0 balance and update later if found in cache
-    {},
+    {}
   )
 
   const cachedBalancesData = apolloClient.readQuery<PortfolioBalancesQuery>({
@@ -149,7 +157,10 @@ function readBalancesFromCache({
   return currencyIdToBalance
 }
 
-function checkIfBalancesUpdated(balance1: CurrencyIdToBalance, balance2: Maybe<CurrencyIdToBalance>) {
+function checkIfBalancesUpdated(
+  balance1: CurrencyIdToBalance,
+  balance2: Maybe<CurrencyIdToBalance>
+) {
   if (!balance2) {
     return true
   } // if no currencies to check, then assume balances are updated

@@ -1,7 +1,6 @@
-import { Extras } from '@sentry/types'
-import { logErrorToDatadog, logToDatadog } from 'utilities/src/logger/Datadog'
+/* eslint-disable no-console */
+import { Extras, ScopeContext } from '@sentry/types'
 import { Sentry } from 'utilities/src/logger/Sentry'
-import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
 import { isInterface, isWeb } from 'utilities/src/platform'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
@@ -12,6 +11,7 @@ import { isInterface, isWeb } from 'utilities/src/platform'
 // perhaps because the declarations are not applying to external packages
 // but somehow its also not picking up the declarations here
 declare global {
+  // @typescript-eslint/ban-ts-comment
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-ignore its ok
   const __DEV__: boolean
@@ -19,8 +19,14 @@ declare global {
 
 const SENTRY_CHAR_LIMIT = 8192
 
+type LogLevel = 'debug' | 'info' | 'warn' | 'error'
+
+export type LoggerErrorContext = Omit<Partial<ScopeContext>, 'tags'> & {
+  tags: { file: string; function: string }
+}
+
 /**
- * Logs a message to console. Additionally sends log to Sentry and Datadog if using 'error', 'warn', or 'info'.
+ * Logs a message to console. Additionally sends log to Sentry if using 'error', 'warn', or 'info'.
  * Use `logger.debug` for development only logs.
  *
  * ex. `logger.warn('myFile', 'myFunc', 'Some warning', myArray)`
@@ -37,7 +43,8 @@ export const logger = {
     logMessage('info', fileName, functionName, message, ...args),
   warn: (fileName: string, functionName: string, message: string, ...args: unknown[]): void =>
     logMessage('warn', fileName, functionName, message, ...args),
-  error: (error: unknown, captureContext: LoggerErrorContext): void => logException(error, captureContext),
+  error: (error: unknown, captureContext: LoggerErrorContext): void =>
+    logException(error, captureContext),
 }
 
 function logMessage(
@@ -49,7 +56,6 @@ function logMessage(
 ): void {
   // Log to console directly for dev builds or interface for debugging
   if (__DEV__ || isInterface) {
-    // eslint-disable-next-line no-console
     console[level](...formatMessage(level, fileName, functionName, message), ...args)
   }
 
@@ -63,15 +69,6 @@ function logMessage(
   } else if (level === 'info') {
     Sentry.captureMessage('info', `${fileName}#${functionName}`, message, ...args)
   }
-
-  if (isInterface) {
-    logToDatadog(message, {
-      level,
-      args,
-      functionName,
-      fileName,
-    })
-  }
 }
 
 function logException(error: unknown, captureContext: LoggerErrorContext): void {
@@ -79,7 +76,6 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
 
   // Log to console directly for dev builds or interface for debugging
   if (__DEV__ || isInterface) {
-    // eslint-disable-next-line no-console
     console.error(error)
   }
 
@@ -98,16 +94,12 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
   }
 
   Sentry.captureException(error, updatedContext)
-  if (isInterface) {
-    logErrorToDatadog(error instanceof Error ? error : new Error(`${error}`), updatedContext)
-  }
 }
 
 interface RNError {
   nativeStackAndroid?: unknown
   userInfo?: unknown
 }
-
 // Adds extra fields from errors provided by React Native
 function addErrorExtras(error: unknown, captureContext: LoggerErrorContext): LoggerErrorContext {
   if (error instanceof Error) {
@@ -135,10 +127,13 @@ function formatMessage(
   level: LogLevel,
   fileName: string,
   functionName: string,
-  message: string,
+  message: string
 ): (string | Record<string, unknown>)[] {
   const t = new Date()
-  const timeString = `${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}.${pad(t.getMilliseconds(), 3)}`
+  const timeString = `${pad(t.getHours())}:${pad(t.getMinutes())}:${pad(t.getSeconds())}.${pad(
+    t.getMilliseconds(),
+    3
+  )}`
   if (isWeb) {
     // Simpler printing for web logging
     return [
@@ -156,15 +151,4 @@ function formatMessage(
     // Specific printing style for mobile logging
     return [`${timeString}::${fileName}#${functionName}`, message]
   }
-}
-
-export function createAndLogError(funcName: string): Error {
-  const e = new Error('Unsupported app environment that failed all checks')
-  logger.error(e, {
-    tags: {
-      file: 'utilities/src/environment/index.ts',
-      function: funcName,
-    },
-  })
-  return e
 }

@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
-import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import {
   Chain,
   SearchPopularTokensQuery,
   useSearchPopularTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { getWrappedNativeAddress } from 'wallet/src/constants/addresses'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 export type TopToken = NonNullable<NonNullable<SearchPopularTokensQuery['topTokens']>[0]>
 
@@ -35,7 +35,8 @@ export function usePopularTokens(): {
           return
         }
 
-        const isWeth = areAddressesEqual(token.address, wethAddress) && token?.chain === Chain.Ethereum
+        const isWeth =
+          areAddressesEqual(token.address, wethAddress) && token?.chain === Chain.Ethereum
 
         // manually replace weth with eth given backend only returns eth data as a proxy for eth
         if (isWeth && eth) {

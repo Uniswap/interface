@@ -35,6 +35,6 @@ export function useLocalCurrencyLinkProps(localCurrency?: SupportedLocalCurrency
               })
             },
           },
-    [localCurrency, location, qs, updateActiveLocalCurrency, activeLocalCurrency],
+    [localCurrency, location, qs, updateActiveLocalCurrency, activeLocalCurrency]
   )
 }

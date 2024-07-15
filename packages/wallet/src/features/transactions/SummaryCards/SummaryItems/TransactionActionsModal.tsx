@@ -2,7 +2,10 @@ import dayjs from 'dayjs'
 import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens, Flex, Separator, Text, isWeb } from 'ui/src'
-import { ActionSheetModalContent, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
+import {
+  ActionSheetModalContent,
+  MenuItemProp,
+} from 'uniswap/src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -11,7 +14,11 @@ import { FORMAT_DATE_LONG, useFormattedDate } from 'wallet/src/features/language
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { BaseSwapTransactionInfo, TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
+import {
+  BaseSwapTransactionInfo,
+  TransactionDetails,
+  TransactionType,
+} from 'wallet/src/features/transactions/types'
 import { useAppDispatch } from 'wallet/src/state'
 import { setClipboard } from 'wallet/src/utils/clipboard'
 import {
@@ -25,7 +32,11 @@ function renderOptionItem(label: string, textColorOverride?: ColorTokens): () =>
     return (
       <>
         <Separator />
-        <Text color={textColorOverride ?? '$neutral1'} p="$spacing16" textAlign="center" variant="body1">
+        <Text
+          color={textColorOverride ?? '$neutral1'}
+          p="$spacing16"
+          textAlign="center"
+          variant="body1">
           {label}
         </Text>
       </>
@@ -64,9 +75,13 @@ export default function TransactionActionsModal({
     onClose()
   }, [onClose])
 
-  const inputCurrencyInfo = useCurrencyInfo((transactionDetails.typeInfo as BaseSwapTransactionInfo).inputCurrencyId)
+  const inputCurrencyInfo = useCurrencyInfo(
+    (transactionDetails.typeInfo as BaseSwapTransactionInfo).inputCurrencyId
+  )
 
-  const outputCurrencyInfo = useCurrencyInfo((transactionDetails.typeInfo as BaseSwapTransactionInfo).outputCurrencyId)
+  const outputCurrencyInfo = useCurrencyInfo(
+    (transactionDetails.typeInfo as BaseSwapTransactionInfo).outputCurrencyId
+  )
 
   const options = useMemo(() => {
     const isSwapTransaction = transactionDetails.typeInfo.type === TransactionType.Swap
@@ -80,7 +95,7 @@ export default function TransactionActionsModal({
               render: renderOptionItem(
                 t('transaction.action.view', {
                   tokenSymbol: inputCurrencyInfo?.currency.symbol,
-                }),
+                })
               ),
             },
             {
@@ -89,7 +104,7 @@ export default function TransactionActionsModal({
               render: renderOptionItem(
                 t('transaction.action.view', {
                   tokenSymbol: outputCurrencyInfo?.currency.symbol,
-                }),
+                })
               ),
             },
           ]
@@ -115,7 +130,7 @@ export default function TransactionActionsModal({
             render: renderOptionItem(
               t('transaction.action.viewEtherscan', {
                 blockExplorerName: chainInfo.explorer.name,
-              }),
+              })
             ),
           },
         ]
@@ -133,7 +148,7 @@ export default function TransactionActionsModal({
                 pushNotification({
                   type: AppNotificationType.Copied,
                   copyType: CopyNotificationType.TransactionId,
-                }),
+                })
               )
               handleClose()
             },
@@ -186,8 +201,7 @@ export default function TransactionActionsModal({
       backgroundColor="$transparent"
       name={ModalName.TransactionActions}
       onClose={handleClose}
-      {...(isWeb && { alignment: 'top' })}
-    >
+      {...(isWeb && { alignment: 'top' })}>
       <Flex px="$spacing12">
         <ActionSheetModalContent
           header={
@@ -203,10 +217,12 @@ export default function TransactionActionsModal({
   )
 }
 
-export async function openSupportLink(transactionDetails: TransactionDetails): Promise<void> {
+async function openSupportLink(transactionDetails: TransactionDetails): Promise<void> {
   switch (transactionDetails.typeInfo.type) {
     case TransactionType.FiatPurchase:
-      return openLegacyFiatOnRampServiceProviderLink(transactionDetails.typeInfo.serviceProvider ?? 'MOONPAY')
+      return openLegacyFiatOnRampServiceProviderLink(
+        transactionDetails.typeInfo.serviceProvider ?? 'MOONPAY'
+      )
     case TransactionType.OnRampPurchase:
     case TransactionType.OnRampTransfer:
       return openOnRampSupportLink(transactionDetails.typeInfo.serviceProvider)
@@ -215,7 +231,7 @@ export async function openSupportLink(transactionDetails: TransactionDetails): P
   }
 }
 
-export function getTransactionId(transactionDetails: TransactionDetails): string | undefined {
+function getTransactionId(transactionDetails: TransactionDetails): string | undefined {
   switch (transactionDetails.typeInfo.type) {
     case TransactionType.FiatPurchase:
     case TransactionType.OnRampPurchase:

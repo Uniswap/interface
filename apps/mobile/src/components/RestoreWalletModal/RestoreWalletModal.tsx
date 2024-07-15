@@ -7,8 +7,7 @@ import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
@@ -33,7 +32,10 @@ export function RestoreWalletModal(): JSX.Element | null {
   }
 
   return (
-    <BottomSheetModal backgroundColor={colors.surface2.get()} isDismissible={false} name={ModalName.RestoreWallet}>
+    <BottomSheetModal
+      backgroundColor={colors.surface2.get()}
+      isDismissible={false}
+      name={ModalName.RestoreWallet}>
       <Flex centered gap="$spacing16" px="$spacing24" py="$spacing12">
         <Flex
           centered
@@ -41,9 +43,12 @@ export function RestoreWalletModal(): JSX.Element | null {
           p="$spacing12"
           style={{
             backgroundColor: opacify(12, colors.neutral1.val),
-          }}
-        >
-          <LockIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
+          }}>
+          <LockIcon
+            color={colors.neutral1.get()}
+            height={iconSizes.icon24}
+            width={iconSizes.icon24}
+          />
         </Flex>
         <Text textAlign="center" variant="body1">
           {t('account.wallet.button.restore')}
@@ -55,7 +60,7 @@ export function RestoreWalletModal(): JSX.Element | null {
           <Button fill theme="tertiary" onPress={onDismiss}>
             {t('common.button.dismiss')}
           </Button>
-          <Button fill testID={TestID.RestoreWallet} theme="primary" onPress={onRestore}>
+          <Button fill testID={ElementName.RestoreWallet} theme="primary" onPress={onRestore}>
             {t('common.button.restore')}
           </Button>
         </Flex>

@@ -575,7 +575,7 @@ export class PreviewTrade {
         this.inputAmount.currency,
         this.outputAmount.currency,
         this.inputAmount.quotient,
-        this.outputAmount.quotient,
+        this.outputAmount.quotient
       ))
     )
   }
@@ -585,7 +585,7 @@ export class PreviewTrade {
       this.inputAmount.currency,
       this.outputAmount.currency,
       this.maximumAmountIn(slippageTolerance).quotient,
-      this.minimumAmountOut(slippageTolerance).quotient,
+      this.minimumAmountOut(slippageTolerance).quotient
     )
   }
 }

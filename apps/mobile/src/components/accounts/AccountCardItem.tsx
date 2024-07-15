@@ -1,4 +1,3 @@
-import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
@@ -9,8 +8,7 @@ import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, HapticFeedback, Text, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -82,12 +80,8 @@ export function AccountCardItem({
       pushNotification({
         type: AppNotificationType.Copied,
         copyType: CopyNotificationType.Address,
-      }),
+      })
     )
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: ElementName.CopyAddress,
-      modal: ModalName.AccountSwitcher,
-    })
   }
 
   const onPressWalletSettings = (): void => {
@@ -128,16 +122,14 @@ export function AccountCardItem({
         if (e.nativeEvent.index === 2) {
           onPressRemoveWallet()
         }
-      }}
-    >
+      }}>
       <TouchableArea
         hapticFeedback
         pb="$spacing12"
         pt="$spacing8"
         px="$spacing24"
         onLongPress={disableOnPress}
-        onPress={(): void => onPress(address)}
-      >
+        onPress={(): void => onPress(address)}>
         <Flex row alignItems="flex-start" gap="$spacing16" testID={`account-item/${address}`}>
           <Flex fill>
             <AddressDisplay

@@ -1,10 +1,10 @@
 import React from 'react'
 import { Flex, Separator, Text, Unicon, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 
 type Props = {
   account: Account

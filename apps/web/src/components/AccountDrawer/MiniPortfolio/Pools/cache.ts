@@ -49,10 +49,10 @@ export function useCachedPositions(account: string): UseCachedPositionsReturnTyp
               return cache
             }
           }),
-        POSITION_CACHE_EXPIRY,
+        POSITION_CACHE_EXPIRY
       )
     },
-    [account, setCachedPositions],
+    [account, setCachedPositions]
   )
   return [cachedPositions[account], setPositionsAndStaleTimeout]
 }
@@ -70,12 +70,12 @@ export function usePoolAddressCache() {
   const [cache, updateCache] = useAtom(poolAddressCacheAtom)
   const get = useCallback(
     (details: PositionDetails, chainId: InterfaceChainId) => cache[poolAddressKey(details, chainId)],
-    [cache],
+    [cache]
   )
   const set = useCallback(
     (details: PositionDetails, chainId: InterfaceChainId, address: string) =>
       updateCache((c) => ({ ...c, [poolAddressKey(details, chainId)]: address })),
-    [updateCache],
+    [updateCache]
   )
   return { get, set }
 }
@@ -89,7 +89,7 @@ function useTokenCache() {
       const entry = cache[buildCurrencyKey(chainId, address)]
       return entry ? deserializeToken(entry) : undefined
     },
-    [cache],
+    [cache]
   )
   const set = useCallback(
     (token?: Token) => {
@@ -97,7 +97,7 @@ function useTokenCache() {
         setCache((cache) => ({ ...cache, [currencyKey(token)]: serializeToken(token) }))
       }
     },
-    [setCache],
+    [setCache]
   )
   return { get, set }
 }
@@ -114,7 +114,7 @@ export function useGetCachedTokens(chains: InterfaceChainId[]): TokenGetterFn {
       Object.values(fetched).forEach(tokenCache.set)
       return fetched
     },
-    [multicallContracts, tokenCache],
+    [multicallContracts, tokenCache]
   )
 
   // Uses tokens from local state if available, otherwise fetches them
@@ -130,7 +130,7 @@ export function useGetCachedTokens(chains: InterfaceChainId[]): TokenGetterFn {
       const fetched = await fetchRemoteTokens([...missing], chainId)
       return { ...local, ...fetched }
     },
-    [fetchRemoteTokens, tokenCache],
+    [fetchRemoteTokens, tokenCache]
   )
 
   return getTokens

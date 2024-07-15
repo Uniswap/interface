@@ -195,14 +195,14 @@ export const ListPage = () => {
       setGlobalMarketplaces,
       sellAssets,
       issues,
-    }),
+    })
   )
   const { listings, collectionsRequiringApproval, setCollectionStatusAndCallback } = useNFTList(
     ({ listings, collectionsRequiringApproval, setCollectionStatusAndCallback }) => ({
       listings,
       collectionsRequiringApproval,
       setCollectionStatusAndCallback,
-    }),
+    })
   )
 
   const totalEthListingValue = useMemo(() => getTotalEthValue(sellAssets), [sellAssets])

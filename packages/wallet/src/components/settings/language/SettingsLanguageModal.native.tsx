@@ -3,11 +3,10 @@ import { Linking } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { Language } from 'ui/src/components/icons'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { opacify } from 'uniswap/src/utils/colors'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isAndroid } from 'utilities/src/platform'
 import { SettingsLanguageModalProps } from 'wallet/src/components/settings/language/SettingsLanguageModalProps'
+import { opacify } from 'wallet/src/utils/colors'
 
 const openLanguageSettings = async (): Promise<void> => {
   if (isAndroid) {
@@ -24,7 +23,10 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
   return (
     <BottomSheetModal name={ModalName.LanguageSelector} onClose={onClose}>
       <Flex centered mt="$spacing16">
-        <Flex borderRadius="$rounded12" p="$spacing12" style={{ backgroundColor: opacify(10, colors.DEP_blue300.val) }}>
+        <Flex
+          borderRadius="$rounded12"
+          p="$spacing12"
+          style={{ backgroundColor: opacify(10, colors.DEP_blue300.val) }}>
           <Language color="$DEP_blue300" size="$icon.24" strokeWidth={1.5} />
         </Flex>
       </Flex>
@@ -37,7 +39,10 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
             {t('settings.setting.language.description.mobile')}
           </Text>
         </Flex>
-        <Button testID={TestID.OpenDeviceLanguageSettings} theme="tertiary" onPress={openLanguageSettings}>
+        <Button
+          testID={ElementName.OpenDeviceLanguageSettings}
+          theme="tertiary"
+          onPress={openLanguageSettings}>
           {t('settings.setting.language.button.navigate')}
         </Button>
       </Flex>

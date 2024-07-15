@@ -2,7 +2,11 @@ import firebase from '@react-native-firebase/app'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
 import { appSelect } from 'src/app/hooks'
-import { getFirebaseUidOrError, getFirestoreMetadataRef, getFirestoreUidRef } from 'src/features/firebase/utils'
+import {
+  getFirebaseUidOrError,
+  getFirestoreMetadataRef,
+  getFirestoreUidRef,
+} from 'src/features/firebase/utils'
 import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
 import { all, call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
@@ -16,7 +20,10 @@ import {
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { makeSelectAccountNotificationSetting, selectAccounts } from 'wallet/src/features/wallet/selectors'
+import {
+  makeSelectAccountNotificationSetting,
+  selectAccounts,
+} from 'wallet/src/features/wallet/selectors'
 import { addAccounts, editAccount } from 'wallet/src/features/wallet/slice'
 
 interface AccountMetadata {
@@ -96,7 +103,7 @@ function* updateFirebaseLanguage(addresses: Address[], language: Language) {
         type: EditAccountAction.UpdateLanguage,
         address,
         locale,
-      }),
+      })
     )
   }
 }
@@ -110,8 +117,8 @@ function* editAccountDataInFirebase(actionData: ReturnType<typeof editAccountAct
       const accountsToRemove = payload.accounts
       yield* all(
         accountsToRemove.map((account: { address: Address; pushNotificationsEnabled: boolean }) =>
-          call(removeAccountFromFirebase, account.address, account.pushNotificationsEnabled),
-        ),
+          call(removeAccountFromFirebase, account.address, account.pushNotificationsEnabled)
+        )
       )
       return
     }
@@ -179,7 +186,10 @@ export function* renameAccountInFirebase(address: Address, newName: string) {
   }
 }
 
-export function* toggleFirebaseNotificationSettings({ address, enabled }: TogglePushNotificationParams) {
+export function* toggleFirebaseNotificationSettings({
+  address,
+  enabled,
+}: TogglePushNotificationParams) {
   if (!address) {
     throw new Error('Address is required for toggleFirebaseNotificationSettings')
   }
@@ -204,7 +214,7 @@ export function* toggleFirebaseNotificationSettings({ address, enabled }: Toggle
           ...account,
           pushNotificationsEnabled: enabled,
         },
-      }),
+      })
     )
   } catch (error) {
     logger.error(error, {
@@ -257,13 +267,16 @@ async function updateFirebaseMetadata(address: Address, metadata: AccountMetadat
     const metadataRef = getFirestoreMetadataRef(firebaseApp, address, pushId)
 
     // Firestore does not support updating properties with an `undefined` value so must strip them out
-    const metadataWithDefinedPropsOnly = getKeys(metadata).reduce((obj: Record<string, unknown>, prop) => {
-      const value = metadata[prop]
-      if (value !== undefined) {
-        obj[prop] = value
-      }
-      return obj
-    }, {})
+    const metadataWithDefinedPropsOnly = getKeys(metadata).reduce(
+      (obj: Record<string, unknown>, prop) => {
+        const value = metadata[prop]
+        if (value !== undefined) {
+          obj[prop] = value
+        }
+        return obj
+      },
+      {}
+    )
 
     await metadataRef.set(metadataWithDefinedPropsOnly, { merge: true })
   } catch (error) {

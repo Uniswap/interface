@@ -73,11 +73,15 @@ export function LayoutContextProvider({
   const containerWidth = useSharedValue(-1)
   const containerHeight = useSharedValue(-1)
   const targetContainerHeight = useSharedValue(-1)
-  const columnWidth = useDerivedValue(() => (containerWidth.value === -1 ? -1 : containerWidth.value / numColumns))
+  const columnWidth = useDerivedValue(() =>
+    containerWidth.value === -1 ? -1 : containerWidth.value / numColumns
+  )
 
   // KEY-INDEX MAPPINGS
   const indexToKey = useSharedValue<string[]>([])
-  const keyToIndex = useDerivedValue(() => Object.fromEntries(indexToKey.value.map((key, index) => [key, index])))
+  const keyToIndex = useDerivedValue(() =>
+    Object.fromEntries(indexToKey.value.map((key, index) => [key, index]))
+  )
 
   // POSITIONING
   const itemPositions = useDerivedValue<Record<string, Vector>>(() => {
@@ -94,7 +98,7 @@ export function LayoutContextProvider({
           x: columnWidth.value * getColumnIndex(parseInt(index, 10), numColumns),
           y: rowOffsets.value[getRowIndex(parseInt(index, 10), numColumns)] ?? 0,
         },
-      ]),
+      ])
     )
   }, [rowsCount, columnWidth, rowOffsets, indexToKey, numColumns])
 
@@ -121,7 +125,7 @@ export function LayoutContextProvider({
         itemDimensions.value = { ...itemDimensions.value }
       }
     },
-    [itemKeys],
+    [itemKeys]
   )
 
   // ROW OFFSETS UPDATER
@@ -140,7 +144,7 @@ export function LayoutContextProvider({
         const rowIndex = getRowIndex(parseInt(itemIndex, 10), numColumns)
         offsets[rowIndex + 1] = Math.max(
           offsets[rowIndex + 1] ?? 0,
-          (offsets[rowIndex] ?? 0) + (dimensions[key]?.height ?? 0),
+          (offsets[rowIndex] ?? 0) + (dimensions[key]?.height ?? 0)
         )
       }
       // Update row offsets only if they have changed
@@ -151,7 +155,7 @@ export function LayoutContextProvider({
         rowOffsets.value = offsets
       }
     },
-    [numColumns],
+    [numColumns]
   )
 
   useAnimatedReaction(
@@ -179,7 +183,7 @@ export function LayoutContextProvider({
         containerHeight.value = newHeight
       }
     },
-    [animateContainerHeight],
+    [animateContainerHeight]
   )
 
   /**
@@ -213,7 +217,7 @@ export function LayoutContextProvider({
       keyToIndex,
       indexToKey,
       itemPositions,
-    ],
+    ]
   )
 
   return <LayoutContext.Provider value={contextValue}>{children}</LayoutContext.Provider>

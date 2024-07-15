@@ -6,9 +6,15 @@ import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPas
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
-export type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupCloudPasswordCreate>
+export type Props = NativeStackScreenProps<
+  OnboardingStackParamList,
+  OnboardingScreens.BackupCloudPasswordCreate
+>
 
-export function CloudBackupPasswordCreateScreen({ navigation, route: { params } }: Props): JSX.Element {
+export function CloudBackupPasswordCreateScreen({
+  navigation,
+  route: { params },
+}: Props): JSX.Element {
   const { t } = useTranslation()
 
   const navigateToNextScreen = ({ password }: { password: string }): void => {
@@ -25,8 +31,7 @@ export function CloudBackupPasswordCreateScreen({ navigation, route: { params } 
   return (
     <SafeKeyboardOnboardingScreen
       subtitle={t('onboarding.cloud.createPassword.description')}
-      title={t('onboarding.cloud.createPassword.title')}
-    >
+      title={t('onboarding.cloud.createPassword.title')}>
       <CloudBackupPasswordForm navigateToNextScreen={navigateToNextScreen} />
     </SafeKeyboardOnboardingScreen>
   )

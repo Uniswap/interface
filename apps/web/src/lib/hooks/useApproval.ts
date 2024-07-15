@@ -21,7 +21,7 @@ export enum ApprovalState {
 function useApprovalStateForSpender(
   amountToApprove: CurrencyAmount<Currency> | undefined,
   spender: string | undefined,
-  useIsPendingApproval: (token?: Token, spender?: string) => boolean,
+  useIsPendingApproval: (token?: Token, spender?: string) => boolean
 ): ApprovalState {
   const account = useAccount()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined
@@ -53,13 +53,13 @@ function useApprovalStateForSpender(
 export function useApproval(
   amountToApprove: CurrencyAmount<Currency> | undefined,
   spender: string | undefined,
-  useIsPendingApproval: (token?: Token, spender?: string) => boolean,
+  useIsPendingApproval: (token?: Token, spender?: string) => boolean
 ): [
   ApprovalState,
   () => Promise<
     | { response: TransactionResponse; tokenAddress: string; spenderAddress: string; amount: CurrencyAmount<Currency> }
     | undefined
-  >,
+  >
 ] {
   const { chainId } = useAccount()
   const token = amountToApprove?.currency?.isToken ? amountToApprove.currency : undefined

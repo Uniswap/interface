@@ -119,7 +119,7 @@ export default function Modal({
         onDismiss()
       }
     },
-    [isOpen, onDismiss],
+    [isOpen, onDismiss]
   )
 
   const fadeTransition = useTransition(isOpen, {
@@ -171,8 +171,8 @@ export default function Modal({
                             style: { transform: y.interpolate((y) => `translateY(${(y as number) > 0 ? y : 0}px)`) },
                           }
                         : slideIn
-                          ? { style: styles }
-                          : {})}
+                        ? { style: styles }
+                        : {})}
                       aria-label="dialog"
                       $height={height}
                       $minHeight={minHeight}
@@ -185,10 +185,10 @@ export default function Modal({
                       {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
                       {children}
                     </StyledDialogContent>
-                  ),
+                  )
               )}
             </StyledDialogOverlay>
-          ),
+          )
       )}
     </div>
   )

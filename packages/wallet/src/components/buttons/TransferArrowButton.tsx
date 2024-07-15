@@ -30,8 +30,7 @@ export function TransferArrowButton({
       // border width applies inside the element so add more padding to account for it
       p={p}
       onPress={onPress}
-      {...rest}
-    >
+      {...rest}>
       <Flex centered p="$spacing2">
         <Arrow color={colors.neutral2.val} direction="s" size={ICON_SIZE} />
       </Flex>

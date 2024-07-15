@@ -84,7 +84,7 @@ export function PoolDetailsTransactionsTable({
     chain.id,
     filter,
     token0,
-    protocolVersion,
+    protocolVersion
   )
 
   const showLoadingSkeleton = loading || !!error
@@ -173,7 +173,7 @@ export function PoolDetailsTransactionsTable({
               {PoolTransactionTableType.getValue?.()}
             </Cell>
           ),
-        },
+        }
       ),
       columnHelper.accessor((row) => row.amountUSD, {
         id: 'fiat-value',

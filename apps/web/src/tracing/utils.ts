@@ -4,7 +4,7 @@
  */
 export function calculateElapsedTimeWithPerformanceMarkMs(
   markName: string,
-  fallbackStartTime?: number,
+  fallbackStartTime?: number
 ): number | undefined {
   const elapsedTime = performance.mark(markName)
   if (elapsedTime) {

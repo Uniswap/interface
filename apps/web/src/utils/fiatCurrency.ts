@@ -9,7 +9,7 @@ import { Currency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated_
  */
 export function getFiatCurrencyName(
   t: AppTFunction,
-  currency: SupportedLocalCurrency,
+  currency: SupportedLocalCurrency
 ): { name: string; shortName: string } {
   const currencyToCurrencyName: Record<SupportedLocalCurrency, string> = {
     [Currency.Aud]: t('currency.aud'),

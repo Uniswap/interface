@@ -125,7 +125,7 @@ const Tab = ({
       }
       closeMenu()
     },
-    [items, navigate, closeMenu, isOpen],
+    [items, navigate, closeMenu, isOpen]
   )
 
   useKeyPress({

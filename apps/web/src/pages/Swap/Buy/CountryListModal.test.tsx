@@ -6,7 +6,7 @@ jest.mock(
   'react-virtualized-auto-sizer',
   () =>
     ({ children }: { children: any }) =>
-      children({ width: 100, height: 100 }),
+      children({ width: 100, height: 100 })
 )
 
 describe('CountryListModal', () => {
@@ -20,7 +20,7 @@ describe('CountryListModal', () => {
         onDismiss={closeHandler}
         onSelectCountry={selectHandler}
         selectedCountry={US}
-      />,
+      />
     )
     screen.getByText('United States').click()
     expect(selectHandler).toHaveBeenCalledWith(US)
@@ -38,7 +38,7 @@ describe('CountryListModal', () => {
         onDismiss={closeHandler}
         onSelectCountry={selectHandler}
         selectedCountry={US}
-      />,
+      />
     )
     const closeButton = screen.getByTestId('CountryListModal-close')
     fireEvent(closeButton, new MouseEvent('click', { bubbles: true }))

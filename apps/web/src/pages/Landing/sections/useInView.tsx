@@ -17,7 +17,7 @@ export const useInView = () => {
       },
       {
         threshold: 0.25,
-      },
+      }
     )
 
     io.observe(ref.current)

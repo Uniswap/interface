@@ -36,11 +36,9 @@ export enum ExtensionUserPropertyName {
   ActiveWalletAddress = 'active_wallet_address',
   ActiveWalletType = 'active_wallet_type',
   AppVersion = 'app_version',
-  Currency = 'currency',
   DarkMode = 'is_dark_mode',
   IsHideSmallBalancesEnabled = 'is_hide_small_balances_enabled',
   IsHideSpamTokensEnabled = 'is_hide_spam_tokens_enabled',
-  Language = 'language',
   WalletSignerAccounts = `wallet_signer_accounts`,
   WalletSignerCount = 'wallet_signer_count',
   WalletViewOnlyCount = 'wallet_view_only_count',
@@ -50,7 +48,7 @@ export enum ExtensionUserPropertyName {
 export function setUserProperty(
   property: MobileUserPropertyName | ExtensionUserPropertyName | CustomUserProperties,
   value: UserPropertyValue,
-  insert?: boolean,
+  insert?: boolean
 ): void {
   analytics.setUserProperty(property, value, insert)
 }

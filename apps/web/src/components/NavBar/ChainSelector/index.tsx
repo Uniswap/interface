@@ -6,7 +6,6 @@ import ChainSelectorRow from 'components/NavBar/ChainSelector/ChainSelectorRow'
 import { NavDropdown } from 'components/NavBar/NavDropdown/NavDropdown'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import {
-  CHAIN_IDS_TO_NAMES,
   L1_CHAIN_IDS,
   L2_CHAIN_IDS,
   TESTNET_CHAIN_IDS,
@@ -15,11 +14,11 @@ import {
 } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
+import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { t } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
-import { useSearchParams } from 'react-router-dom'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import styled, { css, useTheme } from 'styled-components'
 import { Flex, Popover } from 'ui/src'
@@ -78,7 +77,9 @@ function useWalletSupportedChains(): InterfaceChainId[] {
 }
 
 export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
-  const { chainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
+  const account = useAccount()
+  const { chainId: swapChainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
+  const chainId = multichainUXEnabled ? swapChainId : account.chainId
   // multichainFlagEnabled is different from multichainUXEnabled, multichainUXEnabled applies to swap
   // flag can be true but multichainUXEnabled can be false (TDP page)
   const multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
@@ -91,7 +92,8 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
   const navRefreshEnabled = useFeatureFlag(FeatureFlags.NavRefresh)
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const selectChain = useSelectChain()
-  const [searchParams, setSearchParams] = useSearchParams()
+  const chainIdRef = useRef<number | undefined>(undefined)
+  useSyncChainQuery(chainIdRef)
 
   const [supportedChains, unsupportedChains] = useMemo(() => {
     const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter((chain: number) => {
@@ -107,7 +109,7 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
           }
           return acc
         },
-        { supported: [], unsupported: [] } as Record<string, InterfaceChainId[]>,
+        { supported: [], unsupported: [] } as Record<string, InterfaceChainId[]>
       )
     return [supported, unsupported]
   }, [isSupportedChain, showTestnets, walletSupportsChain])
@@ -123,15 +125,10 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
         await selectChain(targetChainId)
         setPendingChainId(undefined)
       }
-      searchParams.delete('inputCurrency')
-      searchParams.delete('outputCurrency')
-      targetChainId && searchParams.set('chain', CHAIN_IDS_TO_NAMES[targetChainId])
-      setSearchParams(searchParams)
-
       setIsOpen(false)
       popoverRef.current?.close()
     },
-    [multichainUXEnabled, setSelectedChainId, selectChain, searchParams, setSearchParams],
+    [popoverRef, selectChain, setIsOpen, setSelectedChainId, multichainUXEnabled]
   )
 
   const styledMenuCss = css`

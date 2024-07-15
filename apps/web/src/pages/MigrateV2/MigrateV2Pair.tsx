@@ -147,17 +147,17 @@ function V2PairMigration({
     () =>
       CurrencyAmount.fromRawAmount(
         token0,
-        JSBI.divide(JSBI.multiply(pairBalance.quotient, reserve0.quotient), totalSupply.quotient),
+        JSBI.divide(JSBI.multiply(pairBalance.quotient, reserve0.quotient), totalSupply.quotient)
       ),
-    [token0, pairBalance, reserve0, totalSupply],
+    [token0, pairBalance, reserve0, totalSupply]
   )
   const token1Value = useMemo(
     () =>
       CurrencyAmount.fromRawAmount(
         token1,
-        JSBI.divide(JSBI.multiply(pairBalance.quotient, reserve1.quotient), totalSupply.quotient),
+        JSBI.divide(JSBI.multiply(pairBalance.quotient, reserve1.quotient), totalSupply.quotient)
       ),
-    [token1, pairBalance, reserve1, totalSupply],
+    [token1, pairBalance, reserve1, totalSupply]
   )
 
   // set up v3 pool
@@ -168,7 +168,7 @@ function V2PairMigration({
   // get spot prices + price difference
   const v2SpotPrice = useMemo(
     () => new Price(token0, token1, reserve0.quotient, reserve1.quotient),
-    [token0, token1, reserve0, reserve1],
+    [token0, token1, reserve0, reserve1]
   )
   const v3SpotPrice = poolState === PoolState.EXISTS ? pool?.token0Price : undefined
 
@@ -186,7 +186,7 @@ function V2PairMigration({
     token0,
     token1,
     feeAmount,
-    baseToken,
+    baseToken
   )
 
   // get value and prices at ticks
@@ -198,7 +198,7 @@ function V2PairMigration({
     baseToken.equals(token0) ? token1 : token0,
     feeAmount,
     tickLower,
-    tickUpper,
+    tickUpper
   )
 
   const { onLeftRangeInput, onRightRangeInput } = useV3MintActionHandlers(noLiquidity)
@@ -221,18 +221,18 @@ function V2PairMigration({
 
   const { amount0: v3Amount0Min, amount1: v3Amount1Min } = useMemo(
     () => (position ? position.mintAmountsWithSlippage(allowedSlippage) : { amount0: undefined, amount1: undefined }),
-    [position, allowedSlippage],
+    [position, allowedSlippage]
   )
 
   const refund0 = useMemo(
     () =>
       position && CurrencyAmount.fromRawAmount(token0, JSBI.subtract(token0Value.quotient, position.amount0.quotient)),
-    [token0Value, position, token0],
+    [token0Value, position, token0]
   )
   const refund1 = useMemo(
     () =>
       position && CurrencyAmount.fromRawAmount(token1, JSBI.subtract(token1Value.quotient, position.amount1.quotient)),
-    [token1Value, position, token1],
+    [token1Value, position, token1]
   )
 
   const [confirmingMigration, setConfirmingMigration] = useState<boolean>(false)
@@ -300,7 +300,7 @@ function V2PairMigration({
           signatureData.v,
           signatureData.r,
           signatureData.s,
-        ]),
+        ])
       )
     }
 
@@ -312,7 +312,7 @@ function V2PairMigration({
           token1.address,
           feeAmount,
           `0x${sqrtPrice.toString(16)}`,
-        ]),
+        ])
       )
     }
 
@@ -334,7 +334,7 @@ function V2PairMigration({
           deadline,
           refundAsETH: true, // hard-code this for now
         },
-      ]),
+      ])
     )
 
     setConfirmingMigration(true)
@@ -408,7 +408,7 @@ function V2PairMigration({
             href={getExplorerLink(
               account.chainId ?? UniverseChainId.Mainnet,
               migrator?.address ?? '',
-              ExplorerDataType.ADDRESS,
+              ExplorerDataType.ADDRESS
             )}
           >
             <Text color="$accent1" display="inline">
@@ -726,7 +726,7 @@ export default function MigrateV2Pair() {
   // get liquidity token balance
   const liquidityToken: Token | undefined = useMemo(
     () => (account.chainId && validatedAddress ? new Token(account.chainId, validatedAddress, 18) : undefined),
-    [account.chainId, validatedAddress],
+    [account.chainId, validatedAddress]
   )
 
   // get data required for V2 pair migration
@@ -735,11 +735,11 @@ export default function MigrateV2Pair() {
   const [reserve0Raw, reserve1Raw] = useSingleCallResult(pair, 'getReserves')?.result ?? []
   const reserve0 = useMemo(
     () => (token0 && reserve0Raw ? CurrencyAmount.fromRawAmount(token0, reserve0Raw) : undefined),
-    [token0, reserve0Raw],
+    [token0, reserve0Raw]
   )
   const reserve1 = useMemo(
     () => (token1 && reserve1Raw ? CurrencyAmount.fromRawAmount(token1, reserve1Raw) : undefined),
-    [token1, reserve1Raw],
+    [token1, reserve1Raw]
   )
 
   // redirect for invalid url params

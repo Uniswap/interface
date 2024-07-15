@@ -3,8 +3,10 @@ import { ContractInteraction } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { DappLogoWithWCBadge, LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
+import {
+  DappLogoWithWCBadge,
+  LogoWithTxStatus,
+} from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
 import { AssetType } from 'wallet/src/entities/assets'
 import {
@@ -19,8 +21,6 @@ import {
   isNFTApproveTransactionInfo,
   isNFTMintTransactionInfo,
   isNFTTradeTransactionInfo,
-  isOnRampPurchaseTransactionInfo,
-  isOnRampTransferTransactionInfo,
   isReceiveTokenTransactionInfo,
   isSendTokenTransactionInfo,
   isSwapTransactionInfo,
@@ -33,15 +33,13 @@ import {
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
   NFTTradeTransactionInfo,
-  OnRampPurchaseInfo,
-  OnRampTransferInfo,
   ReceiveTokenTransactionInfo,
   SendTokenTransactionInfo,
   TransactionDetails,
-  UnknownTransactionInfo,
   WCConfirmInfo,
   WrapTransactionInfo,
 } from 'wallet/src/features/transactions/types'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 const TXN_DETAILS_ICON_SIZE = iconSizes.icon40
 
@@ -77,7 +75,7 @@ const getLogoWithTxStatus = ({
   />
 )
 
-export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element {
+export const HeaderLogo = ({ transactionDetails }: HeaderLogoProps): JSX.Element => {
   const { typeInfo } = transactionDetails
 
   const getHeaderLogoComponent = (): JSX.Element => {
@@ -101,10 +99,8 @@ export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element
       return <WCConfirmHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else if (isWrapTransactionInfo(typeInfo)) {
       return <WrapHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isOnRampPurchaseTransactionInfo(typeInfo) || isOnRampTransferTransactionInfo(typeInfo)) {
-      return <OnRampHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else {
-      return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+      return <UnknownHeaderLogo />
     }
   }
 
@@ -115,10 +111,10 @@ interface SpecificHeaderLogoProps<T> extends HeaderLogoProps {
   typeInfo: T
 }
 
-function SwapHeaderLogo({
+const SwapHeaderLogo = ({
   transactionDetails,
   typeInfo,
-}: SpecificHeaderLogoProps<SwapTypeTransactionInfo>): JSX.Element {
+}: SpecificHeaderLogoProps<SwapTypeTransactionInfo>): JSX.Element => {
   const inputCurrency = useCurrencyInfo(typeInfo.inputCurrencyId)
   const outputCurrency = useCurrencyInfo(typeInfo.outputCurrencyId)
 
@@ -132,11 +128,13 @@ function SwapHeaderLogo({
   )
 }
 
-function ApproveHeaderLogo({
+const ApproveHeaderLogo = ({
   transactionDetails,
   typeInfo,
-}: SpecificHeaderLogoProps<ApproveTransactionInfo>): JSX.Element {
-  const currencyInfo = useCurrencyInfo(buildCurrencyId(transactionDetails.chainId, typeInfo.tokenAddress))
+}: SpecificHeaderLogoProps<ApproveTransactionInfo>): JSX.Element => {
+  const currencyInfo = useCurrencyInfo(
+    buildCurrencyId(transactionDetails.chainId, typeInfo.tokenAddress)
+  )
   return getLogoWithTxStatus({
     assetType: AssetType.Currency,
     currencyInfo,
@@ -144,16 +142,22 @@ function ApproveHeaderLogo({
   })
 }
 
-function FiatPurchaseHeaderLogo({
+const FiatPurchaseHeaderLogo = ({
   transactionDetails,
   typeInfo,
-}: SpecificHeaderLogoProps<FiatPurchaseTransactionInfo>): JSX.Element {
+}: SpecificHeaderLogoProps<FiatPurchaseTransactionInfo>): JSX.Element => {
   const outputCurrencyInfo = useCurrencyInfo(
     typeInfo.outputCurrency?.metadata.contractAddress
-      ? buildCurrencyId(transactionDetails.chainId, typeInfo.outputCurrency?.metadata.contractAddress)
-      : undefined,
+      ? buildCurrencyId(
+          transactionDetails.chainId,
+          typeInfo.outputCurrency?.metadata.contractAddress
+        )
+      : undefined
   )
-  const serviceProviderLogoUrl = getOptionalServiceProviderLogo(typeInfo.serviceProviderLogo, useIsDarkMode())
+  const serviceProviderLogoUrl = getOptionalServiceProviderLogo(
+    typeInfo.serviceProviderLogo,
+    useIsDarkMode()
+  )
   return getLogoWithTxStatus({
     assetType: AssetType.Currency,
     transactionDetails,
@@ -163,58 +167,54 @@ function FiatPurchaseHeaderLogo({
   })
 }
 
-function TokenTransferHeaderLogo({
+const TokenTransferHeaderLogo = ({
   transactionDetails,
   typeInfo,
-}: SpecificHeaderLogoProps<ReceiveTokenTransactionInfo | SendTokenTransactionInfo>): JSX.Element {
+}: SpecificHeaderLogoProps<
+  ReceiveTokenTransactionInfo | SendTokenTransactionInfo
+>): JSX.Element => {
   const currencyInfo = useCurrencyInfo(
     typeInfo.assetType === AssetType.Currency
       ? buildCurrencyId(transactionDetails.chainId, typeInfo.tokenAddress)
-      : undefined,
+      : undefined
   )
   return getLogoWithTxStatus({
     assetType: typeInfo.assetType,
     currencyInfo,
     transactionDetails,
-    nftImageUrl: typeInfo.assetType !== AssetType.Currency ? typeInfo.nftSummaryInfo?.imageURL : undefined,
+    nftImageUrl:
+      typeInfo.assetType !== AssetType.Currency ? typeInfo.nftSummaryInfo?.imageURL : undefined,
   })
 }
 
-function OnRampHeaderLogo({
+const NFTHeaderLogo = ({
   transactionDetails,
   typeInfo,
-}: SpecificHeaderLogoProps<OnRampPurchaseInfo | OnRampTransferInfo>): JSX.Element {
-  const currencyInfo = useCurrencyInfo(buildCurrencyId(transactionDetails.chainId, typeInfo.destinationTokenAddress))
-  return getLogoWithTxStatus({
-    assetType: AssetType.Currency,
-    currencyInfo,
-    transactionDetails,
-  })
-}
-
-function NFTHeaderLogo({
-  transactionDetails,
-  typeInfo,
-}: SpecificHeaderLogoProps<NFTApproveTransactionInfo | NFTMintTransactionInfo | NFTTradeTransactionInfo>): JSX.Element {
-  return getLogoWithTxStatus({
+}: SpecificHeaderLogoProps<
+  NFTApproveTransactionInfo | NFTMintTransactionInfo | NFTTradeTransactionInfo
+>): JSX.Element =>
+  getLogoWithTxStatus({
     assetType: AssetType.ERC721,
     transactionDetails,
     nftImageUrl: typeInfo.nftSummaryInfo.imageURL,
   })
-}
 
-function WCConfirmHeaderLogo({ transactionDetails, typeInfo }: SpecificHeaderLogoProps<WCConfirmInfo>): JSX.Element {
-  return (
-    <DappLogoWithWCBadge
-      chainId={transactionDetails.chainId}
-      dappImageUrl={typeInfo.dapp.icon}
-      dappName={typeInfo.dapp.name}
-      size={TXN_DETAILS_ICON_SIZE}
-    />
-  )
-}
+const WCConfirmHeaderLogo = ({
+  transactionDetails,
+  typeInfo,
+}: SpecificHeaderLogoProps<WCConfirmInfo>): JSX.Element => (
+  <DappLogoWithWCBadge
+    chainId={transactionDetails.chainId}
+    dappImageUrl={typeInfo.dapp.icon}
+    dappName={typeInfo.dapp.name}
+    size={TXN_DETAILS_ICON_SIZE}
+  />
+)
 
-function WrapHeaderLogo({ transactionDetails, typeInfo }: SpecificHeaderLogoProps<WrapTransactionInfo>): JSX.Element {
+const WrapHeaderLogo = ({
+  transactionDetails,
+  typeInfo,
+}: SpecificHeaderLogoProps<WrapTransactionInfo>): JSX.Element => {
   const unwrapped = typeInfo.unwrapped
   const nativeCurrencyInfo = useNativeCurrencyInfo(transactionDetails.chainId)
   const wrappedCurrencyInfo = useWrappedNativeCurrencyInfo(transactionDetails.chainId)
@@ -229,21 +229,7 @@ function WrapHeaderLogo({ transactionDetails, typeInfo }: SpecificHeaderLogoProp
   )
 }
 
-function UnknownHeaderLogo({
-  transactionDetails,
-  typeInfo,
-}: SpecificHeaderLogoProps<UnknownTransactionInfo>): JSX.Element {
+const UnknownHeaderLogo = (): JSX.Element => {
   const colors = useSporeColors()
-  return typeInfo.dappInfo?.icon ? (
-    <DappLogoWithWCBadge
-      circular
-      hideWCBadge
-      chainId={transactionDetails.chainId}
-      dappImageUrl={typeInfo.dappInfo.icon}
-      dappName={typeInfo.dappInfo.name ?? ''}
-      size={iconSizes.icon40}
-    />
-  ) : (
-    <ContractInteraction color="$neutral2" fill={colors.surface1.get()} size="$icon.40" />
-  )
+  return <ContractInteraction color="$neutral2" fill={colors.surface1.get()} size="$icon.40" />
 }

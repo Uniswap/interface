@@ -213,7 +213,7 @@ function TokenTable({
           linkState: { preloadedLogoSrc: token?.project?.logoUrl },
         }
       }) ?? [],
-    [chainId, filterString, formatDelta, sparklines, timePeriod, tokenSortRank, tokens],
+    [chainId, filterString, formatDelta, sparklines, timePeriod, tokenSortRank, tokens]
   )
 
   const showLoadingSkeleton = loading || !!error

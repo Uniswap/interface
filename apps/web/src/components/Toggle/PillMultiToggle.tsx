@@ -22,9 +22,7 @@ const ActivePill = styled.div<{ activePillColor?: string }>`
   top: ${togglePadding}px;
   background-color: ${({ theme, activePillColor }) => activePillColor || theme.neutral3};
   border-radius: 16px;
-  transition:
-    left 0.3s ease,
-    width 0.3s ease;
+  transition: left 0.3s ease, width 0.3s ease;
 `
 const OptionButton = styled.button<{ active: boolean; activeTextColor?: string }>`
   flex: 1;
@@ -100,7 +98,7 @@ export default function PillMultiToggle({
             left: current?.offsetLeft,
             width: current?.offsetWidth,
           }
-        : { display: 'none' },
+        : { display: 'none' }
     )
   }, [buttonRefs, activeIndex])
 

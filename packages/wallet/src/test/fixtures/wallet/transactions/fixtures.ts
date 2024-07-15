@@ -43,7 +43,6 @@ export const nftSummaryInfo = createFixture<NFTSummaryInfo>()(() => ({
   name: faker.lorem.words(),
   collectionName: faker.lorem.words(),
   imageURL: faker.image.imageUrl(),
-  address: faker.finance.ethereumAddress(),
 }))
 
 export const approveTransactionInfo = createFixture<ApproveTransactionInfo>()(() => ({
@@ -58,21 +57,25 @@ export const baseSwapTransactionInfo = createFixture<BaseSwapTransactionInfo>()(
   outputCurrencyId: faker.datatype.uuid(),
 }))
 
-export const extractInputSwapTransactionInfo = createFixture<ExactInputSwapTransactionInfo>()(() => ({
-  ...baseSwapTransactionInfo(),
-  tradeType: TradeType.EXACT_INPUT,
-  inputCurrencyAmountRaw: faker.datatype.number().toString(),
-  expectedOutputCurrencyAmountRaw: faker.datatype.number().toString(),
-  minimumOutputCurrencyAmountRaw: faker.datatype.number().toString(),
-}))
+export const extractInputSwapTransactionInfo = createFixture<ExactInputSwapTransactionInfo>()(
+  () => ({
+    ...baseSwapTransactionInfo(),
+    tradeType: TradeType.EXACT_INPUT,
+    inputCurrencyAmountRaw: faker.datatype.number().toString(),
+    expectedOutputCurrencyAmountRaw: faker.datatype.number().toString(),
+    minimumOutputCurrencyAmountRaw: faker.datatype.number().toString(),
+  })
+)
 
-export const extractOutputSwapTransactionInfo = createFixture<ExactOutputSwapTransactionInfo>()(() => ({
-  ...baseSwapTransactionInfo(),
-  tradeType: TradeType.EXACT_OUTPUT,
-  outputCurrencyAmountRaw: faker.datatype.number().toString(),
-  expectedInputCurrencyAmountRaw: faker.datatype.number().toString(),
-  maximumInputCurrencyAmountRaw: faker.datatype.number().toString(),
-}))
+export const extractOutputSwapTransactionInfo = createFixture<ExactOutputSwapTransactionInfo>()(
+  () => ({
+    ...baseSwapTransactionInfo(),
+    tradeType: TradeType.EXACT_OUTPUT,
+    outputCurrencyAmountRaw: faker.datatype.number().toString(),
+    expectedInputCurrencyAmountRaw: faker.datatype.number().toString(),
+    maximumInputCurrencyAmountRaw: faker.datatype.number().toString(),
+  })
+)
 
 export const confirmedSwapTransactionInfo = createFixture<ConfirmedSwapTransactionInfo>()(() => ({
   ...baseSwapTransactionInfo(),
@@ -166,7 +169,9 @@ export const transactionReceipt = createFixture<TransactionReceipt>()(() => ({
   effectiveGasPrice: faker.datatype.number(),
 }))
 
-export const finalizedTransactionAction = createFixture<ReturnType<typeof finalizeTransaction>>()(() => ({
-  payload: finalizedTransactionDetails(),
-  type: 'transactions/finalizeTransaction',
-}))
+export const finalizedTransactionAction = createFixture<ReturnType<typeof finalizeTransaction>>()(
+  () => ({
+    payload: finalizedTransactionDetails(),
+    type: 'transactions/finalizeTransaction',
+  })
+)

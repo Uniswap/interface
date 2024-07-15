@@ -61,7 +61,7 @@ export const truncateDescription = (desc: string, maxCharacterCount = TRUNCATE_C
   //re-trim if we are in the middle of a word
   tokenDescriptionTruncated = `${tokenDescriptionTruncated.slice(
     0,
-    Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' ')),
+    Math.min(tokenDescriptionTruncated.length, tokenDescriptionTruncated.lastIndexOf(' '))
   )}...`
   return tokenDescriptionTruncated
 }

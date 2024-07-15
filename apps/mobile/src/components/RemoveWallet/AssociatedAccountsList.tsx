@@ -44,8 +44,7 @@ function _AssociatedAccountsList({ accounts }: { accounts: Account[] }): JSX.Ele
       borderWidth={1}
       maxHeight={accountsScrollViewHeight}
       px="$spacing12"
-      width="100%"
-    >
+      width="100%">
       <ScrollView bounces={false} contentContainerStyle={styles.accounts}>
         {sortedAddressesByBalance.map(({ address, balance }, index) => (
           <AssociatedAccountRow
@@ -85,8 +84,7 @@ function AssociatedAccountRow({
       row
       alignItems="center"
       justifyContent="space-between"
-      pb={index !== totalCount - 1 ? '$spacing16' : undefined}
-    >
+      pb={index !== totalCount - 1 ? '$spacing16' : undefined}>
       <Flex shrink>
         <AddressDisplay hideAddressInSubtitle address={address} size={24} variant="subheading2" />
       </Flex>

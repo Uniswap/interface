@@ -3,14 +3,13 @@ import { useAppDispatch } from 'src/app/hooks'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
-import { openUri } from 'uniswap/src/utils/linking'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { EtherscanSearchResult } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
-import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
+import { shortenAddress } from 'wallet/src/utils/addresses'
+import { ExplorerDataType, getExplorerLink, openUri } from 'wallet/src/utils/linking'
 
 type SearchEtherscanItemProps = {
   etherscanResult: EtherscanSearchResult
@@ -28,7 +27,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
     dispatch(
       addToSearchHistory({
         searchResult: etherscanResult,
-      }),
+      })
     )
   }
 
@@ -38,10 +37,15 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
     <TouchableArea
       hapticFeedback
       hapticStyle={ImpactFeedbackStyle.Light}
-      testID={TestID.SearchEtherscanItem}
-      onPress={onPressViewEtherscan}
-    >
-      <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between" px="$spacing8" py="$spacing12">
+      testID={ElementName.SearchEtherscanItem}
+      onPress={onPressViewEtherscan}>
+      <Flex
+        row
+        alignItems="center"
+        gap="$spacing12"
+        justifyContent="space-between"
+        px="$spacing8"
+        py="$spacing12">
         <Flex centered row gap="$spacing12">
           <EtherscanIcon size="$icon.40" />
           <Text variant="body1">{shortenAddress(address)}</Text>

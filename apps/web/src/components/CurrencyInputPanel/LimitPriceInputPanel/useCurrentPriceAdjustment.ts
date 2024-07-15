@@ -37,7 +37,7 @@ export function useCurrentPriceAdjustment({
     }
     const oneUnitOfBaseCurrency = CurrencyAmount.fromRawAmount(
       baseCurrency,
-      JSBI.BigInt(parseUnits('1', baseCurrency?.decimals)),
+      JSBI.BigInt(parseUnits('1', baseCurrency?.decimals))
     )
 
     const marketQuote = marketPrice.quote(oneUnitOfBaseCurrency)

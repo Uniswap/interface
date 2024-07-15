@@ -26,7 +26,7 @@ export function usePDPPriceChartData(
   poolData: PoolData | undefined,
   tokenA: Token | undefined,
   tokenB: Token | undefined,
-  isReversed: boolean,
+  isReversed: boolean
 ): ChartQueryResult<PriceChartData, ChartType.PRICE> {
   const { data, loading } = usePoolPriceHistoryQuery({ variables })
 
@@ -53,14 +53,14 @@ export function usePDPPriceChartData(
 
     // TODO(WEB-3769): Append current price based on active tick to entries
     /* const dataQuality = checkDataQuality(entries, ChartType.PRICE, variables.duration) */
-    const dataQuality = loading || !priceHistory || !priceHistory.length ? DataQuality.INVALID : DataQuality.VALID
+    const dataQuality = loading || !priceHistory ? DataQuality.INVALID : DataQuality.VALID
 
     return { chartType: ChartType.PRICE, entries, loading, dataQuality }
   }, [data?.v2Pair, data?.v3Pool, isReversed, loading, poolData?.token0.address, tokenA, tokenB])
 }
 
 export function usePDPVolumeChartData(
-  variables: PDPChartQueryVars,
+  variables: PDPChartQueryVars
 ): ChartQueryResult<SingleHistogramData, ChartType.VOLUME> {
   const { data, loading } = usePoolVolumeHistoryQuery({ variables })
 

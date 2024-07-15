@@ -1,5 +1,12 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
-import { createContext, PropsWithChildren, useCallback, useContext, useEffect, useState } from 'react'
+import {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { call, getContext } from 'typed-redux-saga'
 import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
@@ -35,7 +42,11 @@ export function WalletContextProvider({ children }: PropsWithChildren<unknown>):
   // Probably not strictly necessary but more robust than relying on 'organic' re-renders
   const [contextVersion, updateContextVersion] = useState(0)
   const incrementContextVersion = useCallback(() => {
-    logger.debug('walletContext', 'WalletContextProvider', `Context update count: ${contextVersion + 1}`)
+    logger.debug(
+      'walletContext',
+      'WalletContextProvider',
+      `Context update count: ${contextVersion + 1}`
+    )
     updateContextVersion(contextVersion + 1)
   }, [contextVersion, updateContextVersion])
   useEffect(() => {

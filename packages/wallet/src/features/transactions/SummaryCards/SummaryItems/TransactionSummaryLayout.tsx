@@ -1,14 +1,15 @@
 import { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, SpinningLoader, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
-import { AlertTriangle, UniswapX } from 'ui/src/components/icons'
+import { UniswapX } from 'ui/src/components/icons'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { TransactionDetailsModal } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
-import { useTransactionActions } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActions'
+import { useTransactionActionsCancelModals } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActionsCancelModals'
 import { TransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryTitle'
 import { TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import {
@@ -55,7 +56,7 @@ function TransactionSummaryLayout({
   // Monitor latest nonce to identify queued transactions.
   const queued = useIsQueuedTransaction(transaction)
 
-  const { openActionsModal, renderModals } = useTransactionActions({
+  const { openActionsModal, renderModals } = useTransactionActionsCancelModals({
     authTrigger,
     transaction,
   })
@@ -88,8 +89,9 @@ function TransactionSummaryLayout({
     <Flex grow alignItems="flex-end" justifyContent="space-between">
       <AlertTriangle
         color={colors.DEP_accentWarning.val}
-        fill={colors.DEP_accentWarning.val}
-        size={TXN_STATUS_ICON_SIZE}
+        fill={statusIconFill}
+        height={TXN_STATUS_ICON_SIZE}
+        width={TXN_STATUS_ICON_SIZE}
       />
     </Flex>
   ) : (
@@ -109,8 +111,7 @@ function TransactionSummaryLayout({
           gap="$spacing12"
           hoverStyle={{ backgroundColor: '$surface2' }}
           px={isWeb ? '$spacing8' : '$none'}
-          py="$spacing8"
-        >
+          py="$spacing8">
           {icon && (
             <Flex centered width={TXN_HISTORY_ICON_SIZE}>
               {icon}
@@ -126,9 +127,8 @@ function TransactionSummaryLayout({
                       textProps={{ color: '$accent1', variant: 'body1' }}
                     />
                   ) : null}
-                  {(transaction.routing === Routing.DUTCH_V2 || transaction.routing === Routing.DUTCH_LIMIT) && (
-                    <UniswapX size="$icon.16" />
-                  )}
+                  {(transaction.routing === Routing.DUTCH_V2 ||
+                    transaction.routing === Routing.DUTCH_LIMIT) && <UniswapX size="$icon.16" />}
                   <TransactionSummaryTitle title={title} transaction={transaction} />
                 </Flex>
                 {!inProgress && rightBlock}

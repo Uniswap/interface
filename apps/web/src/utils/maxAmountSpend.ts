@@ -14,7 +14,7 @@ export function maxAmountSpend(currencyAmount?: CurrencyAmount<Currency>): Curre
     if (JSBI.greaterThan(currencyAmount.quotient, MIN_NATIVE_CURRENCY_FOR_GAS)) {
       return CurrencyAmount.fromRawAmount(
         currencyAmount.currency,
-        JSBI.subtract(currencyAmount.quotient, MIN_NATIVE_CURRENCY_FOR_GAS),
+        JSBI.subtract(currencyAmount.quotient, MIN_NATIVE_CURRENCY_FOR_GAS)
       )
     } else {
       return CurrencyAmount.fromRawAmount(currencyAmount.currency, JSBI.BigInt(0))

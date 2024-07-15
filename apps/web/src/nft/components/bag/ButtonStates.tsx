@@ -39,7 +39,7 @@ export function getBuyButtonStateData(
   theme: DefaultTheme,
   handleClickOverride?: (() => void) | (() => Promise<void>),
   usingPayWithAnyToken?: boolean,
-  priceImpact?: PriceImpact,
+  priceImpact?: PriceImpact
 ): BuyButtonStateData {
   const defaultBuyButtonState: BuyButtonStateData = {
     handleClick: () => undefined,

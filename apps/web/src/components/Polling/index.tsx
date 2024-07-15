@@ -125,7 +125,7 @@ export default function Polling() {
     () =>
       (isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId]?.blockWaitMsBeforeWarning : undefined) ??
       DEFAULT_MS_BEFORE_WARNING,
-    [chainId, isSupportedChain],
+    [chainId, isSupportedChain]
   )
   const machineTime = useMachineTimeMs(AVERAGE_L1_BLOCK_TIME)
   const blockTime = useCurrentBlockTimestamp(
@@ -134,8 +134,8 @@ export default function Polling() {
         blocksPerFetch:
           /* 5m / 12s = */ 25 * (isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId].blockPerMainnetEpochForChainId : 1),
       }),
-      [chainId, isSupportedChain],
-    ),
+      [chainId, isSupportedChain]
+    )
   )
   const warning = Boolean(!!blockTime && machineTime - blockTime.mul(1000).toNumber() > waitMsBeforeWarning)
 
@@ -153,7 +153,7 @@ export default function Polling() {
         clearTimeout(mountingTimer)
       }
     },
-    [blockNumber], //useEffect will run only one time
+    [blockNumber] //useEffect will run only one time
     //if you pass a value to array, like this [data] than clearTimeout will run every time this value changes (useEffect re-run)
   )
 

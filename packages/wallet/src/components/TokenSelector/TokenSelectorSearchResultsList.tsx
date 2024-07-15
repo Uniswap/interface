@@ -1,13 +1,22 @@
 import { memo, useCallback, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { OnSelectCurrency, TokenSection } from 'uniswap/src/components/TokenSelector/types'
-import { formatSearchResults, getTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
-import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { SectionHeader, TokenSelectorList } from 'wallet/src/components/TokenSelector/TokenSelectorList'
-import { usePortfolioBalancesForAddressById, usePortfolioTokenOptions } from 'wallet/src/components/TokenSelector/hooks'
+import {
+  SectionHeader,
+  TokenSelectorList,
+} from 'wallet/src/components/TokenSelector/TokenSelectorList'
+import {
+  usePortfolioBalancesForAddressById,
+  usePortfolioTokenOptions,
+} from 'wallet/src/components/TokenSelector/hooks'
+import { OnSelectCurrency, TokenSection } from 'wallet/src/components/TokenSelector/types'
+import {
+  formatSearchResults,
+  getTokenOptionsSection,
+} from 'wallet/src/components/TokenSelector/utils'
+import { useSearchTokens } from 'wallet/src/features/dataApi/searchTokens'
 import { SearchResultType } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -32,7 +41,7 @@ function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
 function useTokenSectionsForSearchResults(
   chainFilter: UniverseChainId | null,
   searchFilter: string | null,
-  isBalancesOnlySearch: boolean,
+  isBalancesOnlySearch: boolean
 ): GqlResult<TokenSection[]> {
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
@@ -64,16 +73,18 @@ function useTokenSectionsForSearchResults(
   }, [searchResultCurrencies, portfolioBalancesById, searchFilter])
 
   const loading =
-    portfolioTokenOptionsLoading || portfolioBalancesByIdLoading || (!isBalancesOnlySearch && searchTokensLoading)
+    portfolioTokenOptionsLoading ||
+    portfolioBalancesByIdLoading ||
+    (!isBalancesOnlySearch && searchTokensLoading)
 
   const sections = useMemo(
     () =>
       getTokenOptionsSection(
         t('tokens.selector.section.search'),
         // Use local search when only searching balances
-        isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
+        isBalancesOnlySearch ? portfolioTokenOptions : searchResults
       ),
-    [isBalancesOnlySearch, portfolioTokenOptions, searchResults, t],
+    [isBalancesOnlySearch, portfolioTokenOptions, searchResults, t]
   )
 
   const error =
@@ -94,7 +105,7 @@ function useTokenSectionsForSearchResults(
       error: error || undefined,
       refetch: refetchAll,
     }),
-    [error, loading, refetchAll, sections],
+    [error, loading, refetchAll, sections]
   )
 }
 
@@ -134,7 +145,7 @@ function _TokenSelectorSearchResultsList({
             logoUrl: currencyInfo.logoUrl ?? null,
             safetyLevel: currencyInfo.safetyLevel ?? null,
           },
-        }),
+        })
       )
     }
   }
@@ -142,8 +153,9 @@ function _TokenSelectorSearchResultsList({
   const userIsTyping = Boolean(searchFilter && debouncedSearchFilter !== searchFilter)
 
   const emptyElement = useMemo(
-    () => (debouncedSearchFilter ? <EmptyResults searchFilter={debouncedSearchFilter} /> : undefined),
-    [debouncedSearchFilter],
+    () =>
+      debouncedSearchFilter ? <EmptyResults searchFilter={debouncedSearchFilter} /> : undefined,
+    [debouncedSearchFilter]
   )
   return (
     <TokenSelectorList

@@ -19,7 +19,6 @@ const mockSwapAndLimitContextValue = {
   setCurrencyState: jest.fn(),
   currentTab: SwapTab.Limit,
   setCurrentTab: jest.fn(),
-  isSwapAndLimitContext: true,
 }
 
 const mockedSendContextFiatInput: SendContextType = {
@@ -67,7 +66,7 @@ describe('SendCurrencyInputform', () => {
         <SendContext.Provider value={mockedSendContextFiatInput}>
           <SendReviewModal onDismiss={jest.fn()} onConfirm={jest.fn()} />
         </SendContext.Provider>
-      </SwapAndLimitContext.Provider>,
+      </SwapAndLimitContext.Provider>
     )
     expect(screen.getByText('$1,000.00')).toBeVisible()
     expect(screen.getByText('100.00 DAI')).toBeVisible()
@@ -83,7 +82,7 @@ describe('SendCurrencyInputform', () => {
         <SendContext.Provider value={mockedSendContextTokenInput}>
           <SendReviewModal onDismiss={jest.fn()} onConfirm={jest.fn()} />
         </SendContext.Provider>
-      </SwapAndLimitContext.Provider>,
+      </SwapAndLimitContext.Provider>
     )
     expect(screen.getByText('$100.00')).toBeVisible()
     expect(screen.getByText('1.00 DAI')).toBeVisible()

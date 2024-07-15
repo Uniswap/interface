@@ -26,7 +26,7 @@ function useGetAndTrackApproval(getApproval: ReturnType<typeof useApproval>[1]) 
 // returns a variable indicating the state of the approval and a function which approves if necessary or early returns
 export function useApproveCallback(
   amountToApprove?: CurrencyAmount<Currency>,
-  spender?: string,
+  spender?: string
 ): [ApprovalState, () => Promise<void>] {
   const [approval, getApproval] = useApproval(amountToApprove, spender, useHasPendingApproval)
   return [approval, useGetAndTrackApproval(getApproval)]

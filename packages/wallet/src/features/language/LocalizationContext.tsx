@@ -16,7 +16,8 @@ export type LocalizationContextState = {
 export const LocalizationContext = createContext<LocalizationContextState | undefined>(undefined)
 
 export function LocalizationContextProvider({ children }: { children: ReactNode }): JSX.Element {
-  const { formatNumberOrString, formatCurrencyAmount, formatPercent, addFiatSymbolToNumber } = useLocalizedFormatter()
+  const { formatNumberOrString, formatCurrencyAmount, formatPercent, addFiatSymbolToNumber } =
+    useLocalizedFormatter()
 
   const { convertFiatAmount, convertFiatAmountFormatted } = useFiatConverter({
     formatNumberOrString,
@@ -38,7 +39,7 @@ export function LocalizationContextProvider({ children }: { children: ReactNode 
       formatCurrencyAmount,
       formatNumberOrString,
       formatPercent,
-    ],
+    ]
   )
 
   return <LocalizationContext.Provider value={state}>{children}</LocalizationContext.Provider>

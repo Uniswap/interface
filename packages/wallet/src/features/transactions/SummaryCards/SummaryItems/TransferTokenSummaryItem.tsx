@@ -3,15 +3,16 @@ import { useTranslation } from 'react-i18next'
 import { Unitag } from 'ui/src/components/icons'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
+import {
+  SummaryItemProps,
+  TransactionSummaryLayoutProps,
+} from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 import {
   ReceiveTokenTransactionInfo,
@@ -19,7 +20,9 @@ import {
   TransactionDetails,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function TransferTokenSummaryItem({
   transactionType,
@@ -39,7 +42,7 @@ export function TransferTokenSummaryItem({
   const currencyInfo = useCurrencyInfo(
     transaction.typeInfo.assetType === AssetType.Currency
       ? buildCurrencyId(transaction.chainId, transaction.typeInfo.tokenAddress)
-      : undefined,
+      : undefined
   )
 
   const isCurrency = transaction.typeInfo.assetType === AssetType.Currency
@@ -47,7 +50,11 @@ export function TransferTokenSummaryItem({
   const currencyAmount =
     currencyInfo &&
     transaction.typeInfo.currencyAmountRaw &&
-    getFormattedCurrencyAmount(currencyInfo.currency, transaction.typeInfo.currencyAmountRaw, formatter)
+    getFormattedCurrencyAmount(
+      currencyInfo.currency,
+      transaction.typeInfo.currencyAmountRaw,
+      formatter
+    )
 
   const icon = useMemo(() => {
     if (isCurrency) {

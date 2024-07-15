@@ -81,8 +81,8 @@ class RNEthersRS: NSObject {
       resolve(res)
       return
     }
-    
-    reject("Unable to import new mnemonic", "Failed store new mnemonic in ethers library", nil)
+    let err = NSError.init()
+    reject("error", "error", err)
     return
   }
   
@@ -192,7 +192,8 @@ class RNEthersRS: NSObject {
     let mnemonic = retrieveMnemonic(mnemonicId: mnemonicId)
     
     if (mnemonic == nil) {
-      reject("Mnemonic not found", "Could not find mnemonic for given mnemonicId", nil)
+      let err = NSError.init()
+      reject("Mnemonic not found", "Could not find mnemonic for given mnemonicId", err)
       return
     }
     

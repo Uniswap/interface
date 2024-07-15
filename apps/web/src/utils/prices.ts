@@ -32,8 +32,8 @@ function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, TradeType>
     percent = ONE_HUNDRED_PERCENT.subtract(
       trade.swaps.reduce<Percent>(
         (currentFee: Percent): Percent => currentFee.multiply(INPUT_FRACTION_AFTER_FEE),
-        ONE_HUNDRED_PERCENT,
-      ),
+        ONE_HUNDRED_PERCENT
+      )
     )
   } else {
     percent = ZERO_PERCENT
@@ -50,8 +50,8 @@ function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, TradeType>
                   FeeAmount.MEDIUM
                 : pool.fee
             return currentFee.multiply(ONE_HUNDRED_PERCENT.subtract(new Fraction(fee, 1_000_000)))
-          }, ONE_HUNDRED_PERCENT),
-        ),
+          }, ONE_HUNDRED_PERCENT)
+        )
       )
 
       percent = percent.add(routeRealizedLPFeePercent)
@@ -63,7 +63,7 @@ function computeRealizedLPFeePercent(trade: Trade<Currency, Currency, TradeType>
 
 // computes price breakdown for the trade
 export function computeRealizedLPFeeAmount(
-  trade?: Trade<Currency, Currency, TradeType> | null,
+  trade?: Trade<Currency, Currency, TradeType> | null
 ): CurrencyAmount<Currency> | undefined {
   if (trade) {
     const realizedLPFee = computeRealizedLPFeePercent(trade)

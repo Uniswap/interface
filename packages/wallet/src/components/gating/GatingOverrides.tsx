@@ -2,7 +2,11 @@ import React from 'react'
 import { Accordion, Button, Flex, Separator, Text, isWeb } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
-import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import {
+  FeatureFlags,
+  WALLET_FEATURE_FLAG_NAMES,
+  getFeatureFlagName,
+} from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { Switch, WebSwitch } from 'wallet/src/components/buttons/Switch'
@@ -56,8 +60,7 @@ export function GatingOverrides(): JSX.Element {
           Statsig.removeGateOverride()
           Statsig.removeConfigOverride()
           Statsig.removeLayerOverride()
-        }}
-      >
+        }}>
         <Text variant="body2">Clear all gating overrides</Text>
       </Button>
     </>
@@ -113,8 +116,7 @@ function ExperimentRow({ experiment }: { experiment: Experiments }): JSX.Element
             alignItems="center"
             gap="$spacing16"
             justifyContent="space-between"
-            paddingStart="$spacing16"
-          >
+            paddingStart="$spacing16">
             <Text variant="body2" />
             {/* TODO(WEB-4164): implement experiment groups overrides */}
           </Flex>

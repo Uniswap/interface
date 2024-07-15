@@ -19,5 +19,9 @@ export function AnalyticsNavigationContextProvider({
   shouldLogScreen,
   children,
 }: PropsWithChildren<AnalyticsNavigationContext>): JSX.Element {
-  return <context.Provider value={{ useIsPartOfNavigationTree, shouldLogScreen }}>{children}</context.Provider>
+  return (
+    <context.Provider value={{ useIsPartOfNavigationTree, shouldLogScreen }}>
+      {children}
+    </context.Provider>
+  )
 }

@@ -23,13 +23,19 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
-type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackupLoading>
+type Props = NativeStackScreenProps<
+  OnboardingStackParamList,
+  OnboardingScreens.RestoreCloudBackupLoading
+>
 
 const MIN_LOADING_UI_MS = ONE_SECOND_MS
 // 10s timeout time for query for backups, since we don't know when the query completes
 const MAX_LOADING_TIMEOUT_MS = ONE_SECOND_MS * 10
 
-export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } }: Props): JSX.Element {
+export function RestoreCloudBackupLoadingScreen({
+  navigation,
+  route: { params },
+}: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
   const entryPoint = params.entryPoint
@@ -78,14 +84,14 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
           logger.debug(
             'RestoreCloudBackupLoadingScreen',
             'fetchCloudStorageBackups',
-            `Timed out fetching cloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`,
+            `Timed out fetching cloud backups after ${MAX_LOADING_TIMEOUT_MS}ms`
           )
         }
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         stopFetchingCloudStorageBackups()
         setIsLoading(false)
       },
-      backups.length === 0 ? MAX_LOADING_TIMEOUT_MS : MIN_LOADING_UI_MS,
+      backups.length === 0 ? MAX_LOADING_TIMEOUT_MS : MIN_LOADING_UI_MS
     )
 
     return () => {
@@ -105,7 +111,7 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
         dispatch(clearCloudBackups())
         fetchCloudStorageBackups()
       })
-    }, [dispatch, fetchCloudStorageBackups, navigation]),
+    }, [dispatch, fetchCloudStorageBackups, navigation])
   )
 
   /**

@@ -14,13 +14,6 @@ module.exports = {
   rules: {
     // TODO: had to add this rule to avoid errors on monorepo migration that didnt happen in interface
     'cypress/unsafe-to-chain-command': 'off',
-
-    // let prettier do things:
-    semi: 0,
-    quotes: 0,
-    'comma-dangle': 0,
-    'no-trailing-spaces': 0,
-    'no-extra-semi': 0,
   },
 
   overrides: [

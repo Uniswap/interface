@@ -19,9 +19,11 @@ export function useNetworkOptions({
       // null here is the "All networks" option
       [...(includeAllNetworks ? [null] : []), ...chainIds].map((chainId) => ({
         key: `${ElementName.NetworkButton}-${chainId ?? 'all'}`,
-        render: () => <NetworkOption chainId={chainId} currentlySelected={selectedChain === chainId} />,
+        render: () => (
+          <NetworkOption chainId={chainId} currentlySelected={selectedChain === chainId} />
+        ),
         onPress: () => onPress(chainId),
       })),
-    [includeAllNetworks, onPress, selectedChain, chainIds],
+    [includeAllNetworks, onPress, selectedChain, chainIds]
   )
 }

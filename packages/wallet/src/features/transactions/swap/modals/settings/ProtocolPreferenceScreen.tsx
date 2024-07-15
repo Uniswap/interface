@@ -1,5 +1,5 @@
 import { TFunction } from 'i18next'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, UniswapXText } from 'ui/src'
 import { InfoCircleFilled, UniswapX } from 'ui/src/components/icons'
@@ -8,7 +8,7 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { isMobileApp } from 'utilities/src/platform'
-import { UniswapXInfo } from 'wallet/src/features/transactions/swap/modals/UniswapXInfo'
+import { UniswapXInfoModal } from 'wallet/src/features/transactions/swap/modals/UniswapXInfoModal'
 import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
 
 // TODO(WEB-4297): Update controls on this screen to allow combinations of any/all routing options once supported by TradingAPI.
@@ -46,7 +46,10 @@ export function ProtocolPreferenceScreen({
   )
 }
 
-export function getTitleFromProtocolPreference(preference: TradeProtocolPreference, t: TFunction): string {
+export function getTitleFromProtocolPreference(
+  preference: TradeProtocolPreference,
+  t: TFunction
+): string {
   switch (preference) {
     case TradeProtocolPreference.Default:
       return t('swap.settings.routingPreference.option.default.title')
@@ -93,10 +96,14 @@ function OptionRow({
             borderRadius="$roundedFull"
             borderWidth="$spacing2"
             height="$spacing24"
-            width="$spacing24"
-          >
+            width="$spacing24">
             {active && (
-              <Flex backgroundColor="$accent1" borderRadius="$roundedFull" height="$spacing12" width="$spacing12" />
+              <Flex
+                backgroundColor="$accent1"
+                borderRadius="$roundedFull"
+                height="$spacing12"
+                width="$spacing12"
+              />
             )}
           </Flex>
         </TouchableArea>
@@ -106,35 +113,40 @@ function OptionRow({
 }
 
 function DefaultOptionDescription(): JSX.Element {
+  const [showUniswapXModal, setShowUniswapXModal] = useState(false)
   const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
   const { t } = useTranslation()
 
   return (
     <Flex gap="$spacing4">
+      {showUniswapXModal && <UniswapXInfoModal onClose={() => setShowUniswapXModal(false)} />}
       <Text color="$neutral2" variant="body3">
         {t('swap.settings.routingPreference.option.default.description')}
       </Text>
       {uniswapXEnabled && (
-        <UniswapXInfo
-          tooltipTrigger={
-            <Text alignItems="center" color="$neutral2" variant="body3">
-              <Trans
-                components={{
-                  icon: <UniswapX size="$icon.16" style={!isMobileApp && { transform: 'translateY(3px)' }} />,
-                  gradient: <UniswapXText height={18} variant="body3" />,
-                  info: (
-                    <InfoCircleFilled
-                      color="$neutral3"
-                      size="$icon.16"
-                      style={!isMobileApp && { transform: 'translateY(3px)' }}
-                    />
-                  ),
-                }}
-                i18nKey="uniswapx.included"
-              />
-            </Text>
-          }
-        />
+        <TouchableArea onPress={() => setShowUniswapXModal(true)}>
+          <Text alignItems="center" color="$neutral2" variant="body3">
+            <Trans
+              components={{
+                icon: (
+                  <UniswapX
+                    size="$icon.16"
+                    style={!isMobileApp && { transform: 'translateY(3px)' }}
+                  />
+                ),
+                gradient: <UniswapXText height={18} variant="body3" />,
+                info: (
+                  <InfoCircleFilled
+                    color="$neutral3"
+                    size="$icon.16"
+                    style={!isMobileApp && { transform: 'translateY(3px)' }}
+                  />
+                ),
+              }}
+              i18nKey="uniswapx.included"
+            />
+          </Text>
+        </TouchableArea>
       )}
     </Flex>
   )

@@ -8,17 +8,17 @@ const NATIVE_CURRENCY_DECIMALS = 18
 // TODO(MOB-181): calculate this in a more scientific way
 export const MIN_ETH_FOR_GAS: JSBI = JSBI.multiply(
   JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(NATIVE_CURRENCY_DECIMALS - 3)),
-  JSBI.BigInt(15),
+  JSBI.BigInt(15)
 ) // .015 ETH
 
 export const MIN_POLYGON_FOR_GAS: JSBI = JSBI.multiply(
   JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(NATIVE_CURRENCY_DECIMALS - 2)),
-  JSBI.BigInt(6),
+  JSBI.BigInt(6)
 ) // .06 MATIC
 
 export const MIN_ARBITRUM_FOR_GAS: JSBI = JSBI.multiply(
   JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(NATIVE_CURRENCY_DECIMALS - 4)),
-  JSBI.BigInt(8),
+  JSBI.BigInt(8)
 ) // .0008 ETH
 
 export const MIN_OPTIMISM_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
@@ -42,7 +42,9 @@ export const MIN_ZKSYNC_FOR_GAS: JSBI = MIN_ARBITRUM_FOR_GAS
  * https://github.com/Uniswap/interface/blob/main/src/utils/maxAmountSpend.ts
  * @param currencyAmount to return max of
  */
-export function maxAmountSpend(currencyAmount: Maybe<CurrencyAmount<Currency>>): Maybe<CurrencyAmount<Currency>> {
+export function maxAmountSpend(
+  currencyAmount: Maybe<CurrencyAmount<Currency>>
+): Maybe<CurrencyAmount<Currency>> {
   if (!currencyAmount) {
     return undefined
   }

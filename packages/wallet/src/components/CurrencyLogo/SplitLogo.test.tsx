@@ -1,6 +1,11 @@
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
-import { DAI_CURRENCY_INFO, ETH_CURRENCY_INFO, daiCurrencyInfo, ethCurrencyInfo } from 'wallet/src/test/fixtures'
+import {
+  DAI_CURRENCY_INFO,
+  ETH_CURRENCY_INFO,
+  daiCurrencyInfo,
+  ethCurrencyInfo,
+} from 'wallet/src/test/fixtures'
 import { render, within } from 'wallet/src/test/test-utils'
 
 describe(SplitLogo, () => {
@@ -11,7 +16,7 @@ describe(SplitLogo, () => {
         inputCurrencyInfo={DAI_CURRENCY_INFO}
         outputCurrencyInfo={ETH_CURRENCY_INFO}
         size={10}
-      />,
+      />
     )
 
     expect(tree).toMatchSnapshot()
@@ -25,7 +30,7 @@ describe(SplitLogo, () => {
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
-        />,
+        />
       )
 
       const inputCurrencyLogo = getByTestId('input-currency-logo-container')
@@ -40,7 +45,7 @@ describe(SplitLogo, () => {
           inputCurrencyInfo={null}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
-        />,
+        />
       )
 
       const inputCurrencyLogo = getByTestId('input-currency-logo-container')
@@ -57,7 +62,7 @@ describe(SplitLogo, () => {
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
-        />,
+        />
       )
 
       const outputCurrencyLogo = getByTestId('output-currency-logo-container')
@@ -72,7 +77,7 @@ describe(SplitLogo, () => {
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={null}
           size={10}
-        />,
+        />
       )
 
       const outputCurrencyLogo = getByTestId('output-currency-logo-container')
@@ -89,7 +94,7 @@ describe(SplitLogo, () => {
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
-        />,
+        />
       )
 
       const icon = getByTestId('network-logo')
@@ -104,7 +109,7 @@ describe(SplitLogo, () => {
           inputCurrencyInfo={daiCurrencyInfo()}
           outputCurrencyInfo={ethCurrencyInfo()}
           size={10}
-        />,
+        />
       )
 
       const icon = queryByTestId('network-logo')

@@ -1,7 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { expectSaga } from 'redux-saga-test-plan'
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { AssetType } from 'wallet/src/entities/assets'
 import { pushTransactionNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -42,7 +42,7 @@ describe(pushTransactionNotification, () => {
       spender: '0xUniswapDeployer',
     }
     const finalizedApproveAction = createFinalizedTxAction(approveTypeInfo)
-    const { chainId, from } = finalizedApproveAction.payload
+    const { chainId, from, hash } = finalizedApproveAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedApproveAction)
       .withState({
@@ -60,6 +60,7 @@ describe(pushTransactionNotification, () => {
           txStatus: TransactionStatus.Success,
           address: from,
           chainId,
+          txHash: hash,
           type: AppNotificationType.Transaction,
           txType: TransactionType.Approve,
           tokenAddress: approveTypeInfo.tokenAddress,
@@ -104,7 +105,7 @@ describe(pushTransactionNotification, () => {
       maximumInputCurrencyAmountRaw: '12000000000000000',
     }
     const finalizedSwapAction = createFinalizedTxAction(swapTypeInfo)
-    const { chainId, from } = finalizedSwapAction.payload
+    const { chainId, from, hash } = finalizedSwapAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedSwapAction)
       .put(
@@ -112,6 +113,7 @@ describe(pushTransactionNotification, () => {
           txStatus: TransactionStatus.Success,
           address: from,
           chainId,
+          txHash: hash,
           type: AppNotificationType.Transaction,
           txType: TransactionType.Swap,
           inputCurrencyId: swapTypeInfo.inputCurrencyId,
@@ -134,7 +136,7 @@ describe(pushTransactionNotification, () => {
       tokenAddress: '0xUniswapToken',
     }
     const finalizedSendCurrencyAction = createFinalizedTxAction(sendCurrencyTypeInfo)
-    const { chainId, from } = finalizedSendCurrencyAction.payload
+    const { chainId, from, hash } = finalizedSendCurrencyAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedSendCurrencyAction)
       .put(
@@ -142,6 +144,7 @@ describe(pushTransactionNotification, () => {
           txStatus: TransactionStatus.Success,
           address: from,
           chainId,
+          txHash: hash,
           type: AppNotificationType.Transaction,
           txType: TransactionType.Send,
           assetType: AssetType.Currency,
@@ -163,7 +166,7 @@ describe(pushTransactionNotification, () => {
       tokenId: '420',
     }
     const finalizedSendNftAction = createFinalizedTxAction(sendNftTypeInfo)
-    const { chainId, from } = finalizedSendNftAction.payload
+    const { chainId, from, hash } = finalizedSendNftAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedSendNftAction)
       .put(
@@ -171,6 +174,7 @@ describe(pushTransactionNotification, () => {
           txStatus: TransactionStatus.Success,
           address: from,
           chainId,
+          txHash: hash,
           type: AppNotificationType.Transaction,
           txType: TransactionType.Send,
           assetType: AssetType.ERC721,
@@ -192,7 +196,7 @@ describe(pushTransactionNotification, () => {
       tokenAddress: '0xUniswapToken',
     }
     const finalizedReceiveCurrencyAction = createFinalizedTxAction(receiveCurrencyTypeInfo)
-    const { chainId, from } = finalizedReceiveCurrencyAction.payload
+    const { chainId, from, hash } = finalizedReceiveCurrencyAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedReceiveCurrencyAction)
       .put(
@@ -200,6 +204,7 @@ describe(pushTransactionNotification, () => {
           txStatus: TransactionStatus.Success,
           address: from,
           chainId,
+          txHash: hash,
           type: AppNotificationType.Transaction,
           txType: TransactionType.Receive,
           assetType: AssetType.Currency,
@@ -221,7 +226,7 @@ describe(pushTransactionNotification, () => {
       tokenId: '420',
     }
     const finalizedReceiveNftAction = createFinalizedTxAction(receiveNftTypeInfo)
-    const { chainId, from } = finalizedReceiveNftAction.payload
+    const { chainId, from, hash } = finalizedReceiveNftAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedReceiveNftAction)
       .put(
@@ -229,6 +234,7 @@ describe(pushTransactionNotification, () => {
           txStatus: TransactionStatus.Success,
           address: from,
           chainId,
+          txHash: hash,
           type: AppNotificationType.Transaction,
           txType: TransactionType.Receive,
           assetType: AssetType.ERC1155,
@@ -247,7 +253,7 @@ describe(pushTransactionNotification, () => {
       tokenAddress: '0xUniswapToken',
     }
     const finalizedUnknownAction = createFinalizedTxAction(unknownTxTypeInfo)
-    const { chainId, from } = finalizedUnknownAction.payload
+    const { chainId, from, hash } = finalizedUnknownAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedUnknownAction)
       .put(
@@ -255,6 +261,7 @@ describe(pushTransactionNotification, () => {
           txStatus: TransactionStatus.Success,
           address: from,
           chainId,
+          txHash: hash,
           type: AppNotificationType.Transaction,
           txType: TransactionType.Unknown,
           tokenAddress: unknownTxTypeInfo.tokenAddress,

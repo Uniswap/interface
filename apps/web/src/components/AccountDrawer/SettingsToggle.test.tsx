@@ -12,7 +12,7 @@ describe('SettingsToggle', () => {
         description="Test description"
         isActive={mockActive}
         toggle={mockToggle}
-      />,
+      />
     )
 
     expect(mockActive).toBeFalsy()

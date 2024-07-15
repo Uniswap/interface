@@ -120,7 +120,7 @@ export function Table<D extends Record<string, unknown>>({
         },
         ...props,
       },
-      useSortBy,
+      useSortBy
     )
 
   const navigate = useNavigate()

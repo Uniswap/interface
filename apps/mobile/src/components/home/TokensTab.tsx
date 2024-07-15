@@ -26,97 +26,105 @@ export const TOKENS_TAB_DATA_DEPENDENCIES = [GQLQueries.PortfolioBalances]
 // ignore ref type
 
 export const TokensTab = memo(
-  forwardRef<FlatList<TokenBalanceListRow>, TabProps & { isExternalProfile?: boolean }>(function _TokensTab(
-    {
-      owner,
-      containerProps,
-      scrollHandler,
-      isExternalProfile = false,
-      renderedInModal = false,
-      onRefresh,
-      refreshing,
-      headerHeight,
-    },
-    ref,
-  ) {
-    const { t } = useTranslation()
-    const dispatch = useAppDispatch()
-    const tokenDetailsNavigation = useTokenDetailsNavigation()
-    const startProfilerTimer = useStartProfiler()
-    const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
-    const cexTransferEnabled = useFeatureFlag(FeatureFlags.CexTransfers)
-    const cexTransferProviders = useCexTransferProviders(cexTransferEnabled)
-
-    const onPressToken = useCallback(
-      (currencyId: CurrencyId): void => {
-        startProfilerTimer({ source: MobileScreens.Home })
-        tokenDetailsNavigation.navigate(currencyId)
+  forwardRef<FlatList<TokenBalanceListRow>, TabProps & { isExternalProfile?: boolean }>(
+    function _TokensTab(
+      {
+        owner,
+        containerProps,
+        scrollHandler,
+        isExternalProfile = false,
+        renderedInModal = false,
+        onRefresh,
+        refreshing,
+        headerHeight,
       },
-      [startProfilerTimer, tokenDetailsNavigation],
-    )
+      ref
+    ) {
+      const { t } = useTranslation()
+      const dispatch = useAppDispatch()
+      const tokenDetailsNavigation = useTokenDetailsNavigation()
+      const startProfilerTimer = useStartProfiler()
+      const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
+      const cexTransferEnabled = useFeatureFlag(FeatureFlags.CexTransfers)
+      const cexTransferProviders = useCexTransferProviders(cexTransferEnabled)
 
-    const onPressAction = useCallback((): void => {
-      dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
-    }, [dispatch])
-
-    const onPressBuy = useCallback(() => {
-      dispatch(
-        openModal({
-          name: forAggregatorEnabled ? ModalName.FiatOnRampAggregator : ModalName.FiatOnRamp,
-        }),
+      const onPressToken = useCallback(
+        (currencyId: CurrencyId): void => {
+          startProfilerTimer({ source: MobileScreens.Home })
+          tokenDetailsNavigation.navigate(currencyId)
+        },
+        [startProfilerTimer, tokenDetailsNavigation]
       )
-    }, [dispatch, forAggregatorEnabled])
 
-    const onPressReceive = useCallback(() => {
-      dispatch(
-        openModal(
-          cexTransferProviders.length > 0
-            ? {
-                name: ModalName.ReceiveCryptoModal,
-                initialState: cexTransferProviders,
-              }
-            : {
-                name: ModalName.WalletConnectScan,
-                initialState: ScannerModalState.WalletQr,
-              },
-        ),
+      const onPressAction = useCallback((): void => {
+        dispatch(
+          openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr })
+        )
+      }, [dispatch])
+
+      const onPressBuy = useCallback(() => {
+        dispatch(
+          openModal({
+            name: forAggregatorEnabled ? ModalName.FiatOnRampAggregator : ModalName.FiatOnRamp,
+          })
+        )
+      }, [dispatch, forAggregatorEnabled])
+
+      const onPressReceive = useCallback(() => {
+        dispatch(
+          openModal(
+            cexTransferProviders.length > 0
+              ? {
+                  name: ModalName.ReceiveCryptoModal,
+                  initialState: cexTransferProviders,
+                }
+              : {
+                  name: ModalName.WalletConnectScan,
+                  initialState: ScannerModalState.WalletQr,
+                }
+          )
+        )
+      }, [cexTransferProviders, dispatch])
+
+      const onPressImport = useCallback(() => {
+        dispatch(openModal({ name: ModalName.AccountSwitcher }))
+      }, [dispatch])
+
+      const renderEmpty = useMemo((): JSX.Element => {
+        // Show different empty state on external profile pages
+        return isExternalProfile ? (
+          <BaseCard.EmptyState
+            description={t('home.tokens.empty.description')}
+            icon={<NoTokens color="$neutral3" size="$icon.70" />}
+            title={t('home.tokens.empty.title')}
+            onPress={onPressAction}
+          />
+        ) : (
+          <PortfolioEmptyState
+            onPressBuy={onPressBuy}
+            onPressImport={onPressImport}
+            onPressReceive={onPressReceive}
+          />
+        )
+      }, [isExternalProfile, onPressAction, onPressBuy, onPressImport, onPressReceive, t])
+
+      return (
+        <Flex grow backgroundColor="$surface1">
+          <TokenBalanceList
+            ref={ref}
+            containerProps={containerProps}
+            empty={renderEmpty}
+            headerHeight={headerHeight}
+            isExternalProfile={isExternalProfile}
+            owner={owner}
+            refreshing={refreshing}
+            renderedInModal={renderedInModal}
+            scrollHandler={scrollHandler}
+            onPressToken={onPressToken}
+            onRefresh={onRefresh}
+          />
+        </Flex>
       )
-    }, [cexTransferProviders, dispatch])
-
-    const onPressImport = useCallback(() => {
-      dispatch(openModal({ name: ModalName.AccountSwitcher }))
-    }, [dispatch])
-
-    const renderEmpty = useMemo((): JSX.Element => {
-      // Show different empty state on external profile pages
-      return isExternalProfile ? (
-        <BaseCard.EmptyState
-          description={t('home.tokens.empty.description')}
-          icon={<NoTokens color="$neutral3" size="$icon.70" />}
-          title={t('home.tokens.empty.title')}
-          onPress={onPressAction}
-        />
-      ) : (
-        <PortfolioEmptyState onPressBuy={onPressBuy} onPressImport={onPressImport} onPressReceive={onPressReceive} />
-      )
-    }, [isExternalProfile, onPressAction, onPressBuy, onPressImport, onPressReceive, t])
-
-    return (
-      <Flex grow backgroundColor="$surface1">
-        <TokenBalanceList
-          ref={ref}
-          containerProps={containerProps}
-          empty={renderEmpty}
-          headerHeight={headerHeight}
-          isExternalProfile={isExternalProfile}
-          owner={owner}
-          refreshing={refreshing}
-          renderedInModal={renderedInModal}
-          scrollHandler={scrollHandler}
-          onPressToken={onPressToken}
-          onRefresh={onRefresh}
-        />
-      </Flex>
-    )
-  }),
+    }
+  )
 )

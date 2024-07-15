@@ -18,7 +18,7 @@ describe('OffchainOrderLineItem', () => {
           inputAmount: CurrencyAmount.fromRawAmount(DAI, 1),
           outputAmount: CurrencyAmount.fromRawAmount(USDC_MAINNET, 1),
         }}
-      />,
+      />
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('Rate')).toBeInTheDocument()
@@ -50,7 +50,7 @@ describe('OffchainOrderLineItem', () => {
           addedTime: 1,
           expiry: 2,
         }}
-      />,
+      />
     )
     expect(screen.getByText('Expiry')).toBeInTheDocument()
   })
@@ -88,7 +88,7 @@ describe('OffchainOrderLineItem', () => {
           addedTime: 1,
           expiry: 2,
         }}
-      />,
+      />
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText('Transaction ID')).toBeInTheDocument()

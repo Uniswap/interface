@@ -4,10 +4,17 @@ import type {
   DragContextProviderProps,
   LayoutContextProviderProps,
 } from 'src/components/sortableGrid/contexts'
-import { AutoScrollProvider, DragContextProvider, LayoutContextProvider } from 'src/components/sortableGrid/contexts'
+import {
+  AutoScrollProvider,
+  DragContextProvider,
+  LayoutContextProvider,
+} from 'src/components/sortableGrid/contexts'
 
 type SortableGridProviderProps<I> = PropsWithChildren<
-  Omit<LayoutContextProviderProps & DragContextProviderProps<I> & AutoScrollProviderProps, 'itemKeys'>
+  Omit<
+    LayoutContextProviderProps & DragContextProviderProps<I> & AutoScrollProviderProps,
+    'itemKeys'
+  >
 >
 
 export function SortableGridProvider<I>({
@@ -48,9 +55,11 @@ export function SortableGridProvider<I>({
         keyExtractor={keyExtractor}
         onChange={onChange}
         onDragStart={onDragStart}
-        onDrop={onDrop}
-      >
-        <AutoScrollProvider scrollY={scrollY} scrollableRef={scrollableRef} visibleHeight={visibleHeight}>
+        onDrop={onDrop}>
+        <AutoScrollProvider
+          scrollY={scrollY}
+          scrollableRef={scrollableRef}
+          visibleHeight={visibleHeight}>
           {children}
         </AutoScrollProvider>
       </DragContextProvider>

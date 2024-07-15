@@ -76,7 +76,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
         })
       }
     },
-    [setSettingsView, dropdownRef],
+    [setSettingsView, dropdownRef]
   )
   const onExitPreferencesMenu = useCallback(() => changeView(PreferencesView.SETTINGS), [changeView])
   const { t } = useTranslation()

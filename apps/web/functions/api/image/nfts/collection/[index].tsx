@@ -23,7 +23,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
       cacheUrl,
       () => getCollection(collectionAddress, cacheUrl),
       (data): data is NonNullable<Awaited<ReturnType<typeof getCollection>>> =>
-        Boolean(data.ogImage && data.name && data.nftCollectionData?.isVerified),
+        Boolean(data.ogImage && data.name && data.nftCollectionData?.isVerified)
     )
 
     if (!data) {
@@ -111,7 +111,7 @@ export const onRequest: PagesFunction = async ({ params, request }) => {
             style: 'normal',
           },
         ],
-      },
+      }
     ) as Response
   } catch (error: any) {
     return new Response(error.message || error.toString(), { status: 500 })

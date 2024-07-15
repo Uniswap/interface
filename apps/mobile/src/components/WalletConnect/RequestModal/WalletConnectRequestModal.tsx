@@ -17,16 +17,23 @@ import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { signWcRequestActions } from 'src/features/walletConnect/signWcRequestSaga'
-import { WalletConnectRequest, isTransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
+import {
+  WalletConnectRequest,
+  isTransactionRequest,
+} from 'src/features/walletConnect/walletConnectSlice'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
+import {
+  EthMethod,
+  UwULinkMethod,
+  WCEventType,
+  WCRequestOutcome,
+} from 'uniswap/src/types/walletConnect'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasSpeed } from 'wallet/src/features/gas/types'
 import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { areAddressesEqual } from 'wallet/src/utils/addresses'
 
 interface Props {
   onClose: () => void
@@ -57,7 +64,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   }, [chainId, request])
 
   const signerAccounts = useSignerAccounts()
-  const signerAccount = signerAccounts.find((account) => areAddressesEqual(account.address, request.account))
+  const signerAccount = signerAccounts.find((account) =>
+    areAddressesEqual(account.address, request.account)
+  )
   const gasFee = useTransactionGasFee(tx, GasSpeed.Urgent)
 
   const hasSufficientFunds = useHasSufficientFunds({
@@ -67,8 +76,10 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     value: isTransactionRequest(request) ? request.transaction.value : undefined,
   })
 
-  const { isBlocked: isSenderBlocked, isBlockedLoading: isSenderBlockedLoading } = useIsBlockedActiveAddress()
-  const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlocked(tx?.to)
+  const { isBlocked: isSenderBlocked, isBlockedLoading: isSenderBlockedLoading } =
+    useIsBlockedActiveAddress()
+  const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } =
+    useIsBlocked(tx?.to)
 
   const isBlocked = isSenderBlocked ?? isRecipientBlocked
   const isBlockedLoading = isSenderBlockedLoading || isRecipientBlockedLoading
@@ -120,7 +131,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     rejectOnCloseRef.current = false
 
     sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
-      request_type: isTransactionRequest(request) ? WCEventType.TransactionRequest : WCEventType.SignRequest,
+      request_type: isTransactionRequest(request)
+        ? WCEventType.TransactionRequest
+        : WCEventType.SignRequest,
       eth_method: request.type,
       dapp_url: request.dapp.url,
       dapp_name: request.dapp.name,
@@ -136,27 +149,24 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   }
 
   const onConfirm = async (): Promise<void> => {
-    if (!confirmEnabled || !signerAccount || !tx) {
+    if (!confirmEnabled || !signerAccount) {
       return
     }
-
     if (request.type === EthMethod.EthSendTransaction || request.type === UwULinkMethod.Erc20Send) {
-      const txnWithFormattedGasEstimates = formatExternalTxnWithGasEstimates({
-        transaction: tx,
-        gasFeeResult: gasFee,
-      })
-
+      if (!gasFee.params) {
+        return
+      } // appeasing typescript
       dispatch(
         signWcRequestActions.trigger({
           sessionId: request.sessionId,
           requestInternalId: request.internalId,
           method: EthMethod.EthSendTransaction,
-          transaction: txnWithFormattedGasEstimates,
+          transaction: { ...tx, ...gasFee.params },
           account: signerAccount,
           dapp: request.dapp,
           chainId,
           request,
-        }),
+        })
       )
     } else {
       dispatch(
@@ -169,14 +179,16 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
           account: signerAccount,
           dapp: request.dapp,
           chainId,
-        }),
+        })
       )
     }
 
     rejectOnCloseRef.current = false
 
     sendAnalyticsEvent(MobileEventName.WalletConnectSheetCompleted, {
-      request_type: isTransactionRequest(request) ? WCEventType.TransactionRequest : WCEventType.SignRequest,
+      request_type: isTransactionRequest(request)
+        ? WCEventType.TransactionRequest
+        : WCEventType.SignRequest,
       eth_method: request.type,
       dapp_url: request.dapp.url,
       dapp_name: request.dapp.name,
@@ -231,22 +243,28 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   // KidSuper Uniswap Cafe check-in screen
   if (request.type === EthMethod.PersonalSign && request.dapp.name === 'Uniswap Cafe') {
     return (
-      <KidSuperCheckinModal request={request} onClose={handleClose} onConfirm={onConfirmPress} onReject={onReject} />
+      <KidSuperCheckinModal
+        request={request}
+        onClose={handleClose}
+        onConfirm={onConfirmPress}
+        onReject={onReject}
+      />
     )
   }
 
   return (
     <ModalWithOverlay
       confirmationButtonText={
-        isTransactionRequest(request) ? t('common.button.accept') : t('walletConnect.request.button.sign')
+        isTransactionRequest(request)
+          ? t('common.button.accept')
+          : t('walletConnect.request.button.sign')
       }
       disableConfirm={!confirmEnabled}
       name={ModalName.WCSignRequest}
       scrollDownButtonText={t('walletConnect.request.button.scrollDown')}
       onClose={handleClose}
       onConfirm={onConfirmPress}
-      onReject={onReject}
-    >
+      onReject={onReject}>
       <WalletConnectRequestModalContent
         gasFee={gasFee}
         hasSufficientFunds={hasSufficientFunds}

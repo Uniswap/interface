@@ -11,9 +11,7 @@ const PopoverContainer = styled.div<{ show: boolean }>`
   pointer-events: none;
   visibility: ${(props) => (props.show ? 'visible' : 'hidden')};
   opacity: ${(props) => (props.show ? 1 : 0)};
-  transition:
-    visibility 150ms linear,
-    opacity 150ms linear;
+  transition: visibility 150ms linear, opacity 150ms linear;
   color: ${({ theme }) => theme.neutral2};
 `
 
@@ -111,7 +109,7 @@ export default function Popover({
         { name: 'preventOverflow', options: { padding: 8 } },
       ],
     }),
-    [placement, offsetX, offsetY, arrowElement],
+    [placement, offsetX, offsetY, arrowElement]
   )
 
   const { styles, update, attributes } = usePopper(referenceElement, show ? popperElement : null, options)

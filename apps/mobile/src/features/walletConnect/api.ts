@@ -1,6 +1,6 @@
 import { getOneSignalPushToken } from 'src/features/notifications/Onesignal'
 import { config } from 'uniswap/src/config'
-import { isTestEnv } from 'utilities/src/environment'
+import { isJestRun } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 
@@ -36,7 +36,7 @@ export async function registerWCClientForPushNotifications(clientId: string): Pr
     await fetch(`${WC_HOSTED_PUSH_SERVER_URL}/clients`, request)
   } catch (error) {
     // Shouldn't log if this is a jest run to avoid logging after a test completes
-    if (!isTestEnv()) {
+    if (!isJestRun) {
       logger.error(error, {
         tags: { file: 'walletConnectApi', function: 'registerWCv2ClientForPushNotifications' },
       })

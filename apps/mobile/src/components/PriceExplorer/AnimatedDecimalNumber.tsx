@@ -29,7 +29,7 @@ type AnimatedDecimalNumberProps = {
 // Utility component to display decimal numbers where the decimal part
 // is dimmed using AnimatedText
 export const AnimatedDecimalNumber = memo(function AnimatedDecimalNumber(
-  props: AnimatedDecimalNumberProps,
+  props: AnimatedDecimalNumberProps
 ): JSX.Element {
   const colors = useSporeColors()
   const { fullWidth } = useDeviceDimensions()
@@ -47,10 +47,13 @@ export const AnimatedDecimalNumber = memo(function AnimatedDecimalNumber(
     maxCharPixelWidth: maxCharPixelWidthProp,
   } = props
 
-  const wholePart = useDerivedValue(() => number.formatted.value.split(separator)[0] || '', [number, separator])
+  const wholePart = useDerivedValue(
+    () => number.formatted.value.split(separator)[0] || '',
+    [number, separator]
+  )
   const decimalPart = useDerivedValue(
     () => separator + (number.formatted.value.split(separator)[1] || ''),
-    [number, separator],
+    [number, separator]
   )
 
   const wholeStyle = useMemo(() => {
@@ -87,9 +90,19 @@ export const AnimatedDecimalNumber = memo(function AnimatedDecimalNumber(
 
   return (
     <Flex row testID={testID}>
-      <AnimatedText style={[wholeStyle, animatedStyle]} testID="wholePart" text={wholePart} variant={variant} />
+      <AnimatedText
+        style={[wholeStyle, animatedStyle]}
+        testID="wholePart"
+        text={wholePart}
+        variant={variant}
+      />
       {decimalPart.value !== separator && (
-        <AnimatedText style={[decimalStyle, animatedStyle]} testID="decimalPart" text={decimalPart} variant={variant} />
+        <AnimatedText
+          style={[decimalStyle, animatedStyle]}
+          testID="decimalPart"
+          text={decimalPart}
+          variant={variant}
+        />
       )}
     </Flex>
   )

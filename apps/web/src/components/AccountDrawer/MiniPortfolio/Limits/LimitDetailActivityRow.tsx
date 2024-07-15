@@ -70,8 +70,8 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
     return tradePrice.quote(
       CurrencyAmount.fromRawAmount(
         amounts.inputAmount.currency,
-        parseUnits('1', amounts.inputAmount.currency.decimals).toString(),
-      ),
+        parseUnits('1', amounts.inputAmount.currency.decimals).toString()
+      )
     )
   }, [amounts?.inputAmount, amounts?.outputAmount, amountsDefined])
 

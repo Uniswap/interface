@@ -39,7 +39,7 @@ function useTDPCurrency(
   tokenQuery: ReturnType<typeof useTokenWebQuery>,
   tokenAddress: string,
   currencyChainId: InterfaceChainId,
-  isNative: boolean,
+  isNative: boolean
 ) {
   const { chainId } = useAccount()
   const appChainId = chainId ?? UniverseChainId.Mainnet
@@ -110,7 +110,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     tokenQuery,
     tokenAddress,
     currencyChainInfo.id,
-    isNative,
+    isNative
   )
 
   const warning = useTokenWarning(tokenAddress, currencyChainInfo.id)
@@ -123,7 +123,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
     useSrcColor(
       extractedColorSrc,
       tokenQuery.data?.token?.project?.name ?? tokenQuery.data?.token?.name,
-      theme.surface2,
+      theme.surface2
     ).tokenColor ?? undefined
 
   return useMemo(() => {

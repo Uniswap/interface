@@ -7,7 +7,7 @@ export function formatCurrencyAmount(
   amount: CurrencyAmount<Currency> | undefined,
   sigFigs: number,
   locale: SupportedLocale = DEFAULT_LOCALE,
-  fixedDecimals?: number,
+  fixedDecimals?: number
 ): string {
   if (!amount) {
     return '-'

@@ -1,4 +1,3 @@
-import { BlockExplorer } from 'ui/src/components/icons'
 import {
   ArbiscanLogoDark,
   ArbiscanLogoLight,
@@ -81,38 +80,38 @@ export const UNIVERSE_CHAIN_LOGO = {
   } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.Blast]: {
     explorer: {
-      logoLight: BlockExplorer,
-      logoDark: BlockExplorer,
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
   } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.Avalanche]: {
     explorer: {
-      logoLight: BlockExplorer,
-      logoDark: BlockExplorer,
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
   } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.Celo]: {
     explorer: {
-      logoLight: BlockExplorer,
-      logoDark: BlockExplorer,
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
   } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.CeloAlfajores]: {
     explorer: {
-      logoLight: BlockExplorer,
-      logoDark: BlockExplorer,
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
   } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.Zora]: {
     explorer: {
-      logoLight: BlockExplorer,
-      logoDark: BlockExplorer,
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
   } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.Zksync]: {
     explorer: {
-      logoLight: BlockExplorer,
-      logoDark: BlockExplorer,
+      logoLight: EtherscanLogoLight,
+      logoDark: EtherscanLogoDark,
     },
   } as const satisfies UniverseChainLogoInfo,
 }

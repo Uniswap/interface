@@ -17,7 +17,7 @@ describe('LimitPriceError', () => {
         priceInverted={inverted}
         priceAdjustmentPercentage={change}
         priceError={LimitPriceErrorType.BELOW_MARKET}
-      />,
+      />
     )
     expect(container.firstChild).toMatchSnapshot()
   })
@@ -30,7 +30,7 @@ describe('LimitPriceError', () => {
         priceInverted={false}
         priceAdjustmentPercentage={0}
         priceError={LimitPriceErrorType.CALCULATION_ERROR}
-      />,
+      />
     )
     expect(container.firstChild).toMatchSnapshot()
   })

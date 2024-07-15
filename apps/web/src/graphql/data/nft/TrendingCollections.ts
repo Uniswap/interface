@@ -35,7 +35,7 @@ export function useTrendingCollections(size: number, timePeriod: HistoryDuration
           totalSupply: collection.nftContracts?.[0]?.totalSupply,
         }
       }),
-    [data?.topCollections?.edges],
+    [data?.topCollections?.edges]
   )
 
   return {

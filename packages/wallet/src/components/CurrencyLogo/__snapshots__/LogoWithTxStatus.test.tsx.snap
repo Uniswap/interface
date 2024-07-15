@@ -69,10 +69,8 @@ exports[`DappLogoWithWCBadge renders without error 1`] = `
 <View
   style={
     {
-      "alignItems": "center",
       "flexDirection": "column",
       "height": 44,
-      "justifyContent": "center",
       "width": 44,
     }
   }

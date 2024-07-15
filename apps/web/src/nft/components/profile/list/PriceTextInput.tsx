@@ -117,10 +117,10 @@ export const PriceTextInput = ({
     (warningType === WarningType.BELOW_FLOOR && percentBelowFloor >= 20)
       ? colors.red400
       : warningType === WarningType.BELOW_FLOOR
-        ? theme.deprecated_accentWarning
-        : isGlobalPrice || !!listPrice
-          ? theme.accent1
-          : theme.neutral2
+      ? theme.deprecated_accentWarning
+      : isGlobalPrice || !!listPrice
+      ? theme.accent1
+      : theme.neutral2
 
   const setPrice = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!listPrice && event.target.value.includes('.') && parseFloat(event.target.value) === 0) {

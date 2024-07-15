@@ -26,7 +26,9 @@ export const isMobile: boolean =
 export const isWebIOS: boolean =
   typeof document !== 'undefined' &&
   typeof navigator !== 'undefined' &&
-  (['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone'].includes(navigator.platform) ||
+  (['iPad Simulator', 'iPhone Simulator', 'iPod Simulator', 'iPad', 'iPhone'].includes(
+    navigator.platform
+  ) ||
     // iPad on iOS 13 detection
     (navigator.userAgent.includes('Mac') && 'ontouchend' in document))
 
@@ -41,8 +43,10 @@ export const isTouchable =
   ('ontouchstart' in window || navigator.maxTouchPoints > 0)
 
 // Browser
-export const isChrome: boolean = typeof navigator !== 'undefined' && /Chrome/.test(navigator.userAgent || '')
-export const isSafari: boolean = typeof navigator !== 'undefined' && /Safari/.test(navigator.userAgent || '')
+export const isChrome: boolean =
+  typeof navigator !== 'undefined' && /Chrome/.test(navigator.userAgent || '')
+export const isSafari: boolean =
+  typeof navigator !== 'undefined' && /Safari/.test(navigator.userAgent || '')
 export const isMobileWebSafari: boolean = isTouchable && isSafari
 export const isMobileWebAndroid: boolean = isTouchable && isWebAndroid
 

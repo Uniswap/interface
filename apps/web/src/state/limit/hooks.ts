@@ -43,7 +43,7 @@ export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetSta
 
   const relevantTokenBalances = useCurrencyBalances(
     account.address,
-    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency]),
+    useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency])
   )
 
   useEffect(() => {
@@ -58,7 +58,7 @@ export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetSta
       [Field.INPUT]: relevantTokenBalances[0],
       [Field.OUTPUT]: relevantTokenBalances[1],
     }),
-    [relevantTokenBalances],
+    [relevantTokenBalances]
   )
 
   const parsedLimitPrice = useMemo(() => {
@@ -79,7 +79,7 @@ export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetSta
       baseCurrency,
       quoteCurrency,
       JSBI.BigInt(10 ** baseCurrency.decimals),
-      parsedLimitPriceQuoteAmount.quotient,
+      parsedLimitPriceQuoteAmount.quotient
     )
   }, [inputCurrency, limitPriceInverted, outputCurrency, state.limitPrice])
 
@@ -122,7 +122,7 @@ export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetSta
     TradeType.EXACT_INPUT,
     parsedAmounts?.[Field.INPUT],
     outputCurrency,
-    RouterPreference.API,
+    RouterPreference.API
   )
 
   const limitOrderTrade = useLimitOrderTrade({
@@ -210,7 +210,7 @@ function isNativeOrWrappedNative(currency: Currency) {
 
 function useMarketPriceAndFee(
   inputCurrency: Currency | undefined,
-  outputCurrency: Currency | undefined,
+  outputCurrency: Currency | undefined
 ): { marketPrice?: Price<Currency, Currency>; fee?: SwapFeeInfo } {
   const skip = !(inputCurrency && outputCurrency)
   // TODO(limits): update amount for MATIC and CELO once Limits are supported on those chains
@@ -221,7 +221,7 @@ function useMarketPriceAndFee(
     TradeType.EXACT_OUTPUT,
     baseCurrencyAmount,
     inputCurrency,
-    RouterPreference.API,
+    RouterPreference.API
   )
 
   const { trade: tradeB } = useRoutingAPITrade(
@@ -229,7 +229,7 @@ function useMarketPriceAndFee(
     TradeType.EXACT_INPUT,
     baseCurrencyAmount,
     outputCurrency,
-    RouterPreference.API,
+    RouterPreference.API
   )
 
   const marketPrice: Price<Currency, Currency> | undefined = useMemo(() => {

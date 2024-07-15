@@ -105,7 +105,7 @@ describe('TokenBalancesProvider', () => {
       const { rerender } = render(
         <PrefetchBalancesWrapper>
           <div>hi</div>
-        </PrefetchBalancesWrapper>,
+        </PrefetchBalancesWrapper>
       )
       const wrappedComponent = screen.getByText('hi')
 
@@ -113,7 +113,7 @@ describe('TokenBalancesProvider', () => {
       rerender(
         <PrefetchBalancesWrapper>
           <div>hi</div>
-        </PrefetchBalancesWrapper>,
+        </PrefetchBalancesWrapper>
       )
 
       // Should not fetch balances before hover
@@ -134,7 +134,7 @@ describe('TokenBalancesProvider', () => {
       rerender(
         <PrefetchBalancesWrapper>
           <div>hi</div>
-        </PrefetchBalancesWrapper>,
+        </PrefetchBalancesWrapper>
       )
       expect(mockLazyFetch).toHaveBeenCalledTimes(1)
       fireEvent.mouseEnter(wrappedComponent)

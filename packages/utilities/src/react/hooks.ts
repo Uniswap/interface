@@ -1,4 +1,4 @@
-import { RefObject, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 
 // modified from https://usehooks.com/usePrevious/
 export function usePrevious<T>(value: T): T | undefined {
@@ -19,7 +19,7 @@ export function usePrevious<T>(value: T): T | undefined {
 // above link contains example on how to add delayed execution if ever needed
 export function useAsyncData<T>(
   asyncCallback: () => Promise<T> | undefined,
-  onCancel?: () => void,
+  onCancel?: () => void
 ): {
   isLoading: boolean
   data: T | undefined
@@ -109,40 +109,4 @@ export function useMemoCompare<T>(next: () => T, compare: (a: T | undefined, b: 
 
   // Finally, if equal then return the previous value if it's set
   return isEqual && previous ? previous : nextValue
-}
-
-export function useOnClickOutside<T extends HTMLElement>(
-  node: RefObject<T | undefined>,
-  handler: undefined | (() => void),
-  ignoredNodes: Array<RefObject<T | undefined>> = [],
-): void {
-  const handlerRef = useRef<undefined | (() => void)>(handler)
-
-  useEffect(() => {
-    handlerRef.current = handler
-  }, [handler])
-
-  useEffect(() => {
-    const handleClickOutside = (e: MouseEvent): void => {
-      const nodeClicked = node.current?.contains(e.target as Node)
-      const ignoredNodeClicked = ignoredNodes.reduce(
-        (reducer, val) => reducer || !!val.current?.contains(e.target as Node),
-        false,
-      )
-
-      if ((nodeClicked || ignoredNodeClicked) ?? false) {
-        return
-      }
-
-      if (handlerRef.current) {
-        handlerRef.current()
-      }
-    }
-
-    document.addEventListener('mousedown', handleClickOutside)
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside)
-    }
-  }, [node, ignoredNodes])
 }

@@ -28,7 +28,7 @@ export const Body = memo(function Body() {
                   />
                 ))}
               </Route>
-            ) : null,
+            ) : null
           )}
         </Routes>
       </Suspense>

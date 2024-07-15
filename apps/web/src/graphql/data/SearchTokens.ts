@@ -49,7 +49,7 @@ function searchTokenSortFunction(
   searchChain: Chain,
   wrappedNativeAddress: string | undefined,
   a: SearchToken,
-  b: SearchToken,
+  b: SearchToken
 ) {
   if (a.standard === NATIVE_CHAIN_ID) {
     if (b.standard === NATIVE_CHAIN_ID) {
@@ -88,7 +88,7 @@ export function useSearchTokens(searchQuery: string | undefined, chainId: Suppor
     const selectionMap: { [projectId: string]: SearchToken } = {}
     const filteredTokens = data?.searchTokens?.filter(
       (token): token is Token =>
-        token !== undefined && (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(token.chain),
+        token !== undefined && (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(token.chain)
     )
     filteredTokens?.forEach((token) => {
       if (token.project?.id) {
@@ -97,7 +97,7 @@ export function useSearchTokens(searchQuery: string | undefined, chainId: Suppor
       }
     })
     return Object.values(selectionMap).sort(
-      searchTokenSortFunction.bind(null, searchChain, WRAPPED_NATIVE_CURRENCY[chainId]?.address),
+      searchTokenSortFunction.bind(null, searchChain, WRAPPED_NATIVE_CURRENCY[chainId]?.address)
     )
   }, [data, chainId])
 

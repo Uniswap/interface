@@ -25,7 +25,7 @@ describe('LimitExpirySection', () => {
     const result = render(
       <LimitContext.Provider value={mockLimitContextValue}>
         <LimitExpirySection />
-      </LimitContext.Provider>,
+      </LimitContext.Provider>
     )
     expect(result.getByText('Expiry')).toBeInTheDocument()
     expect(result.getByText('1 day')).toBeInTheDocument()
@@ -39,7 +39,7 @@ describe('LimitExpirySection', () => {
     const result = render(
       <LimitContext.Provider value={{ ...mockLimitContextValue, setLimitState: callback }}>
         <LimitExpirySection />
-      </LimitContext.Provider>,
+      </LimitContext.Provider>
     )
     result.getByText('1 month').click()
     expect(callback).toHaveBeenCalled()
@@ -50,7 +50,7 @@ describe('LimitExpirySection', () => {
     const result = render(
       <LimitContext.Provider value={{ ...mockLimitContextValue, setLimitState: callback }}>
         <LimitExpirySection />
-      </LimitContext.Provider>,
+      </LimitContext.Provider>
     )
     result.getByText('1 day').click()
     expect(callback).not.toHaveBeenCalled()

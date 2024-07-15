@@ -32,8 +32,7 @@ export function TransferTokenModal(): JSX.Element {
       renderBehindTopInset
       backgroundColor={colors.surface1.get()}
       name={ModalName.Send}
-      onClose={onClose}
-    >
+      onClose={onClose}>
       <TransferFlow prefilledState={modalState.initialState} onClose={onClose} />
     </BottomSheetModal>
   )

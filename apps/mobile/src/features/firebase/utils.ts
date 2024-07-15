@@ -1,7 +1,7 @@
 import type { ReactNativeFirebase } from '@react-native-firebase/app'
 import '@react-native-firebase/auth'
 import firestore, { FirebaseFirestoreTypes } from '@react-native-firebase/firestore'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment'
+import { isBetaEnv, isDevEnv } from 'uniswap/src/utils/env'
 
 const ADDRESS_DATA_COLLECTION = 'address_data'
 const DEV_ADDRESS_DATA_COLLECTION = 'dev_address_data'
@@ -17,7 +17,7 @@ export const getFirebaseUidOrError = (firebaseApp: ReactNativeFirebase.FirebaseA
 
 export const getFirestoreUidRef = (
   firebaseApp: ReactNativeFirebase.FirebaseApp,
-  address: Address,
+  address: Address
 ): FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData> =>
   firestore(firebaseApp)
     .collection(getAddressDataCollectionFromBundleId())
@@ -28,7 +28,7 @@ export const getFirestoreUidRef = (
 export const getFirestoreMetadataRef = (
   firebaseApp: ReactNativeFirebase.FirebaseApp,
   address: Address,
-  pushId: string,
+  pushId: string
 ): FirebaseFirestoreTypes.DocumentReference<FirebaseFirestoreTypes.DocumentData> =>
   firestore(firebaseApp)
     .collection(getAddressDataCollectionFromBundleId())

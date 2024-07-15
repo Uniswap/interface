@@ -80,16 +80,10 @@ type SwapAndLimitContextType = {
   setCurrencyState: Dispatch<SetStateAction<CurrencyState>>
   currentTab: SwapTab
   setCurrentTab: Dispatch<SetStateAction<SwapTab>>
-  // The chainId of the context - can be different from the connected Chain ID
-  // if multichain UX is enabled, otherwise it will be the same as the connected chain ID
+  // The chainId of the page/context - can be different from the connected Chain ID if the
+  // page is displaying content for a different chain or if multichain UX is enabled
   chainId?: InterfaceChainId
-  // The initial chain ID - used by TDP and PDP pages to keep swap scoped to the initial chain
-  initialChainId?: InterfaceChainId
   multichainUXEnabled?: boolean
-  // Components may use swap and limit context while outside of the context
-  // this flag is used to determine if we should fallback to account.chainId
-  // instead of using the context chainId
-  isSwapAndLimitContext: boolean
 }
 
 export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
@@ -104,11 +98,9 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
     outputCurrency: undefined,
   },
   chainId: UniverseChainId.Mainnet,
-  initialChainId: UniverseChainId.Mainnet,
   currentTab: SwapTab.Swap,
   setCurrentTab: () => undefined,
   multichainUXEnabled: false,
-  isSwapAndLimitContext: false,
 })
 
 export interface SerializedCurrencyState {

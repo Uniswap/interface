@@ -1,6 +1,5 @@
 import { Token } from '@uniswap/sdk-core'
 import dayjs from 'dayjs'
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import {
   Amount,
   Chain,
@@ -11,12 +10,16 @@ import {
   TokenStandard,
   TransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import { CurrencyIdToVisibility } from 'wallet/src/features/favorites/slice'
-import { FORMAT_DATE_MONTH, FORMAT_DATE_MONTH_YEAR, LocalizedDayjs } from 'wallet/src/features/language/localizedDayjs'
+import {
+  FORMAT_DATE_MONTH,
+  FORMAT_DATE_MONTH_YEAR,
+  LocalizedDayjs,
+} from 'wallet/src/features/language/localizedDayjs'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
 import { extractUniswapXOrderDetails } from 'wallet/src/features/transactions/history/conversion/extractUniswapXOrderDetails'
@@ -28,6 +31,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export interface AllFormattedTransactions {
@@ -39,16 +43,16 @@ export interface AllFormattedTransactions {
 
 export function formatTransactionsByDate(
   transactions: TransactionDetails[] | undefined,
-  localizedDayjs: LocalizedDayjs,
+  localizedDayjs: LocalizedDayjs
 ): AllFormattedTransactions {
   // timestamp in ms for start of time periods
   const msTimestampCutoff24h = dayjs().subtract(24, 'hour').valueOf()
   const msTimestampCutoffYear = dayjs().startOf('year').valueOf()
 
   // Segment by time periods.
-  const [pending, last24hTransactionList, olderThan24HTransactionList] = (transactions ?? []).reduce<
-    [TransactionDetails[], TransactionDetails[], TransactionDetails[]]
-  >(
+  const [pending, last24hTransactionList, olderThan24HTransactionList] = (
+    transactions ?? []
+  ).reduce<[TransactionDetails[], TransactionDetails[], TransactionDetails[]]>(
     (accum, item) => {
       if (
         // Want all incomplete transactions
@@ -64,7 +68,7 @@ export function formatTransactionsByDate(
       }
       return accum
     },
-    [[], [], []],
+    [[], [], []]
   )
 
   const pendingSorted = pending.sort((a, b) => {
@@ -93,7 +97,7 @@ export function formatTransactionsByDate(
       accum[key] = currentMonthList
       return accum
     },
-    {},
+    {}
   )
 
   return {
@@ -110,7 +114,7 @@ export function formatTransactionsByDate(
 export function parseDataResponseToTransactionDetails(
   data: TransactionListQuery,
   hideSpamTokens: boolean,
-  tokenVisibilityOverrides?: CurrencyIdToVisibility,
+  tokenVisibilityOverrides?: CurrencyIdToVisibility
 ): TransactionDetails[] | undefined {
   if (data.portfolios?.[0]?.assetActivities) {
     return data.portfolios[0].assetActivities.reduce((accum: TransactionDetails[], t) => {
@@ -147,7 +151,7 @@ export function parseDataResponseToTransactionDetails(
  */
 export function parseDataResponseToFeedTransactionDetails(
   data: FeedTransactionListQuery,
-  hideSpamTokens?: boolean,
+  hideSpamTokens?: boolean
 ): TransactionDetails[] | undefined {
   const allTransactions: TransactionDetails[] = []
 
@@ -186,7 +190,7 @@ export function deriveCurrencyAmountFromAssetResponse(
   chain: Chain,
   address: Maybe<string>,
   decimals: Maybe<number>,
-  quantity: string,
+  quantity: string
 ): string {
   const chainId = fromGraphQLChain(chain)
   if (!chainId) {
@@ -197,8 +201,8 @@ export function deriveCurrencyAmountFromAssetResponse(
     tokenStandard === TokenStandard.Native
       ? NativeCurrency.onChain(chainId)
       : address && decimals
-        ? new Token(chainId, address, decimals)
-        : undefined
+      ? new Token(chainId, address, decimals)
+      : undefined
 
   const currencyAmount = getCurrencyAmount({
     value: quantity,
@@ -238,7 +242,9 @@ export function getAddressFromAsset({
  * @param transactedValue Transacted value amount from TokenTransfer API response
  * @returns parsed USD value as a number if currency is of type USD
  */
-export function parseUSDValueFromAssetChange(transactedValue: Maybe<Partial<Amount>>): number | undefined {
+export function parseUSDValueFromAssetChange(
+  transactedValue: Maybe<Partial<Amount>>
+): number | undefined {
   return transactedValue?.currency === Currency.Usd ? transactedValue.value ?? undefined : undefined
 }
 
@@ -263,7 +269,7 @@ function extractCurrencyIdFromTx(transaction: TransactionDetails | null): Curren
 
 export function remoteTxStatusToLocalTxStatus(
   type: RemoteTransactionType,
-  status: RemoteTransactionStatus,
+  status: RemoteTransactionStatus
 ): TransactionStatus {
   switch (status) {
     case RemoteTransactionStatus.Failed:

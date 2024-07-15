@@ -59,7 +59,7 @@ const customRender = (ui: ReactElement, options?: CustomRenderOptions) => {
 type CustomRenderHookOptions<Props> = Omit<RenderHookOptions<Props>, 'wrapper'>
 const customRenderHook = <Result, Props>(
   hook: (initialProps: Props) => Result,
-  options?: CustomRenderHookOptions<Props>,
+  options?: CustomRenderHookOptions<Props>
 ) => {
   return renderHook(hook, { ...options, wrapper: WithProviders as WrapperComponent<Props> })
 }

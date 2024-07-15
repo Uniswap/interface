@@ -26,7 +26,9 @@ const fontFamily = {
 type SansSerifFontFamilyKey = keyof typeof fontFamily.sansSerif
 type SansSerifFontFamilyValue = (typeof fontFamily.sansSerif)[SansSerifFontFamilyKey]
 
-const platformFontFamily = (family: SansSerifFontFamilyKey): SansSerifFontFamilyKey | SansSerifFontFamilyValue => {
+const platformFontFamily = (
+  family: SansSerifFontFamilyKey
+): SansSerifFontFamilyKey | SansSerifFontFamilyValue => {
   if (isWeb) {
     return family
   }

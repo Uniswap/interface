@@ -7,16 +7,20 @@ import {
   useFiatOnRampAggregatorCryptoQuoteQuery,
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
-import { FORQuote, FORSupportedFiatCurrency, FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import {
-  isFiatOnRampApiError,
-  isInvalidRequestAmountTooHigh,
-  isInvalidRequestAmountTooLow,
-} from 'uniswap/src/features/fiatOnRamp/utils'
+  FORQuote,
+  FORSupportedFiatCurrency,
+  FiatCurrencyInfo,
+} from 'uniswap/src/features/fiatOnRamp/types'
 import { NumberType } from 'utilities/src/format/types'
 import { useDebounce } from 'utilities/src/time/timing'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrencyInfo, useFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import {
+  isFiatOnRampApiError,
+  isInvalidRequestAmountTooHigh,
+  isInvalidRequestAmountTooLow,
+} from 'wallet/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
@@ -37,9 +41,11 @@ export function useMeldFiatCurrencySupportInfo(countryCode: string): {
   const appFiatCurrencySupported =
     !supportedFiatCurrencies ||
     supportedFiatCurrencies.fiatCurrencies.some(
-      (currency): boolean => appFiatCurrencyCode === currency.fiatCurrencyCode.toLowerCase(),
+      (currency): boolean => appFiatCurrencyCode === currency.fiatCurrencyCode.toLowerCase()
     )
-  const meldSupportedFiatCurrency = appFiatCurrencySupported ? appFiatCurrencyInfo : fallbackCurrencyInfo
+  const meldSupportedFiatCurrency = appFiatCurrencySupported
+    ? appFiatCurrencyInfo
+    : fallbackCurrencyInfo
 
   return {
     appFiatCurrencySupportedInMeld: appFiatCurrencySupported,
@@ -88,7 +94,7 @@ export function useFiatOnRampQuotes({
       : skipToken,
     {
       refetchOnMountOrArgChange: true,
-    },
+    }
   )
 
   const loading = quotesFetching || debouncedBaseCurrencyAmount !== baseCurrencyAmount
@@ -105,7 +111,7 @@ export function useFiatOnRampQuotes({
 
 export function useParseFiatOnRampError(
   error: unknown,
-  currencyCode: string,
+  currencyCode: string
 ): {
   errorText: string | undefined
   errorColor: ColorTokens | undefined

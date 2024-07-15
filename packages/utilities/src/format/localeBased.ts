@@ -104,7 +104,9 @@ export function formatPercent(rawPercentage: Maybe<number | string>, locale: str
     return '-'
   }
   const percentage =
-    typeof rawPercentage === 'string' ? parseFloat(rawPercentage) : parseFloat(rawPercentage.toString())
+    typeof rawPercentage === 'string'
+      ? parseFloat(rawPercentage)
+      : parseFloat(rawPercentage.toString())
   return formatNumber({ input: percentage / 100, type: NumberType.Percentage, locale })
 }
 
@@ -127,8 +129,8 @@ export function addFiatSymbolToNumber({
       ? parts[1]?.value
       : ''
     : parts[parts.length - 2]?.type === 'literal'
-      ? parts[parts.length - 2]?.value
-      : ''
+    ? parts[parts.length - 2]?.value
+    : ''
 
   return isSymbolAtFront ? `${currencySymbol}${extra}${value}` : `${value}${extra}${currencySymbol}`
 }
@@ -144,7 +146,10 @@ export type FiatCurrencyComponents = {
  * Helper function to return components of a currency value for a specific locale
  * E.g. comma, period, or space for separating thousands
  */
-export function getFiatCurrencyComponents(locale: string, currencyCode: string): FiatCurrencyComponents {
+export function getFiatCurrencyComponents(
+  locale: string,
+  currencyCode: string
+): FiatCurrencyComponents {
   const format = TwoDecimalsCurrency.createFormat(locale, currencyCode)
 
   // See MDN for official docs https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Intl/NumberFormat/formatToParts

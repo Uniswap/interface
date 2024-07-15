@@ -40,11 +40,13 @@ export function useSwitchChain() {
               {
                 onSuccess() {
                   try {
-                    if (multichainUXEnabled || page === InterfacePageName.EXPLORE_PAGE) {
+                    if (multichainUXEnabled) {
                       return
                     }
-                    searchParams.set('chain', CHAIN_IDS_TO_NAMES[chainId])
-                    setSearchParams(searchParams, { replace: true })
+                    if (page !== InterfacePageName.EXPLORE_PAGE) {
+                      searchParams.set('chain', CHAIN_IDS_TO_NAMES[chainId])
+                      setSearchParams(searchParams, { replace: true })
+                    }
                   } catch (error) {
                     logger.warn('useSwitchChain', 'useSwitchChain', 'Failed to set SearchParams', {
                       error,
@@ -60,9 +62,9 @@ export function useSwitchChain() {
                     resolve()
                   }
                 },
-              },
+              }
             )
-          }),
+          })
       )
     },
     [
@@ -74,6 +76,6 @@ export function useSwitchChain() {
       page,
       searchParams,
       setSearchParams,
-    ],
+    ]
   )
 }

@@ -1,6 +1,7 @@
 import Loader from 'components/Icons/LoadingSpinner'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChain, useSupportedChainId } from 'constants/chains'
+import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import { Check } from 'react-feather'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
@@ -62,7 +63,9 @@ interface ChainSelectorRowProps {
 }
 export default function ChainSelectorRow({ disabled, targetChain, onSelectChain, isPending }: ChainSelectorRowProps) {
   const theme = useTheme()
-  const { chainId } = useSwapAndLimitContext()
+  const account = useAccount()
+  const { chainId: swapChainId, multichainUXEnabled } = useSwapAndLimitContext()
+  const chainId = multichainUXEnabled ? swapChainId : account.chainId
   const supportedChain = useSupportedChainId(targetChain)
   const active = chainId === targetChain
 

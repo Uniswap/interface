@@ -5,18 +5,17 @@ import {
   Token as GQLToken,
   TokenProject,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   buildCurrency,
   currencyIdToContractInput,
   gqlTokenToCurrencyInfo,
   tokenProjectToCurrencyInfos,
   usePersistedError,
-} from 'uniswap/src/features/dataApi/utils'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-// TODO: https://linear.app/uniswap/issue/WEB-4376/move-universepackageswalletsrcfeaturesdataapi-tests-to-uniswap-pkg
+} from 'wallet/src/features/dataApi/utils'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import {
   SAMPLE_CURRENCY_ID_1,
   SAMPLE_CURRENCY_ID_2,

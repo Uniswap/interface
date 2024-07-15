@@ -33,6 +33,6 @@ export function navigateToOnboardingImportMethod(): void {
           },
         },
       ],
-    }),
+    })
   )
 }

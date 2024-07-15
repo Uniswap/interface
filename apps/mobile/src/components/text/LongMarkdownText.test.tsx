@@ -67,7 +67,7 @@ describe(LongMarkdownText, () => {
 
       // props are at index 0, ref is at index 1
       expect(MockedMarkdown.mock.lastCall[0]).toEqual(
-        getMarkdownPropsWithHeight('auto'), // height auto means the text doesn't exceed the limit
+        getMarkdownPropsWithHeight('auto') // height auto means the text doesn't exceed the limit
       )
     })
 
@@ -89,7 +89,7 @@ describe(LongMarkdownText, () => {
         measureMarkdown(tree, 5) // Assume Some very long text is five lines
 
         expect(MockedMarkdown.mock.lastCall[0]).toEqual(
-          getMarkdownPropsWithHeight(LINE_HEIGHT * 3), // Height is limited to 3 lines
+          getMarkdownPropsWithHeight(LINE_HEIGHT * 3) // Height is limited to 3 lines
         )
       })
 
@@ -115,7 +115,7 @@ describe(LongMarkdownText, () => {
         fireEvent.press(readMoreButton)
 
         expect(MockedMarkdown.mock.lastCall[0]).toEqual(
-          getMarkdownPropsWithHeight('auto'), // height auto means the text doesn't exceed the limit
+          getMarkdownPropsWithHeight('auto') // height auto means the text doesn't exceed the limit
         )
       })
 
@@ -142,13 +142,13 @@ describe(LongMarkdownText, () => {
       fireEvent.press(readMoreButton) // expand
 
       expect(MockedMarkdown.mock.lastCall[0]).toEqual(
-        getMarkdownPropsWithHeight('auto'), // height auto means the text doesn't exceed the limit
+        getMarkdownPropsWithHeight('auto') // height auto means the text doesn't exceed the limit
       )
 
       fireEvent.press(readMoreButton) // collapse
 
       expect(MockedMarkdown.mock.lastCall[0]).toEqual(
-        getMarkdownPropsWithHeight(LINE_HEIGHT * 3), // Height is limited to 3 lines
+        getMarkdownPropsWithHeight(LINE_HEIGHT * 3) // Height is limited to 3 lines
       )
     })
   })

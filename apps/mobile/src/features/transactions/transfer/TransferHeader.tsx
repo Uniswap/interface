@@ -11,7 +11,10 @@ type HeaderContentProps = Pick<TransferFlowProps, 'flowName'> & {
   setShowViewOnlyModal: Dispatch<SetStateAction<boolean>>
 }
 
-export function TransferHeader({ flowName, setShowViewOnlyModal }: HeaderContentProps): JSX.Element {
+export function TransferHeader({
+  flowName,
+  setShowViewOnlyModal,
+}: HeaderContentProps): JSX.Element {
   const colors = useSporeColors()
   const account = useActiveAccountWithThrow()
   const { t } = useTranslation()
@@ -26,8 +29,7 @@ export function TransferHeader({ flowName, setShowViewOnlyModal }: HeaderContent
       mt="$spacing8"
       pb="$spacing8"
       pl="$spacing12"
-      pr="$spacing16"
-    >
+      pr="$spacing16">
       <Text $short={{ variant: 'subheading2' }} $sm={{ variant: 'subheading1' }}>
         {flowName}
       </Text>
@@ -39,10 +41,13 @@ export function TransferHeader({ flowName, setShowViewOnlyModal }: HeaderContent
             justifyContent="center"
             px="$spacing8"
             py="$spacing4"
-            onPress={(): void => setShowViewOnlyModal(true)}
-          >
+            onPress={(): void => setShowViewOnlyModal(true)}>
             <Flex row alignItems="center" gap="$spacing4">
-              <EyeIcon color={colors.neutral2.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
+              <EyeIcon
+                color={colors.neutral2.get()}
+                height={iconSizes.icon16}
+                width={iconSizes.icon16}
+              />
               <Text color="$neutral2" variant="buttonLabel3">
                 {t('swap.header.viewOnly')}
               </Text>

@@ -76,7 +76,7 @@ describe('Transactions hooks', () => {
           chainId: UniverseChainId.Mainnet,
           hash: pendingTransactionResponse.hash,
           status: TransactionStatus.Confirmed,
-        }),
+        })
       )
     })
   }

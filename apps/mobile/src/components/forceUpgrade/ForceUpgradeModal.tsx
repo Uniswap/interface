@@ -9,11 +9,11 @@ import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal
 import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { openUri } from 'uniswap/src/utils/linking'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { openUri } from 'wallet/src/utils/linking'
 
 export function ForceUpgradeModal(): JSX.Element {
   const { t } = useTranslation()
@@ -25,7 +25,10 @@ export function ForceUpgradeModal(): JSX.Element {
 
   // signerAccounts could be empty if no seed phrase imported or in onboarding
   const signerAccounts = useSignerAccounts()
-  const mnemonicId = signerAccounts.length > 0 ? (signerAccounts?.[0] as SignerMnemonicAccount)?.mnemonicId : undefined
+  const mnemonicId =
+    signerAccounts.length > 0
+      ? (signerAccounts?.[0] as SignerMnemonicAccount)?.mnemonicId
+      : undefined
 
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
 
@@ -69,8 +72,7 @@ export function ForceUpgradeModal(): JSX.Element {
           severity={WarningSeverity.High}
           title={t('forceUpgrade.title')}
           onClose={onClose}
-          onConfirm={onPressConfirm}
-        >
+          onConfirm={onPressConfirm}>
           <Text color="$neutral2" textAlign="center" variant="body2">
             {t('forceUpgrade.description')}
           </Text>
@@ -86,8 +88,7 @@ export function ForceUpgradeModal(): JSX.Element {
           fullScreen
           backgroundColor={colors.surface1.get()}
           name={ModalName.ForceUpgradeModal}
-          onClose={onDismiss}
-        >
+          onClose={onDismiss}>
           <Flex fill gap="$spacing16" px="$spacing24" py="$spacing24">
             <Flex row alignItems="center" justifyContent="flex-start">
               <TouchableArea onPress={onDismiss}>

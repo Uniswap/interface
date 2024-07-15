@@ -21,7 +21,6 @@ import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
 import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
-import { QueuedOrderModal } from 'wallet/src/features/transactions/swap/modals/QueuedOrderModal'
 import { useAppDispatch } from 'wallet/src/state'
 
 export function AppModals(): JSX.Element {
@@ -78,8 +77,6 @@ export function AppModals(): JSX.Element {
       <LazyModalRenderer name={ModalName.AccountSwitcher}>
         <AccountSwitcherModal />
       </LazyModalRenderer>
-
-      <QueuedOrderModal />
 
       <LazyModalRenderer name={ModalName.RemoveWallet}>
         <RemoveWalletModal />

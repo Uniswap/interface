@@ -18,7 +18,7 @@ describe('Multiple routing options', () => {
     render(
       <Provider>
         <MultipleRoutingOptions chainId={UniverseChainId.Mainnet} />
-      </Provider>,
+      </Provider>
     )
 
     expect(screen.getByTestId('route-preference-toggle-Optimal')).toBeInTheDocument()
@@ -31,7 +31,7 @@ describe('Multiple routing options', () => {
     render(
       <Provider>
         <MultipleRoutingOptions chainId={UniverseChainId.Mainnet} />
-      </Provider>,
+      </Provider>
     )
 
     const optimalToggle = screen.getByTestId('route-preference-toggle-Optimal')
@@ -53,7 +53,7 @@ describe('Multiple routing options', () => {
     render(
       <Provider>
         <MultipleRoutingOptions chainId={UniverseChainId.Mainnet} />
-      </Provider>,
+      </Provider>
     )
 
     const optimalToggle = screen.getByTestId('route-preference-toggle-Optimal')
@@ -88,7 +88,7 @@ describe('Multiple routing options', () => {
     render(
       <Provider>
         <MultipleRoutingOptions chainId={UniverseChainId.Optimism} />
-      </Provider>,
+      </Provider>
     )
 
     expect(screen.queryByTestId('route-preference-toggle-UniswapX')).toBeFalsy()

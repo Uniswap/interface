@@ -52,7 +52,7 @@ const calcSudoSwapExponentialBondingCurve = (currentPrice: BigNumber, delta: Big
 const calcSudoSwapXykBondingCurve = (
   currentPrice: BigNumber,
   sudoSwapPool: Pool,
-  position = 0,
+  position = 0
 ): BigNumber | undefined => {
   let virtualTokenBalance = BigNumber.from(sudoSwapPool.spotPrice)
   let virtualNFTBalance = BigNumber.from(sudoSwapPool.delta)
@@ -149,7 +149,7 @@ const calcAmmBasedPoolprice = (asset: GenieAsset, position = 0): string => {
           ethReserves: number
         }
       >
-    )?.poolMetadata?.ethReserves?.toLocaleString('fullwide', { useGrouping: false }) ?? 1,
+    )?.poolMetadata?.ethReserves?.toLocaleString('fullwide', { useGrouping: false }) ?? 1
   )
   const tokenReserves = BigNumber.from(
     (
@@ -159,7 +159,7 @@ const calcAmmBasedPoolprice = (asset: GenieAsset, position = 0): string => {
           tokenReserves: number
         }
       >
-    )?.poolMetadata?.tokenReserves?.toLocaleString('fullwide', { useGrouping: false }) ?? 1,
+    )?.poolMetadata?.tokenReserves?.toLocaleString('fullwide', { useGrouping: false }) ?? 1
   )
   const numerator = ethReserves.mul(amountToBuy).mul(1000)
   const denominator = tokenReserves.sub(amountToBuy).mul(997)
@@ -210,7 +210,7 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
   if (
     !uncheckedItemsInBag.some((item) => item.asset.marketplace && isPooledMarket(item.asset.marketplace)) ||
     uncheckedItemsInBag.every(
-      (item) => item.status === BagItemStatus.REVIEWED || item.status === BagItemStatus.REVIEWING_PRICE_CHANGE,
+      (item) => item.status === BagItemStatus.REVIEWED || item.status === BagItemStatus.REVIEWING_PRICE_CHANGE
     )
   ) {
     return uncheckedItemsInBag
@@ -231,7 +231,7 @@ export const recalculateBagUsingPooledAssets = (uncheckedItemsInBag: BagItem[]) 
           ? calcAvgGroupPoolPrice(asset, itemsInPool.length)
           : recalculatePooledAssetPrice(
               asset,
-              itemsInPool.findIndex((itemInPool) => itemInPool.asset.tokenId === asset.tokenId),
+              itemsInPool.findIndex((itemInPool) => itemInPool.asset.tokenId === asset.tokenId)
             )
 
         if (isPriceChangedAsset && item.asset.updatedPriceInfo) {

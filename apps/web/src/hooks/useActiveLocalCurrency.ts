@@ -7,7 +7,7 @@ import { getFiatCurrencyComponents } from 'utils/formatNumbers'
 
 export const activeLocalCurrencyAtom = atomWithStorage<SupportedLocalCurrency>(
   'activeLocalCurrency',
-  DEFAULT_LOCAL_CURRENCY,
+  DEFAULT_LOCAL_CURRENCY
 )
 
 function useUrlLocalCurrency() {
@@ -20,7 +20,7 @@ function useUrlLocalCurrency() {
 
   const lowerCaseSupportedLocalCurrency = parsedLocalCurrency.toLowerCase()
   return SUPPORTED_LOCAL_CURRENCIES.find(
-    (localCurrency) => localCurrency.toLowerCase() === lowerCaseSupportedLocalCurrency,
+    (localCurrency) => localCurrency.toLowerCase() === lowerCaseSupportedLocalCurrency
   )
 }
 
@@ -37,6 +37,6 @@ export function useActiveLocalCurrencyComponents() {
 
   return useMemo(
     () => getFiatCurrencyComponents(activeLocale, activeLocalCurrency),
-    [activeLocalCurrency, activeLocale],
+    [activeLocalCurrency, activeLocale]
   )
 }

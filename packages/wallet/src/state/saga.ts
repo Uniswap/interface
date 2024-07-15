@@ -21,14 +21,19 @@ export interface MonitoredSaga {
 
 export type MonitoredSagaReducer = Reducer<Record<string, SagaState>>
 
-export function getMonitoredSagaReducers(monitoredSagas: Record<string, MonitoredSaga>): MonitoredSagaReducer {
+export function getMonitoredSagaReducers(
+  monitoredSagas: Record<string, MonitoredSaga>
+): MonitoredSagaReducer {
   return combineReducers(
-    Object.keys(monitoredSagas).reduce((acc: { [name: string]: Reducer<SagaState> }, sagaName: string) => {
-      // Safe non-null assertion because key `sagaName` comes from `Object.keys(monitoredSagas)`
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      acc[sagaName] = monitoredSagas[sagaName]!.reducer
-      return acc
-    }, {}),
+    Object.keys(monitoredSagas).reduce(
+      (acc: { [name: string]: Reducer<SagaState> }, sagaName: string) => {
+        // Safe non-null assertion because key `sagaName` comes from `Object.keys(monitoredSagas)`
+        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+        acc[sagaName] = monitoredSagas[sagaName]!.reducer
+        return acc
+      },
+      {}
+    )
   )
 }
 

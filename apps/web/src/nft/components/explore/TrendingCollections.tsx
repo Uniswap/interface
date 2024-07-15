@@ -91,7 +91,7 @@ const TrendingCollections = () => {
 
   const { data: trendingCollections, loading: trendingCollectionsAreLoading } = useTrendingCollections(
     100,
-    convertTimePeriodToHistoryDuration(timePeriod),
+    convertTimePeriodToHistoryDuration(timePeriod)
   )
 
   const ethUsdPrice = useNativeUsdPrice()

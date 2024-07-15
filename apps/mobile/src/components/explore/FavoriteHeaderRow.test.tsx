@@ -1,7 +1,6 @@
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import { fireEvent, render } from 'src/test/test-utils'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const defaultProps = {
   title: 'Title',
@@ -28,8 +27,8 @@ describe(FavoriteHeaderRow, () => {
     it('renders favorite button', () => {
       const { queryByTestId } = render(<FavoriteHeaderRow {...defaultProps} />)
 
-      const favoriteButton = queryByTestId(TestID.Edit)
-      const doneButton = queryByTestId(TestID.Done)
+      const favoriteButton = queryByTestId('favorite-header-row/favorite-button')
+      const doneButton = queryByTestId('favorite-header-row/done-button')
 
       expect(favoriteButton).toBeTruthy()
       expect(doneButton).toBeFalsy()
@@ -38,7 +37,7 @@ describe(FavoriteHeaderRow, () => {
     it('calls onPress when favorite icon pressed', () => {
       const { getByTestId } = render(<FavoriteHeaderRow {...defaultProps} />)
 
-      const favoriteButton = getByTestId(TestID.Edit)
+      const favoriteButton = getByTestId('favorite-header-row/favorite-button')
       fireEvent.press(favoriteButton, ON_PRESS_EVENT_PAYLOAD)
 
       expect(defaultProps.onPress).toHaveBeenCalledTimes(1)
@@ -62,8 +61,8 @@ describe(FavoriteHeaderRow, () => {
     it('renders done button', () => {
       const { queryByTestId } = render(<FavoriteHeaderRow {...defaultProps} isEditing />)
 
-      const favoriteButton = queryByTestId(TestID.Edit)
-      const doneButton = queryByTestId(TestID.Done)
+      const favoriteButton = queryByTestId('favorite-header-row/favorite-button')
+      const doneButton = queryByTestId('favorite-header-row/done-button')
 
       expect(favoriteButton).toBeFalsy()
       expect(doneButton).toBeTruthy()
@@ -72,7 +71,7 @@ describe(FavoriteHeaderRow, () => {
     it('calls onPress when done button pressed', () => {
       const { getByTestId } = render(<FavoriteHeaderRow {...defaultProps} isEditing />)
 
-      const doneButton = getByTestId(TestID.Done)
+      const doneButton = getByTestId('favorite-header-row/done-button')
       fireEvent.press(doneButton, ON_PRESS_EVENT_PAYLOAD)
 
       expect(defaultProps.onPress).toHaveBeenCalledTimes(1)

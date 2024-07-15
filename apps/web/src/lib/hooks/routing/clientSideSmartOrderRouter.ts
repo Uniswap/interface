@@ -41,7 +41,7 @@ async function getQuote(
     amount: BigintIsh
   },
   router: AlphaRouter,
-  routerConfig: Partial<AlphaRouterConfig>,
+  routerConfig: Partial<AlphaRouterConfig>
 ): Promise<QuoteResult> {
   const tokenInIsNative = Object.values(SwapRouterNativeAssets).includes(tokenIn.address as SwapRouterNativeAssets)
   const tokenOutIsNative = Object.values(SwapRouterNativeAssets).includes(tokenOut.address as SwapRouterNativeAssets)
@@ -81,7 +81,7 @@ export async function getClientSideQuote(
     tradeType,
   }: GetQuoteArgs,
   router: AlphaRouter,
-  config: Partial<AlphaRouterConfig>,
+  config: Partial<AlphaRouterConfig>
 ) {
   return getQuote(
     {
@@ -101,6 +101,6 @@ export async function getClientSideQuote(
       amount,
     },
     router,
-    config,
+    config
   )
 }

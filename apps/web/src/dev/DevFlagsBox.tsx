@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment'
+import { isBetaEnv, isDevEnv } from 'uniswap/src/utils/env'
 
 const Box = styled.div`
   position: fixed;

@@ -11,16 +11,16 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WalletChainId } from 'uniswap/src/types/chains'
+import { NumberType } from 'utilities/src/format/types'
+import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 import {
   buildCurrencyId,
   buildNativeCurrencyId,
   currencyIdToAddress,
   currencyIdToChain,
-} from 'uniswap/src/utils/currencyId'
-import { NumberType } from 'utilities/src/format/types'
-import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
+} from 'wallet/src/utils/currencyId'
 
 export type TokenItemData = {
   name: string
@@ -41,7 +41,11 @@ interface TokenItemProps {
   metadataDisplayType?: TokenMetadataDisplayType
 }
 
-export const TokenItem = memo(function _TokenItem({ tokenItemData, index, metadataDisplayType }: TokenItemProps) {
+export const TokenItem = memo(function _TokenItem({
+  tokenItemData,
+  index,
+  metadataDisplayType,
+}: TokenItemProps) {
   const { t } = useTranslation()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -61,7 +65,10 @@ export const TokenItem = memo(function _TokenItem({ tokenItemData, index, metada
   const _currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
   const marketCapFormatted = convertFiatAmountFormatted(marketCap, NumberType.FiatTokenDetails)
   const volume24hFormatted = convertFiatAmountFormatted(volume24h, NumberType.FiatTokenDetails)
-  const totalValueLockedFormatted = convertFiatAmountFormatted(totalValueLocked, NumberType.FiatTokenDetails)
+  const totalValueLockedFormatted = convertFiatAmountFormatted(
+    totalValueLocked,
+    NumberType.FiatTokenDetails
+  )
 
   const getMetadataSubtitle = (): string | undefined => {
     switch (metadataDisplayType) {
@@ -102,8 +109,7 @@ export const TokenItem = memo(function _TokenItem({ tokenItemData, index, metada
         hapticStyle={ImpactFeedbackStyle.Light}
         testID={`token-item-${name}`}
         onLongPress={disableOnPress}
-        onPress={onPress}
-      >
+        onPress={onPress}>
         <AnimatedFlex grow row gap="$spacing12" px="$spacing24" py="$spacing8">
           <Flex centered row gap="$spacing4" overflow="hidden">
             {index !== undefined && (
@@ -119,7 +125,11 @@ export const TokenItem = memo(function _TokenItem({ tokenItemData, index, metada
             <Text numberOfLines={1} variant="body1">
               {name}
             </Text>
-            <Text color="$neutral2" numberOfLines={1} testID="token-item/metadata-subtitle" variant="subheading2">
+            <Text
+              color="$neutral2"
+              numberOfLines={1}
+              testID="token-item/metadata-subtitle"
+              variant="subheading2">
               {getMetadataSubtitle()}
             </Text>
           </Flex>

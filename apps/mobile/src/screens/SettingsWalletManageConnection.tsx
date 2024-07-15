@@ -6,7 +6,10 @@ import { Screen } from 'src/components/layout/Screen'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
-type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsWalletManageConnection>
+type Props = NativeStackScreenProps<
+  SettingsStackParamList,
+  MobileScreens.SettingsWalletManageConnection
+>
 
 export function SettingsWalletManageConnection({
   route: {

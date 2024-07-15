@@ -64,7 +64,7 @@ export function useRouterConfig(): RouterConfig {
       hash,
       shouldDisableNFTRoutes: Boolean(shouldDisableNFTRoutes),
     }),
-    [browserRouterEnabled, hash, shouldDisableNFTRoutes],
+    [browserRouterEnabled, hash, shouldDisableNFTRoutes]
   )
 }
 

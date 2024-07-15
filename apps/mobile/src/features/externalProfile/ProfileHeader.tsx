@@ -26,15 +26,14 @@ import { ENS_LOGO } from 'ui/src/assets'
 import { SendAction, XTwitter } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, imageSizes } from 'ui/src/theme'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { openUri } from 'uniswap/src/utils/linking'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'wallet/src/features/ens/api'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
+import { openUri } from 'wallet/src/utils/linking'
 
 const HEADER_GRADIENT_HEIGHT = 144
 const HEADER_ICON_SIZE = 72
@@ -50,7 +49,9 @@ export const solidHeaderProps = {
   maxOpacity: HEADER_SOLID_COLOR_OPACITY,
 }
 
-export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHeaderProps): JSX.Element {
+export const ProfileHeader = memo(function ProfileHeader({
+  address,
+}: ProfileHeaderProps): JSX.Element {
   const colors = useSporeColors()
   const dispatch = useAppDispatch()
   const isDarkMode = useIsDarkMode()
@@ -60,7 +61,8 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
 
   // Note that if a user has a Unitag AND ENS, this prioritizes the Unitag's metadata over the ENS metadata
   const nameToFetchENSMetadata =
-    (displayName?.type === DisplayNameType.ENS || displayName?.type === DisplayNameType.Unitag) && displayName?.name
+    (displayName?.type === DisplayNameType.ENS || displayName?.type === DisplayNameType.Unitag) &&
+    displayName?.name
       ? displayName.name
       : undefined
 
@@ -107,7 +109,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
       openModal({
         name: ModalName.Send,
         ...{ initialState: initialSendState },
-      }),
+      })
     )
   }, [dispatch, initialSendState])
 
@@ -121,7 +123,11 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
 
   return (
     <Flex backgroundColor="$surface1" gap="$spacing16" pt="$spacing60">
-      <StatusBar translucent backgroundColor="transparent" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+      <StatusBar
+        translucent
+        backgroundColor="transparent"
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+      />
       {/* fixed gradient at 0.2 opacity overlaid on surface1 */}
       <AnimatedFlex
         bottom={0}
@@ -130,9 +136,15 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
         left={0}
         position="absolute"
         right={0}
-        top={0}
-      >
-        <Flex backgroundColor="$surface1" bottom={0} left={0} position="absolute" right={0} top={0} />
+        top={0}>
+        <Flex
+          backgroundColor="$surface1"
+          bottom={0}
+          left={0}
+          position="absolute"
+          right={0}
+          top={0}
+        />
         <Flex grow opacity={0.2}>
           <LinearGradient
             colors={fixedGradientColors}
@@ -173,10 +185,15 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
               textAlign="flex-start"
               variant="heading3"
             />
-            {bio ? <LongText color={colors.neutral2.val} initialDisplayedLines={2} text={bio} /> : null}
+            {bio ? (
+              <LongText color={colors.neutral2.val} initialDisplayedLines={2} text={bio} />
+            ) : null}
           </Flex>
           {(twitter || showENSName) && (
-            <ScrollView horizontal contentContainerStyle={{ px: '$spacing24' }} showsHorizontalScrollIndicator={false}>
+            <ScrollView
+              horizontal
+              contentContainerStyle={{ px: '$spacing24' }}
+              showsHorizontalScrollIndicator={false}>
               <Flex row gap="$spacing16">
                 {twitter ? (
                   <TouchableArea onPress={onPressTwitter}>
@@ -218,9 +235,8 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
               p="$spacing12"
               shadowColor="$neutral1"
               style={styles.buttonShadow}
-              testID={TestID.Favorite}
-              onPress={onPressFavorite}
-            >
+              testID={ElementName.Favorite}
+              onPress={onPressFavorite}>
               <Favorite isFavorited={isFavorited} size={iconSizes.icon20} />
             </TouchableArea>
             <TouchableArea
@@ -235,12 +251,15 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
               px="$spacing12"
               shadowColor={isDarkMode ? '$surface2' : '$neutral3'}
               style={styles.buttonShadow}
-              testID={TestID.Send}
-              onPress={onPressSend}
-            >
+              testID={ElementName.Send}
+              onPress={onPressSend}>
               <Flex row alignItems="center" gap="$spacing8">
                 <SendAction color="$neutral2" size="$icon.20" />
-                <Text allowFontScaling={true} color="$neutral2" maxFontSizeMultiplier={1.2} variant="buttonLabel2">
+                <Text
+                  allowFontScaling={true}
+                  color="$neutral2"
+                  maxFontSizeMultiplier={1.2}
+                  variant="buttonLabel2">
                   {t('common.button.send')}
                 </Text>
               </Flex>

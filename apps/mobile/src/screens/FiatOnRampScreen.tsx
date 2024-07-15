@@ -34,7 +34,6 @@ import {
   FiatOnRampCurrency,
   InitialQuoteSelection,
 } from 'uniswap/src/features/fiatOnRamp/types'
-import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
@@ -44,6 +43,7 @@ import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { useLocalFiatToUSDConverter } from 'wallet/src/features/fiatCurrency/hooks'
 import { useFiatOnRampAggregatorTransactionQuery } from 'wallet/src/features/fiatOnRamp/api'
+import { getServiceProviderLogo } from 'wallet/src/features/fiatOnRamp/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 
@@ -51,7 +51,7 @@ type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.
 
 function selectInitialQuote(
   quotes: FORQuote[] | undefined,
-  lastTransaction: FORTransaction | undefined,
+  lastTransaction: FORTransaction | undefined
 ): { quote: FORQuote | undefined; type: InitialQuoteSelection | undefined } {
   const lastUsedServiceProvider = lastTransaction?.serviceProvider
   if (lastUsedServiceProvider) {
@@ -75,9 +75,14 @@ function selectInitialQuote(
   return { quote: undefined, type: undefined }
 }
 
-function preloadServiceProviderLogos(serviceProviders: FORServiceProvider[], isDarkMode: boolean): void {
+function preloadServiceProviderLogos(
+  serviceProviders: FORServiceProvider[],
+  isDarkMode: boolean
+): void {
   FastImage.preload(
-    serviceProviders.map((sp) => ({ uri: getServiceProviderLogo(sp.logos, isDarkMode) })).filter((sp) => !!sp.uri),
+    serviceProviders
+      .map((sp) => ({ uri: getServiceProviderLogo(sp.logos, isDarkMode) }))
+      .filter((sp) => !!sp.uri)
   )
 }
 
@@ -115,7 +120,8 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     setSelection({ start, end: end ?? start })
   }
 
-  const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } = useShouldShowNativeKeyboard()
+  const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } =
+    useShouldShowNativeKeyboard()
 
   const { appFiatCurrencySupportedInMeld, meldSupportedFiatCurrency, supportedFiatCurrencies } =
     useMeldFiatCurrencySupportInfo(countryCode)
@@ -155,7 +161,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     if (serviceProvidersResponse?.serviceProviders && quotes) {
       const quotesServiceProviderNames = quotes.map((q) => q.serviceProvider)
       const serviceProviders = serviceProvidersResponse.serviceProviders.filter(
-        (sp) => quotesServiceProviderNames.indexOf(sp.serviceProvider) !== -1,
+        (sp) => quotesServiceProviderNames.indexOf(sp.serviceProvider) !== -1
       )
       preloadServiceProviderLogos(serviceProviders, isDarkMode)
     }
@@ -172,13 +178,24 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       }
       if (type === InitialQuoteSelection.MostRecent) {
         const otherQuotes = quotes.filter((item) => item !== quote)
-        setQuotesSections([{ data: [quote], type }, ...(otherQuotes.length ? [{ data: otherQuotes }] : [])])
+        setQuotesSections([
+          { data: [quote], type },
+          ...(otherQuotes.length ? [{ data: otherQuotes }] : []),
+        ])
       } else {
         setQuotesSections([{ data: quotes, type }])
       }
       setSelectedQuote(quote)
     }
-  }, [prevQuotes, quotes, selectedQuote, setQuotesSections, setSelectedQuote, t, transactionResponse])
+  }, [
+    prevQuotes,
+    quotes,
+    selectedQuote,
+    setQuotesSections,
+    setSelectedQuote,
+    t,
+    transactionResponse,
+  ])
 
   useEffect(() => {
     if (!quotes && (quotesError || serviceProvidersError || !amount)) {
@@ -187,13 +204,15 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     }
   }, [amount, quotesError, serviceProvidersError, quotes, setQuotesSections, setSelectedQuote])
 
-  const onSelectCountry: ComponentProps<typeof FiatOnRampCountryListModal>['onSelectCountry'] = (country): void => {
+  const onSelectCountry: ComponentProps<typeof FiatOnRampCountryListModal>['onSelectCountry'] = (
+    country
+  ): void => {
     dispatch(
       pushNotification({
         type: AppNotificationType.ChooseCountry,
         countryName: country.displayName,
         countryCode: country.countryCode,
-      }),
+      })
     )
     setSelectingCountry(false)
     // UI does not allow to set the state
@@ -266,14 +285,14 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
 
   // We only support predefined amounts for certain currencies.
   const predefinedAmountsSupported = PREDEFINED_AMOUNTS_SUPPORTED_CURRENCIES.includes(
-    meldSupportedFiatCurrency.code.toLowerCase(),
+    meldSupportedFiatCurrency.code.toLowerCase()
   )
 
   const notAvailableInThisRegion = supportedFiatCurrencies?.length === 0
 
   const { errorText, errorColor } = useParseFiatOnRampError(
     !notAvailableInThisRegion && (quotesError || serviceProvidersError),
-    meldSupportedFiatCurrency.code,
+    meldSupportedFiatCurrency.code
   )
 
   return (
@@ -281,7 +300,12 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       <HandleBar backgroundColor="none" />
       <AnimatedFlex row height="100%" pt="$spacing12">
         {isSheetReady && (
-          <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing16" px="$spacing24" width="100%">
+          <AnimatedFlex
+            entering={FadeIn}
+            exiting={FadeOut}
+            gap="$spacing16"
+            px="$spacing24"
+            width="100%">
             <Flex row alignItems="center" justifyContent="space-between">
               <Text variant="subheading1">{t('common.button.buy')}</Text>
               <FiatOnRampCountryPicker
@@ -324,8 +348,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               position="absolute"
               px="$spacing24"
               right={0}
-              onLayout={onDecimalPadLayout}
-            >
+              onLayout={onDecimalPadLayout}>
               {!showNativeKeyboard && (
                 <DecimalPadLegacy
                   hasCurrencyPrefix

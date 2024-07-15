@@ -127,7 +127,7 @@ export default function LiquidityChartRangeInput({
         }
       })
     },
-    [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit],
+    [isSorted, onLeftRangeInput, onRightRangeInput, ticksAtLimit]
   )
 
   interactive = interactive && Boolean(formattedData?.length)
@@ -159,7 +159,7 @@ export default function LiquidityChartRangeInput({
 
       return price ? `${(Math.sign(percent) < 0 ? '-' : '') + formatDelta(percent)}` : ''
     },
-    [formatDelta, isSorted, price, ticksAtLimit],
+    [formatDelta, isSorted, price, ticksAtLimit]
   )
 
   const isUninitialized = !currencyA || !currencyB || (formattedData === undefined && !isLoading)

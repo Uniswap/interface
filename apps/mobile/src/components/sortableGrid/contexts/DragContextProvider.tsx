@@ -1,5 +1,11 @@
 import { PropsWithChildren, createContext, useContext, useMemo } from 'react'
-import { SharedValue, runOnJS, useAnimatedReaction, useDerivedValue, useSharedValue } from 'react-native-reanimated'
+import {
+  SharedValue,
+  runOnJS,
+  useAnimatedReaction,
+  useDerivedValue,
+  useSharedValue,
+} from 'react-native-reanimated'
 import { useLayoutContext } from 'src/components/sortableGrid/contexts/LayoutContextProvider'
 import { useStableCallback } from 'src/components/sortableGrid/hooks'
 import {
@@ -86,20 +92,22 @@ export function DragContextProvider<I>({
   /**
    * HANDLERS
    */
-  const handleDragStart = useStableCallback(async (key: string, keyToIdx: Record<string, number>) => {
-    const index = keyToIdx[key]
-    if (index === undefined) {
-      return
+  const handleDragStart = useStableCallback(
+    async (key: string, keyToIdx: Record<string, number>) => {
+      const index = keyToIdx[key]
+      if (index === undefined) {
+        return
+      }
+      const item = data[index]
+      if (hapticFeedback) {
+        await HapticFeedback.impact(ImpactFeedbackStyle.Heavy)
+      }
+      if (!onDragStart || !item) {
+        return
+      }
+      onDragStart({ index, item })
     }
-    const item = data[index]
-    if (hapticFeedback) {
-      await HapticFeedback.impact(ImpactFeedbackStyle.Heavy)
-    }
-    if (!onDragStart || !item) {
-      return
-    }
-    onDragStart({ index, item })
-  })
+  )
 
   const handleDrop = useStableCallback((key: string, keyToIdx: Record<string, number>) => {
     const index = keyToIdx[key]
@@ -113,37 +121,39 @@ export function DragContextProvider<I>({
     onDrop({ index, item })
   })
 
-  const handleChange = useStableCallback(async (swappedKey: string, keyToIdx: Record<string, number>) => {
-    if (!onChange) {
-      return
-    }
-    const toIndex = keyToIdx[swappedKey]
-    if (toIndex === undefined) {
-      return
-    }
-    const fromIndex = itemKeys.indexOf(swappedKey)
-
-    const reorderedData: I[] = []
-
-    if (hapticFeedback) {
-      await HapticFeedback.impact(ImpactFeedbackStyle.Medium)
-    }
-
-    for (let i = 0; i < data.length; i++) {
-      const item = data[i]
-      if (!item) {
+  const handleChange = useStableCallback(
+    async (swappedKey: string, keyToIdx: Record<string, number>) => {
+      if (!onChange) {
         return
       }
-      const itemKey = keyExtractor(item, i)
-      const index = keyToIdx[itemKey]
-      if (index === undefined) {
+      const toIndex = keyToIdx[swappedKey]
+      if (toIndex === undefined) {
         return
       }
-      reorderedData[index] = item
-    }
+      const fromIndex = itemKeys.indexOf(swappedKey)
 
-    onChange({ data: reorderedData, fromIndex, toIndex })
-  })
+      const reorderedData: I[] = []
+
+      if (hapticFeedback) {
+        await HapticFeedback.impact(ImpactFeedbackStyle.Medium)
+      }
+
+      for (let i = 0; i < data.length; i++) {
+        const item = data[i]
+        if (!item) {
+          return
+        }
+        const itemKey = keyExtractor(item, i)
+        const index = keyToIdx[itemKey]
+        if (index === undefined) {
+          return
+        }
+        reorderedData[index] = item
+      }
+
+      onChange({ data: reorderedData, fromIndex, toIndex })
+    }
+  )
 
   /**
    * REACTIONS
@@ -162,7 +172,7 @@ export function DragContextProvider<I>({
         prevActiveItemKey.value = key
       }
     },
-    [handleDragStart, handleChange],
+    [handleDragStart, handleChange]
   )
 
   // Handle drop (after animation of the active item is finished
@@ -174,7 +184,7 @@ export function DragContextProvider<I>({
         runOnJS(handleDrop)(prevActiveItemKey.value, keyToIndex.value)
       }
     },
-    [handleDrop],
+    [handleDrop]
   )
 
   /**
@@ -200,7 +210,7 @@ export function DragContextProvider<I>({
       activeItemScale,
       activeItemOpacity,
       activeItemShadowOpacity,
-    ],
+    ]
   )
 
   return <DragContext.Provider value={contextValue}>{children}</DragContext.Provider>

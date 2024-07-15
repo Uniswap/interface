@@ -10,7 +10,11 @@ import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/t
 import { useAllTransactionsBetweenAddresses } from 'wallet/src/features/transactions/hooks/useAllTransactionsBetweenAddresses'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
 import { TransferSpeedbump } from 'wallet/src/features/transactions/transfer/types'
-import { useActiveAccountAddressWithThrow, useDisplayName, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import {
+  useActiveAccountAddressWithThrow,
+  useDisplayName,
+  useSignerAccounts,
+} from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 interface TransferFormWarningProps {
@@ -38,12 +42,12 @@ export function TransferFormSpeedbumps({
   const currentSignerAccounts = useSignerAccounts()
   const isSignerRecipient = useMemo(
     () => currentSignerAccounts.some((a) => a.address === recipient),
-    [currentSignerAccounts, recipient],
+    [currentSignerAccounts, recipient]
   )
 
   const { isSmartContractAddress, loading: addressLoading } = useIsSmartContractAddress(
     recipient,
-    chainId ?? UniverseChainId.Mainnet,
+    chainId ?? UniverseChainId.Mainnet
   )
 
   const shouldWarnSelfSend = isSameAddress(activeAddress, recipient)
@@ -53,7 +57,8 @@ export function TransferFormSpeedbumps({
 
   useEffect(() => {
     setTransferSpeedbump({
-      hasWarning: shouldWarnSmartContract || shouldWarnNewAddress || shouldWarnErc20 || shouldWarnSelfSend,
+      hasWarning:
+        shouldWarnSmartContract || shouldWarnNewAddress || shouldWarnErc20 || shouldWarnSelfSend,
       loading: addressLoading,
     })
   }, [
@@ -126,9 +131,12 @@ export function TransferFormSpeedbumps({
         severity={WarningSeverity.Medium}
         title={t('send.warning.newAddress.title')}
         onClose={onCloseWarning}
-        onConfirm={onNext}
-      >
-        <TransferRecipient address={recipient} displayName={displayName?.name} type={displayName?.type} />
+        onConfirm={onNext}>
+        <TransferRecipient
+          address={recipient}
+          displayName={displayName?.name}
+          type={displayName?.type}
+        />
       </WarningModal>
     )
   }
@@ -154,8 +162,7 @@ const TransferRecipient = ({
       gap="$spacing8"
       px="$spacing16"
       py="$spacing12"
-      width="100%"
-    >
+      width="100%">
       <Text color="$neutral1" textAlign="center" variant="subheading2">
         {type === DisplayNameType.ENS ? displayName : address}
       </Text>

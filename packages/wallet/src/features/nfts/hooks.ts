@@ -1,7 +1,10 @@
 import { useMemo } from 'react'
-import { PollingInterval } from 'uniswap/src/constants/misc'
-import { NftsQuery, useNftsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  NftsQuery,
+  useNftsQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
+import { PollingInterval } from 'wallet/src/constants/misc'
 import { selectNftsVisibility } from 'wallet/src/features/favorites/selectors'
 import {
   EMPTY_NFT_ITEM,
@@ -16,7 +19,11 @@ export type GQLNftAsset = NonNullable<
   NonNullable<NonNullable<NonNullable<NftsQuery['portfolios']>[0]>['nftBalances']>[0]
 >['ownedAsset']
 
-export function useNFT(owner: Address = '', address?: Address, tokenId?: string): GqlResult<GQLNftAsset> {
+export function useNFT(
+  owner: Address = '',
+  address?: Address,
+  tokenId?: string
+): GqlResult<GQLNftAsset> {
   // TODO: [MOB-227] do a direct cache lookup in Apollo using id instead of re-querying
   const { data, loading, refetch } = useNftsQuery({
     variables: { ownerAddress: owner },
@@ -27,9 +34,11 @@ export function useNFT(owner: Address = '', address?: Address, tokenId?: string)
   const nft = useMemo(
     () =>
       data?.portfolios?.[0]?.nftBalances?.find(
-        (balance) => balance?.ownedAsset?.nftContract?.address === address && balance?.ownedAsset?.tokenId === tokenId,
+        (balance) =>
+          balance?.ownedAsset?.nftContract?.address === address &&
+          balance?.ownedAsset?.tokenId === tokenId
       )?.ownedAsset ?? undefined,
-    [data, address, tokenId],
+    [data, address, tokenId]
   )
 
   return { data: nft, loading, refetch }
@@ -38,7 +47,7 @@ export function useNFT(owner: Address = '', address?: Address, tokenId?: string)
 // Apply to NFTs fetched from API hidden filter, which is stored in Redux
 export function useGroupNftsByVisibility(
   nftDataItems: Array<NFTItem> | undefined,
-  showHidden: boolean,
+  showHidden: boolean
 ): {
   nfts: Array<NFTItem | string>
   numHidden: number
@@ -64,7 +73,7 @@ export function useGroupNftsByVisibility(
         }
         return acc
       },
-      { shown: [], hidden: [] },
+      { shown: [], hidden: [] }
     )
     return {
       nfts: [

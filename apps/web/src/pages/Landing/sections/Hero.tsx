@@ -7,7 +7,6 @@ import { TokenCloud } from 'pages/Landing/components/TokenCloud/index'
 import { Hover, RiseIn, RiseInText } from 'pages/Landing/components/animations'
 import { Swap } from 'pages/Swap'
 import { ChevronDown } from 'react-feather'
-import { useTranslation } from 'react-i18next'
 import styled, { css, keyframes } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Text } from 'ui/src'
@@ -96,7 +95,6 @@ interface HeroProps {
 export function Hero({ scrollToRef, transition }: HeroProps) {
   const { height: scrollPosition } = useScroll()
   const initialInputCurrency = useCurrency('ETH')
-  const { t } = useTranslation()
 
   const translateY = -scrollPosition / 7
   const opacityY = 1 - scrollPosition / 1000
@@ -118,22 +116,18 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
       >
         <Box maxWidth="920px" direction="column" align="center" style={{ pointerEvents: 'none' }}>
           <StyledH1>
-            {t('hero.swap.title')
-              .split(' ')
-              .map((word, index) => {
-                if (word === '<br/>') {
-                  return <br key={word} />
-                } else {
-                  return (
-                    <>
-                      <RiseInText key={word} delay={index * 0.1}>
-                        {word}
-                      </RiseInText>{' '}
-                    </>
-                  )
-                }
-              })}
+            <RiseInText delay={0.0}>
+              <Trans i18nKey="common.swap" />
+            </RiseInText>{' '}
+            <RiseInText delay={0.1}>
+              <Trans i18nKey="hero.anytime" />
+            </RiseInText>
           </StyledH1>
+          <RiseIn delay={0.2}>
+            <StyledH1>
+              <Trans i18nKey="hero.anywhere" />
+            </StyledH1>
+          </RiseIn>
         </Box>
 
         <RiseIn delay={0.4}>

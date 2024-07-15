@@ -20,9 +20,17 @@ export function ChangeAssetVisibilityNotification({
       hideDelay={hideDelay}
       icon={
         visible ? (
-          <EyeOffIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
+          <EyeOffIcon
+            color={colors.neutral1.get()}
+            height={iconSizes.icon24}
+            width={iconSizes.icon24}
+          />
         ) : (
-          <EyeIcon color={colors.neutral1.get()} height={iconSizes.icon24} width={iconSizes.icon24} />
+          <EyeIcon
+            color={colors.neutral1.get()}
+            height={iconSizes.icon24}
+            width={iconSizes.icon24}
+          />
         )
       }
       title={

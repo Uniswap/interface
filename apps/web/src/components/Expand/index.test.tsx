@@ -7,7 +7,7 @@ describe('Expand', () => {
     render(
       <Expand header={<span>Header</span>} isOpen={false} onToggle={noop} button={<span>Button</span>}>
         Body
-      </Expand>,
+      </Expand>
     )
     expect(screen.queryByText('Body')).not.toBeVisible()
   })
@@ -16,7 +16,7 @@ describe('Expand', () => {
     render(
       <Expand header={<span>Header</span>} isOpen={true} onToggle={noop} button={<span>Button</span>}>
         Body
-      </Expand>,
+      </Expand>
     )
     expect(screen.queryByText('Body')).toBeVisible()
   })
@@ -26,7 +26,7 @@ describe('Expand', () => {
     render(
       <Expand header={<span>Header</span>} isOpen={false} onToggle={onToggle} button={<span>Button</span>}>
         Body
-      </Expand>,
+      </Expand>
     )
 
     const button = screen.getByText('Button')

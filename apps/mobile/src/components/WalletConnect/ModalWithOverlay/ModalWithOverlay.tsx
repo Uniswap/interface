@@ -1,4 +1,8 @@
-import { BottomSheetFooter, BottomSheetScrollView, useBottomSheetInternal } from '@gorhom/bottom-sheet'
+import {
+  BottomSheetFooter,
+  BottomSheetScrollView,
+  useBottomSheetInternal,
+} from '@gorhom/bottom-sheet'
 import { PropsWithChildren, useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import {
@@ -17,7 +21,7 @@ import { Button, Flex, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { BottomSheetModalProps } from 'uniswap/src/components/modals/BottomSheetModalProps'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 
 const MEASURE_LAYOUT_TIMEOUT = 100
 
@@ -32,7 +36,11 @@ type ModalWithOverlayProps = PropsWithChildren<
   }
 >
 
-const isCloseToBottom = ({ layoutMeasurement, contentOffset, contentSize }: NativeScrollEvent): boolean => {
+const isCloseToBottom = ({
+  layoutMeasurement,
+  contentOffset,
+  contentSize,
+}: NativeScrollEvent): boolean => {
   return layoutMeasurement.height + contentOffset.y >= contentSize.height - spacing.spacing24
 }
 
@@ -64,7 +72,7 @@ export function ModalWithOverlay({
         setConfirmationEnabled(true)
       }
     },
-    [showOverlay],
+    [showOverlay]
   )
 
   const handleScrollDown = useCallback(() => {
@@ -103,7 +111,7 @@ export function ModalWithOverlay({
         measureContent(parentHeight)
       }, MEASURE_LAYOUT_TIMEOUT)
     },
-    [measureContent],
+    [measureContent]
   )
 
   return (
@@ -118,8 +126,7 @@ export function ModalWithOverlay({
         }
         showsVerticalScrollIndicator={false}
         onLayout={handleScrollViewLayout}
-        onScroll={handleScroll}
-      >
+        onScroll={handleScroll}>
         <Flex ref={contentViewRef}>{children}</Flex>
       </BottomSheetScrollView>
 
@@ -166,13 +173,16 @@ function ModalFooter({
     () =>
       Math.max(0, animatedContainerHeight.value - animatedPosition.value) -
       animatedFooterHeight.value -
-      animatedHandleHeight.value,
+      animatedHandleHeight.value
   )
 
   return (
     <BottomSheetFooter animatedFooterPosition={animatedFooterPosition}>
       {showScrollDownOverlay && (
-        <ScrollDownOverlay scrollDownButonText={scrollDownButtonText} onScrollDownPress={onScrollDownPress} />
+        <ScrollDownOverlay
+          scrollDownButonText={scrollDownButtonText}
+          onScrollDownPress={onScrollDownPress}
+        />
       )}
 
       <Flex
@@ -181,12 +191,16 @@ function ModalFooter({
         gap="$spacing8"
         pb={insets.bottom + spacing.spacing12}
         pt="$spacing12"
-        px="$spacing24"
-      >
-        <Button fill size="medium" testID={TestID.Cancel} theme="tertiary" onPress={onReject}>
+        px="$spacing24">
+        <Button fill size="medium" testID={ElementName.Cancel} theme="tertiary" onPress={onReject}>
           {t('common.button.cancel')}
         </Button>
-        <Button fill disabled={!confirmationEnabled} size="medium" testID={TestID.Confirm} onPress={onConfirm}>
+        <Button
+          fill
+          disabled={!confirmationEnabled}
+          size="medium"
+          testID={ElementName.Confirm}
+          onPress={onConfirm}>
           {confirmationButtonText ?? t('common.button.accept')}
         </Button>
       </Flex>

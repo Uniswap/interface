@@ -27,8 +27,7 @@ export function PriceExplorerError({
         borderRadius="$rounded16"
         height={chartHeight}
         justifyContent="center"
-        overflow="hidden"
-      >
+        overflow="hidden">
         <BaseCard.ErrorState
           description={t('token.priceExplorer.error.description')}
           retryButtonLabel={showRetry ? t('common.button.retry') : undefined}

@@ -40,7 +40,10 @@ export function useFiatCurrencyComponents(currency: FiatCurrency): FiatCurrencyC
  * @param currency target currency
  * @returns currency name
  */
-export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { name: string; shortName: string } {
+export function getFiatCurrencyName(
+  t: AppTFunction,
+  currency: FiatCurrency
+): { name: string; shortName: string } {
   const currencyToCurrencyName = {
     [FiatCurrency.AustrialianDollor]: t('currency.aud'),
     [FiatCurrency.BrazilianReal]: t('currency.brl'),
@@ -140,6 +143,6 @@ export const useLocalFiatToUSDConverter = (): ((fiatAmount: number) => number | 
       const { amount: USDInLocalCurrency } = convertFiatAmount(1)
       return USDInLocalCurrency ? fiatAmount / USDInLocalCurrency : undefined
     },
-    [convertFiatAmount],
+    [convertFiatAmount]
   )
 }

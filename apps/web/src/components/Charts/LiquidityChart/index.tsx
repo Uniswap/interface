@@ -128,7 +128,7 @@ async function calculateActiveRangeTokensLocked(
     sqrtPriceX96?: JSBI
     currentTick?: number
     liquidity?: JSBI
-  },
+  }
 ): Promise<{ amount0Locked: number; amount1Locked: number } | undefined> {
   if (!poolData.currentTick || !poolData.sqrtPriceX96 || !poolData.liquidity) {
     return undefined
@@ -159,7 +159,7 @@ async function calculateActiveRangeTokensLocked(
       poolData.sqrtPriceX96,
       tick.liquidityActive,
       poolData.currentTick,
-      mockTicks,
+      mockTicks
     )
     // Calculate amount of token0 that would need to be swapped to reach the bottom of the range
     const bottomOfRangePrice = TickMath.getSqrtRatioAtTick(mockTicks[0].index)
@@ -182,7 +182,7 @@ async function calculateTokensLocked(
   token0: Token,
   token1: Token,
   feeTier: FeeAmount,
-  tick: TickProcessed,
+  tick: TickProcessed
 ): Promise<{ amount0Locked: number; amount1Locked: number }> {
   try {
     const tickSpacing = TICK_SPACINGS[feeTier]
@@ -300,7 +300,7 @@ export function useLiquidityBarData({
           tokenB,
           feeTier,
           ticksProcessed[activeRangeIndex],
-          activePoolData,
+          activePoolData
         )
         barData[activeRangeIndex] = { ...activeRangeData, ...activeTickTvl }
       }

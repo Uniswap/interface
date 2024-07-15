@@ -20,7 +20,7 @@ export const useProfilePageState = createWithEqualityFn<profilePageState>()(
           state: newState,
         })),
     }),
-    { name: 'useProfilePageState' },
+    { name: 'useProfilePageState' }
   ),
-  shallow,
+  shallow
 )

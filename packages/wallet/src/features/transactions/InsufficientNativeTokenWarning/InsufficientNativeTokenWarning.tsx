@@ -8,6 +8,8 @@ export type InsufficientNativeTokenWarningProps = {
   gasFee: GasFeeResult
 }
 
-export function InsufficientNativeTokenWarning(_: InsufficientNativeTokenWarningProps): JSX.Element | null {
+export function InsufficientNativeTokenWarning(
+  _: InsufficientNativeTokenWarningProps
+): JSX.Element | null {
   throw new NotImplementedError('InsufficientNativeTokenWarning')
 }

@@ -30,7 +30,7 @@ export function useExperimentGroupName(experiment: Experiments): string | null {
 export function useExperimentValue<
   Exp extends keyof ExperimentProperties,
   Param extends ExperimentProperties[Exp],
-  ValType,
+  ValType
 >(experiment: Exp, param: Param, defaultValue: ValType): ValType {
   const statsigExperiment = useExperiment(experiment).config
   return statsigExperiment.get(param, defaultValue, (value): value is ValType => {
@@ -41,7 +41,7 @@ export function useExperimentValue<
 export function useExperimentValueWithExposureLoggingDisabled<
   Exp extends keyof ExperimentProperties,
   Param extends ExperimentProperties[Exp],
-  ValType,
+  ValType
 >(experiment: Exp, param: Param, defaultValue: ValType): ValType {
   const statsigExperiment = useExperimentWithExposureLoggingDisabled(experiment).config
   return statsigExperiment.get(param, defaultValue, (value): value is ValType => {

@@ -19,7 +19,7 @@ function* onRestoreMnemonicComplete() {
     pushNotification({
       type: AppNotificationType.Success,
       title: i18n.t('notification.restore.success'),
-    }),
+    })
   )
   yield* call(dispatchNavigationAction, StackActions.replace(MobileScreens.Home))
 }

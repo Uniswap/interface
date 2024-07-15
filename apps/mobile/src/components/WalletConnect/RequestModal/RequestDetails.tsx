@@ -3,20 +3,24 @@ import { Transaction, TransactionDescription } from 'no-yolo-signatures'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
+import { SpendingDetails } from 'src/components/WalletConnect/RequestModal/SpendingDetails'
 import { LinkButton } from 'src/components/buttons/LinkButton'
-import { SignRequest, WalletConnectRequest, isTransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
+import {
+  SignRequest,
+  WalletConnectRequest,
+  isTransactionRequest,
+} from 'src/features/walletConnect/walletConnectSlice'
+import { useNoYoloParser } from 'src/utils/useNoYoloParser'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { TextVariantTokens, iconSizes } from 'ui/src/theme'
-import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { EthMethod, EthTransaction } from 'uniswap/src/types/walletConnect'
-import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
+import { toSupportedChainId } from 'wallet/src/features/chains/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
-import { SpendingDetails } from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
+import { getValidAddress, shortenAddress } from 'wallet/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
-import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
 
 const getStrMessage = (request: WalletConnectRequest): string => {
   if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {
@@ -76,7 +80,12 @@ const getParsedObjectDisplay = (chainId: number, obj: any, depth = 0): JSX.Eleme
 
         if (typeof childValue === 'string') {
           return (
-            <Flex key={objKey} row alignItems="flex-start" gap="$spacing8" style={{ marginLeft: depth * 10 }}>
+            <Flex
+              key={objKey}
+              row
+              alignItems="flex-start"
+              gap="$spacing8"
+              style={{ marginLeft: depth * 10 }}>
               <Text color="$neutral2" py="$spacing4" variant="monospace">
                 {objKey}
               </Text>
@@ -145,9 +154,11 @@ function TransactionDetails({
 
   return (
     <Flex gap="$spacing12">
-      {value && !BigNumber.from(value).eq(0) ? <SpendingDetails chainId={chainId} value={value} /> : null}
+      {value && !BigNumber.from(value).eq(0) ? (
+        <SpendingDetails chainId={chainId} value={value} />
+      ) : null}
       {to ? (
-        <ContentRow label={t('common.text.recipient')} variant="body3">
+        <ContentRow label={t('walletConnect.request.details.label.recipient')} variant="body3">
           <AddressButton address={to} chainId={chainId} />
         </ContentRow>
       ) : null}
@@ -157,8 +168,7 @@ function TransactionDetails({
           borderRadius="$rounded12"
           borderWidth={1}
           px="$spacing8"
-          py="$spacing2"
-        >
+          py="$spacing2">
           <Text color="$neutral1" loading={isLoading} variant="body3">
             {parsedData ? parsedData.name : t('common.text.unknown')}
           </Text>

@@ -225,7 +225,6 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
           </FeatureFlagGroup>
-          <FeatureFlagOption flag={FeatureFlags.L2NFTs} label="L2 NFTs" />
           <FeatureFlagGroup name="Multichain UX">
             <FeatureFlagOption flag={FeatureFlags.MultichainUX} label="Enable Multichain Swap/Send UX" />
             <FeatureFlagOption flag={FeatureFlags.MultichainExplore} label="Enable Multichain Explore Page" />
@@ -245,7 +244,11 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.UniswapXv2} label="UniswapX v2" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Extension">
-            <FeatureFlagOption flag={FeatureFlags.ExtensionLaunch} label="General phase of go-to-market campaign" />
+            <FeatureFlagOption flag={FeatureFlags.ExtensionBetaLaunch} label="Beta phase of go-to-market campaign" />
+            <FeatureFlagOption
+              flag={FeatureFlags.ExtensionGeneralLaunch}
+              label="General phase of go-to-market campaign"
+            />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Outage Banners">
             <FeatureFlagOption flag={FeatureFlags.OutageBannerArbitrum} label="Outage Banner for Arbitrum" />

@@ -21,6 +21,7 @@ export const exampleSwapConfirmation = {
 export const exampleSwapSuccess = {
   txStatus: 'failed',
   chainId: 42161,
+  txHash: '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
   // address: '0x...',
   // txId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
   type: 3,
@@ -50,7 +51,7 @@ export const useMockNotification = (ms?: number): void => {
           ...exampleSwapSuccess,
           hideDelay: ms ?? exampleSwapSuccess.hideDelay,
           address: activeAddress,
-        }),
+        })
       )
       setSent(true)
     }

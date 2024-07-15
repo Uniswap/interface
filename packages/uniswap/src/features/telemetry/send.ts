@@ -1,4 +1,7 @@
-import { AppsFlyerEventProperties, UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
+import {
+  AppsFlyerEventProperties,
+  UniverseEventProperties,
+} from 'uniswap/src/features/telemetry/types'
 import { NotImplementedError } from 'utilities/src/errors'
 
 export function sendAnalyticsEvent<EventName extends keyof UniverseEventProperties>(

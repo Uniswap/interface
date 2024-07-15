@@ -18,14 +18,14 @@ describe('SwapDetailsDropdown.tsx', () => {
         syncing={false}
         loading={false}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-      />,
+      />
     )
     expect(asFragment()).toMatchSnapshot()
   })
 
   it('renders loading state', () => {
     render(
-      <SwapDetailsDropdown trade={undefined} syncing={true} loading={true} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />,
+      <SwapDetailsDropdown trade={undefined} syncing={true} loading={true} allowedSlippage={TEST_ALLOWED_SLIPPAGE} />
     )
     expect(screen.getByText('Fetching best price...')).toBeInTheDocument()
   })
@@ -38,7 +38,7 @@ describe('SwapDetailsDropdown.tsx', () => {
         syncing={false}
         loading={false}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-      />,
+      />
     )
     expect(screen.getByTestId('swap-details-header-row')).toBeInTheDocument()
     expect(screen.getByTestId('trade-price-container')).toBeInTheDocument()
@@ -53,14 +53,14 @@ describe('SwapDetailsDropdown.tsx', () => {
         syncing={false}
         loading={true}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-      />,
+      />
     )
     await act(() => userEvent.click(screen.getByTestId('swap-details-header-row')))
 
     expect(
       screen.getByText(
-        'Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.',
-      ),
+        'Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.'
+      )
     ).toBeInTheDocument()
     expect(screen.getByText(`${TEST_TOKEN_1.symbol} fee`)).toBeInTheDocument()
   })
@@ -72,14 +72,14 @@ describe('SwapDetailsDropdown.tsx', () => {
         syncing={false}
         loading={true}
         allowedSlippage={TEST_ALLOWED_SLIPPAGE}
-      />,
+      />
     )
     await act(() => userEvent.click(screen.getByTestId('swap-details-header-row')))
 
     expect(
       screen.getByText(
-        'Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.',
-      ),
+        'Some tokens take a fee when they are bought or sold, which is set by the token issuer. Uniswap does not receive any of these fees.'
+      )
     ).toBeInTheDocument()
     expect(screen.getByText(`${TEST_TOKEN_2.symbol} fee`)).toBeInTheDocument()
   })

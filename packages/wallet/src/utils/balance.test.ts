@@ -1,6 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import JSBI from 'jsbi'
-import { DAI } from 'uniswap/src/constants/tokens'
+import { DAI } from 'wallet/src/constants/tokens'
 import {
   ARBITRUM_CURRENCY,
   MAINNET_CURRENCY,

@@ -18,7 +18,7 @@ export default function useSelectChain() {
           removePopup({
             content: { failedSwitchNetwork: targetChain, type: PopupType.FailedSwitchNetwork },
             key: 'failed-network-switch',
-          }),
+          })
         )
         return true
       } catch (error) {
@@ -31,13 +31,13 @@ export default function useSelectChain() {
             addPopup({
               content: { failedSwitchNetwork: targetChain, type: PopupType.FailedSwitchNetwork },
               key: 'failed-network-switch',
-            }),
+            })
           )
         }
-        // TODO(WEB-3306): This UX could be improved to show an error state.
+
         return false
       }
     },
-    [dispatch, switchChain],
+    [dispatch, switchChain]
   )
 }

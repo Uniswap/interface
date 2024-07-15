@@ -12,10 +12,10 @@ import { Dots } from 'components/swap/styled'
 import { BIG_INT_ZERO } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
+import { useTokenBalances } from 'hooks/useTokenBalances'
 import { useV2Pairs } from 'hooks/useV2Pairs'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
-import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBalance'
 import { PoolVersionMenu } from 'pages/Pool/shared'
 import { useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
@@ -27,6 +27,7 @@ import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { currencyKey } from 'utils/currencyKey'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -97,21 +98,18 @@ export default function Pool() {
   }
   const tokenPairsWithLiquidityTokens = useMemo(
     () => trackedTokenPairs.map((tokens) => ({ liquidityToken: toV2LiquidityToken(tokens), tokens })),
-    [trackedTokenPairs],
+    [trackedTokenPairs]
   )
-  const [balanceMap, fetchingV2PairBalances] = useRpcTokenBalancesWithLoadingIndicator(
-    account.address,
-    tokenPairsWithLiquidityTokens.map(({ liquidityToken }) => liquidityToken),
-    !account?.address,
-  )
+  const { balanceMap, loading: fetchingV2PairBalances } = useTokenBalances()
 
   // fetch the reserves for all V2 pools in which the user has a balance
   const liquidityTokensWithBalances = useMemo(
     () =>
       tokenPairsWithLiquidityTokens.filter(({ liquidityToken }) => {
-        return balanceMap[liquidityToken.address]?.greaterThan(0)
+        const liquidityTokenKey = currencyKey(liquidityToken)
+        return balanceMap[liquidityTokenKey]?.balance > 0
       }),
-    [tokenPairsWithLiquidityTokens, balanceMap],
+    [tokenPairsWithLiquidityTokens, balanceMap]
   )
 
   const v2Pairs = useV2Pairs(liquidityTokensWithBalances.map(({ tokens }) => tokens))
@@ -123,7 +121,7 @@ export default function Pool() {
   // show liquidity even if its deposited in rewards contract
   const stakingInfo = useStakingInfo()
   const stakingInfosWithBalance = stakingInfo?.filter((pool) =>
-    JSBI.greaterThan(pool.stakedAmount.quotient, BIG_INT_ZERO),
+    JSBI.greaterThan(pool.stakedAmount.quotient, BIG_INT_ZERO)
   )
   const stakingPairs = useV2Pairs(stakingInfosWithBalance?.map((stakingInfo) => stakingInfo.tokens))
 
@@ -236,7 +234,7 @@ export default function Pool() {
                             pair={stakingPair[1]}
                             stakedBalance={stakingInfosWithBalance[i].stakedAmount}
                           />
-                        ),
+                        )
                     )}
                     <RowFixed justify="center" style={{ width: '100%' }}>
                       <ButtonOutlined

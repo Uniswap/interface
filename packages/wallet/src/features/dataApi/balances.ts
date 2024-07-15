@@ -1,6 +1,5 @@
 import { NetworkStatus, Reference, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
-import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   ContractInput,
   IAmount,
@@ -10,15 +9,22 @@ import {
   usePortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency, currencyIdToContractInput, usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { currencyId } from 'uniswap/src/utils/currencyId'
-import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
 import { logger } from 'utilities/src/logger/logger'
+import { PollingInterval } from 'wallet/src/constants/misc'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
+import {
+  buildCurrency,
+  currencyIdToContractInput,
+  usePersistedError,
+} from 'wallet/src/features/dataApi/utils'
 import { useCurrencyIdToVisibility } from 'wallet/src/features/transactions/selectors'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
+import {
+  useHideSmallBalancesSetting,
+  useHideSpamTokensSetting,
+} from 'wallet/src/features/wallet/hooks'
+import { currencyId } from 'wallet/src/utils/currencyId'
 
 type SortedPortfolioBalances = {
   balances: PortfolioBalance[]
@@ -38,15 +44,22 @@ interface TokenOverrides {
 
 export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: PortfolioBalance) => void
 
-export function usePortfolioValueModifiers(address?: Address | Address[]): PortfolioValueModifier[] | undefined {
+export function usePortfolioValueModifiers(
+  address?: Address | Address[]
+): PortfolioValueModifier[] | undefined {
   // Memoize array creation if passed a string to avoid recomputing at every render
-  const addressArray = useMemo(() => (!address ? [] : Array.isArray(address) ? address : [address]), [address])
+  const addressArray = useMemo(
+    () => (!address ? [] : Array.isArray(address) ? address : [address]),
+    [address]
+  )
   const currencyIdToTokenVisibility = useCurrencyIdToVisibility()
 
   const hideSpamTokens = useHideSpamTokensSetting()
   const hideSmallBalances = useHideSmallBalancesSetting()
 
-  const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(currencyIdToTokenVisibility).reduce(
+  const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(
+    currencyIdToTokenVisibility
+  ).reduce(
     (acc: TokenOverrides, [key, tokenVisibility]) => {
       const contractInput = currencyIdToContractInput(key)
       if (tokenVisibility.isVisible) {
@@ -59,7 +72,7 @@ export function usePortfolioValueModifiers(address?: Address | Address[]): Portf
     {
       tokenIncludeOverrides: [],
       tokenExcludeOverrides: [],
-    },
+    }
   )
 
   const modifiers = useMemo<PortfolioValueModifier[]>(() => {
@@ -70,7 +83,13 @@ export function usePortfolioValueModifiers(address?: Address | Address[]): Portf
       includeSmallBalances: !hideSmallBalances,
       includeSpamTokens: !hideSpamTokens,
     }))
-  }, [addressArray, tokenIncludeOverrides, tokenExcludeOverrides, hideSmallBalances, hideSpamTokens])
+  }, [
+    addressArray,
+    tokenIncludeOverrides,
+    tokenExcludeOverrides,
+    hideSmallBalances,
+    hideSpamTokens,
+  ])
 
   return modifiers.length > 0 ? modifiers : undefined
 }
@@ -103,12 +122,6 @@ export function usePortfolioBalances({
   fetchPolicy?: WatchQueryFetchPolicy
 }): GqlResult<Record<CurrencyId, PortfolioBalance>> & { networkStatus: NetworkStatus } {
   const valueModifiers = usePortfolioValueModifiers(address)
-
-  const { fetchPolicy: internalFetchPolicy, pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
-    fetchPolicy,
-    pollInterval,
-  })
-
   const {
     data: balancesData,
     loading,
@@ -116,10 +129,10 @@ export function usePortfolioBalances({
     refetch,
     error,
   } = usePortfolioBalancesQuery({
-    fetchPolicy: internalFetchPolicy,
+    fetchPolicy,
     notifyOnNetworkStatusChange: true,
     onCompleted,
-    pollInterval: internalPollInterval,
+    pollInterval,
     variables: address ? { ownerAddress: address, valueModifiers } : undefined,
     skip: !address,
   })
@@ -191,7 +204,7 @@ export function usePortfolioBalances({
 
   const retry = useCallback(
     () => refetch({ ownerAddress: address, valueModifiers }),
-    [address, valueModifiers, refetch],
+    [address, valueModifiers, refetch]
   )
 
   return {
@@ -215,12 +228,6 @@ export function usePortfolioTotalValue({
   fetchPolicy?: WatchQueryFetchPolicy
 }): GqlResult<PortfolioTotalValue> & { networkStatus: NetworkStatus } {
   const valueModifiers = usePortfolioValueModifiers(address)
-
-  const { fetchPolicy: internalFetchPolicy, pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
-    fetchPolicy,
-    pollInterval,
-  })
-
   const {
     data: balancesData,
     loading,
@@ -228,10 +235,10 @@ export function usePortfolioTotalValue({
     refetch,
     error,
   } = usePortfolioBalancesQuery({
-    fetchPolicy: internalFetchPolicy,
+    fetchPolicy,
     notifyOnNetworkStatusChange: true,
     onCompleted,
-    pollInterval: internalPollInterval,
+    pollInterval,
     variables: address ? { ownerAddress: address, valueModifiers } : undefined,
     skip: !address,
   })
@@ -253,7 +260,7 @@ export function usePortfolioTotalValue({
 
   const retry = useCallback(
     () => refetch({ ownerAddress: address, valueModifiers }),
-    [address, valueModifiers, refetch],
+    [address, valueModifiers, refetch]
   )
 
   return {
@@ -274,7 +281,8 @@ export function usePortfolioTotalValue({
  */
 export function useHighestBalanceNativeCurrencyId(address: Address): CurrencyId | undefined {
   const { data } = useSortedPortfolioBalances({ address })
-  return data?.balances.find((balance) => balance.currencyInfo.currency.isNative)?.currencyInfo.currencyId
+  return data?.balances.find((balance) => balance.currencyInfo.currency.isNative)?.currencyInfo
+    .currencyId
 }
 
 /**
@@ -314,7 +322,7 @@ export function useTokenBalancesGroupedByVisibility({
         }
         return acc
       },
-      { shown: [], hidden: [] },
+      { shown: [], hidden: [] }
     )
     return {
       shownTokens: shown.length ? shown : undefined,
@@ -463,7 +471,7 @@ export function usePortfolioCacheUpdater(address: string): PortfolioCacheUpdater
         },
       })
     },
-    [apolloClient, address],
+    [apolloClient, address]
   )
 
   return updater

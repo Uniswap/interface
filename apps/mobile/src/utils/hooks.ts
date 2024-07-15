@@ -1,11 +1,11 @@
 import { useFocusEffect, useIsFocused } from '@react-navigation/core'
 import { useCallback, useRef } from 'react'
-import { PollingInterval } from 'uniswap/src/constants/misc'
+import { PollingInterval } from 'wallet/src/constants/misc'
 
 export function usePollOnFocusOnly(
   startPolling: (interval: PollingInterval) => void,
   stopPolling: () => void,
-  pollingInterval: PollingInterval,
+  pollingInterval: PollingInterval
 ): void {
   useFocusEffect(
     useCallback(() => {
@@ -13,7 +13,7 @@ export function usePollOnFocusOnly(
       return () => {
         stopPolling()
       }
-    }, [startPolling, stopPolling, pollingInterval]),
+    }, [startPolling, stopPolling, pollingInterval])
   )
 }
 

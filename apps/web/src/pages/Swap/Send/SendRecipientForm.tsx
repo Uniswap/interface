@@ -83,10 +83,7 @@ const MenuFlyout = styled(AutoColumn)`
   width: calc(100% - 8px);
   background-color: ${({ theme }) => theme.surface2};
   border: 1px solid ${({ theme }) => theme.surface3};
-  box-shadow:
-    0px 0px 1px rgba(0, 0, 0, 0.01),
-    0px 4px 8px rgba(0, 0, 0, 0.04),
-    0px 16px 24px rgba(0, 0, 0, 0.04),
+  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
     0px 24px 32px rgba(0, 0, 0, 0.01);
   border-radius: 12px;
   position: absolute;
@@ -134,7 +131,7 @@ const AutocompleteRow = ({
         ensName: cachedEnsName,
         unitag: unitag?.username,
       }),
-    [address, cachedEnsName, selectRecipient, unitag?.username],
+    [address, cachedEnsName, selectRecipient, unitag?.username]
   )
 
   return (
@@ -246,7 +243,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
         validatedRecipient: value,
       }))
     },
-    [setSendState],
+    [setSendState]
   )
 
   const handleInput = useCallback(
@@ -259,7 +256,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
         validatedRecipient: undefined,
       }))
     },
-    [setSendState],
+    [setSendState]
   )
 
   const selectValidatedRecipient = useCallback(
@@ -271,7 +268,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
       handleFocus(false)
       inputNode.current?.blur()
     },
-    [handleFocus, handleInputValidatedRecipient, recipientData],
+    [handleFocus, handleInputValidatedRecipient, recipientData]
   )
 
   const clearValidatedRecipient = useCallback(
@@ -281,7 +278,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
       handleForceFocus(true)
       handleInputValidatedRecipient(undefined)
     },
-    [handleForceFocus, handleInputValidatedRecipient],
+    [handleForceFocus, handleInputValidatedRecipient]
   )
 
   const editValidatedRecipient = useCallback(() => {
@@ -297,7 +294,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
         }
       }
     },
-    [handleFocus, recipientData],
+    [handleFocus, recipientData]
   )
 
   const showInputField = !recipientData || isFocusing || isForcingFocus

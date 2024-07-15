@@ -61,13 +61,9 @@ import { omit, pick } from 'lodash'
  */
 // If there are no custom options
 export function createFixture<T extends object>(): {
-  <V extends T>(
-    getValues: () => V,
-  ): {
+  <V extends T>(getValues: () => V): {
     // If some fields returned by getValues are overridden
-    <O extends Partial<T>>(
-      overrides: O,
-    ): V extends (infer I)[]
+    <O extends Partial<T>>(overrides: O): V extends (infer I)[]
       ? (Omit<I, keyof O> & O)[] // update type of each array element
       : Omit<V, keyof O> & O // update type of the object
     // If no fields are overridden
@@ -77,15 +73,11 @@ export function createFixture<T extends object>(): {
 
 // If there are custom options with default values object
 export function createFixture<T extends object, P extends object>(
-  defaultOptions: Required<P>, // defaultOptions is an object with default options
+  defaultOptions: Required<P> // defaultOptions is an object with default options
 ): {
-  <V extends T>(
-    getValues: (options: P) => V,
-  ): {
+  <V extends T>(getValues: (options: P) => V): {
     // If some fields returned by getValues are overridden
-    <O extends Partial<T & P>>(
-      overrides: O,
-    ): V extends (infer I)[]
+    <O extends Partial<T & P>>(overrides: O): V extends (infer I)[]
       ? (Omit<I, Exclude<keyof O, keyof T>> & Omit<O, keyof P>)[] // update type of each array element
       : Omit<V, Exclude<keyof O, keyof T>> & Omit<O, keyof P> // update type of the object
     // If no fields are overridden
@@ -95,15 +87,11 @@ export function createFixture<T extends object, P extends object>(
 
 // If there are custom options with default values getter function
 export function createFixture<T extends object, P extends object>(
-  getDefaultOptions: () => Required<P>, // getDefaultOptions is a function that returns an object with default options
+  getDefaultOptions: () => Required<P> // getDefaultOptions is a function that returns an object with default options
 ): {
-  <V extends T>(
-    getValues: (options: P) => V,
-  ): {
+  <V extends T>(getValues: (options: P) => V): {
     // If some fields returned by getValues are overridden
-    <O extends Partial<T & P>>(
-      overrides: O,
-    ): V extends (infer I)[]
+    <O extends Partial<T & P>>(overrides: O): V extends (infer I)[]
       ? (Omit<I, Exclude<keyof O, keyof T>> & Omit<O, keyof P>)[] // update type of each array element
       : Omit<V, Exclude<keyof O, keyof T>> & Omit<O, keyof P> // update type of the object
     // If no fields are overridden
@@ -112,19 +100,21 @@ export function createFixture<T extends object, P extends object>(
 }
 
 export function createFixture<T extends object, P extends object>(
-  defaultOptionsOrGetter?: Required<P> | (() => Required<P>),
+  defaultOptionsOrGetter?: Required<P> | (() => Required<P>)
 ) {
   return <V extends T>(getValues: (options?: P) => V) => {
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
     return <O extends Partial<T> | Partial<T & P>>(overrides?: O) => {
       // Get default options (if they exist)
       const defaultOptions =
-        typeof defaultOptionsOrGetter === 'function' ? defaultOptionsOrGetter() : defaultOptionsOrGetter
+        typeof defaultOptionsOrGetter === 'function'
+          ? defaultOptionsOrGetter()
+          : defaultOptionsOrGetter
       // Get overrides for options (filter out undefined values)
       const optionOverrides = Object.fromEntries(
         Object.entries(defaultOptions ? pick(overrides, Object.keys(defaultOptions)) : {}).filter(
-          ([, value]) => value !== undefined,
-        ),
+          ([, value]) => value !== undefined
+        )
       )
       // Get values with getValues function
       const mergedOptions = defaultOptions ? { ...defaultOptions, ...optionOverrides } : undefined

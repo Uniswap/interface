@@ -31,8 +31,7 @@ export const ChooseNftModal = ({ address, setPhotoUri, onClose }: ChooseNftProps
       hideHandlebar={false}
       isDismissible={true}
       name={ModalName.NftCollection}
-      onClose={onClose}
-    >
+      onClose={onClose}>
       <NftsList
         renderedInModal
         contentContainerStyle={{

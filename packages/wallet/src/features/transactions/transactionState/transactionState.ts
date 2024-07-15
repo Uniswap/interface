@@ -1,9 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { shallowEqual } from 'react-redux'
-import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getNativeAddress } from 'wallet/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
-import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
+import {
+  CurrencyField,
+  TransactionState,
+} from 'wallet/src/features/transactions/transactionState/types'
 
 const ETH_TRADEABLE_ASSET: TradeableAsset = {
   address: getNativeAddress(UniverseChainId.Mainnet),
@@ -34,9 +37,13 @@ const slice = createSlice({
      * If input/output currencies would be the same, it swaps the order
      * If network would change, unsets the dependent field
      */
-    selectCurrency: (state, action: PayloadAction<{ field: CurrencyField; tradeableAsset: TradeableAsset }>) => {
+    selectCurrency: (
+      state,
+      action: PayloadAction<{ field: CurrencyField; tradeableAsset: TradeableAsset }>
+    ) => {
       const { field, tradeableAsset } = action.payload
-      const nonExactField = field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+      const nonExactField =
+        field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
       // swap order if tokens are the same
       if (shallowEqual(tradeableAsset, state[nonExactField])) {
@@ -55,7 +62,9 @@ const slice = createSlice({
     /** Switches input and output currencies */
     switchCurrencySides: (state) => {
       state.exactCurrencyField =
-        state.exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+        state.exactCurrencyField === CurrencyField.INPUT
+          ? CurrencyField.OUTPUT
+          : CurrencyField.INPUT
       state.focusOnCurrencyField = state.exactCurrencyField
       ;[state[CurrencyField.INPUT], state[CurrencyField.OUTPUT]] = [
         state[CurrencyField.OUTPUT],
@@ -68,7 +77,7 @@ const slice = createSlice({
       action: PayloadAction<{
         field?: CurrencyField
         amount: string
-      }>,
+      }>
     ) => {
       const { field, amount } = action.payload
       if (field) {
@@ -82,7 +91,7 @@ const slice = createSlice({
       action: PayloadAction<{
         field?: CurrencyField
         amount: string
-      }>,
+      }>
     ) => {
       const { field, amount } = action.payload
       if (field) {

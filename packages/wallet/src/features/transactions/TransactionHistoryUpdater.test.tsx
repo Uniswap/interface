@@ -4,7 +4,7 @@ import {
   AssetActivity,
   TransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   TransactionHistoryUpdater,
   getReceiveNotificationFromData,
@@ -213,6 +213,7 @@ describe(getReceiveNotificationFromData, () => {
       receiveCurrencyTxNotification({
         address: account1.address,
         txStatus: TransactionStatus.Success,
+        txHash: receiveAssetActivity.details.hash,
         txId: receiveAssetActivity.details.hash,
         sender: assetChange.sender,
         tokenAddress: assetChange.asset.address,
@@ -221,7 +222,7 @@ describe(getReceiveNotificationFromData, () => {
         // have to check if the calculation is correct in this test.
         // It's better to test the calculation in a separate test.
         currencyAmountRaw: expect.any(String),
-      }),
+      })
     )
   })
 
@@ -232,7 +233,11 @@ describe(getReceiveNotificationFromData, () => {
     // Ensure all transactions will be "new" compared to this
     const newTimestamp = 1
 
-    const notification = getReceiveNotificationFromData(txnDataWithoutReceiveTxns, account1.address, newTimestamp)
+    const notification = getReceiveNotificationFromData(
+      txnDataWithoutReceiveTxns,
+      account1.address,
+      newTimestamp
+    )
 
     expect(notification).toBeUndefined()
   })

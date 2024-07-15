@@ -44,8 +44,7 @@ export function AccountIcon({
       borderRadius="$roundedFull"
       borderWidth={showBorder ? borderWidth : 0}
       position="relative"
-      testID="account-icon"
-    >
+      testID="account-icon">
       {avatarUri ? (
         <RemoteImage
           borderRadius={size}
@@ -69,8 +68,7 @@ export function AccountIcon({
           justifyContent="center"
           position="absolute"
           right={-4}
-          testID="account-icon/view-only-badge"
-        >
+          testID="account-icon/view-only-badge">
           <Eye color="$neutral2" size={eyeIconSize} />
         </Flex>
       )}
@@ -88,7 +86,15 @@ export const UniconGradient = ({ color, size }: { color: string; size: number })
           <Stop offset="1" stopColor={color} stopOpacity="0.2" />
         </RadialGradientSVG>
       </Defs>
-      <Rect fill="url(#background)" height="100%" opacity={0.6} rx={size} width="100%" x="0" y="0" />
+      <Rect
+        fill="url(#background)"
+        height="100%"
+        opacity={0.6}
+        rx={size}
+        width="100%"
+        x="0"
+        y="0"
+      />
     </Svg>
   )
 }

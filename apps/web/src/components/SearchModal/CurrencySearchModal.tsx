@@ -56,7 +56,7 @@ export default memo(function CurrencySearchModal({
         onDismiss()
       }
     },
-    [onDismiss, onCurrencySelect, userAddedTokens],
+    [onDismiss, onCurrencySelect, userAddedTokens]
   )
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()

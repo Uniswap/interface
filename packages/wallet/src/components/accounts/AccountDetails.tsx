@@ -1,7 +1,7 @@
 import { ColorTokens, Flex, Text } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
+import { shortenAddress } from 'wallet/src/utils/addresses'
 
 export function AccountDetails({
   address,
@@ -32,7 +32,14 @@ export function AccountDetails({
         <Text allowFontScaling={allowFontScaling} color="$neutral2" variant="body3">
           {shortenAddress(address)}
         </Text>
-        {chevron && <RotatableChevron color={chevronColor} direction="end" height={iconSize} width={iconSize} />}
+        {chevron && (
+          <RotatableChevron
+            color={chevronColor}
+            direction="end"
+            height={iconSize}
+            width={iconSize}
+          />
+        )}
       </Flex>
     </Flex>
   )

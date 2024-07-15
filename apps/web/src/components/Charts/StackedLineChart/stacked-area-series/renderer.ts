@@ -77,7 +77,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
       this._data.visibleRange,
       renderingScope,
       zeroY * renderingScope.verticalPixelRatio,
-      options.hoveredLogicalIndex,
+      options.hoveredLogicalIndex
     )
 
     const areaPaths = this._createAreas(linesMeshed)
@@ -151,7 +151,7 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     visibleRange: Range<number>,
     renderingScope: BitmapCoordinatesRenderingScope,
     zeroY: number,
-    hoveredIndex?: number | null,
+    hoveredIndex?: number | null
   ) {
     const { horizontalPixelRatio, verticalPixelRatio } = renderingScope
     const oddLines: LinePathData[] = []

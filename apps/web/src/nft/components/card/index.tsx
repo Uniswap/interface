@@ -113,7 +113,7 @@ export const NftCard = ({
           uniformAspectRatio,
           setUniformAspectRatio,
           renderedHeight,
-          setRenderedHeight,
+          setRenderedHeight
         )}
       </MediaContainer>
       {!hideDetails && (

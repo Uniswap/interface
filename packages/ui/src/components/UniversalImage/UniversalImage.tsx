@@ -27,7 +27,8 @@ export function UniversalImage({
   const [errored, setErrored] = useState(false)
 
   const hasWidthAndHeight = computedSize.width !== undefined && computedSize.height !== undefined
-  const hasHeightAndRatio = computedSize.height !== undefined && computedSize.aspectRatio !== undefined
+  const hasHeightAndRatio =
+    computedSize.height !== undefined && computedSize.aspectRatio !== undefined
   const sizeKnown = hasWidthAndHeight || hasHeightAndRatio
 
   // Propagate prop updates to state
@@ -50,7 +51,7 @@ export function UniversalImage({
         setWidth(calculatedWidth)
         setHeight(calculatedHeight)
       },
-      () => setErrored(true),
+      () => setErrored(true)
     )
   }, [width, height, sizeKnown, uri, fastImage])
 
@@ -103,8 +104,7 @@ export function UniversalImage({
         height={size.height}
         overflow="hidden"
         testID={testID ? `svg-${testID}` : undefined}
-        width={size.width}
-      >
+        width={size.width}>
         <SvgImage autoplay={true} fallback={fallback} size={size} uri={imageHttpUrl} />
       </Flex>
     )

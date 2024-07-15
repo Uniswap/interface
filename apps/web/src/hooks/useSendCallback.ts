@@ -72,7 +72,7 @@ export function useSendCallback({
                   throw error
                 }
               }
-            },
+            }
           )
           const sendInfo: SendTransactionInfo = {
             type: TransactionType.SEND,
@@ -101,6 +101,6 @@ export function useSendCallback({
       gasFee?.params,
       supportedTransactionChainId,
       switchChain,
-    ],
+    ]
   )
 }

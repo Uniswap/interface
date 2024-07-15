@@ -29,6 +29,7 @@ ignores: [
     ## Linting and Babel
     "@babel/preset-env",
     "eslint-plugin-import",
+    "prettier",
     "terser-webpack-plugin",
     ## Testing
     "@types/testing-library__cypress",
@@ -67,5 +68,4 @@ ignores: [
     "utils",
     "i18n",
     "tamagui.config",
-    "setupRive"
   ]

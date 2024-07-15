@@ -39,7 +39,7 @@ export function useUserLocaleManager(): [SupportedLocale | null, (newLocale: Sup
     (newLocale: SupportedLocale) => {
       dispatch(updateUserLocale({ userLocale: newLocale }))
     },
-    [dispatch],
+    [dispatch]
   )
 
   return [locale, setLocale]
@@ -54,7 +54,7 @@ export function useRouterPreference(): [RouterPreference, (routerPreference: Rou
     (newRouterPreference: RouterPreference) => {
       dispatch(updateUserRouterPreference({ userRouterPreference: newRouterPreference }))
     },
-    [dispatch],
+    [dispatch]
   )
 
   return [routerPreference, setRouterPreference]
@@ -65,7 +65,7 @@ export function useRouterPreference(): [RouterPreference, (routerPreference: Rou
  */
 export function useUserSlippageTolerance(): [
   Percent | SlippageTolerance.Auto,
-  (slippageTolerance: Percent | SlippageTolerance.Auto) => void,
+  (slippageTolerance: Percent | SlippageTolerance.Auto) => void
 ] {
   const userSlippageToleranceRaw = useAppSelector((state) => {
     return state.user.userSlippageTolerance
@@ -77,7 +77,7 @@ export function useUserSlippageTolerance(): [
       userSlippageToleranceRaw === SlippageTolerance.Auto
         ? SlippageTolerance.Auto
         : new Percent(userSlippageToleranceRaw, 10_000),
-    [userSlippageToleranceRaw],
+    [userSlippageToleranceRaw]
   )
 
   const dispatch = useAppDispatch()
@@ -95,10 +95,10 @@ export function useUserSlippageTolerance(): [
       dispatch(
         updateUserSlippageTolerance({
           userSlippageTolerance: value,
-        }),
+        })
       )
     },
-    [dispatch],
+    [dispatch]
   )
 
   return [userSlippageTolerance, setUserSlippageTolerance]
@@ -122,7 +122,7 @@ export function useUserHideClosedPositions(): [boolean, (newHideClosedPositions:
     (newHideClosedPositions: boolean) => {
       dispatch(updateHideClosedPositions({ userHideClosedPositions: newHideClosedPositions }))
     },
-    [dispatch],
+    [dispatch]
   )
 
   return [hideClosedPositions, setHideClosedPositions]
@@ -139,7 +139,7 @@ export function useUserTransactionTTL(): [number, (slippage: number) => void] {
     (userDeadline: number) => {
       dispatch(updateUserDeadline({ userDeadline }))
     },
-    [dispatch],
+    [dispatch]
   )
 
   return [deadline, setUserDeadline]
@@ -151,7 +151,7 @@ export function useAddUserToken(): (token: Token) => void {
     (token: Token) => {
       dispatch(addSerializedToken({ serializedToken: serializeToken(token) }))
     },
-    [dispatch],
+    [dispatch]
   )
 }
 
@@ -169,7 +169,7 @@ export function usePairAdder(): (pair: Pair) => void {
     (pair: Pair) => {
       dispatch(addSerializedPair({ serializedPair: serializePair(pair) }))
     },
-    [dispatch],
+    [dispatch]
   )
 }
 
@@ -194,7 +194,7 @@ export function toV2LiquidityToken([tokenA, tokenB]: [Token, Token]): Token {
     computePairAddress({ factoryAddress: V2_FACTORY_ADDRESSES[tokenA.chainId], tokenA, tokenB }),
     18,
     'UNI-V2',
-    'Uniswap V2',
+    'Uniswap V2'
   )
 }
 
@@ -243,7 +243,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
             )
           })
         : [],
-    [popularTokens, chainId],
+    [popularTokens, chainId]
   )
 
   // pairs saved by users
@@ -265,7 +265,7 @@ export function useTrackedTokenPairs(): [Token, Token][] {
 
   const combinedList = useMemo(
     () => userPairs.concat(generatedPairs).concat(pinnedPairs),
-    [pinnedPairs, userPairs, generatedPairs],
+    [pinnedPairs, userPairs, generatedPairs]
   )
 
   return useMemo(() => {

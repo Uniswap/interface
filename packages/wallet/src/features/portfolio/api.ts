@@ -2,12 +2,12 @@ import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from 
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import { getPollingIntervalByBlocktime } from 'uniswap/src/features/chains/utils'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { WalletChainId } from 'uniswap/src/types/chains'
-import { currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
+import { getPollingIntervalByBlocktime } from 'wallet/src/features/chains/utils'
 import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
+import { currencyAddress as getCurrencyAddress } from 'wallet/src/utils/currencyId'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 // stub endpoint to conform to REST endpoint styles
@@ -40,14 +40,19 @@ export const getOnChainBalancesFetch = async (params: BalanceLookupParams): Prom
   }
 
   // erc20 lookup
-  const erc20Contract = walletContextValue.contracts.getOrCreateContract(chainId, currencyAddress, provider, ERC20_ABI)
+  const erc20Contract = walletContextValue.contracts.getOrCreateContract(
+    chainId,
+    currencyAddress,
+    provider,
+    ERC20_ABI
+  )
   const balance = await erc20Contract.callStatic.balanceOf?.(accountAddress)
   return new Response(JSON.stringify({ balance: balance.toString() }))
 }
 
 export function useOnChainCurrencyBalance(
   currency?: Currency | null,
-  accountAddress?: Address,
+  accountAddress?: Address
 ): { balance: CurrencyAmount<Currency> | undefined; isLoading: boolean; error: unknown } {
   const { data, error } = useRestQuery<{ balance?: string }, BalanceLookupParams>(
     STUB_ONCHAIN_BALANCES_ENDPOINT,
@@ -62,22 +67,24 @@ export function useOnChainCurrencyBalance(
       pollInterval: getPollingIntervalByBlocktime(currency?.chainId),
       ttlMs: getPollingIntervalByBlocktime(currency?.chainId),
       skip: !currency,
-    },
+    }
   )
 
   return useMemo(
     () => ({
-      balance: getCurrencyAmount({ value: data?.balance, valueType: ValueType.Raw, currency }) ?? undefined,
+      balance:
+        getCurrencyAmount({ value: data?.balance, valueType: ValueType.Raw, currency }) ??
+        undefined,
       isLoading: !data?.balance,
       error,
     }),
-    [data, currency, error],
+    [data, currency, error]
   )
 }
 
 export function useOnChainNativeCurrencyBalance(
   chain: WalletChainId,
-  accountAddress?: Address,
+  accountAddress?: Address
 ): { balance: CurrencyAmount<NativeCurrencyClass> | undefined; isLoading: boolean } {
   const currency = NativeCurrency.onChain(chain)
   const { balance, isLoading } = useOnChainCurrencyBalance(currency, accountAddress)

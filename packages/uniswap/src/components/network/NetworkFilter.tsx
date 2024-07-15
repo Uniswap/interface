@@ -9,7 +9,11 @@ import {
 } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { useNetworkOptions } from 'uniswap/src/components/network/hooks'
-import { UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
+import {
+  UniverseChainId,
+  WALLET_SUPPORTED_CHAIN_IDS,
+  WalletChainId,
+} from 'uniswap/src/types/chains'
 
 const ELLIPSIS = 'ellipsis'
 const NETWORK_ICON_SIZE = iconSizes.icon20
@@ -53,15 +57,19 @@ export function NetworksInSeries({
 
   const renderItem = useCallback(
     ({ item: chainId }: { item: ListItem }) => (
-      <Flex key={chainId} borderColor="$surface2" borderRadius={8} borderWidth={2} ml={-NETWORK_ICON_SHIFT}>
+      <Flex
+        key={chainId}
+        borderColor="$surface2"
+        borderRadius={8}
+        borderWidth={2}
+        ml={-NETWORK_ICON_SHIFT}>
         {chainId === ELLIPSIS ? (
           <Flex
             centered
             backgroundColor="$neutral3"
             borderRadius={NETWORK_LOGO_SQUARE_BORDER_RADIUS}
             height={networkIconSize}
-            width={networkIconSize}
-          >
+            width={networkIconSize}>
             <Ellipsis color={colors.white} size={iconSizes.icon12} />
           </Flex>
         ) : (
@@ -69,7 +77,7 @@ export function NetworksInSeries({
         )}
       </Flex>
     ),
-    [networkIconSize],
+    [networkIconSize]
   )
 
   return (
@@ -100,7 +108,7 @@ export function NetworkFilter({
       }
       onPressChain(chainId)
     },
-    [showEllipsisIcon, selectedChain, onPressChain, onPressAnimation],
+    [showEllipsisIcon, selectedChain, onPressChain, onPressAnimation]
   )
 
   const networkOptions = useNetworkOptions({
@@ -115,7 +123,11 @@ export function NetworkFilter({
   }, [selectedChain])
 
   return (
-    <ActionSheetDropdown alignment="right" options={networkOptions} testID="chain-selector" onDismiss={onDismiss}>
+    <ActionSheetDropdown
+      alignment="right"
+      options={networkOptions}
+      testID="chain-selector"
+      onDismiss={onDismiss}>
       <Flex centered row gap="$spacing4">
         <NetworksInSeries
           // show ellipsis as the last item when all networks is selected
@@ -123,7 +135,12 @@ export function NetworkFilter({
           // show specific network or all
           networks={networks}
         />
-        <RotatableChevron color="$neutral3" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
+        <RotatableChevron
+          color="$neutral3"
+          direction="down"
+          height={iconSizes.icon20}
+          width={iconSizes.icon20}
+        />
       </Flex>
     </ActionSheetDropdown>
   )

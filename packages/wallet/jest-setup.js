@@ -1,5 +1,4 @@
 import 'uniswap/src/i18n/i18n' // Uses real translations for tests
-import 'utilities/src/logger/mocks'
 
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
@@ -21,8 +20,7 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
   }
 })
 
-jest.mock('utilities/src/environment', () => ({
-  isTestEnv: jest.fn(() => true),
+jest.mock('uniswap/src/utils/env', () => ({
   isDevEnv: jest.fn(() => false),
   isBetaEnv: jest.fn(() => false),
   isProdEnv: jest.fn(() => false),

@@ -101,8 +101,7 @@ export function GenericImportForm({
           // when this component is pressed while the keyboard is visible)
           return focused
         }}
-        onTouchEnd={handleFocus}
-      >
+        onTouchEnd={handleFocus}>
         <Flex
           shrink
           $short={{
@@ -117,8 +116,7 @@ export function GenericImportForm({
           minHeight={shouldUseMinHeight ? INPUT_MIN_HEIGHT : undefined}
           px="$spacing24"
           py="$spacing16"
-          width="100%"
-        >
+          width="100%">
           {/* TODO: [MOB-225] make Box press re-focus TextInput. Fine for now since TexInput has autoFocus */}
           <InputWithSuffix
             autoCorrect={Boolean(autoCorrect)}
@@ -142,8 +140,7 @@ export function GenericImportForm({
               left="$spacing24"
               position="absolute"
               py="$spacing16"
-              top={0}
-            >
+              top={0}>
               <Text color="$neutral2" fontSize={INPUT_FONT_SIZE} pointerEvents="none">
                 {placeholderLabel}
               </Text>

@@ -15,7 +15,7 @@ export function getEventHandlers(
   triggers: string[],
   eventName: string,
   element?: string,
-  properties?: Record<string, unknown>,
+  properties?: Record<string, unknown>
 ): Partial<Record<string, (e: Event) => void>> {
   const eventHandlers: Partial<Record<string, (e: Event) => void>> = {}
   for (const event of triggers) {
@@ -23,11 +23,16 @@ export function getEventHandlers(
       // Some interface elements don't have handlers defined.
       // TODO(WEB-4252): Potentially can remove isInterface check once web is fully converted to tamagui
       if (!child.props[event] && !isInterface) {
-        logger.info('trace/utils.ts', 'getEventHandlers', 'Found a null handler while logging an event', {
-          eventName,
-          ...consumedProps,
-          ...properties,
-        })
+        logger.info(
+          'trace/utils.ts',
+          'getEventHandlers',
+          'Found a null handler while logging an event',
+          {
+            eventName,
+            ...consumedProps,
+            ...properties,
+          }
+        )
       }
 
       // call child event handler with original arguments

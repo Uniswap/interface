@@ -9,13 +9,11 @@ import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { usePrevious } from 'utilities/src/react/hooks'
 import { getParsedChainId } from 'utils/chains'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 
 export default function useSyncChainQuery(chainIdRef: React.MutableRefObject<number | undefined>) {
   const account = useAccount()
-  const prevConnectedChainId = usePrevious(account.chainId)
   const { chainId } = useSwapAndLimitContext()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const parsedQs = useParsedQueryString()
@@ -27,25 +25,17 @@ export default function useSyncChainQuery(chainIdRef: React.MutableRefObject<num
 
   const { pathname } = useLocation()
   const page = getCurrentPageFromLocation(pathname)
-
   useEffect(() => {
-    if (multichainUXEnabled || page === InterfacePageName.EXPLORE_PAGE) {
+    if (multichainUXEnabled) {
       return
     }
-
-    // Set page/app chain to match query params
-    if (urlChainId && account.chainId !== urlChainId) {
+    // Set page/app chain to match query param chain
+    if (page !== InterfacePageName.EXPLORE_PAGE && urlChainId && account.chainId !== urlChainId) {
       chainIdRef.current = urlChainId
       selectChain(urlChainId)
-    } else if (
-      account.chainId !== (urlChainId ?? UniverseChainId.Mainnet) &&
-      (searchParams.has('inputCurrency') || searchParams.has('outputCurrency'))
-    ) {
-      chainIdRef.current = urlChainId ?? UniverseChainId.Mainnet
-      selectChain(urlChainId ?? UniverseChainId.Mainnet)
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps -- exclude account.chainId & searchParams; don't want to trigger twice on account.chainId & urlChainId both being set
-  }, [account.isConnected, chainIdRef, multichainUXEnabled, page, parsedQs, selectChain, urlChainId])
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- exclude account.chainId; don't want to trigger twice on account.chainId & urlChainId both being set
+  }, [account.isConnected, chainIdRef, page, parsedQs, selectChain, urlChainId])
 
   useEffect(() => {
     if (chainIdRef.current || chainIdRef.current === account.chainId) {
@@ -57,7 +47,6 @@ export default function useSyncChainQuery(chainIdRef: React.MutableRefObject<num
       !multichainUXEnabled &&
       account.isConnected &&
       account.chainId &&
-      account.chainId !== prevConnectedChainId &&
       account.chainId !== (urlChainId ?? UniverseChainId.Mainnet)
     ) {
       searchParams.delete('inputCurrency')
@@ -75,7 +64,6 @@ export default function useSyncChainQuery(chainIdRef: React.MutableRefObject<num
     chainIdRef,
     isSupportedChain,
     multichainUXEnabled,
-    prevConnectedChainId,
     searchParams,
     setSearchParams,
     urlChainId,

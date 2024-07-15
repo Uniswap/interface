@@ -1,9 +1,8 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route } from '@uniswap/v3-sdk'
-import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
-import { UNI, WBTC } from 'uniswap/src/constants/tokens'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UNI, WBTC, wrappedNativeCurrency } from 'wallet/src/constants/tokens'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { ClassicTrade } from 'wallet/src/features/transactions/swap/trade/types'
 import {
   getWrapType,

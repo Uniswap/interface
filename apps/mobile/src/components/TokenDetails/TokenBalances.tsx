@@ -5,13 +5,13 @@ import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { InlineNetworkPill } from 'uniswap/src/components/network/NetworkPill'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { InlineNetworkPill } from 'wallet/src/components/network/NetworkPill'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount, useDisplayName } from 'wallet/src/features/wallet/hooks'
@@ -45,7 +45,7 @@ export function TokenBalances({
       preload(currencyId)
       navigateWithPop(currencyId)
     },
-    [navigateWithPop, preload],
+    [navigateWithPop, preload]
   )
 
   if (!hasCurrentChainBalances && !hasOtherChainBalances) {
@@ -106,10 +106,14 @@ export function CurrentChainBalance({
     <Flex row>
       <Flex fill gap="$spacing8">
         <Text color="$neutral2" variant="subheading2">
-          {isReadonly ? t('token.balances.viewOnly', { ownerAddress: displayName }) : t('token.balances.main')}
+          {isReadonly
+            ? t('token.balances.viewOnly', { ownerAddress: displayName })
+            : t('token.balances.main')}
         </Text>
         <Flex fill gap="$spacing4">
-          <Text variant="heading3">{convertFiatAmountFormatted(balance.balanceUSD, NumberType.FiatTokenDetails)}</Text>
+          <Text variant="heading3">
+            {convertFiatAmountFormatted(balance.balanceUSD, NumberType.FiatTokenDetails)}
+          </Text>
           <Text color="$neutral2" variant="body2">
             {formatNumberOrString({ value: balance.quantity, type: NumberType.TokenNonTx })}{' '}
             {getSymbolDisplayText(balance.currencyInfo.currency.symbol)}

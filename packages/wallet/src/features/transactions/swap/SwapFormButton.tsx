@@ -1,20 +1,20 @@
 /* eslint-disable complexity */
 import { TFunction } from 'i18next'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, Button, Flex, SpinningLoader, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { Button, Flex, isWeb, Text, useIsShortMobileDevice } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
   selectHasSubmittedHoldToSwap,
   selectHasViewedReviewScreen,
 } from 'wallet/src/features/behaviorHistory/selectors'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import { SwapScreen, useSwapScreenContext } from 'wallet/src/features/transactions/contexts/SwapScreenContext'
+import {
+  SwapScreen,
+  useSwapScreenContext,
+} from 'wallet/src/features/transactions/contexts/SwapScreenContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import {
@@ -22,7 +22,6 @@ import {
   PROGRESS_CIRCLE_SIZE,
 } from 'wallet/src/features/transactions/swap/HoldToSwapProgressCircle'
 import { ViewOnlyModal } from 'wallet/src/features/transactions/swap/modals/ViewOnlyModal'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { WrapType } from 'wallet/src/features/transactions/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
@@ -31,9 +30,7 @@ import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { useAppSelector } from 'wallet/src/state'
 
-export const HOLD_TO_SWAP_TIMEOUT = 3 * ONE_SECOND_MS
-const KEEP_OPEN_MSG_DELAY = 3 * ONE_SECOND_MS
-export const SWAP_BUTTON_TEXT_VARIANT = isWeb ? 'buttonLabel2' : 'buttonLabel1'
+export const HOLD_TO_SWAP_TIMEOUT = 3000
 
 export function SwapFormButton(): JSX.Element {
   const { t } = useTranslation()
@@ -54,9 +51,9 @@ export function SwapFormButton(): JSX.Element {
   const noValidSwap = !isWrapAction(wrapType) && !trade.trade
 
   const reviewButtonDisabled =
-    noValidSwap || !!blockingWarning || isBlocked || isBlockedLoading || walletNeedsRestore || isSubmitting
+    noValidSwap || !!blockingWarning || isBlocked || isBlockedLoading || walletNeedsRestore
 
-  const isHoldToSwapPressed = screen === SwapScreen.SwapReviewHoldingToSwap
+  const isHoldToSwapPressed = screen === SwapScreen.SwapReviewHoldingToSwap || isSubmitting
 
   const hasViewedReviewScreen = useAppSelector(selectHasViewedReviewScreen)
   const hasSubmittedHoldToSwap = useAppSelector(selectHasSubmittedHoldToSwap)
@@ -73,7 +70,7 @@ export function SwapFormButton(): JSX.Element {
       updateSwapForm({ txId: createTransactionId() })
       setScreen(nextScreen)
     },
-    [setScreen, updateSwapForm],
+    [setScreen, updateSwapForm]
   )
 
   const onReviewPress = useCallback(() => {
@@ -103,34 +100,31 @@ export function SwapFormButton(): JSX.Element {
   const hasButtonWarning = !!blockingWarning?.buttonText
   const buttonText = blockingWarning?.buttonText ?? t('swap.button.review')
   const buttonTextColor = hasButtonWarning ? '$neutral2' : '$white'
-  const buttonBgColor = hasButtonWarning ? '$surface3' : isHoldToSwapPressed || isSubmitting ? '$accent2' : '$accent1'
-  const buttonOpacity = isViewOnlyWallet ? 0.4 : isSubmitting ? 1 : undefined
-
-  const showUniswapXSubmittingUI = trade.trade && isUniswapX(trade?.trade) && isSubmitting
+  const buttonBgColor = hasButtonWarning
+    ? '$surface3'
+    : isHoldToSwapPressed
+    ? '$accent2'
+    : '$accent1'
 
   return (
     <Flex alignItems="center" gap={isShortMobileDevice ? '$spacing8' : '$spacing16'}>
-      {!isWeb && !isHoldToSwapPressed && !isSubmitting && showHoldToSwapTip && <HoldToInstantSwapRow />}
+      {!isWeb && !isHoldToSwapPressed && showHoldToSwapTip && <HoldToInstantSwapRow />}
 
       <Trace logPress element={ElementName.SwapReview}>
         <Button
           hapticFeedback
           backgroundColor={buttonBgColor}
-          disabled={reviewButtonDisabled && !isViewOnlyWallet}
-          icon={showUniswapXSubmittingUI ? <SpinningLoader color="$accent1" size={iconSizes.icon24} /> : undefined}
+          disabled={reviewButtonDisabled && !isHoldToSwapPressed && !isViewOnlyWallet}
           // Override opacity only for view-only wallets
-          opacity={buttonOpacity}
+          opacity={isViewOnlyWallet ? 0.4 : undefined}
           size={isShortMobileDevice ? 'small' : isWeb ? 'medium' : 'large'}
-          testID={TestID.ReviewSwap}
+          testID={ElementName.ReviewSwap}
           width="100%"
           onLongPress={onLongPressHoldToSwap}
           onPress={onReviewPress}
           onResponderRelease={onReleaseHoldToSwap}
-          onResponderTerminate={onReleaseHoldToSwap}
-        >
-          {showUniswapXSubmittingUI ? (
-            <SubmittingText />
-          ) : isHoldToSwapPressed ? (
+          onResponderTerminate={onReleaseHoldToSwap}>
+          {isHoldToSwapPressed ? (
             <Flex row gap="$spacing4" px="$spacing4">
               <HoldToSwapProgressCircle />
 
@@ -139,13 +133,12 @@ export function SwapFormButton(): JSX.Element {
                 flex={1}
                 pr={PROGRESS_CIRCLE_SIZE}
                 textAlign="center"
-                variant={SWAP_BUTTON_TEXT_VARIANT}
-              >
+                variant="buttonLabel1">
                 {holdButtonText}
               </Text>
             </Flex>
           ) : (
-            <Text color={buttonTextColor} variant={SWAP_BUTTON_TEXT_VARIANT}>
+            <Text color={buttonTextColor} variant="buttonLabel1">
               {buttonText}
             </Text>
           )}
@@ -154,29 +147,6 @@ export function SwapFormButton(): JSX.Element {
 
       {showViewOnlyModal && <ViewOnlyModal onDismiss={(): void => setShowViewOnlyModal(false)} />}
     </Flex>
-  )
-}
-
-export function SubmittingText(): JSX.Element {
-  const { t } = useTranslation()
-  const [showKeepOpenMessage, setShowKeepOpenMessage] = useState(false)
-
-  useEffect(() => {
-    const timeout = setTimeout(() => setShowKeepOpenMessage(true), KEEP_OPEN_MSG_DELAY)
-    return () => clearTimeout(timeout)
-  }, [])
-
-  // Use different key to re-trigger animation when message changes
-  const key = showKeepOpenMessage ? 'submitting-text-msg1' : 'submitting-text-msg2'
-
-  return (
-    <AnimatePresence key={key}>
-      <Flex animateEnterExit="fadeInDownOutDown" animation="quicker">
-        <Text color="$accent1" flex={1} textAlign="center" variant={SWAP_BUTTON_TEXT_VARIANT}>
-          {showKeepOpenMessage ? t('swap.button.submitting.keep.open') : t('swap.button.submitting')}
-        </Text>
-      </Flex>
-    </AnimatePresence>
   )
 }
 

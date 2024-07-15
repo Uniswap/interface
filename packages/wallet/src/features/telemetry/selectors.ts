@@ -1,6 +1,7 @@
 import { SharedState } from 'wallet/src/state/reducer'
 
-export const selectLastBalancesReport = (state: SharedState): number => state.telemetry.lastBalancesReport
+export const selectLastBalancesReport = (state: SharedState): number =>
+  state.telemetry.lastBalancesReport
 
 export const selectLastBalancesReportValue = (state: SharedState): number | undefined =>
   state.telemetry.lastBalancesReportValue

@@ -41,8 +41,7 @@ export function LockScreenContextProvider({ children }: PropsWithChildren<unknow
         animationType: animation,
         setIsLockScreenVisible,
         setAnimationType,
-      }}
-    >
+      }}>
       {children}
     </LockScreenContext.Provider>
   )

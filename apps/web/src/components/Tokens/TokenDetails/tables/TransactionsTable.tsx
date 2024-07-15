@@ -66,7 +66,7 @@ export function TransactionsTable({
   const { transactions, loading, loadMore, errorV2, errorV3 } = useTokenTransactions(
     referenceToken.address,
     chainId,
-    filter,
+    filter
   )
   const combinedError =
     errorV2 && errorV3
@@ -103,7 +103,7 @@ export function TransactionsTable({
           makerAddress: transaction.account,
         }
       }),
-    [transactions],
+    [transactions]
   )
 
   const showLoadingSkeleton = allDataStillLoading || !!combinedError
@@ -182,7 +182,7 @@ export function TransactionsTable({
               </ThemedText.BodyPrimary>
             </Cell>
           ),
-        },
+        }
       ),
       columnHelper.accessor(
         (row) => {
@@ -213,7 +213,7 @@ export function TransactionsTable({
               {swapOutput.getValue?.()}
             </Cell>
           ),
-        },
+        }
       ),
       columnHelper.accessor((row) => row.usdValue, {
         id: 'fiat-value',

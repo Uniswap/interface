@@ -7,7 +7,10 @@ type TokenMetadataProps = PropsWithChildren<{
 }>
 
 /** Helper component to format rhs metadata for a given token. */
-export const TokenMetadata = ({ children, align = 'flex-end' }: TokenMetadataProps): JSX.Element => {
+export const TokenMetadata = ({
+  children,
+  align = 'flex-end',
+}: TokenMetadataProps): JSX.Element => {
   return (
     <Flex row>
       <Flex alignItems={align} gap="$spacing4" minWidth={70}>

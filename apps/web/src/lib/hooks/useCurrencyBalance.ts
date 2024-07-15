@@ -30,7 +30,7 @@ function useNativeCurrencyBalances(uncheckedAddresses?: (string | undefined)[]):
             .sort()
             .map((addr) => [addr])
         : [],
-    [uncheckedAddresses],
+    [uncheckedAddresses]
   )
 
   const results = useSingleContractMultipleData(multicallContract, 'getEthBalance', validAddressInputs)
@@ -44,7 +44,7 @@ function useNativeCurrencyBalances(uncheckedAddresses?: (string | undefined)[]):
         }
         return memo
       }, {}),
-    [validAddressInputs, chainId, results],
+    [validAddressInputs, chainId, results]
   )
 }
 
@@ -57,7 +57,7 @@ const tokenBalancesGasRequirement = { gasRequired: 185_000 }
 export function useRpcTokenBalancesWithLoadingIndicator(
   address?: string,
   tokens?: (Token | undefined)[],
-  skip?: boolean,
+  skip?: boolean
 ): [{ [tokenAddress: string]: CurrencyAmount<Token> | undefined }, boolean] {
   const { chainId } = useAccount()
   const validatedTokens: Token[] = useMemo(
@@ -65,7 +65,7 @@ export function useRpcTokenBalancesWithLoadingIndicator(
       skip
         ? []
         : tokens?.filter((t?: Token): t is Token => isAddress(t?.address) !== false && t?.chainId === chainId) ?? [],
-    [chainId, tokens, skip],
+    [chainId, tokens, skip]
   )
   const validatedTokenAddresses = useMemo(() => validatedTokens.map((vt) => vt.address), [validatedTokens])
 
@@ -74,7 +74,7 @@ export function useRpcTokenBalancesWithLoadingIndicator(
     ERC20Interface,
     'balanceOf',
     useMemo(() => [address], [address]),
-    tokenBalancesGasRequirement,
+    tokenBalancesGasRequirement
   )
 
   const anyLoading: boolean = useMemo(() => balances.some((callState) => callState.loading), [balances])
@@ -93,24 +93,24 @@ export function useRpcTokenBalancesWithLoadingIndicator(
         : {},
       anyLoading,
     ],
-    [address, validatedTokens, anyLoading, balances],
+    [address, validatedTokens, anyLoading, balances]
   )
 }
 
 function useRpcTokenBalances(
   address?: string,
-  tokens?: (Token | undefined)[],
+  tokens?: (Token | undefined)[]
 ): { [tokenAddress: string]: CurrencyAmount<Token> | undefined } {
   return useRpcTokenBalancesWithLoadingIndicator(address, tokens)[0]
 }
 
 function useRpcCurrencyBalances(
   account?: string,
-  currencies?: (Currency | undefined)[],
+  currencies?: (Currency | undefined)[]
 ): (CurrencyAmount<Currency> | undefined)[] {
   const tokens = useMemo(
     () => currencies?.filter((currency): currency is Token => currency?.isToken ?? false) ?? [],
-    [currencies],
+    [currencies]
   )
 
   const { chainId } = useAccount()
@@ -132,7 +132,7 @@ function useRpcCurrencyBalances(
         }
         return undefined
       }) ?? [],
-    [account, chainId, currencies, ethBalance, tokenBalances],
+    [account, chainId, currencies, ethBalance, tokenBalances]
   )
 }
 
@@ -143,7 +143,7 @@ function useRpcCurrencyBalances(
  */
 function useGqlCurrencyBalances(
   account?: string,
-  currencies?: (Currency | undefined)[],
+  currencies?: (Currency | undefined)[]
 ): (CurrencyAmount<Currency> | undefined)[] {
   const { balanceMap } = useTokenBalances({ cacheOnly: true })
 
@@ -173,13 +173,14 @@ function useGqlCurrencyBalances(
 /**
  * Returns balances for tokens on currently-connected chainId via RPC.
  * Falls back to graphql TokenBalances if user is not connected to chain, a.k.a !isSynced.
+ * If no chainId is provided we default to rpc balances.
  */
 export function useCurrencyBalances(
   account?: string,
   currencies?: (Currency | undefined)[],
+  chainId?: number
 ): (CurrencyAmount<Currency> | undefined)[] {
   const { chainId: providerChainId } = useAccount()
-  const chainId = useMemo(() => currencies?.[0]?.chainId, [currencies])
   const isSynced = !chainId || chainId === providerChainId
 
   const gqlCurrencyBalances = useGqlCurrencyBalances(account, currencies)
@@ -202,9 +203,11 @@ export function useTokenBalance(account?: string, token?: Token): CurrencyAmount
 export default function useCurrencyBalance(
   account?: string,
   currency?: Currency,
+  chainId?: number
 ): CurrencyAmount<Currency> | undefined {
   return useCurrencyBalances(
     account,
     useMemo(() => [currency], [currency]),
+    chainId
   )[0]
 }

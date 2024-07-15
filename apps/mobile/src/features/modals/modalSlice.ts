@@ -171,10 +171,6 @@ export const initialModalsState: ModalsState = {
     isOpen: false,
     initialState: undefined,
   },
-  [ModalName.QueuedOrderModal]: {
-    isOpen: false,
-    initialState: undefined,
-  },
 }
 
 const slice = createSlice({

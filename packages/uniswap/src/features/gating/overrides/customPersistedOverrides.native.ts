@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Statsig, StatsigOverrides } from 'uniswap/src/features/gating/sdk/statsig'
-import { isDevEnv } from 'utilities/src/environment'
+import { isDevEnv } from 'uniswap/src/utils/env'
 import { logger } from 'utilities/src/logger/logger'
 
 const STATSIG_PERSISTED_OVERRIDE_KEY = 'STATSIG_PERSISTED_OVERRIDE_KEY'
@@ -37,7 +37,11 @@ export function loadStatsigOverrides(): void {
           }
         }
       } catch (error) {
-        logger.debug('persistedOverrides', 'useLoadStatsigOverrides', `Failed to load persisted overrides: ${error}`)
+        logger.debug(
+          'persistedOverrides',
+          'useLoadStatsigOverrides',
+          `Failed to load persisted overrides: ${error}`
+        )
       }
     }
 
@@ -49,9 +53,11 @@ export function loadStatsigOverrides(): void {
 if (isDevEnv()) {
   function syncWithStorage(): void {
     const overrides = Statsig.getAllOverrides()
-    AsyncStorage.setItem(STATSIG_PERSISTED_OVERRIDE_KEY, JSON.stringify(overrides)).catch((error) => {
-      logger.debug('persistedOverrides', 'persistOverrides', error)
-    })
+    AsyncStorage.setItem(STATSIG_PERSISTED_OVERRIDE_KEY, JSON.stringify(overrides)).catch(
+      (error) => {
+        logger.debug('persistedOverrides', 'persistOverrides', error)
+      }
+    )
   }
 
   const overrideConfig = Statsig.overrideConfig.bind(Statsig)

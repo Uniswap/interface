@@ -29,7 +29,7 @@ describe('SmartContractSpeedBumpModal', () => {
     render(
       <SendContext.Provider value={mockSendContext}>
         <SmartContractSpeedBumpModal onCancel={mockOnCancel} onConfirm={mockOnConfirm} />
-      </SendContext.Provider>,
+      </SendContext.Provider>
     )
 
     expect(document.body).toMatchSnapshot()

@@ -1,4 +1,5 @@
-import { isDevEnv, isTestEnv } from 'utilities/src/environment'
+import { isDevEnv } from 'uniswap/src/utils/env'
+import { isJestRun } from 'utilities/src/environment'
 import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 
 enum TrafficFlows {
@@ -83,8 +84,6 @@ export const uniswapUrls = {
     quote: '/v1/quote',
     approval: '/v1/check_approval',
     swap: '/v1/swap',
-    order: '/v1/order',
-    orders: '/v1/orders',
   },
 
   // App and Redirect URL's
@@ -118,7 +117,7 @@ function getCloudflarePrefix(flow?: TrafficFlows): string {
     return 'interface'
   }
 
-  if (isTestEnv()) {
+  if (isJestRun) {
     return 'wallet'
   }
 

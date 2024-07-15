@@ -18,7 +18,7 @@ export function formatTokenMetatagTitleName(symbol: string | undefined, name: st
 export function formatNFTAssetMetatagTitleName(
   name: string | undefined,
   collectionName: string | undefined,
-  tokenId: string,
+  tokenId: string
 ) {
   if (name) {
     return name

@@ -15,7 +15,10 @@ type PreloadedMobileStateOptions = {
   account: Account | undefined
 }
 
-export const preloadedMobileState = createFixture<PreloadedState<MobileState>, PreloadedMobileStateOptions>({
+export const preloadedMobileState = createFixture<
+  PreloadedState<MobileState>,
+  PreloadedMobileStateOptions
+>({
   account: undefined,
 })(({ account }) => ({
   ...(preloadedSharedState({ account }) as PreloadedState<SharedState>),

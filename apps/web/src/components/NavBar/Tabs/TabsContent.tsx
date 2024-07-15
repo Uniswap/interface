@@ -1,4 +1,3 @@
-import { CreditCardIcon } from 'components/Icons/CreditCard'
 import { Limit } from 'components/Icons/Limit'
 import { Send } from 'components/Icons/Send'
 import { SwapV2 } from 'components/Icons/SwapV2'
@@ -26,7 +25,6 @@ export type TabsItem = MenuItem & {
 export const useTabsContent = (): TabsSection[] => {
   const { t } = useTranslation()
   const isLegacyNav = !useFeatureFlag(FeatureFlags.NavRefresh)
-  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregatorWeb)
   const { pathname } = useLocation()
   const theme = useTheme()
   const areTabsVisible = useTabsVisible()
@@ -55,35 +53,24 @@ export const useTabsContent = (): TabsSection[] => {
             {
               label: t('common.swap'),
               icon: <SwapV2 fill={theme.neutral2} />,
-              quickKey: t(`quickKey.swap`),
+              quickKey: t`U`,
               href: '/swap',
               internal: true,
             },
             {
               label: t('swap.limit'),
               icon: <Limit fill={theme.neutral2} />,
-              quickKey: t(`quickKey.limit`),
+              quickKey: t`L`,
               href: '/limit',
               internal: true,
             },
             {
               label: t('common.send.button'),
               icon: <Send fill={theme.neutral2} />,
-              quickKey: t(`quickKey.send`),
+              quickKey: t`E`,
               href: '/send',
               internal: true,
             },
-            ...(forAggregatorEnabled
-              ? [
-                  {
-                    label: t('common.buy.label'),
-                    icon: <CreditCardIcon fill={theme.neutral2} />,
-                    quickKey: t(`quickKey.buy`),
-                    href: '/buy',
-                    internal: true,
-                  },
-                ]
-              : []),
           ],
         },
         {
@@ -91,15 +78,10 @@ export const useTabsContent = (): TabsSection[] => {
           href: '/explore',
           isActive: pathname.startsWith('/explore') || pathname.startsWith('/nfts'),
           items: [
-            { label: t('common.tokens'), quickKey: t(`quickKey.tokens`), href: '/explore/tokens', internal: true },
-            { label: t('common.pools'), quickKey: t(`quickKey.pools`), href: '/explore/pools', internal: true },
-            {
-              label: t('common.transactions'),
-              quickKey: t(`quickKey.transactions`),
-              href: '/explore/transactions',
-              internal: true,
-            },
-            { label: t('common.nfts'), quickKey: t(`quickKey.nfts`), href: '/nfts', internal: true },
+            { label: t('common.tokens'), quickKey: t`T`, href: '/explore/tokens', internal: true },
+            { label: t('common.pools'), quickKey: t`P`, href: '/explore/pools', internal: true },
+            { label: t('common.transactions'), quickKey: t`X`, href: '/explore/transactions', internal: true },
+            { label: t('common.nfts'), quickKey: t`N`, href: '/nfts', internal: true },
           ],
         },
         {

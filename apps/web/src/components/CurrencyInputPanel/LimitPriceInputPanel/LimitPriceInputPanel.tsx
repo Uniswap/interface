@@ -112,7 +112,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
     }
     const oneUnitOfBaseCurrency = CurrencyAmount.fromRawAmount(
       baseCurrency,
-      JSBI.BigInt(parseUnits('1', baseCurrency?.decimals)),
+      JSBI.BigInt(parseUnits('1', baseCurrency?.decimals))
     )
     const getAdjustedPrice = (priceAdjustmentPercentage: number) => {
       return new Price({
@@ -121,10 +121,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         // (100 + adjustmentPercentage) times the market quote amount for 1 input token
         quoteAmount: CurrencyAmount.fromRawAmount(
           quoteCurrency,
-          JSBI.multiply(
-            JSBI.BigInt(100 + priceAdjustmentPercentage),
-            marketPrice.quote(oneUnitOfBaseCurrency).quotient,
-          ),
+          JSBI.multiply(JSBI.BigInt(100 + priceAdjustmentPercentage), marketPrice.quote(oneUnitOfBaseCurrency).quotient)
         ),
       })
     }
@@ -148,7 +145,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
       }
       const oneUnitOfBaseCurrency = CurrencyAmount.fromRawAmount(
         baseCurrency,
-        JSBI.BigInt(parseUnits('1', baseCurrency?.decimals)),
+        JSBI.BigInt(parseUnits('1', baseCurrency?.decimals))
       )
       const marketOutputAmount = adjustedPrice?.quote(oneUnitOfBaseCurrency)
       setLimitPrice(
@@ -157,12 +154,12 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
           type: NumberType.SwapTradeAmount,
           placeholder: limitPrice,
           locale: 'en-US',
-        }),
+        })
       )
       setLimitState((prev) => ({ ...prev, limitPriceEdited: true }))
       sendAnalyticsEvent(InterfaceEventNameLocal.LimitPresetRateSelected, { value: adjustmentPercentage })
     },
-    [baseCurrency, limitPrice, setLimitPrice, setLimitState],
+    [baseCurrency, limitPrice, setLimitPrice, setLimitState]
   )
 
   const { currentPriceAdjustment } = useCurrentPriceAdjustment({
@@ -191,15 +188,12 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
                   amount: marketPrice
                     .invert()
                     .quote(
-                      CurrencyAmount.fromRawAmount(
-                        quoteCurrency,
-                        JSBI.BigInt(parseUnits('1', quoteCurrency?.decimals)),
-                      ),
+                      CurrencyAmount.fromRawAmount(quoteCurrency, JSBI.BigInt(parseUnits('1', quoteCurrency?.decimals)))
                     ),
                   type: NumberType.SwapTradeAmount,
                   placeholder: '',
                   locale: 'en-US',
-                }),
+                })
               )
             }
             setLimitState((prev) => ({ ...prev, limitPriceInverted: !prev.limitPriceInverted, limitPriceEdited: true }))
@@ -270,7 +264,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
           }
           onCurrencySelect(
             limitPriceInverted ? invertCurrencyField(currencySelectModalField) : currencySelectModalField,
-            currency,
+            currency
           )
         }}
         selectedCurrency={quoteCurrency}

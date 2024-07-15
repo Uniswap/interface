@@ -37,7 +37,7 @@ export const unitagsApolloClient = new ApolloClient({
 
 export function addQueryParamsToEndpoint(
   endpoint: string,
-  params: Record<string, string[] | string | number | boolean | undefined>,
+  params: Record<string, string[] | string | number | boolean | undefined>
 ): string {
   const url = new URL(endpoint, uniswapUrls.apiOrigin) // dummy base URL, we only need the path with query params
   Object.entries(params).forEach(([key, value]) => {
@@ -49,7 +49,9 @@ export function addQueryParamsToEndpoint(
   return url.pathname + url.search
 }
 
-export function useUnitagQuery(username?: string): ReturnType<typeof useRestQuery<UnitagUsernameResponse>> {
+export function useUnitagQuery(
+  username?: string
+): ReturnType<typeof useRestQuery<UnitagUsernameResponse>> {
   return useRestQuery<UnitagUsernameResponse, Record<string, unknown>>(
     addQueryParamsToEndpoint('/username', { username }),
     { username }, // dummy body so that cache key is unique per query params
@@ -59,11 +61,13 @@ export function useUnitagQuery(username?: string): ReturnType<typeof useRestQuer
       ttlMs: ONE_MINUTE_MS * 2,
     },
     'GET',
-    unitagsApolloClient,
+    unitagsApolloClient
   )
 }
 
-export function useUnitagByAddressQuery(address?: Address): ReturnType<typeof useRestQuery<UnitagAddressResponse>> {
+export function useUnitagByAddressQuery(
+  address?: Address
+): ReturnType<typeof useRestQuery<UnitagAddressResponse>> {
   return useRestQuery<UnitagAddressResponse, Record<string, unknown>>(
     addQueryParamsToEndpoint('/address', { address }),
     { address }, // dummy body so that cache key is unique per query params
@@ -73,13 +77,13 @@ export function useUnitagByAddressQuery(address?: Address): ReturnType<typeof us
       ttlMs: ONE_MINUTE_MS * 2,
     },
     'GET',
-    unitagsApolloClient,
+    unitagsApolloClient
   )
 }
 
 export function useWaitlistPositionQuery(
   accounts: Address[],
-  skip: boolean,
+  skip: boolean
 ): ReturnType<typeof useRestQuery<UnitagWaitlistPositionResponse>> {
   const addresses = accounts.join(',')
   return useRestQuery<UnitagWaitlistPositionResponse, Record<string, unknown>>(
@@ -91,6 +95,6 @@ export function useWaitlistPositionQuery(
       ttlMs: ONE_MINUTE_MS * 2,
     },
     'GET',
-    unitagsApolloClient,
+    unitagsApolloClient
   )
 }

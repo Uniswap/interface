@@ -26,7 +26,7 @@ describe('PoolDetailsStats', () => {
           name: 'USD Coin',
           decimals: 6,
         },
-      }),
+      })
     )
     store.dispatch(
       addSerializedToken({
@@ -37,7 +37,7 @@ describe('PoolDetailsStats', () => {
           name: 'Wrapped Ether',
           decimals: 18,
         },
-      }),
+      })
     )
   })
 

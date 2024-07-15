@@ -12,7 +12,10 @@ import MoonIcon from 'ui/src/assets/icons/moon.svg'
 import SunIcon from 'ui/src/assets/icons/sun.svg'
 import { iconSizes } from 'ui/src/theme'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
-import { AppearanceSettingType, setSelectedAppearanceSettings } from 'wallet/src/features/appearance/slice'
+import {
+  AppearanceSettingType,
+  setSelectedAppearanceSettings,
+} from 'wallet/src/features/appearance/slice'
 
 export function SettingsAppearanceScreen(): JSX.Element {
   const { t } = useTranslation()
@@ -58,7 +61,13 @@ interface AppearanceOptionProps {
   Icon: React.FC<SvgProps>
 }
 
-function AppearanceOption({ active, title, subtitle, Icon, option }: AppearanceOptionProps): JSX.Element {
+function AppearanceOption({
+  active,
+  title,
+  subtitle,
+  Icon,
+  option,
+}: AppearanceOptionProps): JSX.Element {
   const colors = useSporeColors()
   const dispatch = useAppDispatch()
 
@@ -70,9 +79,13 @@ function AppearanceOption({ active, title, subtitle, Icon, option }: AppearanceO
       flexDirection="row"
       justifyContent="space-between"
       py="$spacing12"
-      onPress={(): Action => dispatch(setSelectedAppearanceSettings(option))}
-    >
-      <Icon color={colors.neutral2.get()} height={iconSizes.icon24} strokeWidth={1.5} width={iconSizes.icon24} />
+      onPress={(): Action => dispatch(setSelectedAppearanceSettings(option))}>
+      <Icon
+        color={colors.neutral2.get()}
+        height={iconSizes.icon24}
+        strokeWidth={1.5}
+        width={iconSizes.icon24}
+      />
       <Flex row shrink>
         <Flex shrink ml="$spacing16">
           <Text variant="body1">{title}</Text>

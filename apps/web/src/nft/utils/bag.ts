@@ -9,7 +9,7 @@ export function getPurchasableAssets(itemsInBag: BagItem[]): UpdatedGenieAsset[]
 function createBagFromUpdatedAssets(
   unavailable: UpdatedGenieAsset[],
   priceChanged: UpdatedGenieAsset[],
-  unchanged: UpdatedGenieAsset[],
+  unchanged: UpdatedGenieAsset[]
 ): BagItem[] {
   return [
     ...unavailable.map((unavailableAsset) => ({
@@ -31,7 +31,7 @@ function evaluateNextBagState(
   hasAssets: boolean,
   shouldReview: boolean,
   hasAssetsInReview: boolean,
-  shouldRefetchCalldata: boolean,
+  shouldRefetchCalldata: boolean
 ): BagStatus {
   if (!hasAssets) {
     return BagStatus.ADDING_TO_BAG
@@ -55,7 +55,7 @@ function evaluateNextBagState(
 export function getNextBagState(
   wishAssetsToBuy: UpdatedGenieAsset[],
   route: RoutingItem[],
-  purchasingWithErc20: boolean,
+  purchasingWithErc20: boolean
 ): { newBagItems: BagItem[]; nextBagStatus: BagStatus } {
   const { hasPriceAdjustment, updatedAssets } = compareAssetsWithTransactionRoute(wishAssetsToBuy, route)
   const shouldRefetchCalldata = hasPriceAdjustment && purchasingWithErc20

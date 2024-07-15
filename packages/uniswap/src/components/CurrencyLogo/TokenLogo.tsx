@@ -31,7 +31,9 @@ export const TokenLogo = memo(function _TokenLogo({
 
   const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== UniverseChainId.Mainnet
 
-  const { foreground, background } = isDarkMode ? logolessColorScheme.dark : logolessColorScheme.light
+  const { foreground, background } = isDarkMode
+    ? logolessColorScheme.dark
+    : logolessColorScheme.light
   const fallback = (
     <Flex
       alignItems="center"
@@ -40,8 +42,7 @@ export const TokenLogo = memo(function _TokenLogo({
       justifyContent="center"
       px="$spacing8"
       style={{ backgroundColor: background }}
-      width={size}
-    >
+      width={size}>
       <Text
         adjustsFontSizeToFit
         allowFontScaling={false}
@@ -51,8 +52,7 @@ export const TokenLogo = memo(function _TokenLogo({
         fontWeight="500"
         lineHeight={14}
         minimumFontScale={0.5}
-        numberOfLines={1}
-      >
+        numberOfLines={1}>
         {symbol?.slice(0, 3)}
       </Text>
     </Flex>
@@ -74,7 +74,12 @@ export const TokenLogo = memo(function _TokenLogo({
   )
 
   return (
-    <Flex alignItems="center" height={size} justifyContent="center" testID="token-logo" width={size}>
+    <Flex
+      alignItems="center"
+      height={size}
+      justifyContent="center"
+      testID="token-logo"
+      width={size}>
       {tokenImage}
       {showNetworkLogo && (
         <Flex
@@ -83,8 +88,7 @@ export const TokenLogo = memo(function _TokenLogo({
           borderWidth={networkLogoBorderWidth}
           bottom={-2}
           position="absolute"
-          right={-3}
-        >
+          right={-3}>
           <NetworkLogo chainId={chainId} size={Math.round(size * STATUS_RATIO)} />
         </Flex>
       )}

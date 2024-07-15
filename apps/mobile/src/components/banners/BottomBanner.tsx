@@ -12,7 +12,12 @@ export type BottomBannerProps = {
   translateY?: number
 }
 
-export function BottomBanner({ text, icon, backgroundColor, translateY }: BottomBannerProps): JSX.Element {
+export function BottomBanner({
+  text,
+  icon,
+  backgroundColor,
+  translateY,
+}: BottomBannerProps): JSX.Element {
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
@@ -46,8 +51,7 @@ export function BottomBanner({ text, icon, backgroundColor, translateY }: Bottom
       position="absolute"
       right={0}
       style={animatedStyle}
-      zIndex="$modal"
-    >
+      zIndex="$modal">
       {icon}
       <Text variant="body2">{text}</Text>
     </AnimatedFlex>

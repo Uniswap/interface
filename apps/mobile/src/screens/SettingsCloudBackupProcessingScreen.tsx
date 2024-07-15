@@ -5,7 +5,10 @@ import { Screen } from 'src/components/layout/Screen'
 import { CloudBackupProcessingAnimation } from 'src/features/CloudBackup/CloudBackupProcessingAnimation'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
-type Props = NativeStackScreenProps<SettingsStackParamList, MobileScreens.SettingsCloudBackupProcessing>
+type Props = NativeStackScreenProps<
+  SettingsStackParamList,
+  MobileScreens.SettingsCloudBackupProcessing
+>
 
 export function SettingsCloudBackupProcessingScreen({
   navigation,

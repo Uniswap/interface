@@ -34,13 +34,13 @@ export function usePermitAllowance(token?: Token, owner?: string, spender?: stri
   const rawAmount = result?.amount.toString() // convert to a string before using in a hook, to avoid spurious rerenders
   const allowance = useMemo(
     () => (token && rawAmount ? CurrencyAmount.fromRawAmount(token, rawAmount) : undefined),
-    [token, rawAmount],
+    [token, rawAmount]
   )
   useEffect(() => setBlocksPerFetch(allowance?.equalTo(0) ? 1 : undefined), [allowance])
 
   return useMemo(
     () => ({ permitAllowance: allowance, expiration: result?.expiration, nonce: result?.nonce }),
-    [allowance, result?.expiration, result?.nonce],
+    [allowance, result?.expiration, result?.nonce]
   )
 }
 
@@ -56,7 +56,7 @@ export function useUpdatePermitAllowance(
   token: Token | undefined,
   spender: string | undefined,
   nonce: number | undefined,
-  onPermitSignature: (signature: PermitSignature) => void,
+  onPermitSignature: (signature: PermitSignature) => void
 ) {
   const account = useAccount()
   const signer = useEthersSigner()
@@ -97,7 +97,7 @@ export function useUpdatePermitAllowance(
           const { domain, types, values } = AllowanceTransfer.getPermitData(
             permit,
             permit2Address(token?.chainId),
-            account.chainId,
+            account.chainId
           )
           const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async (walletTrace) => {
             try {
@@ -124,6 +124,6 @@ export function useUpdatePermitAllowance(
           }
         }
       }),
-    [account.chainId, account.status, nonce, onPermitSignature, signer, spender, token],
+    [account.chainId, account.status, nonce, onPermitSignature, signer, spender, token]
   )
 }

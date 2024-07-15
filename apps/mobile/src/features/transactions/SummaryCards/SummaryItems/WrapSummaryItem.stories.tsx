@@ -97,13 +97,14 @@ const baseWrapTx: Omit<ClassicTransactionDetails, 'status'> & { typeInfo: WrapTr
   },
 }
 
-const baseUnwrapTx: Omit<ClassicTransactionDetails, 'status'> & { typeInfo: WrapTransactionInfo } = {
-  ...baseWrapTx,
-  typeInfo: {
-    ...baseWrapTx.typeInfo,
-    unwrapped: true,
-  },
-}
+const baseUnwrapTx: Omit<ClassicTransactionDetails, 'status'> & { typeInfo: WrapTransactionInfo } =
+  {
+    ...baseWrapTx,
+    typeInfo: {
+      ...baseWrapTx.typeInfo,
+      unwrapped: true,
+    },
+  }
 
 export const Wrap: StoryObj = {
   render: () => (

@@ -77,8 +77,8 @@ export function useLogs(filter: Filter | undefined): UseLogsResult {
       state: isHistoricalLog(filter, blockNumber)
         ? LogsState.SYNCED
         : result.blockNumber >= blockNumber
-          ? LogsState.SYNCED
-          : LogsState.SYNCING,
+        ? LogsState.SYNCED
+        : LogsState.SYNCING,
       logs: result.logs,
     }
   }, [blockNumber, chainId, filter, logs])

@@ -24,7 +24,7 @@ interface ChartTypeSelectorOption<T extends ChartType | PriceChartType> {
 }
 
 function getChartTypeSelectorOption<T extends ChartType | PriceChartType>(
-  option: ChartTypeSelectorOption<T> | T,
+  option: ChartTypeSelectorOption<T> | T
 ): ChartTypeSelectorOption<T> {
   if (typeof option === 'string') {
     return { value: option }

@@ -1,5 +1,4 @@
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { fromGraphQLChain } from 'wallet/src/features/chains/utils'
 import {
   deriveCurrencyAmountFromAssetResponse,
   parseUSDValueFromAssetChange,
@@ -10,16 +9,21 @@ import {
   TransactionListQueryResponse,
   TransactionType,
 } from 'wallet/src/features/transactions/types'
+import { buildCurrencyId, buildNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 export default function parseNFTMintTransaction(
-  transaction: NonNullable<TransactionListQueryResponse>,
+  transaction: NonNullable<TransactionListQueryResponse>
 ): NFTMintTransactionInfo | undefined {
   if (transaction.details.__typename !== TransactionDetailsType.Transaction) {
     return undefined
   }
 
-  const tokenChange = transaction.details.assetChanges?.find((change) => change?.__typename === 'TokenTransfer')
-  const nftChange = transaction.details.assetChanges?.find((change) => change?.__typename === 'NftTransfer')
+  const tokenChange = transaction.details.assetChanges?.find(
+    (change) => change?.__typename === 'TokenTransfer'
+  )
+  const nftChange = transaction.details.assetChanges?.find(
+    (change) => change?.__typename === 'NftTransfer'
+  )
 
   // Mints must include the NFT minted
   if (!nftChange || nftChange.__typename !== 'NftTransfer') {
@@ -32,11 +36,10 @@ export default function parseNFTMintTransaction(
   const tokenId = nftChange.asset.tokenId
   const chainId = fromGraphQLChain(transaction.chain)
   const isSpam = nftChange.asset?.isSpam ?? false
-  const address = nftChange.asset.nftContract?.address
 
   let transactedUSDValue: number | undefined
 
-  if (!name || !collectionName || !imageURL || !tokenId || !chainId || !address) {
+  if (!name || !collectionName || !imageURL || !tokenId || !chainId) {
     return undefined
   }
 
@@ -47,26 +50,19 @@ export default function parseNFTMintTransaction(
       tokenChange.tokenStandard === 'NATIVE'
         ? buildNativeCurrencyId(chainId)
         : tokenChange.asset?.address
-          ? buildCurrencyId(chainId, tokenChange.asset.address)
-          : undefined
+        ? buildCurrencyId(chainId, tokenChange.asset.address)
+        : undefined
     purchaseCurrencyAmountRaw = deriveCurrencyAmountFromAssetResponse(
       tokenChange.tokenStandard,
       tokenChange.asset.chain,
       tokenChange.asset.address,
       tokenChange.asset.decimals,
-      tokenChange.quantity,
+      tokenChange.quantity
     )
 
     transactedUSDValue = parseUSDValueFromAssetChange(tokenChange.transactedValue)
   }
 
-  const dappInfo = transaction.details.application?.address
-    ? {
-        name: transaction.details.application?.name,
-        address: transaction.details.application.address,
-        icon: transaction.details.application?.icon?.url,
-      }
-    : undefined
   return {
     type: TransactionType.NFTMint,
     nftSummaryInfo: {
@@ -74,12 +70,10 @@ export default function parseNFTMintTransaction(
       collectionName,
       imageURL,
       tokenId,
-      address,
     },
     purchaseCurrencyId,
     purchaseCurrencyAmountRaw,
     transactedUSDValue,
     isSpam,
-    dappInfo,
   }
 }

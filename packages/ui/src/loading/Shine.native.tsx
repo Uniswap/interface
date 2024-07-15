@@ -31,7 +31,11 @@ export function Shine({ children, disabled }: ShineProps): JSX.Element {
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
       {
-        translateX: interpolate(xPosition.value, [0, 1], [layout ? -layout.width : 0, layout ? layout.width : 0]),
+        translateX: interpolate(
+          xPosition.value,
+          [0, 1],
+          [layout ? -layout.width : 0, layout ? layout.width : 0]
+        ),
       },
     ],
   }))
@@ -48,8 +52,7 @@ export function Shine({ children, disabled }: ShineProps): JSX.Element {
           nativeEvent: { layout: React.SetStateAction<LayoutRectangle | null | undefined> }
         }): void => {
           setLayout(event.nativeEvent.layout)
-        }}
-      >
+        }}>
         {children}
       </Flex>
     )

@@ -1,8 +1,14 @@
 import { createElement, useMemo } from 'react'
 import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useNativeCurrencyInfo, useWrappedNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
+import {
+  useNativeCurrencyInfo,
+  useWrappedNativeCurrencyInfo,
+} from 'wallet/src/features/tokens/useCurrencyInfo'
+import {
+  SummaryItemProps,
+  TransactionSummaryLayoutProps,
+} from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { TransactionDetails, WrapTransactionInfo } from 'wallet/src/features/transactions/types'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
@@ -29,14 +35,24 @@ export function WrapSummaryItem({
 
     const { currency: inputCurrency } = inputCurrencyInfo
     const { currency: outputCurrency } = outputCurrencyInfo
-    const currencyAmount = getFormattedCurrencyAmount(inputCurrency, transaction.typeInfo.currencyAmountRaw, formatter)
+    const currencyAmount = getFormattedCurrencyAmount(
+      inputCurrency,
+      transaction.typeInfo.currencyAmountRaw,
+      formatter
+    )
     const otherCurrencyAmount = getFormattedCurrencyAmount(
       outputCurrency,
       transaction.typeInfo.currencyAmountRaw,
-      formatter,
+      formatter
     )
     return `${currencyAmount}${inputCurrency.symbol} → ${otherCurrencyAmount}${outputCurrency.symbol}`
-  }, [nativeCurrencyInfo, transaction.typeInfo.currencyAmountRaw, unwrapped, wrappedCurrencyInfo, formatter])
+  }, [
+    nativeCurrencyInfo,
+    transaction.typeInfo.currencyAmountRaw,
+    unwrapped,
+    wrappedCurrencyInfo,
+    formatter,
+  ])
 
   return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
     caption,

@@ -1,14 +1,14 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAllTransactionsBetweenAddresses } from 'wallet/src/features/transactions/hooks/useAllTransactionsBetweenAddresses'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface RecipientInputPanelProps {
   recipientAddress: string
-  onShowRecipientSelector: () => void
+  onToggleShowRecipientSelector: () => void
 }
 
 /**
@@ -17,10 +17,14 @@ interface RecipientInputPanelProps {
  */
 export function RecipientInputPanel({
   recipientAddress,
-  onShowRecipientSelector,
+  onToggleShowRecipientSelector,
 }: RecipientInputPanelProps): JSX.Element {
   return (
-    <TouchableArea px="$spacing32" py="$spacing16" testID={TestID.SelectRecipient} onPress={onShowRecipientSelector}>
+    <TouchableArea
+      px="$spacing32"
+      py="$spacing16"
+      testID={ElementName.SelectRecipient}
+      onPress={onToggleShowRecipientSelector}>
       <Flex gap="$spacing8" py="$spacing24">
         <Flex centered row gap="$spacing4">
           <AddressDisplay hideAddressInSubtitle address={recipientAddress} variant="heading3" />

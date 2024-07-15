@@ -14,7 +14,11 @@ export const UnitagWithProfilePicture = ({
 }): JSX.Element => {
   return (
     <Flex centered gap={-spacing.spacing24}>
-      <UnitagProfilePicture address={address} size={imageSizes.image100} unitagAvatarUri={profilePictureUri} />
+      <UnitagProfilePicture
+        address={address}
+        size={imageSizes.image100}
+        unitagAvatarUri={profilePictureUri}
+      />
       <Flex
         row
         backgroundColor="$surface1"
@@ -25,8 +29,7 @@ export const UnitagWithProfilePicture = ({
         shadowOpacity={0.4}
         shadowRadius="$spacing4"
         transform={[{ rotateZ: '-2deg' }]}
-        zIndex="$popover"
-      >
+        zIndex="$popover">
         <Text color="$accent1" variant="subheading1">
           {unitag}
           <Text color="$neutral3" variant="subheading1">

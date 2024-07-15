@@ -123,12 +123,17 @@ function SortableGridInner<I>({
       <Animated.View
         ref={gridContainerRef}
         style={[styles.gridContainer, animatedContainerStyle]}
-        onLayout={handleGridMeasurement}
-      >
+        onLayout={handleGridMeasurement}>
         {data.map((item, index) => {
           const key = keyExtractor(item, index)
           return (
-            <SortableGridItem key={key} item={item} itemKey={key} numColumns={numColumns} renderItem={renderItem} />
+            <SortableGridItem
+              key={key}
+              item={item}
+              itemKey={key}
+              numColumns={numColumns}
+              renderItem={renderItem}
+            />
           )
         })}
       </Animated.View>
@@ -137,7 +142,10 @@ function SortableGridInner<I>({
       from the animated style was applied. We can't use onLayout on the grid items wrapper component because it already has the same height as containerHeight
       value, thus the onLayout callback won't be called again, because the size
       of the component doesn't change. */}
-      <Animated.View style={[styles.helperView, animatedContainerStyle]} onLayout={handleHelperMeasurement} />
+      <Animated.View
+        style={[styles.helperView, animatedContainerStyle]}
+        onLayout={handleHelperMeasurement}
+      />
     </LayoutAnimationConfig>
   )
 }

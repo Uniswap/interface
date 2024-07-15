@@ -17,7 +17,7 @@ import { hasURL } from 'utils/urlChecks'
 
 function getUniqueAddressesFromPositions(positions: PositionDetails[]): string[] {
   return Array.from(
-    new Set(positions.reduce<string[]>((acc, position) => acc.concat(position.token0, position.token1), [])),
+    new Set(positions.reduce<string[]>((acc, position) => acc.concat(position.token0, position.token1), []))
   )
 }
 

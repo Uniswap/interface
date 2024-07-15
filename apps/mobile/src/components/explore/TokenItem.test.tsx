@@ -4,8 +4,8 @@ import * as exploreHooks from 'src/components/explore/hooks'
 import { TOKEN_ITEM_DATA, tokenItemData } from 'src/test/fixtures'
 import { fireEvent, render, within } from 'src/test/test-utils'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 describe('TokenItem', () => {
   const mockedTokenDetailsNavigation = {
@@ -15,7 +15,9 @@ describe('TokenItem', () => {
   }
 
   beforeAll(() => {
-    jest.spyOn(tokenDetailsHooks, 'useTokenDetailsNavigation').mockReturnValue(mockedTokenDetailsNavigation)
+    jest
+      .spyOn(tokenDetailsHooks, 'useTokenDetailsNavigation')
+      .mockReturnValue(mockedTokenDetailsNavigation)
     jest.spyOn(exploreHooks, 'useExploreTokenContextMenu').mockReturnValue({
       menuActions: [],
       onContextMenuPress: jest.fn(),
@@ -48,7 +50,9 @@ describe('TokenItem', () => {
 
     fireEvent.press(getByTestId(`token-item-${data.name}`), ON_PRESS_EVENT_PAYLOAD)
 
-    expect(mockedTokenDetailsNavigation.navigate).toHaveBeenCalledWith(buildCurrencyId(data.chainId, data.address))
+    expect(mockedTokenDetailsNavigation.navigate).toHaveBeenCalledWith(
+      buildCurrencyId(data.chainId, data.address)
+    )
   })
 
   describe('token price', () => {
@@ -107,7 +111,9 @@ describe('TokenItem', () => {
     ]
 
     it.each(cases)('renders $test metadata subtitle', ({ type, expected }) => {
-      const { getByTestId } = render(<TokenItem index={0} metadataDisplayType={type} tokenItemData={data} />)
+      const { getByTestId } = render(
+        <TokenItem index={0} metadataDisplayType={type} tokenItemData={data} />
+      )
 
       const metadataSubtitle = getByTestId('token-item/metadata-subtitle')
 

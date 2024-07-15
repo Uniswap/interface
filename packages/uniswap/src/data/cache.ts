@@ -1,11 +1,13 @@
 import { InMemoryCache, InMemoryCacheConfig } from '@apollo/client'
 import { Reference, relayStylePagination } from '@apollo/client/utilities'
-import { isTestEnv } from 'utilities/src/environment'
 
 const injectTimestampForRestQueries = (config: InMemoryCacheConfig = {}): InMemoryCacheConfig => {
-  if (config.typePolicies?.Query?.fields?.data && 'merge' in (config.typePolicies?.Query?.fields?.data ?? {})) {
+  if (
+    config.typePolicies?.Query?.fields?.data &&
+    'merge' in (config.typePolicies?.Query?.fields?.data ?? {})
+  ) {
     throw new Error(
-      'Invalid cache config: `data` field already has a `merge` function that conflicts with the injected `merge` function',
+      'Invalid cache config: `data` field already has a `merge` function that conflicts with the injected `merge` function'
     )
   }
 
@@ -62,7 +64,7 @@ export function setupWalletCache(): InMemoryCache {
            */
 
           // Cache redirects don't work in test environment, so we don't use them in tests
-          ...(!isTestEnv()
+          ...(process.env.NODE_ENV !== 'test'
             ? {
                 // simply use chain / address pair as id instead for tokens
                 token: {

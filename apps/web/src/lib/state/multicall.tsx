@@ -20,7 +20,7 @@ export function MulticallUpdater() {
   const contract = useInterfaceMulticall()
   const listenerOptions: ListenerOptions = useMemo(
     () => ({ blocksPerFetch: supportedChain ? UNIVERSE_CHAIN_INFO[supportedChain].blockPerMainnetEpochForChainId : 1 }),
-    [supportedChain],
+    [supportedChain]
   )
 
   const latestMainnetBlockNumber = useMainnetBlockNumber()

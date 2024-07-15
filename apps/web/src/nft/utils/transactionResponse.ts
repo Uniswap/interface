@@ -24,7 +24,7 @@ export const parseTransactionResponse = (transactionResponse: TxResponse | undef
       totalRefundValue = getTotalNftValue(nftsNotPurchased)
       totalUSDRefund = totalRefundValue && parseFloat(formatEther(totalRefundValue)) * ethPrice
       const txFee = BigNumber.from(txReceipt ? txReceipt.gasUsed : 0).mul(
-        BigNumber.from(txReceipt ? txReceipt.effectiveGasPrice : 0),
+        BigNumber.from(txReceipt ? txReceipt.effectiveGasPrice : 0)
       )
       txFeeFiat = parseFloat(formatEther(txFee)) * ethPrice
     }

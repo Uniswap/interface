@@ -11,7 +11,6 @@ import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
@@ -58,7 +57,9 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
 
   const zeroBalance = convertFiatAmountFormatted(0, NumberType.PortfolioBalance)
 
-  const displayName = unitagClaim ? { type: DisplayNameType.Unitag, name: unitagClaim.username } : walletName
+  const displayName = unitagClaim
+    ? { type: DisplayNameType.Unitag, name: unitagClaim.username }
+    : walletName
 
   return (
     <Screen mb="$spacing12" mx="$spacing24">
@@ -80,7 +81,11 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
               size={iconSizes.icon64}
             />
           )}
-          <DisplayNameText displayName={displayName} justifyContent="flex-start" textProps={{ variant: 'body1' }} />
+          <DisplayNameText
+            displayName={displayName}
+            justifyContent="flex-start"
+            textProps={{ variant: 'body1' }}
+          />
           <AnimatedNumber
             colorIndicationDuration={0}
             loading={false}
@@ -96,8 +101,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
             $short={{ variant: 'heading3' }}
             maxFontSizeMultiplier={media.short ? 1.1 : fonts.heading3.maxFontSizeMultiplier}
             textAlign="center"
-            variant="heading3"
-          >
+            variant="heading3">
             {t('onboarding.wallet.title')}
           </Text>
           <Text
@@ -105,8 +109,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
             color="$neutral2"
             maxFontSizeMultiplier={media.short ? 1.1 : fonts.body1.maxFontSizeMultiplier}
             textAlign="center"
-            variant="subheading2"
-          >
+            variant="subheading2">
             {t('onboarding.wallet.description.full')}
           </Text>
         </Flex>
@@ -120,9 +123,12 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
                 <Flex
                   borderRadius="$roundedFull"
                   p="$spacing8"
-                  style={{ backgroundColor: opacify(10, colors.sporeWhite.val) }}
-                >
-                  <LockIcon color={colors.sporeWhite.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+                  style={{ backgroundColor: opacify(10, colors.sporeWhite.val) }}>
+                  <LockIcon
+                    color={colors.sporeWhite.val}
+                    height={iconSizes.icon16}
+                    width={iconSizes.icon16}
+                  />
                 </Flex>
                 <Text color="$sporeWhite" variant="buttonLabel2">
                   {t('onboarding.wallet.continue')}
@@ -131,7 +137,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
               <Arrow color={colors.sporeWhite.val} direction="e" size={iconSizes.icon24} />
             </Flex>
           }
-          testID={TestID.Next}
+          testID={ElementName.Next}
           onPress={onPressNext}
         />
       </Trace>

@@ -10,7 +10,14 @@ export function HiddenNftsRowLeft({ numHidden }: { numHidden: number }): JSX.Ele
   const { t } = useTranslation()
 
   return (
-    <Flex grow row alignItems="center" justifyContent="flex-start" ml="$spacing12" my="$spacing16" py="$spacing4">
+    <Flex
+      grow
+      row
+      alignItems="center"
+      justifyContent="flex-start"
+      ml="$spacing12"
+      my="$spacing16"
+      py="$spacing4">
       <Text color="$neutral2" variant="subheading2">
         {t('tokens.nfts.hidden.label', { numHidden })}
       </Text>
@@ -18,7 +25,13 @@ export function HiddenNftsRowLeft({ numHidden }: { numHidden: number }): JSX.Ele
   )
 }
 
-export function HiddenNftsRowRight({ isExpanded, onPress }: { isExpanded: boolean; onPress: () => void }): JSX.Element {
+export function HiddenNftsRowRight({
+  isExpanded,
+  onPress,
+}: {
+  isExpanded: boolean
+  onPress: () => void
+}): JSX.Element {
   const { t } = useTranslation()
 
   const chevronRotate = useSharedValue(isExpanded ? 180 : 0)
@@ -38,7 +51,11 @@ export function HiddenNftsRowRight({ isExpanded, onPress }: { isExpanded: boolea
   }, [chevronRotate, onPress])
 
   return (
-    <TouchableArea hapticFeedback flexGrow={1} hapticStyle={ImpactFeedbackStyle.Light} onPress={onPressRow}>
+    <TouchableArea
+      hapticFeedback
+      flexGrow={1}
+      hapticStyle={ImpactFeedbackStyle.Light}
+      onPress={onPressRow}>
       <Flex row justifyContent="flex-end" mr="$spacing4" my="$spacing16">
         <Flex
           row
@@ -47,13 +64,17 @@ export function HiddenNftsRowRight({ isExpanded, onPress }: { isExpanded: boolea
           borderRadius="$roundedFull"
           pl="$spacing12"
           pr="$spacing8"
-          py="$spacing4"
-        >
+          py="$spacing4">
           <Text color="$neutral2" variant="buttonLabel3">
             {isExpanded ? t('common.button.hide') : t('common.button.show')}
           </Text>
           <AnimatedFlex style={chevronAnimatedStyle}>
-            <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
+            <RotatableChevron
+              color="$neutral2"
+              direction="down"
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
+            />
           </AnimatedFlex>
         </Flex>
       </Flex>

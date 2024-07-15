@@ -20,7 +20,7 @@ const ERC20_INTERFACE = new Interface([
 
 export default function approveAmountCalldata(
   amount: CurrencyAmount<Currency>,
-  spender: string,
+  spender: string
 ): { to: string; data: string; value: '0x0' } {
   if (!amount.currency.isToken) {
     throw new Error('Must call with an amount of token')

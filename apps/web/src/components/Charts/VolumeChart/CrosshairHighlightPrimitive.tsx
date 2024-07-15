@@ -36,7 +36,7 @@ export function positionsLine(
   positionMedia: number,
   pixelRatio: number,
   desiredWidthMedia = 1,
-  widthIsBitmap?: boolean,
+  widthIsBitmap?: boolean
 ): BitmapPositionLength {
   const scaledPosition = Math.round(pixelRatio * positionMedia)
   const lineBitmapWidth = widthIsBitmap ? desiredWidthMedia : Math.round(desiredWidthMedia * pixelRatio)
@@ -77,7 +77,7 @@ class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
       const margin =
         Math.min(
           Math.max(scope.horizontalPixelRatio, crosshairPos.length),
-          this._data.barSpacing * scope.horizontalPixelRatio,
+          this._data.barSpacing * scope.horizontalPixelRatio
         ) * 0.035
       const crosshairXPosition = crosshairPos.position + margin
 
@@ -88,7 +88,7 @@ class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
         crosshairYPosition,
         crosshairPos.length,
         scope.bitmapSize.height - crosshairYPosition,
-        9,
+        9
       )
       ctx.fill()
 
@@ -104,7 +104,7 @@ class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
         crosshairXPosition + crosshairPos.length,
         crosshairYPosition,
         scope.bitmapSize.width - (crosshairXPosition + crosshairPos.length),
-        scope.bitmapSize.height - crosshairYPosition,
+        scope.bitmapSize.height - crosshairYPosition
       )
       // reset global settings
       ctx.globalAlpha = 1

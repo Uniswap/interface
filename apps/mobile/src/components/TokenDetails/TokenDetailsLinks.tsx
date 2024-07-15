@@ -10,7 +10,11 @@ import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { currencyIdToAddress, currencyIdToChain, isDefaultNativeAddress } from 'wallet/src/utils/currencyId'
+import {
+  currencyIdToAddress,
+  currencyIdToChain,
+  isDefaultNativeAddress,
+} from 'wallet/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'wallet/src/utils/linking'
 
 export function TokenDetailsLinks({
@@ -65,7 +69,7 @@ export function TokenDetailsLinks({
               <LinkButton
                 buttonType={LinkButtonType.Copy}
                 element={ElementName.Copy}
-                label={t('common.text.contract')}
+                label={t('token.links.contract')}
                 value={address}
               />
             )}

@@ -2,7 +2,7 @@ import React, { ComponentClass } from 'react'
 import Animated, { AnimateProps } from 'react-native-reanimated'
 
 export function withAnimated<Props extends object>(
-  WrappedComponent: React.ComponentType<Props>,
+  WrappedComponent: React.ComponentType<Props>
 ): ComponentClass<AnimateProps<Props>> {
   const displayName = WrappedComponent.displayName || WrappedComponent.name || 'Component'
 

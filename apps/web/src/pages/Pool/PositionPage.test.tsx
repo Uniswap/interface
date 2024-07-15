@@ -40,7 +40,7 @@ const pool = new Pool(
   FeeAmount.LOW,
   '1829845065927797685282268152898194',
   '118646741804633449199',
-  200958,
+  200958
 )
 
 const USDC_AMOUNT = CurrencyAmount.fromRawAmount(USDC_MAINNET, '1224156977')

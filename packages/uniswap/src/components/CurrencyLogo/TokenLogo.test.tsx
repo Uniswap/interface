@@ -8,7 +8,9 @@ jest.mock('utilities/src/logger/logger')
 
 describe('TokenLogo', () => {
   it('renders without error', () => {
-    const tree = render(<TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="https://example.com" />)
+    const tree = render(
+      <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="https://example.com" />
+    )
 
     expect(tree).toMatchSnapshot()
   })
@@ -16,7 +18,11 @@ describe('TokenLogo', () => {
   describe('token image', () => {
     it('renders svg when url is svg', () => {
       const { queryByTestId } = render(
-        <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="https://example.com/image.svg" />,
+        <TokenLogo
+          chainId={UniverseChainId.ArbitrumOne}
+          symbol="DAI"
+          url="https://example.com/image.svg"
+        />
       )
 
       const tokenRemoteSvg = queryByTestId('svg-token-image')
@@ -28,7 +34,11 @@ describe('TokenLogo', () => {
 
     it('renders image when url is valid and not svg', () => {
       const { queryByTestId } = render(
-        <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="https://example.com/image.png" />,
+        <TokenLogo
+          chainId={UniverseChainId.ArbitrumOne}
+          symbol="DAI"
+          url="https://example.com/image.png"
+        />
       )
 
       const tokenRemoteSvg = queryByTestId('svg-token-image')
@@ -39,7 +49,9 @@ describe('TokenLogo', () => {
     })
 
     it('renders fallback text when url is not specified', () => {
-      const { queryByText } = render(<TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" />)
+      const { queryByText } = render(
+        <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" />
+      )
 
       const fallbackText = queryByText('DAI')
 
@@ -47,7 +59,9 @@ describe('TokenLogo', () => {
     })
 
     it('renders fallback text when url is invalid', () => {
-      const { queryByText } = render(<TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="invalid-url" />)
+      const { queryByText } = render(
+        <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="invalid-url" />
+      )
 
       const fallbackText = queryByText('DAI')
 
@@ -60,7 +74,7 @@ describe('TokenLogo', () => {
           chainId={UniverseChainId.ArbitrumOne}
           symbol="DAI"
           url="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-        />,
+        />
       )
 
       const fallbackText = queryByText('DAI')
@@ -72,7 +86,7 @@ describe('TokenLogo', () => {
   describe('network logo', () => {
     it('renders network logo by default', () => {
       const { queryByTestId } = render(
-        <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="https://example.com" />,
+        <TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="https://example.com" />
       )
 
       const networkLogo = queryByTestId('network-logo')
@@ -87,7 +101,7 @@ describe('TokenLogo', () => {
           hideNetworkLogo={false}
           symbol="DAI"
           url="https://example.com"
-        />,
+        />
       )
 
       const networkLogo = queryByTestId('network-logo')
@@ -97,7 +111,12 @@ describe('TokenLogo', () => {
 
     it('does not render network logo when hideNetworkLogo is true', () => {
       const { queryByTestId } = render(
-        <TokenLogo hideNetworkLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="https://example.com" />,
+        <TokenLogo
+          hideNetworkLogo
+          chainId={UniverseChainId.ArbitrumOne}
+          symbol="DAI"
+          url="https://example.com"
+        />
       )
 
       const networkLogo = queryByTestId('network-logo')
@@ -115,7 +134,7 @@ describe('TokenLogo', () => {
 
     it('does not render network logo when chainId is Mainnet', () => {
       const { queryByTestId } = render(
-        <TokenLogo chainId={UniverseChainId.Mainnet} symbol="DAI" url="https://example.com" />,
+        <TokenLogo chainId={UniverseChainId.Mainnet} symbol="DAI" url="https://example.com" />
       )
 
       const networkLogo = queryByTestId('network-logo')

@@ -29,14 +29,14 @@ export function useMintActionHandlers(noLiquidity: boolean | undefined): {
     (typedValue: string) => {
       dispatch(typeInput({ field: Field.CURRENCY_A, typedValue, noLiquidity: noLiquidity === true }))
     },
-    [dispatch, noLiquidity],
+    [dispatch, noLiquidity]
   )
 
   const onFieldBInput = useCallback(
     (typedValue: string) => {
       dispatch(typeInput({ field: Field.CURRENCY_B, typedValue, noLiquidity: noLiquidity === true }))
     },
-    [dispatch, noLiquidity],
+    [dispatch, noLiquidity]
   )
 
   return {
@@ -47,7 +47,7 @@ export function useMintActionHandlers(noLiquidity: boolean | undefined): {
 
 export function useDerivedMintInfo(
   currencyA: Currency | undefined,
-  currencyB: Currency | undefined,
+  currencyB: Currency | undefined
 ): {
   dependentField: Field
   currencies: { [field in Field]?: Currency }
@@ -73,7 +73,7 @@ export function useDerivedMintInfo(
       [Field.CURRENCY_A]: currencyA ?? undefined,
       [Field.CURRENCY_B]: currencyB ?? undefined,
     }),
-    [currencyA, currencyB],
+    [currencyA, currencyB]
   )
 
   // pair
@@ -87,13 +87,13 @@ export function useDerivedMintInfo(
       pairState === PairState.EXISTS &&
         pair &&
         JSBI.equal(pair.reserve0.quotient, ZERO) &&
-        JSBI.equal(pair.reserve1.quotient, ZERO),
+        JSBI.equal(pair.reserve1.quotient, ZERO)
     )
 
   // balances
   const balances = useCurrencyBalances(
     account.address,
-    useMemo(() => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]], [currencies]),
+    useMemo(() => [currencies[Field.CURRENCY_A], currencies[Field.CURRENCY_B]], [currencies])
   )
   const currencyBalances: { [field in Field]?: CurrencyAmount<Currency> } = {
     [Field.CURRENCY_A]: balances[0],
@@ -103,7 +103,7 @@ export function useDerivedMintInfo(
   // amounts
   const independentAmount: CurrencyAmount<Currency> | undefined = tryParseCurrencyAmount(
     typedValue,
-    currencies[independentField],
+    currencies[independentField]
   )
   const dependentAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
     if (noLiquidity) {
@@ -164,7 +164,7 @@ export function useDerivedMintInfo(
           'mint/hooks',
           'useDerivedMintInfo',
           `Error getLiquidityMinted: ${error}. Total supply: ${totalSupply}, tokenAmountA: ${tokenAmountA}, tokenAmountB: ${tokenAmountB}`,
-          { error },
+          { error }
         )
         return undefined
       }

@@ -3,19 +3,22 @@ import { useTranslation } from 'react-i18next'
 import { SearchWalletItemBase } from 'src/components/explore/search/items/SearchWalletItemBase'
 import { Flex, Text } from 'ui/src'
 import { imageSizes } from 'ui/src/theme'
-import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import { getCompletedENSName } from 'wallet/src/features/ens/useENS'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { ENSAddressSearchResult } from 'wallet/src/features/search/SearchResult'
+import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type SearchENSAddressItemProps = {
   searchResult: ENSAddressSearchResult
   searchContext?: SearchContext
 }
 
-export function SearchENSAddressItem({ searchResult, searchContext }: SearchENSAddressItemProps): JSX.Element {
+export function SearchENSAddressItem({
+  searchResult,
+  searchContext,
+}: SearchENSAddressItemProps): JSX.Element {
   const { t } = useTranslation()
 
   // Use `savedPrimaryEnsName` for WalletSearchResults that are stored in the search history
@@ -33,7 +36,7 @@ export function SearchENSAddressItem({ searchResult, searchContext }: SearchENSA
    * is `uniswap.eth`, then we should show "uni.eth | owned by uniswap.eth"
    */
   const { data: fetchedPrimaryENSName, loading: isFetchingPrimaryENSName } = useENSName(
-    savedPrimaryENSName ? undefined : address,
+    savedPrimaryENSName ? undefined : address
   )
 
   const primaryENSName = savedPrimaryENSName ?? fetchedPrimaryENSName
@@ -50,7 +53,11 @@ export function SearchENSAddressItem({ searchResult, searchContext }: SearchENSA
       <Flex row alignItems="center" gap="$spacing12" px="$spacing8" py="$spacing12">
         <AccountIcon address={address} avatarUri={avatar} size={imageSizes.image40} />
         <Flex shrink>
-          <Text ellipsizeMode="tail" numberOfLines={1} testID={`address-display/name/${ensName}`} variant="body1">
+          <Text
+            ellipsizeMode="tail"
+            numberOfLines={1}
+            testID={`address-display/name/${ensName}`}
+            variant="body1">
             {completedENSName || formattedAddress}
           </Text>
           {showSecondLine ? (

@@ -3,15 +3,21 @@ import { useTranslation } from 'react-i18next'
 import { useIsDarkMode } from 'ui/src'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { AssetType } from 'wallet/src/entities/assets'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
+import {
+  SummaryItemProps,
+  TransactionSummaryLayoutProps,
+} from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
-import { FiatPurchaseTransactionInfo, TransactionDetails } from 'wallet/src/features/transactions/types'
+import {
+  FiatPurchaseTransactionInfo,
+  TransactionDetails,
+} from 'wallet/src/features/transactions/types'
+import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function FiatPurchaseSummaryItem({
   transaction,
@@ -37,13 +43,16 @@ export function FiatPurchaseSummaryItem({
   const outputCurrencyInfo = useCurrencyInfo(
     outputCurrency?.metadata.contractAddress
       ? buildCurrencyId(chainId, outputCurrency?.metadata.contractAddress)
-      : undefined,
+      : undefined
   )
 
   const cryptoSymbol =
-    outputSymbol ?? getSymbolDisplayText(outputCurrencyInfo?.currency.symbol) ?? t('transaction.currency.unknown')
+    outputSymbol ??
+    getSymbolDisplayText(outputCurrencyInfo?.currency.symbol) ??
+    t('transaction.currency.unknown')
 
-  const cryptoPurchaseAmount = formatNumberOrString({ value: outputCurrencyAmount }) + ' ' + cryptoSymbol
+  const cryptoPurchaseAmount =
+    formatNumberOrString({ value: outputCurrencyAmount }) + ' ' + cryptoSymbol
 
   const isDarkMode = useIsDarkMode()
   const serviceProviderLogoUrl = getOptionalServiceProviderLogo(serviceProviderLogo, isDarkMode)

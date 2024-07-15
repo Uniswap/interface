@@ -4,7 +4,11 @@ import {
   ReceiveCurrencyTxNotification,
   ReceiveNFTNotification,
 } from 'wallet/src/features/notifications/types'
-import { TransactionDetails, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
+import {
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'wallet/src/features/transactions/types'
 
 /**
  * Based on notification type info, returns an AppNotification object for either NFT or Currency receive.
@@ -16,7 +20,7 @@ import { TransactionDetails, TransactionStatus, TransactionType } from 'wallet/s
 
 export function buildReceiveNotification(
   transactionDetails: TransactionDetails,
-  receivingAddress: Address, // not included in transactionDetails
+  receivingAddress: Address // not included in transactionDetails
 ): ReceiveNFTNotification | ReceiveCurrencyTxNotification | undefined {
   const { typeInfo, status, chainId, hash, id } = transactionDetails
 
@@ -28,12 +32,17 @@ export function buildReceiveNotification(
   const baseNotificationData = {
     txStatus: status,
     chainId,
+    txHash: hash,
     address: receivingAddress,
     txId: id,
   }
 
   // Currency receive txn.
-  if (typeInfo?.assetType === AssetType.Currency && typeInfo?.currencyAmountRaw && typeInfo?.sender) {
+  if (
+    typeInfo?.assetType === AssetType.Currency &&
+    typeInfo?.currencyAmountRaw &&
+    typeInfo?.sender
+  ) {
     return {
       ...baseNotificationData,
       type: AppNotificationType.Transaction,
@@ -46,7 +55,10 @@ export function buildReceiveNotification(
   }
 
   // NFT receive txn.
-  if ((typeInfo?.assetType === AssetType.ERC1155 || typeInfo?.assetType === AssetType.ERC721) && typeInfo?.tokenId) {
+  if (
+    (typeInfo?.assetType === AssetType.ERC1155 || typeInfo?.assetType === AssetType.ERC721) &&
+    typeInfo?.tokenId
+  ) {
     return {
       ...baseNotificationData,
       type: AppNotificationType.Transaction,

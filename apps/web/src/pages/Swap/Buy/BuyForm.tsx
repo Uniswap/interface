@@ -29,13 +29,13 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 const InputWrapper = styled(Column)`
   position: relative;
   background-color: ${({ theme }) => theme.surface2};
-  padding: 0 16px 52px 16px;
-  height: 342px;
+  padding: 16px;
+  height: 312px;
   align-items: center;
   border-radius: 20px;
-  justify-content: flex-end;
+  justify-content: center;
   overflow: hidden;
-  gap: 8px;
+  gap: 16px;
 `
 
 const HeaderRow = styled(Row)`
@@ -60,7 +60,7 @@ function BuyFormInner({ disabled }: BuyFormProps) {
   const { buyFormState, setBuyFormState, derivedBuyFormInfo } = useBuyFormContext()
   const { inputAmount, selectedCountry, quoteCurrency, currencyModalOpen, countryModalOpen, providerModalOpen } =
     buyFormState
-  const { amountOut, supportedTokens, countryOptionsResult, error, notAvailableInThisRegion } = derivedBuyFormInfo
+  const { amountOutFiat, supportedTokens, countryOptionsResult } = derivedBuyFormInfo
 
   const postWidthAdjustedDisplayValue = useWidthAdjustedDisplayValue(inputAmount)
   const hiddenObserver = useResizeObserver<HTMLElement>()
@@ -91,11 +91,6 @@ function BuyFormInner({ disabled }: BuyFormProps) {
               countryCode={selectedCountry?.countryCode}
             />
           </HeaderRow>
-          {error && (
-            <Text variant="body3" userSelect="none" color="$statusCritical">
-              {error.message}
-            </Text>
-          )}
           <NumericalInputWrapper>
             <NumericalInputSymbolContainer showPlaceholder={!inputAmount}>{fiatSymbol}</NumericalInputSymbolContainer>
             <StyledNumericalInput
@@ -114,16 +109,15 @@ function BuyFormInner({ disabled }: BuyFormProps) {
             }}
             selectedCurrencyInfo={quoteCurrency.currencyInfo ?? ethCurrencyInfo}
             formattedAmount={formatNumberOrString({
-              input: amountOut || '0',
+              input: amountOutFiat || '0',
               type: NumberType.TokenNonTx,
             })}
             disabled={disabled}
             iconSize={18}
             chevronDirection="down"
             backgroundColor="$surface1"
-            amountReady={Boolean(amountOut)}
           />
-          <Row gap="md" justify="center" marginTop="8px">
+          <Row gap="md" justify="center">
             {PREDEFINED_AMOUNTS.map((amount: number) => (
               <PredefinedAmount
                 onClick={() => {
@@ -136,18 +130,6 @@ function BuyFormInner({ disabled }: BuyFormProps) {
               />
             ))}
           </Row>
-          {notAvailableInThisRegion && (
-            <Text
-              variant="body3"
-              userSelect="none"
-              color="$neutral2"
-              textAlign="center"
-              position="absolute"
-              bottom="20px"
-            >
-              <Trans i18nKey="fiatOnRamp.notAvailable.error" />
-            </Text>
-          )}
         </InputWrapper>
         <BuyFormButton />
       </Column>

@@ -11,9 +11,12 @@ import { Flex, Text, TouchableArea, Unicon, useIsDarkMode } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { FORMAT_DATE_TIME_SHORT, useLocalizedDayjs } from 'wallet/src/features/language/localizedDayjs'
+import {
+  FORMAT_DATE_TIME_SHORT,
+  useLocalizedDayjs,
+} from 'wallet/src/features/language/localizedDayjs'
+import { sanitizeAddressText, shortenAddress } from 'wallet/src/utils/addresses'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackup>
 
@@ -39,8 +42,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
   return (
     <OnboardingScreen
       subtitle={t('account.cloud.backup.subtitle', { cloudProviderName: getCloudProviderName() })}
-      title={t('account.cloud.backup.title')}
-    >
+      title={t('account.cloud.backup.title')}>
       <ScrollView>
         <Flex gap="$spacing8">
           {sortedBackups.map((backup) => {
@@ -55,8 +57,7 @@ export function RestoreCloudBackupScreen({ navigation, route: { params } }: Prop
                 p="$spacing16"
                 shadowColor="$surface3"
                 shadowRadius={!isDarkMode ? '$spacing4' : undefined}
-                onPress={(): Promise<void> => onPressRestoreBackup(backup)}
-              >
+                onPress={(): Promise<void> => onPressRestoreBackup(backup)}>
                 <Flex row alignItems="center" justifyContent="space-between">
                   <Flex centered row gap="$spacing12">
                     <Unicon address={mnemonicId} size={32} />

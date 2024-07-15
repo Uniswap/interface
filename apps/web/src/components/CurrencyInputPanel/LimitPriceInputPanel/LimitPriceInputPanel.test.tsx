@@ -16,7 +16,6 @@ const mockSwapAndLimitContextValue = {
   setSelectedChainId: jest.fn(),
   currentTab: SwapTab.Limit,
   setCurrentTab: jest.fn(),
-  isSwapAndLimitContext: true,
 }
 
 const mockLimitContextValue = {
@@ -54,7 +53,7 @@ describe('LimitPriceInputPanel', () => {
     const { container } = render(
       <SwapAndLimitContext.Provider value={mockSwapAndLimitContextValue}>
         <LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />
-      </SwapAndLimitContext.Provider>,
+      </SwapAndLimitContext.Provider>
     )
     expect(screen.getByText('Limit price')).toBeVisible()
     expect(screen.getByPlaceholderText('0')).toBeVisible()
@@ -68,7 +67,7 @@ describe('LimitPriceInputPanel', () => {
         <LimitContext.Provider value={mockLimitContextValue}>
           <LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />
         </LimitContext.Provider>
-      </SwapAndLimitContext.Provider>,
+      </SwapAndLimitContext.Provider>
     )
     expect(screen.getByText('DAI')).toBeVisible()
     expect(screen.getByPlaceholderText('0')).toBeVisible()
@@ -89,7 +88,7 @@ describe('LimitPriceInputPanel', () => {
         <LimitContext.Provider value={mockLimitContextValue}>
           <LimitPriceInputPanel onCurrencySelect={onCurrencySelect} />
         </LimitContext.Provider>
-      </SwapAndLimitContext.Provider>,
+      </SwapAndLimitContext.Provider>
     )
     expect(screen.getByText('DAI')).toBeVisible()
     expect(container.querySelector('.token-symbol-container')).toHaveTextContent('USDC')

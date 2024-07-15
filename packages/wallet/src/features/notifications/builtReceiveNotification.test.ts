@@ -50,6 +50,7 @@ describe(buildReceiveNotification, () => {
         sender: receiveNftTypeInfo.sender,
         address: account.address,
         tokenAddress: receiveNftTypeInfo.tokenAddress,
+        txHash: testTransaction.hash,
         txId: testTransaction.id,
         txStatus: testTransaction.status,
       })
@@ -67,6 +68,7 @@ describe(buildReceiveNotification, () => {
         currencyAmountRaw: receiveCurrencyTypeInfo.currencyAmountRaw,
         sender: receiveCurrencyTypeInfo.sender,
         tokenAddress: receiveCurrencyTypeInfo.tokenAddress,
+        txHash: testTransaction.hash,
         txId: testTransaction.id,
         txStatus: testTransaction.status,
       })

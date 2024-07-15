@@ -14,7 +14,7 @@ Anytime a required property is added or any property is renamed or deleted to/fr
 
 ### How to migrate
 
-1. Increment the `MOBILE_STATE_VERSION` and/or `EXTENSION_STATE_VERSION` of `persistConfig` defined in `mobile/src/app/migrations.ts` and `extension/src/store/migrations.ts`.
+1. Increment the `MOBILE_STATE_VERSION` and/or `EXTENSION_STATE_VERSION` of `persistConfig` defined in `mobile/src/app/migrations.ts` and `stretch/src/store/migrations.ts`.
 2. Create a migration function within `migrations.ts`. The migration key should be the same as the `version` defined in the previous step.
 3. Write a test for your each of your migrations within `migrations.test.ts` (you will need to write separate tests for each app).
 4. Create a new schema within `schema.ts` for each app and ensure it is being exported by the `getSchema` function at the bottom of the file.

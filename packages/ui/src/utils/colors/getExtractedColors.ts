@@ -11,7 +11,7 @@ export type ExtractedColors = {
 export async function getExtractedColors(
   imageUrl: Maybe<string>,
   fallback: ColorKeys = 'accent1',
-  cache = true,
+  cache = true
 ): Promise<ExtractedColors | undefined> {
   if (!imageUrl) {
     return

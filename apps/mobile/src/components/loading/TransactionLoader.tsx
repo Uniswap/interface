@@ -9,8 +9,20 @@ interface TransactionLoaderProps {
 export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Element {
   return (
     <Flex opacity={opacity} overflow="hidden" sentry-label="TransactionLoader">
-      <Flex grow row alignItems="flex-start" gap="$spacing16" justifyContent="space-between" py="$spacing12">
-        <Flex row shrink alignItems="center" gap="$spacing12" height="100%" justifyContent="flex-start">
+      <Flex
+        grow
+        row
+        alignItems="flex-start"
+        gap="$spacing16"
+        justifyContent="space-between"
+        py="$spacing12">
+        <Flex
+          row
+          shrink
+          alignItems="center"
+          gap="$spacing12"
+          height="100%"
+          justifyContent="flex-start">
           <Flex
             centered
             backgroundColor="$neutral3"
@@ -27,7 +39,12 @@ export function TransactionLoader({ opacity }: TransactionLoaderProps): JSX.Elem
                 variant="body1"
               />
             </Flex>
-            <Text loading="no-shimmer" loadingPlaceholderText="Caption Text" numberOfLines={1} variant="subheading2" />
+            <Text
+              loading="no-shimmer"
+              loadingPlaceholderText="Caption Text"
+              numberOfLines={1}
+              variant="subheading2"
+            />
           </Flex>
         </Flex>
       </Flex>

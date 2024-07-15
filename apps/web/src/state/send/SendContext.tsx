@@ -12,25 +12,26 @@ import {
 import { RecipientData, SendInfo, useDerivedSendInfo } from 'state/send/hooks'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 
-export type SendState = {
-  readonly exactAmountToken?: string
-  readonly exactAmountFiat?: string
-  readonly recipient: string
-  readonly inputCurrency?: Currency
-  readonly inputInFiat: boolean
-  readonly validatedRecipientData?: RecipientData
-} & (
+export type SendState =
   | {
-      readonly exactAmountToken: string
-      readonly exactAmountFiat: undefined
-      readonly inputInFiat: false
-    }
-  | {
-      readonly exactAmountFiat: string
-      readonly exactAmountToken: undefined
-      readonly inputInFiat: true
-    }
-)
+      readonly exactAmountToken?: string
+      readonly exactAmountFiat?: string
+      readonly recipient: string
+      readonly inputCurrency?: Currency
+      readonly inputInFiat: boolean
+      readonly validatedRecipientData?: RecipientData
+    } & (
+      | {
+          readonly exactAmountToken: string
+          readonly exactAmountFiat: undefined
+          readonly inputInFiat: false
+        }
+      | {
+          readonly exactAmountFiat: string
+          readonly exactAmountToken: undefined
+          readonly inputInFiat: true
+        }
+    )
 
 export type SendContextType = {
   sendState: SendState
@@ -89,7 +90,7 @@ export function SendContextProvider({ children }: PropsWithChildren) {
       setSendState,
       derivedSendInfo,
     }),
-    [derivedSendInfo, setSendState, sendState],
+    [derivedSendInfo, setSendState, sendState]
   )
 
   return <SendContext.Provider value={value}>{children}</SendContext.Provider>

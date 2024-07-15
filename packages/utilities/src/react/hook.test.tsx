@@ -71,7 +71,9 @@ describe('useAsyncData', () => {
     const asyncCallback = jest.fn().mockResolvedValue('data')
     const onCancel = jest.fn()
 
-    const { unmount, rerender, waitForNextUpdate } = renderHook(() => useAsyncData(asyncCallback, onCancel))
+    const { unmount, rerender, waitForNextUpdate } = renderHook(() =>
+      useAsyncData(asyncCallback, onCancel)
+    )
 
     await act(async () => {
       rerender()
@@ -91,7 +93,7 @@ describe('useAsyncData', () => {
       ({ asyncCallback, onCancel }) => useAsyncData(asyncCallback, onCancel),
       {
         initialProps: { asyncCallback: initialCallback, onCancel: cancel },
-      },
+      }
     )
 
     expect(initialCallback).toHaveBeenCalledTimes(1)
@@ -115,7 +117,7 @@ describe('useAsyncData', () => {
       ({ asyncCallback, onCancel }) => useAsyncData(asyncCallback, onCancel),
       {
         initialProps: { asyncCallback: initialCallback, onCancel: cancel },
-      },
+      }
     )
     const newCallback = jest.fn().mockResolvedValue('data')
 
@@ -134,9 +136,12 @@ describe('useAsyncData', () => {
 
   it('enters loading state and returns new callback result when the callback changes', async () => {
     const initialCallback = jest.fn().mockImplementation(() => createPromise('data1'))
-    const { rerender, result, waitForNextUpdate } = renderHook(({ asyncCallback }) => useAsyncData(asyncCallback), {
-      initialProps: { asyncCallback: initialCallback },
-    })
+    const { rerender, result, waitForNextUpdate } = renderHook(
+      ({ asyncCallback }) => useAsyncData(asyncCallback),
+      {
+        initialProps: { asyncCallback: initialCallback },
+      }
+    )
 
     expect(result.current).toEqual({ data: undefined, isLoading: true })
 
@@ -196,11 +201,11 @@ describe('useMemoCompare', () => {
       (props) =>
         useMemoCompare(
           () => props,
-          () => true,
+          () => true
         ),
       {
         initialProps: initialValue,
-      },
+      }
     )
 
     rerender({ a: 1 })
@@ -212,11 +217,11 @@ describe('useMemoCompare', () => {
       (props) =>
         useMemoCompare(
           () => props,
-          () => false,
+          () => false
         ),
       {
         initialProps: { a: 1 },
-      },
+      }
     )
 
     const newValue = { a: 2 }

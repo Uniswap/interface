@@ -28,7 +28,11 @@ export function ClientDetails({
   return (
     <Flex centered gap="$spacing12">
       <DappHeaderIcon dapp={dapp} permitCurrencyInfo={permitCurrencyInfo} />
-      <HeaderText permitAmount={permitInfo?.amount} permitCurrency={permitCurrencyInfo?.currency} request={request} />
+      <HeaderText
+        permitAmount={permitInfo?.amount}
+        permitCurrency={permitCurrencyInfo?.currency}
+        request={request}
+      />
       <LinkButton
         color={colors.accent1.val}
         iconColor={colors.accent1.val}

@@ -29,10 +29,10 @@ export function useExactOutputWillFail({
   exactOutputWouldFailIfCurrenciesSwitched: boolean
 } {
   const { hasBuyTax: inputTokenHasBuyTax, hasSellTax: inputTokenHasSellTax } = hasTokenFee(
-    currencies[CurrencyField.INPUT],
+    currencies[CurrencyField.INPUT]
   )
   const { hasBuyTax: outputTokenHasBuyTax, hasSellTax: outputTokenHasSellTax } = hasTokenFee(
-    currencies[CurrencyField.OUTPUT],
+    currencies[CurrencyField.OUTPUT]
   )
   const exactOutputWillFail = inputTokenHasSellTax || outputTokenHasBuyTax
   const exactOutputWouldFailIfCurrenciesSwitched = inputTokenHasBuyTax || outputTokenHasSellTax

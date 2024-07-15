@@ -80,7 +80,11 @@ export const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 10, minWait: 250, maxWai
 
 export const DEFAULT_MS_BEFORE_WARNING = ONE_MINUTE_MS * 10
 
-export const ETHEREUM_CHAIN_IDS = [UniverseChainId.Mainnet, UniverseChainId.Goerli, UniverseChainId.Sepolia] as const
+export const ETHEREUM_CHAIN_IDS = [
+  UniverseChainId.Mainnet,
+  UniverseChainId.Goerli,
+  UniverseChainId.Sepolia,
+] as const
 
 type EthereumChainId = (typeof ETHEREUM_CHAIN_IDS)[number]
 
@@ -134,7 +138,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Etherscan',
       url: 'https://etherscan.io/',
-      apiURL: 'https://api.etherscan.io',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore',
@@ -198,7 +201,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Etherscan',
       url: 'https://sepolia.etherscan.io/',
-      apiURL: 'https://api-sepolia.etherscan.io',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore',
@@ -264,7 +266,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Etherscan',
       url: 'https://goerli.etherscan.io/',
-      apiURL: 'https://api-goerli.etherscan.io',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore',
@@ -326,7 +327,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Arbiscan',
       url: 'https://arbiscan.io/',
-      apiURL: 'https://api.arbiscan.io',
     },
     helpCenterUrl: 'https://help.uniswap.org/en/collections/3137787-uniswap-on-arbitrum',
     infoLink: 'https://app.uniswap.org/explore/tokens/arbitrum',
@@ -353,7 +353,10 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
       default: { http: ['https://arb1.arbitrum.io/rpc'] },
       fallback: { http: ['https://arbitrum.public-rpc.com'] },
       appOnly: {
-        http: [`https://arbitrum-mainnet.infura.io/v3/${config.infuraKey}`, config.quicknodeArbitrumRpcUrl],
+        http: [
+          `https://arbitrum-mainnet.infura.io/v3/${config.infuraKey}`,
+          config.quicknodeArbitrumRpcUrl,
+        ],
       },
       [RPCType.PublicAlt]: { http: ['https://arb1.arbitrum.io/rpc'] },
     },
@@ -438,9 +441,9 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'OP Etherscan',
       url: 'https://optimistic.etherscan.io/',
-      apiURL: 'https://api-optimistic.etherscan.io',
     },
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
+    helpCenterUrl:
+      'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     infoLink: 'https://app.uniswap.org/explore/tokens/optimism',
     infuraPrefix: 'optimism-mainnet',
     interfaceName: 'optimism',
@@ -493,7 +496,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'BaseScan',
       url: 'https://basescan.org/',
-      apiURL: 'https://api.basescan.org',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/base',
@@ -550,9 +552,9 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'OP Etherscan',
       url: 'https://goerli-optimism.etherscan.io/',
-      apiURL: 'https://api-goerli.etherscan.io',
     },
-    helpCenterUrl: 'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
+    helpCenterUrl:
+      'https://help.uniswap.org/en/collections/3137778-uniswap-on-optimistic-ethereum-oξ',
     infoLink: 'https://app.uniswap.org/explore/tokens/optimism',
     infuraPrefix: 'optimism-goerli',
     interfaceName: 'optimism_goerli',
@@ -603,7 +605,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'BscScan',
       url: 'https://bscscan.com/',
-      apiURL: 'https://api.bscscan.com',
     },
     helpCenterUrl: undefined,
     id: UniverseChainId.Bnb,
@@ -659,7 +660,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'PolygonScan',
       url: 'https://polygonscan.com/',
-      apiURL: 'https://api.polygonscan.com',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/polygon',
@@ -714,7 +714,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'PolygonScan',
       url: 'https://mumbai.polygonscan.com/',
-      apiURL: 'https://api-testnet.polygonscan.com',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/polygon',
@@ -768,7 +767,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'BlastScan',
       url: 'https://blastscan.io/',
-      apiURL: 'https://api.blastscan.io',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/blast',
@@ -822,7 +820,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Snowtrace',
       url: 'https://snowtrace.io/',
-      apiURL: 'https://api.snowscan.xyz',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/avalanche',
@@ -872,7 +869,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Celoscan',
       url: 'https://celoscan.io/',
-      apiURL: 'https://api.celoscan.io',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/celo',
@@ -927,7 +923,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'Celo Explorer',
       url: 'https://explorer.celo.org/alfajores/',
-      apiURL: 'https://api-alfajores.celoscan.io',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/celo',
@@ -979,7 +974,7 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     docs: 'https://docs.zora.co/',
     elementName: ElementName.ChainZora,
     explorer: {
-      name: 'Zora Explorer',
+      name: 'Zora explorer',
       url: 'https://explorer.zora.energy/',
     },
     helpCenterUrl: undefined,
@@ -1034,7 +1029,6 @@ export const UNIVERSE_CHAIN_INFO: ChainInfo = {
     explorer: {
       name: 'ZKsync Explorer',
       url: 'https://explorer.zksync.io/',
-      apiURL: 'https://block-explorer-api.mainnet.zksync.io',
     },
     helpCenterUrl: undefined,
     infoLink: 'https://app.uniswap.org/explore/tokens/zksync',

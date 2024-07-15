@@ -16,7 +16,11 @@ function buildIconComponent(chainId: WalletChainId): React.FC<IconComponentProps
 
   const Component = ({ size }: IconComponentProps): JSX.Element => {
     const isDarkMode = useIsDarkMode()
-    return isDarkMode ? <exlorerLogos.logoDark size={size} /> : <exlorerLogos.logoLight size={size} />
+    return isDarkMode ? (
+      <exlorerLogos.logoDark size={size} />
+    ) : (
+      <exlorerLogos.logoLight size={size} />
+    )
   }
   Component.displayName = `BlockExplorerIcon_${explorer.name}`
   iconsCache.set(chainId, Component)

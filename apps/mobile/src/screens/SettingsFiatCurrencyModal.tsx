@@ -20,8 +20,7 @@ export function SettingsFiatCurrencyModal(): JSX.Element {
     <BottomSheetModal
       fullScreen
       name={ModalName.FiatCurrencySelector}
-      onClose={(): Action => dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))}
-    >
+      onClose={(): Action => dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))}>
       <Text pb="$spacing12" textAlign="center" variant="subheading1">
         {t('settings.setting.currency.title')}
       </Text>
@@ -42,7 +41,11 @@ function FiatCurrencySelection({ onClose }: { onClose: () => void }): JSX.Elemen
   return (
     <Flex pb="$spacing32" px="$spacing16">
       {ORDERED_CURRENCIES.map((currency) => (
-        <FiatCurrencyOption active={selectedCurrency === currency} currency={currency} onPress={onClose} />
+        <FiatCurrencyOption
+          active={selectedCurrency === currency}
+          currency={currency}
+          onPress={onClose}
+        />
       ))}
     </Flex>
   )
@@ -65,7 +68,12 @@ function FiatCurrencyOption({ active, currency, onPress }: FiatCurrencyOptionPro
   }, [dispatch, onPress, currency])
 
   return (
-    <TouchableArea alignItems="center" flexDirection="row" px="$spacing12" py="$spacing12" onPress={changeCurrency}>
+    <TouchableArea
+      alignItems="center"
+      flexDirection="row"
+      px="$spacing12"
+      py="$spacing12"
+      onPress={changeCurrency}>
       <Flex row gap="$spacing12">
         <Flex grow row gap="$spacing12">
           <Text variant="subheading1">{name}</Text>

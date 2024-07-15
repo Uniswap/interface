@@ -18,7 +18,7 @@ function truncateValue(value: string, decimals: number): string {
  */
 export default function tryParseCurrencyAmount<T extends Currency>(
   value?: string,
-  currency?: T,
+  currency?: T
 ): CurrencyAmount<T> | undefined {
   if (!value || !currency || isNaN(parseFloat(value))) {
     return undefined

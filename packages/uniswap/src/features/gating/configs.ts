@@ -31,7 +31,9 @@ export function getConfigName(config: DynamicConfigs): string {
   const names = isInterface ? WEB_CONFIG_NAMES : WALLET_CONFIG_NAMES
   const name = names.get(config)
   if (!name) {
-    const err = new Error(`Dynamic config ${DynamicConfigs[config]} does not have a name mapped for this application`)
+    const err = new Error(
+      `Dynamic config ${DynamicConfigs[config]} does not have a name mapped for this application`
+    )
     logger.error(err, {
       tags: {
         file: 'configs.ts',

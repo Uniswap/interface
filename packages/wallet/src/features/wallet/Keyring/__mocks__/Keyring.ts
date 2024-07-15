@@ -9,10 +9,6 @@ const privateKeys: { [id: string]: string } = {}
 const password = faker.word.noun()
 
 class MockKeyring implements IKeyring {
-  removeAllMnemonicsAndPrivateKeys(): Promise<boolean> {
-    return Promise.resolve(false)
-  }
-
   isUnlocked(): Promise<boolean> {
     return Promise.resolve(false)
   }
@@ -90,7 +86,10 @@ class MockKeyring implements IKeyring {
     return Promise.resolve(true)
   }
 
-  async signTransactionForAddress(address: string, transaction: providers.TransactionRequest): Promise<string> {
+  async signTransactionForAddress(
+    address: string,
+    transaction: providers.TransactionRequest
+  ): Promise<string> {
     const privateKey = privateKeys[address]
     if (!privateKey) {
       return Promise.reject(`No private key found for ${address}`)

@@ -32,6 +32,6 @@ export const usePriceRange = create<PriceRangeProps>()(
         })
       },
     }),
-    { name: 'usePriceRange' },
-  ),
+    { name: 'usePriceRange' }
+  )
 )

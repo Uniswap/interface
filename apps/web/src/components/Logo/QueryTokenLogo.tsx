@@ -10,7 +10,7 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 export default function QueryTokenLogo(
   props: AssetLogoBaseProps & {
     token?: TopToken | TokenQueryData | SearchToken
-  },
+  }
 ) {
   const chainId =
     (props.token?.chain ? supportedChainIdFromGQLChain(props.token?.chain) : UniverseChainId.Mainnet) ??

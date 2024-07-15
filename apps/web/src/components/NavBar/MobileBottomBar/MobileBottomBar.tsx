@@ -1,5 +1,6 @@
 import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import styled, { css } from 'styled-components'
+import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
 
 const MOBILE_BAR_MAX_HEIGHT = 100 // ensure that it's translated out of view on scroll
@@ -33,8 +34,8 @@ export const MobileBottomBar = styled.div<{ $hide: boolean }>`
   ${MobileBottomBarBase}
   width: 100%;
   max-height: ${MOBILE_BAR_MAX_HEIGHT}px;
+  background-color: ${({ theme }) => opacify(20, theme.surface1)}};
   backdrop-filter: blur(4px);
-  mask: linear-gradient(to bottom, transparent, ${({ theme }) => theme.surface1} 15%);
   padding: 12px 16px;
   transition: bottom ${({ theme }) => theme.transition.duration.slow};
   ${({ $hide }) => $hide && `bottom: -${MOBILE_BAR_MAX_HEIGHT}px !important`};

@@ -13,7 +13,11 @@ type Props = {
   onClose: () => void
 }
 
-export const PendingConnectionSwitchAccountModal = ({ activeAccount, onPressAccount, onClose }: Props): JSX.Element => {
+export const PendingConnectionSwitchAccountModal = ({
+  activeAccount,
+  onPressAccount,
+  onClose,
+}: Props): JSX.Element => {
   const { t } = useTranslation()
   const signerAccounts = useSignerAccounts()
 
@@ -26,7 +30,7 @@ export const PendingConnectionSwitchAccountModal = ({ activeAccount, onPressAcco
           render: () => <SwitchAccountOption account={account} activeAccount={activeAccount} />,
         }
       }),
-    [signerAccounts, activeAccount, onPressAccount],
+    [signerAccounts, activeAccount, onPressAccount]
   )
 
   return (
