@@ -82,8 +82,6 @@ export function useApproval(
 
   const tokenContract = useTokenContract(token?.address);
 
-  console.log("tokenContract", tokenContract);
-
   const approve = useCallback(async () => {
     function logFailure(error: Error | string): undefined {
       if (typeof error === "string") {
