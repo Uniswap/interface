@@ -1,56 +1,56 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount } from '@taraswap/sdk-core'
-import Loader from 'components/Icons/LoadingSpinner'
-import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
-import { useTokenWarning } from 'constants/tokenSafety'
-import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
-import { useAccount } from 'hooks/useAccount'
-import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
-import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { CSSProperties, MutableRefObject, useCallback } from 'react'
-import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
-import styled from 'styled-components'
-import { ThemedText } from 'theme/components'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { shortenAddress } from 'utilities/src/addresses'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useIsUserAddedToken } from '../../../hooks/Tokens'
-import { TokenFromList } from '../../../state/lists/tokenFromList'
-import Column, { AutoColumn } from '../../Column'
-import CurrencyLogo from '../../Logo/CurrencyLogo'
-import Row, { RowFixed } from '../../Row'
-import { MouseoverTooltip, TooltipSize } from '../../Tooltip'
-import { LoadingRows, MenuItem } from '../styled'
-import { scrollbarStyle } from './index.css'
+import { InterfaceElementName } from "@uniswap/analytics-events";
+import { Currency, CurrencyAmount } from "@taraswap/sdk-core";
+import Loader from "components/Icons/LoadingSpinner";
+import TokenSafetyIcon from "components/TokenSafety/TokenSafetyIcon";
+import { useTokenWarning } from "constants/tokenSafety";
+import { useTotalBalancesUsdForAnalytics } from "graphql/data/apollo/TokenBalancesProvider";
+import { useAccount } from "hooks/useAccount";
+import { TokenBalances } from "lib/hooks/useTokenList/sorting";
+import tryParseCurrencyAmount from "lib/utils/tryParseCurrencyAmount";
+import { CSSProperties, MutableRefObject, useCallback } from "react";
+import { FixedSizeList } from "react-window";
+import { Text } from "rebass";
+import styled from "styled-components";
+import { ThemedText } from "theme/components";
+import Trace from "uniswap/src/features/telemetry/Trace";
+import { WalletEventName } from "uniswap/src/features/telemetry/constants";
+import { shortenAddress } from "utilities/src/addresses";
+import { NumberType, useFormatter } from "utils/formatNumbers";
+import { useIsUserAddedToken } from "../../../hooks/Tokens";
+import { TokenFromList } from "../../../state/lists/tokenFromList";
+import Column, { AutoColumn } from "../../Column";
+import CurrencyLogo from "../../Logo/CurrencyLogo";
+import Row, { RowFixed } from "../../Row";
+import { MouseoverTooltip, TooltipSize } from "../../Tooltip";
+import { LoadingRows, MenuItem } from "../styled";
+import { scrollbarStyle } from "./index.css";
 
 function currencyKey(data: Currency | CurrencyListRow): string {
   if (data instanceof CurrencyListSectionTitle) {
-    return data.label
+    return data.label;
   }
 
   if (data instanceof CurrencyListRow) {
-    return data.currency?.isToken ? data.currency.address : 'ETHER'
+    return data.currency?.isToken ? data.currency.address : "ETHER";
   }
 
-  return data.isToken ? data.address : 'ETHER'
+  return data.isToken ? data.address : "ETHER";
 }
 
-const ROW_ITEM_SIZE = 56
+const ROW_ITEM_SIZE = 56;
 
 const StyledBalanceText = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
   max-width: 5rem;
   text-overflow: ellipsis;
-`
+`;
 
 const CurrencyName = styled(Text)`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-`
+`;
 
 const Tag = styled.div`
   background-color: ${({ theme }) => theme.surface2};
@@ -64,20 +64,20 @@ const Tag = styled.div`
   white-space: nowrap;
   justify-self: flex-end;
   margin-right: 4px;
-`
+`;
 
 const WarningContainer = styled.div`
   margin-left: 0.3em;
-`
+`;
 
 const LabelContainer = styled.div`
   display: flex;
   align-items: center;
   padding: 0 20px;
-`
+`;
 
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
-  const { formatNumberOrString } = useFormatter()
+  const { formatNumberOrString } = useFormatter();
 
   return (
     <StyledBalanceText title={balance.toExact()}>
@@ -86,25 +86,25 @@ function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
         type: NumberType.TokenNonTx,
       })}
     </StyledBalanceText>
-  )
+  );
 }
 
 const TagContainer = styled.div`
   display: flex;
   justify-content: flex-end;
-`
+`;
 
 function TokenTags({ currency }: { currency: Currency }) {
   if (!(currency instanceof TokenFromList)) {
-    return null
+    return null;
   }
 
-  const tags = currency.tags
+  const tags = currency.tags;
   if (!tags || tags.length === 0) {
-    return <span />
+    return <span />;
   }
 
-  const tag = tags[0]
+  const tag = tags[0];
 
   return (
     <TagContainer>
@@ -116,18 +116,18 @@ function TokenTags({ currency }: { currency: Currency }) {
           text={tags
             .slice(1)
             .map(({ name, description }) => `${name}: ${description}`)
-            .join('; \n')}
+            .join("; \n")}
         >
           <Tag>...</Tag>
         </MouseoverTooltip>
       ) : null}
     </TagContainer>
-  )
+  );
 }
 
 const RowWrapper = styled(Row)`
   height: 60px;
-`
+`;
 
 export function CurrencyRow({
   currency,
@@ -142,27 +142,30 @@ export function CurrencyRow({
   tooltip,
   showAddress,
 }: {
-  currency: Currency
-  onSelect: (hasWarning: boolean) => void
-  isSelected: boolean
-  otherSelected: boolean
-  style?: CSSProperties
-  showCurrencyAmount?: boolean
-  eventProperties: Record<string, unknown>
-  balance?: CurrencyAmount<Currency>
-  disabled?: boolean
-  tooltip?: string
-  showAddress?: boolean
+  currency: Currency;
+  onSelect: (hasWarning: boolean) => void;
+  isSelected: boolean;
+  otherSelected: boolean;
+  style?: CSSProperties;
+  showCurrencyAmount?: boolean;
+  eventProperties: Record<string, unknown>;
+  balance?: CurrencyAmount<Currency>;
+  disabled?: boolean;
+  tooltip?: string;
+  showAddress?: boolean;
 }) {
-  const account = useAccount()
-  const key = currencyKey(currency)
-  const customAdded = useIsUserAddedToken(currency)
-  const warning = useTokenWarning(currency?.isNative ? undefined : currency?.address, currency.chainId)
-  const isBlockedToken = !!warning && !warning.canProceed
-  const blockedTokenOpacity = '0.6'
-  const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
+  const account = useAccount();
+  const key = currencyKey(currency);
+  const customAdded = useIsUserAddedToken(currency);
+  const warning = useTokenWarning(
+    currency?.isNative ? undefined : currency?.address,
+    currency.chainId
+  );
+  const isBlockedToken = !!warning && !warning.canProceed;
+  const blockedTokenOpacity = "0.6";
+  const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics();
 
-  const Wrapper = tooltip ? MouseoverTooltip : RowWrapper
+  const Wrapper = tooltip ? MouseoverTooltip : RowWrapper;
 
   // only show add or remove buttons if not on selected list
   return (
@@ -170,18 +173,24 @@ export function CurrencyRow({
       logPress
       logKeyPress
       eventOnTrigger={WalletEventName.TokenSelected}
-      properties={{ is_imported_by_user: customAdded, ...eventProperties, total_balances_usd: portfolioBalanceUsd }}
+      properties={{
+        is_imported_by_user: customAdded,
+        ...eventProperties,
+        total_balances_usd: portfolioBalanceUsd,
+      }}
       element={InterfaceElementName.TOKEN_SELECTOR_ROW}
     >
       <Wrapper
         style={style}
-        text={<ThemedText.Caption textAlign="center">{tooltip}</ThemedText.Caption>}
+        text={
+          <ThemedText.Caption textAlign="center">{tooltip}</ThemedText.Caption>
+        }
         size={TooltipSize.ExtraSmall}
       >
         <MenuItem
           tabIndex={0}
           className={`token-item-${key}`}
-          onKeyPress={(e) => (e.key === 'Enter' ? onSelect(!!warning) : null)}
+          onKeyPress={(e) => (e.key === "Enter" ? onSelect(!!warning) : null)}
           onClick={() => onSelect(!!warning)}
           selected={otherSelected || isSelected}
           dim={isBlockedToken}
@@ -191,10 +200,13 @@ export function CurrencyRow({
             <CurrencyLogo
               currency={currency}
               size={36}
-              style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
+              style={{ opacity: isBlockedToken ? blockedTokenOpacity : "1" }}
             />
           </Column>
-          <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} gap="xs">
+          <AutoColumn
+            style={{ opacity: isBlockedToken ? blockedTokenOpacity : "1" }}
+            gap="xs"
+          >
             <Row>
               <CurrencyName title={currency.name}>{currency.name}</CurrencyName>
               <WarningContainer>
@@ -206,30 +218,38 @@ export function CurrencyRow({
                 {currency.symbol}
               </ThemedText.Caption>
               {showAddress && currency.isToken && (
-                <ThemedText.Caption color="neutral3">{shortenAddress(currency.address)}</ThemedText.Caption>
+                <ThemedText.Caption color="neutral3">
+                  {shortenAddress(currency.address)}
+                </ThemedText.Caption>
               )}
             </Row>
           </AutoColumn>
           <Column>
-            <RowFixed style={{ justifySelf: 'flex-end' }}>
+            <RowFixed style={{ justifySelf: "flex-end" }}>
               <TokenTags currency={currency} />
             </RowFixed>
           </Column>
           {showCurrencyAmount && (
-            <RowFixed style={{ justifySelf: 'flex-end' }}>
-              {account.isConnected ? balance ? <Balance balance={balance} /> : <Loader /> : null}
+            <RowFixed style={{ justifySelf: "flex-end" }}>
+              {account.isConnected ? (
+                balance ? (
+                  <Balance balance={balance} />
+                ) : (
+                  <Loader />
+                )
+              ) : null}
             </RowFixed>
           )}
         </MenuItem>
       </Wrapper>
     </Trace>
-  )
+  );
 }
 
 interface TokenRowProps {
-  data: Array<CurrencyListRow>
-  index: number
-  style: CSSProperties
+  data: Array<CurrencyListRow>;
+  index: number;
+  style: CSSProperties;
 }
 
 export const formatAnalyticsEventProperties = (
@@ -243,13 +263,13 @@ export const formatAnalyticsEventProperties = (
   token_address: token?.isToken ? token?.address : undefined,
   is_suggested_token: false,
   is_selected_from_list: true,
-  scroll_position: '',
+  scroll_position: "",
   token_list_index: index,
   token_list_length: data.length,
   ...(isAddressSearch === false
     ? { search_token_symbol_input: searchQuery }
     : { search_token_address_input: isAddressSearch }),
-})
+});
 
 const LoadingRow = () => (
   <LoadingRows data-testid="loading-rows">
@@ -257,7 +277,7 @@ const LoadingRow = () => (
     <div />
     <div />
   </LoadingRows>
-)
+);
 
 /**
  * This is used to display disabled currencies in the list.
@@ -266,9 +286,9 @@ export class CurrencyListRow {
   constructor(
     public readonly currency: Currency | undefined,
     public readonly options?: {
-      disabled?: boolean
-      showAddress?: boolean
-      tooltip?: string
+      disabled?: boolean;
+      showAddress?: boolean;
+      tooltip?: string;
     }
   ) {}
 }
@@ -279,7 +299,7 @@ export class CurrencyListRow {
  */
 export class CurrencyListSectionTitle extends CurrencyListRow {
   constructor(public readonly label: string) {
-    super(undefined)
+    super(undefined);
   }
 }
 
@@ -296,51 +316,60 @@ export default function CurrencyList({
   isAddressSearch,
   balances,
 }: {
-  height: number
-  currencies: Array<CurrencyListRow>
-  selectedCurrency?: Currency | null
-  onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
-  otherCurrency?: Currency | null
-  fixedListRef?: MutableRefObject<FixedSizeList | undefined>
-  showCurrencyAmount?: boolean
-  isLoading: boolean
-  searchQuery: string
-  isAddressSearch: string | false
-  balances: TokenBalances
-  disabled?: boolean
+  height: number;
+  currencies: Array<CurrencyListRow>;
+  selectedCurrency?: Currency | null;
+  onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void;
+  otherCurrency?: Currency | null;
+  fixedListRef?: MutableRefObject<FixedSizeList | undefined>;
+  showCurrencyAmount?: boolean;
+  isLoading: boolean;
+  searchQuery: string;
+  isAddressSearch: string | false;
+  balances: TokenBalances;
+  disabled?: boolean;
 }) {
   const Row = useCallback(
     function TokenRow({ data, index, style }: TokenRowProps) {
-      const row: CurrencyListRow = data[index]
+      const row: CurrencyListRow = data[index];
 
       if (row instanceof CurrencyListSectionTitle) {
         return (
           <LabelContainer style={style}>
             <ThemedText.BodySecondary>{row.label}</ThemedText.BodySecondary>
           </LabelContainer>
-        )
+        );
       }
 
       if (!row.currency) {
-        return null
+        return null;
       }
 
-      const currency: Currency = row.currency
+      const currency: Currency = row.currency;
 
       const balance =
         tryParseCurrencyAmount(
-          String(balances[currency.isNative ? 'ETH' : currency.address?.toLowerCase()]?.balance ?? 0),
+          String(
+            balances[
+              currency.isNative ? "ETH" : currency.address?.toLowerCase()
+            ]?.balance ?? 0
+          ),
           currency
-        ) ?? CurrencyAmount.fromRawAmount(currency, 0)
+        ) ?? CurrencyAmount.fromRawAmount(currency, 0);
 
-      const isSelected = Boolean(currency && selectedCurrency && selectedCurrency.equals(currency))
-      const otherSelected = Boolean(currency && otherCurrency && otherCurrency.equals(currency))
-      const handleSelect = (hasWarning: boolean) => currency && onCurrencySelect(currency, hasWarning)
+      const isSelected = Boolean(
+        currency && selectedCurrency && selectedCurrency.equals(currency)
+      );
+      const otherSelected = Boolean(
+        currency && otherCurrency && otherCurrency.equals(currency)
+      );
+      const handleSelect = (hasWarning: boolean) =>
+        currency && onCurrencySelect(currency, hasWarning);
 
-      const token = currency?.wrapped
+      const token = currency?.wrapped;
 
       if (isLoading) {
-        return LoadingRow()
+        return LoadingRow();
       } else if (currency) {
         return (
           <CurrencyRow
@@ -350,15 +379,21 @@ export default function CurrencyList({
             otherSelected={otherSelected}
             isSelected={isSelected}
             showCurrencyAmount={showCurrencyAmount && balance.greaterThan(0)}
-            eventProperties={formatAnalyticsEventProperties(token, index, data, searchQuery, isAddressSearch)}
+            eventProperties={formatAnalyticsEventProperties(
+              token,
+              index,
+              data,
+              searchQuery,
+              isAddressSearch
+            )}
             balance={balance}
             disabled={row.options?.disabled}
             tooltip={row.options?.tooltip}
             showAddress={row.options?.showAddress}
           />
-        )
+        );
       } else {
-        return null
+        return null;
       }
     },
     [
@@ -371,12 +406,12 @@ export default function CurrencyList({
       isAddressSearch,
       balances,
     ]
-  )
+  );
 
   const itemKey = useCallback((index: number, data: typeof currencies) => {
-    const currency = data[index]
-    return currencyKey(currency)
-  }, [])
+    const currency = data[index];
+    return currencyKey(currency);
+  }, []);
 
   return (
     <div data-testid="currency-list-wrapper">
@@ -407,5 +442,5 @@ export default function CurrencyList({
         </FixedSizeList>
       )}
     </div>
-  )
+  );
 }

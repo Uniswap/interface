@@ -1,16 +1,22 @@
-import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
-import { TokenAddressMap, tokensToChainTokenMap } from 'lib/hooks/useTokenList/utils'
-import { useMemo } from 'react'
-import { useAppSelector } from 'state/hooks'
-import { AppState } from 'state/reducer'
-import { logger } from 'utilities/src/logger/logger'
+import {
+  DEFAULT_INACTIVE_LIST_URLS,
+  TARAXA_TESTNET_LIST,
+} from "constants/lists";
+import {
+  TokenAddressMap,
+  tokensToChainTokenMap,
+} from "lib/hooks/useTokenList/utils";
+import { useMemo } from "react";
+import { useAppSelector } from "state/hooks";
+import { AppState } from "state/reducer";
+import { logger } from "utilities/src/logger/logger";
 
 type Mutable<T> = {
-  -readonly [P in keyof T]: Mutable<T[P]>
-}
+  -readonly [P in keyof T]: Mutable<T[P]>;
+};
 
-export function useAllLists(): AppState['lists']['byUrl'] {
-  return useAppSelector((state) => state.lists.byUrl)
+export function useAllLists(): AppState["lists"]["byUrl"] {
+  return useAppSelector((state) => state.lists.byUrl);
 }
 
 /**
@@ -18,50 +24,67 @@ export function useAllLists(): AppState['lists']['byUrl'] {
  * @param map1 the base token map
  * @param map2 the map of additioanl tokens to add to the base map
  */
-function combineMaps(map1: TokenAddressMap, map2: TokenAddressMap): TokenAddressMap {
+function combineMaps(
+  map1: TokenAddressMap,
+  map2: TokenAddressMap
+): TokenAddressMap {
   const chainIds = Object.keys(
     Object.keys(map1)
       .concat(Object.keys(map2))
       .reduce<{ [chainId: string]: true }>((memo, value) => {
-        memo[value] = true
-        return memo
+        memo[value] = true;
+        return memo;
       }, {})
-  ).map((id) => parseInt(id))
+  ).map((id) => parseInt(id));
 
   return chainIds.reduce<Mutable<TokenAddressMap>>((memo, chainId) => {
     memo[chainId] = {
       ...map2[chainId],
       // map1 takes precedence
       ...map1[chainId],
-    }
-    return memo
-  }, {}) as TokenAddressMap
+    };
+    return memo;
+  }, {}) as TokenAddressMap;
 }
 
 // merge tokens contained within lists from urls
-function useCombinedTokenMapFromUrls(urls: string[] | undefined): TokenAddressMap {
-  const lists = useAllLists()
+function useCombinedTokenMapFromUrls(
+  urls: string[] | undefined
+): TokenAddressMap {
+  const lists = useAllLists();
   return useMemo(() => {
     if (!urls) {
-      return {}
+      return {};
     }
     return urls.slice().reduce((allTokens, currentUrl) => {
-      const current = lists?.[currentUrl]?.current
+      const current = lists?.[currentUrl]?.current;
       if (!current) {
-        return allTokens
+        return allTokens;
       }
       try {
-        return combineMaps(allTokens, tokensToChainTokenMap(current))
+        return combineMaps(allTokens, tokensToChainTokenMap(current));
       } catch (error) {
-        logger.warn('lists/hooks', 'useCombinedTokenMapFromUrls', 'Failed to combine tokens', error)
-        return allTokens
+        logger.warn(
+          "lists/hooks",
+          "useCombinedTokenMapFromUrls",
+          "Failed to combine tokens",
+          error
+        );
+        return allTokens;
       }
-    }, {})
-  }, [lists, urls])
+    }, {});
+  }, [lists, urls]);
 }
 
 // get all the tokens from active lists, combine with local default tokens
 export function useCombinedInactiveLists(): TokenAddressMap {
-  const inactiveTokens = useCombinedTokenMapFromUrls(DEFAULT_INACTIVE_LIST_URLS)
-  return inactiveTokens
+  const inactiveTokens = useCombinedTokenMapFromUrls(
+    DEFAULT_INACTIVE_LIST_URLS
+  );
+  return inactiveTokens;
+}
+
+export function useTaraxaList(): TokenAddressMap {
+  const activeTokens = useCombinedTokenMapFromUrls([TARAXA_TESTNET_LIST]);
+  return activeTokens;
 }

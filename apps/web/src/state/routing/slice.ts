@@ -184,7 +184,6 @@ export const routingApi = createApi({
                         "x-request-source": "uniswap-web",
                       },
                     });
-                    console.log("response", response);
                     if (response.error) {
                       try {
                         // cast as any here because we do a runtime check on it being an object before indexing into .errorCode
@@ -225,7 +224,7 @@ export const routingApi = createApi({
               } else {
                 try {
                   const taraxaRpcProvider = RPC_PROVIDERS[args.tokenInChainId];
-                  console.log("taraxaRpcProvider", taraxaRpcProvider);
+                  // console.log("taraxaRpcProvider", taraxaRpcProvider);
                   // const taraxaAlphaRouter = new AlphaRouter({
                   //   chainId: args.tokenInChainId,
                   //   provider: taraxaRpcProvider,
@@ -269,7 +268,7 @@ export const routingApi = createApi({
                         return url;
                       };
                       const taraxaurl = constructGetUrlForTaraxa(args);
-                      console.log("Taraxa url: ", taraxaurl.toString());
+                      // console.log("Taraxa url: ", taraxaurl.toString());
                       const returnData = await fetch(taraxaurl.toString());
                       if (!returnData.error) {
                         const quoteResult: URAQuoteResponse = {
@@ -282,7 +281,7 @@ export const routingApi = createApi({
                           quoteResult,
                           QuoteMethod.CLIENT_SIDE_FALLBACK
                         );
-                        console.log("trade", trade);
+                        // console.log("trade", trade);
                         return {
                           data: { ...trade, latencyMs: trace.now() },
                         };
