@@ -3,28 +3,20 @@ import { getChain, useSupportedChainId } from 'constants/chains'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
-import { TradeState } from 'state/routing/types'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const NUM_DECIMALS_USD = 2
 const NUM_DECIMALS_DISPLAY = 2
 
-export function useUSDTokenUpdater(
-  isFiatInput: boolean,
-  exactAmount: string,
-  exactCurrency?: Currency,
-): {
-  formattedAmount?: string
-  loading: boolean
-} {
-  const { price, state } = useStablecoinPrice(exactCurrency)
+export function useUSDTokenUpdater(isFiatInput: boolean, exactAmount: string, exactCurrency?: Currency) {
+  const price = useStablecoinPrice(exactCurrency)
   const { convertToFiatAmount, formatCurrencyAmount } = useFormatter()
   const conversionRate = convertToFiatAmount().amount
   const supportedChainId = useSupportedChainId(exactCurrency?.chainId)
 
   return useMemo(() => {
     if (!exactCurrency || !price) {
-      return { formattedAmount: undefined, loading: state === TradeState.LOADING }
+      return
     }
 
     if (isFiatInput) {
@@ -43,7 +35,7 @@ export function useUSDTokenUpdater(
         placeholder: '',
       })
 
-      return { formattedAmount: formattedCurrencyAmount, loading: state === TradeState.LOADING }
+      return formattedCurrencyAmount
     }
 
     const exactCurrencyAmount = tryParseCurrencyAmount(exactAmount || '0', exactCurrency)
@@ -52,7 +44,7 @@ export function useUSDTokenUpdater(
     const fiatPrice = convertToFiatAmount(parseFloat(usdPrice?.toExact() ?? '0')).amount
     const formattedFiatPrice = fiatPrice ? fiatPrice.toFixed(NUM_DECIMALS_DISPLAY) : '0'
 
-    return { formattedAmount: formattedFiatPrice, loading: state === TradeState.LOADING }
+    return formattedFiatPrice
   }, [
     conversionRate,
     convertToFiatAmount,
@@ -61,7 +53,6 @@ export function useUSDTokenUpdater(
     formatCurrencyAmount,
     isFiatInput,
     price,
-    state,
     supportedChainId,
   ])
 }

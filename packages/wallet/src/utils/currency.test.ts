@@ -1,10 +1,12 @@
-import { DAI, USDC } from 'uniswap/src/constants/tokens'
+import { DAI, USDC } from 'wallet/src/constants/tokens'
 import { mockLocalizedFormatter, noOpFunction } from 'wallet/src/test/mocks/utils'
 import { getCurrencyDisplayText, getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
 describe(getFormattedCurrencyAmount, () => {
   it('formats valid amount', () => {
-    expect(getFormattedCurrencyAmount(DAI, '1000000000000000000', mockLocalizedFormatter)).toEqual('1.00 ')
+    expect(getFormattedCurrencyAmount(DAI, '1000000000000000000', mockLocalizedFormatter)).toEqual(
+      '1.00 '
+    )
   })
 
   it('handles invalid Currency', () => {

@@ -1,5 +1,5 @@
 import { StyledRotatingSVG, StyledSVG } from 'components/Icons/shared'
-import { useTheme } from 'lib/styled-components'
+import { useTheme } from 'styled-components'
 
 /**
  * Takes in custom size and stroke for circle color, default to primary color as fill,

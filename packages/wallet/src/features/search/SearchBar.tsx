@@ -3,8 +3,8 @@ import { TextInput } from 'react-native'
 import { Flex, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { SearchTextInput, SearchTextInputProps } from 'uniswap/src/features/search/SearchTextInput'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { SearchTextInput, SearchTextInputProps } from 'wallet/src/features/search/SearchTextInput'
 
 interface SearchBarProps extends SearchTextInputProps {
   onBack?: () => void

@@ -1,3 +1,5 @@
+/* eslint-disable no-restricted-imports */
+
 import { render as RNRender, RenderOptions, RenderResult } from '@testing-library/react-native'
 import { PropsWithChildren } from 'react'
 import { TamaguiProvider } from 'ui/src'

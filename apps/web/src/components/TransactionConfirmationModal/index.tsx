@@ -13,15 +13,15 @@ import { useIsSupportedChainId } from 'constants/chains'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
-import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
 import { isConfirmedTx, useTransaction } from 'state/transactions/hooks'
+import styled, { useTheme } from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { L2ChainId, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { isL2ChainId } from 'utils/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const Wrapper = styled.div`
@@ -220,7 +220,7 @@ function L2Content({
 }: {
   onDismiss: () => void
   hash?: string
-  chainId: UniverseChainId
+  chainId: L2ChainId
   currencyToAdd?: Currency
   pendingText: ReactNode
   inline?: boolean // not in modal

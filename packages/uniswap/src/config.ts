@@ -5,6 +5,9 @@ import {
   FIREBASE_APP_CHECK_DEBUG_TOKEN,
   INFURA_KEY,
   INFURA_PROJECT_ID,
+  MOONPAY_API_KEY,
+  MOONPAY_API_URL,
+  MOONPAY_WIDGET_API_URL,
   ONESIGNAL_APP_ID,
   QUICKNODE_ARBITRUM_RPC_URL,
   QUICKNODE_BNB_RPC_URL,
@@ -24,6 +27,9 @@ import { isNonJestDev } from 'utilities/src/environment/constants'
 export interface Config {
   appsflyerApiKey: string
   appsflyerAppId: string
+  moonpayApiKey: string
+  moonpayApiUrl: string
+  moonpayWidgetApiUrl: string
   uniswapApiKey: string
   infuraKey: string
   infuraProjectId: string
@@ -55,6 +61,9 @@ export interface Config {
 const _config: Config = {
   appsflyerApiKey: process.env.APPSFLYER_API_KEY || APPSFLYER_API_KEY,
   appsflyerAppId: process.env.APPSFLYER_APP_ID || APPSFLYER_APP_ID,
+  moonpayApiKey: process.env.REACT_APP_MOONPAY_PUBLISHABLE_KEY || process.env.MOONPAY_API_KEY || MOONPAY_API_KEY,
+  moonpayApiUrl: process.env.REACT_APP_MOONPAY_API || process.env.MOONPAY_API_URL || MOONPAY_API_URL,
+  moonpayWidgetApiUrl: process.env.MOONPAY_WIDGET_API_URL || MOONPAY_WIDGET_API_URL,
   uniswapApiKey: process.env.UNISWAP_API_KEY || UNISWAP_API_KEY,
   infuraKey: process.env.REACT_APP_INFURA_KEY || INFURA_KEY,
   infuraProjectId: process.env.INFURA_PROJECT_ID || INFURA_PROJECT_ID,

@@ -1,7 +1,7 @@
 import Tooltip from 'components/Tooltip'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { Trans } from 'i18n'
-import styled from 'lib/styled-components'
+import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 const Container = styled.div`

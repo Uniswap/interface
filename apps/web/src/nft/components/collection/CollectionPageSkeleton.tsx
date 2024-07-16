@@ -1,7 +1,6 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { useIsMobile } from 'hooks/screenSize'
-import styled from 'lib/styled-components'
 import { BAG_WIDTH, XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { ActivitySwitcherLoading } from 'nft/components/collection/ActivitySwitcher'
 import { CollectionNftsAndMenuLoading } from 'nft/components/collection/CollectionNfts'
@@ -9,6 +8,7 @@ import { CollectionStatsLoading } from 'nft/components/collection/CollectionStat
 import { useBag } from 'nft/hooks'
 import { BannerWrapper, CollectionBannerLoading } from 'nft/pages/collection'
 import { ScreenBreakpointsPaddings } from 'nft/pages/collection/index.css'
+import styled from 'styled-components'
 
 const CollectionDescriptionSection = styled(Column)`
   ${ScreenBreakpointsPaddings}

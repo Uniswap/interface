@@ -2,7 +2,6 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType } from 'react-native'
-import { useDispatch } from 'react-redux'
 import { ColorTokens, Flex, HapticFeedback, SpaceTokens, Text, TextProps, TouchableArea } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
@@ -10,13 +9,14 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
+import { useAppDispatch } from 'wallet/src/state'
+import { setClipboard } from 'wallet/src/utils/clipboard'
 
 type AddressDisplayProps = {
   address: string
@@ -98,7 +98,7 @@ export function AddressDisplay({
   gapBetweenLines = '$none',
 }: AddressDisplayProps): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const displayName = useDisplayName(address, { includeUnitagSuffix, overrideDisplayName })
   const { avatar } = useAvatar(address)
 

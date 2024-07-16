@@ -1,6 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'src/app/hooks'
 import { ServiceProviderSelector } from 'src/features/fiatOnRamp/ExchangeTransferServiceProviderSelector'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
@@ -11,19 +10,20 @@ import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAppDispatch } from 'wallet/src/state'
+import { setClipboard } from 'wallet/src/utils/clipboard'
 
 const ACCOUNT_IMAGE_SIZE = 52
 const ICON_SIZE = 32
 const ICON_BORDER_RADIUS = 100
 
 function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
   const onPressCopyAddress = async (): Promise<void> => {
@@ -98,7 +98,7 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
 
 export function ReceiveCryptoModal(): JSX.Element {
   const colors = useSporeColors()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const { initialState } = useAppSelector(selectModalState(ModalName.ReceiveCryptoModal))
 

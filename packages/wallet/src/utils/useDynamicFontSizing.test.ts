@@ -9,7 +9,7 @@ const MAX_CHAR_PIXEL_WIDTH = 23
 describe(useDynamicFontSizing, () => {
   it('returns maxFontSize if text input element width is not set', () => {
     const { result } = renderHook(() =>
-      useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE),
+      useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE)
     )
 
     expect(result.current.fontSize).toBe(MAX_INPUT_FONT_SIZE)
@@ -17,7 +17,7 @@ describe(useDynamicFontSizing, () => {
 
   it('returns maxFontSize as fontSize if text fits in the container', async () => {
     const { result } = renderHook(() =>
-      useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE),
+      useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE)
     )
 
     await act(() => {
@@ -31,7 +31,7 @@ describe(useDynamicFontSizing, () => {
 
   it('scales down font when text does not fit in the container', async () => {
     const { result } = renderHook(() =>
-      useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE),
+      useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE)
     )
 
     await act(() => {
@@ -45,7 +45,7 @@ describe(useDynamicFontSizing, () => {
 
   it("doesn't return font size less than minFontSize", async () => {
     const { result } = renderHook(() =>
-      useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE),
+      useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE)
     )
 
     await act(() => {

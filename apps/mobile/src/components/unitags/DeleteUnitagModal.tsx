@@ -2,7 +2,6 @@ import { useNavigation } from '@react-navigation/native'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
-import { useDispatch } from 'react-redux'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
@@ -17,6 +16,7 @@ import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { deleteUnitag } from 'wallet/src/features/unitags/api'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
+import { useAppDispatch } from 'wallet/src/state'
 
 export function DeleteUnitagModal({
   unitag,
@@ -30,7 +30,7 @@ export function DeleteUnitagModal({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const navigation = useNavigation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { triggerRefetchUnitags } = useUnitagUpdater()
   const account = useAccount(address)
   const signerManager = useWalletSigners()

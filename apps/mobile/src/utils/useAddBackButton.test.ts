@@ -13,7 +13,7 @@ describe(useAddBackButton, () => {
           index: 0,
         }),
         setOptions: setOptionsSpy,
-      } as unknown as NativeStackNavigationProp<OnboardingStackParamList>),
+      } as unknown as NativeStackNavigationProp<OnboardingStackParamList>)
     )
 
     expect(setOptionsSpy).toHaveBeenCalled()
@@ -26,7 +26,7 @@ describe(useAddBackButton, () => {
           index: 1,
         }),
         setOptions: setOptionsSpy,
-      } as unknown as NativeStackNavigationProp<OnboardingStackParamList>),
+      } as unknown as NativeStackNavigationProp<OnboardingStackParamList>)
     )
 
     expect(setOptionsSpy).not.toHaveBeenCalled()

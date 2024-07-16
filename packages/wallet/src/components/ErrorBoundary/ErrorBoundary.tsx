@@ -1,13 +1,13 @@
 import React, { ErrorInfo, PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet } from 'react-native'
-import { useDispatch } from 'react-redux'
 import { Button, Flex, Text } from 'ui/src'
 import { DEAD_LUNI } from 'ui/src/assets'
 import { logger } from 'utilities/src/logger/logger'
 import { restartApp } from 'wallet/src/components/ErrorBoundary/restart'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
+import { useAppDispatch } from 'wallet/src/state'
 
 interface ErrorBoundaryState {
   error: Error | null
@@ -55,7 +55,7 @@ const LUNI_SIZE = 150
 
 function ErrorScreen({ error }: { error: Error }): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const accounts = useAccounts()
 
   // If there is no active account, we need to reset the onboarding flow

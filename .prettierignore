@@ -14,6 +14,7 @@ __mocks__
 *.inc
 *.json
 *.md
+*.test.ts
 *.yml
 babel.config.js
 build

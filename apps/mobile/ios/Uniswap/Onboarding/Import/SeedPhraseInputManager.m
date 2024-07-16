@@ -16,7 +16,6 @@ RCT_EXPORT_VIEW_PROPERTY(onMnemonicStored, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onPasteStart, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onPasteEnd, RCTDirectEventBlock);
 RCT_EXPORT_VIEW_PROPERTY(onHeightMeasured, RCTDirectEventBlock);
-RCT_EXPORT_VIEW_PROPERTY(testID, NSString?)
 RCT_EXTERN_METHOD(handleSubmit: (nonnull NSNumber *)node)
 
 @end

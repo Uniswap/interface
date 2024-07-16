@@ -93,7 +93,7 @@ export function useUSDPrice(
   })
 
   // Use USDC-based pricing for chains not yet supported by backend (for ETH-based pricing).
-  const { price: stablecoinPrice } = useStablecoinPrice(isTokenEthPriced ? undefined : currency)
+  const stablecoinPrice = useStablecoinPrice(isTokenEthPriced ? undefined : currency)
 
   return useMemo(() => {
     if (!currencyAmount) {

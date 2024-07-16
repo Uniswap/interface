@@ -77,7 +77,7 @@ describe('positionPage static titles and descriptions', () => {
 
   it('should return the correct description for v3 pools', () => {
     expect(getPositionPageDescription('/pool/512372?chain=optimism')).toBe(
-      'View your active v3 liquidity positions. Add new positions.',
+      'View your active v3 liquidity positions. Add new positions.'
     )
   })
 

@@ -1,13 +1,13 @@
 import { Portfolio, Token, TokenBalance } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency } from 'uniswap/src/features/dataApi/utils'
-import { currencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
-import { faker } from 'uniswap/src/test/shared'
-import { createFixture } from 'uniswap/src/test/utils'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { buildCurrency } from 'wallet/src/features/dataApi/utils'
 import { portfolio } from 'wallet/src/test/fixtures/gql'
 import { tokenBalance } from 'wallet/src/test/fixtures/gql/assets'
+import { currencyInfo } from 'wallet/src/test/fixtures/wallet/currencies'
+import { faker } from 'wallet/src/test/shared'
+import { createFixture } from 'wallet/src/test/utils'
 
 const portfolioBalanceBase = createFixture<PortfolioBalance>()(() => ({
   cacheId: faker.datatype.uuid(),

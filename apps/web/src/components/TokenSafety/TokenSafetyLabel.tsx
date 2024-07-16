@@ -1,8 +1,8 @@
 import { useTokenWarningColor, useTokenWarningTextColor } from 'hooks/useTokenWarningColor'
-import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { AlertTriangle, Slash } from 'react-feather'
 import { Text } from 'rebass'
+import styled from 'styled-components'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const Label = styled.div<{ color: string; backgroundColor: string }>`

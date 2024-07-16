@@ -9,7 +9,6 @@ import { PriceChartType } from 'components/Charts/utils'
 import { RowBetween } from 'components/Row'
 import { DeltaArrow, DeltaText, calculateDelta } from 'components/Tokens/TokenDetails/Delta'
 import { Trans } from 'i18n'
-import styled from 'lib/styled-components'
 import {
   AreaData,
   AreaSeriesPartialOptions,
@@ -23,6 +22,7 @@ import {
   UTCTimestamp,
 } from 'lightweight-charts'
 import { useMemo } from 'react'
+import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
 import { NumberType, useFormatter } from 'utils/formatNumbers'

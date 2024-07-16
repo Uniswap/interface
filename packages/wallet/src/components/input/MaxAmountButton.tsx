@@ -4,8 +4,8 @@ import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native'
 import { Text, TouchableArea } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { maxAmountSpend } from 'wallet/src/utils/balance'
 
 interface MaxAmountButtonProps {

@@ -16,7 +16,6 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Pill } from 'uniswap/src/components/pill/Pill'
-import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
@@ -28,6 +27,7 @@ import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
+import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import {
   useCreateOnboardingAccountIfNone,
   useOnboardingContext,

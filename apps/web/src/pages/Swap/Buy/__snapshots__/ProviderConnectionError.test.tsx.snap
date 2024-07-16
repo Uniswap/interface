@@ -1,19 +1,34 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`ProviderConnectionError should render the component and call callbacks 1`] = `
+.c8 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 44px;
+}
+
 .c0 {
   display: grid;
   grid-auto-rows: auto;
   grid-row-gap: 16px;
 }
 
-.c4 {
+.c3 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c5 {
+.c4 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -30,7 +45,7 @@ exports[`ProviderConnectionError should render the component and call callbacks 
   justify-content: flex-start;
 }
 
-.c7 {
+.c6 {
   color: #7D7D7D;
   cursor: pointer;
   -webkit-text-decoration: none;
@@ -40,45 +55,42 @@ exports[`ProviderConnectionError should render the component and call callbacks 
   transition-duration: 125ms;
 }
 
-.c7:hover {
+.c6:hover {
   opacity: 0.6;
 }
 
-.c7:active {
+.c6:active {
   opacity: 0.4;
+}
+
+.c2 {
+  pointer-events: none;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  box-shadow: 0 0 12px 12px transparent inset;
 }
 
 .c1 {
   position: relative;
-}
-
-.c2 {
-  position: absolute;
-  z-index: 0;
-}
-
-.c3 {
-  position: absolute;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: radial-gradient(70% 50% at center,transparent 0%,#FFFFFF 100%);
+  padding: 16px 24px 80px 24px;
 }
 
 .c9 {
-  margin: 40px 0 0 0;
-  z-index: 2;
-  height: 100%;
-  width: 100%;
+  margin: 64px 0 0 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  z-index: 1;
 }
 
-.c8 {
+.c7 {
   cursor: pointer;
 }
 
-.c6 {
+.c5 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -87,7 +99,7 @@ exports[`ProviderConnectionError should render the component and call callbacks 
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-  z-index: 2;
+  z-index: 1;
   -webkit-flex-direction: row-reverse;
   -ms-flex-direction: row-reverse;
   flex-direction: row-reverse;
@@ -102,20 +114,15 @@ exports[`ProviderConnectionError should render the component and call callbacks 
     <div
       class="c0 c1"
     >
-      <svg
+      <img
         class="c2"
-        color="#7D7D7D"
-      >
-        for-connecting-v2.svg
-      </svg>
-      <div
-        class="c3"
+        src="for-connecting-light.png"
       />
       <div
-        class="c4 c5 c6"
+        class="c3 c4 c5"
       >
         <svg
-          class="c7"
+          class="c6"
           data-testid="ConnectingViewWrapper-close"
           fill="none"
           height="24"
@@ -141,7 +148,7 @@ exports[`ProviderConnectionError should render the component and call callbacks 
           />
         </svg>
         <svg
-          class="c8"
+          class="c7"
           data-testid="ConnectingViewWrapper-back"
           fill="#7D7D7D"
           height="28"
@@ -155,70 +162,56 @@ exports[`ProviderConnectionError should render the component and call callbacks 
         </svg>
       </div>
       <div
-        class="c9"
+        class="c8 c9"
       >
         <div
-          class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _gap-1316330176"
+          class="_display-flex _alignItems-stretch _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _gap-1481558214 _pb-1481558214"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _gap-1481558214"
+            class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _justifyContent-center"
+            style="background-color: rgb(255, 239, 248); border-radius: 20px; height: 90px; width: 90px;"
           >
-            <div
-              class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _justifyContent-center"
-              style="background-color: rgb(255, 239, 248); border-radius: 20px; height: 90px; width: 90px;"
+            <span
+              class="_dsp_contents"
             >
-              <span
-                class="_dsp_contents"
+              <div
+                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010 is_Image "
+                style="height: 64px; width: 64px;"
               >
                 <div
-                  class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010 is_Image "
-                  style="height: 64px; width: 64px;"
-                >
-                  <div
-                    class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
-                    style="background-image: url(uniswap-logo-large.png);"
-                  />
-                  <img
-                    alt=""
-                    class="css-accessibilityImage-9pa8cd"
-                    draggable="false"
-                    src="uniswap-logo-large.png"
-                  />
-                </div>
-              </span>
-            </div>
-            <img
-              height="120"
-              src="test-provider-logo-light"
-              style="background-color: rgb(255, 239, 248); border-radius: 20px; height: 90px; width: 90px;"
-              width="120"
-            />
-          </div>
-          <div
-            class="_display-flex _alignItems-center _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-center _gap-1481558276"
-          >
-            <span
-              class="font_subHeading _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-1640242377 _fontSize-18px _lineHeight-24px _fontWeight-400"
-              data-disable-theme="true"
-            >
-              Connection failed
-            </span>
-            <span
-              class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-16px _lineHeight-24px _fontWeight-400 _textAlign-center"
-              data-disable-theme="true"
-            >
-              Something went wrong connecting with Test Provider.
+                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                  style="background-image: url(uniswap-logo-large.png);"
+                />
+                <img
+                  alt=""
+                  class="css-accessibilityImage-9pa8cd"
+                  draggable="false"
+                  src="uniswap-logo-large.png"
+                />
+              </div>
             </span>
           </div>
+          <img
+            height="120"
+            src="test-provider-logo-light"
+            style="background-color: rgb(255, 239, 248); border-radius: 20px; height: 90px; width: 90px;"
+            width="120"
+          />
+        </div>
+        <div
+          class="_display-flex _alignItems-center _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-center _gap-1481558276"
+        >
           <span
-            class="t_sub_theme t_primary_Button _dsp_contents is_Theme"
+            class="font_subHeading _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-1640242377 _fontSize-18px _lineHeight-24px _fontWeight-400"
+            data-disable-theme="true"
           >
-            <button
-              class="is_Button _backgroundColor-0active-744986709 _opacity-0active-0d0t746 _display-flex _alignItems-center _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _justifyContent-center _borderTopColor-2122800589 _borderRightColor-2122800589 _borderBottomColor-2122800589 _borderLeftColor-2122800589 _cursor-pointer _height-auto _pt-1481558245 _pr-1481558245 _pb-1481558245 _pl-1481558245 _borderTopLeftRadius-1307609998 _borderTopRightRadius-1307609998 _borderBottomRightRadius-1307609998 _borderBottomLeftRadius-1307609998 _gap-1481558276 _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
-              data-disable-theme="true"
-            >
-              Try again
-            </button>
+            Connection failed
+          </span>
+          <span
+            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-16px _lineHeight-24px _fontWeight-400"
+            data-disable-theme="true"
+          >
+            Something went wrong connecting with Test Provider.
           </span>
         </div>
       </div>

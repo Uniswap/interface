@@ -61,7 +61,9 @@ describe(getPollingIntervalByBlocktime, () => {
   })
 
   it('returns the correct value for L2', () => {
-    expect(getPollingIntervalByBlocktime(UniverseChainId.Polygon)).toEqual(PollingInterval.LightningMcQueen)
+    expect(getPollingIntervalByBlocktime(UniverseChainId.Polygon)).toEqual(
+      PollingInterval.LightningMcQueen
+    )
   })
 })
 

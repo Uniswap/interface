@@ -2,14 +2,14 @@ import { SmallButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
 import Modal from 'components/Modal'
 import Row from 'components/Row'
-import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
-import styled from 'lib/styled-components'
+import { QUICK_ROUTE_CONFIG_KEY, useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
 import { PropsWithChildren } from 'react'
 import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
-import { DynamicConfigKeys, DynamicConfigs, QuickRouteChainsConfigKey } from 'uniswap/src/features/gating/configs'
+import { DynamicConfigs, getConfigName } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
@@ -154,29 +154,24 @@ function FeatureFlagOption({ flag, label }: FeatureFlagProps) {
   )
 }
 
-function DynamicConfigDropdown<Conf extends DynamicConfigs, Key extends DynamicConfigKeys[Conf]>({
-  config,
-  key,
-  label,
-  options,
-  selected,
-  parser,
-}: {
-  config: Conf
-  key: Key
+interface DynamicConfigDropdownProps {
+  config: DynamicConfigs
   label: string
   options: any[]
   selected: any[]
   parser: (opt: string) => any
-}) {
+}
+
+function DynamicConfigDropdown({ config, label, options, selected, parser }: DynamicConfigDropdownProps) {
+  const configName = getConfigName(config)
   const handleSelectChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedValues = Array.from(e.target.selectedOptions, (opt) => parser(opt.value))
-    Statsig.overrideConfig(config, { [key]: selectedValues })
+    Statsig.overrideConfig(configName, { [QUICK_ROUTE_CONFIG_KEY]: selectedValues })
   }
   return (
-    <CenteredRow key={config}>
+    <CenteredRow key={configName}>
       <FlagInfo>
-        <FlagName>{config}</FlagName>
+        <FlagName>{configName}</FlagName>
         <FlagDescription>{label}</FlagDescription>
       </FlagInfo>
       <select multiple onChange={handleSelectChange}>
@@ -242,7 +237,6 @@ export default function FeatureFlagModal() {
               options={WEB_SUPPORTED_CHAIN_IDS}
               parser={Number.parseInt}
               config={DynamicConfigs.QuickRouteChains}
-              key={QuickRouteChainsConfigKey.Chains}
               label="Enable quick routes for these chains"
             />
           </FeatureFlagGroup>

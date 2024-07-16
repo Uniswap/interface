@@ -1,9 +1,9 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { AssetType, NFTAssetType } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
+import { AssetType, NFTAssetType } from 'wallet/src/entities/assets'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 interface BaseTransferParams {
@@ -57,4 +57,9 @@ export type DerivedTransferInfo = BaseDerivedInfo<CurrencyInfo | GQLNftAsset> & 
 export interface TransferSpeedbump {
   hasWarning: boolean
   loading: boolean
+}
+
+export enum TokenSelectorFlow {
+  Swap,
+  Transfer,
 }

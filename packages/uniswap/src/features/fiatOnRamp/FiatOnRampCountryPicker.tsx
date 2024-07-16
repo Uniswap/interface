@@ -27,9 +27,6 @@ export function FiatOnRampCountryPicker({
         hapticFeedback
         backgroundColor="$surface3"
         borderRadius="$roundedFull"
-        hoverStyle={{
-          opacity: 0.5,
-        }}
         overflow="hidden"
         pl="$spacing8"
         pr="$spacing4"

@@ -2,8 +2,8 @@ import Column from 'components/Column'
 import { CheckMark } from 'components/Icons/CheckMark'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import Row, { RowBetween } from 'components/Row'
-import styled, { Keyframes, keyframes } from 'lib/styled-components'
 import { ReactElement, useEffect, useState } from 'react'
+import styled, { Keyframes, keyframes } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 
 export interface StepDetails {

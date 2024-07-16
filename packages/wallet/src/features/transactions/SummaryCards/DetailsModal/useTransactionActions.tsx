@@ -2,7 +2,6 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { providers } from 'ethers'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { IconProps, MenuContentItem, getTokenValue, isWeb, useIsDarkMode } from 'ui/src'
 import { CopySheets, HelpCenter } from 'ui/src/components/icons'
 import { UNIVERSE_CHAIN_LOGO } from 'uniswap/src/assets/chainLogos'
@@ -12,7 +11,6 @@ import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -34,6 +32,8 @@ import {
 import { getIsCancelable } from 'wallet/src/features/transactions/utils'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAppDispatch } from 'wallet/src/state'
+import { setClipboard } from 'wallet/src/utils/clipboard'
 import { openMoonpayTransactionLink, openTransactionLink } from 'wallet/src/utils/linking'
 
 export const useTransactionActions = ({
@@ -59,7 +59,7 @@ export const useTransactionActions = ({
 
   const [showActionsModal, setShowActionsModal] = useState(false)
   const [showCancelModal, setShowCancelModal] = useState(false)
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const { status, addedTime, hash, chainId, typeInfo } = transaction
 

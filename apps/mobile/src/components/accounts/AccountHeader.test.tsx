@@ -5,7 +5,6 @@ import { AccountHeader } from 'src/components/accounts/AccountHeader'
 import { fireEvent, render, screen, waitFor, within } from 'src/test/test-utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { ACCOUNT, preloadedSharedState, signerMnemonicAccount } from 'wallet/src/test/fixtures'
@@ -35,7 +34,7 @@ describe(AccountHeader, () => {
     it('renders shortened address within section address without name section', () => {
       render(<AccountHeader />, { preloadedState: stateWithoutName })
 
-      const addressSection = screen.getByTestId(TestID.AccountHeaderCopyAddress)
+      const addressSection = screen.getByTestId('account-header/address-only')
       const addressText = within(addressSection).queryByText(shortenedAddress)
 
       expect(addressText).toBeTruthy()
@@ -46,7 +45,7 @@ describe(AccountHeader, () => {
       jest.spyOn(ExpoClipboard, 'setStringAsync').mockImplementation(setStringAsync)
       render(<AccountHeader />, { preloadedState: stateWithoutName })
 
-      const addressSection = screen.getByTestId(TestID.AccountHeaderCopyAddress)
+      const addressSection = screen.getByTestId('account-header/address-only')
       fireEvent.press(addressSection, ON_PRESS_EVENT_PAYLOAD)
 
       await waitFor(() => {

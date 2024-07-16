@@ -1,8 +1,8 @@
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row from 'components/Row'
-import { useTheme } from 'lib/styled-components'
 import { ArrowRight } from 'react-feather'
 import { InterfaceTrade } from 'state/routing/types'
+import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 

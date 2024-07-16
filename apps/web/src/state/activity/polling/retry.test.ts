@@ -13,7 +13,7 @@ describe('retry', () => {
 
   it('fails for non-retryable error', async () => {
     await expect(retry(makeFn(1, 'abc', false), { n: 3, maxWait: 0, minWait: 0 }).promise).rejects.toThrow(
-      'bad failure',
+      'bad failure'
     )
   })
 

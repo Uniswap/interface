@@ -1,7 +1,7 @@
 import { call, put, takeLatest } from 'typed-redux-saga'
-import { AssetType } from 'uniswap/src/entities/assets'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { AssetType } from 'wallet/src/entities/assets'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'

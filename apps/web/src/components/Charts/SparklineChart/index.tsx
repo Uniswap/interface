@@ -4,8 +4,8 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { curveCardinal, scaleLinear } from 'd3'
 import { SparklineMap, TopToken } from 'graphql/data/TopTokens'
 import { PricePoint } from 'graphql/data/util'
-import styled, { useTheme } from 'lib/styled-components'
 import { memo } from 'react'
+import styled, { useTheme } from 'styled-components'
 
 const LoadingContainer = styled.div`
   height: 100%;

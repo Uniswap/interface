@@ -4,7 +4,7 @@ import { BREAKPOINTS } from 'theme'
 export const NAV_BREAKPOINT = {
   isMobileDrawer: 450,
   areTabsVisible: BREAKPOINTS.sm,
-  showMobileBar: BREAKPOINTS.lg + 1,
+  showMobileBar: BREAKPOINTS.md,
   collapseSearchBar: BREAKPOINTS.md,
 }
 

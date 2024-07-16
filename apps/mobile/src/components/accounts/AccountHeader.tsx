@@ -1,7 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, HapticFeedback, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
@@ -12,7 +11,6 @@ import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/te
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { isDevEnv } from 'utilities/src/environment'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
@@ -22,11 +20,12 @@ import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
+import { setClipboard } from 'wallet/src/utils/clipboard'
 
 export function AccountHeader(): JSX.Element {
   const activeAddress = useAppSelector(selectActiveAccountAddress)
   const account = useAppSelector(selectActiveAccount)
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const { avatar } = useAvatar(activeAddress)
   const displayName = useDisplayName(activeAddress)
@@ -84,7 +83,7 @@ export function AccountHeader(): JSX.Element {
               flexDirection="row"
               hapticStyle={ImpactFeedbackStyle.Medium}
               hitSlop={20}
-              testID={TestID.AccountHeaderAvatar}
+              testID={TestID.Manage}
               onLongPress={async (): Promise<void> => {
                 if (isDevEnv()) {
                   await HapticFeedback.selection()
@@ -126,7 +125,7 @@ export function AccountHeader(): JSX.Element {
             <TouchableArea
               hapticFeedback
               hitSlop={20}
-              testID={TestID.AccountHeaderCopyAddress}
+              testID="account-header/address-only"
               onPress={onPressCopyAddress}
             >
               <Flex centered row shrink gap="$spacing4">

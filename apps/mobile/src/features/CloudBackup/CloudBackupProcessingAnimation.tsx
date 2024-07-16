@@ -3,7 +3,6 @@ import { NativeStackNavigationProp } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useReducer } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, Alert } from 'react-native'
-import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList, SettingsStackParamList } from 'src/app/navigation/types'
 import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { Flex, Text } from 'ui/src'
@@ -18,6 +17,7 @@ import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingC
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccountIfExists } from 'wallet/src/features/wallet/hooks'
+import { useAppDispatch } from 'wallet/src/state'
 
 type Props = {
   accountAddress: Address
@@ -38,7 +38,7 @@ export function CloudBackupProcessingAnimation({
   navigation,
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { addBackupMethod, getImportedAccounts, getOnboardingAccount } = useOnboardingContext()
   const onboardingAccount = getOnboardingAccount()
   const importedAccounts = getImportedAccounts()

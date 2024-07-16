@@ -41,7 +41,7 @@ const NO_DECIMALS: NumberFormatOptions = {
   minimumFractionDigits: 0,
 }
 
-const NO_DECIMALS_CURRENCY: NumberFormatOptions = {
+export const NO_DECIMALS_CURRENCY: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 0,
   minimumFractionDigits: 0,

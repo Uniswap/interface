@@ -8,6 +8,8 @@ import {
   GQL_MAINNET_CHAINS,
   INFURA_PREFIX_TO_CHAIN_ID,
   InterfaceGqlChain,
+  L1_CHAIN_IDS,
+  L2_CHAIN_IDS,
   SUPPORTED_GAS_ESTIMATE_CHAIN_IDS,
   SupportedInterfaceChainId,
   TESTNET_CHAIN_IDS,
@@ -45,7 +47,7 @@ test.each(chainPriorityTestCases)(
   (chainId: InterfaceChainId, expectedPriority: number) => {
     const priority = getChainPriority(chainId)
     expect(priority).toBe(expectedPriority)
-  },
+  }
 )
 
 const chainIdNames: { [chainId in SupportedInterfaceChainId]: string } = {
@@ -73,7 +75,7 @@ test.each(Object.keys(chainIdNames).map((key) => parseInt(key) as SupportedInter
   (chainId: SupportedInterfaceChainId) => {
     const name = CHAIN_IDS_TO_NAMES[chainId]
     expect(name).toBe(chainIdNames[chainId])
-  },
+  }
 )
 
 const supportedGasEstimateChains = [
@@ -94,7 +96,7 @@ test.each(supportedGasEstimateChains)(
   (chainId: SupportedInterfaceChainId) => {
     expect(SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)).toBe(true)
     expect(SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.length).toEqual(supportedGasEstimateChains.length)
-  },
+  }
 )
 
 const testnetChainIds = [
@@ -111,7 +113,40 @@ test.each(testnetChainIds)('TESTNET_CHAIN_IDS generates the correct chainIds', (
   expect(TESTNET_CHAIN_IDS.length).toEqual(testnetChainIds.length)
 })
 
-const GQLProductionChains = [
+const l1ChainIds = [
+  UniverseChainId.Mainnet,
+  UniverseChainId.Goerli,
+  UniverseChainId.Sepolia,
+  UniverseChainId.Polygon,
+  UniverseChainId.PolygonMumbai,
+  UniverseChainId.Celo,
+  UniverseChainId.CeloAlfajores,
+  UniverseChainId.Bnb,
+  UniverseChainId.Avalanche,
+] as const
+
+test.each(l1ChainIds)('L1_CHAIN_IDS generates the correct chainIds', (chainId: SupportedInterfaceChainId) => {
+  expect(L1_CHAIN_IDS.includes(chainId)).toBe(true)
+  expect(L1_CHAIN_IDS.length).toEqual(l1ChainIds.length)
+})
+
+const l2ChainIds = [
+  UniverseChainId.ArbitrumOne,
+  UniverseChainId.ArbitrumGoerli,
+  UniverseChainId.Optimism,
+  UniverseChainId.OptimismGoerli,
+  UniverseChainId.Base,
+  UniverseChainId.Blast,
+  UniverseChainId.Zora,
+  UniverseChainId.Zksync,
+] as const
+
+test.each(l2ChainIds)('L2_CHAIN_IDS generates the correct chainIds', (chainId: SupportedInterfaceChainId) => {
+  expect(L2_CHAIN_IDS.includes(chainId)).toBe(true)
+  expect(L2_CHAIN_IDS.length).toEqual(l2ChainIds.length)
+})
+
+const GQLMainnetChains = [
   Chain.Ethereum,
   Chain.Polygon,
   Chain.Celo,
@@ -126,11 +161,11 @@ const GQLProductionChains = [
 ] as const
 
 const GQL_TESTNET_CHAINS = [Chain.EthereumGoerli, Chain.EthereumSepolia] as const
-const uxSupportedGQLChains = [...GQLProductionChains, ...GQL_TESTNET_CHAINS] as const
+const uxSupportedGQLChains = [...GQLMainnetChains, ...GQL_TESTNET_CHAINS] as const
 
-test.each(GQLProductionChains)('GQL_MAINNET_CHAINS generates the correct chains', (chain: InterfaceGqlChain) => {
+test.each(GQLMainnetChains)('GQL_MAINNET_CHAINS generates the correct chains', (chain: InterfaceGqlChain) => {
   expect(GQL_MAINNET_CHAINS.includes(chain)).toBe(true)
-  expect(GQL_MAINNET_CHAINS.length).toEqual(GQLProductionChains.length)
+  expect(GQL_MAINNET_CHAINS.length).toEqual(GQLMainnetChains.length)
 })
 
 test.each(uxSupportedGQLChains)('UX_SUPPORTED_GQL_CHAINS generates the correct chains', (chain: InterfaceGqlChain) => {
@@ -162,7 +197,7 @@ test.each(Object.keys(chainIdToBackendName).map((key) => parseInt(key) as Suppor
   (chainId: SupportedInterfaceChainId) => {
     const name = CHAIN_ID_TO_BACKEND_NAME[chainId]
     expect(name).toBe(chainIdToBackendName[chainId])
-  },
+  }
 )
 
 const chainToChainId = {
@@ -186,7 +221,7 @@ test.each(Object.keys(chainToChainId).map((key) => key as InterfaceGqlChain))(
   (chain) => {
     const chainId = CHAIN_NAME_TO_CHAIN_ID[chain]
     expect(chainId).toBe(chainToChainId[chain])
-  },
+  }
 )
 
 const backendSupportedChains = [
@@ -206,7 +241,7 @@ test.each(backendSupportedChains)(
   (chain: InterfaceGqlChain) => {
     expect(BACKEND_SUPPORTED_CHAINS.includes(chain)).toBe(true)
     expect(BACKEND_SUPPORTED_CHAINS.length).toEqual(backendSupportedChains.length)
-  },
+  }
 )
 
 const backendNotyetSupportedChainIds = [UniverseChainId.Zora, UniverseChainId.Zksync] as const
@@ -216,7 +251,7 @@ test.each(backendNotyetSupportedChainIds)(
   (chainId: SupportedInterfaceChainId) => {
     expect(BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId)).toBe(true)
     expect(BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.length).toEqual(backendNotyetSupportedChainIds.length)
-  },
+  }
 )
 
 const infuraPrefixToChainId: { [prefix: string]: SupportedInterfaceChainId } = {
@@ -271,7 +306,7 @@ test.each(WEB_SUPPORTED_CHAIN_IDS)(
   (chainId: SupportedInterfaceChainId) => {
     const block = UNIVERSE_CHAIN_INFO[chainId].blockPerMainnetEpochForChainId
     expect(block).toEqual(getBlocksPerMainnetEpochForChainId(chainId))
-  },
+  }
 )
 
 describe('getChainFromChainUrlParam', () => {

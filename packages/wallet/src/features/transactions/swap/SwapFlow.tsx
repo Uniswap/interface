@@ -19,7 +19,7 @@ import {
   TransactionModalFooterContainer,
 } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { TransactionModalProps } from 'wallet/src/features/transactions/swap/TransactionModalProps'
-import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/api/client'
+import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 
 export function SwapFlow({
   prefilledState,

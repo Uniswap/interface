@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'src/app/hooks'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -16,7 +16,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { isDevEnv } from 'utilities/src/environment'
-import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { LANDING_ANIMATION_DURATION, LandingBackground } from 'wallet/src/components/landing/LandingBackground'
@@ -25,17 +24,14 @@ import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.Landing>
 
 export function LandingScreen({ navigation }: Props): JSX.Element {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { t } = useTranslation()
 
   const actionButtonsOpacity = useSharedValue(0)
   const actionButtonsStyle = useAnimatedStyle(() => ({ opacity: actionButtonsOpacity.value }), [actionButtonsOpacity])
 
   useEffect(() => {
-    // disables looping animation during detox e2e tests which was preventing js thread from idle
-    if (!isDetoxBuild) {
-      actionButtonsOpacity.value = withDelay(LANDING_ANIMATION_DURATION, withTiming(1, { duration: ONE_SECOND_MS }))
-    }
+    actionButtonsOpacity.value = withDelay(LANDING_ANIMATION_DURATION, withTiming(1, { duration: ONE_SECOND_MS }))
   }, [actionButtonsOpacity])
 
   const { canClaimUnitag } = useCanAddressClaimUnitag()

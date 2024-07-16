@@ -4,7 +4,7 @@ import {
   NetInfoStateType,
   NetInfoUnknownState,
 } from '@react-native-community/netinfo'
-import { createFixture } from 'uniswap/src/test/utils'
+import { createFixture } from 'wallet/src/test/utils'
 
 export const networkUnknown = createFixture<NetInfoUnknownState>()(() => ({
   isConnected: null,

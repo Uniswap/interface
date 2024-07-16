@@ -1,6 +1,6 @@
 import Row from 'components/Row'
-import styled, { CSSProperties } from 'lib/styled-components'
 import { ApprovedCheckmarkIcon } from 'nft/components/icons'
+import styled, { CSSProperties } from 'styled-components'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'

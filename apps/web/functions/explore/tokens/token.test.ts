@@ -40,15 +40,15 @@ test.each(tokens)('should inject metadata for valid tokens', async (token) => {
   expect(body).toContain(`<meta property="og:type" content="website" data-rh="true">`)
   expect(body).toContain(`<meta property="og:url" content="${url}" data-rh="true">`)
   expect(body).toContain(
-    `<meta property="og:image:alt" content="Get ${token.tokenData.symbol} on Uniswap" data-rh="true">`,
+    `<meta property="og:image:alt" content="Get ${token.tokenData.symbol} on Uniswap" data-rh="true">`
   )
   expect(body).toContain(`<meta property="twitter:card" content="summary_large_image" data-rh="true">`)
   expect(body).toContain(
-    `<meta property="twitter:title" content="Get ${token.tokenData.symbol} on Uniswap" data-rh="true">`,
+    `<meta property="twitter:title" content="Get ${token.tokenData.symbol} on Uniswap" data-rh="true">`
   )
   expect(body).toContain(`<meta property="twitter:image" content="${token.image}" data-rh="true">`)
   expect(body).toContain(
-    `<meta property="twitter:image:alt" content="Get ${token.tokenData.symbol} on Uniswap" data-rh="true">`,
+    `<meta property="twitter:image:alt" content="Get ${token.tokenData.symbol} on Uniswap" data-rh="true">`
   )
 })
 

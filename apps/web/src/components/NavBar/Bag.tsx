@@ -1,9 +1,9 @@
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { useIsNftProfilePage } from 'hooks/useIsNftPage'
-import styled from 'lib/styled-components'
 import { BagIcon, HundredsOverflowIcon, TagIcon } from 'nft/components/icons'
 import { useBag, useSellAsset } from 'nft/hooks'
 import { useCallback } from 'react'
+import styled from 'styled-components'
 
 const CounterDot = styled.div`
   background-color: ${({ theme }) => theme.accent1};

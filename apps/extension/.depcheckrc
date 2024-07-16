@@ -1,0 +1,17 @@
+ignores: [
+    # Dependencies that depcheck thinks are unused but are actually used
+    "react-native-web",
+    "jest-environment-jsdom",
+    "webpack-cli",
+    # Dependencies that depcheck thinks are missing but are actually present or never used
+    ## Internal packages / workspaces
+    "src",
+    "tsconfig",
+    # Webpack plugins
+    "@svgr/webpack",
+    "tamagui-loader",
+    "esbuild-loader",
+    "swc-loader",
+    ## Testing
+    "@testing-library/dom",
+  ]

@@ -1,8 +1,8 @@
 import { brushHandleAccentPath, brushHandlePath, OffScreenHandle } from 'components/LiquidityChartRangeInput/svg'
 import { BrushBehavior, brushX, D3BrushEvent, ScaleLinear, select } from 'd3'
 import usePrevious from 'hooks/usePrevious'
-import styled from 'lib/styled-components'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import styled from 'styled-components'
 
 const Handle = styled.path<{ color: string }>`
   cursor: ew-resize;

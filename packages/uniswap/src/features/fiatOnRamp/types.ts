@@ -24,7 +24,7 @@ export type FORQuoteRequest = {
   destinationCurrencyCode: string
   sourceAmount: number
   sourceCurrencyCode: string
-  walletAddress?: string
+  walletAddress: string
   state?: string
 }
 
@@ -34,9 +34,9 @@ export type FORQuote = {
   sourceCurrencyCode: string
   destinationAmount: number
   destinationCurrencyCode: string
+  serviceProvider: string
   serviceProviderDetails: FORServiceProvider
   totalFee: number
-  isMostRecentlyUsedProvider: boolean
 }
 
 export type FORQuoteResponse = {
@@ -58,7 +58,10 @@ export type FORServiceProvider = {
   url: string
   logos: FORLogo
   paymentMethods: string[]
-  supportUrl?: string
+}
+
+export type FORServiceProvidersRequest = {
+  countryCode: string
 }
 
 export type FORServiceProvidersResponse = {

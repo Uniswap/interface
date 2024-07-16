@@ -23,7 +23,7 @@ const previousState: PersistAppStateV3 = {
           '0x7F5c764cBc14f9669B88837ca1490cCa17c31607',
           6,
           'USDC',
-          'USD Coin',
+          'USD Coin'
         ),
       },
       [UniverseChainId.Base]: {
@@ -32,7 +32,7 @@ const previousState: PersistAppStateV3 = {
           '0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA',
           6,
           'USDC',
-          'USD Coin',
+          'USD Coin'
         ),
       },
     },
@@ -53,21 +53,21 @@ describe('migration to v3', () => {
         2: migration2,
         3: migration3,
       },
-      { debug: false },
+      { debug: false }
     )
     const result: any = await migrator(previousState, 3)
     expect(Object.keys(result?.user?.tokens).length).toEqual(2)
     expect(
-      result?.user?.tokens[UniverseChainId.Optimism]?.['0x7F5c764cBc14f9669B88837ca1490cCa17c31607'].symbol,
+      result?.user?.tokens[UniverseChainId.Optimism]?.['0x7F5c764cBc14f9669B88837ca1490cCa17c31607'].symbol
     ).toEqual('USDC.e')
     expect(result?.user?.tokens[UniverseChainId.Optimism]?.['0x7F5c764cBc14f9669B88837ca1490cCa17c31607'].name).toEqual(
-      'Bridged USDC',
+      'Bridged USDC'
     )
     expect(result?.user?.tokens[UniverseChainId.Base]?.['0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA'].symbol).toEqual(
-      'USDbC',
+      'USDbC'
     )
     expect(result?.user?.tokens[UniverseChainId.Base]?.['0xd9aAEc86B65D86f6A7B5B1b0c42FFA531710b6CA'].name).toEqual(
-      'USD Base Coin',
+      'USD Base Coin'
     )
 
     expect(result?._persist.version).toEqual(3)

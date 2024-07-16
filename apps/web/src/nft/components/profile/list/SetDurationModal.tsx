@@ -1,6 +1,5 @@
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Plural, t } from 'i18n'
-import styled from 'lib/styled-components'
 import ms from 'ms'
 import { Column, Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
@@ -10,6 +9,7 @@ import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
+import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 const ModalWrapper = styled(Column)`

@@ -1,6 +1,6 @@
 import { LoadingBubble } from 'components/Tokens/loading'
-import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
+import styled from 'styled-components'
 
 const Container = styled.div<{
   $width?: number

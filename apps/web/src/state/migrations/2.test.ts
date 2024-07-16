@@ -30,7 +30,7 @@ describe('migration to v2', () => {
         1: migration1,
         2: migration2,
       },
-      { debug: false },
+      { debug: false }
     )
     const result: any = await migrator(previousState, 2)
     expect(result?.user?.userRouterPreference).toEqual(RouterPreference.API)
@@ -43,7 +43,7 @@ describe('migration to v2', () => {
         1: migration1,
         2: migration2,
       },
-      { debug: false },
+      { debug: false }
     )
     const result: any = await migrator(
       {
@@ -53,7 +53,7 @@ describe('migration to v2', () => {
           userRouterPreference: RouterPreference.X,
         },
       } as PersistAppStateV2,
-      2,
+      2
     )
     expect(result?.user?.userRouterPreference).toEqual(RouterPreference.X)
   })

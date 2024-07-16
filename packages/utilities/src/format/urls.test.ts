@@ -19,7 +19,9 @@ describe(uriToHttpUrls, () => {
     ])
   })
   it('returns ipfs gateways for wrongly formated ipfs:// urls', () => {
-    expect(uriToHttpUrls('ipfs://ipfs/QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif')).toEqual([
+    expect(
+      uriToHttpUrls('ipfs://ipfs/QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif')
+    ).toEqual([
       'https://cloudflare-ipfs.com/ipfs/QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif/',
       'https://ipfs.io/ipfs/QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif/',
     ])

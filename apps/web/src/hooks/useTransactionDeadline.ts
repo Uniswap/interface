@@ -1,11 +1,11 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import { L2_CHAIN_IDS } from 'constants/chains'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useInterfaceMulticall } from 'hooks/useContract'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useCallback, useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
-import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 
 export default function useTransactionDeadline(): BigNumber | undefined {
   const { chainId } = useAccount()
@@ -29,7 +29,7 @@ export function useGetTransactionDeadline(): () => Promise<BigNumber | undefined
 }
 
 function timestampToDeadline(chainId?: number, blockTimestamp?: BigNumber, ttl?: number) {
-  if (blockTimestamp && isL2ChainId(chainId)) {
+  if (blockTimestamp && chainId && L2_CHAIN_IDS.includes(chainId)) {
     return blockTimestamp.add(L2_DEADLINE_FROM_NOW)
   }
   if (blockTimestamp && ttl) {

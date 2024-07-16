@@ -140,8 +140,10 @@ describe(useRecipients, () => {
 
       expect(result.current).toEqual(
         expect.objectContaining({
-          sections: expect.not.arrayContaining([expect.objectContaining({ title: 'Search results' })]),
-        }),
+          sections: expect.not.arrayContaining([
+            expect.objectContaining({ title: 'Search results' }),
+          ]),
+        })
       )
     })
 
@@ -168,7 +170,7 @@ describe(useRecipients, () => {
             data: expect.objectContaining({ address: SAMPLE_SEED_ADDRESS_1 }),
             key: SAMPLE_SEED_ADDRESS_1,
           },
-        ]),
+        ])
       )
     })
   })
@@ -183,7 +185,7 @@ describe(useRecipients, () => {
       expect(result.current).toEqual(
         expect.objectContaining({
           sections: expect.not.arrayContaining([expect.objectContaining({ title: 'Recent' })]),
-        }),
+        })
       )
     })
 
@@ -212,7 +214,7 @@ describe(useRecipients, () => {
               ],
             },
           ]),
-        }),
+        })
       )
     })
 
@@ -221,9 +223,18 @@ describe(useRecipients, () => {
         preloadedState: getPreloadedState({
           transactions: {
             [activeAccount.address]: {
-              [UniverseChainId.Base as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
-              [UniverseChainId.Mainnet as WalletChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
-              [UniverseChainId.Bnb as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [UniverseChainId.Base as WalletChainId]: [
+                sendTxDetailsPending,
+                sendTxDetailsConfirmed,
+              ],
+              [UniverseChainId.Mainnet as WalletChainId]: [
+                sendTxDetailsConfirmed,
+                sendTxDetailsFailed,
+              ],
+              [UniverseChainId.Bnb as WalletChainId]: [
+                sendTxDetailsPending,
+                sendTxDetailsConfirmed,
+              ],
             },
           },
         }),
@@ -254,7 +265,11 @@ describe(useRecipients, () => {
         preloadedState: getPreloadedState({
           transactions: {
             [activeAccount.address]: {
-              [sendTxDetailsPending.chainId]: [sendTxDetailsPending, sendTxDetailsFailed, sendTxDetailsConfirmed],
+              [sendTxDetailsPending.chainId]: [
+                sendTxDetailsPending,
+                sendTxDetailsFailed,
+                sendTxDetailsConfirmed,
+              ],
             },
           },
         }),
@@ -264,7 +279,7 @@ describe(useRecipients, () => {
       expect(result.current).toEqual(
         expect.objectContaining({
           sections: expect.arrayContaining([recentRecipientsSectionResult]),
-        }),
+        })
       )
     })
 
@@ -273,9 +288,18 @@ describe(useRecipients, () => {
         preloadedState: getPreloadedState({
           transactions: {
             [activeAccount.address]: {
-              [UniverseChainId.Base as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
-              [UniverseChainId.Mainnet as WalletChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
-              [UniverseChainId.Bnb as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [UniverseChainId.Base as WalletChainId]: [
+                sendTxDetailsPending,
+                sendTxDetailsConfirmed,
+              ],
+              [UniverseChainId.Mainnet as WalletChainId]: [
+                sendTxDetailsConfirmed,
+                sendTxDetailsFailed,
+              ],
+              [UniverseChainId.Bnb as WalletChainId]: [
+                sendTxDetailsPending,
+                sendTxDetailsConfirmed,
+              ],
             },
           },
         }),
@@ -295,8 +319,10 @@ describe(useRecipients, () => {
 
       expect(result.current).toEqual(
         expect.objectContaining({
-          sections: expect.not.arrayContaining([expect.objectContaining({ title: 'Your wallets' })]),
-        }),
+          sections: expect.not.arrayContaining([
+            expect.objectContaining({ title: 'Your wallets' }),
+          ]),
+        })
       )
     })
 
@@ -309,7 +335,7 @@ describe(useRecipients, () => {
       expect(result.current).toEqual(
         expect.objectContaining({
           sections: expect.arrayContaining([inactiveWalletsSectionResult]),
-        }),
+        })
       )
     })
 
@@ -322,7 +348,7 @@ describe(useRecipients, () => {
       expect(result.current).toEqual(
         expect.objectContaining({
           searchableRecipientOptions: [{ data: inactiveAccount, key: inactiveAccount.address }],
-        }),
+        })
       )
     })
   })
@@ -336,8 +362,10 @@ describe(useRecipients, () => {
 
       expect(result.current).toEqual(
         expect.objectContaining({
-          sections: expect.not.arrayContaining([expect.objectContaining({ title: 'Favorite wallets' })]),
-        }),
+          sections: expect.not.arrayContaining([
+            expect.objectContaining({ title: 'Favorite wallets' }),
+          ]),
+        })
       )
     })
 
@@ -352,7 +380,7 @@ describe(useRecipients, () => {
       expect(result.current).toEqual(
         expect.objectContaining({
           sections: expect.arrayContaining([favoriteWalletsSectionResult]),
-        }),
+        })
       )
     })
   })
@@ -365,9 +393,18 @@ describe(useRecipients, () => {
           hasInactiveAccounts: true,
           transactions: {
             [activeAccount.address]: {
-              [UniverseChainId.Base as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
-              [UniverseChainId.Mainnet as WalletChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
-              [UniverseChainId.Bnb as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [UniverseChainId.Base as WalletChainId]: [
+                sendTxDetailsPending,
+                sendTxDetailsConfirmed,
+              ],
+              [UniverseChainId.Mainnet as WalletChainId]: [
+                sendTxDetailsConfirmed,
+                sendTxDetailsFailed,
+              ],
+              [UniverseChainId.Bnb as WalletChainId]: [
+                sendTxDetailsPending,
+                sendTxDetailsConfirmed,
+              ],
             },
           },
         }),
@@ -383,7 +420,7 @@ describe(useRecipients, () => {
               inactiveWalletsSectionResult,
               favoriteWalletsSectionResult,
             ]),
-          }),
+          })
         )
       })
     })
@@ -395,9 +432,18 @@ describe(useRecipients, () => {
           hasInactiveAccounts: true,
           transactions: {
             [activeAccount.address]: {
-              [UniverseChainId.Base as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
-              [UniverseChainId.Mainnet as WalletChainId]: [sendTxDetailsConfirmed, sendTxDetailsFailed],
-              [UniverseChainId.Bnb as WalletChainId]: [sendTxDetailsPending, sendTxDetailsConfirmed],
+              [UniverseChainId.Base as WalletChainId]: [
+                sendTxDetailsPending,
+                sendTxDetailsConfirmed,
+              ],
+              [UniverseChainId.Mainnet as WalletChainId]: [
+                sendTxDetailsConfirmed,
+                sendTxDetailsFailed,
+              ],
+              [UniverseChainId.Bnb as WalletChainId]: [
+                sendTxDetailsPending,
+                sendTxDetailsConfirmed,
+              ],
             },
           },
         }),

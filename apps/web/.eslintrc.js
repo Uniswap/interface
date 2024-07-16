@@ -59,10 +59,6 @@ module.exports = {
           {
             paths: [
               {
-                name: 'styled-components',
-                message: 'Styled components is deprecated, please use Flex or styled from "ui/src" instead.'
-              },
-              {
                 name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
                 importNames: ['usePortfolioBalancesQuery', 'usePortfolioBalancesWebLazyQuery'],
                 message: 'Import cached/subscription-based balance hooks from `TokenBalancesProvider.tsx` instead.',

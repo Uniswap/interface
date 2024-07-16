@@ -13,8 +13,6 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
-import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { TransferArrowButton } from 'wallet/src/components/buttons/TransferArrowButton'
@@ -30,10 +28,15 @@ import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDTokenUpdater'
 import { transactionStateActions } from 'wallet/src/features/transactions/transactionState/transactionState'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { TransferFormSpeedbumps } from 'wallet/src/features/transactions/transfer/TransferFormWarnings'
 import { useSetShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/transfer/hooks/useShowSendNetworkNotification'
-import { DerivedTransferInfo, TransferSpeedbump } from 'wallet/src/features/transactions/transfer/types'
+import {
+  DerivedTransferInfo,
+  TokenSelectorFlow,
+  TransferSpeedbump,
+} from 'wallet/src/features/transactions/transfer/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'

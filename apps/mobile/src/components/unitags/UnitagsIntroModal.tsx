@@ -2,8 +2,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
@@ -21,7 +20,7 @@ import { setHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHi
 export function UnitagsIntroModal(): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
-  const appDispatch = useDispatch()
+  const appDispatch = useAppDispatch()
   const modalState = useAppSelector(selectModalState(ModalName.UnitagsIntro)).initialState
   const address = modalState?.address
   const entryPoint = modalState?.entryPoint

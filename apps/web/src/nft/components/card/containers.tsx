@@ -1,9 +1,9 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
-import styled from 'lib/styled-components'
 import { StyledImage } from 'nft/components/card/media'
 import { ReactNode } from 'react'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 

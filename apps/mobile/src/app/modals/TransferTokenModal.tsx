@@ -1,6 +1,5 @@
 import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { TransferFlow } from 'src/features/transactions/transfer/TransferFlow'
@@ -13,7 +12,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function TransferTokenModal(): JSX.Element {
   const colors = useSporeColors()
-  const appDispatch = useDispatch()
+  const appDispatch = useAppDispatch()
   const modalState = useAppSelector(selectModalState(ModalName.Send))
 
   const onClose = useCallback((): void => {

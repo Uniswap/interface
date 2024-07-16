@@ -1,12 +1,12 @@
 import React, { createElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useIsDarkMode } from 'ui/src'
-import { AssetType } from 'uniswap/src/entities/assets'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
+import { AssetType } from 'wallet/src/entities/assets'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
@@ -16,7 +16,6 @@ import { FiatPurchaseTransactionInfo, TransactionDetails } from 'wallet/src/feat
 export function FiatPurchaseSummaryItem({
   transaction,
   layoutElement,
-  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: FiatPurchaseTransactionInfo }
 }): JSX.Element {
@@ -84,6 +83,5 @@ export function FiatPurchaseSummaryItem({
       />
     ),
     transaction,
-    index,
   })
 }

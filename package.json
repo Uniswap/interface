@@ -72,6 +72,7 @@
     "moti": "0.27.2",
     "yaml": "2.2.2",
     "multiformats@^9.4.2": "patch:multiformats@npm%3A9.4.2#./.yarn/patches/multiformats-npm-9.4.2-44b8a13c1d.patch",
+    "detox@20.18.1": "patch:detox@npm%3A20.18.1#./.yarn/patches/detox-npm-20.18.1-b532b310b4.patch",
     "@vercel/og@0.5.8": "patch:@vercel/og@npm%3A0.5.8#./.yarn/patches/@vercel-og-npm-0.5.8-83a79f2744.patch",
     "@web3-react/coinbase-wallet@8.2.3": "patch:@web3-react/coinbase-wallet@npm%3A8.2.3#./.yarn/patches/@web3-react-coinbase-wallet-npm-8.2.3-9c7073f079.patch",
     "@web3-react/gnosis-safe@8.2.4": "patch:@web3-react/gnosis-safe@npm%3A8.2.4#./.yarn/patches/@web3-react-gnosis-safe-npm-8.2.4-a7e2850335.patch",
@@ -82,8 +83,7 @@
     "@tamagui/animations-moti@1.92.0": "patch:@tamagui/animations-moti@npm%3A1.92.0#./.yarn/patches/@tamagui-animations-moti-npm-1.92.0-a8dde990ec.patch",
     "cypress-hardhat@2.5.0": "patch:cypress-hardhat@npm%3A2.5.0#./.yarn/patches/cypress-hardhat-npm-2.5.0-9b9b7d7a28.patch",
     "react-native-wagmi-charts@2.5.1": "patch:react-native-wagmi-charts@npm%3A2.5.1#./.yarn/patches/react-native-wagmi-charts-npm-2.5.1-c9e2637be7.patch",
-    "react-native-context-menu-view@1.15.0": "patch:react-native-context-menu-view@npm%3A1.15.0#./.yarn/patches/react-native-context-menu-view-npm-1.15.0-c8a9d10d8c.patch",
-    "detox@20.23.0": "patch:detox@npm%3A20.23.0#./.yarn/patches/detox-npm-20.23.0-6d61110e63.patch"
+    "react-native-context-menu-view@1.15.0": "patch:react-native-context-menu-view@npm%3A1.15.0#./.yarn/patches/react-native-context-menu-view-npm-1.15.0-c8a9d10d8c.patch"
   },
   "scripts": {
     "extension": "yarn workspace @uniswap/extension",

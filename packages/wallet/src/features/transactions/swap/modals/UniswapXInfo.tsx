@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { UniswapXText, isWeb } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons'
 import { colors, opacify } from 'ui/src/theme'
-import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
 import { WarningTooltipProps } from 'wallet/src/components/modals/WarningModal/WarningTooltipProps'
+import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 
 export function UniswapXInfo({

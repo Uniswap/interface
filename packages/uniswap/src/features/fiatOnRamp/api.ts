@@ -6,6 +6,7 @@ import {
   FORGetCountryResponse,
   FORQuoteRequest,
   FORQuoteResponse,
+  FORServiceProvidersRequest,
   FORServiceProvidersResponse,
   FORSupportedCountriesResponse,
   FORSupportedFiatCurrenciesRequest,
@@ -40,14 +41,13 @@ export const fiatOnRampAggregatorApi = createApi({
         method: 'POST',
       }),
       keepUnusedDataFor: 0,
-      transformResponse: (response: FORQuoteResponse) => ({
-        ...response,
-        quotes: response.quotes?.map((quote) => ({
-          ...quote,
-          serviceProviderDetails: {
-            ...quote.serviceProviderDetails,
-            paymentMethods: transformPaymentMethods(quote.serviceProviderDetails.paymentMethods),
-          },
+    }),
+    fiatOnRampAggregatorServiceProviders: builder.query<FORServiceProvidersResponse, FORServiceProvidersRequest>({
+      query: (request) => `/service-providers?${new URLSearchParams(request).toString()}`,
+      transformResponse: (response: FORServiceProvidersResponse) => ({
+        serviceProviders: response.serviceProviders.map((sp) => ({
+          ...sp,
+          paymentMethods: transformPaymentMethods(sp.paymentMethods),
         })),
       }),
     }),
@@ -95,6 +95,7 @@ export const {
   useFiatOnRampAggregatorCountryListQuery,
   useFiatOnRampAggregatorGetCountryQuery,
   useFiatOnRampAggregatorCryptoQuoteQuery,
+  useFiatOnRampAggregatorServiceProvidersQuery,
   useFiatOnRampAggregatorTransferServiceProvidersQuery,
   useFiatOnRampAggregatorSupportedTokensQuery,
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,

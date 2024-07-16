@@ -16,7 +16,6 @@ import { Flex, Shine, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { fonts } from 'ui/src/theme'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
@@ -229,7 +228,6 @@ const AnimatedNumber = (props: AnimatedNumberProps): JSX.Element => {
               color: colors.neutral1.val,
             },
           ]}
-          testID={TestID.PortfolioBalance}
         >
           {amountOfCurrency[0]}
           <Text
@@ -324,7 +322,7 @@ const ReanimatedNumber = ({
   }
 
   return (
-    <Animated.View style={scaleWraper} testID={TestID.PortfolioBalance}>
+    <Animated.View style={scaleWraper}>
       <Flex row alignItems="flex-start" backgroundColor="$surface1" borderRadius="$rounded4" width={MAX_DEVICE_WIDTH}>
         <TopAndBottomGradient />
         <Shine disabled={!warmLoading}>

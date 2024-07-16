@@ -32,7 +32,6 @@ function TransactionSummaryLayout({
   caption,
   postCaptionElement,
   icon,
-  index,
   onRetry,
 }: TransactionSummaryLayoutProps): JSX.Element {
   const { t } = useTranslation()
@@ -101,7 +100,7 @@ function TransactionSummaryLayout({
 
   return (
     <>
-      <TouchableArea mb="$spacing4" overflow="hidden" testID={`activity-list-item-${index ?? 0}`} onPress={onPress}>
+      <TouchableArea mb="$spacing4" overflow="hidden" onPress={onPress}>
         <Flex
           grow
           row

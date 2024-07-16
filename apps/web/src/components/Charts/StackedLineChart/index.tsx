@@ -3,7 +3,6 @@ import { Chart, ChartModel, ChartModelParams } from 'components/Charts/ChartMode
 import { StackedAreaSeriesOptions } from 'components/Charts/StackedLineChart/stacked-area-series/options'
 import { StackedAreaSeries } from 'components/Charts/StackedLineChart/stacked-area-series/stacked-area-series'
 import { getProtocolColor } from 'graphql/data/util'
-import { useTheme } from 'lib/styled-components'
 import {
   CustomStyleOptions,
   DeepPartial,
@@ -14,6 +13,7 @@ import {
   WhitespaceData,
 } from 'lightweight-charts'
 import { useMemo } from 'react'
+import { useTheme } from 'styled-components'
 import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export interface StackedLineData extends WhitespaceData<UTCTimestamp> {

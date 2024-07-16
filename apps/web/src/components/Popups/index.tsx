@@ -2,8 +2,8 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { AutoColumn } from 'components/Column'
 import ClaimPopup from 'components/Popups/ClaimPopup'
 import PopupItem from 'components/Popups/PopupItem'
-import styled from 'lib/styled-components'
 import { useActivePopups } from 'state/application/hooks'
+import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 const StickyContainer = styled.div`

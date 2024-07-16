@@ -19,8 +19,6 @@
     <!-- Skip the CSP in specified test environments -->
     <% if (!process.env.REACT_APP_SKIP_CSP) { %>
       <% let cspConfig = require('./csp.json'); %>
-      <!-- For removing unsafe inline styles-->
-      <% let cspStyleNonce = require('crypto').randomUUID().replaceAll('-','') %>
       <!-- Allow vercel feedback in preview environments -->
       <% if (process.env.REACT_APP_STAGING) { %>
         <% const cspDevConfig = require('./vercel-csp.json'); %>
@@ -28,7 +26,7 @@
       <% } %>
       <meta
         http-equiv="Content-Security-Policy" 
-        content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.concat(['nonce-'+cspStyleNonce]).join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;"
+        content="default-src <%= cspConfig.defaultSrc.join(' ') %>; script-src <%= cspConfig.scriptSrc.join(' ') %>; style-src <%= cspConfig.styleSrc.join(' ') %>; img-src <%= cspConfig.imgSrc.join(' ') %>; frame-src <%= cspConfig.frameSrc.join(' ') %>; connect-src <%= cspConfig.connectSrc.join(' ') %>; worker-src <%= cspConfig.workerSrc.join(' ') %>;"
       >
     <% } %>
 

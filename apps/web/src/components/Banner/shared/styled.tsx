@@ -1,6 +1,6 @@
 import { OpacityHoverState } from 'components/Common'
-import styled from 'lib/styled-components'
 import { X } from 'react-feather'
+import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 

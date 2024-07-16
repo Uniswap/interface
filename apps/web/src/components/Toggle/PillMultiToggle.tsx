@@ -1,6 +1,6 @@
 import { t } from 'i18n'
-import styled from 'lib/styled-components'
 import { createRef, useCallback, useEffect, useMemo, useState } from 'react'
+import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 const togglePadding = 4

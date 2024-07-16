@@ -78,12 +78,6 @@ class SeedPhraseInputView: UIView {
     set { vc.rootView.viewModel.onHeightMeasured = newValue }
     get { return vc.rootView.viewModel.onHeightMeasured }
   }
-
-  @objc
-  var testID: String? {
-    get { vc.rootView.viewModel.testID }
-    set { vc.rootView.viewModel.testID = newValue }
-  }
   
   @objc
   var handleSubmit: () -> Void {
@@ -118,14 +112,12 @@ struct SeedPhraseInput: View {
     VStack(spacing: 12) {
       VStack {
         VStack {
-          ZStack(alignment: .topLeading) {
+          ZStack(alignment: .leading) {
             TextEditor(text: $viewModel.input)
               .focused($focused)
               .autocorrectionDisabled()
               .textInputAutocapitalization(.never)
               .modifier(TextEditModifier())
-              .frame(minHeight: 96) // 120 - 2 * 12 for padding
-              .accessibility(identifier: viewModel.testID ?? "import-account-input")
             
             if (viewModel.input.isEmpty) {
               Text(viewModel.strings.inputPlaceholder)
@@ -139,6 +131,7 @@ struct SeedPhraseInput: View {
           .fixedSize(horizontal: false, vertical: true)
           .background(Colors.surface1)
           .padding(12) // Adds to default TextEditor padding 8
+          .frame(minHeight: 120, alignment: .top)
           .cornerRadius(16)
           .overlay(
             RoundedRectangle(cornerRadius: 16)
@@ -148,7 +141,7 @@ struct SeedPhraseInput: View {
           .onTapGesture {
             focused = true
           }
-          .onAppear {
+          .onAppear() {
             DispatchQueue.main.async {
               focused = true
             }
@@ -196,7 +189,7 @@ struct SeedPhraseInput: View {
         }
       )
     }
-    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+    .frame(maxWidth:.infinity, maxHeight: .infinity, alignment: .top)
     .font(font)
   }
 

@@ -1,7 +1,11 @@
-import { AssetType } from 'uniswap/src/entities/assets'
+import { AssetType } from 'wallet/src/entities/assets'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { createFinalizedTxAction } from 'wallet/src/features/notifications/notificationWatcherSaga.test'
-import { ReceiveTokenTransactionInfo, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
+import {
+  ReceiveTokenTransactionInfo,
+  TransactionStatus,
+  TransactionType,
+} from 'wallet/src/features/transactions/types'
 import {
   receiveCurrencyTxNotification,
   receiveNFTNotification,
@@ -48,7 +52,7 @@ describe(buildReceiveNotification, () => {
         tokenAddress: receiveNftTypeInfo.tokenAddress,
         txId: testTransaction.id,
         txStatus: testTransaction.status,
-      }),
+      })
     )
   })
 
@@ -65,7 +69,7 @@ describe(buildReceiveNotification, () => {
         tokenAddress: receiveCurrencyTypeInfo.tokenAddress,
         txId: testTransaction.id,
         txStatus: testTransaction.status,
-      }),
+      })
     )
   })
 })

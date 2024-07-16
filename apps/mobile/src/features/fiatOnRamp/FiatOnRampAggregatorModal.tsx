@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'src/app/hooks'
 import { FiatOnRampStackNavigator } from 'src/app/navigation/navigation'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { useSporeColors } from 'ui/src'
@@ -9,7 +9,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 export function FiatOnRampAggregatorModal(): JSX.Element {
   const colors = useSporeColors()
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const onClose = useCallback((): void => {
     dispatch(closeModal({ name: ModalName.FiatOnRampAggregator }))
   }, [dispatch])

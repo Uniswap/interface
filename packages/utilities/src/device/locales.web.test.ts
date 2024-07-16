@@ -8,7 +8,9 @@ describe(getDeviceLocales, () => {
 
   it('should return the device locale', () => {
     expect(getDeviceLocales).not.toThrow()
-    expect(getDeviceLocales()).toEqual([{ languageCode: MOCK_LANGUAGE, languageTag: MOCK_LANGUAGE }])
+    expect(getDeviceLocales()).toEqual([
+      { languageCode: MOCK_LANGUAGE, languageTag: MOCK_LANGUAGE },
+    ])
   })
 
   it('should return the default locale if an error occurs', () => {
@@ -17,6 +19,8 @@ describe(getDeviceLocales, () => {
     })
 
     expect(getDeviceLocales).not.toThrow()
-    expect(getDeviceLocales()).toEqual([{ languageCode: DEFAULT_LANGUAGE_CODE, languageTag: DEFAULT_LANGUAGE_TAG }])
+    expect(getDeviceLocales()).toEqual([
+      { languageCode: DEFAULT_LANGUAGE_CODE, languageTag: DEFAULT_LANGUAGE_TAG },
+    ])
   })
 })

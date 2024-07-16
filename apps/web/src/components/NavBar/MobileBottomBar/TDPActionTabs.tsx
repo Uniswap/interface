@@ -6,34 +6,27 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { t } from 'i18n'
-import styled from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 import { ClickableStyle } from 'theme/components'
 
 const TDPActionPill = styled.button<{ $color?: string }>`
   display: flex;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  gap: 8px;
+  gap: 4px;
   border: none;
   border-radius: 50px;
   transition: color 0.2s;
   background-color: ${({ $color, theme }) => $color || theme.neutral2};
   color: ${({ theme }) => theme.neutralContrast};
-  padding: 12px 20px 12px 16px;
+  padding: 12px 20px;
   font-size: 18px;
   font-weight: 535;
-  flex-grow: 1;
   ${ClickableStyle}
-
-  @media (max-width: 360px) {
-    padding-left: 20px;
-    > svg {
-      display: none;
-    }
+  > svg {
+    stroke: transparent;
   }
 `
 
@@ -79,7 +72,7 @@ export function TDPActionTabs() {
     },
   ]
   return (
-    <Row justify="center" gap="8px">
+    <Row justify="space-between">
       {tabs.map((tab) => (
         <TDPActionPill key={tab.label} onClick={() => toActionLink(tab.href)} $color={tokenColor}>
           {tab.icon}

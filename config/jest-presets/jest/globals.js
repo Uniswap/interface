@@ -1,4 +1,4 @@
-process.env.TZ = 'America/New_York'
+process.env.TZ = 'America/New_York';
 
 module.exports = {
   globals: {
@@ -6,6 +6,9 @@ module.exports = {
     AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: 'key',
     APPSFLYER_API_KEY: 'key',
     APPSFLYER_APP_ID: 123,
+    MOONPAY_API_KEY: 'key',
+    MOONPAY_API_URL: 'https://api.moonpay.com',
+    MOONPAY_WIDGET_API_URL: 'https://api.moonpay.com',
     INFURA_KEY: 'key',
     INFURA_PROJECT_ID: 123,
     ONESIGNAL_APP_ID: 123,
@@ -23,6 +26,6 @@ module.exports = {
     TRADING_API_KEY: 'key',
     UNISWAP_API_KEY: 'key',
     WALLETCONNECT_PROJECT_ID: 123,
-    FIREBASE_APP_CHECK_DEBUG_TOKEN: 'token',
+    FIREBASE_APP_CHECK_DEBUG_TOKEN: 'token'
   },
-}
+};

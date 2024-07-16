@@ -2,10 +2,9 @@ import React, { useMemo } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { SearchTokenItem } from 'src/components/explore/search/items/SearchTokenItem'
 import { getSearchResultId } from 'src/components/explore/search/utils'
-import { Flex, Loader } from 'ui/src'
+import { Inset, Loader } from 'ui/src'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
-import { TokenSearchResult } from 'wallet/src/features/search/SearchResult'
+import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 import { TopToken, usePopularTokens } from 'wallet/src/features/tokens/hooks'
 
 function gqlTokenToTokenSearchResult(token: Maybe<TopToken>): TokenSearchResult | null {
@@ -40,9 +39,9 @@ export function SearchPopularTokens(): JSX.Element {
 
   if (loading) {
     return (
-      <Flex px="$spacing24" py="$spacing8">
+      <Inset all="$spacing8">
         <Loader.Token repeat={2} />
-      </Flex>
+      </Inset>
     )
   }
 

@@ -19,14 +19,12 @@ interface TokenBalanceItemProps {
   onPressToken?: (currencyId: CurrencyId) => void
   isLoading?: boolean
   padded?: boolean
-  index?: number
 }
 
 export const TokenBalanceItem = memo(function _TokenBalanceItem({
   portfolioBalance,
   onPressToken,
   isLoading,
-  index,
   padded,
 }: TokenBalanceItemProps) {
   const { quantity, currencyInfo, relativeChange24 } = portfolioBalance
@@ -53,7 +51,6 @@ export const TokenBalanceItem = memo(function _TokenBalanceItem({
       justifyContent="space-between"
       px={padded ? '$spacing24' : '$spacing8'}
       py="$spacing8"
-      testID={`token-list-item-${index ?? 0}`}
       onLongPress={disableOnPress}
       onPress={onPress}
     >

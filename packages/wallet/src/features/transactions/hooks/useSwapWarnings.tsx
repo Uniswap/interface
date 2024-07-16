@@ -4,7 +4,6 @@ import { TFunction } from 'i18next'
 import _ from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { isWeb } from 'ui/src'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { useMemoCompare } from 'utilities/src/react/hooks'
 import { LocalizationContextState, useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -19,8 +18,9 @@ import {
   API_RATE_LIMIT_ERROR,
   NO_QUOTE_DATA,
   SWAP_QUOTE_ERROR,
-} from 'wallet/src/features/transactions/swap/trade/api/hooks/useTrade'
+} from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%

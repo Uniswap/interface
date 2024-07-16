@@ -8,8 +8,6 @@ export type FiatOnRampTransactionDetails = {
   forceFetched: boolean
   addedAt: number
   type: FiatOnRampTransactionType
-  syncedWithBackend: boolean
-  provider: string
 }
 
 export interface FiatOnRampTransactionsState {
@@ -34,7 +32,7 @@ const fiatOnRampTransactionsSlice = createSlice({
     },
     updateFiatOnRampTransaction(fiatOnRampTransactions, { payload }: { payload: FiatOnRampTransactionDetails }) {
       if (!fiatOnRampTransactions[payload.account]?.[payload.externalSessionId]) {
-        throw Error('Attempted to update non-existent FOR transaction.')
+        throw Error('Attempted to update non-existent signature.')
       }
 
       fiatOnRampTransactions[payload.account][payload.externalSessionId] = payload

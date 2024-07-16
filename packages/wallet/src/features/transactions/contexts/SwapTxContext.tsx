@@ -3,8 +3,8 @@ import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import {
   SwapTxAndGasInfo,
-  useSwapTxAndGasInfo,
-} from 'wallet/src/features/transactions/swap/trade/api/hooks/useSwapTxAndGasInfo'
+  useSwapTxAndGasInfoTradingApi,
+} from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useSwapTxAndGasInfoTradingApi'
 import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 
 export type ValidatedSwapTxContext = Required<SwapTxAndGasInfo> & {
@@ -47,7 +47,7 @@ export const SwapTxContext = createContext<SwapTxAndGasInfo | undefined>(undefin
 
 export function SwapTxContextProviderTradingApi({ children }: PropsWithChildren): JSX.Element {
   const { derivedSwapInfo } = useSwapFormContext()
-  const swapTxContext = useSwapTxAndGasInfo({ derivedSwapInfo })
+  const swapTxContext = useSwapTxAndGasInfoTradingApi({ derivedSwapInfo })
 
   return <SwapTxContext.Provider value={swapTxContext}>{children}</SwapTxContext.Provider>
 }

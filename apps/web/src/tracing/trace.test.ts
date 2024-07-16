@@ -79,7 +79,7 @@ describe('trace', () => {
       await expect(
         trace(CONTEXT, () => {
           throw error
-        }),
+        })
       ).rejects.toBe(error)
       expect(span!.status).toBe('unknown_error')
       expect(span!.data).toEqual({ error })
@@ -150,7 +150,7 @@ describe('trace', () => {
         trace(CONTEXT, ({ setError }) => {
           setError(error)
           return Promise.reject(error)
-        }),
+        })
       ).rejects.toBeDefined()
       expect(span!.status).toEqual('internal_error')
       expect(span!.data).toEqual({ error })
@@ -162,7 +162,7 @@ describe('trace', () => {
         trace(CONTEXT, ({ setError }) => {
           setError(error, 'aborted')
           return Promise.reject(error)
-        }),
+        })
       ).rejects.toBeDefined()
       expect(span!.status).toEqual('aborted')
       expect(span!.data).toEqual({ error })

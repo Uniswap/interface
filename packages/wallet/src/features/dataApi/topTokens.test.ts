@@ -1,7 +1,6 @@
-import { usePopularTokens } from 'uniswap/src/features/dataApi/topTokens'
-import { gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-// TODO: https://linear.app/uniswap/issue/WEB-4376/move-universepackageswalletsrcfeaturesdataapi-tests-to-uniswap-pkg
+import { usePopularTokens } from 'wallet/src/features/dataApi/topTokens'
+import { gqlTokenToCurrencyInfo } from 'wallet/src/features/dataApi/utils'
 import { token } from 'wallet/src/test/fixtures'
 import { act, renderHook, waitFor } from 'wallet/src/test/test-utils'
 import { createArray, queryResolvers } from 'wallet/src/test/utils'

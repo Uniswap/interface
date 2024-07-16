@@ -1,0 +1,70 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`KeyboardKey Component renders correctly with state Highlighted 1`] = `
+<div>
+  <span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _backgroundColor-568007324 _borderTopColor-170210283 _borderRightColor-170210283 _borderBottomColor-170210283 _borderLeftColor-170210283 _borderTopLeftRadius-1307610029 _borderTopRightRadius-1307610029 _borderBottomRightRadius-1307610029 _borderBottomLeftRadius-1307610029 _borderTopWidth-1481558338 _borderRightWidth-1481558338 _borderBottomWidth-1481558338 _borderLeftWidth-1481558338 _height-70px _justifyContent-center _pr-1316330114 _pl-1316330114 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-1750371555"
+      >
+        <span
+          class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-1380577629 _fontSize-28px _lineHeight-24px _fontWeight-400"
+          data-disable-theme="true"
+        >
+          Shift
+        </span>
+      </div>
+    </span>
+  </span>
+</div>
+`;
+
+exports[`KeyboardKey Component renders correctly with state KeyDown 1`] = `
+<div>
+  <span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _backgroundColor-568007324 _borderTopColor-170210283 _borderRightColor-170210283 _borderBottomColor-170210283 _borderLeftColor-170210283 _borderTopLeftRadius-1307610029 _borderTopRightRadius-1307610029 _borderBottomRightRadius-1307610029 _borderBottomLeftRadius-1307610029 _borderTopWidth-1481558338 _borderRightWidth-1481558338 _borderBottomWidth-1481558338 _borderLeftWidth-1481558338 _height-70px _justifyContent-center _pr-1316330114 _pl-1316330114 _top-7px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-1150291582"
+      >
+        <span
+          class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-1380577629 _fontSize-28px _lineHeight-24px _fontWeight-400"
+          data-disable-theme="true"
+        >
+          Shift
+        </span>
+      </div>
+    </span>
+  </span>
+</div>
+`;
+
+exports[`KeyboardKey Component renders correctly with state KeyUp 1`] = `
+<div>
+  <span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _backgroundColor-568007324 _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopLeftRadius-1307610029 _borderTopRightRadius-1307610029 _borderBottomRightRadius-1307610029 _borderBottomLeftRadius-1307610029 _borderTopWidth-1481558338 _borderRightWidth-1481558338 _borderBottomWidth-1481558338 _borderLeftWidth-1481558338 _height-70px _justifyContent-center _pr-1316330114 _pl-1316330114 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-1880567627"
+      >
+        <span
+          class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-28px _lineHeight-24px _fontWeight-400"
+          data-disable-theme="true"
+        >
+          Shift
+        </span>
+      </div>
+    </span>
+  </span>
+</div>
+`;

@@ -1,7 +1,7 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, ListRenderItemInfo } from 'react-native'
+import { ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SvgUri } from 'react-native-svg'
 import { Loader } from 'src/components/loading'
@@ -11,15 +11,15 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
-import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 import { useDebounce } from 'utilities/src/time/timing'
+import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
+import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
 
 const ICON_SIZE = 32 // design prefers a custom value here
 
@@ -86,7 +86,6 @@ function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelecto
         py="$spacing8"
         value={searchText}
         onChangeText={setSearchText}
-        onDismiss={() => Keyboard.dismiss()}
       />
       <Flex grow>
         <AnimatedFlex grow entering={FadeIn} exiting={FadeOut}>

@@ -5,13 +5,11 @@ import { NFTApproveTransactionInfo, TransactionDetails, TransactionType } from '
 export function NFTApproveSummaryItem({
   transaction,
   layoutElement,
-  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: NFTApproveTransactionInfo }
 }): JSX.Element {
   return (
     <NFTSummaryItem
-      index={index}
       layoutElement={layoutElement}
       transaction={transaction}
       transactionType={TransactionType.NFTApprove}

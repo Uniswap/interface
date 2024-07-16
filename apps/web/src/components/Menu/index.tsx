@@ -1,10 +1,10 @@
 import { ReactComponent as MenuIcon } from 'assets/images/menu.svg'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import styled, { css } from 'lib/styled-components'
 import { FunctionComponent, PropsWithChildren, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import styled, { css } from 'styled-components'
 import { ExternalLink } from 'theme/components'
 
 export enum FlyoutAlignment {

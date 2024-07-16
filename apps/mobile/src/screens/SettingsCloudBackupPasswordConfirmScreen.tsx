@@ -1,10 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { ScrollView } from 'react-native'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
-import { SafeKeyboardScreen } from 'src/components/layout/SafeKeyboardScreen'
-import { CloudBackupPassword } from 'src/features/CloudBackup/CloudBackupForm'
+import { Screen } from 'src/components/layout/Screen'
+import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPasswordForm'
 import { Flex, Text } from 'ui/src'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 
@@ -14,29 +15,19 @@ export function SettingsCloudBackupPasswordConfirmScreen({ navigation, route: { 
   const { t } = useTranslation()
   const { password } = params
 
-  const navigateToNextScreen = useCallback((): void => {
+  const navigateToNextScreen = (): void => {
     navigation.navigate({
       name: MobileScreens.SettingsCloudBackupProcessing,
       params,
       merge: true,
     })
-  }, [navigation, params])
+  }
 
   return (
-    <CloudBackupPassword.FormProvider
-      isConfirmation={true}
-      navigateToNextScreen={navigateToNextScreen}
-      passwordToConfirm={password}
-    >
-      <SafeKeyboardScreen
-        footer={
-          <Flex mx="$spacing16" my="$spacing12">
-            <CloudBackupPassword.ContinueButton />
-          </Flex>
-        }
-        header={<BackHeader mx="$spacing16" my="$spacing16" />}
-      >
-        <Flex alignItems="center" gap="$spacing12" justifyContent="space-between" mb="$spacing24" mx="$spacing12">
+    <Screen mx="$spacing16" my="$spacing16">
+      <BackHeader mb="$spacing16" />
+      <ScrollView bounces={false} keyboardShouldPersistTaps="handled">
+        <Flex alignItems="center" justifyContent="space-between" mb="$spacing24" mx="$spacing12">
           <Text textAlign="center" variant="heading3">
             {t('onboarding.cloud.confirm.title')}
           </Text>
@@ -44,8 +35,12 @@ export function SettingsCloudBackupPasswordConfirmScreen({ navigation, route: { 
             {t('onboarding.cloud.confirm.description')}
           </Text>
         </Flex>
-        <CloudBackupPassword.PasswordInput />
-      </SafeKeyboardScreen>
-    </CloudBackupPassword.FormProvider>
+        <CloudBackupPasswordForm
+          isConfirmation={true}
+          navigateToNextScreen={navigateToNextScreen}
+          passwordToConfirm={password}
+        />
+      </ScrollView>
+    </Screen>
   )
 }

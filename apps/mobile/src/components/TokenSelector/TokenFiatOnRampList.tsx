@@ -1,17 +1,14 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { memo, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, ListRenderItemInfo } from 'react-native'
+import { ListRenderItemInfo } from 'react-native'
 import { Flex, Inset, Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/TokenOptionItem'
-import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { NumberType } from 'utilities/src/format/types'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
+import { TokenOptionItem } from 'wallet/src/components/TokenSelector/TokenOptionItem'
+import { useBottomSheetFocusHook } from 'wallet/src/components/modals/hooks'
 
 interface Props {
   onSelectCurrency: (currency: FiatOnRampCurrency) => void
@@ -37,8 +34,6 @@ function TokenOptionItemWrapper({
     [currencyInfo],
   )
   const onPress = useCallback(() => onSelectCurrency?.(currency), [currency, onSelectCurrency])
-  const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(currencyInfo?.currencyId)
-  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
 
   if (!option) {
     return null
@@ -46,15 +41,9 @@ function TokenOptionItemWrapper({
 
   return (
     <TokenOptionItem
-      balance={convertFiatAmountFormatted(option.balanceUSD, NumberType.FiatTokenPrice)}
-      dismissWarningCallback={dismissWarningCallback}
       option={option}
-      quantity={option.quantity}
-      quantityFormatted={formatNumberOrString({ value: option.quantity, type: NumberType.TokenTx })}
       showNetworkPill={currencyInfo?.currency.chainId !== UniverseChainId.Mainnet}
       showWarnings={true}
-      tokenWarningDismissed={tokenWarningDismissed}
-      onDismiss={() => Keyboard.dismiss()}
       onPress={onPress}
     />
   )

@@ -5,9 +5,9 @@ import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { renderHookWithProviders } from 'src/test/render'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { FavoritesState } from 'wallet/src/features/favorites/slice'
-import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures/constants'
 import { cleanup } from 'wallet/src/test/test-utils'
 
 const tokenId = SAMPLE_SEED_ADDRESS_1
@@ -30,7 +30,10 @@ describe(useExploreTokenContextMenu, () => {
 
   describe('editing favorite tokens', () => {
     it('renders proper context menu items when onEditFavorites is not provided', async () => {
-      const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), { resolvers })
+      const { result } = renderHookWithProviders(
+        () => useExploreTokenContextMenu(tokenMenuParams),
+        { resolvers }
+      )
 
       expect(result.current.menuActions).toEqual([
         expect.objectContaining({
@@ -57,7 +60,7 @@ describe(useExploreTokenContextMenu, () => {
       const onEditFavorites = jest.fn()
       const { result } = renderHookWithProviders(
         () => useExploreTokenContextMenu({ ...tokenMenuParams, onEditFavorites }),
-        { resolvers },
+        { resolvers }
       )
 
       expect(result.current.menuActions).toEqual([
@@ -85,11 +88,11 @@ describe(useExploreTokenContextMenu, () => {
       const onEditFavorites = jest.fn()
       const { result } = renderHookWithProviders(
         () => useExploreTokenContextMenu({ ...tokenMenuParams, onEditFavorites }),
-        { resolvers },
+        { resolvers }
       )
 
       const editFavoritesActionIndex = result.current.menuActions.findIndex(
-        (action: ContextMenuAction) => action.title === 'Edit favorites',
+        (action: ContextMenuAction) => action.title === 'Edit favorites'
       )
       result.current.onContextMenuPress({
         nativeEvent: { index: editFavoritesActionIndex },
@@ -102,12 +105,15 @@ describe(useExploreTokenContextMenu, () => {
 
   describe('adding / removing favorite tokens', () => {
     it('renders proper context menu items when token is favorited', async () => {
-      const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
-        preloadedState: {
-          favorites: { tokens: [tokenMenuParams.currencyId.toLowerCase()] } as FavoritesState,
-        },
-        resolvers,
-      })
+      const { result } = renderHookWithProviders(
+        () => useExploreTokenContextMenu(tokenMenuParams),
+        {
+          preloadedState: {
+            favorites: { tokens: [tokenMenuParams.currencyId.toLowerCase()] } as FavoritesState,
+          },
+          resolvers,
+        }
+      )
 
       expect(result.current.menuActions).toEqual([
         expect.objectContaining({
@@ -132,13 +138,13 @@ describe(useExploreTokenContextMenu, () => {
 
     it("dispatches add to favorites redux action when 'Favorite token' is pressed", async () => {
       const store = mockStore({ favorites: { tokens: [] }, appearance: { theme: 'system' } })
-      const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
-        resolvers,
-        store,
-      })
+      const { result } = renderHookWithProviders(
+        () => useExploreTokenContextMenu(tokenMenuParams),
+        { resolvers, store }
+      )
 
       const favoriteTokenActionIndex = result.current.menuActions.findIndex(
-        (action: ContextMenuAction) => action.title === 'Favorite token',
+        (action: ContextMenuAction) => action.title === 'Favorite token'
       )
       result.current.onContextMenuPress({
         nativeEvent: { index: favoriteTokenActionIndex },
@@ -159,13 +165,13 @@ describe(useExploreTokenContextMenu, () => {
         favorites: { tokens: [tokenMenuParams.currencyId.toLowerCase()] },
         appearance: { theme: 'system' },
       })
-      const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
-        resolvers,
-        store,
-      })
+      const { result } = renderHookWithProviders(
+        () => useExploreTokenContextMenu(tokenMenuParams),
+        { resolvers, store }
+      )
 
       const removeFavoriteTokenActionIndex = result.current.menuActions.findIndex(
-        (action: ContextMenuAction) => action.title === 'Remove favorite',
+        (action: ContextMenuAction) => action.title === 'Remove favorite'
       )
       result.current.onContextMenuPress({
         nativeEvent: { index: removeFavoriteTokenActionIndex },
@@ -192,7 +198,9 @@ describe(useExploreTokenContextMenu, () => {
       resolvers,
     })
 
-    const swapActionIndex = result.current.menuActions.findIndex((action: ContextMenuAction) => action.title === 'Swap')
+    const swapActionIndex = result.current.menuActions.findIndex(
+      (action: ContextMenuAction) => action.title === 'Swap'
+    )
     result.current.onContextMenuPress({
       nativeEvent: { index: swapActionIndex },
     } as NativeSyntheticEvent<ContextMenuOnPressNativeEvent>)
@@ -227,7 +235,7 @@ describe(useExploreTokenContextMenu, () => {
     jest.spyOn(Share, 'share')
 
     const shareActionIndex = result.current.menuActions.findIndex(
-      (action: ContextMenuAction) => action.title === 'Share',
+      (action: ContextMenuAction) => action.title === 'Share'
     )
     result.current.onContextMenuPress({
       nativeEvent: { index: shareActionIndex },

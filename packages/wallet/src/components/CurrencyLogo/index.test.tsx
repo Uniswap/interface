@@ -1,5 +1,5 @@
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { arbitrumDaiCurrencyInfo, uniCurrencyInfo } from 'uniswap/src/test/fixtures'
+import { arbitrumDaiCurrencyInfo, uniCurrencyInfo } from 'wallet/src/test/fixtures'
 import { renderWithProviders } from 'wallet/src/test/render'
 
 jest.mock('ui/src/assets/', () => 'ethereum-logo.png')

@@ -1,5 +1,6 @@
 export * from './accounts'
 export * from './balances'
+export * from './currencies'
 export * from './notifications'
 export * from './recipients'
 export * from './redux'

@@ -1,5 +1,5 @@
-import styled, { css } from 'lib/styled-components'
 import { darken } from 'polished'
+import styled, { css } from 'styled-components'
 import { ClickableStyle } from 'theme/components'
 import { opacify } from 'theme/utils'
 

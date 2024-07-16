@@ -4,10 +4,7 @@ import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
-import {
-  Chain,
-  useQuickTokenBalancesWebQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, useQuickTokenBalancesWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 jest.mock('@web3-react/core', () => ({
   useWeb3React: jest.fn(() => ({ account: '0x123', chainId: 1 })),

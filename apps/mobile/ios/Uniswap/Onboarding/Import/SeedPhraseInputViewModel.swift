@@ -36,9 +36,6 @@ class SeedPhraseInputViewModel: ObservableObject {
   
   // Following block of variables will come from RN
   @Published var targetMnemonicId: String? = nil
-
-  @Published var testID: String? = nil
-  
   @Published var rawRNStrings: Dictionary<String, String> = Dictionary<String, String>() {
     didSet {
       strings = ReactNativeStrings(
@@ -65,15 +62,11 @@ class SeedPhraseInputViewModel: ObservableObject {
   @Published var onPasteEnd: RCTDirectEventBlock = { _ in }
   @Published var onHeightMeasured: RCTDirectEventBlock = { _ in }
   
-  private var lastWordValidationTimer: Timer?
-  private let lastWordValidationTimeout: TimeInterval = 1.0
-  
   @Published var input = "" {
     didSet {
-      handleInputChange()
+      validateInput()
     }
   }
-  @Published var skipLastWord = true
   @Published var status: Status = .none
   @Published var error: MnemonicError? = nil
   
@@ -142,26 +135,10 @@ class SeedPhraseInputViewModel: ObservableObject {
     return value.trimmingCharacters(in: .whitespacesAndNewlines)
   }
   
-  private func handleInputChange() {
+  private func validateInput() {
     let normalized = normalizeInput(value: input)
     let skipLastWord = normalized.last != " "
-    validateInput(normalizedInput: normalized, skipLastWord: skipLastWord)
-    
-    lastWordValidationTimer?.invalidate()
-    
-    if (skipLastWord) {
-      lastWordValidationTimer = Timer.scheduledTimer(
-        withTimeInterval: lastWordValidationTimeout,
-        repeats: false) { _ in
-            DispatchQueue.global(qos: .background).async {
-                self.validateInput(normalizedInput: normalized, skipLastWord: false)
-            }
-        }
-    }
-  }
-  
-  private func validateInput(normalizedInput: String, skipLastWord: Bool) {
-    let mnemonic = trimInput(value: normalizedInput)
+    let mnemonic = trimInput(value: normalized)
 
     let words = mnemonic.components(separatedBy: " ")
     

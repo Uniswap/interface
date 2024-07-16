@@ -1,4 +1,4 @@
-import { css, keyframes } from 'lib/styled-components'
+import { css, keyframes } from 'styled-components'
 
 const slideIn = keyframes`
   from { opacity: 0; transform: translateX(40px) }

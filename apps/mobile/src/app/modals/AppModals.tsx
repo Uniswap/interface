@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
 import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
 import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { ExploreModal } from 'src/app/modals/ExploreModal'
@@ -8,13 +7,14 @@ import { TransferTokenModal } from 'src/app/modals/TransferTokenModal'
 import { ViewOnlyExplainerModal } from 'src/app/modals/ViewOnlyExplainerModal'
 import { LazyModalRenderer } from 'src/app/modals/utils'
 import { RemoveWalletModal } from 'src/components/RemoveWallet/RemoveWalletModal'
-import { WalletConnectModals } from 'src/components/Requests/WalletConnectModals'
 import { RestoreWalletModal } from 'src/components/RestoreWalletModal/RestoreWalletModal'
+import { WalletConnectModals } from 'src/components/WalletConnect/WalletConnectModals'
 import { ForceUpgradeModal } from 'src/components/forceUpgrade/ForceUpgradeModal'
 import { UnitagsIntroModal } from 'src/components/unitags/UnitagsIntroModal'
 import { LockScreenModal } from 'src/features/authentication/LockScreenModal'
 import { ExchangeTransferModal } from 'src/features/fiatOnRamp/ExchangeTransferModal'
 import { FiatOnRampAggregatorModal } from 'src/features/fiatOnRamp/FiatOnRampAggregatorModal'
+import { FiatOnRampModal } from 'src/features/fiatOnRamp/FiatOnRampModal'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { ScantasticModal } from 'src/features/scantastic/ScantasticModal'
 import { ReceiveCryptoModal } from 'src/screens/ReceiveCryptoModal'
@@ -22,9 +22,10 @@ import { SettingsFiatCurrencyModal } from 'src/screens/SettingsFiatCurrencyModal
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
 import { QueuedOrderModal } from 'wallet/src/features/transactions/swap/modals/QueuedOrderModal'
+import { useAppDispatch } from 'wallet/src/state'
 
 export function AppModals(): JSX.Element {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const onCloseLanguageModal = useCallback(() => {
     dispatch(closeModal({ name: ModalName.LanguageSelector }))
@@ -38,6 +39,10 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.Experiments}>
         <ExperimentsModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.FiatOnRamp}>
+        <FiatOnRampModal />
       </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.FiatOnRampAggregator}>

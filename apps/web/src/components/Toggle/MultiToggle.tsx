@@ -1,4 +1,4 @@
-import styled from 'lib/styled-components'
+import styled from 'styled-components'
 
 export const ToggleWrapper = styled.button<{ width?: string }>`
   display: flex;

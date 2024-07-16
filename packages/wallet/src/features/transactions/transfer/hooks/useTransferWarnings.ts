@@ -2,7 +2,6 @@ import { useNetInfo } from '@react-native-community/netinfo'
 import { TFunction } from 'i18next'
 import _ from 'lodash'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { useMemoCompare } from 'utilities/src/react/hooks'
@@ -14,6 +13,7 @@ import {
   WarningLabel,
   WarningSeverity,
 } from 'wallet/src/features/transactions/WarningModal/types'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
 

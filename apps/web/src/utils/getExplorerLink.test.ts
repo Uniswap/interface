@@ -19,7 +19,7 @@ describe('#getExplorerLink', () => {
   })
   it('bnb chain', () => {
     expect(getExplorerLink(UniverseChainId.Bnb, 'abc', ExplorerDataType.ADDRESS)).toEqual(
-      'https://bscscan.com/address/abc',
+      'https://bscscan.com/address/abc'
     )
   })
   it('polygon', () => {
@@ -33,17 +33,17 @@ describe('#getExplorerLink', () => {
   })
   it('avalanche', () => {
     expect(getExplorerLink(UniverseChainId.Avalanche, 'abc', ExplorerDataType.ADDRESS)).toEqual(
-      'https://snowtrace.io/address/abc',
+      'https://snowtrace.io/address/abc'
     )
   })
   it('base', () => {
     expect(getExplorerLink(UniverseChainId.Base, 'abc', ExplorerDataType.ADDRESS)).toEqual(
-      'https://basescan.org/address/abc',
+      'https://basescan.org/address/abc'
     )
   })
   it('blast', () => {
     expect(getExplorerLink(UniverseChainId.Blast, 'abc', ExplorerDataType.ADDRESS)).toEqual(
-      'https://blastscan.io/address/abc',
+      'https://blastscan.io/address/abc'
     )
   })
 })

@@ -9,13 +9,11 @@ import {
 export function ReceiveSummaryItem({
   transaction,
   layoutElement,
-  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: ReceiveTokenTransactionInfo }
 }): JSX.Element {
   return (
     <TransferTokenSummaryItem
-      index={index}
       layoutElement={layoutElement}
       otherAddress={transaction.typeInfo.sender}
       transaction={transaction}

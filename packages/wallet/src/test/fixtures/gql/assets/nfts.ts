@@ -4,10 +4,9 @@ import {
   NftCollection,
   NftContract,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { faker } from 'uniswap/src/test/shared'
-import { createFixture } from 'uniswap/src/test/utils'
 import { GQL_CHAINS, image } from 'wallet/src/test/fixtures/gql/misc'
-import { createArray, randomChoice } from 'wallet/src/test/utils'
+import { faker } from 'wallet/src/test/shared'
+import { createArray, createFixture, randomChoice } from 'wallet/src/test/utils'
 
 /**
  * Base fixtures

@@ -1,0 +1,124 @@
+import { ethers } from 'ethers'
+import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
+import { SignMessageRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { Button, Flex, Text, Tooltip } from 'ui/src'
+import { AlertTriangle, Code, StickyNoteTextSquare } from 'ui/src/components/icons'
+import { containsNonPrintableChars } from 'utilities/src/primitives/string'
+
+enum ViewEncoding {
+  UTF8,
+  HEX,
+}
+interface PersonalSignRequestProps {
+  dappRequest: SignMessageRequest
+}
+
+export function PersonalSignRequestContent({ dappRequest }: PersonalSignRequestProps): JSX.Element | null {
+  const { t } = useTranslation()
+
+  const [viewEncoding, setViewEncoding] = useState(ViewEncoding.UTF8)
+  const toggleViewEncoding = (): void =>
+    setViewEncoding(viewEncoding === ViewEncoding.UTF8 ? ViewEncoding.HEX : ViewEncoding.UTF8)
+
+  const hexMessage = dappRequest.messageHex
+  const utf8Message = ethers.utils.toUtf8String(hexMessage) // Already validated in schema
+
+  const containsUnrenderableCharacters = containsNonPrintableChars(utf8Message)
+
+  const [isScrollable, setIsScrollable] = useState(false)
+  const messageRef = useRef<HTMLElement>(null)
+  useEffect(() => {
+    const checkScroll = (): void => {
+      if (!messageRef.current) {
+        return
+      }
+      setIsScrollable(messageRef.current.scrollHeight > messageRef.current.clientHeight)
+    }
+
+    checkScroll()
+    window.addEventListener('resize', checkScroll)
+
+    return () => window.removeEventListener('resize', checkScroll)
+  }, [setIsScrollable, viewEncoding])
+
+  return (
+    <DappRequestContent
+      showNetworkCost
+      confirmText={t('common.button.sign')}
+      title={t('dapp.request.signature.header')}
+    >
+      <Flex
+        ref={messageRef}
+        $platform-web={{ overflowY: 'auto' }}
+        alignItems="flex-start"
+        backgroundColor="$surface2"
+        borderColor="$surface3"
+        borderRadius="$rounded16"
+        borderWidth={1}
+        flexDirection="row"
+        justifyContent="space-between"
+        maxHeight={200}
+        minHeight="$spacing48"
+        p="$spacing16"
+        position="relative"
+      >
+        <Text color="$neutral2" maxWidth="calc(100% - 36px)" variant="body4">
+          {viewEncoding === ViewEncoding.UTF8 ? utf8Message : hexMessage}
+        </Text>
+      </Flex>
+      <Tooltip allowFlip stayInFrame delay={100} placement="left">
+        <Flex
+          alignSelf="flex-end"
+          bottom="$spacing16"
+          position="absolute"
+          right={isScrollable ? '$spacing24' : '$spacing12'}
+        >
+          <Tooltip.Trigger>
+            <Button
+              borderColor="$surface3"
+              borderRadius="$rounded4"
+              icon={
+                viewEncoding === ViewEncoding.UTF8 ? (
+                  <Code color="$neutral2" size="$icon.12" />
+                ) : (
+                  <StickyNoteTextSquare color="$neutral2" size="$icon.12" />
+                )
+              }
+              p="$spacing4"
+              position="relative"
+              theme="secondary"
+              onPress={toggleViewEncoding}
+            />
+          </Tooltip.Trigger>
+        </Flex>
+        <Tooltip.Content>
+          <Tooltip.Arrow />
+          <Text variant="body4">
+            {viewEncoding === ViewEncoding.UTF8
+              ? t('dapp.request.signature.toggleDataView.raw')
+              : t('dapp.request.signature.toggleDataView.readable')}
+          </Text>
+        </Tooltip.Content>
+      </Tooltip>
+      {containsUnrenderableCharacters && (
+        <Flex
+          alignItems="center"
+          backgroundColor="$surface2"
+          borderColor="$surface3"
+          borderRadius="$rounded16"
+          flexDirection="row"
+          gap="$spacing8"
+          justifyContent="flex-start"
+          p="$spacing12"
+        >
+          <AlertTriangle color="$neutral2" minWidth="$spacing20" size="$icon.20" />
+          <Text color="$neutral2" variant="body4">
+            {t('dapp.request.signature.containsUnrenderableCharacters')}
+          </Text>
+        </Flex>
+      )}
+    </DappRequestContent>
+  )
+}

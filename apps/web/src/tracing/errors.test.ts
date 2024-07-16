@@ -134,14 +134,14 @@ describe('beforeSend', () => {
   describe('Content Security Policy', () => {
     it('filters unsafe-eval evaluate errors', () => {
       const originalException = new Error(
-        "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inlin...",
+        "Refused to evaluate a string as JavaScript because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-analytics.com https://www.googletagmanager.com 'unsafe-inlin..."
       )
       expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
 
     it('filters blocked frame errors', () => {
       const originalException = new Error(
-        'Blocked a frame with origin "https://app.uniswap.org" from accessing a cross-origin frame.',
+        'Blocked a frame with origin "https://app.uniswap.org" from accessing a cross-origin frame.'
       )
       expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
@@ -153,14 +153,14 @@ describe('beforeSend', () => {
 
     it('filters CSP unsafe-eval compile/instatiate errors', () => {
       const originalException = new Error(
-        "Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-a...",
+        "Refused to compile or instantiate WebAssembly module because 'unsafe-eval' is not an allowed source of script in the following Content Security Policy directive: \"script-src 'self' https://www.google-a..."
       )
       expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
 
     it('filters WebAssembly compilation errors', () => {
       const originalException = new Error(
-        'Aborted(CompileError: WebAssembly.instantiate(): Wasm code generation disallowed by embedder). Build with -sASSERTIONS for more info.',
+        'Aborted(CompileError: WebAssembly.instantiate(): Wasm code generation disallowed by embedder). Build with -sASSERTIONS for more info.'
       )
       expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
@@ -174,14 +174,14 @@ describe('beforeSend', () => {
   describe('meta tags', () => {
     it('filters apple-mobile-web-app-title errors', () => {
       const originalException = new TypeError(
-        "null is not an object (evaluating 'document.querySelector('meta[name=\"apple-mobile-web-app-title\"]').content')",
+        "null is not an object (evaluating 'document.querySelector('meta[name=\"apple-mobile-web-app-title\"]').content')"
       )
       expect(beforeSend(ERROR, { originalException })).toBeNull()
     })
 
     it('filters og:site_name errors', () => {
       const originalException = new TypeError(
-        "null is not an object (evaluating 'document.querySelector('meta[name=\"og:site_name\"]').content')",
+        "null is not an object (evaluating 'document.querySelector('meta[name=\"og:site_name\"]').content')"
       )
       expect(beforeSend(ERROR, { originalException })).toBeNull()
     })

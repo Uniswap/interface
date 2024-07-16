@@ -1,9 +1,9 @@
-import styled from 'lib/styled-components'
 import { DirectToDefi } from 'pages/Landing/sections/DirectToDefi'
 import { Footer } from 'pages/Landing/sections/Footer'
 import { NewsletterEtc } from 'pages/Landing/sections/NewsletterEtc'
 import { Stats } from 'pages/Landing/sections/Stats'
 import { forwardRef } from 'react'
+import styled from 'styled-components'
 
 const Container = styled.div`
   gap: 120px;

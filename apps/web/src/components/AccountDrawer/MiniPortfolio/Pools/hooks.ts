@@ -98,7 +98,7 @@ export function usePoolPriceMap(positions: PositionInfo[] | undefined) {
 }
 
 function useFeeValue(token: Token, fee: number | undefined, queriedPrice: number | undefined) {
-  const { price: stablecoinPrice } = useStablecoinPrice(!queriedPrice ? token : undefined)
+  const stablecoinPrice = useStablecoinPrice(!queriedPrice ? token : undefined)
   return useMemo(() => {
     // Prefers gql price, as fetching stablecoinPrice will trigger multiple infura calls for each pool position
     const price = queriedPrice ?? (stablecoinPrice ? parseFloat(stablecoinPrice.toSignificant()) : undefined)

@@ -23,7 +23,7 @@ describe('createGroups', () => {
         transactions: expect.arrayContaining([
           expect.objectContaining({ timestamp: expect.any(Number), status: TransactionStatus.Confirmed }),
         ]),
-      }),
+      })
     )
     expect(createGroups(mockActivities, true)).toEqual([])
   })
@@ -43,7 +43,7 @@ describe('createGroups', () => {
         transactions: expect.arrayContaining([
           expect.objectContaining({ timestamp: 1700000000, status: TransactionStatus.Pending }),
         ]),
-      }),
+      })
     )
 
     expect(result).toContainEqual(
@@ -52,7 +52,7 @@ describe('createGroups', () => {
         transactions: expect.arrayContaining([
           expect.objectContaining({ timestamp: expect.any(Number), status: TransactionStatus.Confirmed }),
         ]),
-      }),
+      })
     )
   })
 })

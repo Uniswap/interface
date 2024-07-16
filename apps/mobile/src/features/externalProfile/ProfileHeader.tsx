@@ -3,8 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { StatusBar, StyleSheet } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import Svg, { ClipPath, Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Favorite } from 'src/components/icons/Favorite'
 import { LongText } from 'src/components/text/LongText'
@@ -28,14 +27,14 @@ import { SendAction, XTwitter } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, imageSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { openUri } from 'uniswap/src/utils/linking'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'wallet/src/features/ens/api'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
+import { openUri } from 'wallet/src/utils/linking'
 
 const HEADER_GRADIENT_HEIGHT = 144
 const HEADER_ICON_SIZE = 72
@@ -53,7 +52,7 @@ export const solidHeaderProps = {
 
 export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHeaderProps): JSX.Element {
   const colors = useSporeColors()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const isDarkMode = useIsDarkMode()
   const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
 

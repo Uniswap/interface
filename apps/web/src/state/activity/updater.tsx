@@ -14,8 +14,8 @@ import { TransactionType } from 'state/transactions/types'
 import { logSwapSuccess, logUniswapXSwapSuccess } from 'tracing/swapFlowLoggers'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
+import { isL2ChainId } from 'utils/chains'
 
 export function ActivityStateUpdater() {
   const onActivityUpdate = useOnActivityUpdate()

@@ -26,7 +26,6 @@ export enum StringKey {
 }
 interface NativeSeedPhraseInputProps {
   targetMnemonicId?: string
-  testID?: string
   strings: Record<StringKey, string>
   onInputValidated: (e: NativeSyntheticEvent<InputValidatedEvent>) => void
   onMnemonicStored: (e: NativeSyntheticEvent<MnemonicStoredEvent>) => void

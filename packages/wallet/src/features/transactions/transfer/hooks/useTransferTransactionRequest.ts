@@ -4,13 +4,13 @@ import ERC1155_ABI from 'uniswap/src/abis/erc1155.json'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import ERC721_ABI from 'uniswap/src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'uniswap/src/abis/types'
-import { AssetType } from 'uniswap/src/entities/assets'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { useAsyncData } from 'utilities/src/react/hooks'
+import { AssetType } from 'wallet/src/entities/assets'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import {
   DerivedTransferInfo,
   TransferCurrencyParams,
