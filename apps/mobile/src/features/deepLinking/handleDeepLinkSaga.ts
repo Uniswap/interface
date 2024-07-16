@@ -4,13 +4,13 @@ import { Alert } from 'react-native'
 import { URL } from 'react-native-url-polyfill'
 import { appSelect } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { getScantasticQueryParams, parseScantasticParams } from 'src/components/WalletConnect/ScanSheet/util'
+import { getScantasticQueryParams, parseScantasticParams } from 'src/components/Requests/ScanSheet/util'
 import {
   UNISWAP_URL_SCHEME,
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
-import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLinkSaga'
+import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { closeAllModals, openModal } from 'src/features/modals/modalSlice'
@@ -288,7 +288,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       switch (screen) {
         case 'transaction':
           if (fiatOnRamp) {
-            yield* call(handleMoonpayReturnLink)
+            yield* call(handleOnRampReturnLink)
           } else {
             yield* call(handleTransactionLink)
           }

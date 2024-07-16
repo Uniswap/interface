@@ -2,14 +2,16 @@ import useInterval from 'lib/hooks/useInterval'
 import ms from 'ms'
 import { useEffect } from 'react'
 import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
-import { updateFiatOnRampTransaction } from 'state/fiatOnRampTransactions/reducer'
-import { backendStatusToFiatOnRampStatus } from 'state/fiatOnRampTransactions/types'
+import { removeFiatOnRampTransaction, updateFiatOnRampTransaction } from 'state/fiatOnRampTransactions/reducer'
+import { FiatOnRampTransactionStatus, backendStatusToFiatOnRampStatus } from 'state/fiatOnRampTransactions/types'
 import { useAppDispatch } from 'state/hooks'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useActivityWebLazyQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { objectToQueryString } from 'uniswap/src/data/utils'
 import { FOR_API_HEADERS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORTransactionRequest } from 'uniswap/src/features/fiatOnRamp/types'
+import { FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 
 export default function Updater(): null {
@@ -37,6 +39,18 @@ export default function Updater(): null {
         const data = await result.json()
         if (data?.transaction) {
           dispatch(updateFiatOnRampTransaction({ ...transaction, forceFetched: true }))
+          sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampTransactionUpdated, {
+            status: FiatOnRampTransactionStatus.PENDING,
+            externalTransactionId: transaction.externalSessionId,
+            serviceProvider: transaction.provider,
+          })
+        } else if (Date.now() - transaction.addedAt > ms('10m')) {
+          dispatch(removeFiatOnRampTransaction(transaction))
+          sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampTransactionUpdated, {
+            status: FiatOnRampTransactionStatus.FAILED,
+            externalTransactionId: transaction.externalSessionId,
+            serviceProvider: transaction.provider,
+          })
         }
       }
     })
@@ -71,6 +85,11 @@ export default function Updater(): null {
               status: backendStatusToFiatOnRampStatus(activity.details.status),
             }),
           )
+          sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampTransactionUpdated, {
+            status: backendStatusToFiatOnRampStatus(activity.details.status),
+            externalTransactionId: transaction.externalSessionId,
+            serviceProvider: transaction.provider,
+          })
         }
       }
     })

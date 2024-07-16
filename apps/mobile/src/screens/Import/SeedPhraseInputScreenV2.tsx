@@ -19,6 +19,7 @@ import { QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
@@ -71,14 +72,13 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
 
   return (
     <SafeKeyboardOnboardingScreen
-      minHeightWhenKeyboardExpanded={false}
-      screenFooter={
+      footer={
         <Trace logPress element={ElementName.Next}>
           <Button
             disabled={!submitEnabled}
             mx="$spacing16"
             my="$spacing12"
-            testID="seed-input-submit"
+            testID={TestID.Continue}
             onPress={(): void => {
               handleSubmit(seedPhraseInputRef)
             }}
@@ -87,6 +87,7 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
           </Button>
         </Trace>
       }
+      minHeightWhenKeyboardExpanded={false}
       subtitle={
         isRestoringMnemonic
           ? t('account.recoveryPhrase.subtitle.restoring')
@@ -109,6 +110,7 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
           [StringKey.ErrorInvalidPhrase]: t('account.recoveryPhrase.error.invalid'),
         }}
         targetMnemonicId={targetMnemonicId}
+        testID={TestID.ImportAccountInput}
         onInputValidated={(e: NativeSyntheticEvent<InputValidatedEvent>): void =>
           setSubmitEnabled(e.nativeEvent.canSubmit)
         }

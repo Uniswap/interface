@@ -1,5 +1,5 @@
+import { useTheme } from 'lib/styled-components'
 import { ComponentProps } from 'react'
-import { useTheme } from 'styled-components'
 
 export const WalletOneLinkQR = (props: ComponentProps<'svg'>) => {
   const theme = useTheme()

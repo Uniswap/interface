@@ -24,7 +24,6 @@ export const ModalName = {
   FaceIDWarning: 'face-id-warning',
   FOTInfo: 'fee-on-transfer',
   FiatCurrencySelector: 'fiat-currency-selector',
-  FiatOnRamp: 'fiat-on-ramp',
   FiatOnRampAggregator: 'fiat-on-ramp-aggregator',
   FiatOnRampCountryList: 'fiat-on-ramp-country-list',
   FiatOnRampTokenSelector: 'fiat-on-ramp-token-selector',

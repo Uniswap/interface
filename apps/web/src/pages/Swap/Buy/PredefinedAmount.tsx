@@ -1,7 +1,9 @@
-import styled, { css } from 'styled-components'
+import styled, { css } from 'lib/styled-components'
+import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
+import { fallbackCurrencyInfo } from 'pages/Swap/Buy/hooks'
+import { formatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
 import { useSporeColors } from 'ui/src'
 import { Pill } from 'uniswap/src/components/pill/Pill'
-import { NO_DECIMALS_CURRENCY, useFormatter } from 'utils/formatNumbers'
 
 interface PredefinedAmountProps {
   amount: number
@@ -27,7 +29,8 @@ const ClickablePill = styled(Pill)<{ $disabled: boolean; $active: boolean }>`
 
 export function PredefinedAmount({ currentAmount, amount, disabled = false, onClick }: PredefinedAmountProps) {
   const colors = useSporeColors()
-  const { formatFiatPrice } = useFormatter()
+  const { derivedBuyFormInfo } = useBuyFormContext()
+  const { meldSupportedFiatCurrency } = derivedBuyFormInfo
 
   const active = currentAmount === amount.toString()
   return (
@@ -38,15 +41,7 @@ export function PredefinedAmount({ currentAmount, amount, disabled = false, onCl
       $active={active}
       customBorderColor={colors.surface3.val}
       foregroundColor={colors[disabled ? 'neutral3' : active ? 'neutral1' : 'neutral2'].val}
-      label={formatFiatPrice({
-        price: amount,
-        type: [
-          {
-            upperBound: Number.MAX_SAFE_INTEGER,
-            formatterOptions: { ...NO_DECIMALS_CURRENCY, useGrouping: false },
-          },
-        ],
-      })}
+      label={formatFiatOnRampFiatAmount(amount, meldSupportedFiatCurrency ?? fallbackCurrencyInfo)}
       px="$spacing16"
       textVariant="buttonLabel3"
     />

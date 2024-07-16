@@ -147,7 +147,7 @@ describe('sorting', () => {
           [DAI.address]: { usdValue: 100, balance: 100 },
           [USDT.address]: { usdValue: 100, balance: 100 },
         },
-        UniverseChainId.Mainnet
+        UniverseChainId.Mainnet,
       )
 
       expect(result).toEqual([nativeOnChain(UniverseChainId.Mainnet), USDT, WBTC])

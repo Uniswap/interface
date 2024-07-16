@@ -85,6 +85,7 @@ export type TabProps = {
   refreshing?: boolean
   onRefresh?: () => void
   headerHeight?: number
+  testID?: string
 }
 
 export type TabContentProps = Partial<FlatListProps<unknown>> & {
@@ -106,7 +107,7 @@ export const TabLabel = ({
   isExternalProfile?: boolean
 }): JSX.Element => {
   return (
-    <Flex row alignItems="center" gap="$spacing4">
+    <Flex row alignItems="center" gap="$spacing4" testID={`home-tab-${route.title}`}>
       <Text color={focused ? '$neutral1' : '$neutral2'} variant="body1">
         {route.title}
       </Text>

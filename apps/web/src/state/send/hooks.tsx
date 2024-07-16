@@ -86,7 +86,11 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
     useMemo(() => [inputCurrency, nativeCurrency], [inputCurrency, nativeCurrency]),
   )
 
-  const exactAmountOut = useUSDTokenUpdater(inputInFiat, exactAmountToken ?? exactAmountFiat, inputCurrency)
+  const { formattedAmount: exactAmountOut } = useUSDTokenUpdater(
+    inputInFiat,
+    exactAmountToken ?? exactAmountFiat,
+    inputCurrency,
+  )
   const parsedTokenAmount = useMemo(() => {
     return tryParseCurrencyAmount(inputInFiat ? exactAmountOut : exactAmountToken, inputCurrency)
   }, [exactAmountOut, exactAmountToken, inputCurrency, inputInFiat])

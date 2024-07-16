@@ -3,9 +3,9 @@ import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { ONE_BIPS } from 'constants/misc'
 import { Trans } from 'i18n'
+import { useTheme } from 'lib/styled-components'
 import { Text } from 'rebass'
 import { Field } from 'state/mint/actions'
-import { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 export function PoolPriceBar({

@@ -7,13 +7,7 @@ import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import {
-  InterfaceChainId,
-  NetworkLayer,
-  UniverseChainId,
-  UniverseChainInfo,
-  WEB_SUPPORTED_CHAIN_IDS,
-} from 'uniswap/src/types/chains'
+import { InterfaceChainId, UniverseChainId, UniverseChainInfo, WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 export const AVERAGE_L1_BLOCK_TIME = ms(`12s`)
 
@@ -139,27 +133,18 @@ export const CHAIN_NAME_TO_CHAIN_ID = Object.fromEntries(
     .map(([key, value]) => [value.backendChain.chain, parseInt(key) as SupportedInterfaceChainId]),
 ) as { [chain in InterfaceGqlChain]: SupportedInterfaceChainId }
 
+export const ALL_CHAIN_IDS: UniverseChainId[] = Object.values(UNIVERSE_CHAIN_INFO).map((chain) => chain.id)
+
 export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = Object.keys(UNIVERSE_CHAIN_INFO)
   .filter((key) => UNIVERSE_CHAIN_INFO[parseInt(key) as SupportedInterfaceChainId].supportsGasEstimates)
   .map((key) => parseInt(key) as SupportedInterfaceChainId)
 
+export const PRODUCTION_CHAIN_IDS: UniverseChainId[] = Object.values(UNIVERSE_CHAIN_INFO)
+  .filter((chain) => !chain.testnet)
+  .map((chain) => chain.id)
+
 export const TESTNET_CHAIN_IDS = Object.keys(UNIVERSE_CHAIN_INFO)
   .filter((key) => UNIVERSE_CHAIN_INFO[parseInt(key) as SupportedInterfaceChainId].testnet)
-  .map((key) => parseInt(key) as SupportedInterfaceChainId)
-
-/**
- * All the chain IDs that are running the Ethereum protocol.
- */
-export const L1_CHAIN_IDS = Object.keys(UNIVERSE_CHAIN_INFO)
-  .filter((key) => UNIVERSE_CHAIN_INFO[parseInt(key) as SupportedInterfaceChainId].networkLayer === NetworkLayer.L1)
-  .map((key) => parseInt(key) as SupportedInterfaceChainId)
-
-/**
- * Controls some L2 specific behavior, e.g. slippage tolerance, special UI behavior.
- * The expectation is that all of these networks have immediate transaction confirmation.
- */
-export const L2_CHAIN_IDS = Object.keys(UNIVERSE_CHAIN_INFO)
-  .filter((key) => UNIVERSE_CHAIN_INFO[parseInt(key) as SupportedInterfaceChainId].networkLayer === NetworkLayer.L2)
   .map((key) => parseInt(key) as SupportedInterfaceChainId)
 
 /**

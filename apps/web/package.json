@@ -6,7 +6,7 @@
   "scripts": {
     "ajv": "node scripts/compile-ajv-validators.js",
     "check:deps:usage": "depcheck",
-    "check:circular": "concurrently \"../../scripts/check-circular-imports.sh ./src/pages/App.tsx 6\" \"../../scripts/check-circular-imports.sh ./src/setupTests.ts 0\"",
+    "check:circular": "concurrently \"../../scripts/check-circular-imports.sh ./src/pages/App.tsx 7\" \"../../scripts/check-circular-imports.sh ./src/setupTests.ts 0\"",
     "sitemap:generate": "node scripts/generate-sitemap.js",
     "i18n:upload": "./scripts/crowdin.sh upload",
     "i18n:download": "./scripts/crowdin.sh download",
@@ -188,7 +188,7 @@
     "@types/react-scroll-sync": "0.8.7",
     "@types/react-window-infinite-loader": "1.0.6",
     "@uniswap/analytics": "1.7.0",
-    "@uniswap/analytics-events": "2.32.0",
+    "@uniswap/analytics-events": "2.34.0",
     "@uniswap/governance": "1.0.2",
     "@uniswap/liquidity-staker": "1.0.2",
     "@uniswap/merkle-distributor": "1.0.1",

@@ -16,8 +16,8 @@ describe(formSwapNotificationTitle, () => {
         '1-USDC',
         '1000000000000000000',
         '1000000',
-        TradeType.EXACT_INPUT
-      )
+        TradeType.EXACT_INPUT,
+      ),
     ).toEqual('Swapped 1.00 DAI for ~1.00 USDC.')
   })
 
@@ -31,8 +31,8 @@ describe(formSwapNotificationTitle, () => {
         '1-DAI',
         '1-USDC',
         '1000000000000000000',
-        '1200000'
-      )
+        '1200000',
+      ),
     ).toEqual('Swapped 1.00 DAI for 1.20 USDC.')
   })
 
@@ -47,8 +47,8 @@ describe(formSwapNotificationTitle, () => {
         '1-USDC',
         '1000000000000000000',
         '1000000',
-        TradeType.EXACT_INPUT
-      )
+        TradeType.EXACT_INPUT,
+      ),
     ).toEqual('Canceled DAI-USDC swap.')
   })
 
@@ -63,8 +63,8 @@ describe(formSwapNotificationTitle, () => {
         '1-USDC',
         '1000000000000000000',
         '1000000',
-        TradeType.EXACT_INPUT
-      )
+        TradeType.EXACT_INPUT,
+      ),
     ).toEqual('Failed to swap 1.00 DAI for ~1.00 USDC.')
   })
 })

@@ -1,10 +1,10 @@
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
+import styled from 'lib/styled-components'
 import { Carousel, LoadingCarousel } from 'nft/components/explore/Carousel'
 import { CarouselCard, LoadingCarouselCard } from 'nft/components/explore/CarouselCard'
 import { calculateCardIndex } from 'nft/utils'
 import { useCallback, useMemo, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const BannerContainer = styled.div`

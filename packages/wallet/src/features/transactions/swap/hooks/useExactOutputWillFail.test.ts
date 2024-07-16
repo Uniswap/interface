@@ -2,8 +2,8 @@ import { renderHook } from '@testing-library/react-hooks'
 import { Token } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency } from 'uniswap/src/features/dataApi/utils'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { useExactOutputWillFail } from 'wallet/src/features/transactions/swap/hooks/useExactOutputWillFail'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { SAMPLE_CURRENCY_ID_1 } from 'wallet/src/test/fixtures'
 
 describe('useExactOutputWillFail', () => {
@@ -33,7 +33,7 @@ describe('useExactOutputWillFail', () => {
           [CurrencyField.INPUT]: createCurrencyInfo(createToken()),
           [CurrencyField.OUTPUT]: createCurrencyInfo(createToken()),
         },
-      })
+      }),
     )
     expect(result.current).toEqual({
       outputTokenHasBuyTax: false,
@@ -49,7 +49,7 @@ describe('useExactOutputWillFail', () => {
           [CurrencyField.INPUT]: createCurrencyInfo(createToken(undefined, '100')),
           [CurrencyField.OUTPUT]: createCurrencyInfo(createToken()),
         },
-      })
+      }),
     )
     expect(result.current.exactOutputWillFail).toBe(true)
   })
@@ -61,7 +61,7 @@ describe('useExactOutputWillFail', () => {
           [CurrencyField.INPUT]: createCurrencyInfo(createToken()),
           [CurrencyField.OUTPUT]: createCurrencyInfo(createToken('100')),
         },
-      })
+      }),
     )
     expect(result.current.outputTokenHasBuyTax).toBe(true)
   })
@@ -73,7 +73,7 @@ describe('useExactOutputWillFail', () => {
           [CurrencyField.INPUT]: createCurrencyInfo(createToken('100')),
           [CurrencyField.OUTPUT]: createCurrencyInfo(createToken()),
         },
-      })
+      }),
     )
     expect(result.current.exactOutputWouldFailIfCurrenciesSwitched).toBe(true)
   })
@@ -85,7 +85,7 @@ describe('useExactOutputWillFail', () => {
           [CurrencyField.INPUT]: createCurrencyInfo(createToken()),
           [CurrencyField.OUTPUT]: createCurrencyInfo(createToken(undefined, '100')),
         },
-      })
+      }),
     )
     expect(result.current.exactOutputWouldFailIfCurrenciesSwitched).toBe(true)
   })

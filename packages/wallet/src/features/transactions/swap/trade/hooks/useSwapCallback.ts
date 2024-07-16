@@ -1,6 +1,7 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setHasSubmittedHoldToSwap } from 'wallet/src/features/behaviorHistory/slice'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -9,10 +10,10 @@ import { updateSwapStartTimestamp } from 'wallet/src/features/timing/slice'
 import { ValidatedSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
-import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
+import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/api/utils'
 import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
-import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { useAppSelector } from 'wallet/src/state'
 import { toStringish } from 'wallet/src/utils/number'
 
 interface SwapCallbackArgs {
@@ -30,7 +31,7 @@ interface SwapCallbackArgs {
 
 /** Callback to submit trades and track progress */
 export function useSwapCallback(): (args: SwapCallbackArgs) => void {
-  const appDispatch = useAppDispatch()
+  const appDispatch = useDispatch()
   const formatter = useLocalizationContext()
   const swapStartTimestamp = useAppSelector(selectSwapStartTimestamp)
 

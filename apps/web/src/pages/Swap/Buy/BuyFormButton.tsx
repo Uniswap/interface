@@ -1,9 +1,9 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonLight, ButtonPrimary, LoadingButtonSpinner } from 'components/Button'
+import { useTheme } from 'lib/styled-components'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { useMemo } from 'react'
 import { Trans } from 'react-i18next'
-import { useTheme } from 'styled-components'
 import { Flex } from 'ui/src'
 import { useAccount } from 'wagmi'
 

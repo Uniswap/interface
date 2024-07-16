@@ -1,21 +1,14 @@
 import dayjs from 'dayjs'
 import { expectSaga } from 'redux-saga-test-plan'
-import {
-  Account,
-  AccountType,
-  SignerMnemonicAccount,
-} from 'wallet/src/features/wallet/accounts/types'
-import {
-  CreateAccountsParams,
-  createAccounts,
-} from 'wallet/src/features/wallet/create/createAccountsSaga'
+import { Account, AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { CreateAccountsParams, createAccounts } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { sharedRootReducer } from 'wallet/src/state/reducer'
 import { ACCOUNT, ACCOUNT2, ACCOUNT3 } from 'wallet/src/test/fixtures'
 
 const createNativeAccounts = async (
   payload: CreateAccountsParams,
   initialAccounts = {},
-  timeout = 250
+  timeout = 250,
 ): Promise<{
   wallet: {
     accounts: Account
@@ -78,7 +71,7 @@ describe(createAccounts, () => {
           name: 'READONLY ACCOUNT',
           timeImportedMs: dayjs().valueOf(),
         },
-      }
+      },
     )
 
     const wallets = state.wallet.accounts
@@ -103,7 +96,7 @@ describe(createAccounts, () => {
           name: 'READONLY ACCOUNT',
           timeImportedMs: dayjs().valueOf(),
         },
-      }
+      },
     )
 
     const wallets = state.wallet.accounts
@@ -123,7 +116,7 @@ describe(createAccounts, () => {
       { accounts: [ACCOUNT2, ACCOUNT] },
       {
         [ACCOUNT3.address]: ACCOUNT3,
-      }
+      },
     )
 
     const wallets = state.wallet.accounts
@@ -142,7 +135,7 @@ describe(createAccounts, () => {
       { accounts: [ACCOUNT2, ACCOUNT] },
       {
         [ACCOUNT3.address]: ACCOUNT3,
-      }
+      },
     )
 
     const wallets = state.wallet.accounts

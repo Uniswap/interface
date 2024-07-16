@@ -1,6 +1,6 @@
+import styled, { keyframes } from 'lib/styled-components'
 import { darken } from 'polished'
 import { useState } from 'react'
-import styled, { keyframes } from 'styled-components'
 
 const Wrapper = styled.button<{ isActive?: boolean; activeElement?: boolean; $disabled?: boolean }>`
   align-items: center;

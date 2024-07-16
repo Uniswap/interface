@@ -1,7 +1,7 @@
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { motion } from 'framer-motion'
+import styled from 'lib/styled-components'
 import { TickerPosition } from 'pages/Landing/components/TokenCloud'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 

@@ -1,10 +1,10 @@
 import { createElement } from 'react'
 import { useTranslation } from 'react-i18next'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import { AssetType } from 'wallet/src/entities/assets'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
@@ -17,6 +17,7 @@ const ZERO_AMOUNT = '0.0'
 export function ApproveSummaryItem({
   transaction,
   layoutElement,
+  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: ApproveTransactionInfo }
 }): JSX.Element {
@@ -48,5 +49,6 @@ export function ApproveSummaryItem({
       />
     ),
     transaction,
+    index,
   })
 }

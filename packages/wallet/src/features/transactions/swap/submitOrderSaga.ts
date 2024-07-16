@@ -9,7 +9,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { OrderRequest, Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { finalizeTransaction, transactionActions } from 'wallet/src/features/transactions/slice'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
-import { TRADING_API_HEADERS } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
+import { TRADING_API_HEADERS } from 'wallet/src/features/transactions/swap/trade/api/client'
 import {
   QueuedOrderStatus,
   TransactionStatus,
@@ -94,15 +94,16 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
 
   // Submit transaction
   try {
+    const addedTime = Date.now() // refresh the addedTime to match the actual submission time
+    yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.Submitted, addedTime }))
     yield* call(axios.post, ORDER_ENDPOINT, orderParams, { headers: TRADING_API_HEADERS })
   } catch {
-    yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.Stale }))
+    // In the rare event that submission fails, we update the order status to prompt the user.
+    // If the app is closed before this catch block is reached, orderWatcherSaga will handle the failure upon reopening.
+    yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.SubmissionFailed }))
     onFailure()
     return
   }
-
-  // Update the order queueStatus as submitted
-  yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.Submitted }))
 
   const properties = { routing: order.routing, order_hash: orderHash, ...analytics }
   yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, properties)

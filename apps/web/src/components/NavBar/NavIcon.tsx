@@ -1,6 +1,6 @@
 import { t } from 'i18n'
+import styled, { css } from 'lib/styled-components'
 import { ReactNode } from 'react'
-import styled, { css } from 'styled-components'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 

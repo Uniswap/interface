@@ -38,6 +38,7 @@ import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
@@ -49,7 +50,6 @@ import { Language } from 'wallet/src/features/language/constants'
 import { useCurrentLanguage } from 'wallet/src/features/language/hooks'
 import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
 import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 function HeaderTitleElement({
   data,
@@ -249,6 +249,7 @@ function TokenDetails({
               currencyId={_currencyId}
               currentChainBalance={currentChainBalance}
               data={data}
+              isBlocked={safetyLevel === SafetyLevel.Blocked}
               setEllipsisMenuVisible={setEllipsisMenuVisible}
             />
           )
@@ -343,11 +344,13 @@ function TokenDetailsTextPlaceholders(): JSX.Element {
 function HeaderRightElement({
   currencyId,
   currentChainBalance,
+  isBlocked,
   data,
   setEllipsisMenuVisible,
 }: {
   currencyId: string
   currentChainBalance: PortfolioBalance | null
+  isBlocked: boolean
   data?: TokenDetailsScreenQuery
   setEllipsisMenuVisible: (visible: boolean) => void
 }): JSX.Element {
@@ -356,6 +359,7 @@ function HeaderRightElement({
 
   const { menuActions, onContextMenuPress } = useTokenContextMenu({
     currencyId,
+    isBlocked,
     tokenSymbolForNotification: data?.token?.symbol,
     portfolioBalance: currentChainBalance,
   })

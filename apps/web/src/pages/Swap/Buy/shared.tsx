@@ -1,11 +1,11 @@
 import Column, { AutoColumn } from 'components/Column'
 import Row from 'components/Row'
+import styled, { useTheme } from 'lib/styled-components'
 import { BackArrowIcon } from 'nft/components/icons'
-import { PropsWithChildren, useState } from 'react'
-import styled, { useTheme } from 'styled-components'
+import { PropsWithChildren } from 'react'
 import { CloseIcon } from 'theme/components'
-import { useIsDarkMode } from 'ui/src'
-import { FOR_CONNECTING_BACKGROUND_DARK, FOR_CONNECTING_BACKGROUND_LIGHT } from 'ui/src/assets'
+import { ReactComponent as ForConnectingBackground } from 'ui/src/assets/backgrounds/for-connecting-v2.svg'
+import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 
 export const ContentWrapper = styled(Column)`
   background-color: ${({ theme }) => theme.surface1};
@@ -13,27 +13,32 @@ export const ContentWrapper = styled(Column)`
   overflow: hidden;
   flex: 1 1;
   position: relative;
-  border-radius: 20px;
 `
 
-const ConnectingBackgroundImage = styled.img`
-  pointer-events: none;
+const ConnectingContainer = styled(AutoColumn)`
+  position: relative;
+`
+
+const ConnectingBackgroundImage = styled(ForConnectingBackground)`
   position: absolute;
+  z-index: 0;
+`
+
+const ConnectingBackgroundImageFadeLayer = styled.div`
+  position: absolute;
+  z-index: 1;
   width: 100%;
   height: 100%;
-  z-index: 0;
-  box-shadow: 0 0 12px 12px transparent inset;
+  top: 0;
+  left: 0;
+  ${({ theme }) => `background: radial-gradient(70% 50% at center, transparent 0%, ${theme.surface1} 100%)`}
 `
 
-const ConnectedPaddedColumn = styled(AutoColumn)`
-  position: relative;
-  padding: 16px 24px 24px 24px;
-`
-
-const ConnectingContainer = styled(Column)`
+const ConnectingViewContent = styled.div`
   margin: 40px 0 0 0;
-  align-items: center;
-  z-index: 1;
+  z-index: 2;
+  height: 100%;
+  width: 100%;
 `
 
 const BackButton = styled(BackArrowIcon)`
@@ -43,7 +48,7 @@ const BackButton = styled(BackArrowIcon)`
 const ConnectingViewHeader = styled(Row)`
   align-items: center;
   justify-content: space-between;
-  z-index: 1;
+  z-index: 2;
   flex-direction: row-reverse;
 `
 
@@ -53,24 +58,21 @@ interface ConnectingViewWrapperProps {
 }
 
 export function ConnectingViewWrapper({ children, closeModal, onBack }: PropsWithChildren<ConnectingViewWrapperProps>) {
-  const isDarkMode = useIsDarkMode()
   const theme = useTheme()
-  const [imageFailed, setImageFailed] = useState(false)
+
   return (
-    <ConnectedPaddedColumn gap="16px">
-      {!imageFailed && (
-        <ConnectingBackgroundImage
-          src={isDarkMode ? FOR_CONNECTING_BACKGROUND_DARK : FOR_CONNECTING_BACKGROUND_LIGHT}
-          onError={() => {
-            setImageFailed(true)
-          }}
-        />
-      )}
+    <ConnectingContainer gap="16px">
+      <ConnectingBackgroundImage color={theme.neutral2} />
+      <ConnectingBackgroundImageFadeLayer />
       <ConnectingViewHeader>
         <CloseIcon data-testid="ConnectingViewWrapper-close" onClick={closeModal} $color={theme.neutral2} />
         {onBack && <BackButton data-testid="ConnectingViewWrapper-back" fill={theme.neutral2} onClick={onBack} />}
       </ConnectingViewHeader>
-      <ConnectingContainer gap="44px">{children}</ConnectingContainer>
-    </ConnectedPaddedColumn>
+      <ConnectingViewContent>{children}</ConnectingViewContent>
+    </ConnectingContainer>
   )
+}
+
+export function formatFiatOnRampFiatAmount(amount: number, fiatCurrencyInfo: FiatCurrencyInfo) {
+  return fiatCurrencyInfo.symbolAtFront ? `${fiatCurrencyInfo.symbol}${amount}` : `${amount}${fiatCurrencyInfo.symbol}`
 }

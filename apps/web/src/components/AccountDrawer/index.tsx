@@ -9,10 +9,10 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import usePrevious from 'hooks/usePrevious'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
 import { useAtom } from 'jotai'
+import styled, { css } from 'lib/styled-components'
 import { useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { useGesture } from 'react-use-gesture'
-import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
@@ -149,6 +149,7 @@ const AccountDrawerWrapper = styled.div<{ open: boolean; isUniExtensionAvailable
 
 const ExtensionDrawerWrapperStyles = css<{ open: boolean }>`
   height: max-content;
+  max-height: 100%;
   width: ${MODAL_WIDTH};
   max-width: ${MODAL_WIDTH};
   border-radius: 20px;
@@ -156,6 +157,7 @@ const ExtensionDrawerWrapperStyles = css<{ open: boolean }>`
   transform: scale(${({ open }) => (open ? 1 : 0.96)});
   transform-origin: top right;
   opacity: ${({ open }) => (open ? 1 : 0)};
+  overflow-y: scroll;
   transition: ${({ theme }) => `transform ${theme.transition.duration.fast} ${theme.transition.timing.inOut},
     opacity ${theme.transition.duration.fast} ${theme.transition.timing.inOut}`};
 `

@@ -18,40 +18,42 @@ export function ProviderConnectionError({ onBack, closeModal, selectedServicePro
 
   return (
     <ConnectingViewWrapper closeModal={closeModal} onBack={onBack}>
-      <Flex row gap="$spacing16">
-        <Flex alignItems="center" justifyContent="center" style={ServiceProviderLogoStyles.uniswapLogoWrapper}>
-          <Image height={iconSizes.icon64} source={UNISWAP_LOGO_LARGE} width={iconSizes.icon64} />
-        </Flex>
-        <img
-          style={ServiceProviderLogoStyles.uniswapLogoWrapper}
-          height={120}
-          src={getOptionalServiceProviderLogo(selectedServiceProvider?.logos, isDarkMode)}
-          width={120}
-        />
-      </Flex>
-      <Flex centered gap="$spacing8">
-        <Text variant="subheading1" color="$statusCritical">
-          <Trans i18nKey="fiatOnRamp.connection.error" />
-        </Text>
-        <Text color="$neutral2" variant="body2" textAlign="center">
-          <Trans
-            i18nKey="fiatOnRamp.connection.errorDescription"
-            values={{ serviceProvider: selectedServiceProvider.name }}
+      <Flex alignItems="center" gap="$spacing36">
+        <Flex row gap="$spacing16">
+          <Flex alignItems="center" justifyContent="center" style={ServiceProviderLogoStyles.uniswapLogoWrapper}>
+            <Image height={iconSizes.icon64} source={UNISWAP_LOGO_LARGE} width={iconSizes.icon64} />
+          </Flex>
+          <img
+            style={ServiceProviderLogoStyles.uniswapLogoWrapper}
+            height={120}
+            src={getOptionalServiceProviderLogo(selectedServiceProvider?.logos, isDarkMode)}
+            width={120}
           />
-        </Text>
+        </Flex>
+        <Flex centered gap="$spacing8">
+          <Text variant="subheading1" color="$statusCritical">
+            <Trans i18nKey="fiatOnRamp.connection.error" />
+          </Text>
+          <Text color="$neutral2" variant="body2" textAlign="center">
+            <Trans
+              i18nKey="fiatOnRamp.connection.errorDescription"
+              values={{ serviceProvider: selectedServiceProvider.name }}
+            />
+          </Text>
+        </Flex>
+        <Button
+          size="medium"
+          backgroundColor="$accent3"
+          color="$primary"
+          hoverStyle={{
+            backgroundColor: '$accent3Hovered',
+          }}
+          width="100%"
+          onPress={onBack}
+        >
+          <Trans i18nKey="common.tryAgain.error" />
+        </Button>
       </Flex>
-      <Button
-        size="medium"
-        backgroundColor="$accent3"
-        color="$primary"
-        hoverStyle={{
-          backgroundColor: '$accent3Hovered',
-        }}
-        width="100%"
-        onPress={onBack}
-      >
-        <Trans i18nKey="common.tryAgain.error" />
-      </Button>
     </ConnectingViewWrapper>
   )
 }

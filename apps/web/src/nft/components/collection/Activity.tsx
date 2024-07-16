@@ -1,6 +1,7 @@
 import { OpacityHoverState } from 'components/Common'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
 import { useIsMobile } from 'hooks/screenSize'
+import styled from 'lib/styled-components'
 import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Activity.css'
@@ -11,7 +12,6 @@ import { ActivityEventType } from 'nft/types'
 import { useCallback, useReducer } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
 import { NftActivityType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 enum ColumnHeaders {

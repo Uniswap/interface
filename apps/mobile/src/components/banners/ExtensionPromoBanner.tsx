@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { Keyboard, StyleProp, ViewStyle } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { Flex, Image, Text, TouchableArea, useIsDarkMode, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { EXTENSION_PROMO_BANNER_DARK, EXTENSION_PROMO_BANNER_LIGHT } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -19,7 +19,7 @@ export function ExtensionPromoBanner({
 }: {
   onShowExtensionPromoModal: () => void
 }): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
   const colors = useSporeColors()

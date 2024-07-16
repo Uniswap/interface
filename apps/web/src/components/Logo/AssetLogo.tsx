@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import styled from 'lib/styled-components'
 import React from 'react'
-import styled from 'styled-components'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const MissingImageLogo = styled.div<{ $size?: string; $textColor: string; $backgroundColor: string }>`

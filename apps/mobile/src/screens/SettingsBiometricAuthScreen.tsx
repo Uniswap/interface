@@ -2,7 +2,7 @@ import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert, ListRenderItemInfo } from 'react-native'
 import { FlatList } from 'react-native-gesture-handler'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
@@ -38,7 +38,7 @@ type BiometricPromptTriggerArgs = {
 
 export function SettingsBiometricAuthScreen(): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const [showUnsafeWarningModal, setShowUnsafeWarningModal] = useState(false)
   const [unsafeWarningModalType, setUnsafeWarningModalType] = useState<BiometricSettingType | null>(null)

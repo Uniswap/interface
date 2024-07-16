@@ -60,7 +60,7 @@ exports[`AccountHeader renders correctly 1`] = `
             ],
           }
         }
-        testID="manage"
+        testID="account-header-avatar"
       >
         <View
           style={
@@ -387,6 +387,7 @@ exports[`AccountHeader renders correctly 1`] = `
                   ],
                 }
               }
+              testID="account-header-copy-address"
             >
               <View
                 style={

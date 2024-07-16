@@ -1,6 +1,6 @@
 import HolidayUniIcon from 'components/Logo/HolidayUniIcon'
 import { SVGProps } from 'components/Logo/UniIcon'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 
 function Logo({ onClick }: { onClick?: () => void }) {
   return (

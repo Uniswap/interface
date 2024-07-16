@@ -13312,10 +13312,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/analytics-events@npm:2.32.0":
-  version: 2.32.0
-  resolution: "@uniswap/analytics-events@npm:2.32.0"
-  checksum: 7341bb14025bcd72e7367dcc29a1833ad18f316b9310875432d4bbe62da8a2d2f2db473d6e0a10c12a02ff8d1815db0ef66fbb169ad98d80317f2c3fe91bcde2
+"@uniswap/analytics-events@npm:2.34.0":
+  version: 2.34.0
+  resolution: "@uniswap/analytics-events@npm:2.34.0"
+  checksum: 86d2c6035596ed8c4491a5bc2047cec5d1f1a59cfa9e3337499cbe9e955eeff6a09ad1c864ea64253f694263b1af397a6a96926b26a55699f0f36d3548bad145
   languageName: node
   linkType: hard
 
@@ -13407,7 +13407,7 @@ __metadata:
     "@types/redux-persist-webextension-storage": 1.0.3
     "@types/ua-parser-js": 0.7.31
     "@types/uuid": 9.0.1
-    "@uniswap/analytics-events": 2.32.0
+    "@uniswap/analytics-events": 2.34.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/sdk-core": 5.3.0
     "@uniswap/universal-router-sdk": 2.2.0
@@ -13540,7 +13540,7 @@ __metadata:
     "@types/wcag-contrast": 3.0.0
     "@types/xml2js": 0.4.14
     "@uniswap/analytics": 1.7.0
-    "@uniswap/analytics-events": 2.32.0
+    "@uniswap/analytics-events": 2.34.0
     "@uniswap/default-token-list": 11.19.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/governance": 1.0.2
@@ -13766,7 +13766,7 @@ __metadata:
     "@testing-library/react-native": 11.5.0
     "@types/redux-mock-store": 1.0.6
     "@uniswap/analytics": 1.7.0
-    "@uniswap/analytics-events": 2.32.0
+    "@uniswap/analytics-events": 2.34.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/ethers-rs-mobile": 0.0.5
     "@uniswap/sdk-core": 5.3.0
@@ -13786,7 +13786,7 @@ __metadata:
     core-js: 2.6.12
     cross-fetch: 3.1.5
     dayjs: 1.11.7
-    detox: 20.18.1
+    detox: 20.23.0
     eslint: 8.44.0
     ethers: 5.7.2
     expo: 50.0.15
@@ -21318,9 +21318,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"detox@npm:20.18.1":
-  version: 20.18.1
-  resolution: "detox@npm:20.18.1"
+"detox@npm:20.23.0":
+  version: 20.23.0
+  resolution: "detox@npm:20.23.0"
   dependencies:
     ajv: ^8.6.3
     bunyan: ^1.8.12
@@ -21334,7 +21334,7 @@ __metadata:
     funpermaproxy: ^1.1.0
     glob: ^8.0.3
     ini: ^1.3.4
-    jest-environment-emit: ^1.0.5
+    jest-environment-emit: ^1.0.8
     json-cycle: ^1.3.0
     lodash: ^4.17.11
     multi-sort-stream: ^1.0.3
@@ -21364,13 +21364,13 @@ __metadata:
       optional: true
   bin:
     detox: local-cli/cli.js
-  checksum: 29524453f189c5ec71d53fe4b85d11ca7cc925d79ab0f957a8259708b7e85ff741cd8e79ae2374cb84a793d01d2f32d3cb73cacae55ad8e31dff13bf3859a734
+  checksum: e466a66ecf24194bb9ce4436539299134e9acc1accd00f04e29b2a53f9caef8d4e237a6d4f6a86b2a7f413b91261448c8daa97a917668db491719c02e951e3bb
   languageName: node
   linkType: hard
 
-"detox@patch:detox@npm%3A20.18.1#./.yarn/patches/detox-npm-20.18.1-b532b310b4.patch::locator=universe%40workspace%3A.":
-  version: 20.18.1
-  resolution: "detox@patch:detox@npm%3A20.18.1#./.yarn/patches/detox-npm-20.18.1-b532b310b4.patch::version=20.18.1&hash=9e679b&locator=universe%40workspace%3A."
+"detox@patch:detox@npm%3A20.23.0#./.yarn/patches/detox-npm-20.23.0-6d61110e63.patch::locator=universe%40workspace%3A.":
+  version: 20.23.0
+  resolution: "detox@patch:detox@npm%3A20.23.0#./.yarn/patches/detox-npm-20.23.0-6d61110e63.patch::version=20.23.0&hash=a63042&locator=universe%40workspace%3A."
   dependencies:
     ajv: ^8.6.3
     bunyan: ^1.8.12
@@ -21384,7 +21384,7 @@ __metadata:
     funpermaproxy: ^1.1.0
     glob: ^8.0.3
     ini: ^1.3.4
-    jest-environment-emit: ^1.0.5
+    jest-environment-emit: ^1.0.8
     json-cycle: ^1.3.0
     lodash: ^4.17.11
     multi-sort-stream: ^1.0.3
@@ -21414,7 +21414,7 @@ __metadata:
       optional: true
   bin:
     detox: local-cli/cli.js
-  checksum: 5a0fb05cf00201af01ca9450367fc0838b983502ef60d28d3e9aa6cb2a0a2d5fb2f2aaad8d1a67275ee3b38c1d6155a763c1c5b05888268b448a8bb710395829
+  checksum: 086bb4845abfff283cc30ef2b2f66a8827a91b8cb1a6c4d4aa3bc9c9faac2c6e53d8f305e5b9da967d808202d780a5f8296f769bd3f331c5664c66b69403d3f8
   languageName: node
   linkType: hard
 
@@ -28432,9 +28432,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jest-environment-emit@npm:^1.0.5":
-  version: 1.0.6
-  resolution: "jest-environment-emit@npm:1.0.6"
+"jest-environment-emit@npm:^1.0.8":
+  version: 1.0.8
+  resolution: "jest-environment-emit@npm:1.0.8"
   dependencies:
     bunyamin: ^1.5.2
     bunyan: ^2.0.5
@@ -28461,7 +28461,7 @@ __metadata:
       optional: true
     jest-environment-node:
       optional: true
-  checksum: a5af53deb4c712d2f91cdf1f11f35e823909a30534167fc093a89bf35539c6ed39b51f8b21299f1803e131318f094619e99fa7397389b03195bc0ef213e1dfc9
+  checksum: 0c7bafbd3a6e5952f6abb45958f0d2997371d29b29f3876afda48d1d734ccd703577aaac0d5afec2e19dc33a9db0e9458721fe73dbe797f0ced21481d908acfd
   languageName: node
   linkType: hard
 
@@ -42112,6 +42112,7 @@ __metadata:
     i18next: 23.10.0
     jest: 29.7.0
     jest-presets: "workspace:^"
+    qrcode: 1.5.1
     react: 18.2.0
     react-native: 0.73.6
     react-native-fast-image: 8.6.3
@@ -42410,6 +42411,7 @@ __metadata:
     "@ethersproject/address": 5.7.0
     "@ethersproject/bignumber": 5.7.0
     "@ethersproject/providers": 5.7.2
+    "@faker-js/faker": 7.6.0
     "@gorhom/bottom-sheet": 4.5.1
     "@graphql-codegen/cli": ^3.3.1
     "@graphql-codegen/client-preset": ^3.0.1
@@ -42425,7 +42427,7 @@ __metadata:
     "@typechain/ethers-v5": 7.2.0
     "@types/chrome": 0.0.254
     "@types/react-window": 1.8.2
-    "@uniswap/analytics-events": 2.32.0
+    "@uniswap/analytics-events": 2.34.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/router-sdk": 1.9.2
     "@uniswap/sdk-core": 5.3.0
@@ -42434,6 +42436,7 @@ __metadata:
     eslint: 8.44.0
     ethers: 5.7.2
     expo-blur: 12.9.2
+    expo-clipboard: 5.0.1
     expo-web-browser: 12.8.2
     fuse.js: 6.5.3
     get-graphql-schema: ^2.1.2
@@ -42448,6 +42451,7 @@ __metadata:
     react-native-appsflyer: 6.13.1
     react-native-device-info: 10.0.2
     react-native-dotenv: 3.2.0
+    react-native-gesture-handler: 2.15.0
     react-native-reanimated: 3.8.1
     react-test-renderer: 18.2.0
     react-virtualized-auto-sizer: 1.0.20
@@ -42458,6 +42462,7 @@ __metadata:
     typescript: 5.3.3
     ui: "workspace:^"
     utilities: "workspace:^"
+    uuid: 9.0.0
     wagmi: 2.8.4
     wcag-contrast: 3.0.0
   languageName: unknown
@@ -42939,7 +42944,7 @@ __metadata:
     "@types/react": ^18.0.15
     "@types/uuid": 9.0.1
     "@uniswap/analytics": 1.7.0
-    "@uniswap/analytics-events": 2.32.0
+    "@uniswap/analytics-events": 2.34.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/sdk-core": 5.3.0
     aws-appsync-auth-link: 3.0.7
@@ -43480,7 +43485,7 @@ __metadata:
     "@testing-library/react-native": 11.5.0
     "@types/react": ^18.0.15
     "@types/zxcvbn": 4.4.2
-    "@uniswap/analytics-events": 2.32.0
+    "@uniswap/analytics-events": 2.34.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/router-sdk": 1.9.2
@@ -43496,7 +43501,6 @@ __metadata:
     depcheck: 1.4.7
     eslint: 8.44.0
     ethers: 5.7.2
-    expo-clipboard: 5.0.1
     expo-web-browser: 12.8.2
     fuse.js: 6.5.3
     graphql: 16.6.0
@@ -43510,7 +43514,6 @@ __metadata:
     mockdate: 3.0.5
     no-yolo-signatures: 0.0.2
     openapi-typescript-codegen: 0.27.0
-    qrcode: 1.5.1
     react: 18.2.0
     react-i18next: 14.1.0
     react-native: 0.73.6

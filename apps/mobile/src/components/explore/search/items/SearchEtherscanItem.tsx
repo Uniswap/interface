@@ -1,5 +1,5 @@
 import { default as React } from 'react'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -18,7 +18,7 @@ type SearchEtherscanItemProps = {
 
 export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProps): JSX.Element {
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const { address } = etherscanResult
 
@@ -41,7 +41,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
       testID={TestID.SearchEtherscanItem}
       onPress={onPressViewEtherscan}
     >
-      <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between" px="$spacing8" py="$spacing12">
+      <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between" px="$spacing24" py="$spacing12">
         <Flex centered row gap="$spacing12">
           <EtherscanIcon size="$icon.40" />
           <Text variant="body1">{shortenAddress(address)}</Text>

@@ -3,9 +3,9 @@ import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import { RowBetween, RowFixed } from 'components/Row'
 import Toggle from 'components/Toggle'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference } from 'state/user/hooks'
-import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 
 const InlineLink = styled(ThemedText.BodySmall)`

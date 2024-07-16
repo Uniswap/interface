@@ -22,6 +22,7 @@ describe('FiatOnRampTransactions Updater', () => {
         addedAt: Date.now(),
         type: FiatOnRampTransactionType.BUY,
         syncedWithBackend: false,
+        provider: 'COINBASE_PAY',
       },
       '234': {
         account: '0x123',
@@ -31,6 +32,7 @@ describe('FiatOnRampTransactions Updater', () => {
         addedAt: Date.now(),
         type: FiatOnRampTransactionType.BUY,
         syncedWithBackend: false,
+        provider: 'COINBASE_PAY',
       },
       '345': {
         account: '0x123',
@@ -40,6 +42,7 @@ describe('FiatOnRampTransactions Updater', () => {
         addedAt: Date.now(),
         type: FiatOnRampTransactionType.BUY,
         syncedWithBackend: false,
+        provider: 'COINBASE_PAY',
       },
     })
   })

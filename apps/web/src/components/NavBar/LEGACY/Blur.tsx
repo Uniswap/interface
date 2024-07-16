@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 
 const MAX_STRENGTH = 5
 const BLUR_STEPS = 20

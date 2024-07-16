@@ -9,6 +9,7 @@ export type FiatOnRampTransactionDetails = {
   addedAt: number
   type: FiatOnRampTransactionType
   syncedWithBackend: boolean
+  provider: string
 }
 
 export interface FiatOnRampTransactionsState {

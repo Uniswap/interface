@@ -191,6 +191,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
         contentContainerStyle={{ paddingBottom: insets.bottom }}
         data={showLoading ? undefined : topTokenItems}
         keyExtractor={tokenKey}
+        removeClippedSubviews={false}
         renderItem={renderItem}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}

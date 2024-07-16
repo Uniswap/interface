@@ -2,16 +2,16 @@ import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
+import { useTrade } from 'wallet/src/features/transactions/swap/trade/api/hooks/useTrade'
 import { useSetTradeSlippage } from 'wallet/src/features/transactions/swap/trade/hooks/useSetTradeSlippage'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
-import { useTradingApiTrade } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { getWrapType, isWrapAction } from 'wallet/src/features/transactions/swap/utils'
-import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
@@ -84,10 +84,10 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tradeProtocolPreference: isOptionalRoutingEnabled ? tradeProtocolPreference : undefined,
   }
 
-  const tradingApiTrade = useTradingApiTrade(tradeParams)
+  const tradeTradeWithoutSlippage = useTrade(tradeParams)
 
   // Calculate auto slippage tolerance for trade. If customSlippageTolerance is undefined, then the Trade slippage is set to the calculated value.
-  const { trade, autoSlippageTolerance } = useSetTradeSlippage(tradingApiTrade, customSlippageTolerance)
+  const { trade, autoSlippageTolerance } = useSetTradeSlippage(tradeTradeWithoutSlippage, customSlippageTolerance)
 
   const currencyAmounts = useMemo(
     () =>

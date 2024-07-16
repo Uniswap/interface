@@ -22,6 +22,7 @@ import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import useENSName from 'hooks/useENSName'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
 import { Trans, t } from 'i18n'
+import styled from 'lib/styled-components'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
@@ -29,7 +30,6 @@ import { useNavigate } from 'react-router-dom'
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { ArrowDownCircleFilled } from 'ui/src/components/icons'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -104,6 +104,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const { ENSName } = useENSName(account)
   const navigate = useNavigate()
   const closeModal = useCloseModal()
+  const openReceiveModal = useOpenModal(ApplicationModal.RECEIVE_CRYPTO)
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
   const resetSellAssets = useSellAsset((state) => state.reset)
   const clearCollectionFilters = useWalletCollections((state) => state.clearCollectionFilters)
@@ -232,7 +233,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           </Column>
         )}
         {isUniExtensionAvailable ? (
-          <ExtensionDeeplinks />
+          <ExtensionDeeplinks account={account} />
         ) : (
           <>
             <Row gap="8px" marginBottom={!fiatOnrampAvailable && fiatOnrampAvailabilityChecked ? '20px' : '0px'}>
@@ -262,12 +263,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
                   dataTestId="wallet-recieve-crypto"
                   Icon={<ArrowDownCircleFilled size={24} />}
                   name={t('common.receive')}
-                  onClick={() => undefined} // TODO: implement when recieve modal is implemented
+                  onClick={openReceiveModal}
                 />
               )}
             </Row>
             {isEmptyWallet ? (
-              <EmptyWallet handleBuyCryptoClick={handleBuyCryptoClick} handleReceiveCryptoClick={() => undefined} />
+              <EmptyWallet handleBuyCryptoClick={handleBuyCryptoClick} handleReceiveCryptoClick={openReceiveModal} />
             ) : (
               <MiniPortfolio account={account} />
             )}

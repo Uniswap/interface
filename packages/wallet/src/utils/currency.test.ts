@@ -4,9 +4,7 @@ import { getCurrencyDisplayText, getFormattedCurrencyAmount } from 'wallet/src/u
 
 describe(getFormattedCurrencyAmount, () => {
   it('formats valid amount', () => {
-    expect(getFormattedCurrencyAmount(DAI, '1000000000000000000', mockLocalizedFormatter)).toEqual(
-      '1.00 '
-    )
+    expect(getFormattedCurrencyAmount(DAI, '1000000000000000000', mockLocalizedFormatter)).toEqual('1.00 ')
   })
 
   it('handles invalid Currency', () => {

@@ -1,11 +1,13 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
+import { useDispatch } from 'react-redux'
 import { Button, Flex, HapticFeedback, Separator, SpinningLoader, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { selectHasViewedReviewScreen } from 'wallet/src/features/behaviorHistory/selectors'
@@ -33,16 +35,15 @@ import { useSwapCallback } from 'wallet/src/features/transactions/swap/trade/hoo
 import { useWrapCallback } from 'wallet/src/features/transactions/swap/trade/hooks/useWrapCallback'
 import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { getActionName, isWrapAction } from 'wallet/src/features/transactions/swap/utils'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { useAppSelector } from 'wallet/src/state'
 
 // eslint-disable-next-line complexity
 export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX.Element | null {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const isShortMobileDevice = useIsShortMobileDevice()
 
   const account = useActiveAccountWithThrow()

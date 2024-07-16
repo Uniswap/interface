@@ -1,6 +1,8 @@
 import { Currency, CurrencyAmount, Price, Token, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import {
   CUSD,
   USDB,
@@ -14,10 +16,8 @@ import {
   USDC_ZKSYNC,
   USDT_BNB,
   USDzC,
-} from 'uniswap/src/constants/tokens'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
-import { useTradingApiTrade } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useTradingApiTrade'
+} from 'wallet/src/constants/tokens'
+import { useTrade } from 'wallet/src/features/transactions/swap/trade/api/hooks/useTrade'
 import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 
 // Stablecoin amounts used when calculating spot price for a given currency.
@@ -53,7 +53,7 @@ export function useUSDCPrice(currency?: Currency): Price<Currency, Currency> | u
   )
   const amountSpecified = currencyIsStablecoin ? undefined : quoteAmount
 
-  const { trade } = useTradingApiTrade({
+  const { trade } = useTrade({
     amountSpecified,
     otherCurrency: currency,
     tradeType: TradeType.EXACT_OUTPUT,

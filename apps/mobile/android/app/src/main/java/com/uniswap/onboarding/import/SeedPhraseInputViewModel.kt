@@ -6,8 +6,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.uniswap.EthersRs
 import com.uniswap.RnEthersRs
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 class SeedPhraseInputViewModel(
   private val ethersRs: RnEthersRs,
@@ -55,13 +60,26 @@ class SeedPhraseInputViewModel(
     private set
   var status by mutableStateOf<Status>(Status.None)
     private set
+  private var validateLastWordTimeout: Long = 1000
+  private var validateLastWordJob: Job? = null
 
   fun handleInputChange(value: TextFieldValue) {
     input = value
 
     val normalized = normalizeInput(value)
     val skipLastWord = normalized.lastOrNull() != ' '
-    val mnemonic = normalized.trim()
+    validateInput(normalized, skipLastWord)
+
+    validateLastWordJob?.cancel()
+
+    validateLastWordJob = viewModelScope.launch(Dispatchers.Default) {
+      delay(validateLastWordTimeout)
+      validateInput(normalized, false)
+    }
+  }
+
+  private fun validateInput(normalizedInput: String, skipLastWord: Boolean) {
+    val mnemonic = normalizedInput.trim()
     val words = mnemonic.split(" ")
 
     if (words.isEmpty()) {
@@ -71,14 +89,14 @@ class SeedPhraseInputViewModel(
 
     val isValidLength = words.size in MIN_LENGTH..MAX_LENGTH
     val firstInvalidWord = EthersRs.findInvalidWord(mnemonic)
-    if (firstInvalidWord == words.last() && skipLastWord) {
-      status = Status.None
+    status = if (firstInvalidWord == words.last() && skipLastWord) {
+      Status.None
     } else if (firstInvalidWord.isEmpty() && isValidLength) {
-      status = Status.Valid
+      Status.Valid
     } else if (firstInvalidWord.isNotEmpty()) {
-      status = Status.Error(MnemonicError.InvalidWord(firstInvalidWord))
+      Status.Error(MnemonicError.InvalidWord(firstInvalidWord))
     } else {
-      status = Status.None
+      Status.None
     }
 
     val canSubmit = status !is Status.Error && mnemonic != "" && firstInvalidWord.isEmpty()

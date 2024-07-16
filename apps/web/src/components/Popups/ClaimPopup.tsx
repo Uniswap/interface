@@ -5,6 +5,7 @@ import { AutoColumn } from 'components/Column'
 import { CardBGImage, CardNoise } from 'components/earn/styled'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
+import styled, { keyframes } from 'lib/styled-components'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'
 import {
@@ -15,7 +16,6 @@ import {
 } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
-import styled, { keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 const StyledClaimPopup = styled(AutoColumn)`

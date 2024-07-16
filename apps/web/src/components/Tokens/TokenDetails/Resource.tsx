@@ -1,5 +1,5 @@
+import styled from 'lib/styled-components'
 import { darken } from 'polished'
-import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
 
 const ResourceLink = styled(ExternalLink)`

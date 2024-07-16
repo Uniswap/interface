@@ -41,6 +41,8 @@ export type {
   ViewProps,
 } from 'tamagui'
 export { LinearGradient } from 'tamagui/linear-gradient'
+export { AddressQRCode, QRCodeDisplay } from './components/QRCode'
+export type { GradientProps } from './components/QRCode'
 export { Unicon } from './components/Unicon'
 export * from './components/Unicon/utils'
 export * from './components/UniversalImage/UniversalImage'
@@ -54,6 +56,7 @@ export { Flex, Inset, Separator, flexStyles, type FlexProps } from './components
 export { ContextMenu } from './components/menu/ContextMenu'
 export { MenuContent } from './components/menu/MenuContent'
 export type { MenuContentItem } from './components/menu/types'
+export { AdaptiveWebModalSheet } from './components/modal/AdaptiveWebModalSheet'
 export * from './components/text'
 export { Tooltip } from './components/tooltip/Tooltip'
 export * from './components/touchable'

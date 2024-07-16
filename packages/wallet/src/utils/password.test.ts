@@ -11,13 +11,13 @@ describe(isPasswordStrongEnough, () => {
       isPasswordStrongEnough({
         minStrength: PasswordStrength.NONE,
         currentStrength: PasswordStrength.NONE,
-      })
+      }),
     ).toBeTruthy()
     expect(
       isPasswordStrongEnough({
         minStrength: PasswordStrength.MEDIUM,
         currentStrength: PasswordStrength.MEDIUM,
-      })
+      }),
     ).toBeTruthy()
   })
 
@@ -26,13 +26,13 @@ describe(isPasswordStrongEnough, () => {
       isPasswordStrongEnough({
         minStrength: PasswordStrength.MEDIUM,
         currentStrength: PasswordStrength.NONE,
-      })
+      }),
     ).toBeFalsy()
     expect(
       isPasswordStrongEnough({
         minStrength: PasswordStrength.MEDIUM,
         currentStrength: PasswordStrength.WEAK,
-      })
+      }),
     ).toBeFalsy()
   })
 
@@ -41,13 +41,13 @@ describe(isPasswordStrongEnough, () => {
       isPasswordStrongEnough({
         minStrength: PasswordStrength.NONE,
         currentStrength: PasswordStrength.NONE,
-      })
+      }),
     ).toBeTruthy()
     expect(
       isPasswordStrongEnough({
         minStrength: PasswordStrength.NONE,
         currentStrength: PasswordStrength.NONE,
-      })
+      }),
     ).toBeTruthy()
   })
 })

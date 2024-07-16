@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { Screen } from 'src/components/layout/Screen'
 import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { Flex, useIsDarkMode } from 'ui/src'
@@ -19,6 +19,7 @@ import { useTimeout } from 'utilities/src/time/timing'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { FiatPurchaseTransactionInfo } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 // Design decision
@@ -32,15 +33,19 @@ export function ExchangeTransferConnecting({
   onClose: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
 
-  const initialTypeInfo = useMemo(() => ({ serviceProviderLogo: serviceProvider.logos }), [serviceProvider.logos])
+  const initialTypeInfo = useMemo<Partial<FiatPurchaseTransactionInfo>>(
+    () => ({ serviceProviderLogo: serviceProvider.logos, serviceProvider: serviceProvider.serviceProvider }),
+    [serviceProvider],
+  )
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
     UniverseChainId.Mainnet,
+    serviceProvider.serviceProvider,
     initialTypeInfo,
   )
 

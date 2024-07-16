@@ -4,14 +4,11 @@ import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { AssetType } from 'wallet/src/entities/assets'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { transferToken } from 'wallet/src/features/transactions/transfer/transferTokenSaga'
-import {
-  TransferCurrencyParams,
-  TransferNFTParams,
-} from 'wallet/src/features/transactions/transfer/types'
+import { TransferCurrencyParams, TransferNFTParams } from 'wallet/src/features/transactions/transfer/types'
 import { SendTokenTransactionInfo, TransactionType } from 'wallet/src/features/transactions/types'
 import { getContractManager, getProvider } from 'wallet/src/features/wallet/context'
 import { getTxFixtures, signerMnemonicAccount } from 'wallet/src/test/fixtures'

@@ -354,6 +354,10 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   grid-gap: 2px;
   border-radius: 12px;
   overflow: hidden;
+  opacity: 1;
+  max-height: 100vh;
+  -webkit-transition: max-height 125ms ease-in-out,opacity 125ms ease-in-out;
+  transition: max-height 125ms ease-in-out,opacity 125ms ease-in-out;
 }
 
 .c23 {
@@ -661,7 +665,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
                       <div
                         class="c24 css-142zc9n"
                       >
-                        By connecting a wallet, you agree to Uniswap Labs’
+                        By connecting a wallet, you agree to Uniswap Labs’ 
                         <a
                           class="c25 c26"
                           href="https://uniswap.org/terms-of-service/"
@@ -708,14 +712,22 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   min-width: 0;
 }
 
-.c20 {
+.c19 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
   padding: 8px 0px;
 }
 
-.c24 {
+.c23 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  margin-left: 18px;
+  margin-right: 18px;
+}
+
+.c27 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -777,7 +789,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   gap: 4px;
 }
 
-.c21 {
+.c20 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -795,7 +807,24 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   padding: 8px 0px;
 }
 
-.c25 {
+.c24 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c28 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -834,7 +863,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   letter-spacing: -0.01em;
 }
 
-.c33 {
+.c36 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -842,7 +871,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   letter-spacing: -0.01em;
 }
 
-.c34 {
+.c37 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -853,11 +882,11 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   font-weight: 500;
 }
 
-.c34:hover {
+.c37:hover {
   opacity: 0.6;
 }
 
-.c34:active {
+.c37:active {
   opacity: 0.4;
 }
 
@@ -905,7 +934,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   gap: 12px;
 }
 
-.c23 {
+.c26 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -973,7 +1002,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   justify-content: center;
 }
 
-.c29 {
+.c32 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -990,7 +1019,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   align-items: center;
 }
 
-.c28 {
+.c31 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -1018,7 +1047,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   transition: 125ms;
 }
 
-.c31 {
+.c34 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1040,7 +1069,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   padding: 0 8px;
 }
 
-.c30 {
+.c33 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -1058,18 +1087,18 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   justify-content: center;
 }
 
-.c30 img {
+.c33 img {
   border: 1px solid #22222212;
   border-radius: 12px;
 }
 
-.c30 > img,
-.c30 span {
+.c33 > img,
+.c33 span {
   height: 40px;
   width: 40px;
 }
 
-.c27 {
+.c30 {
   -webkit-align-items: stretch;
   -webkit-box-align: stretch;
   -ms-flex-align: stretch;
@@ -1090,16 +1119,16 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   background-color: #F9F9F9;
 }
 
-.c27:hover {
+.c30:hover {
   cursor: pointer;
   background-color: #22222212;
 }
 
-.c27:focus {
+.c30:focus {
   background-color: #22222212;
 }
 
-.c35 {
+.c38 {
   font-weight: 535;
   color: #7D7D7D;
 }
@@ -1116,6 +1145,8 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   -ms-flex-pack: justify;
   justify-content: space-between;
   cursor: pointer;
+  position: relative;
+  z-index: 1;
 }
 
 .c17:hover {
@@ -1139,7 +1170,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   gap: 16px;
 }
 
-.c26 {
+.c29 {
   display: grid;
   -webkit-flex: 1;
   -ms-flex: 1;
@@ -1147,16 +1178,49 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   grid-gap: 2px;
   border-radius: 12px;
   overflow: hidden;
+  opacity: 1;
+  max-height: 100vh;
+  -webkit-transition: max-height 125ms ease-in-out,opacity 125ms ease-in-out;
+  transition: max-height 125ms ease-in-out,opacity 125ms ease-in-out;
 }
 
-.c32 {
+.c35 {
   padding: 0 4px;
+}
+
+.c21 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+.c21:hover {
+  opacity: 0.6;
+}
+
+.c21:active {
+  opacity: 0.4;
 }
 
 .c22 {
   height: 1px;
   width: 100%;
   background: #22222212;
+}
+
+.c25 {
+  height: 20px;
+  width: 20px;
+  fill: #7D7D7D;
+  -webkit-flex-shrink: 0;
+  -ms-flex-negative: 0;
+  flex-shrink: 0;
 }
 
 .c5 {
@@ -1264,6 +1328,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   height: -webkit-max-content;
   height: -moz-max-content;
   height: max-content;
+  max-height: 100%;
   width: 368px;
   max-width: 368px;
   border-radius: 20px;
@@ -1275,13 +1340,14 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   -ms-transform-origin: top right;
   transform-origin: top right;
   opacity: 0;
+  overflow-y: scroll;
   -webkit-transition: -webkit-transform 125ms ease-in-out, opacity 125ms ease-in-out;
   -webkit-transition: transform 125ms ease-in-out, opacity 125ms ease-in-out;
   transition: transform 125ms ease-in-out, opacity 125ms ease-in-out;
 }
 
 @media (max-width:960px) {
-  .c30 {
+  .c33 {
     -webkit-align-items: flex-end;
     -webkit-box-align: flex-end;
     -ms-flex-align: flex-end;
@@ -1289,14 +1355,8 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
   }
 }
 
-@media screen and (max-width:300px) {
-  .c19 {
-    display: none;
-  }
-}
-
 @media (max-width:960px) {
-  .c26 {
+  .c29 {
     grid-template-columns: 1fr;
   }
 }
@@ -1421,11 +1481,14 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
                         fill="none"
                         stroke-width="8"
                         style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(255, 239, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
-                        viewBox="0 0 43 43"
+                        viewBox="0 0 22 22"
                       >
                         <path
-                          d="M28.3632 6.11328H14.3633C10.8633 6.11328 9.11328 7.86327 9.11328 11.3633V32.3632C9.11328 35.8632 10.8633 37.6132 14.3633 37.6132H28.3632C31.8632 37.6132 33.6132 35.8632 33.6132 32.3632V11.3633C33.6132 7.86327 31.8632 6.11328 28.3632 6.11328ZM21.3632 34.1132C20.3972 34.1132 19.6132 33.3292 19.6132 32.3632C19.6132 31.3972 20.3972 30.6132 21.3632 30.6132C22.3292 30.6132 23.1132 31.3972 23.1132 32.3632C23.1132 33.3292 22.3292 34.1132 21.3632 34.1132ZM23.9882 12.6758H18.7382C18.0137 12.6758 17.4257 12.0878 17.4257 11.3633C17.4257 10.6388 18.0137 10.0508 18.7382 10.0508H23.9882C24.7127 10.0508 25.3007 10.6388 25.3007 11.3633C25.3007 12.0878 24.7127 12.6758 23.9882 12.6758Z"
-                          fill="currentColor"
+                          d="M6.92609 1.83331H3.87053C3.33028 1.83331 2.81215 2.04793 2.43013 2.42995C2.04811 2.81197 1.8335 3.33009 1.8335 3.87035V6.92591M20.1668 6.92591V3.87035C20.1668 3.33009 19.9522 2.81197 19.5702 2.42995C19.1882 2.04793 18.67 1.83331 18.1298 1.83331H15.0742M15.0742 20.1666H18.1298C18.67 20.1666 19.1882 19.952 19.5702 19.57C19.9522 19.188 20.1668 18.6699 20.1668 18.1296V15.0741M1.8335 15.0741V18.1296C1.8335 18.6699 2.04811 19.188 2.43013 19.57C2.81215 19.952 3.33028 20.1666 3.87053 20.1666H6.92609M12.1829 12.1827V14.5483M12.1829 16.9139H14.5484V12.1827M14.5482 13.3654H16.9138M16.914 15.7311V16.9139M5.67739 5.08581H9.22578C9.5524 5.08581 9.81717 5.35059 9.81717 5.67721V9.22559C9.81717 9.55221 9.5524 9.81699 9.22578 9.81699H5.67739C5.35077 9.81699 5.08599 9.55221 5.08599 9.22559V5.67721C5.08599 5.35059 5.35077 5.08581 5.67739 5.08581ZM5.67739 12.1827H9.22578C9.5524 12.1827 9.81717 12.4475 9.81717 12.7741V16.3225C9.81717 16.6491 9.5524 16.9139 9.22578 16.9139H5.67739C5.35077 16.9139 5.08599 16.6491 5.08599 16.3225V12.7741C5.08599 12.4475 5.35077 12.1827 5.67739 12.1827ZM12.7743 5.08581H16.3226C16.6493 5.08581 16.914 5.35059 16.914 5.67721V9.22559C16.914 9.55221 16.6493 9.81699 16.3226 9.81699H12.7743C12.4476 9.81699 12.1829 9.55221 12.1829 9.22559V5.67721C12.1829 5.35059 12.4476 5.08581 12.7743 5.08581Z"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="1.75"
                         />
                       </svg>
                       <div
@@ -1438,7 +1501,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
                             class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
                             data-disable-theme="true"
                           >
-                            Mobile Wallet
+                            Uniswap Mobile
                           </span>
                           <span
                             class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
@@ -1448,107 +1511,68 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
                           </span>
                         </div>
                       </div>
-                      <div
-                        class="c19"
-                      >
-                        <svg
-                          fill="none"
-                          stroke-width="8"
-                          style="color: rgb(125, 125, 125); width: 20px; height: 20px;"
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            d="M9 2H3C2.44772 2 2 2.44772 2 3V9C2 9.55228 2.44772 10 3 10H9C9.55228 10 10 9.55228 10 9V3C10 2.44772 9.55228 2 9 2Z"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                          />
-                          <path
-                            d="M9 13.9999H3C2.44772 13.9999 2 14.4476 2 14.9999V20.9999C2 21.5522 2.44772 21.9999 3 21.9999H9C9.55228 21.9999 10 21.5522 10 20.9999V14.9999C10 14.4476 9.55228 13.9999 9 13.9999Z"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                          />
-                          <path
-                            d="M21 2H15C14.4477 2 14 2.44772 14 3V9C14 9.55228 14.4477 10 15 10H21C21.5523 10 22 9.55228 22 9V3C22 2.44772 21.5523 2 21 2Z"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                          />
-                          <path
-                            d="M14 13.9999V17.9999"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                          />
-                          <path
-                            d="M14 21.9999H18V13.9999"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                          />
-                          <path
-                            d="M18 16H22"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                          />
-                          <path
-                            d="M22 20.0001V22.0001"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                          />
-                        </svg>
-                      </div>
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c20 c21"
+                  class="c19 c20 c21"
                 >
                   <div
                     class="c22"
                   />
-                  <span
-                    class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-18px _mb-0px _ml-18px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _whiteSpace-nowrap"
-                    data-disable-theme="true"
+                  <div
+                    class="c23 c24"
                   >
-                    Other wallets
-                  </span>
+                    <span
+                      class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _whiteSpace-nowrap"
+                      data-disable-theme="true"
+                    >
+                      Other wallets
+                    </span>
+                    <svg
+                      class="c25"
+                      fill="none"
+                      height="28"
+                      viewBox="0 0 28 28"
+                      width="28"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <path
+                        d="M13.9912 11.9609C14.2812 11.9609 14.5273 11.8379 14.8086 11.6094L20.75 6.81055C20.9609 6.62598 21.0928 6.3623 21.0928 6.0459C21.0928 5.43945 20.6094 5 20.0557 5C19.8008 5 19.5371 5.10547 19.291 5.30762L14 9.5791L8.7002 5.30762C8.44531 5.10547 8.19043 5 7.93555 5C7.38184 5 6.89844 5.43945 6.89844 6.0459C6.89844 6.3623 7.03027 6.62598 7.24121 6.81055L13.1738 11.6006C13.4639 11.8379 13.71 11.9609 13.9912 11.9609Z"
+                        fill="#70757A"
+                      />
+                      <path
+                        d="M14.0928 15C13.8115 15 13.5654 15.1318 13.2754 15.3604L7.34277 20.1592C7.13184 20.335 7 20.5986 7 20.9238C7 21.5215 7.4834 21.9609 8.03711 21.9609C8.29199 21.9609 8.54688 21.8643 8.80176 21.6621L14.1016 17.3906L19.3926 21.6621C19.6387 21.8643 19.9023 21.9609 20.1572 21.9609C20.7109 21.9609 21.1943 21.5215 21.1943 20.9238C21.1943 20.5986 21.0625 20.335 20.8516 20.1592L14.9102 15.3604C14.6289 15.1318 14.3828 15 14.0928 15Z"
+                        fill="#70757A"
+                      />
+                    </svg>
+                  </div>
                   <div
                     class="c22"
                   />
                 </div>
                 <div
-                  class="c23"
+                  class="c26"
                 >
                   <div
-                    class="c24 c25"
+                    class="c27 c28"
                   >
                     <div
-                      class="c26"
+                      class="c29"
                       data-testid="option-grid"
                     >
                       <div
-                        class="c27"
+                        class="c30"
                       >
                         <button
-                          class="c28"
+                          class="c31"
                           data-testid="wallet-option-walletConnect"
                         >
                           <div
-                            class="c29"
+                            class="c32"
                           >
                             <div
-                              class="c30"
+                              class="c33"
                             >
                               <img
                                 alt="WalletConnect"
@@ -1556,7 +1580,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
                               />
                             </div>
                             <div
-                              class="c31"
+                              class="c34"
                             >
                               WalletConnect
                             </div>
@@ -1564,17 +1588,17 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
                         </button>
                       </div>
                       <div
-                        class="c27"
+                        class="c30"
                       >
                         <button
-                          class="c28"
+                          class="c31"
                           data-testid="wallet-option-coinbaseWallet"
                         >
                           <div
-                            class="c29"
+                            class="c32"
                           >
                             <div
-                              class="c30"
+                              class="c33"
                             >
                               <img
                                 alt="Coinbase Wallet"
@@ -1582,7 +1606,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
                               />
                             </div>
                             <div
-                              class="c31"
+                              class="c34"
                             >
                               Coinbase Wallet
                             </div>
@@ -1595,14 +1619,14 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
                     class="c14"
                   >
                     <div
-                      class="c32"
+                      class="c35"
                     >
                       <div
-                        class="c33 css-142zc9n"
+                        class="c36 css-142zc9n"
                       >
-                        By connecting a wallet, you agree to Uniswap Labs’
+                        By connecting a wallet, you agree to Uniswap Labs’ 
                         <a
-                          class="c34 c35"
+                          class="c37 c38"
                           href="https://uniswap.org/terms-of-service/"
                           rel="noopener noreferrer"
                           target="_blank"
@@ -1611,7 +1635,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
                         </a>
                         and consent to its 
                         <a
-                          class="c34 c35"
+                          class="c37 c38"
                           href="https://uniswap.org/privacy-policy"
                           rel="noopener noreferrer"
                           target="_blank"

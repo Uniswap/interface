@@ -1,17 +1,21 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, isWeb, useMedia, useSporeColors } from 'ui/src'
-import { spacing } from 'ui/src/theme'
+import { Flex, QRCodeDisplay, Text, isWeb, useMedia, useSporeColors } from 'ui/src'
+import { iconSizes, spacing } from 'ui/src/theme'
+import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
-import { QRCodeDisplay } from 'wallet/src/components/QRCodeScanner/QRCode'
+import { useQRColorProps } from 'wallet/src/components/QRCodeScanner/useQRColorProps'
+import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { NetworkLogos } from 'wallet/src/components/network/NetworkLogos'
+import { useAvatar } from 'wallet/src/features/wallet/hooks'
 
 export function WalletQRCode({ address }: { address: Address }): JSX.Element | null {
   const colors = useSporeColors()
+  const { avatar } = useAvatar(address)
   const { t } = useTranslation()
   const media = useMedia()
+  const { smartColor } = useQRColorProps(address)
 
   const QR_CODE_SIZE = media.short ? 220 : 240
   const UNICON_SIZE = QR_CODE_SIZE / 4
@@ -40,18 +44,30 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
       </Flex>
       <QRCodeDisplay
         hideOutline
-        address={address}
+        color={smartColor}
         containerBackgroundColor={colors.surface1.val}
         displayShadow={false}
+        encodedValue={address}
         logoSize={UNICON_SIZE}
         safeAreaColor="$surface1"
         size={QR_CODE_SIZE}
-      />
+      >
+        <AccountIcon
+          address={address}
+          avatarUri={avatar}
+          borderColor="$surface1"
+          borderWidth={4}
+          showBackground={true}
+          showBorder={true}
+          size={UNICON_SIZE}
+        />
+      </QRCodeDisplay>
       <NetworkLogos
         showFirstChainLabel
         backgroundColor="$surface2"
         borderRadius="$roundedFull"
         chains={WALLET_SUPPORTED_CHAIN_IDS}
+        size={iconSizes.icon16}
       />
       <Text color="$neutral2" lineHeight={20} textAlign="center" variant="body4">
         {t('qrScanner.wallet.title')}

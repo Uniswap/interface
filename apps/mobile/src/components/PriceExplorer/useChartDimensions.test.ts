@@ -12,9 +12,7 @@ const sharedDimensions = {
 
 describe(useChartDimensions, () => {
   it('returns small chart height for small screens', () => {
-    jest
-      .spyOn(Dimensions, 'get')
-      .mockReturnValue({ ...sharedDimensions, height: heightBreakpoints.short - 1 })
+    jest.spyOn(Dimensions, 'get').mockReturnValue({ ...sharedDimensions, height: heightBreakpoints.short - 1 })
     const { result } = renderHook(() => useChartDimensions())
 
     expect(result.current).toEqual({
@@ -26,9 +24,7 @@ describe(useChartDimensions, () => {
   })
 
   it('returns large chart height for large screens', () => {
-    jest
-      .spyOn(Dimensions, 'get')
-      .mockReturnValue({ ...sharedDimensions, height: heightBreakpoints.short })
+    jest.spyOn(Dimensions, 'get').mockReturnValue({ ...sharedDimensions, height: heightBreakpoints.short })
     const { result } = renderHook(() => useChartDimensions())
 
     expect(result.current).toEqual({

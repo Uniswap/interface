@@ -1,5 +1,5 @@
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { ARBITRUM_DAI_CURRENCY_INFO, UNI_CURRENCY_INFO, arbitrumDaiCurrencyInfo } from 'wallet/src/test/fixtures'
+import { ARBITRUM_DAI_CURRENCY_INFO, UNI_CURRENCY_INFO, arbitrumDaiCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { render } from 'wallet/src/test/test-utils'
 
 describe(CurrencyLogo, () => {

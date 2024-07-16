@@ -5,6 +5,7 @@
 import { useCallback, useEffect } from 'react'
 import { Directions, FlingGestureHandler, FlingGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
+import { useDispatch } from 'react-redux'
 import {
   Flex,
   Text,
@@ -18,10 +19,11 @@ import {
 } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, spacing } from 'ui/src/theme'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTimeout } from 'utilities/src/time/timing'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
 import { popNotification, setNotificationViewed } from 'wallet/src/features/notifications/slice'
-import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { useAppSelector } from 'wallet/src/state'
 
 const NOTIFICATION_HEIGHT = 64
 
@@ -52,11 +54,12 @@ export interface NotificationToastProps extends NotificationContentProps {
 }
 
 // TODO(EXT-931): Consolidate mobile and web animation styles
-const ToastEntryAnimation = styled(Flex, {
+const WebToastEntryAnimation = styled(Flex, {
   animation: 'semiBouncy',
   y: 0,
   top: '$spacing12',
-  position: 'absolute',
+  // @ts-expect-error - It's Ok to ignore and use the web-only `fixed` value because this component is only used on web.
+  position: 'fixed',
   width: '100%',
   zIndex: '$overlay',
   opacity: 1,
@@ -82,7 +85,7 @@ export function NotificationToast({
   smallToast,
 }: NotificationToastProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const notifications = useAppSelector(selectActiveAccountNotifications)
   const currentNotification = notifications?.[0]
   const hasQueuedNotification = !!notifications?.[1]
@@ -175,7 +178,7 @@ export function NotificationToast({
   )
 
   return isWeb ? (
-    <ToastEntryAnimation>{notificationContent}</ToastEntryAnimation>
+    <WebToastEntryAnimation>{notificationContent}</WebToastEntryAnimation>
   ) : (
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
       <AnimatedFlex
@@ -225,7 +228,12 @@ function NotificationContent({
         >
           {icon}
           <Flex shrink alignItems="flex-start" flexDirection="column">
-            <Text adjustsFontSizeToFit numberOfLines={subtitle ? 1 : 2} variant="subheading2">
+            <Text
+              adjustsFontSizeToFit
+              numberOfLines={subtitle ? 1 : 2}
+              testID={TestID.NotificationToastTitle}
+              variant="subheading2"
+            >
               {title}
             </Text>
             {subtitle && (
@@ -261,7 +269,7 @@ function NotificationContentSmall({ title, icon, onPress, onPressIn }: Notificat
       >
         <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" pr="$spacing4">
           <Flex>{icon}</Flex>
-          <Text adjustsFontSizeToFit numberOfLines={1} variant="body2">
+          <Text adjustsFontSizeToFit numberOfLines={1} testID={TestID.NotificationToastTitle} variant="body2">
             {title}
           </Text>
         </Flex>

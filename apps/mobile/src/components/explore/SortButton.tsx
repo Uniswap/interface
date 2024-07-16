@@ -1,7 +1,7 @@
 import React, { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { getTokensOrderByMenuLabel, getTokensOrderBySelectedLabel } from 'src/features/explore/utils'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
@@ -19,7 +19,7 @@ interface FilterGroupProps {
 
 function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { t } = useTranslation()
 
   const menuActions = useMemo(() => {

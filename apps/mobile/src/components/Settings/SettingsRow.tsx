@@ -1,6 +1,7 @@
 import { NavigatorScreenParams } from '@react-navigation/core'
 import React from 'react'
 import { ValueOf } from 'react-native-gesture-handler/lib/typescript/typeUtils'
+import { useDispatch } from 'react-redux'
 import {
   OnboardingStackNavigationProp,
   OnboardingStackParamList,
@@ -16,7 +17,6 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
 import { Switch } from 'wallet/src/components/buttons/Switch'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
-import { useAppDispatch } from 'wallet/src/state'
 
 export interface SettingsSection {
   subTitle: string
@@ -67,7 +67,7 @@ export function SettingsRow({
   navigation,
 }: SettingsRowProps): JSX.Element {
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const handleRow = async (): Promise<void> => {
     if (onToggle) {

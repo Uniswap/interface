@@ -17,12 +17,7 @@ import {
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 // TODO: https://linear.app/uniswap/issue/WEB-4376/move-universepackageswalletsrcfeaturesdataapi-tests-to-uniswap-pkg
-import {
-  SAMPLE_CURRENCY_ID_1,
-  SAMPLE_CURRENCY_ID_2,
-  ethToken,
-  usdcTokenProject,
-} from 'wallet/src/test/fixtures'
+import { SAMPLE_CURRENCY_ID_1, SAMPLE_CURRENCY_ID_2, ethToken, usdcTokenProject } from 'wallet/src/test/fixtures'
 import { renderHook } from 'wallet/src/test/test-utils'
 
 describe(currencyIdToContractInput, () => {
@@ -53,7 +48,7 @@ describe(tokenProjectToCurrencyInfos, () => {
         symbol: token.symbol,
         name: project.name,
       }),
-    } as CurrencyInfo)
+    }) as CurrencyInfo
 
   it('converts tokenProject to CurrencyInfo', () => {
     const result = tokenProjectToCurrencyInfos([project])
@@ -65,9 +60,7 @@ describe(tokenProjectToCurrencyInfos, () => {
     const result = tokenProjectToCurrencyInfos([project], UniverseChainId.Polygon)
 
     expect(result).toEqual(
-      project.tokens
-        .filter((token) => token.chain === 'POLYGON')
-        .map((token) => getExpectedResult(project, token))
+      project.tokens.filter((token) => token.chain === 'POLYGON').map((token) => getExpectedResult(project, token)),
     )
   })
 
@@ -122,14 +115,14 @@ describe(buildCurrency, () => {
         chainId: null,
         address: '0x0',
         decimals: 18,
-      })
+      }),
     ).toBeUndefined()
     expect(
       buildCurrency({
         chainId: UniverseChainId.Mainnet,
         address: '0x0',
         decimals: null,
-      })
+      }),
     ).toBeUndefined()
   })
 })

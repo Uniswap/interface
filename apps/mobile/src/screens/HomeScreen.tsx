@@ -18,7 +18,8 @@ import Animated, {
 } from 'react-native-reanimated'
 import { SvgProps } from 'react-native-svg'
 import { SceneRendererProps, TabBar } from 'react-native-tab-view'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
+import { useAppSelector } from 'src/app/hooks'
 import { ExtensionPromoModal } from 'src/app/modals/ExtensionPromoModal'
 import { NavBar, SWAP_BUTTON_HEIGHT } from 'src/app/navigation/NavBar'
 import { AppStackScreenProp } from 'src/app/navigation/types'
@@ -55,6 +56,7 @@ import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -66,11 +68,11 @@ import {
   SectionName,
   SectionNameType,
 } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { selectHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/selectors'
-import { useCexTransferProviders } from 'wallet/src/features/fiatOnRamp/api'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
@@ -94,7 +96,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const media = useMedia()
   const insets = useDeviceInsets()
   const dimensions = useDeviceDimensions()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const isFocused = useIsFocused()
   const isModalOpen = useAppSelector(selectSomeModalOpen)
   const isHomeScreenBlur = !isFocused || isModalOpen
@@ -275,19 +277,10 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const { sync } = useScrollSync(currentTabIndex, scrollPairs, headerConfig)
 
-  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
   const cexTransferEnabled = useFeatureFlag(FeatureFlags.CexTransfers)
   const cexTransferProviders = useCexTransferProviders(cexTransferEnabled)
 
-  const onPressBuy = useCallback(
-    () =>
-      dispatch(
-        openModal({
-          name: forAggregatorEnabled ? ModalName.FiatOnRampAggregator : ModalName.FiatOnRamp,
-        }),
-      ),
-    [dispatch, forAggregatorEnabled],
-  )
+  const onPressBuy = useCallback(() => dispatch(openModal({ name: ModalName.FiatOnRampAggregator })), [dispatch])
   const onPressScan = useCallback(() => {
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
@@ -411,7 +404,8 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const emptyComponentStyle = useMemo<StyleProp<ViewStyle>>(
     () => ({
       minHeight: dimensions.fullHeight - (paddingTop + paddingBottom),
-      paddingTop: spacing.none,
+      paddingTop: media.short ? spacing.spacing12 : spacing.spacing32,
+      paddingBottom: media.short ? spacing.spacing12 : spacing.spacing32,
       paddingLeft: media.short ? spacing.none : spacing.spacing12,
       paddingRight: media.short ? spacing.none : spacing.spacing12,
     }),
@@ -538,6 +532,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                     owner={activeAccount?.address}
                     refreshing={refreshing}
                     scrollHandler={tokensTabScrollHandler}
+                    testID={TestID.TokensTab}
                     onRefresh={onRefreshHomeData}
                   />
                 </Animated.View>
@@ -554,6 +549,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                 owner={activeAccount?.address}
                 refreshing={refreshing}
                 scrollHandler={nftsTabScrollHandler}
+                testID={TestID.NFTsTab}
                 onRefresh={onRefreshHomeData}
               />
             </Freeze>
@@ -568,6 +564,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                 owner={activeAccount?.address}
                 refreshing={refreshing}
                 scrollHandler={activityTabScrollHandler}
+                testID={TestID.ActivityTab}
                 onRefresh={onRefreshHomeData}
               />
             </Freeze>

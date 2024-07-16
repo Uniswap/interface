@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Loader, Text, TouchableArea, UniversalImage, useIsDarkMode } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { borderRadii, iconSizes } from 'ui/src/theme'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { concatStrings } from 'utilities/src/primitives/string'
@@ -14,10 +14,12 @@ export function FORQuoteItem({
   serviceProvider,
   onPress,
   hoverIcon,
+  isLoading,
 }: {
   serviceProvider: FORServiceProvider | undefined
   onPress: () => void
   hoverIcon?: JSX.Element
+  isLoading?: boolean
 }): JSX.Element | null {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
@@ -33,14 +35,22 @@ export function FORQuoteItem({
       ? concatStrings(
           [
             serviceProvider.paymentMethods.slice(0, 3).join(', ') + ',', // oxford comma
-            t('fiatOnRamp.quote.type.other'),
+            (t('fiatOnRamp.quote.type.other') as string).toLowerCase(),
           ],
           t('common.endAdornment'),
         )
       : serviceProvider.paymentMethods.join(', ')
 
   return (
-    <TouchableArea onMouseEnter={() => setHovered(true)} onMouseLeave={() => setHovered(false)} onPress={onPress}>
+    <TouchableArea
+      disabled={isLoading}
+      disabledStyle={{
+        cursor: 'wait',
+      }}
+      onMouseEnter={() => setHovered(!isLoading)}
+      onMouseLeave={() => setHovered(false)}
+      onPress={isLoading ? undefined : onPress}
+    >
       <Flex
         $theme-dark={{
           shadowOpacity: 0.12,
@@ -73,13 +83,16 @@ export function FORQuoteItem({
                     height: iconSizes.icon40,
                     width: iconSizes.icon40,
                   }}
+                  style={{
+                    image: { borderRadius: borderRadii.rounded8 },
+                  }}
                   uri={logoUrl}
                 />
               ) : (
                 <LogoLoader />
               )}
             </Flex>
-            <Flex shrink gap="$spacing4">
+            <Flex shrink>
               <Text color="$neutral1" variant="subheading2">
                 {serviceProvider.name}
               </Text>

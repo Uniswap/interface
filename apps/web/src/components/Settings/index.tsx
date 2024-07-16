@@ -8,11 +8,12 @@ import MenuButton from 'components/Settings/MenuButton'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
 import RouterPreferenceSettings from 'components/Settings/RouterPreferenceSettings'
 import TransactionDeadlineSettings from 'components/Settings/TransactionDeadlineSettings'
-import { isUniswapXSupportedChain, L2_CHAIN_IDS, useIsSupportedChainId } from 'constants/chains'
+import { isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
 import { useIsMobile } from 'hooks/screenSize'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { useCallback, useMemo, useRef } from 'react'
 import { X } from 'react-feather'
@@ -20,9 +21,9 @@ import { useCloseModal, useModalIsOpen, useToggleSettingsMenu } from 'state/appl
 import { ApplicationModal } from 'state/application/reducer'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
-import styled from 'styled-components'
 import { Divider, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
@@ -118,7 +119,7 @@ export default function SettingsTab({
   compact?: boolean
   hideRoutingSettings?: boolean
 }) {
-  const showDeadlineSettings = Boolean(chainId && !L2_CHAIN_IDS.includes(chainId))
+  const showDeadlineSettings = !isL2ChainId(chainId)
   const toggleButtonNode = useRef<HTMLDivElement | null>(null)
   const menuNode = useRef<HTMLDivElement | null>(null)
   const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)

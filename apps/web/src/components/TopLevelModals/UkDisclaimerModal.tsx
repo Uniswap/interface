@@ -3,10 +3,10 @@ import Column from 'components/Column'
 import Modal from 'components/Modal'
 import { bannerText } from 'components/TopLevelBanners/UkBanner'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled from 'styled-components'
 import { ButtonText, ThemedText } from 'theme/components'
 
 const Wrapper = styled(Column)`

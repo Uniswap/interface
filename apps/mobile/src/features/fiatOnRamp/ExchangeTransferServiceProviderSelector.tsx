@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -68,7 +68,7 @@ export function ServiceProviderSelector({
   onClose: () => void
   serviceProviders: FORServiceProvider[]
 }): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const onSelectServiceProvider = useCallback(
     (serviceProvider: FORServiceProvider) => {

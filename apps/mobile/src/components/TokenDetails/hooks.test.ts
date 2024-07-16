@@ -41,7 +41,7 @@ describe(useCrossChainBalances, () => {
       expect(result.current).toEqual(
         expect.objectContaining({
           currentChainBalance: null,
-        })
+        }),
       )
     })
 
@@ -51,19 +51,16 @@ describe(useCrossChainBalances, () => {
       const { resolvers } = queryResolvers({
         portfolios: () => [Portfolio],
       })
-      const { result } = renderHook(
-        () => useCrossChainBalances(currentChainBalance.currencyInfo.currencyId, null),
-        {
-          preloadedState: preloadedMobileState(),
-          resolvers,
-        }
-      )
+      const { result } = renderHook(() => useCrossChainBalances(currentChainBalance.currencyInfo.currencyId, null), {
+        preloadedState: preloadedMobileState(),
+        resolvers,
+      })
 
       await waitFor(() => {
         expect(result.current).toEqual(
           expect.objectContaining({
             currentChainBalance,
-          })
+          }),
         )
       })
     })
@@ -80,15 +77,12 @@ describe(useCrossChainBalances, () => {
       expect(result.current).toEqual(
         expect.objectContaining({
           otherChainBalances: null,
-        })
+        }),
       )
     })
 
     it('does not include current chain balance in other chain balances', async () => {
-      const tokenBalances = [
-        tokenBalance({ token: usdcBaseToken() }),
-        tokenBalance({ token: usdcArbitrumToken() }),
-      ]
+      const tokenBalances = [tokenBalance({ token: usdcBaseToken() }), tokenBalance({ token: usdcArbitrumToken() })]
 
       const bridgeInfo = tokenBalances.map((balance) => ({
         chain: balance.token.chain,
@@ -107,13 +101,11 @@ describe(useCrossChainBalances, () => {
         {
           preloadedState: preloadedMobileState(),
           resolvers,
-        }
+        },
       )
 
       await waitFor(() => {
-        expect(result.current).toEqual(
-          expect.objectContaining({ currentChainBalance, otherChainBalances })
-        )
+        expect(result.current).toEqual(expect.objectContaining({ currentChainBalance, otherChainBalances }))
       })
     })
   })

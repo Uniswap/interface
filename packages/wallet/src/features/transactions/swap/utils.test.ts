@@ -1,23 +1,19 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route } from '@uniswap/v3-sdk'
-import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
 import { ClassicTrade } from 'wallet/src/features/transactions/swap/trade/types'
-import {
-  getWrapType,
-  requireAcceptNewTrade,
-  serializeQueryParams,
-} from 'wallet/src/features/transactions/swap/utils'
+import { getWrapType, requireAcceptNewTrade, serializeQueryParams } from 'wallet/src/features/transactions/swap/utils'
 import { WrapType } from 'wallet/src/features/transactions/types'
 import { mockPool } from 'wallet/src/test/mocks'
 
 describe(serializeQueryParams, () => {
   it('handles the correct types', () => {
-    expect(
-      serializeQueryParams({ a: '0x6B175474E89094C44Da98b954EedeAC495271d0F', b: 2, c: false })
-    ).toBe('a=0x6B175474E89094C44Da98b954EedeAC495271d0F&b=2&c=false')
+    expect(serializeQueryParams({ a: '0x6B175474E89094C44Da98b954EedeAC495271d0F', b: 2, c: false })).toBe(
+      'a=0x6B175474E89094C44Da98b954EedeAC495271d0F&b=2&c=false',
+    )
   })
 
   it('escapes characters', () => {

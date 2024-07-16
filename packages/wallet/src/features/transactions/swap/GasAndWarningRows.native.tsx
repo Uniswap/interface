@@ -6,6 +6,7 @@ import { Flex, Text, TouchableArea, useIsShortMobileDevice, useMedia } from 'ui/
 import { Gas } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { NumberType } from 'utilities/src/format/types'
 import { UniswapXFee } from 'wallet/src/components/network/NetworkFee'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
@@ -20,7 +21,6 @@ import { useGasFeeHighRelativeToValue } from 'wallet/src/features/transactions/s
 import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { UniswapXInfo } from 'wallet/src/features/transactions/swap/modals/UniswapXInfo'
 import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 

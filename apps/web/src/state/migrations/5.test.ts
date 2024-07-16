@@ -37,7 +37,7 @@ describe('migration to v5', () => {
         4: migration4,
         5: migration5,
       },
-      { debug: false }
+      { debug: false },
     )
     const result: any = await migrator(previousState, 5)
     expect(result?.user?.userRouterPreference).toEqual(RouterPreference.X)
@@ -55,7 +55,7 @@ describe('migration to v5', () => {
         4: migration4,
         5: migration5,
       },
-      { debug: false }
+      { debug: false },
     )
     const result: any = await migrator(
       {
@@ -65,7 +65,7 @@ describe('migration to v5', () => {
           optedOutOfUniswapX: true,
         },
       } as PersistAppStateV5,
-      5
+      5,
     )
     expect(result?.user?.userRouterPreference).toEqual(RouterPreference.API)
     expect(result?.user?.optedOutOfUniswapX).toBeUndefined()
@@ -81,14 +81,14 @@ describe('migration to v5', () => {
         4: migration4,
         5: migration5,
       },
-      { debug: false }
+      { debug: false },
     )
     const result: any = await migrator(
       {
         ...previousState,
         user: undefined,
       } as PersistAppStateV5,
-      5
+      5,
     )
     expect(result?.user).toBeUndefined()
     expect(result?._persist.version).toEqual(5)

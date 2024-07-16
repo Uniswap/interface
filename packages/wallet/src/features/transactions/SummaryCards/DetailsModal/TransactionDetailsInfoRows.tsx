@@ -1,5 +1,6 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import {
   Flex,
   Text,
@@ -14,6 +15,7 @@ import { borderRadii, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useENS } from 'wallet/src/features/ens/useENS'
@@ -24,8 +26,6 @@ import { shortenHash } from 'wallet/src/features/transactions/SummaryCards/Detai
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
-import { useAppDispatch } from 'wallet/src/state'
-import { setClipboard } from 'wallet/src/utils/clipboard'
 import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
 
 export function TransactionDetailsInfoRows({
@@ -150,7 +150,7 @@ function NetworkFeeRow({ transactionDetails }: { transactionDetails: Transaction
 function TransactionHashRow({ transactionDetails }: { transactionDetails: TransactionDetails }): JSX.Element | null {
   const { hash } = transactionDetails
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   if (!hash && isUniswapX(transactionDetails)) {
     return null

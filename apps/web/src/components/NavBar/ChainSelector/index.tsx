@@ -6,9 +6,8 @@ import ChainSelectorRow from 'components/NavBar/ChainSelector/ChainSelectorRow'
 import { NavDropdown } from 'components/NavBar/NavDropdown/NavDropdown'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import {
+  ALL_CHAIN_IDS,
   CHAIN_IDS_TO_NAMES,
-  L1_CHAIN_IDS,
-  L2_CHAIN_IDS,
   TESTNET_CHAIN_IDS,
   getChainPriority,
   useIsSupportedChainIdCallback,
@@ -17,19 +16,17 @@ import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
 import { t } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
+import styled, { css, useTheme } from 'lib/styled-components'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useSearchParams } from 'react-router-dom'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
-import styled, { css, useTheme } from 'styled-components'
 import { Flex, Popover } from 'ui/src'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { Connector } from 'wagmi'
-
-const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
 
 const StyledDropdownButton = css`
   display: flex;
@@ -71,9 +68,9 @@ function useWalletSupportedChains(): InterfaceChainId[] {
       // Wagmi currently offers no way to discriminate a Connector as a WalletConnect connector providing access to getNamespaceChainsIds.
       return (connector as WalletConnectConnector).getNamespaceChainsIds?.().length
         ? (connector as WalletConnectConnector).getNamespaceChainsIds?.()
-        : NETWORK_SELECTOR_CHAINS
+        : ALL_CHAIN_IDS
     default:
-      return NETWORK_SELECTOR_CHAINS
+      return ALL_CHAIN_IDS
   }
 }
 
@@ -94,7 +91,7 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
   const [searchParams, setSearchParams] = useSearchParams()
 
   const [supportedChains, unsupportedChains] = useMemo(() => {
-    const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter((chain: number) => {
+    const { supported, unsupported } = ALL_CHAIN_IDS.filter((chain: number) => {
       return isSupportedChain(chain) && (showTestnets || !TESTNET_CHAIN_IDS.includes(chain))
     })
       .sort((a, b) => getChainPriority(a) - getChainPriority(b))

@@ -95,7 +95,7 @@ const portfolioWithReceive = portfolio({
 })
 
 const { resolvers } = queryResolvers({
-  portfolios: () => portfolios,
+  portfolios: (_, { ownerAddresses }) => portfolios.filter((p) => ownerAddresses.includes(p.ownerAddress)),
 })
 
 describe(TransactionHistoryUpdater, () => {
@@ -120,7 +120,10 @@ describe(TransactionHistoryUpdater, () => {
 
   it('updates notification status when there are new transactions', async () => {
     const reduxState = {
-      wallet: walletSlice,
+      wallet: {
+        ...walletSlice,
+        activeAccountAddress: account1.address,
+      },
       notifications: {
         notificationQueue: [],
         notificationStatus: {},
