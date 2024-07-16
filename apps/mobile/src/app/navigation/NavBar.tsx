@@ -11,7 +11,7 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'src/app/hooks'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
@@ -32,11 +32,11 @@ import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { opacify } from 'uniswap/src/utils/colors'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
 import { prepareSwapFormState } from 'wallet/src/features/transactions/swap/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { opacify } from 'wallet/src/utils/colors'
 
 export const NAV_BAR_HEIGHT_XS = 52
 export const NAV_BAR_HEIGHT_SM = 72
@@ -106,7 +106,7 @@ type SwapTabBarButtonProps = {
 
 const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonProps) {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const isDarkMode = useIsDarkMode()
 
@@ -182,7 +182,7 @@ type ExploreTabBarButtonProps = {
 }
 
 function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): JSX.Element {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
   const { t } = useTranslation()

@@ -3,8 +3,8 @@ import { RowBetween } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useIsMobile } from 'hooks/screenSize'
 import useHoverProps from 'hooks/useHoverProps'
-import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
+import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 export type LineItemData = {

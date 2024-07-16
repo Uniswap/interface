@@ -1,13 +1,13 @@
 import { BigNumber } from 'ethers'
 import { openModal } from 'src/features/modals/modalSlice'
 import { put } from 'typed-redux-saga'
-import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
+import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 
 export function* handleSwapLink(url: URL) {
   try {

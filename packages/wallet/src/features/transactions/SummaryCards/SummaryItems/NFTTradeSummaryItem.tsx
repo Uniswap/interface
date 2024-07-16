@@ -5,13 +5,11 @@ import { NFTTradeTransactionInfo, TransactionDetails } from 'wallet/src/features
 export function NFTTradeSummaryItem({
   transaction,
   layoutElement,
-  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: NFTTradeTransactionInfo }
 }): JSX.Element {
   return (
     <NFTSummaryItem
-      index={index}
       layoutElement={layoutElement}
       transaction={transaction}
       transactionType={transaction.typeInfo.type}

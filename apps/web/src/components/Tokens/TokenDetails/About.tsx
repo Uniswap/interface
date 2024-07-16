@@ -1,4 +1,4 @@
-import styled from 'lib/styled-components'
+import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 

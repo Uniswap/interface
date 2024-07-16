@@ -1,6 +1,6 @@
 import Column from 'components/Column'
 import { MissingDataIcon } from 'components/Table/icons'
-import styled from 'lib/styled-components'
+import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 const ErrorModalContainer = styled.div`

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { ViewProps } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { SharedValue } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'src/app/hooks'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { useAnimatedCardDragStyle } from 'src/components/explore/hooks'
@@ -35,7 +35,7 @@ function FavoriteWalletCard({
   ...rest
 }: FavoriteWalletCardProps): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { preload, navigate } = useEagerExternalProfileNavigation()
 
   const displayName = useDisplayName(address)

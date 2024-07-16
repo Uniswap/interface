@@ -19,13 +19,12 @@ import { QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { openUri } from 'uniswap/src/utils/linking'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { openUri } from 'wallet/src/utils/linking'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput>
 
@@ -72,13 +71,14 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
 
   return (
     <SafeKeyboardOnboardingScreen
-      footer={
+      minHeightWhenKeyboardExpanded={false}
+      screenFooter={
         <Trace logPress element={ElementName.Next}>
           <Button
             disabled={!submitEnabled}
             mx="$spacing16"
             my="$spacing12"
-            testID={TestID.Continue}
+            testID="seed-input-submit"
             onPress={(): void => {
               handleSubmit(seedPhraseInputRef)
             }}
@@ -87,7 +87,6 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
           </Button>
         </Trace>
       }
-      minHeightWhenKeyboardExpanded={false}
       subtitle={
         isRestoringMnemonic
           ? t('account.recoveryPhrase.subtitle.restoring')
@@ -110,7 +109,6 @@ export function SeedPhraseInputScreenV2({ navigation, route: { params } }: Props
           [StringKey.ErrorInvalidPhrase]: t('account.recoveryPhrase.error.invalid'),
         }}
         targetMnemonicId={targetMnemonicId}
-        testID={TestID.ImportAccountInput}
         onInputValidated={(e: NativeSyntheticEvent<InputValidatedEvent>): void =>
           setSubmitEnabled(e.nativeEvent.canSubmit)
         }

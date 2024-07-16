@@ -1,6 +1,6 @@
 import Column from 'components/Column'
 import { Trans } from 'i18n'
-import styled from 'lib/styled-components'
+import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 
 const Container = styled(Column)`

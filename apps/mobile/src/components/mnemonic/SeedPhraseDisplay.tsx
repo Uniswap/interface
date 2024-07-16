@@ -65,9 +65,7 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
             <MnemonicDisplay mnemonicId={mnemonicId} />
           </Flex>
         ) : (
-          <Flex grow px="$spacing16">
-            <HiddenMnemonicWordView />
-          </Flex>
+          <HiddenMnemonicWordView />
         )}
       </Flex>
       <Flex borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">

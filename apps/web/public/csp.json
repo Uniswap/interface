@@ -5,7 +5,6 @@
   "scriptSrc": [
     "'self'",
     "data:",
-    "'wasm-unsafe-eval'",
     "https://translate.googleapis.com/",
     "https://www.google-analytics.com",
     "https://www.googletagmanager.com"
@@ -54,6 +53,7 @@
     "https://bsc-dataseed1.bnbchain.org",
     "https://buy.moonpay.com/",
     "https://cdn.center.app/",
+    "https://cdn.jsdelivr.net/npm/@rive-app/canvas@2.8.3/rive.wasm",
     "https://celo-org.github.io",
     "https://cloudflare-eth.com",
     "https://cloudflare-ipfs.com",

@@ -1,9 +1,9 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
-import styled from 'lib/styled-components'
 import Banner from 'nft/components/explore/Banner'
 import TrendingCollections from 'nft/components/explore/TrendingCollections'
 import { useBag } from 'nft/hooks'
 import { useEffect } from 'react'
+import styled from 'styled-components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const ExploreContainer = styled.div`

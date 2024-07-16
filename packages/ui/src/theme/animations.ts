@@ -58,28 +58,4 @@ export const animations = createAnimations({
     stiffness: 200,
     delay: 70,
   },
-  fast: {
-    type: 'spring',
-    damping: 75,
-    stiffness: 1000,
-    mass: 1,
-  },
-  fastHeavy: {
-    type: 'spring',
-    damping: 75,
-    stiffness: 1000,
-    mass: 1.4,
-  },
-  fastExit: {
-    type: 'spring',
-    damping: 200,
-    stiffness: 1250,
-    mass: 1,
-  },
-  fastExitHeavy: {
-    type: 'spring',
-    damping: 200,
-    stiffness: 1250,
-    mass: 1.4,
-  },
 })

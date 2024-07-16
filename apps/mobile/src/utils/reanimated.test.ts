@@ -28,7 +28,7 @@ describe('reanimated numberToLocaleStringWorklet', function () {
       numberToLocaleStringWorklet(num, 'en-US', {
         style: 'currency',
         currency: 'USD',
-      }),
+      })
     ).toBe('<$0.0000000000000001')
   })
 
@@ -39,7 +39,7 @@ describe('reanimated numberToLocaleStringWorklet', function () {
       numberToLocaleStringWorklet(num, 'en-US', {
         style: 'currency',
         currency: 'USD',
-      }),
+      })
     ).toBe('$0.0000000123')
   })
 
@@ -121,49 +121,49 @@ describe('reanimated numberToLocaleStringWorklet', function () {
       numberToLocaleStringWorklet(num, 'en-US', {
         style,
         currency,
-      }),
+      })
     ).toBe('$1,234.56')
 
     expect(
       numberToLocaleStringWorklet(negative_num, 'en-US', {
         style,
         currency,
-      }),
+      })
     ).toBe('-$1,234.56')
 
     expect(
       numberToLocaleStringWorklet(num, 'de-DE', {
         style,
         currency,
-      }),
+      })
     ).toBe('1.234,56 $')
 
     expect(
       numberToLocaleStringWorklet(num, 'hu', {
         style,
         currency: 'huf',
-      }),
+      })
     ).toBe('1\u00A0234,56 Ft')
 
     expect(
       numberToLocaleStringWorklet(num, 'hu-HU', {
         style,
         currency: 'huf',
-      }),
+      })
     ).toBe('1\u00A0234,56 Ft')
 
     expect(
       numberToLocaleStringWorklet(num, 'da-DK', {
         style,
         currency: 'DKK',
-      }),
+      })
     ).toBe('1.234,56 kr')
 
     expect(
       numberToLocaleStringWorklet(num, 'nb-NO', {
         style,
         currency: 'NOK',
-      }),
+      })
     ).toBe('1\u00A0234,56 kr')
   })
 

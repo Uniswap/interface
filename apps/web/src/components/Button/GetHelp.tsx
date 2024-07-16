@@ -1,7 +1,7 @@
 import { EnvelopeHeartIcon } from 'components/Icons/EnvelopeHeart'
 import Row from 'components/Row'
 import { Trans } from 'i18n'
-import styled from 'lib/styled-components'
+import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 

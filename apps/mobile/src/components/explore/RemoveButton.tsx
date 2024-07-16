@@ -17,7 +17,6 @@ export default function RemoveButton({ visible = true, ...rest }: RemoveButtonPr
       alignItems="center"
       backgroundColor="$neutral3"
       borderRadius="$roundedFull"
-      disabled={!visible}
       height={imageSizes.image24}
       justifyContent="center"
       style={animatedVisibilityStyle}

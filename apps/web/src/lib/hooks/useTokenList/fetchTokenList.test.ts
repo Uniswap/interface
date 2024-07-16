@@ -17,7 +17,7 @@ describe('fetchTokenList', () => {
       throw new Error()
     })
     await expect(fetchTokenList(url, resolver)).rejects.toThrow(
-      `No valid token list found at any URLs derived from ${url}.`,
+      `No valid token list found at any URLs derived from ${url}.`
     )
     expect(console.debug).toHaveBeenCalled()
     expect(resolver).not.toHaveBeenCalled()
@@ -28,7 +28,7 @@ describe('fetchTokenList', () => {
     const contenthash = '0xD3ADB33F'
     resolver.mockResolvedValue(contenthash)
     await expect(fetchTokenList(url, resolver)).rejects.toThrow(
-      `failed to translate contenthash to URI: ${contenthash}`,
+      `failed to translate contenthash to URI: ${contenthash}`
     )
     expect(resolver).toHaveBeenCalledWith(url)
   })
@@ -43,7 +43,7 @@ describe('fetchTokenList', () => {
 
   it('fetches and validates a list from an ENS address', async () => {
     jest.mock('../../utils/contenthashToUri', () =>
-      jest.fn().mockImplementation(() => 'ipfs://QmPgEqyV3m8SB52BS2j2mJpu9zGprhj2BGCHtRiiw2fdM1'),
+      jest.fn().mockImplementation(() => 'ipfs://QmPgEqyV3m8SB52BS2j2mJpu9zGprhj2BGCHtRiiw2fdM1')
     )
     const url = 'example.eth'
     const contenthash = '0xe3010170122013e051d1cfff20606de36845d4fe28deb9861a319a5bc8596fa4e610e8803918'
@@ -63,7 +63,7 @@ describe('fetchTokenList', () => {
     const url = 'https://example.com/invalid-tokenlist.json'
     fetch.mockOnceIf(url, () => Promise.resolve({ status: 404 }))
     await expect(fetchTokenList(url, resolver)).rejects.toThrow(
-      `No valid token list found at any URLs derived from ${url}.`,
+      `No valid token list found at any URLs derived from ${url}.`
     )
     expect(console.debug).toHaveBeenCalled()
     expect(resolver).not.toHaveBeenCalled()
@@ -73,7 +73,7 @@ describe('fetchTokenList', () => {
     const url = 'https://example.com/invalid-tokenlist.json'
     fetch.mockOnceIf(url, () => Promise.resolve('invalid json'))
     await expect(fetchTokenList(url, resolver)).rejects.toThrow(
-      `No valid token list found at any URLs derived from ${url}.`,
+      `No valid token list found at any URLs derived from ${url}.`
     )
     expect(console.debug).toHaveBeenCalled()
     expect(resolver).not.toHaveBeenCalled()

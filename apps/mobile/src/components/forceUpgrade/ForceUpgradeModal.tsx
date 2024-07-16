@@ -6,23 +6,19 @@ import { APP_STORE_LINK } from 'src/constants/urls'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { DynamicConfigs, ForceUpgradeConfigKey } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { openUri } from 'uniswap/src/utils/linking'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { openUri } from 'wallet/src/utils/linking'
 
 export function ForceUpgradeModal(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const forceUpgradeStatusString = useDynamicConfigValue(
-    DynamicConfigs.MobileForceUpgrade,
-    ForceUpgradeConfigKey.Status,
-    '' as string,
-  )
+  const forceUpgradeConfig = useDynamicConfig(DynamicConfigs.MobileForceUpgrade)
 
   const [isVisible, setIsVisible] = useState(false)
   const [upgradeStatus, setUpgradeStatus] = useState(UpgradeStatus.NotRequired)
@@ -34,15 +30,17 @@ export function ForceUpgradeModal(): JSX.Element {
   const [showSeedPhrase, setShowSeedPhrase] = useState(false)
 
   useEffect(() => {
+    const statusString = forceUpgradeConfig.getValue('status')?.toString()
+
     let status = UpgradeStatus.NotRequired
-    if (forceUpgradeStatusString === 'recommended') {
+    if (statusString === 'recommended') {
       status = UpgradeStatus.Recommended
-    } else if (forceUpgradeStatusString === 'required') {
+    } else if (statusString === 'required') {
       status = UpgradeStatus.Required
     }
     setUpgradeStatus(status)
     setIsVisible(status !== UpgradeStatus.NotRequired)
-  }, [forceUpgradeStatusString])
+  }, [forceUpgradeConfig])
 
   const onPressConfirm = async (): Promise<void> => {
     await openUri(APP_STORE_LINK, /*openExternalBrowser=*/ true, /*isSafeUri=*/ true)

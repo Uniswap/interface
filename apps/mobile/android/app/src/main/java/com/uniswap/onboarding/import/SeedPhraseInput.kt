@@ -25,7 +25,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
@@ -142,29 +141,26 @@ fun SeedPhraseInput(
 private fun SeedPhraseError(viewModel: SeedPhraseInputViewModel) {
   val status = viewModel.status
   val rnStrings = viewModel.rnStrings
-  var text = ""
 
   if (status is Error) {
-    text = when (val error = status.error) {
+    val text = when (val error = status.error) {
       is InvalidWord -> "${rnStrings.errorInvalidWord} ${error.word}"
       is NotEnoughWords, TooManyWords -> rnStrings.errorPhraseLength
       is WrongRecoveryPhrase -> rnStrings.errorWrongPhrase
       is InvalidPhrase -> rnStrings.errorInvalidPhrase
     }
-  }
-
-  Row(
-    horizontalArrangement = Arrangement.spacedBy(UniswapTheme.spacing.spacing4),
-    verticalAlignment = Alignment.CenterVertically,
-    modifier = Modifier.alpha(if (text.isEmpty()) 0f else 1f)
-  ) {
-    Icon(
-      painter = painterResource(id = R.drawable.uniswap_icon_alert_triangle),
-      tint = UniswapTheme.colors.statusCritical,
-      contentDescription = null,
-      modifier = Modifier.size(16.dp)
-    )
-    Text(text, style = UniswapTheme.typography.body3, color = UniswapTheme.colors.statusCritical)
+    Row(
+      horizontalArrangement = Arrangement.spacedBy(UniswapTheme.spacing.spacing4),
+      verticalAlignment = Alignment.CenterVertically
+    ) {
+      Icon(
+        painter = painterResource(id = R.drawable.uniswap_icon_alert_triangle),
+        tint = UniswapTheme.colors.statusCritical,
+        contentDescription = null,
+        modifier = Modifier.size(16.dp)
+      )
+      Text(text, style = UniswapTheme.typography.body3, color = UniswapTheme.colors.statusCritical)
+    }
   }
 }
 

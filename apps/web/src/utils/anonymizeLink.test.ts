@@ -9,17 +9,17 @@ describe('#anonymizeLink', () => {
   })
   it('anonymizes any addresses in testnet etherscan urls', () => {
     expect(anonymizeLink('https://goerli.etherscan.io/address/0xabcd')).toEqual(
-      'https://goerli.etherscan.io/address/***',
+      'https://goerli.etherscan.io/address/***'
     )
   })
   it('anonymizes hashes in the middle of the url', () => {
     expect(anonymizeLink('https://goerli.etherscan.io/address/0xabcd/test')).toEqual(
-      'https://goerli.etherscan.io/address/***/test',
+      'https://goerli.etherscan.io/address/***/test'
     )
   })
   it('does not anonymize 0x', () => {
     expect(anonymizeLink('https://goerli.etherscan.io/address/0x/test')).toEqual(
-      'https://goerli.etherscan.io/address/0x/test',
+      'https://goerli.etherscan.io/address/0x/test'
     )
   })
   it('works for arbitrum urls', () => {

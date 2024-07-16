@@ -1,12 +1,12 @@
 import clsx from 'clsx'
 import { useIsMobile } from 'hooks/screenSize'
-import styled from 'lib/styled-components'
 import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { subheadSmall } from 'nft/css/common.css'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { ReactNode, useEffect, useState } from 'react'
+import styled from 'styled-components'
 
 const ChildreMobileWrapper = styled.div<{ isMobile: boolean }>`
   padding: ${({ isMobile }) => (isMobile ? '0px 16px 0px 12px' : '0px')};

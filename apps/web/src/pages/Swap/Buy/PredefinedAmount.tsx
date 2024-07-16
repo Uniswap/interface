@@ -1,9 +1,7 @@
-import styled, { css } from 'lib/styled-components'
-import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
-import { fallbackCurrencyInfo } from 'pages/Swap/Buy/hooks'
-import { formatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
+import styled, { css } from 'styled-components'
 import { useSporeColors } from 'ui/src'
 import { Pill } from 'uniswap/src/components/pill/Pill'
+import { NO_DECIMALS_CURRENCY, useFormatter } from 'utils/formatNumbers'
 
 interface PredefinedAmountProps {
   amount: number
@@ -12,36 +10,39 @@ interface PredefinedAmountProps {
   onClick: () => void
 }
 
-const ClickablePill = styled(Pill)<{ $disabled: boolean; $active: boolean }>`
-  background-color: ${({ $disabled, $active, theme }) =>
-    $disabled ? theme.surface2 : $active ? theme.surface3 : theme.surface1};
-  user-select: none;
-  ${({ $disabled, $active }) =>
-    !$disabled &&
+const ClickablePill = styled(Pill)<{ disabled: boolean }>`
+  ${({ disabled }) =>
+    !disabled &&
     css`
       cursor: pointer;
       &:hover {
-        background-color: ${({ theme }) => ($active ? theme.surface3Hovered : theme.surface1Hovered)};
-        border-color: ${({ theme }) => theme.surface3Hovered};
+        background-color: ${({ theme }) => theme.surface2};
+        border-color: ${({ theme }) => theme.surface3};
       }
     `}
 `
 
 export function PredefinedAmount({ currentAmount, amount, disabled = false, onClick }: PredefinedAmountProps) {
   const colors = useSporeColors()
-  const { derivedBuyFormInfo } = useBuyFormContext()
-  const { meldSupportedFiatCurrency } = derivedBuyFormInfo
+  const { formatFiatPrice } = useFormatter()
 
-  const active = currentAmount === amount.toString()
+  const highlighted = currentAmount === amount.toString()
   return (
     <ClickablePill
       disabled={disabled}
       onPress={onClick}
-      $disabled={disabled}
-      $active={active}
-      customBorderColor={colors.surface3.val}
-      foregroundColor={colors[disabled ? 'neutral3' : active ? 'neutral1' : 'neutral2'].val}
-      label={formatFiatOnRampFiatAmount(amount, meldSupportedFiatCurrency ?? fallbackCurrencyInfo)}
+      backgroundColor={!disabled && highlighted ? '$surface2' : '$surface1'}
+      customBorderColor={disabled ? colors.surface2.val : colors.surface3.val}
+      foregroundColor={colors[disabled ? 'neutral3' : highlighted ? 'neutral1' : 'neutral2'].val}
+      label={formatFiatPrice({
+        price: amount,
+        type: [
+          {
+            upperBound: Number.MAX_SAFE_INTEGER,
+            formatterOptions: { ...NO_DECIMALS_CURRENCY, useGrouping: false },
+          },
+        ],
+      })}
       px="$spacing16"
       textVariant="buttonLabel3"
     />

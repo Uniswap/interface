@@ -13,7 +13,7 @@ import {
   usePoolPriceMap,
   useV3ManagerContracts,
 } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
-import { PRODUCTION_CHAIN_IDS } from 'constants/chains'
+import { L1_CHAIN_IDS, L2_CHAIN_IDS, TESTNET_CHAIN_IDS } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -51,6 +51,10 @@ type FeeAmounts = [BigNumber, BigNumber]
 
 const MAX_UINT128 = BigNumber.from(2).pow(128).sub(1)
 
+const DEFAULT_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS].filter((chain: number) => {
+  return !TESTNET_CHAIN_IDS.includes(chain)
+})
+
 type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean }
 
 /**
@@ -62,10 +66,7 @@ type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean
  * @param chains - chains to fetch positions from
  * @returns positions, fees
  */
-export default function useMultiChainPositions(
-  account: string,
-  chains = PRODUCTION_CHAIN_IDS,
-): UseMultiChainPositionsData {
+export default function useMultiChainPositions(account: string, chains = DEFAULT_CHAINS): UseMultiChainPositionsData {
   const pms = useV3ManagerContracts(chains)
   const multicalls = useInterfaceMulticallContracts(chains)
 

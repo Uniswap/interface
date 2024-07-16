@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
 import { useAppSelector } from 'src/app/hooks'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteTokenCard, { FAVORITE_TOKEN_CARD_LOADER_HEIGHT } from 'src/components/explore/FavoriteTokenCard'
@@ -16,6 +15,7 @@ import { Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { setFavoriteTokens } from 'wallet/src/features/favorites/slice'
+import { useAppDispatch } from 'wallet/src/state'
 
 const NUM_COLUMNS = 2
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
@@ -27,7 +27,7 @@ type FavoriteTokensGridProps = AutoScrollProps & {
 /** Renders the favorite tokens section on the Explore tab */
 export function FavoriteTokensGrid({ showLoading, ...rest }: FavoriteTokensGridProps): JSX.Element | null {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const [isEditing, setIsEditing] = useState(false)
   const isTokenDragged = useSharedValue(false)

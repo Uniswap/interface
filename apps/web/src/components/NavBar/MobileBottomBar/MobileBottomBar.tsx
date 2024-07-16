@@ -1,5 +1,5 @@
 import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
-import styled, { css } from 'lib/styled-components'
+import styled, { css } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 const MOBILE_BAR_MAX_HEIGHT = 100 // ensure that it's translated out of view on scroll
@@ -12,7 +12,7 @@ const MobileBottomBarBase = css`
   right: 0;
   left: 0;
   justify-content: space-between;
-  gap: 8px;
+
   @media screen and (min-width: ${NAV_BREAKPOINT.showMobileBar}px) {
     display: none;
   }

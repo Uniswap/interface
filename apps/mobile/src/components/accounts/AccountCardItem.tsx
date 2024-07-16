@@ -2,7 +2,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
@@ -12,13 +12,13 @@ import { iconSizes } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
+import { setClipboard } from 'wallet/src/utils/clipboard'
 
 type AccountCardItemProps = {
   address: Address
@@ -73,7 +73,7 @@ export function AccountCardItem({
 }: AccountCardItemProps): JSX.Element {
   const { t } = useTranslation()
 
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const onPressCopyAddress = async (): Promise<void> => {
     await HapticFeedback.impact()

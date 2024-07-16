@@ -1,16 +1,15 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { AssetType } from 'uniswap/src/entities/assets'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import i18n from 'uniswap/src/i18n/i18n'
-import { uniCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { AssetType } from 'wallet/src/entities/assets'
 import { GQLNftAsset } from 'wallet/src/features/nfts/hooks'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { getTransferWarnings } from 'wallet/src/features/transactions/transfer/hooks/useTransferWarnings'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
-import { networkDown, networkUnknown, networkUp } from 'wallet/src/test/fixtures'
+import { networkDown, networkUnknown, networkUp, uniCurrencyInfo } from 'wallet/src/test/fixtures'
 
 const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
 
@@ -170,7 +169,11 @@ describe(getTransferWarnings, () => {
       },
     }
 
-    const warnings = getTransferWarnings(i18n.t, incompleteAndInsufficientBalanceState, isOffline(networkUp()))
+    const warnings = getTransferWarnings(
+      i18n.t,
+      incompleteAndInsufficientBalanceState,
+      isOffline(networkUp())
+    )
     expect(warnings.length).toBe(2)
   })
 })

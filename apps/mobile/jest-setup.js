@@ -122,3 +122,8 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
     useSelectedColorScheme: () => 'light',
   }
 })
+
+jest.mock('wallet/src/features/fiatOnRamp/api', () => ({
+  ...jest.requireActual('wallet/src/features/fiatOnRamp/api'),
+  useFiatOnRampIpAddressQuery: jest.fn().mockReturnValue({}),
+}))

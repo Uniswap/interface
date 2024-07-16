@@ -1,7 +1,7 @@
 import Row from 'components/Row'
 import { motion } from 'framer-motion'
-import styled, { keyframes, useTheme } from 'lib/styled-components'
 import { parseToRgb } from 'polished'
+import styled, { keyframes, useTheme } from 'styled-components'
 import { opacify } from 'theme/utils'
 
 const Mask = motion(styled.div`

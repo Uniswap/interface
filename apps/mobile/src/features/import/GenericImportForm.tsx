@@ -3,9 +3,9 @@ import { Keyboard, TextInput as NativeTextInput } from 'react-native'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
 import { Flex, Text, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import PasteButton from 'uniswap/src/components/buttons/PasteButton'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
+import PasteButton from 'wallet/src/components/buttons/PasteButton'
 
 interface Props {
   value: string | undefined

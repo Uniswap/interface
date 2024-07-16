@@ -2,7 +2,6 @@ import { TFunction } from 'i18next'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getUniqueId } from 'react-native-device-info'
-import { useDispatch } from 'react-redux'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
@@ -35,7 +34,7 @@ import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccounts, useActiveAccount, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
-import { useAppSelector } from 'wallet/src/state'
+import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 
 const MIN_UNITAG_LENGTH = 3
 const MAX_UNITAG_LENGTH = 20
@@ -155,7 +154,7 @@ export const useClaimUnitag = (): ((
   account?: Account,
 ) => Promise<{ claimError?: string }>) => {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { data: deviceId } = useAsyncData(getUniqueId)
   const accounts = useAccounts()
   const signerManager = useWalletSigners()
@@ -290,7 +289,7 @@ export const useShowExtensionPromoBanner = (): {
   loading: boolean
   showExtensionPromoBanner: boolean
 } => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const extensionOnboardingEnabledBeta = useFeatureFlag(FeatureFlags.ExtensionOnboarding)
   const extensionPromotionGAEnabled = useFeatureFlag(FeatureFlags.ExtensionPromotionGA)
   const extensionOnboardingState = useAppSelector(selectExtensionOnboardingState)

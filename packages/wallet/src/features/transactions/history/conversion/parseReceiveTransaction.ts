@@ -1,7 +1,7 @@
-import { AssetType } from 'uniswap/src/entities/assets'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { SpamCode } from 'wallet/src/data/types'
+import { AssetType } from 'wallet/src/entities/assets'
 import {
   deriveCurrencyAmountFromAssetResponse,
   getAddressFromAsset,

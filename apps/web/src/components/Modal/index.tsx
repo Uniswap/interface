@@ -1,9 +1,9 @@
 import { DialogContent, DialogOverlay } from '@reach/dialog'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import styled from 'lib/styled-components'
 import React, { KeyboardEvent, useCallback, useRef } from 'react'
 import { animated, easings, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
+import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 import { isMobile } from 'utilities/src/platform'
 

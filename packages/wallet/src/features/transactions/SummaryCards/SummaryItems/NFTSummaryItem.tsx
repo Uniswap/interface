@@ -1,6 +1,6 @@
 import { createElement } from 'react'
-import { AssetType } from 'uniswap/src/entities/assets'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
+import { AssetType } from 'wallet/src/entities/assets'
 import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 import {
@@ -15,7 +15,6 @@ export function NFTSummaryItem({
   transaction,
   transactionType,
   layoutElement,
-  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & {
     typeInfo: NFTApproveTransactionInfo | NFTTradeTransactionInfo | NFTMintTransactionInfo
@@ -35,6 +34,5 @@ export function NFTSummaryItem({
       />
     ),
     transaction,
-    index,
   })
 }

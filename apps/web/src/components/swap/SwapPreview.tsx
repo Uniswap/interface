@@ -4,9 +4,9 @@ import { SwapModalHeaderAmount } from 'components/swap/SwapModalHeaderAmount'
 import { Field } from 'components/swap/constants'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
-import styled from 'lib/styled-components'
 import { InterfaceTrade } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
+import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 const HeaderContainer = styled(AutoColumn)`

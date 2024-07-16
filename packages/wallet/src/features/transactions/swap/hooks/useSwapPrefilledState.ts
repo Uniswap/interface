@@ -1,14 +1,14 @@
 import { useMemo } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
+import { WalletChainId } from 'uniswap/src/types/chains'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
+import { SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import {
   CurrencyField,
   TradeProtocolPreference,
   TransactionState,
-} from 'uniswap/src/features/transactions/transactionState/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
+} from 'wallet/src/features/transactions/transactionState/types'
 
 export function useSwapPrefilledState(initialState: TransactionState | undefined): SwapFormState | undefined {
   const swapPrefilledState = useMemo(

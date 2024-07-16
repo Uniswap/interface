@@ -1,7 +1,7 @@
 import Column from 'components/Column'
 import { Trans } from 'i18n'
-import styled, { useTheme } from 'lib/styled-components'
 import { AlertTriangle } from 'react-feather'
+import styled, { useTheme } from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 

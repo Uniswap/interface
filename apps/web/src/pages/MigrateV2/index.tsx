@@ -16,11 +16,11 @@ import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
 import { Trans } from 'i18n'
 import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBalance'
-import styled, { useTheme } from 'lib/styled-components'
 import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
 import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
+import styled, { useTheme } from 'styled-components'
 import { BackArrowLink, StyledInternalLink, ThemedText } from 'theme/components'
 
 export const MigrateHeader = styled(ThemedText.H1Small)`

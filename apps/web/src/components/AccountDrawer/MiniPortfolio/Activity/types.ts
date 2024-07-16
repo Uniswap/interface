@@ -23,7 +23,6 @@ export type Activity = {
   from: string
   nonce?: number | null
   prefixIconSrc?: string
-  suffixIconSrc?: string
   cancelled?: boolean
   isSpam?: boolean
 }

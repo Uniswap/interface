@@ -1,4 +1,4 @@
-import styled from 'lib/styled-components'
+import styled from 'styled-components'
 const FilterButton = styled.button<{ active: boolean; highlight?: boolean }>`
   height: 100%;
   color: ${({ theme }) => theme.neutral1};

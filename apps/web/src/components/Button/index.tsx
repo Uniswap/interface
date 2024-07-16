@@ -1,9 +1,9 @@
 import { RowBetween } from 'components/Row'
-import styled, { DefaultTheme, useTheme } from 'lib/styled-components'
 import { darken } from 'polished'
 import { forwardRef } from 'react'
 import { Check, ChevronDown } from 'react-feather'
 import { ButtonProps as ButtonPropsOriginal, Button as RebassButton } from 'rebass/styled-components'
+import styled, { DefaultTheme, useTheme } from 'styled-components'
 
 export { default as LoadingButtonSpinner } from './LoadingButtonSpinner'
 

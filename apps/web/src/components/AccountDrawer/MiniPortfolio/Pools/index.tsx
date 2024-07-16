@@ -17,10 +17,10 @@ import { useAccount } from 'hooks/useAccount'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { t } from 'i18n'
-import styled from 'lib/styled-components'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useCallback, useMemo, useReducer } from 'react'
 import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -31,7 +31,7 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
  * filters the PositionDetails data for malicious content,
  * and then returns the original data in its original format.
  */
-export function useFilterPossiblyMaliciousPositionInfo(positions: PositionInfo[] | undefined): PositionInfo[] {
+function useFilterPossiblyMaliciousPositionInfo(positions: PositionInfo[] | undefined): PositionInfo[] {
   const tokenIdsToPositionInfo: Record<string, PositionInfo> = useMemo(
     () =>
       positions

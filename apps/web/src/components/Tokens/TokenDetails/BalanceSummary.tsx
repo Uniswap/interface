@@ -3,10 +3,10 @@ import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioL
 import { getTokenDetailsURL, gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
-import styled from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo } from 'react'
 import { useNavigate } from 'react-router-dom'
+import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import {
   Chain,

@@ -1,7 +1,7 @@
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
-import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
+import { AssetType, CurrencyAsset } from 'wallet/src/entities/assets'
+import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 
 export function getSendPrefilledState({
   chainId,

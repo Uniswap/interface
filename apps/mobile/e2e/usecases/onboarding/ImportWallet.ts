@@ -10,6 +10,7 @@ export async function ImportWallet(): Promise<void> {
   await element(by.id(TestID.OnboardingImportSeedPhrase)).tap()
 
   // Checks if recovery phase input is in focus and types recovery phrase in
+  await expect(element(by.id(TestID.ImportAccountInput))).toBeFocused()
   await element(by.id(TestID.ImportAccountInput)).typeText(TestWallet.recoveryPhrase)
 
   // Taps continue navigating to SelectWalletScreen

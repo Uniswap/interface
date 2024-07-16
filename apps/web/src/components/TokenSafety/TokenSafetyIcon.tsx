@@ -1,6 +1,6 @@
 import { Warning } from 'constants/tokenSafety'
-import styled, { css } from 'lib/styled-components'
 import { AlertTriangle, Slash } from 'react-feather'
+import styled, { css } from 'styled-components'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const WarningContainer = styled.div`

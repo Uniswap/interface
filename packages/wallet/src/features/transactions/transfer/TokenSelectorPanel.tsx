@@ -1,31 +1,17 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, LayoutAnimation } from 'react-native'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { TokenSelector, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { SearchContext } from 'uniswap/src/features/search/SearchContext'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
-import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
 import { NumberType } from 'utilities/src/format/types'
-import {
-  useAddToSearchHistory,
-  useCommonTokensOptions,
-  useFavoriteTokensOptions,
-  useFilterCallbacks,
-  usePopularTokensOptions,
-  usePortfolioTokenOptions,
-  useTokenSectionsForEmptySearch,
-  useTokenSectionsForSearchResults,
-} from 'wallet/src/components/TokenSelector/hooks'
+import { TokenSelector, TokenSelectorVariation } from 'wallet/src/components/TokenSelector/TokenSelector'
 import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { SearchContext } from 'wallet/src/features/search/SearchContext'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
 
 interface TokenSelectorPanelProps {
   currencyInfo: Maybe<CurrencyInfo>
@@ -49,11 +35,7 @@ export function TokenSelectorPanel({
   showTokenSelector,
 }: TokenSelectorPanelProps): JSX.Element {
   const { t } = useTranslation()
-  const { formatNumberOrString, convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
-  const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
-  const { registerSearch } = useAddToSearchHistory()
-
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const { formatCurrencyAmount } = useLocalizationContext()
 
   const showMaxButton = currencyBalance && !currencyBalance.equalTo(0)
   const formattedCurrencyBalance = formatCurrencyAmount({
@@ -65,26 +47,11 @@ export function TokenSelectorPanel({
     return (
       <Flex fill overflow="hidden">
         <TokenSelector
-          activeAccountAddress={activeAccountAddress}
-          addToSearchHistoryCallback={registerSearch}
-          convertFiatAmountFormattedCallback={convertFiatAmountFormatted}
           currencyField={CurrencyField.INPUT}
           flow={TokenSelectorFlow.Transfer}
-          formatNumberOrStringCallback={formatNumberOrString}
           isSurfaceReady={true}
-          navigateToBuyOrReceiveWithEmptyWalletCallback={navigateToBuyOrReceiveWithEmptyWallet}
-          useCommonTokensOptionsHook={useCommonTokensOptions}
-          useFavoriteTokensOptionsHook={useFavoriteTokensOptions}
-          useFilterCallbacksHook={useFilterCallbacks}
-          usePopularTokensOptionsHook={usePopularTokensOptions}
-          usePortfolioTokenOptionsHook={usePortfolioTokenOptions}
-          useTokenSectionsForEmptySearchHook={useTokenSectionsForEmptySearch}
-          useTokenSectionsForSearchResultsHook={useTokenSectionsForSearchResults}
-          useTokenWarningDismissedHook={useTokenWarningDismissed}
           variation={TokenSelectorVariation.BalancesOnly}
           onClose={onHideTokenSelector}
-          onDismiss={() => Keyboard.dismiss()}
-          onPressAnimation={() => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)}
           onSelectCurrency={onSelectCurrency}
         />
       </Flex>

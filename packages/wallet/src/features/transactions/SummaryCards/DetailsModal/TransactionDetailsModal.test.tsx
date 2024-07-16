@@ -1,20 +1,21 @@
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import {
-  ARBITRUM_DAI_CURRENCY_INFO,
-  BASE_CURRENCY,
-  ETH_CURRENCY_INFO,
-  OPTIMISM_CURRENCY,
-  POLYGON_CURRENCY,
-  currencyInfo,
-} from 'uniswap/src/test/fixtures'
 import { TransactionDetailsInfoRows } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsInfoRows'
 import {
   TransactionDetailsContent,
   TransactionDetailsHeader,
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
-import { ACCOUNT, preloadedSharedState } from 'wallet/src/test/fixtures'
-import { render } from 'wallet/src/test/test-utils'
+import {
+  ACCOUNT,
+  ARBITRUM_DAI_CURRENCY_INFO,
+  BASE_CURRENCY,
+  ETH_CURRENCY_INFO,
+  OPTIMISM_CURRENCY,
+  POLYGON_CURRENCY,
+  currencyInfo,
+  preloadedSharedState,
+} from 'wallet/src/test/fixtures'
+import { renderWithProviders } from 'wallet/src/test/render'
 
 const preloadedState = preloadedSharedState({ account: ACCOUNT })
 const mockTransaction = {
@@ -42,7 +43,7 @@ const mockTransaction = {
   },
 } as TransactionDetails
 
-// Function to set up mocks
+// Helper function to get currency info based on chain ID
 const getCurrencyInfoForChain = (chainId: number): CurrencyInfo => {
   switch (chainId) {
     case 1: // Mainnet
@@ -60,23 +61,19 @@ const getCurrencyInfoForChain = (chainId: number): CurrencyInfo => {
   }
 }
 
+// Mock useCurrencyInfo
 jest.mock('wallet/src/features/tokens/useCurrencyInfo', () => ({
-  useCurrencyInfo: (currencyIdString: string | undefined): Maybe<CurrencyInfo> => {
-    if (!currencyIdString) {
+  useCurrencyInfo: (currencyId: string | undefined): Maybe<CurrencyInfo> => {
+    if (!currencyId) {
       return null
     }
-    const [, chainIdStr] = currencyIdString.split(':')
+    const [, chainIdStr] = currencyId.split(':')
     if (!chainIdStr) {
       return null
     }
     const chainId = parseInt(chainIdStr, 10)
     return getCurrencyInfoForChain(chainId)
   },
-}))
-
-jest.mock('uniswap/src/features/gating/hooks', () => ({
-  useDynamicConfigValue: jest.fn().mockReturnValue(1000),
-  useFeatureFlag: jest.fn().mockReturnValue(true),
 }))
 
 jest.mock('wallet/src/features/language/localizedDayjs', () => ({
@@ -93,29 +90,32 @@ describe('TransactionDetails Components', () => {
       menuItems: [],
     }
 
-    const tree = render(
+    const { toJSON } = renderWithProviders(
       <TransactionDetailsHeader transactionActions={transactionActions} transactionDetails={mockTransaction} />,
       { preloadedState },
     )
 
-    expect(tree).toMatchSnapshot()
+    expect(toJSON()).toMatchSnapshot()
   })
 
   it('renders TransactionDetailsContent without error', () => {
     const onClose = jest.fn()
 
-    const tree = render(<TransactionDetailsContent transactionDetails={mockTransaction} onClose={onClose} />, {
-      preloadedState,
-    })
+    const { toJSON } = renderWithProviders(
+      <TransactionDetailsContent transactionDetails={mockTransaction} onClose={onClose} />,
+      {
+        preloadedState,
+      },
+    )
 
-    expect(tree).toMatchSnapshot()
+    expect(toJSON()).toMatchSnapshot()
   })
 
   it('renders TransactionDetailsInfoRows without error', () => {
-    const tree = render(<TransactionDetailsInfoRows transactionDetails={mockTransaction} />, {
+    const { toJSON } = renderWithProviders(<TransactionDetailsInfoRows transactionDetails={mockTransaction} />, {
       preloadedState,
     })
 
-    expect(tree).toMatchSnapshot()
+    expect(toJSON()).toMatchSnapshot()
   })
 })

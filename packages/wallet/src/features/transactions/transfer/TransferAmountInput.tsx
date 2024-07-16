@@ -5,12 +5,12 @@ import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type TransferAmountInputProps = {

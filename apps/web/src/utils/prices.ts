@@ -11,7 +11,7 @@ import {
   ONE_HUNDRED_PERCENT,
   ZERO_PERCENT,
 } from 'constants/misc'
-import { DefaultTheme } from 'lib/styled-components'
+import { DefaultTheme } from 'styled-components'
 
 const THIRTY_BIPS_FEE = new Percent(30, BIPS_BASE)
 const INPUT_FRACTION_AFTER_FEE = ONE_HUNDRED_PERCENT.subtract(THIRTY_BIPS_FEE)

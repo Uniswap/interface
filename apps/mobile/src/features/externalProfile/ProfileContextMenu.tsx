@@ -3,7 +3,7 @@ import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, Share } from 'react-native'
 import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'src/app/hooks'
 import { TripleDot } from 'src/components/icons/TripleDot'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, HapticFeedback, TouchableArea } from 'ui/src'
@@ -16,12 +16,11 @@ import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
-import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { ExplorerDataType, getExplorerLink, getProfileUrl } from 'wallet/src/utils/linking'
+import { setClipboard } from 'wallet/src/utils/clipboard'
+import { ExplorerDataType, getExplorerLink, getProfileUrl, openUri } from 'wallet/src/utils/linking'
 
 type MenuAction = {
   title: string
@@ -31,7 +30,7 @@ type MenuAction = {
 
 export function ProfileContextMenu({ address }: { address: Address }): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { unitag } = useUnitagByAddress(address)
 
   const onPressCopyAddress = useCallback(async () => {

@@ -1,10 +1,10 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { Trans } from 'i18n'
-import styled, { css } from 'lib/styled-components'
 import { getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
+import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 

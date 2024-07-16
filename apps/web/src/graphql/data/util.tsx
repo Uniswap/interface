@@ -14,10 +14,10 @@ import {
   isSupportedChainId,
 } from 'constants/chains'
 import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
-import { DefaultTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { ExploreTab } from 'pages/Explore'
 import { useEffect } from 'react'
+import { DefaultTheme } from 'styled-components'
 import { ThemeColors } from 'theme/colors'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {

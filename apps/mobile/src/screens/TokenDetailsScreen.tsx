@@ -34,22 +34,22 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
+import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Language } from 'wallet/src/features/language/constants'
 import { useCurrentLanguage } from 'wallet/src/features/language/hooks'
 import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
+import TokenWarningModal from 'wallet/src/features/tokens/TokenWarningModal'
 import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 function HeaderTitleElement({
   data,
@@ -249,7 +249,6 @@ function TokenDetails({
               currencyId={_currencyId}
               currentChainBalance={currentChainBalance}
               data={data}
-              isBlocked={safetyLevel === SafetyLevel.Blocked}
               setEllipsisMenuVisible={setEllipsisMenuVisible}
             />
           )
@@ -344,13 +343,11 @@ function TokenDetailsTextPlaceholders(): JSX.Element {
 function HeaderRightElement({
   currencyId,
   currentChainBalance,
-  isBlocked,
   data,
   setEllipsisMenuVisible,
 }: {
   currencyId: string
   currentChainBalance: PortfolioBalance | null
-  isBlocked: boolean
   data?: TokenDetailsScreenQuery
   setEllipsisMenuVisible: (visible: boolean) => void
 }): JSX.Element {
@@ -359,7 +356,6 @@ function HeaderRightElement({
 
   const { menuActions, onContextMenuPress } = useTokenContextMenu({
     currencyId,
-    isBlocked,
     tokenSymbolForNotification: data?.token?.symbol,
     portfolioBalance: currentChainBalance,
   })

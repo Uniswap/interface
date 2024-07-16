@@ -1,4 +1,4 @@
-import { useTheme } from 'lib/styled-components'
+import { useTheme } from 'styled-components'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export const useTokenWarningTextColor = (level: SafetyLevel) => {

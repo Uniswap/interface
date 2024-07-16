@@ -2,7 +2,7 @@ import searchIcon from 'assets/svg/search.svg'
 import { AutoColumn } from 'components/Column'
 import { LoadingRows as BaseLoadingRows } from 'components/Loader/styled'
 import { RowBetween } from 'components/Row'
-import styled from 'lib/styled-components'
+import styled from 'styled-components'
 
 export const PaddedColumn = styled(AutoColumn)`
   position: relative;

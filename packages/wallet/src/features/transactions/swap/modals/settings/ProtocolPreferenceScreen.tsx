@@ -7,9 +7,9 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
-import { TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
 import { isMobileApp } from 'utilities/src/platform'
 import { UniswapXInfo } from 'wallet/src/features/transactions/swap/modals/UniswapXInfo'
+import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
 
 // TODO(WEB-4297): Update controls on this screen to allow combinations of any/all routing options once supported by TradingAPI.
 export function ProtocolPreferenceScreen({

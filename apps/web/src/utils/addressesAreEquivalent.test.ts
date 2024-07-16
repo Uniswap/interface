@@ -8,16 +8,13 @@ describe('addressesAreEquivalent', () => {
     expect(
       addressesAreEquivalent(
         '0x48c89D77ae34Ae475e4523b25aB01e363dce5A78',
-        '0x48c89D77ae34Ae475e4523b25aB01e363dce5A78'.toLowerCase(),
-      ),
+        '0x48c89D77ae34Ae475e4523b25aB01e363dce5A78'.toLowerCase()
+      )
     ).toBe(true)
   })
   it('should return true for simple equivalence', () => {
     expect(
-      addressesAreEquivalent(
-        '0x48c89D77ae34Ae475e4523b25aB01e363dce5A78',
-        '0x48c89D77ae34Ae475e4523b25aB01e363dce5A78',
-      ),
+      addressesAreEquivalent('0x48c89D77ae34Ae475e4523b25aB01e363dce5A78', '0x48c89D77ae34Ae475e4523b25aB01e363dce5A78')
     ).toBe(true)
   })
 })

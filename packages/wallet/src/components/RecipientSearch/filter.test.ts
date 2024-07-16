@@ -72,14 +72,22 @@ describe(filterRecipientsByAddress, () => {
     expect(filterRecipientsByAddress('0x', options)).toEqual(options)
 
     // Returns only the first one as it has exactly the same beginning
-    expect(filterRecipientsByAddress(options[0].data.address.slice(0, 3), options)).toEqual([options[0]])
+    expect(filterRecipientsByAddress(options[0].data.address.slice(0, 3), options)).toEqual([
+      options[0],
+    ])
     // Returns only the second one as it has exactly the same beginning
-    expect(filterRecipientsByAddress(options[1].data.address.slice(0, 3), options)).toEqual([options[1]])
+    expect(filterRecipientsByAddress(options[1].data.address.slice(0, 3), options)).toEqual([
+      options[1],
+    ])
   })
 
   it('returns the same result irrespective of the casing', () => {
-    expect(filterRecipientsByAddress(options[0].data.address.toLowerCase(), options)).toEqual([options[0]])
-    expect(filterRecipientsByAddress(options[0].data.address.toUpperCase(), options)).toEqual([options[0]])
+    expect(filterRecipientsByAddress(options[0].data.address.toLowerCase(), options)).toEqual([
+      options[0],
+    ])
+    expect(filterRecipientsByAddress(options[0].data.address.toUpperCase(), options)).toEqual([
+      options[0],
+    ])
   })
 })
 

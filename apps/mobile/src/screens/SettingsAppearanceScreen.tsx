@@ -2,7 +2,7 @@ import { Action } from '@reduxjs/toolkit'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { SvgProps } from 'react-native-svg'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'src/app/hooks'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -60,7 +60,7 @@ interface AppearanceOptionProps {
 
 function AppearanceOption({ active, title, subtitle, Icon, option }: AppearanceOptionProps): JSX.Element {
   const colors = useSporeColors()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   const showCheckMark = active ? 1 : 0
 

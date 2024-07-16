@@ -1,7 +1,7 @@
 import Row from 'components/Row'
-import styled, { DefaultTheme, css } from 'lib/styled-components'
 import React, { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { Icon } from 'react-feather'
+import styled, { DefaultTheme, css } from 'styled-components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import useResizeObserver from 'use-resize-observer'
 
@@ -35,11 +35,10 @@ const IconStyles = css<{ hideHorizontal?: boolean }>`
   :hover {
     background-color: ${({ theme }) => theme.surface2};
     transition: ${({
-        theme: {
-          transition: { duration, timing },
-        },
-      }) => `${duration.fast} background-color ${timing.in},`}
-      ${getWidthTransition};
+      theme: {
+        transition: { duration, timing },
+      },
+    }) => `${duration.fast} background-color ${timing.in}, ${getWidthTransition}`};
 
     ${IconHoverText} {
       opacity: 1;

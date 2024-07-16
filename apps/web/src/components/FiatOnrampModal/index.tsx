@@ -1,18 +1,18 @@
 import Circle from 'assets/images/blue-loader.svg'
 import { MOONPAY_SUPPORTED_CURRENCY_CODES } from 'components/FiatOnrampModal/constants'
 import { getDefaultCurrencyCode, parsePathParts } from 'components/FiatOnrampModal/utils'
+import Modal from 'components/Modal'
 import { getChain, getChainFromChainUrlParam, getChainUrlParam } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { Trans } from 'i18n'
-import styled, { useTheme } from 'lib/styled-components'
 import { useCallback, useEffect, useState } from 'react'
 import { useHref } from 'react-router-dom'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
+import styled, { useTheme } from 'styled-components'
 import { CustomLightSpinner, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { AdaptiveWebModalSheet } from 'ui/src'
 import { logger } from 'utilities/src/logger/logger'
 
 const MOONPAY_DARK_BACKGROUND = '#1c1c1e'
@@ -147,7 +147,7 @@ export default function FiatOnrampModal() {
   }, [fetchSignedIframeUrl])
 
   return (
-    <AdaptiveWebModalSheet isOpen={fiatOnrampModalOpen} onClose={() => closeModal()}>
+    <Modal isOpen={fiatOnrampModalOpen} onDismiss={() => closeModal()} maxHeight="80vh" height="80vh">
       <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
         {error ? (
           <>
@@ -176,6 +176,6 @@ export default function FiatOnrampModal() {
           <Trans i18nKey="moonpay.poweredBy" />
         </ThemedText.BodySmall>
       </MoonpayTextWrapper>
-    </AdaptiveWebModalSheet>
+    </Modal>
   )
 }

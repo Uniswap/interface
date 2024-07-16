@@ -1,8 +1,8 @@
 import { OpacityHoverState } from 'components/Common'
 import { Trans } from 'i18n'
-import styled from 'lib/styled-components'
 import { BagCloseIcon } from 'nft/components/icons'
 import { useMemo } from 'react'
+import styled from 'styled-components'
 import { ButtonText, ThemedText } from 'theme/components'
 
 const ClearButton = styled(ButtonText)`

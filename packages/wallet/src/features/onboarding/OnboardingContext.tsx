@@ -1,7 +1,6 @@
 /* eslint-disable max-lines */
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagClaim } from 'uniswap/src/features/unitags/types'
@@ -21,7 +20,7 @@ import { EditAccountAction, editAccountActions } from 'wallet/src/features/walle
 import { Account, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
-import { useAppSelector } from 'wallet/src/state'
+import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 
 export interface OnboardingContext {
   generateOnboardingAccount: (password?: string) => Promise<void>
@@ -98,7 +97,7 @@ const OnboardingContext = createContext<OnboardingContext>(initialOnboardingCont
  * to redux store.
  */
 export function OnboardingContextProvider({ children }: PropsWithChildren<unknown>): JSX.Element {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const claimUnitag = useClaimUnitag()
   const sortedMnemonicAccounts = useAppSelector(selectSortedSignerMnemonicAccounts)

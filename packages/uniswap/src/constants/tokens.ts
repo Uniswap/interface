@@ -1,4 +1,4 @@
-import { Token, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { Token } from '@uniswap/sdk-core'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const USDC_MAINNET = new Token(
@@ -168,71 +168,10 @@ export const USDC_ZORA = new Token(
   'USDC',
   'USD Coin',
 )
-
-export const USDC = new Token(
-  UniverseChainId.Mainnet,
-  '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
-  6,
-  'USDC',
-  'USD//C',
-)
-
-export const USDBC_BASE = new Token(
-  UniverseChainId.Base,
-  '0xd9aaec86b65d86f6a7b5b1b0c42ffa531710b6ca',
-  6,
-  'USDbC',
-  'USD Base Coin',
-)
-export const USDT_BNB = new Token(
-  UniverseChainId.Bnb,
-  '0x55d398326f99059ff775485246999027b3197955',
-  18,
-  'USDT',
-  'TetherUSD',
-)
-
-export const USDB = new Token(UniverseChainId.Blast, '0x4300000000000000000000000000000000000003', 18, 'USDB', 'USDB')
-
-export const CUSD = new Token(UniverseChainId.Celo, '0x765de816845861e75a25fca122bb6898b8b1282a', 18, 'CUSD', 'CUSD')
-
-export const USDzC = new Token(
-  UniverseChainId.Zora,
-  '0xCccCCccc7021b32EBb4e8C08314bD62F7c653EC4',
-  6,
-  'USDzC',
-  'USD Coin',
-)
-
 export const USDC_ZKSYNC = new Token(
   UniverseChainId.Zksync,
   '0x1d17CBcF0D6D143135aE902365D2E5e2A16538D4',
   6,
   'USDC',
-  'USDC',
+  'USD Coin',
 )
-
-export const WBTC = new Token(
-  UniverseChainId.Mainnet,
-  '0x2260fac5e5542a773aa44fbcfedf7c193bc2c599',
-  8,
-  'WBTC',
-  'Wrapped BTC',
-)
-
-export const UNI = {
-  [UniverseChainId.Mainnet]: new Token(
-    UniverseChainId.Mainnet,
-    UNI_ADDRESSES[UniverseChainId.Mainnet] as string,
-    18,
-    'UNI',
-    'Uniswap',
-  ),
-  [UniverseChainId.Goerli]: new Token(
-    UniverseChainId.Goerli,
-    UNI_ADDRESSES[UniverseChainId.Goerli] as string,
-    18,
-    'UNI',
-    'Uniswap',
-  ),
-}

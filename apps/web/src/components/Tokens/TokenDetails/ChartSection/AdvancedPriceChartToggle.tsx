@@ -5,7 +5,7 @@ import Row from 'components/Row'
 import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
 import { useScreenSize } from 'hooks/screenSize'
 import { t } from 'i18n'
-import styled from 'lib/styled-components'
+import styled from 'styled-components'
 import { EllipsisStyle } from 'theme/components'
 
 const ChartTypeRow = styled(Row)`

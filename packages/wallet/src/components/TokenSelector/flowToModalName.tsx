@@ -1,5 +1,5 @@
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
+import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
 
 export function flowToModalName(flow: TokenSelectorFlow): ModalNameType | undefined {
   switch (flow) {

@@ -48,10 +48,7 @@ export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedTok
   })
 
   if (currencyInfo) {
-    return {
-      ...currencyInfo,
-      logoUrl: forCurrency.symbol,
-    }
+    return currencyInfo
   }
 
   // Special case for *bridged* USDC on Optimism, which we otherwise don't use in our app.

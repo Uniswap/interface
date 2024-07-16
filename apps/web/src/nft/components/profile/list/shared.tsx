@@ -1,5 +1,5 @@
 import Row from 'components/Row'
-import styled from 'lib/styled-components'
+import styled from 'styled-components'
 
 export const RemoveIconWrap = styled.div<{ hovered: boolean }>`
   position: absolute;

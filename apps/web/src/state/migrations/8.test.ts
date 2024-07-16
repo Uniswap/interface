@@ -42,7 +42,7 @@ describe('migration to v8', () => {
         7: migration7,
         8: migration8,
       },
-      { debug: false },
+      { debug: false }
     )
     const result: any = await migrator(previousState, 8)
     expect(result?.user?.hideAppPromoBanner).toBeUndefined()
@@ -61,14 +61,14 @@ describe('migration to v8', () => {
         7: migration7,
         8: migration8,
       },
-      { debug: false },
+      { debug: false }
     )
     const result: any = await migrator(
       {
         ...previousState,
         user: undefined,
       } as PersistAppStateV8,
-      8,
+      8
     )
     expect(result?.user).toBeUndefined()
     expect(result?._persist.version).toEqual(8)

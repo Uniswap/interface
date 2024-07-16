@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
@@ -33,7 +33,7 @@ export function SettingsCloudBackupStatus({
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const accounts = useAccounts()
   const mnemonicId = (accounts[address] as SignerMnemonicAccount)?.mnemonicId
   const backups = useCloudBackups(mnemonicId)

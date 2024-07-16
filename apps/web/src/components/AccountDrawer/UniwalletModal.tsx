@@ -8,9 +8,9 @@ import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections
 import { CONNECTION } from 'components/Web3Provider/constants'
 import { useConnect } from 'hooks/useConnect'
 import { Trans } from 'i18n'
-import styled, { useTheme } from 'lib/styled-components'
 import { QRCodeSVG } from 'qrcode.react'
 import { useCallback, useEffect, useState } from 'react'
+import styled, { useTheme } from 'styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
@@ -69,8 +69,6 @@ export default function UniwalletModal() {
   useEffect(() => {
     if (open) {
       sendAnalyticsEvent(InterfaceEventName.UNIWALLET_CONNECT_MODAL_OPENED)
-    } else {
-      setUri(undefined)
     }
   }, [open])
 

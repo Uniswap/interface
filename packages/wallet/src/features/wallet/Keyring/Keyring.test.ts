@@ -33,8 +33,12 @@ jest.mock('./crypto', () => ({
   }),
   generateNewSalt: jest
     .fn()
-    .mockReturnValue(new Uint8Array([190, 197, 42, 2, 229, 18, 122, 161, 234, 166, 219, 110, 247, 102, 197, 214])),
-  generateNewIV: jest.fn().mockReturnValue(new Uint8Array([142, 65, 15, 198, 69, 200, 74, 43, 159, 8, 170, 46])),
+    .mockReturnValue(
+      new Uint8Array([190, 197, 42, 2, 229, 18, 122, 161, 234, 166, 219, 110, 247, 102, 197, 214])
+    ),
+  generateNewIV: jest
+    .fn()
+    .mockReturnValue(new Uint8Array([142, 65, 15, 198, 69, 200, 74, 43, 159, 8, 170, 46])),
 }))
 
 const mockStore = async ({ data }: { data: Record<string, string> }): Promise<void> => {

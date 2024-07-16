@@ -1,7 +1,7 @@
-import { AssetType } from 'uniswap/src/entities/assets'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { AssetType } from 'wallet/src/entities/assets'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { ApproveTxNotification } from 'wallet/src/features/notifications/types'

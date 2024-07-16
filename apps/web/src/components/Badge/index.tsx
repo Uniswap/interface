@@ -1,6 +1,6 @@
-import styled, { DefaultTheme } from 'lib/styled-components'
 import { readableColor } from 'polished'
 import { PropsWithChildren } from 'react'
+import styled, { DefaultTheme } from 'styled-components'
 
 export enum BadgeVariant {
   DEFAULT = 'DEFAULT',

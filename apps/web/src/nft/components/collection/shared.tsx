@@ -1,4 +1,4 @@
-import styled from 'lib/styled-components'
+import styled from 'styled-components'
 
 export const ClearAllButton = styled.button`
   color: ${({ theme }) => theme.neutral3};

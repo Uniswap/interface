@@ -12,8 +12,6 @@ import {
   TokenProjectMarket,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { MAX_FIXTURE_TIMESTAMP, faker } from 'uniswap/src/test/shared'
-import { createFixture } from 'uniswap/src/test/utils'
 import { amounts } from 'wallet/src/test/fixtures/gql/amounts'
 import { get24hPriceChange, getLatestPrice, priceHistory } from 'wallet/src/test/fixtures/gql/history'
 import { GQL_CHAINS, image } from 'wallet/src/test/fixtures/gql/misc'
@@ -27,7 +25,8 @@ import {
   USDC_POLYGON,
   WETH,
 } from 'wallet/src/test/fixtures/lib'
-import { randomChoice, randomEnumValue } from 'wallet/src/test/utils'
+import { MAX_FIXTURE_TIMESTAMP, faker } from 'wallet/src/test/shared'
+import { createFixture, randomChoice, randomEnumValue } from 'wallet/src/test/utils'
 
 /**
  * Base fixtures

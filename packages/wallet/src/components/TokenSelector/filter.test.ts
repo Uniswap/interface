@@ -1,10 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
-import { DAI, DAI_ARBITRUM_ONE } from 'uniswap/src/constants/tokens'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { DAI, DAI_ARBITRUM_ONE } from 'wallet/src/constants/tokens'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 
 const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
 
@@ -44,7 +44,7 @@ const TEST_TOKEN_INPUT: TokenOption[] = [
 const filterAndGetCurrencies = (
   currencies: TokenOption[],
   chainFilter: WalletChainId | null,
-  searchFilter?: string,
+  searchFilter?: string
 ): Currency[] => filter(currencies, chainFilter, searchFilter).map((cm) => cm.currencyInfo.currency)
 
 describe(filter, () => {
@@ -66,7 +66,10 @@ describe(filter, () => {
 
   it('filters by partial token name', () => {
     expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, null, 'th')).toEqual([ETH])
-    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, null, 'stable')).toEqual([DAI, DAI_ARBITRUM_ONE])
+    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, null, 'stable')).toEqual([
+      DAI,
+      DAI_ARBITRUM_ONE,
+    ])
   })
 
   it('filters by first characters of token address', () => {
@@ -86,10 +89,18 @@ describe(filter, () => {
 
   it('filters by chainFilter and searchFilter', () => {
     expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, UniverseChainId.Mainnet, 'DA')).toEqual([DAI])
-    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, UniverseChainId.Mainnet, DAI.address)).toEqual([DAI])
-    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, UniverseChainId.ArbitrumOne, 'DAI')).toEqual([DAI_ARBITRUM_ONE])
-    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, UniverseChainId.ArbitrumOne, DAI_ARBITRUM_ONE.address)).toEqual([
+    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, UniverseChainId.Mainnet, DAI.address)).toEqual([
+      DAI,
+    ])
+    expect(filterAndGetCurrencies(TEST_TOKEN_INPUT, UniverseChainId.ArbitrumOne, 'DAI')).toEqual([
       DAI_ARBITRUM_ONE,
     ])
+    expect(
+      filterAndGetCurrencies(
+        TEST_TOKEN_INPUT,
+        UniverseChainId.ArbitrumOne,
+        DAI_ARBITRUM_ONE.address
+      )
+    ).toEqual([DAI_ARBITRUM_ONE])
   })
 })

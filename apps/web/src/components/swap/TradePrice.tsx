@@ -1,8 +1,8 @@
 import { Currency, Price } from '@uniswap/sdk-core'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import styled from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCallback, useMemo, useState } from 'react'
+import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 

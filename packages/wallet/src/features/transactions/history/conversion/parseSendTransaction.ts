@@ -1,5 +1,5 @@
-import { AssetType } from 'uniswap/src/entities/assets'
 import { SpamCode } from 'wallet/src/data/types'
+import { AssetType } from 'wallet/src/entities/assets'
 import {
   deriveCurrencyAmountFromAssetResponse,
   getAddressFromAsset,

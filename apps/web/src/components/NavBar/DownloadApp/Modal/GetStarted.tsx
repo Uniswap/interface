@@ -1,19 +1,18 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
-import ExtensionIllustration from 'assets/images/extensionIllustration.png'
-import WalletIllustration from 'assets/images/walletIllustration.png'
+import ExtensionIllustration from 'assets/images/extensionIllustration.jpg'
+import WalletIllustration from 'assets/images/walletIllustration.jpg'
 import Column from 'components/Column'
 import { AppleLogo } from 'components/Icons/AppleLogo'
+import { BraveBrowserLogo } from 'components/Icons/BraveBrowserLogo'
 import { GoogleChromeLogo } from 'components/Icons/GoogleChromeLogo'
 import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import { WiggleIcon } from 'components/NavBar/DownloadApp/GetTheAppButton'
 import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
 import Row from 'components/Row'
-import styled, { useTheme } from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
+import styled, { useTheme } from 'styled-components'
 import { Text } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const IllustrationContainer = styled.div`
   display: flex;
@@ -64,7 +63,7 @@ export function GetStarted({ toAppDownload }: { toAppDownload: () => void }) {
           <IllustrationContainer>
             <Illustration src={WalletIllustration} alt="Wallet example page" />
           </IllustrationContainer>
-          <CardInfo title={t('common.uniswapMobile')} details={t('common.iOSAndroid')}>
+          <CardInfo title={t('common.mobileWallet')} details={t('common.iOSAndroid')}>
             <Row gap="8px" width="auto">
               <WiggleIcon>
                 <AppleLogo fill={theme.neutral1} />
@@ -75,20 +74,21 @@ export function GetStarted({ toAppDownload }: { toAppDownload: () => void }) {
             </Row>
           </CardInfo>
         </Card>
-        <Trace logPress element={InterfaceElementName.EXTENSION_DOWNLOAD_BUTTON}>
-          <Card onClick={() => window.open(uniswapUrls.chromeExtension)}>
-            <IllustrationContainer>
-              <Illustration src={ExtensionIllustration} alt="Extension example page" />
-            </IllustrationContainer>
-            <CardInfo title={t('common.chromeExtension')} details={t('common.googleChrome')}>
-              <Row gap="8px" width="auto">
-                <WiggleIcon>
-                  <GoogleChromeLogo width="16px" height="16px" />
-                </WiggleIcon>
-              </Row>
-            </CardInfo>
-          </Card>
-        </Trace>
+        <Card onClick={() => window.open(uniswapUrls.chromeExtension)}>
+          <IllustrationContainer>
+            <Illustration src={ExtensionIllustration} alt="Extension example page" />
+          </IllustrationContainer>
+          <CardInfo title={t('common.chromeExtension')} details={t('common.googleChrome')}>
+            <Row gap="8px" width="auto">
+              <WiggleIcon>
+                <BraveBrowserLogo width="16px" height="16px" />
+              </WiggleIcon>
+              <WiggleIcon>
+                <GoogleChromeLogo width="16px" height="16px" />
+              </WiggleIcon>
+            </Row>
+          </CardInfo>
+        </Card>
       </Row>
     </ModalContent>
   )

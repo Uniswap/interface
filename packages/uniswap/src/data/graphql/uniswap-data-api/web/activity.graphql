@@ -67,29 +67,6 @@ fragment TokenTransferParts on TokenTransfer {
   }
 }
 
-fragment OnRampTransferParts on OnRampTransfer {
-  id
-  token {
-    ...SimpleTokenDetails
-  }
-  tokenStandard
-  amount
-  sourceCurrency
-  sourceAmount
-  serviceProvider {
-    serviceProvider
-    name
-    url
-    logoLightUrl
-    logoDarkUrl
-  }
-  transactionReferenceId
-  externalSessionId
-  networkFee
-  transactionFee
-  totalFee
-}
-
 fragment TokenApprovalParts on TokenApproval {
   id
   asset {
@@ -154,33 +131,6 @@ fragment TransactionDetailsParts on TransactionDetails {
     ... on NftApproveForAll {
       ...NFTApproveForAllParts
     }
-    ... on OnRampTransfer {
-      ...OnRampTransferParts
-    }
-  }
-}
-
-fragment OnRampTransactionDetailsParts on OnRampTransactionDetails {
-  id
-  status
-  receiverAddress
-  onRampTransfer {
-    id
-    token {
-      ...SimpleTokenDetails
-    }
-    amount
-    sourceCurrency
-    sourceAmount
-    serviceProvider {
-      serviceProvider
-      name
-      url
-      logoLightUrl
-      logoDarkUrl
-    }
-    transactionReferenceId
-    externalSessionId
   }
 }
 
@@ -214,16 +164,13 @@ fragment AssetActivityParts on AssetActivity {
     ... on SwapOrderDetails {
       ...SwapOrderDetailsParts
     }
-    ... on OnRampTransactionDetails {
-      ...OnRampTransactionDetailsParts
-    }
   }
 }
 
-query ActivityWeb($account: String!, $chains: [Chain!]!, $onRampTransactionIDs: [String!]) {
+query ActivityWeb($account: String!, $chains: [Chain!]!) {
   portfolios(ownerAddresses: [$account], chains: $chains) {
     id
-    assetActivities(pageSize: 100, page: 1, includeOffChain: true, chains: $chains, onRampTransactionIDs: $onRampTransactionIDs) {
+    assetActivities(pageSize: 100, page: 1, includeOffChain: true, chains: $chains) {
       ...AssetActivityParts
     }
   }

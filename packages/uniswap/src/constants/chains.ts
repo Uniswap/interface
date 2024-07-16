@@ -52,7 +52,7 @@ import {
   UniverseChainId,
   UniverseChainInfo,
 } from 'uniswap/src/types/chains'
-import { isInterface } from 'utilities/src/platform'
+import { isWeb } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import {
   arbitrum,
@@ -80,7 +80,40 @@ export const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 10, minWait: 250, maxWai
 
 export const DEFAULT_MS_BEFORE_WARNING = ONE_MINUTE_MS * 10
 
-export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
+export const ETHEREUM_CHAIN_IDS = [UniverseChainId.Mainnet, UniverseChainId.Goerli, UniverseChainId.Sepolia] as const
+
+type EthereumChainId = (typeof ETHEREUM_CHAIN_IDS)[number]
+
+export const L2_CHAIN_IDS = [
+  UniverseChainId.ArbitrumOne,
+  UniverseChainId.ArbitrumGoerli,
+  UniverseChainId.Avalanche,
+  UniverseChainId.Base,
+  UniverseChainId.Celo,
+  UniverseChainId.CeloAlfajores,
+  UniverseChainId.Optimism,
+  UniverseChainId.OptimismGoerli,
+  UniverseChainId.Polygon,
+  UniverseChainId.PolygonMumbai,
+  UniverseChainId.Bnb,
+  UniverseChainId.Blast,
+  UniverseChainId.Zora,
+  UniverseChainId.Zksync,
+] as const
+
+export type L2ChainId = (typeof L2_CHAIN_IDS)[number]
+
+export type L1ChainInfo = UniverseChainInfo
+export interface L2ChainInfo extends L1ChainInfo {
+  readonly bridge: string
+  readonly statusPage?: string
+}
+
+export type ChainInfo = {
+  readonly [chainId in L2ChainId]: L2ChainInfo
+} & { readonly [chainId in EthereumChainId]: L1ChainInfo }
+
+export const UNIVERSE_CHAIN_INFO: ChainInfo = {
   [UniverseChainId.Mainnet]: {
     ...mainnet,
     id: UniverseChainId.Mainnet,
@@ -93,7 +126,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       nativeTokenBackendAddress: undefined,
     },
     blockPerMainnetEpochForChainId: 1,
-    blockWaitMsBeforeWarning: isInterface ? DEFAULT_MS_BEFORE_WARNING : ONE_MINUTE_MS,
+    blockWaitMsBeforeWarning: isWeb ? DEFAULT_MS_BEFORE_WARNING : ONE_MINUTE_MS,
     bridge: undefined,
     chainPriority: 0,
     docs: 'https://docs.uniswap.org/',
@@ -210,7 +243,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x7b79995e5f793a07bc00c21412e50ecae098e7f9',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L1ChainInfo,
   [UniverseChainId.Goerli]: {
     ...goerli,
     id: UniverseChainId.Goerli,
@@ -223,7 +256,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       nativeTokenBackendAddress: undefined,
     },
     blockPerMainnetEpochForChainId: 1,
-    blockWaitMsBeforeWarning: isInterface ? DEFAULT_MS_BEFORE_WARNING : 180000, // 3 minutes
+    blockWaitMsBeforeWarning: isWeb ? DEFAULT_MS_BEFORE_WARNING : 180000, // 3 minutes
     bridge: undefined,
     chainPriority: 0,
     docs: 'https://docs.uniswap.org/',
@@ -272,7 +305,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0xb4fbf271143f4fbf7b91a5ded31805e42b2208d6',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L1ChainInfo,
   [UniverseChainId.ArbitrumOne]: {
     ...arbitrum,
     id: UniverseChainId.ArbitrumOne,
@@ -330,7 +363,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
   [UniverseChainId.ArbitrumGoerli]: {
     ...arbitrumGoerli,
     id: UniverseChainId.ArbitrumGoerli,
@@ -384,7 +417,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x82af49447d8a07e3bd95bd0d56f35241523fbab1',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
   [UniverseChainId.Optimism]: {
     ...optimism,
     id: UniverseChainId.Optimism,
@@ -397,7 +430,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       nativeTokenBackendAddress: undefined,
     },
     blockPerMainnetEpochForChainId: 6,
-    blockWaitMsBeforeWarning: isInterface ? 1500000 : 1200000,
+    blockWaitMsBeforeWarning: isWeb ? 1500000 : 1200000,
     bridge: 'https://app.optimism.io/bridge',
     chainPriority: 2,
     docs: 'https://optimism.io/',
@@ -440,7 +473,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x4200000000000000000000000000000000000006',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
   [UniverseChainId.Base]: {
     ...base,
     id: UniverseChainId.Base,
@@ -452,7 +485,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       nativeTokenBackendAddress: undefined,
     },
     blockPerMainnetEpochForChainId: 6,
-    blockWaitMsBeforeWarning: isInterface ? 1500000 : 600000,
+    blockWaitMsBeforeWarning: isWeb ? 1500000 : 600000,
     bridge: 'https://bridge.base.org/deposit',
     chainPriority: 4,
     docs: 'https://docs.base.org/docs/',
@@ -496,7 +529,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x4200000000000000000000000000000000000006',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
   [UniverseChainId.OptimismGoerli]: {
     ...optimismGoerli,
     id: UniverseChainId.OptimismGoerli,
@@ -550,7 +583,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x4200000000000000000000000000000000000006',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
   [UniverseChainId.Bnb]: {
     ...bsc,
     sdkId: UniswapSDKChainId.BNB,
@@ -605,7 +638,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0xbb4cdb9cbd36b01bd1cbaebf2de08d9173bc095c',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L1ChainInfo,
   [UniverseChainId.Polygon]: {
     ...polygon,
     id: UniverseChainId.Polygon,
@@ -660,7 +693,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
   [UniverseChainId.PolygonMumbai]: {
     ...polygonMumbai,
     id: UniverseChainId.PolygonMumbai,
@@ -714,7 +747,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x9c3c9283d3e44854697cd22d3faa240cfb032889',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
   [UniverseChainId.Blast]: {
     ...blast,
     id: UniverseChainId.Blast,
@@ -768,7 +801,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x4300000000000000000000000000000000000004',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
   [UniverseChainId.Avalanche]: {
     ...avalanche,
     id: UniverseChainId.Avalanche,
@@ -818,7 +851,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0xb31f66aa3c1e785363f0875a1b74e27b85fd66c7',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
   [UniverseChainId.Celo]: {
     ...celo,
     id: UniverseChainId.Celo,
@@ -873,7 +906,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x471EcE3750Da237f93B8E339c536989b8978a438',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
   [UniverseChainId.CeloAlfajores]: {
     ...celoAlfajores,
     id: UniverseChainId.CeloAlfajores,
@@ -927,7 +960,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x2DEf4285787d58a2f811AF24755A8150622f4361',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
   [UniverseChainId.Zora]: {
     ...zora,
     id: UniverseChainId.Zora,
@@ -980,7 +1013,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x4200000000000000000000000000000000000006',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
   [UniverseChainId.Zksync]: {
     ...zkSync,
     id: UniverseChainId.Zksync,
@@ -1034,5 +1067,5 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: '0x5AEa5775959fBC2557Cc8789bC1bf90A239D9a91',
     },
-  } as const satisfies UniverseChainInfo,
+  } as const satisfies L2ChainInfo,
 }

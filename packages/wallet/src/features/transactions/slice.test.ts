@@ -59,7 +59,7 @@ describe('transaction reducer', () => {
           typeInfo: approveTxTypeInfo,
           status: TransactionStatus.Pending,
           addedTime: Date.now(),
-        }),
+        })
       )
       const txs = store.getState()[address]
       expect(txs?.[UniverseChainId.Mainnet]).toBeTruthy()
@@ -90,7 +90,7 @@ describe('transaction reducer', () => {
           typeInfo: approveTxTypeInfo,
           status: TransactionStatus.Pending,
           addedTime: Date.now(),
-        }),
+        })
       )
 
       try {
@@ -105,7 +105,7 @@ describe('transaction reducer', () => {
             typeInfo: approveTxTypeInfo,
             status: TransactionStatus.Pending,
             addedTime: Date.now(),
-          }),
+          })
         )
       } catch (error) {
         expect(error).toEqual(Error(`addTransaction: Attempted to overwrite tx with id ${id}`))
@@ -129,10 +129,12 @@ describe('transaction reducer', () => {
             typeInfo: approveTxTypeInfo,
             status: TransactionStatus.Pending,
             addedTime: Date.now(),
-          }),
+          })
         )
       } catch (error) {
-        expect(error).toEqual(Error(`updateTransaction: Attempted to update a missing tx with id ${id}`))
+        expect(error).toEqual(
+          Error(`updateTransaction: Attempted to update a missing tx with id ${id}`)
+        )
       }
       expect(store.getState()).toEqual({})
     })
@@ -165,7 +167,9 @@ describe('transaction reducer', () => {
         store.dispatch(finalizeTransaction(finalizedTxAction.payload))
       } catch (error) {
         expect(error).toEqual(
-          Error(`finalizeTransaction: Attempted to finalize a missing tx with id ${finalizedTxAction.payload.id}`),
+          Error(
+            `finalizeTransaction: Attempted to finalize a missing tx with id ${finalizedTxAction.payload.id}`
+          )
         )
       }
       expect(store.getState()).toEqual({})
@@ -184,7 +188,7 @@ describe('transaction reducer', () => {
           typeInfo: approveTxTypeInfo,
           status: TransactionStatus.Pending,
           addedTime: Date.now(),
-        }),
+        })
       )
       store.dispatch(finalizeTransaction(finalizedTxAction.payload))
       const tx = store.getState()[from]?.[chainId]?.[id]
@@ -202,10 +206,12 @@ describe('transaction reducer', () => {
             chainId: UniverseChainId.Goerli,
             cancelRequest: {},
             id,
-          }),
+          })
         )
       } catch (error) {
-        expect(error).toEqual(Error(`cancelTransaction: Attempted to cancel a tx that doesn't exist with id ${id}`))
+        expect(error).toEqual(
+          Error(`cancelTransaction: Attempted to cancel a tx that doesn't exist with id ${id}`)
+        )
       }
       expect(store.getState()).toEqual({})
     })
@@ -225,7 +231,7 @@ describe('transaction reducer', () => {
           typeInfo: approveTxTypeInfo,
           status: TransactionStatus.Pending,
           addedTime: Date.now(),
-        }),
+        })
       )
       store.dispatch(cancelTransaction({ chainId, id, address, cancelRequest: {} }))
       const tx = store.getState()[address]?.[chainId]?.[id]
@@ -245,10 +251,12 @@ describe('transaction reducer', () => {
             chainId: UniverseChainId.Goerli,
             id,
             newTxParams,
-          }),
+          })
         )
       } catch (error) {
-        expect(error).toEqual(Error(`replaceTransaction: Attempted to replace a tx that doesn't exist with id ${id}`))
+        expect(error).toEqual(
+          Error(`replaceTransaction: Attempted to replace a tx that doesn't exist with id ${id}`)
+        )
       }
       expect(store.getState()).toEqual({})
     })
@@ -292,7 +300,7 @@ describe('transaction reducer', () => {
           typeInfo: approveTxTypeInfo,
           status: TransactionStatus.Pending,
           addedTime: Date.now(),
-        }),
+        })
       )
       store.dispatch(
         addTransaction({
@@ -305,7 +313,7 @@ describe('transaction reducer', () => {
           typeInfo: approveTxTypeInfo,
           status: TransactionStatus.Pending,
           addedTime: Date.now(),
-        }),
+        })
       )
       const txs = store.getState()
       expect(Object.keys(txs)).toHaveLength(2)

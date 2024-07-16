@@ -4,7 +4,7 @@ import { Button, Flex, useSporeColors } from 'ui/src'
 import { opacify, validColor } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { getContrastPassingTextColor } from 'uniswap/src/utils/colors'
+import { getContrastPassingTextColor } from 'wallet/src/utils/colors'
 
 function CTAButton({
   title,

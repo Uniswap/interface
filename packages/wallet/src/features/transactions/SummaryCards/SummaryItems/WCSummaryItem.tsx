@@ -7,7 +7,6 @@ import { TransactionDetails, WCConfirmInfo } from 'wallet/src/features/transacti
 export function WCSummaryItem({
   transaction,
   layoutElement,
-  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: WCConfirmInfo }
 }): JSX.Element {
@@ -22,6 +21,5 @@ export function WCSummaryItem({
       />
     ),
     transaction,
-    index,
   })
 }

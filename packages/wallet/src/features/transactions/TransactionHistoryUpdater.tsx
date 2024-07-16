@@ -2,7 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import dayjs from 'dayjs'
 import { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
-import { batch, useDispatch } from 'react-redux'
+import { batch } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   TransactionHistoryUpdaterQueryResult,
@@ -25,7 +25,7 @@ import { useSelectAddressTransactions } from 'wallet/src/features/transactions/s
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { useAccounts, useActiveAccountAddress, useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
-import { useAppSelector } from 'wallet/src/state'
+import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 
 export const GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE = [
   GQLQueries.PortfolioBalances,
@@ -95,7 +95,7 @@ function AddressTransactionHistoryUpdater({
     >['assetActivities']
   >
 }): JSX.Element | null {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const apolloClient = useApolloClient()
 
   const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
@@ -145,10 +145,15 @@ function AddressTransactionHistoryUpdater({
         }
       })
 
-      if (newTransactionsFound && address === activeAccountAddress) {
+      if (newTransactionsFound) {
         // Fetch full recent txn history and dispatch receive notification if needed.
-        await fetchAndDispatchReceiveNotification(address, lastTxNotificationUpdateTimestamp, hideSpamTokens)
-        await apolloClient.refetchQueries({ include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE })
+        if (address === activeAccountAddress) {
+          await fetchAndDispatchReceiveNotification(address, lastTxNotificationUpdateTimestamp, hideSpamTokens)
+        }
+
+        await apolloClient.refetchQueries({
+          include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE,
+        })
       }
     }).catch(() => undefined)
   }, [
@@ -180,7 +185,7 @@ export function useFetchAndDispatchReceiveNotification(): (
   hideSpamTokens: boolean,
 ) => Promise<void> {
   const [fetchFullTransactionData] = useTransactionListLazyQuery()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
 
   return async (
     address: string,

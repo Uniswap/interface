@@ -10,11 +10,11 @@ import {
   useState,
 } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
-import { CurrencyField, TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import { useSwapAnalytics } from 'wallet/src/features/transactions/swap/analytics'
 import { useDerivedSwapInfo } from 'wallet/src/features/transactions/swap/trade/hooks/useDerivedSwapInfo'
+import { CurrencyField, TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
 
 export type SwapFormState = {
   customSlippageTolerance?: number

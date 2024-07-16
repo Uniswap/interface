@@ -1,5 +1,5 @@
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
-import styled, { css, useTheme } from 'lib/styled-components'
+import styled, { css, useTheme } from 'styled-components'
 import { FadePresence, FadePresenceAnimationType } from 'theme/components/FadePresence'
 
 export const LogoContainer = styled.div`

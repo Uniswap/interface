@@ -1,8 +1,8 @@
-import styled from 'lib/styled-components'
 import { ChevronLeftIcon, ChevronRightIcon } from 'nft/components/icons'
 import { calculateCardIndex, calculateFirstCardIndex, calculateRank } from 'nft/utils'
 import { ReactNode, useCallback, useEffect, useRef } from 'react'
 import { a, useSprings } from 'react-spring'
+import styled from 'styled-components'
 
 const CarouselContainer = styled.div`
   display: flex;

@@ -1,6 +1,5 @@
-import { FORLogo } from 'uniswap/src/features/fiatOnRamp/types'
+import { FORLogo, FORQuote, FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { isAndroid, isIOS } from 'utilities/src/platform'
-import { v4 as uuid } from 'uuid'
 
 const APPLE_PAY = 'Apple Pay'
 const GOOGLE_PAY = 'Google Pay'
@@ -89,11 +88,13 @@ export function getOptionalServiceProviderLogo(logos: FORLogo | undefined, isDar
   return isDarkMode ? logos?.darkLogo : logos?.lightLogo
 }
 
-export function getServiceProviderLogo(logos: FORLogo, isDarkMode: boolean): string {
-  return isDarkMode ? logos.darkLogo : logos.lightLogo
+export function getServiceProviderForQuote(
+  quote: FORQuote | undefined,
+  serviceProviders: FORServiceProvider[] | undefined,
+): FORServiceProvider | undefined {
+  return serviceProviders?.find((sp) => sp.serviceProvider === quote?.serviceProvider)
 }
 
-export function createOnRampTransactionId(serviceProvider?: string): string {
-  // The backend expects MoonPay transactions to have the MOONPAY prefix.
-  return `${serviceProvider?.toUpperCase() === 'MOONPAY' ? 'MOONPAY' : ''}${uuid()}`
+export function getServiceProviderLogo(logos: FORLogo, isDarkMode: boolean): string {
+  return isDarkMode ? logos.darkLogo : logos.lightLogo
 }

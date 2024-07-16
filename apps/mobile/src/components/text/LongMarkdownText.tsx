@@ -4,7 +4,7 @@ import { LayoutChangeEvent } from 'react-native'
 import Markdown, { MarkdownProps } from 'react-native-markdown-display'
 import { Flex, SpaceTokens, Text, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
-import { openUri } from 'uniswap/src/utils/linking'
+import { openUri } from 'wallet/src/utils/linking'
 
 type LongMarkdownTextProps = {
   initialDisplayedLines?: number

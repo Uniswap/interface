@@ -6,8 +6,8 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { GetOrdersResponse } from 'wallet/src/data/tradingApi/__generated__/index'
 import { makeSelectUniswapXOrder } from 'wallet/src/features/transactions/selectors'
 import { updateTransaction } from 'wallet/src/features/transactions/slice'
-import { TRADING_API_HEADERS } from 'wallet/src/features/transactions/swap/trade/api/client'
-import { ORDER_STATUS_TO_TX_STATUS } from 'wallet/src/features/transactions/swap/trade/api/utils'
+import { TRADING_API_HEADERS } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
+import { ORDER_STATUS_TO_TX_STATUS } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import {
   QueuedOrderStatus,

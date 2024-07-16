@@ -9,8 +9,8 @@ import {
   useTokenPriceHistoryQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
+import { currencyIdToContractInput } from 'wallet/src/features/dataApi/utils'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 export type TokenSpotData = {

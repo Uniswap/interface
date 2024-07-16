@@ -10,7 +10,6 @@ import { UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
-import styled from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import AppBody from 'pages/App/AppBody'
 import { ProposalActionDetail } from 'pages/CreateProposal/ProposalActionDetail'
@@ -34,6 +33,7 @@ import {
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
+import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 

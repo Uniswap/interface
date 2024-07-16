@@ -12,10 +12,9 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MMKV } from 'react-native-mmkv'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
-import { useDispatch } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
-import { useAppSelector } from 'src/app/hooks'
+import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppModals } from 'src/app/modals/AppModals'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
@@ -256,7 +255,7 @@ function AppOuter(): JSX.Element | null {
 }
 
 function AppInner(): JSX.Element {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const isDarkMode = useIsDarkMode()
   const themeSetting = useCurrentAppearanceSetting()
   const allowAnalytics = useAppSelector(selectAllowAnalytics)

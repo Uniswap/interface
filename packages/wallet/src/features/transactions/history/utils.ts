@@ -12,11 +12,11 @@ import {
   TransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { CurrencyIdToVisibility } from 'wallet/src/features/favorites/slice'
 import { FORMAT_DATE_MONTH, FORMAT_DATE_MONTH_YEAR, LocalizedDayjs } from 'wallet/src/features/language/localizedDayjs'
+import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
 import { extractUniswapXOrderDetails } from 'wallet/src/features/transactions/history/conversion/extractUniswapXOrderDetails'

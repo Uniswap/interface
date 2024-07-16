@@ -3,7 +3,6 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator, EmitterSubscription, Keyboard } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
-import { useDispatch } from 'react-redux'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
@@ -25,6 +24,7 @@ import { useCanAddressClaimUnitag, useCanClaimUnitagName } from 'wallet/src/feat
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
+import { useAppDispatch } from 'wallet/src/state'
 
 export function ChangeUnitagModal({
   unitag,
@@ -38,7 +38,7 @@ export function ChangeUnitagModal({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const navigation = useNavigation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const { data: deviceId } = useAsyncData(getUniqueId)
   const account = useAccount(address)
   const signerManager = useWalletSigners()

@@ -25,6 +25,8 @@ jest.mock('expo-localization', () => ({
 describe(getDeviceLocales, () => {
   it('should return the device locale', () => {
     expect(getDeviceLocales).not.toThrow()
-    expect(getDeviceLocales()).toEqual([{ languageCode: MOCK_LANGUAGE_CODE, languageTag: MOCK_LANGUAGE_TAG }])
+    expect(getDeviceLocales()).toEqual([
+      { languageCode: MOCK_LANGUAGE_CODE, languageTag: MOCK_LANGUAGE_TAG },
+    ])
   })
 })

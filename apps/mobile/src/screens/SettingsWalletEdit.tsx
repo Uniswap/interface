@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, KeyboardAvoidingView, TextInput as NativeTextInput, StyleSheet } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'src/app/hooks'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
@@ -29,7 +29,7 @@ export function SettingsWalletEdit({
   },
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const activeAccount = useAccounts()[address]
   const displayName = useDisplayName(address)
   const [nickname, setNickname] = useState(displayName?.name)

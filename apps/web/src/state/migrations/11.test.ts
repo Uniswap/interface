@@ -62,7 +62,7 @@ describe('migration to v10', () => {
         10: migration10,
         11: migration11,
       },
-      { debug: false },
+      { debug: false }
     )
     const result: any = await migrator(previousStateWithMeta, 11)
 
@@ -84,7 +84,7 @@ describe('migration to v10', () => {
         10: migration10,
         11: migration11,
       },
-      { debug: false },
+      { debug: false }
     )
     const result: any = await migrator(previousStateWithoutMeta, 11)
     expect(Object.keys(result.user)).not.toContain('recentConnectionMeta')

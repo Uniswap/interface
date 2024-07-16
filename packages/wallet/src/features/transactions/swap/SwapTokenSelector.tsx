@@ -1,45 +1,25 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
-import { Keyboard, LayoutAnimation } from 'react-native'
 import { isWeb } from 'ui/src'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import {
   TokenSelector,
   TokenSelectorModal,
   TokenSelectorProps,
   TokenSelectorVariation,
-} from 'uniswap/src/components/TokenSelector/TokenSelector'
-import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
-import { SearchContext } from 'uniswap/src/features/search/SearchContext'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
-import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
-import { currencyAddress } from 'uniswap/src/utils/currencyId'
+} from 'wallet/src/components/TokenSelector/TokenSelector'
 import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
-import {
-  useAddToSearchHistory,
-  useCommonTokensOptions,
-  useFavoriteTokensOptions,
-  useFilterCallbacks,
-  usePopularTokensOptions,
-  usePortfolioTokenOptions,
-  useTokenSectionsForEmptySearch,
-  useTokenSectionsForSearchResults,
-} from 'wallet/src/components/TokenSelector/hooks'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
+import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
+import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { SwapFormState, useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
 
 export function SwapTokenSelector(): JSX.Element {
   const swapContext = useSwapFormContext()
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
   const { updateSwapForm, exactCurrencyField, selectingCurrencyField, output, input } = swapContext
-  const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
-  // TODO: (MOB-3643) Share localization context with WEB
-  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
-  const { registerSearch } = useAddToSearchHistory()
 
   if (!selectingCurrencyField) {
     throw new Error('TokenSelector rendered without `selectingCurrencyField`')
@@ -106,7 +86,6 @@ export function SwapTokenSelector(): JSX.Element {
 
   const props: TokenSelectorProps = {
     // we need to filter tokens using the chainId of the *other* currency
-    activeAccountAddress,
     chainId: selectingCurrencyField === CurrencyField.INPUT ? output?.chainId : input?.chainId,
     currencyField: selectingCurrencyField,
     flow: TokenSelectorFlow.Swap,
@@ -115,21 +94,7 @@ export function SwapTokenSelector(): JSX.Element {
         ? TokenSelectorVariation.BalancesAndPopular
         : TokenSelectorVariation.SuggestedAndFavoritesAndPopular,
     onClose: onHideTokenSelector,
-    onDismiss: () => Keyboard.dismiss(),
-    onPressAnimation: () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut),
     onSelectCurrency,
-    useCommonTokensOptionsHook: useCommonTokensOptions,
-    useFavoriteTokensOptionsHook: useFavoriteTokensOptions,
-    usePopularTokensOptionsHook: usePopularTokensOptions,
-    usePortfolioTokenOptionsHook: usePortfolioTokenOptions,
-    useTokenSectionsForEmptySearchHook: useTokenSectionsForEmptySearch,
-    useTokenSectionsForSearchResultsHook: useTokenSectionsForSearchResults,
-    useTokenWarningDismissedHook: useTokenWarningDismissed,
-    useFilterCallbacksHook: useFilterCallbacks,
-    navigateToBuyOrReceiveWithEmptyWalletCallback: navigateToBuyOrReceiveWithEmptyWallet,
-    convertFiatAmountFormattedCallback: convertFiatAmountFormatted,
-    formatNumberOrStringCallback: formatNumberOrString,
-    addToSearchHistoryCallback: registerSearch,
   }
   return isWeb ? <TokenSelector {...props} /> : <TokenSelectorModal {...props} />
 }

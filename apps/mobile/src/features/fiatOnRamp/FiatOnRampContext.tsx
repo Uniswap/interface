@@ -5,7 +5,12 @@ import React, { createContext, useContext, useState } from 'react'
 import { SectionListData } from 'react-native'
 import { getCountry } from 'react-native-localize'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { FORQuote, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import {
+  FORQuote,
+  FORServiceProvider,
+  FiatCurrencyInfo,
+  FiatOnRampCurrency,
+} from 'uniswap/src/features/fiatOnRamp/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
@@ -25,6 +30,8 @@ interface FiatOnRampContextType {
   setQuoteCurrency: (quoteCurrency: FiatOnRampCurrency) => void
   amount?: number
   setAmount: (amount: number | undefined) => void
+  serviceProviders?: FORServiceProvider[]
+  setServiceProviders: (serviceProviders: FORServiceProvider[] | undefined) => void
 }
 
 const initialState: FiatOnRampContextType = {
@@ -35,6 +42,7 @@ const initialState: FiatOnRampContextType = {
   setBaseCurrencyInfo: () => undefined,
   setQuoteCurrency: () => undefined,
   setAmount: () => undefined,
+  setServiceProviders: () => undefined,
   countryCode: '',
   countryState: undefined,
   quoteCurrency: { currencyInfo: undefined },
@@ -53,6 +61,7 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const [countryState, setCountryState] = useState<string | undefined>()
   const [baseCurrencyInfo, setBaseCurrencyInfo] = useState<FiatCurrencyInfo>()
   const [amount, setAmount] = useState<number>()
+  const [serviceProviders, setServiceProviders] = useState<FORServiceProvider[]>()
 
   // We hardcode ETH as the starting currency
   const ethCurrencyInfo = useCurrencyInfo(
@@ -80,6 +89,8 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
         setQuoteCurrency,
         amount,
         setAmount,
+        serviceProviders,
+        setServiceProviders,
       }}
     >
       {children}

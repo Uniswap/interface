@@ -5,8 +5,8 @@ import {
   SwapOrderStatus,
   TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { MAX_FIXTURE_TIMESTAMP, faker } from 'uniswap/src/test/shared'
 import { GQL_CHAINS } from 'wallet/src/test/fixtures'
+import { MAX_FIXTURE_TIMESTAMP, faker } from 'wallet/src/test/shared'
 import { randomChoice, randomEnumValue } from 'wallet/src/test/utils'
 
 export const mocks = {

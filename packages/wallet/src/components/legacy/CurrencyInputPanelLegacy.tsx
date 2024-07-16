@@ -5,7 +5,6 @@ import { NativeSyntheticEvent, TextInput, TextInputProps, TextInputSelectionChan
 import { Flex, FlexProps, SpaceTokens, Text, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTokenButton'
@@ -14,6 +13,7 @@ import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Warning, WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
+import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type CurrentInputPanelProps = {

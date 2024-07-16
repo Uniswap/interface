@@ -1,10 +1,9 @@
 import { useMemo } from 'react'
-import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { useENS } from 'wallet/src/features/ens/useENS'
-import { WalletSearchResult } from 'wallet/src/features/search/SearchResult'
+import { SearchResultType, WalletSearchResult } from 'wallet/src/features/search/SearchResult'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
 
 // eslint-disable-next-line complexity

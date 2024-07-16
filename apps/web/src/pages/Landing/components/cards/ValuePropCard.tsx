@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion'
-import styled, { css } from 'lib/styled-components'
 import { Box, BoxProps } from 'pages/Landing/components/Generics'
 import { useNavigate } from 'react-router-dom'
+import styled, { css } from 'styled-components'
 
 type ValuePropCardProps = {
   isDarkMode?: boolean

@@ -7,7 +7,7 @@ import {
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { Linking } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useAppDispatch } from 'src/app/hooks'
 import { RootParamList } from 'src/app/navigation/types'
 import { openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { DIRECT_LOG_ONLY_SCREENS } from 'src/features/telemetry/directLogScreens'
@@ -82,7 +82,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
 }
 
 export const useManageDeepLinks = (): void => {
-  const dispatch = useDispatch()
+  const dispatch = useAppDispatch()
   const manageDeepLinks = useCallback(async () => {
     const url = await Linking.getInitialURL()
     if (url) {

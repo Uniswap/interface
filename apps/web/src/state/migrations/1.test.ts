@@ -27,7 +27,7 @@ describe('migration to v1', () => {
       {
         1: migration1,
       },
-      { debug: false },
+      { debug: false }
     )
     const result: any = await migrator(previousState, 1)
     expect(result?.user?.userDeadline).toEqual(600)
@@ -48,7 +48,7 @@ describe('migration to v1', () => {
       {
         1: migration1,
       },
-      { debug: false },
+      { debug: false }
     )
     const result: any = await migrator(
       {
@@ -58,7 +58,7 @@ describe('migration to v1', () => {
           userDeadline: 300,
         },
       } as PersistAppStateV1,
-      1,
+      1
     )
     expect(result?.user?.userDeadline).toEqual(300)
   })
@@ -68,14 +68,14 @@ describe('migration to v1', () => {
       {
         1: migration1,
       },
-      { debug: false },
+      { debug: false }
     )
     const result: any = await migrator(
       {
         ...previousState,
         user: undefined,
       } as PersistAppStateV1,
-      1,
+      1
     )
     expect(result?.user?.userDeadline).toBeUndefined()
   })

@@ -9,7 +9,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { OrderRequest, Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { finalizeTransaction, transactionActions } from 'wallet/src/features/transactions/slice'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
-import { TRADING_API_HEADERS } from 'wallet/src/features/transactions/swap/trade/api/client'
+import { TRADING_API_HEADERS } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import {
   QueuedOrderStatus,
   TransactionStatus,

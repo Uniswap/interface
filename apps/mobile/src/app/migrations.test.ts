@@ -81,7 +81,10 @@ import { initialWalletConnectState } from 'src/features/walletConnect/walletConn
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { ExtensionOnboardingState, initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
+import {
+  ExtensionOnboardingState,
+  initialBehaviorHistoryState,
+} from 'wallet/src/features/behaviorHistory/slice'
 import { initialFavoritesState } from 'wallet/src/features/favorites/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
@@ -91,12 +94,20 @@ import { initialTelemetryState } from 'wallet/src/features/telemetry/slice'
 import { initialTokensState } from 'wallet/src/features/tokens/tokensSlice'
 import { initialTransactionsState } from 'wallet/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { Account, AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import {
+  Account,
+  AccountType,
+  SignerMnemonicAccount,
+} from 'wallet/src/features/wallet/accounts/types'
 import { initialWalletState, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 import { testActivatePendingAccounts } from 'wallet/src/state/sharedMigrationsTests'
 import { getAllKeysOfNestedObject } from 'wallet/src/state/testUtils'
-import { fiatPurchaseTransactionInfo, signerMnemonicAccount, transactionDetails } from 'wallet/src/test/fixtures'
+import {
+  fiatPurchaseTransactionInfo,
+  signerMnemonicAccount,
+  transactionDetails,
+} from 'wallet/src/test/fixtures'
 
 expect.extend({ toIncludeSameMembers })
 
@@ -278,17 +289,21 @@ describe('Redux state migrations', () => {
     expect(newSchema.transactions[UniverseChainId.Mainnet]).toBeUndefined()
     expect(newSchema.transactions.lastTxHistoryUpdate).toBeUndefined()
 
-    expect(newSchema.transactions['0xShadowySuperCoder'][UniverseChainId.Mainnet]['0'].status).toEqual(
-      TransactionStatus.Pending,
-    )
+    expect(
+      newSchema.transactions['0xShadowySuperCoder'][UniverseChainId.Mainnet]['0'].status
+    ).toEqual(TransactionStatus.Pending)
     expect(newSchema.transactions['0xKingHodler'][UniverseChainId.Mainnet]).toBeUndefined()
     expect(newSchema.transactions['0xKingHodler'][UniverseChainId.Goerli]['0']).toBeUndefined()
-    expect(newSchema.transactions['0xKingHodler'][UniverseChainId.Goerli]['1'].from).toEqual('0xKingHodler')
+    expect(newSchema.transactions['0xKingHodler'][UniverseChainId.Goerli]['1'].from).toEqual(
+      '0xKingHodler'
+    )
 
     expect(newSchema.notifications.lastTxNotificationUpdate).toBeDefined()
-    expect(newSchema.notifications.lastTxNotificationUpdate['0xShadowySuperCoder'][UniverseChainId.Mainnet]).toEqual(
-      12345678912345,
-    )
+    expect(
+      newSchema.notifications.lastTxNotificationUpdate['0xShadowySuperCoder'][
+        UniverseChainId.Mainnet
+      ]
+    ).toEqual(12345678912345)
   })
 
   it('migrates from v0 to v1', () => {
@@ -393,7 +408,12 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v6 to v7', () => {
-    const TEST_ADDRESSES: [string, string, string, string] = ['0xTest', '0xTest2', '0xTest3', '0xTest4']
+    const TEST_ADDRESSES: [string, string, string, string] = [
+      '0xTest',
+      '0xTest2',
+      '0xTest3',
+      '0xTest4',
+    ]
     const TEST_IMPORT_TIME_MS = 12345678912345
 
     const v6SchemaStub = {
@@ -451,7 +471,12 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v8 to v9', () => {
-    const TEST_ADDRESSES: [string, string, string, string] = ['0xTest', '0xTest2', '0xTest3', '0xTest4']
+    const TEST_ADDRESSES: [string, string, string, string] = [
+      '0xTest',
+      '0xTest2',
+      '0xTest3',
+      '0xTest4',
+    ]
     const TEST_IMPORT_TIME_MS = 12345678912345
 
     const v8SchemaStub = {
@@ -487,18 +512,15 @@ describe('Redux state migrations', () => {
     const TEST_ADDRESSES = ['0xTest', OLD_DEMO_ACCOUNT_ADDRESS, '0xTest2', '0xTest3']
     const TEST_IMPORT_TIME_MS = 12345678912345
 
-    const accounts = TEST_ADDRESSES.reduce(
-      (acc, address) => {
-        acc[address] = {
-          address,
-          timeImportedMs: TEST_IMPORT_TIME_MS,
-          type: 'native',
-        } as unknown as Account
+    const accounts = TEST_ADDRESSES.reduce((acc, address) => {
+      acc[address] = {
+        address,
+        timeImportedMs: TEST_IMPORT_TIME_MS,
+        type: 'native',
+      } as unknown as Account
 
-        return acc
-      },
-      {} as { [address: string]: Account },
-    )
+      return acc
+    }, {} as { [address: string]: Account })
 
     const v9SchemaStub = {
       ...v9Schema,
@@ -976,18 +998,34 @@ describe('Redux state migrations', () => {
     const v30 = migrations[30](v29Stub)
 
     // expect fiat onramp txdetails to change
-    expect(v30.transactions[account.address][UniverseChainId.Mainnet]['0'].typeInfo).toEqual(expectedTypeInfo)
+    expect(v30.transactions[account.address][UniverseChainId.Mainnet]['0'].typeInfo).toEqual(
+      expectedTypeInfo
+    )
     expect(v30.transactions[account.address][UniverseChainId.Goerli]['0']).toBeUndefined()
     expect(v30.transactions[account.address][UniverseChainId.ArbitrumOne]).toBeUndefined() // does not create an object for chain
-    expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.ArbitrumOne]['0'].typeInfo).toEqual(expectedTypeInfo)
-    expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.Optimism]['0'].typeInfo).toEqual(expectedTypeInfo)
-    expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.Optimism]['1'].typeInfo).toEqual(expectedTypeInfo)
+    expect(
+      v30.transactions['0xshadowySuperCoder'][UniverseChainId.ArbitrumOne]['0'].typeInfo
+    ).toEqual(expectedTypeInfo)
+    expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.Optimism]['0'].typeInfo).toEqual(
+      expectedTypeInfo
+    )
+    expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.Optimism]['1'].typeInfo).toEqual(
+      expectedTypeInfo
+    )
     expect(v30.transactions['0xdeleteMe']).toBe(undefined)
     // expect non-for txDetails to not change
-    expect(v30.transactions[account.address][UniverseChainId.Mainnet]['1']).toEqual(txDetailsConfirmed)
-    expect(v30.transactions[account.address][UniverseChainId.Goerli]['1']).toEqual(txDetailsConfirmed)
-    expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.ArbitrumOne]['1']).toEqual(txDetailsConfirmed)
-    expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.Optimism]['2']).toEqual(txDetailsConfirmed)
+    expect(v30.transactions[account.address][UniverseChainId.Mainnet]['1']).toEqual(
+      txDetailsConfirmed
+    )
+    expect(v30.transactions[account.address][UniverseChainId.Goerli]['1']).toEqual(
+      txDetailsConfirmed
+    )
+    expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.ArbitrumOne]['1']).toEqual(
+      txDetailsConfirmed
+    )
+    expect(v30.transactions['0xshadowySuperCoder'][UniverseChainId.Optimism]['2']).toEqual(
+      txDetailsConfirmed
+    )
   })
 
   it('migrates from v31 to 32', () => {
@@ -1060,16 +1098,24 @@ describe('Redux state migrations', () => {
 
     const v36Stub = { ...v36Schema, transactions }
 
-    expect(v36Stub.transactions[account.address]?.[UniverseChainId.Mainnet][id1].typeInfo.id).toBeUndefined()
-    expect(v36Stub.transactions[account.address]?.[UniverseChainId.Mainnet][id2].typeInfo.id).toBeUndefined()
+    expect(
+      v36Stub.transactions[account.address]?.[UniverseChainId.Mainnet][id1].typeInfo.id
+    ).toBeUndefined()
+    expect(
+      v36Stub.transactions[account.address]?.[UniverseChainId.Mainnet][id2].typeInfo.id
+    ).toBeUndefined()
 
     const v37 = migrations[37](v36Stub)
 
     expect(v37.transactions[account.address]?.[UniverseChainId.Mainnet][id1].typeInfo.id).toEqual(
-      fiatOnRampTxDetailsFailed.typeInfo.id,
+      fiatOnRampTxDetailsFailed.typeInfo.id
     )
-    expect(v36Stub.transactions[account.address]?.[UniverseChainId.Mainnet][id2].typeInfo.id).toBeUndefined()
-    expect(v36Stub.transactions[account.address]?.[UniverseChainId.Mainnet][id3]).toEqual(txDetailsConfirmed)
+    expect(
+      v36Stub.transactions[account.address]?.[UniverseChainId.Mainnet][id2].typeInfo.id
+    ).toBeUndefined()
+    expect(v36Stub.transactions[account.address]?.[UniverseChainId.Mainnet][id3]).toEqual(
+      txDetailsConfirmed
+    )
   })
 
   it('migrates from v37 to 38', () => {

@@ -66,7 +66,7 @@ describe('migration to v9', () => {
         8: migration8,
         9: migration9,
       },
-      { debug: false },
+      { debug: false }
     )
     const result: any = await migrator(previousState, 9)
     expect(result?.lists?.byUrl?.[COINGECKO_AVAX_LIST]).toBeDefined()
