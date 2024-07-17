@@ -16,6 +16,7 @@ interface ProviderConnectionErrorProps {
 export function ProviderConnectionError({ onBack, closeModal, selectedServiceProvider }: ProviderConnectionErrorProps) {
   const isDarkMode = useIsDarkMode()
 
+  // TODO: fix UNISWAP_LOGO_LARGE import
   return (
     <ConnectingViewWrapper closeModal={closeModal} onBack={onBack}>
       <Flex row gap="$spacing16" pb="$spacing16">
