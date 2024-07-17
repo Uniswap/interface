@@ -1,0 +1,186 @@
+import { PropsWithChildren, useCallback } from 'react'
+import { createSearchParams, useNavigate } from 'react-router-dom'
+import { useCopyToClipboard } from 'src/app/hooks/useOnCopyToClipboard'
+import { AppRoutes, HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
+import { navigate } from 'src/app/navigation/state'
+import { focusOrCreateTokensExploreTab } from 'src/app/navigation/utils'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ShareableEntity } from 'uniswap/src/types/sharing'
+import { logger } from 'utilities/src/logger/logger'
+import {
+  NavigateToNftItemArgs,
+  NavigateToSendFlowArgs,
+  NavigateToSwapFlowArgs,
+  ShareNftArgs,
+  ShareTokenArgs,
+  WalletNavigationProvider,
+  getNavigateToSendFlowArgsInitialState,
+  getNavigateToSwapFlowArgsInitialState,
+} from 'wallet/src/contexts/WalletNavigationContext'
+import { CopyNotificationType } from 'wallet/src/features/notifications/types'
+import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
+import { ExplorerDataType, getExplorerLink, getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
+
+export type SidebarLocationState =
+  | {
+      initialTransactionState?: TransactionState
+    }
+  | undefined
+
+export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.Element {
+  const handleShareNft = useHandleShareNft()
+  const handleShareToken = useHandleShareToken()
+  const navigateToAccountActivityList = useNavigateToAccountActivityList()
+  const navigateToAccountTokenList = useNavigateToAccountTokenList()
+  const navigateToBuyOrReceiveWithEmptyWallet = useNavigateToBuyOrReceiveWithEmptyWallet()
+  const navigateToNftDetails = useNavigateToNftDetails()
+  const navigateToReceive = useNavigateToReceive()
+  const navigateToSend = useNavigateToSend()
+  const navigateToSwapFlow = useNavigateToSwapFlow()
+  const navigateToTokenDetails = useNavigateToTokenDetails()
+  const navigateToNftCollection = useCallback(() => {
+    // no-op until we have proper NFT collection
+  }, [])
+
+  return (
+    <WalletNavigationProvider
+      handleShareNft={handleShareNft}
+      handleShareToken={handleShareToken}
+      navigateToAccountActivityList={navigateToAccountActivityList}
+      navigateToAccountTokenList={navigateToAccountTokenList}
+      navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
+      navigateToNftCollection={navigateToNftCollection}
+      navigateToNftDetails={navigateToNftDetails}
+      navigateToReceive={navigateToReceive}
+      navigateToSend={navigateToSend}
+      navigateToSwapFlow={navigateToSwapFlow}
+      navigateToTokenDetails={navigateToTokenDetails}
+    >
+      {children}
+    </WalletNavigationProvider>
+  )
+}
+
+function useHandleShareNft(): (args: ShareNftArgs) => void {
+  const copyToClipboard = useCopyToClipboard()
+
+  return useCallback(
+    async ({ contractAddress, tokenId }: ShareNftArgs): Promise<void> => {
+      const url = getNftUrl(contractAddress, tokenId)
+
+      await copyToClipboard({ textToCopy: url, copyType: CopyNotificationType.NftUrl })
+
+      sendAnalyticsEvent(WalletEventName.ShareButtonClicked, {
+        entity: ShareableEntity.NftItem,
+        url,
+      })
+    },
+    [copyToClipboard],
+  )
+}
+
+function useHandleShareToken(): (args: ShareTokenArgs) => void {
+  const copyToClipboard = useCopyToClipboard()
+
+  return useCallback(
+    async ({ currencyId }: ShareTokenArgs): Promise<void> => {
+      const url = getTokenUrl(currencyId)
+
+      if (!url) {
+        logger.error(new Error('Failed to get token URL'), {
+          tags: { file: 'SideBarNavigationProvider.tsx', function: 'useHandleShareToken' },
+          extra: { currencyId },
+        })
+        return
+      }
+
+      await copyToClipboard({ textToCopy: url, copyType: CopyNotificationType.TokenUrl })
+
+      sendAnalyticsEvent(WalletEventName.ShareButtonClicked, {
+        entity: ShareableEntity.Token,
+        url,
+      })
+    },
+    [copyToClipboard],
+  )
+}
+
+function useNavigateToAccountActivityList(): () => void {
+  // TODO(EXT-1029): determine why we need useNavigate here
+  const navigateFix = useNavigate()
+
+  return useCallback(
+    (): void =>
+      navigateFix({
+        pathname: AppRoutes.Home,
+        search: createSearchParams({
+          [HomeQueryParams.Tab]: HomeTabs.Activity,
+        }).toString(),
+      }),
+    [navigateFix],
+  )
+}
+
+function useNavigateToAccountTokenList(): () => void {
+  // TODO(EXT-1029): determine why we need useNavigate here
+  const navigateFix = useNavigate()
+
+  return useCallback(
+    (): void =>
+      navigateFix({
+        pathname: AppRoutes.Home,
+        search: createSearchParams({
+          [HomeQueryParams.Tab]: HomeTabs.Tokens,
+        }).toString(),
+      }),
+    [navigateFix],
+  )
+}
+
+function useNavigateToReceive(): () => void {
+  return useCallback((): void => navigate(AppRoutes.Receive), [])
+}
+
+function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
+  return useCallback((args: NavigateToSendFlowArgs): void => {
+    const initialState = getNavigateToSendFlowArgsInitialState(args)
+
+    const state: SidebarLocationState = args ? { initialTransactionState: initialState } : undefined
+
+    navigate(AppRoutes.Transfer, { state })
+  }, [])
+}
+
+function useNavigateToSwapFlow(): (args: NavigateToSwapFlowArgs) => void {
+  return useCallback((args: NavigateToSwapFlowArgs): void => {
+    const initialState = getNavigateToSwapFlowArgsInitialState(args)
+
+    const state: SidebarLocationState = initialState ? { initialTransactionState: initialState } : undefined
+
+    navigate(AppRoutes.Swap, { state })
+  }, [])
+}
+
+function useNavigateToTokenDetails(): (currencyId: string) => void {
+  return useCallback(async (currencyId: string): Promise<void> => {
+    await focusOrCreateTokensExploreTab({ currencyId })
+  }, [])
+}
+
+function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
+  return useCallback(({ address, tokenId, chainId }: NavigateToNftItemArgs): void => {
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(getExplorerLink(chainId ?? UniverseChainId.Mainnet, `${address}/${tokenId}`, ExplorerDataType.NFT))
+  }, [])
+}
+
+function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
+  return useCallback((): void => {
+    // TODO(EXT-669): replace this once we have an onramp in the Extension.
+    // eslint-disable-next-line security/detect-non-literal-fs-filename
+    window.open(uniswapUrls.helpArticleUrls.moonpayHelp, '_blank')
+  }, [])
+}

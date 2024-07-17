@@ -15,7 +15,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
 
   const { buyFormState, derivedBuyFormInfo, setBuyFormState } = useBuyFormContext()
   const { inputAmount } = buyFormState
-  const { notAvailableInThisRegion, quotes, fetchingQuotes } = derivedBuyFormInfo
+  const { notAvailableInThisRegion, quotes, fetchingQuotes, error } = derivedBuyFormInfo
 
   const buyButtonState = useMemo(() => {
     if (!account.isConnected) {
@@ -46,7 +46,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
 
     return {
       label: <Trans i18nKey="common.continue.button" />,
-      disabled: Boolean(fetchingQuotes || !quotes || !quotes.quotes || quotes.quotes.length === 0),
+      disabled: Boolean(fetchingQuotes || !quotes || !quotes.quotes || quotes.quotes.length === 0 || error),
       Component: ButtonPrimary,
       onClick: () => {
         setBuyFormState((prev) => ({ ...prev, providerModalOpen: true }))
@@ -59,6 +59,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
     notAvailableInThisRegion,
     fetchingQuotes,
     quotes,
+    error,
     accountDrawer.open,
     setBuyFormState,
   ])

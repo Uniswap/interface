@@ -19,6 +19,7 @@ import { useWrapTransactionRequest } from 'wallet/src/features/transactions/swap
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/tradingApi/client'
 import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
 import { ApprovalAction, TokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/types'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { usePermit2SignatureWithData } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
@@ -29,8 +30,9 @@ export const UNKNOWN_SIM_ERROR = 'Unknown gas simulation error'
 // Poll often to ensure swap quote is never expected to fail
 const SWAP_REQUEST_POLL_INTERVAL = ONE_SECOND_MS
 
-interface TransactionRequestInfo {
+export interface TransactionRequestInfo {
   transactionRequest: providers.TransactionRequest | undefined
+  permitSignature: string | undefined
   gasFeeResult: GasFeeResult
 }
 
@@ -104,7 +106,8 @@ export function useTransactionRequestInfo({
   ])
 
   // Wrap transaction request
-  const isWrapApplicable = derivedSwapInfo.wrapType !== WrapType.NotApplicable
+  const isUniswapXWrap = trade && isUniswapX(trade) && trade.needsWrap
+  const isWrapApplicable = derivedSwapInfo.wrapType !== WrapType.NotApplicable || isUniswapXWrap
   const wrapTxRequest = useWrapTransactionRequest(derivedSwapInfo)
   const wrapGasFee = useTransactionGasFee(wrapTxRequest, GasSpeed.Urgent, !isWrapApplicable)
 
@@ -178,6 +181,7 @@ export function useTransactionRequestInfo({
 
   return {
     transactionRequest: isWrapApplicable ? wrapTxRequest : data?.swap,
+    permitSignature: signatureInfo.signature,
     gasFeeResult,
   }
 }

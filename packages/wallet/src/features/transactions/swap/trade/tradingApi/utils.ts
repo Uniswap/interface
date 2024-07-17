@@ -11,6 +11,7 @@ import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
   ClassicQuote,
   DutchOrderInfoV2,
+  OrderStatus,
   Quote,
   QuoteResponse,
   Routing,
@@ -31,6 +32,7 @@ import {
   UniswapXTrade,
 } from 'wallet/src/features/transactions/swap/trade/types'
 import { CurrencyField, TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
+import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 const NATIVE_ADDRESS_FOR_TRADING_API = '0x0000000000000000000000000000000000000000'
@@ -384,4 +386,14 @@ export function getRoutingPreferenceForSwapRequest(
     default:
       return RoutingPreference.CLASSIC
   }
+}
+
+export const ORDER_STATUS_TO_TX_STATUS: { [key in OrderStatus]: TransactionStatus } = {
+  [OrderStatus.CANCELLED]: TransactionStatus.Canceled,
+  [OrderStatus.ERROR]: TransactionStatus.Failed,
+  [OrderStatus.EXPIRED]: TransactionStatus.Expired,
+  [OrderStatus.FILLED]: TransactionStatus.Success,
+  [OrderStatus.INSUFFICIENT_FUNDS]: TransactionStatus.InsufficientFunds,
+  [OrderStatus.OPEN]: TransactionStatus.Pending,
+  [OrderStatus.UNVERIFIED]: TransactionStatus.Unknown,
 }

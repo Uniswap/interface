@@ -24,6 +24,7 @@ interface TransactionDetailsProps {
   banner?: ReactNode
   chainId: WalletChainId
   gasFee: GasFeeResult
+  preUniswapXGasFeeUSD?: number
   showExpandedChildren?: boolean
   swapFeeInfo?: SwapFeeInfo
   showWarning?: boolean
@@ -41,6 +42,7 @@ export function TransactionDetails({
   showExpandedChildren,
   chainId,
   gasFee,
+  preUniswapXGasFeeUSD,
   swapFeeInfo,
   showWarning,
   warning,
@@ -120,7 +122,12 @@ export function TransactionDetails({
         {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
         {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
         {displaySwapFeeInfo && <SwapFee swapFeeInfo={swapFeeInfo} />}
-        <NetworkFee chainId={chainId} gasFee={gasFee} transactionUSDValue={transactionUSDValue} />
+        <NetworkFee
+          chainId={chainId}
+          gasFee={gasFee}
+          preUniswapXGasFeeUSD={preUniswapXGasFeeUSD}
+          transactionUSDValue={transactionUSDValue}
+        />
         {AccountDetails}
       </Flex>
     </Flex>

@@ -5,7 +5,6 @@ import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { SignRequest, WalletConnectRequest, isTransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { useNoYoloParser } from 'src/utils/useNoYoloParser'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { TextVariantTokens, iconSizes } from 'ui/src/theme'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
@@ -17,6 +16,7 @@ import { useENS } from 'wallet/src/features/ens/useENS'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import { SpendingDetails } from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
 import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
+import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
 
 const getStrMessage = (request: WalletConnectRequest): string => {
   if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {

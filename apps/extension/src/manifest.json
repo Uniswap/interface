@@ -1,0 +1,75 @@
+{
+  "manifest_version": 3,
+  "name": "Uniswap Extension",
+  "description": "The Uniswap Extension is a self-custody crypto wallet that's built for swapping.",
+  "version": "1.0.3",
+  "minimum_chrome_version": "116",
+  "icons": {
+    "16": "assets/icon16.png",
+    "32": "assets/icon32.png",
+    "48": "assets/icon48.png",
+    "128": "assets/icon128.png"
+  },
+  "action": {
+    "default_icon": {
+      "16": "assets/icon16.png",
+      "32": "assets/icon32.png",
+      "48": "assets/icon48.png",
+      "128": "assets/icon128.png"
+    }
+  },
+  "side_panel": {
+    "default_path": "sidebar.html"
+  },
+  "background": {
+    "service_worker": "background.js",
+    "type": "module"
+  },
+  "permissions": [
+    "alarms",
+    "notifications",
+    "sidePanel",
+    "storage",
+    "tabs"
+  ],
+  "content_scripts": [
+    {
+      "id": "injected",
+      "run_at": "document_start",
+      "matches": [
+        "http://127.0.0.1/*",
+        "http://localhost/*",
+        "https://*/*"
+      ],
+      "js": [
+        "injected.js"
+      ]
+    },
+    {
+      "id": "ethereum",
+      "run_at": "document_start",
+      "matches": [
+        "http://127.0.0.1/*",
+        "http://localhost/*",
+        "https://*/*"
+      ],
+      "js": [
+        "ethereum.js"
+      ],
+      "world": "MAIN"
+    }
+  ],
+  "externally_connectable": {
+    "ids": [],
+    "matches": []
+  },
+  "commands": {
+    "_execute_action": {
+      "suggested_key": {
+        "default": "Ctrl+Shift+U",
+        "mac": "Command+Shift+U"
+      },
+      "description": "Toggles the sidebar"
+    }
+  }
+}

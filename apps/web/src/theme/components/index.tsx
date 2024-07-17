@@ -62,8 +62,8 @@ export const ClickableStyle = css`
   }
 `
 
-export const CloseIcon = styled(X)<{ onClick: () => void }>`
-  color: ${({ theme }) => theme.neutral1};
+export const CloseIcon = styled(X)<{ onClick: () => void; $color?: string }>`
+  color: ${({ theme, $color }) => $color ?? theme.neutral1};
   cursor: pointer;
   ${ClickableStyle}
 `

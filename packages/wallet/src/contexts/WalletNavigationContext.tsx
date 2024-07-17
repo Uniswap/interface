@@ -64,6 +64,7 @@ export type NavigateToNftItemArgs = {
   owner?: Address
   address: Address
   tokenId: string
+  chainId?: WalletChainId
   isSpam?: boolean
   fallbackData?: NFTItem
 }

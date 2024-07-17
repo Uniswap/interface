@@ -45,7 +45,7 @@ export function* wrap(params: WrapParams) {
       request: txRequest,
     }
 
-    yield* call(sendTransaction, {
+    return yield* call(sendTransaction, {
       txId,
       chainId: inputCurrencyAmount.currency.chainId,
       account,

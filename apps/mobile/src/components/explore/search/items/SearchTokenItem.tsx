@@ -8,8 +8,9 @@ import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'u
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ElementName, MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
@@ -70,7 +71,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
       <TouchableArea
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
-        testID={ElementName.SearchTokenItem}
+        testID={TestID.SearchTokenItem}
         onLongPress={disableOnPress}
         onPress={onPress}
       >

@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, CheckBox, Flex, SpinningLoader, Text } from 'ui/src'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function RemoveLastMnemonicWalletFooter({
   onPress,
@@ -35,7 +35,7 @@ export function RemoveLastMnemonicWalletFooter({
           fill
           disabled={!checkBoxAccepted}
           icon={inProgress ? <SpinningLoader color="$statusCritical" /> : undefined}
-          testID={ElementName.Confirm}
+          testID={TestID.Confirm}
           theme="detrimental"
           onPress={onPress}
         >

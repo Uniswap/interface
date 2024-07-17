@@ -11,7 +11,7 @@ import { updateSignature } from 'state/signatures/reducer'
 import { SignatureType } from 'state/signatures/types'
 import { addTransaction, finalizeTransaction } from 'state/transactions/reducer'
 import { TransactionType } from 'state/transactions/types'
-import { logSwapSuccess } from 'tracing/swapFlowLoggers'
+import { logSwapSuccess, logUniswapXSwapSuccess } from 'tracing/swapFlowLoggers'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -77,7 +77,7 @@ function useOnActivityUpdate(): OnActivityUpdate {
 
           // Only track swap success for Dutch orders; limit order fill-time will throw off time tracking analytics
           if (original.type !== SignatureType.SIGN_LIMIT) {
-            logSwapSuccess(hash, chainId, analyticsContext)
+            logUniswapXSwapSuccess(hash, updatedOrder.orderHash, chainId, analyticsContext)
           }
         } else if (original.status !== updatedOrder.status) {
           const orderHash = original.orderHash

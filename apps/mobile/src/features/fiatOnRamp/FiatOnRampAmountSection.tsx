@@ -16,6 +16,7 @@ import { fonts, spacing } from 'ui/src/theme'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
 import { FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
@@ -191,6 +192,7 @@ export function FiatOnRampAmountSection({
             formattedAmount={formattedAmount}
             loading={selectTokenLoading}
             selectedCurrencyInfo={currency.currencyInfo}
+            testID={TestID.TokenSelectorToggle}
             onPress={onTokenSelectorPress}
           />
         )}

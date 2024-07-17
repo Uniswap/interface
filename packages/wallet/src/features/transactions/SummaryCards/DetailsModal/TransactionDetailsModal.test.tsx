@@ -4,7 +4,7 @@ import {
   TransactionDetailsContent,
   TransactionDetailsHeader,
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
-import { TransactionStatus } from 'wallet/src/features/transactions/types'
+import { TransactionDetails } from 'wallet/src/features/transactions/types'
 import {
   ACCOUNT,
   ARBITRUM_DAI_CURRENCY_INFO,
@@ -13,12 +13,35 @@ import {
   OPTIMISM_CURRENCY,
   POLYGON_CURRENCY,
   currencyInfo,
-  finalizedTransactionDetails,
   preloadedSharedState,
 } from 'wallet/src/test/fixtures'
 import { renderWithProviders } from 'wallet/src/test/render'
 
 const preloadedState = preloadedSharedState({ account: ACCOUNT })
+const mockTransaction = {
+  id: '9920dbad-ff24-47c8-814a-094566fc45ff',
+  chainId: 81457,
+  routing: 'CLASSIC',
+  from: '0xee814caea14f6cccfeae34fea11d9a2ca6aabb11',
+  typeInfo: {
+    type: 'approve',
+    tokenAddress: '0x2e8b8dafe7faa3aa2bbcd27cda50ebcdfbd8710c',
+    spender: '0xf097e7bed97db1bccd9b067a564aca3d4e5da1f4',
+  },
+  status: 'confirmed',
+  addedTime: 1719911758204,
+  options: { request: {} },
+  hash: 'b568a9e9-bbe7-42fc-ab00-5070186c0600',
+  receipt: {
+    transactionIndex: 29529,
+    blockNumber: 17489,
+    blockHash: 'dfd3ad45-78e7-4124-90f2-92758b4499ba',
+    confirmedTime: 1719946653408,
+    confirmations: 57408,
+    gasUsed: 27844,
+    effectiveGasPrice: 2941,
+  },
+} as TransactionDetails
 
 // Helper function to get currency info based on chain ID
 const getCurrencyInfoForChain = (chainId: number): CurrencyInfo => {
@@ -59,16 +82,16 @@ jest.mock('wallet/src/features/language/localizedDayjs', () => ({
 }))
 
 describe('TransactionDetails Components', () => {
-  const mockTransaction = finalizedTransactionDetails({
-    status: TransactionStatus.Success,
-  })
-  console.log(mockTransaction)
-
   it('renders TransactionDetailsHeader without error', () => {
-    const onClose = jest.fn()
+    const transactionActions = {
+      openActionsModal: jest.fn(),
+      openCancelModal: jest.fn(),
+      renderModals: jest.fn(),
+      menuItems: [],
+    }
 
     const { toJSON } = renderWithProviders(
-      <TransactionDetailsHeader authTrigger={undefined} transactionDetails={mockTransaction} onClose={onClose} />,
+      <TransactionDetailsHeader transactionActions={transactionActions} transactionDetails={mockTransaction} />,
       { preloadedState },
     )
 

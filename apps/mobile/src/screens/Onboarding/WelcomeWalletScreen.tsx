@@ -11,6 +11,7 @@ import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { NumberType } from 'utilities/src/format/types'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
@@ -130,7 +131,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
               <Arrow color={colors.sporeWhite.val} direction="e" size={iconSizes.icon24} />
             </Flex>
           }
-          testID={ElementName.Next}
+          testID={TestID.Next}
           onPress={onPressNext}
         />
       </Trace>

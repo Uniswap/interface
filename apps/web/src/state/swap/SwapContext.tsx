@@ -59,9 +59,6 @@ export function SwapAndLimitContextProvider({
   const previousPrefilledState = usePrevious(prefilledState)
 
   useEffect(() => {
-    if (multichainUXEnabled) {
-      return
-    }
     const combinedCurrencyState = { ...currencyState, ...prefilledState }
     const chainChanged = previousConnectedChainId && previousConnectedChainId !== account.chainId
     const prefilledInputChanged = Boolean(
@@ -75,7 +72,7 @@ export function SwapAndLimitContextProvider({
         : prefilledState.outputCurrency,
     )
 
-    if (chainChanged || prefilledInputChanged || prefilledOutputChanged) {
+    if ((!multichainUXEnabled && chainChanged) || prefilledInputChanged || prefilledOutputChanged) {
       setCurrencyState({
         inputCurrency: combinedCurrencyState.inputCurrency ?? undefined,
         outputCurrency: combinedCurrencyState.outputCurrency ?? undefined,

@@ -113,6 +113,15 @@ export enum ExplorerDataType {
   TOKEN = 'token',
   ADDRESS = 'address',
   BLOCK = 'block',
+  NFT = 'nft',
+}
+
+/**
+ * Return the explorer name for the given chain ID
+ * @param chainId the ID of the chain for which to return the explorer name
+ */
+export function getExplorerName(chainId: UniverseChainId): string {
+  return UNIVERSE_CHAIN_INFO[chainId].explorer.name
 }
 
 /**
@@ -145,6 +154,18 @@ export function getExplorerLink(chainId: WalletChainId, data: string, type: Expl
 
     case ExplorerDataType.ADDRESS:
       return `${prefix}address/${data}`
+
+    case ExplorerDataType.NFT:
+      if (chainId === UniverseChainId.Zora) {
+        // Zora Energy Explorer uses a different URL format of [blockExplorerUrl]/token/[contractAddress]/instance/[tokenId]
+        // We need to split the data to get the contract address and token ID
+        const splitData = data.split('/')
+        const contractAddress = splitData[0] ?? ''
+        const tokenAddress = splitData[1] ?? ''
+        return `${prefix}token/${contractAddress}/instance/${tokenAddress}`
+      }
+      return `${prefix}nft/${data}`
+
     default:
       return `${prefix}`
   }

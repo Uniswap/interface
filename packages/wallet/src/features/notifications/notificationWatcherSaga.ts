@@ -16,12 +16,11 @@ export function* notificationWatcher() {
 }
 
 export function* pushTransactionNotification(action: ReturnType<typeof finalizeTransaction>) {
-  const { chainId, status, typeInfo, hash, id, from, addedTime } = action.payload
+  const { chainId, status, typeInfo, id, from, addedTime } = action.payload
 
   const baseNotificationData = {
     txStatus: status,
     chainId,
-    txHash: hash,
     address: from,
     txId: id,
   }

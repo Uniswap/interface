@@ -12,6 +12,7 @@ import { Flex, HapticFeedback, Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { isDevEnv } from 'utilities/src/environment'
@@ -82,6 +83,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                   shadowColor="$accent1"
                   shadowOpacity={0.4}
                   shadowRadius="$spacing8"
+                  testID={TestID.CreateAccount}
                   onPress={onPressCreateWallet}
                 >
                   <Text color="$sporeWhite" variant="buttonLabel2">
@@ -95,7 +97,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                 hapticFeedback
                 alignItems="center"
                 hitSlop={16}
-                testID={ElementName.ImportAccount}
+                testID={TestID.ImportAccount}
                 onLongPress={async (): Promise<void> => {
                   if (isDevEnv()) {
                     await HapticFeedback.selection()

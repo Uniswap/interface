@@ -28,7 +28,6 @@ export function buildReceiveNotification(
   const baseNotificationData = {
     txStatus: status,
     chainId,
-    txHash: hash,
     address: receivingAddress,
     txId: id,
   }

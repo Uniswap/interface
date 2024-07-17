@@ -5,7 +5,7 @@ import { NativeSyntheticEvent, TextInput, TextInputProps, TextInputSelectionChan
 import { Flex, FlexProps, SpaceTokens, Text, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTokenButton'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
@@ -239,7 +239,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
               py="$none"
               returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
               showSoftInputOnFocus={showSoftInputOnFocus}
-              testID={isOutput ? ElementName.AmountInputOut : ElementName.AmountInputIn}
+              testID={isOutput ? TestID.AmountInputOut : TestID.AmountInputIn}
               value={value}
               onChangeText={onChangeText}
               onPressIn={onPressIn}
@@ -248,7 +248,11 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
           </Flex>
         )}
         <Flex row alignItems="center" pl="$spacing8">
-          <SelectTokenButton selectedCurrencyInfo={currencyInfo} onPress={onShowTokenSelector} />
+          <SelectTokenButton
+            selectedCurrencyInfo={currencyInfo}
+            testID={TestID.TokenSelectorToggle}
+            onPress={onShowTokenSelector}
+          />
         </Flex>
       </Flex>
 

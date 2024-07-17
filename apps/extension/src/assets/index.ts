@@ -1,0 +1,6 @@
+export const ONBOARDING_BACKGROUND_LIGHT = require('./onboarding-background-light.png')
+export const ONBOARDING_BACKGROUND_DARK = require('./onboarding-background-dark.png')
+export const LOCK_SCREEN_BACKGROUND = require('./lock-screen-background.png')
+export const UNISWAP_BETA_LOGO = require('./beta-logo.png')
+export const EXTENSION_PREVIEW_LIGHT = require('./graphics/extension-preview-light.png')
+export const EXTENSION_PREVIEW_DARK = require('./graphics/extension-preview-dark.png')

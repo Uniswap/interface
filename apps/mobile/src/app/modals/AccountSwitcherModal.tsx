@@ -13,8 +13,9 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { ActionSheetModal, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
@@ -110,12 +111,12 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
         }),
       )
 
-      // Log analytics event
-      sendAnalyticsEvent(MobileEventName.WalletAdded, {
+      sendAnalyticsEvent(WalletEventName.WalletAdded, {
         wallet_type: ImportType.CreateAdditional,
         accounts_imported_count: 1,
         wallets_imported: [newAccount.address],
         cloud_backup_used: newAccount.backups?.includes(BackupType.Cloud) ?? false,
+        modal: ModalName.AccountSwitcher,
       })
     }
 
@@ -263,7 +264,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           variant="subheading1"
         />
         <Flex px="$spacing24">
-          <Button size="small" testID={ElementName.WalletSettings} theme="secondary" onPress={onManageWallet}>
+          <Button size="small" testID={TestID.WalletSettings} theme="secondary" onPress={onManageWallet}>
             {t('account.wallet.button.manage')}
           </Button>
         </Flex>

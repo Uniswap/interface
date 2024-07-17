@@ -2,8 +2,9 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native'
 import { Text, TouchableArea } from 'ui/src'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { maxAmountSpend } from 'wallet/src/utils/balance'
 
@@ -51,7 +52,7 @@ export function MaxAmountButton({
         px="$spacing4"
         py="$spacing2"
         style={style}
-        testID={currencyField === CurrencyField.INPUT ? ElementName.SetMaxInput : ElementName.SetMaxOutput}
+        testID={currencyField === CurrencyField.INPUT ? TestID.SetMaxInput : TestID.SetMaxOutput}
         onPress={onPress}
       >
         <Text color={disableMaxButton ? '$neutral2' : '$accent1'} variant="buttonLabel4">

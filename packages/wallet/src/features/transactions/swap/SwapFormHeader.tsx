@@ -4,7 +4,7 @@ import { Keyboard } from 'react-native'
 import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { Eye, Settings, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
@@ -65,10 +65,10 @@ export function SwapFormHeader(): JSX.Element {
         mt={isWeb ? '$spacing4' : '$spacing8'}
         pl={isWeb ? '$none' : '$spacing12'}
         pr={isWeb ? '$spacing4' : customSlippageTolerance ? '$spacing4' : '$spacing16'}
-        testID={ElementName.SwapFormHeader}
+        testID={TestID.SwapFormHeader}
       >
         {isWeb && (
-          <TouchableArea hapticFeedback testID={ElementName.SwapSettings} onPress={onClose}>
+          <TouchableArea hapticFeedback testID={TestID.SwapSettings} onPress={onClose}>
             <Flex
               centered
               row
@@ -104,7 +104,7 @@ export function SwapFormHeader(): JSX.Element {
           )}
 
           {!isViewOnlyWallet && (
-            <TouchableArea hapticFeedback testID={ElementName.SwapSettings} onPress={onPressSwapSettings}>
+            <TouchableArea hapticFeedback testID={TestID.SwapSettings} onPress={onPressSwapSettings}>
               <Flex
                 centered
                 row

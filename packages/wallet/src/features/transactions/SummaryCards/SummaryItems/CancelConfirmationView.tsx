@@ -1,18 +1,17 @@
 import { providers } from 'ethers'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
-import { Button, Flex, HapticFeedback, Text, useSporeColors } from 'ui/src'
-import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { Button, Flex, FlexLoader, HapticFeedback, Separator, Skeleton, Text, isWeb } from 'ui/src'
+import { SlashCircle } from 'ui/src/components/icons'
+import { fonts } from 'ui/src/theme'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
 import { useCancelationGasFeeInfo, useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { useSelectTransaction } from 'wallet/src/features/transactions/hooks'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
-import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function CancelConfirmationView({
   authTrigger,
@@ -25,10 +24,8 @@ export function CancelConfirmationView({
   onCancel: (txRequest: providers.TransactionRequest) => void
   transactionDetails: TransactionDetails
 }): JSX.Element {
-  const colors = useSporeColors()
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const accountAddress = useActiveAccount()?.address
 
   const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
   const gasFeeUSD = useUSDValue(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee)
@@ -51,47 +48,58 @@ export function CancelConfirmationView({
     }
   }, [onCancelConfirm, authTrigger])
 
+  // We don't currently support cancelling orders made from another device.
+  const isRemoteOrder =
+    useSelectTransaction(transactionDetails.from, transactionDetails.chainId, transactionDetails.id) === undefined &&
+    isUniswapX(transactionDetails)
+
   const disableConfirmationButton =
-    !cancelationGasFeeInfo?.cancelRequest || transactionDetails.status !== TransactionStatus.Pending
+    !cancelationGasFeeInfo?.cancelRequest || transactionDetails.status !== TransactionStatus.Pending || isRemoteOrder
 
   return (
-    <Flex centered grow backgroundColor="$surface1" borderRadius="$rounded20" gap="$spacing12" p="$spacing12">
+    <Flex
+      centered
+      grow
+      backgroundColor="$surface1"
+      borderRadius="$rounded20"
+      gap="$spacing16"
+      mt={isWeb ? '$spacing16' : '$none'}
+      px={isWeb ? '$none' : '$spacing24'}
+      py={isWeb ? '$none' : '$spacing12'}
+    >
       <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
-        <SlashCircleIcon color={colors.neutral2.get()} strokeWidth="1" />
+        <SlashCircle color="$neutral2" size="$icon.20" />
       </Flex>
       <Flex centered gap="$spacing8">
         <Text variant="buttonLabel2">{t('transaction.action.cancel.title')}</Text>
-        <Text color="$neutral2" textAlign="center" variant="body2">
+        <Text color="$neutral2" textAlign="center" variant="body3">
           {t('transaction.action.cancel.description')}
         </Text>
       </Flex>
-      <Flex backgroundColor="$surface2" borderRadius="$rounded16" width="100%">
-        <Flex grow row justifyContent="space-between" p="$spacing12">
-          <Text variant="subheading2">{t('transaction.networkCost.label')}</Text>
-          {!gasFeeUSD ? <ActivityIndicator /> : <Text variant="subheading2">{gasFee}</Text>}
-        </Flex>
-        {accountAddress && (
-          <Flex grow row justifyContent="space-between" p="$spacing12">
-            <AddressDisplay
-              hideAddressInSubtitle
-              address={transactionDetails.from}
-              horizontalGap="$spacing8"
-              variant="subheading2"
-            />
-            <Text color="$neutral2" variant="subheading2">
-              {shortenAddress(transactionDetails.from)}
-            </Text>
-          </Flex>
+      <Flex width="100%">
+        <Separator />
+      </Flex>
+      <Flex row justifyContent="space-between" pb="$spacing8" px="$spacing12" width="100%">
+        <Text color="$neutral2" variant="body3">
+          {t('transaction.networkCost.label')}
+        </Text>
+        {!gasFeeUSD ? (
+          <Skeleton>
+            <FlexLoader borderRadius="$rounded4" height={fonts.body3.lineHeight} opacity={0.4} width="$spacing48" />
+          </Skeleton>
+        ) : (
+          <Text variant="body3">{gasFee}</Text>
         )}
       </Flex>
-      <Flex row gap="$spacing8" px="$spacing4" width="100%">
-        <Button fill theme="tertiary" width="50%" onPress={onBack}>
+      <Flex row gap="$spacing8" width="100%">
+        <Button fill size="small" theme="tertiary" width="50%" onPress={onBack}>
           {t('common.button.back')}
         </Button>
         <Button
           fill
           disabled={disableConfirmationButton}
-          testID={ElementName.Cancel}
+          size="small"
+          testID={TestID.Cancel}
           theme="detrimental"
           width="50%"
           onPress={onPressCancel}

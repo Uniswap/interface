@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType } from 'react-native'
@@ -5,6 +6,8 @@ import { ColorTokens, Flex, HapticFeedback, SpaceTokens, Text, TextProps, Toucha
 import { CopySheets } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
@@ -49,7 +52,7 @@ type CopyButtonWrapperProps = {
 function CopyButtonWrapper({ children, onPress }: PropsWithChildren<CopyButtonWrapperProps>): JSX.Element {
   if (onPress) {
     return (
-      <TouchableArea hapticFeedback hitSlop={16} testID={ElementName.Copy} onPress={onPress}>
+      <TouchableArea hapticFeedback hitSlop={16} testID={TestID.Copy} onPress={onPress}>
         {children}
       </TouchableArea>
     )
@@ -113,6 +116,9 @@ export function AddressDisplay({
         copyType: CopyNotificationType.Address,
       }),
     )
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.CopyAddress,
+    })
   }
 
   // Extract sizes so copy icon can match font variants

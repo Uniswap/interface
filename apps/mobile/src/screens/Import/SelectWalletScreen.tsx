@@ -8,6 +8,7 @@ import { Button, Flex, Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useSelectWalletScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -137,7 +138,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
                     hideSelectionCircle={isOnlyOneAccount}
                     name={ElementName.WalletCard}
                     selected={selectedAddresses.includes(ownerAddress)}
-                    testID={`${ElementName.WalletCard}-${i + 1}`}
+                    testID={`${TestID.WalletCard}-${i + 1}`}
                     onSelect={toggleAddressSelection}
                   />
                 )
@@ -148,7 +149,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
         <Flex opacity={showError ? 0 : 1}>
           <Button
             disabled={isImportingAccounts || isLoading || !!showError || selectedAddresses.length === 0}
-            testID={ElementName.Next}
+            testID={TestID.Next}
             onPress={onSubmit}
           >
             {t('common.button.continue')}

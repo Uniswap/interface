@@ -31,9 +31,10 @@ import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -205,7 +206,7 @@ export function SettingsWallet({
             stickySectionHeadersEnabled={false}
           />
         </Flex>
-        <Button testID={ElementName.Remove} theme="detrimental" onPress={onRemoveWallet}>
+        <Button testID={TestID.Remove} theme="detrimental" onPress={onRemoveWallet}>
           {t('settings.setting.wallet.action.remove')}
         </Button>
       </Flex>

@@ -5,6 +5,8 @@ import type { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-nat
 import { GeneratedIcon, isWeb } from 'ui/src'
 import { CoinConvert, Eye, EyeOff, ReceiveAlt, SendAction } from 'ui/src/components/icons'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
@@ -71,6 +73,11 @@ export function useTokenContextMenu({ currencyId, tokenSymbolForNotification, po
      */
     updateCache(!isHidden, portfolioBalance ?? undefined)
 
+    sendAnalyticsEvent(WalletEventName.TokenVisibilityChanged, {
+      currencyId,
+      // we log the state to which it's transitioning
+      visible: isHidden,
+    })
     dispatch(toggleTokenVisibility({ currencyId: currencyId.toLowerCase(), isSpam: isHidden }))
 
     if (tokenSymbolForNotification) {

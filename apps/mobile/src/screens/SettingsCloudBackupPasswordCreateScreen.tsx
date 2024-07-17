@@ -9,7 +9,8 @@ import { CloudBackupPasswordForm } from 'src/features/CloudBackup/CloudBackupPas
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { OSDynamicCloudIcon } from 'ui/src/components/icons'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 
@@ -77,7 +78,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
                 <Button fill theme="tertiary" onPress={(): void => navigation.goBack()}>
                   {t('common.button.cancel')}
                 </Button>
-                <Button fill testID={ElementName.Confirm} onPress={(): void => setShowCloudBackupInfoModal(false)}>
+                <Button fill testID={TestID.Confirm} onPress={(): void => setShowCloudBackupInfoModal(false)}>
                   {t('common.button.continue')}
                 </Button>
               </Flex>

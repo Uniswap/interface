@@ -4,8 +4,9 @@ import { useAppStackNavigation } from 'src/app/navigation/types'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { Verified } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { SearchContext } from 'wallet/src/features/search/SearchContext'
@@ -58,7 +59,7 @@ export function SearchNFTCollectionItem({ collection, searchContext }: NFTCollec
     <TouchableArea
       hapticFeedback
       hapticStyle={ImpactFeedbackStyle.Light}
-      testID={ElementName.SearchNFTCollectionItem}
+      testID={TestID.SearchNFTCollectionItem}
       onPress={onPress}
     >
       <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" px="$spacing8" py="$spacing12">

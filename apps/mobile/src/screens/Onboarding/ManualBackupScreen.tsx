@@ -13,8 +13,9 @@ import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ManualPageViewScreen, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
@@ -106,7 +107,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               {seedWarningAcknowledged ? <MnemonicDisplay mnemonicId={mnemonicId} /> : <HiddenMnemonicWordView />}
             </Flex>
             <Flex justifyContent="flex-end">
-              <Button testID={ElementName.Next} onPress={nextView}>
+              <Button testID={TestID.Next} onPress={nextView}>
                 {t('common.button.continue')}
               </Button>
             </Flex>
@@ -131,7 +132,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
             />
           </Flex>
           <Flex justifyContent="flex-end">
-            <Button disabled={!continueButtonEnabled} testID={ElementName.Continue} onPress={onValidationSuccessful}>
+            <Button disabled={!continueButtonEnabled} testID={TestID.Continue} onPress={onValidationSuccessful}>
               {t('common.button.continue')}
             </Button>
           </Flex>
@@ -162,14 +163,7 @@ const SeedWarningModal = ({ onPress }: { onPress: () => void }): JSX.Element => 
         <Text color="$neutral2" textAlign="center" variant="body2">
           {t('onboarding.recoveryPhrase.warning.final.message')}
         </Text>
-        <Button
-          flexGrow={1}
-          mt="$spacing16"
-          testID={ElementName.Confirm}
-          theme="primary"
-          width="100%"
-          onPress={onPress}
-        >
+        <Button flexGrow={1} mt="$spacing16" testID={TestID.Confirm} theme="primary" width="100%" onPress={onPress}>
           {t('onboarding.recoveryPhrase.warning.final.button')}
         </Button>
       </Flex>

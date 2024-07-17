@@ -3,7 +3,7 @@ import { useAppDispatch } from 'src/app/hooks'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
@@ -37,7 +37,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
     <TouchableArea
       hapticFeedback
       hapticStyle={ImpactFeedbackStyle.Light}
-      testID={ElementName.SearchEtherscanItem}
+      testID={TestID.SearchEtherscanItem}
       onPress={onPressViewEtherscan}
     >
       <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between" px="$spacing8" py="$spacing12">

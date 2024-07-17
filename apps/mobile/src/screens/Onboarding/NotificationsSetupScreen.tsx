@@ -14,6 +14,7 @@ import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'u
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import i18n from 'uniswap/src/i18n/i18n'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
@@ -96,7 +97,7 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
       </Flex>
       <Flex gap="$spacing24">
         <Trace logPress element={ElementName.Skip}>
-          <TouchableArea testID={ElementName.Skip} onPress={navigateToNextScreen}>
+          <TouchableArea testID={TestID.Skip} onPress={navigateToNextScreen}>
             <Text color="$accent1" textAlign="center" variant="buttonLabel2">
               {t('common.button.later')}
             </Text>

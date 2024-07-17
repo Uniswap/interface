@@ -9,12 +9,13 @@ import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
 import { selectTokensVisibility } from 'wallet/src/features/favorites/selectors'
 import { CurrencyIdToVisibility } from 'wallet/src/features/favorites/slice'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
-import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
+import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import {
+  isFinalizedTx,
   SendTokenTransactionInfo,
   TransactionDetails,
-  TransactionStatus,
   TransactionType,
+  UniswapXOrderDetails,
 } from 'wallet/src/features/transactions/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { RootState, useAppSelector } from 'wallet/src/state'
@@ -156,6 +157,28 @@ export const makeSelectTransaction = (): Selector<RootState, TransactionDetails 
     },
   )
 
+interface MakeSelectOrderParams {
+  orderHash: string
+}
+
+export const makeSelectUniswapXOrder = (): Selector<
+  RootState,
+  UniswapXOrderDetails | undefined,
+  [MakeSelectOrderParams]
+> =>
+  createSelector(
+    selectTransactions,
+    (_: RootState, { orderHash }: MakeSelectOrderParams) => ({ orderHash }),
+    (transactions, { orderHash }): UniswapXOrderDetails | undefined => {
+      for (const transactionsForChain of flattenObjectOfObjects(transactions)) {
+        for (const tx of Object.values(transactionsForChain)) {
+          if (isUniswapX(tx) && tx.orderHash === orderHash) {
+            return tx
+          }
+        }
+      }
+    },
+  )
 // Returns a list of past recipients ordered from most to least recent
 // TODO: [MOB-232] either revert this to return addresses or keep but also return displayName so that it's searchable for RecipientSelect
 export const selectRecipientsByRecency = (state: RootState): SearchableRecipient[] => {
@@ -180,9 +203,7 @@ export const selectRecipientsByRecency = (state: RootState): SearchableRecipient
 export const selectIncompleteTransactions = (state: RootState): TransactionDetails[] => {
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
   return transactionsByChainId.reduce<TransactionDetails[]>((accum, transactions) => {
-    const pendingTxs = Object.values(transactions).filter(
-      (tx) => Boolean(!tx.receipt) && tx.status !== TransactionStatus.Failed && tx.status !== TransactionStatus.Success,
-    )
+    const pendingTxs = Object.values(transactions).filter((tx) => Boolean(!tx.receipt) && !isFinalizedTx(tx))
     return [...accum, ...pendingTxs]
   }, [])
 }
