@@ -923,7 +923,7 @@
   "stats.volume.1d.description": "1 day volume is the amount of the asset that has been traded on Uniswap v3 during the past 24 hours.",
   "stats.volume.1d": "1 day volume",
   "stats.volume.description": "Volume is the amount of the asset that has been traded on Uniswap v3 during the selected time frame.",
-  "swap.allow.oneTime": "Allow {{sym}} (one time)",
+  "swap.allow.oneTime": "{{sym}} approval",
   "swap.approvalNeeded": "An approval is needed to use this token. ",
   "swap.approvalPending": "Approval pending",
   "swap.approveAndSubmit": "Approve and submit",
