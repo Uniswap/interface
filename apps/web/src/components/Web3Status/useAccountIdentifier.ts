@@ -38,11 +38,11 @@ export function useAccountIdentifier() {
 
   // Keep the stored account identifiers synced with the latest unitag and ENS name
   useEffect(() => {
-    if (!account.address) {
+    if (!address) {
       return
     }
     updateRecentAccountIdentifierMap((prev) => {
-      const updatedIdentifiers = prev[account.address as string] ?? {}
+      const updatedIdentifiers = prev[address as string] ?? {}
       if (unitagResponse) {
         updatedIdentifiers.unitag = unitagResponse.username
       }
@@ -50,15 +50,15 @@ export function useAccountIdentifier() {
         updatedIdentifiers.ensName = ensNameResponse
       }
 
-      return { ...prev, [account.address as string]: updatedIdentifiers, recent: updatedIdentifiers }
+      return { ...prev, [address as string]: updatedIdentifiers, recent: updatedIdentifiers }
     })
-  }, [account.address, unitagResponse, ensNameResponse, updateRecentAccountIdentifierMap])
+  }, [address, unitagResponse, ensNameResponse, updateRecentAccountIdentifierMap])
 
   // If there is no account yet, optimistically use the stored `recent` account identifier
   const { unitag, ensName } =
-    (account.address ? recentAccountIdentifierMap[account.address] : recentAccountIdentifierMap['recent']) ?? {}
+    (address ? recentAccountIdentifierMap[address] : recentAccountIdentifierMap['recent']) ?? {}
 
-  const accountIdentifier = unitag ?? ensName ?? shortenAddress(account.address)
+  const accountIdentifier = unitag ?? ensName ?? shortenAddress(address)
   return {
     accountIdentifier,
     hasUnitag: Boolean(unitag),
