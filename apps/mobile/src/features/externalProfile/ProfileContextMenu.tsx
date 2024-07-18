@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, Share } from 'react-native'
@@ -9,10 +10,11 @@ import { Flex, HapticFeedback, TouchableArea } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -38,6 +40,10 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     await HapticFeedback.impact()
     await setClipboard(address)
     dispatch(pushNotification({ type: AppNotificationType.Copied, copyType: CopyNotificationType.Address }))
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.CopyAddress,
+      screen: MobileScreens.ExternalProfile,
+    })
   }, [address, dispatch])
 
   const openExplorerLink = useCallback(async () => {

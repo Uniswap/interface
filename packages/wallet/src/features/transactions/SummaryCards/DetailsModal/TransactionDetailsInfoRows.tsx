@@ -1,7 +1,15 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, UniversalImage, UniversalImageResizeMode, useIsDarkMode } from 'ui/src'
-import { CopyAlt, ExternalLink, Unitag } from 'ui/src/components/icons'
+import {
+  Flex,
+  Text,
+  TouchableArea,
+  UniswapXText,
+  UniversalImage,
+  UniversalImageResizeMode,
+  useIsDarkMode,
+} from 'ui/src'
+import { CopyAlt, ExternalLink, UniswapX, Unitag } from 'ui/src/components/icons'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
@@ -13,6 +21,7 @@ import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/n
 import { useNetworkFee } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/hooks'
 import { shortenHash } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import { useAppDispatch } from 'wallet/src/state'
 import { setClipboard } from 'wallet/src/utils/clipboard'
@@ -40,7 +49,7 @@ export function useTransactionDetailsInfoRows(transactionDetails: TransactionDet
 
   const defaultRows = [
     <NetworkFeeRow key="networkFee" transactionDetails={transactionDetails} />,
-    <TransactionHashRow key="transactionId" hash={transactionDetails.hash} />,
+    <TransactionHashRow key="transactionId" transactionDetails={transactionDetails} />,
   ]
   const specificRows: JSX.Element[] = []
 
@@ -127,17 +136,24 @@ function NetworkFeeRow({ transactionDetails }: { transactionDetails: Transaction
   const { t } = useTranslation()
   const { value: networkFeeValue } = useNetworkFee(transactionDetails)
 
+  const Logo = isUniswapX(transactionDetails) ? UniswapX : NetworkLogo
+  const GasText = isUniswapX(transactionDetails) ? UniswapXText : Text
   return (
     <InfoRow key="networkFee" label={t('transaction.details.networkFee')}>
-      <NetworkLogo chainId={transactionDetails.chainId} size={iconSizes.icon16} />
-      <Text variant="body3">{networkFeeValue}</Text>
+      <Logo chainId={transactionDetails.chainId} size={iconSizes.icon16} />
+      <GasText variant="body3">{networkFeeValue}</GasText>
     </InfoRow>
   )
 }
 
-function TransactionHashRow({ hash }: { hash?: string }): JSX.Element {
+function TransactionHashRow({ transactionDetails }: { transactionDetails: TransactionDetails }): JSX.Element | null {
+  const { hash } = transactionDetails
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+
+  if (!hash && isUniswapX(transactionDetails)) {
+    return null
+  }
 
   const onPressCopy = async (): Promise<void> => {
     if (!hash) {

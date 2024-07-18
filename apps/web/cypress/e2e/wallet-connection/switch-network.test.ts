@@ -112,23 +112,44 @@ describe('network switching', () => {
 
   describe('from URL param', () => {
     it('should switch network from URL param', () => {
-      cy.visit('/swap?chain=polygon')
-      cy.get(getTestSelector('web3-status-connected'))
+      cy.visit('/swap?chain=optimism')
       cy.wait('@wallet_switchEthereumChain')
-      waitsForActiveChain('Polygon')
+      waitsForActiveChain('Optimism')
+      cy.get(getTestSelector('web3-status-connected'))
+    })
+
+    it('should switch network with inputCurrency from URL param', () => {
+      cy.visit('/swap?chain=arbitrum&outputCurrency=0xff970a61a04b1ca14834a43f5de4533ebddb5cc8')
+      cy.wait('@wallet_switchEthereumChain')
+      waitsForActiveChain('Arbitrum')
+      cy.get(getTestSelector('web3-status-connected'))
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'USDC.e')
+    })
+
+    it('should not switch network with no chain in param', () => {
+      cy.hardhat().then((hardhat) => {
+        cy.visit('/swap?outputCurrency=0x2260fac5e5542a773aa44fbcfedf7c193bc2c599')
+        const sendSpy = cy.spy(hardhat.provider, 'send')
+        cy.wrap(sendSpy).should('not.be.calledWith', 'wallet_switchEthereumChain')
+        cy.wrap(hardhat.provider.network.chainId).should('eq', 1)
+        cy.get(getTestSelector('web3-status-connected'))
+        cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'WBTC')
+      })
     })
 
     it('should be able to switch network after loading from URL param', () => {
-      cy.visit('/swap?chain=polygon')
-      cy.get(getTestSelector('web3-status-connected'))
+      cy.visit('/swap?chain=arbitrum&outputCurrency=0xff970a61a04b1ca14834a43f5de4533ebddb5cc8')
       cy.wait('@wallet_switchEthereumChain')
-      waitsForActiveChain('Polygon')
+      waitsForActiveChain('Arbitrum')
+      cy.get(getTestSelector('web3-status-connected'))
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'USDC.e')
 
       // switching to another chain clears query param
       switchChain('Ethereum')
       cy.wait('@wallet_switchEthereumChain')
       waitsForActiveChain('Ethereum')
-      cy.url().should('not.contain', 'chain=polygon')
+      cy.url().should('not.contain', 'chain=arbitrum')
+      cy.url().should('not.contain', 'outputCurrency=0xff970a61a04b1ca14834a43f5de4533ebddb5cc8')
     })
   })
 

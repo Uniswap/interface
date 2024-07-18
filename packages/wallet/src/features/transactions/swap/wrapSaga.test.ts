@@ -26,10 +26,7 @@ const params: WrapParams = {
   txId: '1',
   account,
   txRequest,
-  inputCurrencyAmount: CurrencyAmount.fromRawAmount(
-    NativeCurrency.onChain(UniverseChainId.Mainnet),
-    '200000'
-  ),
+  inputCurrencyAmount: CurrencyAmount.fromRawAmount(NativeCurrency.onChain(UniverseChainId.Mainnet), '200000'),
 }
 
 describe(wrap, () => {
@@ -52,7 +49,7 @@ describe(wrap, () => {
       ...params,
       inputCurrencyAmount: CurrencyAmount.fromRawAmount(
         NativeCurrency.onChain(UniverseChainId.Mainnet).wrapped,
-        '200000'
+        '200000',
       ),
     }
     testSaga(wrap, unwrapParams)

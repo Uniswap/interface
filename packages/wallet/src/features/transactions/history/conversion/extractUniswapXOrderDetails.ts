@@ -37,6 +37,7 @@ export function extractUniswapXOrderDetails(transaction: TransactionListQueryRes
     addedTime: transaction.timestamp * 1000, // convert to ms,
     status: remoteOrderStatusToLocalTxStatus(transaction.details.orderStatus),
     from: transaction.details.offerer, // This transaction is not on-chain, so use the offerer address as the from address
+    orderHash: transaction.details.hash,
     typeInfo,
   }
 }

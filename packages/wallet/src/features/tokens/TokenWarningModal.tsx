@@ -7,8 +7,9 @@ import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTokenSafetyLevelColors } from 'uniswap/src/features/tokens/safetyHooks'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { getTokenSafetyHeaderText } from 'wallet/src/features/tokens/utils'
 
@@ -94,14 +95,14 @@ export default function TokenWarningModal({
           <LearnMoreLink url={uniswapUrls.helpArticleUrls.tokenWarning} />
         </Flex>
         <Flex centered row gap="$spacing12" mt="$spacing16" width="100%">
-          <Button flex={1} flexBasis={1} testID={ElementName.Cancel} theme="tertiary" onPress={onClose}>
+          <Button flex={1} flexBasis={1} testID={TestID.Cancel} theme="tertiary" onPress={onClose}>
             {closeButtonText}
           </Button>
           {!hideAcceptButton && (
             <Button
               flex={1}
               flexBasis={1}
-              testID={ElementName.TokenWarningAccept}
+              testID={TestID.TokenWarningAccept}
               theme={getButtonTheme(safetyLevel)}
               onPress={onAccept}
             >

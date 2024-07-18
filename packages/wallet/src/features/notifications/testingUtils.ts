@@ -21,7 +21,6 @@ export const exampleSwapConfirmation = {
 export const exampleSwapSuccess = {
   txStatus: 'failed',
   chainId: 42161,
-  txHash: '0xaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa',
   // address: '0x...',
   // txId: 'aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa',
   type: 3,

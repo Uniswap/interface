@@ -15,6 +15,7 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
@@ -27,6 +28,7 @@ interface ImportMethodOption {
   nav: OnboardingScreens
   importType: ImportType
   name: ElementNameType
+  testID: TestIDType
 }
 
 const options: ImportMethodOption[] = [
@@ -37,6 +39,7 @@ const options: ImportMethodOption[] = [
     nav: OnboardingScreens.SeedPhraseInput,
     importType: ImportType.SeedPhrase,
     name: ElementName.OnboardingImportSeedPhrase,
+    testID: TestID.OnboardingImportSeedPhrase,
   },
   {
     title: (t: AppTFunction) => t('onboarding.import.method.restore.title'),
@@ -48,6 +51,7 @@ const options: ImportMethodOption[] = [
     nav: OnboardingScreens.RestoreCloudBackup,
     importType: ImportType.Restore,
     name: ElementName.RestoreFromCloud,
+    testID: TestID.RestoreFromCloud,
   },
 ]
 
@@ -116,20 +120,21 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
         shadowColor="$surface3"
         shadowRadius={!isDarkMode ? '$spacing8' : undefined}
       >
-        {importOptions.map(({ title, blurb, icon, nav, importType, name }, i) => (
+        {importOptions.map(({ title, blurb, icon, nav, importType, name, testID }, i) => (
           <OptionCard
             key={'connection-option-' + name + i}
             hapticFeedback
             blurb={blurb(t)}
             elementName={name}
             icon={icon}
+            testID={testID}
             title={title(t)}
             onPress={(): Promise<void> => handleOnPress(nav, importType)}
           />
         ))}
       </Flex>
       <Trace logPress element={ElementName.OnboardingImportBackup}>
-        <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={ElementName.WatchWallet}>
+        <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={TestID.WatchWallet}>
           <Flex row alignItems="center" gap="$spacing8">
             <EyeIcon
               color={colors.accent1.get()}

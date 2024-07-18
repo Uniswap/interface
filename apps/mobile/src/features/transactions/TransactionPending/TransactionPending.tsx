@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { StatusAnimation } from 'src/features/transactions/TransactionPending/StatusAnimation'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { TransactionDetails, TransactionStatus, isFinalizedTx } from 'wallet/src/features/transactions/types'
 import { openTransactionLink } from 'wallet/src/utils/linking'
@@ -60,7 +60,7 @@ export function TransactionPending({
             {t('swap.button.view')}
           </Button>
         ) : null}
-        <Button testID={ElementName.OK} onPress={onNext}>
+        <Button testID={TestID.OK} onPress={onNext}>
           {t('common.button.close')}
         </Button>
       </Flex>

@@ -7,7 +7,8 @@ import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
@@ -54,7 +55,7 @@ export function RestoreWalletModal(): JSX.Element | null {
           <Button fill theme="tertiary" onPress={onDismiss}>
             {t('common.button.dismiss')}
           </Button>
-          <Button fill testID={ElementName.RestoreWallet} theme="primary" onPress={onRestore}>
+          <Button fill testID={TestID.RestoreWallet} theme="primary" onPress={onRestore}>
             {t('common.button.restore')}
           </Button>
         </Flex>

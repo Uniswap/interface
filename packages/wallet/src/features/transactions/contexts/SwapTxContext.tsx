@@ -1,38 +1,58 @@
-import { createContext, ReactNode, useContext, useMemo } from 'react'
+import { createContext, PropsWithChildren, useContext } from 'react'
+import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import { useSwapTxAndGasInfoTradingApi } from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useSwapTxAndGasInfoTradingApi'
+import {
+  SwapTxAndGasInfo,
+  useSwapTxAndGasInfoTradingApi,
+} from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useSwapTxAndGasInfoTradingApi'
+import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 
-type SwapTxContextState = {
-  txRequest: ReturnType<typeof useSwapTxAndGasInfoTradingApi>['txRequest']
-  approveTxRequest: ReturnType<typeof useSwapTxAndGasInfoTradingApi>['approveTxRequest']
-  approvalError: ReturnType<typeof useSwapTxAndGasInfoTradingApi>['approvalError']
-  gasFee: ReturnType<typeof useSwapTxAndGasInfoTradingApi>['gasFee']
+export type ValidatedSwapTxContext = Required<SwapTxAndGasInfo> & {
+  approvalError: false
+  gasFee: ValidatedGasFeeResult
+}
+function validateSwapTxContext(swapTxContext: SwapTxAndGasInfo): ValidatedSwapTxContext | undefined {
+  const gasFee = validateGasFeeResult(swapTxContext.gasFee)
+  if (!gasFee) {
+    return undefined
+  }
+
+  if (!swapTxContext.approvalError && swapTxContext.trade) {
+    const { approvalError } = swapTxContext
+    if (isClassic(swapTxContext) && swapTxContext.trade && swapTxContext.txRequest) {
+      const { trade, txRequest } = swapTxContext
+      return { ...swapTxContext, trade, txRequest, approvalError, gasFee }
+    } else if (isUniswapX(swapTxContext) && swapTxContext.orderParams) {
+      const { trade, orderParams } = swapTxContext
+      return { ...swapTxContext, trade, gasFee, approvalError, orderParams }
+    }
+  }
+  return undefined
 }
 
-export const SwapTxContext = createContext<SwapTxContextState | undefined>(undefined)
+type ValidatedGasFeeResult = GasFeeResult & { value: string; error: undefined }
+function validateGasFeeResult(gasFee: GasFeeResult): ValidatedGasFeeResult | undefined {
+  if (gasFee.value === undefined || gasFee.error) {
+    return undefined
+  }
+  return { ...gasFee, value: gasFee.value, error: undefined }
+}
 
-// Same as above, with different hook for data fetching.
-export function SwapTxContextProviderTradingApi({ children }: { children: ReactNode }): JSX.Element {
+export function isValidSwapTxContext(swapTxContext: SwapTxAndGasInfo): swapTxContext is ValidatedSwapTxContext {
+  // Validation fn prevents/futureproofs typeguard against illicit casts
+  return validateSwapTxContext(swapTxContext) !== undefined
+}
+
+export const SwapTxContext = createContext<SwapTxAndGasInfo | undefined>(undefined)
+
+export function SwapTxContextProviderTradingApi({ children }: PropsWithChildren): JSX.Element {
   const { derivedSwapInfo } = useSwapFormContext()
+  const swapTxContext = useSwapTxAndGasInfoTradingApi({ derivedSwapInfo })
 
-  const { txRequest, approveTxRequest, gasFee, approvalError } = useSwapTxAndGasInfoTradingApi({
-    derivedSwapInfo,
-  })
-
-  const state = useMemo<SwapTxContextState>(
-    (): SwapTxContextState => ({
-      txRequest,
-      approveTxRequest,
-      gasFee,
-      approvalError,
-    }),
-    [approvalError, approveTxRequest, gasFee, txRequest],
-  )
-
-  return <SwapTxContext.Provider value={state}>{children}</SwapTxContext.Provider>
+  return <SwapTxContext.Provider value={swapTxContext}>{children}</SwapTxContext.Provider>
 }
 
-export const useSwapTxContext = (): SwapTxContextState => {
+export const useSwapTxContext = (): SwapTxAndGasInfo => {
   const swapContext = useContext(SwapTxContext)
 
   if (swapContext === undefined) {

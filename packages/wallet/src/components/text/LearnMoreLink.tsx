@@ -9,14 +9,16 @@ const onPressLearnMore = async (url: string): Promise<void> => {
 export const LearnMoreLink = ({
   url,
   textVariant = 'buttonLabel3',
+  textColor = '$accent1',
 }: {
   url: string
   textVariant?: TextProps['variant']
+  textColor?: TextProps['color']
 }): JSX.Element => {
   const { t } = useTranslation()
   return (
     <TouchableArea onPress={(): Promise<void> => onPressLearnMore(url)}>
-      <Text color="$accent1" variant={textVariant}>
+      <Text color={textColor} variant={textVariant}>
         {t('common.button.learn')}
       </Text>
     </TouchableArea>

@@ -1,0 +1,256 @@
+import { useCallback, useLayoutEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { Input } from 'src/app/components/Input'
+import { PasswordInput } from 'src/app/components/PasswordInput'
+import { BottomModalProps, InfoModal } from 'src/app/components/modal/InfoModal'
+import { useSagaStatus } from 'src/app/hooks/useSagaStatus'
+import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
+import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
+import { useAppDispatch } from 'src/store/store'
+import { Button, Flex, InputProps, Text, TouchableArea } from 'ui/src'
+import { AlertTriangle, Lock } from 'ui/src/components/icons'
+import { spacing, zIndices } from 'ui/src/theme'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { LandingBackground } from 'wallet/src/components/landing/LandingBackground'
+import { authActions, authSagaName } from 'wallet/src/features/auth/saga'
+import { AuthActionType, AuthSagaError } from 'wallet/src/features/auth/types'
+import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
+import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
+import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+import { SagaStatus } from 'wallet/src/utils/saga'
+
+export function usePasswordInput(defaultValue = ''): Pick<InputProps, 'onChangeText' | 'disabled'> & { value: string } {
+  const [value, setValue] = useState(defaultValue)
+
+  const onChangeText: InputProps['onChangeText'] = (newValue): void => {
+    setValue(newValue)
+  }
+
+  return {
+    value,
+    disabled: !value,
+    onChangeText,
+  }
+}
+
+enum ForgotPasswordModalStep {
+  Initial,
+  Speedbump,
+}
+
+const CONTAINER_PADDING_TOP_MIN = 50
+const CONTAINER_PADDING_TOP_MAX = 220
+const BACKGROUND_CIRCLE_INNER_SIZE = 140
+const BACKGROUND_CIRCLE_OUTER_SIZE = 250
+
+export function Locked(): JSX.Element {
+  const dispatch = useAppDispatch()
+  const { t } = useTranslation()
+  const { value: enteredPassword, onChangeText: onChangePasswordText } = usePasswordInput()
+  const associatedAccounts = useSignerAccounts()
+
+  const onChangeText = useCallback(
+    (text: string) => {
+      if (onChangePasswordText) {
+        onChangePasswordText?.(text)
+      }
+    },
+    [onChangePasswordText],
+  )
+
+  const { status, error } = useSagaStatus(authSagaName, undefined, false)
+
+  const onPress = async (): Promise<void> => {
+    await dispatch(
+      authActions.trigger({
+        type: AuthActionType.Unlock,
+        password: enteredPassword,
+      }),
+    )
+  }
+
+  const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false)
+  const [modalStep, setModalStep] = useState(ForgotPasswordModalStep.Initial)
+  const scantasticOnboardingOnly = useFeatureFlag(FeatureFlags.ScantasticOnboardingOnly)
+
+  const openRecoveryTab = (): Promise<void> =>
+    focusOrCreateOnboardingTab(
+      `${TopLevelRoutes.Onboarding}/${scantasticOnboardingOnly ? OnboardingRoutes.ResetScan : OnboardingRoutes.Reset}`,
+    )
+
+  const onStartResettingWallet = async (): Promise<void> => {
+    const currAccount = associatedAccounts[0]
+
+    if (currAccount?.mnemonicId) {
+      await Keyring.removeMnemonic(currAccount?.mnemonicId)
+    }
+    await Keyring.removePassword()
+
+    // We open the recovery tab before removing the accounts so that the proper reset route is loaded.
+    // Otherwise, the main onboarding route is automatically loaded when accounts are all removed, and then a duplicate recovery tab is opened.
+    // The standard onboarding open logic triggers but doesn't update the path because the generic one doesn't have a path specified.
+    await openRecoveryTab()
+
+    await dispatch(
+      editAccountActions.trigger({
+        type: EditAccountAction.Remove,
+        accounts: associatedAccounts,
+      }),
+    )
+  }
+
+  const isIncorrectPassword = status === SagaStatus.Failure && error === AuthSagaError.InvalidPassword
+
+  const inputRef = useRef<Input>(null)
+  const [hideInput, setHideInput] = useState(true)
+  const toggleHideInput = (): void => setHideInput(!hideInput)
+
+  useLayoutEffect(() => {
+    if (isIncorrectPassword) {
+      inputRef.current?.focus()
+    }
+  }, [isIncorrectPassword])
+
+  const modalProps: Record<ForgotPasswordModalStep, BottomModalProps> = {
+    [ForgotPasswordModalStep.Initial]: {
+      buttonText: t('extension.lock.button.reset'),
+      description: t('extension.lock.password.reset.initial.description'),
+      linkText: t('extension.lock.password.reset.initial.help'),
+      linkUrl: uniswapUrls.helpArticleUrls.recoveryPhraseHowToFind,
+      icon: (
+        <Flex backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
+          <Lock color="$neutral1" size="$icon.24" />
+        </Flex>
+      ),
+      isOpen: forgotPasswordModalOpen,
+      name: ModalName.ForgotPassword,
+      onButtonPress: (): void => setModalStep(ForgotPasswordModalStep.Speedbump),
+      title: t('extension.lock.password.reset.initial.title'),
+    },
+    [ForgotPasswordModalStep.Speedbump]: {
+      buttonText: t('common.button.continue'),
+      description: t('extension.lock.password.reset.speedbump.description'),
+      linkText: t('extension.lock.password.reset.speedbump.help'),
+      linkUrl: uniswapUrls.helpArticleUrls.recoveryPhraseForgotten,
+      icon: (
+        <Flex backgroundColor="$DEP_accentCriticalSoft" borderRadius="$rounded12" p="$spacing12">
+          <AlertTriangle color="$statusCritical" size="$icon.24" />
+        </Flex>
+      ),
+      isOpen: forgotPasswordModalOpen,
+      name: ModalName.ForgotPassword,
+      onButtonPress: onStartResettingWallet,
+      title: t('extension.lock.password.reset.speedbump.title'),
+    },
+  }
+
+  const [inputHeight, setInputHeight] = useState(0)
+  const [containerPaddingTop, setContainerPaddingTop] = useState(CONTAINER_PADDING_TOP_MAX)
+  const [availableHeight, setAvailableHeight] = useState(0)
+
+  useLayoutEffect(() => {
+    if (availableHeight && inputHeight) {
+      const containerHeight = inputHeight + spacing.spacing32
+      const newPaddingTop = Math.min(
+        Math.max(CONTAINER_PADDING_TOP_MIN, availableHeight - containerHeight),
+        CONTAINER_PADDING_TOP_MAX,
+      )
+
+      setContainerPaddingTop(newPaddingTop)
+    }
+  }, [availableHeight, inputHeight])
+
+  return (
+    <>
+      <Flex fill gap="$spacing12" overflow="hidden" p="$spacing24">
+        <Flex fill width="100%" onLayout={(e) => setAvailableHeight(e.nativeEvent.layout.height)}>
+          <Flex pb="$spacing60" pt={containerPaddingTop}>
+            <LandingBackground
+              elementsStyle={{ filter: 'blur(2px)', transform: 'translate(0, 20px)' }}
+              innerCircleSize={BACKGROUND_CIRCLE_INNER_SIZE}
+              outerCircleSize={BACKGROUND_CIRCLE_OUTER_SIZE}
+            />
+          </Flex>
+          <Flex
+            gap="$spacing24"
+            width="100%"
+            zIndex={zIndices.default}
+            onLayout={(e) => setInputHeight(e.nativeEvent.layout.height)}
+          >
+            <Flex>
+              <Text color="$neutral1" textAlign="center" variant="subheading1">
+                {t('extension.lock.title')}
+              </Text>
+
+              <Text color="$neutral2" textAlign="center" variant="subheading2">
+                {t('extension.lock.subtitle')}
+              </Text>
+            </Flex>
+
+            <Flex alignItems="stretch" gap="$spacing12" width="100%">
+              <PasswordInput
+                ref={inputRef}
+                autoFocus
+                hideInput={hideInput}
+                placeholder={t('common.input.password.placeholder')}
+                value={enteredPassword}
+                onChangeText={onChangeText}
+                onSubmitEditing={onPress}
+                onToggleHideInput={toggleHideInput}
+              />
+
+              <Flex
+                style={{
+                  visibility: isIncorrectPassword ? 'visible' : 'hidden',
+                }}
+              >
+                <Text color="$statusCritical" textAlign="center" variant="body3">
+                  {t('extension.lock.password.error')}
+                </Text>
+              </Flex>
+            </Flex>
+          </Flex>
+        </Flex>
+
+        <Flex gap="$spacing12" justifyContent="flex-end" zIndex={zIndices.sticky}>
+          <Button size="large" theme="primary" onPress={onPress}>
+            {t('extension.lock.button.submit')}
+          </Button>
+
+          <TouchableArea>
+            <Text
+              color="$neutral3"
+              hoverStyle={{ color: '$neutral2' }}
+              textAlign="center"
+              variant="body2"
+              onPress={(): void => setForgotPasswordModalOpen(true)}
+            >
+              {t('extension.lock.button.forgot')}
+            </Text>
+          </TouchableArea>
+        </Flex>
+      </Flex>
+
+      <InfoModal
+        showCloseButton
+        buttonText={modalProps[modalStep].buttonText}
+        buttonTheme="tertiary"
+        description={modalProps[modalStep].description}
+        icon={modalProps[modalStep].icon}
+        isOpen={forgotPasswordModalOpen}
+        linkText={modalProps[modalStep].linkText}
+        linkUrl={modalProps[modalStep].linkUrl}
+        name={ModalName.ForgotPassword}
+        title={modalProps[modalStep].title}
+        onButtonPress={modalProps[modalStep].onButtonPress}
+        onDismiss={(): void => {
+          setModalStep(ForgotPasswordModalStep.Initial)
+          setForgotPasswordModalOpen(false)
+        }}
+      />
+    </>
+  )
+}

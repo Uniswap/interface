@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react'
+import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
@@ -11,11 +11,12 @@ import { Delay } from 'src/components/layout/Delayed'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { Button, ColorTokens, Flex, SpinningLoader, Text, ThemeKeys, useSporeColors } from 'ui/src'
+import { Button, Flex, SpinningLoader, Text, ThemeKeys, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
@@ -101,6 +102,10 @@ export function RemoveWalletModal(): JSX.Element | null {
       )
     }
 
+    sendAnalyticsEvent(WalletEventName.WalletRemoved, {
+      wallets_removed: accountsToRemove.map((a) => a.address),
+    })
+
     onClose()
     setInProgress(false)
   }, [account, associatedAccounts, dispatch, isReplacing, hasAccountsLeft, onClose])
@@ -161,7 +166,6 @@ export function RemoveWalletModal(): JSX.Element | null {
 
   const { title, description, Icon, iconColorLabel, actionButtonTheme, actionButtonLabel } = modalContent
 
-  // TODO(MOB-1420): clean up types
   const labelColor: ThemeKeys = iconColorLabel
 
   return (
@@ -208,14 +212,7 @@ export function RemoveWalletModal(): JSX.Element | null {
               )}
               <Button
                 fill
-                icon={
-                  inProgress ? (
-                    <SpinningLoader
-                      // TODO(MOB-1420): clean up types (as ColorTokens)
-                      color={`$${labelColor}` as ColorTokens}
-                    />
-                  ) : undefined
-                }
+                icon={inProgress ? <SpinningLoader color={`$${labelColor}`} /> : undefined}
                 testID={isRemovingRecoveryPhrase ? ElementName.Continue : ElementName.Remove}
                 theme={actionButtonTheme}
                 width="100%"

@@ -3,6 +3,7 @@ import { injectedWithFallback } from 'components/Web3Provider/injectedWithFallba
 import { WC_PARAMS, uniswapWalletConnect } from 'components/Web3Provider/walletConnect'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId, WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 import { createClient } from 'viem'
 import { createConfig, http } from 'wagmi'
@@ -15,6 +16,7 @@ declare module 'wagmi' {
   }
 }
 
+// TODO: fix UNISWAP_LOGO import
 export const wagmiConfig = createConfig({
   chains: [
     UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet],
@@ -25,7 +27,7 @@ export const wagmiConfig = createConfig({
     walletConnect(WC_PARAMS),
     uniswapWalletConnect(),
     coinbaseWallet({
-      appName: 'Uniswap',
+      appName: 'Rigoblock',
       appLogoUrl: UNISWAP_LOGO,
       reloadOnDisconnect: false,
       enableMobileWalletLink: true,
@@ -33,11 +35,16 @@ export const wagmiConfig = createConfig({
     safe(),
   ],
   client({ chain }) {
+    const rpcUrl = chain.backendChain.chain === BackendChainId.Bnb
+      ? process.env.REACT_APP_BNB_RPC_URL
+      : chain.backendChain.chain === BackendChainId.Base
+      ? process.env.REACT_APP_BASE_MAINNET_RPC_URL
+      : chain.rpcUrls.appOnly.http[0] 
     return createClient({
       chain,
       batch: { multicall: true },
       pollingInterval: 12_000,
-      transport: http(chain.rpcUrls.appOnly.http[0]),
+      transport: http(rpcUrl),
     })
   },
 })

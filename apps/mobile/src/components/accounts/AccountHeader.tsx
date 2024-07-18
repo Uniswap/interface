@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect } from 'react'
 import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -5,7 +6,9 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, HapticFeedback, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { CopyAlt, Settings } from 'ui/src/components/icons'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { isDevEnv } from 'utilities/src/environment'
@@ -59,6 +62,10 @@ export function AccountHeader(): JSX.Element {
           copyType: CopyNotificationType.Address,
         }),
       )
+      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+        element: ElementName.CopyAddress,
+        screen: MobileScreens.Home,
+      })
     }
   }
 
@@ -76,7 +83,7 @@ export function AccountHeader(): JSX.Element {
               flexDirection="row"
               hapticStyle={ImpactFeedbackStyle.Medium}
               hitSlop={20}
-              testID={ElementName.Manage}
+              testID={TestID.Manage}
               onLongPress={async (): Promise<void> => {
                 if (isDevEnv()) {
                   await HapticFeedback.selection()

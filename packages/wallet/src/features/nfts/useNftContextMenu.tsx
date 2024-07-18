@@ -2,8 +2,12 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
-import { GeneratedIcon, isWeb } from 'ui/src'
+import { GeneratedIcon, isWeb, useIsDarkMode } from 'ui/src'
 import { Eye, EyeOff } from 'ui/src/components/icons'
+import { UNIVERSE_CHAIN_LOGO } from 'uniswap/src/assets/chainLogos'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { selectNftsVisibility } from 'wallet/src/features/favorites/selectors'
@@ -13,6 +17,7 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { getExplorerName } from 'wallet/src/utils/linking'
 
 interface NFTMenuParams {
   tokenId?: string
@@ -20,6 +25,7 @@ interface NFTMenuParams {
   owner?: Address
   showNotification?: boolean
   isSpam?: boolean
+  chainId?: WalletChainId
 }
 
 type MenuAction = ContextMenuAction & { onPress: () => void; Icon?: GeneratedIcon }
@@ -30,6 +36,7 @@ export function useNFTContextMenu({
   owner,
   showNotification = false,
   isSpam,
+  chainId,
 }: NFTMenuParams): {
   menuActions: Array<MenuAction>
   onContextMenuPress: (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => void
@@ -37,8 +44,9 @@ export function useNFTContextMenu({
 } {
   const { t } = useTranslation()
   const dispatch = useAppDispatch()
+  const isDarkMode = useIsDarkMode()
 
-  const { handleShareNft } = useWalletNavigation()
+  const { handleShareNft, navigateToNftDetails } = useWalletNavigation()
 
   const accounts = useAccounts()
   const isLocalAccount = owner && !!accounts[owner]
@@ -59,6 +67,14 @@ export function useNFTContextMenu({
       return
     }
 
+    sendAnalyticsEvent(WalletEventName.NFTVisibilityChanged, {
+      tokenId,
+      chainId,
+      contractAddress,
+      isSpam,
+      // we log the state to which it's transitioning
+      visible: hidden,
+    })
     dispatch(toggleNftVisibility({ nftKey, isSpam }))
 
     if (showNotification) {
@@ -71,12 +87,30 @@ export function useNFTContextMenu({
         }),
       )
     }
-  }, [nftKey, dispatch, hidden, showNotification, isSpam])
+  }, [nftKey, dispatch, isSpam, tokenId, chainId, contractAddress, hidden, showNotification])
+
+  const onPressNavigateToExplorer = useCallback(() => {
+    if (contractAddress && tokenId && chainId) {
+      navigateToNftDetails({ address: contractAddress, tokenId, chainId })
+    }
+  }, [contractAddress, tokenId, chainId, navigateToNftDetails])
 
   const menuActions = useMemo(
     () =>
       nftKey
         ? [
+            ...(isWeb && chainId
+              ? [
+                  {
+                    title: t('tokens.nfts.action.viewOnExplorer', { blockExplorerName: getExplorerName(chainId) }),
+                    onPress: onPressNavigateToExplorer,
+                    Icon: isDarkMode
+                      ? UNIVERSE_CHAIN_LOGO[chainId].explorer.logoDark
+                      : UNIVERSE_CHAIN_LOGO[chainId].explorer.logoLight,
+                    destructive: false,
+                  },
+                ]
+              : []),
             ...(!isWeb
               ? [
                   {
@@ -103,7 +137,17 @@ export function useNFTContextMenu({
               []),
           ]
         : [],
-    [nftKey, t, onPressShare, isLocalAccount, hidden, onPressHiddenStatus],
+    [
+      nftKey,
+      chainId,
+      t,
+      onPressNavigateToExplorer,
+      isDarkMode,
+      onPressShare,
+      isLocalAccount,
+      hidden,
+      onPressHiddenStatus,
+    ],
   )
 
   const onContextMenuPress = useCallback(

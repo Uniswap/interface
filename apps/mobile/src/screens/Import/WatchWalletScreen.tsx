@@ -14,6 +14,7 @@ import { Button, Flex, Text } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
@@ -184,7 +185,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           </Text>
         </Flex>
       </Flex>
-      <Button disabled={!isValid} testID={ElementName.Next} onPress={onSubmit}>
+      <Button disabled={!isValid} testID={TestID.Next} onPress={onSubmit}>
         {t('common.button.continue')}
       </Button>
     </SafeKeyboardOnboardingScreen>

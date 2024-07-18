@@ -47,12 +47,14 @@ interface BaseTransactionDetails extends TransactionId {
   // It may also become optional for classic if we start tracking txs before they're actually sent
   hash?: string
 
+  // TODO(MOB-3679): receipt does not need to be persisted; remove from state
   receipt?: TransactionReceipt
 
   // cancelRequest is the txRequest object to be submitted
   // in attempt to cancel the current transaction
   // it should contain all the appropriate gas details in order
-  // to get submitted first
+  // to be mined first
+  // TODO(MOB-3679): cancelRequest does not need to be persisted; remove from state
   cancelRequest?: providers.TransactionRequest
 
   networkFee?: TransactionNetworkFee
@@ -70,8 +72,14 @@ export interface UniswapXOrderDetails extends BaseTransactionDetails {
 
   // Note: `orderHash` is an off-chain value used to track orders before they're filled on-chain.
   // UniswapX orders will also have a transaction `hash` if they become filled.
-  // `orderHash` will be undefined if the object is built from a filled order received from graphql. Once filled, it is not needed for any tracking.
+  // `orderHash` will be an undefined if the object is built from a filled order received from graphql. Once filled, it is not needed for any tracking.
   orderHash?: string
+
+  // Used to track status of the order before it is submitted
+  queueStatus?: QueuedOrderStatus
+
+  // The txHash of the wrap transaction submitted before the order
+  wrapTxHash?: string
 }
 
 export interface ClassicTransactionDetails extends BaseTransactionDetails {
@@ -97,17 +105,36 @@ export enum TransactionStatus {
   // May want more granular options here later like InMemPool
 }
 
-// Transaction confirmed on chain
-export type FinalizedTransactionStatus =
-  | TransactionStatus.Success
-  | TransactionStatus.Failed
-  | TransactionStatus.Canceled
-  | TransactionStatus.FailedCancel
-
-export type FinalizedTransactionDetails = TransactionDetails & {
-  status: FinalizedTransactionStatus
-  hash: string
+export enum QueuedOrderStatus {
+  Waiting = 'waiting',
+  ApprovalFailed = 'approvalFailed',
+  WrapFailed = 'wrapFailed',
+  AppClosed = 'appClosed',
+  Stale = 'stale',
+  SubmissionFailed = 'submissionFailed',
+  Submitted = 'submitted',
 }
+
+const FINAL_STATUSES = [
+  TransactionStatus.Success,
+  TransactionStatus.Failed,
+  TransactionStatus.Canceled,
+  TransactionStatus.FailedCancel,
+  TransactionStatus.Expired,
+] as const
+export type FinalizedTransactionStatus = (typeof FINAL_STATUSES)[number]
+
+export type FinalizedTransactionDetails = TransactionDetails &
+  (
+    | {
+        status: TransactionStatus.Success
+        hash: string
+      }
+    | {
+        status: Exclude<FinalizedTransactionStatus, TransactionStatus.Success>
+        hash?: string // Hash may be undefined for non-successful transactions, as the uniswapx backend does not provide hashes for cancelled, failed, or expired orders.
+      }
+  )
 
 export type TransactionOptions = {
   request: providers.TransactionRequest
@@ -359,13 +386,26 @@ export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo
   )
 }
 
+export function isFinalizedTxStatus(status: TransactionStatus): status is FinalizedTransactionStatus {
+  return FINAL_STATUSES.some((finalStatus) => finalStatus === status)
+}
+
 export function isFinalizedTx(tx: TransactionDetails | FinalizedTransactionDetails): tx is FinalizedTransactionDetails {
-  return (
-    tx.status === TransactionStatus.Success ||
-    tx.status === TransactionStatus.Failed ||
-    tx.status === TransactionStatus.Canceled ||
-    tx.status === TransactionStatus.FailedCancel
-  )
+  const validateFinalizedTx = (): FinalizedTransactionDetails | undefined => {
+    const { status, hash } = tx
+    if (status === TransactionStatus.Success) {
+      if (!hash) {
+        return undefined
+      }
+      return { ...tx, status, hash }
+    } else if (isFinalizedTxStatus(status)) {
+      return { ...tx, status }
+    }
+    return undefined
+  }
+
+  // Validation fn prevents & future-proofs the typeguard from illicit casting
+  return Boolean(validateFinalizedTx())
 }
 
 export enum TransactionStep {

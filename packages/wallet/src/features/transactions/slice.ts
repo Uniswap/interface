@@ -3,6 +3,7 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { providers } from 'ethers'
 import { assert } from 'utilities/src/errors'
+import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import {
   ChainIdToTxIdToDetails,
   FiatPurchaseTransactionInfo,
@@ -36,11 +37,15 @@ const slice = createSlice({
       state[from]![chainId]![id] = transaction
     },
     finalizeTransaction: (state, { payload: transaction }: PayloadAction<FinalizedTransactionDetails>) => {
-      const { chainId, id, status, receipt, from } = transaction
+      const { chainId, id, status, receipt, from, hash } = transaction
       assert(state?.[from]?.[chainId]?.[id], `finalizeTransaction: Attempted to finalize a missing tx with id ${id}`)
       state[from]![chainId]![id]!.status = status
       if (receipt) {
         state[from]![chainId]![id]!.receipt = receipt
+      }
+      if (isUniswapX(transaction) && status === TransactionStatus.Success) {
+        assert(hash, `finalizeTransaction: Attempted to finalize an order without providing the fill tx hash`)
+        state[from]![chainId]![id]!.hash = hash
       }
     },
     deleteTransaction: (

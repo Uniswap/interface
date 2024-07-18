@@ -20,6 +20,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
@@ -282,7 +283,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
                   placeholder={inputPlaceholder}
                   placeholderTextColor="$neutral3"
                   returnKeyType="done"
-                  testID={ElementName.WalletNameInput}
+                  testID={TestID.WalletNameInput}
                   textAlign="left"
                   value={unitagInputValue}
                   onChangeText={onChangeTextInput}
@@ -342,7 +343,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
       <Flex gap="$spacing24" justifyContent="flex-end">
         {entryPoint === OnboardingScreens.Landing && (
           <Trace logPress element={ElementName.Skip}>
-            <TouchableArea testID={ElementName.Skip} onPress={onPressMaybeLater}>
+            <TouchableArea testID={TestID.Skip} onPress={onPressMaybeLater}>
               <Text color="$accent1" textAlign="center" variant="buttonLabel2">
                 {t('common.button.later')}
               </Text>
@@ -357,7 +358,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
             shouldBlockContinue
           }
           size="medium"
-          testID={ElementName.Continue}
+          testID={TestID.Continue}
           theme="primary"
           onPress={onPressContinue}
         >

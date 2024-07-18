@@ -3,6 +3,7 @@ import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { ActionTile } from 'components/AccountDrawer/ActionTile'
 import IconButton, { IconHoverText, IconWithConfirmTextButton } from 'components/AccountDrawer/IconButton'
 import MiniPortfolio from 'components/AccountDrawer/MiniPortfolio'
+import { EmptyWallet } from 'components/AccountDrawer/MiniPortfolio/EmptyWallet'
 import { portfolioFadeInAnimation } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Status } from 'components/AccountDrawer/Status'
@@ -167,6 +168,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const { data: portfolioBalances } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
   const portfolio = portfolioBalances?.portfolios?.[0]
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
+  const isEmptyWallet = totalBalance === 0 && forAggregatorEnabled
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
@@ -257,7 +259,11 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
             />
           )}
         </Row>
-        <MiniPortfolio account={account} />
+        {isEmptyWallet ? (
+          <EmptyWallet handleBuyCryptoClick={handleBuyCryptoClick} handleReceiveCryptoClick={() => undefined} />
+        ) : (
+          <MiniPortfolio account={account} />
+        )}
         {isUnclaimed && (
           <UNIButton onClick={openClaimModal} size={ButtonSize.medium} emphasis={ButtonEmphasis.medium}>
             <Trans i18nKey="account.authHeader.claimReward" values={{ amount }} />

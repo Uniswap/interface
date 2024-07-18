@@ -1,0 +1,463 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AccountSwitcherScreen renders correctly 1`] = `
+{
+  "asFragment": [Function],
+  "baseElement": <body>
+    <div>
+      <span
+        class="t_light is_inversed _dsp_contents"
+      >
+        <span
+          class=" t_light _dsp_contents is_Theme"
+        >
+          <div
+            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _backgroundColor-568007324 _pr-1481558245 _pl-1481558245 _pt-1481558276 _pb-1481558276"
+          >
+            <div
+              class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _pr-1481558276 _pl-1481558276 _pt-1481558307 _pb-1481558307 _width-10037"
+            >
+              <div
+                class="_opacity-0active-0d0t7546 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _cursor-pointer"
+              >
+                <svg
+                  fill="none"
+                  stroke-width="8"
+                  style="color: rgb(125, 125, 125); width: 24px; height: 24px;"
+                  viewBox="0 0 16 16"
+                >
+                  <path
+                    d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                    fill="currentColor"
+                  />
+                </svg>
+              </div>
+              <div
+                class="_display-flex _alignItems-center _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _justifyContent-center _flexGrow-1 _mr-24px _pt-1481558276 _pb-1481558276"
+              >
+                <span
+                  class="font_subHeading _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-18px _lineHeight-24px _fontWeight-400"
+                  data-disable-theme="true"
+                >
+                   
+                </span>
+              </div>
+            </div>
+            <div
+              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _gap-1481558214 _pb-1481558307 _pt-1481558276 _pr-1481558245 _pl-1481558245"
+            >
+              <div
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _alignItems-center _flexDirection-column _gap-1481558276"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _backgroundColor-733175080 _borderTopColor-733175080 _borderRightColor-733175080 _borderBottomColor-733175080 _borderLeftColor-733175080 _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _position-relative _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                  data-testid="account-icon"
+                >
+                  <svg
+                    height="56"
+                    viewBox="0 0 56 56"
+                    width="56"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <g
+                      style="transform-origin: center center;"
+                    >
+                      <circle
+                        cx="28"
+                        cy="28"
+                        fill="#4300B01F"
+                        r="28"
+                      />
+                      <g
+                        transform="translate(9.333333333333332, 9.333333333333332) scale(0.7777777777777778)"
+                      >
+                        <path
+                          clip-rule="evenodd"
+                          d="M13.2 6C9.22355 6 6 9.22355 6 13.2V34.8C6 38.7765 9.22355 42 13.2 42H34.8C38.7765 42 42 38.7765 42 34.8V13.2C42 9.22355 38.7765 6 34.8 6H13.2ZM26.1213 14.1213C24.9497 12.9497 23.0503 12.9497 21.8787 14.1213L14.1213 21.8787C12.9497 23.0503 12.9497 24.9497 14.1213 26.1213L21.8787 33.8787C23.0503 35.0503 24.9497 35.0503 26.1213 33.8787L33.8787 26.1213C35.0503 24.9497 35.0503 23.0503 33.8787 21.8787L26.1213 14.1213Z"
+                          fill="#4300B0"
+                          fill-rule="evenodd"
+                        />
+                      </g>
+                    </g>
+                  </svg>
+                </div>
+                <div
+                  class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _alignItems-center _gap-1481558276"
+                >
+                  <div
+                    class="_display-flex _alignItems-center _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-center _gap-1481558245"
+                  >
+                    <div
+                      class="_display-flex _alignItems-center _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-center _gap-1481558307"
+                    >
+                      <span
+                        class="font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _fontSize-18px _lineHeight-24px _fontWeight-400 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _flexShrink-1"
+                        data-disable-theme="true"
+                        data-testid="address-display/name/Jacob Haley"
+                      >
+                        Jacob Haley
+                      </span>
+                    </div>
+                  </div>
+                  <div
+                    class="_opacity-0active-0d0t7546 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _cursor-pointer"
+                    data-testid="copy"
+                  >
+                    <div
+                      class="_display-flex _alignItems-center _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-center _backgroundColor-733175080 _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _gap-1481558307 _mt-1481558400 _pr-1481558400 _pl-1481558400 _pt-1481558400 _pb-1481558400"
+                    >
+                      <span
+                        class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400"
+                        data-disable-theme="true"
+                      >
+                        0x​0fc6...be59
+                      </span>
+                      <svg
+                        fill="none"
+                        stroke-width="8"
+                        style="color: rgb(125, 125, 125); width: 14px; height: 14px;"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          d="M18.375 6.25H9.625C7.448 6.25 6.25 7.448 6.25 9.625V18.375C6.25 20.552 7.448 21.75 9.625 21.75H18.375C20.552 21.75 21.75 20.552 21.75 18.375V9.625C21.75 7.448 20.552 6.25 18.375 6.25ZM20.25 18.375C20.25 19.707 19.707 20.25 18.375 20.25H9.625C8.293 20.25 7.75 19.707 7.75 18.375V9.625C7.75 8.293 8.293 7.75 9.625 7.75H18.375C19.707 7.75 20.25 8.293 20.25 9.625V18.375ZM3.75 5.62V14.38C3.75 15.578 4.23309 15.873 4.39209 15.971C4.74609 16.187 4.85589 16.649 4.63989 17.002C4.49789 17.233 4.25202 17.36 3.99902 17.36C3.86602 17.36 3.72991 17.324 3.60791 17.25C2.70691 16.698 2.25 15.733 2.25 14.38V5.62C2.25 3.478 3.47912 2.25 5.62012 2.25H14.3799C16.0649 2.25 16.87 2.98897 17.25 3.60797C17.466 3.96097 17.355 4.42298 17.002 4.63898C16.648 4.85598 16.1879 4.74399 15.9709 4.39099C15.8739 4.23199 15.5779 3.74902 14.3799 3.74902H5.62012C4.29212 3.75002 3.75 4.292 3.75 5.62Z"
+                          fill="currentColor"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <span
+                class="t_sub_theme t_secondary_Button _dsp_contents is_Theme"
+              >
+                <button
+                  class="is_Button _backgroundColor-0hover-513675900 _backgroundColor-0active-744986709 _opacity-0active-0d0t746 _display-flex _alignItems-center _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _justifyContent-center _backgroundColor-1633501478 _borderTopColor-2122800589 _borderRightColor-2122800589 _borderBottomColor-2122800589 _borderLeftColor-2122800589 _cursor-pointer _height-auto _pt-1481558276 _pr-1481558276 _pb-1481558276 _pl-1481558276 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _gap-1481558307 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                  data-disable-theme="true"
+                  data-testid="account-card"
+                >
+                  <span
+                    class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-675002279 _cursor-pointer _fontSize-229441158 _fontWeight-233016109 _lineHeight-222976511"
+                  >
+                    Edit label
+                  </span>
+                </button>
+              </span>
+            </div>
+            <span
+              class="_dsp_contents"
+            >
+              <div
+                class="css-view-175oi2r r-WebkitOverflowScrolling-150rngu r-flexDirection-eqz5dr r-flexGrow-16y2uox r-flexShrink-1wbh5a2 r-overflowX-11yh6sk r-overflowY-1rnoaur r-transform-agouwx is_ScrollView _backgroundColor-568007324 _height-auto"
+              >
+                <div
+                  class="css-view-175oi2r"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                  />
+                  <div
+                    aria-expanded="false"
+                    aria-haspopup="dialog"
+                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                    data-state="closed"
+                  >
+                    <div
+                      class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _cursor-pointer _gap-1481558245 _mt-1481558245 _pb-1481558307 _pr-1481558245 _pl-1481558245"
+                    >
+                      <div
+                        class="_display-flex _alignItems-center _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-center _backgroundColor-568007324 _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _height-40px _pt-1481558276 _pr-1481558276 _pb-1481558276 _pl-1481558276 _width-40px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-1138931271"
+                      >
+                        <svg
+                          fill="none"
+                          stroke-width="2"
+                          style="color: rgb(125, 125, 125); width: 16px; height: 16px;"
+                          viewBox="0 0 16 16"
+                        >
+                          <path
+                            d="M8 1v14"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                          <path
+                            d="M1 8h14"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                          />
+                        </svg>
+                      </div>
+                      <span
+                        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _pt-1481558276 _pb-1481558276 _fontSize-16px _lineHeight-24px _fontWeight-500"
+                        data-disable-theme="true"
+                      >
+                        Add wallet
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </span>
+          </div>
+        </span>
+      </span>
+    </div>
+  </body>,
+  "container": <div>
+    <span
+      class="t_light is_inversed _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      >
+        <div
+          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _backgroundColor-568007324 _pr-1481558245 _pl-1481558245 _pt-1481558276 _pb-1481558276"
+        >
+          <div
+            class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _pr-1481558276 _pl-1481558276 _pt-1481558307 _pb-1481558307 _width-10037"
+          >
+            <div
+              class="_opacity-0active-0d0t7546 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _cursor-pointer"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="color: rgb(125, 125, 125); width: 24px; height: 24px;"
+                viewBox="0 0 16 16"
+              >
+                <path
+                  d="M12.5303 4.53033C12.8232 4.23744 12.8232 3.76256 12.5303 3.46967C12.2374 3.17678 11.7626 3.17678 11.4697 3.46967L12.5303 4.53033ZM3.46967 11.4697C3.17678 11.7626 3.17678 12.2374 3.46967 12.5303C3.76256 12.8232 4.23744 12.8232 4.53033 12.5303L3.46967 11.4697ZM4.53033 3.46967C4.23744 3.17678 3.76256 3.17678 3.46967 3.46967C3.17678 3.76256 3.17678 4.23744 3.46967 4.53033L4.53033 3.46967ZM11.4697 12.5303C11.7626 12.8232 12.2374 12.8232 12.5303 12.5303C12.8232 12.2374 12.8232 11.7626 12.5303 11.4697L11.4697 12.5303ZM11.4697 3.46967L3.46967 11.4697L4.53033 12.5303L12.5303 4.53033L11.4697 3.46967ZM3.46967 4.53033L11.4697 12.5303L12.5303 11.4697L4.53033 3.46967L3.46967 4.53033Z"
+                  fill="currentColor"
+                />
+              </svg>
+            </div>
+            <div
+              class="_display-flex _alignItems-center _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _justifyContent-center _flexGrow-1 _mr-24px _pt-1481558276 _pb-1481558276"
+            >
+              <span
+                class="font_subHeading _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-18px _lineHeight-24px _fontWeight-400"
+                data-disable-theme="true"
+              >
+                 
+              </span>
+            </div>
+          </div>
+          <div
+            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _gap-1481558214 _pb-1481558307 _pt-1481558276 _pr-1481558245 _pl-1481558245"
+          >
+            <div
+              class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _alignItems-center _flexDirection-column _gap-1481558276"
+            >
+              <div
+                class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _backgroundColor-733175080 _borderTopColor-733175080 _borderRightColor-733175080 _borderBottomColor-733175080 _borderLeftColor-733175080 _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _position-relative _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                data-testid="account-icon"
+              >
+                <svg
+                  height="56"
+                  viewBox="0 0 56 56"
+                  width="56"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <g
+                    style="transform-origin: center center;"
+                  >
+                    <circle
+                      cx="28"
+                      cy="28"
+                      fill="#4300B01F"
+                      r="28"
+                    />
+                    <g
+                      transform="translate(9.333333333333332, 9.333333333333332) scale(0.7777777777777778)"
+                    >
+                      <path
+                        clip-rule="evenodd"
+                        d="M13.2 6C9.22355 6 6 9.22355 6 13.2V34.8C6 38.7765 9.22355 42 13.2 42H34.8C38.7765 42 42 38.7765 42 34.8V13.2C42 9.22355 38.7765 6 34.8 6H13.2ZM26.1213 14.1213C24.9497 12.9497 23.0503 12.9497 21.8787 14.1213L14.1213 21.8787C12.9497 23.0503 12.9497 24.9497 14.1213 26.1213L21.8787 33.8787C23.0503 35.0503 24.9497 35.0503 26.1213 33.8787L33.8787 26.1213C35.0503 24.9497 35.0503 23.0503 33.8787 21.8787L26.1213 14.1213Z"
+                        fill="#4300B0"
+                        fill-rule="evenodd"
+                      />
+                    </g>
+                  </g>
+                </svg>
+              </div>
+              <div
+                class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _alignItems-center _gap-1481558276"
+              >
+                <div
+                  class="_display-flex _alignItems-center _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-center _gap-1481558245"
+                >
+                  <div
+                    class="_display-flex _alignItems-center _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-center _gap-1481558307"
+                  >
+                    <span
+                      class="font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _fontSize-18px _lineHeight-24px _fontWeight-400 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _flexShrink-1"
+                      data-disable-theme="true"
+                      data-testid="address-display/name/Jacob Haley"
+                    >
+                      Jacob Haley
+                    </span>
+                  </div>
+                </div>
+                <div
+                  class="_opacity-0active-0d0t7546 _transform-0active-scale11281 _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _cursor-pointer"
+                  data-testid="copy"
+                >
+                  <div
+                    class="_display-flex _alignItems-center _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-center _backgroundColor-733175080 _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _gap-1481558307 _mt-1481558400 _pr-1481558400 _pl-1481558400 _pt-1481558400 _pb-1481558400"
+                  >
+                    <span
+                      class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400"
+                      data-disable-theme="true"
+                    >
+                      0x​0fc6...be59
+                    </span>
+                    <svg
+                      fill="none"
+                      stroke-width="8"
+                      style="color: rgb(125, 125, 125); width: 14px; height: 14px;"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        d="M18.375 6.25H9.625C7.448 6.25 6.25 7.448 6.25 9.625V18.375C6.25 20.552 7.448 21.75 9.625 21.75H18.375C20.552 21.75 21.75 20.552 21.75 18.375V9.625C21.75 7.448 20.552 6.25 18.375 6.25ZM20.25 18.375C20.25 19.707 19.707 20.25 18.375 20.25H9.625C8.293 20.25 7.75 19.707 7.75 18.375V9.625C7.75 8.293 8.293 7.75 9.625 7.75H18.375C19.707 7.75 20.25 8.293 20.25 9.625V18.375ZM3.75 5.62V14.38C3.75 15.578 4.23309 15.873 4.39209 15.971C4.74609 16.187 4.85589 16.649 4.63989 17.002C4.49789 17.233 4.25202 17.36 3.99902 17.36C3.86602 17.36 3.72991 17.324 3.60791 17.25C2.70691 16.698 2.25 15.733 2.25 14.38V5.62C2.25 3.478 3.47912 2.25 5.62012 2.25H14.3799C16.0649 2.25 16.87 2.98897 17.25 3.60797C17.466 3.96097 17.355 4.42298 17.002 4.63898C16.648 4.85598 16.1879 4.74399 15.9709 4.39099C15.8739 4.23199 15.5779 3.74902 14.3799 3.74902H5.62012C4.29212 3.75002 3.75 4.292 3.75 5.62Z"
+                        fill="currentColor"
+                      />
+                    </svg>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <span
+              class="t_sub_theme t_secondary_Button _dsp_contents is_Theme"
+            >
+              <button
+                class="is_Button _backgroundColor-0hover-513675900 _backgroundColor-0active-744986709 _opacity-0active-0d0t746 _display-flex _alignItems-center _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _justifyContent-center _backgroundColor-1633501478 _borderTopColor-2122800589 _borderRightColor-2122800589 _borderBottomColor-2122800589 _borderLeftColor-2122800589 _cursor-pointer _height-auto _pt-1481558276 _pr-1481558276 _pb-1481558276 _pl-1481558276 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _gap-1481558307 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                data-disable-theme="true"
+                data-testid="account-card"
+              >
+                <span
+                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-675002279 _cursor-pointer _fontSize-229441158 _fontWeight-233016109 _lineHeight-222976511"
+                >
+                  Edit label
+                </span>
+              </button>
+            </span>
+          </div>
+          <span
+            class="_dsp_contents"
+          >
+            <div
+              class="css-view-175oi2r r-WebkitOverflowScrolling-150rngu r-flexDirection-eqz5dr r-flexGrow-16y2uox r-flexShrink-1wbh5a2 r-overflowX-11yh6sk r-overflowY-1rnoaur r-transform-agouwx is_ScrollView _backgroundColor-568007324 _height-auto"
+            >
+              <div
+                class="css-view-175oi2r"
+              >
+                <div
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                />
+                <div
+                  aria-expanded="false"
+                  aria-haspopup="dialog"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                  data-state="closed"
+                >
+                  <div
+                    class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _cursor-pointer _gap-1481558245 _mt-1481558245 _pb-1481558307 _pr-1481558245 _pl-1481558245"
+                  >
+                    <div
+                      class="_display-flex _alignItems-center _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-center _backgroundColor-568007324 _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _height-40px _pt-1481558276 _pr-1481558276 _pb-1481558276 _pl-1481558276 _width-40px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid _boxShadow-1138931271"
+                    >
+                      <svg
+                        fill="none"
+                        stroke-width="2"
+                        style="color: rgb(125, 125, 125); width: 16px; height: 16px;"
+                        viewBox="0 0 16 16"
+                      >
+                        <path
+                          d="M8 1v14"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                        <path
+                          d="M1 8h14"
+                          stroke="currentColor"
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                        />
+                      </svg>
+                    </div>
+                    <span
+                      class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _pt-1481558276 _pb-1481558276 _fontSize-16px _lineHeight-24px _fontWeight-500"
+                      data-disable-theme="true"
+                    >
+                      Add wallet
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </span>
+        </div>
+      </span>
+    </span>
+  </div>,
+  "debug": [Function],
+  "findAllByAltText": [Function],
+  "findAllByDisplayValue": [Function],
+  "findAllByLabelText": [Function],
+  "findAllByPlaceholderText": [Function],
+  "findAllByRole": [Function],
+  "findAllByTestId": [Function],
+  "findAllByText": [Function],
+  "findAllByTitle": [Function],
+  "findByAltText": [Function],
+  "findByDisplayValue": [Function],
+  "findByLabelText": [Function],
+  "findByPlaceholderText": [Function],
+  "findByRole": [Function],
+  "findByTestId": [Function],
+  "findByText": [Function],
+  "findByTitle": [Function],
+  "getAllByAltText": [Function],
+  "getAllByDisplayValue": [Function],
+  "getAllByLabelText": [Function],
+  "getAllByPlaceholderText": [Function],
+  "getAllByRole": [Function],
+  "getAllByTestId": [Function],
+  "getAllByText": [Function],
+  "getAllByTitle": [Function],
+  "getByAltText": [Function],
+  "getByDisplayValue": [Function],
+  "getByLabelText": [Function],
+  "getByPlaceholderText": [Function],
+  "getByRole": [Function],
+  "getByTestId": [Function],
+  "getByText": [Function],
+  "getByTitle": [Function],
+  "queryAllByAltText": [Function],
+  "queryAllByDisplayValue": [Function],
+  "queryAllByLabelText": [Function],
+  "queryAllByPlaceholderText": [Function],
+  "queryAllByRole": [Function],
+  "queryAllByTestId": [Function],
+  "queryAllByText": [Function],
+  "queryAllByTitle": [Function],
+  "queryByAltText": [Function],
+  "queryByDisplayValue": [Function],
+  "queryByLabelText": [Function],
+  "queryByPlaceholderText": [Function],
+  "queryByRole": [Function],
+  "queryByTestId": [Function],
+  "queryByText": [Function],
+  "queryByTitle": [Function],
+  "rerender": [Function],
+  "store": {
+    "@@observable": [Function],
+    "dispatch": [Function],
+    "getState": [Function],
+    "replaceReducer": [Function],
+    "subscribe": [Function],
+  },
+  "unmount": [Function],
+}
+`;

@@ -1,12 +1,13 @@
 import ErrorBoundary from 'components/ErrorBoundary'
 import { useFeatureFlagURLOverrides } from 'featureFlags'
+import useSyncChainQuery from 'hooks/useSyncChainQuery'
 import { useAtom } from 'jotai'
 import { AppLayout } from 'pages/App/Layout'
 import { ResetPageScrollEffect } from 'pages/App/utils/ResetPageScroll'
 import { UserPropertyUpdater } from 'pages/App/utils/UserPropertyUpdater'
 import { findRouteByPath } from 'pages/RouteDefinitions'
 import { useDynamicMetatags } from 'pages/metatags'
-import { useEffect, useLayoutEffect } from 'react'
+import { useEffect, useLayoutEffect, useRef } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, useLocation, useSearchParams } from 'react-router-dom'
 import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
@@ -37,6 +38,9 @@ export default function App() {
 
   // load operated pools and store default pool, update on chain switch
   useOperatedPools()
+
+  const chainIdRef = useRef<number | undefined>(undefined)
+  useSyncChainQuery(chainIdRef)
 
   const metaTags = useDynamicMetatags()
   const staticTitle = findRouteByPath(pathname)?.getTitle(pathname) ?? 'Rigoblock Interface'

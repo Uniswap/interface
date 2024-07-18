@@ -4,7 +4,6 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 interface SelectTokenButtonProps {
@@ -17,6 +16,7 @@ interface SelectTokenButtonProps {
   iconSize?: number
   backgroundColor?: ComponentProps<typeof TouchableArea>['backgroundColor']
   chevronDirection?: ComponentProps<typeof RotatableChevron>['direction']
+  testID?: string
 }
 
 export function SelectTokenButton({
@@ -29,6 +29,7 @@ export function SelectTokenButton({
   iconSize = iconSizes.icon24,
   chevronDirection = 'end',
   backgroundColor,
+  testID,
 }: SelectTokenButtonProps): JSX.Element {
   const textColor = !amountReady || disabled || loading ? '$neutral3' : '$neutral2'
 
@@ -40,7 +41,7 @@ export function SelectTokenButton({
       disabled={disabled}
       px="$spacing8"
       py="$spacing4"
-      testID={ElementName.TokenSelectorToggle}
+      testID={testID}
       onPress={onPress}
     >
       <Flex centered row flexDirection="row" gap="$none" p="$spacing4">

@@ -1,3 +1,4 @@
+import { SharedEventName } from '@uniswap/analytics-events'
 import { useTranslation } from 'react-i18next'
 import { useAppSelector } from 'src/app/hooks'
 import { ServiceProviderSelector } from 'src/features/fiatOnRamp/ExchangeTransferServiceProviderSelector'
@@ -7,7 +8,8 @@ import { Flex, HapticFeedback, ImpactFeedbackStyle, Separator, Text, TouchableAr
 import { CopySheets, QrCode } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -33,6 +35,10 @@ function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
         copyType: CopyNotificationType.Address,
       }),
     )
+    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+      element: ElementName.CopyAddress,
+      modal: ModalName.ReceiveCryptoModal,
+    })
   }
 
   const onPressShowWalletQr = (): void => {

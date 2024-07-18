@@ -18,7 +18,7 @@ import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
-import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
@@ -169,7 +169,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
             </Text>
           </TouchableArea>
         )}
-        <Button disabled={!enteredPassword || isLockedOut} testID={ElementName.Submit} onPress={onPasswordSubmit}>
+        <Button disabled={!enteredPassword || isLockedOut} testID={TestID.Continue} onPress={onPasswordSubmit}>
           {t('common.button.continue')}
         </Button>
       </Flex>

@@ -3,7 +3,8 @@ import { Linking } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { Language } from 'ui/src/components/icons'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isAndroid } from 'utilities/src/platform'
 import { SettingsLanguageModalProps } from 'wallet/src/components/settings/language/SettingsLanguageModalProps'
 import { opacify } from 'wallet/src/utils/colors'
@@ -36,7 +37,7 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
             {t('settings.setting.language.description.mobile')}
           </Text>
         </Flex>
-        <Button testID={ElementName.OpenDeviceLanguageSettings} theme="tertiary" onPress={openLanguageSettings}>
+        <Button testID={TestID.OpenDeviceLanguageSettings} theme="tertiary" onPress={openLanguageSettings}>
           {t('settings.setting.language.button.navigate')}
         </Button>
       </Flex>

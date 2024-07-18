@@ -8,8 +8,9 @@ import { Flex, Image, Text, TouchableArea, TouchableAreaProps, useIsDarkMode, us
 import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
-import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { selectHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
@@ -122,7 +123,7 @@ export function UnitagBanner({
           </Flex>
           <Flex row gap="$spacing2">
             {/* TODO: replace with Button when it's extensible enough to accommodate designs */}
-            <TouchableArea {...baseButtonStyle} testID={ElementName.Confirm} onPress={onPressClaimNow}>
+            <TouchableArea {...baseButtonStyle} testID={TestID.Confirm} onPress={onPressClaimNow}>
               <Text color="white" variant="buttonLabel4">
                 {t('unitags.banner.button.claim')}
               </Text>
@@ -130,7 +131,7 @@ export function UnitagBanner({
             <TouchableArea
               {...baseButtonStyle}
               backgroundColor="$transparent"
-              testID={ElementName.Cancel}
+              testID={TestID.Cancel}
               onPress={onPressMaybeLater}
             >
               <Text color="$neutral2" variant="buttonLabel4">

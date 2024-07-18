@@ -36,7 +36,7 @@ import { TransferReview } from 'wallet/src/features/transactions/transfer/Transf
 import { TransferTokenForm } from 'wallet/src/features/transactions/transfer/TransferTokenForm'
 import { useDerivedTransferInfo } from 'wallet/src/features/transactions/transfer/hooks/useDerivedTransferInfo'
 import { useOnSelectRecipient } from 'wallet/src/features/transactions/transfer/hooks/useOnSelectRecipient'
-import { useOnToggleShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
+import { useSetShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
 import {
   useTransferERC20Callback,
   useTransferNFTCallback,
@@ -67,7 +67,11 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
   const { showRecipientSelector } = state
 
   const onSelectRecipient = useOnSelectRecipient(dispatch)
-  const onToggleShowRecipientSelector = useOnToggleShowRecipientSelector(dispatch)
+  const onSetShowRecipientSelector = useSetShowRecipientSelector(dispatch)
+
+  const onHideRecipientSelector = useCallback(() => {
+    onSetShowRecipientSelector(false)
+  }, [onSetShowRecipientSelector])
 
   const txRequest = useTransferTransactionRequest(derivedTransferInfo)
   const warnings = useTransferWarnings(t, derivedTransferInfo)
@@ -153,9 +157,10 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
           <Flex fill>
             <Animated.View style={[styles.screen, recipientScreenStyle]}>
               <RecipientSelect
+                focusInput={showRecipientSelector}
                 recipient={recipient}
+                onHideRecipientSelector={onHideRecipientSelector}
                 onSelectRecipient={onSelectRecipient}
-                onToggleShowRecipientSelector={onToggleShowRecipientSelector}
               />
             </Animated.View>
 

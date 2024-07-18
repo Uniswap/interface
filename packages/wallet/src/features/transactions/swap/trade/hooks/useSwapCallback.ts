@@ -1,75 +1,64 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { providers } from 'ethers'
-import { useMemo } from 'react'
+import { useCallback } from 'react'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { logger } from 'utilities/src/logger/logger'
 import { setHasSubmittedHoldToSwap } from 'wallet/src/features/behaviorHistory/slice'
-import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { selectSwapStartTimestamp } from 'wallet/src/features/timing/selectors'
 import { updateSwapStartTimestamp } from 'wallet/src/features/timing/slice'
+import { ValidatedSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
-import { SwapParams, swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
+import { swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
 import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
-import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
-import { tradeToTransactionInfo } from 'wallet/src/features/transactions/swap/utils'
-import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
+import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
+import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 import { toStringish } from 'wallet/src/utils/number'
 
-/** Callback to submit trades and track progress */
-export function useSwapCallback(
-  approveTxRequest: providers.TransactionRequest | undefined,
-  swapTxRequest: providers.TransactionRequest | undefined,
-  gasFee: GasFeeResult,
-  trade: Trade | null | undefined,
-  currencyInAmountUSD: Maybe<CurrencyAmount<Currency>>,
-  currencyOutAmountUSD: Maybe<CurrencyAmount<Currency>>,
-  isAutoSlippage: boolean,
-  onSubmit: () => void,
-  txId?: string,
-  isHoldToSwap?: boolean,
+interface SwapCallbackArgs {
+  account: SignerMnemonicAccount
+  swapTxContext: ValidatedSwapTxContext
+  currencyInAmountUSD: Maybe<CurrencyAmount<Currency>>
+  currencyOutAmountUSD: Maybe<CurrencyAmount<Currency>>
+  isAutoSlippage: boolean
+  onSubmit: () => void
+  onFailure: () => void
+  txId?: string
+  isHoldToSwap?: boolean
+  isFiatInputMode?: boolean
+}
 
-  isFiatInputMode?: boolean,
-): () => void {
+/** Callback to submit trades and track progress */
+export function useSwapCallback(): (args: SwapCallbackArgs) => void {
   const appDispatch = useAppDispatch()
-  const account = useActiveAccount()
   const formatter = useLocalizationContext()
   const swapStartTimestamp = useAppSelector(selectSwapStartTimestamp)
 
-  return useMemo(() => {
-    if (!account || !swapTxRequest || !trade || !gasFee.value) {
-      return () => {
-        logger.error(new Error('Attempted swap with missing required parameters'), {
-          tags: {
-            file: 'swap/hooks',
-            function: 'useSwapCallback',
-          },
-          extra: { account, swapTxRequest, trade, gasFee },
-        })
-      }
-    }
-
-    return () => {
-      const params: SwapParams = {
-        txId,
+  return useCallback(
+    (args: SwapCallbackArgs) => {
+      const {
         account,
-        analytics: getBaseTradeAnalyticsProperties({ formatter, trade }),
-        approveTxRequest,
-        swapTxRequest,
-        swapTypeInfo: tradeToTransactionInfo(trade),
-      }
+        swapTxContext,
+        txId,
+        onSubmit,
+        onFailure,
+        currencyInAmountUSD,
+        currencyOutAmountUSD,
+        isAutoSlippage,
+        isHoldToSwap,
+        isFiatInputMode,
+      } = args
+      const { trade, gasFee } = swapTxContext
 
-      appDispatch(swapActions.trigger(params))
-      onSubmit()
+      const analytics = getBaseTradeAnalyticsProperties({ formatter, trade })
+      appDispatch(swapActions.trigger({ swapTxContext, txId, account, analytics, onSubmit, onFailure }))
 
       const blockNumber = getClassicQuoteFromResponse(trade?.quote)?.blockNumber?.toString()
 
       sendAnalyticsEvent(SwapEventName.SWAP_SUBMITTED_BUTTON_CLICKED, {
-        ...getBaseTradeAnalyticsProperties({ formatter, trade }),
+        ...analytics,
         estimated_network_fee_wei: gasFee.value,
-        gas_limit: toStringish(swapTxRequest.gasLimit),
+        gas_limit: isClassic(swapTxContext) ? toStringish(swapTxContext.txRequest.gasLimit) : undefined,
         token_in_amount_usd: currencyInAmountUSD ? parseFloat(currencyInAmountUSD.toFixed(2)) : undefined,
         token_out_amount_usd: currencyOutAmountUSD ? parseFloat(currencyOutAmountUSD.toFixed(2)) : undefined,
         transaction_deadline_seconds: trade.deadline,
@@ -87,22 +76,7 @@ export function useSwapCallback(
       if (isHoldToSwap) {
         appDispatch(setHasSubmittedHoldToSwap(true))
       }
-    }
-  }, [
-    account,
-    swapTxRequest,
-    trade,
-    gasFee,
-    appDispatch,
-    txId,
-    currencyInAmountUSD,
-    currencyOutAmountUSD,
-    approveTxRequest,
-    onSubmit,
-    formatter,
-    isAutoSlippage,
-    swapStartTimestamp,
-    isHoldToSwap,
-    isFiatInputMode,
-  ])
+    },
+    [appDispatch, formatter, swapStartTimestamp],
+  )
 }
