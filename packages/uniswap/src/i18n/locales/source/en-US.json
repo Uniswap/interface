@@ -710,7 +710,7 @@
   "settings.setting.giveFeedback.title": "Share feedback",
   "settings.setting.helpCenter.title": "Help center",
   "settings.setting.language.button.navigate": "Go to settings",
-  "settings.setting.language.description.extension": "Uniswap defaults to your system language settings. To change your preferred language, go to your system settings.",
+  "settings.setting.language.description.extension": "Rigoblock defaults to your system language settings. To change your preferred language, go to your system settings.",
   "settings.setting.language.description.mobile": "Uniswap defaults to your device‘s language settings. To change your preferred language, go to “Uniswap” in your device settings and tap on “Language”.",
   "settings.setting.language.title": "Language",
   "settings.setting.password.title": "Change password",
