@@ -6,8 +6,9 @@ export enum DynamicConfigs {
   // Wallet
   MobileForceUpgrade = 'force_upgrade',
   OnDeviceRecovery = 'on_device_recovery',
+  PollingIntervals = 'polling_intervals',
+  Slippage = 'slippage_configs',
   UwuLink = 'uwulink_config',
-  Swap = 'swap_config',
 
   // Web
   QuickRouteChains = 'quick_route_chains',
@@ -25,10 +26,13 @@ export enum OnDeviceRecoveryConfigKey {
   MaxMnemonicsToLoad = 'maxMnemonicsToLoad',
 }
 
-export enum SwapConfigKey {
+export enum PollingIntervalsConfigKey {
   AverageL1BlockTimeMs = 'averageL1BlockTimeMs',
   AverageL2BlockTimeMs = 'averageL2BlockTimeMs',
   TradingApiSwapRequestMs = 'tradingApiSwapRequestMs',
+}
+
+export enum SlippageConfigKey {
   MinAutoSlippageToleranceL2 = 'minAutoSlippageToleranceL2',
 }
 
@@ -45,8 +49,9 @@ export type DynamicConfigKeys = {
   // Wallet
   [DynamicConfigs.MobileForceUpgrade]: ForceUpgradeConfigKey
   [DynamicConfigs.OnDeviceRecovery]: OnDeviceRecoveryConfigKey
+  [DynamicConfigs.PollingIntervals]: PollingIntervalsConfigKey
+  [DynamicConfigs.Slippage]: SlippageConfigKey
   [DynamicConfigs.UwuLink]: UwuLinkConfigKey
-  [DynamicConfigs.Swap]: SwapConfigKey
 
   // Web
   [DynamicConfigs.QuickRouteChains]: QuickRouteChainsConfigKey

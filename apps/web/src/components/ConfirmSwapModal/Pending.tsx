@@ -135,7 +135,7 @@ export function Pending({
     if (swapResult && swapResult.type === TradeFillType.Classic) {
       txHash = swapResult.response.hash
     } else if (uniswapXOrder && uniswapXOrder.status === UniswapXOrderStatus.FILLED) {
-      txHash = uniswapXOrder.orderHash
+      txHash = uniswapXOrder.txHash
     } else {
       return
     }

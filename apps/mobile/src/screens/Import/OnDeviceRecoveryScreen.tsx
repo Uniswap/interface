@@ -1,5 +1,4 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import { SharedEventName } from '@uniswap/analytics-events'
 import dayjs from 'dayjs'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -19,8 +18,7 @@ import { iconSizes } from 'ui/src/theme'
 import { DynamicConfigs, OnDeviceRecoveryConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -107,20 +105,12 @@ export function OnDeviceRecoveryScreen({
     setSelectedMnemonicId(undefined)
     setSelectedRecoveryWalletInfos([])
     setShowConfirmationModal(false)
-
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: ElementName.OnDeviceRecoveryModalCancel,
-    })
   }
 
   const onPressConfirm = async (): Promise<void> => {
     await clearNonSelectedStoredMnemonics()
     await clearNonSelectedStoredAddresses()
     setShowConfirmationModal(false)
-
-    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-      element: ElementName.OnDeviceRecoveryModalConfirm,
-    })
 
     if (selectedMnemonicId && selectedRecoveryWalletInfos.length) {
       setRecoveredImportedAccounts(
@@ -197,10 +187,6 @@ export function OnDeviceRecoveryScreen({
                     setSelectedMnemonicId(mnemonicId)
                     setSelectedRecoveryWalletInfos(recoveryAddressesInfos)
                     setShowConfirmationModal(true)
-
-                    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-                      element: ElementName.OnDeviceRecoveryWallet,
-                    })
                   }}
                   onPressViewRecoveryPhrase={() => {
                     navigation.navigate(OnboardingScreens.OnDeviceRecoveryViewSeedPhrase, {
@@ -228,13 +214,11 @@ export function OnDeviceRecoveryScreen({
               <Text color="$neutral3" variant="body3" onPress={onPressOtherWallet}>
                 {t('onboarding.import.onDeviceRecovery.other_options.label')}
               </Text>
-              <Trace logPress element={ElementName.OnDeviceRecoveryImportOther}>
-                <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={TestID.WatchWallet}>
-                  <Text color="$accent1" variant="buttonLabel3" onPress={onPressOtherWallet}>
-                    {t('onboarding.import.onDeviceRecovery.other_options')}
-                  </Text>
-                </TouchableArea>
-              </Trace>
+              <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={TestID.WatchWallet}>
+                <Text color="$accent1" variant="buttonLabel3" onPress={onPressOtherWallet}>
+                  {t('onboarding.import.onDeviceRecovery.other_options')}
+                </Text>
+              </TouchableArea>
             </Flex>
           </Flex>
         </Flex>

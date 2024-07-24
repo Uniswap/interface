@@ -75,7 +75,7 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
   const showUniswapWalletOptions = useUniswapWalletOptions()
   const connectors = useOrderedConnections(showUniswapWalletOptions)
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
-  const [showOtherWallets, toggleShowOtherWallets] = useReducer((s) => !s, false)
+  const [showOtherWallets, toggleShowOtherWallets] = useReducer((s) => !s, true)
 
   return (
     <Wrapper data-testid="wallet-modal" isUniExtensionAvailable={isUniExtensionAvailable}>

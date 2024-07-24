@@ -10,7 +10,7 @@ const StyledLink = styled(ExternalLink)`
 export default function PrivacyPolicyNotice() {
   return (
     <ThemedText.BodySmall color="neutral2">
-      <Trans i18nKey="wallet.connectingAgreement" />
+      <Trans i18nKey="wallet.connectingAgreement" />{' '}
       <StyledLink href="https://uniswap.org/terms-of-service/">
         <Trans i18nKey="common.termsOfService" />{' '}
       </StyledLink>

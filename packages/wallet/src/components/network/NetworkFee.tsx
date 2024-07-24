@@ -6,23 +6,21 @@ import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
-import { useFormattedUniswapXGasFeeInfo } from 'wallet/src/components/network/hooks'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useGasFeeHighRelativeToValue } from 'wallet/src/features/transactions/swap/hooks/useGasFeeHighRelativeToValue'
 import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
-import { UniswapXGasBreakdown } from 'wallet/src/features/transactions/swap/trade/api/hooks/useSwapTxAndGasInfo'
 
 export function NetworkFee({
   chainId,
   gasFee,
-  uniswapXGasBreakdown,
+  preUniswapXGasFeeUSD,
   transactionUSDValue,
 }: {
   chainId: WalletChainId
   gasFee: GasFeeResult
-  uniswapXGasBreakdown?: UniswapXGasBreakdown
+  preUniswapXGasFeeUSD?: number
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
 }): JSX.Element {
   const { t } = useTranslation()
@@ -30,29 +28,28 @@ export function NetworkFee({
 
   const gasFeeUSD = useUSDValue(chainId, gasFee.value ?? undefined)
   const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
-
-  const uniswapXGasFeeInfo = useFormattedUniswapXGasFeeInfo(uniswapXGasBreakdown, chainId)
+  const preSavingsGasFeeFormatted = convertFiatAmountFormatted(preUniswapXGasFeeUSD, NumberType.FiatGasPrice)
 
   const gasFeeHighRelativeToValue = useGasFeeHighRelativeToValue(gasFeeUSD, transactionUSDValue)
   const isLoading = gasFee.loading
 
   return (
     <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-      <NetworkFeeWarning gasFeeHighRelativeToValue={gasFeeHighRelativeToValue} uniswapXGasFeeInfo={uniswapXGasFeeInfo}>
+      <NetworkFeeWarning gasFeeHighRelativeToValue={gasFeeHighRelativeToValue}>
         <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant="body3">
           {t('transaction.networkCost.label')}
         </Text>
       </NetworkFeeWarning>
-      <Flex row alignItems="center" gap={uniswapXGasBreakdown ? '$spacing4' : '$spacing8'}>
-        {(!uniswapXGasBreakdown || gasFee.error) && (
+      <Flex row alignItems="center" gap={preUniswapXGasFeeUSD ? '$spacing4' : '$spacing8'}>
+        {(!preUniswapXGasFeeUSD || gasFee.error) && (
           <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon16} />
         )}
         {gasFee.error ? (
           <Text color="$neutral2" variant="body3">
             {t('common.text.notAvailable')}
           </Text>
-        ) : uniswapXGasBreakdown ? (
-          <UniswapXFee gasFee={gasFeeFormatted} preSavingsGasFee={uniswapXGasFeeInfo?.preSavingsGasFeeFormatted} />
+        ) : preUniswapXGasFeeUSD ? (
+          <UniswapXFee gasFee={gasFeeFormatted} preSavingsGasFee={preSavingsGasFeeFormatted} />
         ) : (
           <Text
             color={isLoading ? '$neutral3' : gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral1'}

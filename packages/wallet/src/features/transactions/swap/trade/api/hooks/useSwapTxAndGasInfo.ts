@@ -12,13 +12,6 @@ import { sumGasFees } from 'wallet/src/features/transactions/swap/utils'
 
 export type SwapTxAndGasInfo = ClassicSwapTxAndGasInfo | UniswapXSwapTxAndGasInfo
 
-export type UniswapXGasBreakdown = {
-  classicGasUseEstimateUSD?: number
-  approvalCost?: string
-  wrapCost?: string
-  inputTokenSymbol?: string
-}
-
 export type ClassicSwapTxAndGasInfo = {
   routing: Routing.CLASSIC
   trade?: ClassicTrade
@@ -35,7 +28,6 @@ export type UniswapXSwapTxAndGasInfo = {
   approveTxRequest: ValidatedTransactionRequest | undefined
   orderParams?: OrderRequest
   gasFee: GasFeeResult
-  gasFeeBreakdown: UniswapXGasBreakdown
   approvalError: boolean
 }
 
@@ -99,13 +91,6 @@ export function useSwapTxAndGasInfo({ derivedSwapInfo }: { derivedSwapInfo: Deri
     if (trade?.routing === Routing.DUTCH_V2) {
       const signature = swapTxInfo.permitSignature
       const orderParams = signature ? { signature, quote: trade.quote.quote, routing: Routing.DUTCH_V2 } : undefined
-      const gasFeeBreakdown: UniswapXGasBreakdown = {
-        // TODO(API-324): next version of trading api schema will break the following line; update the type's field to be a string instead
-        classicGasUseEstimateUSD: trade.quote.quote.classicGasUseEstimateUSD,
-        approvalCost: tokenApprovalInfo?.gasFee,
-        wrapCost: swapTxInfo.gasFeeResult.value,
-        inputTokenSymbol: trade.inputAmount.currency.wrapped.symbol,
-      }
 
       return {
         routing: Routing.DUTCH_V2,
@@ -114,7 +99,6 @@ export function useSwapTxAndGasInfo({ derivedSwapInfo }: { derivedSwapInfo: Deri
         approveTxRequest,
         orderParams,
         gasFee,
-        gasFeeBreakdown,
         approvalError,
       }
     } else {

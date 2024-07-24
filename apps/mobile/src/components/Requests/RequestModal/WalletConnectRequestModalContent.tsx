@@ -102,7 +102,7 @@ export function WalletConnectRequestModalContent({
 
         <Flex gap="$spacing8" mb="$spacing12" pt="$spacing20" px="$spacing4">
           <NetworkFeeFooter chainId={chainId} gasFeeUSD={hasGasFee ? gasFeeUSD : '0'} showNetworkLogo={hasGasFee} />
-          <AddressFooter activeAccountAddress={request.account} px="$spacing8" />
+          <AddressFooter activeAccountAddress={request.account} />
         </Flex>
 
         {!hasSufficientFunds && (

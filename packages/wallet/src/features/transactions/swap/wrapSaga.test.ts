@@ -13,7 +13,6 @@ const wrapTxInfo: WrapTransactionInfo = {
   type: TransactionType.Wrap,
   unwrapped: false,
   currencyAmountRaw: '200000',
-  swapTxId: undefined,
 }
 
 const unwrapTxInfo: WrapTransactionInfo = {

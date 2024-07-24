@@ -16,7 +16,7 @@ function key(item: FORServiceProvider): string {
 }
 
 const CEX_ICON_SIZE = iconSizes.icon36
-const CEX_ICON_BORDER_RADIUS = 8
+const CEX_ICON_BORDER_RADIUS = 12
 
 function CEXItemWrapper({
   serviceProvider,

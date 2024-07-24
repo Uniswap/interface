@@ -5,7 +5,7 @@ An open source repository for all Uniswap front end interfaces maintained by Uni
 ## Interfaces
 
 - Web: [app.uniswap.org](https://app.uniswap.org)
-- Wallet (mobile + extension): [wallet.uniswap.org](https://wallet.uniswap.org)
+- Wallet: [wallet.uniswap.org](https://wallet.uniswap.org)
 
 ## Socials / Contact
 
@@ -31,7 +31,6 @@ For instructions per application or package, see the README published for each a
 
 - [Web](apps/web/README.md)
 - [Mobile](apps/mobile/README.md)
-- [Extension](apps/extension/README.md)
 
 ## Releases
 
@@ -44,7 +43,7 @@ Translations for our applications are done through [crowdin](https://crowdin.com
 | App     | Coverage |
 | ------- | -------- |
 | web     | [![Crowdin](https://badges.crowdin.net/uniswap-interface/localized.svg)](https://crowdin.com/project/uniswap-interface) |
-| wallet  | [![Crowdin](https://badges.crowdin.net/uniswap-wallet/localized.svg)](https://crowdin.com/project/uniswap-wallet) |
+| mobile  | [![Crowdin](https://badges.crowdin.net/uniswap-wallet/localized.svg)](https://crowdin.com/project/uniswap-wallet) |
 
 ## 🗂 Directory Structure
 

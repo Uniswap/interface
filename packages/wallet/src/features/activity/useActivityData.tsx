@@ -35,6 +35,7 @@ type ActivityDataProps = {
 
 type ActivityData = {
   maybeEmptyComponent: JSX.Element | null
+  maybeLoaderComponent: JSX.Element | null
   renderActivityItem: ActivityItemRenderer
   sectionData: (TransactionDetails | SectionHeader | LoadingItem)[] | undefined
   keyExtractor: (item: TransactionDetails | SectionHeader | LoadingItem) => string
@@ -78,7 +79,7 @@ export function useActivityData({
     )
   }, [swapCallbacks, authTrigger])
 
-  const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(
+  const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(
     owner,
     hideSpamTokens,
     useMergeLocalAndRemoteTransactions,
@@ -110,11 +111,13 @@ export function useActivityData({
     </Flex>
   )
 
-  // We check `sectionData` instead of `hasData` because `sectionData` has either transactions or a loading skeleton.
-  const maybeEmptyComponent = sectionData?.length ? null : isError ? errorCard : emptyListView
+  const maybeEmptyComponent = hasData ? null : isError ? errorCard : emptyListView
+  // We want to display the loading shimmer only on first load because items have their own loading shimmer
+  const maybeLoaderComponent = isLoading && !hasData ? <Loader.Transaction repeat={6} /> : null
 
   return {
     maybeEmptyComponent,
+    maybeLoaderComponent,
     renderActivityItem,
     sectionData,
     keyExtractor,

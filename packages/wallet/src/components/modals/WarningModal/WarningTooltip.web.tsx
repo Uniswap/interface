@@ -32,9 +32,7 @@ export function WarningTooltip({
               <Text color="$neutral2" variant="body3">
                 {text}
               </Text>
-              <Flex alignSelf="flex-start" width="100%">
-                {button}
-              </Flex>
+              <Flex alignSelf="flex-start">{button}</Flex>
             </Flex>
           </Flex>
           <Tooltip.Arrow />

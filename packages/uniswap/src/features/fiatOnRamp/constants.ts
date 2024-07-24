@@ -18,7 +18,6 @@ export const ServiceProviderLogoStyles = {
   icon: {
     height: SERVICE_PROVIDER_ICON_SIZE,
     width: SERVICE_PROVIDER_ICON_SIZE,
-    borderRadius: SERVICE_PROVIDER_ICON_BORDER_RADIUS,
   },
   uniswapLogoWrapper: {
     backgroundColor: '#FFEFF8', // #FFD8EF with 40% opacity on a white background

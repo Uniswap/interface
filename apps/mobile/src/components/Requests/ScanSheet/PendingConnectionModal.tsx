@@ -141,7 +141,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
   return (
     <TouchableArea disabled={!accountIsSwitchable} m="$none" testID={TestID.WCDappSwitchAccount} onPress={onPress}>
       <Flex row justifyContent="space-between">
-        <AddressFooter activeAccountAddress={activeAddress} px="$spacing8" />
+        <AddressFooter activeAccountAddress={activeAddress} />
         {accountIsSwitchable && <RotatableChevron color="$neutral2" direction="down" height={16} width={16} />}
       </Flex>
     </TouchableArea>

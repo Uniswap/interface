@@ -382,14 +382,6 @@ export type UniverseEventProperties = {
     isBiometricsEnrolled: boolean | undefined
     isBiometricAuthEnabled: boolean
   }
-  [MobileEventName.AutomatedOnDeviceRecoveryMnemonicsFound]: {
-    mnemonicCount: number
-  }
-  [MobileEventName.AutomatedOnDeviceRecoverySingleMnemonicFetched]: {
-    balance: number
-    hasUnitag: boolean
-    hasENS: boolean
-  }
   [MobileEventName.BalancesReport]: {
     total_balances_usd: number
     wallets: string[]

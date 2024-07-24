@@ -4,7 +4,7 @@ import { useMemo } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
 import { isMainnetChainId } from 'uniswap/src/features/chains/utils'
-import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
+import { DynamicConfigs, PollingIntervalsConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
@@ -253,14 +253,14 @@ const FALLBACK_L2_BLOCK_TIME_MS = 3000
 
 function usePollingIntervalByChain(chainId?: WalletChainId): number {
   const averageL1BlockTimeMs = useDynamicConfigValue(
-    DynamicConfigs.Swap,
-    SwapConfigKey.AverageL1BlockTimeMs,
+    DynamicConfigs.PollingIntervals,
+    PollingIntervalsConfigKey.AverageL1BlockTimeMs,
     FALLBACK_L1_BLOCK_TIME_MS,
   )
 
   const averageL2BlockTimeMs = useDynamicConfigValue(
-    DynamicConfigs.Swap,
-    SwapConfigKey.AverageL2BlockTimeMs,
+    DynamicConfigs.PollingIntervals,
+    PollingIntervalsConfigKey.AverageL2BlockTimeMs,
     FALLBACK_L2_BLOCK_TIME_MS,
   )
 

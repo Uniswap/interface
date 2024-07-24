@@ -18,14 +18,13 @@ import {
 } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { SwapFee } from 'wallet/src/features/transactions/TransactionDetails/SwapFee'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
-import { UniswapXGasBreakdown } from 'wallet/src/features/transactions/swap/trade/api/hooks/useSwapTxAndGasInfo'
 import { SwapFeeInfo } from 'wallet/src/features/transactions/swap/trade/types'
 
 interface TransactionDetailsProps {
   banner?: ReactNode
   chainId: WalletChainId
   gasFee: GasFeeResult
-  uniswapXGasBreakdown?: UniswapXGasBreakdown
+  preUniswapXGasFeeUSD?: number
   showExpandedChildren?: boolean
   swapFeeInfo?: SwapFeeInfo
   showWarning?: boolean
@@ -43,7 +42,7 @@ export function TransactionDetails({
   showExpandedChildren,
   chainId,
   gasFee,
-  uniswapXGasBreakdown,
+  preUniswapXGasFeeUSD,
   swapFeeInfo,
   showWarning,
   warning,
@@ -126,8 +125,8 @@ export function TransactionDetails({
         <NetworkFee
           chainId={chainId}
           gasFee={gasFee}
+          preUniswapXGasFeeUSD={preUniswapXGasFeeUSD}
           transactionUSDValue={transactionUSDValue}
-          uniswapXGasBreakdown={uniswapXGasBreakdown}
         />
         {AccountDetails}
       </Flex>

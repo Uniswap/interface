@@ -58,7 +58,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
   const swapTxContext = useSwapTxContext()
   const { gasFee, trade } = swapTxContext
-  const uniswapXGasBreakdown = isUniswapX(swapTxContext) ? swapTxContext.gasFeeBreakdown : undefined
 
   const {
     derivedSwapInfo,
@@ -407,7 +406,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
                   gasFee={gasFee}
                   newTradeRequiresAcceptance={newTradeRequiresAcceptance}
                   outputCurrencyPricePerUnitExact={outputCurrencyPricePerUnitExact}
-                  uniswapXGasBreakdown={uniswapXGasBreakdown}
                   warning={reviewScreenWarning?.warning}
                   onAcceptTrade={onAcceptTrade}
                   onShowSlippageModal={onShowSlippageModal}
