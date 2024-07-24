@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
@@ -10,7 +11,6 @@ import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { useAppDispatch } from 'wallet/src/state'
 
 type EditLabelModalProps = {
   address: Address
@@ -19,7 +19,7 @@ type EditLabelModalProps = {
 
 export function EditLabelModal({ address, onClose }: EditLabelModalProps): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const displayName = useDisplayName(address)
   const defaultText = displayName?.type === DisplayNameType.Local ? displayName.name : ''

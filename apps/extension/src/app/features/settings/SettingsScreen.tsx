@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { SCREEN_ITEM_HORIZONTAL_PAD } from 'src/app/constants'
 import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItemWithDropdown'
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
-import { useAppDispatch } from 'src/store/store'
 import {
   Button,
   ColorTokens,
@@ -53,7 +53,7 @@ const manifestVersion = chrome.runtime.getManifest().version
 
 export function SettingsScreen(): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { navigateTo, navigateBack } = useExtensionNavigation()
   const currentLanguageInfo = useCurrentLanguageInfo()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()

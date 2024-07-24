@@ -22,8 +22,8 @@ import { TimePeriod, gqlToCurrency, supportedChainIdFromGQLChain, toHistoryDurat
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { Trans, t } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
+import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
-import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -271,7 +271,7 @@ function PriceChart({
 
   const params = useMemo(() => ({ data, stale, type: PriceChartType.LINE }), [data, stale])
 
-  const stablecoinPrice = useStablecoinPrice(primaryToken)
+  const { price: stablecoinPrice } = useStablecoinPrice(primaryToken)
 
   const lastPrice = data[data.length - 1]
   return (

@@ -16,7 +16,7 @@ type FiatOnRampCurrencyInfo = {
   notAvailableInThisRegion: boolean
 }
 
-const fallbackCurrencyInfo: FiatCurrencyInfo = {
+export const fallbackCurrencyInfo: FiatCurrencyInfo = {
   ...getFiatCurrencyComponents('en-US', 'USD'),
   symbol: '$',
   name: 'United States Dollar',

@@ -61,6 +61,7 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
       refreshing,
       headerHeight = 0,
       onRefresh,
+      testID,
     },
     ref,
   ) {
@@ -124,7 +125,9 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
     // In order to avoid unnecessary re-renders of the entire FlatList, the `renderItem` function should never change.
     // That's why we use a context provider so that each row can read from there instead of passing down new props every time the data changes.
     const renderItem = useCallback(
-      ({ item }: { item: TokenBalanceListRow }): JSX.Element => <TokenBalanceItemRow item={item} />,
+      ({ item, index }: { item: TokenBalanceListRow; index: number }): JSX.Element => (
+        <TokenBalanceItemRow index={index} item={item} />
+      ),
       [],
     )
 
@@ -209,6 +212,7 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
           renderItem={renderItem}
           scrollEventThrottle={containerProps?.scrollEventThrottle ?? TAB_VIEW_SCROLL_THROTTLE}
           showsVerticalScrollIndicator={false}
+          testID={testID}
           updateCellsBatchingPeriod={10}
           windowSize={isFocused ? 10 : 3}
           onContentSizeChange={onContentSizeChange}
@@ -222,7 +226,13 @@ export const TokenBalanceListInner = forwardRef<FlatList<TokenBalanceListRow>, T
   },
 )
 
-const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: TokenBalanceListRow }) {
+const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
+  item,
+  index,
+}: {
+  item: TokenBalanceListRow
+  index?: number
+}) {
   const {
     balancesById,
     hiddenTokensCount,
@@ -262,6 +272,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
     <TokenBalanceItemContextMenu portfolioBalance={portfolioBalance}>
       <TokenBalanceItem
         padded
+        index={index}
         isLoading={isWarmLoading}
         portfolioBalance={portfolioBalance}
         onPressToken={onPressToken}

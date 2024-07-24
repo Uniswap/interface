@@ -9,9 +9,9 @@ import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import Column from 'components/Column'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import styled from 'lib/styled-components'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useMemo } from 'react'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 const ActivityGroupWrapper = styled(Column)`

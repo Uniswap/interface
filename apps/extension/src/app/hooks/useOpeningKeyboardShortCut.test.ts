@@ -6,9 +6,7 @@ jest.mock('src/app/utils/isAppleDevice', () => ({
   isAppleDevice: jest.fn(),
 }))
 
-const isAppleDevice = isAppleDeviceDep.isAppleDevice as jest.MockedFunction<
-  typeof isAppleDeviceDep.isAppleDevice
->
+const isAppleDevice = isAppleDeviceDep.isAppleDevice as jest.MockedFunction<typeof isAppleDeviceDep.isAppleDevice>
 
 describe('useOpeningKeyboardShortCut', () => {
   beforeEach(() => {

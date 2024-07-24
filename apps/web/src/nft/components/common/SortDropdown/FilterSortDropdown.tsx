@@ -1,9 +1,9 @@
+import styled from 'lib/styled-components'
 import { FilterDropdown, FilterItem } from 'nft/components/collection/MarketplaceSelect'
 import { useCollectionFilters } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useState } from 'react'
 import { Check } from 'react-feather'
-import styled from 'styled-components'
 
 const CheckIcon = styled(Check)`
   height: 20px;

@@ -1,4 +1,5 @@
 import { t } from 'i18next'
+import { useDispatch } from 'react-redux'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { MessageStar } from 'ui/src/components/icons'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
@@ -6,10 +7,10 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { selectExtensionBetaFeedbackState } from 'wallet/src/features/behaviorHistory/selectors'
 import { ExtensionBetaFeedbackState, setExtensionBetaFeedbackState } from 'wallet/src/features/behaviorHistory/slice'
-import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { useAppSelector } from 'wallet/src/state'
 
 export function FeedbackRequestModal(): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const colors = useSporeColors()
 
   const onDismiss = (): void => {

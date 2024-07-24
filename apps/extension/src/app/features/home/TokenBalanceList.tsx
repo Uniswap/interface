@@ -6,6 +6,7 @@ import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { AnimatePresence, ContextMenu, Flex, Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -168,6 +169,7 @@ function TokenContextMenu({
 }>): JSX.Element {
   const contextMenu = useTokenContextMenu({
     currencyId: portfolioBalance.currencyInfo.currencyId,
+    isBlocked: portfolioBalance.currencyInfo.safetyLevel === SafetyLevel.Blocked,
     tokenSymbolForNotification: portfolioBalance?.currencyInfo?.currency?.symbol,
     portfolioBalance,
   })
@@ -177,6 +179,7 @@ function TokenContextMenu({
     onPress: action.onPress,
     Icon: action.Icon,
     destructive: action.destructive,
+    disabled: action.disabled,
   }))
 
   const itemId = `${portfolioBalance.currencyInfo.currencyId}-${portfolioBalance.isHidden}`

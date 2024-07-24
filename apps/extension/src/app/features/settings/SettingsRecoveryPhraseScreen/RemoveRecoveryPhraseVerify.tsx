@@ -1,11 +1,11 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { PasswordInput } from 'src/app/components/PasswordInput'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { removeAllDappConnectionsFromExtension } from 'src/app/features/dapp/actions'
 import { SettingsRecoveryPhrase } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/SettingsRecoveryPhrase'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
-import { useAppDispatch } from 'src/store/store'
 import { CheckBox, Flex, Text, inputStyles } from 'ui/src'
 import { TrashFilled } from 'ui/src/components/icons'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
@@ -17,7 +17,7 @@ import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 export function RemoveRecoveryPhraseVerify(): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const [password, setPassword] = useState('')
   const [showPasswordError, setShowPasswordError] = useState(false)

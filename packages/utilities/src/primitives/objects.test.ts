@@ -5,13 +5,7 @@ const DAI = new Token(1, '0x6b175474e89094c44da98b954eedeac495271d0f', 18, 'DAI'
 
 const USDC = new Token(1, '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48', 6, 'USDC', 'USD//C')
 
-const USDC_ARBITRUM = new Token(
-  42161,
-  '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8',
-  6,
-  'USDC',
-  'USD//C'
-)
+const USDC_ARBITRUM = new Token(42161, '0xff970a61a04b1ca14834a43f5de4533ebddb5cc8', 6, 'USDC', 'USD//C')
 
 describe(flattenObjectOfObjects, () => {
   it('correctly flattens', () => {
@@ -29,7 +23,7 @@ describe(flattenObjectOfObjects, () => {
         42161: {
           [USDC_ARBITRUM.address]: USDC_ARBITRUM,
         },
-      })
+      }),
     ).toEqual([DAI, USDC, USDC_ARBITRUM])
 
     expect(flattenObjectOfObjects({ 1: { '0x1': [1, 2, 3], '0x2': 4 } })).toEqual([[1, 2, 3], 4])

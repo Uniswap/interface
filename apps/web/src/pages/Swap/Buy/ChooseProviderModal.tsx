@@ -1,32 +1,24 @@
-import { skipToken } from '@reduxjs/toolkit/query/react'
-import GetHelpButton from 'components/Button/GetHelp'
 import { AutoColumn } from 'components/Column'
-import Modal from 'components/Modal'
-import Row, { RowBetween } from 'components/Row'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useAccount } from 'hooks/useAccount'
+import styled from 'lib/styled-components'
+import ms from 'ms'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
-import { ProviderConnectingView } from 'pages/Swap/Buy/ProviderConnectingView'
 import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
+import { ProviderOption } from 'pages/Swap/Buy/ProviderOption'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
-import { useEffect, useMemo, useState } from 'react'
+import { useMemo, useState } from 'react'
 import { Trans } from 'react-i18next'
-import { useAddFiatOnRampTransaction } from 'state/fiatOnRampTransactions/hooks'
-import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from 'state/fiatOnRampTransactions/types'
-import styled from 'styled-components'
-import { CloseIcon } from 'theme/components'
-import { Text } from 'ui/src'
-import { UNISWAP_WEB_URL, uniswapUrls } from 'uniswap/src/constants/urls'
-import { FORQuoteItem } from 'uniswap/src/features/fiatOnRamp/FORQuoteItem'
-import { useFiatOnRampAggregatorWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
+import { AdaptiveWebModalSheet, Flex, Separator, Text } from 'ui/src'
+import { TimePast } from 'ui/src/components/icons'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FORQuote, FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useTimeout } from 'utilities/src/time/timing'
-import { v4 as uuid } from 'uuid'
+import { logger } from 'utilities/src/logger/logger'
 
 const ProviderListPaddedColumn = styled(AutoColumn)`
   position: relative;
-  padding: 16px 24px 24px 24px;
+  padding-bottom: 8px;
 `
 
 interface ChooseProviderModal {
@@ -38,129 +30,122 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
   const { derivedBuyFormInfo, buyFormState } = useBuyFormContext()
   const { quoteCurrency, selectedCountry, inputAmount } = buyFormState
   const { quotes, meldSupportedFiatCurrency } = derivedBuyFormInfo
+  const [errorProvider, setErrorProvider] = useState<FORServiceProvider>()
+  const [connectedProvider, setConnectedProvider] = useState<FORServiceProvider>()
 
   const account = useAccount()
-  const addFiatOnRampTransaction = useAddFiatOnRampTransaction()
 
-  const [selectedServiceProvider, setSelectedServiceProvider] = useState<FORServiceProvider>()
-  const [delayElapsed, setDelayElapsed] = useState(false)
-
-  const widgetQueryParams = useMemo(() => {
-    return selectedServiceProvider &&
-      quoteCurrency.meldCurrencyCode &&
-      meldSupportedFiatCurrency &&
-      inputAmount &&
-      account.address &&
-      selectedCountry?.countryCode
-      ? {
-          serviceProvider: selectedServiceProvider.serviceProvider,
-          countryCode: selectedCountry.countryCode,
-          destinationCurrencyCode: quoteCurrency.meldCurrencyCode,
-          sourceAmount: parseFloat(inputAmount),
-          sourceCurrencyCode: meldSupportedFiatCurrency.code,
-          walletAddress: account.address,
-          externalSessionId: uuid(),
-          redirectUrl: `${UNISWAP_WEB_URL}/buy`,
-        }
-      : skipToken
-  }, [
-    account.address,
-    inputAmount,
-    meldSupportedFiatCurrency,
-    quoteCurrency.meldCurrencyCode,
-    selectedCountry?.countryCode,
-    selectedServiceProvider,
-  ])
-
-  const { data: widgetData, error: widgetError } = useFiatOnRampAggregatorWidgetQuery(widgetQueryParams)
-  useTimeout(() => {
-    if (selectedServiceProvider && !delayElapsed) {
-      setDelayElapsed(true)
+  const [mostRecentlyUsedProvider, otherProviders] = useMemo(() => {
+    if (!quotes || !quotes.quotes) {
+      return [undefined, []] as const
     }
-  }, 2 * ONE_SECOND_MS)
-
-  useEffect(() => {
-    if (
-      widgetQueryParams !== skipToken &&
-      account.address &&
-      selectedServiceProvider &&
-      delayElapsed &&
-      widgetData?.widgetUrl
-    ) {
-      window.open(widgetData.widgetUrl, '_blank')
-      addFiatOnRampTransaction({
-        externalSessionId: widgetQueryParams.externalSessionId,
-        account: account.address,
-        status: FiatOnRampTransactionStatus.INITIATED,
-        forceFetched: false,
-        addedAt: Date.now(),
-        type: FiatOnRampTransactionType.BUY,
-      })
+    const mostRecent = quotes.quotes.find((q: FORQuote) => q.isMostRecentlyUsedProvider)
+    if (mostRecent) {
+      return [mostRecent, quotes.quotes.filter((q: FORQuote) => !q.isMostRecentlyUsedProvider)] as const
     }
-  }, [
-    account.address,
-    addFiatOnRampTransaction,
-    delayElapsed,
-    selectedServiceProvider,
-    widgetData?.widgetUrl,
-    widgetQueryParams,
-  ])
+    return [undefined, quotes.quotes] as const
+  }, [quotes])
 
-  if (selectedServiceProvider && widgetError) {
+  const onClose = () => {
+    closeModal()
+    // Delay the state reset until the modal finishes animating away:
+    setTimeout(() => {
+      setErrorProvider(undefined)
+      setConnectedProvider(undefined)
+    }, ms('500ms'))
+  }
+
+  const quoteCurrencyCode = quoteCurrency.meldCurrencyCode
+  const recipientAddress = account.address
+  if (!selectedCountry || !quoteCurrencyCode || !meldSupportedFiatCurrency || !recipientAddress) {
+    logger.debug('ChooseProviderModal', 'ChooseProviderModalContent', 'Modal opened with invalid state. Closing modal.')
+    onClose()
+    return null
+  }
+
+  if (errorProvider) {
     return (
       <ProviderConnectionError
-        onBack={() => setSelectedServiceProvider(undefined)}
-        closeModal={closeModal}
-        selectedServiceProvider={selectedServiceProvider}
+        onBack={() => setErrorProvider(undefined)}
+        closeModal={onClose}
+        selectedServiceProvider={errorProvider}
       />
     )
   }
 
-  if (selectedServiceProvider && delayElapsed) {
-    return <ProviderConnectedView closeModal={closeModal} selectedServiceProvider={selectedServiceProvider} />
-  }
-
-  if (selectedServiceProvider) {
-    return <ProviderConnectingView closeModal={closeModal} selectedServiceProvider={selectedServiceProvider} />
+  if (connectedProvider) {
+    return <ProviderConnectedView closeModal={onClose} selectedServiceProvider={connectedProvider} />
   }
 
   return (
-    <ProviderListPaddedColumn gap="16px">
-      <RowBetween>
-        <Row>
-          <Text variant="body3">
-            <Trans i18nKey="fiatOnRamp.checkoutWith" />
-          </Text>
-        </Row>
-        <Row justify="right" gap="xs">
-          <GetHelpButton url={uniswapUrls.helpArticleUrls.fiatOnRampHelp} />
-          <CloseIcon data-testid="ChooseProviderModal-close" onClick={closeModal} />
-        </Row>
-      </RowBetween>
-      {quotes?.quotes?.map((q: FORQuote) => {
-        return (
-          <FORQuoteItem
-            key={q.serviceProvider}
-            serviceProvider={q.serviceProviderDetails}
-            onPress={() => {
-              setSelectedServiceProvider(q.serviceProviderDetails)
-            }}
-          />
-        )
-      })}
-      <Text variant="body3" textAlign="center" color="$neutral2">
-        <Trans i18nKey="fiatOnRamp.chooseProvider.description" />
-      </Text>
+    <ProviderListPaddedColumn gap="24px">
+      <GetHelpHeader
+        title={<Trans i18nKey="fiatOnRamp.checkoutWith" />}
+        link={uniswapUrls.helpArticleUrls.fiatOnRampHelp}
+        closeModal={closeModal}
+        closeDataTestId="ChooseProviderModal-close"
+      />
+      <Flex gap="16px">
+        {mostRecentlyUsedProvider && (
+          <Flex gap="$spacing12">
+            <Flex row alignItems="center" pb="$spacing12" pl="$spacing8">
+              <TimePast color="$neutral3" size="$icon.16" />
+              <Text color="$neutral2" pl="$spacing4" variant="body3">
+                <Trans i18nKey="fiatOnRamp.quote.type.recent" />
+              </Text>
+            </Flex>
+            <ProviderOption
+              key={mostRecentlyUsedProvider.serviceProviderDetails.serviceProvider}
+              quote={mostRecentlyUsedProvider}
+              selectedCountry={selectedCountry}
+              quoteCurrencyCode={quoteCurrencyCode}
+              inputAmount={inputAmount}
+              meldSupportedFiatCurrency={meldSupportedFiatCurrency}
+              walletAddress={recipientAddress}
+              setConnectedProvider={setConnectedProvider}
+              setErrorProvider={setErrorProvider}
+            />
+            {otherProviders && otherProviders.length > 0 && (
+              <Flex centered row gap="$spacing12" mt="$spacing12">
+                <Separator />
+                <Text color="$neutral3" variant="body3">
+                  <Trans i18nKey="fiatOnRamp.quote.type.other" />
+                </Text>
+                <Separator />
+              </Flex>
+            )}
+          </Flex>
+        )}
+
+        {otherProviders?.map((q: FORQuote) => {
+          return (
+            <ProviderOption
+              key={q.serviceProviderDetails.serviceProvider}
+              quote={q}
+              selectedCountry={selectedCountry}
+              quoteCurrencyCode={quoteCurrencyCode}
+              inputAmount={inputAmount}
+              meldSupportedFiatCurrency={meldSupportedFiatCurrency}
+              walletAddress={recipientAddress}
+              setConnectedProvider={setConnectedProvider}
+              setErrorProvider={setErrorProvider}
+            />
+          )
+        })}
+        <Text variant="body3" textAlign="center" color="$neutral2">
+          <Trans i18nKey="fiatOnRamp.chooseProvider.description" />
+        </Text>
+      </Flex>
     </ProviderListPaddedColumn>
   )
 }
 
 export function ChooseProviderModal(props: ChooseProviderModal) {
   return (
-    <Modal isOpen={props.isOpen} onDismiss={props.closeModal}>
+    <AdaptiveWebModalSheet isOpen={props.isOpen} onClose={props.closeModal} width={420}>
       <ContentWrapper>
         <ChooseProviderModalContent {...props} />
       </ContentWrapper>
-    </Modal>
+    </AdaptiveWebModalSheet>
   )
 }

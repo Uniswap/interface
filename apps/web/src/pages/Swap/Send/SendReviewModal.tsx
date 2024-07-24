@@ -1,18 +1,18 @@
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonPrimary } from 'components/Button'
-import GetHelp from 'components/Button/GetHelp'
 import Column, { ColumnCenter } from 'components/Column'
 import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal from 'components/Modal'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import Row from 'components/Row'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { useSendContext } from 'state/send/SendContext'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
-import styled from 'styled-components'
-import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/components'
+import { Separator, ThemedText } from 'theme/components'
 import { Unitag } from 'ui/src/components/icons'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -26,8 +26,8 @@ const ModalWrapper = styled(ColumnCenter)`
   padding: 8px;
 `
 
-const StyledReviewCloseIcon = styled(CloseIcon)`
-  ${ClickableStyle}
+const ModalHeader = styled(GetHelpHeader)`
+  padding: 8px 12px 4px;
 `
 
 const ReviewContentContainer = styled(Column)`
@@ -95,17 +95,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
   return (
     <Modal $scrollOverlay isOpen onDismiss={onDismiss} maxHeight="90vh">
       <ModalWrapper data-testid="send-review-modal" gap="md">
-        <Row width="100%" padding="8px 12px 4px" align="center">
-          <Row justify="left">
-            <ThemedText.SubHeader>
-              <Trans i18nKey="sendReviewModal.title" />
-            </ThemedText.SubHeader>
-          </Row>
-          <Row justify="right" gap="10px">
-            <GetHelp />
-            <StyledReviewCloseIcon onClick={onDismiss} />
-          </Row>
-        </Row>
+        <ModalHeader title={<Trans i18nKey="sendReviewModal.title" />} closeModal={onDismiss} />
         <ReviewContentContainer>
           <Column gap="lg">
             <SendModalHeader

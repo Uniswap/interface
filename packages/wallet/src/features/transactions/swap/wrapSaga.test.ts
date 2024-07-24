@@ -1,7 +1,7 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { WrapParams, wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { TransactionType, WrapTransactionInfo } from 'wallet/src/features/transactions/types'
@@ -13,6 +13,7 @@ const wrapTxInfo: WrapTransactionInfo = {
   type: TransactionType.Wrap,
   unwrapped: false,
   currencyAmountRaw: '200000',
+  swapTxId: undefined,
 }
 
 const unwrapTxInfo: WrapTransactionInfo = {

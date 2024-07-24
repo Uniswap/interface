@@ -4,9 +4,9 @@ import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalSta
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 
 export interface AppModalState<T> {
   isOpen: boolean
@@ -21,7 +21,6 @@ export interface ModalsState {
   [ModalName.Experiments]: AppModalState<undefined>
   [ModalName.Explore]: AppModalState<ExploreModalState>
   [ModalName.FiatCurrencySelector]: AppModalState<undefined>
-  [ModalName.FiatOnRamp]: AppModalState<undefined>
   [ModalName.FiatOnRampAggregator]: AppModalState<undefined>
   [ModalName.ReceiveCryptoModal]: AppModalState<ReceiveCryptoModalState>
   [ModalName.LanguageSelector]: AppModalState<undefined>

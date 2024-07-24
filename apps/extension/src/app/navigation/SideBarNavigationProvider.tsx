@@ -7,6 +7,7 @@ import { focusOrCreateTokensExploreTab } from 'src/app/navigation/utils'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
@@ -21,7 +22,6 @@ import {
   getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
 import { CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { ExplorerDataType, getExplorerLink, getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
 
 export type SidebarLocationState =
@@ -181,6 +181,6 @@ function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
   return useCallback((): void => {
     // TODO(EXT-669): replace this once we have an onramp in the Extension.
     // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(uniswapUrls.helpArticleUrls.moonpayHelp, '_blank')
+    window.open(uniswapUrls.helpArticleUrls.fiatOnRampHelp, '_blank')
   }, [])
 }

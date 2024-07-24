@@ -73,9 +73,7 @@ describe('Redux state migrations', () => {
       },
     }
 
-    const migratedSchemaKeys = new Set(
-      getAllKeysOfNestedObject(migratedSchema as Record<string, unknown>)
-    )
+    const migratedSchemaKeys = new Set(getAllKeysOfNestedObject(migratedSchema as Record<string, unknown>))
     const latestSchemaKeys = new Set(getAllKeysOfNestedObject(getSchema()))
     const initialStateKeys = new Set(getAllKeysOfNestedObject(initialState))
 

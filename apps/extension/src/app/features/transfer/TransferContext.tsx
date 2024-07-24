@@ -3,6 +3,7 @@ import { providers } from 'ethers'
 import React, { createContext, ReactNode, useContext, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
+import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult, GasSpeed } from 'wallet/src/features/gas/types'
 import {
@@ -14,7 +15,6 @@ import {
   INITIAL_TRANSACTION_STATE,
   transactionStateReducer,
 } from 'wallet/src/features/transactions/transactionState/transactionState'
-import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { useDerivedTransferInfo } from 'wallet/src/features/transactions/transfer/hooks/useDerivedTransferInfo'
 import { useTransferTransactionRequest } from 'wallet/src/features/transactions/transfer/hooks/useTransferTransactionRequest'
 import { useTransferWarnings } from 'wallet/src/features/transactions/transfer/hooks/useTransferWarnings'

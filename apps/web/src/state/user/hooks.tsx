@@ -1,6 +1,6 @@
 import { Percent, Token, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair, computePairAddress } from '@uniswap/v2-sdk'
-import { L2_CHAIN_IDS, chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
+import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { SupportedLocale } from 'constants/locales'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import { BASES_TO_TRACK_LIQUIDITY_FOR, PINNED_PAIRS } from 'constants/routing'
@@ -26,6 +26,7 @@ import {
   TokenSortableField,
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 
 export function useUserLocale(): SupportedLocale | null {
   return useAppSelector((state) => state.user.userLocale)
@@ -132,7 +133,7 @@ export function useUserTransactionTTL(): [number, (slippage: number) => void] {
   const { chainId } = useAccount()
   const dispatch = useAppDispatch()
   const userDeadline = useAppSelector((state) => state.user.userDeadline)
-  const onL2 = Boolean(chainId && L2_CHAIN_IDS.includes(chainId))
+  const onL2 = isL2ChainId(chainId)
   const deadline = onL2 ? L2_DEADLINE_FROM_NOW : userDeadline
 
   const setUserDeadline = useCallback(

@@ -13,9 +13,9 @@ import { Global, Photo } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
+import PasteButton from 'uniswap/src/components/buttons/PasteButton'
 import { Sentry } from 'utilities/src/logger/Sentry'
 import { DevelopmentOnly } from 'wallet/src/components/DevelopmentOnly/DevelopmentOnly'
-import PasteButton from 'wallet/src/components/buttons/PasteButton'
 import { openSettings } from 'wallet/src/utils/linking'
 
 type QRCodeScannerProps = {

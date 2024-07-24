@@ -1,11 +1,12 @@
 import { useEffect } from 'react'
+import { useDispatch } from 'react-redux'
 import { monitoredSagas } from 'src/app/saga'
-import { useAppDispatch, useAppSelector } from 'src/store/store'
+import { useAppSelector } from 'src/store/store'
 import { SagaState, SagaStatus } from 'wallet/src/utils/saga'
 
 // Convenience hook to get the status + error of an active saga
 export function useSagaStatus(sagaName: string, onSuccess?: () => void, resetSagaOnSuccess = true): SagaState {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const sagaState = useAppSelector((s): SagaState | undefined => s.saga[sagaName])
   if (!sagaState) {
     throw new Error(`No saga state found, is sagaName valid? Name: ${sagaName}`)

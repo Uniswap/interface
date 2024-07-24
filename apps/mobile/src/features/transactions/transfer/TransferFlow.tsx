@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
 import { default as React, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet, TouchableWithoutFeedback } from 'react-native'
+import { Keyboard, LayoutAnimation, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
@@ -14,15 +14,30 @@ import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
+import { TokenSelectorModal, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
+import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
-import { TokenSelectorModal, TokenSelectorVariation } from 'wallet/src/components/TokenSelector/TokenSelector'
+import {
+  useAddToSearchHistory,
+  useCommonTokensOptions,
+  useFavoriteTokensOptions,
+  useFilterCallbacks,
+  usePopularTokensOptions,
+  usePortfolioTokenOptions,
+  useTokenSectionsForEmptySearch,
+  useTokenSectionsForSearchResults,
+} from 'wallet/src/components/TokenSelector/hooks'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult, GasSpeed } from 'wallet/src/features/gas/types'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 import { WarningAction, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { useParsedSendWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenSelectorActionHandlers'
@@ -31,7 +46,6 @@ import {
   INITIAL_TRANSACTION_STATE,
   transactionStateReducer,
 } from 'wallet/src/features/transactions/transactionState/transactionState'
-import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { TransferReview } from 'wallet/src/features/transactions/transfer/TransferReview'
 import { TransferTokenForm } from 'wallet/src/features/transactions/transfer/TransferTokenForm'
 import { useDerivedTransferInfo } from 'wallet/src/features/transactions/transfer/hooks/useDerivedTransferInfo'
@@ -43,8 +57,9 @@ import {
 } from 'wallet/src/features/transactions/transfer/hooks/useTransferCallback'
 import { useTransferTransactionRequest } from 'wallet/src/features/transactions/transfer/hooks/useTransferTransactionRequest'
 import { useTransferWarnings } from 'wallet/src/features/transactions/transfer/hooks/useTransferWarnings'
-import { DerivedTransferInfo, TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
+import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import { TransactionStep, TransferFlowProps } from 'wallet/src/features/transactions/types'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TransferFormProps {
   prefilledState?: TransactionState
@@ -57,6 +72,9 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
   const { isSheetReady } = useBottomSheetContext()
+  const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
+  const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
+  const { registerSearch } = useAddToSearchHistory()
 
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || INITIAL_TRANSACTION_STATE)
   const derivedTransferInfo = useDerivedTransferInfo(state)
@@ -65,6 +83,8 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
 
   const { isFiatInput, exactAmountToken, exactAmountFiat } = derivedTransferInfo
   const { showRecipientSelector } = state
+
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
 
   const onSelectRecipient = useOnSelectRecipient(dispatch)
   const onSetShowRecipientSelector = useSetShowRecipientSelector(dispatch)
@@ -211,10 +231,25 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
       </TouchableWithoutFeedback>
       {!!state.selectingCurrencyField && (
         <TokenSelectorModal
+          activeAccountAddress={activeAccountAddress}
+          addToSearchHistoryCallback={registerSearch}
+          convertFiatAmountFormattedCallback={convertFiatAmountFormatted}
           currencyField={CurrencyField.INPUT}
           flow={TokenSelectorFlow.Transfer}
+          formatNumberOrStringCallback={formatNumberOrString}
+          navigateToBuyOrReceiveWithEmptyWalletCallback={navigateToBuyOrReceiveWithEmptyWallet}
+          useCommonTokensOptionsHook={useCommonTokensOptions}
+          useFavoriteTokensOptionsHook={useFavoriteTokensOptions}
+          useFilterCallbacksHook={useFilterCallbacks}
+          usePopularTokensOptionsHook={usePopularTokensOptions}
+          usePortfolioTokenOptionsHook={usePortfolioTokenOptions}
+          useTokenSectionsForEmptySearchHook={useTokenSectionsForEmptySearch}
+          useTokenSectionsForSearchResultsHook={useTokenSectionsForSearchResults}
+          useTokenWarningDismissedHook={useTokenWarningDismissed}
           variation={TokenSelectorVariation.BalancesOnly}
           onClose={onHideTokenSelector}
+          onDismiss={() => Keyboard.dismiss()}
+          onPressAnimation={() => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)}
           onSelectCurrency={onSelectCurrency}
         />
       )}

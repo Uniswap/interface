@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, Tooltip } from 'ui/src'
+import { Flex, SpaceTokens, Text, Tooltip } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -10,9 +10,11 @@ import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/
 export function AddressFooter({
   connectedAccountAddress,
   activeAccountAddress,
+  px = '$none',
 }: {
   connectedAccountAddress?: string
   activeAccountAddress: string
+  px?: SpaceTokens
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -23,7 +25,7 @@ export function AddressFooter({
   const showWarning = connectedAccountAddress && !areAddressesEqual(connectedAccountAddress, activeAccountAddress)
 
   return (
-    <Flex grow px="$spacing8">
+    <Flex grow px={px}>
       <ContentRow
         label={
           <Flex grow row alignItems="center" gap="$spacing4">

@@ -1,0 +1,829 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UniswapWalletOptions Test Download wallet option should be visible if extension is not detected and launch flag is true 1`] = `
+<DocumentFragment>
+  .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c4 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c10 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c2 {
+  max-height: 72px;
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 16px;
+  position: relative;
+}
+
+.c3 {
+  background: url(/images/extension_promo/background_connector.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 1;
+  max-height: 72px;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  -webkit-transition: opacity 125ms ease-in-out;
+  transition: opacity 125ms ease-in-out;
+}
+
+.c6 {
+  padding: 16px;
+  gap: 12px;
+  border-radius: 16px;
+  border: 1px solid #22222212;
+  overflow: hidden;
+  max-height: 72px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.c6:hover {
+  background: #22222212;
+}
+
+.c7 {
+  height: 40px;
+  width: 40px;
+  border-radius: 10px;
+  fill: linear-gradient(0deg,#fff1ff 0%,rgba(255,255,255,0) 100%),#fffbff;
+  -webkit-filter: drop-shadow(0px 1.179px 3.537px rgba(255,117,249,0.24));
+  filter: drop-shadow(0px 1.179px 3.537px rgba(255,117,249,0.24));
+}
+
+@media screen and (max-width:396px) {
+  .c11 {
+    display: none;
+  }
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        >
+          <div
+            class="c2"
+            data-testid="download-uniswap-wallet"
+          >
+            <div
+              class="c3"
+            />
+            <div
+              class="c4 c5 c6"
+            >
+              <img
+                alt="uniswap-app-icon"
+                class="c7"
+                src="uniswap-wallet-icon.png"
+              />
+              <div
+                class="c4 c8"
+              >
+                <div
+                  class="c9"
+                >
+                  <span
+                    class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-137133858 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                    data-disable-theme="true"
+                  >
+                    Get Uniswap Wallet
+                  </span>
+                  <span
+                    class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-137133858 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                    data-disable-theme="true"
+                  >
+                    Available on iOS, Android, and Chrome
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c4 c10 c6"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(255, 239, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
+              viewBox="0 0 43 43"
+            >
+              <path
+                d="M28.3632 6.11328H14.3633C10.8633 6.11328 9.11328 7.86327 9.11328 11.3633V32.3632C9.11328 35.8632 10.8633 37.6132 14.3633 37.6132H28.3632C31.8632 37.6132 33.6132 35.8632 33.6132 32.3632V11.3633C33.6132 7.86327 31.8632 6.11328 28.3632 6.11328ZM21.3632 34.1132C20.3972 34.1132 19.6132 33.3292 19.6132 32.3632C19.6132 31.3972 20.3972 30.6132 21.3632 30.6132C22.3292 30.6132 23.1132 31.3972 23.1132 32.3632C23.1132 33.3292 22.3292 34.1132 21.3632 34.1132ZM23.9882 12.6758H18.7382C18.0137 12.6758 17.4257 12.0878 17.4257 11.3633C17.4257 10.6388 18.0137 10.0508 18.7382 10.0508H23.9882C24.7127 10.0508 25.3007 10.6388 25.3007 11.3633C25.3007 12.0878 24.7127 12.6758 23.9882 12.6758Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div
+              class="c4 c8"
+            >
+              <div
+                class="c9"
+              >
+                <span
+                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                  data-disable-theme="true"
+                >
+                  Mobile Wallet
+                </span>
+                <span
+                  class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                  data-disable-theme="true"
+                >
+                  Scan QR code to connect
+                </span>
+              </div>
+            </div>
+            <div
+              class="c11"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="color: rgb(125, 125, 125); width: 20px; height: 20px;"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M9 2H3C2.44772 2 2 2.44772 2 3V9C2 9.55228 2.44772 10 3 10H9C9.55228 10 10 9.55228 10 9V3C10 2.44772 9.55228 2 9 2Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M9 13.9999H3C2.44772 13.9999 2 14.4476 2 14.9999V20.9999C2 21.5522 2.44772 21.9999 3 21.9999H9C9.55228 21.9999 10 21.5522 10 20.9999V14.9999C10 14.4476 9.55228 13.9999 9 13.9999Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M21 2H15C14.4477 2 14 2.44772 14 3V9C14 9.55228 14.4477 10 15 10H21C21.5523 10 22 9.55228 22 9V3C22 2.44772 21.5523 2 21 2Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M14 13.9999V17.9999"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M14 21.9999H18V13.9999"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M18 16H22"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M22 20.0001V22.0001"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`UniswapWalletOptions Test Download wallet option should not be visible if extension is not detected and launch flag is false 1`] = `
+<DocumentFragment>
+  .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c4 {
+  padding: 16px;
+  gap: 12px;
+  border-radius: 16px;
+  border: 1px solid #22222212;
+  overflow: hidden;
+  max-height: 72px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.c4:hover {
+  background: #22222212;
+}
+
+@media screen and (max-width:396px) {
+  .c7 {
+    display: none;
+  }
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        >
+          <div
+            class="c2 c3 c4"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(255, 239, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
+              viewBox="0 0 43 43"
+            >
+              <path
+                d="M28.3632 6.11328H14.3633C10.8633 6.11328 9.11328 7.86327 9.11328 11.3633V32.3632C9.11328 35.8632 10.8633 37.6132 14.3633 37.6132H28.3632C31.8632 37.6132 33.6132 35.8632 33.6132 32.3632V11.3633C33.6132 7.86327 31.8632 6.11328 28.3632 6.11328ZM21.3632 34.1132C20.3972 34.1132 19.6132 33.3292 19.6132 32.3632C19.6132 31.3972 20.3972 30.6132 21.3632 30.6132C22.3292 30.6132 23.1132 31.3972 23.1132 32.3632C23.1132 33.3292 22.3292 34.1132 21.3632 34.1132ZM23.9882 12.6758H18.7382C18.0137 12.6758 17.4257 12.0878 17.4257 11.3633C17.4257 10.6388 18.0137 10.0508 18.7382 10.0508H23.9882C24.7127 10.0508 25.3007 10.6388 25.3007 11.3633C25.3007 12.0878 24.7127 12.6758 23.9882 12.6758Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div
+              class="c2 c5"
+            >
+              <div
+                class="c6"
+              >
+                <span
+                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                  data-disable-theme="true"
+                >
+                  Mobile Wallet
+                </span>
+                <span
+                  class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                  data-disable-theme="true"
+                >
+                  Scan QR code to connect
+                </span>
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="color: rgb(125, 125, 125); width: 20px; height: 20px;"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M9 2H3C2.44772 2 2 2.44772 2 3V9C2 9.55228 2.44772 10 3 10H9C9.55228 10 10 9.55228 10 9V3C10 2.44772 9.55228 2 9 2Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M9 13.9999H3C2.44772 13.9999 2 14.4476 2 14.9999V20.9999C2 21.5522 2.44772 21.9999 3 21.9999H9C9.55228 21.9999 10 21.5522 10 20.9999V14.9999C10 14.4476 9.55228 13.9999 9 13.9999Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M21 2H15C14.4477 2 14 2.44772 14 3V9C14 9.55228 14.4477 10 15 10H21C21.5523 10 22 9.55228 22 9V3C22 2.44772 21.5523 2 21 2Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M14 13.9999V17.9999"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M14 21.9999H18V13.9999"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M18 16H22"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M22 20.0001V22.0001"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`UniswapWalletOptions Test Extension connecter should be shown if detected 1`] = `
+<DocumentFragment>
+  .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c4 {
+  padding: 16px;
+  gap: 12px;
+  border-radius: 16px;
+  border: 1px solid #22222212;
+  overflow: hidden;
+  max-height: 72px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.c4:hover {
+  background: #22222212;
+}
+
+.c5 {
+  height: 40px;
+  width: 40px;
+  border-radius: 10px;
+  fill: linear-gradient(0deg,#fff1ff 0%,rgba(255,255,255,0) 100%),#fffbff;
+  -webkit-filter: drop-shadow(0px 1.179px 3.537px rgba(255,117,249,0.24));
+  filter: drop-shadow(0px 1.179px 3.537px rgba(255,117,249,0.24));
+}
+
+@media screen and (max-width:396px) {
+  .c7 {
+    display: none;
+  }
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        >
+          <div
+            class="c2 c3 c4"
+            data-testid="connect-uniswap-extension"
+          >
+            <img
+              alt="uniswap-app-icon"
+              class="c5"
+              src="uniswap-wallet-icon.png"
+            />
+            <div
+              class="c2 c6"
+            >
+              <span
+                class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                data-disable-theme="true"
+              >
+                Uniswap Extension
+              </span>
+            </div>
+            <div
+              class="c7"
+            >
+              <span
+                class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400"
+                data-disable-theme="true"
+              >
+                Detected
+              </span>
+            </div>
+          </div>
+          <div
+            class="c2 c8 c4"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(255, 239, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
+              viewBox="0 0 43 43"
+            >
+              <path
+                d="M28.3632 6.11328H14.3633C10.8633 6.11328 9.11328 7.86327 9.11328 11.3633V32.3632C9.11328 35.8632 10.8633 37.6132 14.3633 37.6132H28.3632C31.8632 37.6132 33.6132 35.8632 33.6132 32.3632V11.3633C33.6132 7.86327 31.8632 6.11328 28.3632 6.11328ZM21.3632 34.1132C20.3972 34.1132 19.6132 33.3292 19.6132 32.3632C19.6132 31.3972 20.3972 30.6132 21.3632 30.6132C22.3292 30.6132 23.1132 31.3972 23.1132 32.3632C23.1132 33.3292 22.3292 34.1132 21.3632 34.1132ZM23.9882 12.6758H18.7382C18.0137 12.6758 17.4257 12.0878 17.4257 11.3633C17.4257 10.6388 18.0137 10.0508 18.7382 10.0508H23.9882C24.7127 10.0508 25.3007 10.6388 25.3007 11.3633C25.3007 12.0878 24.7127 12.6758 23.9882 12.6758Z"
+                fill="currentColor"
+              />
+            </svg>
+            <div
+              class="c2 c6"
+            >
+              <div
+                class="c9"
+              >
+                <span
+                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                  data-disable-theme="true"
+                >
+                  Mobile Wallet
+                </span>
+                <span
+                  class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                  data-disable-theme="true"
+                >
+                  Scan QR code to connect
+                </span>
+              </div>
+            </div>
+            <div
+              class="c7"
+            >
+              <svg
+                fill="none"
+                stroke-width="8"
+                style="color: rgb(125, 125, 125); width: 20px; height: 20px;"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  d="M9 2H3C2.44772 2 2 2.44772 2 3V9C2 9.55228 2.44772 10 3 10H9C9.55228 10 10 9.55228 10 9V3C10 2.44772 9.55228 2 9 2Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M9 13.9999H3C2.44772 13.9999 2 14.4476 2 14.9999V20.9999C2 21.5522 2.44772 21.9999 3 21.9999H9C9.55228 21.9999 10 21.5522 10 20.9999V14.9999C10 14.4476 9.55228 13.9999 9 13.9999Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M21 2H15C14.4477 2 14 2.44772 14 3V9C14 9.55228 14.4477 10 15 10H21C21.5523 10 22 9.55228 22 9V3C22 2.44772 21.5523 2 21 2Z"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M14 13.9999V17.9999"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M14 21.9999H18V13.9999"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M18 16H22"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+                <path
+                  d="M22 20.0001V22.0001"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

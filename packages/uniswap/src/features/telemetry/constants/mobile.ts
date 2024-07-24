@@ -4,6 +4,8 @@
 export enum MobileEventName {
   AppRating = 'App Rating',
   AutomatedOnDeviceRecoveryTriggered = 'Automated On Device Recovery Triggered',
+  AutomatedOnDeviceRecoveryMnemonicsFound = 'Automated On Device Recovery Mnemonics Found',
+  AutomatedOnDeviceRecoverySingleMnemonicFetched = 'Automated On Device Recovery Mnemonic Fetched',
   BalancesReport = 'Balances Report',
   DeepLinkOpened = 'Deep Link Opened',
   ExploreFilterSelected = 'Explore Filter Selected',

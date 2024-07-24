@@ -1,12 +1,12 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Input } from 'src/app/components/Input'
 import { PasswordInput } from 'src/app/components/PasswordInput'
 import { BottomModalProps, InfoModal } from 'src/app/components/modal/InfoModal'
 import { useSagaStatus } from 'src/app/hooks/useSagaStatus'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
-import { useAppDispatch } from 'src/store/store'
 import { Button, Flex, InputProps, Text, TouchableArea } from 'ui/src'
 import { AlertTriangle, Lock } from 'ui/src/components/icons'
 import { spacing, zIndices } from 'ui/src/theme'
@@ -47,7 +47,7 @@ const BACKGROUND_CIRCLE_INNER_SIZE = 140
 const BACKGROUND_CIRCLE_OUTER_SIZE = 250
 
 export function Locked(): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { t } = useTranslation()
   const { value: enteredPassword, onChangeText: onChangePasswordText } = usePasswordInput()
   const associatedAccounts = useSignerAccounts()

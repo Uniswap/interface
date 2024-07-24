@@ -13,7 +13,7 @@ jest.useFakeTimers()
 
 const timedPromise = (duration: number, shouldResolve = true): Promise<string> =>
   new Promise((resolve, reject) =>
-    setTimeout(() => (shouldResolve ? resolve('resolve') : reject(new Error('reject'))), duration)
+    setTimeout(() => (shouldResolve ? resolve('resolve') : reject(new Error('reject'))), duration),
   )
 
 describe('promiseTimeout', () => {

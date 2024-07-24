@@ -68,11 +68,11 @@ describe('redux migrations', () => {
   it('clears legacy redux_localstorage_simple values during the initial migration', async () => {
     localStorage.setItem(
       'redux_localstorage_simple_transactions',
-      JSON.stringify({ 1: { test: { info: 'transactions' } } })
+      JSON.stringify({ 1: { test: { info: 'transactions' } } }),
     )
     localStorage.setItem(
       'redux_localstorage_simple_user',
-      JSON.stringify({ test: 'user', userRouterPreference: 'auto' })
+      JSON.stringify({ test: 'user', userRouterPreference: 'auto' }),
     )
     localStorage.setItem('redux_localstorage_simple_lists', JSON.stringify({ test: 'lists' }))
     localStorage.setItem('redux_localstorage_simple_signatures', JSON.stringify({ test: 'signatures' }))
@@ -126,7 +126,7 @@ describe('redux migrations', () => {
         lists: initialListsState,
         signatures: initialSignaturesState,
         _persist: { version: -1 },
-      })
+      }),
     )
 
     persistStore(store)

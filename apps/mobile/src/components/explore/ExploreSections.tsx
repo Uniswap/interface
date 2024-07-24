@@ -26,10 +26,10 @@ import {
   useExploreTokensTabQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
-import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'wallet/src/features/favorites/selectors'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
 
@@ -191,6 +191,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
         contentContainerStyle={{ paddingBottom: insets.bottom }}
         data={showLoading ? undefined : topTokenItems}
         keyExtractor={tokenKey}
+        removeClippedSubviews={false}
         renderItem={renderItem}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}

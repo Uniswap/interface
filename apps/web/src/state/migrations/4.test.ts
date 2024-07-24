@@ -34,7 +34,7 @@ describe('migration to v4', () => {
         3: migration3,
         4: migration4,
       },
-      { debug: false }
+      { debug: false },
     )
     const result: any = await migrator(previousState, 4)
     expect(result.user.userLocale).toEqual(DEFAULT_LOCALE)

@@ -40,7 +40,7 @@ describe('migration to v7', () => {
         6: migration6,
         7: migration7,
       },
-      { debug: false }
+      { debug: false },
     )
     const result: any = await migrator(previousState, 7)
     expect(result?.user?.hideAndroidAnnouncementBanner).toBeUndefined()
@@ -59,7 +59,7 @@ describe('migration to v7', () => {
         6: migration6,
         7: migration7,
       },
-      { debug: false }
+      { debug: false },
     )
     const result: any = await migrator(
       {
@@ -69,7 +69,7 @@ describe('migration to v7', () => {
           hideAndroidAnnouncementBanner: true,
         },
       } as PersistAppStateV7,
-      7
+      7,
     )
     expect(result?.user?.hideAppPromoBanner).toEqual(true)
     expect(result?.user?.hideAndroidAnnouncementBanner).toBeUndefined()
@@ -87,14 +87,14 @@ describe('migration to v7', () => {
         6: migration6,
         7: migration7,
       },
-      { debug: false }
+      { debug: false },
     )
     const result: any = await migrator(
       {
         ...previousState,
         user: undefined,
       } as PersistAppStateV7,
-      7
+      7,
     )
     expect(result?.user).toBeUndefined()
     expect(result?._persist.version).toEqual(7)

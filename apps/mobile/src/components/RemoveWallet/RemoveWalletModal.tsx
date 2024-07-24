@@ -1,7 +1,8 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, withTiming } from 'react-native-reanimated'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
+import { useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AssociatedAccountsList } from 'src/components/RemoveWallet/AssociatedAccountsList'
 import { RemoveLastMnemonicWalletFooter } from 'src/components/RemoveWallet/RemoveLastMnemonicWalletFooter'
@@ -29,7 +30,7 @@ import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 export function RemoveWalletModal(): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const addressToAccount = useAccounts()
   const associatedAccounts = useAppSelector(selectSignerMnemonicAccounts)

@@ -8,6 +8,7 @@ import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n/i18n'
+import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -16,7 +17,6 @@ import { TransactionStatus, TransactionType } from 'wallet/src/features/transact
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'
 import { appSelect } from 'wallet/src/state'
-import { openUri } from 'wallet/src/utils/linking'
 
 // at most once per reminder period (120 days)
 const MIN_PROMPT_REMINDER_MS = 120 * ONE_DAY_MS

@@ -39,23 +39,23 @@ export const TXN_HISTORY_ICON_SIZE = TXN_HISTORY_LOADER_ICON_SIZE
 export const TXN_STATUS_ICON_SIZE = iconSizes.icon16
 
 export type ActivityItem = TransactionDetails | SectionHeader | LoadingItem
-export type ActivityItemRenderer = ({ item }: { item: ActivityItem }) => JSX.Element
+export type ActivityItemRenderer = ({ item, index }: { item: ActivityItem; index: number }) => JSX.Element
 
 export function generateActivityItemRenderer(
   layoutElement: React.FunctionComponent<TransactionSummaryLayoutProps>,
   loadingItem: JSX.Element,
-  sectionHeaderElement: React.FunctionComponent<{ title: string }>,
+  sectionHeaderElement: React.FunctionComponent<{ title: string; index?: number }>,
   swapCallbacks: SwapSummaryCallbacks | undefined,
   authTrigger: ((args: { successCallback: () => void; failureCallback: () => void }) => Promise<void>) | undefined,
 ): ActivityItemRenderer {
-  return function ActivityItemComponent({ item }: { item: ActivityItem }): JSX.Element {
+  return function ActivityItemComponent({ item, index }: { item: ActivityItem; index: number }): JSX.Element {
     // if it's a loading item, render the loading placeholder
     if (isLoadingItem(item)) {
       return loadingItem
     }
     // if it's a section header, render it differently
     if (isSectionHeader(item)) {
-      return createElement(sectionHeaderElement, { title: item.title, key: item.title })
+      return createElement(sectionHeaderElement, { title: item.title, key: item.title, index })
     }
     // item is a transaction
     let SummaryItem
@@ -104,6 +104,7 @@ export function generateActivityItemRenderer(
       transaction: item,
       layoutElement,
       swapCallbacks,
+      index,
     })
   }
 }

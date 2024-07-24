@@ -1,6 +1,9 @@
+import { AssetType } from 'uniswap/src/entities/assets'
+import { currencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
+import { faker } from 'uniswap/src/test/shared'
+import { createFixture } from 'uniswap/src/test/utils'
 import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
-import { AssetType } from 'wallet/src/entities/assets'
 import {
   AppErrorNotification,
   AppNotificationBase,
@@ -33,9 +36,7 @@ import {
   TransactionType,
   WrapType,
 } from 'wallet/src/features/transactions/types'
-import { currencyInfo } from 'wallet/src/test/fixtures/wallet/currencies'
-import { faker } from 'wallet/src/test/shared'
-import { createFixture, randomChoice, randomEnumValue } from 'wallet/src/test/utils'
+import { randomChoice, randomEnumValue } from 'wallet/src/test/utils'
 
 export const FINALIZED_TRANSACTION_STATUSES: FinalizedTransactionStatus[] = [
   TransactionStatus.Success,

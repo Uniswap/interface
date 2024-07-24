@@ -8,6 +8,6 @@ apply from: new File(["node", "--print", "require.resolve('../../../node_modules
 useExpoModules()
 
 include ':@sentry_react-native'
-project(':@sentry_react-native').projectDir = new File('../../../node_modules/@sentry/react-native/android')
+
 include ':detox'
 project(':detox').projectDir = new File('../../../node_modules/detox/android/detox')

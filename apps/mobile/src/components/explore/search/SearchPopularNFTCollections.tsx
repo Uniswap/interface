@@ -2,9 +2,10 @@ import React, { useMemo } from 'react'
 import { FlatList, ListRenderItemInfo } from 'react-native'
 import { SearchNFTCollectionItem } from 'src/components/explore/search/items/SearchNFTCollectionItem'
 import { getSearchResultId, gqlNFTToNFTCollectionSearchResult } from 'src/components/explore/search/utils'
-import { Inset, Loader } from 'ui/src'
+import { Flex, Loader } from 'ui/src'
 import { useSearchPopularNftCollectionsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { NFTCollectionSearchResult, SearchResultType } from 'wallet/src/features/search/SearchResult'
+import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { NFTCollectionSearchResult } from 'wallet/src/features/search/SearchResult'
 
 function isNFTCollectionSearchResult(result: NFTCollectionSearchResult | null): result is NFTCollectionSearchResult {
   return (result as NFTCollectionSearchResult).type === SearchResultType.NFTCollection
@@ -25,9 +26,9 @@ export function SearchPopularNFTCollections(): JSX.Element {
 
   if (loading) {
     return (
-      <Inset all="$spacing8">
+      <Flex px="$spacing24" py="$spacing8">
         <Loader.Token repeat={2} />
-      </Inset>
+      </Flex>
     )
   }
 

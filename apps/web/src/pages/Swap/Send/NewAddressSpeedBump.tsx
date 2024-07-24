@@ -4,8 +4,8 @@ import { UserIcon } from 'components/Icons/UserIcon'
 import Identicon, { IdenticonType, useIdenticonType } from 'components/Identicon'
 import Row from 'components/Row'
 import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { useSendContext } from 'state/send/SendContext'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
 const StyledUserIcon = styled(UserIcon)`

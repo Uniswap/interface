@@ -4,11 +4,11 @@ import { ArrowDown, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 export function TransactionAmountsReview({
   acceptedDerivedSwapInfo,

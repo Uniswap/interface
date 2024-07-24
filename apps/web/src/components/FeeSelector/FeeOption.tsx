@@ -5,7 +5,7 @@ import { FeeTierPercentageBadge } from 'components/FeeSelector/FeeTierPercentage
 import { FEE_AMOUNT_DETAIL } from 'components/FeeSelector/shared'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState } from 'hooks/usePools'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components'
 import { useFormatter } from 'utils/formatNumbers'
 

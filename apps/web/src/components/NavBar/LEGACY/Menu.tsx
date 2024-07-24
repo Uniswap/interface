@@ -1,10 +1,10 @@
 import { ColumnCenter } from 'components/Column'
 import { MenuContent } from 'components/NavBar/LEGACY/MenuContent'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import styled from 'lib/styled-components'
 import { vars } from 'nft/css/sprinkles.css'
 import { useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
-import styled from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 
 const Wrapper = styled.div`

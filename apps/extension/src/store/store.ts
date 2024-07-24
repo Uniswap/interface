@@ -1,5 +1,5 @@
 import { createReduxEnhancer } from '@sentry/react'
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
+import { TypedUseSelectorHook, useSelector } from 'react-redux'
 import { PreloadedState } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
 import { localStorage } from 'redux-persist-webextension-storage'
@@ -92,8 +92,6 @@ export function getReduxPersistor(): ReturnType<typeof persistStore> {
   return persistor
 }
 
-// TODO(EXT-1021): consider removing this helper in favor of using `useDispatch` directly.
-export const useAppDispatch: () => AppDispatch = useDispatch
 export const useAppSelector: TypedUseSelectorHook<WebState> = useSelector
 
 // Use in sagas for better typing when selecting from redux state
@@ -102,6 +100,5 @@ export function* appSelect<T>(fn: (state: WebState) => T): SagaGenerator<T> {
   return state
 }
 
-export type AppDispatch = ReturnType<typeof setupStore>['dispatch']
 export type AppStore = ReturnType<typeof setupStore>
 export type AppSelector<T> = (state: WebState) => T

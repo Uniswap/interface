@@ -1,13 +1,14 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Keyboard } from 'react-native'
 import { useTransferContext } from 'src/app/features/transfer/TransferContext'
 import { Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron, WalletFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
 import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
 import { selectRecipient } from 'wallet/src/features/transactions/transactionState/transactionState'
 import {
   useOnToggleShowRecipientSelector,
@@ -55,6 +56,7 @@ export function RecipientPanel(): JSX.Element {
               py="$none"
               value={pattern ?? ''}
               onChangeText={setPattern}
+              onDismiss={() => Keyboard.dismiss()}
               onFocus={() => setShowRecipientSelector(true)}
             />
           </Flex>

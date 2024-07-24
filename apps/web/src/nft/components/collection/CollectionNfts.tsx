@@ -7,6 +7,7 @@ import { ASSET_PAGE_SIZE, AssetFetcherParams, useNftAssets } from 'graphql/data/
 import { useIsMobile, useScreenSize } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
+import styled, { css } from 'lib/styled-components'
 import { AnimatedBox, Box } from 'nft/components/Box'
 import { Center, Column, Row } from 'nft/components/Flex'
 import { CollectionSearch, FilterButton } from 'nft/components/collection'
@@ -54,7 +55,6 @@ import { applyFiltersFromURL, syncLocalFiltersWithURL } from 'nft/utils/urlParam
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useLocation } from 'react-router-dom'
-import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import {
   NftAssetTraitInput,

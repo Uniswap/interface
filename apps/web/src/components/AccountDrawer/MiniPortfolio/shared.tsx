@@ -1,8 +1,8 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
+import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ArrowRight } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 

@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
+import { useDispatch } from 'react-redux'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { useAppDispatch } from 'wallet/src/state'
 
 export function useCopyToClipboard(): ({
   textToCopy,
@@ -10,7 +10,7 @@ export function useCopyToClipboard(): ({
   textToCopy: string
   copyType: CopyNotificationType
 }) => Promise<void> {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const copyToClipboard = useCallback(
     async ({ textToCopy, copyType }: { textToCopy: string; copyType: CopyNotificationType }) => {

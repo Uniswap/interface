@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { PADDING_STRENGTH_INDICATOR, PasswordInput } from 'src/app/components/PasswordInput'
-import { useAppDispatch } from 'src/store/store'
 import { Button, Flex, Text } from 'ui/src'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -12,7 +12,7 @@ import { usePasswordForm } from 'wallet/src/utils/password'
 
 export function ChangePasswordForm({ onNext }: { onNext: () => void }): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const {
     enableNext,

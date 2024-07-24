@@ -1,5 +1,6 @@
 import { PropsWithChildren, memo, useCallback } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { ConnectionRequestContent } from 'src/app/features/dappRequests/requestContent/Connection/ConnectionRequestContent'
@@ -17,7 +18,6 @@ import {
   isSignMessageRequest,
   isSignTypedDataRequest,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
-import { useAppDispatch } from 'src/store/store'
 import {
   Anchor,
   AnimatePresence,
@@ -60,6 +60,7 @@ interface DappRequestFooterProps {
   showAllNetworks?: boolean
   showNetworkCost?: boolean
   transactionGasFeeResult?: GasFeeResult
+  isUniswapX?: boolean
 }
 
 type DappRequestContentProps = DappRequestHeaderProps & DappRequestFooterProps
@@ -94,7 +95,7 @@ const AnimatedPane = styled(Flex, {
 export function DappRequestWrapper(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const { totalRequestCount, onPressPrevious, onPressNext, currentIndex, increasing } = useDappRequestQueueContext()
 
@@ -268,6 +269,7 @@ export function DappRequestContent({
   showNetworkCost,
   transactionGasFeeResult,
   children,
+  isUniswapX,
 }: PropsWithChildren<DappRequestContentProps>): JSX.Element {
   const { forwards, currentIndex } = useDappRequestQueueContext()
 
@@ -283,6 +285,7 @@ export function DappRequestContent({
         chainId={chainId}
         confirmText={confirmText}
         connectedAccountAddress={connectedAccountAddress}
+        isUniswapX={isUniswapX}
         maybeCloseOnConfirm={maybeCloseOnConfirm}
         showAllNetworks={showAllNetworks}
         showNetworkCost={showNetworkCost}
@@ -340,6 +343,7 @@ export function DappRequestFooter({
   showAllNetworks,
   showNetworkCost,
   transactionGasFeeResult,
+  isUniswapX,
 }: DappRequestFooterProps): JSX.Element {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
@@ -396,6 +400,7 @@ export function DappRequestFooter({
           <NetworkFeeFooter
             chainId={currentChainId}
             gasFeeUSD={transactionGasFeeResult ? gasFeeUSD : '0'}
+            isUniswapX={isUniswapX}
             showNetworkLogo={!!transactionGasFeeResult}
           />
         )}
@@ -403,6 +408,7 @@ export function DappRequestFooter({
         <AddressFooter
           activeAccountAddress={activeAccount.address}
           connectedAccountAddress={connectedAccountAddress || currentAccount.address}
+          px="$spacing8"
         />
         <Flex row gap="$spacing12" pt="$spacing8">
           <Button flex={1} flexBasis={1} size="small" theme="secondary" onPress={handleOnCancel}>

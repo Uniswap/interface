@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { I18nManager, ScrollView } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Screen } from 'src/components/layout/Screen'
@@ -22,7 +22,7 @@ import { useAppSelector } from 'wallet/src/state'
 
 export function DevScreen(): JSX.Element {
   const insets = useDeviceInsets()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const activeAccount = useActiveAccount()
   const [rtlEnabled, setRTLEnabled] = useState(I18nManager.isRTL)
   const sortedMnemonicAccounts = useAppSelector(selectSortedSignerMnemonicAccounts)

@@ -1,12 +1,12 @@
 import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { EventCell } from 'nft/components/collection/ActivityCells'
 import { ActivityEvent } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { getTimeDifference } from 'nft/utils/date'
 import { ReactNode } from 'react'
-import styled from 'styled-components'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 

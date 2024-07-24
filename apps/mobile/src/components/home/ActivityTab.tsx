@@ -1,7 +1,7 @@
 import { ForwardedRef, forwardRef, memo, useMemo } from 'react'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { AnimatedBottomSheetFlatList, AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
@@ -33,7 +33,7 @@ export const ActivityTab = memo(
     },
     ref,
   ) {
-    const dispatch = useAppDispatch()
+    const dispatch = useDispatch()
     const colors = useSporeColors()
     const insets = useDeviceInsets()
 
@@ -48,14 +48,13 @@ export const ActivityTab = memo(
       dispatch(openModal({ name: ModalName.WalletConnectScan, initialState: ScannerModalState.WalletQr }))
     }
 
-    const { maybeLoaderComponent, maybeEmptyComponent, renderActivityItem, sectionData, keyExtractor } =
-      useActivityData({
-        owner,
-        authTrigger: requiresBiometrics ? biometricsTrigger : undefined,
-        isExternalProfile,
-        emptyComponentStyle: containerProps?.emptyComponentStyle,
-        onPressEmptyState: onPressReceive,
-      })
+    const { maybeEmptyComponent, renderActivityItem, sectionData, keyExtractor } = useActivityData({
+      owner,
+      authTrigger: requiresBiometrics ? biometricsTrigger : undefined,
+      isExternalProfile,
+      emptyComponentStyle: containerProps?.emptyComponentStyle,
+      onPressEmptyState: onPressReceive,
+    })
 
     const refreshControl = useMemo(() => {
       return (
@@ -77,12 +76,8 @@ export const ActivityTab = memo(
           ref={ref as ForwardedRef<Animated.FlatList<any>>}
           ListEmptyComponent={maybeEmptyComponent}
           // we add a footer to cover any possible space, so user can scroll the top menu all the way to the top
-          ListFooterComponent={
-            <>
-              {maybeLoaderComponent}
-              {isExternalProfile ? null : adaptiveFooter}
-            </>
-          }
+          ListFooterComponent={isExternalProfile ? null : adaptiveFooter}
+          // `sectionData` will be either an array of transactions or an array of loading skeletons
           data={sectionData}
           estimatedItemSize={ESTIMATED_ITEM_SIZE}
           initialNumToRender={20}

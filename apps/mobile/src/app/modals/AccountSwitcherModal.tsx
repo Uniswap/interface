@@ -1,8 +1,9 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
+import { useDispatch } from 'react-redux'
 import { Action } from 'redux'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
@@ -30,7 +31,7 @@ import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { openSettings } from 'wallet/src/utils/linking'
 
 export function AccountSwitcherModal(): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const colors = useSporeColors()
 
   return (
@@ -59,7 +60,7 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const dimensions = useDeviceDimensions()
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddress()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
   const modalState = useAppSelector(selectModalState(ModalName.AccountSwitcher))
   const sortedMnemonicAccounts = useAppSelector(selectSortedSignerMnemonicAccounts)

@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Outlet } from 'react-router-dom'
 import { StorageWarningModal } from 'src/app/features/warnings/StorageWarningModal'
 import { ONBOARDING_BACKGROUND_DARK, ONBOARDING_BACKGROUND_LIGHT } from 'src/assets'
@@ -7,12 +8,11 @@ import { OnboardingMessageType } from 'src/background/messagePassing/types/Exten
 import { Flex, Image, useIsDarkMode } from 'ui/src'
 import { syncAppWithDeviceLanguage } from 'wallet/src/features/language/slice'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
-import { useAppDispatch } from 'wallet/src/state'
 
 export function OnboardingWrapper(): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const [isHighlighted, setIsHighlighted] = useState(false)
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   useEffect(() => {
     dispatch(syncAppWithDeviceLanguage())

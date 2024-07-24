@@ -10,6 +10,7 @@ import 'tracing'
 // ensure translations load before things
 // prettier-ignore
 import 'i18n'
+// prettier-ignore
 import 'setupRive'
 
 import { getDeviceId } from '@amplitude/analytics-browser'
@@ -33,6 +34,7 @@ import { BrowserRouter, HashRouter, useLocation } from 'react-router-dom'
 import store from 'state'
 import { ActivityStateUpdater } from 'state/activity/updater'
 import ApplicationUpdater from 'state/application/updater'
+import FiatOnRampTransactionsUpdater from 'state/fiatOnRampTransactions/updater'
 import ListsUpdater from 'state/lists/updater'
 import LogsUpdater from 'state/logs/updater'
 import { StatsigProvider as BaseStatsigProvider, StatsigUser } from 'statsig-react'
@@ -67,6 +69,7 @@ function Updaters() {
       <ActivityStateUpdater />
       <MulticallUpdater />
       <LogsUpdater />
+      <FiatOnRampTransactionsUpdater />
     </>
   )
 }

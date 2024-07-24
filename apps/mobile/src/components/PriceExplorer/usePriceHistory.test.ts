@@ -161,12 +161,7 @@ describe(useTokenPriceHistory, () => {
       const { resolvers } = queryResolvers({
         tokenProjects: () => [
           usdcTokenProject({
-            priceHistory: [
-              undefined,
-              timestampedAmount({ value: 1 }),
-              undefined,
-              timestampedAmount({ value: 2 }),
-            ],
+            priceHistory: [undefined, timestampedAmount({ value: 1 }), undefined, timestampedAmount({ value: 2 })],
           }),
         ],
       })
@@ -222,10 +217,7 @@ describe(useTokenPriceHistory, () => {
 
     describe('when duration is set to default value (day)', () => {
       it('returns correct price history', async () => {
-        const { result } = renderHookWithProviders(
-          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1),
-          { resolvers }
-        )
+        const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), { resolvers })
 
         await waitFor(() => {
           expect(result.current).toEqual(
@@ -235,16 +227,13 @@ describe(useTokenPriceHistory, () => {
                 spot: expect.anything(),
               },
               selectedDuration: HistoryDuration.Day,
-            })
+            }),
           )
         })
       })
 
       it('returns correct spot price', async () => {
-        const { result } = renderHookWithProviders(
-          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1),
-          { resolvers }
-        )
+        const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), { resolvers })
 
         await waitFor(() => {
           expect(result.current.data?.spot).toEqual({
@@ -261,7 +250,7 @@ describe(useTokenPriceHistory, () => {
       it('returns correct price history', async () => {
         const { result } = renderHookWithProviders(
           () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, jest.fn(), HistoryDuration.Year),
-          { resolvers }
+          { resolvers },
         )
 
         await waitFor(() => {
@@ -272,7 +261,7 @@ describe(useTokenPriceHistory, () => {
                 spot: expect.anything(),
               },
               selectedDuration: HistoryDuration.Year,
-            })
+            }),
           )
         })
       })
@@ -280,7 +269,7 @@ describe(useTokenPriceHistory, () => {
       it('returns correct spot price', async () => {
         const { result } = renderHookWithProviders(
           () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, jest.fn(), HistoryDuration.Year),
-          { resolvers }
+          { resolvers },
         )
         await waitFor(() => {
           expect(result.current.data?.spot).toEqual({
@@ -296,10 +285,9 @@ describe(useTokenPriceHistory, () => {
     describe('when duration is changed', () => {
       it('re-fetches data', async () => {
         const onCompleted = jest.fn()
-        const { result } = renderHookWithProviders(
-          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, onCompleted),
-          { resolvers }
-        )
+        const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1, onCompleted), {
+          resolvers,
+        })
 
         await waitFor(() => {
           expect(result.current).toEqual(
@@ -307,7 +295,7 @@ describe(useTokenPriceHistory, () => {
               loading: false,
               error: false,
               selectedDuration: HistoryDuration.Day,
-            })
+            }),
           )
         })
 
@@ -324,7 +312,7 @@ describe(useTokenPriceHistory, () => {
               loading: false,
               error: false,
               selectedDuration: HistoryDuration.Week,
-            })
+            }),
           )
         })
 
@@ -332,10 +320,7 @@ describe(useTokenPriceHistory, () => {
       })
 
       it('returns new price history and spot price', async () => {
-        const { result } = renderHookWithProviders(
-          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1),
-          { resolvers }
-        )
+        const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), { resolvers })
 
         await waitFor(() => {
           expect(result.current.data).toEqual({
@@ -376,10 +361,9 @@ describe(useTokenPriceHistory, () => {
             throw new Error('error')
           },
         })
-        const { result } = renderHookWithProviders(
-          () => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1),
-          { resolvers: errorResolvers }
-        )
+        const { result } = renderHookWithProviders(() => useTokenPriceHistory(SAMPLE_CURRENCY_ID_1), {
+          resolvers: errorResolvers,
+        })
 
         await waitFor(() => {
           expect(result.current.loading).toBe(false)

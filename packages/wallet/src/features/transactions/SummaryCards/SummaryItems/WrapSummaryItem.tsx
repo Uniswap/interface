@@ -1,5 +1,5 @@
 import { createElement, useMemo } from 'react'
-import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
+import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useNativeCurrencyInfo, useWrappedNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
@@ -10,6 +10,7 @@ import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 export function WrapSummaryItem({
   transaction,
   layoutElement,
+  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: WrapTransactionInfo }
 }): JSX.Element {
@@ -49,5 +50,6 @@ export function WrapSummaryItem({
       />
     ),
     transaction,
+    index,
   })
 }

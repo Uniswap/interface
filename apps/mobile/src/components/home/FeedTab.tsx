@@ -2,7 +2,8 @@ import { ForwardedRef, forwardRef, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
+import { useAppSelector } from 'src/app/hooks'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
@@ -40,7 +41,7 @@ export const FeedTab = memo(
     ref,
   ) {
     const { t } = useTranslation()
-    const dispatch = useAppDispatch()
+    const dispatch = useDispatch()
     const colors = useSporeColors()
     const insets = useDeviceInsets()
 

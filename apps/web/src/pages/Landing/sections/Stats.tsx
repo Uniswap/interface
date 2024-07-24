@@ -1,11 +1,11 @@
 import Row from 'components/Row'
 import { Trans, t } from 'i18n'
+import styled from 'lib/styled-components'
 import { Body1, Box, H2 } from 'pages/Landing/components/Generics'
 import { StatCard } from 'pages/Landing/components/StatCard'
 import { useInView } from 'pages/Landing/sections/useInView'
 import { useMemo } from 'react'
 import { ArrowRightCircle } from 'react-feather'
-import styled from 'styled-components'
 import { ClickableStyle, ExternalLink } from 'theme/components'
 import {
   ProtocolVersion,

@@ -3,7 +3,7 @@ import { MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { TimePeriod } from 'graphql/data/util'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 
 export const refitChartContentAtom = atom<(() => void) | undefined>(undefined)
 const DEFAULT_TIME_SELECTOR_OPTIONS = ORDERED_TIMES.map((time: TimePeriod) => ({ time, display: DISPLAYS[time] }))

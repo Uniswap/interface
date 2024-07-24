@@ -14,6 +14,7 @@ import { useAccount } from 'hooks/useAccount'
 import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { Trans } from 'i18n'
+import styled, { css } from 'lib/styled-components'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,
@@ -26,7 +27,6 @@ import { useSendContext } from 'state/send/SendContext'
 import { SendInputError } from 'state/send/hooks'
 import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
-import styled, { css } from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { UniverseChainId } from 'uniswap/src/types/chains'

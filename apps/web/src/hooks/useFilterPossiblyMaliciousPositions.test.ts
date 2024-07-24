@@ -85,7 +85,7 @@ describe('useFilterPossiblyMaliciousPositions', () => {
     const { result } = renderHook(() => useFilterPossiblyMaliciousPositions(positions))
 
     expect(result.current.some((position) => position.token1 === '0xB85C51F89788C1B3Bd4568f773e8FfB40cA587Bb')).toEqual(
-      false
+      false,
     )
   })
 })

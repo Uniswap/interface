@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
@@ -38,7 +39,6 @@ import { useAvatarUploadCredsWithRefresh } from 'wallet/src/features/unitags/hoo
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { useAppDispatch } from 'wallet/src/state'
 
 const BIO_TEXT_INPUT_LINES = 6
 
@@ -71,7 +71,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const account = useAccount(address)
   const signerManager = useWalletSigners()
 

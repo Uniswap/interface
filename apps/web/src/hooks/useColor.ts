@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import { useTheme } from 'lib/styled-components'
 import { useMemo } from 'react'
-import { useTheme } from 'styled-components'
 import { useExtractedTokenColor } from 'ui/src'
 
 type ContrastSettings = { backgroundColor: string; darkMode: boolean }

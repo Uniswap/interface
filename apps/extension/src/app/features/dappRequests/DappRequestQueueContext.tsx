@@ -1,5 +1,6 @@
 import { providerErrors, serializeError } from '@metamask/rpc-errors'
 import { PropsWithChildren, createContext, useContext, useEffect, useRef, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import {
   confirmRequest,
   confirmRequestNoDappInfo,
@@ -9,7 +10,7 @@ import {
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { DappResponseType } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
-import { useAppDispatch, useAppSelector } from 'src/store/store'
+import { useAppSelector } from 'src/store/store'
 import { TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -32,7 +33,7 @@ interface DappRequestQueueContextValue {
 const DappRequestQueueContext = createContext<DappRequestQueueContextValue | undefined>(undefined)
 
 export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const [currentIndex, setCurrentIndex] = useState(0)
 
   // Show the top most pending request

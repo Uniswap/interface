@@ -378,6 +378,13 @@ export function isSwapRequest(
   return SwapSendTransactionRequestSchema.safeParse(request).success
 }
 
+// TODO: EXT-1416 - find a more reliable way to detect UniswapX swap requests
+export function isUniswapXSwapRequest(request: SignTypedDataRequest): boolean {
+  const parsedTypedData = JSON.parse(request.typedData)
+
+  return parsedTypedData?.message?.spender === '0x00000011f84b9aa48e5f8aa8b9897600006289be'
+}
+
 export function isSignTypedDataRequest(request: DappRequest): request is SignTypedDataRequest {
   return SignTypedDataRequestSchema.safeParse(request).success
 }

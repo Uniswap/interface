@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ComingSoon } from 'src/app/components/ComingSoon'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
@@ -13,7 +13,6 @@ import { isConnectedAccount } from 'src/app/features/dapp/utils'
 import { PopupName, openPopup } from 'src/app/features/popups/slice'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { useAppDispatch } from 'src/store/store'
 import { Button, Flex, MenuContent, MenuContentItem, Popover, ScrollView, Text, useSporeColors } from 'ui/src'
 import { WalletFilled, X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
@@ -40,7 +39,7 @@ const MIN_MENU_WIDTH = 200
 
 export function AccountSwitcherScreen(): JSX.Element {
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { t } = useTranslation()
 
   const activeAccount = useActiveAccountWithThrow()

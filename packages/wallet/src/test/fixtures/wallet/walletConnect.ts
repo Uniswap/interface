@@ -1,6 +1,6 @@
+import { faker } from 'uniswap/src/test/shared'
+import { createFixture } from 'uniswap/src/test/utils'
 import { DappInfoUwULink, DappInfoWC } from 'uniswap/src/types/walletConnect'
-import { faker } from 'wallet/src/test/shared'
-import { createFixture } from 'wallet/src/test/utils'
 
 export const dappInfoWC = createFixture<DappInfoWC>()(() => ({
   source: 'walletconnect',

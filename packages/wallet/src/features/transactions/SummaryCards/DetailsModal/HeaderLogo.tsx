@@ -1,12 +1,12 @@
 import { Flex, useIsDarkMode, useSporeColors } from 'ui/src'
 import { ContractInteraction } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { DappLogoWithWCBadge, LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
-import { AssetType } from 'wallet/src/entities/assets'
 import {
   useCurrencyInfo,
   useNativeCurrencyInfo,

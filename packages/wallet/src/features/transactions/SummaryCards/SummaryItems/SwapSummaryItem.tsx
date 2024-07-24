@@ -1,18 +1,18 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { createElement, useMemo } from 'react'
+import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
+import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
-  isConfirmedSwapTypeInfo,
   TransactionDetails,
+  isConfirmedSwapTypeInfo,
 } from 'wallet/src/features/transactions/types'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
@@ -22,6 +22,7 @@ export function SwapSummaryItem({
   transaction,
   layoutElement,
   swapCallbacks,
+  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & {
     typeInfo: ExactOutputSwapTransactionInfo | ExactInputSwapTransactionInfo
@@ -86,5 +87,6 @@ export function SwapSummaryItem({
     ),
     transaction,
     onRetry: swapFormState && shouldShowRetry ? onRetry : undefined,
+    index,
   })
 }

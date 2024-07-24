@@ -1,0 +1,86 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TransferTransactionDetails Component renders TransferTransactionDetails without error 1`] = `
+<View
+  cancelable={true}
+  disabled={false}
+  focusable={true}
+  hitSlop={[Function]}
+  minPressDuration={0}
+  onBlur={[Function]}
+  onFocus={[Function]}
+  onMouseEnter={[Function]}
+  onMouseLeave={[Function]}
+  onPress={[Function]}
+  onPressIn={[Function]}
+  onPressOut={[Function]}
+  style={
+    {
+      "flexDirection": "column",
+      "opacity": 1,
+      "transform": [
+        {
+          "scale": 1,
+        },
+      ],
+    }
+  }
+>
+  <View
+    style={
+      {
+        "alignItems": "center",
+        "flexDirection": "column",
+        "gap": 8,
+        "justifyContent": "center",
+        "paddingBottom": 32,
+        "paddingLeft": 32,
+        "paddingRight": 32,
+        "paddingTop": 32,
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      maxFontSizeMultiplier={1.2}
+      style={
+        {
+          "color": "#222222",
+          "fontFamily": "Basel-Book",
+          "fontSize": 36,
+          "lineHeight": 44,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      -
+    </Text>
+    <View
+      style={
+        {
+          "alignItems": "center",
+          "flexDirection": "row",
+          "gap": 8,
+          "justifyContent": "center",
+        }
+      }
+    >
+      <Text
+        allowFontScaling={false}
+        maxFontSizeMultiplier={1.4}
+        style={
+          {
+            "color": "#7D7D7D",
+            "fontFamily": "Basel-Book",
+            "fontSize": 16,
+            "lineHeight": 24,
+          }
+        }
+        suppressHighlighting={true}
+      >
+        -
+      </Text>
+    </View>
+  </View>
+</View>
+`;

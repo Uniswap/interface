@@ -7,6 +7,7 @@ import { Flex, FlexProps, Text, TouchableArea, isWeb, useIsShortMobileDevice, us
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { NumberType } from 'utilities/src/format/types'
@@ -17,7 +18,6 @@ import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'wallet/src/features/transactions/utils'
 import { errorShakeAnimation } from 'wallet/src/utils/animations'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
@@ -184,6 +184,7 @@ export const CurrencyInputPanel = memo(
 
     const loadingFlexProgress = useSharedValue(1)
 
+    // disables looping animation during detox e2e tests which was preventing js thread from idle
     if (!isDetoxBuild) {
       loadingFlexProgress.value = withRepeat(
         withSequence(

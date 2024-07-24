@@ -10,11 +10,11 @@ import { LanguageSettings } from 'components/NavBar/PreferencesMenu/Language'
 import { PreferenceSettings } from 'components/NavBar/PreferencesMenu/Preferences'
 import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
+import styled, { useTheme } from 'lib/styled-components'
 import { Socials } from 'pages/Landing/sections/Footer'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useTranslation } from 'react-i18next'
-import styled, { useTheme } from 'styled-components'
 import { Accordion, Square, Text } from 'ui/src'
 
 const StyledMenuLink = styled(MenuLink)`
