@@ -58,6 +58,11 @@ const ValueInput = styled.input`
   }
 `
 
+const CustomP = styled.p`
+margin: 0px;
+font-size:16px;
+display:block;
+`
 
 export default function Create() {
     return (
@@ -78,6 +83,7 @@ export default function Create() {
                     <Trans i18nKey="common.create.incentives.set.token.reward.description" />
                 </ThemedText.DeprecatedBody>
                 <ValueInput placeholder='Reward token address' />
+                <CustomP><Trans i18nKey="common.create.incentives.set.token.reward.explaination" /></CustomP>
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
@@ -96,6 +102,7 @@ export default function Create() {
                     <Trans i18nKey="common.create.incentives.set.pool.description" />
                 </ThemedText.DeprecatedBody>
                 <ValueInput placeholder='Pool Address' />
+                <CustomP><Trans i18nKey="common.create.incentives.set.pool.explaination" /></CustomP>
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
