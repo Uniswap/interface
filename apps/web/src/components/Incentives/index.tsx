@@ -33,23 +33,23 @@ const ImageWrapper = styled.div`
 `;
 
 export default function Incentives() {
-  return (<><TitleDiv>
-    <div><Trans i18nKey="common.incentives.pool.fee" /></div>
-    <div><Trans i18nKey="common.incentives.duration" /></div>
-    <div><Trans i18nKey="common.incentives.vesting.period" /></div>
-    <div><Trans i18nKey="common.incentives.pool.tv1" /></div>
-    <div><Trans i18nKey="common.incentives.total.program.rewards" /></div>
-    <div><Trans i18nKey="common.incentives.token.reward" /></div>
+  return (
+    <>
+      <TitleDiv>
+        <div><Trans i18nKey="common.incentives.pool.fee" /></div>
+        <div><Trans i18nKey="common.incentives.duration" /></div>
+        <div><Trans i18nKey="common.incentives.vesting.period" /></div>
+        <div><Trans i18nKey="common.incentives.pool.tv1" /></div>
+        <div><Trans i18nKey="common.incentives.total.program.rewards" /></div>
+        <div><Trans i18nKey="common.incentives.token.reward" /></div>
 
-  </TitleDiv>
-    <ImageWrapper>
-      <img src={Missing} alt="Description of image" width={100} />
-    </ImageWrapper>
-    <ResultDiv>no results</ResultDiv>
-    <ResultDiv>Sorry, we have no active or coming incentives at this time.
-      Please try again later.
-    </ResultDiv>
-
-
-  </>);
+      </TitleDiv>
+      <ImageWrapper>
+        <img src={Missing} alt="Description of image" width={100} />
+      </ImageWrapper>
+      <ResultDiv><Trans i18nKey="common.incentives.noresults" /></ResultDiv>
+      <ResultDiv><Trans i18nKey="common.incentives.try.again" />
+      </ResultDiv>
+    </>
+  );
 }

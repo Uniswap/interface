@@ -28,14 +28,15 @@ const ResponsiveColumn = styled(AutoColumn)`
 
 export default function Create() {
     return (
-        <><ResponsiveColumn>
-            <HeaderText>
-                → <Trans i18nKey="common.create.incentives.select.network.title" />
-            </HeaderText>
-            <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
-                <Trans i18nKey="common.create.incentives.select.network.description" />
-            </ThemedText.DeprecatedBody>
-        </ResponsiveColumn>
+        <>
+            <ResponsiveColumn>
+                <HeaderText>
+                    → <Trans i18nKey="common.create.incentives.select.network.title" />
+                </HeaderText>
+                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
+                    <Trans i18nKey="common.create.incentives.select.network.description" />
+                </ThemedText.DeprecatedBody>
+            </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.set.token.reward.title" />

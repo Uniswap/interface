@@ -255,6 +255,8 @@
   "common.incentives.pool.tv1": "Pool TV1",
   "common.incentives.total.program.rewards": "Total program rewards",
   "common.incentives.token.reward": "Token reward",
+  "common.incentives.noresults": "No results",
+  "common.incentives.try.again": "Sorry, we have no active or coming incentives at this time. Please try again later.",
   "common.create.incentives.select.network.title": "Select Network",
   "common.create.incentives.select.network.description": "Select the network first, then connect the wallet.",
   "common.create.incentives.set.token.reward.title": "Set token reward",

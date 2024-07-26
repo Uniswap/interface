@@ -38,14 +38,15 @@ const ResponsiveColumn = styled(AutoColumn)`
 
 export default function FAQ() {
     return (
-        <><ResponsiveColumn>
-            <HeaderText>
-                → <Trans i18nKey="common.faq.difference.title" />
-            </HeaderText>
-            <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
-                <Trans i18nKey="common.faq.difference.description" />
-            </ThemedText.DeprecatedBody>
-        </ResponsiveColumn>
+        <>
+            <ResponsiveColumn>
+                <HeaderText>
+                    → <Trans i18nKey="common.faq.difference.title" />
+                </HeaderText>
+                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
+                    <Trans i18nKey="common.faq.difference.description" />
+                </ThemedText.DeprecatedBody>
+            </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.faq.vesting.title" />
