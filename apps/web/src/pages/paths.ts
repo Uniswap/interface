@@ -16,6 +16,7 @@ export const paths = [
   '/send',
   '/swap',
   '/buy',
+  '/farms',
   '/limit',
   '/limits',
   '/pool/v2/find',

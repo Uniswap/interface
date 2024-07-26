@@ -23,6 +23,8 @@ const MigrateV2 = lazy(() => import('pages/MigrateV2'))
 const MigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
 const NotFound = lazy(() => import('pages/NotFound'))
 const Pool = lazy(() => import('pages/Pool'))
+const Farms = lazy(() => import('pages/Farms'))
+const RedirectFarms = lazy(() => import('pages/Farms/redirects'))
 const PositionPage = lazy(() => import('pages/Pool/PositionPage'))
 const PoolV2 = lazy(() => import('pages/Pool/v2'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
@@ -215,6 +217,13 @@ export const routes: RouteDefinition[] = [
     getElement: () => <Pool />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
+    path: '/farms',
+    getTitle: getExploreTitle,
+    getDescription: getExploreDescription,
+    nestedPaths: [':tab', ':chainName', ':tab/:chainName'],
+    getElement: () => <RedirectFarms />,
   }),
   createRouteDefinition({
     path: '/pool/:tokenId',
