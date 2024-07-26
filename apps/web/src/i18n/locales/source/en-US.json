@@ -260,7 +260,7 @@
   "common.create.incentives.select.network.title": "Select Network",
   "common.create.incentives.select.network.description": "Select the network first, then connect the wallet.",
   "common.create.incentives.set.token.reward.title": "Set token reward",
-  "common.create.incentives.set.token.reward.description": "Enter the address of the ERC20 tokensyou will distribute as incentives.",
+  "common.create.incentives.set.token.reward.description": "Enter the address of the ERC20 tokens you will distribute as incentives.",
   "common.create.incentives.select.reward.title": "Select rewards amount",
   "common.create.incentives.select.reward.description": "Select an amount of the token in your wallet to distribute in the incentive program.",
   "common.create.incentives.set.pool.title": "Set pool pair",

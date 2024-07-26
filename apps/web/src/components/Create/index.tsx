@@ -26,6 +26,39 @@ const ResponsiveColumn = styled(AutoColumn)`
   justify-content: space-between;
 `
 
+const ValueInput = styled.input`
+  background-size: 20px 20px;
+  background-position: 12px center;
+  background-color: ${({ theme }) => theme.surface1};
+  border-radius: 20px;
+  border: 1px solid ${({ theme }) => 'gray'}; // Set a consistent border color
+  height: 100%;
+  width: 400px;
+  font-size: 18px;
+  font-weight: 485;
+  padding: 10px;
+  color: ${({ theme }) => theme.neutral2};
+  transition-duration: ${({ theme }) => theme.transition.duration.fast};
+  text-overflow: ellipsis;
+
+  :focus {
+    outline: none;
+    background-color: ${({ theme }) => theme.surface1};
+    border-color: ${({ theme }) => theme.accent1}; // Keep the same border color on focus
+    color: ${({ theme }) => theme.neutral1};
+  }
+
+  ::placeholder {
+    color: ${({ theme }) => theme.neutral3};
+  }
+  ::-webkit-search-cancel-button {
+    -webkit-appearance: none;
+    appearance: none;
+    cursor: pointer;
+  }
+`
+
+
 export default function Create() {
     return (
         <>
@@ -44,6 +77,7 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
                     <Trans i18nKey="common.create.incentives.set.token.reward.description" />
                 </ThemedText.DeprecatedBody>
+                <ValueInput placeholder='Reward token address' />
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
@@ -52,6 +86,7 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
                     <Trans i18nKey="common.create.incentives.select.reward.description" />
                 </ThemedText.DeprecatedBody>
+                <ValueInput placeholder='Rewards amount' />
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
@@ -60,6 +95,7 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
                     <Trans i18nKey="common.create.incentives.set.pool.description" />
                 </ThemedText.DeprecatedBody>
+                <ValueInput placeholder='Pool Address' />
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
@@ -76,6 +112,7 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
                     <Trans i18nKey="common.create.incentives.set.vesting.description" />
                 </ThemedText.DeprecatedBody>
+                <ValueInput placeholder='Vesting period in days' />
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
@@ -84,6 +121,7 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
                     <Trans i18nKey="common.create.incentives.enter.refundee.description" />
                 </ThemedText.DeprecatedBody>
+                <ValueInput placeholder='Refundee address' />
             </ResponsiveColumn>
         </>
 

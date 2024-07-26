@@ -35,7 +35,6 @@ const ResponsiveColumn = styled(AutoColumn)`
   `};
   justify-content: space-between;
 `
-
 export default function FAQ() {
     return (
         <>
