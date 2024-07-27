@@ -1,10 +1,8 @@
 import { InterfaceElementName, InterfacePageName, SharedEventName } from '@uniswap/analytics-events'
-import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
-import { TopTokensTable } from 'components/Tokens/TokenTable'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { Trans } from 'i18n'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import styled from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
@@ -15,7 +13,6 @@ import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { useResetAtom } from 'jotai/utils'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useExploreParams } from '../Explore/redirects'
-import RecentTransactions from '../Explore/tables/RecentTransactions'
 import { TitleRow } from 'nft/components/profile/list/shared'
 import Incentives from 'components/Incentives'
 import Create from 'components/Create'
@@ -51,7 +48,7 @@ const TabBar = styled(AutoRow)`
     gap: 16px;
   }
 `
-const TabItem = styled(ThemedText.HeadlineMedium)<{ active?: boolean }>`
+const TabItem = styled(ThemedText.HeadlineMedium) <{ active?: boolean }>`
   align-items: center;
   color: ${({ theme, active }) => (active ? theme.neutral1 : theme.neutral2)};
   cursor: pointer;
@@ -74,12 +71,6 @@ export enum LiquidityTab {
   Create = 'create',
   FAQ = 'faq',
 }
-
-// export enum LiquidityTab {
-//   Incentives = 'tokens',
-//   Create = 'pools',
-//   FAQ = 'transactions',
-// }
 
 interface Page {
   title: React.ReactNode
@@ -156,7 +147,7 @@ const Farms = ({ initialTab }: { initialTab?: LiquidityTab }) => {
         {/* <ExploreChartsSection /> */}
         <NavWrapper ref={tabNavRef}>
           <FiltersContainer>
-          <TitleRow padding="0">
+            <TitleRow padding="0">
               <ThemedText.H1Large>
                 <Trans i18nKey="common.liquidity.incentives" />
               </ThemedText.H1Large>
@@ -173,7 +164,7 @@ const Farms = ({ initialTab }: { initialTab?: LiquidityTab }) => {
                 >
                   <StyledInternalLink
                     to={`/farms/${key}`}
-                    // to={`/explore/${key}`}
+                  // to={`/explore/${key}`}
                   >
                     <TabItem onClick={() => setCurrentTab(index)} active={currentTab === index} key={key}>
                       {title}

@@ -33,6 +33,10 @@ export default function RedirectExplore() {
   const { tab, chainName, tokenAddress } = useExploreParams()
   const isLegacyUrl = !useLocation().pathname.includes('farms')
 
+  if (!tab) {
+    return <Navigate to={`/farms/${LiquidityTab.Incentives}`} replace />
+  }
+
   if (isLegacyUrl) {
     if (tab && chainName && tokenAddress) {
       return <Navigate to={`/farms/${tab}/${chainName}/${tokenAddress}`} replace />
