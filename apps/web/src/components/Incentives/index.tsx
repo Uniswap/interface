@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
-import { Trans } from 'i18n'
+import { Trans } from 'i18n';
+import { colors, iconSizes, opacify } from 'ui/src/theme';
 
 const TableContainer = styled.div`
   width: 100%;
@@ -17,9 +18,20 @@ const Table = styled.table`
     text-align: left;
     border-bottom: 1px solid ${({ theme }) => theme.neutral3};
   }
+  
   th {
     font-weight: bold;
   }
+`;
+
+const ColorCell = styled.span`
+  color: green; // Set the color for the pool name
+`;
+
+const StatusCell = styled.span`
+  background-color: #FF9800; // Set the background color for the status
+  padding: 2px 5px; // Optional: Add some padding for better appearance
+  border-radius: 4px; // Optional: Add rounded corners
 `;
 
 const mockData = [
@@ -39,8 +51,8 @@ const mockData = [
     poolName: 'WETH/LAKE',
     poolPercent: '0.3%',
     status: 'active',
-    startDate: '19/JUN/2024 13:00',
-    endDate: '19/JUN/2024 13:00',
+    startDate: '31/AUG/2023 13:00',
+    endDate: '30/AUG/2024 13:00',
     vestingPeriod: '30 days',
     poolTVL: '$1,000,000',
     totalProgramRewards: '600,000 LAKE',
@@ -51,8 +63,8 @@ const mockData = [
     poolName: 'WMINIMA/USDT',
     poolPercent: '0.3%',
     status: 'active',
-    startDate: '19/JUN/2024 13:00',
-    endDate: '19/JUN/2024 13:00',
+    startDate: '15/FEB/2024 13:00',
+    endDate: '14/AUG/2024 13:00',
     vestingPeriod: '30 days',
     poolTVL: '$1,000,000',
     totalProgramRewards: '600,000 WMINIMA',
@@ -63,8 +75,8 @@ const mockData = [
     poolName: 'LINK/SDL',
     poolPercent: '0.3%',
     status: 'active',
-    startDate: '19/JUN/2024 13:00',
-    endDate: '19/JUN/2024 13:00',
+    startDate: '1/APR/2024 13:00',
+    endDate: '28/SEP/2024 13:00',
     vestingPeriod: '30 days',
     poolTVL: '$1,000,000',
     totalProgramRewards: '600,000 SDL',
@@ -75,15 +87,14 @@ const mockData = [
     poolName: 'TKB/WETH',
     poolPercent: '0.3%',
     status: 'active',
-    startDate: '19/JUN/2024 13:00',
-    endDate: '19/JUN/2024 13:00',
+    startDate: '4/AUG/2024 13:00',
+    endDate: '1/AUG/2025 13:00',
     vestingPeriod: '30 days',
     poolTVL: '$1,000,000',
     totalProgramRewards: '600,000 TKB',
     totalDollars: 'approx $50,000',
     tokenReward: 'TKB',
   },
-
 ];
 
 const Incentives = () => {
@@ -103,12 +114,15 @@ const Incentives = () => {
         <tbody>
           {mockData.map((data, index) => (
             <tr key={index}>
-              <td>{data.poolName} {data.poolPercent} <br /> {data.status}</td>
+              <td>
+                <ColorCell>{data.poolName}</ColorCell> {data.poolPercent} <br />
+                <StatusCell>{data.status}</StatusCell>
+              </td>
               <td>{data.startDate} <br /> {data.endDate}</td>
               <td>{data.poolTVL}</td>
               <td>{data.vestingPeriod}</td>
               <td>{data.totalProgramRewards} <br /> {data.totalDollars}</td>
-              <td>{data.tokenReward}</td>
+              <td><ColorCell>{data.tokenReward}</ColorCell></td>
             </tr>
           ))}
         </tbody>
