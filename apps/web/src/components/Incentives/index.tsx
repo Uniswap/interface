@@ -1,55 +1,75 @@
+import React from 'react';
+import styled from 'styled-components';
 
-import styled from 'styled-components'
-import { Trans } from 'i18n'
-import Missing from '../../assets/images/missing_uni.png'
-
-const TitleDiv = styled.div`
-  display: flex;
-  justify-content: space-between;
-  margin-top: 32px;
-  font-size: 17px;
-  align-items: flex-start;
-  padding-bottom:8px;
-  gap: 20px;
-  border-bottom: 1px solid #ccc; // Specify a color for the border
+const TableContainer = styled.div`
+  width: 100%;
+  overflow-x: auto;
+  margin-top: 20px;
 `;
 
-const ResultDiv = styled.div`
-  display: flex;
-  justify-content: center;
-  font-size: 17px;
-  align-items: flex-start;
-  padding-bottom:8px;
-  gap: 20px;
+const Table = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid ${({ theme }) => theme.neutral3};
+  }
+  th {
+    font-weight: bold;
+  }
 `;
 
-const ImageWrapper = styled.div`
-  display: flex;
-  margin-top:100px;
-  margin-bottom:20px;
-  justify-content: center; // Center the image horizontally
-  align-items: center; // Center the image vertically
-  flex: 1; // Allow ImageWrapper to take available space
-`;
+const mockData = [
+  {
+    poolFeeTier: '0.3%',
+    durationUTC: '2024-07-01 12:00',
+    vestingPeriod: '30 days',
+    poolTVL: '$1,000,000',
+    totalProgramRewards: '$50,000',
+    tokenReward: '500 TOKEN',
+  },
+  {
+    poolFeeTier: '0.5%',
+    durationUTC: '2024-07-02 12:00',
+    vestingPeriod: '60 days',
+    poolTVL: '$2,000,000',
+    totalProgramRewards: '$100,000',
+    tokenReward: '1000 TOKEN',
+  },
+  // Add more mocked data as needed
+];
 
-export default function Incentives() {
+const Incentives = () => {
   return (
-    <>
-      <TitleDiv>
-        <div><Trans i18nKey="common.incentives.pool.fee" /></div>
-        <div><Trans i18nKey="common.incentives.duration" /></div>
-        <div><Trans i18nKey="common.incentives.vesting.period" /></div>
-        <div><Trans i18nKey="common.incentives.pool.tv1" /></div>
-        <div><Trans i18nKey="common.incentives.total.program.rewards" /></div>
-        <div><Trans i18nKey="common.incentives.token.reward" /></div>
-
-      </TitleDiv>
-      <ImageWrapper>
-        <img src={Missing} alt="Description of image" width={100} />
-      </ImageWrapper>
-      <ResultDiv><Trans i18nKey="common.incentives.noresults" /></ResultDiv>
-      <ResultDiv><Trans i18nKey="common.incentives.try.again" />
-      </ResultDiv>
-    </>
+    <TableContainer>
+      <Table>
+        <thead>
+          <tr>
+            <th>Pool/Fee Tier</th>
+            <th>Duration (UTC Time)</th>
+            <th>Vesting Period</th>
+            <th>Pool TVL</th>
+            <th>Total Program Rewards</th>
+            <th>Token Reward</th>
+          </tr>
+        </thead>
+        <tbody>
+          {mockData.map((data, index) => (
+            <tr key={index}>
+              <td>{data.poolFeeTier}</td>
+              <td>{data.durationUTC}</td>
+              <td>{data.vestingPeriod}</td>
+              <td>{data.poolTVL}</td>
+              <td>{data.totalProgramRewards}</td>
+              <td>{data.tokenReward}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </TableContainer>
   );
-}
+};
+
+export default Incentives;
