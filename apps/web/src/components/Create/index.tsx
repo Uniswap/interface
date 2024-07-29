@@ -3,11 +3,14 @@ import styled from 'styled-components'
 import { Trans } from 'i18n'
 import { AutoColumn } from 'components/Column'
 import { ThemedText } from 'theme/components'
+import { ButtonLight } from "components/Button";
+import { useAccountDrawer } from "components/AccountDrawer/MiniPortfolio/hooks";
+import { useAccount } from 'hooks/useAccount'
 
 const HeaderText = styled(ThemedText.DeprecatedLabel)`
   align-items: center;
   display: flex;
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 535 !important;
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToMedium`
     font-size: 16px;
@@ -65,13 +68,16 @@ display:block;
 `
 
 export default function Create() {
+    const account = useAccount()
+    const accountDrawer = useAccountDrawer();
+
     return (
         <>
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.select.network.title" />
                 </HeaderText>
-                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
+                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.select.network.description" />
                 </ThemedText.DeprecatedBody>
             </ResponsiveColumn>
@@ -79,7 +85,7 @@ export default function Create() {
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.set.token.reward.title" />
                 </HeaderText>
-                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
+                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.set.token.reward.description" />
                 </ThemedText.DeprecatedBody>
                 <ValueInput placeholder='Reward token address' />
@@ -89,16 +95,22 @@ export default function Create() {
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.select.reward.title" />
                 </HeaderText>
-                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
+                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.select.reward.description" />
                 </ThemedText.DeprecatedBody>
                 <ValueInput placeholder='Rewards amount' />
             </ResponsiveColumn>
+
+            {/* <DatePicker
+                placeholder="Select Date"
+                style={{ width: 200 }}
+            /> */}
+
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.set.pool.title" />
                 </HeaderText>
-                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
+                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.set.pool.description" />
                 </ThemedText.DeprecatedBody>
                 <ValueInput placeholder='Pool Address' />
@@ -108,7 +120,7 @@ export default function Create() {
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.set.incentives.title" />
                 </HeaderText>
-                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
+                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.set.incentives.description" />
                 </ThemedText.DeprecatedBody>
             </ResponsiveColumn>
@@ -116,7 +128,7 @@ export default function Create() {
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.set.vesting.title" />
                 </HeaderText>
-                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
+                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.set.vesting.description" />
                 </ThemedText.DeprecatedBody>
                 <ValueInput placeholder='Vesting period in days' />
@@ -125,11 +137,29 @@ export default function Create() {
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.enter.refundee.title" />
                 </HeaderText>
-                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 20 }}>
+                <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.enter.refundee.description" />
                 </ThemedText.DeprecatedBody>
                 <ValueInput placeholder='Refundee address' />
             </ResponsiveColumn>
+            {!account.address ?
+                (<ButtonLight
+                    onClick={accountDrawer.open}
+                    fontWeight={535}
+                    $borderRadius="16px"
+                    marginTop={2}
+                >
+                    <Trans i18nKey="common.connectWallet.button" />
+                </ButtonLight>) : (
+                    <ButtonLight
+                        fontWeight={535}
+                        $borderRadius="16px"
+                        marginTop={2}>
+                        <Trans i18nKey="common.incentives.create.button" />
+                    </ButtonLight>
+                )
+            }
+
         </>
 
     )

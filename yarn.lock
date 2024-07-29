@@ -2106,6 +2106,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.20.1":
+  version: 7.25.0
+  resolution: "@babel/runtime@npm:7.25.0"
+  dependencies:
+    regenerator-runtime: ^0.14.0
+  checksum: 4a2a374a58eb01aaa65c5762606e90b3a1f448e0c637d42278b6cc0b42a9f5399b5f381ba9f237ee087da2860d14dd2d1de7bddcbe18be6a3cafba97e44bed64
+  languageName: node
+  linkType: hard
+
 "@babel/template@npm:^7.0.0, @babel/template@npm:^7.18.10, @babel/template@npm:^7.20.7, @babel/template@npm:^7.22.15, @babel/template@npm:^7.23.9, @babel/template@npm:^7.3.3":
   version: 7.23.9
   resolution: "@babel/template@npm:7.23.9"
@@ -6087,7 +6096,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@juggle/resize-observer@npm:3.4.0, @juggle/resize-observer@npm:^3.3.1":
+"@juggle/resize-observer@npm:3.4.0, @juggle/resize-observer@npm:^3.3.1, @juggle/resize-observer@npm:^3.4.0":
   version: 3.4.0
   resolution: "@juggle/resize-observer@npm:3.4.0"
   checksum: 2505028c05cc2e17639fcad06218b1c4b60f932a4ebb4b41ab546ef8c157031ae377e3f560903801f6d01706dbefd4943b6c4704bf19ed86dfa1c62f1473a570
@@ -8306,6 +8315,29 @@ __metadata:
   peerDependencies:
     rollup: ^1.20.0||^2.0.0
   checksum: 8be16e27863c219edbb25a4e6ec2fe0e1e451d9e917b6a43cf2ae5bc025a6b8faaa40f82a6e53b66d0de37b58ff472c6c3d57a83037ae635041f8df959d6d9aa
+  languageName: node
+  linkType: hard
+
+"@rsuite/icon-font@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "@rsuite/icon-font@npm:4.0.0"
+  checksum: c4ae583653b9333d5bef7174180f5c8cce216e79cd412dc6a0c0b4d1559a4d7fae83448a218d2e0e37f02a5c871a01933e2757a5ffecd8d925ececcea62467f4
+  languageName: node
+  linkType: hard
+
+"@rsuite/icons@npm:^1.0.0, @rsuite/icons@npm:^1.0.2":
+  version: 1.0.3
+  resolution: "@rsuite/icons@npm:1.0.3"
+  dependencies:
+    "@babel/runtime": ^7.12.1
+    "@rsuite/icon-font": ^4.0.0
+    classnames: ^2.2.5
+    insert-css: ^2.0.0
+    lodash: ^4.17.20
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 9229a8cd3bf618dfa5cc85ca55ca1902d2b5910dfdb54600da7067b15a5bb60eee9b6581b9883877f7dc289fba4176a9c2fcb267d3feccb4239a9dd30889df3b
   languageName: node
   linkType: hard
 
@@ -12440,6 +12472,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/lodash@npm:^4.14.184":
+  version: 4.17.7
+  resolution: "@types/lodash@npm:4.17.7"
+  checksum: 09e58a119cd8a70acfb33f8623dc2fc54f74cdce3b3429b879fc2daac4807fe376190a04b9e024dd300f9a3ee1876d6623979cefe619f70654ca0fe0c47679a7
+  languageName: node
+  linkType: hard
+
 "@types/lru-cache@npm:^5.1.0":
   version: 5.1.1
   resolution: "@types/lru-cache@npm:5.1.1"
@@ -12607,6 +12646,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/prop-types@npm:^15.7.5":
+  version: 15.7.12
+  resolution: "@types/prop-types@npm:15.7.12"
+  checksum: ac16cc3d0a84431ffa5cfdf89579ad1e2269549f32ce0c769321fdd078f84db4fbe1b461ed5a1a496caf09e637c0e367d600c541435716a55b1d9713f5035dfe
+  languageName: node
+  linkType: hard
+
 "@types/q@npm:^1.5.1":
   version: 1.5.5
   resolution: "@types/q@npm:1.5.5"
@@ -12702,7 +12748,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-window@npm:*":
+"@types/react-window@npm:*, @types/react-window@npm:^1.8.5":
   version: 1.8.8
   resolution: "@types/react-window@npm:1.8.8"
   dependencies:
@@ -13674,6 +13720,7 @@ __metadata:
     redux: 4.2.1
     redux-persist: 6.0.0
     resize-observer-polyfill: 1.5.1
+    rsuite: 5.68.0
     serve: ^14.2.0
     source-map-explorer: 2.5.3
     start-server-and-test: 2.0.0
@@ -21387,6 +21434,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"dom-lib@npm:^3.1.3, dom-lib@npm:^3.3.1":
+  version: 3.3.1
+  resolution: "dom-lib@npm:3.3.1"
+  dependencies:
+    "@babel/runtime": ^7.20.0
+  checksum: fed1897099ae5cfac7adca11319ec986dc716758571089527cc2c295768cea98d35f5258482a6441bc69b76340aad40889f29c73be294c4281ce4c70058dfc3a
+  languageName: node
+  linkType: hard
+
 "dom-serializer@npm:0":
   version: 0.2.2
   resolution: "dom-serializer@npm:0.2.2"
@@ -25140,6 +25196,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"get-value@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "get-value@npm:3.0.1"
+  dependencies:
+    isobject: ^3.0.1
+  checksum: d2df36858c34f0ef63d928e760740b23d14a7b955eaf740fea0d908b60cf2504de388a2ff72fb531318719645271f506390005f811a53d35ce4d7f7eba98e470
+  languageName: node
+  linkType: hard
+
 "getenv@npm:^1.0.0":
   version: 1.0.0
   resolution: "getenv@npm:1.0.0"
@@ -26780,6 +26845,13 @@ __metadata:
     through: ^2.3.6
     wrap-ansi: ^6.0.1
   checksum: 387ffb0a513559cc7414eb42c57556a60e302f820d6960e89d376d092e257a919961cd485a1b4de693dbb5c0de8bc58320bfd6247dfd827a873aa82a4215a240
+  languageName: node
+  linkType: hard
+
+"insert-css@npm:^2.0.0":
+  version: 2.0.0
+  resolution: "insert-css@npm:2.0.0"
+  checksum: c510411fc2df6fd5106a3bc771417b3ea07ebfefa2c0e360b0901c37d8d3f5de7dc9a78a7c949433ac6875f661a7a6290b71f411b8594284c097fa1fa2a35a35
   languageName: node
   linkType: hard
 
@@ -36045,7 +36117,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-is@npm:^17.0.1":
+"react-is@npm:^17.0.1, react-is@npm:^17.0.2":
   version: 17.0.2
   resolution: "react-is@npm:17.0.2"
   checksum: 9d6d111d8990dc98bc5402c1266a808b0459b5d54830bbea24c12d908b536df7883f268a7868cfaedde3dd9d4e0d574db456f84d2e6df9c4526f99bb4b5344d8
@@ -36958,6 +37030,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-use-set@npm:^1.0.0":
+  version: 1.0.0
+  resolution: "react-use-set@npm:1.0.0"
+  peerDependencies:
+    react: ">=16.8.0"
+  checksum: ffdd7958450c0eb6adae186ebb88118c4caf400f46204f95c548785be6fd5d6d46f25903d3ea660a1795bea92dbe147546732dbfb9ff465e32d5cec3eb3959a1
+  languageName: node
+  linkType: hard
+
 "react-virtualized-auto-sizer@npm:1.0.20":
   version: 1.0.20
   resolution: "react-virtualized-auto-sizer@npm:1.0.20"
@@ -36988,6 +37069,19 @@ __metadata:
     react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
     react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
   checksum: cefa232f4f37269d292529ef15780fb108123d6bb5beee19eeac657e75cf8d4664be66f2da04baf0cb1bc64c5ab3d83a88199c3358f023b78940acd37b0673b2
+  languageName: node
+  linkType: hard
+
+"react-window@npm:^1.8.8":
+  version: 1.8.10
+  resolution: "react-window@npm:1.8.10"
+  dependencies:
+    "@babel/runtime": ^7.0.0
+    memoize-one: ">=3.1.1 <6"
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+  checksum: e8830f32e3ad4bf91af9cdc5cead84148c7694ce6abd9fdb447fb609da6cd4bbd0bbc75ff985f78828f4bbbd3ba4cbc98235cc9c056b5e5787578518f7fafbb9
   languageName: node
   linkType: hard
 
@@ -38158,6 +38252,51 @@ __metadata:
   languageName: node
   linkType: hard
 
+"rsuite-table@npm:^5.18.3":
+  version: 5.18.3
+  resolution: "rsuite-table@npm:5.18.3"
+  dependencies:
+    "@babel/runtime": ^7.12.5
+    "@juggle/resize-observer": ^3.3.1
+    "@rsuite/icons": ^1.0.0
+    classnames: ^2.3.1
+    dom-lib: ^3.1.3
+    lodash: ^4.17.21
+    react-is: ^17.0.2
+  peerDependencies:
+    prop-types: ^15.7.2
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: 4639a3eecaa3a1e38f362403cf5e89617d95eb60908b7c2968bdf4fb81192b517cb1ee3e1cce78485ffe1dc7aabdac8f25ca0cc171df1440b11412fd1dae4709
+  languageName: node
+  linkType: hard
+
+"rsuite@npm:5.68.0":
+  version: 5.68.0
+  resolution: "rsuite@npm:5.68.0"
+  dependencies:
+    "@babel/runtime": ^7.20.1
+    "@juggle/resize-observer": ^3.4.0
+    "@rsuite/icons": ^1.0.2
+    "@types/lodash": ^4.14.184
+    "@types/prop-types": ^15.7.5
+    "@types/react-window": ^1.8.5
+    classnames: ^2.3.1
+    date-fns: ^2.29.3
+    dom-lib: ^3.3.1
+    lodash: ^4.17.11
+    prop-types: ^15.8.1
+    react-use-set: ^1.0.0
+    react-window: ^1.8.8
+    rsuite-table: ^5.18.3
+    schema-typed: ^2.2.2
+  peerDependencies:
+    react: ">=16.8.0"
+    react-dom: ">=16.8.0"
+  checksum: f192fd4e4d838b6d8ad361ad260d982b0ce691edcbb9bc714390f52638468c7a807f3427fd7c3ba43dbb17c0f7fe8d137a63efa853730dee6e276691ed91258a
+  languageName: node
+  linkType: hard
+
 "rsvp@npm:^4.8.2":
   version: 4.8.5
   resolution: "rsvp@npm:4.8.5"
@@ -38413,6 +38552,16 @@ __metadata:
   dependencies:
     loose-envify: ^1.1.0
   checksum: d79192eeaa12abef860c195ea45d37cbf2bbf5f66e3c4dcd16f54a7da53b17788a70d109ee3d3dde1a0fd50e6a8fc171f4300356c5aee4fc0171de526bf35f8a
+  languageName: node
+  linkType: hard
+
+"schema-typed@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "schema-typed@npm:2.2.2"
+  dependencies:
+    get-value: ^3.0.1
+    set-value: ^4.1.0
+  checksum: 0a1f21e8f7b8435ae084ad8427717296b71e90a81a3b21348bd7081530fa67f1656f49772e442a4ebfb378c963a4fca462124c9b9692f11370d3de687a976d56
   languageName: node
   linkType: hard
 

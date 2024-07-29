@@ -255,6 +255,7 @@
   "common.incentives.pool.tvl": "Pool TVL",
   "common.incentives.total.program.rewards": "Total program rewards",
   "common.incentives.token.reward": "Token reward",
+  "common.incentives.create.button": "Create incentive",
   "common.incentives.noresults": "No results",
   "common.incentives.try.again": "Sorry, we have no active or coming incentives at this time. Please try again later.",
   "common.create.incentives.select.network.title": "Select Network",
