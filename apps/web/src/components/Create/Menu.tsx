@@ -23,8 +23,8 @@ const StyledMenu = styled.div`
   justify-content: center;
   align-items: center;
   position: relative;
-  border: solid 1px;
-  border-radius: 10px;
+  border: solid 1px gray;
+  border-radius: 20px;
   text-align: left;
 `
 
@@ -33,8 +33,8 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   max-height: 350px;
   overflow: auto;
   background-color: ${({ theme }) => theme.surface1};
-  border: 1px solid;
-  border-radius: 10px;
+  border: 1px solid gray;
+  border-radius: 20px;
   padding: 6px, 12px;
   display: flex;
   flex-direction: column;
@@ -92,6 +92,7 @@ interface MenuProps {
     content: any
     external: boolean
   }[]
+  onNetworkTypeChange: (networkType: string) => void;
 }
 
 const ExternalMenuItem = styled(MenuItem)`
@@ -99,13 +100,18 @@ const ExternalMenuItem = styled(MenuItem)`
   text-decoration: none;
 `
 
-export const Menu = ({ modal, flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, menuItems, ...rest }: MenuProps) => {
+export const Menu = ({ modal, flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI, menuItems, onNetworkTypeChange, ...rest }: MenuProps) => {
   const node = useRef<HTMLDivElement>()
   const open = useModalIsOpen(modal)
   const toggle = useToggleModal(modal)
-  console.log("menuItems", menuItems)
   useOnClickOutside(node, open ? toggle : undefined)
   const ToggleElement = ToggleUI || StyledMenuIcon
+
+  const changeContent = (content: any) => {
+    const value = content.props.children[1].props.children.props.i18nKey;
+    onNetworkTypeChange(value);
+  };
+
 
   return (
     <StyledMenu ref={node as any} {...rest}>
@@ -114,11 +120,11 @@ export const Menu = ({ modal, flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI,
         <MenuFlyout flyoutAlignment={flyoutAlignment} onClick={toggle}>
           {menuItems.map(({ content, external }, i) =>
             external ? (
-              <ExternalMenuItem key={i}>
+              <ExternalMenuItem key={i} onClick={() => changeContent(content)}>
                 {content}
               </ExternalMenuItem>
             ) : (
-              <InternalMenuItem key={i}>
+              <InternalMenuItem key={i} onClick={() => changeContent(content)}>
                 {content}
               </InternalMenuItem>
             )

@@ -7,6 +7,7 @@ import { useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { useEffect, useState } from 'react'
 
 export enum NetworkType {
   Type1 = 'Evmos/Forge',
@@ -23,11 +24,11 @@ const PoolVersionItem = styled.div`
 
 const PoolOptionsButton = styled(ButtonGray) <{ $isOpen: boolean }>`
   flex: 1 1 auto;
-  padding: 6px 8px 6px 12px;
+  padding: 10px;
   width: 100%;
-  background-color: ${({ theme }) => theme.surface3};
+  background-color: ${({ theme }) => theme.surface1};
   border: none;
-  border-radius: 8px;
+  border-radius: 20px;
   gap: 6px;
 
   &:hover {
@@ -39,7 +40,7 @@ const PoolOptionsButton = styled(ButtonGray) <{ $isOpen: boolean }>`
     $isOpen &&
     css`
       background-color: ${({ theme }) => theme.surface1};
-      border: ${({ theme }) => `1.5px solid ${theme.neutral3}`};
+      border: ${({ theme }) => `1px solid ${theme.neutral3}`};
     `}
 `
 
@@ -85,17 +86,25 @@ const titles = {
 export default function NetworkTypeMenu({ networkType }: { networkType: NetworkType }) {
   const isOpen = useModalIsOpen(ApplicationModal.POOL_VERSION)
 
+  const [networkTypeValue, setNetworkTypeValue] = useState(networkType);
+
+  const handleNetworkTypeChange = (content: any) => {
+    if (content === "common.network.type1") setNetworkTypeValue(NetworkType.Type1);
+    else setNetworkTypeValue(NetworkType.Type2);
+  };
+
   return (
     <Menu
       modal={ApplicationModal.POOL_VERSION}
-      menuItems={[menuItems[networkType === NetworkType.Type1 ? NetworkType.Type2 : NetworkType.Type1]]}
+      menuItems={[menuItems[networkTypeValue === NetworkType.Type1 ? NetworkType.Type2 : NetworkType.Type1]]}
       flyoutAlignment={FlyoutAlignment.LEFT}
       ToggleUI={(props: any) => (
         <PoolOptionsButton {...props} $isOpen={isOpen}>
-          <ThemedText.BodyPrimary color="neutral2">{titles[networkType]}</ThemedText.BodyPrimary>
+          <ThemedText.BodyPrimary color="neutral2">{titles[networkTypeValue]}</ThemedText.BodyPrimary>
           <StyledChevron $isOpen={isOpen} />
         </PoolOptionsButton>
       )}
+      onNetworkTypeChange={handleNetworkTypeChange}
     />
   )
 }
