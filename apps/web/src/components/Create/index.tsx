@@ -6,6 +6,12 @@ import { ThemedText } from 'theme/components'
 import { ButtonLight } from "components/Button";
 import { useAccountDrawer } from "components/AccountDrawer/MiniPortfolio/hooks";
 import { useAccount } from 'hooks/useAccount'
+import NetworkTypeMenu from "./NetworkTypeMenu";
+
+export enum NetworkType {
+    Type1 = 'Evmos/Forge',
+    Type2 = 'Polygon/Uniswap'
+}
 
 const HeaderText = styled(ThemedText.DeprecatedLabel)`
   align-items: center;
@@ -80,6 +86,7 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.select.network.description" />
                 </ThemedText.DeprecatedBody>
+                <NetworkTypeMenu networkType={NetworkType.Type2} />
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>

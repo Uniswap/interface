@@ -1,0 +1,101 @@
+import { ButtonGray } from 'components/Button'
+import { Pool } from 'components/Icons/Pool'
+import { FlyoutAlignment, Menu } from './Menu'
+import { Trans } from 'i18n'
+import { ChevronDown } from 'react-feather'
+import { useModalIsOpen } from 'state/application/hooks'
+import { ApplicationModal } from 'state/application/reducer'
+import styled, { css } from 'styled-components'
+import { ThemedText } from 'theme/components'
+
+export enum NetworkType {
+  Type1 = 'Evmos/Forge',
+  Type2 = 'Polygon/Uniswap'
+}
+
+const PoolVersionItem = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  gap: 12px;
+`
+
+const PoolOptionsButton = styled(ButtonGray) <{ $isOpen: boolean }>`
+  flex: 1 1 auto;
+  padding: 6px 8px 6px 12px;
+  width: 100%;
+  background-color: ${({ theme }) => theme.surface3};
+  border: none;
+  border-radius: 8px;
+  gap: 6px;
+
+  &:hover {
+    background-color: ${({ theme, $isOpen }) => ($isOpen ? theme.surface1 : theme.surface3)};
+    opacity: 0.9;
+  }
+
+  ${({ $isOpen }) =>
+    $isOpen &&
+    css`
+      background-color: ${({ theme }) => theme.surface1};
+      border: ${({ theme }) => `1.5px solid ${theme.neutral3}`};
+    `}
+`
+
+const StyledChevron = styled(ChevronDown) <{ $isOpen: boolean }>`
+  transform: ${({ $isOpen }) => ($isOpen ? 'rotate(180deg)' : 'rotate(0deg)')};
+  transition: ${({
+  theme: {
+    transition: { duration, timing },
+  },
+}) => `transform ${duration.fast} ${timing.ease}`};
+`
+
+const menuItems = {
+  [NetworkType.Type2]: {
+    content: (
+      <PoolVersionItem>
+        <Pool width="20px" height="20px" />
+        <ThemedText.BodyPrimary lineHeight="24px" color="currentColor">
+          <Trans i18nKey="pool.v3" />
+        </ThemedText.BodyPrimary>
+      </PoolVersionItem>
+    ),
+    external: false,
+  },
+  [NetworkType.Type1]: {
+    content: (
+      <PoolVersionItem>
+        <Pool width="20px" height="20px" />
+        <ThemedText.BodyPrimary lineHeight="24px" color="currentColor">
+          <Trans i18nKey="pool.v2" />
+        </ThemedText.BodyPrimary>
+      </PoolVersionItem>
+    ),
+    external: false,
+  },
+}
+
+const titles = {
+  [NetworkType.Type1]: <Trans i18nKey="Evmos/Forge" />,
+  [NetworkType.Type2]: <Trans i18nKey="Polygon/Uniswap" />,
+}
+
+export default function NetworkTypeMenu({ networkType }: { networkType: NetworkType }) {
+  const isOpen = useModalIsOpen(ApplicationModal.POOL_VERSION)
+
+  return (
+    <Menu
+      modal={ApplicationModal.POOL_VERSION}
+      menuItems={[menuItems[networkType === NetworkType.Type1 ? NetworkType.Type1 : NetworkType.Type2]]}
+      flyoutAlignment={FlyoutAlignment.LEFT}
+      ToggleUI={(props: any) => (
+        <PoolOptionsButton {...props} $isOpen={isOpen}>
+          <ThemedText.BodyPrimary color="neutral2">{titles[networkType]}</ThemedText.BodyPrimary>
+          <StyledChevron $isOpen={isOpen} />
+        </PoolOptionsButton>
+      )}
+    />
+  )
+}
