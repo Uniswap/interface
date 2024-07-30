@@ -19,10 +19,12 @@ const StyledMenuIcon = styled(MenuIcon)`
 
 const StyledMenu = styled.div`
   display: flex;
+  width: 200px;
   justify-content: center;
   align-items: center;
   position: relative;
-  border: none;
+  border: solid 1px;
+  border-radius: 10px;
   text-align: left;
 `
 
@@ -31,11 +33,9 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   max-height: 350px;
   overflow: auto;
   background-color: ${({ theme }) => theme.surface1};
-  box-shadow: 0px 0px 1px rgba(0, 0, 0, 0.01), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04),
-    0px 24px 32px rgba(0, 0, 0, 0.01);
-  border: 1px solid ${({ theme }) => theme.surface3};
-  border-radius: 12px;
-  padding: 0.5rem;
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 6px, 12px;
   display: flex;
   flex-direction: column;
   font-size: 16px;
@@ -103,6 +103,7 @@ export const Menu = ({ modal, flyoutAlignment = FlyoutAlignment.RIGHT, ToggleUI,
   const node = useRef<HTMLDivElement>()
   const open = useModalIsOpen(modal)
   const toggle = useToggleModal(modal)
+  console.log("menuItems", menuItems)
   useOnClickOutside(node, open ? toggle : undefined)
   const ToggleElement = ToggleUI || StyledMenuIcon
 

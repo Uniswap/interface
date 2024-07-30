@@ -220,6 +220,8 @@
   "common.faq.vesting.description": "The vesting period over which accrued reward are vested is decided by the Incentives program creator. They could be vested over just a few days, which would have been enough to prevent the 1-tick strategy that has dominated previous incentive programs on v3. The vesting period could also be set for the full length of the incentives program, which should incentivize even wider liquidity across the price range.",
   "common.faq.more": "Read more",
   "common.faq.here": "here",
+  "common.network.type1": "Evmos/Forge",
+  "common.network.type2": "Polygon/Uniswap",
   "common.faq.fork.title": "Has this fork been audited?",
   "common.faq.fork.description": "Yes. The forked contract has gone through anaudit process with PeckShield, which was generously sponsored by Polygon, and covered under the grant programme for building on top of Uniswap v3 based AMMs, of which this project is the first recipient.",
   "common.faq.support.title": "How can I support this?",

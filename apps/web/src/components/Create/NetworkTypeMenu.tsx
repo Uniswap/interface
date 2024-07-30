@@ -58,7 +58,7 @@ const menuItems = {
       <PoolVersionItem>
         <Pool width="20px" height="20px" />
         <ThemedText.BodyPrimary lineHeight="24px" color="currentColor">
-          <Trans i18nKey="pool.v3" />
+          <Trans i18nKey="common.network.type2" />
         </ThemedText.BodyPrimary>
       </PoolVersionItem>
     ),
@@ -69,7 +69,7 @@ const menuItems = {
       <PoolVersionItem>
         <Pool width="20px" height="20px" />
         <ThemedText.BodyPrimary lineHeight="24px" color="currentColor">
-          <Trans i18nKey="pool.v2" />
+          <Trans i18nKey="common.network.type1" />
         </ThemedText.BodyPrimary>
       </PoolVersionItem>
     ),
@@ -78,8 +78,8 @@ const menuItems = {
 }
 
 const titles = {
-  [NetworkType.Type1]: <Trans i18nKey="Evmos/Forge" />,
-  [NetworkType.Type2]: <Trans i18nKey="Polygon/Uniswap" />,
+  [NetworkType.Type1]: <Trans i18nKey="common.network.type1" />,
+  [NetworkType.Type2]: <Trans i18nKey="common.network.type2" />,
 }
 
 export default function NetworkTypeMenu({ networkType }: { networkType: NetworkType }) {
@@ -88,7 +88,7 @@ export default function NetworkTypeMenu({ networkType }: { networkType: NetworkT
   return (
     <Menu
       modal={ApplicationModal.POOL_VERSION}
-      menuItems={[menuItems[networkType === NetworkType.Type1 ? NetworkType.Type1 : NetworkType.Type2]]}
+      menuItems={[menuItems[networkType === NetworkType.Type1 ? NetworkType.Type2 : NetworkType.Type1]]}
       flyoutAlignment={FlyoutAlignment.LEFT}
       ToggleUI={(props: any) => (
         <PoolOptionsButton {...props} $isOpen={isOpen}>
