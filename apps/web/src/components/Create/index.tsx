@@ -7,6 +7,8 @@ import { ButtonLight } from "components/Button";
 import { useAccountDrawer } from "components/AccountDrawer/MiniPortfolio/hooks";
 import { useAccount } from 'hooks/useAccount'
 import NetworkTypeMenu from "./NetworkTypeMenu";
+import DatePickerValue from './DatePickerValue';
+import dayjs from 'dayjs'
 
 export enum NetworkType {
     Type1 = 'Evmos/Forge',
@@ -76,6 +78,8 @@ display:block;
 export default function Create() {
     const account = useAccount()
     const accountDrawer = useAccountDrawer();
+    const today = dayjs().format("YYYY-MM-DD");
+    const tomorrow = dayjs().add(1, 'day').format("YYYY-MM-DD");
 
     return (
         <>
@@ -108,11 +112,6 @@ export default function Create() {
                 <ValueInput placeholder='Rewards amount' />
             </ResponsiveColumn>
 
-            {/* <DatePicker
-                placeholder="Select Date"
-                style={{ width: 200 }}
-            /> */}
-
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.set.pool.title" />
@@ -130,6 +129,8 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.set.incentives.description" />
                 </ThemedText.DeprecatedBody>
+                <DatePickerValue date={today} labelName="Start Date" />
+                <DatePickerValue date={tomorrow} labelName="End Date" />
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>

@@ -79,9 +79,6 @@ const InternalMenuItem = styled.div`
     cursor: pointer;
     text-decoration: none;
   }
-  > svg {
-    margin-right: 8px;
-  }
 `
 
 interface MenuProps {
