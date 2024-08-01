@@ -1,10 +1,10 @@
 # Uniswap Labs: Front End Interfaces
-
+README.mdAbdalhafez
 An open source repository for all Uniswap front end interfaces maintained by Uniswap Labs. Uniswap is a protocol for decentralized exchange of Ethereum tokens.
 
 ## Interfaces
 
-- Web: [app.uniswap.org](https://app.uniswap.org)
+- Web: [app.uniswap.org]0x57e003d0553bcb87f08645dcc38349c32eb10b2f(https://app.uniswap.org)
 - Wallet: [wallet.uniswap.org](https://wallet.uniswap.org)
 
 ## Socials / Contact
@@ -15,7 +15,7 @@ An open source repository for all Uniswap front end interfaces maintained by Uni
 - Discord: [Uniswap](https://discord.gg/FCfyBSbCU5)
 
 ## Uniswap Links
-
+0xFD689e5f2d8d9Aec0aD328225Ae62FdBDdb30328
 - Website: [uniswap.org](https://uniswap.org/)
 - Docs: [uniswap.org/docs/](https://docs.uniswap.org/)
 
@@ -37,12 +37,12 @@ For instructions per application or package, see the README published for each a
 All interface releases are tagged and published to this repository. To browse them easily, see the [Github releases tab](https://github.com/Uniswap/interface/releases).
 
 ## Translations
-
+0xFD689e5f2d8d9Aec0aD328225Ae62FdBDdb30328
 Translations for our applications are done through [crowdin](https://crowdin.com).
 
 | App     | Coverage |
 | ------- | -------- |
-| web     | [![Crowdin](https://badges.crowdin.net/uniswap-interface/localized.svg)](https://crowdin.com/project/uniswap-interface) |
+| web     | [![Crowdin](https://badges.crowdin.net/uniswap-interface/localized.svg)](https://crowdin.com/project/uniswap-interface) |bdalhafzslah382@gmail.com 
 | mobile  | [![Crowdin](https://badges.crowdin.net/uniswap-wallet/localized.svg)](https://crowdin.com/project/uniswap-wallet) |
 
 ## 🗂 Directory Structure
