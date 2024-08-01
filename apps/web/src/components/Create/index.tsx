@@ -9,6 +9,7 @@ import { useAccount } from 'hooks/useAccount'
 import NetworkTypeMenu from "./NetworkTypeMenu";
 import DatePickerValue from './DatePickerValue';
 import dayjs from 'dayjs'
+import TimePickerValue from './TimePickerValue';
 
 export enum NetworkType {
     Type1 = 'Evmos/Forge',
@@ -81,6 +82,9 @@ export default function Create() {
     const today = dayjs().format("YYYY-MM-DD");
     const tomorrow = dayjs().add(1, 'day').format("YYYY-MM-DD");
 
+    const startTime = "Start Time";
+    const endTime = "End TIme";
+
     return (
         <>
             <ResponsiveColumn>
@@ -130,7 +134,9 @@ export default function Create() {
                     <Trans i18nKey="common.create.incentives.set.incentives.description" />
                 </ThemedText.DeprecatedBody>
                 <DatePickerValue date={today} labelName="Start Date" />
+                <TimePickerValue labelName={startTime} />
                 <DatePickerValue date={tomorrow} labelName="End Date" />
+                <TimePickerValue labelName={endTime} />
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
