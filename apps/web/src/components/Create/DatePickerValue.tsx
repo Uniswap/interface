@@ -15,11 +15,39 @@ export default function DatePickerValue({ date, labelName }: DateValueProps) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker', 'DatePicker']}>
+      <DemoContainer components={['DatePicker', 'DatePicker']} sx={{ borderRadius: "20px", borderColor: 'black' }}>
         <DatePicker
           label={labelName}
           value={value}
           onChange={(newValue) => setValue(newValue)}
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              borderRadius: '20px',
+              '& fieldset': {
+                borderColor: 'gray',
+              },
+              '&:hover fieldset': {
+                borderColor: 'gray',
+              },
+              '&.Mui-focused fieldset': {
+                borderColor: '#FC72FF',
+                borderWidth: '1px',
+              },
+            },
+            '& .MuiInputBase-root': {
+              fontSize: '18px',
+              fontWeight: 485,
+              color: '#7D7D7D',
+            },
+            '& .MuiInputLabel-root': {
+              fontSize: '18px',
+              fontWeight: 485,
+              color: '#7D7D7D',
+            },
+            // '& .MuiInputBase-root': {
+            //   borderRadius: '12px', // This might also be needed to ensure the input part has the same border radius
+            // },
+          }}
         />
       </DemoContainer>
     </LocalizationProvider>
