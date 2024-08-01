@@ -43,6 +43,9 @@ export default function TimePickerValue({ labelName }: TimeValueProps) {
                             fontWeight: 485,
                             color: '#7D7D7D',
                         },
+                        '& .MuiSvgIcon-root': {
+                            color: '#7D7D7D',
+                        },
                         // '& .MuiInputBase-root': {
                         //   borderRadius: '12px', // This might also be needed to ensure the input part has the same border radius
                         // },

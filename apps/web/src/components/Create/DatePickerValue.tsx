@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { styled } from "@mui/system";
 import dayjs, { Dayjs } from 'dayjs';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
@@ -15,7 +16,7 @@ export default function DatePickerValue({ date, labelName }: DateValueProps) {
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
-      <DemoContainer components={['DatePicker', 'DatePicker']} sx={{ borderRadius: "20px", borderColor: 'black' }}>
+      <DemoContainer components={['DatePicker', 'DatePicker']}>
         <DatePicker
           label={labelName}
           value={value}
@@ -42,6 +43,9 @@ export default function DatePickerValue({ date, labelName }: DateValueProps) {
             '& .MuiInputLabel-root': {
               fontSize: '18px',
               fontWeight: 485,
+              color: '#7D7D7D',
+            },
+            '& .MuiSvgIcon-root': {
               color: '#7D7D7D',
             },
             // '& .MuiInputBase-root': {

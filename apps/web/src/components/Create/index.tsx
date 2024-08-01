@@ -72,8 +72,13 @@ const ValueInput = styled.input`
 
 const CustomP = styled.p`
 margin: 0px;
-font-size:16px;
-display:block;
+font-size: 16px;
+display: block;
+`
+const CustomDiv = styled.div`
+margin: 0px;
+gap: 12px;
+display:flex;
 `
 
 export default function Create() {
@@ -133,10 +138,15 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.set.incentives.description" />
                 </ThemedText.DeprecatedBody>
-                <DatePickerValue date={today} labelName="Start Date" />
-                <TimePickerValue labelName={startTime} />
-                <DatePickerValue date={tomorrow} labelName="End Date" />
-                <TimePickerValue labelName={endTime} />
+                <CustomDiv>
+                    <DatePickerValue date={today} labelName="Start Date" />
+                    <TimePickerValue labelName={startTime} />
+                </CustomDiv>
+                <CustomDiv>
+                    <DatePickerValue date={tomorrow} labelName="End Date" />
+                    <TimePickerValue labelName={endTime} />
+                </CustomDiv>
+
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
