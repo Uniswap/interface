@@ -9,7 +9,11 @@ import { useAccount } from 'hooks/useAccount'
 import NetworkTypeMenu from "./NetworkTypeMenu";
 import DatePickerValue from './DatePickerValue';
 import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc';
 import TimePickerValue from './TimePickerValue';
+import { useEffect, useState } from 'react';
+
+dayjs.extend(utc);
 
 export enum NetworkType {
     Type1 = 'Evmos/Forge',
@@ -79,16 +83,36 @@ const CustomDiv = styled.div`
 margin: 0px;
 gap: 12px;
 display:flex;
+align-items: center;
 `
 
 export default function Create() {
     const account = useAccount()
     const accountDrawer = useAccountDrawer();
-    const today = dayjs().format("YYYY-MM-DD");
-    const tomorrow = dayjs().add(1, 'day').format("YYYY-MM-DD");
+    const today = dayjs().utc().format("YYYY-MM-DD");
+    const tomorrow = dayjs().add(1, 'day').utc().format("YYYY-MM-DD");
 
-    const startTime = "Start Time";
-    const endTime = "End TIme";
+    const [startDate, setStartDate] = useState(today);
+    const [endDate, setEndDate] = useState(tomorrow);
+
+    const [startTime, setStartTime] = useState("12:00");
+    const [endTime, setEndTime] = useState("12:00");
+
+    const [startDateFormat, setStartDateFormat] = useState("");
+    const [endDateFormat, setEndDateFormat] = useState("");
+
+
+    useEffect(() => {
+        const formattedStartDate = dayjs(startDate).format("MMMM D, YYYY");
+        const formattedEndDate = dayjs(endDate).format("MMMM D, YYYY");
+        setStartDateFormat(formattedStartDate);
+        setEndDateFormat(formattedEndDate);
+    }, [startDate, endDate])
+
+    useEffect(() => {
+        console.log("startTime", startTime);
+        console.log("endTime", endTime);
+    }, [startTime, endTime])
 
     return (
         <>
@@ -139,12 +163,14 @@ export default function Create() {
                     <Trans i18nKey="common.create.incentives.set.incentives.description" />
                 </ThemedText.DeprecatedBody>
                 <CustomDiv>
-                    <DatePickerValue date={today} labelName="Start Date" />
-                    <TimePickerValue labelName={startTime} />
+                    <DatePickerValue date={today} labelName="Start Date" onDateChange={setStartDate} />
+                    <TimePickerValue labelName="Start Time" onTimeChange={setStartTime} />
+                    <CustomP>Starts on {startDateFormat} at {startTime}</CustomP>
                 </CustomDiv>
                 <CustomDiv>
-                    <DatePickerValue date={tomorrow} labelName="End Date" />
-                    <TimePickerValue labelName={endTime} />
+                    <DatePickerValue date={tomorrow} labelName="End Date" onDateChange={setEndDate} />
+                    <TimePickerValue labelName="End TIme" onTimeChange={setEndTime} />
+                    <CustomP>Ends on {endDateFormat} at {endTime}</CustomP>
                 </CustomDiv>
 
             </ResponsiveColumn>

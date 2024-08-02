@@ -4,13 +4,22 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { TimePicker } from '@mui/x-date-pickers/TimePicker';
+import { useEffect } from 'react';
 
 interface TimeValueProps {
     labelName: string
+    onTimeChange: (newDate: string) => void;
 }
 
-export default function TimePickerValue({ labelName }: TimeValueProps) {
+export default function TimePickerValue({ labelName, onTimeChange }: TimeValueProps) {
     const [value, setValue] = React.useState<Dayjs | null>(dayjs('2022-04-17T12:00'));
+
+    useEffect(() => {
+        if (value) {
+            console.log("value", value.format("HH:mm"));
+            onTimeChange(value.format("HH:mm"));
+        }
+    }, [value]);
 
     return (
         <LocalizationProvider dateAdapter={AdapterDayjs}>

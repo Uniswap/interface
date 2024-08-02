@@ -5,14 +5,22 @@ import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useEffect } from 'react';
 
 interface DateValueProps {
   date: string
   labelName: string
+  onDateChange: (newDate: string) => void;
 }
 
-export default function DatePickerValue({ date, labelName }: DateValueProps) {
+export default function DatePickerValue({ date, labelName, onDateChange }: DateValueProps) {
   const [value, setValue] = React.useState<Dayjs | null>(dayjs(date));
+
+  useEffect(() => {
+    if (value) {
+      onDateChange(value.format("YYYY-MM-DD")); // Call the function to update the parent state
+    }
+  }, [value]);
 
   return (
     <LocalizationProvider dateAdapter={AdapterDayjs}>
