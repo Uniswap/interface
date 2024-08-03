@@ -5,11 +5,13 @@ import { SendTokenTransactionInfo, TransactionDetails, TransactionType } from 'w
 export function SendSummaryItem({
   transaction,
   layoutElement,
+  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: SendTokenTransactionInfo }
 }): JSX.Element {
   return (
     <TransferTokenSummaryItem
+      index={index}
       layoutElement={layoutElement}
       otherAddress={transaction.typeInfo.recipient}
       transaction={transaction}

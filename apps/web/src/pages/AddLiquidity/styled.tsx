@@ -1,6 +1,6 @@
 import { AutoColumn } from 'components/Column'
 import { Input } from 'components/NumericalInput'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 
 export const Wrapper = styled.div`
   position: relative;

@@ -1,6 +1,6 @@
 import { LoadingRows as BaseLoadingRows } from 'components/Loader/styled'
+import styled from 'lib/styled-components'
 import { Text } from 'rebass'
-import styled from 'styled-components'
 
 export const Wrapper = styled.div`
   position: relative;

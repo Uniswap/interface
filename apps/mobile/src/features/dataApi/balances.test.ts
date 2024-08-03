@@ -35,10 +35,10 @@ describe(useBalances, () => {
     const { resolvers } = queryResolvers({
       portfolios: () => [Portfolio],
     })
-    const { result } = renderHook(
-      () => useBalances(balances.map(({ currencyInfo: { currencyId } }) => currencyId)),
-      { preloadedState, resolvers }
-    )
+    const { result } = renderHook(() => useBalances(balances.map(({ currencyInfo: { currencyId } }) => currencyId)), {
+      preloadedState,
+      resolvers,
+    })
 
     await waitFor(() => {
       // The response contains only the first currency as the second one is not in the portfolio

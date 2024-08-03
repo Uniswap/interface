@@ -2,10 +2,10 @@ import { AppleLogo } from 'components/Icons/AppleLogo'
 import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import Row from 'components/Row'
 import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { Wiggle } from 'pages/Landing/components/animations'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { useTheme } from 'styled-components'
 import { Text } from 'ui/src'
 
 const StyledButton = styled.button`

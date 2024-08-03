@@ -2,7 +2,8 @@ import { SEARCH_RESULT_HEADER_KEY } from 'src/components/explore/search/constant
 import { SearchResultOrHeader } from 'src/components/explore/search/types'
 import { Chain, ExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { NFTCollectionSearchResult, SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
+import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { NFTCollectionSearchResult, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 import { searchResultId } from 'wallet/src/features/search/searchHistorySlice'
 
 const MAX_TOKEN_RESULTS_COUNT = 4

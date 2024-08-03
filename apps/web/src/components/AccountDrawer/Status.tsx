@@ -1,3 +1,4 @@
+import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
 import Column from 'components/Column'
 import { ENS } from 'components/Icons/ENS'
 import { EthMini } from 'components/Icons/EthMini'
@@ -5,11 +6,10 @@ import StatusIcon from 'components/Identicon/StatusIcon'
 import Popover from 'components/Popover'
 import Row from 'components/Row'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import styled from 'lib/styled-components'
 import { useRef, useState } from 'react'
 import { MoreHorizontal } from 'react-feather'
-import styled from 'styled-components'
-import { ClickableStyle, CopyHelper, EllipsisStyle, ThemedText } from 'theme/components'
-import { Unitag } from 'ui/src/components/icons'
+import { ClickableStyle, CopyHelper, ThemedText } from 'theme/components'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const Container = styled.div`
@@ -25,13 +25,6 @@ const Identifiers = styled.div`
   user-select: none;
   overflow: hidden;
   flex: 1 1 auto;
-`
-const IdentifierText = styled.span`
-  ${EllipsisStyle}
-  max-width: 120px;
-  @media screen and (min-width: 1440px) {
-    max-width: 180px;
-  }
 `
 const SecondaryIdentifiersContainer = styled(Row)`
   position: relative;
@@ -80,7 +73,7 @@ function SecondaryIdentifier({
   )
 }
 
-function SecondaryIdentifiers({
+export function SecondaryIdentifiers({
   account,
   uniswapUsername,
   ensUsername,
@@ -130,26 +123,19 @@ export function Status({
   account,
   ensUsername,
   uniswapUsername,
+  showAddressCopy = true,
 }: {
   account: string
   ensUsername: string | null
   uniswapUsername?: string
+  showAddressCopy?: boolean
 }) {
   return (
     <Container data-testid="account-drawer-status">
       <StatusIcon size={40} />
       <Identifiers>
         <ThemedText.SubHeader>
-          <CopyHelper
-            iconSize={14}
-            iconPosition="right"
-            toCopy={uniswapUsername ? uniswapUsername + '.uni.eth' : ensUsername ? ensUsername : account}
-          >
-            <Row gap="2px">
-              <IdentifierText>{uniswapUsername ?? ensUsername ?? shortenAddress(account)}</IdentifierText>
-              {uniswapUsername && <Unitag size={18} />}
-            </Row>
-          </CopyHelper>
+          <AddressDisplay enableCopyAddress={showAddressCopy} address={account} />
         </ThemedText.SubHeader>
         {(uniswapUsername || ensUsername) && (
           <SecondaryIdentifiers account={account} ensUsername={ensUsername} uniswapUsername={uniswapUsername} />

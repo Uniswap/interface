@@ -1,8 +1,8 @@
 import { Group } from '@visx/group'
 import { LinePath } from '@visx/shape'
 import { CurveFactory } from 'd3'
+import { useTheme } from 'lib/styled-components'
 import React, { ReactNode } from 'react'
-import { useTheme } from 'styled-components'
 
 interface LineChartProps<T> {
   data: T[]

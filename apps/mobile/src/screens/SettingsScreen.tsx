@@ -5,7 +5,6 @@ import { Image, ListRenderItemInfo, SectionList, StyleSheet } from 'react-native
 import { FadeInDown, FadeOutUp } from 'react-native-reanimated'
 import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
-import { useAppDispatch } from 'src/app/hooks'
 import {
   OnboardingStackNavigationProp,
   SettingsStackNavigationProp,
@@ -75,7 +74,7 @@ import {
 
 export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const colors = useSporeColors()
   const insets = useDeviceInsets()
   const { deviceSupportsBiometrics } = useBiometricContext()

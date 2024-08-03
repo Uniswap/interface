@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { openModal } from 'src/features/modals/modalSlice'
 import { iconSizes } from 'ui/src/theme'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
@@ -14,7 +14,7 @@ import { formWCNotificationTitle } from 'wallet/src/features/notifications/utils
 
 export function WCNotification({ notification }: { notification: WalletConnectNotification }): JSX.Element {
   const { imageUrl, chainId, address, event, hideDelay, dappName } = notification
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const validChainId = toSupportedChainId(chainId)
   const title = formWCNotificationTitle(notification)
 

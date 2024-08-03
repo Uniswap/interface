@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
+import { useAppSelector } from 'src/app/hooks'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeAllModals } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
@@ -35,7 +36,7 @@ interface OtpStateApiResponse {
 export function ScantasticModal(): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   // Use the first mnemonic account because zero-balance mnemonic accounts will fail to retrieve the mnemonic from rnEthers
   const account = useSignerAccounts().sort(

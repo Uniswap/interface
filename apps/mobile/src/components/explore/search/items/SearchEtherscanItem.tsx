@@ -1,15 +1,16 @@
 import { default as React } from 'react'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { openUri } from 'uniswap/src/utils/linking'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { EtherscanSearchResult } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
-import { ExplorerDataType, getExplorerLink, openUri } from 'wallet/src/utils/linking'
+import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
 
 type SearchEtherscanItemProps = {
   etherscanResult: EtherscanSearchResult
@@ -17,7 +18,7 @@ type SearchEtherscanItemProps = {
 
 export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProps): JSX.Element {
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const { address } = etherscanResult
 
@@ -40,7 +41,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
       testID={TestID.SearchEtherscanItem}
       onPress={onPressViewEtherscan}
     >
-      <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between" px="$spacing8" py="$spacing12">
+      <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between" px="$spacing24" py="$spacing12">
         <Flex centered row gap="$spacing12">
           <EtherscanIcon size="$icon.40" />
           <Text variant="body1">{shortenAddress(address)}</Text>

@@ -1,6 +1,6 @@
 import useENSAvatar from 'hooks/useENSAvatar'
+import styled from 'lib/styled-components'
 import { useCallback, useState } from 'react'
-import styled from 'styled-components'
 
 const StyledAvatarIcon = styled.div<{ iconSize: number }>`
   height: ${({ iconSize }) => `${iconSize}px`};

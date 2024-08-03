@@ -5,9 +5,9 @@ import { Language } from 'ui/src/components/icons'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { opacify } from 'uniswap/src/utils/colors'
 import { isAndroid } from 'utilities/src/platform'
 import { SettingsLanguageModalProps } from 'wallet/src/components/settings/language/SettingsLanguageModalProps'
-import { opacify } from 'wallet/src/utils/colors'
 
 const openLanguageSettings = async (): Promise<void> => {
   if (isAndroid) {

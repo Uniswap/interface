@@ -34,6 +34,7 @@ export function MenuContent({ items, onClose, ...rest }: MenuContentProps & Flex
           key={index}
           hoverable
           borderRadius="$rounded12"
+          disabledStyle={{ opacity: 0.6, cursor: 'default' }}
           onPress={(e) => handleOnPress(e, onPress)}
           {...touchableProps}
         >

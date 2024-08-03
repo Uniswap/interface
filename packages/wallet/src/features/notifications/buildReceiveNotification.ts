@@ -1,4 +1,4 @@
-import { AssetType } from 'wallet/src/entities/assets'
+import { AssetType } from 'uniswap/src/entities/assets'
 import {
   AppNotificationType,
   ReceiveCurrencyTxNotification,

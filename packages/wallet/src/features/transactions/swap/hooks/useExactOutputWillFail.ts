@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 
 export function hasTokenFee(currencyInfo: Maybe<CurrencyInfo>): {
   hasBuyTax: boolean

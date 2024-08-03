@@ -6,7 +6,7 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { sleep } from 'utilities/src/time/timing'
-import { fetchMoonpayTransaction } from 'wallet/src/features/fiatOnRamp/api'
+import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import {
   addTransaction,
@@ -42,12 +42,15 @@ const {
 
 const { mockProvider, mockProviderManager } = getTxProvidersMocks(ethersTxReceipt)
 
+const ACTIVE_ACCOUNT_ADDRESS = '0x000000000000000000000000000000000000000001'
+
 describe(transactionWatcher, () => {
   it('Triggers watchers successfully', () => {
     const approveTxDetailsPending = transactionDetails({
       typeInfo: approveTransactionInfo(),
       status: TransactionStatus.Pending,
       hash: faker.datatype.uuid(),
+      from: ACTIVE_ACCOUNT_ADDRESS,
     })
 
     return expectSaga(transactionWatcher, { apolloClient: mockApolloClient })
@@ -62,6 +65,7 @@ describe(transactionWatcher, () => {
             },
           },
         },
+        wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
       })
       .provide([
         [call(getProvider, UniverseChainId.Mainnet), mockProvider],
@@ -104,6 +108,9 @@ describe(watchTransaction, () => {
       transaction: txDetailsPending,
       apolloClient: mockApolloClient,
     })
+      .withState({
+        wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
+      })
       .provide([[call(getProvider, chainId), receiptProvider]])
       .put(finalizeTransaction(finalizedTxAction.payload))
       .silentRun()
@@ -121,6 +128,9 @@ describe(watchTransaction, () => {
       transaction: txDetailsPending,
       apolloClient: mockApolloClient,
     })
+      .withState({
+        wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
+      })
       .provide([
         [call(getProvider, chainId), receiptProvider],
         [call(attemptCancelTransaction, txDetailsPending, cancelRequest), true],
@@ -142,6 +152,9 @@ describe(watchTransaction, () => {
       transaction: txDetailsPending,
       apolloClient: mockApolloClient,
     })
+      .withState({
+        wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
+      })
       .provide([
         [call(getProvider, chainId), receiptProvider],
         [call(waitForTxnInvalidated, chainId, id, options.request.nonce), true],
@@ -158,7 +171,7 @@ describe(watchFiatOnRampTransaction, () => {
     return (
       expectSaga(watchFiatOnRampTransaction, txDetailsPending)
         .provide([
-          [call(fetchMoonpayTransaction, txDetailsPending), staleTx],
+          [call(fetchFiatOnRampTransaction, txDetailsPending, false), staleTx],
           [matchers.call.fn(sendAnalyticsEvent), undefined],
         ])
         .put(
@@ -185,7 +198,7 @@ describe(watchFiatOnRampTransaction, () => {
         .provide([
           {
             call(effect): TransactionDetails | undefined {
-              if (effect.fn === fetchMoonpayTransaction) {
+              if (effect.fn === fetchFiatOnRampTransaction) {
                 switch (fetchCalledCount++) {
                   case 0:
                   case 1:
@@ -197,9 +210,9 @@ describe(watchFiatOnRampTransaction, () => {
               }
             },
           },
-          [delay(PollingInterval.Normal), Promise.resolve(() => undefined)],
+          [delay(PollingInterval.Fast), Promise.resolve(() => undefined)],
         ])
-        .delay(PollingInterval.Normal)
+        .delay(PollingInterval.Fast)
         // only called once
         .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))
         .silentRun()
@@ -217,7 +230,7 @@ describe(watchFiatOnRampTransaction, () => {
         .provide([
           {
             call(effect): TransactionDetails | undefined {
-              if (effect.fn === fetchMoonpayTransaction) {
+              if (effect.fn === fetchFiatOnRampTransaction) {
                 switch (fetchCalledCount++) {
                   case 0:
                   case 1:
@@ -243,7 +256,7 @@ describe(watchFiatOnRampTransaction, () => {
     const confirmedTx = { ...txDetailsPending, status: TransactionStatus.Success }
     return expectSaga(watchFiatOnRampTransaction, txDetailsPending)
       .provide([
-        [call(fetchMoonpayTransaction, txDetailsPending), confirmedTx],
+        [call(fetchFiatOnRampTransaction, txDetailsPending, false), confirmedTx],
         [matchers.call.fn(sendAnalyticsEvent), undefined],
       ])
       .put(transactionActions.upsertFiatOnRampTransaction(confirmedTx))

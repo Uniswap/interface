@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { Button, Flex, Text, useIsDarkMode } from 'ui/src'
@@ -9,14 +10,13 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch } from 'wallet/src/state'
 
 const WALLET_IMAGE_ASPECT_RATIO = 327 / 215
 
 export function ViewOnlyExplainerModal(): JSX.Element {
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddress()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
   const isDarkMode = useIsDarkMode()
 

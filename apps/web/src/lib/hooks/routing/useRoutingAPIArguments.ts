@@ -4,7 +4,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
-import { Experiments } from 'uniswap/src/features/gating/experiments'
+import { ArbitrumXV2OpenOrderProperties, Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useExperimentGroupName, useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -41,9 +41,21 @@ export function useRoutingAPIArguments({
   const xv2ArbitrumEnabled =
     useExperimentGroupName(Experiments.ArbitrumXV2OpenOrders) === ArbitrumXV2ExperimentGroup.Test
   const isXv2Arbitrum = tokenIn?.chainId === UniverseChainId.ArbitrumOne && xv2ArbitrumEnabled
-  const priceImprovementBps = useExperimentValue(Experiments.ArbitrumXV2OpenOrders, 'priceImprovementBps', 0)
-  const forceOpenOrders = useExperimentValue(Experiments.ArbitrumXV2OpenOrders, 'forceOpenOrders', false)
-  const deadlineBufferSecs = useExperimentValue(Experiments.ArbitrumXV2OpenOrders, 'deadlineBufferSecs', 30)
+  const priceImprovementBps = useExperimentValue(
+    Experiments.ArbitrumXV2OpenOrders,
+    ArbitrumXV2OpenOrderProperties.PriceImprovementBps,
+    0,
+  )
+  const forceOpenOrders = useExperimentValue(
+    Experiments.ArbitrumXV2OpenOrders,
+    ArbitrumXV2OpenOrderProperties.ForceOpenOrders,
+    false,
+  )
+  const deadlineBufferSecs = useExperimentValue(
+    Experiments.ArbitrumXV2OpenOrders,
+    ArbitrumXV2OpenOrderProperties.DeadlineBufferSecs,
+    30,
+  )
   // Don't enable fee logic if this is a quote for pricing
   const sendPortionEnabled = routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE
 

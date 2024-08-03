@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import React from 'react'
 import { useAppSelector } from 'src/app/hooks'
+import { renderHeaderBackButton, renderHeaderBackImage } from 'src/app/navigation/components'
 import {
   AppStackParamList,
   AppStackScreenProp,
@@ -12,7 +13,6 @@ import {
   SettingsStackParamList,
   UnitagStackParamList,
 } from 'src/app/navigation/types'
-import { BackButton } from 'src/components/buttons/BackButton'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { FiatOnRampProvider } from 'src/features/fiatOnRamp/FiatOnRampContext'
@@ -65,7 +65,6 @@ import { SettingsWalletManageConnection } from 'src/screens/SettingsWalletManage
 import { TokenDetailsScreen } from 'src/screens/TokenDetailsScreen'
 import { WebViewScreen } from 'src/screens/WebViewScreen'
 import { useDeviceInsets, useSporeColors } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -201,8 +200,6 @@ export function FiatOnRampStackNavigator(): JSX.Element {
   )
 }
 
-const renderHeaderBackButton = (): JSX.Element => <BackButton color="$neutral2" size={28} />
-
 export function OnboardingStackNavigator(): JSX.Element {
   const colors = useSporeColors()
   const seedPhraseRefactorEnabled = useFeatureFlag(FeatureFlags.SeedPhraseRefactorNative)
@@ -216,7 +213,8 @@ export function OnboardingStackNavigator(): JSX.Element {
         <OnboardingStack.Group
           screenOptions={{
             headerTitle: '',
-            headerBackTitleVisible: false,
+            gestureEnabled: true,
+            headerBackVisible: false,
             headerLeft: renderHeaderBackButton,
             headerTransparent: true,
             headerTintColor: colors.neutral2.val,
@@ -286,8 +284,6 @@ export function OnboardingStackNavigator(): JSX.Element {
     </OnboardingContextProvider>
   )
 }
-
-const renderHeaderBackImage = (): JSX.Element => <RotatableChevron color="$neutral2" height={28} width={28} />
 
 export function UnitagStackNavigator(): JSX.Element {
   const colors = useSporeColors()

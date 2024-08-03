@@ -28,7 +28,6 @@ export function SelectTokenButton({
   loading,
   iconSize = iconSizes.icon24,
   chevronDirection = 'end',
-  backgroundColor,
   testID,
 }: SelectTokenButtonProps): JSX.Element {
   const textColor = !amountReady || disabled || loading ? '$neutral3' : '$neutral2'
@@ -36,15 +35,13 @@ export function SelectTokenButton({
   return (
     <TouchableArea
       hapticFeedback
-      backgroundColor={backgroundColor ?? 'unset'}
       borderRadius="$roundedFull"
       disabled={disabled}
-      px="$spacing8"
-      py="$spacing4"
+      p="$spacing4"
       testID={testID}
       onPress={onPress}
     >
-      <Flex centered row flexDirection="row" gap="$none" p="$spacing4">
+      <Flex centered row flexDirection="row" gap="$none" pr="$spacing4">
         {loading ? (
           <SpinningLoader />
         ) : (

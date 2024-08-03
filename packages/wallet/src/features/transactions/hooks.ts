@@ -1,6 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
+import { useDispatch } from 'react-redux'
+import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { ensureLeading0x } from 'uniswap/src/utils/addresses'
 import { areCurrencyIdsEqual, buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -12,7 +14,6 @@ import {
   createWrapFormFromTxDetails,
 } from 'wallet/src/features/transactions/swap/createSwapFormFromTxDetails'
 import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
-import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import {
   QueuedOrderStatus,
   TransactionDetails,
@@ -22,7 +23,7 @@ import {
   isFinalizedTx,
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { useAppSelector } from 'wallet/src/state'
 
 type HashToTxMap = Map<string, TransactionDetails>
 
@@ -158,7 +159,7 @@ export function useMergeLocalAndRemoteTransactions(
   address: Address,
   remoteTransactions: TransactionDetails[] | undefined,
 ): TransactionDetails[] | undefined {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const localTransactions = useSelectAddressTransactions(address)
 
   // Merge local and remote txs into one array and reconcile data discrepancies

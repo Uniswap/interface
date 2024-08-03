@@ -51,7 +51,7 @@ describe(walletReducer, () => {
 
   it('throws when setting unknown active account', () => {
     expect(() => store.dispatch(setAccountAsActive(ACCOUNT_1.address))).toThrow(
-      `Cannot activate missing account ${ACCOUNT_1.address}`
+      `Cannot activate missing account ${ACCOUNT_1.address}`,
     )
   })
 
@@ -89,13 +89,13 @@ describe(walletReducer, () => {
 
   it('throws when removing unknown active account', () => {
     expect(() => store.dispatch(removeAccounts([ACCOUNT_1.address]))).toThrow(
-      `Cannot remove missing account ${ACCOUNT_1.address}`
+      `Cannot remove missing account ${ACCOUNT_1.address}`,
     )
   })
 
   it('throws when removing unknown active accounts', () => {
     expect(() => store.dispatch(removeAccounts([ACCOUNT_1.address, ACCOUNT_2.address]))).toThrow(
-      `Cannot remove missing account ${ACCOUNT_1.address}`
+      `Cannot remove missing account ${ACCOUNT_1.address}`,
     )
   })
 })

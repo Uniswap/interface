@@ -1,0 +1,646 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`UniswapWalletOptions Test Download wallet option should be visible if extension is not detected and launch flag is true 1`] = `
+<DocumentFragment>
+  .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c4 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c10 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c2 {
+  max-height: 72px;
+  width: 100%;
+  background: #FFFFFF;
+  border-radius: 16px;
+  position: relative;
+}
+
+.c3 {
+  background: url(/images/extension_promo/background_connector.png);
+  background-repeat: no-repeat;
+  background-size: cover;
+  opacity: 1;
+  max-height: 72px;
+  width: 100%;
+  height: 100%;
+  border-radius: 16px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 0;
+  -webkit-transition: opacity 125ms ease-in-out;
+  transition: opacity 125ms ease-in-out;
+}
+
+.c6 {
+  padding: 16px;
+  gap: 12px;
+  border-radius: 16px;
+  border: 1px solid #22222212;
+  overflow: hidden;
+  max-height: 72px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.c6:hover {
+  background: #22222212;
+}
+
+.c7 {
+  height: 40px;
+  width: 40px;
+  border-radius: 10px;
+  fill: linear-gradient(0deg,#fff1ff 0%,rgba(255,255,255,0) 100%),#fffbff;
+  -webkit-filter: drop-shadow(0px 1.179px 3.537px rgba(255,117,249,0.24));
+  filter: drop-shadow(0px 1.179px 3.537px rgba(255,117,249,0.24));
+}
+
+<span
+    class="t_light is_inversed _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        >
+          <div
+            class="c2"
+            data-testid="download-uniswap-wallet"
+          >
+            <div
+              class="c3"
+            />
+            <div
+              class="c4 c5 c6"
+            >
+              <img
+                alt="uniswap-app-icon"
+                class="c7"
+                src="uniswap-wallet-icon.png"
+              />
+              <div
+                class="c4 c8"
+              >
+                <div
+                  class="c9"
+                >
+                  <span
+                    class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-137133827 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                    data-disable-theme="true"
+                  >
+                    Get Uniswap Wallet
+                  </span>
+                  <span
+                    class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-137133827 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                    data-disable-theme="true"
+                  >
+                    Available on iOS, Android, and Chrome
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c4 c10 c6"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(255, 239, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
+              viewBox="0 0 22 22"
+            >
+              <path
+                d="M6.92609 1.83331H3.87053C3.33028 1.83331 2.81215 2.04793 2.43013 2.42995C2.04811 2.81197 1.8335 3.33009 1.8335 3.87035V6.92591M20.1668 6.92591V3.87035C20.1668 3.33009 19.9522 2.81197 19.5702 2.42995C19.1882 2.04793 18.67 1.83331 18.1298 1.83331H15.0742M15.0742 20.1666H18.1298C18.67 20.1666 19.1882 19.952 19.5702 19.57C19.9522 19.188 20.1668 18.6699 20.1668 18.1296V15.0741M1.8335 15.0741V18.1296C1.8335 18.6699 2.04811 19.188 2.43013 19.57C2.81215 19.952 3.33028 20.1666 3.87053 20.1666H6.92609M12.1829 12.1827V14.5483M12.1829 16.9139H14.5484V12.1827M14.5482 13.3654H16.9138M16.914 15.7311V16.9139M5.67739 5.08581H9.22578C9.5524 5.08581 9.81717 5.35059 9.81717 5.67721V9.22559C9.81717 9.55221 9.5524 9.81699 9.22578 9.81699H5.67739C5.35077 9.81699 5.08599 9.55221 5.08599 9.22559V5.67721C5.08599 5.35059 5.35077 5.08581 5.67739 5.08581ZM5.67739 12.1827H9.22578C9.5524 12.1827 9.81717 12.4475 9.81717 12.7741V16.3225C9.81717 16.6491 9.5524 16.9139 9.22578 16.9139H5.67739C5.35077 16.9139 5.08599 16.6491 5.08599 16.3225V12.7741C5.08599 12.4475 5.35077 12.1827 5.67739 12.1827ZM12.7743 5.08581H16.3226C16.6493 5.08581 16.914 5.35059 16.914 5.67721V9.22559C16.914 9.55221 16.6493 9.81699 16.3226 9.81699H12.7743C12.4476 9.81699 12.1829 9.55221 12.1829 9.22559V5.67721C12.1829 5.35059 12.4476 5.08581 12.7743 5.08581Z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.75"
+              />
+            </svg>
+            <div
+              class="c4 c8"
+            >
+              <div
+                class="c9"
+              >
+                <span
+                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                  data-disable-theme="true"
+                >
+                  Uniswap Mobile
+                </span>
+                <span
+                  class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                  data-disable-theme="true"
+                >
+                  Scan QR code to connect
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`UniswapWalletOptions Test Download wallet option should not be visible if extension is not detected and launch flag is false 1`] = `
+<DocumentFragment>
+  .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c5 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c4 {
+  padding: 16px;
+  gap: 12px;
+  border-radius: 16px;
+  border: 1px solid #22222212;
+  overflow: hidden;
+  max-height: 72px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.c4:hover {
+  background: #22222212;
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        >
+          <div
+            class="c2 c3 c4"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(255, 239, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
+              viewBox="0 0 22 22"
+            >
+              <path
+                d="M6.92609 1.83331H3.87053C3.33028 1.83331 2.81215 2.04793 2.43013 2.42995C2.04811 2.81197 1.8335 3.33009 1.8335 3.87035V6.92591M20.1668 6.92591V3.87035C20.1668 3.33009 19.9522 2.81197 19.5702 2.42995C19.1882 2.04793 18.67 1.83331 18.1298 1.83331H15.0742M15.0742 20.1666H18.1298C18.67 20.1666 19.1882 19.952 19.5702 19.57C19.9522 19.188 20.1668 18.6699 20.1668 18.1296V15.0741M1.8335 15.0741V18.1296C1.8335 18.6699 2.04811 19.188 2.43013 19.57C2.81215 19.952 3.33028 20.1666 3.87053 20.1666H6.92609M12.1829 12.1827V14.5483M12.1829 16.9139H14.5484V12.1827M14.5482 13.3654H16.9138M16.914 15.7311V16.9139M5.67739 5.08581H9.22578C9.5524 5.08581 9.81717 5.35059 9.81717 5.67721V9.22559C9.81717 9.55221 9.5524 9.81699 9.22578 9.81699H5.67739C5.35077 9.81699 5.08599 9.55221 5.08599 9.22559V5.67721C5.08599 5.35059 5.35077 5.08581 5.67739 5.08581ZM5.67739 12.1827H9.22578C9.5524 12.1827 9.81717 12.4475 9.81717 12.7741V16.3225C9.81717 16.6491 9.5524 16.9139 9.22578 16.9139H5.67739C5.35077 16.9139 5.08599 16.6491 5.08599 16.3225V12.7741C5.08599 12.4475 5.35077 12.1827 5.67739 12.1827ZM12.7743 5.08581H16.3226C16.6493 5.08581 16.914 5.35059 16.914 5.67721V9.22559C16.914 9.55221 16.6493 9.81699 16.3226 9.81699H12.7743C12.4476 9.81699 12.1829 9.55221 12.1829 9.22559V5.67721C12.1829 5.35059 12.4476 5.08581 12.7743 5.08581Z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.75"
+              />
+            </svg>
+            <div
+              class="c2 c5"
+            >
+              <div
+                class="c6"
+              >
+                <span
+                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                  data-disable-theme="true"
+                >
+                  Uniswap Mobile
+                </span>
+                <span
+                  class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                  data-disable-theme="true"
+                >
+                  Scan QR code to connect
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`UniswapWalletOptions Test Extension connecter should be shown if detected 1`] = `
+<DocumentFragment>
+  .c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.c1 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c2 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c3 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c8 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c4 {
+  padding: 16px;
+  gap: 12px;
+  border-radius: 16px;
+  border: 1px solid #22222212;
+  overflow: hidden;
+  max-height: 72px;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  cursor: pointer;
+  position: relative;
+  z-index: 1;
+}
+
+.c4:hover {
+  background: #22222212;
+}
+
+.c5 {
+  height: 40px;
+  width: 40px;
+  border-radius: 10px;
+  fill: linear-gradient(0deg,#fff1ff 0%,rgba(255,255,255,0) 100%),#fffbff;
+  -webkit-filter: drop-shadow(0px 1.179px 3.537px rgba(255,117,249,0.24));
+  filter: drop-shadow(0px 1.179px 3.537px rgba(255,117,249,0.24));
+}
+
+@media screen and (max-width:396px) {
+  .c7 {
+    display: none;
+  }
+}
+
+<span
+    class=" _dsp_contents"
+  >
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        class="c0"
+      >
+        <div
+          class="c1"
+        >
+          <div
+            class="c2 c3 c4"
+            data-testid="connect-uniswap-extension"
+          >
+            <img
+              alt="uniswap-app-icon"
+              class="c5"
+              src="uniswap-wallet-icon.png"
+            />
+            <div
+              class="c2 c6"
+            >
+              <span
+                class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                data-disable-theme="true"
+              >
+                Uniswap Extension
+              </span>
+            </div>
+            <div
+              class="c7"
+            >
+              <span
+                class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400"
+                data-disable-theme="true"
+              >
+                Detected
+              </span>
+            </div>
+          </div>
+          <div
+            class="c2 c8 c4"
+          >
+            <svg
+              fill="none"
+              stroke-width="8"
+              style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(255, 239, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
+              viewBox="0 0 22 22"
+            >
+              <path
+                d="M6.92609 1.83331H3.87053C3.33028 1.83331 2.81215 2.04793 2.43013 2.42995C2.04811 2.81197 1.8335 3.33009 1.8335 3.87035V6.92591M20.1668 6.92591V3.87035C20.1668 3.33009 19.9522 2.81197 19.5702 2.42995C19.1882 2.04793 18.67 1.83331 18.1298 1.83331H15.0742M15.0742 20.1666H18.1298C18.67 20.1666 19.1882 19.952 19.5702 19.57C19.9522 19.188 20.1668 18.6699 20.1668 18.1296V15.0741M1.8335 15.0741V18.1296C1.8335 18.6699 2.04811 19.188 2.43013 19.57C2.81215 19.952 3.33028 20.1666 3.87053 20.1666H6.92609M12.1829 12.1827V14.5483M12.1829 16.9139H14.5484V12.1827M14.5482 13.3654H16.9138M16.914 15.7311V16.9139M5.67739 5.08581H9.22578C9.5524 5.08581 9.81717 5.35059 9.81717 5.67721V9.22559C9.81717 9.55221 9.5524 9.81699 9.22578 9.81699H5.67739C5.35077 9.81699 5.08599 9.55221 5.08599 9.22559V5.67721C5.08599 5.35059 5.35077 5.08581 5.67739 5.08581ZM5.67739 12.1827H9.22578C9.5524 12.1827 9.81717 12.4475 9.81717 12.7741V16.3225C9.81717 16.6491 9.5524 16.9139 9.22578 16.9139H5.67739C5.35077 16.9139 5.08599 16.6491 5.08599 16.3225V12.7741C5.08599 12.4475 5.35077 12.1827 5.67739 12.1827ZM12.7743 5.08581H16.3226C16.6493 5.08581 16.914 5.35059 16.914 5.67721V9.22559C16.914 9.55221 16.6493 9.81699 16.3226 9.81699H12.7743C12.4476 9.81699 12.1829 9.55221 12.1829 9.22559V5.67721C12.1829 5.35059 12.4476 5.08581 12.7743 5.08581Z"
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="1.75"
+              />
+            </svg>
+            <div
+              class="c2 c6"
+            >
+              <div
+                class="c9"
+              >
+                <span
+                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                  data-disable-theme="true"
+                >
+                  Uniswap Mobile
+                </span>
+                <span
+                  class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                  data-disable-theme="true"
+                >
+                  Scan QR code to connect
+                </span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </span>
+  </span>
+</DocumentFragment>
+`;

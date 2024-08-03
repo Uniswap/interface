@@ -1,15 +1,15 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { Currency } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
+import { AssetType } from 'uniswap/src/entities/assets'
+import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
-import { AssetType } from 'wallet/src/entities/assets'
-import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { transactionStateActions } from 'wallet/src/features/transactions/transactionState/transactionState'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
 
 export function useTokenSelectorActionHandlers(
   dispatch: React.Dispatch<AnyAction>,

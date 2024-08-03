@@ -1,21 +1,16 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { DAI, USDC } from 'uniswap/src/constants/tokens'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import i18n from 'uniswap/src/i18n/i18n'
+import { daiCurrencyInfo, ethCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { DAI, USDC } from 'wallet/src/constants/tokens'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
 import { getSwapWarnings } from 'wallet/src/features/transactions/hooks/useSwapWarnings'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { WrapType } from 'wallet/src/features/transactions/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
-import {
-  daiCurrencyInfo,
-  ethCurrencyInfo,
-  networkDown,
-  networkUnknown,
-  networkUp,
-} from 'wallet/src/test/fixtures'
+import { networkDown, networkUnknown, networkUp } from 'wallet/src/test/fixtures'
 import { mockLocalizedFormatter } from 'wallet/src/test/mocks'
 
 const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
@@ -110,12 +105,7 @@ describe(getSwapWarnings, () => {
   })
 
   it('catches insufficient balance errors', () => {
-    const warnings = getSwapWarnings(
-      i18n.t,
-      formatPercent,
-      insufficientBalanceState,
-      isOffline(networkUp())
-    )
+    const warnings = getSwapWarnings(i18n.t, formatPercent, insufficientBalanceState, isOffline(networkUp()))
     expect(warnings.length).toBe(1)
     expect(warnings[0]?.type).toEqual(WarningLabel.InsufficientFunds)
   })
@@ -133,7 +123,7 @@ describe(getSwapWarnings, () => {
       i18n.t,
       formatPercent,
       incompleteAndInsufficientBalanceState,
-      isOffline(networkUp())
+      isOffline(networkUp()),
     )
     expect(warnings.length).toBe(2)
   })
@@ -144,22 +134,12 @@ describe(getSwapWarnings, () => {
   })
 
   it('errors if there is no internet', () => {
-    const warnings = getSwapWarnings(
-      i18n.t,
-      formatPercent,
-      tradeErrorState,
-      isOffline(networkDown())
-    )
+    const warnings = getSwapWarnings(i18n.t, formatPercent, tradeErrorState, isOffline(networkDown()))
     expect(warnings.find((warning) => warning.type === WarningLabel.NetworkError)).toBeTruthy()
   })
 
   it('does not error when network state is unknown', () => {
-    const warnings = getSwapWarnings(
-      i18n.t,
-      formatPercent,
-      tradeErrorState,
-      isOffline(networkUnknown())
-    )
+    const warnings = getSwapWarnings(i18n.t, formatPercent, tradeErrorState, isOffline(networkUnknown()))
     expect(warnings.find((warning) => warning.type === WarningLabel.NetworkError)).toBeFalsy()
   })
 })

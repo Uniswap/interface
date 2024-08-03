@@ -10,6 +10,7 @@ import { TransactionDetails, UnknownTransactionInfo } from 'wallet/src/features/
 export function UnknownSummaryItem({
   transaction,
   layoutElement,
+  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: UnknownTransactionInfo }
 }): JSX.Element {
@@ -35,5 +36,6 @@ export function UnknownSummaryItem({
       <ContractInteraction color="$neutral2" fill={colors.surface1.get()} size="$icon.40" />
     ),
     transaction,
+    index,
   })
 }

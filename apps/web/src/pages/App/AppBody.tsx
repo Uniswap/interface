@@ -1,5 +1,5 @@
+import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
-import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 
 export const BodyWrapper = styled.main<BodyWrapperProps>`

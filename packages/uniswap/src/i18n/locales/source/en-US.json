@@ -264,8 +264,6 @@
   "extension.warning.storage.message": "Make sure to back up your recovery phrase to prevent losing access to your wallet and funds.",
   "extension.warning.storage.title": "Your browser is running out of storage",
   "fiatOnRamp.button.chooseToken": "Choose a token",
-  "fiatOnRamp.button.continueCheckout": "Continue to checkout",
-  "fiatOnRamp.checkout.button": "Checkout",
   "fiatOnRamp.checkout.title": "Checkout with",
   "fiatOnRamp.connection.message": "Connecting you to {{serviceProvider}}",
   "fiatOnRamp.connection.quote": "Buying {{amount}} worth of {{currencySymbol}}",

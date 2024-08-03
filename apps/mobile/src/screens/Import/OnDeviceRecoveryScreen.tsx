@@ -1,6 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import dayjs from 'dayjs'
-import { isNumber } from 'lodash'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
@@ -16,8 +15,8 @@ import { Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { PapersText } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
+import { DynamicConfigs, OnDeviceRecoveryConfigKey } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -45,10 +44,10 @@ export function OnDeviceRecoveryScreen({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const { setRecoveredImportedAccounts } = useOnboardingContext()
-  const recoveryLoadingTimeoutMs = useDynamicConfig(DynamicConfigs.OnDeviceRecovery).get(
-    'recoveryLoadingTimeoutMs',
+  const recoveryLoadingTimeoutMs = useDynamicConfigValue(
+    DynamicConfigs.OnDeviceRecovery,
+    OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
     FALLBACK_RECOVERY_LOADING_TIMEOUT_MS,
-    isNumber,
   )
 
   const [selectedMnemonicId, setSelectedMnemonicId] = useState<string>()

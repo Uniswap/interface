@@ -1,20 +1,20 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { ConfirmedIcon, LogoContainer, SubmittedIcon } from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { useCancelOrdersGasEstimate } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import GetHelp from 'components/Button/GetHelp'
 import Column from 'components/Column'
 import { Container, Dialog, DialogButtonType, DialogProps } from 'components/Dialog/Dialog'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import Modal from 'components/Modal'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import Row from 'components/Row'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { nativeOnChain } from 'constants/tokens'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { Plural, Trans, t } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
-import styled, { useTheme } from 'styled-components'
-import { CloseIcon, ExternalLink, ThemedText } from 'theme/components'
+import { ExternalLink, ThemedText } from 'theme/components'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -23,6 +23,9 @@ const GasEstimateContainer = styled(Row)`
   border-top: 1px solid ${({ theme }) => theme.surface3};
   margin-top: 16px;
   padding-top: 16px;
+`
+const ModalHeader = styled(GetHelpHeader)`
+  padding: 4px 0px;
 `
 
 export enum CancellationState {
@@ -104,10 +107,7 @@ export function CancelOrdersDialog(
     return (
       <Modal isOpen $scrollOverlay onDismiss={onCancel} maxHeight="90vh">
         <Container gap="lg">
-          <Row gap="10px" width="100%" padding="4px 0px" justify="end" align="center">
-            <GetHelp />
-            <CloseIcon onClick={onCancel} />
-          </Row>
+          <ModalHeader closeModal={onCancel} />
           <LogoContainer>{icon}</LogoContainer>
           <ThemedText.SubHeaderLarge width="100%" textAlign="center">
             {title}

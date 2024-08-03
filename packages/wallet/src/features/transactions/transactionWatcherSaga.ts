@@ -3,7 +3,7 @@ import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
-import { call, delay, fork, put, race, select, take, takeEvery } from 'typed-redux-saga'
+import { call, delay, fork, put, race, take, takeEvery } from 'typed-redux-saga'
 import { isWeb } from 'ui/src'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
@@ -20,7 +20,7 @@ import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { selectExtensionBetaFeedbackState } from 'wallet/src/features/behaviorHistory/selectors'
 import { ExtensionBetaFeedbackState, setExtensionBetaFeedbackState } from 'wallet/src/features/behaviorHistory/slice'
-import { fetchFiatOnRampTransaction, fetchMoonpayTransaction } from 'wallet/src/features/fiatOnRamp/api'
+import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { FiatOnRampTransactionDetails } from 'wallet/src/features/fiatOnRamp/types'
 import { pushNotification, setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -50,8 +50,7 @@ import {
   isFinalizedTx,
 } from 'wallet/src/features/transactions/types'
 import { getFinalizedTransactionStatus, receiptFromEthersReceipt } from 'wallet/src/features/transactions/utils'
-import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
-import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
+import { getProvider } from 'wallet/src/features/wallet/context'
 import { appSelect } from 'wallet/src/state'
 
 export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClient<NormalizedCacheObject> }) {
@@ -112,40 +111,13 @@ export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClie
 }
 
 export function* fetchUpdatedFiatOnRampTransaction(transaction: FiatOnRampTransactionDetails, forceFetch: boolean) {
-  const activeAccount = yield* select(selectActiveAccount)
-  if (!activeAccount) {
-    return
-  }
-  const signerManager = yield* call(getSignerManager)
-
-  return yield* call(
-    fetchFiatOnRampTransaction,
-    /** previousTransactionDetails= */ transaction,
-    forceFetch,
-    activeAccount,
-    signerManager,
-  )
-}
-
-export function* fetchUpdatedMoonpayTransaction(transaction: FiatOnRampTransactionDetails) {
-  return yield* call(fetchMoonpayTransaction, /** previousTransactionDetails= */ transaction)
+  return yield* call(fetchFiatOnRampTransaction, transaction, forceFetch)
 }
 
 export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDetails) {
-  // we want to re-fetch this every time we've added a transaction,
-  // as this feature flag could be changed after the app has started
-  const useOldMoonpayIntegration = !Statsig.checkGate(getFeatureFlagName(FeatureFlags.ForAggregator))
-
   const { id } = transaction
 
-  logger.debug(
-    'transactionWatcherSaga',
-    'watchFiatOnRampTransaction',
-    'Watching for updates for fiat onramp tx:',
-    id,
-    'useOldMoonpayIntegration:',
-    useOldMoonpayIntegration,
-  )
+  logger.debug('transactionWatcherSaga', 'watchFiatOnRampTransaction', 'Watching for updates for fiat onramp tx:', id)
 
   let latestStatus = transaction.status
   let syncedWithBackend = transaction.typeInfo.syncedWithBackend
@@ -153,9 +125,7 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
 
   try {
     while (true) {
-      const updatedTransaction = yield* useOldMoonpayIntegration
-        ? fetchUpdatedMoonpayTransaction(transaction)
-        : fetchUpdatedFiatOnRampTransaction(transaction, forceFetch)
+      const updatedTransaction = yield* fetchUpdatedFiatOnRampTransaction(transaction, forceFetch)
 
       forceFetch = false
       // We've got an invalid response from backend
@@ -216,7 +186,7 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
       // try again after a waiting period or when we've come back WebView
       const raceResult = yield* race({
         forceFetch: take(forceFetchFiatOnRampTransactions),
-        timeout: delay(useOldMoonpayIntegration ? PollingInterval.Normal : PollingInterval.Fast),
+        timeout: delay(PollingInterval.Fast),
       })
 
       if (raceResult.forceFetch) {

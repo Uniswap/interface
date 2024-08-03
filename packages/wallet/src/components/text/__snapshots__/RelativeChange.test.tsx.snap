@@ -93,6 +93,7 @@ exports[`renders a relative change 1`] = `
         }
       }
       suppressHighlighting={true}
+      testID="portfolio-relative-change"
     >
       12%
     </Text>
@@ -193,6 +194,7 @@ exports[`renders placeholders with absolute change 1`] = `
         }
       }
       suppressHighlighting={true}
+      testID="portfolio-relative-change"
     >
       $100.00 (12%)
     </Text>
@@ -231,6 +233,7 @@ exports[`renders placeholders without a change 1`] = `
         }
       }
       suppressHighlighting={true}
+      testID="portfolio-relative-change"
     >
       -
     </Text>

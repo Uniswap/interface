@@ -2,11 +2,12 @@ import { ReactComponent as TooltipTriangle } from 'assets/svg/tooltip_triangle.s
 import { outboundLink } from 'components/analytics'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { Trans } from 'i18n'
+import styled, { css, keyframes } from 'lib/styled-components'
 import React, {
-  forwardRef,
   HTMLProps,
   PropsWithChildren,
   ReactNode,
+  forwardRef,
   useCallback,
   useImperativeHandle,
   useRef,
@@ -14,7 +15,6 @@ import React, {
 } from 'react'
 import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, X } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled, { css, keyframes } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 import { anonymizeLink } from 'utils/anonymizeLink'
 

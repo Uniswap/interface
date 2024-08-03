@@ -2,11 +2,13 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
 import type { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
+import { useDispatch } from 'react-redux'
 import { GeneratedIcon, isWeb } from 'ui/src'
 import { CoinConvert, Eye, EyeOff, ReceiveAlt, SendAction } from 'ui/src/components/icons'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
@@ -16,24 +18,28 @@ import { usePortfolioCacheUpdater } from 'wallet/src/features/dataApi/balances'
 import { toggleTokenVisibility } from 'wallet/src/features/favorites/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch } from 'wallet/src/state'
 
 interface TokenMenuParams {
   currencyId: CurrencyId
+  isBlocked: boolean
   tokenSymbolForNotification?: Nullable<string>
   portfolioBalance?: Nullable<PortfolioBalance>
 }
 
 type MenuAction = ContextMenuAction & { onPress: () => void; Icon?: GeneratedIcon }
 
-export function useTokenContextMenu({ currencyId, tokenSymbolForNotification, portfolioBalance }: TokenMenuParams): {
+export function useTokenContextMenu({
+  currencyId,
+  isBlocked,
+  tokenSymbolForNotification,
+  portfolioBalance,
+}: TokenMenuParams): {
   menuActions: Array<MenuAction>
   onContextMenuPress: (e: NativeSyntheticEvent<ContextMenuOnPressNativeEvent>) => void
 } {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
   const { navigateToSwapFlow, navigateToReceive, navigateToSend, handleShareToken } = useWalletNavigation()
@@ -96,6 +102,7 @@ export function useTokenContextMenu({ currencyId, tokenSymbolForNotification, po
     (): MenuAction[] => [
       {
         title: t('common.button.swap'),
+        disabled: isBlocked,
         onPress: () => onPressSwap(CurrencyField.INPUT),
         ...(isWeb
           ? {
@@ -149,6 +156,7 @@ export function useTokenContextMenu({ currencyId, tokenSymbolForNotification, po
     ],
     [
       t,
+      isBlocked,
       onPressSend,
       navigateToReceive,
       onPressShare,

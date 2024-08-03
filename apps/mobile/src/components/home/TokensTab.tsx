@@ -2,7 +2,7 @@ import { useStartProfiler } from '@shopify/react-native-performance'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { TokenBalanceList } from 'src/components/TokenBalanceList/TokenBalanceList'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { TabProps } from 'src/components/layout/TabHelpers'
@@ -11,13 +11,13 @@ import { Flex } from 'ui/src'
 import { NoTokens } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { useCexTransferProviders } from 'wallet/src/features/fiatOnRamp/api'
 import { PortfolioEmptyState } from 'wallet/src/features/portfolio/PortfolioEmptyState'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 
@@ -36,14 +36,14 @@ export const TokensTab = memo(
       onRefresh,
       refreshing,
       headerHeight,
+      testID,
     },
     ref,
   ) {
     const { t } = useTranslation()
-    const dispatch = useAppDispatch()
+    const dispatch = useDispatch()
     const tokenDetailsNavigation = useTokenDetailsNavigation()
     const startProfilerTimer = useStartProfiler()
-    const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
     const cexTransferEnabled = useFeatureFlag(FeatureFlags.CexTransfers)
     const cexTransferProviders = useCexTransferProviders(cexTransferEnabled)
 
@@ -60,12 +60,8 @@ export const TokensTab = memo(
     }, [dispatch])
 
     const onPressBuy = useCallback(() => {
-      dispatch(
-        openModal({
-          name: forAggregatorEnabled ? ModalName.FiatOnRampAggregator : ModalName.FiatOnRamp,
-        }),
-      )
-    }, [dispatch, forAggregatorEnabled])
+      dispatch(openModal({ name: ModalName.FiatOnRampAggregator }))
+    }, [dispatch])
 
     const onPressReceive = useCallback(() => {
       dispatch(
@@ -90,16 +86,26 @@ export const TokensTab = memo(
     const renderEmpty = useMemo((): JSX.Element => {
       // Show different empty state on external profile pages
       return isExternalProfile ? (
-        <BaseCard.EmptyState
-          description={t('home.tokens.empty.description')}
-          icon={<NoTokens color="$neutral3" size="$icon.70" />}
-          title={t('home.tokens.empty.title')}
-          onPress={onPressAction}
-        />
+        <Flex centered pt="$spacing48" px="$spacing36" style={containerProps?.emptyComponentStyle}>
+          <BaseCard.EmptyState
+            description={t('home.tokens.empty.description')}
+            icon={<NoTokens color="$neutral3" size="$icon.70" />}
+            title={t('home.tokens.empty.title')}
+            onPress={onPressAction}
+          />
+        </Flex>
       ) : (
         <PortfolioEmptyState onPressBuy={onPressBuy} onPressImport={onPressImport} onPressReceive={onPressReceive} />
       )
-    }, [isExternalProfile, onPressAction, onPressBuy, onPressImport, onPressReceive, t])
+    }, [
+      isExternalProfile,
+      onPressAction,
+      onPressBuy,
+      onPressImport,
+      onPressReceive,
+      containerProps?.emptyComponentStyle,
+      t,
+    ])
 
     return (
       <Flex grow backgroundColor="$surface1">
@@ -113,6 +119,7 @@ export const TokensTab = memo(
           refreshing={refreshing}
           renderedInModal={renderedInModal}
           scrollHandler={scrollHandler}
+          testID={testID}
           onPressToken={onPressToken}
           onRefresh={onRefresh}
         />

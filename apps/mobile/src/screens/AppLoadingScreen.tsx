@@ -2,8 +2,8 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import dayjs from 'dayjs'
 import { isEnrolledAsync } from 'expo-local-authentication'
 import { t } from 'i18next'
-import { isNumber } from 'lodash'
 import { useCallback, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { SplashScreen } from 'src/features/appLoading/SplashScreen'
 import { useBiometricContext } from 'src/features/biometrics/context'
@@ -14,8 +14,8 @@ import {
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
 import { RecoveryWalletInfo, useOnDeviceRecoveryData } from 'src/screens/Import/useOnDeviceRecoveryData'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { DynamicConfigs } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfig } from 'uniswap/src/features/gating/hooks'
+import { DynamicConfigs, OnDeviceRecoveryConfigKey } from 'uniswap/src/features/gating/configs'
+import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -26,7 +26,7 @@ import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { selectAnyAddressHasNotificationsEnabled } from 'wallet/src/features/wallet/selectors'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
-import { useAppDispatch, useAppSelector } from 'wallet/src/state'
+import { useAppSelector } from 'wallet/src/state'
 
 export const SPLASH_SCREEN = { uri: 'SplashScreen' }
 
@@ -35,7 +35,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 function useFinishAutomatedRecovery(navigation: Props['navigation']): {
   finishRecovery: (mnemonicId: string, recoveryWalletInfos: RecoveryWalletInfo[]) => void
 } {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { setRecoveredImportedAccounts, finishOnboarding } = useOnboardingContext()
 
   const notificationOSPermission = useNotificationOSPermissionsEnabled()
@@ -120,15 +120,18 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
 const FALLBACK_APP_LOADING_TIMEOUT_MS = 15000
 
 export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
-  const onDeviceRecoveryConfig = useDynamicConfig(DynamicConfigs.OnDeviceRecovery)
-  const appLoadingTimeoutMs = onDeviceRecoveryConfig.get(
-    'appLoadingTimeoutMs',
+  const appLoadingTimeoutMs = useDynamicConfigValue(
+    DynamicConfigs.OnDeviceRecovery,
+    OnDeviceRecoveryConfigKey.AppLoadingTimeoutMs,
     FALLBACK_APP_LOADING_TIMEOUT_MS,
-    isNumber,
   )
-  const maxMnemonicsToLoad = onDeviceRecoveryConfig.getValue('maxMnemonicsToLoad', 20) as number
+  const maxMnemonicsToLoad = useDynamicConfigValue(
+    DynamicConfigs.OnDeviceRecovery,
+    OnDeviceRecoveryConfigKey.MaxMnemonicsToLoad,
+    20,
+  )
 
   const [finished, setFinished] = useState(false)
 

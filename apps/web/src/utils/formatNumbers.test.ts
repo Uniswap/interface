@@ -132,7 +132,7 @@ describe('formatNumber', () => {
     expect(formatNumber({ input: 0.0000001234, type: NumberType.FiatTokenPrice })).toBe('$0.000000123')
     expect(formatNumber({ input: 0.000000009876, type: NumberType.FiatTokenPrice })).toBe('<$0.00000001')
     expect(formatNumber({ input: 10000000000000000000000000000000, type: NumberType.FiatTokenPrice })).toBe(
-      '$1.000000E31'
+      '$1.000000E31',
     )
   })
 
@@ -152,7 +152,7 @@ describe('formatNumber', () => {
     expect(formatNumber({ input: 0.0000001234, type: NumberType.FiatTokenPrice })).toBe('0,000000123\xa0¥')
     expect(formatNumber({ input: 0.000000009876, type: NumberType.FiatTokenPrice })).toBe('<0,00000001\xa0¥')
     expect(formatNumber({ input: 10000000000000000000000000000000, type: NumberType.FiatTokenPrice })).toBe(
-      '1,000000E31\xa0¥'
+      '1,000000E31\xa0¥',
     )
   })
 

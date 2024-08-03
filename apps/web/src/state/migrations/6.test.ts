@@ -53,7 +53,7 @@ describe('migration to v6', () => {
         5: migration5,
         6: migration6,
       },
-      { debug: false }
+      { debug: false },
     )
     const result: any = await migrator(previousStateUnselected, 6)
     expect(Object.keys(result)).not.toContain('selectedWallet')
@@ -70,7 +70,7 @@ describe('migration to v6', () => {
         5: migration5,
         6: migration6,
       },
-      { debug: false }
+      { debug: false },
     )
     const result: any = await migrator(previousStateSelected, 6)
     expect(Object.keys(result)).not.toContain('selectedWallet')

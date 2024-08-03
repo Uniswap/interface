@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { ExploreStackNavigator } from 'src/app/navigation/navigation'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { useSporeColors } from 'ui/src'
@@ -8,7 +8,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function ExploreModal(): JSX.Element {
   const colors = useSporeColors()
-  const appDispatch = useAppDispatch()
+  const appDispatch = useDispatch()
 
   const onClose = (): void => {
     appDispatch(closeModal({ name: ModalName.Explore }))

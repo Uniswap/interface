@@ -9,6 +9,7 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
@@ -28,7 +29,6 @@ import { TransactionModalInnerContainer } from 'wallet/src/features/transactions
 import { useExactOutputWillFail } from 'wallet/src/features/transactions/swap/hooks/useExactOutputWillFail'
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/trade/hooks/useShowSwapNetworkNotification'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'wallet/src/features/transactions/utils'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {

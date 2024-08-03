@@ -1,9 +1,19 @@
-Developed by Uniswap Labs, the Uniswap Extension allows you to access and explore onchain apps while maintaining full control of your crypto assets. The Uniswap Extension is the first wallet extension to live in your browser’s sidebar, persisting no matter where you are on the web. So you can explore crypto without obstructing your window or losing your place.
+IPFS hash of the deployment:
+- CIDv0: `Qmb16dcqcbFFjG7vkpfKEeZp4fNHBcbzXwuPLW92MQNRAx`
+- CIDv1: `bafybeif4ewp6t3m3h2yfzmgwe6o3lcccxeec5asf5xkezonc6vwcpxw5de`
 
-- Connect to thousands of onchain apps across Ethereum, Base, Arbitrum and many other EVM blockchains
-- Explore tokens directly on Uniswap, one of the most trusted DeFi protocols with over $2 trillion in volume
-- View all of your crypto assets without switching, across Ethereum and other EVM-compatible blockchains
-- Easily create a new wallet or import your existing wallet
-- Safely send and receive crypto tokens with other wallets
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-The Uniswap Extension’s source code is audited by the security firm Trail of Bits as an added measure to ensure that your crypto assets are safe.
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
+
+IPFS gateways:
+- https://bafybeif4ewp6t3m3h2yfzmgwe6o3lcccxeec5asf5xkezonc6vwcpxw5de.ipfs.dweb.link/
+- https://bafybeif4ewp6t3m3h2yfzmgwe6o3lcccxeec5asf5xkezonc6vwcpxw5de.ipfs.cf-ipfs.com/
+- [ipfs://Qmb16dcqcbFFjG7vkpfKEeZp4fNHBcbzXwuPLW92MQNRAx/](ipfs://Qmb16dcqcbFFjG7vkpfKEeZp4fNHBcbzXwuPLW92MQNRAx/)
+
+### 5.40.3 (2024-07-25)
+
+

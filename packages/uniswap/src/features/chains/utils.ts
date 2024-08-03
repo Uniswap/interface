@@ -1,9 +1,9 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { ChainId } from '@uniswap/sdk-core'
-import { L2ChainId, L2_CHAIN_IDS } from 'uniswap/src/constants/chains'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
+import { NetworkLayer, UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
 import { isTestEnv } from 'utilities/src/environment'
 
 export function toGraphQLChain(chainId: ChainId | number): Chain | undefined {
@@ -66,8 +66,13 @@ export function hexadecimalStringToInt(hex: string): number {
   return parseInt(hex, 16)
 }
 
-export const isL2Chain = (chainId?: UniverseChainId): boolean =>
-  Boolean(chainId && L2_CHAIN_IDS.includes(chainId as L2ChainId))
+export function isL2ChainId(chainId?: UniverseChainId): boolean {
+  return chainId !== undefined && UNIVERSE_CHAIN_INFO[chainId].networkLayer === NetworkLayer.L2
+}
+
+export function isMainnetChainId(chainId?: UniverseChainId): boolean {
+  return chainId === UniverseChainId.Mainnet
+}
 
 export function fromGraphQLChain(chain: Chain | undefined): WalletChainId | null {
   switch (chain) {
@@ -101,7 +106,7 @@ export function fromGraphQLChain(chain: Chain | undefined): WalletChainId | null
 }
 
 export function getPollingIntervalByBlocktime(chainId?: WalletChainId): PollingInterval {
-  return isL2Chain(chainId) ? PollingInterval.LightningMcQueen : PollingInterval.Fast
+  return isMainnetChainId(chainId) ? PollingInterval.Fast : PollingInterval.LightningMcQueen
 }
 
 export function fromMoonpayNetwork(moonpayNetwork: string | undefined): WalletChainId | undefined {

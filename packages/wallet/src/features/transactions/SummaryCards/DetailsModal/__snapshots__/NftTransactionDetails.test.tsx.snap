@@ -1,0 +1,128 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`NftTransactionDetails Component renders NftTransactionDetails without error 1`] = `
+<View
+  style={
+    {
+      "borderBottomLeftRadius": 20,
+      "borderBottomRightRadius": 20,
+      "borderTopLeftRadius": 20,
+      "borderTopRightRadius": 20,
+      "flexDirection": "column",
+      "overflow": "hidden",
+    }
+  }
+>
+  <View
+    cancelable={true}
+    disabled={false}
+    focusable={true}
+    hitSlop={[Function]}
+    minPressDuration={0}
+    onBlur={[Function]}
+    onFocus={[Function]}
+    onMouseEnter={[Function]}
+    onMouseLeave={[Function]}
+    onPress={[Function]}
+    onPressIn={[Function]}
+    onPressOut={[Function]}
+    style={
+      {
+        "flexDirection": "column",
+        "opacity": 1,
+        "transform": [
+          {
+            "scale": 1,
+          },
+        ],
+      }
+    }
+  />
+  <View
+    style={
+      {
+        "borderBottomColor": "#2222220D",
+        "borderBottomLeftRadius": 20,
+        "borderBottomRightRadius": 20,
+        "borderBottomWidth": 1,
+        "borderLeftColor": "#2222220D",
+        "borderLeftWidth": 1,
+        "borderRightColor": "#2222220D",
+        "borderRightWidth": 1,
+        "borderStyle": "solid",
+        "borderTopColor": "#2222220D",
+        "borderTopWidth": 0,
+        "flexDirection": "column",
+        "paddingBottom": 12,
+        "paddingLeft": 12,
+        "paddingRight": 12,
+        "paddingTop": 12,
+      }
+    }
+  >
+    <Text
+      allowFontScaling={false}
+      maxFontSizeMultiplier={1.4}
+      style={
+        {
+          "color": "#222222",
+          "fontFamily": "Basel-Book",
+          "fontSize": 16,
+          "lineHeight": 24,
+        }
+      }
+      suppressHighlighting={true}
+    >
+      voluptates repudiandae aliquid
+    </Text>
+    <View
+      disabled={true}
+      hitSlop={
+        {
+          "bottom": 5,
+          "left": 5,
+          "right": 5,
+          "top": 5,
+        }
+      }
+      style={
+        {
+          "flexDirection": "column",
+          "opacity": 1,
+          "transform": [
+            {
+              "scale": 1,
+            },
+          ],
+        }
+      }
+    >
+      <View
+        style={
+          {
+            "flexDirection": "row",
+            "paddingRight": 12,
+          }
+        }
+      >
+        <Text
+          allowFontScaling={false}
+          maxFontSizeMultiplier={1.4}
+          numberOfLines={1}
+          style={
+            {
+              "color": "#7D7D7D",
+              "fontFamily": "Basel-Book",
+              "fontSize": 14,
+              "lineHeight": 20,
+            }
+          }
+          suppressHighlighting={true}
+        >
+          inventore qui fugiat
+        </Text>
+      </View>
+    </View>
+  </View>
+</View>
+`;

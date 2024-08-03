@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 
 const Container = styled.div<{ $iconSize: number }>`

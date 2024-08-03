@@ -1,9 +1,9 @@
 import { OpacityHoverState } from 'components/Common'
 import useCopyClipboard from 'hooks/useCopyClipboard'
+import styled from 'lib/styled-components'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'
 import { useCallback } from 'react'
 import { Copy } from 'react-feather'
-import styled from 'styled-components'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 

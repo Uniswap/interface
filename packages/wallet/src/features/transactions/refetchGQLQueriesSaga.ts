@@ -1,5 +1,5 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
-import { call, delay } from 'typed-redux-saga'
+import { call, delay, select } from 'typed-redux-saga'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import {
   PortfolioBalancesDocument,
@@ -12,6 +12,7 @@ import { CurrencyId } from 'uniswap/src/types/currency'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
 type CurrencyIdToBalance = Record<CurrencyId, number>
@@ -34,7 +35,13 @@ export function* refetchGQLQueries({
     apolloClient,
   })
 
-  // when there is a new local tx wait 1s then proactively refresh portfolio and activity queries
+  const activeAddress = yield* select(selectActiveAccountAddress)
+  if (owner !== activeAddress) {
+    // We can ignore if the transaction does not belong to the active account.
+    return
+  }
+
+  // when there is a new local tx wait REFETCH_INTERVAL then proactively refresh portfolio and activity queries
   yield* delay(REFETCH_INTERVAL)
 
   yield* call([apolloClient, apolloClient.refetchQueries], {
@@ -46,7 +53,7 @@ export function* refetchGQLQueries({
   }
 
   let freshnessLag = REFETCH_INTERVAL
-  // poll every second until the cache has updated balances for the relevant currencies
+  // poll every REFETCH_INTERVAL until the cache has updated balances for the relevant currencies
   for (let i = 0; i < MAX_REFETCH_ATTEMPTS; i += 1) {
     const currencyIdToUpdatedBalance = readBalancesFromCache({
       owner,
@@ -59,6 +66,13 @@ export function* refetchGQLQueries({
     }
 
     yield* delay(REFETCH_INTERVAL)
+
+    const currentActiveAddress = yield* select(selectActiveAccountAddress)
+    if (owner !== currentActiveAddress) {
+      // We stop polling if the user has switched accounts.
+      // A call to `refetchQueries` wouldn't be useful in this case because no query with the transaction's owner is currently being watched.
+      break
+    }
 
     yield* call([apolloClient, apolloClient.refetchQueries], {
       include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE,

@@ -1,5 +1,5 @@
 import Column from 'components/Column'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 
 export enum PreferencesView {
   SETTINGS = 'Settings',

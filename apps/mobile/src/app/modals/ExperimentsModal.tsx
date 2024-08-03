@@ -1,8 +1,9 @@
 import { useApolloClient } from '@apollo/client'
 import React, { useState } from 'react'
 import { ScrollView } from 'react-native-gesture-handler'
+import { useDispatch } from 'react-redux'
 import { Action } from 'redux'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useAppSelector } from 'src/app/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
@@ -15,7 +16,7 @@ import { AccordionHeader, GatingOverrides } from 'wallet/src/components/gating/G
 
 export function ExperimentsModal(): JSX.Element {
   const insets = useDeviceInsets()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const customEndpoint = useAppSelector(selectCustomEndpoint)
 
   const apollo = useApolloClient()

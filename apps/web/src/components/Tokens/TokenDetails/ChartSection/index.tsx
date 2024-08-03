@@ -23,9 +23,9 @@ import {
 import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
 import { Trans } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
+import styled from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo, useState } from 'react'
-import styled from 'styled-components'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export const TDP_CHART_HEIGHT_PX = 356

@@ -10,8 +10,8 @@ import {
 } from 'components/DoubleLogo'
 import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
+import styled from 'lib/styled-components'
 import React from 'react'
-import styled from 'styled-components'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 
 const UnknownContract = styled(UnknownStatus)`

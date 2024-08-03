@@ -1,8 +1,8 @@
 import { createContext, ReactNode, useContext } from 'react'
+import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getSwapPrefilledState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
-import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { getSendPrefilledState } from 'wallet/src/features/transactions/transfer/getSendPrefilledState'
 
 type NavigateToTransactionFlowTransactionState = {

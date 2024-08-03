@@ -4,13 +4,13 @@ import { Alert } from 'react-native'
 import { URL } from 'react-native-url-polyfill'
 import { appSelect } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { getScantasticQueryParams, parseScantasticParams } from 'src/components/WalletConnect/ScanSheet/util'
+import { getScantasticQueryParams, parseScantasticParams } from 'src/components/Requests/ScanSheet/util'
 import {
   UNISWAP_URL_SCHEME,
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
 } from 'src/features/deepLinking/constants'
-import { handleMoonpayReturnLink } from 'src/features/deepLinking/handleMoonpayReturnLinkSaga'
+import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { handleSwapLink } from 'src/features/deepLinking/handleSwapLinkSaga'
 import { handleTransactionLink } from 'src/features/deepLinking/handleTransactionLinkSaga'
 import { closeAllModals, openModal } from 'src/features/modals/modalSlice'
@@ -29,11 +29,12 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { WidgetType } from 'uniswap/src/types/widgets'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { ScantasticParams } from 'wallet/src/features/scantastic/types'
 import { selectAccounts, selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { UNISWAP_APP_NATIVE_TOKEN, openUri } from 'wallet/src/utils/linking'
+import { UNISWAP_APP_NATIVE_TOKEN } from 'wallet/src/utils/linking'
 
 export interface DeepLink {
   url: string
@@ -287,7 +288,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       switch (screen) {
         case 'transaction':
           if (fiatOnRamp) {
-            yield* call(handleMoonpayReturnLink)
+            yield* call(handleOnRampReturnLink)
           } else {
             yield* call(handleTransactionLink)
           }

@@ -12,11 +12,11 @@ import {
 import { GqlResult } from 'uniswap/src/data/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { buildCurrency, currencyIdToContractInput, usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
 import { logger } from 'utilities/src/logger/logger'
-import { buildCurrency, currencyIdToContractInput, usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { useCurrencyIdToVisibility } from 'wallet/src/features/transactions/selectors'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 

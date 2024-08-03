@@ -1,12 +1,12 @@
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
-import GetHelp from 'components/Button/GetHelp'
 import { ColumnCenter } from 'components/Column'
 import Modal from 'components/Modal'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import Row from 'components/Row'
+import styled, { DefaultTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
-import styled, { DefaultTheme } from 'styled-components'
 import { Gap } from 'theme'
-import { CloseIcon, ThemedText } from 'theme/components'
+import { ThemedText } from 'theme/components'
 
 export const Container = styled(ColumnCenter)`
   background-color: ${({ theme }) => theme.surface1};
@@ -47,6 +47,10 @@ const StyledButton = styled(ThemeButton)<{ $color?: keyof DefaultTheme }>`
   height: 40px;
   ${({ $color, theme }) => $color && `color: ${theme[$color]};`}
   border-radius: 12px;
+`
+
+const DialogHeader = styled(GetHelpHeader)`
+  padding: 4px 0px;
 `
 
 export enum DialogButtonType {
@@ -151,10 +155,7 @@ export function Dialog(props: DialogProps) {
   return (
     <Modal $scrollOverlay isOpen={props.isVisible} onDismiss={props.onCancel}>
       <Container gap="lg">
-        <Row gap="10px" width="100%" padding="4px 0px" justify="end" align="center">
-          <GetHelp />
-          <CloseIcon data-testid="Dialog-closeButton" onClick={props.onCancel} />
-        </Row>
+        <DialogHeader closeModal={props.onCancel} closeDataTestId="Dialog-closeButton" />
         <DialogContent {...props} />
       </Container>
     </Modal>

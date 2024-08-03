@@ -1,8 +1,8 @@
 import { CopyTextButton } from 'src/components/buttons/CopyTextButton'
 import { act, fireEvent, render } from 'src/test/test-utils'
-import { setClipboard } from 'wallet/src/utils/clipboard'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 
-jest.mock('wallet/src/utils/clipboard')
+jest.mock('uniswap/src/utils/clipboard')
 
 describe(CopyTextButton, () => {
   beforeEach(() => {
