@@ -328,6 +328,20 @@ export class OnChainQuoteProvider implements IOnChainQuoteProvider {
     routesWithQuotes: RouteWithQuotes<TRoute>[]
     blockNumber: BigNumber
   }> {
+    ////// DEBUG /////
+    // console.log('getQuotesManyData', functionName, _providerConfig)
+    // amounts.forEach((a) => {
+    //   console.log(a.toFixed(3))
+    // })
+    // routes.forEach((r) => {
+    //   if (r.protocol == Protocol.V3) {
+    //     console.log('Route', r.protocol, r.tokenPath.map((t) => t.symbol).join('->'), r)
+    //   } else if (r.protocol == Protocol.V2) {
+    //     console.log('Route', r.protocol, r.path.map((t) => t.symbol).join('->'))
+    //   } else if (r.protocol == Protocol.MIXED) {
+    //     console.log('Route', r.protocol, r.path.map((t) => t.symbol).join('->'))
+    //   }
+    // })
     const useMixedRouteQuoter =
       routes.some((route) => route.protocol === Protocol.V2) ||
       routes.some((route) => route.protocol === Protocol.MIXED)

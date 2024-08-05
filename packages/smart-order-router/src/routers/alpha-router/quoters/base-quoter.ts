@@ -110,7 +110,7 @@ export abstract class BaseQuoter<
   public getRoutesThenQuotes(
     tokenIn: Token,
     tokenOut: Token,
-    amount: CurrencyAmount,
+    _amount: CurrencyAmount,
     amounts: CurrencyAmount[],
     percents: number[],
     quoteToken: Token,
@@ -121,11 +121,11 @@ export abstract class BaseQuoter<
     gasPriceWei?: BigNumber
   ): Promise<GetQuotesResult> {
     return this.getRoutes(tokenIn, tokenOut, candidatePools, tradeType, routingConfig).then((routesResult) => {
-      if (routesResult.routes.length == 1) {
+      /*if (routesResult.routes.length == 1) {
         metric.putMetric(`${this.protocol}QuoterSingleRoute`, 1, MetricLoggerUnit.Count)
         percents = [100]
         amounts = [amount]
-      }
+      }*/
 
       if (routesResult.routes.length > 0) {
         metric.putMetric(`${this.protocol}QuoterRoutesFound`, routesResult.routes.length, MetricLoggerUnit.Count)

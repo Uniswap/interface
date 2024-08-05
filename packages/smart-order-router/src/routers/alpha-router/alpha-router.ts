@@ -555,7 +555,7 @@ export class AlphaRouter implements IRouter<AlphaRouterConfig>, ISwapToRatio<Alp
               maxTimeout: 1000,
             },
             {
-              multicallChunk: 10,
+              multicallChunk: 5,
               gasLimitPerCall: 5_000_000,
               quoteMinSuccessRate: 0.1,
             },
