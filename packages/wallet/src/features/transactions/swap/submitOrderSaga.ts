@@ -58,7 +58,6 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
     addedTime: Date.now(),
     status: TransactionStatus.Pending,
     queueStatus: QueuedOrderStatus.Waiting,
-    wrapTxHash,
   } satisfies UniswapXOrderDetails
 
   yield* put(transactionActions.addTransaction(order))

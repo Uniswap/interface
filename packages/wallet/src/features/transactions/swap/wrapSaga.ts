@@ -13,6 +13,8 @@ import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export type WrapParams = {
   txId?: string
+  // The id that will be used for the swap submitted after the wrap, if applicable.
+  swapTxId?: string
   txRequest: providers.TransactionRequest
   account: Account
   inputCurrencyAmount: CurrencyAmount<Currency>
@@ -24,7 +26,7 @@ export async function getWethContract(chainId: WalletChainId, provider: provider
 
 export function* wrap(params: WrapParams) {
   try {
-    const { account, inputCurrencyAmount, txRequest, txId } = params
+    const { account, inputCurrencyAmount, txRequest, txId, swapTxId } = params
     let typeInfo: TransactionTypeInfo
 
     if (inputCurrencyAmount.currency.isNative) {
@@ -32,12 +34,14 @@ export function* wrap(params: WrapParams) {
         type: TransactionType.Wrap,
         unwrapped: false,
         currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
+        swapTxId,
       }
     } else {
       typeInfo = {
         type: TransactionType.Wrap,
         unwrapped: true,
         currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
+        swapTxId,
       }
     }
 

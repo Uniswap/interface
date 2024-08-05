@@ -6,10 +6,8 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 
 export function TransactionAmountsReview({
@@ -23,45 +21,55 @@ export function TransactionAmountsReview({
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
-  const { currencyAmountsUSDValue, exactCurrencyField, trade } = acceptedDerivedSwapInfo
+  const { convertFiatAmountFormatted, formatCurrencyAmount, formatNumberOrString } = useLocalizationContext()
 
-  if (!trade.trade) {
-    throw new Error('Missing required `trade` to render `TransactionAmountsReview`')
-  }
+  const { currencies, currencyAmounts, currencyAmountsUSDValue, exactAmountToken, exactCurrencyField } =
+    acceptedDerivedSwapInfo
 
-  // Token amounts
-  // On review screen, always show values directly from trade object, to match exactly what is submitted on chain
-  const inputCurrencyAmount = trade.trade.inputAmount
-  const outputCurrencyAmount = trade.trade.outputAmount
+  const currencyInInfo = currencies[CurrencyField.INPUT]
+  const currencyOutInfo = currencies[CurrencyField.OUTPUT]
 
-  const formattedTokenAmountIn = formatCurrencyAmount({
-    value: inputCurrencyAmount,
-    type: NumberType.TokenTx,
-  })
-  const formattedTokenAmountOut = formatCurrencyAmount({
-    value: outputCurrencyAmount,
-    type: NumberType.TokenTx,
-  })
+  const usdAmountIn =
+    exactCurrencyField === CurrencyField.INPUT
+      ? currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
+      : acceptedDerivedSwapInfo?.currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
 
-  // USD amounts
-  const usdAmountIn = currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
-  const usdAmountOut = currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
+  const usdAmountOut =
+    exactCurrencyField === CurrencyField.OUTPUT
+      ? currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
+      : acceptedDerivedSwapInfo?.currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
+
   const formattedFiatAmountIn = convertFiatAmountFormatted(usdAmountIn, NumberType.FiatTokenQuantity)
   const formattedFiatAmountOut = convertFiatAmountFormatted(usdAmountOut, NumberType.FiatTokenQuantity)
+
+  const derivedCurrencyField = exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+
+  const derivedAmount = formatCurrencyAmount({
+    value: acceptedDerivedSwapInfo?.currencyAmounts[derivedCurrencyField],
+    type: NumberType.TokenTx,
+  })
+
+  const formattedExactAmountToken = formatNumberOrString({
+    value: exactAmountToken,
+    type: NumberType.TokenTx,
+  })
+
+  const [formattedTokenAmountIn, formattedTokenAmountOut] =
+    exactCurrencyField === CurrencyField.INPUT
+      ? [formattedExactAmountToken, derivedAmount]
+      : [derivedAmount, formattedExactAmountToken]
 
   const shouldDimInput = newTradeRequiresAcceptance && exactCurrencyField === CurrencyField.OUTPUT
   const shouldDimOutput = newTradeRequiresAcceptance && exactCurrencyField === CurrencyField.INPUT
 
-  // Rebuild currency infos directly from trade object to ensure it matches what is submitted on chain
-  const currencyInInfo = useCurrencyInfo(
-    buildCurrencyId(inputCurrencyAmount.currency.chainId, currencyAddress(inputCurrencyAmount.currency)),
-  )
-  const currencyOutInfo = useCurrencyInfo(
-    buildCurrencyId(outputCurrencyAmount.currency.chainId, currencyAddress(outputCurrencyAmount.currency)),
-  )
-
-  if (!currencyInInfo || !currencyOutInfo) {
+  if (
+    !currencyInInfo ||
+    !currencyOutInfo ||
+    !currencyAmounts[CurrencyField.INPUT] ||
+    !currencyAmounts[CurrencyField.OUTPUT] ||
+    !acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.INPUT] ||
+    !acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.OUTPUT]
+  ) {
     // This should never happen. It's just to keep TS happy.
     throw new Error('Missing required props in `derivedSwapInfo` to render `TransactionAmountsReview` screen.')
   }

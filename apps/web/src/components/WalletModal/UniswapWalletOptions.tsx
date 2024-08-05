@@ -10,7 +10,7 @@ import styled from 'lib/styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { Text } from 'ui/src'
-import { ScanQr } from 'ui/src/components/icons'
+import { Mobile, QrCode } from 'ui/src/components/icons'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
@@ -79,17 +79,20 @@ export function UniswapWalletOptions() {
           <DownloadWalletOption />
         ) : null}
         <OptionContainer gap="md" onClick={() => connect({ connector: uniswapWalletConnectConnector })}>
-          <ScanQr size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} p={7} />
+          <Mobile size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} p={7} />
           <Row gap="xs">
             <Column>
               <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
-                <Trans i18nKey="common.uniswapMobile" />
+                <Trans i18nKey="common.mobileWallet" />
               </Text>
               <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
                 <Trans i18nKey="wallet.scanToConnect" />
               </Text>
             </Column>
           </Row>
+          <TagContainer>
+            <QrCode size={20} color="$neutral2" />
+          </TagContainer>
         </OptionContainer>
       </Column>
     </Column>

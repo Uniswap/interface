@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import { useTranslation } from 'react-i18next'
+import { Trans, useTranslation } from 'react-i18next'
 import { UniswapXText, isWeb } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons'
 import { colors, opacify } from 'ui/src/theme'
@@ -30,7 +30,7 @@ export function UniswapXInfo({
       }
       modalProps={{
         backgroundIconColor: opacify(16, colors.uniswapXPurple),
-        caption: t('uniswapx.description'),
+        caption: <Trans components={{ gradient: <></> }} i18nKey="uniswapx.description" />,
         closeText: t('common.button.close'),
         icon: <UniswapX size="$icon.24" />,
         modalName: ModalName.UniswapXInfo,

@@ -66,6 +66,7 @@ import {
   v63Schema,
   v64Schema,
   v65Schema,
+  v66Schema,
   v6Schema,
   v7Schema,
   v8Schema,
@@ -1406,5 +1407,12 @@ describe('Redux state migrations', () => {
   it('migrates from v65 to v66', () => {
     const v66 = migrations[66]
     testActivatePendingAccounts(v66, v65Schema)
+  })
+
+  it('migrates from v66 to v67', () => {
+    const v66Stub = { ...v66Schema }
+    const v67 = migrations[67](v66Stub)
+
+    expect(v67.behaviorHistory.extensionOnboardingState).toBe(ExtensionOnboardingState.Undefined)
   })
 })

@@ -505,6 +505,8 @@ export const v65Schema = { ...v64Schema }
 
 export const v66Schema = { ...v65Schema }
 
+export const v67Schema = { ...v66Schema }
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v65Schema => v65Schema
+export const getSchema = (): typeof v67Schema => v67Schema

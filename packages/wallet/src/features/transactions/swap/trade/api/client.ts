@@ -3,12 +3,13 @@ import { RestLink } from 'apollo-link-rest'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { createNewInMemoryCache } from 'uniswap/src/data/cache'
-import { REQUEST_SOURCE } from 'uniswap/src/data/constants'
+import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
 
 export const TRADING_API_HEADERS = {
   'Content-Type': 'application/json',
   'X-API-KEY': config.tradingApiKey,
   'x-request-source': REQUEST_SOURCE,
+  'x-app-version': getVersionHeader(),
   Origin: uniswapUrls.requestOriginUrl,
 } as const
 

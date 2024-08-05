@@ -877,6 +877,18 @@ export const migrations = {
   65: addRoutingFieldToTransactions,
 
   66: activatePendingAccounts,
+
+  67: function resetOnboardingStateForGA(state: any) {
+    const newState = { ...state }
+
+    // Reset state so that everyone gets the new promo banner even if theyve dismissed the beta version.
+    newState.behaviorHistory = {
+      ...state.behaviorHistory,
+      extensionOnboardingState: ExtensionOnboardingState.Undefined,
+    }
+
+    return newState
+  },
 }
 
-export const MOBILE_STATE_VERSION = 66
+export const MOBILE_STATE_VERSION = 67

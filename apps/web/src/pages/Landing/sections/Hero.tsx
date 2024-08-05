@@ -16,6 +16,8 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const Container = styled(Box)`
   min-width: 100%;
+  min-height: 100vh;
+  height: min-content;
   padding-top: ${({ theme }) => theme.navHeight}px;
 `
 const LandingSwapContainer = styled(Box)`
@@ -104,7 +106,6 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
   return (
     <Container
       position="relative"
-      height="100vh"
       justify="center"
       style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
     >

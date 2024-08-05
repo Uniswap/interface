@@ -20,7 +20,7 @@ export function AddressDisplay({ address, enableCopyAddress }: { address: Addres
   const uniswapUsername = unitag?.username
 
   const AddressDisplay = (
-    <Flex row gap="2px" alignItems="center">
+    <Flex row gap="2px">
       <IdentifierText>{uniswapUsername ?? ENSName ?? shortenAddress(address)}</IdentifierText>
       {uniswapUsername && <Unitag size={18} />}
     </Flex>

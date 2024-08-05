@@ -15,8 +15,8 @@ import { FeeOnTransferFeeGroupProps } from 'wallet/src/features/transactions/Tra
 import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
+import { UniswapXGasBreakdown } from 'wallet/src/features/transactions/swap/trade/api/hooks/useSwapTxAndGasInfo'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
@@ -50,6 +50,7 @@ interface SwapDetailsProps {
   derivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
   gasFallbackUsed?: boolean
   gasFee: GasFeeResult
+  uniswapXGasBreakdown?: UniswapXGasBreakdown
   newTradeRequiresAcceptance: boolean
   outputCurrencyPricePerUnitExact?: string
   warning?: Warning
@@ -64,6 +65,7 @@ export function SwapDetails({
   customSlippageTolerance,
   derivedSwapInfo,
   gasFee,
+  uniswapXGasBreakdown,
   newTradeRequiresAcceptance,
   outputCurrencyPricePerUnitExact,
   warning,
@@ -123,8 +125,6 @@ export function SwapDetails({
     ],
   )
 
-  const preUniswapXGasFeeUSD = isUniswapX(trade) ? trade.quote.quote.classicGasUseEstimateUSD : undefined
-
   return (
     <TransactionDetails
       isSwap
@@ -140,11 +140,11 @@ export function SwapDetails({
       chainId={acceptedTrade.inputAmount.currency.chainId}
       feeOnTransferProps={feeOnTransferProps}
       gasFee={gasFee}
-      preUniswapXGasFeeUSD={preUniswapXGasFeeUSD}
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
       swapFeeInfo={swapFeeInfo}
       transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
+      uniswapXGasBreakdown={uniswapXGasBreakdown}
       warning={warning}
       onShowWarning={onShowWarning}
     >

@@ -3,7 +3,7 @@ import { providers } from 'ethers'
 import { useEffect, useMemo, useRef } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import { DynamicConfigs, PollingIntervalsConfigKey } from 'uniswap/src/features/gating/configs'
+import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
@@ -116,8 +116,8 @@ export function useTransactionRequestInfo({
 
   // We will remove this cast in follow up change to dynamic config typing
   const tradingApiSwapRequestMs = useDynamicConfigValue(
-    DynamicConfigs.PollingIntervals,
-    PollingIntervalsConfigKey.TradingApiSwapRequestMs,
+    DynamicConfigs.Swap,
+    SwapConfigKey.TradingApiSwapRequestMs,
     FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS,
   )
 

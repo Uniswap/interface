@@ -33,6 +33,7 @@ const Nav = styled.nav`
   justify-content: center;
 `
 const NavContents = styled.div`
+  max-width: ${({ theme }) => `${theme.breakpoint.xxxl}px`};
   width: 100%;
   display: flex;
   flex-direction: row;

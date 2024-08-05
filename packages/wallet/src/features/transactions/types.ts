@@ -77,9 +77,6 @@ export interface UniswapXOrderDetails extends BaseTransactionDetails {
 
   // Used to track status of the order before it is submitted
   queueStatus?: QueuedOrderStatus
-
-  // The txHash of the wrap transaction submitted before the order
-  wrapTxHash?: string
 }
 
 export interface ClassicTransactionDetails extends BaseTransactionDetails {
@@ -207,6 +204,8 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   spender: string
   approvalAmount?: string
   dappInfo?: DappInfoTransactionDetails
+  // The id of the swap TransactionDetails object submitted after this approval on the current client, if applicable.
+  swapTxId?: string
 }
 
 export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
@@ -244,6 +243,9 @@ export interface WrapTransactionInfo extends BaseTransactionInfo {
   type: TransactionType.Wrap
   unwrapped: boolean
   currencyAmountRaw: string
+  // The id of the swap TransactionDetails object submitted after this wrap on the current client, if applicable.
+  // Currently, this will only be set for wraps that are part of a UniswapX native-input swap.
+  swapTxId?: string
 }
 
 export interface SendTokenTransactionInfo extends BaseTransactionInfo {

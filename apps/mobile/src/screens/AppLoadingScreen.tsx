@@ -16,6 +16,7 @@ import { RecoveryWalletInfo, useOnDeviceRecoveryData } from 'src/screens/Import/
 import { hideSplashScreen } from 'src/utils/splashScreen'
 import { DynamicConfigs, OnDeviceRecoveryConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -133,6 +134,7 @@ export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
     20,
   )
 
+  // Used to stop this running multiple times during navigation
   const [finished, setFinished] = useState(false)
 
   const [mnemonicIds, setMnemonicIds] = useState<string[]>()
@@ -148,7 +150,12 @@ export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
 
   useEffect(() => {
     Keyring.getMnemonicIds()
-      .then((storedMnemonicIds) => setMnemonicIds(storedMnemonicIds))
+      .then((storedMnemonicIds) => {
+        setMnemonicIds(storedMnemonicIds)
+        sendAnalyticsEvent(MobileEventName.AutomatedOnDeviceRecoveryMnemonicsFound, {
+          mnemonicCount: storedMnemonicIds.length,
+        })
+      })
       .catch(() => {
         logger.error('Failed to load mnemonic ids', {
           tags: { file: 'AppLoadingScreen', function: 'getMnemonicIds' },
@@ -170,36 +177,41 @@ export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
 
   // Logic to determine what screen to show on app load
   useEffect(() => {
-    async function checkOnDeviceRecovery(): Promise<void> {
-      if (!mnemonicIds || loading || finished) {
+    if (!mnemonicIds || finished) {
+      return
+    }
+
+    const mnemonicIdsCount = mnemonicIds.length
+    const firstMnemonicId = mnemonicIds[0]
+
+    if (mnemonicIdsCount === 1 && firstMnemonicId) {
+      if (loading) {
         return
       }
 
-      const mnemonicIdsCount = mnemonicIds.length
-      const firstMnemonicId = mnemonicIds[0]
-
-      // Used to stop this running multiple times as the following logic is async
       setFinished(true)
 
-      if (mnemonicIdsCount === 1 && firstMnemonicId) {
-        if (significantRecoveryWalletInfos.length) {
-          finishRecovery(firstMnemonicId, significantRecoveryWalletInfos)
-        } else {
-          navigateToLanding()
-        }
-      } else if (mnemonicIdsCount > 1) {
-        navigation.replace(OnboardingScreens.OnDeviceRecovery, {
-          importType: ImportType.OnDeviceRecovery,
-          entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
-          mnemonicIds: mnemonicIds.slice(0, maxMnemonicsToLoad),
-        })
+      sendAnalyticsEvent(MobileEventName.AutomatedOnDeviceRecoverySingleMnemonicFetched, {
+        balance: significantRecoveryWalletInfos[0]?.balance ?? 0,
+        hasUnitag: Boolean(significantRecoveryWalletInfos[0]?.unitag),
+        hasENS: Boolean(significantRecoveryWalletInfos[0]?.ensName),
+      })
+      if (significantRecoveryWalletInfos.length) {
+        finishRecovery(firstMnemonicId, significantRecoveryWalletInfos)
       } else {
         navigateToLanding()
       }
+    } else if (mnemonicIdsCount > 1) {
+      setFinished(true)
+      navigation.replace(OnboardingScreens.OnDeviceRecovery, {
+        importType: ImportType.OnDeviceRecovery,
+        entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
+        mnemonicIds: mnemonicIds.slice(0, maxMnemonicsToLoad),
+      })
+    } else {
+      setFinished(true)
+      navigateToLanding()
     }
-    checkOnDeviceRecovery().catch(() => {
-      logger.warn('AppLoadingScreen', 'checkOnDeviceRecovery', 'Failed to check on device recovery')
-    })
   }, [
     dispatch,
     finishRecovery,
@@ -212,5 +224,9 @@ export function AppLoadingScreen({ navigation }: Props): JSX.Element | null {
     significantRecoveryWalletInfos,
   ])
 
-  return <SplashScreen />
+  return (
+    <Trace logImpression screen={OnboardingScreens.AppLoading}>
+      <SplashScreen />
+    </Trace>
+  )
 }

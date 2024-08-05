@@ -1,19 +1,12 @@
-IPFS hash of the deployment:
-- CIDv0: `Qmb16dcqcbFFjG7vkpfKEeZp4fNHBcbzXwuPLW92MQNRAx`
-- CIDv1: `bafybeif4ewp6t3m3h2yfzmgwe6o3lcccxeec5asf5xkezonc6vwcpxw5de`
+We are back with some new new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+UniswapX is live: We’ve integrated the UniswapX protocol, which aggregates liquidity across onchain and offchain sources for better quotes.
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Easy import to Uniswap Extension: Onboard onto our new Chrome extension wallet easily by scanning a QR code with your Uniswap Mobile App.
 
-IPFS gateways:
-- https://bafybeif4ewp6t3m3h2yfzmgwe6o3lcccxeec5asf5xkezonc6vwcpxw5de.ipfs.dweb.link/
-- https://bafybeif4ewp6t3m3h2yfzmgwe6o3lcccxeec5asf5xkezonc6vwcpxw5de.ipfs.cf-ipfs.com/
-- [ipfs://Qmb16dcqcbFFjG7vkpfKEeZp4fNHBcbzXwuPLW92MQNRAx/](ipfs://Qmb16dcqcbFFjG7vkpfKEeZp4fNHBcbzXwuPLW92MQNRAx/)
+Transaction Details: Press anything on the Activity Screen and see more robust details about any of your transactions (swaps, sends, NFTs, etc).
 
-### 5.40.3 (2024-07-25)
+Other changes:
 
-
+- Onboarding improvements
+- Various bug fixes and performance improvements

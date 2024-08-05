@@ -119,7 +119,7 @@ export default function SettingsTab({
   compact?: boolean
   hideRoutingSettings?: boolean
 }) {
-  const showDeadlineSettings = !isL2ChainId(chainId)
+  const showDeadlineSettings = isL2ChainId(chainId)
   const toggleButtonNode = useRef<HTMLDivElement | null>(null)
   const menuNode = useRef<HTMLDivElement | null>(null)
   const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)

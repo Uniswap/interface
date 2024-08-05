@@ -6,7 +6,6 @@ import Modal from 'components/Modal'
 import Row from 'components/Row'
 import { AppIcon } from 'components/WalletModal/UniswapWalletOptions'
 import { useIsMobile } from 'hooks/screenSize'
-import useParsedQueryString from 'hooks/useParsedQueryString'
 import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
@@ -26,9 +25,6 @@ const ModalWrapper = styled.div`
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     flex-direction: column;
   }
-  * {
-    outline: none;
-  }
 `
 
 const PromoImage = styled.img`
@@ -39,7 +35,7 @@ const PromoImage = styled.img`
   background: url('/images/extension_promo/announcement_modal_desktop.png');
   background-repeat: no-repeat;
   background-size: cover;
-  flex: 1;
+  flex-shrink: 0;
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     background: url('/images/extension_promo/announcement_modal_mobile.png');
@@ -47,7 +43,6 @@ const PromoImage = styled.img`
     background-position: 50%;
     height: 392px;
     width: 100%;
-    flex: unset;
   }
 `
 
@@ -62,7 +57,6 @@ const TextWrapper = styled(Column)`
   padding: 20px 24px;
   gap: 16px;
   height: 100%;
-  flex: 1;
 
   @media screen and (max-width: ${BREAKPOINTS.sm}px) {
     gap: 12px;
@@ -101,7 +95,6 @@ const showExtensionLaunchAtom = atomWithStorage('showUniswapExtensionLaunchAtom'
 
 export function ExtensionLaunchModal() {
   const [showExtensionLaunch, setShowExtensionLaunch] = useAtom(showExtensionLaunchAtom)
-  const isOnLandingPage = useParsedQueryString().intro === 'true'
   const isMobile = useIsMobile()
 
   return (
@@ -109,8 +102,7 @@ export function ExtensionLaunchModal() {
       <Modal
         maxWidth={isMobile ? undefined : 520}
         height={isMobile ? 564 : 320}
-        isOpen={showExtensionLaunch && !isOnLandingPage}
-        hideBorder
+        isOpen={showExtensionLaunch}
         onDismiss={() => setShowExtensionLaunch(false)}
       >
         <ModalWrapper>

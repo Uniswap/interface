@@ -3,7 +3,7 @@ import { PopperProps } from 'ui/src'
 
 export type WarningTooltipProps = {
   title?: string
-  text: string
+  text: ReactNode
   icon?: Maybe<JSX.Element>
   button: ReactNode
   trigger: ReactNode

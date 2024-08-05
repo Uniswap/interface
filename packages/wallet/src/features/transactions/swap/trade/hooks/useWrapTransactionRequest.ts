@@ -1,10 +1,8 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { useCallback } from 'react'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { getWethContract } from 'wallet/src/features/transactions/swap/wrapSaga'
@@ -16,18 +14,11 @@ export function useWrapTransactionRequest(derivedSwapInfo: DerivedSwapInfo): pro
   const address = useActiveAccountAddressWithThrow()
   const { chainId, wrapType, currencyAmounts, trade } = derivedSwapInfo
   const provider = useProvider(chainId)
+  const isUniswapXWrap = Boolean(trade.trade && isUniswapX(trade.trade) && trade.trade.needsWrap)
 
   const transactionFetcher = useCallback(
-    () =>
-      getWrapTransactionRequest(
-        provider,
-        trade.trade,
-        chainId,
-        address,
-        wrapType,
-        currencyAmounts[CurrencyField.INPUT],
-      ),
-    [address, chainId, wrapType, currencyAmounts, provider, trade.trade],
+    () => getWrapTransactionRequest(provider, isUniswapXWrap, chainId, address, wrapType, currencyAmounts.input),
+    [provider, isUniswapXWrap, chainId, address, wrapType, currencyAmounts.input],
   )
 
   return useAsyncData(transactionFetcher).data
@@ -35,13 +26,12 @@ export function useWrapTransactionRequest(derivedSwapInfo: DerivedSwapInfo): pro
 
 const getWrapTransactionRequest = async (
   provider: providers.Provider | null,
-  trade: Trade | null,
+  isUniswapXWrap: boolean,
   chainId: WalletChainId,
   address: Address,
   wrapType: WrapType,
   currencyAmountIn: Maybe<CurrencyAmount<Currency>>,
 ): Promise<providers.TransactionRequest | undefined> => {
-  const isUniswapXWrap = trade && isUniswapX(trade) && trade.needsWrap
   if (!currencyAmountIn || !provider || (wrapType === WrapType.NotApplicable && !isUniswapXWrap)) {
     return
   }

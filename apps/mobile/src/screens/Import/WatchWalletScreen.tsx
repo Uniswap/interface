@@ -31,21 +31,21 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 const LIVE_CHECK_DELAY = 1000
 
 const validateForm = ({
-  isAddress,
+  validAddress,
   name,
   walletExists,
   loading,
   isSmartContractAddress,
   isValidSmartContract,
 }: {
-  isAddress: string | null
+  validAddress: string | null
   name: string | null
   walletExists: boolean
   loading: boolean
   isSmartContractAddress: boolean
   isValidSmartContract: boolean
 }): boolean => {
-  return (!!isAddress || !!name) && !walletExists && !loading && (!isSmartContractAddress || isValidSmartContract)
+  return (!!validAddress || !!name) && !walletExists && !loading && (!isSmartContractAddress || isValidSmartContract)
 }
 
 const getErrorText = ({
@@ -85,28 +85,28 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   const normalizedValue = normalizeTextInput(value ?? '')
   const hasSuffixIncluded = normalizedValue.includes('.')
   const { address: resolvedAddress, name } = useENS(UniverseChainId.Mainnet, normalizedValue, !hasSuffixIncluded)
-  const isAddress = getValidAddress(normalizedValue, true, false)
+  const validAddress = getValidAddress(normalizedValue, true, false)
   const { isSmartContractAddress, loading } = useIsSmartContractAddress(
-    (isAddress || resolvedAddress) ?? undefined,
+    (validAddress || resolvedAddress) ?? undefined,
     UniverseChainId.Mainnet,
   )
   // Allow smart contracts with non-null balances
   const { data: balancesById } = usePortfolioBalances({
-    address: isSmartContractAddress ? (isAddress || resolvedAddress) ?? undefined : undefined,
+    address: isSmartContractAddress ? (validAddress || resolvedAddress) ?? undefined : undefined,
     fetchPolicy: 'cache-and-network',
   })
   const isValidSmartContract = isSmartContractAddress && !!balancesById
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params)
 
-  const walletExists = Object.keys(initialAccounts).some(
+  const walletExists = Object.keys(initialAccounts.current).some(
     (accountAddress) =>
-      areAddressesEqual(accountAddress, resolvedAddress) || areAddressesEqual(accountAddress, normalizedValue),
+      areAddressesEqual(accountAddress, resolvedAddress) || areAddressesEqual(accountAddress, validAddress),
   )
 
   // Form validation.
   const isValid = validateForm({
-    isAddress,
+    validAddress,
     name,
     walletExists,
     loading,
@@ -159,7 +159,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           blurOnSubmit
           errorMessage={errorText}
           inputAlignment="flex-start"
-          inputSuffix={isAddress || hasSuffixIncluded ? undefined : '.eth'}
+          inputSuffix={validAddress || hasSuffixIncluded ? undefined : '.eth'}
           liveCheck={showLiveCheck}
           placeholderLabel={t('account.wallet.watch.placeholder')}
           shouldUseMinHeight={false}
@@ -185,7 +185,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           </Text>
         </Flex>
       </Flex>
-      <Button disabled={!isValid} testID={TestID.Next} onPress={onSubmit}>
+      <Button disabled={!isValid} mt="$spacing24" testID={TestID.Next} onPress={onSubmit}>
         {t('common.button.continue')}
       </Button>
     </SafeKeyboardOnboardingScreen>

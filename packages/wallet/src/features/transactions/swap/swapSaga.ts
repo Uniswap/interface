@@ -55,6 +55,7 @@ export function* approveAndSwap(params: SwapParams) {
         type: TransactionType.Approve,
         tokenAddress: approveTxRequest.to,
         spender: permit2Address(chainId),
+        swapTxId: txId,
       }
 
       const options = { request: approveTxRequest, submitViaPrivateRpc }
@@ -73,7 +74,12 @@ export function* approveAndSwap(params: SwapParams) {
       // Wrap Logic - UniswapX Eth-input
       if (wrapTxRequest) {
         const inputCurrencyAmount = trade.inputAmount
-        const wrapResponse = yield* wrap({ txRequest: { ...wrapTxRequest, nonce }, account, inputCurrencyAmount })
+        const wrapResponse = yield* wrap({
+          txRequest: { ...wrapTxRequest, nonce },
+          account,
+          inputCurrencyAmount,
+          swapTxId: txId,
+        })
         wrapTxHash = wrapResponse?.transactionResponse.hash
       }
 
