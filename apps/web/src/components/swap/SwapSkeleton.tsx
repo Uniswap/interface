@@ -1,8 +1,8 @@
 import { ArrowContainer, ArrowWrapper } from 'components/swap/styled'
-import { Trans } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { ArrowDown } from 'react-feather'
 import { ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 const StyledArrowWrapper = styled(ArrowWrapper)`
   position: absolute;

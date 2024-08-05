@@ -1,10 +1,10 @@
 import { AutoColumn } from 'components/Column'
 import { useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
 import styled, { css } from 'lib/styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const CTASection = styled.section`

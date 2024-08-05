@@ -1,10 +1,10 @@
 import React from 'react'
-import { Accordion, Button, Flex, Separator, Text, isWeb } from 'ui/src'
+import { Accordion, Button, Flex, Input, Separator, Text, isWeb } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { Statsig, useExperiment } from 'uniswap/src/features/gating/sdk/statsig'
 import { Switch, WebSwitch } from 'wallet/src/components/buttons/Switch'
 
 export function GatingOverrides(): JSX.Element {
@@ -43,13 +43,14 @@ export function GatingOverrides(): JSX.Element {
             <Text variant="body2">Clear all local experiment/config overrides</Text>
           </Button>
 
-          <Flex gap="$spacing24" mt="$spacing12">
+          <Flex gap="$spacing12" mt="$spacing12">
             {experimentRows}
           </Flex>
         </Accordion.Content>
       </Accordion.Item>
 
       <Button
+        mt="$spacing12"
         p="$spacing4"
         theme="tertiary"
         onPress={() => {
@@ -81,11 +82,11 @@ export function AccordionHeader({ title }: { title: React.ReactNode }): JSX.Elem
   )
 }
 
+const SwitchElement = isWeb ? WebSwitch : Switch
+
 function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
   const status = useFeatureFlagWithExposureLoggingDisabled(flag)
   const name = getFeatureFlagName(flag)
-
-  const SwitchElement = isWeb ? WebSwitch : Switch
 
   return (
     <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between">
@@ -101,22 +102,66 @@ function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
 }
 
 function ExperimentRow({ experiment }: { experiment: Experiments }): JSX.Element {
+  const { config } = useExperiment(experiment)
+
+  const paramRows = Object.entries(config.value).map(([key, value]) => {
+    let valueElement: JSX.Element | undefined
+    if (typeof value === 'boolean') {
+      valueElement = (
+        <SwitchElement
+          value={value}
+          onValueChange={(newValue: boolean): void => {
+            Statsig.overrideConfig(experiment, {
+              ...config.value,
+              [key]: newValue,
+            })
+          }}
+        />
+      )
+    } else if (typeof value === 'number') {
+      valueElement = (
+        <Input
+          value={value.toString()}
+          onChangeText={(newValue: string): void => {
+            Statsig.overrideConfig(experiment, {
+              ...config.value,
+              [key]: Number(newValue),
+            })
+          }}
+        />
+      )
+    } else if (typeof value === 'string') {
+      valueElement = (
+        <Input
+          value={value}
+          onChangeText={(newValue: string): void => {
+            Statsig.overrideConfig(experiment, {
+              ...config.value,
+              [key]: newValue,
+            })
+          }}
+        />
+      )
+    }
+
+    return (
+      valueElement && (
+        <Flex key={key} row alignItems="center" gap="$spacing16" justifyContent="space-between">
+          <Text variant="body1">{key}</Text>
+          {valueElement}
+        </Flex>
+      )
+    )
+  })
+
   return (
     <>
       <Separator />
       <Flex>
         <Text variant="body1">{experiment}</Text>
-        <Flex gap="$spacing4">
-          <Flex
-            key={experiment}
-            row
-            alignItems="center"
-            gap="$spacing16"
-            justifyContent="space-between"
-            paddingStart="$spacing16"
-          >
-            <Text variant="body2" />
-            {/* TODO(WEB-4164): implement experiment groups overrides */}
+        <Flex>
+          <Flex key={experiment} gap="$spacing8" paddingStart="$spacing8">
+            {paramRows}
           </Flex>
         </Flex>
       </Flex>

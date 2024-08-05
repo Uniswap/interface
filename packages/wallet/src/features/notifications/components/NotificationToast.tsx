@@ -5,7 +5,7 @@
 import { useCallback, useEffect } from 'react'
 import { Directions, FlingGestureHandler, FlingGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Flex,
   Text,
@@ -23,7 +23,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTimeout } from 'utilities/src/time/timing'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
 import { popNotification, setNotificationViewed } from 'wallet/src/features/notifications/slice'
-import { useAppSelector } from 'wallet/src/state'
 
 const NOTIFICATION_HEIGHT = 64
 
@@ -39,6 +38,7 @@ export interface NotificationContentProps {
   title: string
   subtitle?: string
   icon?: JSX.Element
+  iconPosition?: 'left' | 'right'
   actionButton?: {
     title: string
     onPress: () => void
@@ -77,6 +77,7 @@ export function NotificationToast({
   subtitle,
   title,
   icon,
+  iconPosition = 'left',
   onPress,
   onPressIn,
   hideDelay,
@@ -86,7 +87,7 @@ export function NotificationToast({
 }: NotificationToastProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const dispatch = useDispatch()
-  const notifications = useAppSelector(selectActiveAccountNotifications)
+  const notifications = useSelector(selectActiveAccountNotifications)
   const currentNotification = notifications?.[0]
   const hasQueuedNotification = !!notifications?.[1]
 
@@ -163,11 +164,18 @@ export function NotificationToast({
       pointerEvents="auto"
     >
       {smallToast ? (
-        <NotificationContentSmall icon={icon} title={title} onPress={onNotificationPress} onPressIn={onPressIn} />
+        <NotificationContentSmall
+          icon={icon}
+          iconPosition={iconPosition}
+          title={title}
+          onPress={onNotificationPress}
+          onPressIn={onPressIn}
+        />
       ) : (
         <NotificationContent
           actionButton={actionButton ? { title: actionButton.title, onPress: onActionButtonPress } : undefined}
           icon={icon}
+          iconPosition={iconPosition}
           subtitle={subtitle}
           title={title}
           onPress={onNotificationPress}
@@ -201,6 +209,7 @@ function NotificationContent({
   title,
   subtitle,
   icon,
+  iconPosition,
   actionButton,
   onPress,
   onPressIn,
@@ -226,7 +235,7 @@ function NotificationContent({
           gap="$spacing12"
           justifyContent="flex-start"
         >
-          {icon}
+          {iconPosition === 'left' ? icon : undefined}
           <Flex shrink alignItems="flex-start" flexDirection="column">
             <Text
               adjustsFontSizeToFit
@@ -242,6 +251,7 @@ function NotificationContent({
               </Text>
             )}
           </Flex>
+          {iconPosition === 'right' ? icon : undefined}
         </Flex>
         {actionButton && (
           <Flex shrink alignItems="flex-end" flexBasis="25%" gap="$spacing4">
@@ -257,7 +267,13 @@ function NotificationContent({
   )
 }
 
-function NotificationContentSmall({ title, icon, onPress, onPressIn }: NotificationContentProps): JSX.Element {
+function NotificationContentSmall({
+  title,
+  icon,
+  iconPosition,
+  onPress,
+  onPressIn,
+}: NotificationContentProps): JSX.Element {
   return (
     <Flex centered row shrink pointerEvents="box-none">
       <TouchableArea
@@ -268,10 +284,11 @@ function NotificationContentSmall({ title, icon, onPress, onPressIn }: Notificat
         onPressIn={onPressIn}
       >
         <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" pr="$spacing4">
-          <Flex>{icon}</Flex>
+          {iconPosition === 'left' ? <Flex>{icon}</Flex> : undefined}
           <Text adjustsFontSizeToFit numberOfLines={1} testID={TestID.NotificationToastTitle} variant="body2">
             {title}
           </Text>
+          {iconPosition === 'right' ? <Flex>{icon}</Flex> : undefined}
         </Flex>
       </TouchableArea>
     </Flex>

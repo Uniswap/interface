@@ -608,15 +608,19 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
               class="c5"
             >
               <div
-                class="c6"
-                size="20"
+                class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
               >
-                 
-                <img
-                  class="c7"
+                <div
+                  class="c6"
                   size="20"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                />
+                >
+                   
+                  <img
+                    class="c7"
+                    size="20"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  />
+                </div>
               </div>
             </div>
           </div>

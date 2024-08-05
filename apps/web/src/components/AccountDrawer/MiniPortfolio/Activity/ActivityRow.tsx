@@ -8,14 +8,12 @@ import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
-import useENSName from 'hooks/useENSName'
 import styled from 'lib/styled-components'
 import { useCallback } from 'react'
 import { SignatureType } from 'state/signatures/types'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { shortenAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
@@ -48,6 +46,7 @@ function StatusIndicator({ activity: { status, timestamp, offchainOrderDetails }
   }
 }
 
+// TODO WEB-4550 - Fix regression where ENS name is not displayed in activity row
 export function ActivityRow({ activity }: { activity: Activity }) {
   const {
     chainId,
@@ -64,7 +63,6 @@ export function ActivityRow({ activity }: { activity: Activity }) {
 
   const openOffchainActivityModal = useOpenOffchainActivityModal()
 
-  const { ENSName } = useENSName(otherAccount)
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
 
   const onClick = useCallback(() => {
@@ -98,12 +96,7 @@ export function ActivityRow({ activity }: { activity: Activity }) {
             {suffixIconSrc && <img height="14px" width="14px" src={suffixIconSrc} alt="" />}
           </Row>
         }
-        descriptor={
-          <ActivityRowDescriptor color="neutral2">
-            {descriptor}
-            {ENSName ?? shortenAddress(otherAccount)}
-          </ActivityRowDescriptor>
-        }
+        descriptor={<ActivityRowDescriptor color="neutral2">{descriptor}</ActivityRowDescriptor>}
         right={<StatusIndicator activity={activity} />}
         onClick={onClick}
       />

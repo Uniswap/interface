@@ -64,7 +64,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
         return account.address ? (
           <AuthenticatedHeader account={account.address} openSettings={openSettings} />
         ) : (
-          <WalletModal openSettings={openSettings} />
+          <WalletModal />
         )
       case MenuState.SETTINGS:
         return (

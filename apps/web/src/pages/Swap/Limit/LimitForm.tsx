@@ -14,17 +14,15 @@ import {
 } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import Row from 'components/Row'
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
+import { CurrencySearchFilters } from 'components/SearchModal/DeprecatedCurrencySearch'
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { getChain, isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
-import useSelectChain from 'hooks/useSelectChain'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import styled, { useTheme } from 'lib/styled-components'
 import { LimitExpirySection } from 'pages/Swap/Limit/LimitExpirySection'
@@ -36,13 +34,16 @@ import { LimitContextProvider, useLimitContext } from 'state/limit/LimitContext'
 import { getDefaultPriceInverted } from 'state/limit/hooks'
 import { LimitState } from 'state/limit/types'
 import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
-import { useSwapActionHandlers, useSwapAndLimitContext } from 'state/swap/hooks'
+import { useSwapActionHandlers } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { Trans } from 'uniswap/src/i18n'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import {
   NumberType,
   formatCurrencyAmount as formatCurrencyAmountWithoutUserLocale,
@@ -86,7 +87,6 @@ type LimitFormProps = {
 
 function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const account = useAccount()
-  const selectChain = useSelectChain()
   const {
     chainId,
     currencyState: { inputCurrency, outputCurrency },
@@ -310,6 +310,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
             value={formattedAmounts[Field.INPUT]}
             showMaxButton={showMaxButton}
             currency={inputCurrency ?? null}
+            currencyField={CurrencyField.INPUT}
             onUserInput={onTypeInput('inputAmount')}
             onCurrencySelect={(currency) => onSelectCurrency('inputCurrency', currency)}
             otherCurrency={outputCurrency}
@@ -337,6 +338,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
             value={formattedAmounts[Field.OUTPUT]}
             showMaxButton={false}
             currency={outputCurrency ?? null}
+            currencyField={CurrencyField.OUTPUT}
             onUserInput={onTypeInput('outputAmount')}
             onCurrencySelect={(currency) => onSelectCurrency('outputCurrency', currency)}
             otherCurrency={inputCurrency}
@@ -348,20 +350,14 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       {parsedLimitPrice && <LimitExpirySection />}
       <SubmitOrderButton
         inputCurrency={inputCurrency}
-        handleContinueToReview={async () => {
-          if (chainId && chainId !== account.chainId) {
-            const didSwitchChain = await selectChain(chainId)
-            if (!didSwitchChain) {
-              return
-            }
-          }
+        handleContinueToReview={() => {
           setShowConfirm(true)
         }}
         trade={limitOrderTrade}
         hasInsufficientFunds={hasInsufficientFunds}
         limitPriceError={priceError}
       />
-      {!!priceError && inputCurrency && outputCurrency && limitOrderTrade && (
+      {isUniswapXSupportedChain(chainId) && !!priceError && inputCurrency && outputCurrency && limitOrderTrade && (
         <LimitPriceError
           priceError={priceError}
           priceAdjustmentPercentage={currentPriceAdjustment}
@@ -370,6 +366,22 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           priceInverted={limitState.limitPriceInverted}
         />
       )}
+      <LimitDisclaimerContainer>
+        <StyledAlertIcon size={20} color={!isUniswapXSupportedChain(chainId) ? theme.critical : theme.neutral2} />
+        <DisclaimerText>
+          {!isUniswapXSupportedChain(chainId) ? (
+            <Trans
+              i18nKey="limits.form.disclaimer.mainnet"
+              components={{ link: <ExternalLink href={uniswapUrls.helpArticleUrls.limitsNetworkSupport} /> }}
+            />
+          ) : (
+            <Trans
+              i18nKey="limits.form.disclaimer.uniswapx"
+              components={{ link: <ExternalLink href={uniswapUrls.helpArticleUrls.limitsFailure} /> }}
+            />
+          )}
+        </DisclaimerText>
+      </LimitDisclaimerContainer>
       {account.address && (
         <OpenLimitOrdersButton
           account={account.address}
@@ -379,24 +391,6 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           }}
         />
       )}
-      <LimitDisclaimerContainer>
-        <StyledAlertIcon size={20} color={!isUniswapXSupportedChain(chainId) ? theme.critical : theme.neutral2} />
-        <DisclaimerText>
-          {!isUniswapXSupportedChain(chainId) ? (
-            <Trans i18nKey="limits.onlyMainnet">
-              <ExternalLink href={uniswapUrls.helpArticleUrls.limitsNetworkSupport}>
-                <Trans i18nKey="common.learnMore.link" />
-              </ExternalLink>
-            </Trans>
-          ) : (
-            <Trans i18nKey="limits.priceWarning">
-              <ExternalLink href={uniswapUrls.helpArticleUrls.limitsFailure}>
-                <Trans i18nKey="common.learnMore.link" />
-              </ExternalLink>
-            </Trans>
-          )}
-        </DisclaimerText>
-      </LimitDisclaimerContainer>
       {limitOrderTrade && showConfirm && (
         <ConfirmSwapModal
           allowance={allowance}

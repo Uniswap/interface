@@ -277,7 +277,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
               class="c7 c14 css-obwv3p"
               data-testid="position-min-0"
             >
-              Min: 0 WETH per USDC
+              Min: 0 WETH per USDC
             </div>
             <svg
               class="c15"
@@ -296,7 +296,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
               class="c7 c14 css-obwv3p"
               data-testid="position-max-1"
             >
-              Max: 1.00 WETH per USDC
+              Max: 1.00 WETH per USDC
             </div>
           </div>
         </div>
@@ -558,7 +558,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
               class="c7 c15 css-obwv3p"
               data-testid="position-min-0"
             >
-              Min: 0 WETH per USDC
+              Min: 0 WETH per USDC
             </div>
             <svg
               class="c16"
@@ -577,7 +577,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
               class="c7 c15 css-obwv3p"
               data-testid="position-max-1"
             >
-              Max: 1.00 WETH per USDC
+              Max: 1.00 WETH per USDC
             </div>
           </div>
         </div>
@@ -856,7 +856,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
               class="c7 c14 css-obwv3p"
               data-testid="position-min-0"
             >
-              Min: 0 WETH per USDC
+              Min: 0 WETH per USDC
             </div>
             <svg
               class="c15"
@@ -875,7 +875,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
               class="c7 c14 css-obwv3p"
               data-testid="position-max-1"
             >
-              Max: 1.00 WETH per USDC
+              Max: 1.00 WETH per USDC
             </div>
           </div>
         </div>

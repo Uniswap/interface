@@ -2,10 +2,10 @@ import Circle from 'assets/images/blue-loader.svg'
 import { AutoColumn, ColumnCenter } from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { ArrowUpCircle } from 'react-feather'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const ConfirmOrLoadingWrapper = styled.div`

@@ -8,7 +8,6 @@ import {
 
 export function ReceiveSummaryItem({
   transaction,
-  layoutElement,
   index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: ReceiveTokenTransactionInfo }
@@ -16,7 +15,6 @@ export function ReceiveSummaryItem({
   return (
     <TransferTokenSummaryItem
       index={index}
-      layoutElement={layoutElement}
       otherAddress={transaction.typeInfo.sender}
       transaction={transaction}
       transactionType={TransactionType.Receive}

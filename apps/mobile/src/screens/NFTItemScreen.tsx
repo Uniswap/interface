@@ -5,8 +5,7 @@ import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatusBar, StyleSheet, TouchableOpacity } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loader } from 'src/components/loading'
@@ -133,7 +132,7 @@ function NFTItemScreenContents({
     }
   }
 
-  const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
+  const inModal = useSelector(selectModalState(ModalName.Explore)).isOpen
 
   const traceProperties: Record<string, Maybe<string | boolean>> = useMemo(() => {
     const baseProps = {

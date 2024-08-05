@@ -2,16 +2,15 @@ import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { scrollbarStyle } from 'components/SearchModal/CurrencyList/index.css'
 import { PaddedColumn, SearchInput } from 'components/SearchModal/styled'
-import { t } from 'i18next'
 import { CountryListRow } from 'pages/Swap/Buy/CountryListRow'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
-import { Trans } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { CloseIcon } from 'theme/components'
 import { Text } from 'ui/src/components/text/Text'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
+import { Trans, t } from 'uniswap/src/i18n'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 
 const ROW_ITEM_SIZE = 56
@@ -68,7 +67,7 @@ export function CountryListModal({
             type="text"
             id="for-country-search-input"
             data-testid="for-country-search-input"
-            placeholder={t`Search by country or region`}
+            placeholder={t`swap.buy.countryModal.placeholder`}
             autoComplete="off"
             value={searchQuery}
             onChange={handleInput}

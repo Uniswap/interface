@@ -317,19 +317,23 @@ exports[`OrderContent should render without error, filled order 1`] = `
             class="c3"
           >
             <div
-              class="c4"
-              size="40"
+              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
             >
-              <img
-                class="c5"
+              <div
+                class="c4"
                 size="40"
-                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-              />
-              <img
-                class="c5"
-                size="40"
-                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-              />
+              >
+                <img
+                  class="c5"
+                  size="40"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                />
+                <img
+                  class="c5"
+                  size="40"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                />
+              </div>
             </div>
           </div>
           <div
@@ -385,15 +389,19 @@ exports[`OrderContent should render without error, filled order 1`] = `
                 class="c3"
               >
                 <div
-                  class="c15"
-                  size="36"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                 >
-                   
-                  <img
-                    class="c16"
+                  <div
+                    class="c15"
                     size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                  />
+                  >
+                     
+                    <img
+                      class="c16"
+                      size="36"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -451,15 +459,19 @@ exports[`OrderContent should render without error, filled order 1`] = `
                 class="c3"
               >
                 <div
-                  class="c15"
-                  size="36"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                 >
-                   
-                  <img
-                    class="c16"
+                  <div
+                    class="c15"
                     size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                  />
+                  >
+                     
+                    <img
+                      class="c16"
+                      size="36"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -947,19 +959,23 @@ exports[`OrderContent should render without error, limit order 1`] = `
             class="c3"
           >
             <div
-              class="c4"
-              size="40"
+              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
             >
-              <img
-                class="c5"
+              <div
+                class="c4"
                 size="40"
-                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-              />
-              <img
-                class="c5"
-                size="40"
-                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-              />
+              >
+                <img
+                  class="c5"
+                  size="40"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                />
+                <img
+                  class="c5"
+                  size="40"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                />
+              </div>
             </div>
           </div>
           <div
@@ -1015,15 +1031,19 @@ exports[`OrderContent should render without error, limit order 1`] = `
                 class="c3"
               >
                 <div
-                  class="c15"
-                  size="36"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                 >
-                   
-                  <img
-                    class="c16"
+                  <div
+                    class="c15"
                     size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                  />
+                  >
+                     
+                    <img
+                      class="c16"
+                      size="36"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -1081,15 +1101,19 @@ exports[`OrderContent should render without error, limit order 1`] = `
                 class="c3"
               >
                 <div
-                  class="c15"
-                  size="36"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                 >
-                   
-                  <img
-                    class="c16"
+                  <div
+                    class="c15"
                     size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                  />
+                  >
+                     
+                    <img
+                      class="c16"
+                      size="36"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -1575,19 +1599,23 @@ exports[`OrderContent should render without error, open order 1`] = `
             class="c3"
           >
             <div
-              class="c4"
-              size="40"
+              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
             >
-              <img
-                class="c5"
+              <div
+                class="c4"
                 size="40"
-                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-              />
-              <img
-                class="c5"
-                size="40"
-                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-              />
+              >
+                <img
+                  class="c5"
+                  size="40"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                />
+                <img
+                  class="c5"
+                  size="40"
+                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                />
+              </div>
             </div>
           </div>
           <div
@@ -1643,15 +1671,19 @@ exports[`OrderContent should render without error, open order 1`] = `
                 class="c3"
               >
                 <div
-                  class="c15"
-                  size="36"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                 >
-                   
-                  <img
-                    class="c16"
+                  <div
+                    class="c15"
                     size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                  />
+                  >
+                     
+                    <img
+                      class="c16"
+                      size="36"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -1709,15 +1741,19 @@ exports[`OrderContent should render without error, open order 1`] = `
                 class="c3"
               >
                 <div
-                  class="c15"
-                  size="36"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                 >
-                   
-                  <img
-                    class="c16"
+                  <div
+                    class="c15"
                     size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                  />
+                  >
+                     
+                    <img
+                      class="c16"
+                      size="36"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                    />
+                  </div>
                 </div>
               </div>
             </div>

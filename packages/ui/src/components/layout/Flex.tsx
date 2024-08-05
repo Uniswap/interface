@@ -1,19 +1,11 @@
 import type { Insets } from 'react-native'
-import { SizeTokens, View, ViewProps, styled } from 'tamagui'
+import { GetProps, SizeTokens, View, styled } from 'tamagui'
 import { animationsEnter, animationsEnterExit, animationsExit } from 'ui/src/animations/animationPresets'
 
 export const flexStyles = {
   fill: { flex: 1 },
   grow: { flexGrow: 1 },
   shrink: { flexShrink: 1 },
-}
-
-export type FlexProps = ViewProps & {
-  row?: boolean
-  shrink?: boolean
-  grow?: boolean
-  fill?: boolean
-  centered?: boolean
 }
 
 type SizeOrNumber = number | SizeTokens
@@ -74,3 +66,5 @@ export const Flex = styled(View, {
     animateEnterExit: animationsEnterExit,
   } as const,
 })
+
+export type FlexProps = GetProps<typeof Flex>

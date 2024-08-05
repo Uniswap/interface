@@ -12,7 +12,6 @@ import { isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chain
 import { useIsMobile } from 'hooks/screenSize'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { useCallback, useMemo, useRef } from 'react'
@@ -26,6 +25,7 @@ import { Z_INDEX } from 'theme/zIndex'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Trans } from 'uniswap/src/i18n'
 
 const CloseButton = styled.button`
   background: transparent;
@@ -119,7 +119,7 @@ export default function SettingsTab({
   compact?: boolean
   hideRoutingSettings?: boolean
 }) {
-  const showDeadlineSettings = isL2ChainId(chainId)
+  const showDeadlineSettings = !isL2ChainId(chainId)
   const toggleButtonNode = useRef<HTMLDivElement | null>(null)
   const menuNode = useRef<HTMLDivElement | null>(null)
   const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)

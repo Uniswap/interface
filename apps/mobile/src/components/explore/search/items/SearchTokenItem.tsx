@@ -9,13 +9,13 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
-import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
-import { TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 
 type SearchTokenItemProps = {
@@ -29,7 +29,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
   const { chainId, address, name, symbol, logoUrl, safetyLevel } = token
-  const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
+  const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId as WalletChainId)
 
   const onPress = (): void => {
     tokenDetailsNavigation.preload(currencyId)
@@ -62,7 +62,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
   }
 
   const { menuActions, onContextMenuPress } = useExploreTokenContextMenu({
-    chainId,
+    chainId: chainId as WalletChainId,
     currencyId,
     analyticsSection: SectionName.ExploreSearch,
   })
@@ -72,7 +72,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
       <TouchableArea
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
-        testID={TestID.SearchTokenItem}
+        testID={`${TestID.SearchTokenItem}-${name}-${chainId}`}
         onLongPress={disableOnPress}
         onPress={onPress}
       >

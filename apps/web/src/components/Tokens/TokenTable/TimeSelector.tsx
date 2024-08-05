@@ -2,11 +2,11 @@ import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { TimePeriod } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize'
-import { Trans } from 'i18n'
 import { useAtom } from 'jotai'
 import { css, useTheme } from 'lib/styled-components'
 import { useReducer } from 'react'
 import { Check } from 'react-feather'
+import { useTranslation } from 'uniswap/src/i18n'
 
 export enum TimePeriodDisplay {
   HOUR = '1H',
@@ -53,6 +53,7 @@ const StyledMenuFlyout = css`
 `
 // TODO: change this to reflect data pipeline
 export default function TimeSelector() {
+  const { t } = useTranslation()
   const theme = useTheme()
   const [isMenuOpen, toggleMenu] = useReducer((s) => !s, false)
   const [activeTime, setTime] = useAtom(filterTimeAtom)
@@ -67,7 +68,7 @@ export default function TimeSelector() {
         toggleOpen={toggleMenu}
         menuLabel={
           <>
-            {DISPLAYS[activeTime]} {isLargeScreen && <Trans i18nKey="common.volume.lowercase" />}
+            {DISPLAYS[activeTime]} {isLargeScreen && t('common.volume').toLowerCase()}
           </>
         }
         internalMenuItems={
@@ -82,7 +83,7 @@ export default function TimeSelector() {
                 }}
               >
                 <div>
-                  {DISPLAYS[time]} <Trans i18nKey="common.volume.lowercase" />
+                  {DISPLAYS[time]} {t('common.volume').toLowerCase()}
                 </div>
                 {time === activeTime && <Check color={theme.accent1} size={16} />}
               </InternalMenuItem>

@@ -4,7 +4,6 @@ import { getDefaultCurrencyCode, parsePathParts } from 'components/FiatOnrampMod
 import { getChain, getChainFromChainUrlParam, getChainUrlParam } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useParsedQueryString from 'hooks/useParsedQueryString'
-import { Trans } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { useCallback, useEffect, useState } from 'react'
 import { useHref } from 'react-router-dom'
@@ -13,6 +12,8 @@ import { ApplicationModal } from 'state/application/reducer'
 import { CustomLightSpinner, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { AdaptiveWebModalSheet } from 'ui/src'
+import { Trans } from 'uniswap/src/i18n'
+
 import { logger } from 'utilities/src/logger/logger'
 
 const MOONPAY_DARK_BACKGROUND = '#1c1c1e'

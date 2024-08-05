@@ -23,11 +23,11 @@ import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam 
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
 import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL } from 'graphql/data/util'
-import { Trans } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
 import styled from 'lib/styled-components'
 import { ReactElement, ReactNode, useMemo } from 'react'
 import { EllipsisStyle, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const TableWrapper = styled.div`

@@ -9,12 +9,13 @@ import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
 import { ProviderOption } from 'pages/Swap/Buy/ProviderOption'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { useMemo, useState } from 'react'
-import { Trans } from 'react-i18next'
 import { AdaptiveWebModalSheet, Flex, Separator, Text } from 'ui/src'
 import { TimePast } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FORQuote, FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
+import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
+import { useInterval } from 'utilities/src/time/timing'
 
 const ProviderListPaddedColumn = styled(AutoColumn)`
   position: relative;
@@ -55,6 +56,13 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
     }, ms('500ms'))
   }
 
+  // close modal after 5 minutes because some provider link have expirations and we don't want to keep generating these if the user is not active
+  useInterval(() => {
+    if (!errorProvider && !connectedProvider) {
+      onClose()
+    }
+  }, ms('5m'))
+
   const quoteCurrencyCode = quoteCurrency.meldCurrencyCode
   const recipientAddress = account.address
   if (!selectedCountry || !quoteCurrencyCode || !meldSupportedFiatCurrency || !recipientAddress) {
@@ -78,7 +86,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
   }
 
   return (
-    <ProviderListPaddedColumn gap="24px">
+    <ProviderListPaddedColumn gap="24px" id="ChooseProviderModal">
       <GetHelpHeader
         title={<Trans i18nKey="fiatOnRamp.checkoutWith" />}
         link={uniswapUrls.helpArticleUrls.fiatOnRampHelp}

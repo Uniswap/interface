@@ -428,7 +428,7 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
           class="c3"
         >
           <span
-            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
+            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _userSelect-none"
             data-disable-theme="true"
           >
             You’re sending
@@ -505,19 +505,23 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
                 class="c22"
               >
                 <div
-                  class="c23"
-                  size="36"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                 >
-                  <img
-                    class="c24"
+                  <div
+                    class="c23"
                     size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                  />
-                  <img
-                    class="c24"
-                    size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                  />
+                  >
+                    <img
+                      class="c24"
+                      size="36"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                    <img
+                      class="c24"
+                      size="36"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                  </div>
                 </div>
               </div>
               <div
@@ -972,7 +976,7 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
           class="c3"
         >
           <span
-            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
+            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _userSelect-none"
             data-disable-theme="true"
           >
             You’re sending
@@ -1044,19 +1048,23 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
                 class="c21"
               >
                 <div
-                  class="c22"
-                  size="36"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                 >
-                  <img
-                    class="c23"
+                  <div
+                    class="c22"
                     size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                  />
-                  <img
-                    class="c23"
-                    size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                  />
+                  >
+                    <img
+                      class="c23"
+                      size="36"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                    <img
+                      class="c23"
+                      size="36"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                  </div>
                 </div>
               </div>
               <div
@@ -1523,7 +1531,7 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
           class="c3"
         >
           <span
-            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
+            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _userSelect-none"
             data-disable-theme="true"
           >
             You’re sending
@@ -1598,19 +1606,23 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
                 class="c22"
               >
                 <div
-                  class="c23"
-                  size="36"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                 >
-                  <img
-                    class="c24"
+                  <div
+                    class="c23"
                     size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                  />
-                  <img
-                    class="c24"
-                    size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                  />
+                  >
+                    <img
+                      class="c24"
+                      size="36"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                    <img
+                      class="c24"
+                      size="36"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                  </div>
                 </div>
               </div>
               <div

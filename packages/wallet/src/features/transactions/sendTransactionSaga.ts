@@ -1,11 +1,11 @@
 import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { transactionActions } from 'wallet/src/features/transactions/slice'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import {

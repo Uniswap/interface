@@ -2,15 +2,15 @@ import { RowBetween, RowFixed } from 'components/Row'
 import SettingsTab from 'components/Settings'
 import SwapBuyFiatButton from 'components/swap/SwapBuyFiatButton'
 import { SwapHeaderTabButton } from 'components/swap/styled'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { useCallback, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
+import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { isIFramed } from 'utils/isIFramed'
 
@@ -43,7 +43,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const [triggerBuyFlow, setTriggerBuyFlow] = useState(false)
-  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregatorWeb)
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   useEffect(() => {
     if (pathname === '/buy') {

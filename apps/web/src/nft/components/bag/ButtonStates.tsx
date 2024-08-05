@@ -1,7 +1,7 @@
-import { Trans } from 'i18n'
 import { DefaultTheme } from 'lib/styled-components'
 import { PriceImpact } from 'nft/hooks/usePriceImpact'
 import { ReactNode } from 'react'
+import { Trans } from 'uniswap/src/i18n'
 
 export enum BuyButtonStates {
   WALLET_NOT_CONNECTED,

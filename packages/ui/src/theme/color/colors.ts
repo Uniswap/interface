@@ -227,9 +227,9 @@ const sporeLight = {
   neutral3: '#CECECE',
 
   accent1: '#FC72FF',
-  accent1Hovered: '#C70A92',
-  accent2: '#FFEFFF',
-  accent2Hovered: '#FEEBFC',
+  accent1Hovered: '#FA5BEC',
+  accent2: '#FEF4FF',
+  accent2Hovered: '#FFE6FA',
   accent3: '#4C82FB',
   accent3Hovered: '#F5F5F5',
 
@@ -239,6 +239,9 @@ const sporeLight = {
   statusSuccess: '#40B66B',
   statusSuccess2: '#EEFBF1',
   statusCritical: '#FF5F52',
+  statusCriticalHovered: '#FF3931',
+  statusCritical2: '#FFF2F1',
+  statusCritical2Hovered: '#FFD5D4',
 }
 
 const sporeDark = {
@@ -272,6 +275,9 @@ const sporeDark = {
   statusSuccess: '#40B66B',
   statusSuccess2: '#0F2C1A',
   statusCritical: '#FF5F52',
+  statusCriticalHovered: '#FF3931',
+  statusCritical2: '#220D0C',
+  statusCritical2Hovered: '#470402',
 }
 
 export const colorsLight = {
@@ -306,6 +312,9 @@ export const colorsLight = {
   statusSuccess: sporeLight.statusSuccess,
   statusSuccess2: sporeLight.statusSuccess2,
   statusCritical: sporeLight.statusCritical,
+  statusCriticalHovered: sporeLight.statusCriticalHovered,
+  statusCritical2: sporeLight.statusCritical2,
+  statusCritical2Hovered: sporeLight.statusCritical2Hovered,
 
   DEP_backgroundBranded: '#FCF7FF',
   DEP_backgroundActionButton: colors.magenta50,
@@ -379,6 +388,9 @@ export const colorsDark = {
   statusSuccess: sporeDark.statusSuccess,
   statusSuccess2: sporeDark.statusSuccess2,
   statusCritical: sporeDark.statusCritical,
+  statusCriticalHovered: sporeDark.statusCriticalHovered,
+  statusCritical2: sporeDark.statusCritical2,
+  statusCritical2Hovered: sporeDark.statusCritical2Hovered,
 
   DEP_backgroundBranded: '#100D1C',
   DEP_backgroundActionButton: opacify(12, colors.magentaVibrant),

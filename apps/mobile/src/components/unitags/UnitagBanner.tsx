@@ -1,7 +1,7 @@
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Image, Text, TouchableArea, TouchableAreaProps, useIsDarkMode, useIsShortMobileDevice } from 'ui/src'
@@ -15,7 +15,6 @@ import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { selectHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
-import { useAppSelector } from 'wallet/src/state'
 
 const IMAGE_ASPECT_RATIO = 0.42
 const IMAGE_SCREEN_WIDTH_PROPORTION = 0.18
@@ -34,7 +33,7 @@ export function UnitagBanner({
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
   const isDarkMode = useIsDarkMode()
-  const hasCompletedUnitagsIntroModal = useAppSelector(selectHasCompletedUnitagsIntroModal)
+  const hasCompletedUnitagsIntroModal = useSelector(selectHasCompletedUnitagsIntroModal)
   const isShortDevice = useIsShortMobileDevice()
 
   const imageWidth = compact

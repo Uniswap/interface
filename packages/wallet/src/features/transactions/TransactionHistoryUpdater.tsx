@@ -2,7 +2,7 @@ import { useApolloClient } from '@apollo/client'
 import dayjs from 'dayjs'
 import { useEffect, useMemo } from 'react'
 import { View } from 'react-native'
-import { batch, useDispatch } from 'react-redux'
+import { batch, useDispatch, useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   TransactionHistoryUpdaterQueryResult,
@@ -25,7 +25,6 @@ import { useSelectAddressTransactions } from 'wallet/src/features/transactions/s
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { useAccounts, useActiveAccountAddress, useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
-import { useAppSelector } from 'wallet/src/state'
 
 export const GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE = [
   GQLQueries.PortfolioBalances,
@@ -98,10 +97,10 @@ function AddressTransactionHistoryUpdater({
   const dispatch = useDispatch()
   const apolloClient = useApolloClient()
 
-  const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
+  const activeAccountAddress = useSelector(selectActiveAccountAddress)
 
   // Current txn count for all addresses
-  const lastTxNotificationUpdateTimestamp = useAppSelector(selectLastTxNotificationUpdate)[address]
+  const lastTxNotificationUpdateTimestamp = useSelector(selectLastTxNotificationUpdate)[address]
 
   const fetchAndDispatchReceiveNotification = useFetchAndDispatchReceiveNotification()
 
@@ -115,7 +114,7 @@ function AddressTransactionHistoryUpdater({
       let newTransactionsFound = false
 
       // Parse txns and address from portfolio.
-      activities.map((activity) => {
+      activities.forEach((activity) => {
         if (!activity) {
           return
         }

@@ -4,13 +4,13 @@ import { AutoColumn, ColumnCenter } from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { ArrowUpCircle, X } from 'react-feather'
 import { useUserVotes, useVoteCallback } from 'state/governance/hooks'
 import { VoteOption } from 'state/governance/types'
 import { CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -92,7 +92,7 @@ export default function VoteModal({ isOpen, onDismiss, proposalId, voteOption }:
                 ) : voteOption === VoteOption.For ? (
                   <Trans i18nKey="account.transactionSummary.vote.for" values={{ proposalKey: proposalId }} />
                 ) : (
-                  <Trans i18nKey="account.transactionSummary.decision.abstain" values={{ proposalKey: proposalId }} />
+                  <Trans i18nKey="account.transactionSummary.vote.abstain" values={{ proposalKey: proposalId }} />
                 )}
               </ThemedText.DeprecatedMediumHeader>
               <StyledClosed onClick={wrappedOnDismiss} />

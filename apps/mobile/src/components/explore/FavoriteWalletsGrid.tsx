@@ -1,8 +1,7 @@
 import { default as React, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteWalletCard from 'src/components/explore/FavoriteWalletCard'
 import { Loader } from 'src/components/loading'
@@ -31,7 +30,7 @@ export function FavoriteWalletsGrid({ showLoading, ...rest }: FavoriteWalletsGri
 
   const [isEditing, setIsEditing] = useState(false)
   const isTokenDragged = useSharedValue(false)
-  const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
+  const watchedWalletsSet = useSelector(selectWatchedAddressSet)
   const watchedWalletsList = useMemo(() => Array.from(watchedWalletsSet), [watchedWalletsSet])
 
   // Reset edit mode when there are no favorite wallets

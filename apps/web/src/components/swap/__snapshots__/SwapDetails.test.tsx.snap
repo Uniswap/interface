@@ -102,6 +102,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 }
 
 .c19 {
+  position: relative;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -317,10 +318,6 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   align-items: center;
 }
 
-.c16::after {
-  content: 'Auto';
-}
-
 .c1 {
   padding: 0px 12px 8px;
 }
@@ -490,7 +487,9 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
                         >
                           <div
                             class="c5 c16 css-1lgneq0"
-                          />
+                          >
+                            Auto
+                          </div>
                            2%
                         </div>
                       </div>
@@ -921,10 +920,6 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   align-items: center;
 }
 
-.c16::after {
-  content: 'Auto';
-}
-
 .c1 {
   padding: 0px 12px 8px;
 }
@@ -1059,7 +1054,9 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
                         >
                           <div
                             class="c5 c16 css-1lgneq0"
-                          />
+                          >
+                            Auto
+                          </div>
                            2%
                         </div>
                       </div>
@@ -1159,33 +1156,36 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
             class="c5 css-1jyz67g"
           >
             <div
-              class="c6 c7"
+              class="c6 c15"
             >
               <style>
                 
   @keyframes rotate360 {
       from {
-          transform: rotate(0deg);
+          transform: rotate(45deg);
       }
       to {
-          transform: rotate(360deg);
+          transform: rotate(405deg);
       }
   }
 
   .RotateElement {
-      animation: rotate360 3s linear infinite;
+      animation: rotate360 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
       transform-origin: center center;
   }
 
               </style>
               <div
-                class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _height-16px _justifyContent-center _marginEnd-2px _marginStart-2px _width-16px RotateElement"
+                class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _height-20px _justifyContent-center _marginEnd-2px _marginStart-2px _width-20px"
               >
                 <div
-                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _flexShrink-0 _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _height-8px _minHeight-8px _minWidth-8px _position-relative _width-8px"
+                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _flexShrink-0 _height-20px _minHeight-8px _minWidth-8px _pt-1d0t66667px46 _pr-1d0t66667px46 _pb-1d0t66667px46 _pl-1d0t66667px46 _position-relative _width-20px"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _backgroundColor-transparent _borderBottomColor-transparent _borderBottomWidth-1px _borderLeftColor-843134974 _borderLeftWidth-2px _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderRightColor-transparent _borderRightWidth-1px _borderTopColor-transparent _borderTopWidth-1px _height-14px _left--6px _position-relative _top--6px _width-14px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid RotateElement"
+                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _backgroundColor-transparent _borderTopColor-843134974 _borderRightColor-843134974 _borderBottomColor-843134974 _borderLeftColor-843134974 _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-3px _borderRightWidth-3px _borderBottomWidth-3px _borderLeftWidth-3px _height-20px _opacity-0d0t146 _position-absolute _width-20px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                  />
+                  <div
+                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _backgroundColor-transparent _borderBottomColor-transparent _borderBottomWidth-3px _borderLeftColor-transparent _borderLeftWidth-3px _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderRightColor-transparent _borderRightWidth-3px _borderTopColor-843134974 _borderTopWidth-3px _height-20px _position-absolute _width-20px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid RotateElement"
                   />
                 </div>
               </div>

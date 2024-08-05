@@ -147,6 +147,7 @@ const ONRAMP_TRANSFER_ASSET_CHANGE = {
   __typename: 'OnRampTransfer' as const,
   id: ASSET_CHANGE_ID,
   transactionReferenceId: 'transaction_reference_id',
+  externalSessionId: 'external_session_id',
   token: {
     id: 'asset_id',
     symbol: 'asset_symbol',

@@ -1,6 +1,6 @@
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 const StyledLink = styled(ExternalLink)`
   font-weight: 535;
@@ -10,14 +10,13 @@ const StyledLink = styled(ExternalLink)`
 export default function PrivacyPolicyNotice() {
   return (
     <ThemedText.BodySmall color="neutral2">
-      <Trans i18nKey="wallet.connectingAgreement" />
-      <StyledLink href="https://uniswap.org/terms-of-service/">
-        <Trans i18nKey="common.termsOfService" />{' '}
-      </StyledLink>
-      <Trans i18nKey="wallet.termsAndConsent" />{' '}
-      <StyledLink href="https://uniswap.org/privacy-policy">
-        <Trans i18nKey="wallet.privacyPolicyPeriod" />
-      </StyledLink>
+      <Trans
+        i18nKey="wallet.connectingAgreement"
+        components={{
+          termsLink: <StyledLink href="https://uniswap.org/terms-of-service/" />,
+          privacyLink: <StyledLink href="https://uniswap.org/privacy-policy" />,
+        }}
+      />
     </ThemedText.BodySmall>
   )
 }

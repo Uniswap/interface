@@ -29,6 +29,7 @@ const erc20TranferParams: TransferCurrencyParams = {
   chainId: UniverseChainId.Goerli,
   toAddress: '0xdefaced',
   amountInWei: '100000000000000000',
+  currencyAmountUSD: undefined,
 }
 const nativeTranferParams: TransferCurrencyParams = {
   ...erc20TranferParams,
@@ -42,6 +43,7 @@ const erc721TransferParams: TransferNFTParams = {
   toAddress: '0xdefaced',
   tokenAddress: '0xdeadbeef',
   tokenId: '123567',
+  currencyAmountUSD: undefined,
 }
 const erc1155TransferParams: TransferNFTParams = {
   ...erc721TransferParams,
@@ -54,6 +56,7 @@ const typeInfo: SendTokenTransactionInfo = {
   recipient: erc20TranferParams.toAddress,
   tokenAddress: erc20TranferParams.tokenAddress,
   type: TransactionType.Send,
+  currencyAmountUSD: undefined,
 }
 
 describe('transferTokenSaga', () => {
@@ -126,6 +129,7 @@ describe('transferTokenSaga', () => {
           tokenAddress: erc721TransferParams.tokenAddress,
           tokenId: erc721TransferParams.tokenId,
           type: TransactionType.Send,
+          currencyAmountUSD: undefined,
         },
         txId: '1',
       })
@@ -150,6 +154,7 @@ describe('transferTokenSaga', () => {
           tokenAddress: erc1155TransferParams.tokenAddress,
           tokenId: erc1155TransferParams.tokenId,
           type: TransactionType.Send,
+          currencyAmountUSD: undefined,
         },
         txId: '1',
       })

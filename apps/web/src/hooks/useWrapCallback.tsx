@@ -3,17 +3,17 @@ import { Currency } from '@uniswap/sdk-core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useWETHContract } from 'hooks/useContract'
-import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useCurrencyBalance } from 'state/connection/hooks'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import { WrapType } from 'uniswap/src/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -60,7 +60,11 @@ export default function useWrapCallback(
 ): { wrapType: WrapType; execute?: () => Promise<string | undefined>; inputError?: WrapInputError } {
   const account = useAccount()
   const { chainId } = useSwapAndLimitContext()
+
   const wethContract = useWETHContract(true, chainId)
+  const wethContractRef = useRef(wethContract)
+  wethContractRef.current = wethContract
+
   const balance = useCurrencyBalance(account.address, inputCurrency ?? undefined)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(
@@ -77,7 +81,7 @@ export default function useWrapCallback(
   }
 
   return useMemo(() => {
-    if (!wethContract || !chainId || !inputCurrency || !outputCurrency) {
+    if (!wethContractRef.current || !chainId || !inputCurrency || !outputCurrency) {
       return NOT_APPLICABLE
     }
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
@@ -104,6 +108,10 @@ export default function useWrapCallback(
           sufficientBalance && inputAmount
             ? () =>
                 trace({ name: 'Wrap', op: 'swap.wrap' }, async (trace) => {
+                  const wethContract = wethContractRef.current
+                  if (!wethContract) {
+                    throw new Error('wethContract is null')
+                  }
                   const network = await wethContract.provider.getNetwork()
                   if (
                     network.chainId !== chainId ||
@@ -151,6 +159,10 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
             ? () =>
                 trace({ name: 'Wrap', op: 'swap.wrap' }, async (trace) => {
                   try {
+                    const wethContract = wethContractRef.current
+                    if (!wethContract) {
+                      throw new Error('wethContract is null')
+                    }
                     const txReceipt = await trace.child({ name: 'Withdraw', op: 'wallet.send_transaction' }, () =>
                       wethContract.withdraw(`0x${inputAmount.quotient.toString(16)}`),
                     )
@@ -180,5 +192,5 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
     } else {
       return NOT_APPLICABLE
     }
-  }, [wethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  }, [chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
 }

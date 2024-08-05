@@ -60,26 +60,6 @@ export type TransactionEip1559FeeParams = {
 // GasFeeResponse is the type that comes directly from the Gas Service API
 export type GasFeeResponse = GasFeeResponseEip1559 | GasFeeResponseLegacy
 
-// TransactionGasFeeInfo is the transformed response that is readily usable
-// by components
-export type TransactionGasFeeInfo = {
-  type: FeeType
-  speed: GasSpeed
-
-  // gasFee.value is the total network fee denoted in wei of the native currency
-  // this is the value to be converted into USD and shown to the user
-  gasFee: GasFeeResult
-
-  // these are the values corresponding to gasFee that are eventually
-  // passed to the transaction itself
-  params: TransactionLegacyFeeParams | TransactionEip1559FeeParams
-}
-
-export type UseTransactionGasFeeResponse = {
-  data?: TransactionGasFeeInfo
-  error?: ApolloError
-}
-
 export type GasFeeResult = {
   value?: string
   loading: boolean

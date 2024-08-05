@@ -15,11 +15,11 @@ interface FormattedDisplayAmountsProps {
 }
 
 /**
- * Used to get sub-text display amoounts for the non-active input mode.
+ * Used to get sub-text display amounts for the non-active input mode.
  *
- * If fiat mode, returns the equivilent token amount string.
+ * If fiat mode, returns the equivalent token amount string.
  *
- * If token mode, returns the equivilent fiat amount formatted based on app currency settings.
+ * If token mode, returns the equivalent fiat amount formatted based on app currency settings.
  *
  */
 export function useTokenAndFiatDisplayAmounts({
@@ -36,7 +36,7 @@ export function useTokenAndFiatDisplayAmounts({
     ? formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })
     : ''
 
-  const formattedFiatValue: string = convertFiatAmountFormatted(usdValue?.toExact(), NumberType.FiatTokenQuantity)
+  const formattedFiatValue: string = convertFiatAmountFormatted(usdValue?.toExact() || 0, NumberType.FiatTokenQuantity)
 
   // In fiat mode, show equivalent token amount. In token mode, show equivalent fiat amount
   return useMemo((): string => {
@@ -59,12 +59,13 @@ export function useTokenAndFiatDisplayAmounts({
         return `${formattedCurrencyAmount} ${currencySymbol}`
       }
     } else {
-      if (formattedFiatValue && usdValue) {
+      if (formattedFiatValue) {
         return formattedFiatValue
       }
     }
+
     // Fallback for no formatted value case
-    return ''
+    return '0'
   }, [
     addFiatSymbolToNumber,
     appFiatCurrency.code,
@@ -73,7 +74,6 @@ export function useTokenAndFiatDisplayAmounts({
     formattedCurrencyAmount,
     formattedFiatValue,
     isFiatMode,
-    usdValue,
     value,
   ])
 }

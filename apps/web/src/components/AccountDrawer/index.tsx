@@ -72,18 +72,16 @@ const AccountDrawerScrollWrapper = styled.div`
 
   ${ScrollBarStyles}
 
-  scrollbar-gutter: stable;
   overscroll-behavior: contain;
   border-radius: 12px;
 `
 
-const Container = styled.div<{ isUniExtensionAvailable?: boolean }>`
+const Container = styled.div<{ isUniExtensionAvailable?: boolean; $open?: boolean }>`
   display: flex;
   flex-direction: row;
   height: calc(100% - 2 * ${DRAWER_MARGIN});
-  overflow: hidden;
   position: fixed;
-  right: ${DRAWER_MARGIN};
+  right: ${({ $open }) => ($open ? DRAWER_MARGIN : 0)};
   top: ${DRAWER_MARGIN};
   z-index: ${Z_INDEX.fixed};
 
@@ -102,7 +100,7 @@ const Container = styled.div<{ isUniExtensionAvailable?: boolean }>`
 const ExtensionContainerStyles = css`
   height: auto;
   max-height: calc(100% - ${({ theme }) => theme.navHeight + 16}px);
-  right: 24px;
+  right: 12px;
   top: ${({ theme }) => theme.navHeight}px;
   ${ScrollBarStyles}
 `
@@ -148,16 +146,16 @@ const AccountDrawerWrapper = styled.div<{ open: boolean; isUniExtensionAvailable
 `
 
 const ExtensionDrawerWrapperStyles = css<{ open: boolean }>`
+  ${ScrollBarStyles}
   height: max-content;
   max-height: 100%;
   width: ${MODAL_WIDTH};
   max-width: ${MODAL_WIDTH};
   border-radius: 20px;
-  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
   transform: scale(${({ open }) => (open ? 1 : 0.96)});
   transform-origin: top right;
   opacity: ${({ open }) => (open ? 1 : 0)};
-  overflow-y: scroll;
+  overflow-y: auto;
   transition: ${({ theme }) => `transform ${theme.transition.duration.fast} ${theme.transition.timing.inOut},
     opacity ${theme.transition.duration.fast} ${theme.transition.timing.inOut}`};
 `
@@ -276,7 +274,7 @@ function AccountDrawer() {
   })
 
   return (
-    <Container isUniExtensionAvailable={isUniExtensionAvailable}>
+    <Container isUniExtensionAvailable={isUniExtensionAvailable} $open={accountDrawer.isOpen}>
       {accountDrawer.isOpen && !isUniExtensionAvailable && (
         <Trace logPress eventOnTrigger={InterfaceEventName.MINI_PORTFOLIO_TOGGLED} properties={{ type: 'close' }}>
           <CloseDrawer onClick={accountDrawer.close} data-testid="close-account-drawer">

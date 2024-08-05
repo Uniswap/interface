@@ -11,7 +11,6 @@ import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { t } from 'i18n'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemote'
@@ -32,6 +31,7 @@ import {
   TransactionDetailsPartsFragment,
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -161,7 +161,10 @@ function getSwapDescriptor({
   tokenOut: TokenAssetPartsFragment
   inputAmount: string
 }) {
-  return `${inputAmount} ${tokenIn.symbol} for ${outputAmount} ${tokenOut.symbol}`
+  return t('activity.transaction.swap.descriptor', {
+    amountWithSymbolA: `${inputAmount} ${tokenIn.symbol}`,
+    amountWithSymbolB: `${outputAmount} ${tokenOut.symbol}`,
+  })
 }
 
 /**
@@ -351,7 +354,10 @@ function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: For
   const tokenBQuantity = formatNumberOrString({ input: poolTokenB.quantity, type: NumberType.TokenNonTx })
 
   return {
-    descriptor: `${tokenAQuanitity} ${poolTokenA.asset.symbol} and ${tokenBQuantity} ${poolTokenB.asset.symbol}`,
+    descriptor: t('activity.transaction.tokens.descriptor', {
+      amountWithSymbolA: `${tokenAQuanitity} ${poolTokenA.asset.symbol}`,
+      amountWithSymbolB: `${tokenBQuantity} ${poolTokenB.asset.symbol}`,
+    }),
     logos: [poolTokenA.asset.project?.logo?.url, poolTokenB.asset.project?.logo?.url],
     currencies: [gqlToCurrency(poolTokenA.asset), gqlToCurrency(poolTokenB.asset)],
   }
@@ -388,29 +394,39 @@ function parseSendReceive(
 
   if (transfer && assetName && amount) {
     const isMoonpayPurchase = MOONPAY_SENDER_ADDRESSES.some((address) => isSameAddress(address, transfer?.sender))
+    const otherAccount = isAddress(transfer.recipient) || undefined
 
     if (transfer.direction === 'IN') {
       return isMoonpayPurchase && transfer.__typename === 'TokenTransfer'
         ? {
             title: t('common.purchased'),
-            descriptor: `${amount} ${assetName} ${t('for')} ${formatNumberOrString({
-              input: getTransactedValue(transfer.transactedValue),
-              type: NumberType.FiatTokenPrice,
-            })}`,
+            descriptor: t('activity.transaction.swap.descriptor', {
+              amountWithSymbolA: `${amount} ${assetName}`,
+              amountWithSymbolB: formatNumberOrString({
+                input: getTransactedValue(transfer.transactedValue),
+                type: NumberType.FiatTokenPrice,
+              }),
+            }),
             logos: [moonpayLogoSrc],
             currencies,
           }
         : {
             title: t('common.received'),
-            descriptor: `${amount} ${assetName} ${t('common.from')} `,
-            otherAccount: isAddress(transfer.sender) || undefined,
+            descriptor: t('activity.transaction.receive.descriptor', {
+              amountWithSymbol: `${amount} ${assetName}`,
+              walletAddress: otherAccount,
+            }),
+            otherAccount,
             currencies,
           }
     } else {
       return {
         title: t('common.sent'),
-        descriptor: `${amount} ${assetName} ${t('common.to')} `,
-        otherAccount: isAddress(transfer.recipient) || undefined,
+        descriptor: t('activity.transaction.send.descriptor', {
+          amountWithSymbol: `${amount} ${assetName}`,
+          walletAddress: otherAccount,
+        }),
+        otherAccount,
         currencies,
       }
     }

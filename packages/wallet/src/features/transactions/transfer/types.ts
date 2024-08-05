@@ -13,6 +13,7 @@ interface BaseTransferParams {
   chainId: WalletChainId
   toAddress: Address
   tokenAddress: Address
+  currencyAmountUSD?: Maybe<CurrencyAmount<Currency>> // for analytics
 }
 
 export interface TransferCurrencyParams extends BaseTransferParams {
@@ -57,4 +58,9 @@ export type DerivedTransferInfo = BaseDerivedInfo<CurrencyInfo | GQLNftAsset> & 
 export interface TransferSpeedbump {
   hasWarning: boolean
   loading: boolean
+}
+
+export enum TokenSelectorFlow {
+  Swap,
+  Transfer,
 }

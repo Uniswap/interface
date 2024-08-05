@@ -3,7 +3,6 @@ import { Pair } from '@uniswap/v2-sdk'
 import { useAccount } from 'hooks/useAccount'
 import { useTotalSupply } from 'hooks/useTotalSupply'
 import { useV2Pair } from 'hooks/useV2Pairs'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -11,6 +10,7 @@ import { ReactNode, useCallback } from 'react'
 import { Field, typeInput } from 'state/burn/actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
+import { Trans } from 'uniswap/src/i18n'
 
 export function useBurnState(): AppState['burn'] {
   return useAppSelector((state) => state.burn)

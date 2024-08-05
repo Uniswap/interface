@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
 import { useMemo } from 'react'
+import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
-import { OrderRequest, Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useTokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/api/hooks/useTokenApprovalInfo'
 import { useTransactionRequestInfo } from 'wallet/src/features/transactions/swap/trade/api/hooks/useTransactionRequestInfo'
@@ -13,7 +13,7 @@ import { sumGasFees } from 'wallet/src/features/transactions/swap/utils'
 export type SwapTxAndGasInfo = ClassicSwapTxAndGasInfo | UniswapXSwapTxAndGasInfo
 
 export type UniswapXGasBreakdown = {
-  classicGasUseEstimateUSD?: number
+  classicGasUseEstimateUSD?: string
   approvalCost?: string
   wrapCost?: string
   inputTokenSymbol?: string
@@ -39,7 +39,7 @@ export type UniswapXSwapTxAndGasInfo = {
   approvalError: boolean
 }
 
-type ValidatedTransactionRequest = providers.TransactionRequest & { to: string; chainId: number }
+export type ValidatedTransactionRequest = providers.TransactionRequest & { to: string; chainId: number }
 function validateTransactionRequest(
   request?: providers.TransactionRequest | null,
 ): ValidatedTransactionRequest | undefined {
@@ -100,7 +100,6 @@ export function useSwapTxAndGasInfo({ derivedSwapInfo }: { derivedSwapInfo: Deri
       const signature = swapTxInfo.permitSignature
       const orderParams = signature ? { signature, quote: trade.quote.quote, routing: Routing.DUTCH_V2 } : undefined
       const gasFeeBreakdown: UniswapXGasBreakdown = {
-        // TODO(API-324): next version of trading api schema will break the following line; update the type's field to be a string instead
         classicGasUseEstimateUSD: trade.quote.quote.classicGasUseEstimateUSD,
         approvalCost: tokenApprovalInfo?.gasFee,
         wrapCost: swapTxInfo.gasFeeResult.value,

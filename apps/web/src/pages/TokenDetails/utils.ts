@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { SupportedInterfaceChainId } from 'constants/chains'
-import { t } from 'i18n'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const getTokenPageTitle = (currency?: Currency, chainId?: SupportedInterfaceChainId) => {

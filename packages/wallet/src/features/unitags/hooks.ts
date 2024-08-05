@@ -7,7 +7,7 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useUnitagQuery, useWaitlistPositionQuery } from 'uniswap/src/features/unitags/api'
+import { useUnitagQuery } from 'uniswap/src/features/unitags/api'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import {
   UnitagClaim,
@@ -21,8 +21,6 @@ import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck'
-import { selectExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/selectors'
-import { ExtensionOnboardingState, setExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -31,11 +29,10 @@ import { claimUnitag, getUnitagAvatarUploadUrl, useUnitagClaimEligibilityQuery }
 import { isLocalFileUri, uploadAndUpdateAvatarAfterClaim } from 'wallet/src/features/unitags/avatars'
 import { AVATAR_UPLOAD_CREDS_EXPIRY_SECONDS, UNITAG_VALID_REGEX } from 'wallet/src/features/unitags/constants'
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
-import { useAccounts, useActiveAccount, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useAccounts, useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
-import { useAppSelector } from 'wallet/src/state'
 
 const MIN_UNITAG_LENGTH = 3
 const MAX_UNITAG_LENGTH = 20
@@ -283,69 +280,4 @@ export const useAvatarUploadCredsWithRefresh = ({
   }, [unitag, account, signerManager])
 
   return { avatarUploadUrlLoading, avatarUploadUrlResponse }
-}
-
-export const useShowExtensionPromoBanner = (): {
-  error: string | undefined
-  loading: boolean
-  showExtensionPromoBanner: boolean
-} => {
-  const dispatch = useDispatch()
-  const extensionOnboardingEnabledBeta = useFeatureFlag(FeatureFlags.ExtensionOnboarding)
-  const extensionPromotionGAEnabled = useFeatureFlag(FeatureFlags.ExtensionPromotionGA)
-  const extensionOnboardingState = useAppSelector(selectExtensionOnboardingState)
-  const activeAccount = useActiveAccount()
-
-  const skipBetaWaitlistQuery =
-    extensionPromotionGAEnabled || // ignore waitlist if GA enabled
-    !extensionOnboardingEnabledBeta ||
-    extensionOnboardingState === ExtensionOnboardingState.Completed ||
-    !activeAccount ||
-    activeAccount.type !== AccountType.SignerMnemonic
-
-  const { data, error, loading } = useWaitlistPositionQuery([activeAccount?.address || ''], skipBetaWaitlistQuery)
-
-  /** Onboarding completed, skip all checks **/
-  if (extensionOnboardingState === ExtensionOnboardingState.Completed) {
-    return {
-      error: undefined,
-      loading: false,
-      showExtensionPromoBanner: false,
-    }
-  }
-
-  /*** GA checks first ***/
-  if (extensionPromotionGAEnabled) {
-    if (extensionOnboardingState === ExtensionOnboardingState.Undefined) {
-      dispatch(setExtensionOnboardingState(ExtensionOnboardingState.ReadyToOnboard))
-    }
-
-    return {
-      error: undefined,
-      loading: false,
-      showExtensionPromoBanner: true,
-    }
-  }
-
-  /*** Skip beta checks if we didn't query for the data ***/
-  if (skipBetaWaitlistQuery) {
-    return {
-      error: undefined,
-      loading: false,
-      showExtensionPromoBanner: false,
-    }
-  }
-
-  const canOnboardToExtensionBeta = data?.isAccepted ?? false
-
-  if (canOnboardToExtensionBeta && extensionOnboardingState === ExtensionOnboardingState.Undefined) {
-    // Store the information locally so that we don't need to check again during onboarding
-    dispatch(setExtensionOnboardingState(ExtensionOnboardingState.ReadyToOnboard))
-  }
-
-  return {
-    error: error?.message,
-    loading,
-    showExtensionPromoBanner: canOnboardToExtensionBeta,
-  }
 }

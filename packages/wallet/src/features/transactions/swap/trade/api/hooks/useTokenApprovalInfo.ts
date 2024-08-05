@@ -2,10 +2,10 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
+import { ApprovalRequest, ApprovalResponse, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { ApprovalRequest, ApprovalResponse, Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/api/client'
 import {
   getTokenAddressForApi,

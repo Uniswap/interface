@@ -1,5 +1,5 @@
-import { Trans } from 'i18n'
 import { TickMarkType, UTCTimestamp } from 'lightweight-charts'
+import { Trans } from 'uniswap/src/i18n'
 
 /** Compatible with ISeriesApi<'Area' | 'Candlestick'> */
 export enum PriceChartType {

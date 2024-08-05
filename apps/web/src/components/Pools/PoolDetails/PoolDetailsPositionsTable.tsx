@@ -7,7 +7,6 @@ import { BIPS_BASE } from 'constants/misc'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useSwitchChain } from 'hooks/useSwitchChain'
-import { Trans } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { useCallback } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -15,6 +14,7 @@ import { useNavigate } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
 const PositionTableWrapper = styled(Column)`
@@ -85,6 +85,7 @@ enum PositionStatus {
 }
 
 function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
+  const { t } = useTranslation()
   const tokens = [
     useCurrency(positionInfo.details.token0, positionInfo.chainId),
     useCurrency(positionInfo.details.token1, positionInfo.chainId),
@@ -135,31 +136,27 @@ function PositionRow({ positionInfo }: { positionInfo: PositionInfo }) {
         <RangeText data-testid={`position-min-${priceLower.toFixed(0)}`}>
           <Trans i18nKey="pool.min.label" />
           &nbsp;
-          {formatTickPrice({
-            price: priceLower,
-            atLimit: ticksAtLimit,
-            direction: Bound.LOWER,
+          {t('liquidityPool.positions.price', {
+            amountWithSymbol: `${formatTickPrice({
+              price: priceLower,
+              atLimit: ticksAtLimit,
+              direction: Bound.LOWER,
+            })} ${positionInfo.pool.token0.symbol}`,
+            outputToken: positionInfo.pool.token1.symbol,
           })}
-          &nbsp;
-          {positionInfo.pool.token0.symbol}&nbsp;
-          <Trans i18nKey="common.per" />
-          &nbsp;
-          {positionInfo.pool.token1.symbol}
         </RangeText>
         <StyledDoubleArrow />
         <RangeText data-testid={`position-max-${priceUpper.toFixed(0)}`}>
           <Trans i18nKey="pool.max.label" />
           &nbsp;
-          {formatTickPrice({
-            price: priceUpper,
-            atLimit: ticksAtLimit,
-            direction: Bound.UPPER,
+          {t('liquidityPool.positions.price', {
+            amountWithSymbol: `${formatTickPrice({
+              price: priceUpper,
+              atLimit: ticksAtLimit,
+              direction: Bound.UPPER,
+            })} ${positionInfo.pool.token0.symbol}`,
+            outputToken: positionInfo.pool.token1.symbol,
           })}
-          &nbsp;
-          {positionInfo.pool.token0.symbol}&nbsp;
-          <Trans i18nKey="common.per" />
-          &nbsp;
-          {positionInfo.pool.token1.symbol}
         </RangeText>
       </RangeWrapper>
     </PositionWrapper>

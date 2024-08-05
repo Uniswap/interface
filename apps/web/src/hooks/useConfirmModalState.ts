@@ -7,12 +7,14 @@ import { useAccount } from 'hooks/useAccount'
 import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import usePrevious from 'hooks/usePrevious'
+import useSelectChain from 'hooks/useSelectChain'
 import useWrapCallback from 'hooks/useWrapCallback'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { getPriceUpdateBasisPoints } from 'lib/utils/analytics'
 import { useCallback, useEffect, useState } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useIsTransactionConfirmed } from 'state/transactions/hooks'
 import invariant from 'tiny-invariant'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -51,6 +53,9 @@ export function useConfirmModalState({
   const [pendingModalSteps, setPendingModalSteps] = useState<PendingConfirmModalState[]>([])
   const { formatCurrencyAmount } = useFormatter()
 
+  const account = useAccount()
+  const { chainId } = useSwapAndLimitContext()
+
   // This is a function instead of a memoized value because we do _not_ want it to update as the allowance changes.
   // For example, if the user needs to complete 3 steps initially, we should always show 3 step indicators
   // at the bottom of the modal, even after they complete steps 1 and 2.
@@ -77,7 +82,6 @@ export function useConfirmModalState({
     return steps
   }, [allowance, trade])
 
-  const { chainId } = useAccount()
   const trace = useTrace()
   const maximumAmountIn = useMaxAmountIn(trade, allowedSlippage)
 
@@ -106,6 +110,7 @@ export function useConfirmModalState({
     [trade],
   )
 
+  const selectChain = useSelectChain()
   const performStep = useCallback(
     async (step: ConfirmModalState) => {
       switch (step) {
@@ -169,11 +174,17 @@ export function useConfirmModalState({
     ],
   )
 
-  const startSwapFlow = useCallback(() => {
+  const startSwapFlow = useCallback(async () => {
+    if (chainId && chainId !== account.chainId) {
+      const switchChainResult = await selectChain(chainId)
+      if (!switchChainResult) {
+        return
+      }
+    }
     const steps = generateRequiredSteps()
     setPendingModalSteps(steps)
     performStep(steps[0])
-  }, [generateRequiredSteps, performStep])
+  }, [account.chainId, chainId, generateRequiredSteps, performStep, selectChain])
 
   const previousSetupApprovalNeeded = usePrevious(
     allowance.state === AllowanceState.REQUIRED ? allowance.needsSetupApproval : undefined,

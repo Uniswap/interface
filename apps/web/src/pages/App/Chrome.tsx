@@ -1,4 +1,4 @@
-import Polling from 'components/Polling'
+import { ChainConnectivityWarning } from 'components/ChainConnectivityWarning'
 import Popups from 'components/Popups'
 import TopLevelModals from 'components/TopLevelModals'
 
@@ -6,7 +6,7 @@ export default function AppChrome() {
   return (
     <>
       <Popups />
-      <Polling />
+      <ChainConnectivityWarning />
       <TopLevelModals />
     </>
   )

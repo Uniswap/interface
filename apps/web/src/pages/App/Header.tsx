@@ -8,8 +8,7 @@ import { GRID_AREAS } from 'pages/App/utils/shared'
 import { memo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { Z_INDEX } from 'theme/zIndex'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useIsTouchDevice } from 'ui/src'
 
 const AppHeader = styled.div`
   grid-area: ${GRID_AREAS.HEADER};
@@ -39,7 +38,7 @@ export const Header = memo(function Header() {
   const isHeaderTransparent = !isScrolledDown && !isBagExpanded
   const renderUkBanner = useRenderUkBanner()
   const extensionEligible = useMobileAppPromoBannerEligible()
-  const isLegacyNav = !useFeatureFlag(FeatureFlags.NavRefresh)
+  const isTouchDevice = useIsTouchDevice()
 
   return (
     <AppHeader id="AppHeader">
@@ -48,10 +47,10 @@ export const Header = memo(function Header() {
         {renderUkBanner && <UkBanner />}
       </Banners>
       <NavOnScroll
-        $hide={!isExplorePage && !isLegacyNav && scrollDirection === ScrollDirection.DOWN}
+        $hide={isTouchDevice && !isExplorePage && scrollDirection === ScrollDirection.DOWN}
         $transparent={isHeaderTransparent}
       >
-        <Navbar blur={isHeaderTransparent} />
+        <Navbar />
       </NavOnScroll>
     </AppHeader>
   )

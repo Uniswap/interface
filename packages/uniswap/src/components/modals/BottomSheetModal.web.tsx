@@ -1,4 +1,4 @@
-import { pick } from 'lodash'
+import { pick } from 'es-toolkit'
 import { ComponentProps, useEffect, useState } from 'react'
 import { Flex, Portal, Sheet } from 'ui/src'
 import { validColor, zIndices } from 'ui/src/theme'
@@ -73,7 +73,16 @@ function WebTopSheetModal({
 }: WebBottomSheetProps): JSX.Element {
   const [isMounted, setIsMounted] = useState(false)
 
-  useEffect(() => setIsMounted(true), [])
+  useEffect(() => {
+    // adding timeout or else it doesn't render twice and animation doesn't run
+    const tm = setTimeout(() => {
+      setIsMounted(true)
+    })
+
+    return () => {
+      clearTimeout(tm)
+    }
+  }, [])
 
   useUpdateScrollLock({ isModalOpen })
 
@@ -100,23 +109,30 @@ function WebTopSheetModal({
           onPress={isDismissible ? onClose : null}
           {...(isModalOpen &&
             isMounted && {
+              exitStyle: { opacity: 0 },
               opacity: 1,
             })}
         />
-
         {/* sheet */}
         <Flex
-          animation="quicker"
+          animation={[
+            'quicker',
+            {
+              opacity: {
+                overshootClamping: true,
+              },
+            },
+          ]}
           backgroundColor={backgroundColor ? validColor(backgroundColor) : '$surface1'}
           borderRadius="$rounded24"
+          enterStyle={{ y: -20, opacity: 0 }}
           flexShrink={1}
           opacity={0}
           p="$spacing12"
-          y={-20}
           {...(isModalOpen &&
             isMounted && {
+              exitStyle: { y: -20, opacity: 0 },
               opacity: 1,
-              y: 0,
             })}
         >
           {/*

@@ -1,8 +1,13 @@
 import { Currency } from '@uniswap/sdk-core'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { NumberType } from 'utilities/src/format/types'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
+import { SwapTypeTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
+import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
+
+const INTERFACE_FEE_SWITCH_TIMESTAMP = 1712772000000 // April 10th 2024 2pm EST
 
 export function useFormattedCurrencyAmountAndUSDValue({
   currency,
@@ -48,4 +53,56 @@ export function shortenHash(hash: string | undefined, chars: NumberRange<1, 20> 
     return ''
   }
   return `${hash.substring(0, chars + 2)}...${hash.substring(hash.length - chars)}`
+}
+
+export function getFormattedSwapRatio({
+  typeInfo,
+  inputCurrency,
+  outputCurrency,
+  formatter,
+}: {
+  typeInfo: SwapTypeTransactionInfo
+  inputCurrency: CurrencyInfo
+  outputCurrency: CurrencyInfo
+  formatter: LocalizationContextState
+}): string {
+  const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
+
+  const inputCurrencyAmount = getCurrencyAmount({
+    value: inputCurrencyAmountRaw,
+    valueType: ValueType.Raw,
+    currency: inputCurrency.currency,
+  })
+
+  const outputCurrencyAmount = getCurrencyAmount({
+    value: outputCurrencyAmountRaw,
+    valueType: ValueType.Raw,
+    currency: outputCurrency.currency,
+  })
+
+  const inputExactAmount = inputCurrencyAmount ? parseFloat(inputCurrencyAmount.toExact()) : 0
+  const outputExactAmount = outputCurrencyAmount ? parseFloat(outputCurrencyAmount.toExact()) : 0
+
+  const outputMoreValuable = inputExactAmount > outputExactAmount // If there are more input tokens per output token, then output token is worth more
+  const swapRate = outputMoreValuable ? inputExactAmount / outputExactAmount : outputExactAmount / inputExactAmount
+  const higherValueSymbol = outputMoreValuable ? outputCurrency.currency.symbol : inputCurrency.currency.symbol
+  const lowerValueSymbol = outputMoreValuable ? inputCurrency.currency.symbol : outputCurrency.currency.symbol
+
+  const formattedSwapRate = formatter.formatNumberOrString({
+    value: swapRate,
+    type: NumberType.TokenTx,
+  })
+  const formattedLine = '1 ' + higherValueSymbol + ' = ' + formattedSwapRate + ' ' + lowerValueSymbol
+
+  return formattedLine
+}
+
+export function hasInterfaceFees({ swapTimestampMs }: { swapTimestampMs: number }): boolean {
+  const beforeInterfaceFeeSwitch = swapTimestampMs < INTERFACE_FEE_SWITCH_TIMESTAMP
+  if (beforeInterfaceFeeSwitch) {
+    return false
+  }
+
+  // TODO (WALL-4189): blocked on backend, decided to not show fees for now so hard-codeed to always return false
+  return false
 }

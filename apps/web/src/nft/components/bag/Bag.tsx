@@ -1,7 +1,6 @@
 import { NFTEventName } from '@uniswap/analytics-events'
 import { useIsMobile } from 'hooks/screenSize'
 import { useIsNftDetailsPage, useIsNftPage, useIsNftProfilePage } from 'hooks/useIsNftPage'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { Box } from 'nft/components/Box'
 import { Column } from 'nft/components/Flex'
@@ -19,6 +18,7 @@ import { formatAssetEventProperties, recalculateBagUsingPooledAssets } from 'nft
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Z_INDEX } from 'theme/zIndex'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 
 export const BAG_WIDTH = 320
 export const XXXL_BAG_WIDTH = 360
@@ -179,7 +179,7 @@ const Bag = () => {
               })
             }}
           >
-            <Trans i18nKey="common.continue.button" />
+            <Trans i18nKey="common.button.continue" />
           </ContinueButton>
         )}
       </BagContainer>

@@ -74,14 +74,15 @@ function NetworkFeeText({
   if (uniswapXGasFeeInfo) {
     return (
       <Trans
-        components={{ gradient: <UniswapXText height={18} variant="body3" /> }}
+        // TODO(WEB-4313): Remove need to manually adjust the height of the UniswapXText component for mobile.
+        components={{ gradient: <UniswapXText height={17} variant="body3" /> }}
         i18nKey="swap.warning.networkFee.message.uniswapX"
       />
     )
   } else if (showHighGasFeeUI) {
-    return t('swap.warning.networkFee.highRelativeToValue')
+    return <>{t('swap.warning.networkFee.highRelativeToValue')}</>
   } else {
-    return t('swap.warning.networkFee.message')
+    return <>{t('swap.warning.networkFee.message')}</>
   }
 }
 
@@ -91,7 +92,7 @@ function UniswapXFeeContent({ uniswapXGasFeeInfo }: { uniswapXGasFeeInfo: Format
 
   return (
     <Flex gap="$spacing12">
-      <Flex centered={isMobile} width="100%">
+      <Flex row centered={isMobile} width="100%">
         <LearnMoreLink
           textVariant={isWeb ? 'buttonLabel4' : undefined}
           url={uniswapUrls.helpArticleUrls.uniswapXInfo}

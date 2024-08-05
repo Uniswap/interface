@@ -20,6 +20,7 @@ export function SwapPendingNotification({ notification }: { notification: SwapPe
       smallToast
       hideDelay={TRANSACTION_PENDING_NOTIFICATION_DELAY}
       icon={<SpinningLoader color="$accent1" />}
+      iconPosition="right"
       title={notificationText}
     />
   )

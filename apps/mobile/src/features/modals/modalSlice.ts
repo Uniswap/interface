@@ -4,6 +4,7 @@ import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWallet
 import { ExchangeTransferModalState } from 'src/features/fiatOnRamp/ExchangeTransferModalState'
 import { ModalsState } from 'src/features/modals/ModalsState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
+import { FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
@@ -35,7 +36,7 @@ type FiatCurrencySelectorParams = {
 
 type FiatOnRampAggregatorModalParams = {
   name: typeof ModalName.FiatOnRampAggregator
-  initialState?: undefined
+  initialState?: FiatOnRampModalState
 }
 
 type ReceiveCryptoModalParams = {

@@ -1,8 +1,7 @@
 import React, { PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
@@ -29,7 +28,7 @@ export function SearchWalletItemBase({
   const dispatch = useDispatch()
   const { preload, navigate } = useEagerExternalProfileNavigation()
   const { address, type } = searchResult
-  const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
+  const isFavorited = useSelector(selectWatchedAddressSet).has(address)
 
   const onPress = (): void => {
     navigate(address)

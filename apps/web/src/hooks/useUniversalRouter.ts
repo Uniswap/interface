@@ -9,14 +9,15 @@ import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { PermitSignature } from 'hooks/usePermitAllowance'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
-import { t } from 'i18n'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { formatCommonPropertiesForTrade, formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import { ClassicTrade, TradeFillType } from 'state/routing/types'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { t } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -55,8 +56,13 @@ export function useUniversalRouterSwapCallback(
   options: SwapOptions,
 ) {
   const account = useAccount()
-  const provider = useEthersWeb3Provider()
-  const connectorName = useAccount().connector?.name
+  const accountRef = useRef(account)
+  accountRef.current = account
+
+  const { chainId } = useSwapAndLimitContext()
+  const provider = useEthersWeb3Provider({ chainId })
+  const providerRef = useRef(provider)
+  providerRef.current = provider
 
   const analyticsContext = useTrace()
   const blockNumber = useBlockNumber()
@@ -68,6 +74,8 @@ export function useUniversalRouterSwapCallback(
     (): Promise<{ type: TradeFillType.Classic; response: TransactionResponse; deadline?: BigNumber }> =>
       trace({ name: 'Swap (Classic)', op: 'swap.classic' }, async (trace) => {
         try {
+          const account = accountRef.current
+          const provider = providerRef.current
           if (account.status !== 'connected') {
             throw new Error('wallet not connected')
           }
@@ -78,7 +86,7 @@ export function useUniversalRouterSwapCallback(
             throw new Error('missing trade')
           }
           const connectedChainId = await provider.getSigner().getChainId()
-          if (account.chainId !== connectedChainId) {
+          if (account.chainId !== connectedChainId || account.chainId !== chainId) {
             throw new WrongChainError()
           }
 
@@ -94,7 +102,7 @@ export function useUniversalRouterSwapCallback(
           })
           const tx = {
             from: account.address,
-            to: UNIVERSAL_ROUTER_ADDRESS(account.chainId),
+            to: UNIVERSAL_ROUTER_ADDRESS(chainId),
             data,
             // TODO(https://github.com/Uniswap/universal-router-sdk/issues/113): universal-router-sdk returns a non-hexlified value.
             ...(value && !isZero(value) ? { value: toHex(value) } : {}),
@@ -122,6 +130,10 @@ export function useUniversalRouterSwapCallback(
             { name: 'Send transaction', op: 'wallet.send_transaction' },
             async (walletTrace) => {
               try {
+                const provider = providerRef.current
+                if (!provider) {
+                  throw new Error('missing provider')
+                }
                 return await provider.getSigner().sendTransaction({ ...tx, gasLimit })
               } catch (error) {
                 if (didUserReject(error)) {
@@ -145,7 +157,7 @@ export function useUniversalRouterSwapCallback(
             ...analyticsContext,
             // TODO (WEB-2993): remove these after debugging missing user properties.
             [CustomUserProperties.WALLET_ADDRESS]: account.address,
-            [CustomUserProperties.WALLET_TYPE]: connectorName,
+            [CustomUserProperties.WALLET_TYPE]: account.connector.name,
             [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
           })
           if (tx.data !== response.data) {
@@ -176,11 +188,8 @@ export function useUniversalRouterSwapCallback(
         }
       }),
     [
-      account.status,
-      account.chainId,
-      account.address,
-      provider,
       trade,
+      chainId,
       getDeadline,
       options.slippageTolerance,
       options.permit,
@@ -189,7 +198,6 @@ export function useUniversalRouterSwapCallback(
       fiatValues,
       portfolioBalanceUsd,
       analyticsContext,
-      connectorName,
       blockNumber,
       isAutoSlippage,
     ],

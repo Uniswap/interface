@@ -1,9 +1,9 @@
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedInterfaceChainId, getChain, useSupportedChainId } from 'constants/chains'
+import { SupportedInterfaceChainId, getChain } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
-import useBlockNumber, { useFastForwardBlockNumber } from 'lib/hooks/useBlockNumber'
+import useBlockNumber from 'lib/hooks/useBlockNumber'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
 import { CanceledError, RetryableError, retry } from 'state/activity/polling/retry'
@@ -79,22 +79,20 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
       ? undefined
       : account.chainId,
   )
-  const supportedChain = useSupportedChainId(account.chainId)
   const hasPending = pendingTransactions.length > 0
   const blockTimestamp = useCurrentBlockTimestamp(hasPending ? undefined : NEVER_RELOAD)
 
   const lastBlockNumber = useBlockNumber()
-  const fastForwardBlockNumber = useFastForwardBlockNumber()
   const removeTransaction = useTransactionRemover()
   const dispatch = useAppDispatch()
 
   const getReceipt = useCallback(
     (tx: PendingTransactionDetails) => {
-      if (!provider || !supportedChain) {
+      if (!provider || !account.chainId) {
         throw new Error('No provider or chainId')
       }
       const retryOptions =
-        getChain({ chainId: supportedChain })?.pendingTransactionsRetryOptions ?? DEFAULT_RETRY_OPTIONS
+        getChain({ chainId: account.chainId })?.pendingTransactionsRetryOptions ?? DEFAULT_RETRY_OPTIONS
       return retry(
         () =>
           provider.getTransactionReceipt(tx.hash).then(async (receipt) => {
@@ -117,7 +115,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
         retryOptions,
       )
     },
-    [account.isConnected, blockTimestamp, provider, removeTransaction, supportedChain],
+    [account.chainId, account.isConnected, blockTimestamp, provider, removeTransaction],
   )
 
   useEffect(() => {
@@ -134,7 +132,6 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
             if (!account.chainId) {
               return
             }
-            fastForwardBlockNumber(receipt.blockNumber)
             onActivityUpdate({
               type: 'transaction',
               chainId: account.chainId,
@@ -163,7 +160,6 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
     lastBlockNumber,
     getReceipt,
     pendingTransactions,
-    fastForwardBlockNumber,
     hasPending,
     dispatch,
     onActivityUpdate,

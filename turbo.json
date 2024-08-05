@@ -6,7 +6,7 @@
         "package.json"
       ]
     },
-    "wallet#tradingapi:generate": {
+    "uniswap#tradingapi:generate": {
       "inputs": [
         "src/data/tradingApi/api.json"
       ],
@@ -32,6 +32,7 @@
         "contracts",
         "i18n:generate",
         "graphql:generate",
+        "tradingapi:generate",
         "^prepare"
       ]
     },
@@ -40,7 +41,6 @@
         "package.json"
       ],
       "dependsOn": [
-        "tradingapi:generate",
         "^prepare"
       ]
     },

@@ -30,8 +30,9 @@ function _SuggestedToken({
       onPress={onPress}
     >
       <Pill
-        backgroundColor="$surface3"
+        borderColor="$surface3"
         borderRadius="$roundedFull"
+        borderWidth={1}
         foregroundColor={colors.neutral1.val}
         icon={
           <TokenLogo
@@ -45,7 +46,7 @@ function _SuggestedToken({
         pl="$spacing4"
         pr="$spacing12"
         py="$spacing4"
-        textVariant={isWeb ? 'buttonLabel4' : 'body1'}
+        textVariant="buttonLabel1"
       />
     </TouchableArea>
   )

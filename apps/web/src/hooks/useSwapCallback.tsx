@@ -13,7 +13,7 @@ import { InterfaceTrade, OffchainOrderType, TradeFillType } from 'state/routing/
 import { isClassicTrade, isUniswapXTrade } from 'state/routing/utils'
 import { useAddOrder } from 'state/signatures/hooks'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import {
   ExactInputSwapTransactionInfo,

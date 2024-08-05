@@ -67,7 +67,7 @@ export function useApproval(
   // check the current approval status
   const approvalState = useApprovalStateForSpender(amountToApprove, spender, useIsPendingApproval)
 
-  const tokenContract = useTokenContract(token?.address)
+  const tokenContract = useTokenContract(token?.address, undefined, token?.chainId)
 
   const approve = useCallback(async () => {
     function logFailure(error: Error | string): undefined {

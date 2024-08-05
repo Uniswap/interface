@@ -5,11 +5,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { createNewInMemoryCache } from 'uniswap/src/data/cache'
 import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import {
-  UnitagAddressResponse,
-  UnitagUsernameResponse,
-  UnitagWaitlistPositionResponse,
-} from 'uniswap/src/features/unitags/types'
+import { UnitagAddressResponse, UnitagUsernameResponse } from 'uniswap/src/features/unitags/types'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 const restLink = new RestLink({
@@ -70,24 +66,6 @@ export function useUnitagByAddressQuery(address?: Address): ReturnType<typeof us
     ['username', 'metadata'], // return all fields
     {
       skip: !address, // skip if address is not provided
-      ttlMs: ONE_MINUTE_MS * 2,
-    },
-    'GET',
-    unitagsApolloClient,
-  )
-}
-
-export function useWaitlistPositionQuery(
-  accounts: Address[],
-  skip: boolean,
-): ReturnType<typeof useRestQuery<UnitagWaitlistPositionResponse>> {
-  const addresses = accounts.join(',')
-  return useRestQuery<UnitagWaitlistPositionResponse, Record<string, unknown>>(
-    addQueryParamsToEndpoint('/waitlist/position', { addresses }),
-    { addresses }, // dummy body so that cache key is unique per query params
-    ['isAccepted', 'waitlistPosition'], // return all fields
-    {
-      skip,
       ttlMs: ONE_MINUTE_MS * 2,
     },
     'GET',

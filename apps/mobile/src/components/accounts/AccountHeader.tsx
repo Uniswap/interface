@@ -1,7 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, HapticFeedback, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
@@ -24,8 +23,8 @@ import { selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/feat
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 export function AccountHeader(): JSX.Element {
-  const activeAddress = useAppSelector(selectActiveAccountAddress)
-  const account = useAppSelector(selectActiveAccount)
+  const activeAddress = useSelector(selectActiveAccountAddress)
+  const account = useSelector(selectActiveAccount)
   const dispatch = useDispatch()
 
   const { avatar } = useAvatar(activeAddress)

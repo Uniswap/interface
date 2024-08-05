@@ -1,12 +1,3 @@
-We are back with some new new updates! Here’s the latest:
-
-UniswapX is live: We’ve integrated the UniswapX protocol, which aggregates liquidity across onchain and offchain sources for better quotes.
-
-Easy import to Uniswap Extension: Onboard onto our new Chrome extension wallet easily by scanning a QR code with your Uniswap Mobile App.
-
-Transaction Details: Press anything on the Activity Screen and see more robust details about any of your transactions (swaps, sends, NFTs, etc).
-
-Other changes:
-
 - Onboarding improvements
+- Adds fallback support method for opening the side panel on chrome failure
 - Various bug fixes and performance improvements

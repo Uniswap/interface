@@ -1,12 +1,12 @@
 import { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, SpinningLoader, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { AnimatePresence, Flex, SpinningLoader, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { AlertTriangle, UniswapX } from 'ui/src/components/icons'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { TransactionDetailsModal } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
 import { useTransactionActions } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActions'
 import { TransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryTitle'
@@ -158,13 +158,15 @@ function TransactionSummaryLayout({
           )}
         </Flex>
       </TouchableArea>
-      {showDetailsModal && (
-        <TransactionDetailsModal
-          authTrigger={authTrigger}
-          transactionDetails={transaction}
-          onClose={(): void => setShowDetailsModal(false)}
-        />
-      )}
+      <AnimatePresence>
+        {showDetailsModal && (
+          <TransactionDetailsModal
+            authTrigger={authTrigger}
+            transactionDetails={transaction}
+            onClose={(): void => setShowDetailsModal(false)}
+          />
+        )}
+      </AnimatePresence>
       {renderModals()}
     </>
   )

@@ -219,14 +219,12 @@ export default function FeatureFlagModal() {
             label="Enable EIP-6963: Multi Injected Provider Discovery"
           />
           <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
-          <FeatureFlagOption flag={FeatureFlags.CurrencyConversion} label="Enable currency conversion" />
           <FeatureFlagOption flag={FeatureFlags.ExitAnimation} label="Landing page exit animation" />
           <FeatureFlagOption flag={FeatureFlags.V2Everywhere} label="Enable V2 Everywhere" />
           <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
-          <FeatureFlagOption flag={FeatureFlags.NavRefresh} label="Refreshed navigation features" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
-          <FeatureFlagOption flag={FeatureFlags.ForAggregatorWeb} label="Enable FOR aggregator web" />
+          <FeatureFlagOption flag={FeatureFlags.ForAggregator} label="Enable FOR aggregator web" />
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
           </FeatureFlagGroup>

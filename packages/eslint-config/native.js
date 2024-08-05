@@ -170,12 +170,13 @@ module.exports = {
             importNames: ['useAccountListQuery'],
             message: 'Use `useAccountList` instead.',
           },
-          {
-            name: 'wallet/src/features/dataApi/balances',
-            importNames: ['usePortfolioValueModifiers'],
-            message:
-              'Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.',
-          },
+          // TODO(WALL-3643): Re-enable this rule once valueModifiers are shared via redux
+          // {
+          //   name: 'wallet/src/features/dataApi/balances',
+          //   importNames: ['usePortfolioValueModifiers'],
+          //   message:
+          //     'Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.',
+          // },
           {
             name: '@gorhom/bottom-sheet',
             importNames: ['BottomSheetTextInput'],

@@ -21,12 +21,12 @@ import {
   getTimePeriodFromDisplay,
 } from 'components/Tokens/TokenTable/TimeSelector'
 import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
-import { Trans } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
 import styled from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo, useState } from 'react'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Trans } from 'uniswap/src/i18n'
 
 export const TDP_CHART_HEIGHT_PX = 356
 const TDP_CHART_SELECTOR_OPTIONS = [ChartType.PRICE, ChartType.VOLUME, ChartType.TVL] as const

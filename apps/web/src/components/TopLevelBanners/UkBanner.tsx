@@ -1,4 +1,3 @@
-import { Trans, t } from 'i18n'
 import styled from 'lib/styled-components'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -7,6 +6,7 @@ import { AppState } from 'state/reducer'
 import { BREAKPOINTS } from 'theme'
 import { ButtonText, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { Trans, t } from 'uniswap/src/i18n'
 
 const BannerWrapper = styled.div`
   position: relative;

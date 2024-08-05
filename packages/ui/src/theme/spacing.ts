@@ -3,6 +3,7 @@ export const spacing = {
   spacing1: 1,
   spacing2: 2,
   spacing4: 4,
+  spacing6: 6,
   spacing8: 8,
   spacing12: 12,
   spacing16: 16,

@@ -16,7 +16,6 @@ import {
   UnitagResponse,
   UnitagUpdateMetadataRequestBody,
   UnitagUpdateMetadataResponse,
-  UnitagWaitlistPositionResponse,
 } from 'uniswap/src/features/unitags/types'
 import { isMobileApp } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
@@ -208,26 +207,6 @@ export async function fetchUnitagByAddresses(addresses: Address[]): Promise<{
     })
     return {
       data: response.data.usernames,
-    }
-  } catch (error) {
-    return { error }
-  }
-}
-
-export async function fetchExtensionWaitlistEligibity(username: string): Promise<{
-  data?: UnitagWaitlistPositionResponse
-  error?: unknown
-}> {
-  const unitagWaitlistPositionUrl = `${uniswapUrls.unitagsApiUrl}/waitlist/position?username=${encodeURIComponent(
-    username,
-  )}`
-
-  try {
-    const response = await axios.get<UnitagWaitlistPositionResponse>(unitagWaitlistPositionUrl, {
-      headers: BASE_HEADERS,
-    })
-    return {
-      data: response.data,
     }
   } catch (error) {
     return { error }

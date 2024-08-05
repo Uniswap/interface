@@ -12,6 +12,7 @@ import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import styled from 'lib/styled-components'
 import React from 'react'
+import { Flex, SpinningLoader, styled as TamaguiStyled } from 'ui/src'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 
 const UnknownContract = styled(UnknownStatus)`
@@ -33,6 +34,7 @@ interface PortfolioLogoProps {
   images?: Array<string | undefined>
   size?: number
   style?: React.CSSProperties
+  loading?: boolean
 }
 
 function SquareL2Logo({ chainId, size }: { chainId: InterfaceChainId; size: number }) {
@@ -49,6 +51,14 @@ function SquareL2Logo({ chainId, size }: { chainId: InterfaceChainId; size: numb
 
 const LOGO_DEFAULT_SIZE = 40
 
+const AbsoluteCenteredElement = TamaguiStyled(Flex, {
+  position: 'absolute',
+  ml: 'auto',
+  mr: 'auto',
+  left: -4.5,
+  top: -4.5,
+})
+
 // TODO(WEB-2983)
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback contract icon
@@ -56,7 +66,14 @@ const LOGO_DEFAULT_SIZE = 40
 export function PortfolioLogo(props: PortfolioLogoProps) {
   return (
     <LogoContainer style={props.style}>
-      {getLogo(props)}
+      <Flex position="relative">
+        {props.size && props.loading && (
+          <AbsoluteCenteredElement>
+            <SpinningLoader size={props.size + 6} width={2} />
+          </AbsoluteCenteredElement>
+        )}
+        {getLogo(props)}
+      </Flex>
       <SquareL2Logo chainId={props.chainId} size={props.size ?? LOGO_DEFAULT_SIZE} />
     </LogoContainer>
   )

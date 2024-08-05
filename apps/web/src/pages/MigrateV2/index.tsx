@@ -14,7 +14,6 @@ import { Dots } from 'components/swap/styled'
 import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { PairState, useV2Pairs } from 'hooks/useV2Pairs'
-import { Trans } from 'i18n'
 import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBalance'
 import styled, { useTheme } from 'lib/styled-components'
 import { BodyWrapper } from 'pages/App/AppBody'
@@ -22,6 +21,7 @@ import { ReactNode, useMemo } from 'react'
 import { Text } from 'rebass'
 import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
 import { BackArrowLink, StyledInternalLink, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 export const MigrateHeader = styled(ThemedText.H1Small)`
   font-weight: 535;
@@ -181,11 +181,12 @@ export default function MigrateV2() {
 
           <AutoColumn justify="center" gap="md">
             <Text textAlign="center" fontSize={14} style={{ padding: '.5rem 0 .5rem 0' }}>
-              <Trans i18nKey="migrate.missingV2Position">
-                <StyledInternalLink id="import-pool-link" to="/pools/v2/find">
-                  <Trans i18nKey="migrate.import" />
-                </StyledInternalLink>
-              </Trans>
+              <Trans
+                i18nKey="migrate.missingV2Position"
+                components={{
+                  link: <StyledInternalLink id="import-pool-link" to="/pools/v2/find"></StyledInternalLink>,
+                }}
+              />
             </Text>
           </AutoColumn>
         </AutoColumn>

@@ -1,4 +1,3 @@
-import { t } from 'i18n'
 import styled from 'lib/styled-components'
 import { createRef, useCallback, useEffect, useMemo, useState } from 'react'
 import { Z_INDEX } from 'theme/zIndex'
@@ -122,7 +121,7 @@ export default function PillMultiToggle({
               onSelectOption(value)
             }}
           >
-            {display ?? <>{t(`{{value}}`, { value })}</>}
+            {display ?? value}
           </OptionButton>
         )
       })}

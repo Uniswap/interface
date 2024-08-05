@@ -1,18 +1,19 @@
-import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { DownloadWalletOption } from 'components/WalletModal/DownloadWalletOption'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import { useConnect } from 'hooks/useConnect'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { Text } from 'ui/src'
-import { Mobile, QrCode } from 'ui/src/components/icons'
+import { Image, Text } from 'ui/src'
+import { UNISWAP_LOGO } from 'ui/src/assets'
+import { ScanQr } from 'ui/src/components/icons'
+import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Trans } from 'uniswap/src/i18n'
 
 export const OptionContainer = styled(Row)`
   padding: 16px;
@@ -62,7 +63,7 @@ export function UniswapWalletOptions() {
             onClick={() => connect({ connector: uniswapExtensionConnector })}
             data-testid="connect-uniswap-extension"
           >
-            <AppIcon src={UNIWALLET_ICON} alt="uniswap-app-icon" />
+            <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
             <Row gap="xs">
               <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
                 <Trans i18nKey="common.extension" />
@@ -79,20 +80,17 @@ export function UniswapWalletOptions() {
           <DownloadWalletOption />
         ) : null}
         <OptionContainer gap="md" onClick={() => connect({ connector: uniswapWalletConnectConnector })}>
-          <Mobile size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} p={7} />
+          <ScanQr size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} p={7} />
           <Row gap="xs">
             <Column>
               <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
-                <Trans i18nKey="common.mobileWallet" />
+                <Trans i18nKey="common.uniswapMobile" />
               </Text>
               <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
                 <Trans i18nKey="wallet.scanToConnect" />
               </Text>
             </Column>
           </Row>
-          <TagContainer>
-            <QrCode size={20} color="$neutral2" />
-          </TagContainer>
         </OptionContainer>
       </Column>
     </Column>

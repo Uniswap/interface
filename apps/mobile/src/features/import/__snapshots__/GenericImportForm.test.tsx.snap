@@ -169,7 +169,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           onPressOut={[Function]}
           style={
             {
-              "backgroundColor": "#FFEFFF",
+              "backgroundColor": "#FEF4FF",
               "borderBottomLeftRadius": 12,
               "borderBottomRightRadius": 12,
               "borderTopLeftRadius": 12,
@@ -205,7 +205,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
                 {
                   "color": "#FC72FF",
                   "fontFamily": "Basel-Medium",
-                  "fontSize": 15,
+                  "fontSize": 13,
                   "fontWeight": "500",
                   "lineHeight": 16,
                 }

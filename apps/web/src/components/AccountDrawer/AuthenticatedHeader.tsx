@@ -19,9 +19,9 @@ import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
+import { useDisconnect } from 'hooks/useDisconnect'
 import useENSName from 'hooks/useENSName'
 import { useIsUniExtensionAvailable } from 'hooks/useUniswapWalletOptions'
-import { Trans, t } from 'i18n'
 import styled from 'lib/styled-components'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
@@ -37,9 +37,9 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { Trans, t } from 'uniswap/src/i18n'
 import { isPathBlocked } from 'utils/blockedPaths'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { useDisconnect } from 'wagmi'
 
 const AuthenticatedHeaderWrapper = styled.div<{ isUniExtensionAvailable?: boolean }>`
   padding: ${({ isUniExtensionAvailable }) => (isUniExtensionAvailable ? 16 : 20)}px 16px;
@@ -112,7 +112,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const { formatNumber, formatDelta } = useFormatter()
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
 
-  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregatorWeb)
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
 
   const unclaimedAmount: CurrencyAmount<Token> | undefined = useUserUnclaimedAmount(account)

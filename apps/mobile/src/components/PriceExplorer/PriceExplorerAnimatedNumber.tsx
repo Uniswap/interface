@@ -17,6 +17,7 @@ import { useSporeColors } from 'ui/src'
 import { TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { fonts } from 'ui/src/theme'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import {
   ADDITIONAL_WIDTH_FOR_ANIMATIONS,
   AnimatedCharStyles,
@@ -370,7 +371,7 @@ const PriceExplorerAnimatedNumber = ({
       <Animated.View style={animatedWrapperStyle}>
         <LoadingWrapper />
       </Animated.View>
-      <View style={RowWrapper.wrapperStyle}>
+      <View style={RowWrapper.wrapperStyle} testID={TestID.PriceExplorerAnimatedNumber}>
         <TopAndBottomGradient />
         {lessThanSymbol}
         {currency.symbolAtFront && currencySymbol}

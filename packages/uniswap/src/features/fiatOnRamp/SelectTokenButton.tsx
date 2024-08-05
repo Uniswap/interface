@@ -4,6 +4,7 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 interface SelectTokenButtonProps {
@@ -16,7 +17,7 @@ interface SelectTokenButtonProps {
   iconSize?: number
   backgroundColor?: ComponentProps<typeof TouchableArea>['backgroundColor']
   chevronDirection?: ComponentProps<typeof RotatableChevron>['direction']
-  testID?: string
+  testID?: TestIDType
 }
 
 export function SelectTokenButton({

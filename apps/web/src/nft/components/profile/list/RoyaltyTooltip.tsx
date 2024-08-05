@@ -1,11 +1,11 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
 import styled, { css } from 'lib/styled-components'
 import { getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { ThemedText } from 'theme/components'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const FeeWrap = styled(Row)`
@@ -57,6 +57,7 @@ export const RoyaltyTooltip = ({
   asset: WalletAsset
   fees?: number
 }) => {
+  const { t } = useTranslation()
   const { formatNumberOrString, formatDelta } = useFormatter()
   const maxRoyalty = Math.max(...selectedMarkets.map((market) => getRoyalty(market, asset) ?? 0))
   return (
@@ -66,8 +67,7 @@ export const RoyaltyTooltip = ({
           <Row>
             <MarketIcon>{getMarketplaceIcon(market.name, '16')}</MarketIcon>
             <ThemedText.BodySmall lineHeight="16px" marginRight="12px">
-              {market.name}&nbsp;
-              <Trans i18nKey="common.fee" />
+              {t('nft.marketplace.royalty.header', { marketName: market.name })}
             </ThemedText.BodySmall>
           </Row>
           <FeePercent>{formatDelta(market.fee)}</FeePercent>

@@ -7,8 +7,6 @@ import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { mocked } from 'test-utils/mocked'
 import { Currency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 jest.mock('hooks/useActiveLocale')
@@ -18,7 +16,6 @@ jest.mock('graphql/data/ConversionRate')
 describe('formatNumber', () => {
   beforeEach(() => {
     mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
-    mocked(useFeatureFlag).mockImplementation((f) => f === FeatureFlags.CurrencyConversion)
   })
 
   it('formats token reference numbers correctly', () => {
@@ -318,7 +315,6 @@ describe('formatNumber', () => {
 describe('formatUSDPrice', () => {
   beforeEach(() => {
     mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
-    mocked(useFeatureFlag).mockImplementation((f) => f === FeatureFlags.CurrencyConversion)
   })
 
   it('format fiat price correctly', () => {
@@ -359,7 +355,6 @@ describe('formatUSDPrice', () => {
 describe('formatPercent', () => {
   beforeEach(() => {
     mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
-    mocked(useFeatureFlag).mockImplementation((f) => f === FeatureFlags.CurrencyConversion)
   })
 
   it('should correctly format undefined', () => {
@@ -393,7 +388,6 @@ describe('formatPercent', () => {
 describe('formatReviewSwapCurrencyAmount', () => {
   beforeEach(() => {
     mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
-    mocked(useFeatureFlag).mockImplementation((f) => f === FeatureFlags.CurrencyConversion)
   })
 
   it('should use TokenTx formatting under a default length', () => {
@@ -430,7 +424,6 @@ describe('formatReviewSwapCurrencyAmount', () => {
 describe('formatDelta', () => {
   beforeEach(() => {
     mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1.0, isLoading: false })
-    mocked(useFeatureFlag).mockImplementation((f) => f === FeatureFlags.CurrencyConversion)
   })
 
   it.each([[null], [undefined], [Infinity], [NaN]])('should correctly format %p', (value) => {
@@ -462,10 +455,6 @@ describe('formatDelta', () => {
 })
 
 describe('formatToFiatAmount', () => {
-  beforeEach(() => {
-    mocked(useFeatureFlag).mockImplementation((f) => f === FeatureFlags.CurrencyConversion)
-  })
-
   it('should return default values when undefined', () => {
     mocked(useLocalCurrencyConversionRate).mockReturnValue({ data: 1, isLoading: false })
     const { convertToFiatAmount } = renderHook(() => useFormatter()).result.current

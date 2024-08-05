@@ -5,6 +5,7 @@ import PopupItem from 'components/Popups/PopupItem'
 import styled from 'lib/styled-components'
 import { useActivePopups } from 'state/application/hooks'
 import { Z_INDEX } from 'theme/zIndex'
+import { AnimatePresence } from 'ui/src'
 
 const StickyContainer = styled.div`
   position: absolute;
@@ -60,9 +61,11 @@ export default function Popups() {
       <StickyContainer>
         <FixedPopupColumn gap="20px" drawerOpen={accountDrawer.isOpen} data-testid="popups">
           <ClaimPopup />
-          {activePopups.map((item) => (
-            <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
-          ))}
+          <AnimatePresence>
+            {activePopups.map((item) => (
+              <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
+            ))}
+          </AnimatePresence>
         </FixedPopupColumn>
       </StickyContainer>
       {hasPopups && (

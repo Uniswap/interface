@@ -1,10 +1,10 @@
 import { permit2Address } from '@uniswap/permit2-sdk'
 import { call, select } from 'typed-redux-saga'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { RPCType } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { ValidatedSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { makeSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
@@ -39,14 +39,15 @@ export function* approveAndSwap(params: SwapParams) {
 
     const chainId = swapTxContext.trade.inputAmount.currency.chainId
 
+    // For classic swaps, trigger UI changes immediately after click
+    if (!isUniswapX) {
+      // onSubmit does not need to be wrapped in yield* call() here, but doing so makes it easier to test call ordering in swapSaga.test.ts
+      yield* call(onSubmit)
+    }
+
     // MEV protection is not needed for UniswapX approval and/or wrap transactions.
     const submitViaPrivateRpc = !isUniswapX && (yield* call(shouldSubmitViaPrivateRpc, chainId))
     let nonce = yield* call(getNonceForApproveAndSwap, address, chainId, submitViaPrivateRpc)
-
-    // For classic swaps, trigger UI changes immediately after click
-    if (!isUniswapX) {
-      onSubmit()
-    }
 
     let approveTxHash: string | undefined
     // Approval Logic
@@ -65,7 +66,10 @@ export function* approveAndSwap(params: SwapParams) {
       nonce++
     }
 
-    const typeInfo = tradeToTransactionInfo(swapTxContext.trade)
+    // Default to input for USD volume amount
+    const transactedUSDValue = analytics.token_in_amount_usd
+
+    const typeInfo = tradeToTransactionInfo(swapTxContext.trade, transactedUSDValue)
     // Swap Logic - UniswapX
     if (isUniswapX) {
       const { orderParams, wrapTxRequest } = swapTxContext
@@ -120,7 +124,7 @@ export const {
   actions: swapActions,
 } = createMonitoredSaga<SwapParams>(approveAndSwap, 'swap')
 
-function* getNonceForApproveAndSwap(address: Address, chainId: number, submitViaPrivateRpc: boolean) {
+export function* getNonceForApproveAndSwap(address: Address, chainId: number, submitViaPrivateRpc: boolean) {
   const rpcType = submitViaPrivateRpc ? RPCType.Private : RPCType.Public
   const provider = yield* call(getProvider, chainId, rpcType)
   const nonce = yield* call([provider, provider.getTransactionCount], address, 'pending')
@@ -135,7 +139,7 @@ function* getNonceForApproveAndSwap(address: Address, chainId: number, submitVia
   return nonce
 }
 
-function* shouldSubmitViaPrivateRpc(chainId: number) {
+export function* shouldSubmitViaPrivateRpc(chainId: number) {
   const swapProtectionSetting = yield* select(selectWalletSwapProtectionSetting)
   const swapProtectionOn = swapProtectionSetting === SwapProtectionSetting.On
   const mevBlockerFeatureEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.MevBlocker))

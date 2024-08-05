@@ -20,13 +20,13 @@ import { DISPLAYS, TimePeriodDisplay, getTimePeriodFromDisplay } from 'component
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { TimePeriod, gqlToCurrency, supportedChainIdFromGQLChain, toHistoryDuration } from 'graphql/data/util'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
-import { Trans, t } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Trans, t } from 'uniswap/src/i18n'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -349,10 +349,10 @@ function LiquidityTooltipDisplay({
   return (
     <>
       <ThemedText.BodySmall>
-        {t(`{{token}} liquidity: {{name}}`, { token: tokenADescriptor, name: displayValue0 })}
+        {t('liquidityPool.chart.tooltip.amount', { token: tokenADescriptor, amount: displayValue0 })}
       </ThemedText.BodySmall>
       <ThemedText.BodySmall>
-        {t(`{{token}} liquidity: {{name}}`, { token: tokenBDescriptor, name: displayValue1 })}
+        {t('liquidityPool.chart.tooltip.amount', { token: tokenBDescriptor, amount: displayValue1 })}
       </ThemedText.BodySmall>
     </>
   )

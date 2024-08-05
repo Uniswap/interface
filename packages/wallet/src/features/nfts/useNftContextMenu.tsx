@@ -2,7 +2,7 @@ import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { GeneratedIcon, isWeb, useIsDarkMode } from 'ui/src'
 import { Eye, EyeOff } from 'ui/src/components/icons'
 import { UNIVERSE_CHAIN_LOGO } from 'uniswap/src/assets/chainLogos'
@@ -17,7 +17,6 @@ import { getIsNftHidden, getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { useAppSelector } from 'wallet/src/state'
 import { getExplorerName } from 'wallet/src/utils/linking'
 
 interface NFTMenuParams {
@@ -52,7 +51,7 @@ export function useNFTContextMenu({
   const accounts = useAccounts()
   const isLocalAccount = owner && !!accounts[owner]
 
-  const nftVisibility = useAppSelector(selectNftsVisibility)
+  const nftVisibility = useSelector(selectNftsVisibility)
   const nftKey = contractAddress && tokenId ? getNFTAssetKey(contractAddress, tokenId) : undefined
   const hidden = getIsNftHidden({ contractAddress, tokenId, isSpam, nftVisibility })
 

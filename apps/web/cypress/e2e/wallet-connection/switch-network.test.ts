@@ -1,12 +1,8 @@
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { getTestSelector, resetHardhatChain } from '../../utils'
-
-export function waitsForActiveChain(chain: string) {
-  cy.get(getTestSelector('chain-selector-logo')).invoke('attr', 'alt').should('eq', `${chain} logo`)
-}
+import { getTestSelector, resetHardhatChain, waitsForActiveChain } from '../../utils'
 
 function switchChain(chain: string) {
-  cy.get(getTestSelector('chain-selector')).eq(1).click()
+  cy.get(getTestSelector('chain-selector')).click()
   cy.contains(chain).click()
 }
 

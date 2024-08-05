@@ -98,16 +98,7 @@ export function TransferAmountInput({
 
   // We ignore this specific warning type because we have dedicated UI for this in the review button
   const warning = insufficientGasFunds ? undefined : formScreenWarning
-
-  const subTextValue = warning
-    ? warning.warning.title
-    : !tokenOrFiatEquivalentAmount
-      ? // Override empty string from useTokenAndFiatDisplayAmounts to keep UI placeholder text consistent
-        isFiatInput
-        ? '0'
-        : '$0'
-      : tokenOrFiatEquivalentAmount
-
+  const subTextValue = warning ? warning.warning.title : tokenOrFiatEquivalentAmount
   const subTextValueColor = warning ? '$statusCritical' : '$neutral2'
   const inputColor = !value ? '$neutral3' : '$neutral1'
 

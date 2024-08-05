@@ -4,12 +4,6 @@ import { UnsignedV2DutchOrderInfo } from '@uniswap/uniswapx-sdk'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { CurrencyField, TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { currencyId } from 'uniswap/src/utils/currencyId'
-import { logger } from 'utilities/src/logger/logger'
-import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
   ClassicQuote,
   DutchOrderInfoV2,
@@ -22,7 +16,13 @@ import {
   TokenInRoute as TradingApiTokenInRoute,
   V2PoolInRoute as TradingApiV2PoolInRoute,
   V3PoolInRoute as TradingApiV3PoolInRoute,
-} from 'wallet/src/data/tradingApi/__generated__/index'
+} from 'uniswap/src/data/tradingApi/__generated__/index'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { CurrencyField, TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { currencyId } from 'uniswap/src/utils/currencyId'
+import { logger } from 'utilities/src/logger/logger'
+import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import {

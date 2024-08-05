@@ -2,7 +2,6 @@ import { Percent } from '@uniswap/sdk-core'
 import { RowBetween } from 'components/Row'
 import SettingsTab from 'components/Settings'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ArrowLeft } from 'react-feather'
@@ -13,6 +12,7 @@ import { resetMintState } from 'state/mint/actions'
 import { resetMintState as resetMintV3State } from 'state/mint/v3/actions'
 import { ThemedText } from 'theme/components'
 import { flexRowNoWrap } from 'theme/styles'
+import { Trans } from 'uniswap/src/i18n'
 
 const Tabs = styled.div`
   ${flexRowNoWrap};

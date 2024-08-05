@@ -3,12 +3,12 @@ import Row from 'components/Row'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
 import { useScreenSize } from 'hooks/screenSize'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import { Trans, t } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { useCallback, useState } from 'react'
 import { Copy } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { ClickableStyle } from 'theme/components'
+import { Trans, t } from 'uniswap/src/i18n'
 import { shortenAddress } from 'utilities/src/addresses'
 
 export const BreadcrumbNavContainer = styled.nav`

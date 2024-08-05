@@ -27,7 +27,6 @@ export const uniswapUrls = {
   helpArticleUrls: {
     approvalsExplainer: `${helpUrl}/articles/8120520483085-What-is-an-approval-transaction`,
     extensionHelp: `${helpUrl}/categories/25219141467405`,
-    extensionWaitlist: `${helpUrl}/articles/24458735271181-Get-started-with-the-Uniswap-Extension`,
     extensionDappTroubleshooting: `${helpUrl}/articles/25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps`,
     feeOnTransferHelp: `${helpUrl}/articles/18673568523789-What-is-a-token-fee-`,
     howToSwapTokens: `${helpUrl}/articles/8370549680909-How-to-swap-tokens-`,
@@ -57,8 +56,6 @@ export const uniswapUrls = {
   },
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
-  // TODO(EXT-668): Remove this after beta launch
-  extensionFeedbackFormUrl: 'https://forms.gle/Znf6nDRa9PMp4BAJ7',
   chromeExtension: 'http://uniswap.org/ext',
 
   // Core API Urls

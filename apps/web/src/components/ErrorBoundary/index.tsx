@@ -3,12 +3,12 @@ import { ButtonLight, SmallButtonPrimary } from 'components/Button'
 import { Column } from 'components/Column'
 import { useIsMobile } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { PropsWithChildren, useState } from 'react'
 import { Copy } from 'react-feather'
 import { CopyToClipboard, ExternalLink, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { isRemoteReportingEnabled } from 'utils/env'
 
 const FallbackWrapper = styled.div`

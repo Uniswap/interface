@@ -23,10 +23,6 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
   transition-property: opacity,color,background-color;
 }
 
-.c1:hover {
-  opacity: 0.6;
-}
-
 .c1:focus {
   -webkit-text-decoration: underline;
   text-decoration: underline;
@@ -48,6 +44,12 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
 .c2:active {
   -webkit-text-decoration: none;
   text-decoration: none;
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .c1:hover {
+    opacity: 0.6;
+  }
 }
 
 <span

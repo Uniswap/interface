@@ -1,11 +1,10 @@
 import { I18nManager } from 'react-native'
 import RNRestart from 'react-native-restart'
 import { call, put, select, takeLatest } from 'typed-redux-saga'
-import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import i18n from 'uniswap/src/i18n/i18n'
 import { getDeviceLocales } from 'utilities/src/device/locales'
 import { logger } from 'utilities/src/logger/logger'
+import { isMobile } from 'utilities/src/platform'
 import {
   Language,
   Locale,
@@ -21,11 +20,6 @@ export function* appLanguageWatcherSaga() {
 }
 
 function* appLanguageSaga(action: ReturnType<typeof updateLanguage>) {
-  const featureEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.LanguageSelection))
-  if (!featureEnabled) {
-    return
-  }
-
   const { payload: preferredLanguage } = action
   const currentAppLanguage = yield* select(selectCurrentLanguage)
 
@@ -45,7 +39,9 @@ function* appLanguageSaga(action: ReturnType<typeof updateLanguage>) {
     logger.warn('language/saga', 'appLanguageSaga', 'Sync of language setting state and i18n instance failed')
   }
 
-  yield* call(restartAppIfRTL, localeToSet)
+  if (isMobile) {
+    yield* call(restartAppIfRTL, localeToSet)
+  }
 }
 
 function getDeviceLanguage(): Language {

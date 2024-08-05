@@ -72,7 +72,6 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   const shouldGetQuote = !isWrapAction(wrapType)
   const sendPortionEnabled = useFeatureFlag(FeatureFlags.PortionFields)
-  const isOptionalRoutingEnabled = useFeatureFlag(FeatureFlags.OptionalRouting)
 
   const tradeParams = {
     amountSpecified: shouldGetQuote ? amountSpecified : null,
@@ -80,8 +79,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     customSlippageTolerance,
     sendPortionEnabled,
-    // Only pass custom routing preference if feature is enabled
-    tradeProtocolPreference: isOptionalRoutingEnabled ? tradeProtocolPreference : undefined,
+    tradeProtocolPreference,
   }
 
   const tradeTradeWithoutSlippage = useTrade(tradeParams)

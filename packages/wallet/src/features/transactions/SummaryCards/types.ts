@@ -17,7 +17,6 @@ export interface TransactionSummaryLayoutProps {
 export interface SummaryItemProps {
   authTrigger?: AuthTrigger
   transaction: TransactionDetails
-  layoutElement: React.FunctionComponent<TransactionSummaryLayoutProps>
   swapCallbacks?: SwapSummaryCallbacks
   index?: number
 }

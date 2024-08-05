@@ -1,7 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { ServiceProviderSelector } from 'src/features/fiatOnRamp/ExchangeTransferServiceProviderSelector'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
@@ -100,7 +99,7 @@ export function ReceiveCryptoModal(): JSX.Element {
   const colors = useSporeColors()
   const dispatch = useDispatch()
   const { t } = useTranslation()
-  const { initialState } = useAppSelector(selectModalState(ModalName.ReceiveCryptoModal))
+  const { initialState } = useSelector(selectModalState(ModalName.ReceiveCryptoModal))
 
   const onClose = (): void => {
     dispatch(closeModal({ name: ModalName.ReceiveCryptoModal }))

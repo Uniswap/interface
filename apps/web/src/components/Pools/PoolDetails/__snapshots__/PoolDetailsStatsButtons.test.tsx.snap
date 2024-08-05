@@ -210,6 +210,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
 }
 
 .c19 {
+  position: relative;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -260,10 +261,6 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   transition-timing-function: ease-in-out;
   -webkit-transition-property: opacity,color,background-color;
   transition-property: opacity,color,background-color;
-}
-
-.c22:hover {
-  opacity: 0.6;
 }
 
 .c22:focus {
@@ -978,6 +975,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   display: none;
 }
 
+@media (hover:hover) and (pointer:fine) {
+  .c22:hover {
+    opacity: 0.6;
+  }
+}
+
 @media only screen and (max-width:1024px) {
   .c56 {
     opacity: 0;
@@ -1226,7 +1229,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                         class="c32"
                       >
                         <span
-                          class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
+                          class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _userSelect-none"
                           data-disable-theme="true"
                         >
                           Sell
@@ -1266,30 +1269,39 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                                     class="c1 c2 c19"
                                   >
                                     <div
-                                      class="c42"
-                                      style="height: 24px; width: 24px; margin-right: 2px;"
+                                      class="css-view-175oi2r"
+                                      style="display: flex; align-items: stretch; flex-direction: row; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0;"
                                     >
                                       <div
-                                        class="c43"
+                                        class="c42"
+                                        style="height: 24px; width: 24px; margin-right: 2px;"
                                       >
                                         <div
-                                          class="c44"
-                                          size="24"
+                                          class="c43"
                                         >
-                                           
-                                          <img
-                                            class="c45"
-                                            size="24"
-                                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                                          />
+                                          <div
+                                            class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
+                                          >
+                                            <div
+                                              class="c44"
+                                              size="24"
+                                            >
+                                               
+                                              <img
+                                                class="c45"
+                                                size="24"
+                                                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                                              />
+                                            </div>
+                                          </div>
                                         </div>
                                       </div>
+                                      <span
+                                        class="c46 token-symbol-container"
+                                      >
+                                        USDC
+                                      </span>
                                     </div>
-                                    <span
-                                      class="c46 token-symbol-container"
-                                    >
-                                      USDC
-                                    </span>
                                   </div>
                                   <svg
                                     class="c47"
@@ -1375,7 +1387,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                           class="c32"
                         >
                           <span
-                            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-14px _lineHeight-20px _fontWeight-400 _userSelect-none"
+                            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _userSelect-none"
                             data-disable-theme="true"
                           >
                             Buy
@@ -1415,30 +1427,39 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                                       class="c1 c2 c19"
                                     >
                                       <div
-                                        class="c42"
-                                        style="height: 24px; width: 24px; margin-right: 2px;"
+                                        class="css-view-175oi2r"
+                                        style="display: flex; align-items: stretch; flex-direction: row; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; opacity: 0;"
                                       >
                                         <div
-                                          class="c43"
+                                          class="c42"
+                                          style="height: 24px; width: 24px; margin-right: 2px;"
                                         >
                                           <div
-                                            class="c44"
-                                            size="24"
+                                            class="c43"
                                           >
-                                             
-                                            <img
-                                              class="c45"
-                                              size="24"
-                                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                                            />
+                                            <div
+                                              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
+                                            >
+                                              <div
+                                                class="c44"
+                                                size="24"
+                                              >
+                                                 
+                                                <img
+                                                  class="c45"
+                                                  size="24"
+                                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                                                />
+                                              </div>
+                                            </div>
                                           </div>
                                         </div>
+                                        <span
+                                          class="c46 token-symbol-container"
+                                        >
+                                          WETH
+                                        </span>
                                       </div>
-                                      <span
-                                        class="c46 token-symbol-container"
-                                      >
-                                        WETH
-                                      </span>
                                     </div>
                                     <svg
                                       class="c47"

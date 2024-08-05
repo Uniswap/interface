@@ -76,11 +76,19 @@ export function isGifUri(uri: Maybe<string>): boolean {
   return isSegmentUri(uri, '.gif')
 }
 
+function truncateQueryParams(url: string): string {
+  // In fact, the first element will be always returned below. url is
+  // added as a fallback just to satisfy TypeScript.
+  return url.split('?')[0] ?? url
+}
+
 /**
- * Removes safe prefixes and trailing slashes from URL to improve human readability.
+ * Removes query params, safe prefixes and trailing slashes from URL to improve human readability.
  *
  * @param {string} url The URL to check.
  */
 export function formatDappURL(url: string): string {
-  return url?.replace('https://', '').replace('www.', '').replace(/\/$/, '')
+  const truncatedURL = truncateQueryParams(url)
+
+  return truncatedURL?.replace('https://', '').replace('www.', '').replace(/\/$/, '')
 }

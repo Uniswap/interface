@@ -3,6 +3,7 @@ import '@testing-library/jest-dom' // jest custom assertions
 import '@vanilla-extract/css/disableRuntimeStyles' // https://vanilla-extract.style/documentation/test-environments/#disabling-runtime-styles
 import 'jest-styled-components' // adds style diffs to snapshot tests
 import 'polyfills' // add polyfills
+import { setupi18n } from 'uniswap/src/i18n/i18n-setup-interface'
 import 'utilities/src/logger/mocks'
 
 import type { createPopper } from '@popperjs/core'
@@ -15,6 +16,8 @@ import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TextDecoder, TextEncoder } from 'util'
+
+setupi18n()
 
 // Sets origin to the production origin, because some tests depend on this.
 // This prevents each test file from needing to set this manually.
@@ -50,6 +53,8 @@ globalThis.origin = 'https://app.uniswap.org'
 
   globalThis.React = React
 }
+
+jest.mock('react-native-svg', () => require('@tamagui/react-native-svg'))
 
 jest.mock('@popperjs/core', () => {
   const core = jest.requireActual('@popperjs/core')

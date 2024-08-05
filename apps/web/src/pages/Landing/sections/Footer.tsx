@@ -1,15 +1,17 @@
-import Row from 'components/Row'
-import { useScreenSize } from 'hooks/screenSize'
-import { Trans } from 'i18n'
-import styled, { css } from 'lib/styled-components'
-import { Body1, Box, H3 } from 'pages/Landing/components/Generics'
+import { MenuItem, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
+import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
+import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
+import deprecatedStyled, { useTheme } from 'lib/styled-components'
 import { Discord, Github, Twitter } from 'pages/Landing/components/Icons'
 import { Wiggle } from 'pages/Landing/components/animations'
-import { Link } from 'react-router-dom'
+import { useMemo } from 'react'
 import { useTogglePrivacyPolicy } from 'state/application/hooks'
-import { ExternalLink } from 'theme/components'
+import { Anchor, Flex, Separator, Text, styled } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
+import { useTranslation } from 'uniswap/src/i18n'
 
-const SocialIcon = styled(Wiggle)`
+const SOCIAL_ICONS_SIZE = `${iconSizes.icon32}px`
+const SocialIcon = deprecatedStyled(Wiggle)`
   flex: 0;
   fill: ${(props) => props.theme.neutral1};
   cursor: pointer;
@@ -19,162 +21,116 @@ const SocialIcon = styled(Wiggle)`
     fill: ${(props) => props.$hoverColor};
   }
 `
-const RowToCol = styled(Box)`
-  height: auto;
-  flex-shrink: 1;
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`
-const HideWhenSmall = styled(Box)`
-  @media (max-width: 768px) {
-    display: none;
-  }
-`
-const HideWhenLarge = styled(Box)`
-  @media (min-width: 768px) {
-    display: none;
-  }
-`
-const MenuItemStyles = css`
-  padding: 0;
-  margin: 0;
-  text-align: left;
-  font-family: Basel;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 24px;
-  color: ${({ theme }) => theme.neutral2};
-  stroke: none;
-  transition: color 0.1s ease-in-out;
-  text-decoration: none;
-  &:hover {
-    color: ${({ theme }) => theme.neutral1};
-    opacity: 1;
-  }
-`
-const StyledInternalLink = styled(Link)`
-  ${MenuItemStyles}
-`
-const StyledExternalLink = styled(ExternalLink)`
-  ${MenuItemStyles}
-`
-const DownloadLink = styled.a`
-  ${MenuItemStyles}
-`
-const ModalItem = styled.div`
-  ${MenuItemStyles}
-  cursor: pointer;
-  user-select: none;
-`
+const SocialLink = styled(Anchor, {
+  target: '_blank',
+  animateOnly: ['color'],
+  animation: '100ms',
+})
+const PolicyLink = styled(Text, {
+  variant: 'body3',
+  animation: '100ms',
+  color: '$neutral2',
+  cursor: 'pointer',
+  hoverStyle: { color: '$neutral1' },
+})
+
 export function Socials({ iconSize }: { iconSize?: string }) {
   return (
-    <Row gap="24px" maxHeight={iconSize} align="flex-start">
+    <Flex row gap="$spacing24" maxHeight={iconSize} alignItems="flex-start">
       <SocialIcon $hoverColor="#00C32B">
-        <StyledExternalLink href="https://github.com/Uniswap">
+        <SocialLink href="https://github.com/Uniswap" target="_blank">
           <Github size={iconSize} fill="inherit" />
-        </StyledExternalLink>
+        </SocialLink>
       </SocialIcon>
       <SocialIcon $hoverColor="#20BAFF">
-        <StyledExternalLink href="https://twitter.com/Uniswap">
+        <SocialLink href="https://x.com/Uniswap" target="_blank">
           <Twitter size={iconSize} fill="inherit" />
-        </StyledExternalLink>
+        </SocialLink>
       </SocialIcon>
       <SocialIcon $hoverColor="#5F51FF">
-        <StyledExternalLink href="https://discord.com/invite/uniswap">
+        <SocialLink href="https://discord.com/invite/uniswap" target="_blank">
           <Discord size={iconSize} fill="inherit" />
-        </StyledExternalLink>
+        </SocialLink>
       </SocialIcon>
-    </Row>
+    </Flex>
+  )
+}
+
+function FooterSection({ title, items }: { title: string; items: MenuItem[] }) {
+  const theme = useTheme()
+  return (
+    <Flex width="auto" $md={{ width: '100%' }} flexGrow={0} flexShrink={1} flexBasis="auto" gap="10px">
+      <Text variant="body1">{title}</Text>
+      {items.map((item, index) => (
+        <MenuLink
+          key={`footer_${title}_${index}}`}
+          label={item.label}
+          href={item.href}
+          internal={item.internal}
+          overflow={item.overflow}
+          $hoverColor={theme.neutral1}
+        />
+      ))}
+    </Flex>
   )
 }
 
 export function Footer() {
-  const screenIsLarge = useScreenSize()['lg']
+  const { t } = useTranslation()
   const togglePrivacyPolicy = useTogglePrivacyPolicy()
+  const tabsContent = useTabsContent({ includeNftsLink: true })
+  const appSectionItems: MenuItem[] = useMemo(() => {
+    return tabsContent.map((tab) => ({
+      label: tab.title,
+      href: tab.href,
+      internal: true,
+    }))
+  }, [tabsContent])
+  const sections = useMenuContent()
+  const brandAssets = {
+    label: t('common.brandAssets'),
+    href: 'https://github.com/Uniswap/brand-assets/raw/main/Uniswap%20Brand%20Assets.zip',
+    internal: false,
+  }
 
   return (
-    <Box as="footer" direction="column" align="center" padding={screenIsLarge ? '0 40px' : '0 48px'}>
-      <Box direction="row" maxWidth="1280px" gap="24px">
-        <RowToCol direction="row" justify-content="space-between" gap="32px">
-          <Box direction="column" height="100%" gap="64px">
-            <Box direction="column" gap="10px">
-              <H3>© 2024</H3>
-              <H3>Uniswap Labs</H3>
-            </Box>
-            <HideWhenSmall>
-              <Socials />
-            </HideWhenSmall>
-          </Box>
-          <RowToCol direction="row" height="100%" gap="16px">
-            <Box direction="row" gap="16px">
-              <Box direction="column" gap="10px">
-                <Body1>App</Body1>
-                <StyledInternalLink to="/swap">
-                  <Trans i18nKey="common.swap" />
-                </StyledInternalLink>
-                <StyledInternalLink to="/tokens/ethereum">
-                  <Trans i18nKey="common.tokens" />
-                </StyledInternalLink>
-                <StyledInternalLink to="/nfts">
-                  <Trans i18nKey="common.nfts" />
-                </StyledInternalLink>
-                <StyledInternalLink to="/pool">
-                  <Trans i18nKey="common.pool" />
-                </StyledInternalLink>
-              </Box>
-              <Box direction="column" gap="10px">
-                <Body1>
-                  <Trans i18nKey="common.protocol" />
-                </Body1>
-                <StyledExternalLink href="https://uniswap.org/governance">
-                  <Trans i18nKey="common.governance" />
-                </StyledExternalLink>
-                <StyledExternalLink href="https://uniswap.org/developers">
-                  <Trans i18nKey="common.developers" />
-                </StyledExternalLink>
-              </Box>
-            </Box>
-            <Box direction="row" gap="16px">
-              <Box direction="column" gap="10px">
-                <Body1>
-                  <Trans i18nKey="common.company" />
-                </Body1>
-                <StyledExternalLink href="https://boards.greenhouse.io/uniswaplabs">
-                  <Trans i18nKey="common.careers" />
-                </StyledExternalLink>
-                <StyledExternalLink href="https://blog.uniswap.org/">
-                  <Trans i18nKey="common.blog" />
-                </StyledExternalLink>
-                <DownloadLink href="https://github.com/Uniswap/brand-assets/raw/main/Uniswap%20Brand%20Assets.zip">
-                  <Trans i18nKey="common.brandAssets" />
-                </DownloadLink>
-                <ModalItem onClick={togglePrivacyPolicy}>
-                  <Trans i18nKey="common.termsPrivacy" />
-                </ModalItem>
-                <StyledExternalLink href="https://uniswap.org/trademark">
-                  <Trans i18nKey="common.trademarkPolicy" />
-                </StyledExternalLink>
-              </Box>
-              <Box direction="column" gap="10px">
-                <Body1>
-                  <Trans i18nKey="common.needHelp" />
-                </Body1>
-                <StyledExternalLink href="https://support.uniswap.org/hc/en-us/requests/new">
-                  <Trans i18nKey="common.contactUs.button" />
-                </StyledExternalLink>
-                <StyledExternalLink href="https://support.uniswap.org/hc/en-us">
-                  <Trans i18nKey="common.helpCenter" />
-                </StyledExternalLink>
-              </Box>
-            </Box>
-          </RowToCol>
-          <HideWhenLarge>
-            <Socials />
-          </HideWhenLarge>
-        </RowToCol>
-      </Box>
-    </Box>
+    <Flex width="100%" gap="$spacing24" pt="$none" px="$spacing48" pb="40px" $lg={{ px: '$spacing40' }}>
+      <Flex row $md={{ flexDirection: 'column' }} justifyContent="space-between" gap="$spacing32">
+        <Flex height="100%" gap="$spacing60">
+          <Flex $md={{ display: 'none' }}>
+            <Socials iconSize={SOCIAL_ICONS_SIZE} />
+          </Flex>
+        </Flex>
+        <Flex row $md={{ flexDirection: 'column' }} height="100%" gap="$spacing16">
+          <Flex row gap="$spacing16" justifyContent="space-between" $md={{ width: 'auto' }}>
+            <FooterSection title={t('common.app')} items={appSectionItems} />
+            <FooterSection title={sections[0].title} items={[...sections[0].items, brandAssets]} />
+          </Flex>
+          <Flex row gap="$spacing16" $md={{ width: 'auto' }}>
+            <FooterSection title={sections[1].title} items={sections[1].items} />
+            <FooterSection title={sections[2].title} items={sections[2].items} />
+          </Flex>
+        </Flex>
+        <Flex $md={{ display: 'flex' }} display="none">
+          <Socials iconSize={SOCIAL_ICONS_SIZE} />
+        </Flex>
+      </Flex>
+      <Separator />
+      <Flex
+        row
+        alignItems="center"
+        $md={{ flexDirection: 'column', alignItems: 'flex-start' }}
+        width="100%"
+        justifyContent="space-between"
+      >
+        <Text variant="body3">© 2024 - Uniswap Labs</Text>
+        <Flex row alignItems="center" gap="$spacing16">
+          <Anchor textDecorationLine="none" href="https://uniswap.org/trademark" target="_blank">
+            <PolicyLink>{t('common.trademarkPolicy')}</PolicyLink>
+          </Anchor>
+          <PolicyLink onPress={togglePrivacyPolicy}>{t('common.privacyPolicy')}</PolicyLink>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }

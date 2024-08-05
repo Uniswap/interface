@@ -108,7 +108,7 @@ export function TransactionDetails({
             onPress={onPressToggleShowChildren}
           >
             <Text color="$neutral3" variant="body3">
-              {showChildren ? t('swap.details.action.less') : t('swap.details.action.more')}
+              {showChildren ? t('common.button.showLess') : t('common.button.showMore')}
             </Text>
             {showChildren ? (
               <AnglesMinimize color={colors.neutral3.get()} height={iconSizes.icon20} width={iconSizes.icon20} />

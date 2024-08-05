@@ -1,3 +1,4 @@
+import { DdRumReactNavigationTracking } from '@datadog/mobile-react-navigation'
 import {
   createNavigationContainerRef,
   DefaultTheme,
@@ -52,6 +53,8 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
         // setting initial route name for telemetry
         const initialRoute = navigationRef.getCurrentRoute()?.name as MobileAppScreen
         setRouteName(initialRoute)
+
+        DdRumReactNavigationTracking.startTrackingViews(navigationRef.current)
       }}
       onStateChange={(): void => {
         const previousRouteName = routeName

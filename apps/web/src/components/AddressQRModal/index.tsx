@@ -5,7 +5,6 @@ import Identicon from 'components/Identicon'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { PRODUCTION_CHAIN_IDS } from 'constants/chains'
 import useENSName from 'hooks/useENSName'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { useCallback } from 'react'
 import { useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
@@ -14,6 +13,7 @@ import { ExternalLink, ThemedText } from 'theme/components'
 import { AdaptiveWebModalSheet, Flex, QRCodeDisplay, Text, useSporeColors } from 'ui/src'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { Trans } from 'uniswap/src/i18n'
 
 const HelpCenterLink = styled(ExternalLink)`
   font-size: 14px;
@@ -82,7 +82,7 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
           </Text>
           <NetworkLogos showFirstChainLabel borderRadius="$roundedFull" chains={PRODUCTION_CHAIN_IDS} />
           <HelpCenterLink href="https://support.uniswap.org/hc/en-us/articles/14569415293325-Networks-on-Uniswap">
-            <Trans i18nKey="common.learnMore.link" />
+            <Trans i18nKey="common.button.learn" />
           </HelpCenterLink>
         </Flex>
       </Flex>

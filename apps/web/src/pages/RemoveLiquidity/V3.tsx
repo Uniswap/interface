@@ -25,7 +25,6 @@ import { useEthersSigner } from 'hooks/useEthersSigner'
 import { PoolCache } from 'hooks/usePools'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import AppBody from 'pages/App/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
@@ -39,6 +38,7 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -361,23 +361,16 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                     <Trans i18nKey="common.amount.label" />
                   </ThemedText.DeprecatedMain>
                   <RowBetween>
-                    <ResponsiveHeaderText>
-                      <Trans
-                        i18nKey="common.percentage"
-                        values={{
-                          pct: percentForSlider,
-                        }}
-                      />
-                    </ResponsiveHeaderText>
+                    <ResponsiveHeaderText>{percentForSlider}%</ResponsiveHeaderText>
                     <AutoRow gap="4px" justify="flex-end">
                       <SmallMaxButton onClick={() => onPercentSelect(25)} width="20%">
-                        <Trans i18nKey="common.percentage" values={{ pct: '25' }} />
+                        25%
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(50)} width="20%">
-                        <Trans i18nKey="common.percentage" values={{ pct: '50' }} />
+                        50%
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(75)} width="20%">
-                        <Trans i18nKey="common.percentage" values={{ pct: '75' }} />
+                        75%
                       </SmallMaxButton>
                       <SmallMaxButton onClick={() => onPercentSelect(100)} width="20%">
                         <Trans i18nKey="common.max" />

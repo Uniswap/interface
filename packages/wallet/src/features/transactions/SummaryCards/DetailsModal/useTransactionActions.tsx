@@ -34,7 +34,7 @@ import {
 import { getIsCancelable } from 'wallet/src/features/transactions/utils'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { openMoonpayTransactionLink, openTransactionLink } from 'wallet/src/utils/linking'
+import { openTransactionLink } from 'wallet/src/utils/linking'
 
 export const useTransactionActions = ({
   authTrigger,
@@ -93,14 +93,6 @@ export const useTransactionActions = ({
     return openTransactionLink(hash, chainId)
   }, [chainId, hash])
 
-  const handleViewMoonpay = (): Promise<void> | undefined => {
-    if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
-      setShowActionsModal(false)
-      return openMoonpayTransactionLink(transaction.typeInfo)
-    }
-    return undefined
-  }
-
   const handleViewTokenDetails = useCallback(
     (currencyId: CurrencyId): void | undefined => {
       if (typeInfo.type === TransactionType.Swap) {
@@ -151,9 +143,6 @@ export const useTransactionActions = ({
           }}
           onClose={handleActionsModalClose}
           onExplore={handleExplore}
-          onViewMoonpay={
-            typeInfo.type === TransactionType.FiatPurchase && typeInfo.explorerUrl ? handleViewMoonpay : undefined
-          }
           onViewTokenDetails={typeInfo.type === TransactionType.Swap ? handleViewTokenDetails : undefined}
         />
       )}

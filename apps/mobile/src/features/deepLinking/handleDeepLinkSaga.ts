@@ -2,7 +2,6 @@ import { createAction } from '@reduxjs/toolkit'
 import { parseUri } from '@walletconnect/utils'
 import { Alert } from 'react-native'
 import { URL } from 'react-native-url-polyfill'
-import { appSelect } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { getScantasticQueryParams, parseScantasticParams } from 'src/components/Requests/ScanSheet/util'
 import {
@@ -17,7 +16,7 @@ import { closeAllModals, openModal } from 'src/features/modals/modalSlice'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
-import { call, put, takeLatest } from 'typed-redux-saga'
+import { call, put, select, takeLatest } from 'typed-redux-saga'
 import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
 import { fromUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
@@ -160,8 +159,8 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
     if (!accountAddress) {
       return
     }
-    const accounts = yield* appSelect(selectAccounts)
-    const activeAccountAddress = yield* appSelect(selectActiveAccountAddress)
+    const accounts = yield* select(selectAccounts)
+    const activeAccountAddress = yield* select(selectActiveAccountAddress)
     if (accountAddress === activeAccountAddress) {
       return
     }
@@ -199,7 +198,7 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
     const userAddress = url.searchParams.get('userAddress')
     const fiatOnRamp = url.searchParams.get('fiatOnRamp') === 'true'
 
-    const activeAccount = yield* appSelect(selectActiveAccount)
+    const activeAccount = yield* select(selectActiveAccount)
     if (!activeAccount) {
       // For app.uniswap.org links it should open a browser with the link
       // instead of handling it inside the app
@@ -354,7 +353,7 @@ export function* parseAndValidateUserAddress(userAddress: string | null) {
     throw new Error('No `userAddress` provided')
   }
 
-  const userAccounts = yield* appSelect(selectAccounts)
+  const userAccounts = yield* select(selectAccounts)
   const matchingAccount = Object.values(userAccounts).find(
     (account) => account.address.toLowerCase() === userAddress.toLowerCase(),
   )

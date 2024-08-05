@@ -1,20 +1,7 @@
 import { useFocusEffect } from '@react-navigation/core'
 import { useCallback, useRef, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
-import { TypedUseSelectorHook, useSelector } from 'react-redux'
-import type { MobileState } from 'src/app/reducer'
-import { SagaGenerator, select } from 'typed-redux-saga'
 import { spacing } from 'ui/src/theme'
-
-// Use throughout the app instead of plain `useDispatch` and `useSelector`
-
-export const useAppSelector: TypedUseSelectorHook<MobileState> = useSelector
-
-// Use in sagas for better typing when selecting from redux state
-export function* appSelect<T>(fn: (state: MobileState) => T): SagaGenerator<T> {
-  const state = yield* select(fn)
-  return state
-}
 
 const MIN_INPUT_DECIMAL_PAD_GAP = spacing.spacing8
 

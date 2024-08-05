@@ -1,12 +1,12 @@
 import { Settings } from 'components/Icons/Settings'
 import Row from 'components/Row'
-import { Trans, t } from 'i18n'
 import styled from 'lib/styled-components'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import { ThemedText } from 'theme/components'
+import { Trans, t } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 import validateUserSlippageTolerance, { SlippageValidationResult } from 'utils/validateUserSlippageTolerance'
 

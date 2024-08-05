@@ -1,0 +1,32 @@
+{
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "display": "Web App",
+  "extends": "tsconfig/nextjs.json",
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.json",
+    "../../declarations.d.ts",
+  ],
+  "exclude": [
+    "node_modules"
+  ],
+  "references": [
+    {
+      "path": "../../packages/ui"
+    },
+    {
+      "path": "../../packages/utilities"
+    },
+    {
+      "path": "../../packages/wallet"
+    }
+  ],
+  "compilerOptions": {
+    "baseUrl": "./",
+    "types": [
+      "chrome",
+      "jest"
+    ]
+  }
+}

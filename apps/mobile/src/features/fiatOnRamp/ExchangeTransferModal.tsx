@@ -1,5 +1,4 @@
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { ExchangeTransferConnecting } from 'src/screens/ExchangeTransferConnecting'
@@ -12,7 +11,7 @@ export function ExchangeTransferModal(): JSX.Element | null {
     dispatch(closeModal({ name: ModalName.ExchangeTransferModal }))
   }
 
-  const { initialState } = useAppSelector(selectModalState(ModalName.ExchangeTransferModal))
+  const { initialState } = useSelector(selectModalState(ModalName.ExchangeTransferModal))
   const serviceProvider = initialState?.serviceProvider
 
   return serviceProvider ? (

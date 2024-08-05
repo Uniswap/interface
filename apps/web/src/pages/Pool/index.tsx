@@ -11,7 +11,6 @@ import { useAccount } from 'hooks/useAccount'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV3Positions } from 'hooks/useV3Positions'
-import { Trans } from 'i18n'
 import styled, { css, useTheme } from 'lib/styled-components'
 import CTACards from 'pages/Pool/CTACards'
 import { PoolVersionMenu } from 'pages/Pool/shared'
@@ -25,6 +24,7 @@ import { HideSmall, ThemedText } from 'theme/components'
 import { PositionDetails } from 'types/position'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;

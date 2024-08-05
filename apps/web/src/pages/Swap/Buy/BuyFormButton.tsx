@@ -1,10 +1,9 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonLight, ButtonPrimary, LoadingButtonSpinner } from 'components/Button'
+import { ButtonLight, LoadingButtonSpinner } from 'components/Button'
 import { useTheme } from 'lib/styled-components'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
-import { useMemo } from 'react'
-import { Trans } from 'react-i18next'
-import { Flex } from 'ui/src'
+import { AnimatePresence, Button, Flex, Text } from 'ui/src'
+import { Trans } from 'uniswap/src/i18n'
 import { useAccount } from 'wagmi'
 
 interface BuyFormButtonProps {
@@ -20,62 +19,61 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
   const { inputAmount } = buyFormState
   const { notAvailableInThisRegion, quotes, fetchingQuotes, error } = derivedBuyFormInfo
 
-  const buyButtonState = useMemo(() => {
-    if (!account.isConnected) {
-      return {
-        label: <Trans i18nKey="common.connectWallet.button" />,
-        disabled: false,
-        onClick: accountDrawer.open,
-        Component: ButtonLight,
-      }
-    }
-    if (!inputAmount || forceDisabled) {
-      return {
-        label: <Trans i18nKey="common.noAmount.error" />,
-        disabled: true,
-        onClick: undefined,
-        Component: ButtonPrimary,
-      }
-    }
+  if (!account.isConnected) {
+    return (
+      <ButtonLight onClick={accountDrawer.open}>
+        <Trans i18nKey="common.connectWallet.button" />
+      </ButtonLight>
+    )
+  }
 
-    if (notAvailableInThisRegion) {
-      return {
-        label: <Trans i18nKey="common.notAvailableInRegion.error" />,
-        disabled: true,
-        onClick: undefined,
-        Component: ButtonPrimary,
-      }
-    }
-
-    return {
-      label: (
-        <Flex row alignItems="center" gap="$spacing12">
-          {fetchingQuotes && <LoadingButtonSpinner fill={theme.neutral2} />}
-          <Trans i18nKey="common.continue.button" />
-        </Flex>
-      ),
-      disabled: Boolean(fetchingQuotes || !quotes || !quotes.quotes || quotes.quotes.length === 0 || error),
-      Component: ButtonPrimary,
-      onClick: () => {
-        setBuyFormState((prev) => ({ ...prev, providerModalOpen: true }))
-      },
-    }
-  }, [
-    account.isConnected,
-    inputAmount,
-    forceDisabled,
-    notAvailableInThisRegion,
-    theme.neutral2,
-    fetchingQuotes,
-    quotes,
-    error,
-    accountDrawer.open,
-    setBuyFormState,
-  ])
+  if (!inputAmount || forceDisabled || notAvailableInThisRegion) {
+    return (
+      <Button
+        key="BuyFormButton"
+        disabled
+        size="large"
+        disabledStyle={{
+          backgroundColor: '$surface3',
+        }}
+      >
+        <Text variant="buttonLabel1">
+          {notAvailableInThisRegion ? (
+            <Trans i18nKey="common.notAvailableInRegion.error" />
+          ) : (
+            <Trans i18nKey="common.noAmount.error" />
+          )}
+        </Text>
+      </Button>
+    )
+  }
 
   return (
-    <buyButtonState.Component fontWeight={535} disabled={buyButtonState.disabled} onClick={buyButtonState.onClick}>
-      {buyButtonState.label}
-    </buyButtonState.Component>
+    <Button
+      key="BuyFormButton-animation"
+      size="large"
+      animation="fastHeavy"
+      disabled={Boolean(fetchingQuotes || !quotes || !quotes.quotes || quotes.quotes.length === 0 || error)}
+      onPress={() => {
+        setBuyFormState((prev) => ({ ...prev, providerModalOpen: true }))
+      }}
+    >
+      <Flex row alignItems="center" gap="$spacing12">
+        <LoadingButtonSpinner opacity={fetchingQuotes ? 1 : 0} fill={theme.neutral1} />
+        <AnimatePresence>
+          <Flex
+            animation="fastHeavy"
+            enterStyle={{
+              opacity: 0,
+              x: -20,
+            }}
+          >
+            <Text variant="buttonLabel1" color="$white" animation="fastHeavy" x={fetchingQuotes ? 0 : -20}>
+              <Trans i18nKey="common.button.continue" />
+            </Text>
+          </Flex>
+        </AnimatePresence>
+      </Flex>
+    </Button>
   )
 }

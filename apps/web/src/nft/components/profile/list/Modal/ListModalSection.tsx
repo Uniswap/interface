@@ -2,7 +2,6 @@ import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Plural, Trans, t } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { ChevronUpIcon, ListingModalWindowActive, ListingModalWindowClosed } from 'nft/components/icons'
 import { ContentRow } from 'nft/components/profile/list/Modal/ContentRow'
@@ -13,6 +12,7 @@ import { Info } from 'react-feather'
 import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 const SectionHeader = styled(Row)`
   justify-content: space-between;
@@ -67,7 +67,9 @@ interface ListModalSectionProps {
 }
 
 export const ListModalSection = ({ sectionType, active, content, toggleSection }: ListModalSectionProps) => {
+  const { t } = useTranslation()
   const theme = useTheme()
+
   const sellAssets = useSellAsset((state) => state.sellAssets)
   const removeAssetMarketplace = useSellAsset((state) => state.removeAssetMarketplace)
   const allContentApproved = useMemo(() => !content.some((row) => row.status !== ListingStatus.APPROVED), [content])
@@ -106,18 +108,9 @@ export const ListModalSection = ({ sectionType, active, content, toggleSection }
             <ListingModalWindowClosed />
           )}
           <SectionTitle active={active} marginLeft="12px" approved={allContentApproved}>
-            {isCollectionApprovalSection ? (
-              <>
-                <Trans i18nKey="common.approve" />
-                &nbsp;
-                <Plural value={uniqueCollections ?? 1} one={t('common.collection')} other={t('common.collections')} />
-              </>
-            ) : (
-              <>
-                <Trans i18nKey="common.sign.action" /> &nbsp;{content.length}&nbsp;{' '}
-                <Plural value={content.length} one={t('common.listing')} other={t('common.listings')} />
-              </>
-            )}
+            {isCollectionApprovalSection
+              ? t('nfts.collection.action.approve', { count: uniqueCollections ?? 1 })
+              : t('nfts.collection.action.sign', { count: content.length })}
           </SectionTitle>
         </Row>
         <SectionArrow

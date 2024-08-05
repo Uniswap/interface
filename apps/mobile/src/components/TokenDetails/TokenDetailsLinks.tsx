@@ -9,6 +9,7 @@ import TwitterIcon from 'ui/src/assets/icons/x-twitter.svg'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyIdToAddress, currencyIdToChain, isDefaultNativeAddress } from 'wallet/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'wallet/src/utils/linking'
@@ -41,6 +42,7 @@ export function TokenDetailsLinks({
               buttonType={LinkButtonType.Link}
               element={ElementName.TokenLinkEtherscan}
               label={explorerName}
+              testID={TestID.TokenLinkEtherscan}
               value={explorerLink}
             />
             {homepageUrl && (
@@ -49,6 +51,7 @@ export function TokenDetailsLinks({
                 buttonType={LinkButtonType.Link}
                 element={ElementName.TokenLinkWebsite}
                 label={t('token.links.website')}
+                testID={TestID.TokenLinkWebsite}
                 value={homepageUrl}
               />
             )}
@@ -58,6 +61,7 @@ export function TokenDetailsLinks({
                 buttonType={LinkButtonType.Link}
                 element={ElementName.TokenLinkTwitter}
                 label={t('token.links.twitter')}
+                testID={TestID.TokenLinkTwitter}
                 value={getTwitterLink(twitterName)}
               />
             )}
@@ -66,6 +70,7 @@ export function TokenDetailsLinks({
                 buttonType={LinkButtonType.Copy}
                 element={ElementName.Copy}
                 label={t('common.text.contract')}
+                testID={TestID.TokenLinkCopy}
                 value={address}
               />
             )}

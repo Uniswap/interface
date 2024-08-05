@@ -1,14 +1,14 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { Protocol } from '@uniswap/router-sdk'
-import { TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { Dispatch } from 'react'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { FORLogo } from 'uniswap/src/features/fiatOnRamp/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { DappInfo } from 'uniswap/src/types/walletConnect'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { MoonpayCurrency } from 'wallet/src/features/fiatOnRamp/types'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
@@ -256,6 +256,7 @@ export interface SendTokenTransactionInfo extends BaseTransactionInfo {
   currencyAmountRaw?: string
   tokenId?: string // optional. NFT token id
   nftSummaryInfo?: NFTSummaryInfo // optional. NFT metadata
+  currencyAmountUSD?: Maybe<CurrencyAmount<Currency>> // optional, for analytics
 }
 
 export interface ReceiveTokenTransactionInfo extends BaseTransactionInfo {

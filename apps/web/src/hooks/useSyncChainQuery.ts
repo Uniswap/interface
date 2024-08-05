@@ -5,9 +5,9 @@ import useParsedQueryString from 'hooks/useParsedQueryString'
 import useSelectChain from 'hooks/useSelectChain'
 import { useEffect } from 'react'
 import { useLocation, useSearchParams } from 'react-router-dom'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { getParsedChainId } from 'utils/chains'
@@ -19,7 +19,9 @@ export default function useSyncChainQuery(chainIdRef: React.MutableRefObject<num
   const { chainId } = useSwapAndLimitContext()
   const isSupportedChain = useIsSupportedChainId(chainId)
   const parsedQs = useParsedQueryString()
-  const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
+  const { value: multichainUXEnabled, isLoading: isMultichainFlagLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.MultichainUX,
+  )
 
   const selectChain = useSelectChain()
   const [searchParams, setSearchParams] = useSearchParams()
@@ -54,6 +56,7 @@ export default function useSyncChainQuery(chainIdRef: React.MutableRefObject<num
     }
     // If a user has a connected wallet and has manually changed their chain, update the query parameter if it's supported
     if (
+      !isMultichainFlagLoading &&
       !multichainUXEnabled &&
       account.isConnected &&
       account.chainId &&
@@ -70,6 +73,7 @@ export default function useSyncChainQuery(chainIdRef: React.MutableRefObject<num
       setSearchParams(searchParams, { replace: true })
     }
   }, [
+    isMultichainFlagLoading,
     account.chainId,
     account.isConnected,
     chainIdRef,

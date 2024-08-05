@@ -2,7 +2,7 @@ import { createNavigationContainerRef, NavigationContainer } from '@react-naviga
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { createStackNavigator, TransitionPresets } from '@react-navigation/stack'
 import React from 'react'
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
 import { renderHeaderBackButton, renderHeaderBackImage } from 'src/app/navigation/components'
 import {
   AppStackParamList,
@@ -36,7 +36,6 @@ import { RestoreCloudBackupLoadingScreen } from 'src/screens/Import/RestoreCloud
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
 import { RestoreCloudBackupScreen } from 'src/screens/Import/RestoreCloudBackupScreen'
 import { SeedPhraseInputScreen } from 'src/screens/Import/SeedPhraseInputScreen'
-import { SeedPhraseInputScreenV2 } from 'src/screens/Import/SeedPhraseInputScreenV2'
 import { SelectWalletScreen } from 'src/screens/Import/SelectWalletScreen'
 import { WatchWalletScreen } from 'src/screens/Import/WatchWalletScreen'
 import { NFTCollectionScreen } from 'src/screens/NFTCollectionScreen'
@@ -202,8 +201,6 @@ export function FiatOnRampStackNavigator(): JSX.Element {
 
 export function OnboardingStackNavigator(): JSX.Element {
   const colors = useSporeColors()
-  const seedPhraseRefactorEnabled = useFeatureFlag(FeatureFlags.SeedPhraseRefactorNative)
-  const SeedPhraseInputComponent = seedPhraseRefactorEnabled ? SeedPhraseInputScreenV2 : SeedPhraseInputScreen
 
   const isOnboardingKeyringEnabled = useFeatureFlag(FeatureFlags.OnboardingKeyring)
 
@@ -276,7 +273,7 @@ export function OnboardingStackNavigator(): JSX.Element {
             component={RestoreCloudBackupPasswordScreen}
             name={OnboardingScreens.RestoreCloudBackupPassword}
           />
-          <OnboardingStack.Screen component={SeedPhraseInputComponent} name={OnboardingScreens.SeedPhraseInput} />
+          <OnboardingStack.Screen component={SeedPhraseInputScreen} name={OnboardingScreens.SeedPhraseInput} />
           <OnboardingStack.Screen component={SelectWalletScreen} name={OnboardingScreens.SelectWallet} />
           <OnboardingStack.Screen component={WatchWalletScreen} name={OnboardingScreens.WatchWallet} />
         </OnboardingStack.Group>
@@ -327,7 +324,7 @@ export function UnitagStackNavigator(): JSX.Element {
 }
 
 export function AppStackNavigator(): JSX.Element {
-  const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
+  const finishedOnboarding = useSelector(selectFinishedOnboarding)
   useBiometricCheck()
 
   return (

@@ -3,8 +3,8 @@ import { Field } from 'components/swap/constants'
 import { nativeOnChain } from 'constants/tokens'
 import { SwapForm } from 'pages/Swap/SwapForm'
 import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
-import { useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
 import { SwapAndLimitContext, SwapInfo } from 'state/swap/types'
+import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { render, screen } from 'test-utils/render'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
@@ -87,11 +87,13 @@ describe('SwapAndLimitContext', () => {
       multichainUXEnabled: undefined,
       setSelectedChainId: expect.any(Function),
       setCurrencyState: expect.any(Function),
+      setIsUserSelectedChainId: expect.any(Function),
       currentTab: SwapTab.Swap,
       setCurrentTab: expect.any(Function),
       chainId: 1,
       pageChainId: undefined,
       isSwapAndLimitContext: true,
+      isUserSelectedChainId: false,
     })
   })
 
@@ -138,10 +140,12 @@ describe('Combined contexts', () => {
           },
           setCurrencyState: expect.any(Function),
           setSelectedChainId: jest.fn(),
+          setIsUserSelectedChainId: jest.fn(),
           chainId: UniverseChainId.Mainnet,
           currentTab: SwapTab.Swap,
           setCurrentTab: expect.any(Function),
           isSwapAndLimitContext: true,
+          isUserSelectedChainId: false,
         }}
       >
         <SwapContextProvider>

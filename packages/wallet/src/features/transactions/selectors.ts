@@ -1,5 +1,6 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { useMemo } from 'react'
+import { useSelector } from 'react-redux'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { unique } from 'utilities/src/primitives/array'
@@ -18,7 +19,7 @@ import {
   UniswapXOrderDetails,
 } from 'wallet/src/features/transactions/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { RootState, useAppSelector } from 'wallet/src/state'
+import { RootState } from 'wallet/src/state'
 
 export const selectTransactions = (state: RootState): TransactionStateMap => state.transactions
 
@@ -82,19 +83,19 @@ export const makeSelectAddressTransactions = (): Selector<
 
 export function useSelectAddressTransactions(address: Address | null): TransactionDetails[] | undefined {
   const selectAddressTransactions = useMemo(makeSelectAddressTransactions, [])
-  return useAppSelector((state) => selectAddressTransactions(state, address))
+  return useSelector((state: RootState) => selectAddressTransactions(state, address))
 }
 
 export function useCurrencyIdToVisibility(): CurrencyIdToVisibility {
   const accounts = useAccounts()
   const addresses = Object.values(accounts).map((account) => account.address)
-  const manuallySetTokenVisibility = useAppSelector(selectTokensVisibility)
+  const manuallySetTokenVisibility = useSelector(selectTokensVisibility)
   const selectLocalTxCurrencyIds: (state: RootState, addresses: Address[]) => CurrencyIdToVisibility = useMemo(
     makeSelectTokenVisibilityFromLocalTxs,
     [],
   )
 
-  const tokenVisibilityFromLocalTxs = useAppSelector((state) => selectLocalTxCurrencyIds(state, addresses))
+  const tokenVisibilityFromLocalTxs = useSelector((state: RootState) => selectLocalTxCurrencyIds(state, addresses))
 
   return {
     ...tokenVisibilityFromLocalTxs,

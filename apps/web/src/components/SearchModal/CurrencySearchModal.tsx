@@ -1,11 +1,14 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import Modal from 'components/Modal'
-import { CurrencySearch, CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
+import { CurrencySearch } from 'components/SearchModal/CurrencySearch'
+import { CurrencySearchFilters, DeprecatedCurrencySearch } from 'components/SearchModal/DeprecatedCurrencySearch'
 import TokenSafety from 'components/TokenSafety'
 import useLast from 'hooks/useLast'
 import { memo, useCallback, useEffect, useState } from 'react'
-
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { CurrencyField } from 'uniswap/src/types/currency'
 
 interface CurrencySearchModalProps {
   isOpen: boolean
@@ -15,6 +18,7 @@ interface CurrencySearchModalProps {
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
   currencySearchFilters?: CurrencySearchFilters
+  currencyField?: CurrencyField
 }
 
 enum CurrencyModalView {
@@ -31,10 +35,12 @@ export default memo(function CurrencySearchModal({
   otherSelectedCurrency,
   showCurrencyAmount = true,
   currencySearchFilters,
+  currencyField = CurrencyField.INPUT,
 }: CurrencySearchModalProps) {
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
   const userAddedTokens = useUserAddedTokens()
+  const multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
   useEffect(() => {
     if (isOpen && !lastOpen) {
@@ -64,8 +70,10 @@ export default memo(function CurrencySearchModal({
   let content = null
   switch (modalView) {
     case CurrencyModalView.search:
-      content = (
-        <CurrencySearch
+      content = multichainFlagEnabled ? (
+        <CurrencySearch currencyField={currencyField} onCurrencySelect={onCurrencySelect} onDismiss={onDismiss} />
+      ) : (
+        <DeprecatedCurrencySearch
           isOpen={isOpen}
           onDismiss={onDismiss}
           onCurrencySelect={handleCurrencySelect}

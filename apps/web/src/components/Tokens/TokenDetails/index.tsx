@@ -7,7 +7,6 @@ import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { ActivitySection } from 'components/Tokens/TokenDetails/ActivitySection'
 import BalanceSummary, { PageChainBalanceSummary } from 'components/Tokens/TokenDetails/BalanceSummary'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
-import MobileBalanceSummaryFooter from 'components/Tokens/TokenDetails/MobileBalanceSummaryFooter'
 import { LeftPanel, RightPanel, TokenDetailsLayout, TokenInfoContainer } from 'components/Tokens/TokenDetails/Skeleton'
 import StatsSection from 'components/Tokens/TokenDetails/StatsSection'
 import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
@@ -21,7 +20,6 @@ import { useScreenSize } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
@@ -29,9 +27,9 @@ import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useIsTouchDevice } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
 
@@ -197,9 +195,9 @@ export default function TokenDetails() {
   const { address, currency, tokenQuery, currencyChain, multiChainMap } = useTDPContext()
   const tokenQueryData = tokenQuery.data?.token
   const pageChainBalance = multiChainMap[currencyChain]?.balance
-  const isLegacyNav = !useFeatureFlag(FeatureFlags.NavRefresh)
   const { lg: showRightPanel } = useScreenSize()
   const { direction: scrollDirection } = useScroll()
+  const isTouchDevice = useIsTouchDevice()
 
   return (
     <TDPAnalytics>
@@ -210,7 +208,7 @@ export default function TokenDetails() {
             <TokenDetailsHeader />
           </TokenInfoContainer>
           <ChartSection />
-          {!isLegacyNav && !showRightPanel && !!pageChainBalance && (
+          {!showRightPanel && !!pageChainBalance && (
             <BalanceSummaryContainer>
               <PageChainBalanceSummary pageChainBalance={pageChainBalance} alignLeft />
             </BalanceSummaryContainer>
@@ -228,13 +226,12 @@ export default function TokenDetails() {
           )}
           <TokenDescription />
         </RightPanel>
-        {isLegacyNav ? (
-          <MobileBalanceSummaryFooter />
-        ) : (
-          <MobileBottomBar $hide={scrollDirection === ScrollDirection.DOWN}>
-            <TDPActionTabs />
-          </MobileBottomBar>
-        )}
+        <MobileBottomBar
+          $hide={isTouchDevice && scrollDirection === ScrollDirection.DOWN}
+          data-testid="tdp-mobile-bottom-bar"
+        >
+          <TDPActionTabs />
+        </MobileBottomBar>
       </TokenDetailsLayout>
     </TDPAnalytics>
   )

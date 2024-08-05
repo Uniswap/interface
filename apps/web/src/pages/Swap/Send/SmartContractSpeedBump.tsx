@@ -1,7 +1,7 @@
 import { Dialog } from 'components/Dialog/Dialog'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
+import { Trans } from 'uniswap/src/i18n'
 
 const StyledAlertIcon = styled(AlertTriangleFilled)`
   path {
@@ -25,11 +25,11 @@ export const SmartContractSpeedBumpModal = ({
       onCancel={onCancel}
       buttonsConfig={{
         left: {
-          title: <Trans i18nKey="common.cancel.button" />,
+          title: <Trans i18nKey="common.button.cancel" />,
           onClick: onCancel,
         },
         right: {
-          title: <Trans i18nKey="common.continue.button" />,
+          title: <Trans i18nKey="common.button.continue" />,
           onClick: onConfirm,
         },
       }}

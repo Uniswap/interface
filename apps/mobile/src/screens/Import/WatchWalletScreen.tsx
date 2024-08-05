@@ -12,6 +12,7 @@ import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Text } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -19,7 +20,7 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
-import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { createViewOnlyAccount } from 'wallet/src/features/onboarding/createViewOnlyAccount'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
@@ -90,10 +91,13 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
     (validAddress || resolvedAddress) ?? undefined,
     UniverseChainId.Mainnet,
   )
+  const address = isSmartContractAddress ? (validAddress || resolvedAddress) ?? undefined : undefined
+  const valueModifiers = usePortfolioValueModifiers(address)
   // Allow smart contracts with non-null balances
   const { data: balancesById } = usePortfolioBalances({
-    address: isSmartContractAddress ? (validAddress || resolvedAddress) ?? undefined : undefined,
+    address,
     fetchPolicy: 'cache-and-network',
+    valueModifiers,
   })
   const isValidSmartContract = isSmartContractAddress && !!balancesById
 

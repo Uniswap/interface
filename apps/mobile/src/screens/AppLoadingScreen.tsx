@@ -3,7 +3,7 @@ import dayjs from 'dayjs'
 import { isEnrolledAsync } from 'expo-local-authentication'
 import { t } from 'i18next'
 import { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { SplashScreen } from 'src/features/appLoading/SplashScreen'
 import { useBiometricContext } from 'src/features/biometrics/context'
@@ -27,7 +27,6 @@ import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { selectAnyAddressHasNotificationsEnabled } from 'wallet/src/features/wallet/selectors'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
-import { useAppSelector } from 'wallet/src/state'
 
 export const SPLASH_SCREEN = { uri: 'SplashScreen' }
 
@@ -40,7 +39,7 @@ function useFinishAutomatedRecovery(navigation: Props['navigation']): {
   const { setRecoveredImportedAccounts, finishOnboarding } = useOnboardingContext()
 
   const notificationOSPermission = useNotificationOSPermissionsEnabled()
-  const hasAnyNotificationsEnabled = useAppSelector(selectAnyAddressHasNotificationsEnabled)
+  const hasAnyNotificationsEnabled = useSelector(selectAnyAddressHasNotificationsEnabled)
   const { deviceSupportsBiometrics } = useBiometricContext()
   const { requiredForTransactions: isBiometricAuthEnabled } = useBiometricAppSettings()
 

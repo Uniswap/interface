@@ -98,6 +98,7 @@ export function WalletConnectModal({
       }
 
       if (supportedURI.type === URIType.Address) {
+        setShouldFreezeCamera(true)
         await preload(supportedURI.value)
         await navigate(supportedURI.value, onClose)
         return

@@ -3,8 +3,8 @@ import { MenuColumn, MenuItem } from 'components/AccountDrawer/shared'
 import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
-import { Trans } from 'i18n'
 import { useUserLocaleManager } from 'state/user/hooks'
+import { Trans } from 'uniswap/src/i18n'
 
 function LanguageMenuItem({ locale, isActive }: { locale: SupportedLocale; isActive: boolean }) {
   const { to, onClick } = useLocationLinkProps(locale)

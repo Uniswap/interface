@@ -3,11 +3,11 @@ import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
 import { LOCALE_LABEL } from 'constants/locales'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { Trans, t } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { ChevronRight } from 'react-feather'
 import { ThemeSelector } from 'theme/components/ThemeToggle'
 import { Text } from 'ui/src'
+import { Trans, t } from 'uniswap/src/i18n'
 
 const Pref = styled.div`
   display: flex;

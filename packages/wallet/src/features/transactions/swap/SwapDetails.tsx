@@ -9,6 +9,7 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { logger } from 'utilities/src/logger/logger'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { FeeOnTransferFeeGroupProps } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferFee'
@@ -90,7 +91,11 @@ export function SwapDetails({
   }
 
   const swapFeeUsd = getFeeAmountUsd(trade, outputCurrencyPricePerUnitExact)
-  const swapFeeFiatFormatted = convertFiatAmountFormatted(swapFeeUsd, NumberType.FiatGasPrice)
+  if (swapFeeUsd && isNaN(swapFeeUsd)) {
+    logger.warn('SwapDetails', '', `swapFeeUsd is NaN`, { trade, outputCurrencyPricePerUnitExact })
+  }
+  const formattedAmountFiat =
+    swapFeeUsd && !isNaN(swapFeeUsd) ? convertFiatAmountFormatted(swapFeeUsd, NumberType.FiatGasPrice) : undefined
 
   const swapFeeInfo = trade.swapFee
     ? {
@@ -99,7 +104,7 @@ export function SwapDetails({
         formattedAmount:
           getFormattedCurrencyAmount(trade.outputAmount.currency, trade.swapFee.amount, formatter) +
           getSymbolDisplayText(trade.outputAmount.currency.symbol),
-        formattedAmountFiat: swapFeeUsd ? swapFeeFiatFormatted : undefined,
+        formattedAmountFiat,
       }
     : undefined
 

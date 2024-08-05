@@ -1,5 +1,5 @@
 import styled, { useTheme } from 'lib/styled-components'
-import { themeVars, vars } from 'nft/css/sprinkles.css'
+import { themeVars } from 'nft/css/sprinkles.css'
 import React from 'react'
 
 // ESLint reports `fill` is missing, whereas it exists on an SVGProps type
@@ -235,15 +235,6 @@ export const BrokenLinkIcon = (props: SVGProps) => (
   </svg>
 )
 
-export const ClockIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <path
-      d="M10.7474 4.99984C10.7474 4.58562 10.4116 4.24984 9.9974 4.24984C9.58318 4.24984 9.2474 4.58562 9.2474 4.99984H10.7474ZM9.9974 9.99984H9.2474C9.2474 10.2839 9.4079 10.5436 9.66199 10.6707L9.9974 9.99984ZM12.9953 12.3373C13.3658 12.5226 13.8163 12.3724 14.0015 12.0019C14.1868 11.6314 14.0366 11.1809 13.6661 10.9957L12.9953 12.3373ZM17.5807 9.99984C17.5807 14.188 14.1856 17.5832 9.9974 17.5832V19.0832C15.014 19.0832 19.0807 15.0164 19.0807 9.99984H17.5807ZM9.9974 17.5832C5.80924 17.5832 2.41406 14.188 2.41406 9.99984H0.914062C0.914062 15.0164 4.98081 19.0832 9.9974 19.0832V17.5832ZM2.41406 9.99984C2.41406 5.81168 5.80924 2.4165 9.9974 2.4165V0.916504C4.98081 0.916504 0.914062 4.98325 0.914062 9.99984H2.41406ZM9.9974 2.4165C14.1856 2.4165 17.5807 5.81168 17.5807 9.99984H19.0807C19.0807 4.98325 15.014 0.916504 9.9974 0.916504V2.4165ZM9.2474 4.99984V9.99984H10.7474V4.99984H9.2474ZM9.66199 10.6707L12.9953 12.3373L13.6661 10.9957L10.3328 9.32902L9.66199 10.6707Z"
-      fill={vars.color.neutral2}
-    />
-  </svg>
-)
-
 export const ApprovedCheckmarkIcon = (props: SVGProps) => (
   <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <g id="Icon">
@@ -262,26 +253,6 @@ export const FilterIcon = (props: SVGProps) => (
       fill="currentColor"
       d="M5.5 3H18.5C19.328 3 20 3.672 20 4.5V6.75699C20 7.15499 19.842 7.53599 19.561 7.81799L14.4399 12.939C14.1589 13.22 14.001 13.602 14.001 14V21L10.001 18V14C10.001 13.602 9.84302 13.221 9.56202 12.939L4.44104 7.81799C4.16004 7.53699 4.00196 7.15499 4.00196 6.75699V4.5C3.99996 3.672 4.672 3 5.5 3Z"
     />
-  </svg>
-)
-
-export const NavMagnifyingGlassIcon = () => (
-  <svg
-    viewBox="0 0 24 24"
-    width="24"
-    height="24"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    data-cy="magnifying-icon"
-  >
-    <path
-      d="M10.5 18C14.6421 18 18 14.6421 18 10.5C18 6.35786 14.6421 3 10.5 3C6.35786 3 3 6.35786 3 10.5C3 14.6421 6.35786 18 10.5 18Z"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-    />
-    <path d="M21 21L16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
@@ -355,14 +326,6 @@ export const ChevronRightIcon = styled(ChevronLeftIcon)`
   transform: rotate(180deg);
 `
 
-export const TrendingArrow = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path
-      d="M17.5 5.8335H18.25C18.25 5.41928 17.9142 5.0835 17.5 5.0835V5.8335ZM11.0227 12.4307L10.4876 12.9562C10.6286 13.0998 10.8214 13.1807 11.0227 13.1807C11.224 13.1807 11.4169 13.0998 11.5579 12.9562L11.0227 12.4307ZM7.61364 8.9585L8.14881 8.43305C8.00778 8.28941 7.81493 8.2085 7.61364 8.2085C7.41234 8.2085 7.21949 8.28941 7.07846 8.43305L7.61364 8.9585ZM1.96483 13.6414C1.67463 13.937 1.67899 14.4118 1.97456 14.702C2.27013 14.9922 2.74498 14.9878 3.03517 14.6923L1.96483 13.6414ZM13.4091 5.0835C12.9949 5.0835 12.6591 5.41928 12.6591 5.8335C12.6591 6.24771 12.9949 6.5835 13.4091 6.5835V5.0835ZM16.75 10.0002C16.75 10.4144 17.0858 10.7502 17.5 10.7502C17.9142 10.7502 18.25 10.4144 18.25 10.0002H16.75ZM16.9648 5.30805L10.4876 11.9053L11.5579 12.9562L18.0352 6.35894L16.9648 5.30805ZM11.5579 11.9053L8.14881 8.43305L7.07846 9.48394L10.4876 12.9562L11.5579 11.9053ZM7.07846 8.43305L1.96483 13.6414L3.03517 14.6923L8.14881 9.48394L7.07846 8.43305ZM13.4091 6.5835H17.5V5.0835H13.4091V6.5835ZM16.75 5.8335V10.0002H18.25V5.8335H16.75Z"
-      fill={vars.color.neutral2}
-    />
-  </svg>
-)
 export const ActivityListingIcon = (props: SVGProps) => (
   <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path

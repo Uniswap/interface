@@ -1,7 +1,6 @@
 import firebase from '@react-native-firebase/app'
 import auth from '@react-native-firebase/auth'
 import firestore from '@react-native-firebase/firestore'
-import { appSelect } from 'src/app/hooks'
 import { getFirebaseUidOrError, getFirestoreMetadataRef, getFirestoreUidRef } from 'src/features/firebase/utils'
 import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
 import { all, call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
@@ -185,7 +184,7 @@ export function* toggleFirebaseNotificationSettings({ address, enabled }: Toggle
   }
 
   try {
-    const accounts = yield* appSelect(selectAccounts)
+    const accounts = yield* select(selectAccounts)
     const account = accounts[address]
     if (!account) {
       throw new Error(`Account not found for address ${address}`)

@@ -1,4 +1,4 @@
-import { omit, pick } from 'lodash'
+import { omit, pick } from 'es-toolkit'
 
 /**
  * This utility function, `createFixture`, generates a factory function for creating test data fixtures. It is designed to support
@@ -122,15 +122,19 @@ export function createFixture<T extends object, P extends object>(
         typeof defaultOptionsOrGetter === 'function' ? defaultOptionsOrGetter() : defaultOptionsOrGetter
       // Get overrides for options (filter out undefined values)
       const optionOverrides = Object.fromEntries(
-        Object.entries(defaultOptions ? pick(overrides, Object.keys(defaultOptions)) : {}).filter(
-          ([, value]) => value !== undefined,
-        ),
+        Object.entries(
+          defaultOptions
+            ? pick(overrides || ({} as { [key in string]: unknown }), Object.keys(defaultOptions) || [])
+            : {},
+        ).filter(([, value]) => value !== undefined),
       )
       // Get values with getValues function
       const mergedOptions = defaultOptions ? { ...defaultOptions, ...optionOverrides } : undefined
       const values = getValues(mergedOptions)
       // Get overrides for values
-      const valueOverrides = overrides ? omit(overrides, Object.keys(defaultOptions || {})) : {}
+      const valueOverrides = overrides
+        ? omit(overrides as { [key in string]: unknown }, Object.keys(defaultOptions || []))
+        : {}
       return Array.isArray(values)
         ? // eslint-disable-next-line @typescript-eslint/no-unsafe-return
           values.map((v) => ({ ...v, ...valueOverrides }))

@@ -1,12 +1,12 @@
 import { ButtonEmpty, ButtonPrimary } from 'components/Button'
 import Modal from 'components/Modal'
 import { useConnect } from 'hooks/useConnect'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { useCallback } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
+import { Trans } from 'uniswap/src/i18n'
 
 const Wrapper = styled.div`
   ${flexColumnNoWrap};

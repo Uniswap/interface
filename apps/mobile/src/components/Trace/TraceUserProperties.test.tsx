@@ -1,7 +1,6 @@
 import React from 'react'
 import { useColorScheme } from 'react-native'
 import renderer, { act } from 'react-test-renderer'
-import * as appHooks from 'src/app/hooks'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import * as biometricHooks from 'src/features/biometrics/hooks'
 import { AuthMethod } from 'src/features/telemetry/utils'
@@ -32,6 +31,15 @@ jest.mock('wallet/src/features/wallet/Keyring/Keyring', () => {
     },
   }
 })
+
+const mockDispatch = jest.fn()
+const mockSelector = jest.fn()
+
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'),
+  useDispatch: (): jest.Mock => mockDispatch,
+  useSelector: (): jest.Mock => mockSelector,
+}))
 
 const address1 = '0x168fA52Da8A45cEb01318E72B299b2d6A17167BF'
 const address2 = '0x168fA52Da8A45cEb01318E72B299b2d6A17167BD'
@@ -87,7 +95,6 @@ describe('TraceUserProperties', () => {
     mockFn(useIsDarkModeFile, 'useIsDarkMode', true)
     mockFn(fiatCurrencyHooks, 'useAppFiatCurrency', FiatCurrency.UnitedStatesDollar)
     mockFn(languageHooks, 'useCurrentLanguageInfo', { loggingName: 'English' })
-    mockFn(appHooks, 'useAppSelector', { enabled: true })
 
     // mock setUserProperty
     const mocked = mockFn(analytics, 'setUserProperty', undefined)

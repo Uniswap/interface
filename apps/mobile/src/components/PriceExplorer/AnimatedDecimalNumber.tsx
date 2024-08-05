@@ -6,6 +6,7 @@ import { AnimatedText } from 'src/components/text/AnimatedText'
 import { Flex, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { TextVariantTokens, fonts } from 'ui/src/theme'
+import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 
 type AnimatedDecimalNumberProps = {
   number: ValueAndFormatted
@@ -14,7 +15,7 @@ type AnimatedDecimalNumberProps = {
   wholePartColor?: string
   decimalPartColor?: string
   decimalThreshold?: number // below this value (not including) decimal part would have wholePartColor too
-  testID?: string
+  testID?: TestIDType
   maxWidth?: number
   maxCharPixelWidth?: number
 }

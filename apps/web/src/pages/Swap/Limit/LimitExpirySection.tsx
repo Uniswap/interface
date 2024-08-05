@@ -1,10 +1,10 @@
 import Row from 'components/Row'
-import { Trans, t } from 'i18n'
 import styled from 'lib/styled-components'
 import { useLimitContext } from 'state/limit/LimitContext'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans, t } from 'uniswap/src/i18n'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 
 const ExpirySection = styled(Row)`

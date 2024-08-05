@@ -1,6 +1,7 @@
 import { ExploreModalState } from 'src/app/modals/ExploreModalState'
 import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWalletModalState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
+import { FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -21,7 +22,7 @@ export interface ModalsState {
   [ModalName.Experiments]: AppModalState<undefined>
   [ModalName.Explore]: AppModalState<ExploreModalState>
   [ModalName.FiatCurrencySelector]: AppModalState<undefined>
-  [ModalName.FiatOnRampAggregator]: AppModalState<undefined>
+  [ModalName.FiatOnRampAggregator]: AppModalState<FiatOnRampModalState>
   [ModalName.ReceiveCryptoModal]: AppModalState<ReceiveCryptoModalState>
   [ModalName.LanguageSelector]: AppModalState<undefined>
   [ModalName.QueuedOrderModal]: AppModalState<undefined>

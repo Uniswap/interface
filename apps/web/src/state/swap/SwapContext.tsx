@@ -1,6 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
+import { useUpdateAtom } from 'jotai/utils'
+import { multicallUpdaterSwapChainIdAtom } from 'lib/hooks/useBlockNumber'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext, SwapContext, SwapState, initialSwapState } from 'state/swap/types'
@@ -20,6 +22,7 @@ export function SwapAndLimitContextProvider({
   multichainUXEnabled?: boolean
 }>) {
   const [selectedChainId, setSelectedChainId] = useState<InterfaceChainId | undefined | null>(initialChainId)
+  const [isUserSelectedChainId, setIsUserSelectedChainId] = useState<boolean>(false)
   const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
 
   const [currencyState, setCurrencyState] = useState<CurrencyState>({
@@ -93,6 +96,12 @@ export function SwapAndLimitContextProvider({
     }
   }, [initialChainId, setSelectedChainId])
 
+  const setMulticallUpdaterChainId = useUpdateAtom(multicallUpdaterSwapChainIdAtom)
+  useEffect(() => {
+    const chainId = (multichainUXEnabled ? selectedChainId : account.chainId) ?? undefined
+    setMulticallUpdaterChainId(chainId)
+  }, [account.chainId, multichainUXEnabled, selectedChainId, setMulticallUpdaterChainId])
+
   const value = useMemo(() => {
     return {
       currencyState,
@@ -105,8 +114,19 @@ export function SwapAndLimitContextProvider({
       chainId: (multichainUXEnabled ? selectedChainId : account.chainId) ?? undefined,
       multichainUXEnabled,
       isSwapAndLimitContext: true,
+      isUserSelectedChainId,
+      setIsUserSelectedChainId,
     }
-  }, [initialChainId, account.chainId, selectedChainId, currencyState, currentTab, prefilledState, multichainUXEnabled])
+  }, [
+    initialChainId,
+    account.chainId,
+    selectedChainId,
+    currencyState,
+    currentTab,
+    prefilledState,
+    multichainUXEnabled,
+    isUserSelectedChainId,
+  ])
 
   return <SwapAndLimitContext.Provider value={value}>{children}</SwapAndLimitContext.Provider>
 }

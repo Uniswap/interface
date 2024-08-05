@@ -21,12 +21,15 @@ export function useIdenticonType(account?: string) {
   if (!account) {
     return undefined
   }
-  if (unitagLoading || ensAvatarLoading) {
+
+  if (unitagLoading) {
     return IdenticonType.LOADING
   } else if (unitag?.metadata?.avatar) {
     return IdenticonType.UNITAG_PROFILE_PICTURE
   } else if (avatar) {
     return IdenticonType.ENS_AVATAR
+  } else if (ensAvatarLoading) {
+    return IdenticonType.LOADING
   } else {
     return IdenticonType.UNICON
   }

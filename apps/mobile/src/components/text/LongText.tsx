@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextLayoutEventData } from 'react-native'
 import { Flex, SpaceTokens, Text, useSporeColors } from 'ui/src'
 import { fonts } from 'ui/src/theme'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 type LongTextProps = {
   initialDisplayedLines?: number
@@ -64,7 +65,7 @@ export function LongText(props: LongTextProps): JSX.Element {
           my="$none"
           py="$none"
           style={{ color: readMoreOrLessColor }}
-          testID="read-more-button"
+          testID={TestID.ReadMoreButton}
           variant="buttonLabel3"
           onPress={(): void => setExpanded(!expanded)}
         >

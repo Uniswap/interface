@@ -2,6 +2,15 @@
 import { ApolloError } from '@apollo/client'
 import { toIncludeSameMembers } from 'jest-extended'
 import { PreloadedState } from 'redux'
+import {
+  useAllCommonBaseCurrencies,
+  useCommonTokensOptions,
+  useCurrencyInfosToTokenOptions,
+  useFilterCallbacks,
+  usePopularTokensOptions,
+  usePortfolioBalancesForAddressById,
+  usePortfolioTokenOptions,
+} from 'uniswap/src/components/TokenSelector/hooks'
 import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -11,17 +20,7 @@ import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/ty
 import { arbitrumDaiCurrencyInfo, ethCurrencyInfo, usdcCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import {
-  useAllCommonBaseCurrencies,
-  useCommonTokensOptions,
-  useCurrencyInfosToTokenOptions,
-  useFavoriteCurrencies,
-  useFavoriteTokensOptions,
-  useFilterCallbacks,
-  usePopularTokensOptions,
-  usePortfolioBalancesForAddressById,
-  usePortfolioTokenOptions,
-} from 'wallet/src/components/TokenSelector/hooks'
+import { useFavoriteCurrencies, useFavoriteTokensOptions } from 'wallet/src/components/TokenSelector/hooks'
 import { SharedState } from 'wallet/src/state/reducer'
 import {
   SAMPLE_SEED_ADDRESS_1,
@@ -354,7 +353,7 @@ describe(usePortfolioBalancesForAddressById, () => {
     const { resolvers } = queryResolvers({
       portfolios: queryResolver(input),
     })
-    const { result } = renderHook(() => usePortfolioBalancesForAddressById(SAMPLE_SEED_ADDRESS_1), {
+    const { result } = renderHook(() => usePortfolioBalancesForAddressById(SAMPLE_SEED_ADDRESS_1, []), {
       resolvers,
     })
 
@@ -393,7 +392,7 @@ describe(usePortfolioTokenOptions, () => {
       const { resolvers } = queryResolvers({
         portfolios: queryResolver(input),
       })
-      const { result } = renderHook(() => usePortfolioTokenOptions(SAMPLE_SEED_ADDRESS_1, null), {
+      const { result } = renderHook(() => usePortfolioTokenOptions(SAMPLE_SEED_ADDRESS_1, null, []), {
         resolvers,
       })
 
@@ -433,7 +432,7 @@ describe(usePortfolioTokenOptions, () => {
     }[] = [
       {
         test: 'returns only shown tokens after data is fetched',
-        input: [SAMPLE_SEED_ADDRESS_1, null],
+        input: [SAMPLE_SEED_ADDRESS_1, null, []],
         output: {
           data: shownPortfolioBalances,
           loading: false,
@@ -443,7 +442,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens filtered by chain',
-        input: [SAMPLE_SEED_ADDRESS_1, fromGraphQLChain(usdcTokenBalance.token.chain)],
+        input: [SAMPLE_SEED_ADDRESS_1, fromGraphQLChain(usdcTokenBalance.token.chain), []],
         output: {
           data: [usdcPortfolioBalance],
           loading: false,
@@ -453,7 +452,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens starting with "et" (ETH) filtered by search filter',
-        input: [SAMPLE_SEED_ADDRESS_1, null, 'et'],
+        input: [SAMPLE_SEED_ADDRESS_1, null, [], 'et'],
         output: {
           data: [ethPortfolioBalance],
           loading: false,
@@ -463,7 +462,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens starting with "us" (USDC) filtered by search filter',
-        input: [SAMPLE_SEED_ADDRESS_1, null, 'us'],
+        input: [SAMPLE_SEED_ADDRESS_1, null, [], 'us'],
         output: {
           data: [usdcPortfolioBalance],
           loading: false,
@@ -473,7 +472,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns no data when there is no token that matches both chain and search filter',
-        input: [SAMPLE_SEED_ADDRESS_1, UniverseChainId.Base, 'et'],
+        input: [SAMPLE_SEED_ADDRESS_1, UniverseChainId.Base, [], 'et'],
         output: {
           data: [],
           loading: false,

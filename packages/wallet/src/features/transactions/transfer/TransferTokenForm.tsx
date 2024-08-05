@@ -30,10 +30,10 @@ import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDTokenUpdater'
 import { transactionStateActions } from 'wallet/src/features/transactions/transactionState/transactionState'
-import { TransferFormSpeedbumps } from 'wallet/src/features/transactions/transfer/TransferFormWarnings'
 import { useSetShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/transfer/hooks/useShowSendNetworkNotification'
-import { DerivedTransferInfo, TransferSpeedbump } from 'wallet/src/features/transactions/transfer/types'
+import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
+import { TransactionType } from 'wallet/src/features/transactions/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
@@ -83,7 +83,6 @@ export function TransferTokenForm({
     isFiatInput = false,
     currencyInInfo,
     nftIn,
-    chainId,
   } = derivedTransferInfo
 
   const currencyIn = currencyInInfo?.currency
@@ -95,11 +94,6 @@ export function TransferTokenForm({
 
   const [currencyFieldFocused, setCurrencyFieldFocused] = useState(true)
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const [showSpeedbumpModal, setShowSpeedbumpModal] = useState(false)
-  const [transferSpeedbump, setTransferSpeedbump] = useState<TransferSpeedbump>({
-    loading: true,
-    hasWarning: false,
-  })
 
   const { onShowTokenSelector } = useTokenSelectorActionHandlers(dispatch, TokenSelectorFlow.Transfer)
   const { onSetExactAmount, onSetMax } = useTokenFormActionHandlers(dispatch)
@@ -125,7 +119,6 @@ export function TransferTokenForm({
   const isViewOnlyWallet = account.type === AccountType.Readonly
   const actionButtonDisabled =
     warnings.warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
-    transferSpeedbump.loading ||
     isBlocked ||
     isBlockedLoading ||
     walletNeedsRestore
@@ -139,20 +132,10 @@ export function TransferTokenForm({
   const onPressReview = useCallback(() => {
     if (isViewOnlyWallet) {
       setShowViewOnlyModal(true)
-    } else if (transferSpeedbump.hasWarning) {
-      setShowSpeedbumpModal(true)
     } else {
       goToNext()
     }
-  }, [goToNext, transferSpeedbump.hasWarning, isViewOnlyWallet, setShowViewOnlyModal])
-
-  const onSetTransferSpeedbump = useCallback(({ hasWarning, loading }: TransferSpeedbump) => {
-    setTransferSpeedbump({ hasWarning, loading })
-  }, [])
-
-  const onSetShowSpeedbumpModal = useCallback((showModal: boolean) => {
-    setShowSpeedbumpModal(showModal)
-  }, [])
+  }, [isViewOnlyWallet, setShowViewOnlyModal, goToNext])
 
   const [inputSelection, setInputSelection] = useState<TextInputProps['selection']>()
 
@@ -227,14 +210,6 @@ export function TransferTokenForm({
           onConfirm={(): void => setShowWarningModal(false)}
         />
       )}
-      <TransferFormSpeedbumps
-        chainId={chainId}
-        recipient={recipient}
-        setShowSpeedbumpModal={onSetShowSpeedbumpModal}
-        setTransferSpeedbump={onSetTransferSpeedbump}
-        showSpeedbumpModal={showSpeedbumpModal}
-        onNext={goToNext}
-      />
       <Flex grow gap="$spacing8" justifyContent="space-between">
         <AnimatedFlex
           entering={FadeIn}
@@ -255,6 +230,7 @@ export function TransferTokenForm({
                 isFiatInput={isFiatInput}
                 isOnScreen={!showingSelectorScreen}
                 showSoftInputOnFocus={showNativeKeyboard}
+                transactionType={TransactionType.Send}
                 usdValue={inputCurrencyUSDValue}
                 value={isFiatInput ? exactAmountFiat : exactAmountToken}
                 warnings={warnings.warnings}

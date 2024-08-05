@@ -3,20 +3,17 @@ import { Alert } from 'react-native'
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
-import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
-import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n/i18n'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
-import { isAndroid } from 'utilities/src/platform'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'
-import { appSelect } from 'wallet/src/state'
+import { RootState } from 'wallet/src/state'
 
 // at most once per reminder period (120 days)
 const MIN_PROMPT_REMINDER_MS = 120 * ONE_DAY_MS
@@ -28,12 +25,6 @@ const SWAP_FINALIZED_PROMPT_DELAY_MS = 3 * ONE_SECOND_MS
 export function* appRatingWatcherSaga() {
   function* processFinalizedTx(action: ReturnType<typeof finalizeTransaction>) {
     // count successful swaps
-
-    const shouldSkip = yield* call(shouldSkipRatingPrompt)
-    if (shouldSkip) {
-      return
-    }
-
     if (action.payload.typeInfo.type === TransactionType.Swap && action.payload.status === TransactionStatus.Success) {
       yield* delay(SWAP_FINALIZED_PROMPT_DELAY_MS)
       yield* call(maybeRequestAppRating)
@@ -56,15 +47,15 @@ function* maybeRequestAppRating() {
     }
 
     // Conditions
-    const appRatingProvidedMs = yield* appSelect((state) => state.wallet.appRatingProvidedMs)
+    const appRatingProvidedMs = yield* select((state: RootState) => state.wallet.appRatingProvidedMs)
     if (appRatingProvidedMs) {
       return
     } // avoids prompting again
 
-    const appRatingPromptedMs = yield* appSelect((state) => state.wallet.appRatingPromptedMs)
-    const appRatingFeedbackProvidedMs = yield* appSelect((state) => state.wallet.appRatingFeedbackProvidedMs)
+    const appRatingPromptedMs = yield* select((state: RootState) => state.wallet.appRatingPromptedMs)
+    const appRatingFeedbackProvidedMs = yield* select((state: RootState) => state.wallet.appRatingFeedbackProvidedMs)
 
-    const consecutiveSwapsCondition = yield* appSelect(hasConsecutiveRecentSwapsSelector)
+    const consecutiveSwapsCondition = yield* select(hasConsecutiveRecentSwapsSelector)
 
     // prompt if enough time has passed since last prompt or last feedback provided
     const reminderCondition =
@@ -83,7 +74,7 @@ function* maybeRequestAppRating() {
       return
     }
 
-    logger.info('appRating', 'maybeRequestAppRating', 'Requesting app rating', {
+    logger.debug('appRating', 'maybeRequestAppRating', 'Requesting app rating', {
       lastPrompt: appRatingPromptedMs,
       lastProvided: appRatingProvidedMs,
       consecutiveSwapsCondition,
@@ -93,8 +84,6 @@ function* maybeRequestAppRating() {
     const shouldShowNativeReviewModal = yield* call(openRatingOptionsAlert)
 
     if (shouldShowNativeReviewModal) {
-      yield* call(openNativeReviewModal)
-
       // expo-review does not return whether a rating was actually provided.
       // assume it was and mark rating as provided.
       yield* put(setAppRating({ ratingProvided: true }))
@@ -191,11 +180,4 @@ async function openNativeReviewModal() {
   } catch (e) {
     logger.error(e, { tags: { file: 'appRating/saga', function: 'useAppRating' } })
   }
-}
-
-function shouldSkipRatingPrompt(): boolean {
-  const isPlaystoreRatingPromptEnabled = Statsig.checkGate(
-    WALLET_FEATURE_FLAG_NAMES.get(FeatureFlags.PlaystoreAppRating) ?? '',
-  )
-  return isAndroid && !isPlaystoreRatingPromptEnabled
 }

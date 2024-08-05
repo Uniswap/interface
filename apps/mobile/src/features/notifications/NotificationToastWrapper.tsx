@@ -1,5 +1,5 @@
 import React from 'react'
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
 import { ScantasticCompleteNotification } from 'src/features/notifications/ScantasticCompleteNotification'
 import { WCNotification } from 'src/features/notifications/WCNotification'
 import { SharedNotificationToastRouter } from 'wallet/src/features/notifications/components/SharedNotificationToastRouter'
@@ -7,7 +7,7 @@ import { selectActiveAccountNotifications } from 'wallet/src/features/notificati
 import { AppNotification, AppNotificationType } from 'wallet/src/features/notifications/types'
 
 export function NotificationToastWrapper(): JSX.Element | null {
-  const notifications = useAppSelector(selectActiveAccountNotifications)
+  const notifications = useSelector(selectActiveAccountNotifications)
   const notification = notifications?.[0]
 
   if (!notification) {

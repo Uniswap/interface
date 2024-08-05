@@ -10,7 +10,7 @@ export function currencyId(currency: Currency): CurrencyId {
   return buildCurrencyId(currency.chainId, currencyAddress(currency))
 }
 
-export function buildCurrencyId(chainId: WalletChainId, address: string): string {
+export function buildCurrencyId(chainId: UniverseChainId, address: string): string {
   return `${chainId}-${address}`
 }
 

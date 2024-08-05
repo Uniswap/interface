@@ -1,4 +1,3 @@
-import React, { createElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useIsDarkMode } from 'ui/src'
 import { AssetType } from 'uniswap/src/entities/assets'
@@ -9,13 +8,13 @@ import { NumberType } from 'utilities/src/format/types'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
+import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
+import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { FiatPurchaseTransactionInfo, TransactionDetails } from 'wallet/src/features/transactions/types'
 
 export function FiatPurchaseSummaryItem({
   transaction,
-  layoutElement,
   index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: FiatPurchaseTransactionInfo }
@@ -69,21 +68,23 @@ export function FiatPurchaseSummaryItem({
           })
       : formatFiatTokenPrice()
 
-  return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
-    caption,
-    icon: (
-      <LogoWithTxStatus
-        assetType={AssetType.Currency}
-        chainId={transaction.chainId}
-        currencyInfo={outputCurrencyInfo}
-        institutionLogoUrl={institutionLogoUrl}
-        serviceProviderLogoUrl={serviceProviderLogoUrl}
-        size={TXN_HISTORY_ICON_SIZE}
-        txStatus={transaction.status}
-        txType={transaction.typeInfo.type}
-      />
-    ),
-    transaction,
-    index,
-  })
+  return (
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={
+        <LogoWithTxStatus
+          assetType={AssetType.Currency}
+          chainId={transaction.chainId}
+          currencyInfo={outputCurrencyInfo}
+          institutionLogoUrl={institutionLogoUrl}
+          serviceProviderLogoUrl={serviceProviderLogoUrl}
+          size={TXN_HISTORY_ICON_SIZE}
+          txStatus={transaction.status}
+          txType={transaction.typeInfo.type}
+        />
+      }
+      index={index}
+      transaction={transaction}
+    />
+  )
 }

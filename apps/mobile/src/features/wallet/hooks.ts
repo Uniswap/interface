@@ -1,10 +1,7 @@
 import { useCallback, useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
@@ -20,14 +17,13 @@ export function useWalletRestore(params?: { openModalImmediately?: boolean }): {
   // Means that no private key found for mnemonic wallets
   const [walletNeedsRestore, setWalletNeedsRestore] = useState<boolean>(false)
   const hasImportedSeedPhrase = useNativeAccountExists()
-  const isRestoreWalletEnabled = useFeatureFlag(FeatureFlags.RestoreWallet)
 
   const openWalletRestoreModal = useCallback((): void => {
     dispatch(openModal({ name: ModalName.RestoreWallet }))
   }, [dispatch])
 
   useEffect(() => {
-    if (!hasImportedSeedPhrase || !isRestoreWalletEnabled) {
+    if (!hasImportedSeedPhrase) {
       return
     }
 
@@ -38,7 +34,7 @@ export function useWalletRestore(params?: { openModalImmediately?: boolean }): {
     openRestoreWalletModalIfNeeded().catch((error) =>
       logger.error(error, { tags: { file: 'wallet/hooks', function: 'useWalletRestore' } }),
     )
-  }, [dispatch, hasImportedSeedPhrase, isRestoreWalletEnabled])
+  }, [dispatch, hasImportedSeedPhrase])
 
   useEffect(() => {
     if (openModalImmediately && walletNeedsRestore) {
@@ -46,7 +42,7 @@ export function useWalletRestore(params?: { openModalImmediately?: boolean }): {
     }
   }, [openModalImmediately, openWalletRestoreModal, walletNeedsRestore])
 
-  const isModalOpen = useAppSelector(selectModalState(ModalName.RestoreWallet)).isOpen
+  const isModalOpen = useSelector(selectModalState(ModalName.RestoreWallet)).isOpen
 
   return { walletNeedsRestore, openWalletRestoreModal, isModalOpen }
 }

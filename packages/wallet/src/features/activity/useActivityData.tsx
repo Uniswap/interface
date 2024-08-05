@@ -9,7 +9,6 @@ import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
 import { LoadingItem, SectionHeader } from 'wallet/src/features/activity/utils'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
 import { ActivityItemRenderer, generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useCreateSwapFormState, useMergeLocalAndRemoteTransactions } from 'wallet/src/features/transactions/hooks'
@@ -69,13 +68,7 @@ export function useActivityData({
   }, [navigateToSwapFlow])
 
   const renderActivityItem = useMemo(() => {
-    return generateActivityItemRenderer(
-      TransactionSummaryLayout,
-      <Loader.Transaction />,
-      SectionTitle,
-      swapCallbacks,
-      authTrigger,
-    )
+    return generateActivityItemRenderer(<Loader.Transaction />, SectionTitle, swapCallbacks, authTrigger)
   }, [swapCallbacks, authTrigger])
 
   const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(

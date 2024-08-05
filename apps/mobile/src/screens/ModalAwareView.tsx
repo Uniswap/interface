@@ -1,7 +1,7 @@
 import { BottomSheetDraggableView } from '@gorhom/bottom-sheet'
 import React from 'react'
 import { View } from 'react-native'
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { Flex, flexStyles, useDeviceInsets, useSporeColors } from 'ui/src'
@@ -17,7 +17,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
  * uses a compatible virtualized list when rendered within a bottom sheet modal).
  */
 export function ExploreModalAwareView({ children }: { children: JSX.Element }): JSX.Element {
-  const inModal = useAppSelector(selectModalState(ModalName.Explore)).isOpen
+  const inModal = useSelector(selectModalState(ModalName.Explore)).isOpen
   const colors = useSporeColors()
   const insets = useDeviceInsets()
 

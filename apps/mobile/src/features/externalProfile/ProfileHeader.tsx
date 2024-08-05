@@ -1,10 +1,9 @@
-import React, { memo, useCallback, useMemo } from 'react'
+import React, { memo, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StatusBar, StyleSheet } from 'react-native'
 import { FadeIn } from 'react-native-reanimated'
 import Svg, { ClipPath, Defs, RadialGradient, Rect, Stop } from 'react-native-svg'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Favorite } from 'src/components/icons/Favorite'
 import { LongText } from 'src/components/text/LongText'
@@ -31,6 +30,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { openUri } from 'uniswap/src/utils/linking'
+import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'wallet/src/features/ens/api'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
@@ -55,7 +55,8 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
   const colors = useSporeColors()
   const dispatch = useDispatch()
   const isDarkMode = useIsDarkMode()
-  const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
+  const isFavorited = useSelector(selectWatchedAddressSet).has(address)
+  const [checkSpeedBumps, setCheckSpeedBumps] = useState(false)
 
   const displayName = useDisplayName(address, { includeUnitagSuffix: true })
 
@@ -103,7 +104,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
     }
   }, [address])
 
-  const onPressSend = useCallback(() => {
+  const openSendModal = useCallback(() => {
     dispatch(
       openModal({
         name: ModalName.Send,
@@ -111,6 +112,10 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
       }),
     )
   }, [dispatch, initialSendState])
+
+  const onPressSend = useCallback(async () => {
+    setCheckSpeedBumps(true)
+  }, [])
 
   const onPressTwitter = useCallback(async () => {
     if (twitter) {
@@ -249,6 +254,12 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
           </Flex>
         </Flex>
       </Flex>
+      <RecipientSelectSpeedBumps
+        checkSpeedBumps={checkSpeedBumps}
+        recipientAddress={address}
+        setCheckSpeedBumps={setCheckSpeedBumps}
+        onConfirm={openSendModal}
+      />
     </Flex>
   )
 })

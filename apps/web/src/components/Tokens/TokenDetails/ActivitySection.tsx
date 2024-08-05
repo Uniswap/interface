@@ -1,11 +1,11 @@
 import Row from 'components/Row'
 import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/TokenDetailsPoolsTable'
 import { TransactionsTable } from 'components/Tokens/TokenDetails/tables/TransactionsTable'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useState } from 'react'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 const Container = styled.div`
   width: 100%;

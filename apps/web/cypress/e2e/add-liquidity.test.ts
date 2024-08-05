@@ -1,5 +1,4 @@
-import { getTestSelector, resetHardhatChain } from '../utils'
-import { waitsForActiveChain } from './wallet-connection/switch-network.test'
+import { getTestSelector, resetHardhatChain, waitsForActiveChain } from '../utils'
 
 describe('Add Liquidity', () => {
   it('loads the token pair', () => {

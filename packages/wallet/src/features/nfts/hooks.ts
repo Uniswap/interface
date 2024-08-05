@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { NftsQuery, useNftsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
@@ -10,7 +11,6 @@ import {
 } from 'wallet/src/features/nfts/constants'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getIsNftHidden } from 'wallet/src/features/nfts/utils'
-import { useAppSelector } from 'wallet/src/state'
 
 export type GQLNftAsset = NonNullable<
   NonNullable<NonNullable<NonNullable<NftsQuery['portfolios']>[0]>['nftBalances']>[0]
@@ -44,7 +44,7 @@ export function useGroupNftsByVisibility(
   numHidden: number
   numShown: number
 } {
-  const nftVisibility = useAppSelector(selectNftsVisibility)
+  const nftVisibility = useSelector(selectNftsVisibility)
   return useMemo(() => {
     const { shown, hidden } = (nftDataItems ?? []).reduce<{
       shown: NFTItem[]

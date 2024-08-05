@@ -2,12 +2,12 @@ import Column from 'components/Column'
 import { Dialog, DialogButtonType } from 'components/Dialog/Dialog'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import Row from 'components/Row'
-import { Trans, t } from 'i18n'
 import styled from 'lib/styled-components'
 import { useCallback, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { ButtonText, ExternalLink, ThemedText } from 'theme/components'
+import { Trans, t } from 'uniswap/src/i18n'
 
 const StyledAlertIcon = styled(AlertTriangleFilled)`
   path {
@@ -127,13 +127,13 @@ export function BlastRebasingAlert() {
           <Trans i18nKey="v3.blast.yield.usdbAndWeth" />{' '}
           <StyledLearnMore href="https://support.uniswap.org/hc/en-us/articles/25351747812109-Blast-Rebase-Tokens">
             <ThemedText.SubHeaderSmall fontWeight={535} lineHeight="20px" color="neutral1">
-              <Trans i18nKey="common.learnMore.link" />
+              <Trans i18nKey="common.button.learn" />
             </ThemedText.SubHeaderSmall>
           </StyledLearnMore>
         </TextWrapper>
         <ReadMore onClick={handleSetExpanded}>
           <ThemedText.SubHeaderSmall lineHeight="20px" fontWeight={535}>
-            {expanded ? t('Read less') : t('Read more')}
+            {expanded ? t('common.longText.button.less') : t('common.longText.button.more')}
           </ThemedText.SubHeaderSmall>
           <StyledChevronDown $expanded={expanded} size={16} />
         </ReadMore>

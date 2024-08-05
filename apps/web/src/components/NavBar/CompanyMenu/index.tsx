@@ -1,4 +1,3 @@
-import { useIsTouchDevice } from '@tamagui/core'
 import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
 import { NavIcon } from 'components/Logo/NavIcon'
 import { MenuDropdown } from 'components/NavBar/CompanyMenu/MenuDropdown'
@@ -8,7 +7,7 @@ import { useScreenSize } from 'hooks/screenSize'
 import styled from 'lib/styled-components'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { Popover, Text } from 'ui/src'
+import { Popover, Text, useIsTouchDevice } from 'ui/src'
 import { Hamburger } from 'ui/src/components/icons'
 
 const ArrowDown = styled(ArrowChangeDown)<{ $isActive: boolean }>`
@@ -58,10 +57,10 @@ export function CompanyMenu() {
 
   return (
     <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip onOpenChange={setIsOpen}>
-      <Popover.Trigger>
+      <Popover.Trigger data-testid="nav-company-menu">
         <Trigger>
-          <UniIcon onClick={handleLogoClick}>
-            <NavIcon width="48" height="48" data-testid="uniswap-logo" />
+          <UniIcon onClick={handleLogoClick} data-testid="nav-uniswap-logo">
+            <NavIcon width="48" height="48" />
             {isLargeScreen && (
               <Text variant="subheading1" color="$accent1" userSelect="none">
                 Uniswap

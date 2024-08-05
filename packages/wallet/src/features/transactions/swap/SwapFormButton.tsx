@@ -2,6 +2,7 @@
 import { TFunction } from 'i18next'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { AnimatePresence, Button, Flex, SpinningLoader, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -29,7 +30,6 @@ import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useAppSelector } from 'wallet/src/state'
 
 export const HOLD_TO_SWAP_TIMEOUT = 3 * ONE_SECOND_MS
 const KEEP_OPEN_MSG_DELAY = 3 * ONE_SECOND_MS
@@ -58,8 +58,8 @@ export function SwapFormButton(): JSX.Element {
 
   const isHoldToSwapPressed = screen === SwapScreen.SwapReviewHoldingToSwap
 
-  const hasViewedReviewScreen = useAppSelector(selectHasViewedReviewScreen)
-  const hasSubmittedHoldToSwap = useAppSelector(selectHasSubmittedHoldToSwap)
+  const hasViewedReviewScreen = useSelector(selectHasViewedReviewScreen)
+  const hasSubmittedHoldToSwap = useSelector(selectHasSubmittedHoldToSwap)
 
   const isViewOnlyWallet = activeAccount.type === AccountType.Readonly
   const showHoldToSwapTip = hasViewedReviewScreen && !hasSubmittedHoldToSwap && !isViewOnlyWallet

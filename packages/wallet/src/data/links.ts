@@ -1,16 +1,24 @@
 import { ApolloLink, createHttpLink } from '@apollo/client'
+import { setContext } from '@apollo/client/link/context'
 import { onError } from '@apollo/client/link/error'
 import { RestLink } from 'apollo-link-rest'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
+import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { logger } from 'utilities/src/logger/logger'
+import { isMobile } from 'utilities/src/platform'
+import { ON_RAMP_AUTH_MAX_LIMIT, createOnRampTransactionsAuth } from 'wallet/src/data/utils'
 import { EnsLookupParams, STUB_ONCHAIN_ENS_ENDPOINT, getOnChainEnsFetch } from 'wallet/src/features/ens/api'
 import {
   BalanceLookupParams,
   STUB_ONCHAIN_BALANCES_ENDPOINT,
   getOnChainBalancesFetch,
 } from 'wallet/src/features/portfolio/api'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
+import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 
 // mapping from endpoint to custom fetcher, when needed
 function getCustomFetcherMap(
@@ -118,7 +126,8 @@ export function getErrorLink(
         )
       })
     }
-    if (networkError) {
+    // We use DataDog to catch network errors on Mobile
+    if (networkError && !isMobile) {
       sample(
         () => logger.error(networkError, { tags: { file: 'data/links', function: 'getErrorLink' } }),
         networkErrorSamplingRate,
@@ -152,5 +161,35 @@ export function getPerformanceLink(
 
       return data
     })
+  })
+}
+
+export function getOnRampAuthLink(accounts: Record<string, Account>, signerManager: SignerManager): ApolloLink {
+  return setContext((operation, prevContext) => {
+    if (operation.operationName !== GQLQueries.TransactionList) {
+      return prevContext
+    }
+
+    const enabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.ForTransactionsFromGraphQL))
+    const account = accounts[operation.variables?.address]
+
+    if (!enabled || !account) {
+      return prevContext
+    }
+
+    return createOnRampTransactionsAuth(ON_RAMP_AUTH_MAX_LIMIT, account, signerManager).then((onRampAuth) => {
+      return {
+        ...prevContext,
+        onRampAuth,
+      }
+    })
+  }).concat((operation, forward) => {
+    if (operation.getContext().onRampAuth) {
+      operation.variables = {
+        ...operation.variables,
+        onRampAuth: operation.getContext().onRampAuth,
+      }
+    }
+    return forward(operation)
   })
 }

@@ -5,6 +5,15 @@ import {
   Chain,
   PortfolioBalanceDocument,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  sortPortfolioBalances,
+  useHighestBalanceNativeCurrencyId,
+  usePortfolioBalances,
+  usePortfolioCacheUpdater,
+  usePortfolioTotalValue,
+  useSortedPortfolioBalances,
+  useTokenBalancesGroupedByVisibility,
+} from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
   ARBITRUM_CURRENCY,
@@ -14,17 +23,7 @@ import {
   POLYGON_CURRENCY,
   currencyInfo,
 } from 'uniswap/src/test/fixtures'
-import {
-  sortPortfolioBalances,
-  useHighestBalanceNativeCurrencyId,
-  usePortfolioBalances,
-  usePortfolioCacheUpdater,
-  usePortfolioTotalValue,
-  // eslint-disable-next-line no-restricted-imports
-  usePortfolioValueModifiers,
-  useSortedPortfolioBalances,
-  useTokenBalancesGroupedByVisibility,
-} from 'wallet/src/features/dataApi/balances'
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { FavoritesState, initialFavoritesState } from 'wallet/src/features/favorites/slice'
 import { WalletState, initialWalletState } from 'wallet/src/features/wallet/slice'
 import {
@@ -218,7 +217,7 @@ describe(usePortfolioValueModifiers, () => {
 
 describe(usePortfolioBalances, () => {
   it('returns empty results if no address was specified', () => {
-    const { result } = renderHook(() => usePortfolioBalances({}))
+    const { result } = renderHook(() => usePortfolioBalances({ valueModifiers: [] }))
 
     expect(result.current).toEqual({
       data: undefined,
@@ -230,7 +229,7 @@ describe(usePortfolioBalances, () => {
   })
 
   it('returns loading set to true when data is being fetched', async () => {
-    const { result } = renderHook(() => usePortfolioBalances({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioBalances({ valueModifiers: [], address: Portfolio.ownerAddress }), {
       resolvers: portfolioResolvers,
     })
 
@@ -253,7 +252,7 @@ describe(usePortfolioBalances, () => {
         throw new Error('test')
       },
     })
-    const { result } = renderHook(() => usePortfolioBalances({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioBalances({ valueModifiers: [], address: Portfolio.ownerAddress }), {
       resolvers,
     })
 
@@ -272,7 +271,7 @@ describe(usePortfolioBalances, () => {
     const { resolvers } = queryResolvers({
       portfolios: () => [],
     })
-    const { result } = renderHook(() => usePortfolioBalances({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioBalances({ valueModifiers: [], address: Portfolio.ownerAddress }), {
       resolvers,
     })
 
@@ -290,7 +289,7 @@ describe(usePortfolioBalances, () => {
   })
 
   it('returns balances grouped by currencyId', async () => {
-    const { result } = renderHook(() => usePortfolioBalances({ address: Portfolio.ownerAddress }), {
+    const { result } = renderHook(() => usePortfolioBalances({ valueModifiers: [], address: Portfolio.ownerAddress }), {
       resolvers: portfolioResolvers,
     })
 
@@ -326,7 +325,7 @@ describe(usePortfolioBalances, () => {
 
 describe(usePortfolioTotalValue, () => {
   it('returns empty results if no address was specified', () => {
-    const { result } = renderHook(() => usePortfolioTotalValue({}))
+    const { result } = renderHook(() => usePortfolioTotalValue({ valueModifiers: [] }))
 
     expect(result.current).toEqual({
       data: undefined,
@@ -419,7 +418,7 @@ describe(useHighestBalanceNativeCurrencyId, () => {
     const { resolvers } = queryResolvers({
       portfolios: () => [portfolio({ tokenBalances: [daiTokenBalance] })],
     })
-    const { result } = renderHook(() => useHighestBalanceNativeCurrencyId(SAMPLE_SEED_ADDRESS_1), {
+    const { result } = renderHook(() => useHighestBalanceNativeCurrencyId(SAMPLE_SEED_ADDRESS_1, []), {
       resolvers,
     })
 
@@ -429,7 +428,7 @@ describe(useHighestBalanceNativeCurrencyId, () => {
   })
 
   it('returns native currency id with the highest balance', async () => {
-    const { result } = renderHook(() => useHighestBalanceNativeCurrencyId(SAMPLE_SEED_ADDRESS_1), {
+    const { result } = renderHook(() => useHighestBalanceNativeCurrencyId(SAMPLE_SEED_ADDRESS_1, []), {
       resolvers: portfolioResolvers,
     })
 

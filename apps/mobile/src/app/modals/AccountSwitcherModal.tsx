@@ -1,9 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Action } from 'redux'
-import { useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
@@ -62,12 +61,12 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const activeAccountAddress = useActiveAccountAddress()
   const dispatch = useDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
-  const modalState = useAppSelector(selectModalState(ModalName.AccountSwitcher))
-  const sortedMnemonicAccounts = useAppSelector(selectSortedSignerMnemonicAccounts)
+  const modalState = useSelector(selectModalState(ModalName.AccountSwitcher))
+  const sortedMnemonicAccounts = useSelector(selectSortedSignerMnemonicAccounts)
 
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
 
-  const accounts = useAppSelector(selectAllAccountsSorted)
+  const accounts = useSelector(selectAllAccountsSorted)
 
   const onPressAccount = useCallback(
     (address: Address) => {

@@ -7,6 +7,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
+import { BuyNativeTokenButton } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/BuyNativeTokenButton'
 import { InsufficientNativeTokenBaseComponent } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenBaseComponent'
 import type { InsufficientNativeTokenWarningProps } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useInsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
@@ -25,12 +26,12 @@ export function InsufficientNativeTokenWarning({
     gasFee,
   })
 
-  if (!parsedInsufficentNativeTokenWarning) {
+  const { modalOrTooltipMainMessage, nativeCurrency, nativeCurrencyInfo, networkName } =
+    parsedInsufficentNativeTokenWarning ?? {}
+
+  if (!parsedInsufficentNativeTokenWarning || !nativeCurrencyInfo || !nativeCurrency) {
     return null
   }
-
-  const { modalOrTooltipMainMessage, nativeCurrency, nativeCurrencyInfo, networkName } =
-    parsedInsufficentNativeTokenWarning
 
   const shouldShowNetworkName = nativeCurrency.symbol === 'ETH' && nativeCurrency.chainId !== UniverseChainId.Mainnet
 
@@ -59,12 +60,17 @@ export function InsufficientNativeTokenWarning({
           }
           onClose={(): void => setShowModal(false)}
         >
-          <Flex centered gap="$spacing16">
+          <Flex centered gap="$spacing16" width="100%">
             <Text color="$neutral2" textAlign="center" variant="body3">
               {modalOrTooltipMainMessage}
             </Text>
 
-            <LearnMoreLink url={uniswapUrls.helpArticleUrls.networkFeeInfo} />
+            <BuyNativeTokenButton nativeCurrencyInfo={nativeCurrencyInfo} />
+            <LearnMoreLink
+              textColor="$neutral2"
+              textVariant="buttonLabel3"
+              url={uniswapUrls.helpArticleUrls.networkFeeInfo}
+            />
           </Flex>
         </WarningModal>
       )}

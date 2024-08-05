@@ -7,6 +7,7 @@ import {
   OnSelectCurrency,
   TokenSection,
 } from 'uniswap/src/components/TokenSelector/types'
+import { PortfolioValueModifier } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
@@ -29,31 +30,37 @@ function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
 }
 
 function _TokenSelectorSearchResultsList({
-  addToSearchHistoryCallback,
-  onDismiss,
   onSelectCurrency: parentOnSelectCurrency,
+  activeAccountAddress,
   chainFilter,
   searchFilter,
   debouncedSearchFilter,
   isBalancesOnlySearch,
+  valueModifiers,
+  onDismiss,
+  addToSearchHistoryCallback,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
   useTokenSectionsForSearchResultsHook,
   useTokenWarningDismissedHook,
 }: {
   onSelectCurrency: OnSelectCurrency
+  activeAccountAddress: string
   chainFilter: UniverseChainId | null
   searchFilter: string
   debouncedSearchFilter: string | null
   isBalancesOnlySearch: boolean
+  valueModifiers?: PortfolioValueModifier[]
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
   addToSearchHistoryCallback: (currencyInfo: CurrencyInfo) => void
   onDismiss: () => void
   useTokenSectionsForSearchResultsHook: (
+    address: string,
     chainFilter: UniverseChainId | null,
     searchFilter: string | null,
     isBalancesOnlySearch: boolean,
+    valueModifiers?: PortfolioValueModifier[],
   ) => GqlResult<TokenSection[]>
   useTokenWarningDismissedHook: (currencyId: Maybe<string>) => {
     tokenWarningDismissed: boolean
@@ -66,7 +73,13 @@ function _TokenSelectorSearchResultsList({
     loading,
     error,
     refetch,
-  } = useTokenSectionsForSearchResultsHook(chainFilter, debouncedSearchFilter, isBalancesOnlySearch)
+  } = useTokenSectionsForSearchResultsHook(
+    activeAccountAddress,
+    chainFilter,
+    debouncedSearchFilter,
+    isBalancesOnlySearch,
+    valueModifiers,
+  )
 
   const onSelectCurrency: OnSelectCurrency = (currencyInfo, section, index) => {
     parentOnSelectCurrency(currencyInfo, section, index)

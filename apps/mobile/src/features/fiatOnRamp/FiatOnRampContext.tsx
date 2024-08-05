@@ -4,8 +4,11 @@
 import React, { createContext, useContext, useState } from 'react'
 import { SectionListData } from 'react-native'
 import { getCountry } from 'react-native-localize'
+import { useSelector } from 'react-redux'
+import { selectModalState } from 'src/features/modals/selectModalState'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { FORQuote, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
@@ -54,14 +57,19 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const [baseCurrencyInfo, setBaseCurrencyInfo] = useState<FiatCurrencyInfo>()
   const [amount, setAmount] = useState<number>()
 
-  // We hardcode ETH as the starting currency
+  const { initialState: initialModalState } = useSelector(selectModalState(ModalName.FiatOnRampAggregator))
+  const prefilledCurrency = initialModalState?.prefilledCurrency
+
+  // We hardcode ETH as the default starting currency if not specified by modal state's prefilledCurrency
   const ethCurrencyInfo = useCurrencyInfo(
     buildCurrencyId(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Mainnet)),
   )
-  const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>({
-    currencyInfo: ethCurrencyInfo,
-    meldCurrencyCode: 'ETH',
-  })
+  const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>(
+    prefilledCurrency ?? {
+      currencyInfo: ethCurrencyInfo,
+      meldCurrencyCode: 'ETH',
+    },
+  )
 
   return (
     <FiatOnRampContext.Provider

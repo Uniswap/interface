@@ -1,4 +1,5 @@
 import { useMemo, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { trimToLength } from 'utilities/src/primitives/string'
@@ -21,16 +22,16 @@ import {
 } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
-import { useAppSelector } from 'wallet/src/state'
+import { RootState } from 'wallet/src/state'
 
 const ENS_TRIM_LENGTH = 8
 
 export function useAccounts(): Record<string, Account> {
-  return useAppSelector<Record<string, Account>>(selectAccounts)
+  return useSelector(selectAccounts)
 }
 
 export function useAccount(address: Address): Account {
-  const account = useAppSelector<Record<string, Account>>(selectAccounts)[address]
+  const account = useSelector(selectAccounts)[address]
   if (!account) {
     throw new Error(`No account found for address ${address}`)
   }
@@ -38,44 +39,44 @@ export function useAccount(address: Address): Account {
 }
 
 export function useAccountIfExists(address: Address): Account | undefined {
-  const account = useAppSelector<Record<string, Account>>(selectAccounts)[address]
+  const account = useSelector(selectAccounts)[address]
   return account
 }
 
 export function useSignerAccountIfExists(address: Address): SignerMnemonicAccount | undefined {
-  const signerAccounts = useAppSelector<SignerMnemonicAccount[]>(selectSignerMnemonicAccounts)
+  const signerAccounts = useSelector(selectSignerMnemonicAccounts)
   return signerAccounts.find((account) => account.address === address)
 }
 
 export function useSignerAccounts(): SignerMnemonicAccount[] {
-  return useAppSelector<SignerMnemonicAccount[]>(selectSignerMnemonicAccounts)
+  return useSelector(selectSignerMnemonicAccounts)
 }
 
 export function useViewOnlyAccounts(): Account[] {
-  return useAppSelector<Account[]>(selectViewOnlyAccounts)
+  return useSelector(selectViewOnlyAccounts)
 }
 
 export function useActiveAccount(): Account | null {
-  return useAppSelector(selectActiveAccount)
+  return useSelector(selectActiveAccount)
 }
 
 export function useActiveSignerAccount(): Account | null {
-  const activeAccount = useAppSelector(selectActiveAccount)
+  const activeAccount = useSelector(selectActiveAccount)
   return activeAccount?.type === AccountType.SignerMnemonic ? activeAccount : null
 }
 
 export function useActiveAccountAddress(): Address | null {
-  return useAppSelector(selectActiveAccountAddress)
+  return useSelector(selectActiveAccountAddress)
 }
 
 export function useNativeAccountExists(): boolean {
-  return useAppSelector(selectSignerMnemonicAccountExists)
+  return useSelector(selectSignerMnemonicAccountExists)
 }
 
 export function useActiveAccountAddressWithThrow(): Address {
   const addressRef = useRef<string | null>(null)
   const isFocused = useIsFocused()
-  const activeAccountAddress = useAppSelector(selectActiveAccountAddress)
+  const activeAccountAddress = useSelector(selectActiveAccountAddress)
 
   // Update the account address only when the screen is focused
   // or the address haven't been set yet
@@ -94,7 +95,7 @@ export function useActiveAccountAddressWithThrow(): Address {
 }
 
 export function useActiveAccountWithThrow(): Account {
-  const activeAccount = useAppSelector(selectActiveAccount)
+  const activeAccount = useSelector(selectActiveAccount)
   if (!activeAccount) {
     throw new Error('No active account')
   }
@@ -102,20 +103,20 @@ export function useActiveAccountWithThrow(): Account {
 }
 
 export function useSwapProtectionSetting(): SwapProtectionSetting {
-  return useAppSelector(selectWalletSwapProtectionSetting)
+  return useSelector(selectWalletSwapProtectionSetting)
 }
 
 export function useSelectAccountNotificationSetting(address: Address): boolean {
   const selectAccountNotificationSetting = useMemo(() => makeSelectAccountNotificationSetting(), [])
-  return useAppSelector((state) => selectAccountNotificationSetting(state, address))
+  return useSelector((state: RootState) => selectAccountNotificationSetting(state, address))
 }
 
 export function useHideSmallBalancesSetting(): boolean {
-  return useAppSelector(selectWalletHideSmallBalancesSetting)
+  return useSelector(selectWalletHideSmallBalancesSetting)
 }
 
 export function useHideSpamTokensSetting(): boolean {
-  return useAppSelector(selectWalletHideSpamTokensSetting)
+  return useSelector(selectWalletHideSpamTokensSetting)
 }
 
 type DisplayNameOptions = {

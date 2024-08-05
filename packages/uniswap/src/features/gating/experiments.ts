@@ -5,6 +5,8 @@
  */
 export enum Experiments {
   ArbitrumXV2OpenOrders = 'arbitrum_uniswapx_openorders',
+  OnboardingRedesignHomeScreen = 'onboarding-redesign-home-screen',
+  OnboardingRedesignRecoveryBackup = 'onboarding-redesign-recovery-backup',
 }
 
 export enum ArbitrumXV2OpenOrderProperties {
@@ -13,6 +15,18 @@ export enum ArbitrumXV2OpenOrderProperties {
   DeadlineBufferSecs = 'deadlineBufferSecs',
 }
 
+export enum OnboardingRedesignHomeScreenProperties {
+  Enabled = 'enabled',
+  ExploreChainId = 'exploreChainId',
+  ExploreTokenAddresses = 'exploreTokenAddresses',
+}
+
+export enum OnboardingRedesignRecoveryBackupProperties {
+  Enabled = 'enabled',
+}
+
 export type ExperimentProperties = {
   [Experiments.ArbitrumXV2OpenOrders]: ArbitrumXV2OpenOrderProperties
+  [Experiments.OnboardingRedesignHomeScreen]: OnboardingRedesignHomeScreenProperties
+  [Experiments.OnboardingRedesignRecoveryBackup]: OnboardingRedesignRecoveryBackupProperties
 }

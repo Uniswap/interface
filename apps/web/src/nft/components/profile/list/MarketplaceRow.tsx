@@ -3,7 +3,6 @@ import { CollapsedIcon } from 'components/Icons/Collapse'
 import { ExpandIcon } from 'components/Icons/Expand'
 import Row from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { t } from 'i18n'
 import styled from 'lib/styled-components'
 import { PriceTextInput } from 'nft/components/profile/list/PriceTextInput'
 import { RoyaltyTooltip } from 'nft/components/profile/list/RoyaltyTooltip'
@@ -16,6 +15,7 @@ import { getMarketplaceIcon } from 'nft/utils'
 import { Dispatch, DispatchWithoutAction, useCallback, useEffect, useMemo, useReducer, useState } from 'react'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
+import { t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const LastPriceInfo = styled(Column)`
@@ -160,6 +160,13 @@ export const MarketplaceRow = ({
 
     return maxFee
   }, [asset, selectedMarkets])
+  const feesDelta = formatDelta(fees)
+  const feesDeltaDisplay =
+    selectedMarkets.length > 1
+      ? t('nfts.marketplace.fees.deltaMax', {
+          percentChanged: feesDelta,
+        })
+      : feesDelta
 
   const feeInEth = price && (price * fees) / 100
   const userReceives = price && feeInEth && price - feeInEth
@@ -242,9 +249,7 @@ export const MarketplaceRow = ({
           placement="left"
         >
           <FeeWrapper>
-            <ThemedText.BodyPrimary color="neutral2">
-              {fees > 0 ? `${formatDelta(fees)}${selectedMarkets.length > 1 ? t('max') : ''}` : '--%'}
-            </ThemedText.BodyPrimary>
+            <ThemedText.BodyPrimary color="neutral2">{fees > 0 ? feesDeltaDisplay : '--%'}</ThemedText.BodyPrimary>
           </FeeWrapper>
         </MouseoverTooltip>
       </FeeColumnWrapper>

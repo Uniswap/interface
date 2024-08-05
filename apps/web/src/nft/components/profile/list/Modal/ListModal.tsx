@@ -2,7 +2,6 @@ import { InterfaceModalName, NFTEventName } from '@uniswap/analytics-events'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
-import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import styled from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -21,6 +20,7 @@ import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -138,7 +138,7 @@ export const ListModal = ({ overlayClick }: { overlayClick: () => void }) => {
             <>
               <TitleRow>
                 <ThemedText.HeadlineSmall lineHeight="28px">
-                  <Trans i18nKey="nft.list" />
+                  <Trans i18nKey="nft.list.title" />
                 </ThemedText.HeadlineSmall>
                 <X size={24} cursor="pointer" onClick={closeModalOnClick} />
               </TitleRow>

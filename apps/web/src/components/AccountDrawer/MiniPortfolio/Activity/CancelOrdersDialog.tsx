@@ -10,11 +10,11 @@ import Row from 'components/Row'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { nativeOnChain } from 'constants/tokens'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
-import { Plural, Trans, t } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { Slash } from 'react-feather'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { Plural, Trans, t } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -47,17 +47,12 @@ function useCancelOrdersDialogContent(
   switch (state) {
     case CancellationState.REVIEWING_CANCELLATION:
       return {
-        title: (
-          <Plural
-            value={orders.length}
-            one={
-              orders.length && orders[0].type === SignatureType.SIGN_LIMIT
-                ? t('common.limit.cancel')
-                : t('common.cancelOrder')
-            }
-            other={t(`common.limit.cancel.amount`, { count: orders.length })}
-          />
-        ),
+        title:
+          orders.length === 1 && orders[0].type === SignatureType.SIGN_LIMIT ? (
+            <Trans i18nKey="common.limit.cancel" count={orders.length} />
+          ) : (
+            <Trans i18nKey="common.cancelOrder" />
+          ),
         icon: <Slash />,
       }
     case CancellationState.PENDING_SIGNATURE:

@@ -1,9 +1,7 @@
 import type { Middleware, PreloadedState, Reducer, StoreEnhancer } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
-import { TypedUseSelectorHook, useSelector } from 'react-redux'
 import { PersistState } from 'redux-persist'
 import createSagaMiddleware, { Saga } from 'redux-saga'
-import { SagaGenerator, select } from 'typed-redux-saga'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 import { sharedRootReducer } from 'wallet/src/state/reducer'
 import { rootSaga } from 'wallet/src/state/saga'
@@ -76,12 +74,3 @@ export function createStore({
 export type RootState = ReturnType<typeof sharedRootReducer> & {
   saga: Record<string, SagaState>
 } & { _persist?: PersistState }
-export type AppSelector<T> = (state: RootState) => T
-
-export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector
-
-// Use in sagas for better typing when selecting from redux state
-export function* appSelect<T>(fn: (state: RootState) => T): SagaGenerator<T> {
-  const state = yield* select(fn)
-  return state
-}

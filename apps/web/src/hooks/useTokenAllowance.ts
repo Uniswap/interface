@@ -3,7 +3,8 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import { CurrencyAmount, MaxUint256, Token } from '@uniswap/sdk-core'
 import { useTokenContract } from 'hooks/useContract'
 import { useSingleCallResult } from 'lib/hooks/multicall'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ApproveTransactionInfo, TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -21,7 +22,8 @@ export function useTokenAllowance(
   tokenAllowance?: CurrencyAmount<Token>
   isSyncing: boolean
 } {
-  const contract = useTokenContract(token?.address, false)
+  const { chainId } = useSwapAndLimitContext()
+  const contract = useTokenContract(token?.address, false, chainId)
   const inputs = useMemo(() => [owner, spender], [owner, spender])
 
   // If there is no allowance yet, re-check next observed block.
@@ -46,13 +48,17 @@ export function useUpdateTokenAllowance(
   amount: CurrencyAmount<Token> | undefined,
   spender: string,
 ): () => Promise<{ response: ContractTransaction; info: ApproveTransactionInfo }> {
-  const contract = useTokenContract(amount?.currency.address)
   const analyticsTrace = useTrace()
+
+  const contract = useTokenContract(amount?.currency.address, true, amount?.currency.chainId)
+  const contractRef = useRef(contract)
+  contractRef.current = contract
 
   return useCallback(
     () =>
       trace({ name: 'Allowance', op: 'permit.allowance' }, async (trace) => {
         try {
+          const contract = contractRef.current
           if (!amount) {
             throw new Error('missing amount')
           }
@@ -65,7 +71,11 @@ export function useUpdateTokenAllowance(
 
           const allowance = amount.equalTo(0) ? '0' : MAX_ALLOWANCE
           const response = await trace.child({ name: 'Approve', op: 'wallet.approve' }, async (walletTrace) => {
+            const contract = contractRef.current
             try {
+              if (!contract) {
+                throw new Error('missing contract')
+              }
               return await contract.approve(spender, allowance)
             } catch (error) {
               if (didUserReject(error)) {
@@ -102,7 +112,7 @@ export function useUpdateTokenAllowance(
           }
         }
       }),
-    [amount, contract, spender, analyticsTrace],
+    [amount, spender, analyticsTrace],
   )
 }
 
