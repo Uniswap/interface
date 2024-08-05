@@ -192,7 +192,7 @@ export const PORTAL_ETH_CELO = new Token(
   'Portal Ether'
 )
 
-export const USDT_CELO = new Token(ChainId.CELO, '0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e', 18, 'USDT', 'Tether USD')
+export const USDT_CELO = new Token(ChainId.CELO, '0x48065fbBE25f71C9282ddf5e1cD6D6A887483D5e', 6, 'USDT', 'Tether USD')
 
 export const WBTC_CELO = new Token(
   ChainId.CELO,
