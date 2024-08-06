@@ -75,7 +75,7 @@ export function UniversalImage({
     const errMsg = errored
       ? 'could not compute sizing information for uri'
       : 'Could not retrieve and format remote image for uri'
-    logger.warn('UniversalImage', 'UniversalImage', `${errMsg}: ${uri}`)
+    logger.warn('UniversalImage', 'UniversalImage', errMsg, { data: uri })
 
     // Return fallback or null
     return fallback ?? null

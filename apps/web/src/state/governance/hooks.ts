@@ -28,7 +28,6 @@ import { UNISWAP_GRANTS_PROPOSAL_DESCRIPTION } from 'constants/proposals/uniswap
 import { UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useContract } from 'hooks/useContract'
-import { t } from 'i18n'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useCallback, useMemo } from 'react'
 import { VoteOption } from 'state/governance/types'
@@ -36,19 +35,35 @@ import { useLogs } from 'state/logs/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import GOVERNOR_BRAVO_ABI from 'uniswap/src/abis/governor-bravo.json'
+import { t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 function useGovernanceV0Contract(): Contract | null {
-  return useContract(GOVERNANCE_ALPHA_V0_ADDRESSES, GovernorAlphaJSON.abi, false)
+  const account = useAccount()
+  return useContract(
+    account.chainId ? GOVERNANCE_ALPHA_V0_ADDRESSES[account.chainId] : undefined,
+    GovernorAlphaJSON.abi,
+    false,
+  )
 }
 
 function useGovernanceV1Contract(): Contract | null {
-  return useContract(GOVERNANCE_ALPHA_V1_ADDRESSES, GovernorAlphaJSON.abi, false)
+  const account = useAccount()
+  return useContract(
+    account.chainId ? GOVERNANCE_ALPHA_V1_ADDRESSES[account.chainId] : undefined,
+    GovernorAlphaJSON.abi,
+    false,
+  )
 }
 
 function useGovernanceBravoContract(): Contract | null {
-  return useContract(GOVERNANCE_BRAVO_ADDRESSES, GOVERNOR_BRAVO_ABI, true)
+  const account = useAccount()
+  return useContract(
+    account.chainId ? GOVERNANCE_BRAVO_ADDRESSES[account.chainId] : undefined,
+    GOVERNOR_BRAVO_ABI,
+    true,
+  )
 }
 
 const useLatestGovernanceContract = useGovernanceBravoContract

@@ -1,4 +1,3 @@
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getTestSelector } from '../utils'
 
 describe('Wallet Dropdown', () => {
@@ -74,7 +73,7 @@ describe('Wallet Dropdown', () => {
 
   describe('should change locale with feature flag', () => {
     beforeEach(() => {
-      cy.visit('/', { featureFlags: [{ flag: FeatureFlags.CurrencyConversion, value: true }] })
+      cy.visit('/')
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
     })
@@ -106,10 +105,10 @@ describe('Wallet Dropdown', () => {
       cy.get(getTestSelector('wallet-disconnect')).click()
       cy.get(getTestSelector('wallet-disconnect')).should('contain', 'Disconnect')
       cy.get(getTestSelector('wallet-disconnect')).click()
-      cy.get(getTestSelector('wallet-settings')).click()
     })
-    itChangesTheme()
-    itChangesLocale()
+    it('wallet settings should not be accessible', () => {
+      cy.get(getTestSelector('wallet-settings')).should('not.exist')
+    })
   })
 
   // TODO(WEB-3905): Fix tamagui error causing these tests to fail.
@@ -169,19 +168,19 @@ describe('Wallet Dropdown', () => {
 
   describe('local currency', () => {
     it('loads local currency from the query param', () => {
-      cy.visit('/', { featureFlags: [{ flag: FeatureFlags.CurrencyConversion, value: true }] })
+      cy.visit('/')
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.contains('USD')
 
-      cy.visit('/?cur=AUD', { featureFlags: [{ flag: FeatureFlags.CurrencyConversion, value: true }] })
+      cy.visit('/?cur=AUD')
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.contains('AUD')
     })
 
     it('loads local currency from menu', () => {
-      cy.visit('/', { featureFlags: [{ flag: FeatureFlags.CurrencyConversion, value: true }] })
+      cy.visit('/')
       cy.get(getTestSelector('web3-status-connected')).click()
       cy.get(getTestSelector('wallet-settings')).click()
       cy.contains('USD')

@@ -13,7 +13,6 @@ import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { KeyAction, useKeyPress } from 'hooks/useKeyPress'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { useTranslation } from 'i18n/useTranslation'
 import styled, { css, useTheme } from 'lib/styled-components'
 import { organizeSearchResults } from 'lib/utils/searchBar'
 import { useCallback, useEffect, useRef, useState } from 'react'
@@ -24,6 +23,7 @@ import { Z_INDEX } from 'theme/zIndex'
 import { Input } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTranslation } from 'uniswap/src/i18n'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const NAV_SEARCH_MAX_WIDTH = '400px'
@@ -227,11 +227,11 @@ export const SearchBar = ({
     ...trace,
   }
 
-  const placeholderText = shouldDisableNFTRoutes ? t('common.searchTokens') : t('common.searchTokensNFT')
+  const placeholderText = shouldDisableNFTRoutes ? t('tokens.selector.search.placeholder') : t('common.searchTokensNFT')
 
   return (
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
-      <Anchor $fullScreen={fullScreen}>
+      <Anchor $fullScreen={fullScreen} data-cy="nav-search-container">
         <SearchContainer
           ref={searchRef}
           $isOpen={isOpen}
@@ -242,7 +242,7 @@ export const SearchBar = ({
         >
           {(!!isNavSearchInputVisible || isOpen) && (
             <SearchInput $isOpen={isOpen} $fullScreen={fullScreen}>
-              <SearchIcon>
+              <SearchIcon data-cy="nav-search-icon">
                 <Search width="20px" height="20px" color={theme.neutral2} />
               </SearchIcon>
               <Trace
@@ -253,7 +253,6 @@ export const SearchBar = ({
               >
                 <Input
                   ref={inputRef}
-                  data-cy="search-bar-input"
                   width="100%"
                   height="100%"
                   backgroundColor="$transparent"
@@ -289,7 +288,7 @@ export const SearchBar = ({
         </SearchContainer>
         {!isNavSearchInputVisible && (
           <NavIcon onClick={toggleOpen} label={placeholderText}>
-            <SearchIcon>
+            <SearchIcon data-cy="nav-search-icon">
               <Search width="20px" height="20px" color={theme.neutral2} />
             </SearchIcon>
           </NavIcon>

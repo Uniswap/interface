@@ -1,10 +1,10 @@
 import { TransactionRequest } from '@ethersproject/providers'
 import { TradeType } from '@uniswap/sdk-core'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { faker } from 'uniswap/src/test/shared'
 import { createFixture } from 'uniswap/src/test/utils'
 import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import {
   ApproveTransactionInfo,

@@ -1,5 +1,6 @@
 import { IconProps, useSporeColors } from 'ui/src'
-import { AlertTriangle, XOctagon } from 'ui/src/components/icons'
+import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { XOctagon } from 'ui/src/components/icons/XOctagon'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useTokenSafetyLevelColors } from 'uniswap/src/features/tokens/safetyHooks'
 

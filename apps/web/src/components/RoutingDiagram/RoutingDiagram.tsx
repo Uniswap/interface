@@ -8,11 +8,11 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Row, { AutoRow } from 'components/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { BIPS_BASE } from 'constants/misc'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { Box } from 'rebass'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { Trans } from 'uniswap/src/i18n'
 import { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
 
 const Wrapper = styled(Box)`

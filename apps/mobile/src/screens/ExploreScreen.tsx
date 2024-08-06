@@ -4,7 +4,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, KeyboardAvoidingView, TextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
 import { ExploreSections } from 'src/components/explore/ExploreSections'
 import { SearchEmptySection } from 'src/components/explore/search/SearchEmptySection'
@@ -23,7 +23,7 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useDebounce } from 'utilities/src/time/timing'
 
 export function ExploreScreen(): JSX.Element {
-  const modalInitialState = useAppSelector(selectModalState(ModalName.Explore)).initialState
+  const modalInitialState = useSelector(selectModalState(ModalName.Explore)).initialState
   const navigation = useExploreStackNavigation()
 
   const { isSheetReady } = useBottomSheetContext()

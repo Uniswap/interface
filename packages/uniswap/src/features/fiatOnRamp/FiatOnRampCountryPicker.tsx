@@ -36,7 +36,7 @@ export function FiatOnRampCountryPicker({
         py="$spacing2"
         onPress={onPress}
       >
-        <Flex row shrink alignItems="center" flex={0} gap="$spacing2">
+        <Flex row shrink alignItems="center" data-testid="FiatOnRampCountryPicker" flex={0} gap="$spacing2">
           <Flex borderRadius="$roundedFull" overflow="hidden">
             {isWeb ? (
               <img alt={countryCode} height={ICON_SIZE} src={countryFlagUrl} width={ICON_SIZE} />

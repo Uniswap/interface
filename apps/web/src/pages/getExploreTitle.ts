@@ -1,29 +1,46 @@
 import { ChainSlug, isChainUrlParam } from 'constants/chains'
-import { t } from 'i18n'
 import { ExploreTab } from 'pages/Explore'
 import { capitalize } from 'tsafe/capitalize'
+import { t } from 'uniswap/src/i18n'
+import { logger } from 'utilities/src/logger/logger'
 
 export const getExploreTitle = (path?: string) => {
   const parts = path?.split('/').filter((part) => part !== '')
   const tabsToFind: string[] = [ExploreTab.Pools, ExploreTab.Tokens, ExploreTab.Transactions]
   const tab = parts?.find((part) => tabsToFind.includes(part)) ?? ExploreTab.Tokens
 
-  const network: ChainSlug = parts?.find(isChainUrlParam) ?? 'ethereum'
+  const networkPart: ChainSlug = parts?.find(isChainUrlParam) ?? 'ethereum'
+  const network = capitalize(networkPart)
 
-  return t(`Explore top {{tab}} on {{network}} on Uniswap`, {
-    tab,
-    network: capitalize(network),
-  })
+  switch (tab) {
+    case ExploreTab.Pools:
+      return t(`web.explore.title.pools`, {
+        network,
+      })
+    case ExploreTab.Tokens:
+      return t(`web.explore.title.tokens`, {
+        network,
+      })
+    case ExploreTab.Transactions:
+      return t(`web.explore.title.transactions`, {
+        network,
+      })
+    default:
+      logger.error(`Unavailable explore title for tab ${tab}`, {
+        tags: {
+          file: 'getExploreTitle',
+          function: 'getExploreTitle',
+        },
+      })
+      return ''
+  }
 }
 
 export const getExploreDescription = (path?: string) => {
   const parts = path?.split('/').filter((part) => part !== '')
   const network: ChainSlug = parts?.find(isChainUrlParam) ?? 'ethereum'
 
-  return t(
-    `Discover and research tokens on {{network}}. Explore top pools. View real-time prices, trading volume, TVL, charts, and transaction data.`,
-    {
-      network: capitalize(network),
-    },
-  )
+  return t(`web.explore.description`, {
+    network: capitalize(network),
+  })
 }

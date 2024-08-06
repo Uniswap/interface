@@ -28,7 +28,6 @@ import { PoolState, usePool } from 'hooks/usePools'
 import { useTotalSupply } from 'hooks/useTotalSupply'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
-import { Trans, t } from 'i18n'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { useTheme } from 'lib/styled-components'
@@ -46,6 +45,7 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { BackArrowLink, ExternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans, t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -489,8 +489,8 @@ function V2PairMigration({
                       <Trans
                         i18nKey="migrate.symbolPrice"
                         values={{
-                          name: isNotUniswap ? 'SushiSwap' : 'V2',
-                          sym: invertPrice ? currency1.symbol : currency0.symbol,
+                          protocolName: isNotUniswap ? 'SushiSwap' : 'V2',
+                          tokenSymbol: invertPrice ? currency1.symbol : currency0.symbol,
                         }}
                       />{' '}
                       {invertPrice

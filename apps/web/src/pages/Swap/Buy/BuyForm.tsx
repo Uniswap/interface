@@ -16,7 +16,6 @@ import {
   useWidthAdjustedDisplayValue,
 } from 'pages/Swap/common/shared'
 import { useEffect } from 'react'
-import { Trans } from 'react-i18next'
 import { Text } from 'ui/src/components/text/Text'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
@@ -24,6 +23,7 @@ import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fia
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { FiatOnRampEventName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -111,6 +111,7 @@ function BuyFormInner({ disabled }: BuyFormProps) {
               placeholder="0"
               $width={inputAmount && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
               maxDecimals={6}
+              testId="buy-form-amount-input"
             />
             <NumericalInputMimic ref={hiddenObserver.ref}>{inputAmount}</NumericalInputMimic>
           </NumericalInputWrapper>

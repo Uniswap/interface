@@ -4,7 +4,6 @@ import { Flex, Loader, Text, TouchableArea, UniversalImage, useIsDarkMode } from
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
-import { concatStrings } from 'utilities/src/primitives/string'
 
 function LogoLoader(): JSX.Element {
   return <Loader.Box borderRadius="$roundedFull" height={iconSizes.icon40} width={iconSizes.icon40} />
@@ -32,13 +31,7 @@ export function FORQuoteItem({
 
   const paymentMethods =
     serviceProvider.paymentMethods.length > 3
-      ? concatStrings(
-          [
-            serviceProvider.paymentMethods.slice(0, 3).join(', ') + ',', // oxford comma
-            (t('fiatOnRamp.quote.type.other') as string).toLowerCase(),
-          ],
-          t('common.endAdornment'),
-        )
+      ? t('fiatOnRamp.quote.type.list', { optionsList: serviceProvider.paymentMethods.slice(3).join(', ') }) // oxford comma
       : serviceProvider.paymentMethods.join(', ')
 
   return (

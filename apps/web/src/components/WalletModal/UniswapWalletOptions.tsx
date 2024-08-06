@@ -1,18 +1,19 @@
-import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { DownloadWalletOption } from 'components/WalletModal/DownloadWalletOption'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import { useConnect } from 'hooks/useConnect'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { Text } from 'ui/src'
+import { Image, Text } from 'ui/src'
+import { UNISWAP_LOGO } from 'ui/src/assets'
 import { ScanQr } from 'ui/src/components/icons'
+import { iconSizes } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Trans } from 'uniswap/src/i18n'
 
 export const OptionContainer = styled(Row)`
   padding: 16px;
@@ -62,7 +63,7 @@ export function UniswapWalletOptions() {
             onClick={() => connect({ connector: uniswapExtensionConnector })}
             data-testid="connect-uniswap-extension"
           >
-            <AppIcon src={UNIWALLET_ICON} alt="uniswap-app-icon" />
+            <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
             <Row gap="xs">
               <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
                 <Trans i18nKey="common.extension" />

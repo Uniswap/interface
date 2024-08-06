@@ -1,13 +1,11 @@
-import { t } from 'i18n'
-import styled, { css } from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { t } from 'uniswap/src/i18n'
 
-const ContainerBase = css<{ $size: number }>`
+const Container = styled.div<{ $size: number; $isActive: boolean }>`
+  position: relative;
   width: ${({ $size }) => $size}px;
   height: ${({ $size }) => $size}px;
-  position: relative;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -18,15 +16,6 @@ const ContainerBase = css<{ $size: number }>`
   cursor: pointer;
   transition: all 250ms;
   z-index: 1;
-`
-const LegacyContainer = styled.div<{ $size: number; $isActive: boolean }>`
-  ${ContainerBase}
-  color: ${({ $isActive, theme }) => ($isActive ? theme.neutral1 : theme.neutral2)};
-  border-radius: 16px;
-  transform: translateY(-1px) translateX(4px);
-`
-const Container = styled.div<{ $size: number; $isActive: boolean }>`
-  ${ContainerBase}
   background-color: ${({ $isActive, theme }) => ($isActive ? theme.surface1Hovered : 'transparent')};
   color: ${({ theme }) => theme.neutral2};
   border-radius: 50%;
@@ -50,14 +39,9 @@ export const NavIcon = ({
   label = t('common.navigationButton'),
   onClick,
 }: NavIconProps) => {
-  const isNavRefresh = useFeatureFlag(FeatureFlags.NavRefresh)
-  return isNavRefresh ? (
+  return (
     <Container $size={size} $isActive={isActive} onClick={onClick} aria-label={label}>
       {children}
     </Container>
-  ) : (
-    <LegacyContainer $size={size} $isActive={isActive} onClick={onClick} aria-label={label}>
-      {children}
-    </LegacyContainer>
   )
 }

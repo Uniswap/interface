@@ -1,12 +1,11 @@
-import { t } from 'i18next'
 import styled, { useTheme } from 'lib/styled-components'
 import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
-import { Trans } from 'react-i18next'
 import { ExternalLink } from 'theme/components'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
+import { Trans, t } from 'uniswap/src/i18n'
 
 const StyledLink = styled(ExternalLink)`
   font-weight: 535;

@@ -18,6 +18,7 @@ import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatt
 function useTokenSectionsForSend({
   activeAccountAddress,
   chainFilter,
+  valueModifiers,
   usePortfolioTokenOptionsHook,
 }: TokenSectionsForSend): GqlResult<TokenSection[]> {
   const { t } = useTranslation()
@@ -27,7 +28,7 @@ function useTokenSectionsForSend({
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
     loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptionsHook(activeAccountAddress, chainFilter)
+  } = usePortfolioTokenOptionsHook(activeAccountAddress, chainFilter, valueModifiers)
 
   const loading = portfolioTokenOptionsLoading
   const error = !portfolioTokenOptions && portfolioTokenOptionsError
@@ -75,10 +76,12 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }):
 }
 
 function _TokenSelectorSendList({
-  onDismiss,
-  onSelectCurrency,
   activeAccountAddress,
   chainFilter,
+  searchHistory,
+  valueModifiers,
+  onDismiss,
+  onSelectCurrency,
   onEmptyActionPress,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
@@ -103,6 +106,8 @@ function _TokenSelectorSendList({
   } = useTokenSectionsForSend({
     activeAccountAddress,
     chainFilter,
+    searchHistory,
+    valueModifiers,
     usePortfolioTokenOptionsHook,
   })
   const emptyElement = useMemo(() => <EmptyList onEmptyActionPress={onEmptyActionPress} />, [onEmptyActionPress])

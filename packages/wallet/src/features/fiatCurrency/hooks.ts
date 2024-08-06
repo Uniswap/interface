@@ -1,15 +1,14 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 // eslint-disable-next-line no-restricted-imports
 import { FiatCurrencyComponents, getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
-import { useAppSelector } from 'wallet/src/state'
+import { RootState } from 'wallet/src/state'
 
 /**
  * Helper function for getting the ISO currency code from our internal enum
@@ -113,9 +112,8 @@ export function useFiatCurrencyInfo(currency: FiatCurrency): FiatCurrencyInfo {
  * @returns currently selected fiat currency
  */
 export function useAppFiatCurrency(): FiatCurrency {
-  const featureEnabled = useFeatureFlag(FeatureFlags.CurrencyConversion)
-  const { currentCurrency } = useAppSelector((state) => state.fiatCurrencySettings)
-  return featureEnabled ? currentCurrency : FiatCurrency.UnitedStatesDollar
+  const { currentCurrency } = useSelector((state: RootState) => state.fiatCurrencySettings)
+  return currentCurrency
 }
 
 /**

@@ -12,7 +12,6 @@ import {
 } from 'components/AccountDrawer/MiniPortfolio/constants'
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
-import { t } from 'i18n'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import { isConfirmedTx, useMultichainTransactions } from 'state/transactions/hooks'
@@ -32,6 +31,7 @@ import {
   WrapTransactionInfo,
 } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { t } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -45,7 +45,7 @@ function buildCurrencyDescriptor(
   currencyB: Currency | undefined,
   amtB: string,
   formatNumber: FormatNumberFunctionType,
-  delimiter = t('for'),
+  isSwap = false,
 ) {
   const formattedA = currencyA
     ? formatNumber({
@@ -53,15 +53,27 @@ function buildCurrencyDescriptor(
         type: NumberType.TokenNonTx,
       })
     : t('common.unknown')
-  const symbolA = currencyA?.symbol ?? ''
+  const symbolA = currencyA?.symbol ? ` ${currencyA?.symbol}` : ''
   const formattedB = currencyB
     ? formatNumber({
         input: parseFloat(CurrencyAmount.fromRawAmount(currencyB, amtB).toSignificant()),
         type: NumberType.TokenNonTx,
       })
     : t('common.unknown')
-  const symbolB = currencyB?.symbol ?? ''
-  return [formattedA, symbolA, delimiter, formattedB, symbolB].filter(Boolean).join(' ')
+  const symbolB = currencyB?.symbol ? ` ${currencyB?.symbol}` : ''
+
+  const amountWithSymbolA = `${formattedA}${symbolA}`
+  const amountWithSymbolB = `${formattedB}${symbolB}`
+
+  return isSwap
+    ? t('activity.transaction.swap.descriptor', {
+        amountWithSymbolA,
+        amountWithSymbolB,
+      })
+    : t('activity.transaction.tokens.descriptor', {
+        amountWithSymbolA,
+        amountWithSymbolB,
+      })
 }
 
 async function parseSwap(
@@ -79,7 +91,7 @@ async function parseSwap(
       : [swap.expectedInputCurrencyAmountRaw, swap.outputCurrencyAmountRaw]
 
   return {
-    descriptor: buildCurrencyDescriptor(tokenIn, inputRaw, tokenOut, outputRaw, formatNumber, undefined),
+    descriptor: buildCurrencyDescriptor(tokenIn, inputRaw, tokenOut, outputRaw, formatNumber, true),
     currencies: [tokenIn, tokenOut],
     prefixIconSrc: swap.isUniswapXOrder ? UniswapXBolt : undefined,
   }
@@ -101,6 +113,7 @@ function parseWrap(
     output,
     wrap.currencyAmountRaw,
     formatNumber,
+    true,
   )
   const title = getActivityTitle(TransactionType.WRAP, status, wrap.unwrapped)
   const currencies = wrap.unwrapped ? [wrapped, native] : [native, wrapped]
@@ -140,14 +153,7 @@ async function parseLP(
     getCurrency(lp.quoteCurrencyId, chainId),
   ])
   const [baseRaw, quoteRaw] = [lp.expectedAmountBaseRaw, lp.expectedAmountQuoteRaw]
-  const descriptor = buildCurrencyDescriptor(
-    baseCurrency,
-    baseRaw,
-    quoteCurrency,
-    quoteRaw,
-    formatNumber,
-    t('common.endAdornment'),
-  )
+  const descriptor = buildCurrencyDescriptor(baseCurrency, baseRaw, quoteCurrency, quoteRaw, formatNumber)
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
@@ -181,7 +187,10 @@ async function parseMigrateCreateV3(
   ])
   const baseSymbol = baseCurrency?.symbol ?? t('common.unknown')
   const quoteSymbol = quoteCurrency?.symbol ?? t('common.unknown')
-  const descriptor = t(`{{baseSymbol}} and {{quoteSymbol}}`, { baseSymbol, quoteSymbol })
+  const descriptor = t('activity.transaction.tokens.descriptor', {
+    amountWithSymbolA: baseSymbol,
+    amountWithSymbolB: quoteSymbol,
+  })
 
   return { descriptor, currencies: [baseCurrency, quoteCurrency] }
 }
@@ -199,10 +208,14 @@ async function parseSend(
         type: NumberType.TokenNonTx,
       })
     : t('common.unknown')
+  const otherAccount = isAddress(recipient) || undefined
 
   return {
-    descriptor: `${formattedAmount} ${currency?.symbol} ${t('common.to')} `,
-    otherAccount: isAddress(recipient) || undefined,
+    descriptor: t('activity.transaction.send.descriptor', {
+      amountWithSymbol: `${formattedAmount} ${currency?.symbol}`,
+      walletAddress: recipient,
+    }),
+    otherAccount,
     currencies: [currency],
   }
 }

@@ -22,7 +22,6 @@ import { SwapModalHeaderAmount } from 'components/swap/SwapModalHeaderAmount'
 import { Field } from 'components/swap/constants'
 import { useCurrency } from 'hooks/Tokens'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { Trans } from 'i18n'
 import { atom } from 'jotai'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
@@ -34,6 +33,7 @@ import { Divider, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -266,7 +266,7 @@ export function OrderContent({
       {Boolean(order.status === UniswapXOrderStatus.OPEN && order.encodedOrder) && (
         <OffchainModalBottomButton emphasis={ButtonEmphasis.medium} onClick={onCancel} size={ButtonSize.medium}>
           {order.type === SignatureType.SIGN_LIMIT ? (
-            <Trans i18nKey="common.limit.cancel" />
+            <Trans i18nKey="common.limit.cancel" count={1} />
           ) : (
             <Trans i18nKey="common.cancelOrder" />
           )}

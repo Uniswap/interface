@@ -2,7 +2,7 @@ import { render as RNRender, RenderOptions, RenderResult } from '@testing-librar
 import { PropsWithChildren } from 'react'
 import { TamaguiProvider } from 'ui/src'
 import { config as tamaguiConfig } from 'ui/src/tamagui.config'
-import 'uniswap/src/i18n/i18n'
+import 'uniswap/src/i18n'
 
 /**
  *

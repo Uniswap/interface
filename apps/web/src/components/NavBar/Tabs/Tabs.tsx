@@ -140,8 +140,8 @@ const Tab = ({
 
   return (
     <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip onOpenChange={setIsOpen}>
-      <Popover.Trigger>{Label}</Popover.Trigger>
-      <NavDropdown isOpen={isOpen}>
+      <Popover.Trigger data-testid={`${label}-tab`}>{Label}</Popover.Trigger>
+      <NavDropdown isOpen={isOpen} dataTestId={`${label}-menu`}>
         <NavDropdownTabWrapper>
           {items.map((item, index) => (
             <Item

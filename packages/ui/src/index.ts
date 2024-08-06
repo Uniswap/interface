@@ -22,6 +22,7 @@ export {
   isWeb,
   styled,
   useComposedRefs,
+  useIsTouchDevice,
   useMedia,
   usePropsAndStyle,
   useWindowDimensions,
@@ -58,6 +59,7 @@ export { MenuContent } from './components/menu/MenuContent'
 export type { MenuContentItem } from './components/menu/types'
 export { AdaptiveWebModalSheet } from './components/modal/AdaptiveWebModalSheet'
 export * from './components/text'
+export { ToastSimple } from './components/toast/ToastSimple'
 export { Tooltip } from './components/tooltip/Tooltip'
 export * from './components/touchable'
 export { useDeviceInsets } from './hooks/useDeviceInsets'

@@ -1,0 +1,108 @@
+{
+  "supportedTokens": [
+    {
+      "cryptoCurrencyCode": "ETH",
+      "displayName": "Ethereum",
+      "address": null,
+      "cryptoCurrencyChain": "Ethereum",
+      "chainId": "1",
+      "symbol": "https://images-currency.meld.io/crypto/ETH/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "USDC",
+      "displayName": "USD Coin",
+      "address": "0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48",
+      "cryptoCurrencyChain": "Ethereum",
+      "chainId": "1",
+      "symbol": "https://images-currency.meld.io/crypto/USDC/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "USDT",
+      "displayName": "Tether",
+      "address": "0xdac17f958d2ee523a2206206994597c13d831ec7",
+      "cryptoCurrencyChain": "Ethereum",
+      "chainId": "1",
+      "symbol": "https://images-currency.meld.io/crypto/USDT/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "DAI",
+      "displayName": "Dai",
+      "address": "0x6b175474e89094c44da98b954eedeac495271d0f",
+      "cryptoCurrencyChain": "Ethereum",
+      "chainId": "1",
+      "symbol": "https://images-currency.meld.io/crypto/DAI/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "WBTC",
+      "displayName": "Wrapped Bitcoin",
+      "address": "0x2260fac5e5542a773aa44fbcfedf7c193bc2c599",
+      "cryptoCurrencyChain": "Ethereum",
+      "chainId": "1",
+      "symbol": "https://images-currency.meld.io/crypto/WBTC/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "WETH",
+      "displayName": "Wrapped Ether (ERC-20)",
+      "address": "0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2",
+      "cryptoCurrencyChain": "ethereum",
+      "chainId": "1",
+      "symbol": ""
+    },
+    {
+      "cryptoCurrencyCode": "ETH_BASE",
+      "displayName": "Ethereum",
+      "address": null,
+      "cryptoCurrencyChain": "Base",
+      "chainId": "8453",
+      "symbol": "https://images-currency.meld.io/crypto/ETH_BASE/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "USDC_BASE",
+      "displayName": "USD Coin",
+      "address": "0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913",
+      "cryptoCurrencyChain": "Base",
+      "chainId": "8453",
+      "symbol": "https://images-currency.meld.io/crypto/USDC_BASE/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "ETH_OPTIMISM",
+      "displayName": "Ethereum",
+      "address": null,
+      "cryptoCurrencyChain": "Optimism",
+      "chainId": "10",
+      "symbol": "https://images-currency.meld.io/crypto/ETH_OPTIMISM/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "USDC_OPTIMISM",
+      "displayName": "USD Coin",
+      "address": "0x7f5c764cbc14f9669b88837ca1490cca17c31607",
+      "cryptoCurrencyChain": "Optimism",
+      "chainId": "10",
+      "symbol": "https://images-currency.meld.io/crypto/USDC_OPTIMISM/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "ETH_ARBITRUM",
+      "displayName": "Ethereum",
+      "address": null,
+      "cryptoCurrencyChain": "Arbitrum",
+      "chainId": "42161",
+      "symbol": "https://images-currency.meld.io/crypto/ETH_ARBITRUM/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "USDC_ARBITRUM",
+      "displayName": "USD Coin",
+      "address": "0xaf88d065e77c8cc2239327c5edb3a432268e5831",
+      "cryptoCurrencyChain": "Arbitrum",
+      "chainId": "42161",
+      "symbol": "https://images-currency.meld.io/crypto/USDC_ARBITRUM/symbol.png"
+    },
+    {
+      "cryptoCurrencyCode": "MATIC",
+      "displayName": "Matic",
+      "address": null,
+      "cryptoCurrencyChain": "Polygon",
+      "chainId": "137",
+      "symbol": "https://images-currency.meld.io/crypto/MATIC/symbol.png"
+    }
+  ]
+}

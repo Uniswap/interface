@@ -33,6 +33,7 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
 }
 
 .c4 {
+  position: relative;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -52,10 +53,6 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
   transition-timing-function: ease-in-out;
   -webkit-transition-property: opacity,color,background-color;
   transition-property: opacity,color,background-color;
-}
-
-.c6:hover {
-  opacity: 0.6;
 }
 
 .c6:focus {
@@ -144,6 +141,12 @@ exports[`SwapHeader.tsx matches base snapshot 1`] = `
 
 .c5 {
   gap: 16px;
+}
+
+@media (hover:hover) and (pointer:fine) {
+  .c6:hover {
+    opacity: 0.6;
+  }
 }
 
 <span

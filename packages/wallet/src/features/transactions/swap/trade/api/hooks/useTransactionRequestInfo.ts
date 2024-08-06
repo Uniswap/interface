@@ -3,18 +3,18 @@ import { providers } from 'ethers'
 import { useEffect, useMemo, useRef } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
-import { DynamicConfigs, PollingIntervalsConfigKey } from 'uniswap/src/features/gating/configs'
+import {
+  CreateSwapRequest,
+  CreateSwapResponse,
+  TransactionFailureReason,
+} from 'uniswap/src/data/tradingApi/__generated__/index'
+import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import {
-  CreateSwapRequest,
-  CreateSwapResponse,
-  TransactionFailureReason,
-} from 'wallet/src/data/tradingApi/__generated__/index'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult, GasSpeed } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -116,8 +116,8 @@ export function useTransactionRequestInfo({
 
   // We will remove this cast in follow up change to dynamic config typing
   const tradingApiSwapRequestMs = useDynamicConfigValue(
-    DynamicConfigs.PollingIntervals,
-    PollingIntervalsConfigKey.TradingApiSwapRequestMs,
+    DynamicConfigs.Swap,
+    SwapConfigKey.TradingApiSwapRequestMs,
     FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS,
   )
 
@@ -173,11 +173,8 @@ export function useTransactionRequestInfo({
     }
 
     if (gasEstimateError) {
-      logger.error(gasEstimateError, {
-        tags: { file: 'useTransactionRequestInfo', function: 'useTransactionRequestInfo' },
-        extra: {
-          swapRequestArgs,
-        },
+      logger.warn('useTransactionRequestInfo', 'useTransactionRequestInfo', UNKNOWN_SIM_ERROR, {
+        ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
       })
 
       sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {

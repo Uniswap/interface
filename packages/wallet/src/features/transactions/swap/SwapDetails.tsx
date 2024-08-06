@@ -9,14 +9,15 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { logger } from 'utilities/src/logger/logger'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { FeeOnTransferFeeGroupProps } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
+import { UniswapXGasBreakdown } from 'wallet/src/features/transactions/swap/trade/api/hooks/useSwapTxAndGasInfo'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
@@ -50,6 +51,7 @@ interface SwapDetailsProps {
   derivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
   gasFallbackUsed?: boolean
   gasFee: GasFeeResult
+  uniswapXGasBreakdown?: UniswapXGasBreakdown
   newTradeRequiresAcceptance: boolean
   outputCurrencyPricePerUnitExact?: string
   warning?: Warning
@@ -64,6 +66,7 @@ export function SwapDetails({
   customSlippageTolerance,
   derivedSwapInfo,
   gasFee,
+  uniswapXGasBreakdown,
   newTradeRequiresAcceptance,
   outputCurrencyPricePerUnitExact,
   warning,
@@ -88,7 +91,11 @@ export function SwapDetails({
   }
 
   const swapFeeUsd = getFeeAmountUsd(trade, outputCurrencyPricePerUnitExact)
-  const swapFeeFiatFormatted = convertFiatAmountFormatted(swapFeeUsd, NumberType.FiatGasPrice)
+  if (swapFeeUsd && isNaN(swapFeeUsd)) {
+    logger.warn('SwapDetails', '', `swapFeeUsd is NaN`, { trade, outputCurrencyPricePerUnitExact })
+  }
+  const formattedAmountFiat =
+    swapFeeUsd && !isNaN(swapFeeUsd) ? convertFiatAmountFormatted(swapFeeUsd, NumberType.FiatGasPrice) : undefined
 
   const swapFeeInfo = trade.swapFee
     ? {
@@ -97,7 +104,7 @@ export function SwapDetails({
         formattedAmount:
           getFormattedCurrencyAmount(trade.outputAmount.currency, trade.swapFee.amount, formatter) +
           getSymbolDisplayText(trade.outputAmount.currency.symbol),
-        formattedAmountFiat: swapFeeUsd ? swapFeeFiatFormatted : undefined,
+        formattedAmountFiat,
       }
     : undefined
 
@@ -123,8 +130,6 @@ export function SwapDetails({
     ],
   )
 
-  const preUniswapXGasFeeUSD = isUniswapX(trade) ? trade.quote.quote.classicGasUseEstimateUSD : undefined
-
   return (
     <TransactionDetails
       isSwap
@@ -140,11 +145,11 @@ export function SwapDetails({
       chainId={acceptedTrade.inputAmount.currency.chainId}
       feeOnTransferProps={feeOnTransferProps}
       gasFee={gasFee}
-      preUniswapXGasFeeUSD={preUniswapXGasFeeUSD}
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
       swapFeeInfo={swapFeeInfo}
       transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
+      uniswapXGasBreakdown={uniswapXGasBreakdown}
       warning={warning}
       onShowWarning={onShowWarning}
     >

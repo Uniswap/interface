@@ -2,11 +2,11 @@ import { Currency, Percent, Price } from '@uniswap/sdk-core'
 import { AutoColumn } from 'components/Column'
 import { AutoRow } from 'components/Row'
 import { ONE_BIPS } from 'constants/misc'
-import { Trans } from 'i18n'
 import { useTheme } from 'lib/styled-components'
 import { Text } from 'rebass'
 import { Field } from 'state/mint/actions'
 import { ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 export function PoolPriceBar({
   currencies,

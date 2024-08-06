@@ -14,9 +14,12 @@ import {
   getCustomGraphqlHttpLink,
   getErrorLink,
   getGraphqlHttpLink,
+  getOnRampAuthLink,
   getPerformanceLink,
   getRestLink,
 } from 'wallet/src/data/links'
+import { useWalletSigners } from 'wallet/src/features/wallet/context'
+import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 type ApolloClientRef = {
   current: ApolloClient<NormalizedCacheObject> | null
@@ -74,6 +77,8 @@ export const usePersistedApolloClient = ({
   customEndpoint?: CustomEndpoint
 }): ApolloClient<NormalizedCacheObject> | undefined => {
   const [client, setClient] = useState<ApolloClient<NormalizedCacheObject>>()
+  const signerManager = useWalletSigners()
+  const accounts = useAccounts()
 
   const apolloLink = customEndpoint ? getCustomGraphqlHttpLink(customEndpoint) : getGraphqlHttpLink()
 
@@ -97,6 +102,7 @@ export const usePersistedApolloClient = ({
         // requires typing outside of wallet package
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         getPerformanceLink((args: any) => sendAnalyticsEvent(WalletEventName.PerformanceGraphql, args)),
+        getOnRampAuthLink(accounts, signerManager),
         restLink,
         apolloLink,
       ]),

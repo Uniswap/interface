@@ -7,6 +7,7 @@ import { useCurrencyInfo } from 'hooks/Tokens'
 import { mocked } from 'test-utils/mocked'
 import { act, render, screen, waitForElementToBeRemoved, within } from 'test-utils/render'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { getExplorerLink } from 'utils/getExplorerLink'
 
 const unsupportedTokenAddress = '0x4e83b6287588a96321B2661c5E041845fF7814af'
@@ -35,7 +36,7 @@ describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {
 
   it('works as expected when one unsupported token exists', async () => {
     const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
-    await act(() => userEvent.click(screen.getByTestId('read-more-button')))
+    await act(() => userEvent.click(screen.getByTestId(TestID.ReadMoreButton)))
     expect(screen.getByText('Unsupported assets')).toBeInTheDocument()
     expect(
       screen.getByText((content) => content.startsWith('Some assets are not available through this interface')),
@@ -66,7 +67,7 @@ describe('UnsupportedCurrencyFooter.tsx with no unsupported tokens', () => {
       currency: unsupportedToken,
     })
     const rendered = render(<UnsupportedCurrencyFooter show={true} currencies={[unsupportedToken]} />)
-    await act(() => userEvent.click(screen.getByTestId('read-more-button')))
+    await act(() => userEvent.click(screen.getByTestId(TestID.ReadMoreButton)))
     expect(screen.getByText('Unsupported assets')).toBeInTheDocument()
     expect(
       screen.getByText((content) => content.startsWith('Some assets are not available through this interface')),

@@ -7,8 +7,6 @@
     "lint": "eslint . --ext ts,tsx --max-warnings=0",
     "lint:fix": "eslint . --ext ts,tsx --fix",
     "test": "jest",
-    "tradingapi:schema": "curl https://api.uniswap.org/v2/trade/api.json -o ./src/data/tradingApi/api.json",
-    "tradingapi:generate": "openapi --input ./src/data/tradingApi/api.json --output ./src/data/tradingApi/__generated__ --client axios --useOptions --exportServices true --exportModels true",
     "snapshots": "jest -u",
     "typecheck": "tsc -b"
   },
@@ -90,7 +88,6 @@
     "jest": "29.7.0",
     "jest-extended": "4.0.1",
     "jest-presets": "workspace:^",
-    "openapi-typescript-codegen": "0.27.0",
     "react-native-apollo-devtools-client": "1.0.4",
     "react-native-mmkv-flipper-plugin": "1.0.0",
     "react-test-renderer": "18.2.0",

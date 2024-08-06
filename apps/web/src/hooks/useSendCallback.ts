@@ -5,7 +5,7 @@ import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'
 import { useSwitchChain } from 'hooks/useSwitchChain'
 import { GasFeeResult } from 'hooks/useTransactionGasFee'
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { SendTransactionInfo, TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
@@ -25,7 +25,12 @@ export function useSendCallback({
   gasFee?: GasFeeResult
 }) {
   const account = useAccount()
+  const accountRef = useRef(account)
+  accountRef.current = account
   const provider = useEthersProvider({ chainId: account.chainId })
+  const providerRef = useRef(provider)
+  providerRef.current = provider
+
   const addTransaction = useTransactionAdder()
   const switchChain = useSwitchChain()
   const supportedTransactionChainId = useSupportedChainId(transactionRequest?.chainId)
@@ -33,12 +38,6 @@ export function useSendCallback({
   return useCallback(
     () =>
       trace({ name: 'Send', op: 'send' }, async (trace) => {
-        if (account.status !== 'connected') {
-          throw new Error('wallet must be connected to send')
-        }
-        if (!provider) {
-          throw new Error('missing provider')
-        }
         if (!transactionRequest) {
           throw new Error('missing to transaction to execute')
         }
@@ -57,6 +56,14 @@ export function useSendCallback({
             { name: 'Send transaction', op: 'wallet.send_transaction' },
             async (walletTrace) => {
               try {
+                const account = accountRef.current
+                const provider = providerRef.current
+                if (account.status !== 'connected') {
+                  throw new Error('wallet must be connected to send')
+                }
+                if (!provider) {
+                  throw new Error('missing provider')
+                }
                 if (account.chainId !== supportedTransactionChainId) {
                   await switchChain(supportedTransactionChainId)
                 }
@@ -91,16 +98,13 @@ export function useSendCallback({
         }
       }),
     [
-      account.status,
-      account.chainId,
-      provider,
-      transactionRequest,
-      currencyAmount,
-      recipient,
       addTransaction,
+      currencyAmount,
       gasFee?.params,
+      recipient,
       supportedTransactionChainId,
       switchChain,
+      transactionRequest,
     ],
   )
 }

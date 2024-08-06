@@ -3,6 +3,7 @@ import { default as React, useCallback, useEffect, useMemo, useReducer, useState
 import { useTranslation } from 'react-i18next'
 import { Keyboard, LayoutAnimation, StyleSheet, TouchableWithoutFeedback } from 'react-native'
 import Animated, { useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import { useSelector } from 'react-redux'
 import { useShouldShowNativeKeyboard } from 'src/app/hooks'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import { Screen } from 'src/components/layout/Screen'
@@ -15,8 +16,16 @@ import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
 import { TokenSelectorModal, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
+import {
+  useCommonTokensOptions,
+  useFilterCallbacks,
+  usePopularTokensOptions,
+  usePortfolioTokenOptions,
+  useTokenSectionsForSearchResults,
+} from 'uniswap/src/components/TokenSelector/hooks'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
+import { TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
@@ -24,24 +33,22 @@ import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/ty
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import {
   useAddToSearchHistory,
-  useCommonTokensOptions,
   useFavoriteTokensOptions,
-  useFilterCallbacks,
-  usePopularTokensOptions,
-  usePortfolioTokenOptions,
   useTokenSectionsForEmptySearch,
-  useTokenSectionsForSearchResults,
 } from 'wallet/src/components/TokenSelector/hooks'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult, GasSpeed } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
 import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 import { WarningAction, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { useParsedSendWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenSelectorActionHandlers'
 import { useTransactionGasWarning } from 'wallet/src/features/transactions/hooks/useTransactionGasWarning'
+import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import {
   INITIAL_TRANSACTION_STATE,
   transactionStateReducer,
@@ -74,7 +81,10 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
   const { isSheetReady } = useBottomSheetContext()
   const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
+  const address = useActiveAccountAddressWithThrow()
+  const valueModifiers = usePortfolioValueModifiers(address)
   const { registerSearch } = useAddToSearchHistory()
+  const searchHistory = useSelector(selectSearchHistory)
 
   const [state, dispatch] = useReducer(transactionStateReducer, prefilledState || INITIAL_TRANSACTION_STATE)
   const derivedTransferInfo = useDerivedTransferInfo(state)
@@ -177,6 +187,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
           <Flex fill>
             <Animated.View style={[styles.screen, recipientScreenStyle]}>
               <RecipientSelect
+                chainId={derivedTransferInfo.chainId}
                 focusInput={showRecipientSelector}
                 recipient={recipient}
                 onHideRecipientSelector={onHideRecipientSelector}
@@ -238,6 +249,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
           flow={TokenSelectorFlow.Transfer}
           formatNumberOrStringCallback={formatNumberOrString}
           navigateToBuyOrReceiveWithEmptyWalletCallback={navigateToBuyOrReceiveWithEmptyWallet}
+          searchHistory={searchHistory as TokenSearchResult[]}
           useCommonTokensOptionsHook={useCommonTokensOptions}
           useFavoriteTokensOptionsHook={useFavoriteTokensOptions}
           useFilterCallbacksHook={useFilterCallbacks}
@@ -246,6 +258,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
           useTokenSectionsForEmptySearchHook={useTokenSectionsForEmptySearch}
           useTokenSectionsForSearchResultsHook={useTokenSectionsForSearchResults}
           useTokenWarningDismissedHook={useTokenWarningDismissed}
+          valueModifiers={valueModifiers}
           variation={TokenSelectorVariation.BalancesOnly}
           onClose={onHideTokenSelector}
           onDismiss={() => Keyboard.dismiss()}
@@ -290,6 +303,10 @@ function TransferInnerContent({
   const { showNativeKeyboard, onDecimalPadLayout, isLayoutPending, onInputPanelLayout } = useShouldShowNativeKeyboard()
 
   const { currencyAmounts, recipient, currencyInInfo, nftIn, chainId, txId } = derivedTransferInfo
+
+  // for transfer analytics
+  const currencyAmountUSD = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
+
   const transferERC20Callback = useTransferERC20Callback(
     txId,
     chainId,
@@ -298,6 +315,7 @@ function TransferInnerContent({
     currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
     txRequest,
     onReviewNext,
+    currencyAmountUSD,
   )
   const transferNFTCallback = useTransferNFTCallback(
     txId,

@@ -23,17 +23,20 @@ import PasteButton from 'uniswap/src/components/buttons/PasteButton'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
+import { PortfolioValueModifier } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
+import { TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
+import { isInterface } from 'utilities/src/platform'
 import { useDebounce } from 'utilities/src/time/timing'
 
 export enum TokenSelectorVariation {
@@ -51,11 +54,14 @@ export interface TokenSelectorProps {
   currencyField: CurrencyField
   flow: TokenSelectorFlow
   activeAccountAddress: string
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
+  valueModifiers?: PortfolioValueModifier[]
+  searchHistory?: TokenSearchResult[]
   isSurfaceReady?: boolean
   onClose: () => void
   onDismiss: () => void
   onPressAnimation: () => void
+  onSelectChain?: (chainId: UniverseChainId | null) => void
   onSelectCurrency: (currency: Currency, currencyField: CurrencyField, context: SearchContext) => void
   variation: TokenSelectorVariation
   addToSearchHistoryCallback: (currencyInfo: CurrencyInfo) => void
@@ -75,13 +81,16 @@ export interface TokenSelectorProps {
 function TokenSelectorContent({
   currencyField,
   flow,
+  searchHistory,
   onSelectCurrency,
   chainId,
+  valueModifiers,
   onClose,
   variation,
   isSurfaceReady = true,
   activeAccountAddress,
   onDismiss,
+  onSelectChain,
   onPressAnimation,
   addToSearchHistoryCallback,
   convertFiatAmountFormattedCallback,
@@ -108,6 +117,12 @@ function TokenSelectorContent({
       setHasClipboardString(result)
     }
 
+    // Browser doesn't have permissions to access clipboard by default
+    // so it will prompt the user to allow clipboard access which is
+    // quite jarring and unnecessary.
+    if (isInterface) {
+      return
+    }
     checkClipboard().catch(() => undefined)
   }, [])
 
@@ -175,6 +190,7 @@ function TokenSelectorContent({
     if (searchFilter) {
       return (
         <TokenSelectorSearchResultsList
+          activeAccountAddress={activeAccountAddress}
           addToSearchHistoryCallback={addToSearchHistoryCallback}
           chainFilter={chainFilter}
           convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
@@ -184,6 +200,7 @@ function TokenSelectorContent({
           searchFilter={searchFilter}
           useTokenSectionsForSearchResultsHook={useTokenSectionsForSearchResultsHook}
           useTokenWarningDismissedHook={useTokenWarningDismissedHook}
+          valueModifiers={valueModifiers}
           onDismiss={onDismiss}
           onSelectCurrency={onSelectCurrencyCallback}
         />
@@ -198,8 +215,10 @@ function TokenSelectorContent({
             chainFilter={chainFilter}
             convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
             formatNumberOrStringCallback={formatNumberOrStringCallback}
+            searchHistory={searchHistory}
             usePortfolioTokenOptionsHook={usePortfolioTokenOptionsHook}
             useTokenWarningDismissedHook={useTokenWarningDismissedHook}
+            valueModifiers={valueModifiers}
             onDismiss={onDismiss}
             onEmptyActionPress={onSendEmptyActionPress}
             onSelectCurrency={onSelectCurrencyCallback}
@@ -212,9 +231,12 @@ function TokenSelectorContent({
             chainFilter={chainFilter}
             convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
             formatNumberOrStringCallback={formatNumberOrStringCallback}
+            searchHistory={searchHistory}
+            useFavoriteTokensOptionsHook={useFavoriteTokensOptionsHook}
             usePopularTokensOptionsHook={usePopularTokensOptionsHook}
             usePortfolioTokenOptionsHook={usePortfolioTokenOptionsHook}
             useTokenWarningDismissedHook={useTokenWarningDismissedHook}
+            valueModifiers={valueModifiers}
             onDismiss={onDismiss}
             onSelectCurrency={onSelectCurrencyCallback}
           />
@@ -226,10 +248,13 @@ function TokenSelectorContent({
             chainFilter={chainFilter}
             convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
             formatNumberOrStringCallback={formatNumberOrStringCallback}
+            searchHistory={searchHistory}
             useCommonTokensOptionsHook={useCommonTokensOptionsHook}
             useFavoriteTokensOptionsHook={useFavoriteTokensOptionsHook}
             usePopularTokensOptionsHook={usePopularTokensOptionsHook}
+            usePortfolioTokenOptionsHook={usePortfolioTokenOptionsHook}
             useTokenWarningDismissedHook={useTokenWarningDismissedHook}
+            valueModifiers={valueModifiers}
             onDismiss={onDismiss}
             onSelectCurrency={onSelectCurrencyCallback}
           />
@@ -238,10 +263,12 @@ function TokenSelectorContent({
   }, [
     searchInFocus,
     searchFilter,
+    searchHistory,
     variation,
     activeAccountAddress,
     chainFilter,
     debouncedSearchFilter,
+    valueModifiers,
     onDismiss,
     addToSearchHistoryCallback,
     convertFiatAmountFormattedCallback,
@@ -259,11 +286,11 @@ function TokenSelectorContent({
 
   return (
     <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
-      <Flex grow gap={isWeb ? '$spacing4' : '$spacing16'} px="$spacing16">
+      <Flex grow gap="$spacing4" px="$spacing16">
         <Flex
           borderBottomColor={isWeb ? '$surface3' : undefined}
           borderBottomWidth={isWeb ? '$spacing1' : undefined}
-          py="$spacing8"
+          py="$spacing4"
         >
           <SearchTextInput
             autoFocus={isWeb}
@@ -291,7 +318,10 @@ function TokenSelectorContent({
                   selectedChain={chainFilter}
                   onDismiss={onDismiss}
                   onPressAnimation={onPressAnimation}
-                  onPressChain={onChangeChainFilter}
+                  onPressChain={(newChainId) => {
+                    onChangeChainFilter(newChainId)
+                    onSelectChain?.(newChainId)
+                  }}
                 />
               </Flex>
             )}

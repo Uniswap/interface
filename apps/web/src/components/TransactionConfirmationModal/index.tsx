@@ -12,7 +12,6 @@ import AnimatedConfirmation from 'components/TransactionConfirmationModal/Animat
 import { useIsSupportedChainId } from 'constants/chains'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode, useCallback, useState } from 'react'
 import { AlertCircle, ArrowUpCircle, CheckCircle } from 'react-feather'
@@ -21,6 +20,7 @@ import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/c
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
+import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -292,10 +292,13 @@ function L2Content({
               <div style={{ height: '24px' }} />
             ) : (
               <div>
-                <Trans i18nKey="transaction.completed.in" />
-                <span style={{ fontWeight: 535, marginLeft: '4px', color: theme.neutral1 }}>
-                  {secondsToConfirm} seconds 🎉
-                </span>
+                <Trans
+                  i18nKey="transaction.confirmation.completionTime"
+                  components={{
+                    highlight: <span style={{ fontWeight: 535, marginLeft: '4px', color: theme.neutral1 }} />,
+                  }}
+                  count={secondsToConfirm}
+                />
               </div>
             )}
           </ThemedText.SubHeaderSmall>

@@ -1,8 +1,8 @@
 import { useOpenLimitOrders } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { TabButton } from 'components/AccountDrawer/MiniPortfolio/shared'
-import { Plural, Trans, t } from 'i18n'
 import { useTheme } from 'lib/styled-components'
 import { Clock } from 'react-feather'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 
 function getExtraWarning(openLimitOrders: any[]) {
   if (openLimitOrders.length >= 100) {
@@ -25,6 +25,7 @@ export function OpenLimitOrdersButton({
   disabled?: boolean
   className?: string
 }) {
+  const { t } = useTranslation()
   const { openLimitOrders } = useOpenLimitOrders(account)
   const theme = useTheme()
   const extraWarning = getExtraWarning(openLimitOrders)
@@ -35,13 +36,7 @@ export function OpenLimitOrdersButton({
 
   return (
     <TabButton
-      text={
-        <Plural
-          value={openLimitOrders.length}
-          one={t('limit.open.one')}
-          other={t('limit.open.count', { count: openLimitOrders.length })}
-        />
-      }
+      text={t('limit.open.count', { count: openLimitOrders.length })}
       icon={<Clock fill={theme.neutral2} color={theme.surface2} size="20px" />}
       extraWarning={extraWarning}
       onClick={openLimitsMenu}

@@ -55,7 +55,7 @@ exports[`CopyTextButton renders without error 1`] = `
       {
         "color": "#222222",
         "fontFamily": "Basel-Medium",
-        "fontSize": 19,
+        "fontSize": 17,
         "fontWeight": "500",
         "lineHeight": 24,
       }

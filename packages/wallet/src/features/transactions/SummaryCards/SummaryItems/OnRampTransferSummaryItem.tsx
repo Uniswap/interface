@@ -1,4 +1,3 @@
-import React, { createElement } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
@@ -6,7 +5,8 @@ import { NumberType } from 'utilities/src/format/types'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
+import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
+import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 import {
   OnRampPurchaseInfo,
@@ -17,7 +17,6 @@ import {
 
 export function OnRampTransferSummaryItem({
   transaction,
-  layoutElement,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: OnRampPurchaseInfo | OnRampTransferInfo }
 }): JSX.Element {
@@ -47,18 +46,20 @@ export function OnRampTransferSummaryItem({
         })
       : cryptoPurchaseAmount
 
-  return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
-    caption,
-    icon: (
-      <LogoWithTxStatus
-        assetType={AssetType.Currency}
-        chainId={transaction.chainId}
-        currencyInfo={outputCurrencyInfo}
-        size={TXN_HISTORY_ICON_SIZE}
-        txStatus={transaction.status}
-        txType={transaction.typeInfo.type}
-      />
-    ),
-    transaction,
-  })
+  return (
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={
+        <LogoWithTxStatus
+          assetType={AssetType.Currency}
+          chainId={transaction.chainId}
+          currencyInfo={outputCurrencyInfo}
+          size={TXN_HISTORY_ICON_SIZE}
+          txStatus={transaction.status}
+          txType={transaction.typeInfo.type}
+        />
+      }
+      transaction={transaction}
+    />
+  )
 }

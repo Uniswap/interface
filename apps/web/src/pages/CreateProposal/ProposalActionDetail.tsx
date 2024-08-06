@@ -1,10 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
 import AddressInputPanel from 'components/AddressInputPanel'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
-import { Trans } from 'i18n'
+import { CurrencySearchFilters } from 'components/SearchModal/DeprecatedCurrencySearch'
 import styled from 'lib/styled-components'
 import { ProposalAction } from 'pages/CreateProposal/ProposalActionSelector'
+import { Trans } from 'uniswap/src/i18n'
 
 enum ProposalActionDetailField {
   ADDRESS,

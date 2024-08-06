@@ -1,6 +1,6 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { Trans } from 'i18n'
 import type { ReactNode } from 'react'
+import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId, WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 export const FEE_AMOUNT_DETAIL: Record<

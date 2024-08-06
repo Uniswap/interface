@@ -1,5 +1,4 @@
 import Row from 'components/Row'
-import { Trans, t } from 'i18n'
 import styled from 'lib/styled-components'
 import { Body1, Box, H2 } from 'pages/Landing/components/Generics'
 import { StatCard } from 'pages/Landing/components/StatCard'
@@ -11,6 +10,7 @@ import {
   ProtocolVersion,
   useDailyProtocolVolumeQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Trans, t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Container = styled.div`
@@ -145,7 +145,7 @@ function LearnMore() {
   return (
     <LearnMoreButton href="/explore">
       <Row gap="sm" align="center">
-        <Trans i18nKey="common.learnMore.link" />
+        <Trans i18nKey="common.button.learn" />
         <LearnMoreArrow />
       </Row>
     </LearnMoreButton>

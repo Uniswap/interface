@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { ClipboardPaste, StickyNoteSquare } from 'ui/src/components/icons'
+import { ClipboardPaste } from 'ui/src/components/icons/ClipboardPaste'
+import { StickyNoteSquare } from 'ui/src/components/icons/StickyNoteSquare'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
 
 export default function PasteButton({

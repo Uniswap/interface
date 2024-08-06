@@ -1,6 +1,5 @@
 import Row from 'components/Row'
 import PillMultiToggle from 'components/Toggle/PillMultiToggle'
-import { Trans } from 'i18n'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import styled, { useTheme } from 'lib/styled-components'
@@ -9,6 +8,7 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
 import { ThemedText } from 'theme/components/text'
 import { Moon as MoonFilled, Sun as SunFilled } from 'ui/src/components/icons'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { addMediaQueryListener, removeMediaQueryListener } from 'utils/matchMedia'
 
 const THEME_UPDATE_DELAY = ms(`0.1s`)
@@ -100,62 +100,9 @@ const ThemePillMultiToggleContainer = styled.div`
   width: fit;
 `
 
-const compactOptions = [
-  {
-    value: ThemeMode.AUTO,
-    display: (
-      <CompactOptionPill data-testid="theme-auto">
-        <Trans>Auto</Trans>
-      </CompactOptionPill>
-    ),
-  },
-  {
-    value: ThemeMode.LIGHT,
-    display: (
-      <CompactOptionPill data-testid="theme-light">
-        <SunFilled size="$icon.20" />
-      </CompactOptionPill>
-    ),
-  },
-  {
-    value: ThemeMode.DARK,
-    display: (
-      <CompactOptionPill data-testid="theme-dark">
-        <MoonFilled size="$icon.20" />
-      </CompactOptionPill>
-    ),
-  },
-]
-
-const defaultOptions = [
-  {
-    value: ThemeMode.AUTO,
-    display: (
-      <OptionPill data-testid="theme-auto">
-        <Trans>Auto</Trans>
-      </OptionPill>
-    ),
-  },
-  {
-    value: ThemeMode.LIGHT,
-    display: (
-      <OptionPill data-testid="theme-light">
-        <Sun size="20" />
-      </OptionPill>
-    ),
-  },
-  {
-    value: ThemeMode.DARK,
-    display: (
-      <OptionPill data-testid="theme-dark">
-        <Moon size="20" />
-      </OptionPill>
-    ),
-  },
-]
-
 export function ThemeSelector({ disabled, compact = false }: { disabled?: boolean; compact?: boolean }) {
   const theme = useTheme()
+  const { t } = useTranslation()
   const [mode, setMode] = useAtom(themeModeAtom)
   const switchMode = useCallback(
     (mode: string | number) => {
@@ -164,6 +111,54 @@ export function ThemeSelector({ disabled, compact = false }: { disabled?: boolea
     },
     [disabled, setMode],
   )
+
+  const compactOptions = [
+    {
+      value: ThemeMode.AUTO,
+      display: (
+        <CompactOptionPill data-testid="theme-auto">{t('settings.setting.appearance.option.auto')}</CompactOptionPill>
+      ),
+    },
+    {
+      value: ThemeMode.LIGHT,
+      display: (
+        <CompactOptionPill data-testid="theme-light">
+          <SunFilled size="$icon.20" />
+        </CompactOptionPill>
+      ),
+    },
+    {
+      value: ThemeMode.DARK,
+      display: (
+        <CompactOptionPill data-testid="theme-dark">
+          <MoonFilled size="$icon.20" />
+        </CompactOptionPill>
+      ),
+    },
+  ]
+
+  const defaultOptions = [
+    {
+      value: ThemeMode.AUTO,
+      display: <OptionPill data-testid="theme-auto">{t('settings.setting.appearance.option.auto')}</OptionPill>,
+    },
+    {
+      value: ThemeMode.LIGHT,
+      display: (
+        <OptionPill data-testid="theme-light">
+          <Sun size="20" />
+        </OptionPill>
+      ),
+    },
+    {
+      value: ThemeMode.DARK,
+      display: (
+        <OptionPill data-testid="theme-dark">
+          <Moon size="20" />
+        </OptionPill>
+      ),
+    },
+  ]
 
   return (
     <ThemePillMultiToggleContainer>

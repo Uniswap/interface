@@ -1,12 +1,12 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ExternalLink } from 'theme/components'
 import { Text } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { Trans } from 'uniswap/src/i18n'
 
 const Container = styled.div`
   height: 100%;
@@ -53,7 +53,7 @@ export function PoolWarning({ title, subtitle, link }: PoolWarningProps) {
           </Text>
           <ExternalLink href={link}>
             <Text variant="buttonLabel4" color="$neutral1">
-              <Trans i18nKey="common.learnMore.link" />
+              <Trans i18nKey="common.button.learn" />
             </Text>
           </ExternalLink>
         </StyledColumn>

@@ -148,6 +148,11 @@ describe(isGifUri, () => {
 })
 
 describe(formatDappURL, () => {
+  it('removes query params from url', () => {
+    expect(formatDappURL('example.com?test=true')).toEqual('example.com')
+    expect(formatDappURL('example.com?test=true&test2=false')).toEqual('example.com')
+  })
+
   it('removes prefix from url', () => {
     expect(formatDappURL('https://example.com')).toEqual('example.com')
     expect(formatDappURL('https://www.example.com')).toEqual('example.com')

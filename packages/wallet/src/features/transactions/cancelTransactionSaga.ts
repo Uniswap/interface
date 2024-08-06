@@ -1,7 +1,7 @@
 import { PERMIT2_ADDRESS } from '@uniswap/permit2-sdk'
 import { CosignedV2DutchOrder, getCancelSingleParams } from '@uniswap/uniswapx-sdk'
 import { Contract, providers } from 'ethers'
-import { call } from 'typed-redux-saga'
+import { call, select } from 'typed-redux-saga'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
 import { Permit2 } from 'uniswap/src/abis/types'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
@@ -13,7 +13,6 @@ import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import { TransactionDetails, UniswapXOrderDetails } from 'wallet/src/features/transactions/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
-import { appSelect } from 'wallet/src/state'
 
 // Note, transaction cancellation on Ethereum is inherently flaky
 // The best we can do is replace the transaction and hope the original isn't mined first
@@ -61,7 +60,7 @@ function* cancelOrder(order: UniswapXOrderDetails, cancelRequest: providers.Tran
   }
 
   try {
-    const accounts = yield* appSelect(selectAccounts)
+    const accounts = yield* select(selectAccounts)
     const checksummedAddress = getValidAddress(order.from, true, false)
     if (!checksummedAddress) {
       throw new Error(`Cannot cancel order, address is invalid: ${checksummedAddress}`)

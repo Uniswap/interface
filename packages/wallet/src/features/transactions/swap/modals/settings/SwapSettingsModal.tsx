@@ -158,7 +158,6 @@ function SwapSettingsOptions({
   const { chainId } = derivedSwapInfo
 
   const isMevBlockerFeatureEnabled = useFeatureFlag(FeatureFlags.MevBlocker)
-  const isOptionalRoutingEnabled = useFeatureFlag(FeatureFlags.OptionalRouting)
 
   const tradeProtocolPreferenceTitle = getTitleFromProtocolPreference(tradeProtocolPreference, t)
 
@@ -171,24 +170,22 @@ function SwapSettingsOptions({
       />
       <Separator backgroundColor="$surface3" />
       {isMevBlockerFeatureEnabled && <SwapProtectionSettingsRow chainId={chainId} />}
-      {isOptionalRoutingEnabled && (
-        <>
-          <Separator backgroundColor="$surface3" />
-          <Flex centered row gap="$spacing16" justifyContent="space-between">
-            <Text color="$neutral1" flexShrink={1} variant="subheading2">
-              {t('swap.settings.routingPreference.title')}
-            </Text>
-            <TouchableArea flexShrink={1} onPress={(): void => setView(SwapSettingsModalView.RoutePreference)}>
-              <Flex row alignItems="center" gap="$spacing4" justifyContent="flex-end">
-                <Text color="$neutral2" flexWrap="wrap" variant="subheading2">
-                  {tradeProtocolPreferenceTitle}
-                </Text>
-                <RotatableChevron color="$neutral3" direction="right" height={iconSizes.icon24} />
-              </Flex>
-            </TouchableArea>
-          </Flex>
-        </>
-      )}
+      <>
+        <Separator backgroundColor="$surface3" />
+        <Flex centered row gap="$spacing16" justifyContent="space-between">
+          <Text color="$neutral1" flexShrink={1} variant="subheading2">
+            {t('swap.settings.routingPreference.title')}
+          </Text>
+          <TouchableArea flexShrink={1} onPress={(): void => setView(SwapSettingsModalView.RoutePreference)}>
+            <Flex row alignItems="center" gap="$spacing4" justifyContent="flex-end">
+              <Text color="$neutral2" flexWrap="wrap" variant="subheading2">
+                {tradeProtocolPreferenceTitle}
+              </Text>
+              <RotatableChevron color="$neutral3" direction="right" height={iconSizes.icon24} />
+            </Flex>
+          </TouchableArea>
+        </Flex>
+      </>
     </Flex>
   )
 }

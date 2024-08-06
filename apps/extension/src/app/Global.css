@@ -1,0 +1,31 @@
+body,
+html {
+  height: 100%;
+  max-width: 100vw;
+}
+
+#root {
+  height: 100vh;
+  display: flex;
+
+  scrollbar-width: 'thin';
+}
+
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@keyframes shine {
+  from {
+    -webkit-mask-position: 150%;
+  }
+  to {
+    -webkit-mask-position: -50%;
+  }
+}

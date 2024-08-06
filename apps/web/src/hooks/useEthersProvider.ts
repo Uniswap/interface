@@ -1,4 +1,5 @@
 import { Web3Provider } from '@ethersproject/providers'
+import { useAccount } from 'hooks/useAccount'
 import { useMemo } from 'react'
 import { UniverseChainInfo } from 'uniswap/src/types/chains'
 import type { Client, Transport } from 'viem'
@@ -37,9 +38,13 @@ function clientToProvider(client?: Client<Transport, UniverseChainInfo>, chainId
 
 /** Hook to convert a viem Client to an ethers.js Provider with a default disconnected Network fallback. */
 export function useEthersProvider({ chainId }: { chainId?: number } = {}) {
+  const account = useAccount()
   const { data: client } = useConnectorClient({ chainId })
   const disconnectedClient = useClient({ chainId })
-  return useMemo(() => clientToProvider(client ?? disconnectedClient, chainId), [chainId, client, disconnectedClient])
+  return useMemo(
+    () => clientToProvider(account.chainId !== chainId ? disconnectedClient : client ?? disconnectedClient, chainId),
+    [account.chainId, chainId, client, disconnectedClient],
+  )
 }
 
 /** Hook to convert a connected viem Client to an ethers.js Provider. */

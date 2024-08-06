@@ -1,3 +1,4 @@
+import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
@@ -16,6 +17,7 @@ export function useTransferERC20Callback(
   amountInWei?: string,
   transferTxWithGasSettings?: providers.TransactionRequest,
   onSubmit?: () => void,
+  currencyAmountUSD?: Maybe<CurrencyAmount<Currency>>, // for analytics
 ): (() => void) | null {
   const account = useActiveAccount()
 
@@ -29,6 +31,7 @@ export function useTransferERC20Callback(
           amountInWei,
           type: AssetType.Currency,
           txId,
+          currencyAmountUSD,
         }
       : undefined,
     transferTxWithGasSettings,

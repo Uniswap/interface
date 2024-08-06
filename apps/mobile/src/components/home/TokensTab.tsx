@@ -12,8 +12,6 @@ import { NoTokens } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -44,8 +42,7 @@ export const TokensTab = memo(
     const dispatch = useDispatch()
     const tokenDetailsNavigation = useTokenDetailsNavigation()
     const startProfilerTimer = useStartProfiler()
-    const cexTransferEnabled = useFeatureFlag(FeatureFlags.CexTransfers)
-    const cexTransferProviders = useCexTransferProviders(cexTransferEnabled)
+    const cexTransferProviders = useCexTransferProviders()
 
     const onPressToken = useCallback(
       (currencyId: CurrencyId): void => {

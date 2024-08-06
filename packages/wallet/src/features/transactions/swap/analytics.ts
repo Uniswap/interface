@@ -1,5 +1,5 @@
 import { SwapEventName } from '@uniswap/analytics-events'
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useEffect } from 'react'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
@@ -37,9 +37,13 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
 export function getBaseTradeAnalyticsProperties({
   formatter,
   trade,
+  currencyInAmountUSD,
+  currencyOutAmountUSD,
 }: {
   formatter: LocalizationContextState
   trade: Trade<Currency, Currency, TradeType>
+  currencyInAmountUSD?: Maybe<CurrencyAmount<Currency>>
+  currencyOutAmountUSD?: Maybe<CurrencyAmount<Currency>>
 }): SwapTradeBaseProperties {
   const portionAmount = getClassicQuoteFromResponse(trade?.quote)?.portionAmount
 
@@ -67,6 +71,8 @@ export function getBaseTradeAnalyticsProperties({
       value: finalOutputAmount,
       type: NumberType.SwapTradeAmount,
     }),
+    token_in_amount_usd: currencyInAmountUSD ? parseFloat(currencyInAmountUSD.toFixed(2)) : undefined,
+    token_out_amount_usd: currencyOutAmountUSD ? parseFloat(currencyOutAmountUSD.toFixed(2)) : undefined,
     allowed_slippage_basis_points: trade.slippageTolerance * 100,
     fee_amount: portionAmount,
     requestId: trade.quote?.requestId,
@@ -81,9 +87,17 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
   derivedSwapInfo: DerivedSwapInfo
   formatter: LocalizationContextState
 }): SwapTradeBaseProperties {
-  const { chainId, currencyAmounts } = derivedSwapInfo
+  const { chainId, currencyAmounts, currencyAmountsUSDValue } = derivedSwapInfo
   const inputCurrencyAmount = currencyAmounts[CurrencyField.INPUT]
   const outputCurrencyAmount = currencyAmounts[CurrencyField.OUTPUT]
+
+  const currencyInAmountUSD = currencyAmountsUSDValue[CurrencyField.INPUT]
+    ? parseFloat(currencyAmountsUSDValue[CurrencyField.INPUT].toFixed(2))
+    : undefined
+  const currencyOutAmountUSD = currencyAmountsUSDValue[CurrencyField.OUTPUT]
+    ? parseFloat(currencyAmountsUSDValue[CurrencyField.OUTPUT].toFixed(2))
+    : undefined
+
   const slippageTolerance = derivedSwapInfo.customSlippageTolerance ?? derivedSwapInfo.autoSlippageTolerance
 
   const portionAmount = getClassicQuoteFromResponse(derivedSwapInfo.trade?.trade?.quote)?.portionAmount
@@ -110,6 +124,8 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
       value: finalOutputAmount,
       type: NumberType.SwapTradeAmount,
     }),
+    token_in_amount_usd: currencyInAmountUSD,
+    token_out_amount_usd: currencyOutAmountUSD,
     allowed_slippage_basis_points: slippageTolerance ? slippageTolerance * 100 : undefined,
     fee_amount: portionAmount,
   }

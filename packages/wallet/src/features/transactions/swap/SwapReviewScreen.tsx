@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { Button, Flex, HapticFeedback, Separator, SpinningLoader, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -38,7 +38,6 @@ import { getActionName, isWrapAction } from 'wallet/src/features/transactions/sw
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useAppSelector } from 'wallet/src/state'
 
 // eslint-disable-next-line complexity
 export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX.Element | null {
@@ -58,6 +57,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
 
   const swapTxContext = useSwapTxContext()
   const { gasFee, trade } = swapTxContext
+  const uniswapXGasBreakdown = isUniswapX(swapTxContext) ? swapTxContext.gasFeeBreakdown : undefined
 
   const {
     derivedSwapInfo,
@@ -303,7 +303,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   }, [])
 
   // Flag review screen user behavior, used to show hold to swap tip
-  const hasViewedReviewScreen = useAppSelector(selectHasViewedReviewScreen)
+  const hasViewedReviewScreen = useSelector(selectHasViewedReviewScreen)
   useEffect(() => {
     if (!hasViewedReviewScreen) {
       dispatch(setHasViewedReviewScreen(true))
@@ -406,6 +406,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
                   gasFee={gasFee}
                   newTradeRequiresAcceptance={newTradeRequiresAcceptance}
                   outputCurrencyPricePerUnitExact={outputCurrencyPricePerUnitExact}
+                  uniswapXGasBreakdown={uniswapXGasBreakdown}
                   warning={reviewScreenWarning?.warning}
                   onAcceptTrade={onAcceptTrade}
                   onShowSlippageModal={onShowSlippageModal}

@@ -3,12 +3,12 @@ import Expand from 'components/Expand'
 import QuestionHelper from 'components/QuestionHelper'
 import Row, { RowBetween } from 'components/Row'
 import { Input, InputContainer } from 'components/Settings/Input'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
 import { CautionTriangle, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
 enum SlippageError {

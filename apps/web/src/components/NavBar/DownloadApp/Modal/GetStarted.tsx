@@ -5,16 +5,23 @@ import Column from 'components/Column'
 import { AppleLogo } from 'components/Icons/AppleLogo'
 import { GoogleChromeLogo } from 'components/Icons/GoogleChromeLogo'
 import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
-import { WiggleIcon } from 'components/NavBar/DownloadApp/GetTheAppButton'
 import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
-import Row from 'components/Row'
 import styled, { useTheme } from 'lib/styled-components'
+import { Wiggle } from 'pages/Landing/components/animations'
 import { PropsWithChildren } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Text } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { useTranslation } from 'uniswap/src/i18n'
 
+const WiggleIcon = styled(Wiggle)`
+  flex: 0;
+  height: auto;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
 const IllustrationContainer = styled.div`
   display: flex;
   max-width: 100%;
@@ -40,17 +47,17 @@ const RightContent = styled.div`
 
 function CardInfo({ title, details, children }: PropsWithChildren<{ title: string; details: string }>) {
   return (
-    <Row padding="16px 12px" justify="space-between" align="start">
-      <Column>
+    <Flex row py="$spacing16" px="$spacing8" justifyContent="space-between" alignItems="flex-start">
+      <Flex>
         <Text variant="body2" fontWeight="535">
           {title}
         </Text>
         <Text variant="body4" color="$neutral2">
           {details}
         </Text>
-      </Column>
+      </Flex>
       <RightContent>{children}</RightContent>
-    </Row>
+    </Flex>
   )
 }
 
@@ -59,20 +66,20 @@ export function GetStarted({ toAppDownload }: { toAppDownload: () => void }) {
   const { t } = useTranslation()
   return (
     <ModalContent title={t('uniswap.wallet.modal.title')} subtext={t('uniswap.wallet.modal.subtitle')}>
-      <Row gap="12px" width="100%" flex="auto" align="start">
+      <Flex row gap="$spacing12" width="100%" alignItems="flex-start">
         <Card flex="1 1 auto" onClick={toAppDownload}>
           <IllustrationContainer>
             <Illustration src={WalletIllustration} alt="Wallet example page" />
           </IllustrationContainer>
           <CardInfo title={t('common.uniswapMobile')} details={t('common.iOSAndroid')}>
-            <Row gap="8px" width="auto">
+            <Flex row gap="$spacing8">
               <WiggleIcon>
                 <AppleLogo fill={theme.neutral1} />
               </WiggleIcon>
               <WiggleIcon>
                 <GooglePlayStoreLogo />
               </WiggleIcon>
-            </Row>
+            </Flex>
           </CardInfo>
         </Card>
         <Trace logPress element={InterfaceElementName.EXTENSION_DOWNLOAD_BUTTON}>
@@ -80,16 +87,16 @@ export function GetStarted({ toAppDownload }: { toAppDownload: () => void }) {
             <IllustrationContainer>
               <Illustration src={ExtensionIllustration} alt="Extension example page" />
             </IllustrationContainer>
-            <CardInfo title={t('common.chromeExtension')} details={t('common.googleChrome')}>
-              <Row gap="8px" width="auto">
+            <CardInfo title={t('common.chromeExtension')} details="Google Chrome">
+              <Flex row gap="$spacing8">
                 <WiggleIcon>
                   <GoogleChromeLogo width="16px" height="16px" />
                 </WiggleIcon>
-              </Row>
+              </Flex>
             </CardInfo>
           </Card>
         </Trace>
-      </Row>
+      </Flex>
     </ModalContent>
   )
 }

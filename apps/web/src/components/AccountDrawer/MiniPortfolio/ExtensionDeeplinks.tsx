@@ -5,7 +5,6 @@ import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { Pool } from 'components/Icons/Pool'
 import { ExtensionRequestMethods, useUniswapExtensionConnector } from 'components/WalletModal/useOrderedConnections'
-import { t } from 'i18n'
 import { useUpdateAtom } from 'jotai/utils'
 import { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'
@@ -13,6 +12,7 @@ import { Button, Flex, Image, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { ArrowRightToLine, RotatableChevron, TimePast } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme/iconSizes'
+import { t } from 'uniswap/src/i18n'
 
 const UnreadIndicator = () => {
   const theme = useTheme()

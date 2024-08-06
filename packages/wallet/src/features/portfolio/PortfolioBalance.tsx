@@ -1,10 +1,11 @@
 import { memo } from 'react'
 import { Flex, Shine, Text, isWeb } from 'ui/src'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
-import { usePortfolioTotalValue } from 'wallet/src/features/dataApi/balances'
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -17,11 +18,13 @@ interface PortfolioBalanceProps {
 }
 
 export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
+  const valueModifiers = usePortfolioValueModifiers(owner) ?? []
   const { data, loading, networkStatus } = usePortfolioTotalValue({
     address: owner,
     // TransactionHistoryUpdater will refetch this query on new transaction.
     // No need to be super aggressive with polling here.
     pollInterval: PollingInterval.Normal,
+    valueModifiers,
   })
 
   const currency = useAppFiatCurrency()

@@ -4,9 +4,10 @@ import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import styled, { css } from 'lib/styled-components'
 import React, { useRef } from 'react'
-import { ChevronDown } from 'react-feather'
 import { dropdownSlideDown } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
+import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { iconSizes } from 'ui/src/theme/iconSizes'
 
 export const InternalMenuItem = styled.div<{ disabled?: boolean }>`
   display: flex;
@@ -84,7 +85,7 @@ const StyledMenu = styled.div`
   text-align: left;
   width: 100%;
 `
-export const StyledMenuContent = styled.div`
+const StyledMenuContent = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 8px;
@@ -94,12 +95,6 @@ export const StyledMenuContent = styled.div`
   width: 100%;
   vertical-align: middle;
   white-space: nowrap;
-`
-const Chevron = styled.span<{ open: boolean }>`
-  display: flex;
-  color: ${({ open, theme }) => (open ? theme.neutral1 : theme.neutral2)};
-  rotate: ${({ open }) => (open ? '180deg' : '0deg')};
-  transition: rotate ${({ theme }) => `${theme.transition.duration.fast} ${theme.transition.timing.inOut}`};
 `
 const StyledFilterButton = styled(FilterButton)<{ buttonCss?: string }>`
   ${({ buttonCss }) => buttonCss}
@@ -152,9 +147,7 @@ export function DropdownSelector({
           <StyledMenuContent>
             {menuLabel}
             {!hideChevron && (
-              <Chevron open={isOpen}>
-                <ChevronDown width={20} height={20} />
-              </Chevron>
+              <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
             )}
           </StyledMenuContent>
         </StyledFilterButton>

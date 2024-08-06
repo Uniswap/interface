@@ -19,7 +19,7 @@ import { BottomSheetModalProps } from 'uniswap/src/components/modals/BottomSheet
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
-import { isIOS } from 'utilities/src/platform'
+import { isAndroid, isIOS } from 'utilities/src/platform'
 
 /**
  * (android only)
@@ -250,6 +250,8 @@ function BottomSheetModalContents({
       {...background}
       {...backdrop}
       ref={modalRef}
+      // Adds vertical pan gesture activate offset to avoid nested scroll gesture handler conflicts on android
+      activeOffsetY={isAndroid ? 12 : undefined}
       animatedPosition={animatedPosition}
       backgroundStyle={backgroundStyle}
       containerComponent={containerComponent}

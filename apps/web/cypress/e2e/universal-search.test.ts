@@ -7,7 +7,7 @@ const UNI_ADDRESS = UNI[UniverseChainId.Mainnet].address.toLowerCase()
 describe('Universal search bar', () => {
   function openSearch() {
     // can't just type "/" because on mobile it doesn't respond to that
-    return cy.get('[data-cy="right-search-container"] [data-cy="magnifying-icon"]').click()
+    return cy.get('[data-cy="nav-search-container"] [data-cy="nav-search-icon"]').click()
   }
 
   beforeEach(() => {
@@ -15,7 +15,7 @@ describe('Universal search bar', () => {
   })
 
   function getSearchBar() {
-    return cy.get('[data-cy="right-search-container"] [data-cy="search-bar-input"]').click()
+    return cy.get('[data-cy="nav-search-container"] input').click()
   }
 
   it('should yield clickable result that is then added to recent searches', () => {

@@ -1,10 +1,10 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { t } from 'i18n'
 import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { ChevronDown } from 'react-feather'
 import { ThemedText } from 'theme/components'
+import { t } from 'uniswap/src/i18n'
 
 const ExpandIcon = styled(ChevronDown)<{ $expanded: boolean }>`
   color: ${({ theme }) => theme.neutral2};

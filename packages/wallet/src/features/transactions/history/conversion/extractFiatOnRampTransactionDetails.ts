@@ -1,9 +1,9 @@
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { FiatOnRampTransactionDetails } from 'wallet/src/features/fiatOnRamp/types'
 import parseOnRampTransaction from 'wallet/src/features/transactions/history/conversion/parseOnRampTransaction'
 import { remoteTxStatusToLocalTxStatus } from 'wallet/src/features/transactions/history/utils'
@@ -103,7 +103,7 @@ export function extractOnRampTransactionDetails(transaction: TransactionListQuer
 
   return {
     routing: Routing.CLASSIC,
-    id: transaction.details.id,
+    id: transaction.details.onRampTransfer.externalSessionId,
     chainId: fromGraphQLChain(transaction.chain) ?? UniverseChainId.Mainnet,
     addedTime: transaction.timestamp * 1000, // convert to ms,
     status: remoteTxStatusToLocalTxStatus(RemoteTransactionType.OnRamp, transaction.details.status),

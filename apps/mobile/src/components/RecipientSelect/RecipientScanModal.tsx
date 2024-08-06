@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-reanimated'
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { getSupportedURI, URIType } from 'src/components/Requests/ScanSheet/util'
 import { Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
@@ -24,7 +24,7 @@ type Props = {
 export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const activeAddress = useAppSelector(selectActiveAccountAddress)
+  const activeAddress = useSelector(selectActiveAccountAddress)
   const [currentScreenState, setCurrentScreenState] = useState<ScannerModalState>(ScannerModalState.ScanQr)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
 

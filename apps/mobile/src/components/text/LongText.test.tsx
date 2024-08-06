@@ -2,6 +2,7 @@ import React from 'react'
 import { ReactTestInstance } from 'react-test-renderer'
 import { LongText } from 'src/components/text/LongText'
 import { fireEvent, render, within } from 'src/test/test-utils'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const SHORT_TEXT = 'Short text'
 const LONG_TEXT = 'Some very long text'
@@ -42,7 +43,7 @@ describe(LongText, () => {
       const tree = render(<LongText initialDisplayedLines={3} text={SHORT_TEXT} />)
 
       fireTextLayoutEvent(tree.getByText(SHORT_TEXT), 1) // Assume Short text is one line
-      const readMoreButton = tree.queryByTestId('read-more-button')
+      const readMoreButton = tree.queryByTestId(TestID.ReadMoreButton)
 
       expect(readMoreButton).toBeNull()
     })
@@ -63,7 +64,7 @@ describe(LongText, () => {
         const tree = render(<LongText initialDisplayedLines={3} text={LONG_TEXT} />)
 
         fireTextLayoutEvent(tree.getByText(LONG_TEXT), 5) // Assume Some very long text is five lines
-        const readMoreButton = tree.queryByTestId('read-more-button')
+        const readMoreButton = tree.queryByTestId(TestID.ReadMoreButton)
 
         expect(readMoreButton).toBeTruthy()
         expect(within(readMoreButton!).getByText('Read more')).toBeTruthy()
@@ -79,7 +80,7 @@ describe(LongText, () => {
 
         expect(textInstance.props.numberOfLines).toBe(3)
 
-        const readMoreButton = tree.getByTestId('read-more-button')
+        const readMoreButton = tree.getByTestId(TestID.ReadMoreButton)
         fireEvent.press(readMoreButton)
 
         expect(textInstance.props.numberOfLines).toBeUndefined()
@@ -89,7 +90,7 @@ describe(LongText, () => {
         const tree = render(<LongText initialDisplayedLines={3} text={LONG_TEXT} />)
 
         fireTextLayoutEvent(tree.getByText(LONG_TEXT), 5) // Assume Some very long text is five lines
-        const readMoreButton = tree.getByTestId('read-more-button')
+        const readMoreButton = tree.getByTestId(TestID.ReadMoreButton)
         fireEvent.press(readMoreButton)
 
         expect(within(readMoreButton).getByText('Read less')).toBeTruthy()
@@ -100,7 +101,7 @@ describe(LongText, () => {
       const tree = render(<LongText initialDisplayedLines={3} text={LONG_TEXT} />)
 
       fireTextLayoutEvent(tree.getByText(LONG_TEXT), 5) // Assume Some very long text is five lines
-      const readMoreButton = tree.getByTestId('read-more-button')
+      const readMoreButton = tree.getByTestId(TestID.ReadMoreButton)
       fireEvent.press(readMoreButton) // expand
 
       expect(tree.getByText(LONG_TEXT).props.numberOfLines).toBeUndefined()

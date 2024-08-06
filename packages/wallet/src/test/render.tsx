@@ -31,6 +31,7 @@ const mockNavigationFunctions: WalletNavigationContextState = {
   navigateToAccountActivityList: jest.fn(),
   navigateToAccountTokenList: jest.fn(),
   navigateToBuyOrReceiveWithEmptyWallet: jest.fn(),
+  navigateToFiatOnRamp: jest.fn(),
   navigateToNftDetails: jest.fn(),
   navigateToNftCollection: jest.fn(),
   navigateToSwapFlow: jest.fn(),

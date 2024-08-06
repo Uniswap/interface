@@ -1,12 +1,12 @@
 import { Container, PopupContainer, StyledXButton, TextContainer } from 'components/Banner/shared/styled'
 import { chainIdToBackendChain } from 'constants/chains'
 import { ChainOutageData } from 'featureFlags/flags/outageBanner'
-import { Trans } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { useState } from 'react'
 import { Globe } from 'react-feather'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { capitalize } from 'tsafe'
+import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const IconContainer = styled.div`
@@ -65,7 +65,7 @@ export function OutageBanner({ chainId, version }: ChainOutageData) {
             <Trans i18nKey="outageBanner.message.sub" />
           </ThemedText.LabelMicro>
           <HelpCenterLink href="https://support.uniswap.org/hc/en-us/articles/23952001935373-Subgraph-downtime">
-            <Trans i18nKey="common.learnMore.link" />
+            <Trans i18nKey="common.button.learn" />
           </HelpCenterLink>
         </OutageTextContainer>
         <StyledXButton

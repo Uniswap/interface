@@ -1,10 +1,10 @@
 import { Alignment, Fit, Layout, useRive } from '@rive-app/react-canvas'
-import { t } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { Wallet } from 'pages/Landing/components/Icons'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { t } from 'uniswap/src/i18n'
 
 const Contents = styled.div`
   width: 100%;

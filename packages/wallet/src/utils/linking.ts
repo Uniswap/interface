@@ -6,7 +6,7 @@ import { toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { currencyIdToChain, currencyIdToGraphQLAddress } from 'uniswap/src/utils/currencyId'
 import { openUri } from 'uniswap/src/utils/linking'
-import { FiatPurchaseTransactionInfo, ServiceProviderInfo } from 'wallet/src/features/transactions/types'
+import { ServiceProviderInfo } from 'wallet/src/features/transactions/types'
 
 export const UNISWAP_APP_NATIVE_TOKEN = 'NATIVE'
 
@@ -24,10 +24,6 @@ export async function openTransactionLink(hash: string | undefined, chainId: Wal
 
 export async function openUniswapHelpLink(): Promise<void> {
   return openUri(uniswapUrls.helpRequestUrl)
-}
-
-export async function openMoonpayTransactionLink(info: FiatPurchaseTransactionInfo): Promise<void> {
-  return openUri(info.explorerUrl ?? 'https://support.moonpay.com/hc/en-gb')
 }
 
 const SERVICE_PROVIDER_SUPPORT_URLS: Record<string, string> = {

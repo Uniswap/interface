@@ -644,6 +644,29 @@ PODS:
   - BoringSSL-GRPC/Implementation (0.0.24):
     - BoringSSL-GRPC/Interface (= 0.0.24)
   - BoringSSL-GRPC/Interface (0.0.24)
+  - DatadogCore (2.13.0):
+    - DatadogInternal (= 2.13.0)
+  - DatadogCrashReporting (2.13.0):
+    - DatadogInternal (= 2.13.0)
+    - PLCrashReporter (~> 1.11.2)
+  - DatadogInternal (2.13.0)
+  - DatadogLogs (2.13.0):
+    - DatadogInternal (= 2.13.0)
+  - DatadogRUM (2.13.0):
+    - DatadogInternal (= 2.13.0)
+  - DatadogSDKReactNative (2.4.1):
+    - DatadogCore (~> 2.13.0)
+    - DatadogCrashReporting (~> 2.13.0)
+    - DatadogLogs (~> 2.13.0)
+    - DatadogRUM (~> 2.13.0)
+    - DatadogTrace (~> 2.13.0)
+    - DatadogWebViewTracking (~> 2.13.0)
+    - React-Core
+  - DatadogTrace (2.13.0):
+    - DatadogInternal (= 2.13.0)
+    - OpenTelemetrySwiftApi (= 1.6.0)
+  - DatadogWebViewTracking (2.13.0):
+    - DatadogInternal (= 2.13.0)
   - DoubleConversion (1.1.6)
   - EthersRS (0.0.5)
   - EXBarCodeScanner (12.9.3):
@@ -873,10 +896,12 @@ PODS:
     - OneSignalXCFramework/OneSignalOutcomes
   - OneSignalXCFramework/OneSignalOutcomes (3.12.6):
     - OneSignalXCFramework/OneSignalCore
+  - OpenTelemetrySwiftApi (1.6.0)
   - Permission-FaceID (3.6.0):
     - RNPermissions
   - Permission-Notifications (3.6.0):
     - RNPermissions
+  - PLCrashReporter (1.11.2)
   - PromisesObjC (2.4.0)
   - RCT-Folly (2022.05.16.00):
     - boost
@@ -2037,6 +2062,7 @@ DEPENDENCIES:
   - Apollo (= 1.2.1)
   - Argon2Swift (= 1.0.3)
   - boost (from `../../../node_modules/react-native/third-party-podspecs/boost.podspec`)
+  - "DatadogSDKReactNative (from `../../../node_modules/@datadog/mobile-react-native`)"
   - DoubleConversion (from `../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec`)
   - "EthersRS (from `../../../node_modules/@uniswap/ethers-rs-mobile`)"
   - EXBarCodeScanner (from `../../../node_modules/expo-barcode-scanner/ios`)
@@ -2153,6 +2179,13 @@ SPEC REPOS:
     - AppsFlyerFramework
     - Argon2Swift
     - BoringSSL-GRPC
+    - DatadogCore
+    - DatadogCrashReporting
+    - DatadogInternal
+    - DatadogLogs
+    - DatadogRUM
+    - DatadogTrace
+    - DatadogWebViewTracking
     - Firebase
     - FirebaseAppCheck
     - FirebaseAppCheckInterop
@@ -2172,6 +2205,8 @@ SPEC REPOS:
     - MMKVCore
     - nanopb
     - OneSignalXCFramework
+    - OpenTelemetrySwiftApi
+    - PLCrashReporter
     - PromisesObjC
     - RecaptchaInterop
     - RiveRuntime
@@ -2188,6 +2223,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@amplitude/analytics-react-native"
   boost:
     :podspec: "../../../node_modules/react-native/third-party-podspecs/boost.podspec"
+  DatadogSDKReactNative:
+    :path: "../../../node_modules/@datadog/mobile-react-native"
   DoubleConversion:
     :podspec: "../../../node_modules/react-native/third-party-podspecs/DoubleConversion.podspec"
   EthersRS:
@@ -2400,6 +2437,14 @@ SPEC CHECKSUMS:
   Argon2Swift: 99482c1b8122a03524b61e41c4903a9548e7c33b
   boost: d3f49c53809116a5d38da093a8aa78bf551aed09
   BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
+  DatadogCore: 9390fd07a89f57a23983de66fbec5bf3c2034f7a
+  DatadogCrashReporting: 79b67b790df186524fc76d45c0b8ce751c36ef41
+  DatadogInternal: 61ab12516d2faad79e35973534c29a72b0d44382
+  DatadogLogs: 912d7b3fd3d75df856de060082b785f92f7cefe6
+  DatadogRUM: b5629479d4553d80f2a57ef9db44ce37e56f8b97
+  DatadogSDKReactNative: 0101462ddda14f13470dfe05cca244c190bb1fac
+  DatadogTrace: 1f40893de00c9a9b87be46fa7016fa0d50c4e66b
+  DatadogWebViewTracking: d1e2e755bb2ed7c18208471b9cbcfc7cb920aa45
   DoubleConversion: fea03f2699887d960129cc54bba7e52542b6f953
   EthersRS: 56b70e73d22d4e894b7e762eef1129159bcd3135
   EXBarCodeScanner: d59fd943cebee3f913ebf4ffde0d05d344da8b78
@@ -2442,8 +2487,10 @@ SPEC CHECKSUMS:
   MMKVCore: a67a1cede26175c413176f404a7cedec43f96a0b
   nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
   OneSignalXCFramework: ff1c970b7aeb4ac0fe48fb35393eb5d8bf378135
+  OpenTelemetrySwiftApi: 657da8071c2908caecce11548e006f779924ff9c
   Permission-FaceID: aaf43b353c25aaa2c1a501f93fa33dcb0f76e6c8
   Permission-Notifications: 7f2a467ab97a130a847519705340830d52cfc5f0
+  PLCrashReporter: 499c53b0104f95c302d94fd723ebb03c56d9bac8
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   RCT-Folly: 7169b2b1c44399c76a47b5deaaba715eeeb476c0
   RCTRequired: ca1d7414aba0b27efcfa2ccd37637edb1ab77d96

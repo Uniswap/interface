@@ -1,7 +1,6 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { Trans } from 'i18n'
 import styled, { css } from 'lib/styled-components'
 import { Dropdown } from 'nft/components/profile/list/Dropdown'
 import { NFTListRow } from 'nft/components/profile/list/NFTListRow'
@@ -11,6 +10,7 @@ import { DropDownOption, ListingMarket } from 'nft/types'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
 import { BREAKPOINTS } from 'theme'
+import { Trans } from 'uniswap/src/i18n'
 
 const TableHeader = styled.div`
   display: flex;
@@ -210,15 +210,13 @@ export const NFTListingsGrid = ({ selectedMarkets }: { selectedMarkets: ListingM
   return (
     <Column>
       <TableHeader>
-        <NFTHeader>
-          <Trans i18nKey="nft" />
-        </NFTHeader>
+        <NFTHeader>NFT</NFTHeader>
         <PriceHeaders>
           <FloorPriceHeader>
             <Trans i18nKey="common.floor" />
           </FloorPriceHeader>
           <LastPriceHeader>
-            <Trans i18nKey="nft.last" />
+            <Trans i18nKey="nft.list.header.lastPrice" />
           </LastPriceHeader>
 
           <DropdownAndHeaderWrapper ref={dropdownRef}>

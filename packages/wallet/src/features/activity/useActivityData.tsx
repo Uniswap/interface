@@ -9,7 +9,6 @@ import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
 import { LoadingItem, SectionHeader } from 'wallet/src/features/activity/utils'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
 import { ActivityItemRenderer, generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useCreateSwapFormState, useMergeLocalAndRemoteTransactions } from 'wallet/src/features/transactions/hooks'
@@ -35,7 +34,6 @@ type ActivityDataProps = {
 
 type ActivityData = {
   maybeEmptyComponent: JSX.Element | null
-  maybeLoaderComponent: JSX.Element | null
   renderActivityItem: ActivityItemRenderer
   sectionData: (TransactionDetails | SectionHeader | LoadingItem)[] | undefined
   keyExtractor: (item: TransactionDetails | SectionHeader | LoadingItem) => string
@@ -70,16 +68,10 @@ export function useActivityData({
   }, [navigateToSwapFlow])
 
   const renderActivityItem = useMemo(() => {
-    return generateActivityItemRenderer(
-      TransactionSummaryLayout,
-      <Loader.Transaction />,
-      SectionTitle,
-      swapCallbacks,
-      authTrigger,
-    )
+    return generateActivityItemRenderer(<Loader.Transaction />, SectionTitle, swapCallbacks, authTrigger)
   }, [swapCallbacks, authTrigger])
 
-  const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(
+  const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(
     owner,
     hideSpamTokens,
     useMergeLocalAndRemoteTransactions,
@@ -111,13 +103,11 @@ export function useActivityData({
     </Flex>
   )
 
-  const maybeEmptyComponent = hasData ? null : isError ? errorCard : emptyListView
-  // We want to display the loading shimmer only on first load because items have their own loading shimmer
-  const maybeLoaderComponent = isLoading && !hasData ? <Loader.Transaction repeat={6} /> : null
+  // We check `sectionData` instead of `hasData` because `sectionData` has either transactions or a loading skeleton.
+  const maybeEmptyComponent = sectionData?.length ? null : isError ? errorCard : emptyListView
 
   return {
     maybeEmptyComponent,
-    maybeLoaderComponent,
     renderActivityItem,
     sectionData,
     keyExtractor,

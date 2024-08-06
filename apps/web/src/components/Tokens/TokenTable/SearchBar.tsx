@@ -4,11 +4,11 @@ import xIcon from 'assets/svg/x.svg'
 import { MEDIUM_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import useDebounce from 'hooks/useDebounce'
-import { t } from 'i18n'
 import { useAtomValue, useUpdateAtom } from 'jotai/utils'
 import styled from 'lib/styled-components'
 import { useEffect, useState } from 'react'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { t } from 'uniswap/src/i18n'
 const ICON_SIZE = '20px'
 
 const SearchBarContainer = styled.div`
@@ -99,7 +99,9 @@ export default function SearchBar({ tab }: { tab?: string }) {
         <SearchInput
           data-testid="explore-tokens-search-input"
           type="search"
-          placeholder={tab === 'tokens' ? t('Search tokens') : t('Search pools')}
+          placeholder={
+            tab === 'tokens' ? t('tokens.table.search.placeholder.tokens') : t('tokens.table.search.placeholder.pools')
+          }
           id="searchBar"
           autoComplete="off"
           value={localFilterString}

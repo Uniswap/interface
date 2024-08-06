@@ -4,7 +4,8 @@ import {
   isEnrolledAsync,
   supportedAuthenticationTypesAsync,
 } from 'expo-local-authentication'
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
+import { MobileState } from 'src/app/reducer'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { BiometricSettingsState } from 'src/features/biometrics/slice'
@@ -115,7 +116,7 @@ export function useOsBiometricAuthEnabled(): boolean | undefined {
 }
 
 export function useBiometricAppSettings(): BiometricSettingsState {
-  const biometricSettings = useAppSelector((state) => state.biometricSettings)
+  const biometricSettings = useSelector((state: MobileState) => state.biometricSettings)
   return biometricSettings
 }
 

@@ -14,6 +14,8 @@ import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Warning, WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
+import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
+import { TransactionType } from 'wallet/src/features/transactions/types'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type CurrentInputPanelProps = {
@@ -36,6 +38,7 @@ type CurrentInputPanelProps = {
   selection?: TextInputProps['selection']
   onSelectionChange?: (start: number, end: number) => void
   usdValue: Maybe<CurrencyAmount<Currency>>
+  transactionType?: TransactionType
 
   // sometimes CurrencyInputPanel rendered off screen like with Send input -> selector flow
   isOnScreen?: boolean
@@ -107,21 +110,17 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
     onSelectionChange: selectionChange,
     usdValue,
     isOnScreen,
+    transactionType,
     ...rest
   } = props
 
   const { t } = useTranslation()
   const inputRef = useRef<TextInput>(null)
-  const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
+  const { formatCurrencyAmount } = useLocalizationContext()
 
   const insufficientBalanceWarning = warnings.find((warning) => warning.type === WarningLabel.InsufficientFunds)
 
   const showInsufficientBalanceWarning = insufficientBalanceWarning && !isOutput
-
-  const formattedFiatValue = convertFiatAmountFormatted(usdValue?.toExact(), NumberType.FiatTokenQuantity)
-  const formattedCurrencyAmount = currencyAmount
-    ? formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })
-    : ''
 
   // the focus state for native Inputs can sometimes be out of sync with the controlled `focus`
   // prop. When the internal focus state differs from our `focus` prop, sync the internal
@@ -194,6 +193,14 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
   const inputColor = !value ? '$neutral3' : '$neutral1'
   const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
 
+  const inputPanelFormattedValue = useTokenAndFiatDisplayAmounts({
+    value,
+    currencyInfo,
+    currencyAmount,
+    usdValue,
+    isFiatMode: isFiatInput,
+  })
+
   return (
     <Flex gap="$spacing8" pb={paddingBottom} pt={paddingTop} px={paddingHorizontal} {...rest}>
       <Flex
@@ -261,7 +268,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
           <TouchableArea onPress={handleToggleFiatInput}>
             <Flex shrink>
               <Text color="$neutral2" numberOfLines={1} variant="subheading2">
-                {!isFiatInput ? (usdValue ? formattedFiatValue : '') : formattedCurrencyAmount}
+                {inputPanelFormattedValue}
               </Text>
             </Flex>
           </TouchableArea>
@@ -279,6 +286,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
                 currencyAmount={currencyAmount}
                 currencyBalance={currencyBalance}
                 currencyField={isOutput ? CurrencyField.OUTPUT : CurrencyField.INPUT}
+                transactionType={transactionType}
                 onSetMax={handleSetMax}
               />
             )}

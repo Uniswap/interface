@@ -36,7 +36,6 @@ import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { Trans, t } from 'i18n'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import styled, { useTheme } from 'lib/styled-components'
@@ -51,6 +50,7 @@ import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLi
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans, t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -697,7 +697,7 @@ function PositionPageContent() {
       <>
         <Helmet>
           <title>
-            {t(`Manage {{quoteSymbol}}/{{baseSymbol}} pool liquidity on Uniswap`, {
+            {t(`liquidityPool.positions.page.title`, {
               quoteSymbol: currencyQuote?.symbol,
               baseSymbol: currencyBase?.symbol,
             })}
@@ -853,9 +853,7 @@ function PositionPageContent() {
                             </ThemedText.DeprecatedMain>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <BadgeText>
-                                  <Trans i18nKey="common.percentage" values={{ pct: inverted ? ratio : 100 - ratio }} />
-                                </BadgeText>
+                                <BadgeText>{inverted ? ratio : 100 - ratio}%</BadgeText>
                               </Badge>
                             ) : null}
                           </RowFixed>
@@ -871,9 +869,7 @@ function PositionPageContent() {
                             </ThemedText.DeprecatedMain>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <BadgeText>
-                                  <Trans i18nKey="common.percentage" values={{ pct: inverted ? 100 - ratio : ratio }} />
-                                </BadgeText>
+                                <BadgeText>{inverted ? 100 - ratio : ratio}%</BadgeText>
                               </Badge>
                             ) : null}
                           </RowFixed>

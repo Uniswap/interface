@@ -1,10 +1,8 @@
-// TODO(TAM-42): remove import after upgrading tamagui
-// eslint-disable-next-line no-restricted-imports
-import { type ViewStyle } from '@tamagui/core'
+import type { ViewProps } from 'tamagui'
 
 // for now only enter/exit though we can change this in the future to support
 // any type of animation, likely we'd want to split that into multiple files
-type EnterExitStyles = Record<string, Pick<ViewStyle, 'enterStyle' | 'exitStyle'>>
+type EnterExitStyles = Record<string, Pick<ViewProps, 'enterStyle' | 'exitStyle'>>
 
 export const animationsEnter = {
   fadeInDown: {

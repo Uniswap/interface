@@ -1,12 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
-import { Trans } from 'i18n'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
 import { Ranking as RankingContainer, Suspicious as SuspiciousContainer } from 'nft/components/card/icons'
 import { useBag } from 'nft/hooks'
 import { GenieAsset, UniformAspectRatio } from 'nft/types'
 import { useCallback, useMemo } from 'react'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 

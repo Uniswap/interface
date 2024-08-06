@@ -3,10 +3,10 @@ import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import { ColumnCenter } from 'components/Column'
 import Modal from 'components/Modal'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { AlertTriangle } from 'react-feather'
 import { CloseIcon, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
 const Wrapper = styled(ColumnCenter)`
@@ -50,7 +50,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
         </IconContainer>
         <ColumnCenter gap="sm">
           <ThemedText.HeadlineSmall fontWeight={535}>
-            <Trans i18nKey="common.warning" />
+            <Trans i18nKey="token.safetyLevel.strong.header" />
           </ThemedText.HeadlineSmall>
           <ThemedText.BodyPrimary lineHeight="24px" textAlign="center">
             <Trans
@@ -67,10 +67,10 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
         </ColumnCenter>
         <ButtonContainer gap="md">
           <StyledThemeButton size={ButtonSize.large} emphasis={ButtonEmphasis.failure} onClick={onContinue}>
-            <Trans i18nKey="common.continue.button" />
+            <Trans i18nKey="common.button.continue" />
           </StyledThemeButton>
           <StyledThemeButton size={ButtonSize.medium} emphasis={ButtonEmphasis.low} onClick={onDismiss}>
-            <Trans i18nKey="common.cancel.button" />
+            <Trans i18nKey="common.button.cancel" />
           </StyledThemeButton>
         </ButtonContainer>
       </Wrapper>

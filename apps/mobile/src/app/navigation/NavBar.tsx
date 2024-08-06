@@ -28,13 +28,14 @@ import {
 import { Search } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, fonts } from 'ui/src/theme'
+import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { opacify } from 'uniswap/src/utils/colors'
 import { isAndroid, isIOS } from 'utilities/src/platform'
-import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { prepareSwapFormState } from 'wallet/src/features/transactions/swap/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -109,9 +110,9 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
   const dispatch = useDispatch()
 
   const isDarkMode = useIsDarkMode()
-
   const activeAccountAddress = useActiveAccountAddressWithThrow()
-  const inputCurrencyId = useHighestBalanceNativeCurrencyId(activeAccountAddress)
+  const valueModifiers = usePortfolioValueModifiers(activeAccountAddress) ?? []
+  const inputCurrencyId = useHighestBalanceNativeCurrencyId(activeAccountAddress, valueModifiers)
 
   const onPress = useCallback(async () => {
     dispatch(

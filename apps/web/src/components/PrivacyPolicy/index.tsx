@@ -3,15 +3,15 @@ import Card, { DarkGrayCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import Row, { AutoRow, RowBetween } from 'components/Row'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { useEffect, useRef } from 'react'
 import { ArrowDown, Info, X } from 'react-feather'
-import { useModalIsOpen, useTogglePrivacyPolicy } from 'state/application/hooks'
+import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import { isMobile } from 'utilities/src/platform'
 
 const Wrapper = styled.div`
@@ -62,7 +62,7 @@ const EXTERNAL_APIS = [
       <>
         <Trans i18nKey="privacy.trm" />{' '}
         <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8671777747597-Address-Screening-Guide">
-          <Trans i18nKey="common.learnMore.link" />
+          <Trans i18nKey="common.button.learn" />
         </ExternalLink>
       </>
     ),
@@ -76,7 +76,7 @@ const EXTERNAL_APIS = [
 export function PrivacyPolicyModal() {
   const node = useRef<HTMLDivElement>()
   const open = useModalIsOpen(ApplicationModal.PRIVACY_POLICY)
-  const toggle = useTogglePrivacyPolicy()
+  const closeModal = useCloseModal()
 
   useEffect(() => {
     if (!open) {
@@ -89,13 +89,13 @@ export function PrivacyPolicyModal() {
   }, [open])
 
   return (
-    <Modal isOpen={open} onDismiss={() => toggle()}>
+    <Modal isOpen={open} onDismiss={() => closeModal(ApplicationModal.PRIVACY_POLICY)}>
       <AutoColumn gap="md" ref={node as any}>
         <RowBetween padding="1rem 1rem 0.5rem 1rem">
           <ThemedText.DeprecatedMediumHeader>
             <Trans i18nKey="common.legalAndPrivacy" />
           </ThemedText.DeprecatedMediumHeader>
-          <HoverText onClick={() => toggle()}>
+          <HoverText onClick={() => closeModal(ApplicationModal.PRIVACY_POLICY)}>
             <X size={24} />
           </HoverText>
         </RowBetween>
@@ -165,7 +165,7 @@ function PrivacyPolicy() {
           <ThemedText.DeprecatedBody fontSize={12}>
             <Row justify="center" marginBottom="1rem">
               <ExternalLink href="https://help.uniswap.org/en/articles/5675203-terms-of-service-faq">
-                <Trans i18nKey="common.learnMore.link" />
+                <Trans i18nKey="common.button.learn" />
               </ExternalLink>
             </Row>
           </ThemedText.DeprecatedBody>

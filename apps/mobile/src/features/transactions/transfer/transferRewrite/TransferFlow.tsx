@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { useOnCloseSendModal } from 'src/features/transactions/swap/hooks/useOnCloseSendModal'
 import { TransferFormScreen } from 'src/features/transactions/transfer/transferRewrite/TransferFormScreen'
@@ -77,7 +77,7 @@ function TransferFormScreenDelayedRender(): JSX.Element {
 }
 
 function TransferContextsContainer({ children }: { children?: ReactNode }): JSX.Element {
-  const { initialState } = useAppSelector(selectModalState(ModalName.Send))
+  const { initialState } = useSelector(selectModalState(ModalName.Send))
 
   const prefilledState = useMemo(
     (): SwapFormState | undefined =>

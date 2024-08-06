@@ -20,8 +20,6 @@ function clientToSigner(client?: Client<Transport, UniverseChainInfo, Account>) 
 }
 
 /** Hook to convert a Viem Client to an ethers.js Signer. */
-// TODO(wagmi migration): Remove eslinst disable when hook is used
-// eslint-disable-next-line import/no-unused-modules
 export function useEthersSigner({ chainId }: { chainId?: number } = {}) {
   const { data: client } = useConnectorClient({ chainId })
   return useMemo(() => clientToSigner(client), [client])

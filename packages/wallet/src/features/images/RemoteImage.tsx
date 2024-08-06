@@ -32,7 +32,9 @@ export function RemoteImage({
   const imageHttpUrl = uriToHttpUrls(uri)[0]
 
   if (!imageHttpUrl) {
-    logger.warn('RemoteImage', '', `Could not retrieve and format remote image for uri: ${uri}`)
+    logger.warn('RemoteImage', '', 'Could not retrieve and format remote image for uri', {
+      data: uri,
+    })
     return fallback ?? null
   }
 

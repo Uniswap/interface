@@ -1,5 +1,4 @@
 import Row from 'components/Row'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { getHeightFromAspectRatio, getMediaAspectRatio, handleUniformAspectRatio } from 'nft/components/card/utils'
 import { UniformAspectRatio, UniformAspectRatios } from 'nft/types'
@@ -8,6 +7,7 @@ import { Pause, Play } from 'react-feather'
 import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 const StyledImageContainer = styled.div<{ isDisabled?: boolean }>`
   position: relative;
@@ -247,9 +247,7 @@ const NoContentContainer = ({ height }: { height?: number }) => (
   <>
     <NoContentContainerBackground $height={height}>
       <NoContentText>
-        <Trans i18nKey="nft.contentNot" />
-        <br />
-        <Trans i18nKey="nft.availableYet" />
+        <Trans i18nKey="nft.card.notAvailable" components={{ br: <br /> }} />
       </NoContentText>
     </NoContentContainerBackground>
   </>

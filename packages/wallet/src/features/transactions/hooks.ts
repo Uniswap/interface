@@ -1,7 +1,9 @@
 import { Currency } from '@uniswap/sdk-core'
 import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { ensureLeading0x } from 'uniswap/src/utils/addresses'
@@ -23,7 +25,7 @@ import {
   isFinalizedTx,
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useAppSelector } from 'wallet/src/state'
+import { RootState } from 'wallet/src/state'
 
 type HashToTxMap = Map<string, TransactionDetails>
 
@@ -98,7 +100,7 @@ export function useSelectTransaction(
   txId: string | undefined,
 ): TransactionDetails | undefined {
   const selectTransaction = useMemo(makeSelectTransaction, [])
-  return useAppSelector((state) => selectTransaction(state, { address, chainId, txId }))
+  return useSelector((state: RootState) => selectTransaction(state, { address, chainId, txId }))
 }
 
 export function useCreateSwapFormState(
@@ -162,6 +164,8 @@ export function useMergeLocalAndRemoteTransactions(
   const dispatch = useDispatch()
   const localTransactions = useSelectAddressTransactions(address)
 
+  const onRampTransactionsFromGraphQL = useFeatureFlag(FeatureFlags.ForTransactionsFromGraphQL)
+
   // Merge local and remote txs into one array and reconcile data discrepancies
   return useMemo((): TransactionDetails[] | undefined => {
     if (!remoteTransactions?.length) {
@@ -195,21 +199,27 @@ export function useMergeLocalAndRemoteTransactions(
     }
 
     const hashes = new Set<string>()
-    const offChainFiatOnRampTxs: TransactionDetails[] = []
+    const offChainFiatOnRampTxs = new Map<string, TransactionDetails>()
     function addToMap(map: HashToTxMap, tx: TransactionDetails): HashToTxMap {
       const hash = getTrackingHash(tx)
       if (hash) {
         map.set(hash, tx)
         hashes.add(hash)
-      } else {
-        offChainFiatOnRampTxs.push(tx)
+      } else if (
+        tx.typeInfo.type === TransactionType.FiatPurchase ||
+        tx.typeInfo.type === TransactionType.OnRampPurchase ||
+        tx.typeInfo.type === TransactionType.OnRampTransfer
+      ) {
+        offChainFiatOnRampTxs.set(tx.id, tx)
       }
       return map
     }
+    // First iterate over remote transactions, then local transactions
+    // This ensures that local transactions overwrite remote transactions
     const remoteTxMap = remoteTransactions.reduce(addToMap, new Map<string, TransactionDetails>())
     const localTxMap = localTransactions.reduce(addToMap, new Map<string, TransactionDetails>())
 
-    const deDupedTxs: TransactionDetails[] = [...offChainFiatOnRampTxs]
+    const deDupedTxs: TransactionDetails[] = [...offChainFiatOnRampTxs.values()]
 
     for (const hash of [...hashes]) {
       const remoteTx = remoteTxMap.get(hash)
@@ -252,7 +262,7 @@ export function useMergeLocalAndRemoteTransactions(
       }
 
       // If the tx is FiatPurchase and it's already on-chain, then use locally stored data, which comes from FOR provider API
-      if (localTx.typeInfo.type === TransactionType.FiatPurchase) {
+      if (!onRampTransactionsFromGraphQL && localTx.typeInfo.type === TransactionType.FiatPurchase) {
         deDupedTxs.push(localTx)
         continue
       }
@@ -283,7 +293,7 @@ export function useMergeLocalAndRemoteTransactions(
 
       return a.addedTime > b.addedTime ? -1 : 1
     })
-  }, [dispatch, localTransactions, remoteTransactions])
+  }, [dispatch, localTransactions, onRampTransactionsFromGraphQL, remoteTransactions])
 }
 
 function useLowestPendingNonce(): BigNumberish | undefined {

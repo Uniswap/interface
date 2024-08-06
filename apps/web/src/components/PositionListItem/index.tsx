@@ -10,13 +10,13 @@ import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from 'constant
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePool } from 'hooks/usePools'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { MEDIA_WIDTHS } from 'theme'
 import { HideSmall, SmallOnly, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -227,18 +227,22 @@ export default function PositionListItem({
               <Trans i18nKey="pool.min.label" />
               &nbsp;
             </ExtentsText>
-            <span>
-              {formatTickPrice({
-                price: priceLower,
-                atLimit: tickAtLimit,
-                direction: Bound.LOWER,
-              })}{' '}
-            </span>
             <Trans
-              i18nKey="common.xPerY"
+              i18nKey="liquidityPool.positions.price.formatted"
               components={{
-                x: <HoverInlineText text={currencyQuote?.symbol} />,
-                y: <HoverInlineText text={currencyBase?.symbol ?? ''} />,
+                amountWithSymbol: (
+                  <>
+                    <span>
+                      {formatTickPrice({
+                        price: priceLower,
+                        atLimit: tickAtLimit,
+                        direction: Bound.LOWER,
+                      })}{' '}
+                    </span>
+                    <HoverInlineText text={currencyQuote?.symbol} />
+                  </>
+                ),
+                outputToken: <HoverInlineText text={currencyBase?.symbol ?? ''} />,
               }}
             />
           </RangeText>{' '}
@@ -252,18 +256,22 @@ export default function PositionListItem({
             <ExtentsText>
               <Trans i18nKey="pool.max.label" />
             </ExtentsText>
-            <span>
-              {formatTickPrice({
-                price: priceUpper,
-                atLimit: tickAtLimit,
-                direction: Bound.UPPER,
-              })}{' '}
-            </span>
             <Trans
-              i18nKey="common.xPerY"
+              i18nKey="liquidityPool.positions.price.formatted"
               components={{
-                x: <HoverInlineText text={currencyQuote?.symbol} />,
-                y: <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />,
+                amountWithSymbol: (
+                  <>
+                    <span>
+                      {formatTickPrice({
+                        price: priceUpper,
+                        atLimit: tickAtLimit,
+                        direction: Bound.UPPER,
+                      })}{' '}
+                    </span>
+                    <HoverInlineText text={currencyQuote?.symbol} />
+                  </>
+                ),
+                outputToken: <HoverInlineText maxCharacters={10} text={currencyBase?.symbol} />,
               }}
             />
           </RangeText>

@@ -4,12 +4,12 @@ import { useToken } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { usePool } from 'hooks/usePools'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
-import { Trans } from 'i18n'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { selectPercent } from 'state/burn/v3/actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { AppState } from 'state/reducer'
 import { PositionDetails } from 'types/position'
+import { Trans } from 'uniswap/src/i18n'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 export function useBurnV3State(): AppState['burnV3'] {

@@ -2,11 +2,11 @@ import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import Modal from 'components/Modal'
 import { LoadingView, SubmittedView } from 'components/ModalViews'
-import { Trans } from 'i18n'
 import { useTheme } from 'lib/styled-components'
 import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 export const ProposalSubmissionModal = ({

@@ -23,11 +23,7 @@ import { SwapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/S
 import { UnknownSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/UnknownSummaryItem'
 import { WCSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/WCSummaryItem'
 import { WrapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/WrapSummaryItem'
-import {
-  SummaryItemProps,
-  SwapSummaryCallbacks,
-  TransactionSummaryLayoutProps,
-} from 'wallet/src/features/transactions/SummaryCards/types'
+import { SummaryItemProps, SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
 import {
   NFTTradeType,
   TransactionDetails,
@@ -42,7 +38,6 @@ export type ActivityItem = TransactionDetails | SectionHeader | LoadingItem
 export type ActivityItemRenderer = ({ item, index }: { item: ActivityItem; index: number }) => JSX.Element
 
 export function generateActivityItemRenderer(
-  layoutElement: React.FunctionComponent<TransactionSummaryLayoutProps>,
   loadingItem: JSX.Element,
   sectionHeaderElement: React.FunctionComponent<{ title: string; index?: number }>,
   swapCallbacks: SwapSummaryCallbacks | undefined,
@@ -102,7 +97,6 @@ export function generateActivityItemRenderer(
       key: item.id,
       authTrigger,
       transaction: item,
-      layoutElement,
       swapCallbacks,
       index,
     })

@@ -14,6 +14,7 @@ import Animated, { SharedValue } from 'react-native-reanimated'
 import { Route } from 'react-native-tab-view'
 import { Flex, Text } from 'ui/src'
 import { colorsLight, spacing } from 'ui/src/theme'
+import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { PendingNotificationBadge } from 'wallet/src/features/notifications/components/PendingNotificationBadge'
 
 export const TAB_VIEW_SCROLL_THROTTLE = 16
@@ -85,7 +86,7 @@ export type TabProps = {
   refreshing?: boolean
   onRefresh?: () => void
   headerHeight?: number
-  testID?: string
+  testID?: TestIDType
 }
 
 export type TabContentProps = Partial<FlatListProps<unknown>> & {
@@ -97,23 +98,39 @@ export type TabContentProps = Partial<FlatListProps<unknown>> & {
   scrollEventThrottle?: number
 }
 
+export type TabLabelProps = {
+  route: Route
+  focused: boolean
+  isExternalProfile?: boolean
+  textStyleType?: 'primary' | 'secondary'
+  enableNotificationBadge?: boolean
+}
 export const TabLabel = ({
   route,
   focused,
   isExternalProfile,
-}: {
-  route: Route
-  focused: boolean
-  isExternalProfile?: boolean
-}): JSX.Element => {
+  textStyleType = 'primary',
+  enableNotificationBadge,
+}: TabLabelProps): JSX.Element => {
   return (
     <Flex row alignItems="center" gap="$spacing4" testID={`home-tab-${route.title}`}>
-      <Text color={focused ? '$neutral1' : '$neutral2'} variant="body1">
+      <Text
+        color={
+          focused
+            ? textStyleType === 'primary'
+              ? '$neutral1'
+              : '$neutral2'
+            : textStyleType === 'primary'
+              ? '$neutral2'
+              : '$neutral3'
+        }
+        variant={textStyleType === 'primary' ? 'body1' : 'subheading2'}
+      >
         {route.title}
       </Text>
       {/* Streamline UI by hiding the Activity tab spinner when focused
       and showing it only on the specific pending transactions. */}
-      {route.title === 'Activity' && !isExternalProfile && !focused ? <PendingNotificationBadge /> : null}
+      {enableNotificationBadge && !isExternalProfile && !focused ? <PendingNotificationBadge /> : null}
     </Flex>
   )
 }

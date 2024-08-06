@@ -1,10 +1,10 @@
 import { CHART_TYPE_LABELS, ChartType, PriceChartType } from 'components/Charts/utils'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Trans } from 'i18n'
 import { css, useTheme } from 'lib/styled-components'
 import { useReducer } from 'react'
 import { Check, Info } from 'react-feather'
+import { Trans } from 'uniswap/src/i18n'
 import { isMobile } from 'utilities/src/platform'
 
 const StyledDropdownButton = css`

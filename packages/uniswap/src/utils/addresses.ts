@@ -34,7 +34,10 @@ export function getValidAddress(address: Maybe<string>, withChecksum = false, lo
       return getAddress(addressWith0x)
     } catch (error) {
       if (log) {
-        logger.warn('utils/addresses', 'getValidAddress', `Invalid address at checksum: ${address}`)
+        logger.warn('utils/addresses', 'getValidAddress', 'Invalid address at checksum', {
+          data: address,
+          stacktrace: new Error().stack,
+        })
       }
       return null
     }
@@ -42,7 +45,10 @@ export function getValidAddress(address: Maybe<string>, withChecksum = false, lo
 
   if (addressWith0x.length !== 42) {
     if (log) {
-      logger.warn('utils/addresses', 'getValidAddress', `Address has an invalid format: ${address}`)
+      logger.warn('utils/addresses', 'getValidAddress', 'Address has an invalid format', {
+        data: address,
+        stacktrace: new Error().stack,
+      })
     }
     return null
   }

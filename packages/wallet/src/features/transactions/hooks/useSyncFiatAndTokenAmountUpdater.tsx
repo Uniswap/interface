@@ -16,19 +16,19 @@ const NUM_DECIMALS_DISPLAY_FIAT = 2
  * we reference the current fiat input amount, and update the token amount. If not enabled, we update the fiat amount based on token
  * amount. This allows us to toggle between 2 modes, without losing the entered amount.
  */
-export function useSyncFiatAndTokenAmountUpdater(): void {
+export function useSyncFiatAndTokenAmountUpdater({ skip = false }: { skip?: boolean }): void {
   const { isFiatMode, updateSwapForm, exactAmountToken, exactAmountFiat, derivedSwapInfo, exactCurrencyField } =
     useSwapFormContext()
 
   const exactCurrency = derivedSwapInfo.currencies[exactCurrencyField]
 
-  const usdPriceOfCurrency = useUSDCPrice(exactCurrency?.currency ?? undefined)
+  const usdPriceOfCurrency = useUSDCPrice(skip ? undefined : exactCurrency?.currency ?? undefined)
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
   const chainId = currencyIdToChain(exactCurrency?.currencyId ?? '')
 
   useEffect(() => {
-    if (!exactCurrency || !usdPriceOfCurrency || !chainId) {
+    if (skip || !exactCurrency || !usdPriceOfCurrency || !chainId) {
       return
     }
 
@@ -67,5 +67,6 @@ export function useSyncFiatAndTokenAmountUpdater(): void {
     chainId,
     usdPriceOfCurrency,
     isFiatMode,
+    skip,
   ])
 }

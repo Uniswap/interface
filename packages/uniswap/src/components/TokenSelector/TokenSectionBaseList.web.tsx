@@ -1,4 +1,4 @@
-import { isEqual } from 'lodash'
+import { isEqual } from 'es-toolkit'
 import React, { CSSProperties, Key, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
@@ -11,6 +11,7 @@ import {
 } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
 
 const ITEM_ROW_HEIGHT = 72
+const ITEM_SECTION_HEADER_ROW_HEIGHT = 40
 
 type BaseListRowInfo = {
   key: Key | undefined
@@ -103,7 +104,8 @@ export function TokenSectionBaseList({
       } else if (measuredHeight) {
         return measuredHeight
       }
-      return ITEM_ROW_HEIGHT
+
+      return isSectionHeader(item) ? ITEM_SECTION_HEADER_ROW_HEIGHT : ITEM_ROW_HEIGHT
     },
     [items],
   )
@@ -200,10 +202,14 @@ function _Row({ index, itemData, style, windowWidth, updateRowHeight }: RowProps
   const rowRef = useRef<HTMLElement>(null)
 
   useEffect(() => {
-    const height = rowRef.current?.getBoundingClientRect().height
-    if (height && updateRowHeight) {
+    // We need to run this in the next tick to get the correct height.
+    setTimeout(() => {
+      const height = rowRef.current?.getBoundingClientRect().height
+      if (!height || !updateRowHeight) {
+        return
+      }
       updateRowHeight(index, height)
-    }
+    }, 0)
   }, [updateRowHeight, index, windowWidth])
 
   return (

@@ -2,6 +2,8 @@ import { DynamicConfigKeys } from 'uniswap/src/features/gating/configs'
 import { ExperimentProperties, Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import {
+  DynamicConfig,
+  Statsig,
   useConfig,
   useExperiment,
   useExperimentWithExposureLoggingDisabled,
@@ -15,15 +17,46 @@ export function useFeatureFlag(flag: FeatureFlags): boolean {
   return value
 }
 
+export function useFeatureFlagWithLoading(flag: FeatureFlags): { value: boolean; isLoading: boolean } {
+  const name = getFeatureFlagName(flag)
+  const { value, isLoading } = useGate(name)
+  return { value, isLoading }
+}
+
+export function getFeatureFlag(flag: FeatureFlags): boolean {
+  const name = getFeatureFlagName(flag)
+  return Statsig.checkGate(name)
+}
+
 export function useFeatureFlagWithExposureLoggingDisabled(flag: FeatureFlags): boolean {
   const name = getFeatureFlagName(flag)
   const { value } = useGateWithExposureLoggingDisabled(name)
   return value
 }
 
+export function getFeatureFlagWithExposureLoggingDisabled(flag: FeatureFlags): boolean {
+  const name = getFeatureFlagName(flag)
+  return Statsig.checkGateWithExposureLoggingDisabled(name)
+}
+
 export function useExperimentGroupName(experiment: Experiments): string | null {
   const statsigExperiment = useExperiment(experiment).config
   return statsigExperiment.getGroupName()
+}
+
+function getValueFromConfig<ValType>(
+  config: DynamicConfig,
+  param: string,
+  defaultValue: ValType,
+  customTypeGuard?: (x: unknown) => boolean,
+): ValType {
+  return config.get(param, defaultValue, (value): value is ValType => {
+    if (customTypeGuard) {
+      return customTypeGuard(value)
+    } else {
+      return typeof value === typeof defaultValue
+    }
+  })
 }
 
 export function useExperimentValue<
@@ -32,13 +65,16 @@ export function useExperimentValue<
   ValType,
 >(experiment: Exp, param: Param, defaultValue: ValType, customTypeGuard?: (x: unknown) => boolean): ValType {
   const statsigExperiment = useExperiment(experiment).config
-  return statsigExperiment.get(param, defaultValue, (value): value is ValType => {
-    if (customTypeGuard) {
-      return customTypeGuard(value)
-    } else {
-      return typeof value === typeof defaultValue
-    }
-  })
+  return getValueFromConfig(statsigExperiment, param, defaultValue, customTypeGuard)
+}
+
+export function getExperimentValue<
+  Exp extends keyof ExperimentProperties,
+  Param extends ExperimentProperties[Exp],
+  ValType,
+>(experiment: Exp, param: Param, defaultValue: ValType, customTypeGuard?: (x: unknown) => boolean): ValType {
+  const statsigExperiment = Statsig.getExperiment(experiment)
+  return getValueFromConfig(statsigExperiment, param, defaultValue, customTypeGuard)
 }
 
 export function useExperimentValueWithExposureLoggingDisabled<
@@ -47,13 +83,16 @@ export function useExperimentValueWithExposureLoggingDisabled<
   ValType,
 >(experiment: Exp, param: Param, defaultValue: ValType, customTypeGuard?: (x: unknown) => boolean): ValType {
   const statsigExperiment = useExperimentWithExposureLoggingDisabled(experiment).config
-  return statsigExperiment.get(param, defaultValue, (value): value is ValType => {
-    if (customTypeGuard) {
-      return customTypeGuard(value)
-    } else {
-      return typeof value === typeof defaultValue
-    }
-  })
+  return getValueFromConfig(statsigExperiment, param, defaultValue, customTypeGuard)
+}
+
+export function getExperimentValueWithExposureLoggingDisabled<
+  Exp extends keyof ExperimentProperties,
+  Param extends ExperimentProperties[Exp],
+  ValType,
+>(experiment: Exp, param: Param, defaultValue: ValType, customTypeGuard?: (x: unknown) => boolean): ValType {
+  const statsigExperiment = Statsig.getExperimentWithExposureLoggingDisabled(experiment)
+  return getValueFromConfig(statsigExperiment, param, defaultValue, customTypeGuard)
 }
 
 export function useDynamicConfigValue<
@@ -62,11 +101,14 @@ export function useDynamicConfigValue<
   ValType,
 >(config: Conf, key: Key, defaultValue: ValType, customTypeGuard?: (x: unknown) => boolean): ValType {
   const { config: dynamicConfig } = useConfig(config)
-  return dynamicConfig.get(key, defaultValue, (value): value is ValType => {
-    if (customTypeGuard) {
-      return customTypeGuard(value)
-    } else {
-      return typeof value === typeof defaultValue
-    }
-  })
+  return getValueFromConfig(dynamicConfig, key, defaultValue, customTypeGuard)
+}
+
+export function getDynamicConfigValue<
+  Conf extends keyof DynamicConfigKeys,
+  Key extends DynamicConfigKeys[Conf],
+  ValType,
+>(config: Conf, key: Key, defaultValue: ValType, customTypeGuard?: (x: unknown) => boolean): ValType {
+  const dynamicConfig = Statsig.getConfig(config)
+  return getValueFromConfig(dynamicConfig, key, defaultValue, customTypeGuard)
 }

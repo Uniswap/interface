@@ -58,12 +58,8 @@ export default function TokenWarningModal({
 
   const showWarningIcon = safetyLevel === SafetyLevel.StrongWarning || safetyLevel === SafetyLevel.Blocked
 
-  if (!isVisible) {
-    return null
-  }
-
   return (
-    <BottomSheetModal name={ModalName.TokenWarningModal} onClose={onClose}>
+    <BottomSheetModal isModalOpen={isVisible} maxWidth={420} name={ModalName.TokenWarningModal} onClose={onClose}>
       <Flex
         centered
         gap="$spacing16"

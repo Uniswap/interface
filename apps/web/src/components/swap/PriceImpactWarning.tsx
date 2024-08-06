@@ -3,10 +3,10 @@ import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { RowBetween, RowFixed } from 'components/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Trans } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
+import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
 const StyledCard = styled(OutlineCard)`

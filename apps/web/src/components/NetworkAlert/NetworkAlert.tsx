@@ -4,12 +4,12 @@ import { RowBetween } from 'components/Row'
 import { getChain, useIsSupportedChainId } from 'constants/chains'
 import { useIsSendPage } from 'hooks/useIsSendPage'
 import { useIsSwapPage } from 'hooks/useIsSwapPage'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { ArrowUpRight } from 'react-feather'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { Trans } from 'uniswap/src/i18n'
 
 const BridgeLink = styled(ExternalLink)<{ bgColor: string }>`
   color: ${({ color }) => color};

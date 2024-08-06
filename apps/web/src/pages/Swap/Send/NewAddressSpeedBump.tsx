@@ -3,10 +3,10 @@ import { Dialog } from 'components/Dialog/Dialog'
 import { UserIcon } from 'components/Icons/UserIcon'
 import Identicon, { IdenticonType, useIdenticonType } from 'components/Identicon'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
 import styled, { useTheme } from 'lib/styled-components'
 import { useSendContext } from 'state/send/SendContext'
 import { ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 const StyledUserIcon = styled(UserIcon)`
   width: 28px;
@@ -51,11 +51,11 @@ export const NewAddressSpeedBumpModal = ({ onCancel, onConfirm }: { onCancel: ()
       onCancel={onCancel}
       buttonsConfig={{
         left: {
-          title: <Trans i18nKey="common.cancel.button" />,
+          title: <Trans i18nKey="common.button.cancel" />,
           onClick: onCancel,
         },
         right: {
-          title: <Trans i18nKey="common.continue.button" />,
+          title: <Trans i18nKey="common.button.continue" />,
           onClick: onConfirm,
         },
       }}

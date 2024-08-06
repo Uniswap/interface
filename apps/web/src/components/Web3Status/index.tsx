@@ -10,7 +10,6 @@ import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
 import { atom, useAtom } from 'jotai'
 import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
@@ -21,6 +20,7 @@ import { flexRowNoWrap } from 'theme/styles'
 import { Unitag } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import { isIFramed } from 'utils/isIFramed'
 
 // https://stackoverflow.com/a/31617326

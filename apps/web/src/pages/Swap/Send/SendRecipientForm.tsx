@@ -7,7 +7,6 @@ import useENSName from 'hooks/useENSName'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
-import { Plural, Trans, t } from 'i18n'
 import styled, { css, keyframes } from 'lib/styled-components'
 import { ChangeEvent, ForwardedRef, KeyboardEvent, forwardRef, useCallback, useRef, useState } from 'react'
 import { X } from 'react-feather'
@@ -15,9 +14,11 @@ import { useSendContext } from 'state/send/SendContext'
 import { RecipientData } from 'state/send/hooks'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
+import { capitalize } from 'tsafe'
 import { Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
+import { Plural, Trans, t, useTranslation } from 'uniswap/src/i18n'
 import { shortenAddress } from 'utilities/src/addresses'
 
 const StyledConfirmedRecipientRow = styled(Row)`
@@ -219,6 +220,7 @@ const AutocompleteFlyout = forwardRef((props: AutocompleteFlyoutProps, ref: Forw
 AutocompleteFlyout.displayName = 'AutocompleteFlyout'
 
 export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
+  const { t } = useTranslation()
   const account = useAccount()
   const { sendState, setSendState, derivedSendInfo } = useSendContext()
   const { recipient } = sendState
@@ -306,7 +308,7 @@ export function SendRecipientForm({ disabled }: { disabled?: boolean }) {
       {showInputField ? (
         <>
           <Text variant="body3" userSelect="none" color="$neutral2">
-            <Trans i18nKey="common.to.caps" />
+            {capitalize(t('common.to'))}
           </Text>
           <StyledRecipientInputRow justify="space-between">
             <Row ref={inputWrapperNode}>

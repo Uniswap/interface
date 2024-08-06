@@ -33,10 +33,16 @@ export function* transferToken(params: Params) {
       options: { request: txRequest },
       typeInfo,
     })
+
+    const amountUSD = params.transferTokenParams.currencyAmountUSD
+      ? parseFloat(params.transferTokenParams.currencyAmountUSD.toFixed(2))
+      : undefined
+
     sendAnalyticsEvent(WalletEventName.TransferSubmitted, {
       chainId: params.transferTokenParams.chainId,
       tokenAddress: params.transferTokenParams.tokenAddress,
       toAddress: params.transferTokenParams.toAddress,
+      amountUSD,
     })
     logger.debug('transferTokenSaga', 'transferToken', 'Transfer submitted')
   } catch (error) {
@@ -91,12 +97,13 @@ function* validateTransfer(transferTokenParams: TransferTokenParams) {
 }
 
 function getTransferTypeInfo(params: TransferTokenParams): SendTokenTransactionInfo {
-  const { type: assetType, toAddress, tokenAddress } = params
+  const { type: assetType, toAddress, tokenAddress, currencyAmountUSD } = params
   const typeInfo: SendTokenTransactionInfo = {
     assetType,
     recipient: toAddress,
     tokenAddress,
     type: TransactionType.Send,
+    currencyAmountUSD,
   }
 
   if (assetType === AssetType.ERC721 || assetType === AssetType.ERC1155) {

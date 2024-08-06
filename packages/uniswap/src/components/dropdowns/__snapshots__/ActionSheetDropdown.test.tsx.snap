@@ -18,8 +18,6 @@ exports[`ActionSheetDropdown should render 1`] = `
     {
       "flexDirection": "column",
       "opacity": 1,
-      "paddingBottom": 8,
-      "paddingTop": 8,
       "transform": [
         {
           "scale": 1,
@@ -33,6 +31,8 @@ exports[`ActionSheetDropdown should render 1`] = `
     style={
       {
         "flexDirection": "column",
+        "paddingBottom": 8,
+        "paddingTop": 8,
       }
     }
     testID="dropdown-toggle"

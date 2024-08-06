@@ -14,7 +14,7 @@ import {
   WarningSeverity,
 } from 'wallet/src/features/transactions/WarningModal/types'
 
-type WarningWithStyle = {
+export type WarningWithStyle = {
   warning: Warning
   color: WarningColor
   Icon: FunctionComponent<SvgProps> | typeof AlertTriangle | null

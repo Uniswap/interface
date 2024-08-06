@@ -5,7 +5,7 @@ import { useContract } from 'hooks/useContract'
 import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import ms from 'ms'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { trace } from 'tracing/trace'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
 import { Permit2 } from 'uniswap/src/abis/types'
@@ -21,7 +21,7 @@ function toDeadline(expiration: number): number {
 }
 
 export function usePermitAllowance(token?: Token, owner?: string, spender?: string) {
-  const contract = useContract<Permit2>(permit2Address(token?.chainId), PERMIT2_ABI)
+  const contract = useContract<Permit2>(permit2Address(token?.chainId), PERMIT2_ABI, undefined, token?.chainId)
   const inputs = useMemo(() => [owner, token?.address, spender], [owner, spender, token?.address])
 
   // If there is no allowance yet, re-check next observed block.
@@ -60,18 +60,21 @@ export function useUpdatePermitAllowance(
 ) {
   const account = useAccount()
   const signer = useEthersSigner()
+  const accountRef = useRef(account)
+  accountRef.current = account
+  const signerRef = useRef(signer)
+  signerRef.current = signer
+
   return useCallback(
     () =>
       trace({ name: 'Permit2', op: 'permit.permit2.signature' }, async (trace) => {
         try {
+          const account = accountRef.current
           if (account.status !== 'connected') {
             throw new Error('wallet not connected')
           }
           if (!account.chainId) {
             throw new Error('connected to an unsupported network')
-          }
-          if (!signer) {
-            throw new Error('missing signer')
           }
           if (!token) {
             throw new Error('missing token')
@@ -101,6 +104,10 @@ export function useUpdatePermitAllowance(
           )
           const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async (walletTrace) => {
             try {
+              const signer = signerRef.current
+              if (!signer) {
+                throw new Error('missing signer')
+              }
               return await signTypedData(signer, domain, types, values)
             } catch (error) {
               if (didUserReject(error)) {
@@ -124,6 +131,6 @@ export function useUpdatePermitAllowance(
           }
         }
       }),
-    [account.chainId, account.status, nonce, onPermitSignature, signer, spender, token],
+    [nonce, onPermitSignature, spender, token],
   )
 }

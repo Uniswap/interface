@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { MobileAppsFlyerEvents, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
@@ -22,15 +22,14 @@ import {
 } from 'wallet/src/features/telemetry/slice'
 import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { useAppSelector } from 'wallet/src/state'
 
 export function useLastBalancesReporter(): void {
   const dispatch = useDispatch()
 
   const accounts = useAccounts()
-  const lastBalancesReport = useAppSelector(selectLastBalancesReport)
-  const lastBalancesReportValue = useAppSelector(selectLastBalancesReportValue)
-  const walletIsFunded = useAppSelector(selectWalletIsFunded)
+  const lastBalancesReport = useSelector(selectLastBalancesReport)
+  const lastBalancesReportValue = useSelector(selectLastBalancesReportValue)
+  const walletIsFunded = useSelector(selectWalletIsFunded)
 
   const signerAccountAddresses = useMemo(() => {
     return Object.values(accounts)
@@ -89,8 +88,8 @@ export function useLastBalancesReporter(): void {
 // Only logs when the user has allowing product analytics off and a heartbeat has not been sent for the user's local day
 export function useHeartbeatReporter(): void {
   const dispatch = useDispatch()
-  const allowAnalytics = useAppSelector(selectAllowAnalytics)
-  const lastHeartbeat = useAppSelector(selectLastHeartbeat)
+  const allowAnalytics = useSelector(selectAllowAnalytics)
+  const lastHeartbeat = useSelector(selectLastHeartbeat)
 
   const nowDate = new Date(Date.now())
   const lastHeartbeatDate = new Date(lastHeartbeat)

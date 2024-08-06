@@ -4,17 +4,20 @@ import { Button, Flex, useSporeColors } from 'ui/src'
 import { opacify, validColor } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { TestID, TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { getContrastPassingTextColor } from 'uniswap/src/utils/colors'
 
 function CTAButton({
   title,
   element,
   onPress,
+  testID,
   tokenColor,
 }: {
   title: string
   element: ElementNameType
   onPress: () => void
+  testID?: TestIDType
   tokenColor?: Maybe<string>
 }): JSX.Element {
   const colors = useSporeColors()
@@ -31,6 +34,7 @@ function CTAButton({
         onPress={onPress}
         size="large"
         backgroundColor={validColor(tokenColor) ?? '$accent1'}
+        testID={testID}
       >
         {title}
       </Button>
@@ -64,6 +68,7 @@ export function TokenDetailsActionButtons({
     >
       <CTAButton
         element={ElementName.Buy}
+        testID={TestID.TokenDetailsBuyButton}
         title={t('common.button.buy')}
         tokenColor={tokenColor}
         onPress={onPressBuy}
@@ -71,6 +76,7 @@ export function TokenDetailsActionButtons({
       {userHasBalance && (
         <CTAButton
           element={ElementName.Sell}
+          testID={TestID.TokenDetailsSellButton}
           title={t('common.button.sell')}
           tokenColor={tokenColor}
           onPress={onPressSell}

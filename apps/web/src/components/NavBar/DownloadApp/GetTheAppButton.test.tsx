@@ -15,7 +15,5 @@ describe('GetTheAppButton', () => {
 
     expect(container).toMatchSnapshot()
     expect(screen.getByText('Get the app')).toBeVisible()
-    expect(screen.getByTestId('apple-logo')).toBeVisible()
-    expect(screen.getByTestId('google-play-store-logo')).toBeVisible()
   })
 })

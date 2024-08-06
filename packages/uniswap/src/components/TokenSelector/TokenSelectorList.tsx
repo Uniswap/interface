@@ -42,7 +42,6 @@ function TokenOptionItemWrapper({
   onSelectCurrency,
   section,
   index,
-  chainFilter,
   showWarnings,
   showTokenAddress,
   useTokenWarningDismissedHook,
@@ -53,7 +52,6 @@ function TokenOptionItemWrapper({
   onSelectCurrency: OnSelectCurrency
   section: TokenSection
   index: number
-  chainFilter: Maybe<UniverseChainId>
   showWarnings: boolean
   showTokenAddress?: boolean
   useTokenWarningDismissedHook: TokenWarningDismissedHook
@@ -80,7 +78,6 @@ function TokenOptionItemWrapper({
         value: tokenOption.quantity,
         type: NumberType.TokenTx,
       })}
-      showNetworkPill={!chainFilter && tokenOption.currencyInfo.currency.chainId !== UniverseChainId.Mainnet}
       showTokenAddress={showTokenAddress}
       showWarnings={showWarnings}
       tokenWarningDismissed={tokenWarningDismissed}
@@ -153,7 +150,6 @@ function _TokenSelectorList({
       if (!isSuggestedTokenItem(item) && !isSuggestedTokenSection(section)) {
         return (
           <TokenOptionItemWrapper
-            chainFilter={chainFilter}
             convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
             formatNumberOrStringCallback={formatNumberOrStringCallback}
             index={index}
@@ -171,7 +167,6 @@ function _TokenSelectorList({
       return null
     },
     [
-      chainFilter,
       onSelectCurrency,
       showTokenAddress,
       showTokenWarnings,
@@ -208,7 +203,7 @@ function _TokenSelectorList({
     )
   }
 
-  if (loading) {
+  if (!sections && loading) {
     return (
       <Flex grow>
         <Flex py="$spacing16" width={80}>

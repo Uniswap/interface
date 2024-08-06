@@ -1,6 +1,5 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useNftAssetDetails } from 'graphql/data/nft/Details'
-import { t } from 'i18n'
 import styled from 'lib/styled-components'
 import { AssetDetails } from 'nft/components/details/AssetDetails'
 import { AssetDetailsLoading } from 'nft/components/details/AssetDetailsLoading'
@@ -12,6 +11,7 @@ import { Helmet } from 'react-helmet-async/lib/index'
 import { Navigate, useParams } from 'react-router-dom'
 import { formatNFTAssetMetatagTitleName } from 'shared-cloud/metatags'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { t } from 'uniswap/src/i18n'
 import { isIFramed } from 'utils/isIFramed'
 
 const AssetContainer = styled.div`

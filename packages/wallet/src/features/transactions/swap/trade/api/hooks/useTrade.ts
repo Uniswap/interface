@@ -3,17 +3,18 @@ import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
+import { QuoteRequest, TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { isMainnetChainId } from 'uniswap/src/features/chains/utils'
-import { DynamicConfigs, PollingIntervalsConfigKey } from 'uniswap/src/features/gating/configs'
+import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import { isMobile } from 'utilities/src/platform'
 import { ONE_SECOND_MS, inXMinutesUnix } from 'utilities/src/time/time'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
-import { QuoteRequest, TradeType as TradingApiTradeType } from 'wallet/src/data/tradingApi/__generated__/index'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/api/client'
 import {
@@ -161,7 +162,8 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
 
   return useMemo(() => {
     // Error logging
-    if (error && !isUSDQuote) {
+    // We use DataDog to catch network errors on Mobile
+    if (error && (!isMobile || !error.networkError) && !isUSDQuote) {
       logger.error(error, { tags: { file: 'useTrade', function: 'quote' } })
     }
     if (data && !data.quote) {
@@ -253,14 +255,14 @@ const FALLBACK_L2_BLOCK_TIME_MS = 3000
 
 function usePollingIntervalByChain(chainId?: WalletChainId): number {
   const averageL1BlockTimeMs = useDynamicConfigValue(
-    DynamicConfigs.PollingIntervals,
-    PollingIntervalsConfigKey.AverageL1BlockTimeMs,
+    DynamicConfigs.Swap,
+    SwapConfigKey.AverageL1BlockTimeMs,
     FALLBACK_L1_BLOCK_TIME_MS,
   )
 
   const averageL2BlockTimeMs = useDynamicConfigValue(
-    DynamicConfigs.PollingIntervals,
-    PollingIntervalsConfigKey.AverageL2BlockTimeMs,
+    DynamicConfigs.Swap,
+    SwapConfigKey.AverageL2BlockTimeMs,
     FALLBACK_L2_BLOCK_TIME_MS,
   )
 

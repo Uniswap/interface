@@ -1,7 +1,7 @@
 import { useNetInfo } from '@react-native-community/netinfo'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
 import { BANNER_HEIGHT, BottomBanner } from 'src/components/banners/BottomBanner'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
 import { useSporeColors } from 'ui/src'
@@ -17,8 +17,8 @@ export function OfflineBanner(): JSX.Element | null {
   const netInfo = useNetInfo()
 
   // don't show the offline banner in onboarding
-  const finishedOnboarding = useAppSelector(selectFinishedOnboarding)
-  const isModalOpen = useAppSelector(selectSomeModalOpen)
+  const finishedOnboarding = useSelector(selectFinishedOnboarding)
+  const isModalOpen = useSelector(selectSomeModalOpen)
 
   // Needs to explicity check for false since `netInfo.isConnected` may be null
   const showBanner = netInfo.isConnected === false && finishedOnboarding && !isModalOpen

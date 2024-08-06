@@ -11,8 +11,6 @@ import Column, { AutoColumn } from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { AutoRow } from 'components/Row'
 import { SupportedInterfaceChainId, useIsSupportedChainId } from 'constants/chains'
-import useENSName from 'hooks/useENSName'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { X } from 'react-feather'
 import { useOrder } from 'state/signatures/hooks'
@@ -20,6 +18,7 @@ import { useTransaction } from 'state/transactions/hooks'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -103,7 +102,6 @@ const Descriptor = styled(ThemedText.BodySmall)`
 type ActivityPopupContentProps = { activity: Activity; onClick: () => void; onClose: () => void }
 function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupContentProps) {
   const success = activity.status === TransactionStatus.Confirmed && !activity.cancelled
-  const { ENSName } = useENSName(activity?.otherAccount)
 
   return (
     <PopupContainer>
@@ -124,12 +122,7 @@ function ActivityPopupContent({ activity, onClick, onClose }: ActivityPopupConte
           )
         }
         title={<ThemedText.SubHeader>{activity.title}</ThemedText.SubHeader>}
-        descriptor={
-          <Descriptor color="neutral2">
-            {activity.descriptor}
-            {ENSName ?? activity.otherAccount}
-          </Descriptor>
-        }
+        descriptor={<Descriptor color="neutral2">{activity.descriptor}</Descriptor>}
         onClick={onClick}
       />
     </PopupContainer>

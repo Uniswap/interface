@@ -1,5 +1,7 @@
 import { getTestSelector } from '../utils'
 
+const DOWNLOAD_APP_MODAL_TITLE = 'Get started with Uniswap'
+
 describe('Landing Page', () => {
   it('shows landing page when no user state exists', () => {
     cy.visit('/', { eagerlyConnect: false })
@@ -34,15 +36,18 @@ describe('Landing Page', () => {
   it('allows navigation to pool', () => {
     cy.viewport(2000, 1600)
     cy.visit('/swap')
-    cy.get(getTestSelector('pool-nav-link')).first().click()
+    cy.get(getTestSelector('Pool-tab')).first().click()
     cy.url().should('include', '/pool')
   })
 
   it('allows navigation to pool on mobile', () => {
     cy.viewport('iphone-6')
     cy.visit('/swap')
-    cy.get(getTestSelector('pool-nav-link')).last().click()
-    cy.url().should('include', '/pool')
+    cy.get(getTestSelector('nav-company-menu')).should('be.visible').click()
+    cy.get(getTestSelector('company-menu-mobile-drawer')).should('be.visible').within(() => {
+      cy.contains('Pool').should('be.visible').click()
+      cy.url().should('include', '/pool')
+    })
   })
 
   it('does not render landing page when / path is blocked', () => {
@@ -106,7 +111,7 @@ describe('Landing Page', () => {
   it('hides call to action text on small screen sizes', () => {
     cy.viewport('iphone-8')
     cy.visit('/?intro=true')
-    cy.get(getTestSelector('get-the-app-cta')).should('not.be.visible')
+    cy.contains('Get the app').should('not.exist')
   })
 
   it('opens modal when Get-the-App button is selected', () => {
@@ -114,7 +119,7 @@ describe('Landing Page', () => {
     cy.get('nav').within(() => {
       cy.contains('Get the app').should('exist').click()
     })
-    cy.contains('Download the Uniswap app').should('exist')
+    cy.contains(DOWNLOAD_APP_MODAL_TITLE).should('exist')
   })
 
   it('closes modal when close button is selected', () => {
@@ -122,9 +127,9 @@ describe('Landing Page', () => {
     cy.get('nav').within(() => {
       cy.contains('Get the app').should('exist').click()
     })
-    cy.contains('Download the Uniswap app').should('exist')
+    cy.contains(DOWNLOAD_APP_MODAL_TITLE).should('exist')
     cy.get(getTestSelector('get-the-app-close-button')).click()
-    cy.contains('Download the Uniswap app').should('not.exist')
+    cy.contains(DOWNLOAD_APP_MODAL_TITLE).should('not.exist')
   })
 
   it('closes modal when user selects area outside of modal', () => {
@@ -132,8 +137,8 @@ describe('Landing Page', () => {
     cy.get('nav').within(() => {
       cy.contains('Get the app').should('exist').click()
     })
-    cy.contains('Download the Uniswap app').should('exist')
+    cy.contains(DOWNLOAD_APP_MODAL_TITLE).should('exist')
     cy.get('nav').click({ force: true })
-    cy.contains('Download the Uniswap app').should('not.exist')
+    cy.contains(DOWNLOAD_APP_MODAL_TITLE).should('not.exist')
   })
 })

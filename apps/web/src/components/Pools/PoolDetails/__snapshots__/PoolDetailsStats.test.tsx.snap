@@ -309,15 +309,19 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
                   class="c10"
                 >
                   <div
-                    class="c11"
-                    size="20"
+                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                   >
-                     
-                    <img
-                      class="c12"
+                    <div
+                      class="c11"
                       size="20"
-                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                    />
+                    >
+                       
+                      <img
+                        class="c12"
+                        size="20"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -340,15 +344,19 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
                   class="c10"
                 >
                   <div
-                    class="c11"
-                    size="20"
+                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                   >
-                     
-                    <img
-                      class="c12"
+                    <div
+                      class="c11"
                       size="20"
-                      src="ethereum-logo.png"
-                    />
+                    >
+                       
+                      <img
+                        class="c12"
+                        size="20"
+                        src="ethereum-logo.png"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -802,15 +810,19 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
                     class="c11"
                   >
                     <div
-                      class="c12"
-                      size="16"
+                      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                     >
-                       
-                      <img
-                        class="c13"
+                      <div
+                        class="c12"
                         size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                      />
+                      >
+                         
+                        <img
+                          class="c13"
+                          size="16"
+                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -833,15 +845,19 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
                     class="c11"
                   >
                     <div
-                      class="c12"
-                      size="16"
+                      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
                     >
-                       
-                      <img
-                        class="c13"
+                      <div
+                        class="c12"
                         size="16"
-                        src="ethereum-logo.png"
-                      />
+                      >
+                         
+                        <img
+                          class="c13"
+                          size="16"
+                          src="ethereum-logo.png"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>

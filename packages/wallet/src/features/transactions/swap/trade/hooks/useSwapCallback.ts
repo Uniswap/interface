@@ -1,7 +1,7 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setHasSubmittedHoldToSwap } from 'wallet/src/features/behaviorHistory/slice'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -13,7 +13,6 @@ import { swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
 import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/api/utils'
 import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
-import { useAppSelector } from 'wallet/src/state'
 import { toStringish } from 'wallet/src/utils/number'
 
 interface SwapCallbackArgs {
@@ -33,7 +32,7 @@ interface SwapCallbackArgs {
 export function useSwapCallback(): (args: SwapCallbackArgs) => void {
   const appDispatch = useDispatch()
   const formatter = useLocalizationContext()
-  const swapStartTimestamp = useAppSelector(selectSwapStartTimestamp)
+  const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
 
   return useCallback(
     (args: SwapCallbackArgs) => {
@@ -51,7 +50,7 @@ export function useSwapCallback(): (args: SwapCallbackArgs) => void {
       } = args
       const { trade, gasFee } = swapTxContext
 
-      const analytics = getBaseTradeAnalyticsProperties({ formatter, trade })
+      const analytics = getBaseTradeAnalyticsProperties({ formatter, trade, currencyInAmountUSD, currencyOutAmountUSD })
       appDispatch(swapActions.trigger({ swapTxContext, txId, account, analytics, onSubmit, onFailure }))
 
       const blockNumber = getClassicQuoteFromResponse(trade?.quote)?.blockNumber?.toString()
@@ -60,8 +59,6 @@ export function useSwapCallback(): (args: SwapCallbackArgs) => void {
         ...analytics,
         estimated_network_fee_wei: gasFee.value,
         gas_limit: isClassic(swapTxContext) ? toStringish(swapTxContext.txRequest.gasLimit) : undefined,
-        token_in_amount_usd: currencyInAmountUSD ? parseFloat(currencyInAmountUSD.toFixed(2)) : undefined,
-        token_out_amount_usd: currencyOutAmountUSD ? parseFloat(currencyOutAmountUSD.toFixed(2)) : undefined,
         transaction_deadline_seconds: trade.deadline,
         swap_quote_block_number: blockNumber,
         is_auto_slippage: isAutoSlippage,

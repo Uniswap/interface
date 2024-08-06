@@ -6,7 +6,8 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { maxAmountSpend } from 'wallet/src/utils/balance'
+import { useMaxAmountSpend } from 'wallet/src/features/gas/useMaxAmountSpend'
+import { TransactionType } from 'wallet/src/features/transactions/types'
 
 interface MaxAmountButtonProps {
   currencyAmount: CurrencyAmount<Currency> | null | undefined
@@ -14,6 +15,7 @@ interface MaxAmountButtonProps {
   onSetMax: (amount: string) => void
   style?: StyleProp<ViewStyle>
   currencyField: CurrencyField
+  transactionType?: TransactionType
 }
 
 export function MaxAmountButton({
@@ -22,10 +24,11 @@ export function MaxAmountButton({
   onSetMax,
   style,
   currencyField,
+  transactionType,
 }: MaxAmountButtonProps): JSX.Element {
   const { t } = useTranslation()
 
-  const maxInputAmount = maxAmountSpend(currencyBalance)
+  const maxInputAmount = useMaxAmountSpend(currencyBalance, transactionType)
 
   // Disable max button if max already set or when balance is not sufficient
   const disableMaxButton =

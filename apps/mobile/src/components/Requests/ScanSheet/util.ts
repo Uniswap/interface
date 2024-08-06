@@ -68,12 +68,6 @@ const EASTER_EGG_QR_CODE = 'DO_NOT_SCAN_OR_ELSE_YOU_WILL_GO_TO_MOBILE_TEAM_JAIL'
 export const CUSTOM_UNI_QR_CODE_PREFIX = 'hello_uniwallet:'
 export const UWULINK_PREFIX = 'uwulink' as const
 
-export const truncateQueryParams = (url: string): string => {
-  // In fact, the first element will be always returned below. url is
-  // added as a fallback just to satisfy TypeScript.
-  return url.split('?')[0] ?? url
-}
-
 export async function getSupportedURI(
   uri: string,
   enabledFeatureFlags?: EnabledFeatureFlags,

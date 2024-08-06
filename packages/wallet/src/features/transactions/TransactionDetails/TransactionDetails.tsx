@@ -18,13 +18,14 @@ import {
 } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { SwapFee } from 'wallet/src/features/transactions/TransactionDetails/SwapFee'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
+import { UniswapXGasBreakdown } from 'wallet/src/features/transactions/swap/trade/api/hooks/useSwapTxAndGasInfo'
 import { SwapFeeInfo } from 'wallet/src/features/transactions/swap/trade/types'
 
 interface TransactionDetailsProps {
   banner?: ReactNode
   chainId: WalletChainId
   gasFee: GasFeeResult
-  preUniswapXGasFeeUSD?: number
+  uniswapXGasBreakdown?: UniswapXGasBreakdown
   showExpandedChildren?: boolean
   swapFeeInfo?: SwapFeeInfo
   showWarning?: boolean
@@ -42,7 +43,7 @@ export function TransactionDetails({
   showExpandedChildren,
   chainId,
   gasFee,
-  preUniswapXGasFeeUSD,
+  uniswapXGasBreakdown,
   swapFeeInfo,
   showWarning,
   warning,
@@ -107,7 +108,7 @@ export function TransactionDetails({
             onPress={onPressToggleShowChildren}
           >
             <Text color="$neutral3" variant="body3">
-              {showChildren ? t('swap.details.action.less') : t('swap.details.action.more')}
+              {showChildren ? t('common.button.showLess') : t('common.button.showMore')}
             </Text>
             {showChildren ? (
               <AnglesMinimize color={colors.neutral3.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
@@ -125,8 +126,8 @@ export function TransactionDetails({
         <NetworkFee
           chainId={chainId}
           gasFee={gasFee}
-          preUniswapXGasFeeUSD={preUniswapXGasFeeUSD}
           transactionUSDValue={transactionUSDValue}
+          uniswapXGasBreakdown={uniswapXGasBreakdown}
         />
         {AccountDetails}
       </Flex>

@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { isMainnetChainId, toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { DynamicConfigs, SlippageConfigKey } from 'uniswap/src/features/gating/configs'
+import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE, MIN_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import {
@@ -63,7 +63,11 @@ export function useSetTradeSlippage(
 function useCalculateAutoSlippage(trade: Maybe<Trade>): number {
   const outputAmountUSD = useUSDCValue(trade?.outputAmount)?.toExact()
 
-  const minAutoSlippageToleranceL2 = useSlippageValueFromDynamicConfig(SlippageConfigKey.MinAutoSlippageToleranceL2)
+  const minAutoSlippageToleranceL2 = useDynamicConfigValue(
+    DynamicConfigs.Swap,
+    SwapConfigKey.MinAutoSlippageToleranceL2,
+    0,
+  )
 
   return useMemo<number>(() => {
     const quote = getClassicQuoteFromResponse(trade?.quote)
@@ -109,11 +113,4 @@ function calculateAutoSlippage({
   }
 
   return Number(suggestedSlippageTolerance.toFixed(2))
-}
-
-function useSlippageValueFromDynamicConfig(configName: SlippageConfigKey): number {
-  const slippageValue = useDynamicConfigValue(DynamicConfigs.Slippage, configName, '')
-
-  // Format as % number
-  return parseInt(slippageValue, 10)
 }

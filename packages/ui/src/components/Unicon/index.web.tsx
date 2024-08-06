@@ -1,15 +1,16 @@
 import React from 'react'
 import { IconPaths, Icons } from 'ui/src/components/Unicon/UniconSVGs'
 import { UniconProps } from 'ui/src/components/Unicon/types'
-import { getUniconColors, getUniconsDeterministicHash, isValidEthAddress } from 'ui/src/components/Unicon/utils'
+import { getUniconColors, getUniconsDeterministicHash } from 'ui/src/components/Unicon/utils'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
+import { isAddress } from 'utilities/src/addresses'
 
 const styles = { transformOrigin: 'center center' }
 
 export const Unicon: React.FC<UniconProps> = ({ address, size = 32 }) => {
   const isDarkMode = useIsDarkMode()
 
-  if (!address || !isValidEthAddress(address)) {
+  if (!address || !isAddress(address)) {
     return null
   }
 

@@ -1,4 +1,3 @@
-import { Trans, t } from 'i18n'
 import styled from 'lib/styled-components'
 import { useCallback, useMemo } from 'react'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
@@ -6,6 +5,7 @@ import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } fro
 import { ArrowDownCircle, Buy as BuyIcon } from 'ui/src/components/icons'
 import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { Trans, t } from 'uniswap/src/i18n'
 
 export const EmptyWallet = ({
   handleBuyCryptoClick,

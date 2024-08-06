@@ -1,6 +1,5 @@
 import { BigNumber } from 'ethers'
-import { Transaction, TransactionDescription } from 'no-yolo-signatures'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { ScrollView } from 'react-native-gesture-handler'
 import { LinkButton } from 'src/components/buttons/LinkButton'
@@ -14,9 +13,13 @@ import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
-import { SpendingDetails } from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
+import {
+  SpendingDetails,
+  SpendingEthDetails,
+} from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
 import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
 import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
+import { useTransactionCurrencies } from 'wallet/src/utils/useTransactionCurrencies'
 
 const getStrMessage = (request: WalletConnectRequest): string => {
   if (request.type === EthMethod.PersonalSign || request.type === EthMethod.EthSign) {
@@ -110,46 +113,24 @@ function TransactionDetails({
   transaction: EthTransaction
 }): JSX.Element {
   const { t } = useTranslation()
-  const parser = useNoYoloParser(chainId)
+  const { parsedTransactionData, isLoading } = useNoYoloParser(transaction, chainId)
+  const { to, value } = transaction
 
-  const [isLoading, setIsLoading] = useState(true)
-  const [parsedData, setParsedData] = useState<TransactionDescription | undefined>(undefined)
-
-  const { from, to, value, data } = transaction
-
-  useEffect(() => {
-    const parseResult = async (): Promise<TransactionDescription | undefined> => {
-      // no-yolo-parser library expects these fields to be defined
-      if (!from || !to || !value || !data) {
-        return
-      }
-      return parser.parseAsResult(transaction as Transaction).then((result) => {
-        if (!result.transactionDescription.ok) {
-          throw result.transactionDescription.error
-        }
-
-        return result.transactionDescription.result
-      })
-    }
-
-    parseResult()
-      .then((result) => {
-        setParsedData(result)
-      })
-      .catch((error) => {
-        setParsedData(undefined)
-        logger.warn('RequestMessage', 'DecodedDataDetails', 'Could not parse data', error)
-      })
-      .finally(() => {
-        setIsLoading(false)
-      })
-  }, [data, from, parser, to, transaction, value])
+  const transactionCurrencies = useTransactionCurrencies({ chainId, to, parsedTransactionData })
 
   return (
     <Flex gap="$spacing12">
-      {value && !BigNumber.from(value).eq(0) ? <SpendingDetails chainId={chainId} value={value} /> : null}
+      {value && !BigNumber.from(value).eq(0) ? <SpendingEthDetails chainId={chainId} value={value} /> : null}
+      {transactionCurrencies?.map((currencyInfo, i) => (
+        <SpendingDetails
+          key={currencyInfo.currencyId}
+          currencyInfo={currencyInfo}
+          showLabel={i === 0}
+          tokenCount={transactionCurrencies.length}
+        />
+      ))}
       {to ? (
-        <ContentRow label={t('common.text.recipient')} variant="body3">
+        <ContentRow label={t('common.text.contract')} variant="body3">
           <AddressButton address={to} chainId={chainId} />
         </ContentRow>
       ) : null}
@@ -162,7 +143,7 @@ function TransactionDetails({
           py="$spacing2"
         >
           <Text color="$neutral1" loading={isLoading} variant="body3">
-            {parsedData ? parsedData.name : t('common.text.unknown')}
+            {parsedTransactionData ? parsedTransactionData.name : t('common.text.unknown')}
           </Text>
         </Flex>
       </ContentRow>

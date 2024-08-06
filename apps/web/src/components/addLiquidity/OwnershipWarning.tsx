@@ -1,7 +1,7 @@
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { AlertTriangle } from 'react-feather'
 import { ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 const ExplainerText = styled.div`
   color: ${({ theme }) => theme.neutral2};
@@ -31,7 +31,7 @@ const OwnershipWarning = ({ ownerAddress }: OwnershipWarningProps) => (
     <TitleRow>
       <AlertTriangle style={{ marginRight: '8px' }} />
       <ThemedText.SubHeader color="deprecated_accentWarning">
-        <Trans i18nKey="common.warning" />
+        <Trans i18nKey="token.safetyLevel.strong.header" />
       </ThemedText.SubHeader>
     </TitleRow>
     <ExplainerText>

@@ -22,7 +22,6 @@ import { UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import styled from 'lib/styled-components'
@@ -51,7 +50,9 @@ import {
 } from 'state/governance/hooks'
 import { VoteOption } from 'state/governance/types'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
+import { Flex } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { isAddress } from 'utilities/src/addresses'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -162,6 +163,7 @@ function getDateFromBlock(
 }
 
 export default function VotePage() {
+  const { t } = useTranslation()
   // see https://github.com/remix-run/react-router/issues/8200#issuecomment-962520661
   const { governorIndex, id } = useParams() as { governorIndex: string; id: string }
   const parsedGovernorIndex = Number.parseInt(governorIndex)
@@ -292,12 +294,10 @@ export default function VotePage() {
           <ProposalInfo gap="lg" justify="start">
             <RowBetween style={{ width: '100%' }}>
               <ArrowWrapper to="/vote">
-                <Trans
-                  i18nKey="vote.votePage.allProposals"
-                  values={{
-                    arrow: <ArrowLeft size={20} />,
-                  }}
-                />
+                <Flex gap="$spacing4">
+                  <ArrowLeft size={20} />
+                  {t('vote.votePage.allProposals')}
+                </Flex>
               </ArrowWrapper>
               {proposalData && <ProposalStatus status={proposalData.status} />}
             </RowBetween>

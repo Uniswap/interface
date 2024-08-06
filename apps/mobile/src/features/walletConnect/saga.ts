@@ -6,7 +6,6 @@ import { buildApprovedNamespaces, getSdkError } from '@walletconnect/utils'
 import { IWeb3Wallet, Web3Wallet, Web3WalletTypes } from '@walletconnect/web3wallet'
 import { Alert } from 'react-native'
 import { EventChannel, eventChannel } from 'redux-saga'
-import { appSelect } from 'src/app/hooks'
 import { registerWCClientForPushNotifications } from 'src/features/walletConnect/api'
 import {
   getAccountAddressFromEIP155String,
@@ -22,7 +21,7 @@ import {
   removeSession,
   setHasPendingSessionError,
 } from 'src/features/walletConnect/walletConnectSlice'
-import { call, fork, put, take } from 'typed-redux-saga'
+import { call, fork, put, select, take } from 'typed-redux-saga'
 import { config } from 'uniswap/src/config'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import i18n from 'uniswap/src/i18n/i18n'
@@ -135,7 +134,7 @@ function showAlert(title: string, message: string): Promise<boolean> {
 }
 
 function* handleSessionProposal(proposal: ProposalTypes.Struct) {
-  const activeAccountAddress = yield* appSelect(selectActiveAccountAddress)
+  const activeAccountAddress = yield* select(selectActiveAccountAddress)
 
   const {
     id,
@@ -284,7 +283,7 @@ function* populateActiveSessions() {
   // Fetch all active sessions and add to store
   const sessions = wcWeb3Wallet.getActiveSessions()
 
-  const accounts = yield* appSelect(selectAccounts)
+  const accounts = yield* select(selectAccounts)
 
   for (const session of Object.values(sessions)) {
     // Get account address connected to the session from first namespace

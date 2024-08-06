@@ -138,3 +138,15 @@ export function activatePendingAccounts(state: any): any {
     },
   }
 }
+
+export function deleteBetaOnboardingState(state: any): any {
+  const newState = { ...state }
+  delete newState?.behaviorHistory?.extensionBetaFeedbackState
+  return newState
+}
+
+export function deleteExtensionOnboardingState(state: any): any {
+  const newState = { ...state }
+  delete newState?.behaviorHistory?.extensionOnboardingState
+  return newState
+}

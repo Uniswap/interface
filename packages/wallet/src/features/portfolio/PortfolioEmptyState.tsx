@@ -7,8 +7,6 @@ import { ArrowDownCircle, Buy as BuyIcon, PaperStack } from 'ui/src/components/i
 import { borderRadii } from 'ui/src/theme'
 import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { AccountType } from 'wallet/src/features/wallet/accounts/types'
@@ -28,16 +26,22 @@ type WalletEmptyStateProps = {
   // Buying and importing are optionally supported
   onPressImport?: () => void
   onPressBuy?: () => void
+  // If buy is supported but not from a cex like on the extension
+  disableCexTransfers?: boolean
 }
 
-export function PortfolioEmptyState({ onPressReceive, onPressImport, onPressBuy }: WalletEmptyStateProps): JSX.Element {
+export function PortfolioEmptyState({
+  onPressReceive,
+  onPressImport,
+  onPressBuy,
+  disableCexTransfers = false,
+}: WalletEmptyStateProps): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 
   const activeAccount = useActiveAccount()
   const isViewOnly = activeAccount?.type === AccountType.Readonly
-  const cexTransferEnabled = useFeatureFlag(FeatureFlags.CexTransfers)
-  const cexTransferProviders = useCexTransferProviders(cexTransferEnabled)
+  const cexTransferProviders = useCexTransferProviders({ isDisabled: disableCexTransfers })
 
   const BackgroundImageWrapperCallback = useCallback(
     ({ children }: { children: React.ReactNode }) => {

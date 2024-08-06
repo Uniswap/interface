@@ -111,8 +111,16 @@ describe('TransactionDetails Components', () => {
     expect(tree).toMatchSnapshot()
   })
 
-  it('renders TransactionDetailsInfoRows without error', () => {
-    const tree = render(<TransactionDetailsInfoRows transactionDetails={mockTransaction} />, {
+  it('renders TransactionDetailsInfoRows without error with isShowingMore false', () => {
+    const tree = render(<TransactionDetailsInfoRows isShowingMore={false} transactionDetails={mockTransaction} />, {
+      preloadedState,
+    })
+
+    expect(tree).toMatchSnapshot()
+  })
+
+  it('renders TransactionDetailsInfoRows without error with isShowingMore true', () => {
+    const tree = render(<TransactionDetailsInfoRows isShowingMore={true} transactionDetails={mockTransaction} />, {
       preloadedState,
     })
 

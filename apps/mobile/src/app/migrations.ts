@@ -7,7 +7,6 @@ import dayjs from 'dayjs'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
@@ -18,6 +17,8 @@ import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import {
   activatePendingAccounts,
   addRoutingFieldToTransactions,
+  deleteBetaOnboardingState,
+  deleteExtensionOnboardingState,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
 } from 'wallet/src/state/sharedMigrations'
@@ -864,7 +865,8 @@ export const migrations = {
 
     newState.behaviorHistory = {
       ...state.behaviorHistory,
-      extensionOnboardingState: ExtensionOnboardingState.Undefined,
+      // Removed in schema 69
+      extensionOnboardingState: 'Undefined',
     }
 
     return newState
@@ -877,6 +879,23 @@ export const migrations = {
   65: addRoutingFieldToTransactions,
 
   66: activatePendingAccounts,
+
+  67: function resetOnboardingStateForGA(state: any) {
+    const newState = { ...state }
+
+    // Reset state so that everyone gets the new promo banner even if theyve dismissed the beta version.
+    newState.behaviorHistory = {
+      ...state.behaviorHistory,
+      // Removed in schema 69
+      extensionOnboardingState: 'Undefined',
+    }
+
+    return newState
+  },
+
+  68: deleteBetaOnboardingState,
+
+  69: deleteExtensionOnboardingState,
 }
 
-export const MOBILE_STATE_VERSION = 66
+export const MOBILE_STATE_VERSION = 69

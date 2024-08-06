@@ -1,9 +1,7 @@
-import IconButton from 'components/AccountDrawer/IconButton'
 import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Column from 'components/Column'
 import { CollapsedIcon } from 'components/Icons/Collapse'
 import { ExpandIcon } from 'components/Icons/Expand'
-import { Settings } from 'components/Icons/Settings'
 import Row, { AutoRow } from 'components/Row'
 import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
 import { Option } from 'components/WalletModal/Option'
@@ -11,18 +9,18 @@ import PrivacyPolicyNotice from 'components/WalletModal/PrivacyPolicyNotice'
 import { UniswapWalletOptions } from 'components/WalletModal/UniswapWalletOptions'
 import { useOrderedConnections } from 'components/WalletModal/useOrderedConnections'
 import { useIsUniExtensionAvailable, useUniswapWalletOptions } from 'hooks/useUniswapWalletOptions'
-import { Trans } from 'i18n'
 import styled, { css } from 'lib/styled-components'
 import { useReducer } from 'react'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
 import { Text } from 'ui/src'
+import { Trans } from 'uniswap/src/i18n'
 
 const Wrapper = styled.div<{ isUniExtensionAvailable?: boolean }>`
   ${flexColumnNoWrap};
   background-color: ${({ theme }) => theme.surface1};
   width: 100%;
-  padding: ${({ isUniExtensionAvailable }) => (isUniExtensionAvailable ? 0 : 14)}px 16px 16px;
+  padding: ${({ isUniExtensionAvailable }) => (isUniExtensionAvailable ? 0 : 14)}px 16px 20px;
   flex: 1;
   gap: 16px;
 `
@@ -70,7 +68,7 @@ const StyledCollapsedIcon = styled(CollapsedIcon)`
   ${OtherWalletIconStyles}
 `
 
-export default function WalletModal({ openSettings }: { openSettings: () => void }) {
+export default function WalletModal() {
   const showMoonpayText = useShowMoonpayText()
   const showUniswapWalletOptions = useUniswapWalletOptions()
   const connectors = useOrderedConnections(showUniswapWalletOptions)
@@ -81,8 +79,9 @@ export default function WalletModal({ openSettings }: { openSettings: () => void
     <Wrapper data-testid="wallet-modal" isUniExtensionAvailable={isUniExtensionAvailable}>
       <ConnectionErrorView />
       <AutoRow justify="space-between" width="100%">
-        <ThemedText.SubHeader>Connect a wallet</ThemedText.SubHeader>
-        <IconButton Icon={Settings} onClick={openSettings} data-testid="wallet-settings" />
+        <ThemedText.SubHeader>
+          <Trans i18nKey="common.connectAWallet.button" />
+        </ThemedText.SubHeader>
       </AutoRow>
       {showUniswapWalletOptions && (
         <>

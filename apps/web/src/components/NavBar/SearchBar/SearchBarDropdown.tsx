@@ -14,15 +14,16 @@ import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { useAccount } from 'hooks/useAccount'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { GenieCollection } from 'nft/types'
 import { useEffect, useMemo, useState } from 'react'
 import { Clock, TrendingUp } from 'react-feather'
 import { useLocation } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
+import { Flex } from 'ui/src'
 import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
+import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -72,12 +73,12 @@ function SearchBarDropdownSection({
   eventProperties,
 }: SearchBarDropdownSectionProps) {
   return (
-    <Column gap="4px" data-testid="searchbar-dropdown">
+    <Flex gap="$spacing4" data-testid="searchbar-dropdown">
       <DropdownHeader gap="8px">
         {headerIcon ? headerIcon : null}
         {header}
       </DropdownHeader>
-      <Column gap="4">
+      <Flex gap="$spacing4">
         {suggestions.map((suggestion, index) =>
           isLoading || !suggestion ? (
             <SkeletonRow key={index} />
@@ -98,8 +99,8 @@ function SearchBarDropdownSection({
             />
           ),
         )}
-      </Column>
-    </Column>
+      </Flex>
+    </Flex>
   )
 }
 
@@ -164,7 +165,7 @@ function SearchBarDropdownContents({
 }: SearchBarDropdownProps): JSX.Element {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
   const { data: searchHistory } = useRecentlySearchedAssets()
-  const shortenedHistory = useMemo(() => searchHistory?.slice(0, 2) ?? [...Array<SearchToken>(2)], [searchHistory])
+  const shortenedHistory = useMemo(() => searchHistory ?? [...Array<SearchToken>(2)], [searchHistory])
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/explore')
@@ -288,7 +289,7 @@ function SearchBarDropdownContents({
 
   return hasInput ? (
     // Empty or Up to 8 combined tokens and nfts
-    <Column gap="20">
+    <Flex gap="$spacing20">
       {showCollectionsFirst ? (
         <>
           {collectionSearchResults}
@@ -300,10 +301,10 @@ function SearchBarDropdownContents({
           {collectionSearchResults}
         </>
       )}
-    </Column>
+    </Flex>
   ) : (
     // Recent Searches, Trending Tokens, Trending Collections
-    <Column gap="20">
+    <Flex gap="$spacing20">
       {shortenedHistory.length > 0 && (
         <SearchBarDropdownSection
           hoveredIndex={hoveredIndex}
@@ -315,7 +316,7 @@ function SearchBarDropdownContents({
             suggestion_type: NavBarSearchTypes.RECENT_SEARCH,
             ...eventProperties,
           }}
-          header={<Trans i18nKey="search.recent" />}
+          header={<Trans i18nKey="tokens.selector.section.recent" />}
           headerIcon={<Clock width={20} height={20} />}
           isLoading={!searchHistory}
         />
@@ -331,7 +332,7 @@ function SearchBarDropdownContents({
             suggestion_type: NavBarSearchTypes.TOKEN_TRENDING,
             ...eventProperties,
           }}
-          header={<Trans i18nKey="common.popularTokens" />}
+          header={<Trans i18nKey="tokens.selector.section.popular" />}
           headerIcon={<TrendingUp width={20} height={20} />}
           isLoading={!trendingTokenData}
         />
@@ -352,7 +353,7 @@ function SearchBarDropdownContents({
           isLoading={trendingCollectionsAreLoading}
         />
       )}
-    </Column>
+    </Flex>
   )
 }
 

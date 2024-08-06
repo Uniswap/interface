@@ -17,7 +17,7 @@ if [[ "$expected" == "0" ]]; then
         echo "$out"
         exit 1
     fi
-elif [[ "$out" == *"Found $expected circular dependencies"* ]]; then
+elif [[ "$out" == *"Found $expected circular dependencies"* || "$out" == *"Found $expected circular dependency"* ]]; then
     echo "Passed!"
     echo ""
     echo "$out"

@@ -1,13 +1,8 @@
-import { PageTabs } from 'components/NavBar/LEGACY'
-import { MobileBottomBarLegacy } from 'components/NavBar/MobileBottomBar'
 import styled from 'lib/styled-components'
 import { Body } from 'pages/App/Body'
 import { Header } from 'pages/App/Header'
 import { GRID_AREAS } from 'pages/App/utils/shared'
 import { BREAKPOINTS } from 'theme'
-import { Z_INDEX } from 'theme/zIndex'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const AppContainer = styled.div`
   min-height: 100vh;
@@ -36,30 +31,14 @@ const AppBody = styled.div`
     padding-right: 10px;
   }
 `
-const MobileBar = styled.div`
-  grid-area: mobile-bar;
-  width: 100vw;
-  position: fixed;
-  bottom: 0px;
-  z-index: ${Z_INDEX.sticky};
-`
 
 export function AppLayout() {
-  const isLegacyNav = !useFeatureFlag(FeatureFlags.NavRefresh)
-
   return (
     <AppContainer>
       <Header />
       <AppBody>
         <Body />
       </AppBody>
-      <MobileBar>
-        {isLegacyNav && (
-          <MobileBottomBarLegacy>
-            <PageTabs />
-          </MobileBottomBarLegacy>
-        )}
-      </MobileBar>
     </AppContainer>
   )
 }

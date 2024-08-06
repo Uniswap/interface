@@ -9,7 +9,6 @@ import {
   useIsSupportedChainIdCallback,
 } from 'constants/chains'
 import { getSupportedGraphQlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { Trans } from 'i18n'
 import styled, { css, useTheme } from 'lib/styled-components'
 import { ExploreTab } from 'pages/Explore'
 import { useExploreParams } from 'pages/Explore/redirects'
@@ -20,6 +19,7 @@ import { EllipsisStyle } from 'theme/components'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useTranslation } from 'uniswap/src/i18n'
 
 const NetworkLabel = styled.div`
   ${EllipsisStyle}
@@ -46,7 +46,8 @@ const StyledMenuFlyout = css`
     left: 0px;
   }
 `
-export default function NetworkFilter() {
+export default function TableNetworkFilter() {
+  const { t } = useTranslation()
   const theme = useTheme()
   const navigate = useNavigate()
   const [isMenuOpen, toggleMenu] = useReducer((s) => !s, false)
@@ -83,7 +84,7 @@ export default function NetworkFilter() {
                 }}
               >
                 <NetworkLabel>
-                  <AllNetworksIcon /> <Trans>All networks</Trans>
+                  <AllNetworksIcon /> {t('transaction.network.all')}
                 </NetworkLabel>
                 {!exploreParams.chainName && <Check size={16} color={theme.accent1} />}
               </InternalMenuItem>

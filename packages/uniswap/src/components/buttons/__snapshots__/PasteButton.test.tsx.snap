@@ -104,7 +104,7 @@ exports[`SplitLogo inline renders inline button 1`] = `
         {
           "color": "#9B9B9B",
           "fontFamily": "Basel-Medium",
-          "fontSize": 14,
+          "fontSize": 12,
           "fontWeight": "500",
           "lineHeight": 16,
         }
@@ -169,7 +169,7 @@ exports[`SplitLogo renders without error 1`] = `
         {
           "color": "#FC72FF",
           "fontFamily": "Basel-Medium",
-          "fontSize": 14,
+          "fontSize": 12,
           "fontWeight": "500",
           "lineHeight": 16,
         }

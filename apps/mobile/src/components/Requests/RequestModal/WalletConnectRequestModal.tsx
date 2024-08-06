@@ -3,8 +3,7 @@ import { getSdkError } from '@walletconnect/utils'
 import { providers } from 'ethers'
 import React, { useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
 import { KidSuperCheckinModal } from 'src/components/Requests/RequestModal/KidSuperCheckinModal'
 import { UwULinkErc20SendModal } from 'src/components/Requests/RequestModal/UwULinkErc20SendModal'
@@ -46,7 +45,7 @@ const VALID_REQUEST_TYPES = [
 export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Element | null {
   const { t } = useTranslation()
   const netInfo = useNetInfo()
-  const didOpenFromDeepLink = useAppSelector(selectDidOpenFromDeepLink)
+  const didOpenFromDeepLink = useSelector(selectDidOpenFromDeepLink)
   const chainId = request.chainId
 
   const tx: providers.TransactionRequest | null = useMemo(() => {

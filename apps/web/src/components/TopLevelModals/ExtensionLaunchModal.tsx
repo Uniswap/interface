@@ -1,21 +1,24 @@
 import { InterfaceElementName, InterfaceModalName } from '@uniswap/analytics-events'
-import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import Modal from 'components/Modal'
 import Row from 'components/Row'
-import { AppIcon } from 'components/WalletModal/UniswapWalletOptions'
+import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
+import { CONNECTION } from 'components/Web3Provider/constants'
 import { useIsMobile } from 'hooks/screenSize'
-import useParsedQueryString from 'hooks/useParsedQueryString'
-import { Trans } from 'i18n'
+import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import styled from 'lib/styled-components'
 import { X } from 'react-feather'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle, ExternalLink, ThemedText } from 'theme/components'
+import { Image } from 'ui/src'
+import { UNISWAP_LOGO } from 'ui/src/assets'
+import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 
 const ModalWrapper = styled.div`
   display: flex;
@@ -101,7 +104,8 @@ const showExtensionLaunchAtom = atomWithStorage('showUniswapExtensionLaunchAtom'
 
 export function ExtensionLaunchModal() {
   const [showExtensionLaunch, setShowExtensionLaunch] = useAtom(showExtensionLaunchAtom)
-  const isOnLandingPage = useParsedQueryString().intro === 'true'
+  const isOnLandingPage = useIsLandingPage()
+  const uniswapExtensionConnector = useConnectorWithId(CONNECTION.UNISWAP_EXTENSION_RDNS)
   const isMobile = useIsMobile()
 
   return (
@@ -109,7 +113,7 @@ export function ExtensionLaunchModal() {
       <Modal
         maxWidth={isMobile ? undefined : 520}
         height={isMobile ? 564 : 320}
-        isOpen={showExtensionLaunch && !isOnLandingPage}
+        isOpen={showExtensionLaunch && !isOnLandingPage && !uniswapExtensionConnector}
         hideBorder
         onDismiss={() => setShowExtensionLaunch(false)}
       >
@@ -117,7 +121,7 @@ export function ExtensionLaunchModal() {
           <PromoImage />
           <TextWrapper>
             <HeaderRow>
-              <AppIcon src={UNIWALLET_ICON} alt="uniswap-app-icon" />
+              <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
               <Trace logPress element={InterfaceElementName.CLOSE_BUTTON}>
                 <CloseIcon onClick={() => setShowExtensionLaunch(false)} />
               </Trace>
@@ -149,7 +153,7 @@ export function ExtensionLaunchModal() {
                     emphasis={isMobile ? ButtonEmphasis.high : ButtonEmphasis.medium}
                     onClick={() => setShowExtensionLaunch(false)}
                   >
-                    <Trans i18nKey="common.learnMore.link" />
+                    <Trans i18nKey="common.button.learn" />
                   </StyledThemeButton>
                 </StyledExternalLink>
               </Trace>

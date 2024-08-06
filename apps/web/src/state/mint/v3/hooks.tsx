@@ -14,7 +14,6 @@ import { BIG_INT_ZERO } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { PoolState, usePool } from 'hooks/usePools'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
@@ -32,6 +31,7 @@ import {
 } from 'state/mint/v3/actions'
 import { tryParseTick } from 'state/mint/v3/utils'
 import { AppState } from 'state/reducer'
+import { Trans } from 'uniswap/src/i18n'
 import { getTickToPrice } from 'utils/getTickToPrice'
 
 export function useV3MintState(): AppState['mintV3'] {

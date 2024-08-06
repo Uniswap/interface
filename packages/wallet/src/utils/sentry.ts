@@ -1,6 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { ErrorEvent, EventHint } from '@sentry/types'
-import { MissingI18nInterpolationError } from 'uniswap/src/i18n/i18n'
+import { MissingI18nInterpolationError } from 'uniswap/src/i18n/shared'
 
 const APOLLO_HTTP_ERROR_REGEX = /Received status code ([0-9]+)/
 

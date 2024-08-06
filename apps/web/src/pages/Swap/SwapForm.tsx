@@ -32,7 +32,6 @@ import useSelectChain from 'hooks/useSelectChain'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import useWrapCallback, { WrapErrorText } from 'hooks/useWrapCallback'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { useTheme } from 'lib/styled-components'
 import { formatSwapQuoteReceivedEventProperties } from 'lib/utils/analytics'
@@ -45,8 +44,9 @@ import { Text } from 'rebass'
 import { useAppSelector } from 'state/hooks'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
-import { useSwapActionHandlers, useSwapAndLimitContext, useSwapContext } from 'state/swap/hooks'
+import { useSwapActionHandlers } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
+import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
@@ -54,6 +54,8 @@ import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generat
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { WrapType } from 'uniswap/src/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -70,10 +72,15 @@ const SWAP_FORM_CURRENCY_SEARCH_FILTERS = {
 
 interface SwapFormProps {
   disableTokenInputs?: boolean
+  initialCurrencyLoading?: boolean
   onCurrencyChange?: (selected: CurrencyState) => void
 }
 
-export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapFormProps) {
+export function SwapForm({
+  disableTokenInputs = false,
+  initialCurrencyLoading = false,
+  onCurrencyChange,
+}: SwapFormProps) {
   const { isDisconnected, chainId: connectedChainId } = useAccount()
 
   const trace = useTrace()
@@ -536,6 +543,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               value={formattedAmounts[Field.INPUT]}
               showMaxButton={showMaxButton}
               currency={currencies[Field.INPUT] ?? null}
+              currencyField={CurrencyField.INPUT}
               onUserInput={handleTypeInput}
               onMax={handleMaxInput}
               fiatValue={showFiatValueInput ? fiatValueInput : undefined}
@@ -544,6 +552,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
               currencySearchFilters={SWAP_FORM_CURRENCY_SEARCH_FILTERS}
               id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
               loading={independentField === Field.OUTPUT && routeIsSyncing}
+              initialCurrencyLoading={initialCurrencyLoading}
               ref={inputCurrencyNumericalInputRef}
             />
           </Trace>
@@ -587,6 +596,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
                 fiatValue={showFiatValueOutput ? fiatValueOutput : undefined}
                 priceImpact={stablecoinPriceImpact}
                 currency={currencies[Field.OUTPUT] ?? null}
+                currencyField={CurrencyField.OUTPUT}
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
                 currencySearchFilters={SWAP_FORM_CURRENCY_SEARCH_FILTERS}
@@ -640,7 +650,7 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
             <ButtonPrimary $borderRadius="16px" onClick={async () => await selectChain(initialChainId)}>
               <Trans
                 i18nKey="common.connectToChain.button"
-                values={{ chainName: supportedChainId ? UNIVERSE_CHAIN_INFO[initialChainId].label : '' }}
+                values={{ chainName: initialChainId ? UNIVERSE_CHAIN_INFO[initialChainId].label : '' }}
               />
             </ButtonPrimary>
           ) : showWrap ? (
@@ -668,15 +678,8 @@ export function SwapForm({ disableTokenInputs = false, onCurrencyChange }: SwapF
           ) : (
             <Trace logPress element={InterfaceElementName.SWAP_BUTTON}>
               <ButtonError
-                onClick={async () => {
-                  const inputChainId = trade?.inputAmount?.currency?.chainId
-                  let correctChain = true
-                  if (inputChainId && inputChainId !== connectedChainId) {
-                    correctChain = await selectChain(inputChainId)
-                  }
-                  if (correctChain) {
-                    showPriceImpactWarning ? setShowPriceImpactModal(true) : handleContinueToReview()
-                  }
+                onClick={() => {
+                  showPriceImpactWarning ? setShowPriceImpactModal(true) : handleContinueToReview()
                 }}
                 id="swap-button"
                 data-testid="swap-button"

@@ -193,13 +193,13 @@ exports[`UniswapWalletOptions Test Download wallet option should be visible if e
                   class="c9"
                 >
                   <span
-                    class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-137133827 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                    class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-137133827 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _whiteSpace-nowrap"
                     data-disable-theme="true"
                   >
                     Get Uniswap Wallet
                   </span>
                   <span
-                    class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-137133827 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                    class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-137133827 _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202 _whiteSpace-nowrap"
                     data-disable-theme="true"
                   >
                     Available on iOS, Android, and Chrome
@@ -214,7 +214,7 @@ exports[`UniswapWalletOptions Test Download wallet option should be visible if e
             <svg
               fill="none"
               stroke-width="8"
-              style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(255, 239, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
+              style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(254, 244, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
               viewBox="0 0 22 22"
             >
               <path
@@ -232,13 +232,13 @@ exports[`UniswapWalletOptions Test Download wallet option should be visible if e
                 class="c9"
               >
                 <span
-                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _whiteSpace-nowrap"
                   data-disable-theme="true"
                 >
                   Uniswap Mobile
                 </span>
                 <span
-                  class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                  class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202 _whiteSpace-nowrap"
                   data-disable-theme="true"
                 >
                   Scan QR code to connect
@@ -379,7 +379,7 @@ exports[`UniswapWalletOptions Test Download wallet option should not be visible 
             <svg
               fill="none"
               stroke-width="8"
-              style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(255, 239, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
+              style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(254, 244, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
               viewBox="0 0 22 22"
             >
               <path
@@ -397,13 +397,13 @@ exports[`UniswapWalletOptions Test Download wallet option should not be visible 
                 class="c6"
               >
                 <span
-                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _whiteSpace-nowrap"
                   data-disable-theme="true"
                 >
                   Uniswap Mobile
                 </span>
                 <span
-                  class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                  class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202 _whiteSpace-nowrap"
                   data-disable-theme="true"
                 >
                   Scan QR code to connect
@@ -450,7 +450,7 @@ exports[`UniswapWalletOptions Test Extension connecter should be shown if detect
   gap: 12px;
 }
 
-.c9 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -487,7 +487,7 @@ exports[`UniswapWalletOptions Test Extension connecter should be shown if detect
   justify-content: flex-start;
 }
 
-.c6 {
+.c5 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -505,7 +505,7 @@ exports[`UniswapWalletOptions Test Extension connecter should be shown if detect
   gap: 4px;
 }
 
-.c8 {
+.c7 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -543,17 +543,8 @@ exports[`UniswapWalletOptions Test Extension connecter should be shown if detect
   background: #22222212;
 }
 
-.c5 {
-  height: 40px;
-  width: 40px;
-  border-radius: 10px;
-  fill: linear-gradient(0deg,#fff1ff 0%,rgba(255,255,255,0) 100%),#fffbff;
-  -webkit-filter: drop-shadow(0px 1.179px 3.537px rgba(255,117,249,0.24));
-  filter: drop-shadow(0px 1.179px 3.537px rgba(255,117,249,0.24));
-}
-
 @media screen and (max-width:396px) {
-  .c7 {
+  .c6 {
     display: none;
   }
 }
@@ -574,26 +565,40 @@ exports[`UniswapWalletOptions Test Extension connecter should be shown if detect
             class="c2 c3 c4"
             data-testid="connect-uniswap-extension"
           >
-            <img
-              alt="uniswap-app-icon"
-              class="c5"
-              src="uniswap-wallet-icon.png"
-            />
+            <span
+              class="_dsp_contents"
+            >
+              <div
+                class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010 is_Image "
+                style="height: 40px; width: 40px;"
+              >
+                <div
+                  class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-4gszlv"
+                  style="background-image: url(uniswap-logo.png);"
+                />
+                <img
+                  alt=""
+                  class="css-accessibilityImage-9pa8cd"
+                  draggable="false"
+                  src="uniswap-logo.png"
+                />
+              </div>
+            </span>
             <div
-              class="c2 c6"
+              class="c2 c5"
             >
               <span
-                class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _whiteSpace-nowrap"
                 data-disable-theme="true"
               >
                 Uniswap Extension
               </span>
             </div>
             <div
-              class="c7"
+              class="c6"
             >
               <span
-                class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400"
+                class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-233016202"
                 data-disable-theme="true"
               >
                 Detected
@@ -601,12 +606,12 @@ exports[`UniswapWalletOptions Test Extension connecter should be shown if detect
             </div>
           </div>
           <div
-            class="c2 c8 c4"
+            class="c2 c7 c4"
           >
             <svg
               fill="none"
               stroke-width="8"
-              style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(255, 239, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
+              style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(254, 244, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
               viewBox="0 0 22 22"
             >
               <path
@@ -618,19 +623,19 @@ exports[`UniswapWalletOptions Test Extension connecter should be shown if detect
               />
             </svg>
             <div
-              class="c2 c6"
+              class="c2 c5"
             >
               <div
-                class="c9"
+                class="c8"
               >
                 <span
-                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500 _whiteSpace-nowrap"
+                  class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _whiteSpace-nowrap"
                   data-disable-theme="true"
                 >
                   Uniswap Mobile
                 </span>
                 <span
-                  class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-12px _lineHeight-16px _fontWeight-400 _whiteSpace-nowrap"
+                  class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202 _whiteSpace-nowrap"
                   data-disable-theme="true"
                 >
                   Scan QR code to connect

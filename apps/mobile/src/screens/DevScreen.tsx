@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { I18nManager, ScrollView } from 'react-native'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Screen } from 'src/components/layout/Screen'
@@ -18,14 +18,13 @@ import { createAccountsActions } from 'wallet/src/features/wallet/create/createA
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 import { resetWallet } from 'wallet/src/features/wallet/slice'
-import { useAppSelector } from 'wallet/src/state'
 
 export function DevScreen(): JSX.Element {
   const insets = useDeviceInsets()
   const dispatch = useDispatch()
   const activeAccount = useActiveAccount()
   const [rtlEnabled, setRTLEnabled] = useState(I18nManager.isRTL)
-  const sortedMnemonicAccounts = useAppSelector(selectSortedSignerMnemonicAccounts)
+  const sortedMnemonicAccounts = useSelector(selectSortedSignerMnemonicAccounts)
 
   const onPressResetTokenWarnings = (): void => {
     dispatch(resetDismissedWarnings())

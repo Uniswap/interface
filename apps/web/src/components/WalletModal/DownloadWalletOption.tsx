@@ -3,7 +3,6 @@ import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { AppIcon, OptionContainer } from 'components/WalletModal/UniswapWalletOptions'
-import { Trans } from 'i18n'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
 import { useOpenModal } from 'state/application/hooks'
@@ -12,6 +11,7 @@ import { colors } from 'theme/colors'
 import { Z_INDEX } from 'theme/zIndex'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 
 // The light background is needed so that when hovered the background image always becomes lighter even when the app is in dark mode
 const LightBackground = styled.div`

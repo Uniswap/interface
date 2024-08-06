@@ -19,13 +19,16 @@ import {
   isWeb,
   useComposedRefs,
 } from 'ui/src'
-import { RotatableChevron, Search, X } from 'ui/src/components/icons'
+import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { Search } from 'ui/src/components/icons/Search'
+import { X } from 'ui/src/components/icons/X'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { SHADOW_OFFSET_SMALL } from 'uniswap/src/components/BaseCard/BaseCard'
 import ViewGestureHandler from 'uniswap/src/components/ViewGestureHandler'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 
 const DEFAULT_MIN_HEIGHT = 48
@@ -175,6 +178,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 placeholderTextColor="$neutral3"
                 position="absolute"
                 returnKeyType="done"
+                testID={TestID.ExploreSearchInput}
                 textContentType="none"
                 top={0}
                 // fix horizontal text wobble on iOS

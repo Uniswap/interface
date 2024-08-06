@@ -8,6 +8,7 @@
     "@amplitude/analytics-types": "0.13.0",
     "@apollo/client": "3.10.4",
     "@datadog/browser-logs": "^5.20.0",
+    "@datadog/mobile-react-native": "2.4.1",
     "@ethersproject/abstract-signer": "5.7.0",
     "@ethersproject/address": "5.7.0",
     "@ethersproject/constants": "5.7.0",

@@ -2,7 +2,6 @@ import { skipToken } from '@reduxjs/toolkit/query/react'
 import { buildCurrencyInfo } from 'constants/routing'
 import { nativeOnChain } from 'constants/tokens'
 import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
-import { t } from 'i18next'
 import { useFiatOnRampSupportedTokens, useMeldFiatCurrencyInfo } from 'pages/Swap/Buy/hooks'
 import { formatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
@@ -23,6 +22,7 @@ import {
   isInvalidRequestAmountTooHigh,
   isInvalidRequestAmountTooLow,
 } from 'uniswap/src/features/fiatOnRamp/utils'
+import { t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useAccount } from 'wagmi'
 

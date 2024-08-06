@@ -2,8 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { SearchPopularNFTCollections } from 'src/components/explore/search/SearchPopularNFTCollections'
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { renderSearchItem } from 'src/components/explore/search/SearchResultsSection'
@@ -36,7 +35,7 @@ export const SUGGESTED_WALLETS: WalletSearchResult[] = [
 export function SearchEmptySection(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const searchHistory = useAppSelector(selectSearchHistory)
+  const searchHistory = useSelector(selectSearchHistory)
 
   const onPressClearSearchHistory = (): void => {
     dispatch(clearSearchHistory())

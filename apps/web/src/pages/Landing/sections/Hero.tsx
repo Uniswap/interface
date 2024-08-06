@@ -1,21 +1,22 @@
 import { ColumnCenter } from 'components/Column'
 import { useCurrency } from 'hooks/Tokens'
 import { useScroll } from 'hooks/useScroll'
-import { Trans } from 'i18n'
 import styled, { css, keyframes } from 'lib/styled-components'
 import { Box, H1 } from 'pages/Landing/components/Generics'
 import { TokenCloud } from 'pages/Landing/components/TokenCloud/index'
 import { Hover, RiseIn, RiseInText } from 'pages/Landing/components/animations'
 import { Swap } from 'pages/Swap'
 import { ChevronDown } from 'react-feather'
-import { useTranslation } from 'react-i18next'
 import { BREAKPOINTS } from 'theme'
 import { Text } from 'ui/src'
 import { heightBreakpoints } from 'ui/src/theme'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const Container = styled(Box)`
   min-width: 100%;
+  min-height: 100vh;
+  height: min-content;
   padding-top: ${({ theme }) => theme.navHeight}px;
 `
 const LandingSwapContainer = styled(Box)`
@@ -104,7 +105,6 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
   return (
     <Container
       position="relative"
-      height="100vh"
       justify="center"
       style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
     >

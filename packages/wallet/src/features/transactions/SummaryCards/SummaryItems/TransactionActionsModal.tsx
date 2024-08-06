@@ -35,7 +35,6 @@ function renderOptionItem(label: string, textColorOverride?: ColorTokens): () =>
 interface TransactionActionModalProps {
   onExplore: () => void
   onViewTokenDetails?: (currencyId: CurrencyId) => void
-  onViewMoonpay?: () => void
   onClose: () => void
   onCancel: () => void
   msTimestampAdded: number
@@ -50,7 +49,6 @@ export default function TransactionActionsModal({
   onClose,
   onViewTokenDetails,
   onExplore,
-  onViewMoonpay,
   showCancelButton,
   transactionDetails,
 }: TransactionActionModalProps): JSX.Element {
@@ -94,16 +92,6 @@ export default function TransactionActionsModal({
           ]
         : []
 
-    const maybeViewOnMoonpayOption = onViewMoonpay
-      ? [
-          {
-            key: ElementName.MoonpayExplorerView,
-            onPress: onViewMoonpay,
-            render: renderOptionItem(t('transaction.action.viewMoonPay')),
-          },
-        ]
-      : []
-
     const chainInfo = UNIVERSE_CHAIN_INFO[transactionDetails.chainId]
 
     const maybeViewOnEtherscanOption = transactionDetails.hash
@@ -122,6 +110,12 @@ export default function TransactionActionsModal({
 
     const transactionId = getTransactionId(transactionDetails)
 
+    const onRampProviderName =
+      transactionDetails.typeInfo.type === TransactionType.OnRampPurchase ||
+      transactionDetails.typeInfo.type === TransactionType.OnRampTransfer
+        ? transactionDetails.typeInfo.serviceProvider?.name
+        : undefined
+
     const maybeCopyTransactionIdOption = transactionId
       ? [
           {
@@ -136,8 +130,12 @@ export default function TransactionActionsModal({
               )
               handleClose()
             },
-            render: onViewMoonpay
-              ? renderOptionItem(t('transaction.action.copyMoonPay'))
+            render: onRampProviderName
+              ? renderOptionItem(
+                  t('transaction.action.copyProvider', {
+                    providerName: onRampProviderName,
+                  }),
+                )
               : renderOptionItem(t('transaction.action.copy')),
           },
         ]
@@ -145,7 +143,6 @@ export default function TransactionActionsModal({
 
     const transactionActionOptions: MenuItemProp[] = [
       ...maybeViewSwapToken,
-      ...maybeViewOnMoonpayOption,
       ...maybeViewOnEtherscanOption,
       ...maybeCopyTransactionIdOption,
       {
@@ -169,7 +166,6 @@ export default function TransactionActionsModal({
     transactionDetails,
     inputCurrencyInfo,
     outputCurrencyInfo,
-    onViewMoonpay,
     onViewTokenDetails,
     t,
     onExplore,

@@ -22,11 +22,11 @@ exports[`PredefinedAmount renders correctly with amount= 100 , currentAmount= "1
     class=" t_light _dsp_contents is_Theme"
   >
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558276 _justifyContent-center _pr-1481558214 _pl-1481558214 _pt-1481558276 _pb-1481558276 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558245 _justifyContent-center _pr-1481558183 _pl-1481558183 _pt-1481558245 _pb-1481558245 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
       style="border-color: #2222220d;"
     >
       <span
-        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500"
+        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109"
         data-disable-theme="true"
         style="color: rgb(125, 125, 125); padding-top: 1px;"
       >
@@ -54,11 +54,11 @@ exports[`PredefinedAmount renders correctly with amount= 300 , currentAmount= "1
   >
     <div
       aria-disabled="true"
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558276 _justifyContent-center _pr-1481558214 _pl-1481558214 _pt-1481558276 _pb-1481558276 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558245 _justifyContent-center _pr-1481558183 _pl-1481558183 _pt-1481558245 _pb-1481558245 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
       style="border-color: #2222220d;"
     >
       <span
-        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500"
+        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109"
         data-disable-theme="true"
         style="color: rgb(206, 206, 206); padding-top: 1px;"
       >
@@ -91,11 +91,11 @@ exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "
     class=" t_light _dsp_contents is_Theme"
   >
     <div
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558276 _justifyContent-center _pr-1481558214 _pl-1481558214 _pt-1481558276 _pb-1481558276 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558245 _justifyContent-center _pr-1481558183 _pl-1481558183 _pt-1481558245 _pb-1481558245 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
       style="border-color: #2222220d;"
     >
       <span
-        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500"
+        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109"
         data-disable-theme="true"
         style="color: rgb(34, 34, 34); padding-top: 1px;"
       >
@@ -123,11 +123,11 @@ exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "
   >
     <div
       aria-disabled="true"
-      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558276 _justifyContent-center _pr-1481558214 _pl-1481558214 _pt-1481558276 _pb-1481558276 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
+      class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _flexDirection-row _gap-1481558245 _justifyContent-center _pr-1481558183 _pl-1481558183 _pt-1481558245 _pb-1481558245 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid c0"
       style="border-color: #2222220d;"
     >
       <span
-        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-500"
+        class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109"
         data-disable-theme="true"
         style="color: rgb(206, 206, 206); padding-top: 1px;"
       >

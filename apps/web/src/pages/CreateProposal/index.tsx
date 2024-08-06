@@ -8,7 +8,6 @@ import { AutoColumn } from 'components/Column'
 import { LATEST_GOVERNOR_INDEX } from 'constants/governance'
 import { UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import styled from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -36,6 +35,7 @@ import {
 } from 'state/governance/hooks'
 import { ExternalLink, ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -284,13 +284,17 @@ ${bodyValue}
             <BlueCard>
               <AutoColumn gap="10px">
                 <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
-                  <Trans i18nKey="vote.create.prompt" />
-                  <ExternalLink
-                    key="create-proposal-prompt-link"
-                    href="https://docs.uniswap.org/protocol/reference/Governance/governance-reference#propose"
-                  >
-                    <Trans i18nKey="proposal.readTheDocs" />
-                  </ExternalLink>
+                  <Trans
+                    i18nKey="vote.create.prompt"
+                    components={{
+                      link: (
+                        <ExternalLink
+                          key="create-proposal-prompt-link"
+                          href="https://docs.uniswap.org/protocol/reference/Governance/governance-reference#propose"
+                        />
+                      ),
+                    }}
+                  />
                 </ThemedText.DeprecatedLink>
               </AutoColumn>
             </BlueCard>

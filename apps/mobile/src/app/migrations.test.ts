@@ -66,6 +66,9 @@ import {
   v63Schema,
   v64Schema,
   v65Schema,
+  v66Schema,
+  v67Schema,
+  v68Schema,
   v6Schema,
   v7Schema,
   v8Schema,
@@ -81,7 +84,7 @@ import { initialWalletConnectState } from 'src/features/walletConnect/walletConn
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { ExtensionOnboardingState, initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
+import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialFavoritesState } from 'wallet/src/features/favorites/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
@@ -1336,7 +1339,8 @@ describe('Redux state migrations', () => {
     const v61Stub = { ...v61Schema }
     const v62 = migrations[62](v61Stub)
 
-    expect(v62.behaviorHistory.extensionOnboardingState).toBe(ExtensionOnboardingState.Undefined)
+    // Removed in schema 69
+    expect(v62.behaviorHistory.extensionOnboardingState).toBe('Undefined')
   })
 
   it('migrates from v62 to 63', () => {
@@ -1406,5 +1410,26 @@ describe('Redux state migrations', () => {
   it('migrates from v65 to v66', () => {
     const v66 = migrations[66]
     testActivatePendingAccounts(v66, v65Schema)
+  })
+
+  it('migrates from v66 to v67', () => {
+    const v66Stub = { ...v66Schema }
+    const v67 = migrations[67](v66Stub)
+
+    // Removed in migration 69
+    expect(v67.behaviorHistory.extensionOnboardingState).toBe('Undefined')
+  })
+
+  it('migrates from v67 to v68', () => {
+    const v67Stub = { ...v67Schema }
+    const v68 = migrations[68](v67Stub)
+
+    expect(v68.behaviorHistory.extensionBetaFeedbackState).toBe(undefined)
+  })
+
+  it('migrates from v68 to v69', async () => {
+    const v68Stub = { ...v68Schema }
+    const v69 = await migrations[69](v68Stub)
+    expect(v69.behaviorHistory.extensionBetaFeedbackState).toBe(undefined)
   })
 })

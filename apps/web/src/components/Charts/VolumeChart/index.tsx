@@ -9,11 +9,11 @@ import { getCumulativeVolume } from 'components/Charts/VolumeChart/utils'
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
 import { BIPS_BASE } from 'constants/misc'
 import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
-import { t } from 'i18n'
 import { useTheme } from 'lib/styled-components'
 import { useMemo } from 'react'
 import { ThemedText } from 'theme/components'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface VolumeChartModelParams extends ChartModelParams<SingleHistogramData>, CustomVolumeChartModelParams {
@@ -115,7 +115,7 @@ function FeesTooltipDisplay({ data, feeTier }: { data: SingleHistogramData; feeT
   return (
     <>
       <ThemedText.BodySmall>
-        {t(`Fees: {{amount}}`, {
+        {t(`token.chart.tooltip`, {
           amount: formatFiatPrice({
             price: fees,
             type: NumberType.ChartFiatValue,

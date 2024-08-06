@@ -5,6 +5,7 @@ import {
   PortfolioBalancesDocument,
   PortfolioBalancesQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -41,19 +42,19 @@ export function* refetchGQLQueries({
     return
   }
 
-  // when there is a new local tx wait REFETCH_INTERVAL then proactively refresh portfolio and activity queries
+  // When there is a new local tx, we wait `REFETCH_INTERVAL` and then refetch all queries.
   yield* delay(REFETCH_INTERVAL)
 
-  yield* call([apolloClient, apolloClient.refetchQueries], {
-    include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE,
-  })
+  // We refetch all queries for the Tokens, NFT and Activity tabs.
+  yield* call([apolloClient, apolloClient.refetchQueries], { include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE })
 
   if (!currencyIdToStartingBalance) {
     return
   }
 
   let freshnessLag = REFETCH_INTERVAL
-  // poll every REFETCH_INTERVAL until the cache has updated balances for the relevant currencies
+
+  // We poll every `REFETCH_INTERVAL` until we see updated balances for the relevant currencies.
   for (let i = 0; i < MAX_REFETCH_ATTEMPTS; i += 1) {
     const currencyIdToUpdatedBalance = readBalancesFromCache({
       owner,
@@ -74,9 +75,8 @@ export function* refetchGQLQueries({
       break
     }
 
-    yield* call([apolloClient, apolloClient.refetchQueries], {
-      include: GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE,
-    })
+    // We only want to refetch `PortfolioBalances`, as this is the only query needed to check the updated balances.
+    yield* call([apolloClient, apolloClient.refetchQueries], { include: [GQLQueries.PortfolioBalances] })
 
     freshnessLag += REFETCH_INTERVAL
   }

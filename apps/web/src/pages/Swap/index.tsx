@@ -46,7 +46,8 @@ export default function SwapPage({ className }: { className?: string }) {
   const location = useLocation()
   const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
-  const { initialInputCurrency, initialOutputCurrency, initialChainId } = useInitialCurrencyState()
+  const { initialInputCurrency, initialOutputCurrency, initialChainId, initialCurrencyLoading } =
+    useInitialCurrencyState()
   const isUnsupportedConnectedChain = useSupportedChainId(useAccount().chainId) === undefined
   const shouldDisableTokenInputs = multichainUXEnabled ? false : isUnsupportedConnectedChain
 
@@ -60,6 +61,7 @@ export default function SwapPage({ className }: { className?: string }) {
           disableTokenInputs={shouldDisableTokenInputs}
           initialInputCurrency={initialInputCurrency}
           initialOutputCurrency={initialOutputCurrency}
+          initialCurrencyLoading={initialCurrencyLoading}
           syncTabToUrl={true}
         />
       </PageWrapper>
@@ -79,6 +81,7 @@ export function Swap({
   className,
   initialInputCurrency,
   initialOutputCurrency,
+  initialCurrencyLoading = false,
   chainId,
   onCurrencyChange,
   multichainUXEnabled = false,
@@ -92,13 +95,14 @@ export function Swap({
   disableTokenInputs?: boolean
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
+  initialCurrencyLoading?: boolean
   compact?: boolean
   syncTabToUrl: boolean
   multichainUXEnabled?: boolean
 }) {
   const isDark = useIsDarkMode()
   const screenSize = useScreenSize()
-  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregatorWeb)
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   return (
     <SwapAndLimitContextProvider
@@ -115,7 +119,11 @@ export function Swap({
               <SwapWrapper isDark={isDark} className={className} id="swap-page">
                 <SwapHeader compact={compact || !screenSize.sm} syncTabToUrl={syncTabToUrl} />
                 {currentTab === SwapTab.Swap && (
-                  <SwapForm onCurrencyChange={onCurrencyChange} disableTokenInputs={disableTokenInputs} />
+                  <SwapForm
+                    onCurrencyChange={onCurrencyChange}
+                    initialCurrencyLoading={initialCurrencyLoading}
+                    disableTokenInputs={disableTokenInputs}
+                  />
                 )}
                 {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
                 {currentTab === SwapTab.Send && (

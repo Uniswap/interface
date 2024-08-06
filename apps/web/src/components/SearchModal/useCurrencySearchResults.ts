@@ -1,15 +1,14 @@
 import { Currency } from '@uniswap/sdk-core'
 import { CurrencyListRow, CurrencyListSectionTitle } from 'components/SearchModal/CurrencyList'
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
+import { CurrencySearchFilters } from 'components/SearchModal/DeprecatedCurrencySearch'
 import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import { useFallbackListTokens, useToken } from 'hooks/Tokens'
 import { useTokenBalances } from 'hooks/useTokenBalances'
-import { t } from 'i18next'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { getSortedPortfolioTokens } from 'lib/hooks/useTokenList/sorting'
 import { useMemo } from 'react'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
 import { UserAddedToken } from 'types/tokens'
 import {
@@ -19,6 +18,7 @@ import {
   useSearchTokensWebQuery,
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { t } from 'uniswap/src/i18n'
 import { isSameAddress } from 'utilities/src/addresses'
 import { currencyKey } from 'utils/currencyKey'
 
@@ -212,16 +212,21 @@ export function useCurrencySearchResults({
   const finalCurrencyList: CurrencyListRow[] = useMemo(() => {
     if (!isEmpty(searchQuery) || portfolioTokens.length === 0) {
       return [
-        new CurrencyListSectionTitle(searchQuery ? t('common.searchResults') : t('common.popularTokens')),
+        new CurrencyListSectionTitle(
+          searchQuery ? t('tokens.selector.section.search') : t('tokens.selector.section.popular'),
+        ),
         ...sortedCombinedTokens.map(searchQuery ? searchResultsCurrencyListMapper : currencyListRowMapper),
       ]
     } else if (sortedTokensWithoutPortfolio.length === 0) {
-      return [new CurrencyListSectionTitle(t('common.yourTokens')), ...portfolioTokens.map(currencyListRowMapper)]
+      return [
+        new CurrencyListSectionTitle(t('tokens.selector.section.yours')),
+        ...portfolioTokens.map(currencyListRowMapper),
+      ]
     } else {
       return [
-        new CurrencyListSectionTitle(t('common.yourTokens')),
+        new CurrencyListSectionTitle(t('tokens.selector.section.yours')),
         ...portfolioTokens.map(currencyListRowMapper),
-        new CurrencyListSectionTitle(t('common.popularTokens')),
+        new CurrencyListSectionTitle(t('tokens.selector.section.popular')),
         ...sortedTokensWithoutPortfolio.map(currencyListRowMapper),
       ]
     }

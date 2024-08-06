@@ -3,12 +3,10 @@ import { getSdkError } from '@walletconnect/utils'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import Animated, { useAnimatedStyle } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { DappHeaderIcon } from 'src/components/Requests/DappHeaderIcon'
 import { ModalWithOverlay } from 'src/components/Requests/ModalWithOverlay/ModalWithOverlay'
 import { PendingConnectionSwitchAccountModal } from 'src/components/Requests/ScanSheet/PendingConnectionSwitchAccountModal'
-import { truncateQueryParams } from 'src/components/Requests/ScanSheet/util'
 import { LinkButton } from 'src/components/buttons/LinkButton'
 import { returnToPreviousApp } from 'src/features/walletConnect/WalletConnect'
 import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
@@ -141,7 +139,7 @@ const SwitchAccountRow = ({ activeAddress, setModalState }: SwitchAccountProps):
   return (
     <TouchableArea disabled={!accountIsSwitchable} m="$none" testID={TestID.WCDappSwitchAccount} onPress={onPress}>
       <Flex row justifyContent="space-between">
-        <AddressFooter activeAccountAddress={activeAddress} />
+        <AddressFooter activeAccountAddress={activeAddress} px="$spacing8" />
         {accountIsSwitchable && <RotatableChevron color="$neutral2" direction="down" height={16} width={16} />}
       </Flex>
     </TouchableArea>
@@ -154,7 +152,7 @@ export const PendingConnectionModal = ({ pendingSession, onClose }: Props): JSX.
   const dispatch = useDispatch()
   const activeAddress = useActiveAccountAddressWithThrow()
   const activeAccount = useActiveAccountWithThrow()
-  const didOpenFromDeepLink = useAppSelector(selectDidOpenFromDeepLink)
+  const didOpenFromDeepLink = useSelector(selectDidOpenFromDeepLink)
 
   const [modalState, setModalState] = useState<PendingConnectionModalState>(PendingConnectionModalState.Hidden)
 
@@ -288,7 +286,7 @@ function PendingConnectionModalContent({
         </Text>
         <LinkButton
           color={colors.accent1.val}
-          label={formatDappURL(truncateQueryParams(pendingSession.dapp.url))}
+          label={formatDappURL(pendingSession.dapp.url)}
           mb="$spacing12"
           px="$spacing8"
           py="$spacing4"

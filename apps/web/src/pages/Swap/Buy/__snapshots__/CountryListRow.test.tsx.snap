@@ -80,7 +80,7 @@ exports[`CountryListRow should render 1`] = `
           width="32"
         />
         <span
-          class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-400"
+          class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
           data-disable-theme="true"
         >
           United States
@@ -171,7 +171,7 @@ exports[`CountryListRow should render selected country 1`] = `
           width="32"
         />
         <span
-          class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-16px _lineHeight-24px _fontWeight-400"
+          class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
           data-disable-theme="true"
         >
           United States

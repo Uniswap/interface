@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { NativeModules } from 'react-native'
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
 import { useBiometricAppSettings, useDeviceSupportsBiometricAuth } from 'src/features/biometrics/hooks'
 import { getAuthMethod } from 'src/features/telemetry/utils'
 import { getFullAppVersion } from 'src/utils/version'
@@ -39,7 +39,7 @@ export function TraceUserProperties(): null {
   const hideSmallBalances = useHideSmallBalancesSetting()
 
   // Effects must check this and ensure they are setting properties for when analytics is reenabled
-  const allowAnalytics = useAppSelector(selectAllowAnalytics)
+  const allowAnalytics = useSelector(selectAllowAnalytics)
 
   useGatingUserPropertyUsernames()
 

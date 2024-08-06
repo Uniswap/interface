@@ -1,5 +1,6 @@
 import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { useDisconnect } from 'hooks/useDisconnect'
 import { PropsWithChildren, createContext, useContext, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -7,7 +8,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { getCurrentPageFromLocation } from 'utils/urlRoutes'
 import { UserRejectedRequestError } from 'viem'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { ResolvedRegister, UseConnectReturnType, useConnect as useConnectWagmi, useDisconnect } from 'wagmi'
+import { ResolvedRegister, UseConnectReturnType, useConnect as useConnectWagmi } from 'wagmi'
 
 const ConnectionContext = createContext<UseConnectReturnType<ResolvedRegister['config']> | undefined>(undefined)
 

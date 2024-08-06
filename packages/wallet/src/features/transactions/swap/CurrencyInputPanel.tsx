@@ -9,6 +9,7 @@ import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { NumberType } from 'utilities/src/format/types'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -334,7 +335,7 @@ export const CurrencyInputPanel = memo(
                       value: currencyBalance,
                       type: NumberType.TokenNonTx,
                     })}{' '}
-                    {currencyInfo.currency.symbol}
+                    {getSymbolDisplayText(currencyInfo.currency.symbol)}
                   </Text>
                 )}
                 {showMaxButton && onSetMax && (

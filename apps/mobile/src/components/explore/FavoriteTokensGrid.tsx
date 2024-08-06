@@ -1,8 +1,7 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteTokenCard, { FAVORITE_TOKEN_CARD_LOADER_HEIGHT } from 'src/components/explore/FavoriteTokenCard'
 import { Loader } from 'src/components/loading'
@@ -31,7 +30,7 @@ export function FavoriteTokensGrid({ showLoading, ...rest }: FavoriteTokensGridP
 
   const [isEditing, setIsEditing] = useState(false)
   const isTokenDragged = useSharedValue(false)
-  const favoriteCurrencyIds = useAppSelector(selectFavoriteTokens)
+  const favoriteCurrencyIds = useSelector(selectFavoriteTokens)
 
   // Reset edit mode when there are no favorite tokens
   useEffect(() => {

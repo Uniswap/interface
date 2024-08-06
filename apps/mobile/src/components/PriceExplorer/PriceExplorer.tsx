@@ -14,7 +14,9 @@ import { Loader } from 'src/components/loading'
 import { Flex, HapticFeedback } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
@@ -61,7 +63,8 @@ export const PriceExplorer = memo(function PriceExplorer({
 
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
-  const shouldShowAnimatedDot = selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour
+  const shouldShowAnimatedDot =
+    (selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour) && !isDetoxBuild
   const additionalPadding = shouldShowAnimatedDot ? 40 : 0
 
   const { lastPricePoint, convertedPriceHistory } = useMemo(() => {
@@ -154,7 +157,12 @@ function PriceExplorerChart({
 
   return (
     // TODO(MOB-2166): remove forced LTR direction + scaleX horizontal flip technique once react-native-wagmi-charts fixes this: https://github.com/coinjar/react-native-wagmi-charts/issues/136
-    <Flex direction="ltr" my="$spacing24" style={{ transform: [{ scaleX: isRTL ? -1 : 1 }] }}>
+    <Flex
+      direction="ltr"
+      my="$spacing24"
+      style={{ transform: [{ scaleX: isRTL ? -1 : 1 }] }}
+      testID={TestID.PriceExplorerChart}
+    >
       <LineChart height={chartHeight} width={chartWidth - additionalPadding} yGutter={20}>
         <LineChart.Path color={tokenColor} pathProps={{ isTransitionEnabled: false }}>
           {shouldShowAnimatedDot && (

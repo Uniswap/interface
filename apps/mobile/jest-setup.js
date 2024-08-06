@@ -122,3 +122,5 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
     useSelectedColorScheme: () => 'light',
   }
 })
+
+jest.mock('openai')

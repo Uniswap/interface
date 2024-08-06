@@ -1,6 +1,6 @@
 import { createStore, Store } from '@reduxjs/toolkit'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import {
   addTransaction,
   cancelTransaction,

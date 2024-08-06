@@ -1,11 +1,12 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { createElement, useMemo } from 'react'
+import { useMemo } from 'react'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
+import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
+import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import {
@@ -20,7 +21,6 @@ const MAX_SHOW_RETRY_TIME = 15 * ONE_MINUTE_MS
 
 export function SwapSummaryItem({
   transaction,
-  layoutElement,
   swapCallbacks,
   index,
 }: SummaryItemProps & {
@@ -75,18 +75,20 @@ export function SwapSummaryItem({
 
   const onRetry = swapCallbacks?.onRetryGenerator?.(swapFormState)
 
-  return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
-    caption,
-    icon: (
-      <SplitLogo
-        chainId={transaction.chainId}
-        inputCurrencyInfo={inputCurrencyInfo}
-        outputCurrencyInfo={outputCurrencyInfo}
-        size={TXN_HISTORY_ICON_SIZE}
-      />
-    ),
-    transaction,
-    onRetry: swapFormState && shouldShowRetry ? onRetry : undefined,
-    index,
-  })
+  return (
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={
+        <SplitLogo
+          chainId={transaction.chainId}
+          inputCurrencyInfo={inputCurrencyInfo}
+          outputCurrencyInfo={outputCurrencyInfo}
+          size={TXN_HISTORY_ICON_SIZE}
+        />
+      }
+      index={index}
+      transaction={transaction}
+      onRetry={swapFormState && shouldShowRetry ? onRetry : undefined}
+    />
+  )
 }

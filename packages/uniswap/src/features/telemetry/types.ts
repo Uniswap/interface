@@ -91,6 +91,8 @@ export type SwapTradeBaseProperties = {
   chain_id?: number
   token_in_amount?: string | number
   token_out_amount?: string | number
+  token_in_amount_usd?: number
+  token_out_amount_usd?: number
   fee_amount?: string
   requestId?: string
   quoteId?: string
@@ -134,6 +136,7 @@ type TransferProperties = {
   chainId: WalletChainId
   tokenAddress: Address
   toAddress: Address
+  amountUSD?: number
 }
 
 export type WindowEthereumRequestProperties = {
@@ -365,9 +368,6 @@ export type UniverseEventProperties = {
     fee_tier?: number
     pool_address?: string
   } & ITraceContext
-  [MobileEventName.ExtensionPromoBannerActionTaken]: {
-    action: 'join' | 'dismiss'
-  }
   [MobileEventName.AppRating]: {
     type: 'store-review' | 'feedback-form' | 'remind'
     appRatingPromptedMs?: number
@@ -381,6 +381,14 @@ export type UniverseEventProperties = {
     deviceSupportsBiometrics: boolean | undefined
     isBiometricsEnrolled: boolean | undefined
     isBiometricAuthEnabled: boolean
+  }
+  [MobileEventName.AutomatedOnDeviceRecoveryMnemonicsFound]: {
+    mnemonicCount: number
+  }
+  [MobileEventName.AutomatedOnDeviceRecoverySingleMnemonicFetched]: {
+    balance: number
+    hasUnitag: boolean
+    hasENS: boolean
   }
   [MobileEventName.BalancesReport]: {
     total_balances_usd: number
@@ -400,6 +408,9 @@ export type UniverseEventProperties = {
       type: 'collection' | 'token' | 'address'
     }
   [MobileEventName.ExploreTokenItemSelected]: AssetDetailsBaseProperties & {
+    position: number
+  }
+  [MobileEventName.HomeExploreTokenItemSelected]: AssetDetailsBaseProperties & {
     position: number
   }
   [MobileEventName.FavoriteItem]: AssetDetailsBaseProperties & {

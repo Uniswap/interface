@@ -66,7 +66,10 @@ export function isWrapAction(wrapType: WrapType): wrapType is WrapType.Unwrap | 
   return wrapType === WrapType.Unwrap || wrapType === WrapType.Wrap
 }
 
-export function tradeToTransactionInfo(trade: Trade): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
+export function tradeToTransactionInfo(
+  trade: Trade,
+  transactedUSDValue?: number,
+): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
 
   const { quote, slippageTolerance } = trade
@@ -84,6 +87,7 @@ export function tradeToTransactionInfo(trade: Trade): ExactInputSwapTransactionI
     gasUseEstimate,
     routeString,
     protocol: getProtocolVersionFromTrade(trade),
+    transactedUSDValue,
   }
 
   return trade.tradeType === TradeType.EXACT_INPUT

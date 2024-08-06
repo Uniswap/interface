@@ -8,6 +8,7 @@ import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openUri } from 'uniswap/src/utils/linking'
@@ -27,6 +28,7 @@ export function LinkButton({
   openExternalBrowser = false,
   isSafeUri = false,
   value,
+  testID,
 }: {
   buttonType: LinkButtonType
   label: string
@@ -35,6 +37,7 @@ export function LinkButton({
   openExternalBrowser?: boolean
   isSafeUri?: boolean
   value: string
+  testID?: TestIDType
 }): JSX.Element {
   const dispatch = useDispatch()
   const colors = useSporeColors()
@@ -69,7 +72,7 @@ export function LinkButton({
         borderRadius="$rounded20"
         px="$spacing12"
         py="$spacing8"
-        testID={element}
+        testID={testID}
         onPress={onPress}
       >
         <Flex centered row shrink gap="$spacing8" width="auto">

@@ -82,19 +82,23 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
         class="c0"
       >
         <div
-          class="c1"
-          size="40"
+          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
         >
-          <img
-            class="c2"
+          <div
+            class="c1"
             size="40"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1/logo.png"
-          />
-          <img
-            class="c2"
-            size="40"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xaf88d065e77c8cC2239327C5EDb3A432268e5831/logo.png"
-          />
+          >
+            <img
+              class="c2"
+              size="40"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xDA10009cBd5D07dd0CeCc66161FC93D7c9000da1/logo.png"
+            />
+            <img
+              class="c2"
+              size="40"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/arbitrum/assets/0xaf88d065e77c8cC2239327C5EDb3A432268e5831/logo.png"
+            />
+          </div>
         </div>
         <div
           class="c3"
@@ -173,19 +177,23 @@ exports[`PortfolioLogo renders without L2 icon 1`] = `
         class="c0"
       >
         <div
-          class="c1"
-          size="40"
+          class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
         >
-          <img
-            class="c2"
+          <div
+            class="c1"
             size="40"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-          />
-          <img
-            class="c2"
-            size="40"
-            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-          />
+          >
+            <img
+              class="c2"
+              size="40"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+            />
+            <img
+              class="c2"
+              size="40"
+              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+            />
+          </div>
         </div>
       </div>
     </span>
