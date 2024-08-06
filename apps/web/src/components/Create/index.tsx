@@ -129,6 +129,16 @@ export default function Create() {
         }
     };
 
+    const [rewardsAmount, setRewardsAmount] = useState('');
+    const handleRewardsAmountChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        const value = event.target.value;
+
+        // Allow only numbers and empty string
+        if (/^\d*\.?\d*$/.test(value)) {
+            setRewardsAmount(value);
+        }
+    };
+
     return (
         <>
             <ResponsiveColumn>
@@ -154,7 +164,7 @@ export default function Create() {
                     style={{ borderColor }}
                 />
             </ResponsiveColumn>
-            {borderColor === "gray" ? (<CustomP color='green'><Trans i18nKey="common.create.incentives.set.token.reward.explaination" /></CustomP>) : (<CustomP style={{ color: 'red' }}><Trans i18nKey="common.create.incentives.set.token.reward.notValid" /></CustomP>)}
+            {borderColor === "gray" ? (<CustomP><Trans i18nKey="common.create.incentives.set.token.reward.explaination" /></CustomP>) : (<CustomP style={{ color: 'red' }}><Trans i18nKey="common.create.incentives.set.token.reward.notValid" /></CustomP>)}
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.select.reward.title" />
@@ -162,7 +172,11 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.select.reward.description" />
                 </ThemedText.DeprecatedBody>
-                <ValueInput placeholder='Rewards amount' />
+                <ValueInput
+                    placeholder='Rewards amount'
+                    value={rewardsAmount}
+                    onChange={handleRewardsAmountChange}
+                />
             </ResponsiveColumn>
 
             <ResponsiveColumn>
