@@ -144,6 +144,28 @@ export default function Create() {
         }
     };
 
+    const [poolAddress, setPoolAddress] = useState('');
+    const [poolAddressError, setPoolAddressError] = useState('');
+
+    // Create a validation function for the pool address
+    const isValidPoolAddress = (address: string): boolean => {
+        // Replace with your actual pool address validation logic
+        return /^0x[a-fA-F0-9]{40}$/.test(address);
+    };
+
+    // Handle the pool address input change
+    const handlePoolAddressChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        const value = event.target.value;
+        setPoolAddress(value);
+
+        // Validate the address
+        if (isValidPoolAddress(value)) {
+            setPoolAddressError(''); // Clear error message when input is valid
+        } else {
+            setPoolAddressError('Please correct pool address'); // Set error message when input is invalid
+        }
+    };
+
     return (
         <>
             <ResponsiveColumn>
@@ -192,8 +214,14 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.set.pool.description" />
                 </ThemedText.DeprecatedBody>
-                <ValueInput placeholder='Pool Address' />
-                <CustomP><Trans i18nKey="common.create.incentives.set.pool.explaination" /></CustomP>
+                <ValueInput
+                    placeholder='Pool Address'
+                    value={poolAddress}
+                    onChange={handlePoolAddressChange}
+                    style={{ borderColor: poolAddressError ? 'red' : 'gray' }} // Optionally change border color based on error
+                />
+                {poolAddressError ? <CustomP style={{ color: 'red' }}>{poolAddressError}</CustomP> : <CustomP><Trans i18nKey="common.create.incentives.set.pool.explaination" /></CustomP>}
+
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
