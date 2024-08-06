@@ -153,8 +153,8 @@ export default function Create() {
                     onChange={handleRewardTokenAddressChange}
                     style={{ borderColor }}
                 />
-                {borderColor === "gray" ? (<CustomP><Trans i18nKey="common.create.incentives.set.token.reward.explaination" /></CustomP>) : (<CustomP><Trans i18nKey="common.create.incentives.set.token.reward.notValid" /></CustomP>)}
             </ResponsiveColumn>
+            {borderColor === "gray" ? (<CustomP color='green'><Trans i18nKey="common.create.incentives.set.token.reward.explaination" /></CustomP>) : (<CustomP style={{ color: 'red' }}><Trans i18nKey="common.create.incentives.set.token.reward.notValid" /></CustomP>)}
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.select.reward.title" />
