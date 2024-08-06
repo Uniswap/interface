@@ -130,12 +130,17 @@ export default function Create() {
     };
 
     const [rewardsAmount, setRewardsAmount] = useState('');
+    const [rewardsError, setRewardsError] = useState('');
+
     const handleRewardsAmountChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
 
         // Allow only numbers and empty string
         if (/^\d*\.?\d*$/.test(value)) {
             setRewardsAmount(value);
+            setRewardsError(''); // Clear error message when input is valid
+        } else {
+            setRewardsError('Please enter a number'); // Set error message when input is invalid
         }
     };
 
@@ -177,6 +182,7 @@ export default function Create() {
                     value={rewardsAmount}
                     onChange={handleRewardsAmountChange}
                 />
+                {rewardsError && <CustomP style={{ color: 'red' }}>{rewardsError}</CustomP>}
             </ResponsiveColumn>
 
             <ResponsiveColumn>
