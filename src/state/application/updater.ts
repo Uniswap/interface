@@ -14,7 +14,6 @@ import { setChainConnectivityWarning, setImplements3085, updateBlockNumber, upda
 
 function useQueryCacheInvalidator() {
   const dispatch = useAppDispatch()
-
 }
 
 const NETWORK_HEALTH_CHECK_MS = ms`15s`
