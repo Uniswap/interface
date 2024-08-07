@@ -15912,7 +15912,7 @@ polished@^3.3.2:
 
 polyfill-object.fromentries@^1.0.1:
   version "1.0.1"
-  resolved "https://registry.nlark.com/polyfill-object.fromentries/download/polyfill-object.fromentries-1.0.1.tgz#1a5d89e3777684a852c9b6a6a1d2c3f9c262fc86"
+  resolved "https://registry.npmmirror.com/polyfill-object.fromentries/download/polyfill-object.fromentries-1.0.1.tgz#1a5d89e3777684a852c9b6a6a1d2c3f9c262fc86"
   integrity sha1-Gl2J43d2hKhSybamodLD+cJi/IY=
 
 popmotion@9.3.6:
