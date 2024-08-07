@@ -155,7 +155,7 @@ export default function Create() {
             setVestingPeriod(value);
             setVestingError(''); // Clear error message when input is valid
         } else {
-            setVestingError('The vesting period is required.');
+            setVestingError("common.create.incentives.select.vesting.period");
         }
     };
 
@@ -175,7 +175,7 @@ export default function Create() {
         if (isValidPoolAddress(value)) {
             setPoolAddressError('');
         } else {
-            setPoolAddressError('Please correct pool address');
+            setPoolAddressError('common.create.incentives.set.token.notValid.pool.address');
         }
     };
 
@@ -185,7 +185,7 @@ export default function Create() {
         const endDateTime = dayjs(`${endDate} ${endTime}`);
 
         if (endDateTime.isBefore(startDateTime)) {
-            setDateError('Please enter the correct date');
+            setDateError("common.create.incentives.select.period");
         } else {
             setDateError('');
         }
@@ -254,7 +254,7 @@ export default function Create() {
                     onChange={handlePoolAddressChange}
                     style={{ borderColor: poolAddressError ? 'red' : 'gray' }}
                 />
-                {poolAddressError ? <CustomP style={{ color: 'red' }}>{poolAddressError}</CustomP> : <CustomP><Trans i18nKey="common.create.incentives.set.pool.explaination" /></CustomP>}
+                {poolAddressError ? <CustomP style={{ color: 'red' }}><Trans i18nKey={poolAddressError} /></CustomP> : <CustomP><Trans i18nKey="common.create.incentives.set.pool.explaination" /></CustomP>}
 
             </ResponsiveColumn>
             <ResponsiveColumn>
@@ -274,7 +274,7 @@ export default function Create() {
                     <TimePickerValue labelName="End TIme" onTimeChange={setEndTime} />
                     <CustomP>Ends on {endDateFormat} at {endTime}</CustomP>
                 </CustomDiv>
-                {dateError && <CustomP style={{ color: 'red' }}>{dateError}</CustomP>}
+                {dateError && <CustomP style={{ color: 'red' }}><Trans i18nKey={dateError} /></CustomP>}
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
@@ -285,7 +285,7 @@ export default function Create() {
                 </ThemedText.DeprecatedBody>
                 <ValueInput placeholder='Vesting period in days' value={vestingPeriod}
                     onChange={handleVestingPeriod} />
-                {vestingError && <CustomP style={{ color: 'red' }}>{vestingError}</CustomP>}
+                {vestingError && <CustomP style={{ color: 'red' }}><Trans i18nKey={vestingError} /></CustomP>}
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
