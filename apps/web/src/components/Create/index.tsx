@@ -144,6 +144,22 @@ export default function Create() {
         }
     };
 
+    const [vestingPeriod, setVestingPeriod] = useState('');
+    const [vestingError, setVestingError] = useState('');
+
+    const handleVestingPeriod = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        const value = event.target.value;
+
+        // Allow only numbers and empty string
+        if (/^\d*\.?\d*$/.test(value)) {
+            setVestingPeriod(value);
+            setVestingError(''); // Clear error message when input is valid
+        } else {
+            setVestingError('The vesting period is required.');
+        }
+    };
+
+
     const [poolAddress, setPoolAddress] = useState('');
     const [poolAddressError, setPoolAddressError] = useState('');
 
@@ -267,7 +283,9 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.set.vesting.description" />
                 </ThemedText.DeprecatedBody>
-                <ValueInput placeholder='Vesting period in days' />
+                <ValueInput placeholder='Vesting period in days' value={vestingPeriod}
+                    onChange={handleVestingPeriod} />
+                {vestingError && <CustomP style={{ color: 'red' }}>{vestingError}</CustomP>}
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
