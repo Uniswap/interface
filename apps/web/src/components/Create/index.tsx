@@ -140,31 +140,49 @@ export default function Create() {
             setRewardsAmount(value);
             setRewardsError(''); // Clear error message when input is valid
         } else {
-            setRewardsError('Please enter a number'); // Set error message when input is invalid
+            setRewardsError('Please enter a number');
         }
     };
 
     const [poolAddress, setPoolAddress] = useState('');
     const [poolAddressError, setPoolAddressError] = useState('');
 
-    // Create a validation function for the pool address
     const isValidPoolAddress = (address: string): boolean => {
-        // Replace with your actual pool address validation logic
+
         return /^0x[a-fA-F0-9]{40}$/.test(address);
     };
 
-    // Handle the pool address input change
     const handlePoolAddressChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
         setPoolAddress(value);
 
-        // Validate the address
         if (isValidPoolAddress(value)) {
-            setPoolAddressError(''); // Clear error message when input is valid
+            setPoolAddressError('');
         } else {
-            setPoolAddressError('Please correct pool address'); // Set error message when input is invalid
+            setPoolAddressError('Please correct pool address');
         }
     };
+
+    const [dateError, setDateError] = useState('');
+    const validateDatesAndTimes = () => {
+        const startDateTime = dayjs(`${startDate} ${startTime}`);
+        const endDateTime = dayjs(`${endDate} ${endTime}`);
+
+        if (endDateTime.isBefore(startDateTime)) {
+            setDateError('Please enter the correct date');
+        } else {
+            setDateError('');
+        }
+    };
+    useEffect(() => {
+        const formattedStartDate = dayjs(startDate).format("MMMM D, YYYY");
+        const formattedEndDate = dayjs(endDate).format("MMMM D, YYYY");
+        setStartDateFormat(formattedStartDate);
+        setEndDateFormat(formattedEndDate);
+
+        // Call the validation function
+        validateDatesAndTimes();
+    }, [startDate, endDate, startTime, endTime]);
 
     return (
         <>
@@ -218,7 +236,7 @@ export default function Create() {
                     placeholder='Pool Address'
                     value={poolAddress}
                     onChange={handlePoolAddressChange}
-                    style={{ borderColor: poolAddressError ? 'red' : 'gray' }} // Optionally change border color based on error
+                    style={{ borderColor: poolAddressError ? 'red' : 'gray' }}
                 />
                 {poolAddressError ? <CustomP style={{ color: 'red' }}>{poolAddressError}</CustomP> : <CustomP><Trans i18nKey="common.create.incentives.set.pool.explaination" /></CustomP>}
 
@@ -240,6 +258,7 @@ export default function Create() {
                     <TimePickerValue labelName="End TIme" onTimeChange={setEndTime} />
                     <CustomP>Ends on {endDateFormat} at {endTime}</CustomP>
                 </CustomDiv>
+                {dateError && <CustomP style={{ color: 'red' }}>{dateError}</CustomP>}
             </ResponsiveColumn>
             <ResponsiveColumn>
                 <HeaderText>
