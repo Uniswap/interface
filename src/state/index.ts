@@ -5,7 +5,6 @@ import { load, save } from 'redux-localstorage-simple'
 import application from './application/reducer'
 import burn from './burn/reducer'
 import burnV3 from './burn/v3/reducer'
-import { api as dataApi } from './data/slice'
 import { updateVersion } from './global/actions'
 import lists from './lists/reducer'
 import logs from './logs/slice'
@@ -35,13 +34,11 @@ const store = configureStore({
     multicall,
     lists,
     logs,
-    [dataApi.reducerPath]: dataApi.reducer,
     [routingApiInch.reducerPath]: routingApiInch.reducer,
     [routingApiKromatika.reducerPath]: routingApiKromatika.reducer,
   },
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({ thunk: true })
-      .concat(dataApi.middleware)
       .concat(routingApiInch.middleware)
       .concat(routingApiKromatika.middleware)
       .concat(save({ states: PERSISTED_KEYS, debounce: 1000 })),
