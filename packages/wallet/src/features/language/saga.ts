@@ -4,7 +4,6 @@ import { call, put, select, takeLatest } from 'typed-redux-saga'
 import i18n from 'uniswap/src/i18n/i18n'
 import { getDeviceLocales } from 'utilities/src/device/locales'
 import { logger } from 'utilities/src/logger/logger'
-import { isMobile } from 'utilities/src/platform'
 import {
   Language,
   Locale,
@@ -39,9 +38,7 @@ function* appLanguageSaga(action: ReturnType<typeof updateLanguage>) {
     logger.warn('language/saga', 'appLanguageSaga', 'Sync of language setting state and i18n instance failed')
   }
 
-  if (isMobile) {
-    yield* call(restartAppIfRTL, localeToSet)
-  }
+  yield* call(restartAppIfRTL, localeToSet)
 }
 
 function getDeviceLanguage(): Language {

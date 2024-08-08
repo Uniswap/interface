@@ -36,7 +36,7 @@ export const useExtensionNavigation = (): {
 export async function focusOrCreateOnboardingTab(page?: string): Promise<void> {
   const extension = await chrome.management.getSelf()
 
-  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/onboarding.html*` })
+  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/*` })
   const tab = tabs[0]
 
   const url = 'onboarding.html#/' + (page ? page : TopLevelRoutes.Onboarding)
@@ -66,44 +66,6 @@ export async function focusOrCreateOnboardingTab(page?: string): Promise<void> {
   await onboardingMessageChannel.sendMessage({
     type: OnboardingMessageType.HighlightOnboardingTab,
   })
-}
-
-export async function focusOrCreateDappRequestWindow(tabId: number | undefined, windowId: number): Promise<void> {
-  const extension = await chrome.management.getSelf()
-
-  const window = await chrome.windows.getCurrent()
-
-  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/popup.html*` })
-  const tab = tabs[0]
-
-  // Centering within current window
-  const height = 410
-  const width = 330
-  const top = Math.round((window.top ?? 0) + ((window.height ?? height) - height) / 2)
-  const left = Math.round((window.left ?? 0) + ((window.width ?? width) - width) / 2)
-  let url = `popup.html?windowId=${windowId}`
-  if (tabId) {
-    url += `&tabId=${tabId}`
-  }
-
-  if (!tab?.id) {
-    await chrome.windows.create({
-      url,
-      type: 'popup',
-      top,
-      left,
-      width,
-      height,
-    })
-    return
-  }
-
-  await chrome.tabs.update(tab.id, {
-    url,
-    active: true,
-    highlighted: true,
-  })
-  await chrome.windows.update(tab.windowId, { focused: true, top, left, width, height })
 }
 
 /**

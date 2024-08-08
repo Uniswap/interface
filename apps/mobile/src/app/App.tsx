@@ -93,8 +93,7 @@ if (!__DEV__ && !isDetoxBuild) {
     environment: getSentryEnvironment(),
     dsn: config.sentryDsn,
     attachViewHierarchy: true,
-    // DataDog would do this for us now
-    enableCaptureFailedRequests: false,
+    enableCaptureFailedRequests: true,
     tracesSampleRate: getSentryTracesSamplingRate(),
     integrations: [
       new Sentry.ReactNativeTracing({
@@ -175,26 +174,24 @@ function App(): JSX.Element | null {
 
   return (
     <StatsigProvider {...statSigOptions}>
-      <DatadogProviderWrapper>
-        <Trace>
-          <StrictMode>
-            <I18nextProvider i18n={i18n}>
-              <SentryTags>
-                <SafeAreaProvider>
-                  <SharedProvider reduxStore={store}>
-                    <AnalyticsNavigationContextProvider
-                      shouldLogScreen={shouldLogScreen}
-                      useIsPartOfNavigationTree={useIsPartOfNavigationTree}
-                    >
-                      <AppOuter />
-                    </AnalyticsNavigationContextProvider>
-                  </SharedProvider>
-                </SafeAreaProvider>
-              </SentryTags>
-            </I18nextProvider>
-          </StrictMode>
-        </Trace>
-      </DatadogProviderWrapper>
+      <Trace>
+        <StrictMode>
+          <I18nextProvider i18n={i18n}>
+            <SentryTags>
+              <SafeAreaProvider>
+                <SharedProvider reduxStore={store}>
+                  <AnalyticsNavigationContextProvider
+                    shouldLogScreen={shouldLogScreen}
+                    useIsPartOfNavigationTree={useIsPartOfNavigationTree}
+                  >
+                    <AppOuter />
+                  </AnalyticsNavigationContextProvider>
+                </SharedProvider>
+              </SafeAreaProvider>
+            </SentryTags>
+          </I18nextProvider>
+        </StrictMode>
+      </Trace>
     </StatsigProvider>
   )
 }
@@ -248,38 +245,40 @@ function AppOuter(): JSX.Element | null {
     <ApolloProvider client={client}>
       <PersistGate loading={null} persistor={persistor}>
         <ErrorBoundary>
-          <LocalizationContextProvider>
-            <GestureHandlerRootView style={flexStyles.fill}>
-              <WalletContextProvider>
-                <UnitagUpdaterContextProvider>
-                  <BiometricContextProvider>
-                    <LockScreenContextProvider>
-                      <Sentry.TouchEventBoundary>
-                        <DataUpdaters />
-                        <NavigationContainer
-                          onReady={(navigationRef): void => {
-                            routingInstrumentation.registerNavigationContainer(navigationRef)
-                          }}
-                        >
-                          <MobileWalletNavigationProvider>
-                            <OpenAIContextProvider>
-                              <BottomSheetModalProvider>
-                                <AppModals />
-                                <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                  <AppInner />
-                                </PerformanceProfiler>
-                              </BottomSheetModalProvider>
-                              <NotificationToastWrapper />
-                            </OpenAIContextProvider>
-                          </MobileWalletNavigationProvider>
-                        </NavigationContainer>
-                      </Sentry.TouchEventBoundary>
-                    </LockScreenContextProvider>
-                  </BiometricContextProvider>
-                </UnitagUpdaterContextProvider>
-              </WalletContextProvider>
-            </GestureHandlerRootView>
-          </LocalizationContextProvider>
+          <DatadogProviderWrapper>
+            <LocalizationContextProvider>
+              <GestureHandlerRootView style={flexStyles.fill}>
+                <WalletContextProvider>
+                  <UnitagUpdaterContextProvider>
+                    <BiometricContextProvider>
+                      <LockScreenContextProvider>
+                        <Sentry.TouchEventBoundary>
+                          <DataUpdaters />
+                          <NavigationContainer
+                            onReady={(navigationRef): void => {
+                              routingInstrumentation.registerNavigationContainer(navigationRef)
+                            }}
+                          >
+                            <MobileWalletNavigationProvider>
+                              <OpenAIContextProvider>
+                                <BottomSheetModalProvider>
+                                  <AppModals />
+                                  <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                    <AppInner />
+                                  </PerformanceProfiler>
+                                </BottomSheetModalProvider>
+                                <NotificationToastWrapper />
+                              </OpenAIContextProvider>
+                            </MobileWalletNavigationProvider>
+                          </NavigationContainer>
+                        </Sentry.TouchEventBoundary>
+                      </LockScreenContextProvider>
+                    </BiometricContextProvider>
+                  </UnitagUpdaterContextProvider>
+                </WalletContextProvider>
+              </GestureHandlerRootView>
+            </LocalizationContextProvider>
+          </DatadogProviderWrapper>
         </ErrorBoundary>
       </PersistGate>
     </ApolloProvider>
