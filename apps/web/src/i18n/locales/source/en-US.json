@@ -270,6 +270,7 @@
   "common.create.incentives.select.reward.title": "Select rewards amount.",
   "common.create.incentives.select.period": "Please enter the correct date.",
   "common.create.incentives.select.vesting.period": "Must be a number.",
+  "common.create.incentives.enter.refundee.notValid": "Not valid address",
   "common.create.incentives.select.reward.description": "Select an amount of the token in your wallet to distribute in the incentive program.",
   "common.create.incentives.set.pool.title": "Set pool pair",
   "common.create.incentives.set.pool.explaination": "Enter address to identify pool and fee tier.",

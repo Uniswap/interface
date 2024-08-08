@@ -190,6 +190,22 @@ export default function Create() {
             setDateError('');
         }
     };
+    const [refundeeAddress, setRefundeeAddress] = useState('');
+    const [refundeeAddressError, setRefundeeAddressError] = useState('');
+
+    const handleRefundeeAddressChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+        const value = event.target.value;
+        setRefundeeAddress(value);
+
+        // Validate the address
+        if (isValidEthereumAddress(value)) {
+            setRefundeeAddressError('');
+        } else if (value === "") {
+            setRefundeeAddressError('');
+        } else {
+            setRefundeeAddressError('common.create.incentives.enter.refundee.notValid');
+        }
+    };
     useEffect(() => {
         const formattedStartDate = dayjs(startDate).format("MMMM D, YYYY");
         const formattedEndDate = dayjs(endDate).format("MMMM D, YYYY");
@@ -294,7 +310,13 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.enter.refundee.description" />
                 </ThemedText.DeprecatedBody>
-                <ValueInput placeholder='Refundee address' />
+                <ValueInput
+                    placeholder='Refundee address'
+                    value={refundeeAddress}
+                    onChange={handleRefundeeAddressChange}
+                    style={{ borderColor: refundeeAddressError ? 'red' : 'gray' }}
+                />
+                {refundeeAddressError && <CustomP style={{ color: 'red' }}><Trans i18nKey={refundeeAddressError} /></CustomP>}
             </ResponsiveColumn>
             {!account.address ?
                 (<ButtonLight
