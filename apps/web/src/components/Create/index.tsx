@@ -115,20 +115,25 @@ export default function Create() {
         return /^0x[a-fA-F0-9]{40}$/.test(address);
     };
 
+    const [rewardTokenError, setRewardTokenError] = useState('');
+
     const handleRewardTokenAddressChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
         setRewardTokenAddress(value);
 
         // Validate the address
         if (isValidEthereumAddress(value)) {
-            setBorderColor('gray');
-        } else if (value === "") {
-            setBorderColor('gray');
+            setRewardTokenError('');
+            setBorderColor('gray'); // Set to gray if valid
         } else {
-            setBorderColor('red');
+            setBorderColor('red'); // Set to red if invalid
+            if (value === '') {
+                setRewardTokenError('The reward token address is required.');
+            } else {
+                setRewardTokenError('common.create.incentives.set.token.reward.notValid');
+            }
         }
     };
-
     const [rewardsAmount, setRewardsAmount] = useState('');
     const [rewardsError, setRewardsError] = useState('');
 
@@ -142,6 +147,11 @@ export default function Create() {
         } else {
             setRewardsError('Please enter a number');
         }
+
+        // Check if the input is empty
+        if (value === '') {
+            setRewardsError('The reward amount is required.');
+        }
     };
 
     const [vestingPeriod, setVestingPeriod] = useState('');
@@ -151,11 +161,18 @@ export default function Create() {
         const value = event.target.value;
         setVestingPeriod(value);
 
-        // Allow only numbers and empty string
+        // Validate the vesting period
         if (/^\d*\.?\d*$/.test(value)) {
             setVestingError('');
+            setBorderColor('gray');
+
+            if (value === '') {
+                setBorderColor('red');
+                setVestingError('The vesting period is required.');
+            }
         } else {
-            setVestingError("common.create.incentives.select.vesting.period");
+            setBorderColor('red');
+            setVestingError('common.create.incentives.set.vesting.notValid');
         }
     };
 
@@ -168,14 +185,22 @@ export default function Create() {
         return /^0x[a-fA-F0-9]{40}$/.test(address);
     };
 
+
     const handlePoolAddressChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
         setPoolAddress(value);
 
+        // Validate the address
         if (isValidPoolAddress(value)) {
             setPoolAddressError('');
+            setBorderColor('gray'); // Set to gray if valid
         } else {
-            setPoolAddressError('common.create.incentives.set.token.notValid.pool.address');
+            setBorderColor('red'); // Set to red if invalid
+            if (value === '') {
+                setPoolAddressError('The pool address is required.');
+            } else {
+                setPoolAddressError('common.create.incentives.set.token.notValid.pool.address');
+            }
         }
     };
 
@@ -200,12 +225,17 @@ export default function Create() {
         // Validate the address
         if (isValidEthereumAddress(value)) {
             setRefundeeAddressError('');
-        } else if (value === "") {
-            setRefundeeAddressError('');
+            setBorderColor('gray'); // Set to gray if valid
         } else {
-            setRefundeeAddressError('common.create.incentives.enter.refundee.notValid');
+            setBorderColor('red'); // Set to red if invalid
+            if (value === '') {
+                setRefundeeAddressError('The refundee address is required.');
+            } else {
+                setRefundeeAddressError('common.create.incentives.set.token.notValid.refundee.address');
+            }
         }
     };
+
     useEffect(() => {
         const formattedStartDate = dayjs(startDate).format("MMMM D, YYYY");
         const formattedEndDate = dayjs(endDate).format("MMMM D, YYYY");
@@ -238,10 +268,10 @@ export default function Create() {
                     placeholder='Reward token address'
                     value={rewardTokenAddress}
                     onChange={handleRewardTokenAddressChange}
-                    style={{ borderColor }}
+                    style={{ borderColor: borderColor }}
                 />
+                {rewardTokenError ? <CustomP style={{ color: 'red' }}><Trans i18nKey={rewardTokenError} /></CustomP> : <CustomP><Trans i18nKey="common.create.incentives.set.token.reward.explaination" /></CustomP>}
             </ResponsiveColumn>
-            {borderColor === "gray" ? (<CustomP><Trans i18nKey="common.create.incentives.set.token.reward.explaination" /></CustomP>) : (<CustomP style={{ color: 'red' }}><Trans i18nKey="common.create.incentives.set.token.reward.notValid" /></CustomP>)}
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.select.reward.title" />
@@ -300,8 +330,12 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.set.vesting.description" />
                 </ThemedText.DeprecatedBody>
-                <ValueInput placeholder='Vesting period in days' value={vestingPeriod}
-                    onChange={handleVestingPeriod} style={{ borderColor: vestingError ? 'red' : 'gray' }} />
+                <ValueInput
+                    placeholder='Vesting period in days'
+                    value={vestingPeriod}
+                    onChange={handleVestingPeriod}
+                    style={{ borderColor: vestingError ? 'red' : 'gray' }}
+                />
                 {vestingError && <CustomP style={{ color: 'red' }}><Trans i18nKey={vestingError} /></CustomP>}
             </ResponsiveColumn>
             <ResponsiveColumn>
