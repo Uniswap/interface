@@ -6,7 +6,6 @@ export enum HomeTabs {
 
 export enum ExtensionScreens {
   Home = 'home',
-  PopupOpenExtension = 'PopupOpenExtension',
   UnsupportedBrowserScreen = 'UnsupportedBrowserScreen'
 }
 

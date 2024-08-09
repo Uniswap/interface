@@ -127,7 +127,6 @@ export const ElementName = {
   EmptyStateReceive: 'empty-state-receive',
   Enable: 'enable',
   EtherscanView: 'etherscan-view',
-  ExtensionPopupOpenButton: 'extension-popup-open-button',
   FiatOnRampTokenSelector: 'fiat-on-ramp-token-selector',
   FiatOnRampWidgetButton: 'fiat-on-ramp-widget-button',
   FiatOnRampCountryPicker: 'fiat-on-ramp-country-picker',

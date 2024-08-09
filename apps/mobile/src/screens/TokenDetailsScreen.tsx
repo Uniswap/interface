@@ -377,7 +377,7 @@ function TokenDetails({
           chainId={currencyChainId}
           currencyId={_currencyId}
           onClose={(): void => {
-            setShowWarningModal(false)
+            setShowBuyNativeTokenModal(false)
           }}
         />
       )}

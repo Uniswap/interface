@@ -1,3 +1,8 @@
-- Onboarding improvements
-- Adds fallback support method for opening the side panel on chrome failure
+Here are the latest updates:
+
+Native Asset Top Up: Easily access our fiat on ramp feature if you don’t have enough native asset on a network to complete a transaction.
+
+Other changes:
+
 - Various bug fixes and performance improvements
+- Improved gas estimation for Send transactions

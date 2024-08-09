@@ -58,7 +58,7 @@ const setupStore = (preloadedState?: PreloadedState<ExtensionState>): ReturnType
 let store: ReturnType<typeof setupStore> | undefined
 let persistor: ReturnType<typeof persistStore> | undefined
 
-export async function initializeReduxStore(args?: { readOnly?: boolean }): Promise<{
+export async function initializeReduxStore(): Promise<{
   store: ReturnType<typeof setupStore>
   persistor: ReturnType<typeof persistStore>
 }> {
@@ -68,12 +68,6 @@ export async function initializeReduxStore(args?: { readOnly?: boolean }): Promi
 
   store = setupStore(oldStore)
   persistor = persistStore(store)
-
-  if (args?.readOnly) {
-    // This means the store will be initialized with the persisted state from disk, but it won't persist any changes.
-    // Only useful for use cases where we don't want to modify the state (for example, a popup window instead of the sidebar).
-    persistor.pause()
-  }
 
   // We wait a few seconds to make sure the store is fully initialized and persisted before deleting the old storage.
   // This is needed because otherwise the background script might think the user is not onboarded if it reads the storage while it's being migrated.

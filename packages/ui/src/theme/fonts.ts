@@ -2,7 +2,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { createFont, isWeb } from '@tamagui/core'
 import { needsSmallFont } from 'ui/src/utils/needs-small-font'
-import { isInterface } from 'utilities/src/platform'
 
 // TODO(EXT-148): remove this type and use Tamagui's FontTokens
 export type TextVariantTokens = keyof typeof fonts
@@ -48,9 +47,9 @@ const MEDIUM_WEIGHT = '500'
 const MEDIUM_WEIGHT_WEB = '535'
 
 const defaultWeights = {
-  book: isInterface ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
-  true: isInterface ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
-  medium: isInterface ? MEDIUM_WEIGHT_WEB : MEDIUM_WEIGHT,
+  book: isWeb ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
+  true: isWeb ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
+  medium: isWeb ? MEDIUM_WEIGHT_WEB : MEDIUM_WEIGHT,
 }
 
 export const fonts = {
