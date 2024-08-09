@@ -41,12 +41,16 @@ const ResponsiveColumn = styled(AutoColumn)`
   justify-content: space-between;
 `;
 
-const ValueInput = styled.input`
+interface ValueInputProps {
+    error?: boolean;
+}
+
+const ValueInput = styled.input<ValueInputProps>`
   background-size: 20px 20px;
   background-position: 12px center;
   background-color: ${({ theme }) => theme.surface1};
   border-radius: 20px;
-  border: 1px solid ${({ theme }) => 'gray'};
+  border: 1px solid ${({ theme, error }) => (error ? 'red' : 'gray')};
   height: 100%;
   width: 400px;
   font-size: 18px;
@@ -74,17 +78,50 @@ const ValueInput = styled.input`
 `;
 
 const CustomP = styled.p`
-margin: 0px;
-font-size: 16px;
-display: block;
+  margin: 0px;
+  font-size: 16px;
+  display: block;
+  color: ${({ color }) => color || 'black'};
 `;
 
 const CustomDiv = styled.div`
-margin: 0px;
-gap: 12px;
-display:flex;
-align-items: center;
+  margin: 0px;
+  gap: 12px;
+  display:flex;
+  align-items: center;
 `;
+
+function isValidEthereumAddress(address: string): boolean {
+    return /^0x[a-fA-F0-9]{40}$/.test(address);
+}
+
+interface InputFieldProps {
+    placeholder: string;
+    value: string;
+    onChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    error: boolean;
+    errorMessage?: string;
+}
+
+function InputField({
+    placeholder,
+    value,
+    onChange,
+    error,
+    errorMessage,
+}: InputFieldProps) {
+    return (
+        <>
+            <ValueInput
+                placeholder={placeholder}
+                value={value}
+                onChange={onChange}
+                error={!!error}
+            />
+            {error && <CustomP color="red"><Trans i18nKey={errorMessage} /></CustomP>}
+        </>
+    );
+}
 
 export default function Create() {
     const account = useAccount();
@@ -94,157 +131,91 @@ export default function Create() {
 
     const [startDate, setStartDate] = useState(today);
     const [endDate, setEndDate] = useState(tomorrow);
-
     const [startTime, setStartTime] = useState("12:00");
     const [endTime, setEndTime] = useState("12:00");
 
-    const [startDateFormat, setStartDateFormat] = useState("");
-    const [endDateFormat, setEndDateFormat] = useState("");
-
-    useEffect(() => {
-        const formattedStartDate = dayjs(startDate).format("MMMM D, YYYY");
-        const formattedEndDate = dayjs(endDate).format("MMMM D, YYYY");
-        setStartDateFormat(formattedStartDate);
-        setEndDateFormat(formattedEndDate);
-    }, [startDate, endDate]);
+    const [formattedStartDate, setFormattedStartDate] = useState(dayjs(today).format("MMMM D, YYYY"));
+    const [formattedEndDate, setFormattedEndDate] = useState(dayjs(tomorrow).format("MMMM D, YYYY"));
 
     const [rewardTokenAddress, setRewardTokenAddress] = useState('');
-    const [borderColor, setBorderColor] = useState('gray');
-
-    const isValidEthereumAddress = (address: string): boolean => {
-        return /^0x[a-fA-F0-9]{40}$/.test(address);
-    };
-
-    const [rewardTokenError, setRewardTokenError] = useState('');
-
-    const handleRewardTokenAddressChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        const value = event.target.value;
-        setRewardTokenAddress(value);
-
-        // Validate the address
-        if (isValidEthereumAddress(value)) {
-            setRewardTokenError('');
-            setBorderColor('gray'); // Set to gray if valid
-        } else {
-            setBorderColor('red'); // Set to red if invalid
-            if (value === '') {
-                setRewardTokenError('The reward token address is required.');
-            } else {
-                setRewardTokenError('common.create.incentives.set.token.reward.notValid');
-            }
-        }
-    };
     const [rewardsAmount, setRewardsAmount] = useState('');
-    const [rewardsError, setRewardsError] = useState('');
-
-    const handleRewardsAmountChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        const value = event.target.value;
-        setRewardsAmount(value);
-
-        // Allow only numbers and empty string
-        if (/^\d*\.?\d*$/.test(value)) {
-            setRewardsError('');
-        } else {
-            setRewardsError('Please enter a number');
-        }
-
-        // Check if the input is empty
-        if (value === '') {
-            setRewardsError('The reward amount is required.');
-        }
-    };
-
     const [vestingPeriod, setVestingPeriod] = useState('');
-    const [vestingError, setVestingError] = useState('');
-
-    const handleVestingPeriod = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        const value = event.target.value;
-        setVestingPeriod(value);
-
-        // Validate the vesting period
-        if (/^\d*\.?\d*$/.test(value)) {
-            setVestingError('');
-            setBorderColor('gray');
-
-            if (value === '') {
-                setBorderColor('red');
-                setVestingError('The vesting period is required.');
-            }
-        } else {
-            setBorderColor('red');
-            setVestingError('common.create.incentives.set.vesting.notValid');
-        }
-    };
-
-
     const [poolAddress, setPoolAddress] = useState('');
-    const [poolAddressError, setPoolAddressError] = useState('');
+    const [refundeeAddress, setRefundeeAddress] = useState('');
 
-    const isValidPoolAddress = (address: string): boolean => {
+    const [errorMessages, setErrorMessages] = useState({
+        rewardToken: '',
+        rewardsAmount: '',
+        vestingPeriod: '',
+        poolAddress: '',
+        refundeeAddress: '',
+        date: '',
+    });
 
-        return /^0x[a-fA-F0-9]{40}$/.test(address);
-    };
+    useEffect(() => {
+        setFormattedStartDate(dayjs(startDate).format("MMMM D, YYYY"));
+        setFormattedEndDate(dayjs(endDate).format("MMMM D, YYYY"));
+        validateDatesAndTimes();
+    }, [startDate, endDate, startTime, endTime]);
 
-
-    const handlePoolAddressChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
-        const value = event.target.value;
-        setPoolAddress(value);
-
-        // Validate the address
-        if (isValidPoolAddress(value)) {
-            setPoolAddressError('');
-            setBorderColor('gray'); // Set to gray if valid
-        } else {
-            setBorderColor('red'); // Set to red if invalid
-            if (value === '') {
-                setPoolAddressError('The pool address is required.');
-            } else {
-                setPoolAddressError('common.create.incentives.set.token.notValid.pool.address');
-            }
-        }
-    };
-
-    const [dateError, setDateError] = useState('');
     const validateDatesAndTimes = () => {
         const startDateTime = dayjs(`${startDate} ${startTime}`);
         const endDateTime = dayjs(`${endDate} ${endTime}`);
 
-        if (endDateTime.isBefore(startDateTime)) {
-            setDateError("common.create.incentives.select.period");
-        } else {
-            setDateError('');
-        }
+        setErrorMessages((prev) => ({
+            ...prev,
+            date: endDateTime.isBefore(startDateTime) ? "common.create.incentives.select.period" : '',
+        }));
     };
-    const [refundeeAddress, setRefundeeAddress] = useState('');
-    const [refundeeAddressError, setRefundeeAddressError] = useState('');
 
-    const handleRefundeeAddressChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
+    type SetterFunction = React.Dispatch<React.SetStateAction<string>>;
+    type ValidatorFunction = (value: string) => boolean;
+
+    const handleInputChange = (setter: SetterFunction,
+        validator: ValidatorFunction,
+        errorKey: keyof typeof errorMessages, // Ensure this is a valid key for errorMessages state
+        event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
-        setRefundeeAddress(value);
+        setter(value);
 
-        // Validate the address
-        if (isValidEthereumAddress(value)) {
-            setRefundeeAddressError('');
-            setBorderColor('gray'); // Set to gray if valid
-        } else {
-            setBorderColor('red'); // Set to red if invalid
+        setErrorMessages((prev) => {
             if (value === '') {
-                setRefundeeAddressError('The refundee address is required.');
+                return {
+                    ...prev,
+                    [errorKey]: `The ${errorKey.replace(/[A-Z]/g, (match) => ' ' + match.toLowerCase())} is required.`,
+                };
             } else {
-                setRefundeeAddressError('common.create.incentives.set.token.notValid.refundee.address');
+                return {
+                    ...prev,
+                    [errorKey]: validator(value) ? '' : `common.create.incentives.set.token.notValid.${errorKey}`,
+                };
             }
-        }
+        });
     };
 
-    useEffect(() => {
-        const formattedStartDate = dayjs(startDate).format("MMMM D, YYYY");
-        const formattedEndDate = dayjs(endDate).format("MMMM D, YYYY");
-        setStartDateFormat(formattedStartDate);
-        setEndDateFormat(formattedEndDate);
+    const handleRewardTokenAddressChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+        handleInputChange(setRewardTokenAddress, isValidEthereumAddress, 'rewardToken', e);
 
-        // Call the validation function
-        validateDatesAndTimes();
-    }, [startDate, endDate, startTime, endTime]);
+    const handlePoolAddressChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+        handleInputChange(setPoolAddress, isValidEthereumAddress, 'poolAddress', e);
+
+    const handleRefundeeAddressChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+        handleInputChange(setRefundeeAddress, isValidEthereumAddress, 'refundeeAddress', e);
+
+    const handleRewardsAmountChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+        handleInputChange(setRewardsAmount, (val) => /^\d*\.?\d*$/.test(val), 'rewardsAmount', e);
+
+    const handleVestingPeriodChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+        handleInputChange(setVestingPeriod, (val) => /^\d*\.?\d*$/.test(val), 'vestingPeriod', e);
+
+
+    const createIncentive = () => {
+        if (!rewardTokenAddress) setErrorMessages((prev) => ({ ...prev, rewardToken: 'The reward token address is required.' }));
+        if (!rewardsAmount) setErrorMessages((prev) => ({ ...prev, rewardsAmount: 'The reward amount is required.' }));
+        if (!poolAddress) setErrorMessages((prev) => ({ ...prev, poolAddress: 'The pool address is required.' }));
+        if (!vestingPeriod) setErrorMessages((prev) => ({ ...prev, vestingPeriod: 'The vesting period is required.' }));
+        if (!refundeeAddress) setErrorMessages((prev) => ({ ...prev, refundeeAddress: 'The refundee address is required.' }));
+    };
 
     return (
         <>
@@ -257,6 +228,7 @@ export default function Create() {
                 </ThemedText.DeprecatedBody>
                 <NetworkTypeMenu networkType={NetworkType.Type2} />
             </ResponsiveColumn>
+
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.set.token.reward.title" />
@@ -264,14 +236,15 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.set.token.reward.description" />
                 </ThemedText.DeprecatedBody>
-                <ValueInput
+                <InputField
                     placeholder='Reward token address'
                     value={rewardTokenAddress}
                     onChange={handleRewardTokenAddressChange}
-                    style={{ borderColor: borderColor }}
+                    error={!!errorMessages.rewardToken}
+                    errorMessage={errorMessages.rewardToken}
                 />
-                {rewardTokenError ? <CustomP style={{ color: 'red' }}><Trans i18nKey={rewardTokenError} /></CustomP> : <CustomP><Trans i18nKey="common.create.incentives.set.token.reward.explaination" /></CustomP>}
             </ResponsiveColumn>
+
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.select.reward.title" />
@@ -279,13 +252,13 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.select.reward.description" />
                 </ThemedText.DeprecatedBody>
-                <ValueInput
+                <InputField
                     placeholder='Rewards amount'
                     value={rewardsAmount}
                     onChange={handleRewardsAmountChange}
-                    style={{ borderColor: rewardsError ? 'red' : 'gray' }}
+                    error={!!errorMessages.rewardsAmount}
+                    errorMessage={errorMessages.rewardsAmount}
                 />
-                {rewardsError && <CustomP style={{ color: 'red' }}>{rewardsError}</CustomP>}
             </ResponsiveColumn>
 
             <ResponsiveColumn>
@@ -295,15 +268,15 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.set.pool.description" />
                 </ThemedText.DeprecatedBody>
-                <ValueInput
+                <InputField
                     placeholder='Pool Address'
                     value={poolAddress}
                     onChange={handlePoolAddressChange}
-                    style={{ borderColor: poolAddressError ? 'red' : 'gray' }}
+                    error={!!errorMessages.poolAddress}
+                    errorMessage={errorMessages.poolAddress}
                 />
-                {poolAddressError ? <CustomP style={{ color: 'red' }}><Trans i18nKey={poolAddressError} /></CustomP> : <CustomP><Trans i18nKey="common.create.incentives.set.pool.explaination" /></CustomP>}
-
             </ResponsiveColumn>
+
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.set.incentives.title" />
@@ -314,15 +287,16 @@ export default function Create() {
                 <CustomDiv>
                     <DatePickerValue date={today} labelName="Start Date" onDateChange={setStartDate} />
                     <TimePickerValue labelName="Start Time" onTimeChange={setStartTime} />
-                    <CustomP>Starts on {startDateFormat} at {startTime}</CustomP>
+                    <CustomP>Starts on {formattedStartDate} at {startTime}</CustomP>
                 </CustomDiv>
                 <CustomDiv>
                     <DatePickerValue date={tomorrow} labelName="End Date" onDateChange={setEndDate} />
-                    <TimePickerValue labelName="End TIme" onTimeChange={setEndTime} />
-                    <CustomP>Ends on {endDateFormat} at {endTime}</CustomP>
+                    <TimePickerValue labelName="End Time" onTimeChange={setEndTime} />
+                    <CustomP>Ends on {formattedEndDate} at {endTime}</CustomP>
                 </CustomDiv>
-                {dateError && <CustomP style={{ color: 'red' }}><Trans i18nKey={dateError} /></CustomP>}
+                {errorMessages.date && <CustomP color="red"><Trans i18nKey={errorMessages.date} /></CustomP>}
             </ResponsiveColumn>
+
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.set.vesting.title" />
@@ -330,14 +304,15 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.set.vesting.description" />
                 </ThemedText.DeprecatedBody>
-                <ValueInput
+                <InputField
                     placeholder='Vesting period in days'
                     value={vestingPeriod}
-                    onChange={handleVestingPeriod}
-                    style={{ borderColor: vestingError ? 'red' : 'gray' }}
+                    onChange={handleVestingPeriodChange}
+                    error={!!errorMessages.vestingPeriod}
+                    errorMessage={errorMessages.vestingPeriod}
                 />
-                {vestingError && <CustomP style={{ color: 'red' }}><Trans i18nKey={vestingError} /></CustomP>}
             </ResponsiveColumn>
+
             <ResponsiveColumn>
                 <HeaderText>
                     → <Trans i18nKey="common.create.incentives.enter.refundee.title" />
@@ -345,31 +320,34 @@ export default function Create() {
                 <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16 }}>
                     <Trans i18nKey="common.create.incentives.enter.refundee.description" />
                 </ThemedText.DeprecatedBody>
-                <ValueInput
+                <InputField
                     placeholder='Refundee address'
                     value={refundeeAddress}
                     onChange={handleRefundeeAddressChange}
-                    style={{ borderColor: refundeeAddressError ? 'red' : 'gray' }}
+                    error={!!errorMessages.refundeeAddress}
+                    errorMessage={errorMessages.refundeeAddress}
                 />
-                {refundeeAddressError && <CustomP style={{ color: 'red' }}><Trans i18nKey={refundeeAddressError} /></CustomP>}
             </ResponsiveColumn>
-            {!account.address ?
-                (<ButtonLight
+
+            {!account.address ? (
+                <ButtonLight
                     onClick={accountDrawer.open}
                     fontWeight={535}
                     $borderRadius="16px"
                     marginTop={2}
                 >
                     <Trans i18nKey="common.connectWallet.button" />
-                </ButtonLight>) : (
-                    <ButtonLight
-                        fontWeight={535}
-                        $borderRadius="16px"
-                        marginTop={2}>
-                        <Trans i18nKey="common.incentives.create.button" />
-                    </ButtonLight>
-                )
-            }
+                </ButtonLight>
+            ) : (
+                <ButtonLight
+                    fontWeight={535}
+                    $borderRadius="16px"
+                    marginTop={2}
+                    onClick={createIncentive}
+                >
+                    <Trans i18nKey="common.incentives.create.button" />
+                </ButtonLight>
+            )}
         </>
     );
 }
