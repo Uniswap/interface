@@ -134,11 +134,11 @@ export default function Create() {
 
     const handleRewardsAmountChange = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
+        setRewardsAmount(value);
 
         // Allow only numbers and empty string
         if (/^\d*\.?\d*$/.test(value)) {
-            setRewardsAmount(value);
-            setRewardsError(''); // Clear error message when input is valid
+            setRewardsError('');
         } else {
             setRewardsError('Please enter a number');
         }
@@ -149,11 +149,11 @@ export default function Create() {
 
     const handleVestingPeriod = (event: React.ChangeEvent<HTMLInputElement>): void => {
         const value = event.target.value;
+        setVestingPeriod(value);
 
         // Allow only numbers and empty string
         if (/^\d*\.?\d*$/.test(value)) {
-            setVestingPeriod(value);
-            setVestingError(''); // Clear error message when input is valid
+            setVestingError('');
         } else {
             setVestingError("common.create.incentives.select.vesting.period");
         }
@@ -253,6 +253,7 @@ export default function Create() {
                     placeholder='Rewards amount'
                     value={rewardsAmount}
                     onChange={handleRewardsAmountChange}
+                    style={{ borderColor: rewardsError ? 'red' : 'gray' }}
                 />
                 {rewardsError && <CustomP style={{ color: 'red' }}>{rewardsError}</CustomP>}
             </ResponsiveColumn>
@@ -300,7 +301,7 @@ export default function Create() {
                     <Trans i18nKey="common.create.incentives.set.vesting.description" />
                 </ThemedText.DeprecatedBody>
                 <ValueInput placeholder='Vesting period in days' value={vestingPeriod}
-                    onChange={handleVestingPeriod} />
+                    onChange={handleVestingPeriod} style={{ borderColor: vestingError ? 'red' : 'gray' }} />
                 {vestingError && <CustomP style={{ color: 'red' }}><Trans i18nKey={vestingError} /></CustomP>}
             </ResponsiveColumn>
             <ResponsiveColumn>
