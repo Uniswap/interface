@@ -11,6 +11,13 @@ import invariant from "tiny-invariant";
 // eslint-disable-next-line no-restricted-syntax
 export const NATIVE_CHAIN_ID = "NATIVE";
 
+export const USDT_TARAXA = new Token(
+  ChainId.TARAXA,
+  "0x46258327541455119869d7344dd2673facf5f104",
+  18,
+  "T0",
+  "TestToken0"
+);
 export const USDT_TARAXA_TESTNET = new Token(
   ChainId.TARAXA_TESTNET,
   "0x30c708A962641B223b6b78237A402FAeD9860fc2",

@@ -1,5 +1,4 @@
 import { ChainId, Currency, Token, WETH9 } from "@taraswap/sdk-core";
-import { USDT_MAINNET } from "@taraswap/smart-order-router";
 import {
   ARB,
   BTC_BSC,
@@ -36,6 +35,7 @@ import {
   USDT_BSC,
   USDT_OPTIMISM,
   USDT_POLYGON,
+  USDT_TARAXA,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_CELO,
@@ -213,7 +213,7 @@ export const COMMON_BASES: ChainCurrencyList = {
   [ChainId.TARAXA]: [
     nativeOnChain(ChainId.TARAXA),
     WRAPPED_NATIVE_CURRENCY[ChainId.TARAXA] as Token,
-    USDT_MAINNET,
+    USDT_TARAXA,
   ].map(buildCurrencyInfo),
 };
 
