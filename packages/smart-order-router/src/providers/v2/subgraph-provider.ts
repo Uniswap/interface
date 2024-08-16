@@ -1,7 +1,7 @@
 import { ChainId, Token } from '@ubeswap/sdk-core'
 import retry from 'async-retry'
 import Timeout from 'await-timeout'
-import { GraphQLClient, gql } from 'graphql-request'
+import { GraphQLClient /*, gql*/ } from 'graphql-request'
 import _ from 'lodash'
 
 import { log } from '../../util/log'
@@ -56,6 +56,7 @@ export interface IV2SubgraphProvider {
 }
 
 export class V2SubgraphProvider implements IV2SubgraphProvider {
+  // @ts-ignore
   private client: GraphQLClient
 
   constructor(
@@ -79,7 +80,7 @@ export class V2SubgraphProvider implements IV2SubgraphProvider {
   ): Promise<V2SubgraphPool[]> {
     let blockNumber = providerConfig?.blockNumber ? await providerConfig.blockNumber : undefined
     // Due to limitations with the Subgraph API this is the only way to parameterize the query.
-    const query2 = gql`
+    /*const query2 = gql`
         query getPools($pageSize: Int!, $id: String) {
             pairs(
                 first: $pageSize
@@ -94,7 +95,7 @@ export class V2SubgraphProvider implements IV2SubgraphProvider {
                 reserveUSD
             }
         }
-    `
+    `*/
 
     let pools: RawV2SubgraphPool[] = []
 
@@ -109,7 +110,7 @@ export class V2SubgraphProvider implements IV2SubgraphProvider {
         const timeout = new Timeout()
 
         const getPools = async (): Promise<RawV2SubgraphPool[]> => {
-          let lastId = ''
+          /*let lastId = ''
           let pairs: RawV2SubgraphPool[] = []
           let pairsPage: RawV2SubgraphPool[] = []
 
@@ -136,9 +137,10 @@ export class V2SubgraphProvider implements IV2SubgraphProvider {
                 },
               }
             )
-          } while (pairsPage.length > 0)
+          } while (pairsPage.length > 0)*/
 
-          return pairs
+          const res = await fetch('https://raw.githubusercontent.com/Ubeswap/static/main/ubeswap-v2-pools.json')
+          return (await res.json()) as RawV2SubgraphPool[]
         }
 
         /* eslint-disable no-useless-catch */
