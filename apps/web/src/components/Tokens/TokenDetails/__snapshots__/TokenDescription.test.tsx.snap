@@ -53,8 +53,8 @@ exports[`TokenDescription no description or social buttons shown when not availa
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #15AC5B;
+  stroke: #15AC5B;
   font-weight: 500;
 }
 
@@ -291,8 +291,8 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #15AC5B;
+  stroke: #15AC5B;
   font-weight: 500;
 }
 
@@ -607,8 +607,8 @@ exports[`TokenDescription truncates description and shows more 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #15AC5B;
+  stroke: #15AC5B;
   font-weight: 500;
 }
 

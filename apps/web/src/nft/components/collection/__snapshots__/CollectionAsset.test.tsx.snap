@@ -108,7 +108,7 @@ exports[`NftCard renders correctly 1`] = `
   left: 8px;
   right: 8px;
   color: #F5F6FC;
-  background: #FC72FF;
+  background: #15AC5B;
   -webkit-transition: 250ms ease bottom,250ms ease visibility;
   transition: 250ms ease bottom,250ms ease visibility;
   will-change: transform;
