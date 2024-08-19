@@ -6,6 +6,7 @@ import { COMMON_BASES } from 'constants/routing'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
 import styled from 'lib/styled-components'
 import { getTokenAddress } from 'lib/utils/analytics'
+import { useCallback } from 'react'
 import { Text } from 'rebass'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -24,7 +25,7 @@ const BaseWrapper = styled.div<{ disable?: boolean }>`
 
   align-items: center;
   :hover {
-    cursor: ${({ disable }) => !disable && 'pointer'};
+    cursor: ${({ disable }) => (disable ? 'not-allowed' : 'pointer')};
     background-color: ${({ theme }) => theme.deprecated_hoverDefault};
   }
 
@@ -53,6 +54,7 @@ const formatAnalyticsEventProperties = (
 export default function CommonBases({
   chainId,
   onSelect,
+  closeModal,
   selectedCurrency,
   searchQuery,
   isAddressSearch,
@@ -60,12 +62,24 @@ export default function CommonBases({
   chainId?: number
   selectedCurrency?: Currency | null
   onSelect: (currency: Currency) => void
+  closeModal: () => void
   searchQuery: string
   isAddressSearch: string | false
   portfolioBalanceUsd?: number
 }) {
   const bases = chainId !== undefined ? COMMON_BASES[chainId] ?? [] : []
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
+
+  const handleSelect = useCallback(
+    (currency: Currency, isSelected?: boolean) => {
+      if (isSelected) {
+        closeModal()
+      } else {
+        onSelect(currency)
+      }
+    },
+    [onSelect, closeModal],
+  )
 
   return bases.length > 0 ? (
     <AutoRow gap="4px">
@@ -85,7 +99,7 @@ export default function CommonBases({
             <BaseWrapper
               tabIndex={0}
               onKeyPress={(e) => !isSelected && e.key === 'Enter' && onSelect(currency)}
-              onClick={() => !isSelected && onSelect(currency)}
+              onClick={() => handleSelect(currency, isSelected)}
               disable={isSelected}
               key={currencyId(currency)}
               data-testid={`common-base-${currency.symbol}`}

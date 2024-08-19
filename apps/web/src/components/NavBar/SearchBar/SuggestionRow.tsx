@@ -173,9 +173,9 @@ export function SuggestionRow({
           />
         )}
         <PrimaryContainer>
-          <Flex row gap="$spacing4">
+          <Flex row gap="$spacing4" centered>
             <PrimaryText lineHeight="24px">{suggestion.name}</PrimaryText>
-            {isToken ? <TokenSafetyIcon warning={warning} /> : suggestion.isVerified && <Verified />}
+            {isToken ? <TokenSafetyIcon warning={warning} /> : suggestion.isVerified && <Verified size={14} />}
           </Flex>
           <ThemedText.SubHeaderSmall lineHeight="20px">
             {isToken
@@ -224,7 +224,7 @@ const SkeletonContent = styled(Column)`
 export function SkeletonRow() {
   return (
     <SkeletonSuggestionRow $isFocused={false}>
-      <Flex row>
+      <Flex row width="100%" gap="$gap4">
         <BrokenCollectionImage />
         <SkeletonContent gap="sm">
           <Flex row justifyContent="space-between">

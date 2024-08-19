@@ -14,14 +14,19 @@ exports[`CountryListModal should render options and call select callback 1`] = `
 }
 
 <span
-  class="t_light is_inversed _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <div
-      tabindex="0"
-    />
+    <span
+      class=" t_light _dsp_contents is_Theme"
+    >
+      <div
+        tabindex="0"
+      />
+    </span>
   </span>
 </span>
 `;

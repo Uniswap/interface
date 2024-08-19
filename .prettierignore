@@ -1,3 +1,4 @@
+*.tsbuildinfo
 __generated__
 __mocks__
 .detoxrc.js

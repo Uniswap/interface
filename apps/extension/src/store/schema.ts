@@ -107,4 +107,19 @@ const v6SchemaIntermediate = {
 delete v6SchemaIntermediate.behaviorHistory.extensionOnboardingState
 export const v6Schema = v6SchemaIntermediate
 
-export const getSchema = (): typeof v6Schema => v6Schema
+export const v7Schema = { ...v6Schema }
+
+export const v8Schema = {
+  ...v7Schema,
+  appearanceSettings: {
+    ...v7Schema.appearanceSettings,
+    hapticsEnabled: true,
+  },
+}
+
+export const v9Schema = {
+  ...v8Schema,
+  behaviorHistory: { ...v8Schema.behaviorHistory, hasViewedWelcomeWalletCard: false, hasUsedExplore: false },
+}
+
+export const getSchema = (): typeof v9Schema => v9Schema

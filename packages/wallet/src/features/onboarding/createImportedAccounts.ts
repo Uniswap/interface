@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { AccountType, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
 export const NUMBER_OF_WALLETS_TO_IMPORT = 10
 

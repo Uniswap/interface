@@ -196,6 +196,7 @@ export function DeprecatedCurrencySearch({
             <CommonBases
               chainId={chainId}
               onSelect={handleCurrencySelect}
+              closeModal={onDismiss}
               selectedCurrency={selectedCurrency}
               searchQuery={searchQuery}
               isAddressSearch={isAddressSearch}

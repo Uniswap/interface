@@ -1,4 +1,4 @@
-import sourceTranslations from 'uniswap/src/i18n/locales/web-source/en-US.json'
+import sourceTranslations from 'uniswap/src/i18n/locales/source/en-US.json'
 
 describe('navigation quick keys', () => {
   const keys = Object.keys(sourceTranslations).filter((key) => key.startsWith('quickKey'))

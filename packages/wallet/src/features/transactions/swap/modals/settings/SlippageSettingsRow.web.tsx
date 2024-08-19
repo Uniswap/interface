@@ -39,7 +39,7 @@ export function SlippageSettingsRow({ derivedSwapInfo, onSlippageChange }: Slipp
         <Flex
           row
           backgroundColor={backgroundColor}
-          borderColor={isEditingSlippage ? '$accentSoft' : '$surface3'}
+          borderColor={isEditingSlippage ? '$DEP_accentSoft' : '$surface3'}
           borderRadius="$rounded16"
           borderWidth={1}
           gap="$spacing8"

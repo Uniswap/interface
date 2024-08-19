@@ -1,3 +1,4 @@
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
@@ -28,6 +29,7 @@ import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import useResizeObserver from 'use-resize-observer'
@@ -321,10 +323,12 @@ export default function SendCurrencyInputForm({
           />
           <NumericalInputMimic ref={hiddenObserver.ref}>{displayValue}</NumericalInputMimic>
         </NumericalInputWrapper>
-        <AlternateCurrencyDisplay
-          disabled={fiatCurrencyEqualsTransferCurrency}
-          onToggle={toggleFiatInputAmountEnabled}
-        />
+        <Trace logPress element={InterfaceElementName.SEND_FIAT_TOGGLE}>
+          <AlternateCurrencyDisplay
+            disabled={fiatCurrencyEqualsTransferCurrency}
+            onToggle={toggleFiatInputAmountEnabled}
+          />
+        </Trace>
         <InputError />
       </InputWrapper>
       <CurrencyInputWrapper>
@@ -357,9 +361,11 @@ export default function SendCurrencyInputForm({
           <StyledDropDown />
         </ClickableRowBetween>
         {showMaxButton && (
-          <MaxButton onClick={handleMaxInput}>
-            <Trans i18nKey="common.max" />
-          </MaxButton>
+          <Trace logPress element={InterfaceElementName.SEND_MAX_BUTTON}>
+            <MaxButton onClick={handleMaxInput}>
+              <Trans i18nKey="common.max" />
+            </MaxButton>
+          </Trace>
         )}
       </CurrencyInputWrapper>
       <CurrencySearchModal

@@ -20,13 +20,12 @@ import { Button, Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from
 import { SECURITY_SCREEN_BACKGROUND_DARK, SECURITY_SCREEN_BACKGROUND_LIGHT } from 'ui/src/assets'
 import FaceIcon from 'ui/src/assets/icons/faceid-thin.svg'
 import FingerprintIcon from 'ui/src/assets/icons/fingerprint.svg'
-import { borderRadii, imageSizes } from 'ui/src/theme'
+import { borderRadii, imageSizes, opacify } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { opacify } from 'uniswap/src/utils/colors'
 import { isIOS } from 'utilities/src/platform'
 import { openSettings } from 'wallet/src/utils/linking'
 
@@ -101,7 +100,7 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
       )}
       {isLoadingAccount && (
         <Flex centered mt="$spacing60" position="absolute" pt="$spacing36" width="100%" zIndex={100}>
-          <ActivityIndicator color={colors.sporeWhite.val} />
+          <ActivityIndicator color={colors.white.val} />
         </Flex>
       )}
       <OnboardingScreen
@@ -120,22 +119,20 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
             <SecurityBackgroundImage />
           </Flex>
           <Flex
+            backgroundColor={opacify(35, colors.surface1.val)}
+            borderColor={opacify(15, colors.white.val)}
             borderRadius="$rounded16"
             borderWidth={1}
             overflow="hidden"
             p="$spacing36"
             position="absolute"
-            style={{
-              borderColor: opacify(15, colors.sporeWhite.val),
-              backgroundColor: opacify(35, colors.surface1.val),
-            }}
             top={0}
           >
             <BlurView intensity={isDarkMode ? (isIOS ? 20 : 80) : 40} style={styles.blurView} tint="dark" />
             {isTouchIdDevice ? (
-              <FingerprintIcon color={colors.sporeWhite.val} height={imageSizes.image48} width={imageSizes.image48} />
+              <FingerprintIcon color={colors.white.val} height={imageSizes.image48} width={imageSizes.image48} />
             ) : (
-              <FaceIcon color={colors.sporeWhite.val} height={imageSizes.image48} width={imageSizes.image48} />
+              <FaceIcon color={colors.white.val} height={imageSizes.image48} width={imageSizes.image48} />
             )}
           </Flex>
         </Flex>

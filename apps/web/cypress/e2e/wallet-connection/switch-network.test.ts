@@ -115,11 +115,11 @@ describe('network switching', () => {
     })
 
     it('should switch network with inputCurrency from URL param', () => {
-      cy.visit('/swap?chain=arbitrum&outputCurrency=0xff970a61a04b1ca14834a43f5de4533ebddb5cc8')
+      cy.visit('/swap?chain=optimism&outputCurrency=0x0b2c639c533813f4aa9d7837caf62653d097ff85')
       cy.wait('@wallet_switchEthereumChain')
-      waitsForActiveChain('Arbitrum')
+      waitsForActiveChain('Optimism')
       cy.get(getTestSelector('web3-status-connected'))
-      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'USDC.e')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'USDC')
     })
 
     it('should not switch network with no chain in param', () => {
@@ -134,17 +134,17 @@ describe('network switching', () => {
     })
 
     it('should be able to switch network after loading from URL param', () => {
-      cy.visit('/swap?chain=arbitrum&outputCurrency=0xff970a61a04b1ca14834a43f5de4533ebddb5cc8')
+      cy.visit('/swap?chain=optimism&outputCurrency=0x0b2c639c533813f4aa9d7837caf62653d097ff85')
       cy.wait('@wallet_switchEthereumChain')
-      waitsForActiveChain('Arbitrum')
+      waitsForActiveChain('Optimism')
       cy.get(getTestSelector('web3-status-connected'))
-      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'USDC.e')
+      cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'USDC')
 
       // switching to another chain clears query param
       switchChain('Ethereum')
       cy.wait('@wallet_switchEthereumChain')
       waitsForActiveChain('Ethereum')
-      cy.url().should('not.contain', 'chain=arbitrum')
+      cy.url().should('not.contain', 'chain=optimism')
       cy.url().should('not.contain', 'outputCurrency=0xff970a61a04b1ca14834a43f5de4533ebddb5cc8')
     })
   })

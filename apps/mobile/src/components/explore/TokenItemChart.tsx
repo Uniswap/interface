@@ -45,7 +45,7 @@ export function TokenItemChart({
     [data, conversionRate],
   )
 
-  if (!convertedPriceHistory) {
+  if (!convertedPriceHistory || !convertedPriceHistory.length) {
     return null
   }
 

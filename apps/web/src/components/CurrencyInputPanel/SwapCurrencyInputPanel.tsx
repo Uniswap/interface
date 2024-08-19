@@ -274,7 +274,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
   ) => {
     const [modalOpen, setModalOpen] = useState(false)
     const account = useAccount()
-    const { chainId, isUserSelectedChainId } = useSwapAndLimitContext()
+    const { chainId, isUserSelectedToken } = useSwapAndLimitContext()
     const chainAllowed = useIsSupportedChainId(chainId)
     const selectedCurrencyBalance = useCurrencyBalance(account.address, currency ?? undefined)
     const theme = useTheme()
@@ -297,7 +297,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
     useEffect(() => setTooltipVisible(false), [currency])
 
     const showCurrencyLoadingSpinner =
-      initialCurrencyLoading && !otherCurrency && !isUserSelectedChainId && currencyField === CurrencyField.INPUT
+      initialCurrencyLoading && !otherCurrency && !isUserSelectedToken && currencyField === CurrencyField.INPUT
 
     return (
       <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -343,6 +343,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                   visible={currency !== undefined}
                   selected={!!currency}
                   hideInput={hideInput}
+                  data-testid={`currency-${currency?.chainId}-${currency?.symbol}`}
                   className="open-currency-select-button"
                   onClick={() => {
                     if (onCurrencySelect) {

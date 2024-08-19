@@ -1,6 +1,12 @@
-import { Flex, GeneratedIcon, IconProps, Text, ViewProps } from 'ui/src'
+import { Flex, GeneratedIcon, IconProps, Text, TouchableArea, ViewProps, useIsDarkMode } from 'ui/src'
+import { X } from 'ui/src/components/icons'
+import { useTranslation } from 'uniswap/src/i18n'
 
-type HeaderActionDisplayType = 'text' | 'button'
+export enum CardType {
+  Required,
+  Dismissible,
+  Swipe,
+}
 
 export type IntroCardProps = {
   Icon: GeneratedIcon
@@ -8,10 +14,10 @@ export type IntroCardProps = {
   iconContainerProps?: ViewProps
   title: string
   description: string
-  headerActionString?: string
-  headerActionType?: HeaderActionDisplayType
+  cardType: CardType
 
   onPress?: () => void
+  onClose?: () => void
 }
 
 export function IntroCard({
@@ -20,51 +26,60 @@ export function IntroCard({
   iconContainerProps,
   title,
   description,
-  headerActionString,
-  headerActionType = 'text',
+  cardType,
   onPress,
+  onClose,
 }: IntroCardProps): JSX.Element {
+  const isDarkMode = useIsDarkMode()
+  const { t } = useTranslation()
+
   return (
     <Flex
       grow
       row
       alignItems="flex-start"
-      backgroundColor="$surface1"
+      backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
       borderColor="$surface3"
       borderRadius="$rounded20"
       borderWidth={1}
       gap="$spacing12"
-      px="$spacing12"
-      py="$spacing16"
-      shadowColor="$surface3"
-      shadowRadius={9.316}
+      p="$spacing16"
+      paddingStart="$spacing12"
+      // TODO WALL-3699 replace with spore shadow support
+      shadowColor={isDarkMode ? 'rgba(0, 0, 0, 0.24)' : 'rgba(0, 0, 0, 0.02)'}
+      shadowOffset={{ width: 0, height: 1 }}
+      shadowRadius={6}
       onPress={onPress}
     >
-      <Flex backgroundColor="$surface2" borderRadius="$roundedFull" p="$spacing8" {...iconContainerProps}>
+      <Flex
+        backgroundColor={isDarkMode ? '$surface3' : '$surface2'}
+        borderRadius="$roundedFull"
+        p="$spacing8"
+        {...iconContainerProps}
+      >
         <Icon color="$neutral1" size="$icon.20" {...iconProps} />
       </Flex>
 
       <Flex fill gap="$spacing4">
-        <Flex row gap="$spacing12" justifyContent="space-between">
+        <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
           <Text color="$neutral1" variant="subheading2">
             {title}
           </Text>
-          {headerActionString && (
-            <>
-              {headerActionType === 'text' && (
-                <Text color="$neutral3" variant="body4">
-                  {headerActionString}
-                </Text>
-              )}
-              {headerActionType === 'button' && (
-                <Flex backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing6">
-                  <Text color="$accent1" variant="buttonLabel4">
-                    {headerActionString}
-                  </Text>
-                </Flex>
-              )}
-            </>
-          )}
+          {cardType === CardType.Required ? (
+            <Flex backgroundColor="$surface2" borderRadius="$rounded8" px="$spacing8" py="$spacing4">
+              <Text color="$neutral2" variant="buttonLabel4">
+                {t('onboarding.home.intro.label.required')}
+              </Text>
+            </Flex>
+          ) : cardType === CardType.Dismissible ? (
+            <TouchableArea p="$spacing4" onPress={onClose}>
+              <X color="$neutral3" size="$icon.16" />
+            </TouchableArea>
+          ) : cardType === CardType.Swipe ? (
+            <Text color="$neutral3" variant="body4">
+              {t('onboarding.home.intro.label.swipe')}
+            </Text>
+          ) : null}
         </Flex>
         <Text color="$neutral2" variant="body2">
           {description}

@@ -529,6 +529,25 @@ const v69SchemaIntermediate = {
 delete v69SchemaIntermediate.behaviorHistory.extensionOnboardingState
 export const v69Schema = v69SchemaIntermediate
 
+export const v70Schema = { ...v69Schema }
+
+export const v71Schema = {
+  ...v70Schema,
+  appearanceSettings: {
+    ...v70Schema.appearanceSettings,
+    hapticsEnabled: true,
+  },
+}
+
+export const v72Schema = {
+  ...v71Schema,
+  behaviorHistory: {
+    ...v71Schema.behaviorHistory,
+    hasViewedWelcomeWalletCard: false,
+    hasUsedExplore: false,
+  },
+}
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v69Schema => v69Schema
+export const getSchema = (): typeof v72Schema => v72Schema

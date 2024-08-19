@@ -2,21 +2,21 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
+import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
 import { setHasSubmittedHoldToSwap } from 'wallet/src/features/behaviorHistory/slice'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { selectSwapStartTimestamp } from 'wallet/src/features/timing/selectors'
-import { updateSwapStartTimestamp } from 'wallet/src/features/timing/slice'
 import { ValidatedSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
 import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/api/utils'
 import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
-import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { toStringish } from 'wallet/src/utils/number'
 
 interface SwapCallbackArgs {
-  account: SignerMnemonicAccount
+  account: SignerMnemonicAccountMeta
   swapTxContext: ValidatedSwapTxContext
   currencyInAmountUSD: Maybe<CurrencyAmount<Currency>>
   currencyOutAmountUSD: Maybe<CurrencyAmount<Currency>>

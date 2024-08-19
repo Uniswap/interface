@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ServiceProviderSelector } from 'src/features/fiatOnRamp/ExchangeTransferServiceProviderSelector'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { Flex, HapticFeedback, ImpactFeedbackStyle, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Separator, Text, TouchableArea, useHapticFeedback, useSporeColors } from 'ui/src'
 import { CopySheets, QrCode } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
@@ -24,9 +24,10 @@ const ICON_BORDER_RADIUS = 100
 function AccountCardItem({ onClose }: { onClose: () => void }): JSX.Element {
   const dispatch = useDispatch()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const { hapticFeedback } = useHapticFeedback()
 
   const onPressCopyAddress = async (): Promise<void> => {
-    await HapticFeedback.impact()
+    await hapticFeedback.impact()
     await setClipboard(activeAccountAddress)
     dispatch(
       pushNotification({

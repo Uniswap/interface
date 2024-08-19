@@ -19,9 +19,9 @@ import {
   UniswapXOrderDetails,
 } from 'wallet/src/features/transactions/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { RootState } from 'wallet/src/state'
+import { WalletState } from 'wallet/src/state/walletReducer'
 
-export const selectTransactions = (state: RootState): TransactionStateMap => state.transactions
+export const selectTransactions = (state: WalletState): TransactionStateMap => state.transactions
 
 export const selectSwapTransactionsCount = createSelector(selectTransactions, (transactions) => {
   let swapTransactionCount = 0
@@ -37,13 +37,13 @@ export const selectSwapTransactionsCount = createSelector(selectTransactions, (t
 })
 
 export const makeSelectAddressTransactions = (): Selector<
-  RootState,
+  WalletState,
   TransactionDetails[] | undefined,
   [Address | null]
 > =>
   createSelector(
     selectTransactions,
-    (_: RootState, address: Address | null) => address,
+    (_: WalletState, address: Address | null) => address,
     (transactions, address) => {
       if (!address) {
         return
@@ -83,19 +83,19 @@ export const makeSelectAddressTransactions = (): Selector<
 
 export function useSelectAddressTransactions(address: Address | null): TransactionDetails[] | undefined {
   const selectAddressTransactions = useMemo(makeSelectAddressTransactions, [])
-  return useSelector((state: RootState) => selectAddressTransactions(state, address))
+  return useSelector((state: WalletState) => selectAddressTransactions(state, address))
 }
 
 export function useCurrencyIdToVisibility(): CurrencyIdToVisibility {
   const accounts = useAccounts()
   const addresses = Object.values(accounts).map((account) => account.address)
   const manuallySetTokenVisibility = useSelector(selectTokensVisibility)
-  const selectLocalTxCurrencyIds: (state: RootState, addresses: Address[]) => CurrencyIdToVisibility = useMemo(
+  const selectLocalTxCurrencyIds: (state: WalletState, addresses: Address[]) => CurrencyIdToVisibility = useMemo(
     makeSelectTokenVisibilityFromLocalTxs,
     [],
   )
 
-  const tokenVisibilityFromLocalTxs = useSelector((state: RootState) => selectLocalTxCurrencyIds(state, addresses))
+  const tokenVisibilityFromLocalTxs = useSelector((state: WalletState) => selectLocalTxCurrencyIds(state, addresses))
 
   return {
     ...tokenVisibilityFromLocalTxs,
@@ -104,10 +104,10 @@ export function useCurrencyIdToVisibility(): CurrencyIdToVisibility {
   }
 }
 
-const makeSelectTokenVisibilityFromLocalTxs = (): Selector<RootState, CurrencyIdToVisibility, [Address[]]> =>
+const makeSelectTokenVisibilityFromLocalTxs = (): Selector<WalletState, CurrencyIdToVisibility, [Address[]]> =>
   createSelector(
     selectTransactions,
-    (_: RootState, addresses: Address[]) => addresses,
+    (_: WalletState, addresses: Address[]) => addresses,
     (transactions, addresses) =>
       addresses.reduce<CurrencyIdToVisibility>((acc, address) => {
         const addressTransactions = transactions[address]
@@ -136,10 +136,10 @@ interface MakeSelectParams {
   txId: string | undefined
 }
 
-export const makeSelectTransaction = (): Selector<RootState, TransactionDetails | undefined, [MakeSelectParams]> =>
+export const makeSelectTransaction = (): Selector<WalletState, TransactionDetails | undefined, [MakeSelectParams]> =>
   createSelector(
     selectTransactions,
-    (_: RootState, { address, chainId, txId }: MakeSelectParams) => ({
+    (_: WalletState, { address, chainId, txId }: MakeSelectParams) => ({
       address,
       chainId,
       txId,
@@ -163,13 +163,13 @@ interface MakeSelectOrderParams {
 }
 
 export const makeSelectUniswapXOrder = (): Selector<
-  RootState,
+  WalletState,
   UniswapXOrderDetails | undefined,
   [MakeSelectOrderParams]
 > =>
   createSelector(
     selectTransactions,
-    (_: RootState, { orderHash }: MakeSelectOrderParams) => ({ orderHash }),
+    (_: WalletState, { orderHash }: MakeSelectOrderParams) => ({ orderHash }),
     (transactions, { orderHash }): UniswapXOrderDetails | undefined => {
       for (const transactionsForChain of flattenObjectOfObjects(transactions)) {
         for (const tx of Object.values(transactionsForChain)) {
@@ -182,7 +182,7 @@ export const makeSelectUniswapXOrder = (): Selector<
   )
 // Returns a list of past recipients ordered from most to least recent
 // TODO: [MOB-232] either revert this to return addresses or keep but also return displayName so that it's searchable for RecipientSelect
-export const selectRecipientsByRecency = (state: RootState): SearchableRecipient[] => {
+export const selectRecipientsByRecency = (state: WalletState): SearchableRecipient[] => {
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
   const sendTransactions = transactionsByChainId.reduce<TransactionDetails[]>((accum, transactions) => {
     const sendTransactionsWithRecipients = Object.values(transactions).filter(
@@ -201,7 +201,7 @@ export const selectRecipientsByRecency = (state: RootState): SearchableRecipient
   return uniqueAddressesOnly(sortedRecipients)
 }
 
-export const selectIncompleteTransactions = (state: RootState): TransactionDetails[] => {
+export const selectIncompleteTransactions = (state: WalletState): TransactionDetails[] => {
   const transactionsByChainId = flattenObjectOfObjects(state.transactions)
   return transactionsByChainId.reduce<TransactionDetails[]>((accum, transactions) => {
     const pendingTxs = Object.values(transactions).filter((tx) => Boolean(!tx.receipt) && !isFinalizedTx(tx))

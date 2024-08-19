@@ -1,6 +1,6 @@
 import type { Insets } from 'react-native'
 import { GetProps, SizeTokens, View, styled } from 'tamagui'
-import { animationsEnter, animationsEnterExit, animationsExit } from 'ui/src/animations/animationPresets'
+import { animationsEnter, animationsEnterExit, animationsExit } from 'ui/src/animations/presets'
 
 export const flexStyles = {
   fill: { flex: 1 },

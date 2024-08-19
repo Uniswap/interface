@@ -183,7 +183,19 @@ export function useUniswapXSwapCallback({
               }
             }
           })
-          if (deadline < Math.floor(Date.now() / 1000)) {
+          const resultTime = Math.floor(Date.now() / 1000)
+          if (deadline < resultTime) {
+            sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXSignatureDeadlineExpired, {
+              ...formatSwapSignedAnalyticsEventProperties({
+                trade,
+                allowedSlippage,
+                fiatValues,
+                portfolioBalanceUsd,
+              }),
+              ...analyticsContext,
+              deadline,
+              resultTime,
+            })
             throw new SignatureExpiredError()
           }
           sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {

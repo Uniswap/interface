@@ -149,7 +149,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
             shadowRadius: 6,
             elevation: 6,
             '$theme-dark': {
-              shadowColor: '$sporeBlack',
+              shadowColor: '$black',
             },
           })}
         >

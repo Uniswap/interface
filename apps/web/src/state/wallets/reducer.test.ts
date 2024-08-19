@@ -1,7 +1,7 @@
 import walletsReducer from 'state/wallets/reducer'
 import { Wallet } from 'state/wallets/types'
 
-const WALLET: Wallet = { account: '0x123', walletType: 'test' }
+const WALLET: Wallet = { account: '0x123', walletName: 'test' }
 
 const INITIAL_STATE = { connectedWallets: [] as Wallet[], switchingChain: false as const }
 

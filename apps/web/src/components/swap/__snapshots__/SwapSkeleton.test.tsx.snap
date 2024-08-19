@@ -138,70 +138,25 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
 }
 
 <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c1"
+          class="c0"
         >
           <div
-            class="c2 css-n8z49y"
-          >
-            Swap
-          </div>
-        </div>
-        <div
-          class="c3"
-        >
-          <div
-            class="c4"
+            class="c1"
           >
             <div
-              class="c5 c6"
-              width="60"
-            />
-            <div
-              class="c7 c6"
-              radius="16"
-              width="100"
-            />
-          </div>
-        </div>
-        <div
-          class="c8"
-        >
-          <div
-            class="c9 c10"
-          >
-            <div
-              class="c11"
+              class="c2 css-n8z49y"
             >
-              <svg
-                fill="none"
-                height="16"
-                stroke="#CECECE"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <line
-                  x1="12"
-                  x2="12"
-                  y1="5"
-                  y2="19"
-                />
-                <polyline
-                  points="19 12 12 19 5 12"
-                />
-              </svg>
+              Swap
             </div>
           </div>
           <div
@@ -221,12 +176,62 @@ exports[`SwapSkeleton.tsx renders a skeleton 1`] = `
               />
             </div>
           </div>
+          <div
+            class="c8"
+          >
+            <div
+              class="c9 c10"
+            >
+              <div
+                class="c11"
+              >
+                <svg
+                  fill="none"
+                  height="16"
+                  stroke="#CECECE"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <line
+                    x1="12"
+                    x2="12"
+                    y1="5"
+                    y2="19"
+                  />
+                  <polyline
+                    points="19 12 12 19 5 12"
+                  />
+                </svg>
+              </div>
+            </div>
+            <div
+              class="c3"
+            >
+              <div
+                class="c4"
+              >
+                <div
+                  class="c5 c6"
+                  width="60"
+                />
+                <div
+                  class="c7 c6"
+                  radius="16"
+                  width="100"
+                />
+              </div>
+            </div>
+          </div>
+          <div
+            class="c12"
+            radius="16"
+          />
         </div>
-        <div
-          class="c12"
-          radius="16"
-        />
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>

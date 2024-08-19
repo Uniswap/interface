@@ -1,6 +1,7 @@
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
 import { SwapDisplay } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapDisplay'
+import { ETH_ADDRESS } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/constants'
 import { formatUnits } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/utils'
 import { SignTypedDataRequest, SwapSendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import {
@@ -16,14 +17,14 @@ import {
   isAmountOutParam,
   isURCommandASwap,
 } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { assert } from 'utilities/src/errors'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
+import { useCurrencyInfo, useNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 
 function extractPathValues(commands: UniversalRouterCommand[]): {
@@ -134,12 +135,15 @@ export function SwapRequestContent({
   const isLastCommandUnwrappingEth =
     dappRequest.parsedCalldata.commands[dappRequest.parsedCalldata.commands.length - 1]?.commandName === 'UnwrapWeth'
 
-  const nativeCurrency = NativeCurrency.onChain(activeChain)
+  const nativeCurrencyInfo = useNativeCurrencyInfo(activeChain)
+  const nativeCurrency = nativeCurrencyInfo?.currency
 
-  const nativeInput = isFirstCommandWrappingEth && inputCurrencyInfo?.currency.equals(nativeCurrency.wrapped)
-  const nativeOutput = isLastCommandUnwrappingEth && outputCurrencyInfo?.currency.equals(nativeCurrency.wrapped)
-  const currency0 = nativeInput ? nativeCurrency : inputCurrencyInfo?.currency
-  const currency1 = nativeOutput ? nativeCurrency : outputCurrencyInfo?.currency
+  const nativeInput =
+    isFirstCommandWrappingEth && nativeCurrency && inputCurrencyInfo?.currency.equals(nativeCurrency.wrapped)
+  const nativeOutput =
+    isLastCommandUnwrappingEth && nativeCurrency && outputCurrencyInfo?.currency.equals(nativeCurrency.wrapped)
+  const currencyInfo0 = nativeInput ? nativeCurrencyInfo : inputCurrencyInfo
+  const currencyInfo1 = nativeOutput ? nativeCurrencyInfo : outputCurrencyInfo
 
   const firstSwapCommand = dappRequest.parsedCalldata.commands.find(isURCommandASwap)
   const lastSwapCommand = dappRequest.parsedCalldata.commands.findLast(isURCommandASwap)
@@ -186,8 +190,8 @@ export function SwapRequestContent({
     0,
   )
   const transactionTypeInfo = getTransactionTypeInfo({
-    inputCurrencyInfo,
-    outputCurrencyInfo,
+    inputCurrencyInfo: currencyInfo0,
+    outputCurrencyInfo: currencyInfo1,
     inputAmountRaw,
     outputAmountRaw,
   })
@@ -196,12 +200,10 @@ export function SwapRequestContent({
   return (
     <SwapDisplay
       chainId={activeChain}
-      currencyIn={currency0}
-      currencyOut={currency1}
       inputAmount={inputAmount}
-      inputCurrencyInfo={inputCurrencyInfo}
+      inputCurrencyInfo={currencyInfo0}
       outputAmount={outputAmount}
-      outputCurrencyInfo={outputCurrencyInfo}
+      outputCurrencyInfo={currencyInfo1}
       transactionGasFeeResult={transactionGasFeeResult}
       onCancel={onCancel}
       onConfirm={onConfirmWithTransactionTypeInfo}
@@ -220,7 +222,8 @@ export function UniswapXSwapRequestContent({ dappRequest }: { dappRequest: SignT
     parsedTypedData?.message?.witness?.baseOutputs[0] || {}
 
   const inputCurrencyInfo = useCurrencyInfo(buildCurrencyId(activeChain, inputToken))
-  const outputCurrencyInfo = useCurrencyInfo(buildCurrencyId(activeChain, outputToken))
+  const nativeEthOrOutputToken = outputToken === ETH_ADDRESS ? DEFAULT_NATIVE_ADDRESS : outputToken
+  const outputCurrencyInfo = useCurrencyInfo(buildCurrencyId(activeChain, nativeEthOrOutputToken))
 
   assert(
     firstAmountInParam && lastAmountOutParam,
@@ -240,8 +243,6 @@ export function UniswapXSwapRequestContent({ dappRequest }: { dappRequest: SignT
     <SwapDisplay
       isUniswapX
       chainId={activeChain}
-      currencyIn={inputCurrencyInfo?.currency}
-      currencyOut={outputCurrencyInfo?.currency}
       inputAmount={inputAmount}
       inputCurrencyInfo={inputCurrencyInfo}
       outputAmount={outputAmount}

@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
 import { ApprovalRequest, ApprovalResponse, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
@@ -13,24 +14,24 @@ import {
 } from 'wallet/src/features/transactions/swap/trade/api/utils'
 import { ApprovalAction, TokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/types'
 import { WrapType } from 'wallet/src/features/transactions/types'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TokenApprovalInfoParams {
   chainId: WalletChainId
   wrapType: WrapType
   currencyInAmount: Maybe<CurrencyAmount<Currency>>
   routing: Routing | undefined
+  account: AccountMeta
   skip?: boolean
 }
 
 export function useTokenApprovalInfo(
   params: TokenApprovalInfoParams,
 ): (TokenApprovalInfo & { gasFee?: string }) | undefined {
-  const { chainId, wrapType, currencyInAmount, routing, skip } = params
+  const { account, chainId, wrapType, currencyInAmount, routing, skip } = params
 
   const isWrap = wrapType !== WrapType.NotApplicable
 
-  const address = useActiveAccountAddressWithThrow()
+  const address = account.address
   // Off-chain orders must have wrapped currencies approved, rather than natives.
   const currencyIn = routing === Routing.DUTCH_V2 ? currencyInAmount?.currency.wrapped : currencyInAmount?.currency
   const amount = currencyInAmount?.quotient.toString()

@@ -43,7 +43,7 @@ export function getBuyButtonStateData(
 ): BuyButtonStateData {
   const defaultBuyButtonState: BuyButtonStateData = {
     handleClick: () => undefined,
-    buttonText: <Trans i18nKey="common.somethingWentWrong.error" />,
+    buttonText: <Trans i18nKey="common.card.error.description" />,
     disabled: true,
     warningText: undefined,
     warningTextColor: theme.deprecated_accentWarning,

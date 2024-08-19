@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { MobileState } from 'src/app/reducer'
+import { MobileState } from 'src/app/mobileReducer'
 import { AppModalState } from 'src/features/modals/ModalsState'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import {

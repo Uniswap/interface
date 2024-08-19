@@ -146,7 +146,7 @@ function useDerivedBuyFormInfo(state: BuyFormState): BuyInfo {
         )
         return new BuyFormError(t(`fiatOnRamp.error.max`, { amount: formattedAmount }))
       }
-      return new BuyFormError(t('common.somethingWentWrong.error'))
+      return new BuyFormError(t('common.card.error.description'))
     }
     return undefined
   }, [meldSupportedFiatCurrency, quotesError])

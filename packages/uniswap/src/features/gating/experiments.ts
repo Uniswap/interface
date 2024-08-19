@@ -13,12 +13,13 @@ export enum ArbitrumXV2OpenOrderProperties {
   PriceImprovementBps = 'priceImprovementBps',
   ForceOpenOrders = 'forceOpenOrders',
   DeadlineBufferSecs = 'deadlineBufferSecs',
+  SlippageTolerance = 'slippageTolerance',
 }
 
 export enum OnboardingRedesignHomeScreenProperties {
   Enabled = 'enabled',
-  ExploreChainId = 'exploreChainId',
-  ExploreTokenAddresses = 'exploreTokenAddresses',
+  ExploreEthChainId = 'exploreEthChainId',
+  ExploreTokens = 'exploreTokens',
 }
 
 export enum OnboardingRedesignRecoveryBackupProperties {

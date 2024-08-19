@@ -68,7 +68,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
           <BottomSheetModal backgroundColor={colors.surface2.get()} name={ModalName.CloudBackupInfo}>
             <Flex px="$spacing16" py="$spacing12">
               <Flex centered gap="$spacing16">
-                <Flex backgroundColor="$accentSoft" borderRadius="$rounded12" p="$spacing12">
+                <Flex backgroundColor="$DEP_accentSoft" borderRadius="$rounded12" p="$spacing12">
                   <OSDynamicCloudIcon color="$accent1" size="$icon.24" />
                 </Flex>
                 <Text textAlign="center" variant="subheading1">

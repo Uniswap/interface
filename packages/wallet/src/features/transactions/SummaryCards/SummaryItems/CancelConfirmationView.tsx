@@ -1,7 +1,7 @@
 import { providers } from 'ethers'
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, FlexLoader, HapticFeedback, Separator, Skeleton, Text, isWeb } from 'ui/src'
+import { Button, Flex, FlexLoader, Separator, Skeleton, Text, isWeb, useHapticFeedback } from 'ui/src'
 import { SlashCircle } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -26,6 +26,7 @@ export function CancelConfirmationView({
 }): JSX.Element {
   const { t } = useTranslation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
+  const { hapticFeedback } = useHapticFeedback()
 
   const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
   const gasFeeUSD = useUSDValue(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee)
@@ -40,13 +41,13 @@ export function CancelConfirmationView({
   }, [cancelationGasFeeInfo, onCancel])
 
   const onPressCancel = useCallback(async () => {
-    await HapticFeedback.success()
+    await hapticFeedback.success()
     if (authTrigger) {
       await authTrigger({ successCallback: onCancelConfirm, failureCallback: () => {} })
     } else {
       onCancelConfirm()
     }
-  }, [onCancelConfirm, authTrigger])
+  }, [hapticFeedback, authTrigger, onCancelConfirm])
 
   // We don't currently support cancelling orders made from another device.
   const isRemoteOrder =

@@ -1,7 +1,7 @@
 import { Flex, Image, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { DAI_LOGO, ETH_LOGO } from 'ui/src/assets'
 import { RightArrow } from 'ui/src/components/icons'
-import { colors, iconSizes, imageSizes, opacify } from 'ui/src/theme'
+import { DEP_accentColors, iconSizes, imageSizes, opacify, validColor } from 'ui/src/theme'
 
 export const SwapElement = (): JSX.Element => {
   const sporeColors = useSporeColors()
@@ -15,14 +15,14 @@ export const SwapElement = (): JSX.Element => {
       <Flex
         centered
         row
+        backgroundColor={opacify(backgroundColorOpacity, DEP_accentColors.blue200)}
         borderRadius="$roundedFull"
         gap="$spacing8"
         opacity={componentOpacity}
         p="$spacing8"
-        style={{ backgroundColor: opacify(backgroundColorOpacity, colors.blue200) }}
       >
         <Image height={imageSizes.image24} resizeMode="contain" source={ETH_LOGO} width={imageSizes.image24} />
-        <Text color="$blue400" textAlign="center" variant="body2">
+        <Text color={validColor(DEP_accentColors.blue400)} textAlign="center" variant="body2">
           ETH
         </Text>
       </Flex>
@@ -30,14 +30,14 @@ export const SwapElement = (): JSX.Element => {
       <Flex
         centered
         row
+        backgroundColor={opacify(backgroundColorOpacity, DEP_accentColors.yellow100)}
         borderRadius="$roundedFull"
         gap="$spacing8"
         opacity={componentOpacity}
         p="$spacing8"
-        style={{ backgroundColor: opacify(backgroundColorOpacity, colors.yellow100) }}
       >
         <Image height={imageSizes.image24} resizeMode="contain" source={DAI_LOGO} width={imageSizes.image24} />
-        <Text color="$yellow200" textAlign="center" variant="body2">
+        <Text color={validColor(DEP_accentColors.yellow200)} textAlign="center" variant="body2">
           DAI
         </Text>
       </Flex>

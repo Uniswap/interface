@@ -16,6 +16,7 @@ import { Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { PapersText } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { DynamicConfigs, OnDeviceRecoveryConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -30,7 +31,7 @@ import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningM
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.OnDeviceRecovery>
 

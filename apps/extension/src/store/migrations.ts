@@ -3,12 +3,15 @@
 
 import {
   activatePendingAccounts,
+  addExploreAndWelcomeBehaviorHistory,
+  addHapticSetting,
   addRoutingFieldToTransactions,
   deleteBetaOnboardingState,
+  deleteDefaultFavoritesFromFavoritesState,
   deleteExtensionOnboardingState,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
-} from 'wallet/src/state/sharedMigrations'
+} from 'wallet/src/state/walletMigrations'
 
 export const migrations = {
   0: removeWalletIsUnlockedState,
@@ -20,6 +23,9 @@ export const migrations = {
   },
   5: deleteBetaOnboardingState,
   6: deleteExtensionOnboardingState,
+  7: deleteDefaultFavoritesFromFavoritesState,
+  8: addHapticSetting,
+  9: addExploreAndWelcomeBehaviorHistory,
 }
 
-export const EXTENSION_STATE_VERSION = 6
+export const EXTENSION_STATE_VERSION = 9

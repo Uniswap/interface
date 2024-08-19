@@ -6,7 +6,7 @@ import ContextMenu, { ContextMenuOnPressNativeEvent } from 'react-native-context
 import { useDispatch } from 'react-redux'
 import { TripleDot } from 'src/components/icons/TripleDot'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, HapticFeedback, TouchableArea } from 'ui/src'
+import { Flex, TouchableArea, useHapticFeedback } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -33,19 +33,20 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { unitag } = useUnitagByAddress(address)
+  const { hapticFeedback } = useHapticFeedback()
 
   const onPressCopyAddress = useCallback(async () => {
     if (!address) {
       return
     }
-    await HapticFeedback.impact()
+    await hapticFeedback.impact()
     await setClipboard(address)
     dispatch(pushNotification({ type: AppNotificationType.Copied, copyType: CopyNotificationType.Address }))
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.CopyAddress,
       screen: MobileScreens.ExternalProfile,
     })
-  }, [address, dispatch])
+  }, [address, dispatch, hapticFeedback])
 
   const openExplorerLink = useCallback(async () => {
     await openUri(getExplorerLink(UniverseChainId.Mainnet, address, ExplorerDataType.ADDRESS))
@@ -125,7 +126,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
         onLongPress={disableOnPress}
       >
         <Flex centered grow height={iconSizes.icon16} width={iconSizes.icon16}>
-          <TripleDot color="$sporeWhite" size={3.5} />
+          <TripleDot color="$white" size={3.5} />
         </Flex>
       </TouchableArea>
     </ContextMenu>

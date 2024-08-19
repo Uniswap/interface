@@ -2,6 +2,7 @@ import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
@@ -16,7 +17,6 @@ import {
   TransactionTypeInfo,
 } from 'wallet/src/features/transactions/types'
 import { createTransactionId, getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
@@ -26,7 +26,7 @@ export interface SendTransactionParams {
   // this is optional as an override in txDetail.id calculation
   txId?: string
   chainId: WalletChainId
-  account: Account
+  account: AccountMeta
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
   analytics?: ReturnType<typeof getBaseTradeAnalyticsProperties>
@@ -65,7 +65,7 @@ export function* sendTransaction(params: SendTransactionParams) {
 
 export async function signAndSendTransaction(
   request: providers.TransactionRequest,
-  account: Account,
+  account: AccountMeta,
   provider: providers.Provider,
   signerManager: SignerManager,
 ): Promise<{

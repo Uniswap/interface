@@ -1,14 +1,14 @@
 import { memo, useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { filterRecentlySearchedTokenOptions } from 'uniswap/src/components/TokenSelector/hooks'
 import {
   ConvertFiatAmountFormattedCallback,
   OnSelectCurrency,
+  TokenOptionSection,
   TokenSectionsForSwapOutput,
   TokenSelectorListSections,
 } from 'uniswap/src/components/TokenSelector/types'
-import { getTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
+import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -24,8 +24,6 @@ function useTokenSectionsForSwapOutput({
   useFavoriteTokensOptionsHook,
   useCommonTokensOptionsHook,
 }: TokenSectionsForSwapOutput): GqlResult<TokenSelectorListSections> {
-  const { t } = useTranslation()
-
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
@@ -56,7 +54,7 @@ function useTokenSectionsForSwapOutput({
     // if there is no chain filter then we show mainnet tokens
   } = useCommonTokensOptionsHook(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet, valueModifiers)
 
-  const recentlySearchedTokenOptions = filterRecentlySearchedTokenOptions(searchHistory)
+  const recentlySearchedTokenOptions = filterRecentlySearchedTokenOptions(chainFilter, searchHistory)
 
   const error =
     (!portfolioTokenOptions && portfolioTokenOptionsError) ||
@@ -77,30 +75,28 @@ function useTokenSectionsForSwapOutput({
     refetchCommonTokenOptions?.()
   }, [refetchCommonTokenOptions, refetchFavoriteTokenOptions, refetchPopularTokenOptions, refetchPortfolioTokenOptions])
 
+  // we draw the Suggested pills as a single item of a section list, so `data` is TokenOption[][]
+  const suggestedSection = useTokenOptionsSection(TokenOptionSection.SuggestedTokens, [commonTokenOptions ?? []])
+  const portfolioSection = useTokenOptionsSection(TokenOptionSection.YourTokens, portfolioTokenOptions)
+  const recentSection = useTokenOptionsSection(TokenOptionSection.RecentTokens, recentlySearchedTokenOptions)
+  const favoriteSection = useTokenOptionsSection(TokenOptionSection.FavoriteTokens, favoriteTokenOptions)
+  const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularTokenOptions)
+
   const sections = useMemo<TokenSelectorListSections>(() => {
     if (loading) {
       return []
     }
 
     return [
-      // we draw the pills as a single item of a section list, so `data` is an array of Token[]
-      { title: t('tokens.selector.section.suggested'), data: [commonTokenOptions ?? []] },
-      ...(getTokenOptionsSection(t('tokens.selector.section.yours'), portfolioTokenOptions) ?? []),
-      ...(getTokenOptionsSection(t('tokens.selector.section.recent'), recentlySearchedTokenOptions) ?? []),
+      ...(suggestedSection ?? []),
+      ...(portfolioSection ?? []),
+      ...(recentSection ?? []),
       // TODO(WEB-3061): Favorited wallets/tokens
       // Extension does not support favoriting but has a default list, so we can't rely on empty array check
-      ...(isExtension ? [] : getTokenOptionsSection(t('tokens.selector.section.favorite'), favoriteTokenOptions) ?? []),
-      ...(getTokenOptionsSection(t('tokens.selector.section.popular'), popularTokenOptions) ?? []),
+      ...(isExtension ? [] : favoriteSection ?? []),
+      ...(popularSection ?? []),
     ]
-  }, [
-    commonTokenOptions,
-    favoriteTokenOptions,
-    loading,
-    popularTokenOptions,
-    portfolioTokenOptions,
-    recentlySearchedTokenOptions,
-    t,
-  ])
+  }, [favoriteSection, loading, popularSection, portfolioSection, recentSection, suggestedSection])
 
   return useMemo(
     () => ({

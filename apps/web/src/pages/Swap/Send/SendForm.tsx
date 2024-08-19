@@ -208,13 +208,15 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
             />
           </ButtonPrimary>
         ) : (
-          <ButtonPrimary
-            fontWeight={535}
-            disabled={!!inputError || loadingSmartContractAddress || transfersLoading || sendButtonState.disabled}
-            onClick={() => handleSendButton()}
-          >
-            {sendButtonState.label}
-          </ButtonPrimary>
+          <Trace logPress element={InterfaceElementName.SEND_BUTTON}>
+            <ButtonPrimary
+              fontWeight={535}
+              disabled={!!inputError || loadingSmartContractAddress || transfersLoading || sendButtonState.disabled}
+              onClick={() => handleSendButton()}
+            >
+              {sendButtonState.label}
+            </ButtonPrimary>
+          </Trace>
         )}
       </Column>
       {sendFormModalState === SendFormModalState.REVIEW ? (

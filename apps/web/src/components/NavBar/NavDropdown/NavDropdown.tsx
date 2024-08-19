@@ -1,9 +1,8 @@
-import { RemoveScroll } from '@tamagui/remove-scroll'
 import { ScrollBarStyles } from 'components/Common'
 import { NAV_BREAKPOINT, useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
 import styled from 'lib/styled-components'
 import { ReactNode, RefObject } from 'react'
-import { Flex, Popover } from 'ui/src'
+import { Flex, Popover, RemoveScroll } from 'ui/src'
 
 const NavDropdownContent = styled.div<{ $width?: number }>`
   border-radius: 16px;

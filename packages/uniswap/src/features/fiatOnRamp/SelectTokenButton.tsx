@@ -34,14 +34,7 @@ export function SelectTokenButton({
   const textColor = !amountReady || disabled || loading ? '$neutral3' : '$neutral2'
 
   return (
-    <TouchableArea
-      hapticFeedback
-      borderRadius="$roundedFull"
-      disabled={disabled}
-      p="$spacing4"
-      testID={testID}
-      onPress={onPress}
-    >
+    <TouchableArea hapticFeedback borderRadius="$roundedFull" disabled={disabled} testID={testID} onPress={onPress}>
       <Flex centered row flexDirection="row" gap="$none" pr="$spacing4">
         {loading ? (
           <SpinningLoader />

@@ -21,13 +21,9 @@ export interface FavoritesState {
 const WBTC_CURRENCY_ID = idFromCurrency(WBTC).toLowerCase()
 const ETH_CURRENCY_ID = idFromCurrency(Ether.onChain(UniverseChainId.Mainnet)).toLowerCase()
 
-const VITALIK_ETH_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
-const HAYDEN_ETH_ADDRESS = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
-export const DEFAULT_WATCHED_ADDRESSES = [VITALIK_ETH_ADDRESS, HAYDEN_ETH_ADDRESS]
-
 export const initialFavoritesState: FavoritesState = {
   tokens: [ETH_CURRENCY_ID, WBTC_CURRENCY_ID],
-  watchedAddresses: DEFAULT_WATCHED_ADDRESSES,
+  watchedAddresses: [],
   tokensVisibility: {},
   nftsVisibility: {},
 }

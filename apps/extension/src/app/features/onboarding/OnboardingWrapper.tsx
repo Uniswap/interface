@@ -32,7 +32,7 @@ export function OnboardingWrapper(): JSX.Element {
       <StorageWarningModal isOnboarding={true} />
       <Flex
         alignItems="center"
-        backgroundColor={isHighlighted ? '$accentSoft' : '$transparent'}
+        backgroundColor={isHighlighted ? '$DEP_accentSoft' : '$transparent'}
         justifyContent="center"
         minHeight="100vh"
         width="100%"

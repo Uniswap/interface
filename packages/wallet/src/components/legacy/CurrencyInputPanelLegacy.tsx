@@ -1,12 +1,12 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextInput, TextInputProps, TextInputSelectionChangeEventData } from 'react-native'
 import { Flex, FlexProps, SpaceTokens, Text, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTokenButton'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
@@ -65,7 +65,7 @@ const getSwapPanelPaddingValues = (
     ? {
         // when there is a currency value, and the box is on the top, add a bit more
         // padding (spacing24) to account for the swap direction button
-        paddingBottom: isOutputBox ? '$spacing16' : '$spacing24',
+        paddingBottom: isOutputBox ? '$spacing16' : '$spacing16',
         paddingTop: isOutputBox ? '$spacing24' : '$spacing16',
         paddingHorizontal: '$spacing16',
       }
@@ -114,7 +114,6 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
     ...rest
   } = props
 
-  const { t } = useTranslation()
   const inputRef = useRef<TextInput>(null)
   const { formatCurrencyAmount } = useLocalizationContext()
 
@@ -267,18 +266,18 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
         <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" mb="$spacing4">
           <TouchableArea onPress={handleToggleFiatInput}>
             <Flex shrink>
-              <Text color="$neutral2" numberOfLines={1} variant="subheading2">
+              <Text color="$neutral2" numberOfLines={1} variant="body3">
                 {inputPanelFormattedValue}
               </Text>
             </Flex>
           </TouchableArea>
           <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
-            <Text color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'} variant="subheading2">
-              {t('swap.form.balance')}:{' '}
+            <Text color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'} variant="body3">
               {formatCurrencyAmount({
                 value: currencyBalance,
                 type: NumberType.TokenNonTx,
-              })}
+              })}{' '}
+              {getSymbolDisplayText(currencyInfo.currency.symbol)}
             </Text>
 
             {onSetMax && (

@@ -46,7 +46,11 @@ function useWalletSupportedChains(): InterfaceChainId[] {
   }
 }
 
-export const ChainSelector = ({ hideArrow }: { hideArrow?: boolean }) => {
+type ChainSelectorProps = {
+  isNavSelector?: boolean
+  hideArrow?: boolean
+}
+export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) => {
   const { chainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
   // multichainFlagEnabled is different from multichainUXEnabled, multichainUXEnabled applies to swap
   // flag can be true but multichainUXEnabled can be false (TDP page)
@@ -112,7 +116,6 @@ export const ChainSelector = ({ hideArrow }: { hideArrow?: boolean }) => {
     return (
       <Flex px={8}>
         <NetworkFilter
-          includeAllNetworks
           selectedChain={chainId ?? null}
           onPressChain={onSelectChain}
           hideArrow={hideArrow}
@@ -127,7 +130,7 @@ export const ChainSelector = ({ hideArrow }: { hideArrow?: boolean }) => {
   return (
     <Popover ref={popoverRef} placement="bottom" stayInFrame allowFlip onOpenChange={setIsOpen}>
       <Popover.Trigger padding={8} cursor="pointer" data-testid="chain-selector">
-        <NavIcon isActive={isOpen}>{menuLabel}</NavIcon>
+        {isNavSelector ? <NavIcon isActive={isOpen}>{menuLabel}</NavIcon> : menuLabel}
       </Popover.Trigger>
       <NavDropdown width={240} isOpen={isOpen}>
         <Flex p="$spacing8" data-testid="chain-selector-options">

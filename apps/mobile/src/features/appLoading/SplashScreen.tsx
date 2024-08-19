@@ -15,7 +15,7 @@ export function SplashScreen(): JSX.Element {
   return (
     <Flex
       alignItems="center"
-      backgroundColor={isDarkMode ? '$surface1' : '$sporeWhite'}
+      backgroundColor={isDarkMode ? '$surface1' : '$white'}
       justifyContent={isAndroid ? 'center' : undefined}
       pointerEvents="none"
       style={{

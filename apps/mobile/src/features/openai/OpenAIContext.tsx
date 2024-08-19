@@ -11,9 +11,9 @@ import { ASSISTANT_ID, openai } from 'src/features/openai/assistant'
 import { FunctionName, PossibleFunctionArgs } from 'src/features/openai/functions'
 import { DEFAULT_NATIVE_ADDRESS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
-  AiTopTokensDocument,
   SearchTokensDocument,
   TokenDetailsScreenDocument,
+  TopTokensDocument,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
@@ -172,7 +172,7 @@ function _OpenAIContextProvider({ children }: { children: React.ReactNode }): JS
       [FunctionName.GetTopTokens]: async (args): Promise<object> => {
         const { chain, sortBy, pageSize } = args
         const { data } = await apollo.query({
-          query: AiTopTokensDocument,
+          query: TopTokensDocument,
           variables: { chain, topTokensOrderBy: sortBy, pageSize },
         })
 

@@ -121,55 +121,60 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <a
-        class="c0"
-        href="/explore/tokens/polygon/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
-        <div
-          class="c1 c2"
+        <a
+          class="c0"
+          href="/explore/tokens/polygon/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         >
           <div
-            class="c3"
+            class="c1 c2"
           >
             <div
-              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
+              class="c3"
             >
               <div
-                class="c4"
-                size="16"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+              >
+                <div
+                  class="c4"
+                  size="16"
+                >
+                  <img
+                    class="c5"
+                    size="16"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  />
+                </div>
+              </div>
+              <div
+                class="c6"
               >
                 <img
-                  class="c5"
-                  size="16"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  alt="Polygon logo"
+                  aria-labelledby="titleID"
+                  height="100%"
+                  src="polygon-logo.png"
+                  style="border-radius: 2px;"
+                  width="100%"
                 />
               </div>
             </div>
             <div
-              class="c6"
+              class="c7 c8 css-1urox24"
             >
-              <img
-                alt="Polygon logo"
-                aria-labelledby="titleID"
-                height="100%"
-                src="polygon-logo.png"
-                style="border-radius: 2px;"
-                width="100%"
-              />
+              USDC
             </div>
           </div>
-          <div
-            class="c7 c8 css-1urox24"
-          >
-            USDC
-          </div>
-        </div>
-      </a>
+        </a>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -273,43 +278,48 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <a
-        class="c0"
-        href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
-        <div
-          class="c1 c2"
+        <a
+          class="c0"
+          href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         >
           <div
-            class="c3"
+            class="c1 c2"
           >
             <div
-              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
+              class="c3"
             >
               <div
-                class="c4"
-                size="16"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
               >
-                <img
-                  class="c5"
+                <div
+                  class="c4"
                   size="16"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                />
+                >
+                  <img
+                    class="c5"
+                    size="16"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  />
+                </div>
               </div>
             </div>
+            <div
+              class="c6 c7 css-1urox24"
+            >
+              USDC
+            </div>
           </div>
-          <div
-            class="c6 c7 css-1urox24"
-          >
-            USDC
-          </div>
-        </div>
-      </a>
+        </a>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -413,43 +423,48 @@ exports[`TokenLinkCell renders unknown token 1`] = `
 }
 
 <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <a
-        class="c0"
-        href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
-        <div
-          class="c1 c2"
+        <a
+          class="c0"
+          href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         >
           <div
-            class="c3"
+            class="c1 c2"
           >
             <div
-              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
+              class="c3"
             >
               <div
-                class="c4"
-                size="16"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
               >
-                <img
-                  class="c5"
+                <div
+                  class="c4"
                   size="16"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                />
+                >
+                  <img
+                    class="c5"
+                    size="16"
+                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                  />
+                </div>
               </div>
             </div>
+            <div
+              class="c6 c7 css-1urox24"
+            >
+              UNKNOWN
+            </div>
           </div>
-          <div
-            class="c6 c7 css-1urox24"
-          >
-            UNKNOWN
-          </div>
-        </div>
-      </a>
+        </a>
+      </span>
     </span>
   </span>
 </DocumentFragment>

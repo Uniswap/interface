@@ -9,13 +9,13 @@ import { ReactNode, useCallback, useMemo } from 'react'
 import { useCurrencyBalances } from 'state/connection/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { Field, typeInput } from 'state/mint/actions'
-import { AppState } from 'state/reducer'
+import { InterfaceState } from 'state/webReducer'
 import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 
 const ZERO = JSBI.BigInt(0)
 
-export function useMintState(): AppState['mint'] {
+export function useMintState(): InterfaceState['mint'] {
   return useAppSelector((state) => state.mint)
 }
 

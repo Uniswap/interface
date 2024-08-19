@@ -34,25 +34,26 @@ export type TokenOptionsWithBalanceOnlySearchHookType = (
   valueModifiers?: PortfolioValueModifier[],
 ) => GqlResult<TokenSection[]>
 
-export type OnSelectCurrency = (
-  currency: CurrencyInfo,
-  section: SuggestedTokenSection | TokenSection,
-  index: number,
-) => void
+export type TokenSectionsForEmptySearchHookType = (chainFilter: UniverseChainId | null) => GqlResult<TokenSection[]>
+
+export type OnSelectCurrency = (currency: CurrencyInfo, section: TokenSection, index: number) => void
+
+export enum TokenOptionSection {
+  YourTokens = 'yourTokens',
+  PopularTokens = 'popularTokens',
+  RecentTokens = 'recentTokens',
+  FavoriteTokens = 'favoriteTokens',
+  SearchResults = 'searchResults',
+  SuggestedTokens = 'suggestedTokens',
+}
 
 export type TokenSection = {
-  title: string
-  data: TokenOption[]
+  data: TokenOption[] | TokenOption[][]
+  sectionKey: TokenOptionSection
   rightElement?: JSX.Element
 }
 
-export type SuggestedTokenSection = {
-  title: string
-  data: TokenOption[][]
-  rightElement?: JSX.Element
-}
-
-export type TokenSelectorListSections = Array<SuggestedTokenSection | TokenSection>
+export type TokenSelectorListSections = TokenSection[]
 
 export type TokenWarningDismissedHook = (currencyId: Maybe<string>) => {
   tokenWarningDismissed: boolean

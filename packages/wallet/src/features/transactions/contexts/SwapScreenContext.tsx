@@ -1,4 +1,7 @@
 import { createContext, ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 
 export enum SwapScreen {
   SwapForm,
@@ -18,10 +21,16 @@ export function SwapScreenContextProvider({ children }: { children: ReactNode })
   const screenRef = useRef<SwapScreen>(SwapScreen.SwapForm)
   const [screen, setScreen] = useState<SwapScreen>(SwapScreen.SwapForm)
 
-  const wrappedSetScreen = useCallback((_screen: SwapScreen) => {
-    screenRef.current = _screen
-    setScreen(_screen)
-  }, [])
+  const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
+
+  const wrappedSetScreen = useCallback(
+    (_screen: SwapScreen) => {
+      screenRef.current = _screen
+      setScreen(_screen)
+      logContextUpdate('SwapScreenContext', { screen: _screen }, datadogEnabled)
+    },
+    [setScreen, datadogEnabled],
+  )
 
   const state = useMemo<SwapScreenContextState>(
     (): SwapScreenContextState => ({

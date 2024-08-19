@@ -19,6 +19,7 @@ import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { getChain, isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
+import { nativeOnChain } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
@@ -29,7 +30,6 @@ import { LimitExpirySection } from 'pages/Swap/Limit/LimitExpirySection'
 import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { ArrowDown } from 'react-feather'
-import { Text } from 'rebass'
 import { LimitContextProvider, useLimitContext } from 'state/limit/LimitContext'
 import { getDefaultPriceInverted } from 'state/limit/hooks'
 import { LimitState } from 'state/limit/types'
@@ -37,7 +37,7 @@ import { LimitOrderTrade, TradeFillType } from 'state/routing/types'
 import { useSwapActionHandlers } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
-import { ExternalLink, ThemedText } from 'theme/components'
+import { Anchor, Text, styled as tamaguiStyled } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -73,9 +73,17 @@ const LimitDisclaimerContainer = styled(Row)`
   margin-top: 12px;
 `
 
-const DisclaimerText = styled(ThemedText.LabelSmall)`
-  line-height: 20px;
-`
+const LearnMore = tamaguiStyled(Text, {
+  variant: 'buttonLabel4',
+  color: '$accent1',
+  animation: '100ms',
+  hoverStyle: {
+    opacity: 0.6,
+  },
+  focusStyle: {
+    opacity: 0.4,
+  },
+})
 
 export const LIMIT_FORM_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
   showCommonBases: true,
@@ -200,9 +208,13 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
 
   useEffect(() => {
     if (!outputCurrency && isSupportedChain) {
-      onSelectCurrency('outputCurrency', getChain({ chainId }).spotPriceStablecoinAmount.currency)
+      const stablecoinCurrency = getChain({ chainId }).spotPriceStablecoinAmount.currency
+      onSelectCurrency(
+        'outputCurrency',
+        inputCurrency?.equals(stablecoinCurrency) ? nativeOnChain(chainId) : stablecoinCurrency,
+      )
     }
-  }, [onSelectCurrency, outputCurrency, isSupportedChain, chainId])
+  }, [onSelectCurrency, outputCurrency, isSupportedChain, chainId, inputCurrency])
 
   useEffect(() => {
     if (isSupportedChain && inputCurrency && outputCurrency && (inputCurrency.isNative || outputCurrency.isNative)) {
@@ -368,19 +380,39 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       )}
       <LimitDisclaimerContainer>
         <StyledAlertIcon size={20} color={!isUniswapXSupportedChain(chainId) ? theme.critical : theme.neutral2} />
-        <DisclaimerText>
+        <Text variant="body3">
           {!isUniswapXSupportedChain(chainId) ? (
             <Trans
               i18nKey="limits.form.disclaimer.mainnet"
-              components={{ link: <ExternalLink href={uniswapUrls.helpArticleUrls.limitsNetworkSupport} /> }}
+              components={{
+                link: (
+                  <Anchor
+                    textDecorationLine="none"
+                    href={uniswapUrls.helpArticleUrls.limitsNetworkSupport}
+                    target="_blank"
+                  >
+                    <LearnMore>
+                      <Trans i18nKey="common.button.learn" />
+                    </LearnMore>
+                  </Anchor>
+                ),
+              }}
             />
           ) : (
             <Trans
               i18nKey="limits.form.disclaimer.uniswapx"
-              components={{ link: <ExternalLink href={uniswapUrls.helpArticleUrls.limitsFailure} /> }}
+              components={{
+                link: (
+                  <Anchor textDecorationLine="none" href={uniswapUrls.helpArticleUrls.limitsFailure} target="_blank">
+                    <LearnMore>
+                      <Trans i18nKey="common.button.learn" />
+                    </LearnMore>
+                  </Anchor>
+                ),
+              }}
             />
           )}
-        </DisclaimerText>
+        </Text>
       </LimitDisclaimerContainer>
       {account.address && (
         <OpenLimitOrdersButton
@@ -474,7 +506,7 @@ function SubmitOrderButton({
         data-testid="submit-order-button"
         disabled={!trade || !!limitPriceError}
       >
-        <Text fontSize={20}>
+        <Text color="neutralContrast" fontSize={20}>
           <Trans i18nKey="common.confirm" />
         </Text>
       </ButtonError>

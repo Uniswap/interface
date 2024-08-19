@@ -30,8 +30,8 @@ export function FORQuoteItem({
   }
 
   const paymentMethods =
-    serviceProvider.paymentMethods.length > 3
-      ? t('fiatOnRamp.quote.type.list', { optionsList: serviceProvider.paymentMethods.slice(3).join(', ') }) // oxford comma
+    serviceProvider.paymentMethods.length > 4
+      ? t('fiatOnRamp.quote.type.list', { optionsList: serviceProvider.paymentMethods.slice(0, 3).join(', ') })
       : serviceProvider.paymentMethods.join(', ')
 
   return (

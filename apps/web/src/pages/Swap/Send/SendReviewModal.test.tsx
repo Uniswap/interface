@@ -17,11 +17,11 @@ const mockSwapAndLimitContextValue = {
   prefilledState: {},
   setSelectedChainId: jest.fn(),
   setCurrencyState: jest.fn(),
-  setIsUserSelectedChainId: jest.fn(),
+  setIsUserSelectedToken: jest.fn(),
   currentTab: SwapTab.Limit,
   setCurrentTab: jest.fn(),
   isSwapAndLimitContext: true,
-  isUserSelectedChainId: false,
+  isUserSelectedToken: false,
 }
 
 const mockedSendContextFiatInput: SendContextType = {

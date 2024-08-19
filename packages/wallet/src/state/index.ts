@@ -1,11 +1,9 @@
 import type { Middleware, PreloadedState, Reducer, StoreEnhancer } from '@reduxjs/toolkit'
 import { configureStore } from '@reduxjs/toolkit'
-import { PersistState } from 'redux-persist'
 import createSagaMiddleware, { Saga } from 'redux-saga'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
-import { sharedRootReducer } from 'wallet/src/state/reducer'
-import { rootSaga } from 'wallet/src/state/saga'
-import { SagaState } from 'wallet/src/utils/saga'
+import { rootWalletSaga } from 'wallet/src/state/saga'
+import { WalletStateReducersOnly } from 'wallet/src/state/walletReducer'
 
 interface CreateStoreProps {
   reducer: Reducer
@@ -18,7 +16,7 @@ interface CreateStoreProps {
   middlewareAfter?: Array<Middleware<unknown>>
   // middlewares to before after the default middleware
   middlewareBefore?: Array<Middleware<unknown>>
-  preloadedState?: PreloadedState<RootState>
+  preloadedState?: PreloadedState<WalletStateReducersOnly>
 }
 
 // Disable eslint rule to infer return type from the returned value
@@ -63,14 +61,8 @@ export function createStore({
     devTools: __DEV__,
   })
 
-  sagaMiddleware.run(rootSaga)
+  sagaMiddleware.run(rootWalletSaga)
   additionalSagas.forEach((saga) => sagaMiddleware.run(saga))
 
   return store
 }
-
-// Utility types and functions to be used inside the wallet shared package
-// Apps should re-define those with a more specific `AppState`
-export type RootState = ReturnType<typeof sharedRootReducer> & {
-  saga: Record<string, SagaState>
-} & { _persist?: PersistState }

@@ -12,7 +12,7 @@ interface TokenOverrides {
   tokenExcludeOverrides: ContractInput[]
 }
 
-// TODO(MOB-3643): Redux state sharing opportunites
+// TODO(MOB-3643): Redux state sharing opportunities
 // Share usePortfolioValueModifiers when redux state for visibility settings is available
 export function usePortfolioValueModifiers(address?: Address | Address[]): PortfolioValueModifier[] | undefined {
   // Memoize array creation if passed a string to avoid recomputing at every render

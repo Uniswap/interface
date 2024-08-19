@@ -105,7 +105,7 @@ export function DeleteUnitagModal({
           <Button fill disabled={isDeleting} testID={TestID.Remove} theme="detrimental" onPress={onDelete}>
             {isDeleting ? (
               <Flex height={fonts.buttonLabel1.lineHeight}>
-                <ActivityIndicator color={colors.sporeWhite.val} />
+                <ActivityIndicator color={colors.white.val} />
               </Flex>
             ) : (
               t('common.button.delete')

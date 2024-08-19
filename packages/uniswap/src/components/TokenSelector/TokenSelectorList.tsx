@@ -1,23 +1,23 @@
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { Flex, Loader, Skeleton, Text, isWeb } from 'ui/src'
+import { Flex, Loader, Skeleton, isWeb } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/TokenOptionItem'
 import {
-  SectionHeaderProps,
   TokenSectionBaseList,
   TokenSectionBaseListRef,
 } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
+import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/TokenSectionHeader'
 import { renderSuggestedTokenItem } from 'uniswap/src/components/TokenSelector/renderSuggestedTokenItem'
 import { suggestedTokensKeyExtractor } from 'uniswap/src/components/TokenSelector/suggestedTokensKeyExtractor'
 import {
   ConvertFiatAmountFormattedCallback,
   OnSelectCurrency,
-  SuggestedTokenSection,
   TokenOption,
+  TokenOptionSection,
   TokenSection,
   TokenSelectorListSections,
   TokenWarningDismissedHook,
@@ -27,13 +27,14 @@ import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatt
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { isInterface } from 'utilities/src/platform'
 
 function isSuggestedTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
   return Array.isArray(data)
 }
 
-function isSuggestedTokenSection(section: SuggestedTokenSection | TokenSection): section is SuggestedTokenSection {
-  return Array.isArray((section as SuggestedTokenSection).data[0])
+function isSuggestedTokenSection(section: TokenSection): boolean {
+  return section.sectionKey === TokenOptionSection.SuggestedTokens
 }
 
 function TokenOptionItemWrapper({
@@ -134,15 +135,7 @@ function _TokenSelectorList({
   }, [chainFilter, sections?.length])
 
   const renderItem = useCallback(
-    ({
-      item,
-      section,
-      index,
-    }: {
-      item: TokenOption | TokenOption[]
-      section: SuggestedTokenSection | TokenSection
-      index: number
-    }) => {
+    ({ item, section, index }: { item: TokenOption | TokenOption[]; section: TokenSection; index: number }) => {
       if (isSuggestedTokenItem(item) && isSuggestedTokenSection(section)) {
         return renderSuggestedTokenItem({ item, section, index, onSelectCurrency })
       }
@@ -178,8 +171,8 @@ function _TokenSelectorList({
   )
 
   const renderSectionHeader = useCallback(
-    ({ section: { title, rightElement } }: { section: SectionHeaderProps }): JSX.Element => (
-      <SectionHeader rightElement={rightElement} title={title} />
+    ({ section }: { section: TokenSectionHeaderProps }): JSX.Element => (
+      <SectionHeader rightElement={section.rightElement} sectionKey={section.sectionKey} />
     ),
     [],
   )
@@ -218,7 +211,7 @@ function _TokenSelectorList({
 
   return (
     // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
-    <AnimatedFlex grow entering={FadeIn} exiting={isWeb ? undefined : FadeOut}>
+    <AnimatedFlex grow entering={isInterface ? undefined : FadeIn} exiting={isWeb ? undefined : FadeOut}>
       <TokenSectionBaseList
         ListEmptyComponent={emptyElement}
         focusHook={useBottomSheetFocusHook}
@@ -229,17 +222,6 @@ function _TokenSelectorList({
         sections={sections ?? []}
       />
     </AnimatedFlex>
-  )
-}
-
-export function SectionHeader({ title, rightElement }: SectionHeaderProps): JSX.Element {
-  return (
-    <Flex row backgroundColor="$surface1" justifyContent="space-between" pb="$spacing4" pt="$spacing12">
-      <Text color="$neutral2" variant={isWeb ? 'body2' : 'subheading2'}>
-        {title}
-      </Text>
-      {rightElement}
-    </Flex>
   )
 }
 

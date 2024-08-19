@@ -8,7 +8,7 @@ import { Screen } from 'src/components/layout/Screen'
 import { openModal } from 'src/features/modals/modalSlice'
 import { TermsOfService } from 'src/screens/Onboarding/TermsOfService'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { Flex, HapticFeedback, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -27,6 +27,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function LandingScreen({ navigation }: Props): JSX.Element {
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const { hapticFeedback } = useHapticFeedback()
 
   const actionButtonsOpacity = useSharedValue(0)
   const actionButtonsStyle = useAnimatedStyle(() => ({ opacity: actionButtonsOpacity.value }), [actionButtonsOpacity])
@@ -90,7 +91,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                   testID={TestID.CreateAccount}
                   onPress={onPressCreateWallet}
                 >
-                  <Text color="$sporeWhite" variant="buttonLabel2">
+                  <Text color="$white" variant="buttonLabel2">
                     {t('onboarding.landing.button.create')}
                   </Text>
                 </TouchableArea>
@@ -104,7 +105,7 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
                 testID={TestID.ImportAccount}
                 onLongPress={async (): Promise<void> => {
                   if (isDevEnv()) {
-                    await HapticFeedback.selection()
+                    await hapticFeedback.selection()
                     dispatch(openModal({ name: ModalName.Experiments }))
                   }
                 }}

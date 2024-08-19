@@ -25,7 +25,7 @@ import {
 import { ENS_LOGO } from 'ui/src/assets'
 import { SendAction, XTwitter } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { iconSizes, imageSizes } from 'ui/src/theme'
+import { DEP_accentColors, iconSizes, imageSizes, validColor } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -157,7 +157,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
       {/* header row */}
       <Flex row alignItems="center" justifyContent="space-between" mx="$spacing4" px="$spacing24">
         <Flex centered backgroundColor="$surface3" borderRadius="$roundedFull" p="$spacing4">
-          <BackButton color="$sporeWhite" size={iconSizes.icon24} />
+          <BackButton color="$white" size={iconSizes.icon24} />
         </Flex>
         <ProfileContextMenu address={address} />
       </Flex>
@@ -202,7 +202,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
                       source={ENS_LOGO}
                       width={imageSizes.image16}
                     />
-                    <Text color="$blue400" variant="buttonLabel3">
+                    <Text color={validColor(DEP_accentColors.blue400)} variant="buttonLabel3">
                       {primaryENSName}
                     </Text>
                   </Flex>

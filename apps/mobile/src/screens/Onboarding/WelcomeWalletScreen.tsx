@@ -117,18 +117,14 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
           icon={
             <Flex grow row alignItems="center" justifyContent="space-between">
               <Flex row alignItems="center" gap="$spacing8">
-                <Flex
-                  borderRadius="$roundedFull"
-                  p="$spacing8"
-                  style={{ backgroundColor: opacify(10, colors.sporeWhite.val) }}
-                >
-                  <LockIcon color={colors.sporeWhite.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+                <Flex backgroundColor={opacify(10, colors.white.val)} borderRadius="$roundedFull" p="$spacing8">
+                  <LockIcon color={colors.white.val} height={iconSizes.icon16} width={iconSizes.icon16} />
                 </Flex>
-                <Text color="$sporeWhite" variant="buttonLabel2">
+                <Text color="$white" variant="buttonLabel2">
                   {t('onboarding.wallet.continue')}
                 </Text>
               </Flex>
-              <Arrow color={colors.sporeWhite.val} direction="e" size={iconSizes.icon24} />
+              <Arrow color={colors.white.val} direction="e" size={iconSizes.icon24} />
             </Flex>
           }
           testID={TestID.Next}

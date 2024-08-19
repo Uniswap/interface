@@ -6,21 +6,18 @@ import { useDispatch } from 'react-redux'
 import { useEagerExternalProfileRootNavigation } from 'src/app/navigation/hooks'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { ConnectedDappsList } from 'src/components/Requests/ConnectedDapps/ConnectedDappsList'
+import { URIType, getSupportedURI } from 'src/components/Requests/ScanSheet/util'
 import {
-  URIType,
-  UWULINK_PREFIX,
-  findAllowedTokenRecipient,
-  getSupportedURI,
+  getFormattedUwuLinkTxnRequest,
   isAllowedUwuLinkRequest,
-  toTokenTransferRequest,
   useUwuLinkContractAllowlist,
-} from 'src/components/Requests/ScanSheet/util'
+} from 'src/components/Requests/Uwulink/utils'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
 import { addRequest } from 'src/features/walletConnect/walletConnectSlice'
-import { Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useHapticFeedback, useIsDarkMode, useSporeColors } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -30,7 +27,7 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { EthMethod, UwULinkMethod, UwULinkRequest } from 'uniswap/src/types/walletConnect'
+import { UwULinkRequest } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { WalletQRCode } from 'wallet/src/components/QRCodeScanner/WalletQRCode'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -57,6 +54,7 @@ export function WalletConnectModal({
   const dispatch = useDispatch()
   const isUwULinkEnabled = useFeatureFlag(FeatureFlags.UwULink)
   const isScantasticEnabled = useFeatureFlag(FeatureFlags.Scantastic)
+  const { hapticFeedback } = useHapticFeedback()
 
   const uwuLinkContractAllowlist = useUwuLinkContractAllowlist()
 
@@ -77,7 +75,7 @@ export function WalletConnectModal({
       if (!activeAccount || hasPendingSessionError || shouldFreezeCamera) {
         return
       }
-      await HapticFeedback.selection()
+      await hapticFeedback.selection()
 
       const supportedURI = await getSupportedURI(uri, {
         isUwULinkEnabled,
@@ -160,80 +158,16 @@ export function WalletConnectModal({
             return
           }
 
-          const newRequest = {
-            sessionId: UWULINK_PREFIX, // session/internalId is WalletConnect specific, but not needed here
-            internalId: UWULINK_PREFIX,
-            account: activeAccount?.address,
-            dapp: {
-              name: '',
-              url: '',
-              ...parsedUwulinkRequest.dapp,
-              source: UWULINK_PREFIX,
-              chain_id: parsedUwulinkRequest.chainId,
-              webhook: parsedUwulinkRequest.webhook,
-            },
-            chainId: parsedUwulinkRequest.chainId,
-          }
+          const wcRequest = await getFormattedUwuLinkTxnRequest({
+            request: parsedUwulinkRequest,
+            activeAccount,
+            allowList: uwuLinkContractAllowlist,
+            providerManager,
+            contractManager,
+          })
 
-          if (parsedUwulinkRequest.method === EthMethod.PersonalSign) {
-            dispatch(
-              addRequest({
-                account: activeAccount.address,
-                request: {
-                  ...newRequest,
-                  type: EthMethod.PersonalSign,
-                  message: parsedUwulinkRequest.message,
-                  // rawMessage should be the hex version of `message`, but our wallet will only use
-                  // `message` if it exists. so this is mostly to appease Typescript
-                  rawMessage: parsedUwulinkRequest.message,
-                },
-              }),
-            )
-          } else if (parsedUwulinkRequest.method === UwULinkMethod.Erc20Send) {
-            const preparedTransaction = await toTokenTransferRequest(
-              parsedUwulinkRequest,
-              activeAccount,
-              providerManager,
-              contractManager,
-            )
-            const tokenRecipient = findAllowedTokenRecipient(parsedUwulinkRequest, uwuLinkContractAllowlist)
+          dispatch(addRequest(wcRequest))
 
-            dispatch(
-              addRequest({
-                account: activeAccount.address,
-                request: {
-                  ...newRequest,
-                  type: UwULinkMethod.Erc20Send,
-                  recipient: {
-                    address: parsedUwulinkRequest.recipient,
-                    name: tokenRecipient?.name ?? '',
-                    logo: tokenRecipient?.logo,
-                  },
-                  amount: parsedUwulinkRequest.amount,
-                  tokenAddress: parsedUwulinkRequest.tokenAddress,
-                  isStablecoin: parsedUwulinkRequest.isStablecoin,
-                  transaction: {
-                    from: activeAccount.address,
-                    ...preparedTransaction,
-                  },
-                },
-              }),
-            )
-          } else {
-            dispatch(
-              addRequest({
-                account: activeAccount.address,
-                request: {
-                  ...newRequest,
-                  type: EthMethod.EthSendTransaction,
-                  transaction: {
-                    from: activeAccount.address,
-                    ...parsedUwulinkRequest.value,
-                  },
-                },
-              }),
-            )
-          }
           onClose()
         } catch (_) {
           Alert.alert(t('walletConnect.error.uwu.title'), t('walletConnect.error.uwu.scan'), [
@@ -274,6 +208,7 @@ export function WalletConnectModal({
       uwuLinkContractAllowlist,
       providerManager,
       contractManager,
+      hapticFeedback,
     ],
   )
 

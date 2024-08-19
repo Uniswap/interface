@@ -156,7 +156,6 @@ module.exports = {
           '@web3-react/core': path.resolve(__dirname, 'src/connection/web3reactShim.ts'),
           crypto: require.resolve('expo-crypto'),
           'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
-          'react-native-svg$': require.resolve('@tamagui/react-native-svg'),
           'react-native$': 'react-native-web',
         },
         plugins: webpackConfig.resolve.plugins.map((plugin) => {

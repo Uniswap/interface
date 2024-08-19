@@ -18,6 +18,11 @@ export type ImageUriProps = {
   imageDimensions?: { width: number; height: number } | undefined
 } & Pick<FastImageProps, 'shouldRasterizeIOS'>
 
+/**
+ * @deprecated Please use `UniversalImage` for all added cases
+ *
+ *  If it doesn't fit you use case, modify it to fit or consult with the universe team for help!
+ */
 export function ImageUri(_: ImageUriProps): JSX.Element | null {
   throw new NotImplementedError('ImageURI')
 }

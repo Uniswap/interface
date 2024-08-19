@@ -29,7 +29,6 @@ import {
   TradeWithStatus,
   UseTradeArgs,
 } from 'wallet/src/features/transactions/swap/trade/types'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 // error strings hardcoded in @uniswap/unified-routing-api
 // https://github.com/Uniswap/unified-routing-api/blob/020ea371a00d4cc25ce9f9906479b00a43c65f2c/lib/util/errors.ts#L4
@@ -44,8 +43,13 @@ export const SWAP_FORM_DEBOUNCE_TIME_MS = 250
 
 export const API_RATE_LIMIT_ERROR = 'TOO_MANY_REQUESTS'
 
+// The TradingAPI requires an address for the swapper field; we supply a placeholder address if no account is connected.
+// Note: This address was randomly generated.
+const UNCONNECTED_ADDRESS = '0xAAAA44272dc658575Ba38f43C438447dDED45358'
+
 export function useTrade(args: UseTradeArgs): TradeWithStatus {
   const {
+    account,
     amountSpecified,
     otherCurrency,
     tradeType,
@@ -55,7 +59,7 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     skip,
     tradeProtocolPreference,
   } = args
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const activeAccountAddress = account?.address
 
   const formatter = useLocalizationContext()
 
@@ -89,20 +93,9 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     !tokenInChainId ||
     !tokenOutChainId ||
     !amount ||
-    currencyInEqualsCurrencyOut ||
-    !activeAccountAddress
+    currencyInEqualsCurrencyOut
 
   const quoteRequestArgs: QuoteRequest | undefined = useMemo(() => {
-    // Temporary logging to help debug invalid requests with missing `swappper` param
-    if (!activeAccountAddress) {
-      logger.error(new Error('Missing account address in /swap request'), {
-        tags: { file: 'useTrade', function: 'quote' },
-        extra: {
-          activeAccountAddress,
-        },
-      })
-    }
-
     if (skipQuery) {
       return undefined
     }
@@ -110,7 +103,7 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     const quoteArgs: QuoteRequest = {
       type: requestTradeType,
       amount: amount.quotient.toString(),
-      swapper: activeAccountAddress,
+      swapper: activeAccountAddress ?? UNCONNECTED_ADDRESS,
       tokenInChainId,
       tokenOutChainId,
       tokenIn: tokenInAddress,

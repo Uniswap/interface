@@ -87,13 +87,13 @@ describe('SwapAndLimitContext', () => {
       multichainUXEnabled: undefined,
       setSelectedChainId: expect.any(Function),
       setCurrencyState: expect.any(Function),
-      setIsUserSelectedChainId: expect.any(Function),
+      setIsUserSelectedToken: expect.any(Function),
       currentTab: SwapTab.Swap,
       setCurrentTab: expect.any(Function),
       chainId: 1,
       pageChainId: undefined,
       isSwapAndLimitContext: true,
-      isUserSelectedChainId: false,
+      isUserSelectedToken: false,
     })
   })
 
@@ -140,12 +140,12 @@ describe('Combined contexts', () => {
           },
           setCurrencyState: expect.any(Function),
           setSelectedChainId: jest.fn(),
-          setIsUserSelectedChainId: jest.fn(),
+          setIsUserSelectedToken: jest.fn(),
           chainId: UniverseChainId.Mainnet,
           currentTab: SwapTab.Swap,
           setCurrentTab: expect.any(Function),
           isSwapAndLimitContext: true,
-          isUserSelectedChainId: false,
+          isUserSelectedToken: false,
         }}
       >
         <SwapContextProvider>

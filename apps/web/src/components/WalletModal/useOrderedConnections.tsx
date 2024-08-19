@@ -65,7 +65,8 @@ function getInjectedConnectors(connectors: readonly Connector[], excludeUniswapC
   return { injectedConnectors, isCoinbaseWalletBrowser }
 }
 
-export function useOrderedConnections(excludeUniswapConnections?: boolean) {
+type InjectableConnector = Connector & { isInjected?: boolean }
+export function useOrderedConnections(excludeUniswapConnections?: boolean): InjectableConnector[] {
   const { connectors } = useConnect()
   const recentConnectorId = useRecentConnectorId()
 
@@ -83,7 +84,11 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean) {
   )
 
   return useMemo(() => {
-    const { injectedConnectors, isCoinbaseWalletBrowser } = getInjectedConnectors(connectors, excludeUniswapConnections)
+    const { injectedConnectors: injectedConnectorsBase, isCoinbaseWalletBrowser } = getInjectedConnectors(
+      connectors,
+      excludeUniswapConnections,
+    )
+    const injectedConnectors = injectedConnectorsBase.map((c) => ({ ...c, isInjected: true }))
 
     const coinbaseSdkConnector = getConnectorWithId(connectors, CONNECTION.COINBASE_SDK_CONNECTOR_ID, SHOULD_THROW)
     const walletConnectConnector = getConnectorWithId(connectors, CONNECTION.WALLET_CONNECT_CONNECTOR_ID, SHOULD_THROW)
@@ -106,7 +111,7 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean) {
       return [coinbaseSdkConnector]
     }
 
-    const orderedConnectors: Connector[] = []
+    const orderedConnectors: InjectableConnector[] = []
     const shouldDisplayUniswapWallet = !excludeUniswapConnections && (isWebIOS || isWebAndroid || !isTouchable)
 
     // Place the Uniswap Wallet at the top of the list by default.

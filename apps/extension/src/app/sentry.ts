@@ -19,6 +19,7 @@ export const enum SentryAppNameTag {
   Onboarding = 'onboarding',
   ContentScript = 'content-script',
   Background = 'background',
+  Popup = 'popup',
 }
 
 export function initializeSentry(appNameTag: SentryAppNameTag, sentryUserId: string): void {

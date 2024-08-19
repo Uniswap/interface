@@ -4,6 +4,7 @@
 /* eslint-disable max-lines */
 
 import dayjs from 'dayjs'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
@@ -12,16 +13,19 @@ import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
 import { ChainIdToTxIdToDetails, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import {
   activatePendingAccounts,
+  addExploreAndWelcomeBehaviorHistory,
+  addHapticSetting,
   addRoutingFieldToTransactions,
   deleteBetaOnboardingState,
+  deleteDefaultFavoritesFromFavoritesState,
   deleteExtensionOnboardingState,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
-} from 'wallet/src/state/sharedMigrations'
+} from 'wallet/src/state/walletMigrations'
 
 export const OLD_DEMO_ACCOUNT_ADDRESS = '0xdd0E380579dF30E38524F9477808d9eE37E2dEa6'
 
@@ -896,6 +900,12 @@ export const migrations = {
   68: deleteBetaOnboardingState,
 
   69: deleteExtensionOnboardingState,
+
+  70: deleteDefaultFavoritesFromFavoritesState,
+
+  71: addHapticSetting,
+
+  72: addExploreAndWelcomeBehaviorHistory,
 }
 
-export const MOBILE_STATE_VERSION = 69
+export const MOBILE_STATE_VERSION = 72

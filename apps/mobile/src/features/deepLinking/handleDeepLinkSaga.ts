@@ -5,6 +5,12 @@ import { URL } from 'react-native-url-polyfill'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { getScantasticQueryParams, parseScantasticParams } from 'src/components/Requests/ScanSheet/util'
 import {
+  getFormattedUwuLinkTxnRequest,
+  isAllowedUwuLinkRequest,
+  isUwuLinkUniswapDeepLink,
+  parseUwuLinkDataFromDeeplink,
+} from 'src/components/Requests/Uwulink/utils'
+import {
   UNISWAP_URL_SCHEME,
   UNISWAP_URL_SCHEME_WALLETCONNECT_AS_PARAM,
   UNISWAP_WALLETCONNECT_URL,
@@ -15,22 +21,26 @@ import { handleTransactionLink } from 'src/features/deepLinking/handleTransactio
 import { closeAllModals, openModal } from 'src/features/modals/modalSlice'
 import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { pairWithWalletConnectURI } from 'src/features/walletConnect/utils'
-import { setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
+import { addRequest, setDidOpenFromDeepLink } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put, select, takeLatest } from 'typed-redux-saga'
 import { UNISWAP_WEB_HOSTNAME } from 'uniswap/src/constants/urls'
 import { fromUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
+import { DynamicConfigs, UwuLinkConfigKey } from 'uniswap/src/features/gating/configs'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n/i18n'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
+import { UwULinkRequest } from 'uniswap/src/types/walletConnect'
 import { WidgetType } from 'uniswap/src/types/widgets'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { ScantasticParams } from 'wallet/src/features/scantastic/types'
+import { getContractManager, getProviderManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts, selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { UNISWAP_APP_NATIVE_TOKEN } from 'wallet/src/utils/linking'
@@ -248,6 +258,11 @@ export function* handleDeepLink(action: ReturnType<typeof openDeepLink>) {
       return
     }
 
+    if (isUwuLinkUniswapDeepLink(action.payload.url)) {
+      yield* call(handleUwuLinkDeepLink, action.payload.url)
+      return
+    }
+
     // Skip handling any non-WalletConnect uniswap:// URL scheme deep links for now for security reasons
     // Currently only used on WalletConnect Universal Link web page fallback button (https://uniswap.org/app/wc)
     if (action.payload.url.startsWith(UNISWAP_URL_SCHEME)) {
@@ -389,4 +404,56 @@ function* launchScantastic(params: ScantasticParams): Generator {
       },
     }),
   )
+}
+
+function* handleUwuLinkDeepLink(uri: string): Generator {
+  try {
+    const decodedUri = decodeURIComponent(uri)
+    const uwulinkData = parseUwuLinkDataFromDeeplink(decodedUri)
+    const parsedUwulinkRequest: UwULinkRequest = JSON.parse(uwulinkData)
+
+    const uwuLinkAllowList = getDynamicConfigValue(DynamicConfigs.UwuLink, UwuLinkConfigKey.Allowlist, {
+      contracts: [],
+      tokenRecipients: [],
+    })
+
+    const isAllowed = isAllowedUwuLinkRequest(parsedUwulinkRequest, uwuLinkAllowList)
+
+    if (!isAllowed) {
+      Alert.alert(i18n.t('walletConnect.error.uwu.title'), i18n.t('walletConnect.error.uwu.scan'), [
+        {
+          text: i18n.t('common.button.ok'),
+        },
+      ])
+      return
+    }
+
+    const activeAccount = yield* select(selectActiveAccount)
+    if (!activeAccount) {
+      return
+    }
+
+    const providerManager = yield* call(getProviderManager)
+    const contractManager = yield* call(getContractManager)
+
+    const uwuLinkTxnRequest = yield* call(getFormattedUwuLinkTxnRequest, {
+      request: parsedUwulinkRequest,
+      activeAccount,
+      allowList: {
+        contracts: [],
+        tokenRecipients: [],
+      },
+      providerManager,
+      contractManager,
+    })
+
+    yield* put(addRequest(uwuLinkTxnRequest))
+  } catch {
+    Alert.alert(i18n.t('walletConnect.error.uwu.title'), i18n.t('walletConnect.error.uwu.scan'), [
+      {
+        text: i18n.t('common.button.ok'),
+      },
+    ])
+    return
+  }
 }

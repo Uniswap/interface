@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import Animated, { useAnimatedProps, useSharedValue, withTiming } from 'react-native-reanimated'
 import Svg, { Circle } from 'react-native-svg'
-import { HapticFeedback } from 'ui/src'
+import { useHapticFeedback } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { SwapScreen, useSwapScreenContext } from 'wallet/src/features/transactions/contexts/SwapScreenContext'
 
@@ -29,7 +29,7 @@ const AnimatedCircle = Animated.createAnimatedComponent(Circle)
 export function HoldToSwapProgressCircle(): JSX.Element {
   const { screen } = useSwapScreenContext()
 
-  useHapticFeedback()
+  useSwapHoldHapticFeedback()
 
   const isHoldToSwapPressed = screen === SwapScreen.SwapReviewHoldingToSwap
 
@@ -67,12 +67,13 @@ export function HoldToSwapProgressCircle(): JSX.Element {
 }
 
 // This triggers haptic feedback at 0, 1 and 2 seconds in increasing intensity.
-function useHapticFeedback(): void {
+function useSwapHoldHapticFeedback(): void {
   const impactCount = useRef(0)
+  const { hapticFeedback } = useHapticFeedback()
 
   useEffect(() => {
     impactCount.current += 1
-    HapticFeedback.light().catch(() => undefined)
+    hapticFeedback.light().catch(() => undefined)
 
     const hapticImpactInterval = HOLD_TO_SWAP_TIMEOUT / 3
 
@@ -80,13 +81,13 @@ function useHapticFeedback(): void {
       impactCount.current += 1
 
       if (impactCount.current === 2) {
-        HapticFeedback.medium().catch(() => undefined)
+        hapticFeedback.medium().catch(() => undefined)
       } else {
-        HapticFeedback.success().catch(() => undefined)
+        hapticFeedback.success().catch(() => undefined)
         clearInterval(timeout)
       }
     }, hapticImpactInterval)
 
     return () => clearInterval(timeout)
-  }, [])
+  }, [hapticFeedback])
 }

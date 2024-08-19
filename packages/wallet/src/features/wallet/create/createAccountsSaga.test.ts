@@ -1,8 +1,9 @@
 import dayjs from 'dayjs'
 import { expectSaga } from 'redux-saga-test-plan'
-import { Account, AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { CreateAccountsParams, createAccounts } from 'wallet/src/features/wallet/create/createAccountsSaga'
-import { sharedRootReducer } from 'wallet/src/state/reducer'
+import { walletRootReducer } from 'wallet/src/state/walletReducer'
 import { ACCOUNT, ACCOUNT2, ACCOUNT3 } from 'wallet/src/test/fixtures'
 
 const createNativeAccounts = async (
@@ -16,7 +17,7 @@ const createNativeAccounts = async (
   }
 }> => {
   const { storeState } = await expectSaga(createAccounts, payload)
-    .withReducer(sharedRootReducer)
+    .withReducer(walletRootReducer)
     .withState({
       wallet: {
         accounts: initialAccounts as { [key: string]: Account },

@@ -25,7 +25,7 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { FavoritesState, initialFavoritesState } from 'wallet/src/features/favorites/slice'
-import { WalletState, initialWalletState } from 'wallet/src/features/wallet/slice'
+import { WalletSliceState, initialWalletState } from 'wallet/src/features/wallet/slice'
 import {
   ACCOUNT,
   ACCOUNT2,
@@ -62,7 +62,7 @@ describe(usePortfolioValueModifiers, () => {
     includeSpamTokens: false,
   }
 
-  const mockWalletState = (overrideSettings?: Partial<WalletState['settings']>): WalletState => ({
+  const mockWalletState = (overrideSettings?: Partial<WalletSliceState['settings']>): WalletSliceState => ({
     ...initialWalletState,
     settings: {
       ...initialWalletState.settings,

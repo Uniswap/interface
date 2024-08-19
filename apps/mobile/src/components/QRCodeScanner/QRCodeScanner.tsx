@@ -171,7 +171,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
           </Flex>
           {!shouldFreezeCamera ? (
             // camera isn't frozen (after seeing barcode) — show the camera scan icon (the four white corners)
-            <CameraScan color={colors.sporeWhite.val} height={scannerSize} strokeWidth={5} width={scannerSize} />
+            <CameraScan color={colors.white.val} height={scannerSize} strokeWidth={5} width={scannerSize} />
           ) : (
             // camera has been frozen (has seen a barcode) — show the loading spinner and "Connecting..." or "Loading..."
             <Flex height={scannerSize} width={scannerSize}>
@@ -321,9 +321,9 @@ const GradientOverlay = memo(function GradientOverlay({
           </LinearGradient>
         </Defs>
         {!shouldFreezeCamera ? (
-          <Path d={pathWithHole} fill={colors.DEP_scrimSoft.val} strokeWidth="32" />
+          <Path d={pathWithHole} fill={colors.scrim.val} strokeWidth="32" />
         ) : (
-          <Rect fill={colors.DEP_scrimSoft.val} height="100%" width="100%" x="0" y="0" />
+          <Rect fill={colors.scrim.val} height="100%" width="100%" x="0" y="0" />
         )}
         {/* gradient from top of modal to top of QR code, of color DEP_background1 to transparent */}
         <Rect fill="url(#scan-top-fadeout)" height="100%" width="100%" x="0" y="0" />

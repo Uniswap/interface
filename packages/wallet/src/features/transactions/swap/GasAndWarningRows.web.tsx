@@ -16,6 +16,7 @@ import { useLocalizationContext } from 'wallet/src/features/language/Localizatio
 import { InsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
+import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { GasAndWarningRowsProps } from 'wallet/src/features/transactions/swap/GasAndWarningRowsProps'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
@@ -25,7 +26,7 @@ import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/
 import { PriceImpactWarning } from 'wallet/src/features/transactions/swap/modals/PriceImpactWarning'
 import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
-import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { useIsBlocked } from 'wallet/src/features/trm/hooks'
 
 export function GasAndWarningRows({
   renderEmptyRows: _renderEmptyRows, // Web does not need to render empty rows for layout calculations
@@ -33,17 +34,19 @@ export function GasAndWarningRows({
   const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
   const { t } = useTranslation()
 
+  const { account } = useTransactionModalContext()
   const swapTxContext = useSwapTxContext()
   const { gasFee } = swapTxContext
   const { derivedSwapInfo } = useSwapFormContext()
 
   const { chainId, trade, currencyAmountsUSDValue } = derivedSwapInfo
+  const inputUSDValue = currencyAmountsUSDValue[CurrencyField.INPUT]
   const outputUSDValue = currencyAmountsUSDValue[CurrencyField.OUTPUT]
   const priceImpact = trade.trade ? normalizePriceImpact(trade.trade?.priceImpact) : undefined
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 
-  const { isBlocked } = useIsBlockedActiveAddress()
+  const { isBlocked } = useIsBlocked(account.address)
 
   const { formScreenWarning, priceImpactWarning, warnings } = useParsedSwapWarnings()
   const showPriceImpactWarning = Boolean(priceImpact && priceImpactWarning)
@@ -69,7 +72,7 @@ export function GasAndWarningRows({
     setShowWarningModal(true)
   }, [formScreenWarning?.warning.message])
 
-  const gasFeeHighRelativeToSwapValue = useGasFeeHighRelativeToValue(gasFeeUSD, outputUSDValue)
+  const gasFeeHighRelativeToSwapValue = useGasFeeHighRelativeToValue(gasFeeUSD, outputUSDValue ?? inputUSDValue)
 
   return (
     <>

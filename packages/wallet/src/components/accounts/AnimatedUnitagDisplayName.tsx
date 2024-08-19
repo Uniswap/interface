@@ -2,7 +2,7 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { BaseSyntheticEvent, useState } from 'react'
 import { LayoutChangeEvent } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { AnimatePresence, Flex, HapticFeedback, Text, TouchableArea } from 'ui/src'
+import { AnimatePresence, Flex, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { CopyAlt, Unitag } from 'ui/src/components/icons'
 import { IconSizeTokens } from 'ui/src/theme'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -33,6 +33,7 @@ export function AnimatedUnitagDisplayName({
   const [showUnitagSuffix, setShowUnitagSuffix] = useState(false)
   const [textWidth, setTextWidth] = useState(0)
   const isUnitag = displayName?.type === DisplayNameType.Unitag
+  const { hapticFeedback } = useHapticFeedback()
 
   const onTextLayout = (event: LayoutChangeEvent): void => {
     setTextWidth(event.nativeEvent.layout.width)
@@ -48,7 +49,7 @@ export function AnimatedUnitagDisplayName({
     }
 
     e.stopPropagation()
-    await HapticFeedback.impact()
+    await hapticFeedback.impact()
     await setClipboard(address)
     dispatch(
       pushNotification({

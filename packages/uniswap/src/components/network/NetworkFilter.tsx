@@ -1,5 +1,5 @@
 import { useCallback } from 'react'
-import { Flex, HapticFeedback } from 'ui/src'
+import { Flex, useHapticFeedback } from 'ui/src'
 import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { colors, iconSizes } from 'ui/src/theme'
@@ -84,13 +84,14 @@ export function NetworkFilter({
   styles,
   hideArrow = false,
 }: NetworkFilterProps): JSX.Element {
+  const { hapticFeedback } = useHapticFeedback()
   const onPress = useCallback(
     async (chainId: UniverseChainId | null) => {
       onPressAnimation?.()
-      await HapticFeedback.selection()
+      await hapticFeedback.selection()
       onPressChain(chainId)
     },
-    [onPressChain, onPressAnimation],
+    [onPressAnimation, hapticFeedback, onPressChain],
   )
 
   const networkOptions = useNetworkOptions({
@@ -111,9 +112,12 @@ export function NetworkFilter({
       onDismiss={onDismiss}
     >
       <Flex centered row gap="$spacing8">
-        <NetworkLogo chainId={selectedChain ?? null} size={NETWORK_ICON_SIZE} />
+        <NetworkLogo
+          chainId={selectedChain ?? (includeAllNetworks ? null : UniverseChainId.Mainnet)}
+          size={NETWORK_ICON_SIZE}
+        />
         <RotatableChevron
-          color="$neutral3"
+          color="$neutral2"
           direction="down"
           display={hideArrow ? 'none' : 'block'}
           height={iconSizes.icon20}

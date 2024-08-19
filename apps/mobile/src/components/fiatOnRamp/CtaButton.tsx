@@ -26,11 +26,7 @@ export function FiatOnRampCtaButton({
       color={buttonAvailable ? '$white' : '$neutral2'}
       disabled={disabled}
       icon={
-        isLoading ? (
-          <SpinningLoader color="$sporeWhite" />
-        ) : !eligible ? (
-          <InfoCircleFilled color="$neutral3" />
-        ) : undefined
+        isLoading ? <SpinningLoader color="$white" /> : !eligible ? <InfoCircleFilled color="$neutral3" /> : undefined
       }
       size="large"
       theme={buttonAvailable ? 'primary' : 'tertiary'}

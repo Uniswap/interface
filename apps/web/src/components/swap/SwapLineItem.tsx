@@ -103,10 +103,11 @@ function Loading({ width = 50 }: { width?: number }) {
   return <LoadingRow data-testid="loading-row" height={15} width={width} />
 }
 
-function ColoredPercentRow({ percent, estimate }: { percent: Percent; estimate?: boolean }) {
+function ColoredPercentRow({ percent }: { percent: Percent }) {
   const { formatPercent } = useFormatter()
-  const formattedPercent = (estimate ? '~' : '') + formatPercent(percent)
-  return <ColorWrapper textColor={getPriceImpactColor(percent)}>{formattedPercent}</ColorWrapper>
+  const formattedPercent = formatPercent(percent)
+  const positivePercent = percent.lessThan(0) ? percent.multiply(-1) : percent
+  return <ColorWrapper textColor={getPriceImpactColor(positivePercent)}>{formattedPercent}</ColorWrapper>
 }
 
 function CurrencyAmountRow({ amount }: { amount: CurrencyAmount<Currency> }) {
@@ -176,7 +177,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       return {
         Label: () => <Trans i18nKey="swap.priceImpact" />,
         TooltipBody: () => <Trans i18nKey="swap.impactOfTrade" />,
-        Value: () => (isPreview ? <Loading /> : <ColoredPercentRow percent={priceImpact} estimate />),
+        Value: () => (isPreview ? <Loading /> : <ColoredPercentRow percent={priceImpact} />),
       }
     case SwapLineItemType.MAX_SLIPPAGE:
       return {

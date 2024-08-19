@@ -1,10 +1,12 @@
 import { memo, useMemo } from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { SectionHeader, TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
+import { SectionHeader } from 'uniswap/src/components/TokenSelector/TokenSectionHeader'
+import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import {
   ConvertFiatAmountFormattedCallback,
   OnSelectCurrency,
+  TokenOptionSection,
   TokenSection,
 } from 'uniswap/src/components/TokenSelector/types'
 import { PortfolioValueModifier } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -14,11 +16,10 @@ import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatt
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
-  const { t } = useTranslation()
   return (
     <Flex>
-      <SectionHeader title={t('tokens.selector.section.search')} />
-      <Text color="$neutral3" textAlign="center" variant="subheading2">
+      <SectionHeader sectionKey={TokenOptionSection.SearchResults} />
+      <Text color="$neutral3" mt="$spacing16" textAlign="center" variant="subheading2">
         <Trans
           components={{ highlight: <Text color="$neutral1" variant="subheading2" /> }}
           i18nKey="tokens.selector.search.empty"

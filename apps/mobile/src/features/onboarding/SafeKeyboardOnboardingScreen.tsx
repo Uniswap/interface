@@ -69,6 +69,7 @@ export function SafeKeyboardOnboardingScreen({
       minHeightWhenKeyboardExpanded={minHeightWhenKeyboardExpanded}
     >
       <AnimatedFlex
+        grow
         $short={{ gap: '$none' }}
         entering={FadeIn}
         exiting={FadeOut}

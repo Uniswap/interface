@@ -1,4 +1,3 @@
-import { Currency } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { Flex, Separator, Text } from 'ui/src'
@@ -20,8 +19,6 @@ export function SwapDisplay({
   inputCurrencyInfo,
   outputCurrencyInfo,
   chainId,
-  currencyIn,
-  currencyOut,
   transactionGasFeeResult,
   onCancel,
   onConfirm,
@@ -32,8 +29,6 @@ export function SwapDisplay({
   inputCurrencyInfo: Maybe<CurrencyInfo>
   outputCurrencyInfo: Maybe<CurrencyInfo>
   chainId: WalletChainId | null
-  currencyIn?: Currency
-  currencyOut?: Currency
   transactionGasFeeResult?: GasFeeResult
   onCancel?: () => Promise<void>
   onConfirm?: () => Promise<void>
@@ -56,6 +51,8 @@ export function SwapDisplay({
   })
   const outputValue = useUSDCValue(outputCurrencyAmount)
 
+  const currencyIn = inputCurrencyInfo?.currency
+  const currencyOut = outputCurrencyInfo?.currency
   const showSplitLogo = Boolean(inputCurrencyInfo?.logoUrl && outputCurrencyInfo?.logoUrl)
   const showSwapDetails = Boolean(currencyIn?.symbol && currencyOut?.symbol)
 

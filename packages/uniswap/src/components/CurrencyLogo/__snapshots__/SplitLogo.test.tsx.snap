@@ -50,7 +50,7 @@ exports[`SplitLogo renders without error 1`] = `
           style={
             {
               "aspectRatio": undefined,
-              "backgroundColor": "#FFFFFF1F",
+              "backgroundColor": "rgba(255,255,255,0.12)",
               "borderRadius": 5,
               "objectFit": "contain",
             }
@@ -100,7 +100,7 @@ exports[`SplitLogo renders without error 1`] = `
           style={
             {
               "aspectRatio": undefined,
-              "backgroundColor": "#FFFFFF1F",
+              "backgroundColor": "rgba(255,255,255,0.12)",
               "borderRadius": 5,
               "objectFit": "contain",
             }

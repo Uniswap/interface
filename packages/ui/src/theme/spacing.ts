@@ -1,3 +1,6 @@
+/**
+ * Generic spacing tokens (padding, margin, etc)
+ */
 export const spacing = {
   none: 0,
   spacing1: 1,
@@ -12,6 +15,26 @@ export const spacing = {
   spacing28: 28,
   spacing32: 32,
   spacing36: 36,
+  spacing40: 40,
   spacing48: 48,
   spacing60: 60,
+}
+
+/**
+ * Spore variables for gap and padding will be displayed with all other spacing tokens.
+ */
+
+export const padding = {
+  padding6: spacing.spacing6,
+  padding8: spacing.spacing8,
+  padding12: spacing.spacing12,
+  padding16: spacing.spacing16,
+  padding20: spacing.spacing20,
+  padding36: spacing.spacing36,
+}
+
+export const gap = {
+  gap4: spacing.spacing4,
+  gap8: spacing.spacing8,
+  gap12: spacing.spacing12,
 }

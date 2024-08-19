@@ -1,7 +1,7 @@
 import i18n from 'i18next'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import { initReactI18next } from 'react-i18next'
-import enUsLocale from 'uniswap/src/i18n/locales/web-source/en-US.json'
+import enUsLocale from 'uniswap/src/i18n/locales/source/en-US.json'
 import { logger } from 'utilities/src/logger/logger'
 
 let isSetup = false
@@ -26,7 +26,7 @@ export function setupi18n(): undefined {
           return enUsLocale
         }
         // eslint-disable-next-line no-unsanitized/method
-        return import(`./locales/web-translations/${language}.json`)
+        return import(`./locales/translations/${language}.json`)
       }),
     )
     .on('failedLoading', (language, namespace, msg) => {

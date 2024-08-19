@@ -40,7 +40,7 @@ const StyledButton = css`
 `
 const StyledMenuFlyout = css`
   max-height: 350px;
-  min-width: 240px;
+  min-width: 256px;
   right: 0px;
   @media screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     left: 0px;
@@ -51,7 +51,7 @@ export default function TableNetworkFilter() {
   const theme = useTheme()
   const navigate = useNavigate()
   const [isMenuOpen, toggleMenu] = useReducer((s) => !s, false)
-  const isSupportedChainCallaback = useIsSupportedChainIdCallback()
+  const isSupportedChainCallback = useIsSupportedChainIdCallback()
   const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
 
   const exploreParams = useExploreParams()
@@ -91,7 +91,7 @@ export default function TableNetworkFilter() {
             )}
             {BACKEND_SUPPORTED_CHAINS.map((network) => {
               const chainId = supportedChainIdFromGQLChain(network)
-              const isSupportedChain = isSupportedChainCallaback(chainId)
+              const isSupportedChain = isSupportedChainCallback(chainId)
               const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId] : undefined
               return (
                 <InternalMenuItem
@@ -112,7 +112,7 @@ export default function TableNetworkFilter() {
               )
             })}
             {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
-              const isSupportedChain = isSupportedChainCallaback(network)
+              const isSupportedChain = isSupportedChainCallback(network)
               const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[network] : undefined
               return chainInfo ? (
                 <InternalMenuItem key={network} data-testid={`tokens-network-filter-option-${network}-chain`} disabled>

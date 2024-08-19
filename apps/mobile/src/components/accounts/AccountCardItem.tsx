@@ -7,7 +7,7 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, HapticFeedback, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -72,11 +72,11 @@ export function AccountCardItem({
   onPress,
 }: AccountCardItemProps): JSX.Element {
   const { t } = useTranslation()
-
   const dispatch = useDispatch()
+  const { hapticFeedback } = useHapticFeedback()
 
   const onPressCopyAddress = async (): Promise<void> => {
-    await HapticFeedback.impact()
+    await hapticFeedback.impact()
     await setClipboard(address)
     dispatch(
       pushNotification({

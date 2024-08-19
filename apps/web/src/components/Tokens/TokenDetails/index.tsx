@@ -154,7 +154,7 @@ function TDPSwapComponent() {
           initialInputCurrency={initialInputCurrency}
           initialOutputCurrency={currency}
           onCurrencyChange={handleCurrencyChange}
-          disableTokenInputs={currency.chainId !== account.chainId}
+          disableTokenInputs={account.isConnected && currency.chainId !== account.chainId}
           compact
         />
       </div>

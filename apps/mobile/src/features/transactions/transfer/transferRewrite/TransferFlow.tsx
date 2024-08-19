@@ -15,6 +15,7 @@ import { TradeProtocolPreference } from 'uniswap/src/features/transactions/trans
 import { SwapFormContextProvider, SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { TransactionModal } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { getFocusOnCurrencyFieldFromInitialState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 /**
  * @todo: The screens within this flow are not implemented.
@@ -26,10 +27,12 @@ export function TransferFlow(): JSX.Element {
   const fullscreen = screen === TransferScreen.TransferForm
   const onClose = useOnCloseSendModal()
 
+  const account = useActiveAccountWithThrow()
   const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
 
   return (
     <TransactionModal
+      account={account}
       fullscreen={fullscreen}
       modalName={ModalName.Send}
       openWalletRestoreModal={openWalletRestoreModal}

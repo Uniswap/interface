@@ -28,6 +28,7 @@ export const createFinalizedTxAction = (typeInfo: TransactionTypeInfo): ReturnTy
     ...finalizedTxAction.payload,
     typeInfo,
     id: txId,
+    addedTime: Date.now(),
   },
   type: 'transactions/finalizeTransaction',
 })

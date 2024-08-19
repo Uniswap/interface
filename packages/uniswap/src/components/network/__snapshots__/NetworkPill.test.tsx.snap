@@ -5,11 +5,11 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
   style={
     {
       "alignItems": "center",
-      "backgroundColor": "#2098531a",
+      "backgroundColor": "#21C95E1a",
       "borderBottomLeftRadius": 999999,
       "borderBottomRightRadius": 999999,
       "borderBottomWidth": 1,
-      "borderColor": "#209853",
+      "borderColor": "#21C95E",
       "borderLeftWidth": 1,
       "borderRightWidth": 1,
       "borderStyle": "solid",
@@ -31,7 +31,7 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#209853",
+        "color": "#21C95E",
         "fontFamily": "Basel-Book",
         "fontSize": 16,
         "lineHeight": 24,
@@ -50,7 +50,7 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
   style={
     {
       "alignItems": "center",
-      "backgroundColor": "#2098531a",
+      "backgroundColor": "#21C95E1a",
       "borderBottomLeftRadius": 999999,
       "borderBottomRightRadius": 999999,
       "borderBottomWidth": 1,
@@ -76,7 +76,7 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
     maxFontSizeMultiplier={1.4}
     style={
       {
-        "color": "#209853",
+        "color": "#21C95E",
         "fontFamily": "Basel-Book",
         "fontSize": 16,
         "lineHeight": 24,
@@ -95,7 +95,7 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
   style={
     {
       "alignItems": "center",
-      "backgroundColor": "#2098531a",
+      "backgroundColor": "#21C95E1a",
       "borderBottomLeftRadius": 8,
       "borderBottomRightRadius": 8,
       "borderBottomWidth": 1,
@@ -121,7 +121,7 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       {
-        "color": "#209853",
+        "color": "#21C95E",
         "fontFamily": "Basel-Medium",
         "fontSize": 12,
         "fontWeight": "500",

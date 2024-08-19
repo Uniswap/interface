@@ -14,6 +14,7 @@ import { useLocalizationContext } from 'wallet/src/features/language/Localizatio
 import { InsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
+import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { GasAndWarningRowsProps } from 'wallet/src/features/transactions/swap/GasAndWarningRowsProps'
 import { SwapWarningModal } from 'wallet/src/features/transactions/swap/SwapWarningModal'
@@ -21,23 +22,25 @@ import { useGasFeeHighRelativeToValue } from 'wallet/src/features/transactions/s
 import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
-import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { useIsBlocked } from 'wallet/src/features/trm/hooks'
 
 export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): JSX.Element {
   const isShort = useMedia().short
   const isShortMobileDevice = useIsShortMobileDevice()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
+  const { account } = useTransactionModalContext()
   const swapTxContext = useSwapTxContext()
   const { gasFee } = swapTxContext
   const { derivedSwapInfo } = useSwapFormContext()
 
   const { chainId, currencyAmountsUSDValue } = derivedSwapInfo
+  const inputUSDValue = currencyAmountsUSDValue[CurrencyField.INPUT]
   const outputUSDValue = currencyAmountsUSDValue[CurrencyField.OUTPUT]
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 
-  const { isBlocked } = useIsBlockedActiveAddress()
+  const { isBlocked } = useIsBlocked(account.address)
 
   const { formScreenWarning, insufficientGasFundsWarning, warnings } = useParsedSwapWarnings()
   const showFormWarning = formScreenWarning && formScreenWarning.displayedInline && !isBlocked
@@ -63,7 +66,7 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
     setShowWarningModal(true)
   }, [formScreenWarning?.warning.message])
 
-  const gasFeeHighRelativeToValue = useGasFeeHighRelativeToValue(gasFeeUSD, outputUSDValue)
+  const gasFeeHighRelativeToValue = useGasFeeHighRelativeToValue(gasFeeUSD, outputUSDValue ?? inputUSDValue)
   const gasColor = gasFeeHighRelativeToValue ? '$statusCritical' : '$neutral2'
 
   return (

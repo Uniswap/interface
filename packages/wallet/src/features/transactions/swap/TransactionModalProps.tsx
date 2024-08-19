@@ -4,6 +4,7 @@ import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { TransactionModalContextState } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 
 export type TransactionModalProps = PropsWithChildren<{
+  account: TransactionModalContextState['account']
   fullscreen: boolean
   modalName: ModalNameType
   onClose: () => void

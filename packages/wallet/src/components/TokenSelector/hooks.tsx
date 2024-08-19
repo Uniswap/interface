@@ -9,8 +9,8 @@ import {
   useCurrencyInfosToTokenOptions,
   usePortfolioBalancesForAddressById,
 } from 'uniswap/src/components/TokenSelector/hooks'
-import { TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
-import { getTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
+import { TokenOption, TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { PortfolioValueModifier } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
@@ -128,34 +128,32 @@ function ClearAll({ onPress }: { onPress: () => void }): JSX.Element {
   )
 }
 
-export function useTokenSectionsForEmptySearch(): GqlResult<TokenSection[]> {
-  const { t } = useTranslation()
+export function useTokenSectionsForEmptySearch(chainFilter: UniverseChainId | null): GqlResult<TokenSection[]> {
   const dispatch = useDispatch()
 
   const { popularTokens, loading } = usePopularWalletTokens()
 
   const searchHistory = useSelector(selectSearchHistory)
-  const recentlySearchedTokenOptions = filterRecentlySearchedTokenOptions(searchHistory as TokenSearchResult[])
+  const recentlySearchedTokenOptions = filterRecentlySearchedTokenOptions(
+    chainFilter,
+    searchHistory as TokenSearchResult[],
+  )
 
   // it's a depenedency of useMemo => useCallback
   const onPressClearSearchHistory = useCallback((): void => {
     dispatch(clearSearchHistory())
   }, [dispatch])
 
-  const sections = useMemo(
-    () => [
-      ...(getTokenOptionsSection(
-        t('tokens.selector.section.recent'),
-        recentlySearchedTokenOptions,
-        <ClearAll onPress={onPressClearSearchHistory} />,
-      ) ?? []),
-      ...(getTokenOptionsSection(
-        t('tokens.selector.section.popular'),
-        currencyInfosToTokenOptions(popularTokens?.map(gqlTokenToCurrencyInfo)),
-      ) ?? []),
-    ],
-    [onPressClearSearchHistory, popularTokens, recentlySearchedTokenOptions, t],
+  const recentSection = useTokenOptionsSection(
+    TokenOptionSection.RecentTokens,
+    recentlySearchedTokenOptions,
+    <ClearAll onPress={onPressClearSearchHistory} />,
   )
+  const popularSection = useTokenOptionsSection(
+    TokenOptionSection.PopularTokens,
+    currencyInfosToTokenOptions(popularTokens?.map(gqlTokenToCurrencyInfo)),
+  )
+  const sections = useMemo(() => [...(recentSection ?? []), ...(popularSection ?? [])], [popularSection, recentSection])
 
   return useMemo(
     () => ({

@@ -4,13 +4,14 @@ import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSel
 import {
   ConvertFiatAmountFormattedCallback,
   OnSelectCurrency,
-  TokenSection,
+  TokenSectionsForEmptySearchHookType,
 } from 'uniswap/src/components/TokenSelector/types'
-import { GqlResult } from 'uniswap/src/data/types'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 function _TokenSelectorEmptySearchList({
   onDismiss,
+  chainFilter,
   onSelectCurrency,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
@@ -18,6 +19,7 @@ function _TokenSelectorEmptySearchList({
   useTokenWarningDismissedHook,
 }: {
   onSelectCurrency: OnSelectCurrency
+  chainFilter: UniverseChainId | null
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
   onDismiss: () => void
@@ -25,11 +27,11 @@ function _TokenSelectorEmptySearchList({
     tokenWarningDismissed: boolean
     dismissWarningCallback: () => void
   }
-  useTokenSectionsForEmptySearchHook: () => GqlResult<TokenSection[]>
+  useTokenSectionsForEmptySearchHook: TokenSectionsForEmptySearchHookType
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const { data: sections, loading, error, refetch } = useTokenSectionsForEmptySearchHook()
+  const { data: sections, loading, error, refetch } = useTokenSectionsForEmptySearchHook(chainFilter)
 
   return (
     <TokenSelectorList

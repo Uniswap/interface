@@ -1,4 +1,4 @@
-import { Flex, Text, TouchableArea } from 'ui/src'
+import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 
@@ -8,6 +8,7 @@ export interface ActionCardItem {
   icon: JSX.Element
   elementName: ElementNameType
   badgeText?: string
+  containerProps?: FlexProps
   onPress?: () => void
   BackgroundImageWrapperCallback?: React.FC<{ children: React.ReactNode }>
 }
@@ -18,6 +19,7 @@ export const ActionCard = ({
   onPress,
   icon,
   elementName,
+  containerProps,
   BackgroundImageWrapperCallback,
 }: ActionCardItem): JSX.Element => (
   <Trace logPress element={elementName}>
@@ -30,7 +32,7 @@ export const ActionCard = ({
       onPress={onPress}
     >
       <BackgroundWrapper BackgroundImageWrapper={BackgroundImageWrapperCallback}>
-        <Flex centered shrink alignContent="center" gap="$spacing4" px="$spacing20" py="$spacing12">
+        <Flex centered shrink alignContent="center" gap="$spacing4" px="$spacing20" py="$spacing12" {...containerProps}>
           {icon}
           <Flex centered shrink alignContent="center">
             <Text textAlign="center" variant="buttonLabel3">

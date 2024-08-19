@@ -7,8 +7,6 @@ import '@reach/dialog/styles.css'
 import 'polyfills'
 // prettier-ignore
 import 'tracing'
-// prettier-ignore
-import 'setupRive'
 
 // adding this so webpack won't tree shake this away, sideEffects was giving trouble
 setupi18n()

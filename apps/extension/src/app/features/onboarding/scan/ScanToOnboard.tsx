@@ -210,7 +210,7 @@ export function ScanToOnboard(): JSX.Element {
           <Flex
             alignContent="center"
             alignItems="center"
-            backgroundColor={colors.sporeWhite.val}
+            backgroundColor={colors.white.val}
             borderColor="$surface3"
             borderRadius="$rounded16"
             borderWidth="$spacing1"
@@ -259,7 +259,7 @@ export function ScanToOnboard(): JSX.Element {
                   >
                     <QRCode
                       bgColor="transparent"
-                      fgColor={colors.sporeBlack.val}
+                      fgColor={colors.black.val}
                       size={QR_CODE_SIZE}
                       value={scantasticValue}
                     />

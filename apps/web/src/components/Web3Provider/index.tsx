@@ -2,6 +2,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { CustomUserProperties, InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { recentConnectorIdAtom } from 'components/Web3Provider/constants'
 import { queryClient, wagmiConfig } from 'components/Web3Provider/wagmi'
+import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
 import { useIsSupportedChainId } from 'constants/chains'
 import { RPC_PROVIDERS } from 'constants/providers'
 import { useAccount } from 'hooks/useAccount'
@@ -89,11 +90,12 @@ function Updater() {
   const [connectedWallets, addConnectedWallet] = useConnectedWallets()
   useEffect(() => {
     if (account.address && account.address !== previousAccount) {
-      const walletType = connector?.name ?? 'Network'
+      const walletName = connector?.name ?? 'Network'
+      const amplitudeWalletType = walletTypeToAmplitudeWalletType(connector?.type)
       const peerWalletAgent = provider ? getWalletMeta(provider)?.agent : undefined
 
       const isReconnect = connectedWallets.some(
-        (wallet) => wallet.account === account.address && wallet.walletType === walletType,
+        (wallet) => wallet.account === account.address && wallet.walletName === walletName,
       )
 
       provider
@@ -110,7 +112,8 @@ function Updater() {
       setUserProperty(CustomUserProperties.WALLET_ADDRESS, account.address)
       setUserProperty(CustomUserProperties.ALL_WALLET_ADDRESSES_CONNECTED, account.address, true)
 
-      setUserProperty(CustomUserProperties.WALLET_TYPE, walletType)
+      setUserProperty(CustomUserProperties.WALLET_TYPE, amplitudeWalletType)
+      setUserProperty(CustomUserProperties.WALLET_NAME, walletName)
       setUserProperty(CustomUserProperties.PEER_WALLET_AGENT, peerWalletAgent ?? '')
       if (account.chainId) {
         setUserProperty(CustomUserProperties.CHAIN_ID, account.chainId)
@@ -120,13 +123,14 @@ function Updater() {
       sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
         result: WalletConnectionResult.SUCCEEDED,
         wallet_address: account.address,
-        wallet_type: walletType,
+        wallet_name: walletName,
+        wallet_type: walletTypeToAmplitudeWalletType(connector?.type),
         is_reconnect: isReconnect,
         peer_wallet_agent: peerWalletAgent,
         page: currentPage,
       })
 
-      addConnectedWallet({ account: account.address, walletType })
+      addConnectedWallet({ account: account.address, walletName })
     }
   }, [
     account.address,

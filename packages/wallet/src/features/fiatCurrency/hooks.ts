@@ -8,7 +8,7 @@ import { FiatCurrencyComponents, getFiatCurrencyComponents } from 'utilities/src
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
-import { RootState } from 'wallet/src/state'
+import { WalletState } from 'wallet/src/state/walletReducer'
 
 /**
  * Helper function for getting the ISO currency code from our internal enum
@@ -112,7 +112,7 @@ export function useFiatCurrencyInfo(currency: FiatCurrency): FiatCurrencyInfo {
  * @returns currently selected fiat currency
  */
 export function useAppFiatCurrency(): FiatCurrency {
-  const { currentCurrency } = useSelector((state: RootState) => state.fiatCurrencySettings)
+  const { currentCurrency } = useSelector((state: WalletState) => state.fiatCurrencySettings)
   return currentCurrency
 }
 

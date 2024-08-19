@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { MobileState } from 'src/app/reducer'
+import { MobileState } from 'src/app/mobileReducer'
 import { monitoredSagas } from 'src/app/saga'
 import { SagaState, SagaStatus } from 'wallet/src/utils/saga'
 

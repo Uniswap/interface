@@ -104,64 +104,69 @@ exports[`LimitPriceError renders the limit price error correctly when there is a
 }
 
 <span
-  class=" _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <div
-      class="c0"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c1 c2 c3"
+        class="c0"
       >
         <div
-          class="c4"
-        >
-          <svg
-            fill="none"
-            height="20px"
-            stroke="#FF5F52"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1"
-            viewBox="0 0 24 24"
-            width="20px"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-            />
-            <line
-              x1="12"
-              x2="12"
-              y1="9"
-              y2="13"
-            />
-            <line
-              x1="12"
-              x2="12.01"
-              y1="17"
-              y2="17"
-            />
-          </svg>
-        </div>
-        <div
-          class="c5"
+          class="c1 c2 c3"
         >
           <div
-            class="c6 css-n8z49y"
+            class="c4"
           >
-            Market price not available
+            <svg
+              fill="none"
+              height="20px"
+              stroke="#FF5F52"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1"
+              viewBox="0 0 24 24"
+              width="20px"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+              />
+              <line
+                x1="12"
+                x2="12"
+                y1="9"
+                y2="13"
+              />
+              <line
+                x1="12"
+                x2="12.01"
+                y1="17"
+                y2="17"
+              />
+            </svg>
           </div>
           <div
-            class="c7 css-142zc9n"
+            class="c5"
           >
-            We are unable to calculate the current market price. To avoid submitting an order below market price, please check your network connection and try again.
+            <div
+              class="c6 css-n8z49y"
+            >
+              Market price not available
+            </div>
+            <div
+              class="c7 css-142zc9n"
+            >
+              We are unable to calculate the current market price. To avoid submitting an order below market price, please check your network connection and try again.
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </span>
   </span>
 </span>
 `;
@@ -270,64 +275,69 @@ exports[`LimitPriceError renders the limit price error correctly, inverted false
 }
 
 <span
-  class=" _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <div
-      class="c0"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c1 c2 c3"
+        class="c0"
       >
         <div
-          class="c4"
-        >
-          <svg
-            fill="none"
-            height="20px"
-            stroke="#FF5F52"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1"
-            viewBox="0 0 24 24"
-            width="20px"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-            />
-            <line
-              x1="12"
-              x2="12"
-              y1="9"
-              y2="13"
-            />
-            <line
-              x1="12"
-              x2="12.01"
-              y1="17"
-              y2="17"
-            />
-          </svg>
-        </div>
-        <div
-          class="c5"
+          class="c1 c2 c3"
         >
           <div
-            class="c6 css-n8z49y"
+            class="c4"
           >
-            Selling DAI below market price
+            <svg
+              fill="none"
+              height="20px"
+              stroke="#FF5F52"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1"
+              viewBox="0 0 24 24"
+              width="20px"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+              />
+              <line
+                x1="12"
+                x2="12"
+                y1="9"
+                y2="13"
+              />
+              <line
+                x1="12"
+                x2="12.01"
+                y1="17"
+                y2="17"
+              />
+            </svg>
           </div>
           <div
-            class="c7 css-142zc9n"
+            class="c5"
           >
-            Your limit price is 10% lower than market. Adjust your limit price to proceed.
+            <div
+              class="c6 css-n8z49y"
+            >
+              Selling DAI below market price
+            </div>
+            <div
+              class="c7 css-142zc9n"
+            >
+              Your limit price is 10% lower than market. Adjust your limit price to proceed.
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </span>
   </span>
 </span>
 `;
@@ -436,64 +446,69 @@ exports[`LimitPriceError renders the limit price error correctly, inverted false
 }
 
 <span
-  class=" _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <div
-      class="c0"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c1 c2 c3"
+        class="c0"
       >
         <div
-          class="c4"
-        >
-          <svg
-            fill="none"
-            height="20px"
-            stroke="#FF5F52"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1"
-            viewBox="0 0 24 24"
-            width="20px"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-            />
-            <line
-              x1="12"
-              x2="12"
-              y1="9"
-              y2="13"
-            />
-            <line
-              x1="12"
-              x2="12.01"
-              y1="17"
-              y2="17"
-            />
-          </svg>
-        </div>
-        <div
-          class="c5"
+          class="c1 c2 c3"
         >
           <div
-            class="c6 css-n8z49y"
+            class="c4"
           >
-            Selling DAI below market price
+            <svg
+              fill="none"
+              height="20px"
+              stroke="#FF5F52"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1"
+              viewBox="0 0 24 24"
+              width="20px"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+              />
+              <line
+                x1="12"
+                x2="12"
+                y1="9"
+                y2="13"
+              />
+              <line
+                x1="12"
+                x2="12.01"
+                y1="17"
+                y2="17"
+              />
+            </svg>
           </div>
           <div
-            class="c7 css-142zc9n"
+            class="c5"
           >
-            Your limit price is 10% lower than market. Adjust your limit price to proceed.
+            <div
+              class="c6 css-n8z49y"
+            >
+              Selling DAI below market price
+            </div>
+            <div
+              class="c7 css-142zc9n"
+            >
+              Your limit price is 10% lower than market. Adjust your limit price to proceed.
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </span>
   </span>
 </span>
 `;
@@ -602,64 +617,69 @@ exports[`LimitPriceError renders the limit price error correctly, inverted true 
 }
 
 <span
-  class=" _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <div
-      class="c0"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c1 c2 c3"
+        class="c0"
       >
         <div
-          class="c4"
-        >
-          <svg
-            fill="none"
-            height="20px"
-            stroke="#FF5F52"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1"
-            viewBox="0 0 24 24"
-            width="20px"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-            />
-            <line
-              x1="12"
-              x2="12"
-              y1="9"
-              y2="13"
-            />
-            <line
-              x1="12"
-              x2="12.01"
-              y1="17"
-              y2="17"
-            />
-          </svg>
-        </div>
-        <div
-          class="c5"
+          class="c1 c2 c3"
         >
           <div
-            class="c6 css-n8z49y"
+            class="c4"
           >
-            Buying USDC above market price.error
+            <svg
+              fill="none"
+              height="20px"
+              stroke="#FF5F52"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1"
+              viewBox="0 0 24 24"
+              width="20px"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+              />
+              <line
+                x1="12"
+                x2="12"
+                y1="9"
+                y2="13"
+              />
+              <line
+                x1="12"
+                x2="12.01"
+                y1="17"
+                y2="17"
+              />
+            </svg>
           </div>
           <div
-            class="c7 css-142zc9n"
+            class="c5"
           >
-            Your limit price is 10% higher than market. Adjust your limit price to proceed.
+            <div
+              class="c6 css-n8z49y"
+            >
+              Buying USDC above market price.error
+            </div>
+            <div
+              class="c7 css-142zc9n"
+            >
+              Your limit price is 10% higher than market. Adjust your limit price to proceed.
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </span>
   </span>
 </span>
 `;
@@ -768,64 +788,69 @@ exports[`LimitPriceError renders the limit price error correctly, inverted true 
 }
 
 <span
-  class="t_light is_inversed _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <div
-      class="c0"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c1 c2 c3"
+        class="c0"
       >
         <div
-          class="c4"
-        >
-          <svg
-            fill="none"
-            height="20px"
-            stroke="#FF5F52"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="1"
-            viewBox="0 0 24 24"
-            width="20px"
-            xmlns="http://www.w3.org/2000/svg"
-          >
-            <path
-              d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
-            />
-            <line
-              x1="12"
-              x2="12"
-              y1="9"
-              y2="13"
-            />
-            <line
-              x1="12"
-              x2="12.01"
-              y1="17"
-              y2="17"
-            />
-          </svg>
-        </div>
-        <div
-          class="c5"
+          class="c1 c2 c3"
         >
           <div
-            class="c6 css-n8z49y"
+            class="c4"
           >
-            Buying USDC above market price.error
+            <svg
+              fill="none"
+              height="20px"
+              stroke="#FF5F52"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="1"
+              viewBox="0 0 24 24"
+              width="20px"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"
+              />
+              <line
+                x1="12"
+                x2="12"
+                y1="9"
+                y2="13"
+              />
+              <line
+                x1="12"
+                x2="12.01"
+                y1="17"
+                y2="17"
+              />
+            </svg>
           </div>
           <div
-            class="c7 css-142zc9n"
+            class="c5"
           >
-            Your limit price is 10% higher than market. Adjust your limit price to proceed.
+            <div
+              class="c6 css-n8z49y"
+            >
+              Buying USDC above market price.error
+            </div>
+            <div
+              class="c7 css-142zc9n"
+            >
+              Your limit price is 10% higher than market. Adjust your limit price to proceed.
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </span>
   </span>
 </span>
 `;

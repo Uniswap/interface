@@ -23,12 +23,7 @@ export function _Caret({ size = '$icon.24', color, direction = 'n' }: Props): JS
   }
 
   return (
-    <ArrowChange
-      color={color ?? '$sporeBlack'}
-      size={size}
-      strokeWidth={2}
-      style={{ transform: [{ rotate: degree }] }}
-    />
+    <ArrowChange color={color ?? '$black'} size={size} strokeWidth={2} style={{ transform: [{ rotate: degree }] }} />
   )
 }
 

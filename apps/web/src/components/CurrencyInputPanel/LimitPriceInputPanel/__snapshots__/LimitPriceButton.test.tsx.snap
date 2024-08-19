@@ -109,54 +109,59 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly 1`] = 
 }
 
 <span
-  class=" _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <div
-      class="c0 c1"
-      width="unset"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      <button
-        class="c2"
+      <div
+        class="c0 c1"
+        width="unset"
       >
-        <div
-          class="c3 css-1guhfcl"
+        <button
+          class="c2"
         >
-          +
-          10%
-        </div>
-      </button>
-      <button
-        class="c4"
-      >
-        <svg
-          fill="none"
-          height="16"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="c3 css-1guhfcl"
+          >
+            +
+            10%
+          </div>
+        </button>
+        <button
+          class="c4"
         >
-          <line
-            x1="18"
-            x2="6"
-            y1="6"
-            y2="18"
-          />
-          <line
-            x1="6"
-            x2="18"
-            y1="6"
-            y2="18"
-          />
-        </svg>
-      </button>
-    </div>
+          <svg
+            fill="none"
+            height="16"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line
+              x1="18"
+              x2="6"
+              y1="6"
+              y2="18"
+            />
+            <line
+              x1="6"
+              x2="18"
+              y1="6"
+              y2="18"
+            />
+          </svg>
+        </button>
+      </div>
+    </span>
   </span>
 </span>
 `;
@@ -270,53 +275,58 @@ exports[`LimitCustomMarketPriceButton renders the custom amount correctly, negat
 }
 
 <span
-  class=" _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <div
-      class="c0 c1"
-      width="unset"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      <button
-        class="c2"
+      <div
+        class="c0 c1"
+        width="unset"
       >
-        <div
-          class="c3 css-1guhfcl"
+        <button
+          class="c2"
         >
-          -10%
-        </div>
-      </button>
-      <button
-        class="c4"
-      >
-        <svg
-          fill="none"
-          height="16"
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          width="16"
-          xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="c3 css-1guhfcl"
+          >
+            -10%
+          </div>
+        </button>
+        <button
+          class="c4"
         >
-          <line
-            x1="18"
-            x2="6"
-            y1="6"
-            y2="18"
-          />
-          <line
-            x1="6"
-            x2="18"
-            y1="6"
-            y2="18"
-          />
-        </svg>
-      </button>
-    </div>
+          <svg
+            fill="none"
+            height="16"
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <line
+              x1="18"
+              x2="6"
+              y1="6"
+              y2="18"
+            />
+            <line
+              x1="6"
+              x2="18"
+              y1="6"
+              y2="18"
+            />
+          </svg>
+        </button>
+      </div>
+    </span>
   </span>
 </span>
 `;
@@ -364,20 +374,25 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected
 }
 
 <span
-  class="t_light is_inversed _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <button
-      class="c0"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      <div
-        class="c1 css-1guhfcl"
+      <button
+        class="c0"
       >
-        Market
-      </div>
-    </button>
+        <div
+          class="c1 css-1guhfcl"
+        >
+          Market
+        </div>
+      </button>
+    </span>
   </span>
 </span>
 `;
@@ -425,20 +440,25 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled false and selected
 }
 
 <span
-  class=" _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <button
-      class="c0"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      <div
-        class="c1 css-1guhfcl"
+      <button
+        class="c0"
       >
-        Market
-      </div>
-    </button>
+        <div
+          class="c1 css-1guhfcl"
+        >
+          Market
+        </div>
+      </button>
+    </span>
   </span>
 </span>
 `;
@@ -473,20 +493,25 @@ exports[`LimitPresetPriceButton renders 0 correctly, disabled true and selected 
 }
 
 <span
-  class=" _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <button
-      class="c0"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      <div
-        class="c1 css-1guhfcl"
+      <button
+        class="c0"
       >
-        Market
-      </div>
-    </button>
+        <div
+          class="c1 css-1guhfcl"
+        >
+          Market
+        </div>
+      </button>
+    </span>
   </span>
 </span>
 `;
@@ -534,21 +559,26 @@ exports[`LimitPresetPriceButton renders 5 correctly, disabled false and selected
 }
 
 <span
-  class=" _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <button
-      class="c0"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      <div
-        class="c1 css-1guhfcl"
+      <button
+        class="c0"
       >
-        +
-        5%
-      </div>
-    </button>
+        <div
+          class="c1 css-1guhfcl"
+        >
+          +
+          5%
+        </div>
+      </button>
+    </span>
   </span>
 </span>
 `;
@@ -583,21 +613,26 @@ exports[`LimitPresetPriceButton renders 5 correctly, disabled true and selected 
 }
 
 <span
-  class=" _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <button
-      class="c0"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      <div
-        class="c1 css-1guhfcl"
+      <button
+        class="c0"
       >
-        +
-        5%
-      </div>
-    </button>
+        <div
+          class="c1 css-1guhfcl"
+        >
+          +
+          5%
+        </div>
+      </button>
+    </span>
   </span>
 </span>
 `;
@@ -645,21 +680,26 @@ exports[`LimitPresetPriceButton renders 10 correctly, disabled false and selecte
 }
 
 <span
-  class=" _dsp_contents"
+  class=""
+  style="display: contents;"
 >
   <span
-    class=" t_light _dsp_contents is_Theme"
+    class=" _dsp_contents"
   >
-    <button
-      class="c0"
+    <span
+      class=" t_light _dsp_contents is_Theme"
     >
-      <div
-        class="c1 css-1guhfcl"
+      <button
+        class="c0"
       >
-        +
-        10%
-      </div>
-    </button>
+        <div
+          class="c1 css-1guhfcl"
+        >
+          +
+          10%
+        </div>
+      </button>
+    </span>
   </span>
 </span>
 `;

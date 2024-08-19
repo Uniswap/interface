@@ -1,10 +1,10 @@
 import { useColorScheme } from 'react-native'
 import { useSelector } from 'react-redux'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
-import { RootState } from 'wallet/src/state'
+import { WalletState } from 'wallet/src/state/walletReducer'
 
 export function useCurrentAppearanceSetting(): AppearanceSettingType {
-  const { selectedAppearanceSettings } = useSelector((state: RootState) => state.appearanceSettings)
+  const { selectedAppearanceSettings } = useSelector((state: WalletState) => state.appearanceSettings)
   return selectedAppearanceSettings
 }
 

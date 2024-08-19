@@ -7,12 +7,12 @@ import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { selectPercent } from 'state/burn/v3/actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { AppState } from 'state/reducer'
+import { InterfaceState } from 'state/webReducer'
 import { PositionDetails } from 'types/position'
 import { Trans } from 'uniswap/src/i18n'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
-export function useBurnV3State(): AppState['burnV3'] {
+export function useBurnV3State(): InterfaceState['burnV3'] {
   return useAppSelector((state) => state.burnV3)
 }
 

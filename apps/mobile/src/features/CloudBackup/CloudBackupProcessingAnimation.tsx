@@ -9,6 +9,7 @@ import { backupMnemonicToCloudStorage } from 'src/features/CloudBackup/RNCloudSt
 import { Flex, Text } from 'ui/src'
 import { CheckmarkCircle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { logger } from 'utilities/src/logger/logger'
@@ -16,7 +17,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { promiseMinDelay } from 'utilities/src/time/timing'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccountIfExists } from 'wallet/src/features/wallet/hooks'
 
 type Props = {

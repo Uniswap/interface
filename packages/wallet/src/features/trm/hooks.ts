@@ -1,7 +1,7 @@
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 type ScreenResponse = {

@@ -73,25 +73,13 @@ const sagasInitializedOnStartup = [
 
 export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)
 
-export function* webRootSaga() {
+export function* rootExtensionSaga() {
   for (const s of sagasInitializedOnStartup) {
     yield* spawn(s)
   }
 
   const apolloClient = yield* call(apolloClientRef.onReady)
   yield* spawn(transactionWatcher, { apolloClient })
-
-  for (const m of Object.values(monitoredSagas)) {
-    yield* spawn(m.wrappedSaga)
-  }
-}
-
-const onboardingSagasInitializedOnStartup = [initProviders] as const
-
-export function* onboardingRootSaga() {
-  for (const s of onboardingSagasInitializedOnStartup) {
-    yield* spawn(s)
-  }
 
   for (const m of Object.values(monitoredSagas)) {
     yield* spawn(m.wrappedSaga)

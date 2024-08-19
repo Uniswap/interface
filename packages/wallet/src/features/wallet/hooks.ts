@@ -1,5 +1,6 @@
 import { useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { trimToLength } from 'utilities/src/primitives/string'
@@ -7,7 +8,7 @@ import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
-import { Account, AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import {
   makeSelectAccountNotificationSetting,
   selectAccounts,
@@ -22,7 +23,7 @@ import {
 } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { DisplayName, DisplayNameType } from 'wallet/src/features/wallet/types'
-import { RootState } from 'wallet/src/state'
+import { WalletState } from 'wallet/src/state/walletReducer'
 
 const ENS_TRIM_LENGTH = 8
 
@@ -108,7 +109,7 @@ export function useSwapProtectionSetting(): SwapProtectionSetting {
 
 export function useSelectAccountNotificationSetting(address: Address): boolean {
   const selectAccountNotificationSetting = useMemo(() => makeSelectAccountNotificationSetting(), [])
-  return useSelector((state: RootState) => selectAccountNotificationSetting(state, address))
+  return useSelector((state: WalletState) => selectAccountNotificationSetting(state, address))
 }
 
 export function useHideSmallBalancesSetting(): boolean {

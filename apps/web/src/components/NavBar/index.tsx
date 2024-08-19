@@ -105,7 +105,7 @@ export default function Navbar() {
           {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
           {isLandingPage && !isSmallScreen && <GetTheAppButton />}
           {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
-          {!hideChainSelector && <ChainSelector />}
+          {!hideChainSelector && <ChainSelector isNavSelector />}
           <Web3Status />
         </Right>
       </NavContents>

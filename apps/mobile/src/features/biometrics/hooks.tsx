@@ -5,7 +5,7 @@ import {
   supportedAuthenticationTypesAsync,
 } from 'expo-local-authentication'
 import { useSelector } from 'react-redux'
-import { MobileState } from 'src/app/reducer'
+import { MobileState } from 'src/app/mobileReducer'
 import { BiometricAuthenticationStatus, tryLocalAuthenticate } from 'src/features/biometrics'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { BiometricSettingsState } from 'src/features/biometrics/slice'

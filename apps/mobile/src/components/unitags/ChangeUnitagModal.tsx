@@ -245,7 +245,7 @@ export function ChangeUnitagModal({
             >
               {isCheckingUnitag || isChangeResponseLoading ? (
                 <Flex height={fonts.buttonLabel1.lineHeight}>
-                  <ActivityIndicator color={colors.sporeWhite.val} />
+                  <ActivityIndicator color={colors.white.val} />
                 </Flex>
               ) : (
                 t('unitags.editUsername.button.confirm')

@@ -18,6 +18,7 @@ export enum FeatureFlags {
   UniswapX,
 
   // Mobile
+  AATest,
   Datadog,
   ExtensionPromotionGA,
   FeedTab,
@@ -85,6 +86,7 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
   [FeatureFlags.ForAggregator, 'for-aggregator'],
   // Wallet Specific
+  [FeatureFlags.AATest, 'aatest1'],
   [FeatureFlags.Datadog, 'datadog'],
   [FeatureFlags.FeedTab, 'feed-tab'],
   [FeatureFlags.ForTransactionsFromGraphQL, 'for-from-graphql'],

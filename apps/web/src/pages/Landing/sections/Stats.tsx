@@ -221,7 +221,7 @@ function Cards({ inView }: { inView: boolean }) {
       <LeftTop>
         <StatCard
           title={t('stats.allTimeVolume')}
-          value={formatNumber({ input: 2 * 10 ** 12, type: NumberType.FiatTokenStats })}
+          value={formatNumber({ input: 2.2 * 10 ** 12, type: NumberType.FiatTokenStats })}
           delay={0}
           inView={inView}
         />

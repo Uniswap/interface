@@ -61,7 +61,7 @@ export function FiatValue({
       </ThemedText.BodySmall>
       {priceImpact && (
         <ThemedText.BodySmall color={priceImpactColor}>
-          <MouseoverTooltip text={<Trans i18nKey="swap.estimatedDifference.label" />}>
+          <MouseoverTooltip placement="right" text={<Trans i18nKey="swap.estimatedDifference.label" />}>
             ({formatPercent(priceImpact.multiply(-1))})
           </MouseoverTooltip>
         </ThemedText.BodySmall>

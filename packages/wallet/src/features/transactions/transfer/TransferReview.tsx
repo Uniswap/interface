@@ -1,6 +1,7 @@
 import { providers } from 'ethers'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { NumberType } from 'utilities/src/format/types'
@@ -15,7 +16,6 @@ import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/t
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountAddressWithThrow, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TransferFormProps {

@@ -11,7 +11,7 @@ import {
 import { SagaState } from 'wallet/src/utils/saga'
 
 // Sagas that are spawned at startup
-const sharedSagas = [initProviders, notificationWatcher] as const
+const walletSagas = [initProviders, notificationWatcher] as const
 
 export interface MonitoredSaga {
   // TODO(MOB-645): Add more specific types
@@ -32,7 +32,7 @@ export function getMonitoredSagaReducers(monitoredSagas: Record<string, Monitore
   )
 }
 
-export const sharedMonitoredSagas: Record<string, MonitoredSaga> = {
+export const walletMonitoredSagas: Record<string, MonitoredSaga> = {
   [transferTokenSagaName]: {
     name: transferTokenSagaName,
     wrappedSaga: transferTokenSaga,
@@ -41,12 +41,12 @@ export const sharedMonitoredSagas: Record<string, MonitoredSaga> = {
   },
 }
 
-export function* rootSaga() {
-  for (const s of sharedSagas) {
+export function* rootWalletSaga() {
+  for (const s of walletSagas) {
     yield* spawn(s)
   }
 
-  for (const m of Object.values(sharedMonitoredSagas)) {
+  for (const m of Object.values(walletMonitoredSagas)) {
     yield* spawn(m.wrappedSaga)
   }
 }

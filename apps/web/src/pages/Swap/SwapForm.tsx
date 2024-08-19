@@ -16,7 +16,6 @@ import ErrorIcon from 'components/Icons/Error'
 import Row from 'components/Row'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
-import PriceImpactWarning from 'components/swap/PriceImpactWarning'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
 import { Field } from 'components/swap/constants'
@@ -414,7 +413,10 @@ export function SwapForm({
 
     const marketPriceImpact = trade?.priceImpact ? computeRealizedPriceImpact(trade) : undefined
     const largerPriceImpact = largerPercentValue(marketPriceImpact, preTaxStablecoinPriceImpact)
-    return { priceImpactSeverity: warningSeverity(largerPriceImpact), largerPriceImpact }
+    return {
+      priceImpactSeverity: warningSeverity(largerPriceImpact),
+      largerPriceImpact: largerPriceImpact?.multiply(-1.0),
+    }
   }, [preTaxStablecoinPriceImpact, trade])
 
   const handleConfirmDismiss = useCallback(() => {
@@ -618,7 +620,6 @@ export function SwapForm({
           </OutputSwapSection>
         </div>
 
-        {showPriceImpactWarning && <PriceImpactWarning priceImpact={largerPriceImpact} />}
         <div>
           {swapIsUnsupported ? (
             <ButtonPrimary $borderRadius="16px" disabled={true}>
@@ -684,19 +685,8 @@ export function SwapForm({
                 id="swap-button"
                 data-testid="swap-button"
                 disabled={isUsingBlockedExtension || !getIsReviewableQuote(trade, tradeState, swapInputError)}
-                error={!swapInputError && priceImpactSeverity > 2 && allowance.state === AllowanceState.ALLOWED}
               >
-                <Text fontSize={20}>
-                  {swapInputError ? (
-                    swapInputError
-                  ) : routeIsSyncing || routeIsLoading ? (
-                    <Trans i18nKey="common.swap" />
-                  ) : priceImpactSeverity > 2 ? (
-                    <Trans i18nKey="swap.form.swapAnywayAction" />
-                  ) : (
-                    <Trans i18nKey="common.swap" />
-                  )}
-                </Text>
+                <Text fontSize={20}>{swapInputError ?? <Trans i18nKey="common.swap" />}</Text>
               </ButtonError>
             </Trace>
           )}

@@ -1,6 +1,8 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
+import { useAccount } from 'hooks/useAccount'
 import { useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
+import useParsedQueryString from 'hooks/useParsedQueryString'
 import styled from 'lib/styled-components'
 import { BuyFormButton } from 'pages/Swap/Buy/BuyFormButton'
 import { BuyFormContextProvider, ethCurrencyInfo, useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
@@ -24,6 +26,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { FiatOnRampEventName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -55,6 +58,7 @@ type BuyFormProps = {
 }
 
 function BuyFormInner({ disabled }: BuyFormProps) {
+  const { chainId } = useAccount()
   const { formatNumberOrString, convertToFiatAmount } = useFormatter()
   const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
 
@@ -81,6 +85,30 @@ function BuyFormInner({ disabled }: BuyFormProps) {
       setBuyFormState((state) => ({ ...state, selectedCountry: countryResult }))
     }
   }, [buyFormState.selectedCountry, countryResult, selectedCountry, setBuyFormState])
+
+  const parsedQs = useParsedQueryString()
+  useEffect(() => {
+    const quoteCurrencyCode = parsedQs.quoteCurrencyCode
+    const supportedToken = supportedTokens?.find((meldToken) => meldToken.meldCurrencyCode === quoteCurrencyCode)
+    // If currency code is specified and known to be supported, set it as the quote currency
+    if (quoteCurrencyCode && supportedToken) {
+      setBuyFormState((state) => ({
+        ...state,
+        quoteCurrency: supportedToken,
+      }))
+      return
+    }
+    // If connected to a non-mainnet chain, default to the native chain of that token if supported.
+    const supportedNativeToken = supportedTokens?.find((meldToken) => {
+      return meldToken.currencyInfo?.currency.chainId === chainId && meldToken.currencyInfo?.currency.isNative
+    })
+    if (chainId !== UniverseChainId.Mainnet && supportedNativeToken) {
+      setBuyFormState((state) => ({
+        ...state,
+        quoteCurrency: supportedNativeToken,
+      }))
+    }
+  }, [chainId, parsedQs, setBuyFormState, supportedTokens])
 
   return (
     <Trace page={InterfacePageNameLocal.Buy} logImpression>

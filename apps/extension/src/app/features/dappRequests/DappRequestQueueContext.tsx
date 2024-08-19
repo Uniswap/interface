@@ -11,6 +11,9 @@ import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { DappResponseType } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import { ExtensionState } from 'src/store/extensionReducer'
+import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { DappRequestAction } from 'uniswap/src/features/telemetry/types'
 import { TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -82,6 +85,19 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
       ...requestToConfirm,
       transactionTypeInfo,
     }
+    if (requestToConfirm.dappInfo) {
+      const { activeConnectedAddress, lastChainId } = requestToConfirm.dappInfo
+      const connectedAddresses = requestToConfirm.dappInfo.connectedAccounts.map((account) => account.address)
+      sendAnalyticsEvent(ExtensionEventName.DappRequest, {
+        action: DappRequestAction.Accept,
+        requestType: requestToConfirm.dappRequest.type,
+        dappUrl: requestToConfirm.senderTabInfo.url,
+        chainId: lastChainId,
+        activeConnectedAddress,
+        connectedAddresses,
+      })
+    }
+
     if (isDappRequestWithDappInfo(requestWithTxInfo)) {
       await dispatch(confirmRequest(requestWithTxInfo))
     } else {
@@ -92,6 +108,18 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
   }
 
   const onCancel = async (requestToCancel: DappRequestStoreItem): Promise<void> => {
+    if (requestToCancel.dappInfo) {
+      const { activeConnectedAddress, lastChainId } = requestToCancel.dappInfo
+      const connectedAddresses = requestToCancel.dappInfo.connectedAccounts.map((account) => account.address)
+      sendAnalyticsEvent(ExtensionEventName.DappRequest, {
+        action: DappRequestAction.Reject,
+        requestType: requestToCancel.dappRequest.type,
+        dappUrl: requestToCancel.senderTabInfo.url,
+        chainId: lastChainId,
+        activeConnectedAddress,
+        connectedAddresses,
+      })
+    }
     await dispatch(
       rejectRequest({
         senderTabInfo: requestToCancel.senderTabInfo,

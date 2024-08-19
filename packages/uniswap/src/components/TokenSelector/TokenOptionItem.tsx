@@ -72,7 +72,14 @@ function _TokenOptionItem({
         width="100%"
         onPress={onPressTokenOption}
       >
-        <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" py="$spacing12">
+        <Flex
+          row
+          alignItems="center"
+          data-testid={`token-option-${currency.chainId}-${currency.symbol}`}
+          gap="$spacing8"
+          justifyContent="space-between"
+          py="$spacing12"
+        >
           <Flex row shrink alignItems="center" gap={isWeb ? '$spacing8' : '$spacing12'}>
             <TokenLogo
               chainId={currency.chainId}

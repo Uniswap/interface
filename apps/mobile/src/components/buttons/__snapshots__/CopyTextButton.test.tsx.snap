@@ -16,7 +16,7 @@ exports[`CopyTextButton renders without error 1`] = `
   style={
     {
       "alignItems": "center",
-      "backgroundColor": "#2222220D",
+      "backgroundColor": "rgba(34,34,34,0.05)",
       "borderBottomColor": "transparent",
       "borderBottomLeftRadius": 16,
       "borderBottomRightRadius": 16,
