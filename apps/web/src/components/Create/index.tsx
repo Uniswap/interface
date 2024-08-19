@@ -11,6 +11,8 @@ import dayjs from 'dayjs';
 import utc from 'dayjs/plugin/utc';
 import TimePickerValue from './TimePickerValue';
 import { useEffect, useState } from 'react';
+import { ethers } from 'ethers';
+import UniswapV3StakerABI from './UniswapV3StakerABI.json'; // Import your contract ABI
 
 dayjs.extend(utc);
 
@@ -173,7 +175,7 @@ export default function Create() {
 
     const handleInputChange = (setter: SetterFunction,
         validator: ValidatorFunction,
-        errorKey: keyof typeof errorMessages, // Ensure this is a valid key for errorMessages state
+        errorKey: keyof typeof errorMessages,
         event: React.ChangeEvent<HTMLInputElement>) => {
         const value = event.target.value;
         setter(value);
@@ -208,13 +210,46 @@ export default function Create() {
     const handleVestingPeriodChange = (e: React.ChangeEvent<HTMLInputElement>) =>
         handleInputChange(setVestingPeriod, (val) => /^\d*\.?\d*$/.test(val), 'vestingPeriod', e);
 
-
-    const createIncentive = () => {
+    const createIncentive = async () => {
         if (!rewardTokenAddress) setErrorMessages((prev) => ({ ...prev, rewardToken: 'The reward token address is required.' }));
         if (!rewardsAmount) setErrorMessages((prev) => ({ ...prev, rewardsAmount: 'The reward amount is required.' }));
         if (!poolAddress) setErrorMessages((prev) => ({ ...prev, poolAddress: 'The pool address is required.' }));
         if (!vestingPeriod) setErrorMessages((prev) => ({ ...prev, vestingPeriod: 'The vesting period is required.' }));
         if (!refundeeAddress) setErrorMessages((prev) => ({ ...prev, refundeeAddress: 'The refundee address is required.' }));
+
+        if (rewardTokenAddress && rewardsAmount && poolAddress && vestingPeriod && refundeeAddress) {
+            try {
+                // Connect to Ethereum
+                const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
+                const signer = provider.getSigner();
+
+                // Create contract instance
+                const contractAddress = '0x1dfE3eEcbC234F2795Df358DD8Cc8DFAbdF38715';
+                const contract = new ethers.Contract(contractAddress, UniswapV3StakerABI as any, signer);
+
+                // Prepare parameters for createIncentive function
+                const startedTime = Math.floor(new Date(`${startDate} ${startTime}`).getTime() / 1000);
+                const endedTime = Math.floor(new Date(`${endDate} ${endTime}`).getTime() / 1000);
+                const reward = ethers.utils.parseUnits(rewardsAmount, 18); // Adjust decimals as needed
+
+                const incentiveKey = {
+                    rewardToken: rewardTokenAddress,
+                    pool: poolAddress,
+                    startTime: startedTime,
+                    endTime: endedTime,
+                    refundee: refundeeAddress,
+                };
+
+                // Call createIncentive function
+                const tx = await contract.createIncentive(incentiveKey, reward);
+                await tx.wait(); // Wait for the transaction to be mined
+
+                alert('Incentive created successfully!');
+            } catch (error) {
+                console.error(error);
+                alert('Failed to create incentive: ' + error.message);
+            }
+        }
     };
 
     return (
