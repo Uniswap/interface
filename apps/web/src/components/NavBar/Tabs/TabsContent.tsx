@@ -85,7 +85,12 @@ export const useTabsContent = (): TabsSection[] => {
         {
           title: t('common.pool'),
           href: '/pool',
-          isActive: pathname.startsWith('/pools'),
+          isActive: pathname.startsWith('/pool'),
+        },
+        {
+          title: t('common.farms'),
+          href: '/farms',
+          isActive: pathname.startsWith('/farms'),
         },
       ]
 }

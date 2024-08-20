@@ -99,8 +99,8 @@ exports[`ConfirmSwapModal/Head should render correctly for a Limit order 1`] = `
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #15AC5B;
+  stroke: #15AC5B;
   font-weight: 500;
 }
 
@@ -349,8 +349,8 @@ exports[`ConfirmSwapModal/Head should render correctly for a classic swap 1`] = 
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #15AC5B;
+  stroke: #15AC5B;
   font-weight: 500;
 }
 

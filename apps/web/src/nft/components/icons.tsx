@@ -1,25 +1,29 @@
-import React from 'react'
-import styled, { useTheme } from 'styled-components'
+import React from "react";
+import styled, { useTheme } from "styled-components";
 
-import { themeVars, vars } from '../css/sprinkles.css'
+import { themeVars, vars } from "../css/sprinkles.css";
 
 // ESLint reports `fill` is missing, whereas it exists on an SVGProps type
 type SVGProps = React.SVGProps<SVGSVGElement> & {
-  fill?: string
-  height?: string | number
-  width?: string | number
-  gradientId?: string
-}
+  fill?: string;
+  height?: string | number;
+  width?: string | number;
+  gradientId?: string;
+};
 
 export const ChevronUpIcon = ({
   secondaryColor,
   secondaryWidth,
   secondaryHeight,
   ...props
-}: SVGProps & { secondaryWidth?: string; secondaryHeight?: string; secondaryColor?: string }) => (
+}: SVGProps & {
+  secondaryWidth?: string;
+  secondaryHeight?: string;
+  secondaryColor?: string;
+}) => (
   <svg
-    width={secondaryWidth || '29'}
-    height={secondaryHeight || '28'}
+    width={secondaryWidth || "29"}
+    height={secondaryHeight || "28"}
     viewBox="0 0 29 28"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -33,22 +37,40 @@ export const ChevronUpIcon = ({
     </g>
     <defs>
       <clipPath id="clip0_564_11230">
-        <rect width="28" height="28" fill="white" transform="translate(0.716797)" />
+        <rect
+          width="28"
+          height="28"
+          fill="white"
+          transform="translate(0.716797)"
+        />
       </clipPath>
     </defs>
   </svg>
-)
+);
 
 export const BackArrowIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 28 28" {...props}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="28"
+    height="28"
+    viewBox="0 0 28 28"
+    {...props}
+  >
     <path d="M5.676 13.645c0 .263.114.527.316.72l5.801 5.792c.21.202.44.3.694.3.554 0 .958-.396.958-.933a.934.934 0 00-.29-.694l-1.977-2.004-2.55-2.329 2.049.123h10.652c.58 0 .985-.404.985-.975 0-.58-.405-.985-.985-.985H10.677l-2.04.123 2.54-2.329 1.978-2.004a.934.934 0 00.29-.694c0-.536-.404-.932-.958-.932-.255 0-.492.097-.72.317l-5.775 5.774a1.012 1.012 0 00-.316.73z" />
   </svg>
-)
+);
 
 export const VerifiedIcon = (props: SVGProps) => {
-  const theme = useTheme()
+  const theme = useTheme();
   return (
-    <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+    <svg
+      width="20"
+      height="20"
+      viewBox="0 0 20 20"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      {...props}
+    >
       <path
         d="M4.52795 13.8056C4.52719 14.4043 4.6712 14.8474 4.95997 15.135C5.24798 15.4233 5.68496 15.5651 6.27091 15.5605H7.57497C7.62945 15.5585 7.68379 15.5676 7.73463 15.5873C7.78547 15.607 7.83176 15.6369 7.87062 15.6752L8.79884 16.5928C9.22054 17.0142 9.63382 17.2237 10.0387 17.2214C10.4436 17.2191 10.8569 17.0096 11.2786 16.5928L12.1954 15.6752C12.2356 15.6365 12.2832 15.6063 12.3354 15.5866C12.3876 15.5669 12.4433 15.558 12.499 15.5605H13.7951C14.3871 15.5613 14.8283 15.4171 15.1186 15.1281C15.4089 14.839 15.5541 14.3959 15.5541 13.7987V12.5014C15.5511 12.389 15.5923 12.2799 15.6687 12.1974L16.5854 11.2798C17.0125 10.86 17.2245 10.4467 17.2214 10.0399C17.2184 9.63305 17.0064 9.21935 16.5854 8.79878L15.6687 7.88115C15.592 7.79886 15.5509 7.68965 15.5541 7.57719V6.2799C15.5533 5.68191 15.4093 5.23878 15.1221 4.95049C14.8348 4.66221 14.3925 4.51806 13.7951 4.51806H12.499C12.4433 4.52036 12.3877 4.51138 12.3355 4.49168C12.2834 4.47197 12.2357 4.44193 12.1954 4.40336L11.2786 3.48574C10.8569 3.06439 10.4436 2.85487 10.0387 2.85717C9.63382 2.85946 9.22054 3.06898 8.79884 3.48574L7.87062 4.40336C7.83164 4.44148 7.78536 4.4713 7.73454 4.49101C7.68373 4.51072 7.62943 4.51993 7.57497 4.51806H6.27091C5.67961 4.51883 5.23995 4.66182 4.95194 4.94705C4.66393 5.23228 4.51992 5.67656 4.51992 6.2799V7.58063C4.52314 7.69309 4.48197 7.80229 4.40533 7.88459L3.48859 8.80222C3.06765 9.22203 2.85718 9.63572 2.85718 10.0433C2.85718 10.4509 3.07033 10.8653 3.49662 11.2867L4.41336 12.2043C4.48979 12.2867 4.53092 12.3958 4.52795 12.5083V13.8056Z"
         fill={theme.accent1}
@@ -58,17 +80,23 @@ export const VerifiedIcon = (props: SVGProps) => {
         fill="white"
       />
     </svg>
-  )
-}
+  );
+};
 
 export const XMarkIcon = (props: SVGProps) => (
-  <svg width="40" height="40" viewBox="0 0 40 40" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="40"
+    height="40"
+    viewBox="0 0 40 40"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       fill={props.fill ?? themeVars.colors.neutral2}
       d="M10.2706 27.2148C9.74321 27.7421 9.7181 28.6838 10.2831 29.2362C10.8356 29.7887 11.7773 29.7761 12.3046 29.2488L19.9887 21.5521L27.6855 29.2488C28.2254 29.7887 29.1545 29.7887 29.7069 29.2362C30.2468 28.6712 30.2594 27.7547 29.7069 27.2148L22.0228 19.518L29.7069 11.8339C30.2594 11.294 30.2594 10.3649 29.7069 9.81241C29.1419 9.27251 28.2254 9.25995 27.6855 9.79985L19.9887 17.4966L12.3046 9.79985C11.7773 9.27251 10.823 9.2474 10.2831 9.81241C9.73066 10.3649 9.74321 11.3065 10.2706 11.8339L17.9673 19.518L10.2706 27.2148Z"
     />
   </svg>
-)
+);
 
 export const ExternalIcon = (props: SVGProps) => (
   <svg {...props} viewBox="0 0 28 28" xmlns="http://www.w3.org/2000/svg">
@@ -79,10 +107,16 @@ export const ExternalIcon = (props: SVGProps) => (
       fill={props.fill}
     />
   </svg>
-)
+);
 
 export const InstagramIcon = (props: SVGProps) => (
-  <svg role="img" viewBox="-3 -3 23 23" xmlns="http://www.w3.org/2000/svg" {...props} fill="none">
+  <svg
+    role="img"
+    viewBox="-3 -3 23 23"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    fill="none"
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -90,7 +124,7 @@ export const InstagramIcon = (props: SVGProps) => (
       fill={props.fill}
     />
   </svg>
-)
+);
 
 export const EllipsisIcon = (props: SVGProps) => (
   <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -116,10 +150,17 @@ export const EllipsisIcon = (props: SVGProps) => (
       strokeLinejoin="round"
     />
   </svg>
-)
+);
 
 export const LightningBoltIcon = (props: SVGProps) => (
-  <svg {...props} width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    {...props}
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       d="M6.51562 12.6003C6.51562 12.9092 6.7567 13.1427 7.08817 13.1427H11.4576L9.15988 19.3126C8.851 20.1338 9.70229 20.5707 10.2447 19.9078L17.281 11.1991C17.4166 11.0258 17.4844 10.8676 17.4844 10.6943C17.4844 10.3779 17.2433 10.1519 16.9118 10.1519H12.5424L14.8401 3.97447C15.149 3.15332 14.2977 2.71638 13.7553 3.38686L6.72656 12.0956C6.59096 12.2613 6.51562 12.4195 6.51562 12.6003Z"
       fill="#FB118E"
@@ -138,7 +179,7 @@ export const LightningBoltIcon = (props: SVGProps) => (
       </linearGradient>
     </defs>
   </svg>
-)
+);
 
 export const SweepIcon = (props: SVGProps) => (
   <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -154,30 +195,43 @@ export const SweepIcon = (props: SVGProps) => (
       fill="currentColor"
     />
   </svg>
-)
+);
 
 export const CrossIcon = (props: SVGProps) => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="28"
+    height="28"
+    viewBox="0 0 28 28"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       d="M9.0304 17.9341C8.66126 18.3032 8.64369 18.9624 9.03919 19.3403C9.41712 19.7358 10.0851 19.7183 10.4542 19.3491L14.7169 15.0864L18.9796 19.3491C19.3576 19.7271 20.0079 19.7358 20.3859 19.3403C20.7814 18.9624 20.7726 18.3032 20.3947 17.9253L16.132 13.6626L20.3947 9.40869C20.7726 9.02197 20.7814 8.37158 20.3859 7.99365C20.0079 7.59814 19.3576 7.60693 18.9796 7.98486L14.7169 12.2476L10.4542 7.98486C10.0851 7.61572 9.41712 7.59814 9.03919 7.99365C8.64369 8.37158 8.66126 9.03076 9.0304 9.3999L13.2931 13.6626L9.0304 17.9341Z"
       fill="currentColor"
     />
   </svg>
-)
+);
 
 export const ArrowsIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       d="M8.5166 5.71191C8.91211 5.29883 9.52734 5.30762 9.91406 5.71191L14.3438 10.2471C14.5195 10.4229 14.6338 10.6953 14.6338 10.9326C14.6338 11.4863 14.2471 11.8643 13.7021 11.8643C13.4385 11.8643 13.2275 11.7764 13.0518 11.5918L11.2412 9.71094L10.0811 8.375L10.1514 10.2383L10.1514 21.6465C10.1514 22.1914 9.75586 22.5869 9.21094 22.5869C8.66602 22.5869 8.2793 22.1914 8.2793 21.6465L8.2793 10.2383L8.34082 8.375L7.18945 9.71094L5.37891 11.5918C5.20313 11.7764 4.9834 11.8643 4.71973 11.8643C4.18359 11.8643 3.79688 11.4863 3.79688 10.9326C3.79688 10.6953 3.91113 10.4229 4.08691 10.2471L8.5166 5.71191ZM20.1533 22.2793C19.7578 22.6924 19.1426 22.6836 18.7559 22.2793L14.3262 17.7529C14.1504 17.5684 14.0361 17.2959 14.0361 17.0586C14.0361 16.5137 14.4229 16.1357 14.9678 16.1357C15.2227 16.1357 15.4424 16.2236 15.6182 16.3994L17.4287 18.2803L18.5801 19.6162L18.5186 17.7529L18.5186 6.34473C18.5186 5.80859 18.9141 5.4043 19.459 5.4043C19.9951 5.4043 20.3906 5.80859 20.3906 6.34473L20.3906 17.7529L20.3291 19.6162L21.4805 18.2803L23.291 16.3994C23.4668 16.2236 23.6865 16.1357 23.9414 16.1357C24.4863 16.1357 24.873 16.5137 24.873 17.0586C24.873 17.2959 24.7588 17.5684 24.583 17.7529L20.1533 22.2793Z"
       fill="currentColor"
     />
   </svg>
-)
+);
 
 export const ReversedArrowsIcon = (props: SVGProps & { size?: string }) => (
   <svg
-    width={props.size ?? '20'}
-    height={props.size ?? '20'}
+    width={props.size ?? "20"}
+    height={props.size ?? "20"}
     viewBox="0 3 24 24"
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
@@ -188,10 +242,16 @@ export const ReversedArrowsIcon = (props: SVGProps & { size?: string }) => (
       fill="currentColor"
     />
   </svg>
-)
+);
 
 export const RarityVerifiedIcon = () => (
-  <svg width="17" height="17" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    width="17"
+    height="17"
+    viewBox="0 0 15 15"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       d="M4.5686 3.53439C4.74662 3.33093 5.0038 3.21423 5.27414 3.21423L10.1451 3.21423C10.4154 3.21423 10.6726 3.33093 10.8506 3.53438L13.0437 6.04077C13.3654 6.40839 13.3509 6.96139 13.0104 7.31163L8.38181 12.0724C8.01367 12.4511 7.40558 12.4511 7.03744 12.0724L2.40887 7.31163C2.06836 6.96139 2.05385 6.40839 2.37552 6.04077L4.5686 3.53439Z"
       fill="#4673FA"
@@ -201,10 +261,17 @@ export const RarityVerifiedIcon = () => (
       fill="white"
     />
   </svg>
-)
+);
 
 export const BrokenLinkIcon = (props: SVGProps) => (
-  <svg width="21" height="21" viewBox="0 0 21 21" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="21"
+    height="21"
+    viewBox="0 0 21 21"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <g clipPath="url(#clip0_79_4612)">
       <path
         d="M14.4344 11.3181L16.9344 8.81813C17.6934 8.03229 18.1133 6.97978 18.1039 5.8873C18.0944 4.79481 17.6562 3.74976 16.8836 2.97722C16.1111 2.20469 15.066 1.76649 13.9735 1.75699C12.8811 1.7475 11.8286 2.16748 11.0427 2.92647L9.60938 4.35147"
@@ -230,23 +297,40 @@ export const BrokenLinkIcon = (props: SVGProps) => (
     </g>
     <defs>
       <clipPath id="clip0_79_4612">
-        <rect width="20" height="20" fill="white" transform="translate(0.128906 0.0341797)" />
+        <rect
+          width="20"
+          height="20"
+          fill="white"
+          transform="translate(0.128906 0.0341797)"
+        />
       </clipPath>
     </defs>
   </svg>
-)
+);
 
 export const RowsCollpsedIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    width="28"
+    height="28"
+    viewBox="0 0 28 28"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       d="M13.9912 5.42773C13.71 5.42773 13.4639 5.55957 13.1738 5.78809L7.24121 10.5869C7.03027 10.7627 6.89844 11.0264 6.89844 11.3516C6.89844 11.9492 7.38184 12.3887 7.93555 12.3887C8.19043 12.3887 8.44531 12.292 8.7002 12.0898L14 7.81836L19.291 12.0898C19.5371 12.292 19.8008 12.3887 20.0557 12.3887C20.6094 12.3887 21.0928 11.9492 21.0928 11.3516C21.0928 11.0264 20.9609 10.7627 20.75 10.5869L14.8086 5.78809C14.5273 5.55957 14.2812 5.42773 13.9912 5.42773ZM13.9912 21.7139C14.2812 21.7139 14.5273 21.5908 14.8086 21.3623L20.75 16.5635C20.9609 16.3789 21.0928 16.1152 21.0928 15.7988C21.0928 15.1924 20.6094 14.7529 20.0557 14.7529C19.8008 14.7529 19.5371 14.8584 19.291 15.0605L14 19.332L8.7002 15.0605C8.44531 14.8584 8.19043 14.7529 7.93555 14.7529C7.38184 14.7529 6.89844 15.1924 6.89844 15.7988C6.89844 16.1152 7.03027 16.3789 7.24121 16.5635L13.1738 21.3535C13.4639 21.5908 13.71 21.7139 13.9912 21.7139Z"
       fill="#70757A"
     />
   </svg>
-)
+);
 
 export const RowsExpandedIcon = () => (
-  <svg width="28" height="28" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    width="28"
+    height="28"
+    viewBox="0 0 28 28"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       d="M13.9912 11.9609C14.2812 11.9609 14.5273 11.8379 14.8086 11.6094L20.75 6.81055C20.9609 6.62598 21.0928 6.3623 21.0928 6.0459C21.0928 5.43945 20.6094 5 20.0557 5C19.8008 5 19.5371 5.10547 19.291 5.30762L14 9.5791L8.7002 5.30762C8.44531 5.10547 8.19043 5 7.93555 5C7.38184 5 6.89844 5.43945 6.89844 6.0459C6.89844 6.3623 7.03027 6.62598 7.24121 6.81055L13.1738 11.6006C13.4639 11.8379 13.71 11.9609 13.9912 11.9609Z"
       fill="#70757A"
@@ -256,19 +340,32 @@ export const RowsExpandedIcon = () => (
       fill="#70757A"
     />
   </svg>
-)
+);
 
 export const ClockIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       d="M10.7474 4.99984C10.7474 4.58562 10.4116 4.24984 9.9974 4.24984C9.58318 4.24984 9.2474 4.58562 9.2474 4.99984H10.7474ZM9.9974 9.99984H9.2474C9.2474 10.2839 9.4079 10.5436 9.66199 10.6707L9.9974 9.99984ZM12.9953 12.3373C13.3658 12.5226 13.8163 12.3724 14.0015 12.0019C14.1868 11.6314 14.0366 11.1809 13.6661 10.9957L12.9953 12.3373ZM17.5807 9.99984C17.5807 14.188 14.1856 17.5832 9.9974 17.5832V19.0832C15.014 19.0832 19.0807 15.0164 19.0807 9.99984H17.5807ZM9.9974 17.5832C5.80924 17.5832 2.41406 14.188 2.41406 9.99984H0.914062C0.914062 15.0164 4.98081 19.0832 9.9974 19.0832V17.5832ZM2.41406 9.99984C2.41406 5.81168 5.80924 2.4165 9.9974 2.4165V0.916504C4.98081 0.916504 0.914062 4.98325 0.914062 9.99984H2.41406ZM9.9974 2.4165C14.1856 2.4165 17.5807 5.81168 17.5807 9.99984H19.0807C19.0807 4.98325 15.014 0.916504 9.9974 0.916504V2.4165ZM9.2474 4.99984V9.99984H10.7474V4.99984H9.2474ZM9.66199 10.6707L12.9953 12.3373L13.6661 10.9957L10.3328 9.32902L9.66199 10.6707Z"
       fill={vars.color.neutral2}
     />
   </svg>
-)
+);
 
 export const ApprovedCheckmarkIcon = (props: SVGProps) => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <g id="Icon">
       <path
         id="Vector"
@@ -277,16 +374,23 @@ export const ApprovedCheckmarkIcon = (props: SVGProps) => (
       />
     </g>
   </svg>
-)
+);
 
 export const FilterIcon = (props: SVGProps) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       fill="currentColor"
       d="M5.5 3H18.5C19.328 3 20 3.672 20 4.5V6.75699C20 7.15499 19.842 7.53599 19.561 7.81799L14.4399 12.939C14.1589 13.22 14.001 13.602 14.001 14V21L10.001 18V14C10.001 13.602 9.84302 13.221 9.56202 12.939L4.44104 7.81799C4.16004 7.53699 4.00196 7.15499 4.00196 6.75699V4.5C3.99996 3.672 4.672 3 5.5 3Z"
     />
   </svg>
-)
+);
 
 export const NavMagnifyingGlassIcon = () => (
   <svg
@@ -304,12 +408,25 @@ export const NavMagnifyingGlassIcon = () => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <path d="M21 21L16 16" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M21 21L16 16"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
-)
+);
 
 export const BagIcon = (props: SVGProps) => (
-  <svg fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" {...props}>
+  <svg
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    {...props}
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -317,10 +434,16 @@ export const BagIcon = (props: SVGProps) => (
       fill="currentColor"
     />
   </svg>
-)
+);
 
 export const HundredsOverflowIcon = () => (
-  <svg width="8" height="12" viewBox="0 0 8 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    width="8"
+    height="12"
+    viewBox="0 0 8 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       d="M0.781304 6.5554C0.565868 6.5554 0.381209 6.47964 0.227327 6.32812C0.073444 6.17661 -0.00231359 5.99195 5.38039e-05 5.77415C-0.00231359 5.56108 0.073444 5.37879 0.227327 5.22727C0.381209 5.07576 0.565868 5 0.781304 5C0.989637 5 1.17075 5.07576 1.32463 5.22727C1.48088 5.37879 1.56019 5.56108 1.56255 5.77415C1.56019 5.91856 1.52231 6.04995 1.44892 6.16832C1.37789 6.2867 1.2832 6.38139 1.16483 6.45242C1.04882 6.52107 0.920982 6.5554 0.781304 6.5554Z"
       fill="white"
@@ -334,10 +457,17 @@ export const HundredsOverflowIcon = () => (
       fill="white"
     />
   </svg>
-)
+);
 
 export const TagIcon = (props: SVGProps) => (
-  <svg fill="none" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" {...props}>
+  <svg
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    {...props}
+  >
     <path
       d="M8.33333 8.33333H8.34097M20.7908 14.2092L14.2183 20.7817C14.0481 20.9521 13.8459 21.0873 13.6233 21.1796C13.4007 21.2719 13.1622 21.3194 12.9213 21.3194C12.6803 21.3194 12.4418 21.2719 12.2192 21.1796C11.9966 21.0873 11.7944 20.9521 11.6242 20.7817L3.75 12.9167V3.75H12.9167L20.7908 11.6242C21.1323 11.9677 21.324 12.4323 21.324 12.9167C21.324 13.401 21.1323 13.8657 20.7908 14.2092Z"
       stroke="currentColor"
@@ -346,19 +476,32 @@ export const TagIcon = (props: SVGProps) => (
       strokeLinejoin="round"
     />
   </svg>
-)
+);
 
 export const DiscordIcon = (props: SVGProps) => (
-  <svg role="img" width="44" height="44" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg" {...props} fill="none">
+  <svg
+    role="img"
+    width="44"
+    height="44"
+    viewBox="0 0 44 44"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+    fill="none"
+  >
     <path
       d="M27.2113 25.4989C25.6574 25.4989 24.3869 24.1067 24.3869 22.3837C24.3869 20.6607 25.63 19.2685 27.2113 19.2685C27.5983 19.2814 27.9789 19.3726 28.331 19.5367C28.6831 19.7007 28.9998 19.9345 29.2625 20.2243C29.5253 20.5141 29.729 20.8543 29.8617 21.225C29.9944 21.5956 30.0536 21.9895 30.0358 22.3837C30.0358 24.0927 28.7892 25.4989 27.2113 25.4989ZM16.7708 25.4989C15.2203 25.4989 13.9464 24.1067 13.9464 22.3837C13.9464 20.6607 15.1929 19.2685 16.7708 19.2685C17.1578 19.2814 17.5384 19.3726 17.8905 19.5367C18.2426 19.7007 18.5593 19.9345 18.822 20.2243C19.0848 20.5141 19.2885 20.8543 19.4212 21.225C19.5539 21.5956 19.6131 21.9895 19.5952 22.3837C19.5987 24.0927 18.3487 25.4989 16.7708 25.4989ZM32.8978 11.402C30.8261 10.4652 28.6454 9.80198 26.4087 9.42847C26.103 9.96986 25.8259 10.5276 25.5788 11.0992C23.2005 10.749 20.7851 10.749 18.4067 11.0992C18.1547 10.5281 17.8743 9.97046 17.5666 9.42847C15.3293 9.80279 13.1484 10.4684 11.0775 11.409C6.97921 17.4167 5.86241 23.2748 6.4191 29.0493C8.83313 30.8106 11.521 32.145 14.3699 32.9964C15.0139 32.1426 15.5852 31.2343 16.0775 30.2815C15.1502 29.9373 14.2533 29.5134 13.3965 29.0145C13.6185 28.8544 13.8405 28.6664 14.0522 28.5098C16.5478 29.6693 19.2586 30.2693 22.0013 30.2693C24.744 30.2693 27.4548 29.6693 29.9504 28.5098C30.1655 28.6838 30.3841 28.8578 30.6061 29.0145C29.7492 29.5157 28.851 29.9396 27.9217 30.2815C28.4139 31.2355 28.9852 32.145 29.6293 32.9999C32.4808 32.1479 35.171 30.8123 37.5869 29.0493C38.2222 22.3559 36.4531 16.55 32.8978 11.402Z"
       fill="currentColor"
     />
   </svg>
-)
+);
 
 export const TwitterIcon = (props: SVGProps) => (
-  <svg {...props} role="img" viewBox="0 0 44 44" xmlns="http://www.w3.org/2000/svg">
+  <svg
+    {...props}
+    role="img"
+    viewBox="0 0 44 44"
+    xmlns="http://www.w3.org/2000/svg"
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -366,26 +509,46 @@ export const TwitterIcon = (props: SVGProps) => (
       fill="currentColor"
     />
   </svg>
-)
+);
 
 export const ChevronLeftIcon = (props: SVGProps) => (
-  <svg width="8" height="16" viewBox="0 0 8 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M7 1L1 7L7 13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+  <svg
+    width="8"
+    height="16"
+    viewBox="0 0 8 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <path
+      d="M7 1L1 7L7 13"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
-)
+);
 
 export const ChevronRightIcon = styled(ChevronLeftIcon)`
   transform: rotate(180deg);
-`
+`;
 
 export const TrendingArrow = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       d="M17.5 5.8335H18.25C18.25 5.41928 17.9142 5.0835 17.5 5.0835V5.8335ZM11.0227 12.4307L10.4876 12.9562C10.6286 13.0998 10.8214 13.1807 11.0227 13.1807C11.224 13.1807 11.4169 13.0998 11.5579 12.9562L11.0227 12.4307ZM7.61364 8.9585L8.14881 8.43305C8.00778 8.28941 7.81493 8.2085 7.61364 8.2085C7.41234 8.2085 7.21949 8.28941 7.07846 8.43305L7.61364 8.9585ZM1.96483 13.6414C1.67463 13.937 1.67899 14.4118 1.97456 14.702C2.27013 14.9922 2.74498 14.9878 3.03517 14.6923L1.96483 13.6414ZM13.4091 5.0835C12.9949 5.0835 12.6591 5.41928 12.6591 5.8335C12.6591 6.24771 12.9949 6.5835 13.4091 6.5835V5.0835ZM16.75 10.0002C16.75 10.4144 17.0858 10.7502 17.5 10.7502C17.9142 10.7502 18.25 10.4144 18.25 10.0002H16.75ZM16.9648 5.30805L10.4876 11.9053L11.5579 12.9562L18.0352 6.35894L16.9648 5.30805ZM11.5579 11.9053L8.14881 8.43305L7.07846 9.48394L10.4876 12.9562L11.5579 11.9053ZM7.07846 8.43305L1.96483 13.6414L3.03517 14.6923L8.14881 9.48394L7.07846 8.43305ZM13.4091 6.5835H17.5V5.0835H13.4091V6.5835ZM16.75 5.8335V10.0002H18.25V5.8335H16.75Z"
       fill={vars.color.neutral2}
     />
   </svg>
-)
+);
 export const ActivityListingIcon = (props: SVGProps) => (
   <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
@@ -394,9 +557,14 @@ export const ActivityListingIcon = (props: SVGProps) => (
       strokeLinecap="round"
       strokeLinejoin="round"
     />
-    <path d="M5.66797 5.66675H5.6763" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M5.66797 5.66675H5.6763"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
-)
+);
 
 export const ActivitySaleIcon = (props: SVGProps) => (
   <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
@@ -419,11 +587,16 @@ export const ActivitySaleIcon = (props: SVGProps) => (
       strokeLinejoin="round"
     />
   </svg>
-)
+);
 
 export const ActivityTransferIcon = (props: SVGProps) => (
   <svg fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <path d="M14.6654 1.33337L7.33203 8.66671" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M14.6654 1.33337L7.33203 8.66671"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
     <path
       d="M14.6654 1.33337L9.9987 14.6667L7.33203 8.66671L1.33203 6.00004L14.6654 1.33337Z"
       stroke="currentColor"
@@ -431,11 +604,25 @@ export const ActivityTransferIcon = (props: SVGProps) => (
       strokeLinejoin="round"
     />
   </svg>
-)
+);
 
 export const ActivityExternalLinkIcon = () => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <mask id="path-1-outside-1_3799_46574" maskUnits="userSpaceOnUse" x="2" y="2" width="15" height="15" fill="black">
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <mask
+      id="path-1-outside-1_3799_46574"
+      maskUnits="userSpaceOnUse"
+      x="2"
+      y="2"
+      width="15"
+      height="15"
+      fill="black"
+    >
       <rect fill="white" x="2" y="2" width="15" height="15" />
       <path
         fillRule="evenodd"
@@ -455,10 +642,17 @@ export const ActivityExternalLinkIcon = () => (
       mask="url(#path-1-outside-1_3799_46574)"
     />
   </svg>
-)
+);
 
 export const LargeTagIcon = (props: SVGProps) => (
-  <svg width="96" height="96" viewBox="0 0 96 96" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="96"
+    height="96"
+    viewBox="0 0 96 96"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       d="M55.6215 80.6815L55.621 80.6819C55.0823 81.2212 54.4427 81.649 53.7386 81.9409C53.0345 82.2328 52.2797 82.383 51.5175 82.383C50.7553 82.383 50.0006 82.2328 49.2965 81.9409C48.5923 81.649 47.9527 81.2212 47.414 80.6819L47.413 80.681L17.7 51.0025V17.7H51.0029L80.714 47.411C80.7141 47.4111 80.7142 47.4112 80.7143 47.4113C81.7943 48.498 82.4006 49.9679 82.4006 51.5C82.4006 53.032 81.7944 54.5017 80.7146 55.5884C80.7144 55.5886 80.7142 55.5888 80.714 55.589L55.6215 80.6815Z"
       stroke="currentColor"
@@ -468,10 +662,17 @@ export const LargeTagIcon = (props: SVGProps) => (
     />
     <circle cx="34" cy="34" r="3" fill="currentColor" />
   </svg>
-)
+);
 
 export const CircularCloseIcon = (props: SVGProps) => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <circle cx="8" cy="8" r="8" fill="#293249" />
     <path
       fillRule="evenodd"
@@ -480,10 +681,17 @@ export const CircularCloseIcon = (props: SVGProps) => (
       fill="white"
     />
   </svg>
-)
+);
 
 export const SquareArrowDownIcon = (props: SVGProps) => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       d="M4.66797 4.66663L11.3346 11.3333M11.3346 11.3333V4.66663M11.3346 11.3333H4.66797"
       stroke="currentColor"
@@ -491,10 +699,17 @@ export const SquareArrowDownIcon = (props: SVGProps) => (
       strokeLinejoin="round"
     />
   </svg>
-)
+);
 
 export const SquareArrowUpIcon = (props: SVGProps) => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       d="M4.66797 11.3334L11.3346 4.66671M11.3346 4.66671V11.3334M11.3346 4.66671H4.66797"
       stroke="currentColor"
@@ -502,19 +717,33 @@ export const SquareArrowUpIcon = (props: SVGProps) => (
       strokeLinejoin="round"
     />
   </svg>
-)
+);
 
 export const CloseTimerIcon = (props: SVGProps) => (
-  <svg width="11" height="12" viewBox="0 0 11 12" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="11"
+    height="12"
+    viewBox="0 0 11 12"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       d="M8.2435 3.95892C8.53639 3.66603 8.53639 3.19115 8.2435 2.89826C7.95061 2.60537 7.47573 2.60537 7.18284 2.89826L8.2435 3.95892ZM2.03998 8.04112C1.74709 8.33401 1.74709 8.80888 2.03998 9.10178C2.33288 9.39467 2.80775 9.39467 3.10064 9.10178L2.03998 8.04112ZM3.10064 2.89826C2.80775 2.60537 2.33288 2.60537 2.03998 2.89826C1.74709 3.19115 1.74709 3.66603 2.03998 3.95892L3.10064 2.89826ZM7.18284 9.10178C7.47573 9.39467 7.95061 9.39467 8.2435 9.10178C8.53639 8.80888 8.53639 8.33401 8.2435 8.04112L7.18284 9.10178ZM7.18284 2.89826L2.03998 8.04112L3.10064 9.10178L8.2435 3.95892L7.18284 2.89826ZM2.03998 3.95892L7.18284 9.10178L8.2435 8.04112L3.10064 2.89826L2.03998 3.95892Z"
       fill="currentColor"
     />
   </svg>
-)
+);
 
 export const ChevronDownBagIcon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       d="M5 7.5L10 12.5L15 7.5"
       stroke="currentColor"
@@ -523,10 +752,17 @@ export const ChevronDownBagIcon = (props: SVGProps) => (
       strokeLinejoin="round"
     />
   </svg>
-)
+);
 
 export const ChevronUpBagIcon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       d="M5 12.5L10 7.5L15 12.5"
       stroke="currentColor"
@@ -535,19 +771,33 @@ export const ChevronUpBagIcon = (props: SVGProps) => (
       strokeLinejoin="round"
     />
   </svg>
-)
+);
 
 export const BagCloseIcon = (props: SVGProps) => (
-  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="24"
+    height="24"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       d="M18.7071 6.70711C19.0976 6.31658 19.0976 5.68342 18.7071 5.29289C18.3166 4.90237 17.6834 4.90237 17.2929 5.29289L18.7071 6.70711ZM5.29289 17.2929C4.90237 17.6834 4.90237 18.3166 5.29289 18.7071C5.68342 19.0976 6.31658 19.0976 6.70711 18.7071L5.29289 17.2929ZM6.70711 5.29289C6.31658 4.90237 5.68342 4.90237 5.29289 5.29289C4.90237 5.68342 4.90237 6.31658 5.29289 6.70711L6.70711 5.29289ZM17.2929 18.7071C17.6834 19.0976 18.3166 19.0976 18.7071 18.7071C19.0976 18.3166 19.0976 17.6834 18.7071 17.2929L17.2929 18.7071ZM17.2929 5.29289L5.29289 17.2929L6.70711 18.7071L18.7071 6.70711L17.2929 5.29289ZM5.29289 6.70711L17.2929 18.7071L18.7071 17.2929L6.70711 5.29289L5.29289 6.70711Z"
       fill="currentColor"
     />
   </svg>
-)
+);
 
 export const CancelListingIcon = (props: SVGProps) => (
-  <svg width="15" height="15" viewBox="0 0 15 15" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="15"
+    height="15"
+    viewBox="0 0 15 15"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       d="M12.6667 6L13.3933 6.72667C13.6417 6.97648 13.7811 7.31442 13.7811 7.66667C13.7811 8.01891 13.6417 8.35685 13.3933 8.60667L8.61333 13.3867C8.4895 13.5106 8.34245 13.609 8.18059 13.6761C8.01872 13.7432 7.84522 13.7777 7.67 13.7777C7.49478 13.7777 7.32128 13.7432 7.15941 13.6761C6.99755 13.609 6.8505 13.5106 6.72667 13.3867L6 12.6667M8.8 2.13333L7.66667 1H1V7.66667L2.13333 8.8M13.7811 1L1.10498 13.6761M4.33333 4.33333H4.33889"
       stroke="currentColor"
@@ -555,23 +805,55 @@ export const CancelListingIcon = (props: SVGProps) => (
       strokeLinejoin="round"
     />
   </svg>
-)
+);
 
 export const ListingModalWindowActive = (props: SVGProps) => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
-    <circle cx="8" cy="8" r="8" fill={props.fill ? props.fill : themeVars.colors.accent1} fillOpacity="0.24" />
-    <circle cx="8" cy="8" r="5" fill={props.fill ? props.fill : themeVars.colors.accent1} />
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
+    <circle
+      cx="8"
+      cy="8"
+      r="8"
+      fill={props.fill ? props.fill : themeVars.colors.accent1}
+      fillOpacity="0.24"
+    />
+    <circle
+      cx="8"
+      cy="8"
+      r="5"
+      fill={props.fill ? props.fill : themeVars.colors.accent1}
+    />
   </svg>
-)
+);
 
 export const ListingModalWindowClosed = (props: SVGProps) => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="16"
+    height="16"
+    viewBox="0 0 16 16"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <circle cx="8" cy="8" r="7" stroke="#333D59" strokeWidth="2" />
   </svg>
-)
+);
 
 export const OpenSeaMarketplaceIcon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -579,10 +861,17 @@ export const OpenSeaMarketplaceIcon = (props: SVGProps) => (
       fill="white"
     />
   </svg>
-)
+);
 
 export const CollectionSelectedAssetIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none" {...props}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    {...props}
+  >
     <path
       d="M17.5 9.16667V6.52778C17.5 5.68401 16.7538 5 15.8333 5H4.16667C3.24619 5 2.5 5.68401 2.5 6.52778V17.2222C2.5 18.066 3.24619 18.75 4.16667 18.75H11.25"
       stroke="#F5F6FC"
@@ -605,10 +894,17 @@ export const CollectionSelectedAssetIcon = (props: SVGProps) => (
       strokeLinejoin="round"
     />
   </svg>
-)
+);
 
 export const Nft20Icon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -616,10 +912,17 @@ export const Nft20Icon = (props: SVGProps) => (
       fill="white"
     />
   </svg>
-)
+);
 
 export const NftXIcon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -627,10 +930,17 @@ export const NftXIcon = (props: SVGProps) => (
       fill="white"
     />
   </svg>
-)
+);
 
 export const X2y2Icon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -638,10 +948,17 @@ export const X2y2Icon = (props: SVGProps) => (
       fill="white"
     />
   </svg>
-)
+);
 
 export const SudoSwapIcon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -649,10 +966,17 @@ export const SudoSwapIcon = (props: SVGProps) => (
       fill="white"
     />
   </svg>
-)
+);
 
 export const LooksRareIcon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -660,10 +984,17 @@ export const LooksRareIcon = (props: SVGProps) => (
       fill="white"
     />
   </svg>
-)
+);
 
 export const LarvaLabsMarketplaceIcon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 24 24"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
@@ -671,10 +1002,17 @@ export const LarvaLabsMarketplaceIcon = (props: SVGProps) => (
       fill="white"
     />
   </svg>
-)
+);
 
 export const SquareOpenSeaMarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="360"
+    height="361"
+    viewBox="0 0 360 361"
+    fill="none"
+    {...props}
+  >
     <g clipPath="url(#clip0_992_26814)">
       <rect y="0.5" width="360" height="360" rx="48" fill="#2081E2" />
       <g clipPath="url(#clip1_992_26814)">
@@ -701,10 +1039,17 @@ export const SquareOpenSeaMarketplaceIcon = (props: SVGProps) => (
       </clipPath>
     </defs>
   </svg>
-)
+);
 
 export const SquareLooksRareMarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="360"
+    height="361"
+    viewBox="0 0 360 361"
+    fill="none"
+    {...props}
+  >
     <rect y="0.5" width="360" height="360" rx="48" fill="black" />
     <path
       d="M114.128 130.914C150.508 94.74 209.492 94.74 245.872 130.914L277.297 162.162L245.872 193.409C209.492 229.584 150.508 229.584 114.128 193.409L82.7026 162.162L114.128 130.914Z"
@@ -727,10 +1072,20 @@ export const SquareLooksRareMarketplaceIcon = (props: SVGProps) => (
       fill="white"
     />
   </svg>
-)
+);
 
-export const SquareLooksX2Y2MarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...rest}>
+export const SquareLooksX2Y2MarketplaceIcon = ({
+  gradientId,
+  ...rest
+}: SVGProps) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="360"
+    height="361"
+    viewBox="0 0 360 361"
+    fill="none"
+    {...rest}
+  >
     <g clipPath="url(#clip0_992_26815)">
       <rect y="0.5" width="360" height="360" rx="48" fill="white" />
       <g clipPath="url(#clip1_992_26815)">
@@ -796,10 +1151,17 @@ export const SquareLooksX2Y2MarketplaceIcon = ({ gradientId, ...rest }: SVGProps
       </clipPath>
     </defs>
   </svg>
-)
+);
 
 export const SquareLooksBlurMarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="360"
+    height="361"
+    viewBox="0 0 360 361"
+    fill="none"
+    {...props}
+  >
     <rect y="0.5" width="360" height="360" rx="48" fill="#070705" />
     <g filter="url(#filter0_d_992_26824)">
       <path
@@ -837,9 +1199,21 @@ export const SquareLooksBlurMarketplaceIcon = (props: SVGProps) => (
         <feOffset />
         <feGaussianBlur stdDeviation="14" />
         <feComposite in2="hardAlpha" operator="out" />
-        <feColorMatrix type="matrix" values="0 0 0 0 0.976471 0 0 0 0 0.423529 0 0 0 0 0.152941 0 0 0 1 0" />
-        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_992_26824" />
-        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_992_26824" result="shape" />
+        <feColorMatrix
+          type="matrix"
+          values="0 0 0 0 0.976471 0 0 0 0 0.423529 0 0 0 0 0.152941 0 0 0 1 0"
+        />
+        <feBlend
+          mode="normal"
+          in2="BackgroundImageFix"
+          result="effect1_dropShadow_992_26824"
+        />
+        <feBlend
+          mode="normal"
+          in="SourceGraphic"
+          in2="effect1_dropShadow_992_26824"
+          result="shape"
+        />
       </filter>
       <filter
         id="filter1_d_992_26824"
@@ -860,28 +1234,63 @@ export const SquareLooksBlurMarketplaceIcon = (props: SVGProps) => (
         <feOffset />
         <feGaussianBlur stdDeviation="14" />
         <feComposite in2="hardAlpha" operator="out" />
-        <feColorMatrix type="matrix" values="0 0 0 0 0.976471 0 0 0 0 0.423529 0 0 0 0 0.152941 0 0 0 1 0" />
-        <feBlend mode="normal" in2="BackgroundImageFix" result="effect1_dropShadow_992_26824" />
-        <feBlend mode="normal" in="SourceGraphic" in2="effect1_dropShadow_992_26824" result="shape" />
+        <feColorMatrix
+          type="matrix"
+          values="0 0 0 0 0.976471 0 0 0 0 0.423529 0 0 0 0 0.152941 0 0 0 1 0"
+        />
+        <feBlend
+          mode="normal"
+          in2="BackgroundImageFix"
+          result="effect1_dropShadow_992_26824"
+        />
+        <feBlend
+          mode="normal"
+          in="SourceGraphic"
+          in2="effect1_dropShadow_992_26824"
+          result="shape"
+        />
       </filter>
     </defs>
   </svg>
-)
+);
 
 export const SquareSudoSwapMarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="360"
+    height="361"
+    viewBox="0 0 360 361"
+    fill="none"
+    {...props}
+  >
     <rect y="0.5" width="360" height="360" rx="48" fill="#B9B9FF" />
     <path
       d="M174.524 244C164.482 244 156.951 241.49 150.256 237.305C144.398 233.121 141.888 226.427 141.888 218.895H158.624C158.624 222.242 159.461 224.753 162.809 227.263C165.319 228.937 169.503 229.774 174.524 229.774H182.056C186.461 229.779 190.79 228.624 194.608 226.427C197.119 223.916 198.792 220.569 198.792 217.221C198.792 213.037 197.119 210.527 194.608 208.016C191.36 205.788 187.634 204.354 183.729 203.832L171.177 201.322C152.767 198.811 143.561 189.606 143.561 175.38C143.154 167.762 146.234 160.371 151.93 155.296C156.951 151.112 165.319 148.602 175.361 148.602H182.056C191.261 148.602 198.792 151.112 205.487 155.296C210.508 159.48 213.855 165.338 213.855 172.033H197.118C197.118 169.522 195.445 167.012 192.934 165.338C190.424 163.664 186.24 162.828 182.056 162.828H174.524C169.503 162.828 166.156 164.501 162.809 166.175C160.298 168.685 158.624 171.196 158.624 174.543C158.624 181.238 163.645 185.422 172.85 187.096L185.403 188.769C193.771 188.769 200.466 192.117 207.16 197.138C212.181 202.159 213.855 208.016 213.855 216.385C214.262 224.003 211.183 231.393 205.487 236.469C199.629 241.49 191.261 244 180.382 244H174.524Z"
       fill="black"
     />
-    <path d="M73 118H92.2471L114.841 180.762L91.4102 243.524H73L96.4312 180.762L73 118Z" fill="black" />
-    <path d="M286.362 118H267.115L244.52 180.762L267.952 243.524H286.362L262.931 180.762L286.362 118Z" fill="black" />
+    <path
+      d="M73 118H92.2471L114.841 180.762L91.4102 243.524H73L96.4312 180.762L73 118Z"
+      fill="black"
+    />
+    <path
+      d="M286.362 118H267.115L244.52 180.762L267.952 243.524H286.362L262.931 180.762L286.362 118Z"
+      fill="black"
+    />
   </svg>
-)
+);
 
-export const SquareNftXMarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...rest}>
+export const SquareNftXMarketplaceIcon = ({
+  gradientId,
+  ...rest
+}: SVGProps) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="360"
+    height="361"
+    viewBox="0 0 360 361"
+    fill="none"
+    {...rest}
+  >
     <rect y="0.5" width="360" height="360" rx="48" fill="white" />
     <g clipPath="url(#clip0_992_26819)">
       <path
@@ -940,14 +1349,26 @@ export const SquareNftXMarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => 
         <stop offset="0.55" stopColor="#652CB4" stopOpacity="0" />
       </linearGradient>
       <clipPath id="clip0_992_26819">
-        <rect width="240" height="240" fill="white" transform="translate(60 60)" />
+        <rect
+          width="240"
+          height="240"
+          fill="white"
+          transform="translate(60 60)"
+        />
       </clipPath>
     </defs>
   </svg>
-)
+);
 
 export const SquareGemMarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...rest}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="360"
+    height="361"
+    viewBox="0 0 360 361"
+    fill="none"
+    {...rest}
+  >
     <g clipPath="url(#clip0_992_26820)">
       <path
         d="M120.925 -208L-186 323.611L-88.8168 379.717L218.108 -151.892L120.925 -208Z"
@@ -1044,10 +1465,20 @@ export const SquareGemMarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => (
       </clipPath>
     </defs>
   </svg>
-)
+);
 
-export const SquareZoraMarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...rest}>
+export const SquareZoraMarketplaceIcon = ({
+  gradientId,
+  ...rest
+}: SVGProps) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="360"
+    height="361"
+    viewBox="0 0 360 361"
+    fill="none"
+    {...rest}
+  >
     <g clipPath="url(#clip0_992_26823)">
       <path
         d="M0 180C0 279.267 80.734 360 180 360C279.266 360 360 279.267 360 180C359.909 80.734 279.174 0 180 0C80.734 0 0 80.734 0 180Z"
@@ -1110,10 +1541,20 @@ export const SquareZoraMarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => 
       </clipPath>
     </defs>
   </svg>
-)
+);
 
-export const SquareEnsVisionMarketplaceIcon = ({ gradientId, ...rest }: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...rest}>
+export const SquareEnsVisionMarketplaceIcon = ({
+  gradientId,
+  ...rest
+}: SVGProps) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="360"
+    height="361"
+    viewBox="0 0 360 361"
+    fill="none"
+    {...rest}
+  >
     <rect y="0.5" width="360" height="360" rx="48" fill="#1E1E1E" />
     <g clipPath="url(#clip0_992_26817)">
       <path
@@ -1138,16 +1579,35 @@ export const SquareEnsVisionMarketplaceIcon = ({ gradientId, ...rest }: SVGProps
         <stop offset="1" stopColor="#FACC15" />
       </linearGradient>
       <clipPath id="clip0_992_26817">
-        <rect width="239.876" height="240" fill="white" transform="translate(60 60)" />
+        <rect
+          width="239.876"
+          height="240"
+          fill="white"
+          transform="translate(60 60)"
+        />
       </clipPath>
     </defs>
   </svg>
-)
+);
 
 export const SquareCryptopunksMarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="361" height="361" viewBox="0 0 361 361" fill="none" {...props}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="361"
+    height="361"
+    viewBox="0 0 361 361"
+    fill="none"
+    {...props}
+  >
     <g clipPath="url(#clip0_992_26825)">
-      <rect x="0.432617" y="0.5" width="360" height="360" rx="48" fill="#EA34B0" />
+      <rect
+        x="0.432617"
+        y="0.5"
+        width="360"
+        height="360"
+        rx="48"
+        fill="#EA34B0"
+      />
       <path
         d="M85.2899 358.604C85.2899 333.816 85.2899 309.038 85.2999 284.26V209.52C85.2999 207.53 85.2299 207.46 83.2799 207.46C79.0299 207.46 74.7799 207.47 70.5299 207.46C68.3999 207.46 68.2399 207.3 68.2399 205.2C68.2399 190.28 68.2499 175.37 68.2399 160.45C68.2399 159.5 68.1699 158.54 68.0099 157.6C67.8699 156.78 68.1399 156.39 68.9299 156.34C69.6299 156.29 70.3399 156.26 71.0499 156.26H114.67C115.58 156.26 116.5 156.19 117.41 156.12C119.19 155.97 119.49 156.22 119.49 157.97C119.49 162.39 119.49 166.8 119.48 171.22C119.48 173.53 119.5 173.55 121.88 173.55C126.13 173.55 130.38 173.57 134.63 173.52C135.78 173.51 136.32 173.87 136.3 175.08C136.25 177.54 136.21 180 136.28 182.45C136.36 184.94 136.53 187.44 136.76 189.92C136.79 190.25 137.43 190.75 137.83 190.79C139.32 190.95 140.82 191 142.32 191C150.898 191.01 159.487 191 168.065 190.99H168.07C168.74 190.99 169.4 190.94 170.07 190.91C171.72 190.83 171.78 190.77 171.78 189.19C171.78 185.11 171.77 181.02 171.78 176.94C171.8 173.04 171.35 173.58 175.17 173.56C179.25 173.54 183.34 173.53 187.42 173.55C188.5 173.55 189.03 173.19 189.02 172.02C188.98 168.82 189.02 165.61 189 162.41C188.99 161.03 188.93 159.66 188.85 158.29C188.75 156.55 188.99 156.25 190.78 156.25C197.03 156.25 203.28 156.28 209.53 156.25C213.48 156.23 217.44 156.14 221.39 156.07C223.21 156.04 223.42 156.39 223.38 158.16C223.29 161.82 223.36 165.49 223.36 169.15C223.37 170.06 223.43 170.98 223.38 171.89C223.3 173.28 223.46 173.54 224.85 173.54C229.298 173.56 233.755 173.55 238.213 173.54H238.22C240.22 173.53 240.24 173.55 240.24 175.56C240.24 180.06 240.23 184.56 240.25 189.06C240.25 190.81 240.46 191 242.2 191C252.2 191 262.2 190.99 272.2 190.99C272.87 190.99 273.53 191.02 274.2 191.01C275.1 191.01 275.5 191.45 275.46 192.33C275.44 192.7 275.46 193.07 275.46 193.45C275.46 224.37 275.47 255.28 275.44 286.2C275.44 288.19 275.2 290.19 275 292.17C274.85 293.63 274.38 294 272.86 294C268.45 294 264.03 293.96 259.62 294C258.07 294.01 257.96 294.19 257.96 295.79C257.95 300.29 257.96 304.79 257.95 309.29C257.95 311.08 257.8 311.23 256.03 311.24C251.61 311.26 247.2 311.24 242.78 311.25C240.72 311.25 240.52 311.41 240.48 313.41C240.39 318.07 240.31 322.74 240.31 327.4C240.31 328.44 239.9 328.72 239 328.72C237.67 328.72 236.33 328.74 235 328.74C215.08 328.74 195.17 328.74 175.25 328.75C174.41 328.75 173.58 328.79 172.75 328.84C171.83 328.89 171.43 329.38 171.47 330.31C171.56 332.47 171.67 334.64 171.68 336.8C171.71 342.5 171.69 348.21 171.69 353.92C171.69 355.78 171.66 357.65 171.69 359.52C171.7 360.57 171.22 361.06 170.19 361.05C168.32 361.03 166.45 360.99 164.58 360.99H88.2099C87.6699 360.99 87.1299 360.96 86.5899 360.99C85.6099 361.04 85.2199 360.57 85.2899 359.63C85.3099 359.34 85.2899 359.05 85.2899 358.76V358.604Z"
         fill="white"
@@ -1159,14 +1619,28 @@ export const SquareCryptopunksMarketplaceIcon = (props: SVGProps) => (
     </g>
     <defs>
       <clipPath id="clip0_992_26825">
-        <rect x="0.432617" y="0.5" width="360" height="360" rx="48" fill="white" />
+        <rect
+          x="0.432617"
+          y="0.5"
+          width="360"
+          height="360"
+          rx="48"
+          fill="white"
+        />
       </clipPath>
     </defs>
   </svg>
-)
+);
 
 export const SquareRaribleMarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="360"
+    height="361"
+    viewBox="0 0 360 361"
+    fill="none"
+    {...props}
+  >
     <rect y="0.5" width="360" height="360" rx="48" fill="#FEDA03" />
     <path
       fillRule="evenodd"
@@ -1175,10 +1649,17 @@ export const SquareRaribleMarketplaceIcon = (props: SVGProps) => (
       fill="black"
     />
   </svg>
-)
+);
 
 export const SquareFoundationMarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="360" height="361" viewBox="0 0 360 361" fill="none" {...props}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="360"
+    height="361"
+    viewBox="0 0 360 361"
+    fill="none"
+    {...props}
+  >
     <rect y="0.5" width="360" height="360" rx="48" fill="black" />
     <path
       fillRule="evenodd"
@@ -1187,10 +1668,17 @@ export const SquareFoundationMarketplaceIcon = (props: SVGProps) => (
       fill="white"
     />
   </svg>
-)
+);
 
 export const SquareNft20MarketplaceIcon = (props: SVGProps) => (
-  <svg xmlns="http://www.w3.org/2000/svg" width="363" height="364" viewBox="0 0 363 364" fill="none" {...props}>
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    width="363"
+    height="364"
+    viewBox="0 0 363 364"
+    fill="none"
+    {...props}
+  >
     <rect width="363" height="364" rx="48" fill="#3D3D3D" />
     <path
       d="M218.1 115.8V102.1C218.1 102.1 187 101 177.94 115.76L177.72 102.31C177.72 102.31 148.79 100.74 135.52 117.68C131.99 122.19 129.43 125.82 127.64 130.38C123.78 140.19 124.37 155.26 124.37 155.26V221.26C124.37 221.26 115.51 219.54 110.05 224.26C109.786 224.509 109.449 224.666 109.088 224.708C108.728 224.749 108.364 224.673 108.05 224.49C107.77 224.301 107.567 224.017 107.48 223.69C105.96 218.31 95.1501 214.78 88.7401 221.6C81.8701 228.91 85.5401 242.18 97.4601 242.66C97.4601 242.66 94.9701 262.44 111.08 269.82C124.46 275.95 133.08 269.82 133.08 269.82C133.08 269.82 138.08 276.74 150.69 276.74H237.4C243.64 276.74 257.72 269.55 257.72 255.01V102.27C257.72 102.27 225 101.08 218.1 115.8ZM250.17 256C250.17 266.83 236.76 269.94 234.94 269.94H149.49C146.518 269.946 143.587 269.246 140.938 267.899C138.288 266.552 135.996 264.595 134.25 262.19C128.63 267.08 120.36 265.87 120.36 265.87C104.36 264.78 103.6 246.55 104.69 242.94C105.78 239.33 104.95 236.07 98.4101 236.17C91.8701 236.27 90.3301 229.24 94.6401 226.48C98.9501 223.72 103.05 226.32 103.08 229.67C103.08 231.67 105.08 234.1 108.27 234.2C112.5 234.33 114.48 228.68 120.95 228.32C124.697 228.061 128.438 228.894 131.72 230.72C131.72 230.72 132.54 178.65 132.54 144.77C132.54 137.08 136.37 129.65 140.33 124.47C142.583 121.477 145.281 118.847 148.33 116.67C154.964 111.879 162.979 109.379 171.16 109.55V147.14C171.16 112.84 211.04 109.55 211.04 109.55V146.48C211.04 111.87 250.14 109.55 250.14 109.55L250.17 256Z"
@@ -1221,15 +1709,22 @@ export const SquareNft20MarketplaceIcon = (props: SVGProps) => (
       fill="#24DDD8"
     />
   </svg>
-)
+);
 
 export const UniswapMagentaIcon = (props: SVGProps) => (
-  <svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
+  <svg
+    width="20"
+    height="20"
+    viewBox="0 0 20 20"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    {...props}
+  >
     <path
       fillRule="evenodd"
       clipRule="evenodd"
       d="M8.26028 7.69661C8.2265 7.827 8.16752 7.94944 8.0867 8.05696C7.93627 8.25309 7.73717 8.40605 7.50935 8.50052C7.30443 8.58922 7.08744 8.64655 6.8656 8.67061C6.81999 8.67641 6.77273 8.68001 6.72695 8.68349L6.72692 8.68349L6.71944 8.68406C6.57894 8.68943 6.44384 8.73983 6.33392 8.82791C6.224 8.91598 6.14503 9.03709 6.10858 9.17351C6.09189 9.24138 6.07949 9.31024 6.07143 9.37969C6.05867 9.4844 6.0521 9.59161 6.04499 9.70758L6.04499 9.7076C6.03989 9.79082 6.03451 9.87856 6.02636 9.97313C5.97864 10.3583 5.86772 10.7329 5.6981 11.0817C5.66343 11.155 5.62809 11.2261 5.59338 11.2959C5.40739 11.6701 5.23937 12.008 5.28761 12.4607C5.32537 12.8095 5.50321 13.0432 5.73951 13.2842C5.85174 13.3995 6.00056 13.4981 6.15504 13.6003C6.58739 13.8866 7.06406 14.2022 6.90702 14.9973C6.77851 15.6415 5.71515 16.3175 4.2206 16.5537C4.36557 16.5316 4.04625 15.9843 4.01077 15.9235L4.00866 15.9199C3.96746 15.855 3.92525 15.7912 3.88311 15.7274L3.88309 15.7274L3.88309 15.7274C3.76142 15.5433 3.64034 15.3601 3.5458 15.157C3.29609 14.6265 3.18038 14.0129 3.2827 13.4317C3.37538 12.9056 3.72157 12.4854 4.05489 12.0808C4.10923 12.0149 4.16323 11.9493 4.21573 11.8838C4.66153 11.3277 5.12927 10.599 5.2328 9.87708C5.24153 9.81436 5.24933 9.74598 5.25753 9.67402C5.2722 9.54524 5.28819 9.40501 5.31319 9.26528C5.35036 9.02398 5.4256 8.79019 5.53609 8.57271C5.61152 8.43009 5.71082 8.30157 5.82965 8.19278C5.8916 8.13503 5.93248 8.05806 5.94573 7.9742C5.95898 7.89035 5.94384 7.80445 5.90273 7.73026L3.52022 3.4256L6.94234 7.66786C6.98131 7.71701 7.03057 7.75695 7.08663 7.78484C7.14269 7.81273 7.20417 7.82788 7.26671 7.82922C7.32925 7.83056 7.39132 7.81807 7.44852 7.79261C7.50571 7.76716 7.55663 7.72937 7.59765 7.68193C7.641 7.63115 7.66558 7.56689 7.66725 7.50002C7.66891 7.43314 7.64756 7.36774 7.60679 7.31484C7.44767 7.11058 7.28207 6.90352 7.11724 6.69742L7.11693 6.69703C7.05033 6.61376 6.98385 6.53063 6.91798 6.44792L6.05682 5.37726L4.32839 3.23962L2.40918 0.957275L4.55008 3.04812L6.38995 5.09155L7.30776 6.11571C7.39208 6.21109 7.4764 6.30562 7.56072 6.40016C7.78091 6.64702 8.0011 6.89388 8.2213 7.15578L8.27124 7.21696L8.2822 7.31179C8.29704 7.44037 8.28963 7.57057 8.26028 7.69661ZM17.0557 9.13522L17.0593 9.14073L17.0593 9.14022C17.0585 8.68377 16.7771 7.93092 16.2079 7.20681L16.1945 7.18907C16.0191 6.97129 15.828 6.7668 15.6226 6.57727L15.6058 6.56111L15.625 6.57774C15.6005 6.55502 15.5756 6.53252 15.5507 6.51012L15.5032 6.467L15.5386 6.49973L15.5008 6.46653C15.2378 6.23604 14.9502 6.03537 14.6433 5.86818L14.6214 5.85717C13.6573 5.32979 12.4027 5.05815 10.8558 5.36406C10.648 5.11068 10.4242 4.87097 10.1859 4.64641C9.82077 4.29694 9.39101 4.02277 8.9209 3.83944C8.45502 3.66813 7.9561 3.607 7.46289 3.66079C7.93832 3.70379 8.40139 3.83664 8.82772 4.05235C9.23946 4.27394 9.61026 4.56489 9.92397 4.91254C10.2419 5.26742 10.5408 5.63911 10.8192 6.02603L10.8891 6.11741C11.1616 6.47389 11.439 6.83678 11.7846 7.1597C11.9748 7.33953 12.187 7.49433 12.4161 7.62039C12.477 7.65159 12.5385 7.68096 12.5988 7.70666C12.6591 7.73235 12.7158 7.75621 12.7767 7.77824C12.8942 7.82412 13.016 7.86205 13.1378 7.89693C13.625 8.03642 14.1238 8.08659 14.611 8.11351C14.6789 8.11709 14.7466 8.12044 14.814 8.12378C14.988 8.13239 15.1604 8.14093 15.3303 8.15327C15.5631 8.16717 15.794 8.20363 16.0197 8.26217C16.3589 8.35099 16.6575 8.55399 16.8657 8.83727C16.9364 8.93161 17 9.03121 17.0557 9.13522ZM15.0299 11.0846C13.4631 10.446 11.8242 9.77791 12.0682 7.90283C12.5913 8.46392 13.4125 8.58159 14.3056 8.70957C15.1158 8.82566 15.9851 8.95023 16.745 9.42194C18.5379 10.5342 18.2761 12.6951 17.667 13.4904C17.7219 12.182 16.4037 11.6446 15.0299 11.0846ZM8.70682 10.1459C9.12035 10.1061 10.0016 9.89012 9.60757 9.19327C9.52279 9.05151 9.39993 8.93664 9.25309 8.86186C9.10626 8.78708 8.94141 8.75542 8.77747 8.77052C8.6111 8.78845 8.45424 8.85736 8.32819 8.9679C8.20214 9.07844 8.11298 9.22526 8.07283 9.38844C7.95041 9.84423 8.08013 10.207 8.70682 10.1459ZM8.59812 4.63104C8.33868 4.33003 7.93611 4.17219 7.54146 4.11468C7.5267 4.21341 7.51734 4.31287 7.51345 4.41263C7.49579 5.23428 7.78629 6.1367 8.34842 6.7638C8.52823 6.96652 8.74511 7.13267 8.98729 7.25324C9.12737 7.32176 9.49887 7.49185 9.63651 7.3389C9.64699 7.32488 9.65359 7.30832 9.65562 7.29091C9.65765 7.2735 9.65505 7.25585 9.64808 7.23978C9.62528 7.17428 9.58121 7.11485 9.53747 7.05585L9.53747 7.05585C9.50644 7.01401 9.47558 6.97239 9.45259 6.92899C9.42932 6.88521 9.40443 6.84254 9.37956 6.7999L9.37956 6.79989L9.37955 6.79988L9.37955 6.79988L9.37955 6.79987L9.37954 6.79986L9.37954 6.79985C9.33282 6.71975 9.28616 6.63975 9.25039 6.55272C9.15602 6.3249 9.10688 6.08265 9.05789 5.84116C9.04807 5.79277 9.03826 5.74441 9.0281 5.6962C8.95319 5.32361 8.85757 4.93205 8.59812 4.63104ZM14.1416 11.1862C13.7391 12.3144 14.3883 13.2674 15.0336 14.2147C15.7554 15.2744 16.4724 16.3271 15.7074 17.6101C17.1941 16.9934 17.8999 15.1305 17.283 13.6524C16.8942 12.7175 15.9573 12.2106 15.0876 11.7402C14.7501 11.5577 14.4228 11.3806 14.1416 11.1862ZM9.78299 13.8799C9.51358 13.9903 9.25954 14.1353 9.02718 14.3112C9.5555 14.1187 10.1101 14.0088 10.6716 13.9851C10.7734 13.9791 10.8758 13.9743 10.9792 13.9695L10.9793 13.9695C11.1579 13.9613 11.3391 13.9529 11.5242 13.9374C11.8277 13.9167 12.127 13.855 12.414 13.7538C12.7148 13.6481 12.9885 13.4768 13.2155 13.2522C13.4448 13.0203 13.6056 12.7291 13.6802 12.4109C13.7457 12.1104 13.7365 11.7982 13.6533 11.5021C13.5702 11.2059 13.4156 10.935 13.2033 10.7132C13.3057 10.9741 13.3687 11.249 13.3903 11.5287C13.4088 11.7891 13.3736 12.0505 13.2867 12.2965C13.2019 12.5297 13.0634 12.7394 12.8823 12.9083C12.6953 13.0789 12.4788 13.2137 12.2435 13.306C11.9164 13.4384 11.5466 13.4925 11.1613 13.5489C10.9856 13.5746 10.8066 13.6009 10.6271 13.6352C10.3383 13.6883 10.0555 13.7703 9.78299 13.8799ZM14.4825 18.5143L14.4282 18.558L14.4282 18.5581C14.3601 18.6131 14.2909 18.6691 14.2164 18.7193C14.1214 18.7822 14.0218 18.8378 13.9186 18.8857C13.7036 18.9911 13.4671 19.0449 13.2279 19.0429C12.5799 19.0307 12.1219 18.5462 11.854 17.9986C11.7837 17.8551 11.7218 17.7071 11.6599 17.5591C11.5609 17.3223 11.4618 17.0855 11.3284 16.8667C11.0184 16.3583 10.4879 15.949 9.86671 16.0249C9.61335 16.0567 9.37583 16.1711 9.23515 16.392C8.86486 16.9689 9.39654 17.7771 10.0744 17.6627C10.132 17.6539 10.1885 17.6383 10.2425 17.6162C10.2963 17.5932 10.3466 17.5625 10.3917 17.525C10.4864 17.4458 10.5578 17.3422 10.5981 17.2253C10.6427 17.1033 10.6526 16.9714 10.6268 16.8441C10.599 16.7111 10.5208 16.5942 10.4087 16.518C10.539 16.5793 10.6405 16.689 10.6919 16.8239C10.7453 16.9628 10.759 17.1139 10.7315 17.2601C10.7049 17.4125 10.638 17.555 10.5379 17.6725C10.4846 17.7329 10.4231 17.7855 10.3551 17.8285C10.2878 17.871 10.2156 17.9053 10.1402 17.9307C9.98719 17.9832 9.82434 18.0001 9.6639 17.9802C9.43863 17.948 9.22616 17.8554 9.04878 17.7123C9.01043 17.6818 8.97388 17.6496 8.93858 17.6162C8.82611 17.5169 8.72353 17.4067 8.63236 17.2871C8.58742 17.2373 8.54176 17.1881 8.49396 17.1408C8.27683 16.912 8.02065 16.724 7.73755 16.5859C7.54232 16.4998 7.33801 16.4362 7.12852 16.3963C7.02316 16.3742 6.91658 16.3583 6.81 16.3449C6.79841 16.3437 6.77607 16.3398 6.7483 16.335C6.65931 16.3194 6.51457 16.2942 6.48904 16.318C6.81846 16.0133 7.17757 15.7428 7.56093 15.5104C7.95455 15.2757 8.37719 15.0941 8.81796 14.9702C9.27496 14.8409 9.75294 14.8041 10.2242 14.8619C10.4668 14.8911 10.7044 14.9529 10.9307 15.0454C11.1678 15.1405 11.3866 15.2763 11.5775 15.4467C11.7663 15.6255 11.919 15.8393 12.0269 16.0763C12.1244 16.2982 12.1971 16.5303 12.2437 16.7682C12.2687 16.8963 12.2876 17.037 12.3071 17.1827C12.3959 17.8464 12.4984 18.6121 13.259 18.7456C13.3073 18.755 13.3561 18.762 13.4052 18.7664L13.5568 18.7701C13.6611 18.7626 13.7647 18.7477 13.8668 18.7254C14.0784 18.6754 14.2846 18.6047 14.4825 18.5143Z"
-      fill="#FC72FF"
+      fill="#15AC5B"
     />
   </svg>
-)
+);

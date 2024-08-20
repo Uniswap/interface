@@ -253,7 +253,9 @@ export const routingApi = createApi({
                         );
                         url.searchParams.set(
                           "tokenOutAddress",
-                          args.tokenOutAddress
+                          args.tokenOutAddress === "ETH"
+                            ? "TARA"
+                            : args.tokenOutAddress
                         );
                         url.searchParams.set("amount", args.amount);
                         url.searchParams.set(

@@ -35,6 +35,7 @@ import {
   USDT_BSC,
   USDT_OPTIMISM,
   USDT_POLYGON,
+  USDT_TARAXA,
   WBTC,
   WBTC_ARBITRUM_ONE,
   WBTC_CELO,
@@ -207,6 +208,12 @@ export const COMMON_BASES: ChainCurrencyList = {
     nativeOnChain(ChainId.TARAXA_TESTNET),
     WRAPPED_NATIVE_CURRENCY[ChainId.TARAXA_TESTNET] as Token,
     USDT_TARAXA_TESTNET,
+  ].map(buildCurrencyInfo),
+
+  [ChainId.TARAXA]: [
+    nativeOnChain(ChainId.TARAXA),
+    WRAPPED_NATIVE_CURRENCY[ChainId.TARAXA] as Token,
+    USDT_TARAXA,
   ].map(buildCurrencyInfo),
 };
 

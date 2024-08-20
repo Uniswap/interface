@@ -270,8 +270,8 @@ export const colorsLight = {
 
   DEP_accentWarning: colors.goldVibrant,
 
-  DEP_accentBranded: colors.magentaVibrant,
-  DEP_shadowBranded: colors.magentaVibrant,
+  DEP_accentBranded: colors.networkTaraxa,
+  DEP_shadowBranded: colors.networkTaraxa,
 
   DEP_accentSuccessSoft: opacify(24, colors.green300),
   DEP_accentWarningSoft: opacify(24, colors.goldVibrant),
@@ -279,7 +279,7 @@ export const colorsLight = {
 
   DEP_blue300: colors.blue300,
   DEP_brandedAccentSoft: colors.magenta100,
-  DEP_magentaDark: opacify(12, colors.magentaVibrant),
+  DEP_magentaDark: opacify(12, colors.networkTaraxa),
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
@@ -337,14 +337,14 @@ export const colorsDark = {
   statusCritical: sporeDark.statusCritical,
 
   DEP_backgroundBranded: '#100D1C',
-  DEP_backgroundActionButton: opacify(12, colors.magentaVibrant),
+  DEP_backgroundActionButton: opacify(12, colors.networkTaraxa),
   DEP_backgroundOverlay: opacify(10, colors.white),
 
   DEP_accentWarning: colors.goldVibrant,
 
-  DEP_accentBranded: colors.magentaVibrant,
+  DEP_accentBranded: colors.networkTaraxa,
   // TODO(MOB-160): accommodate one-off color in cleaner way
-  DEP_shadowBranded: '#B60ACF',
+  DEP_shadowBranded: colors.networkTaraxa,
 
   DEP_accentSuccessSoft: opacify(24, colors.green400),
   DEP_accentWarningSoft: opacify(24, colors.gold200),
@@ -352,7 +352,7 @@ export const colorsDark = {
 
   DEP_blue300: colors.blue300,
   DEP_brandedAccentSoft: '#46244F', // git blame Chelsy
-  DEP_magentaDark: opacify(12, colors.magentaVibrant),
+  DEP_magentaDark: opacify(12, colors.networkTaraxa),
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 

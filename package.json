@@ -118,7 +118,7 @@
     "lfg": "yarn g:prepare && yarn mobile env:local:download && yarn stretch env:local:download && yarn g:build && yarn mobile pod && yarn mobile ios",
     "mobile": "yarn workspace @uniswap/mobile",
     "local:check": "./scripts/local-version-check.sh",
-    "postinstall": "husky install && yarn g:prepare",
+    "postinstall": "bash -c 'if [ -d .git ]; then husky install; fi && yarn g:prepare'",
     "stretch": "yarn workspace @uniswap/stretch",
     "ui": "yarn workspace ui",
     "upgrade:tamagui": "yarn up '*tamagui*' '@tamagui/*'",

@@ -203,7 +203,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 }
 
 .c24 {
-  background-color: #FC72FF;
+  background-color: #15AC5B;
   font-size: 20px;
   font-weight: 535;
   padding: 16px;
@@ -810,7 +810,7 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
 }
 
 .c21 {
-  background-color: #FC72FF;
+  background-color: #15AC5B;
   font-size: 20px;
   font-weight: 535;
   padding: 16px;

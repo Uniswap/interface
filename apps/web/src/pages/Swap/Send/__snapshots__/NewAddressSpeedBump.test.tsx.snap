@@ -195,8 +195,8 @@ exports[`NewAddressSpeedBumpModal should not render identicon if account has no 
   cursor: pointer;
   -webkit-transition-duration: 125ms;
   transition-duration: 125ms;
-  color: #FC72FF;
-  stroke: #FC72FF;
+  color: #15AC5B;
+  stroke: #15AC5B;
   font-weight: 500;
 }
 

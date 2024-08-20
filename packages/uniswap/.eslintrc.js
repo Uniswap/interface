@@ -25,5 +25,13 @@ module.exports = {
       rules: {},
     },
   ],
-  rules: {},
+  rules: {
+    "import/no-unused-modules": [
+      "warn",
+      {
+        "unusedExports": true,
+        "ignoreExports": ["**/*.test.js", "**/*.test.ts", "**/*.test.tsx"]
+      }
+    ]
+  },
 }
