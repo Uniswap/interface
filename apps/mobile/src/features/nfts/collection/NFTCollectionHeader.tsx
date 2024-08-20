@@ -89,12 +89,12 @@ export function NFTCollectionHeader({
           mx="$spacing24"
         >
           <Flex backgroundColor="$scrim" borderRadius="$roundedFull" p="$spacing4">
-            <BackButton color="$sporeWhite" mr="$spacing1" size={iconSizes.icon24} />
+            <BackButton color="$white" mr="$spacing1" size={iconSizes.icon24} />
           </Flex>
           <NFTCollectionContextMenu
             collectionAddress={collectionAddress}
             data={data}
-            iconColor="$sporeWhite"
+            iconColor="$white"
             showButtonOutline={true}
           />
         </Flex>

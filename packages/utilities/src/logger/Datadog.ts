@@ -1,8 +1,20 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { StoreEnhancerStoreCreator } from 'redux'
 import { NotImplementedError } from 'utilities/src/errors'
 import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
 
 export function setupDatadog(): void {
   throw new NotImplementedError('Please use the web implementation from Datadog.web.ts')
+}
+
+interface Config {
+  shouldLogReduxState: (state: any) => boolean
+}
+
+export function createDatadogReduxEnhancer(
+  _config: Config,
+): (next: StoreEnhancerStoreCreator) => StoreEnhancerStoreCreator {
+  throw new NotImplementedError('createDatadogReduxEnhancer')
 }
 
 export function logToDatadog(

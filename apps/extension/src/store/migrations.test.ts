@@ -1,8 +1,22 @@
 import { BigNumber } from 'ethers'
 import { toIncludeSameMembers } from 'jest-extended'
 import { EXTENSION_STATE_VERSION, migrations } from 'src/store/migrations'
-import { getSchema, initialSchema, v0Schema, v1Schema, v2Schema, v3Schema, v4Schema, v5Schema } from 'src/store/schema'
+import {
+  getSchema,
+  initialSchema,
+  v0Schema,
+  v1Schema,
+  v2Schema,
+  v3Schema,
+  v4Schema,
+  v5Schema,
+  v6Schema,
+  v7Schema,
+  v8Schema,
+} from 'src/store/schema'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
+import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialFavoritesState } from 'wallet/src/features/favorites/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
@@ -14,8 +28,8 @@ import { initialTransactionsState } from 'wallet/src/features/transactions/slice
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { createMigrate } from 'wallet/src/state/createMigrate'
-import { testActivatePendingAccounts } from 'wallet/src/state/sharedMigrationsTests'
-import { getAllKeysOfNestedObject } from 'wallet/src/state/testUtils'
+import { HAYDEN_ETH_ADDRESS } from 'wallet/src/state/walletMigrations'
+import { testActivatePendingAccounts, testAddedHapticSetting } from 'wallet/src/state/walletMigrationsTests'
 
 expect.extend({ toIncludeSameMembers })
 
@@ -43,7 +57,7 @@ describe('Redux state migrations', () => {
 
     // Add new slices here!
     const initialState = {
-      appearanceSettings: { selectedAppearanceSettings: 'system' },
+      appearanceSettings: initialAppearanceSettingsState,
       blocks: { byChainId: {} },
       chains: {
         byChainId: {
@@ -168,8 +182,7 @@ describe('Redux state migrations', () => {
   })
 
   it('migrates from v2 to v3', () => {
-    const v3 = migrations[3]
-    testActivatePendingAccounts(v3, v2Schema)
+    testActivatePendingAccounts(migrations[3], v2Schema)
   })
 
   it('migrates from v3 to v4', async () => {
@@ -188,5 +201,24 @@ describe('Redux state migrations', () => {
     const v5Stub = { ...v5Schema }
     const v6 = await migrations[6](v5Stub)
     expect(v6.behaviorHistory.extensionOnboardingState).toBe(undefined)
+  })
+
+  it('migrates from v6 to v7', async () => {
+    const v6Stub = { ...v6Schema }
+    v6Stub.favorites.watchedAddresses = [HAYDEN_ETH_ADDRESS] as never
+    const v7 = await migrations[7](v6Stub)
+    expect(v7.favorites.watchedAddresses).toEqual([])
+  })
+
+  it('migrates from v7 to v8', async () => {
+    testAddedHapticSetting(migrations[8], v7Schema)
+  })
+
+  it('migrates from v8 to v9', async () => {
+    const v8Stub = { ...v8Schema }
+    const v9 = await migrations[9](v8Stub)
+
+    expect(v9.behaviorHistory.hasUsedExplore).toBe(false)
+    expect(v9.behaviorHistory.hasViewedWelcomeWalletCard).toBe(false)
   })
 })

@@ -2,14 +2,16 @@ import { memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { SectionHeader, TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
+import { SectionHeader } from 'uniswap/src/components/TokenSelector/TokenSectionHeader'
+import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import {
   ConvertFiatAmountFormattedCallback,
   OnSelectCurrency,
+  TokenOptionSection,
   TokenSection,
   TokenSectionsForSend,
 } from 'uniswap/src/components/TokenSelector/types'
-import { getTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
+import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -21,8 +23,6 @@ function useTokenSectionsForSend({
   valueModifiers,
   usePortfolioTokenOptionsHook,
 }: TokenSectionsForSend): GqlResult<TokenSection[]> {
-  const { t } = useTranslation()
-
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
@@ -33,10 +33,7 @@ function useTokenSectionsForSend({
   const loading = portfolioTokenOptionsLoading
   const error = !portfolioTokenOptions && portfolioTokenOptionsError
 
-  const sections = useMemo(
-    () => getTokenOptionsSection(t('tokens.selector.section.yours'), portfolioTokenOptions),
-    [portfolioTokenOptions, t],
-  )
+  const sections = useTokenOptionsSection(TokenOptionSection.YourTokens, portfolioTokenOptions)
 
   return useMemo(
     () => ({
@@ -56,7 +53,7 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }):
 
   return (
     <Flex>
-      <SectionHeader title={t('tokens.selector.section.yours')} />
+      <SectionHeader sectionKey={TokenOptionSection.YourTokens} />
       <Flex pt="$spacing16" px="$spacing16">
         <BaseCard.EmptyState
           buttonLabel={

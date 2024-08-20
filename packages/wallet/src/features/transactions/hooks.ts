@@ -25,7 +25,7 @@ import {
   isFinalizedTx,
 } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { RootState } from 'wallet/src/state'
+import { WalletState } from 'wallet/src/state/walletReducer'
 
 type HashToTxMap = Map<string, TransactionDetails>
 
@@ -100,7 +100,7 @@ export function useSelectTransaction(
   txId: string | undefined,
 ): TransactionDetails | undefined {
   const selectTransaction = useMemo(makeSelectTransaction, [])
-  return useSelector((state: RootState) => selectTransaction(state, { address, chainId, txId }))
+  return useSelector((state: WalletState) => selectTransaction(state, { address, chainId, txId }))
 }
 
 export function useCreateSwapFormState(

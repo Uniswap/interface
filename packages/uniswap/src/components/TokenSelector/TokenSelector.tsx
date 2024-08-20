@@ -12,11 +12,11 @@ import { TokenSelectorSwapOutputList } from 'uniswap/src/components/TokenSelecto
 import {
   ConvertFiatAmountFormattedCallback,
   FilterCallbacksHookType,
-  SuggestedTokenSection,
   TokenOptionsHookType,
   TokenOptionsWithBalanceOnlySearchHookType,
   TokenOptionsWithChainFilterHookType,
   TokenSection,
+  TokenSectionsForEmptySearchHookType,
   TokenWarningDismissedHook,
 } from 'uniswap/src/components/TokenSelector/types'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
@@ -24,7 +24,6 @@ import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheet
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { PortfolioValueModifier } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult } from 'uniswap/src/data/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
@@ -73,7 +72,7 @@ export interface TokenSelectorProps {
   useFavoriteTokensOptionsHook: TokenOptionsHookType
   usePopularTokensOptionsHook: TokenOptionsWithChainFilterHookType
   usePortfolioTokenOptionsHook: TokenOptionsHookType
-  useTokenSectionsForEmptySearchHook: () => GqlResult<TokenSection[]>
+  useTokenSectionsForEmptySearchHook: TokenSectionsForEmptySearchHookType
   useTokenSectionsForSearchResultsHook: TokenOptionsWithBalanceOnlySearchHookType
   useFilterCallbacksHook: FilterCallbacksHookType
 }
@@ -137,9 +136,9 @@ function TokenSelectorContent({
       : undefined
 
   const onSelectCurrencyCallback = useCallback(
-    (currencyInfo: CurrencyInfo, section: SuggestedTokenSection | TokenSection, index: number): void => {
+    (currencyInfo: CurrencyInfo, section: TokenSection, index: number): void => {
       const searchContext: SearchContext = {
-        category: section.title,
+        category: section.sectionKey,
         query: debouncedSearchFilter ?? undefined,
         position: index + 1,
         suggestionCount: section.data.length,
@@ -177,6 +176,7 @@ function TokenSelectorContent({
     if (searchInFocus && !searchFilter) {
       return (
         <TokenSelectorEmptySearchList
+          chainFilter={chainFilter}
           convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
           formatNumberOrStringCallback={formatNumberOrStringCallback}
           useTokenSectionsForEmptySearchHook={useTokenSectionsForEmptySearchHook}

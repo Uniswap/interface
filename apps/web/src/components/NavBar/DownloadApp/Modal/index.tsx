@@ -1,5 +1,4 @@
 import { InterfaceModalName } from '@uniswap/analytics-events'
-import { AnimatedSlider } from 'components/AnimatedSlider'
 import Modal from 'components/Modal'
 import { GetStarted } from 'components/NavBar/DownloadApp/Modal/GetStarted'
 import { GetTheApp } from 'components/NavBar/DownloadApp/Modal/GetTheApp'
@@ -9,7 +8,7 @@ import { ArrowLeft, X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ClickableStyle } from 'theme/components'
-import { Flex } from 'ui/src'
+import { AnimateTransition, Flex } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
@@ -57,13 +56,13 @@ export function GetTheAppModal() {
             {showBackButton && <BackButton onClick={() => setPage(Page.GetStarted)} size={iconSizes.icon24} />}
             <CloseButton onClick={close} size={iconSizes.icon24} data-testid="get-the-app-close-button" />
           </Flex>
-          <AnimatedSlider
+          <AnimateTransition
             currentIndex={page === Page.GetStarted ? 0 : 1}
-            slideDirection={page === Page.GetStarted ? 'forward' : 'backward'}
+            animationType={page === Page.GetStarted ? 'forward' : 'backward'}
           >
             <GetStarted toAppDownload={() => setPage(Page.GetApp)} />
             <GetTheApp />
-          </AnimatedSlider>
+          </AnimateTransition>
         </Wrapper>
       </StyledModal>
     </Trace>

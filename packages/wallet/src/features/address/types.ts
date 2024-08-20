@@ -1,4 +1,4 @@
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 
 export interface SearchableRecipient {
   address: Address

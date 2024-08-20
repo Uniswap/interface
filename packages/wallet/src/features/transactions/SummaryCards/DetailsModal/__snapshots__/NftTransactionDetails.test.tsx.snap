@@ -41,16 +41,16 @@ exports[`NftTransactionDetails Component renders NftTransactionDetails without e
   <View
     style={
       {
-        "borderBottomColor": "#2222220D",
+        "borderBottomColor": "rgba(34,34,34,0.05)",
         "borderBottomLeftRadius": 20,
         "borderBottomRightRadius": 20,
         "borderBottomWidth": 1,
-        "borderLeftColor": "#2222220D",
+        "borderLeftColor": "rgba(34,34,34,0.05)",
         "borderLeftWidth": 1,
-        "borderRightColor": "#2222220D",
+        "borderRightColor": "rgba(34,34,34,0.05)",
         "borderRightWidth": 1,
         "borderStyle": "solid",
-        "borderTopColor": "#2222220D",
+        "borderTopColor": "rgba(34,34,34,0.05)",
         "borderTopWidth": 0,
         "flexDirection": "column",
         "paddingBottom": 12,

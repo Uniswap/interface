@@ -5,7 +5,7 @@ import 'react-native-reanimated'
 import { useSelector } from 'react-redux'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
 import { getSupportedURI, URIType } from 'src/components/Requests/ScanSheet/util'
-import { Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useHapticFeedback, useIsDarkMode, useSporeColors } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -27,6 +27,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
   const activeAddress = useSelector(selectActiveAccountAddress)
   const [currentScreenState, setCurrentScreenState] = useState<ScannerModalState>(ScannerModalState.ScanQr)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
+  const { hapticFeedback } = useHapticFeedback()
 
   const onScanCode = async (uri: string): Promise<void> => {
     // don't scan any QR codes if camera is frozen
@@ -34,7 +35,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
       return
     }
 
-    await HapticFeedback.selection()
+    await hapticFeedback.selection()
     setShouldFreezeCamera(true)
     const supportedURI = await getSupportedURI(uri)
 

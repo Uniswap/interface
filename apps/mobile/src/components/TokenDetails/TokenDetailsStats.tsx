@@ -4,7 +4,7 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { LongText } from 'src/components/text/LongText'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ChartBar, ChartPie, Language as LanguageIcon, TrendDown, TrendUp } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
+import { DEP_accentColors, iconSizes, validColor } from 'ui/src/theme'
 import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
@@ -164,7 +164,7 @@ export function TokenDetailsStats({
                         {currentLanguageInfo.displayName}
                       </Text>
                     </Flex>
-                    <Text color="$blue400" variant="buttonLabel4">
+                    <Text color={validColor(DEP_accentColors.blue400)} variant="buttonLabel4">
                       {t('token.stats.translation.original')}
                     </Text>
                   </Flex>

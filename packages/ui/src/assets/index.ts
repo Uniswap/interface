@@ -21,6 +21,7 @@ export const AVATARS_LIGHT = require('./misc/avatars-light.png')
 export const AVATARS_DARK = require('./misc/avatars-dark.png')
 export const APP_SCREENSHOT_LIGHT = require('./misc/app-screenshot-light.png')
 export const APP_SCREENSHOT_DARK = require('./misc/app-screenshot-dark.png')
+export const CHROME_LOGO = require('./logos/png/chrome-logo.png')
 export const DOT_GRID = require('./misc/dot-grid.png')
 export const UNITAGS_BANNER_VERTICAL_LIGHT = require('./graphics/unitags-banner-v-light.png')
 export const UNITAGS_BANNER_VERTICAL_DARK = require('./graphics/unitags-banner-v-dark.png')
@@ -36,6 +37,9 @@ export const FROGGY = require('./graphics/froggy.png')
 
 export const UNITAG_DARK = require('./graphics/unitag-dark.png')
 export const UNITAG_LIGHT = require('./graphics/unitag-light.png')
+
+export const UNITAG_DARK_SMALL = require('./graphics/unitag-dark-small.png')
+export const UNITAG_LIGHT_SMALL = require('./graphics/unitag-light-small.png')
 
 export const ONBOARDING_LANDING_LIGHT = {
   ios: require(`./backgrounds/onboarding-landing-static-light.png`),

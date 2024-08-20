@@ -6,11 +6,14 @@ interface ImportableAccount {
   balance: number | undefined
 }
 
-export function useSelectAccounts(accounts: ImportableAccount[] = []): {
+export function useSelectAccounts(initialAccounts: ImportableAccount[] = []): {
   selectedAddresses: string[]
   toggleAddressSelection: (address: string) => void
 } {
-  const initialSelectedAddresses = useMemo(() => accounts.map((account) => account.ownerAddress), [accounts])
+  const initialSelectedAddresses = useMemo(
+    () => initialAccounts.map((account) => account.ownerAddress),
+    [initialAccounts],
+  )
   const [selectedAddresses, setSelectedAddresses] = useState(initialSelectedAddresses)
 
   const toggleAddressSelection = (address: string): void => {

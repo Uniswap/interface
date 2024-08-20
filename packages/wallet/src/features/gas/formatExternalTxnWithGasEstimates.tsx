@@ -17,14 +17,17 @@ export function formatExternalTxnWithGasEstimates({
 }): providers.TransactionRequest {
   const { params } = gasFeeResult
 
+  // Clone to ensure object is configurable, otherwise deleting properties may cause type errors
+  const transactionClone = { ...transaction }
+
   // Remove preset gas params from txn, account for both type 1 and type 2 gas formats
-  delete transaction.gasLimit
-  delete transaction.gasPrice
-  delete transaction.maxFeePerGas
-  delete transaction.maxPriorityFeePerGas
+  delete transactionClone.gasLimit
+  delete transactionClone.gasPrice
+  delete transactionClone.maxFeePerGas
+  delete transactionClone.maxPriorityFeePerGas
 
   const formattedTxnWithGasEstimates: providers.TransactionRequest = {
-    ...transaction,
+    ...transactionClone,
     ...params,
   }
 

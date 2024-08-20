@@ -450,163 +450,168 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
 }
 
 <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c1"
-        />
-        <div
-          class="c2"
-          data-testid="account-drawer"
+          class="c0"
         >
           <div
-            class="c3"
-            id="wallet-dropdown-scroll-wrapper"
+            class="c1"
+          />
+          <div
+            class="c2"
+            data-testid="account-drawer"
           >
             <div
-              class="c4 c5"
+              class="c3"
+              id="wallet-dropdown-scroll-wrapper"
             >
               <div
-                class="c6"
-                data-testid="wallet-modal"
+                class="c4 c5"
               >
                 <div
-                  tabindex="0"
-                />
-                <div
-                  class="c7 c8 c9"
-                  width="100%"
+                  class="c6"
+                  data-testid="wallet-modal"
                 >
                   <div
-                    class="c10 css-n8z49y"
-                  >
-                    Connect a wallet
-                  </div>
-                </div>
-                <div
-                  class="c11"
-                >
+                    tabindex="0"
+                  />
                   <div
-                    class="c12 c13"
+                    class="c7 c8 c9"
+                    width="100%"
                   >
                     <div
-                      class="c14"
-                      data-testid="option-grid"
+                      class="c10 css-n8z49y"
                     >
-                      <div
-                        class="c15"
-                      >
-                        <button
-                          class="c16"
-                          data-testid="wallet-option-uniswapWalletConnect"
-                        >
-                          <div
-                            class="c17"
-                          >
-                            <div
-                              class="c18"
-                            >
-                              <img
-                                alt="Uniswap Wallet"
-                                src="uniswap-wallet-icon.png"
-                              />
-                            </div>
-                            <div
-                              class="c19"
-                            >
-                              Uniswap Wallet
-                            </div>
-                          </div>
-                        </button>
-                      </div>
-                      <div
-                        class="c15"
-                      >
-                        <button
-                          class="c16"
-                          data-testid="wallet-option-walletConnect"
-                        >
-                          <div
-                            class="c17"
-                          >
-                            <div
-                              class="c18"
-                            >
-                              <img
-                                alt="WalletConnect"
-                                src="walletconnect-icon.svg"
-                              />
-                            </div>
-                            <div
-                              class="c19"
-                            >
-                              WalletConnect
-                            </div>
-                          </div>
-                        </button>
-                      </div>
-                      <div
-                        class="c15"
-                      >
-                        <button
-                          class="c16"
-                          data-testid="wallet-option-coinbaseWallet"
-                        >
-                          <div
-                            class="c17"
-                          >
-                            <div
-                              class="c18"
-                            >
-                              <img
-                                alt="Coinbase Wallet"
-                                src="coinbase-icon.svg"
-                              />
-                            </div>
-                            <div
-                              class="c19"
-                            >
-                              Coinbase Wallet
-                            </div>
-                          </div>
-                        </button>
-                      </div>
+                      Connect a wallet
                     </div>
                   </div>
                   <div
-                    class="c20"
+                    class="c11"
                   >
                     <div
-                      class="c21"
+                      class="c12 c13"
                     >
                       <div
-                        class="c22 css-142zc9n"
+                        class="c14"
+                        data-testid="option-grid"
                       >
-                        By connecting a wallet, you agree to Uniswap Labs’ 
-                        <a
-                          class="c23 c24"
-                          href="https://uniswap.org/terms-of-service/"
-                          rel="noopener noreferrer"
-                          target="_blank"
+                        <div
+                          class="c15"
                         >
-                          Terms of Service
-                        </a>
-                         and consent to its 
-                        <a
-                          class="c23 c24"
-                          href="https://uniswap.org/privacy-policy"
-                          rel="noopener noreferrer"
-                          target="_blank"
+                          <button
+                            class="c16"
+                            data-testid="wallet-option-uniswapWalletConnect"
+                          >
+                            <div
+                              class="c17"
+                            >
+                              <div
+                                class="c18"
+                              >
+                                <img
+                                  alt="Uniswap Wallet"
+                                  src="uniswap-wallet-icon.png"
+                                />
+                              </div>
+                              <div
+                                class="c19"
+                              >
+                                Uniswap Wallet
+                              </div>
+                            </div>
+                          </button>
+                        </div>
+                        <div
+                          class="c15"
                         >
-                          Privacy Policy
-                        </a>
-                        .
+                          <button
+                            class="c16"
+                            data-testid="wallet-option-walletConnect"
+                          >
+                            <div
+                              class="c17"
+                            >
+                              <div
+                                class="c18"
+                              >
+                                <img
+                                  alt="WalletConnect"
+                                  src="walletconnect-icon.svg"
+                                />
+                              </div>
+                              <div
+                                class="c19"
+                              >
+                                WalletConnect
+                              </div>
+                            </div>
+                          </button>
+                        </div>
+                        <div
+                          class="c15"
+                        >
+                          <button
+                            class="c16"
+                            data-testid="wallet-option-coinbaseWallet"
+                          >
+                            <div
+                              class="c17"
+                            >
+                              <div
+                                class="c18"
+                              >
+                                <img
+                                  alt="Coinbase Wallet"
+                                  src="coinbase-icon.svg"
+                                />
+                              </div>
+                              <div
+                                class="c19"
+                              >
+                                Coinbase Wallet
+                              </div>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c20"
+                    >
+                      <div
+                        class="c21"
+                      >
+                        <div
+                          class="c22 css-142zc9n"
+                        >
+                          By connecting a wallet, you agree to Uniswap Labs’ 
+                          <a
+                            class="c23 c24"
+                            href="https://uniswap.org/terms-of-service/"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            Terms of Service
+                          </a>
+                           and consent to its 
+                          <a
+                            class="c23 c24"
+                            href="https://uniswap.org/privacy-policy"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            Privacy Policy
+                          </a>
+                          .
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -615,7 +620,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
             </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -1295,220 +1300,225 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c1"
-        />
-        <div
-          class="c2"
-          data-testid="account-drawer"
+          class="c0"
         >
           <div
-            class="c3"
-            id="wallet-dropdown-scroll-wrapper"
+            class="c1"
+          />
+          <div
+            class="c2"
+            data-testid="account-drawer"
           >
             <div
-              class="c4 c5"
+              class="c3"
+              id="wallet-dropdown-scroll-wrapper"
             >
               <div
-                class="c6"
-                data-testid="wallet-modal"
+                class="c4 c5"
               >
                 <div
-                  tabindex="0"
-                />
-                <div
-                  class="c7 c8 c9"
-                  width="100%"
+                  class="c6"
+                  data-testid="wallet-modal"
                 >
                   <div
-                    class="c10 css-n8z49y"
-                  >
-                    Connect a wallet
-                  </div>
-                </div>
-                <div
-                  class="c11"
-                >
+                    tabindex="0"
+                  />
                   <div
-                    class="c12"
+                    class="c7 c8 c9"
+                    width="100%"
                   >
                     <div
-                      class="c13 c14 c15"
+                      class="c10 css-n8z49y"
                     >
-                      <svg
-                        fill="none"
-                        stroke-width="8"
-                        style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(254, 244, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
-                        viewBox="0 0 22 22"
-                      >
-                        <path
-                          d="M6.92609 1.83331H3.87053C3.33028 1.83331 2.81215 2.04793 2.43013 2.42995C2.04811 2.81197 1.8335 3.33009 1.8335 3.87035V6.92591M20.1668 6.92591V3.87035C20.1668 3.33009 19.9522 2.81197 19.5702 2.42995C19.1882 2.04793 18.67 1.83331 18.1298 1.83331H15.0742M15.0742 20.1666H18.1298C18.67 20.1666 19.1882 19.952 19.5702 19.57C19.9522 19.188 20.1668 18.6699 20.1668 18.1296V15.0741M1.8335 15.0741V18.1296C1.8335 18.6699 2.04811 19.188 2.43013 19.57C2.81215 19.952 3.33028 20.1666 3.87053 20.1666H6.92609M12.1829 12.1827V14.5483M12.1829 16.9139H14.5484V12.1827M14.5482 13.3654H16.9138M16.914 15.7311V16.9139M5.67739 5.08581H9.22578C9.5524 5.08581 9.81717 5.35059 9.81717 5.67721V9.22559C9.81717 9.55221 9.5524 9.81699 9.22578 9.81699H5.67739C5.35077 9.81699 5.08599 9.55221 5.08599 9.22559V5.67721C5.08599 5.35059 5.35077 5.08581 5.67739 5.08581ZM5.67739 12.1827H9.22578C9.5524 12.1827 9.81717 12.4475 9.81717 12.7741V16.3225C9.81717 16.6491 9.5524 16.9139 9.22578 16.9139H5.67739C5.35077 16.9139 5.08599 16.6491 5.08599 16.3225V12.7741C5.08599 12.4475 5.35077 12.1827 5.67739 12.1827ZM12.7743 5.08581H16.3226C16.6493 5.08581 16.914 5.35059 16.914 5.67721V9.22559C16.914 9.55221 16.6493 9.81699 16.3226 9.81699H12.7743C12.4476 9.81699 12.1829 9.55221 12.1829 9.22559V5.67721C12.1829 5.35059 12.4476 5.08581 12.7743 5.08581Z"
-                          stroke="currentColor"
-                          stroke-linecap="round"
-                          stroke-linejoin="round"
-                          stroke-width="1.75"
-                        />
-                      </svg>
+                      Connect a wallet
+                    </div>
+                  </div>
+                  <div
+                    class="c11"
+                  >
+                    <div
+                      class="c12"
+                    >
                       <div
-                        class="c13 c16"
+                        class="c13 c14 c15"
                       >
-                        <div
-                          class="c4"
+                        <svg
+                          fill="none"
+                          stroke-width="8"
+                          style="color: rgb(252, 114, 255); width: 40px; height: 40px; min-width: 40px; background-color: rgb(254, 244, 255); border-top-left-radius: 8px; border-top-right-radius: 8px; border-bottom-right-radius: 8px; border-bottom-left-radius: 8px; padding: 7px 7px 7px 7px;"
+                          viewBox="0 0 22 22"
                         >
-                          <span
-                            class="font_button _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _whiteSpace-nowrap"
-                            data-disable-theme="true"
+                          <path
+                            d="M6.92609 1.83331H3.87053C3.33028 1.83331 2.81215 2.04793 2.43013 2.42995C2.04811 2.81197 1.8335 3.33009 1.8335 3.87035V6.92591M20.1668 6.92591V3.87035C20.1668 3.33009 19.9522 2.81197 19.5702 2.42995C19.1882 2.04793 18.67 1.83331 18.1298 1.83331H15.0742M15.0742 20.1666H18.1298C18.67 20.1666 19.1882 19.952 19.5702 19.57C19.9522 19.188 20.1668 18.6699 20.1668 18.1296V15.0741M1.8335 15.0741V18.1296C1.8335 18.6699 2.04811 19.188 2.43013 19.57C2.81215 19.952 3.33028 20.1666 3.87053 20.1666H6.92609M12.1829 12.1827V14.5483M12.1829 16.9139H14.5484V12.1827M14.5482 13.3654H16.9138M16.914 15.7311V16.9139M5.67739 5.08581H9.22578C9.5524 5.08581 9.81717 5.35059 9.81717 5.67721V9.22559C9.81717 9.55221 9.5524 9.81699 9.22578 9.81699H5.67739C5.35077 9.81699 5.08599 9.55221 5.08599 9.22559V5.67721C5.08599 5.35059 5.35077 5.08581 5.67739 5.08581ZM5.67739 12.1827H9.22578C9.5524 12.1827 9.81717 12.4475 9.81717 12.7741V16.3225C9.81717 16.6491 9.5524 16.9139 9.22578 16.9139H5.67739C5.35077 16.9139 5.08599 16.6491 5.08599 16.3225V12.7741C5.08599 12.4475 5.35077 12.1827 5.67739 12.1827ZM12.7743 5.08581H16.3226C16.6493 5.08581 16.914 5.35059 16.914 5.67721V9.22559C16.914 9.55221 16.6493 9.81699 16.3226 9.81699H12.7743C12.4476 9.81699 12.1829 9.55221 12.1829 9.22559V5.67721C12.1829 5.35059 12.4476 5.08581 12.7743 5.08581Z"
+                            stroke="currentColor"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="1.75"
+                          />
+                        </svg>
+                        <div
+                          class="c13 c16"
+                        >
+                          <div
+                            class="c4"
                           >
-                            Uniswap Mobile
-                          </span>
-                          <span
-                            class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202 _whiteSpace-nowrap"
-                            data-disable-theme="true"
-                          >
-                            Scan QR code to connect
-                          </span>
+                            <span
+                              class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _whiteSpace-nowrap"
+                              data-disable-theme="true"
+                            >
+                              Uniswap Mobile
+                            </span>
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202 _whiteSpace-nowrap"
+                              data-disable-theme="true"
+                            >
+                              Scan QR code to connect
+                            </span>
+                          </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  class="c17 c18 c19"
-                >
                   <div
-                    class="c20"
-                  />
-                  <div
-                    class="c21 c22"
-                  >
-                    <span
-                      class="font_body _fontFamily-299667014 _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _whiteSpace-nowrap"
-                      data-disable-theme="true"
-                    >
-                      Other wallets
-                    </span>
-                    <svg
-                      class="c23"
-                      fill="none"
-                      height="28"
-                      viewBox="0 0 28 28"
-                      width="28"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M13.9912 11.9609C14.2812 11.9609 14.5273 11.8379 14.8086 11.6094L20.75 6.81055C20.9609 6.62598 21.0928 6.3623 21.0928 6.0459C21.0928 5.43945 20.6094 5 20.0557 5C19.8008 5 19.5371 5.10547 19.291 5.30762L14 9.5791L8.7002 5.30762C8.44531 5.10547 8.19043 5 7.93555 5C7.38184 5 6.89844 5.43945 6.89844 6.0459C6.89844 6.3623 7.03027 6.62598 7.24121 6.81055L13.1738 11.6006C13.4639 11.8379 13.71 11.9609 13.9912 11.9609Z"
-                        fill="#70757A"
-                      />
-                      <path
-                        d="M14.0928 15C13.8115 15 13.5654 15.1318 13.2754 15.3604L7.34277 20.1592C7.13184 20.335 7 20.5986 7 20.9238C7 21.5215 7.4834 21.9609 8.03711 21.9609C8.29199 21.9609 8.54688 21.8643 8.80176 21.6621L14.1016 17.3906L19.3926 21.6621C19.6387 21.8643 19.9023 21.9609 20.1572 21.9609C20.7109 21.9609 21.1943 21.5215 21.1943 20.9238C21.1943 20.5986 21.0625 20.335 20.8516 20.1592L14.9102 15.3604C14.6289 15.1318 14.3828 15 14.0928 15Z"
-                        fill="#70757A"
-                      />
-                    </svg>
-                  </div>
-                  <div
-                    class="c20"
-                  />
-                </div>
-                <div
-                  class="c24"
-                >
-                  <div
-                    class="c25 c26"
+                    class="c17 c18 c19"
                   >
                     <div
-                      class="c27"
-                      data-testid="option-grid"
+                      class="c20"
+                    />
+                    <div
+                      class="c21 c22"
+                    >
+                      <span
+                        class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _whiteSpace-nowrap"
+                        data-disable-theme="true"
+                      >
+                        Other wallets
+                      </span>
+                      <svg
+                        class="c23"
+                        fill="none"
+                        height="28"
+                        viewBox="0 0 28 28"
+                        width="28"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <path
+                          d="M13.9912 11.9609C14.2812 11.9609 14.5273 11.8379 14.8086 11.6094L20.75 6.81055C20.9609 6.62598 21.0928 6.3623 21.0928 6.0459C21.0928 5.43945 20.6094 5 20.0557 5C19.8008 5 19.5371 5.10547 19.291 5.30762L14 9.5791L8.7002 5.30762C8.44531 5.10547 8.19043 5 7.93555 5C7.38184 5 6.89844 5.43945 6.89844 6.0459C6.89844 6.3623 7.03027 6.62598 7.24121 6.81055L13.1738 11.6006C13.4639 11.8379 13.71 11.9609 13.9912 11.9609Z"
+                          fill="#70757A"
+                        />
+                        <path
+                          d="M14.0928 15C13.8115 15 13.5654 15.1318 13.2754 15.3604L7.34277 20.1592C7.13184 20.335 7 20.5986 7 20.9238C7 21.5215 7.4834 21.9609 8.03711 21.9609C8.29199 21.9609 8.54688 21.8643 8.80176 21.6621L14.1016 17.3906L19.3926 21.6621C19.6387 21.8643 19.9023 21.9609 20.1572 21.9609C20.7109 21.9609 21.1943 21.5215 21.1943 20.9238C21.1943 20.5986 21.0625 20.335 20.8516 20.1592L14.9102 15.3604C14.6289 15.1318 14.3828 15 14.0928 15Z"
+                          fill="#70757A"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="c20"
+                    />
+                  </div>
+                  <div
+                    class="c24"
+                  >
+                    <div
+                      class="c25 c26"
                     >
                       <div
-                        class="c28"
+                        class="c27"
+                        data-testid="option-grid"
                       >
-                        <button
-                          class="c29"
-                          data-testid="wallet-option-walletConnect"
+                        <div
+                          class="c28"
                         >
-                          <div
-                            class="c30"
+                          <button
+                            class="c29"
+                            data-testid="wallet-option-walletConnect"
                           >
                             <div
-                              class="c31"
+                              class="c30"
                             >
-                              <img
-                                alt="WalletConnect"
-                                src="walletconnect-icon.svg"
-                              />
+                              <div
+                                class="c31"
+                              >
+                                <img
+                                  alt="WalletConnect"
+                                  src="walletconnect-icon.svg"
+                                />
+                              </div>
+                              <div
+                                class="c32"
+                              >
+                                WalletConnect
+                              </div>
                             </div>
-                            <div
-                              class="c32"
-                            >
-                              WalletConnect
-                            </div>
-                          </div>
-                        </button>
-                      </div>
-                      <div
-                        class="c28"
-                      >
-                        <button
-                          class="c29"
-                          data-testid="wallet-option-coinbaseWallet"
+                          </button>
+                        </div>
+                        <div
+                          class="c28"
                         >
-                          <div
-                            class="c30"
+                          <button
+                            class="c29"
+                            data-testid="wallet-option-coinbaseWallet"
                           >
                             <div
-                              class="c31"
+                              class="c30"
                             >
-                              <img
-                                alt="Coinbase Wallet"
-                                src="coinbase-icon.svg"
-                              />
+                              <div
+                                class="c31"
+                              >
+                                <img
+                                  alt="Coinbase Wallet"
+                                  src="coinbase-icon.svg"
+                                />
+                              </div>
+                              <div
+                                class="c32"
+                              >
+                                Coinbase Wallet
+                              </div>
                             </div>
-                            <div
-                              class="c32"
-                            >
-                              Coinbase Wallet
-                            </div>
-                          </div>
-                        </button>
+                          </button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div
-                    class="c12"
-                  >
                     <div
-                      class="c33"
+                      class="c12"
                     >
                       <div
-                        class="c34 css-142zc9n"
+                        class="c33"
                       >
-                        By connecting a wallet, you agree to Uniswap Labs’ 
-                        <a
-                          class="c35 c36"
-                          href="https://uniswap.org/terms-of-service/"
-                          rel="noopener noreferrer"
-                          target="_blank"
+                        <div
+                          class="c34 css-142zc9n"
                         >
-                          Terms of Service
-                        </a>
-                         and consent to its 
-                        <a
-                          class="c35 c36"
-                          href="https://uniswap.org/privacy-policy"
-                          rel="noopener noreferrer"
-                          target="_blank"
-                        >
-                          Privacy Policy
-                        </a>
-                        .
+                          By connecting a wallet, you agree to Uniswap Labs’ 
+                          <a
+                            class="c35 c36"
+                            href="https://uniswap.org/terms-of-service/"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            Terms of Service
+                          </a>
+                           and consent to its 
+                          <a
+                            class="c35 c36"
+                            href="https://uniswap.org/privacy-policy"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            Privacy Policy
+                          </a>
+                          .
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -1517,7 +1527,7 @@ exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable i
             </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>

@@ -1,7 +1,7 @@
 import { PreloadedState } from '@reduxjs/toolkit'
 import { waitFor } from '@testing-library/react-native'
 import { toIncludeSameMembers } from 'jest-extended'
-import { MobileState } from 'src/app/reducer'
+import { MobileState } from 'src/app/mobileReducer'
 import { renderHookWithProviders } from 'src/test/render'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { useRecipients } from 'wallet/src/components/RecipientSearch/hooks'

@@ -3,7 +3,7 @@ import { default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItemInfo, SectionList } from 'react-native'
 import { SvgProps } from 'react-native-svg'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackNavigationProp, SettingsStackNavigationProp } from 'src/app/navigation/types'
 import { FooterSettings } from 'src/components/Settings/FooterSettings'
 import { OnboardingRow } from 'src/components/Settings/OnboardingRow'
@@ -36,6 +36,7 @@ import {
   LineChartDots,
   OSDynamicCloudIcon,
   ShieldQuestion,
+  WavePulse,
 } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -43,8 +44,10 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
+import { isDevEnv } from 'utilities/src/environment'
 import { isAndroid } from 'utilities/src/platform'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
+import { selectHapticsEnabled, setHapticsUserSettingEnabled } from 'wallet/src/features/appearance/slice'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
@@ -80,6 +83,11 @@ export function SettingsScreen(): JSX.Element {
   const onToggleHideSpamTokens = useCallback(() => {
     dispatch(setHideSpamTokens(!hideSpamTokens))
   }, [dispatch, hideSpamTokens])
+
+  const hapticsUserEnabled = useSelector(selectHapticsEnabled)
+  const onToggleEnableHaptics = useCallback(() => {
+    dispatch(setHapticsUserSettingEnabled(!hapticsUserEnabled))
+  }, [dispatch, hapticsUserEnabled])
 
   // Signer account info
   const signerAccount = useSignerAccounts()[0]
@@ -143,6 +151,12 @@ export function SettingsScreen(): JSX.Element {
             icon: <ShieldQuestion {...iconProps} />,
             isToggleEnabled: hideSpamTokens,
             onToggle: onToggleHideSpamTokens,
+          },
+          {
+            text: t('settings.setting.hapticTouch.title'),
+            icon: <WavePulse {...iconProps} />,
+            isToggleEnabled: hapticsUserEnabled,
+            onToggle: onToggleEnableHaptics,
           },
           {
             screen: MobileScreens.SettingsPrivacy,
@@ -244,7 +258,7 @@ export function SettingsScreen(): JSX.Element {
       },
       {
         subTitle: 'Developer settings',
-        isHidden: !__DEV__,
+        isHidden: !isDevEnv(),
         data: [
           {
             screen: MobileScreens.Dev,
@@ -265,6 +279,8 @@ export function SettingsScreen(): JSX.Element {
     onToggleHideSmallBalances,
     hideSpamTokens,
     onToggleHideSpamTokens,
+    hapticsUserEnabled,
+    onToggleEnableHaptics,
     noSignerAccountImported,
     deviceSupportsBiometrics,
     isTouchIdSupported,

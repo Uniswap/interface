@@ -4,6 +4,7 @@ import { isWeb } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
+import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { isPriceImpactWarning, useSwapWarnings } from 'wallet/src/features/transactions/hooks/useSwapWarnings'
 import { useTransactionGasWarning } from 'wallet/src/features/transactions/hooks/useTransactionGasWarning'
 import {
@@ -32,12 +33,14 @@ export type ParsedWarnings = {
 }
 
 export function useParsedSwapWarnings(): ParsedWarnings {
+  const { account } = useTransactionModalContext()
   const { derivedSwapInfo } = useSwapFormContext()
   const { gasFee } = useSwapTxContext()
 
   const swapWarnings = useSwapWarnings(derivedSwapInfo)
 
   const gasWarning = useTransactionGasWarning({
+    account,
     derivedInfo: derivedSwapInfo,
     gasFee: gasFee.value,
   })

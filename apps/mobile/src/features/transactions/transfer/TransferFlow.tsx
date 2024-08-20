@@ -66,7 +66,7 @@ import { useTransferTransactionRequest } from 'wallet/src/features/transactions/
 import { useTransferWarnings } from 'wallet/src/features/transactions/transfer/hooks/useTransferWarnings'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
 import { TransactionStep, TransferFlowProps } from 'wallet/src/features/transactions/types'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountAddressWithThrow, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TransferFormProps {
   prefilledState?: TransactionState
@@ -81,7 +81,8 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
   const { isSheetReady } = useBottomSheetContext()
   const { formatNumberOrString, convertFiatAmountFormatted } = useLocalizationContext()
   const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
-  const address = useActiveAccountAddressWithThrow()
+  const account = useActiveAccountWithThrow()
+  const address = account.address
   const valueModifiers = usePortfolioValueModifiers(address)
   const { registerSearch } = useAddToSearchHistory()
   const searchHistory = useSelector(selectSearchHistory)
@@ -118,6 +119,7 @@ export function TransferFlow({ prefilledState, onClose }: TransferFormProps): JS
   )
 
   const gasWarning = useTransactionGasWarning({
+    account,
     derivedInfo: derivedTransferInfo,
     gasFee: gasFee?.value,
   })
@@ -356,6 +358,7 @@ function TransferInnerContent({
           <TransferTokenForm
             derivedTransferInfo={derivedTransferInfo}
             dispatch={dispatch}
+            gasFee={gasFee}
             isLayoutPending={isLayoutPending}
             openWalletRestoreModal={openWalletRestoreModal}
             setShowViewOnlyModal={setShowViewOnlyModal}

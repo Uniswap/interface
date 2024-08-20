@@ -13,10 +13,10 @@ import {
   TransactionDetailsHeader,
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
-import { ACCOUNT, preloadedSharedState } from 'wallet/src/test/fixtures'
+import { ACCOUNT, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 import { render } from 'wallet/src/test/test-utils'
 
-const preloadedState = preloadedSharedState({ account: ACCOUNT })
+const preloadedState = preloadedWalletPackageState({ account: ACCOUNT })
 const mockTransaction = {
   id: '9920dbad-ff24-47c8-814a-094566fc45ff',
   chainId: 81457,

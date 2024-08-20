@@ -21,7 +21,7 @@ export function SwapFeeWarning({ noFee, children }: PropsWithChildren<{ noFee: b
     <WarningInfo
       infoButton={
         <TouchableArea onPress={onPressLearnMore}>
-          <Text color="$magentaVibrant" variant={isWeb ? 'buttonLabel4' : 'buttonLabel3'}>
+          <Text color="$purpleVibrant" variant={isWeb ? 'buttonLabel4' : 'buttonLabel3'}>
             {t('common.button.learn')}
           </Text>
         </TouchableArea>

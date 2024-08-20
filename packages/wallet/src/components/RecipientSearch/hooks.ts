@@ -2,6 +2,7 @@ import { isEqual } from 'lodash'
 import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useSelector } from 'react-redux'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
@@ -13,9 +14,8 @@ import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
-import { DEFAULT_WATCHED_ADDRESSES } from 'wallet/src/features/favorites/slice'
 import { selectRecipientsByRecency } from 'wallet/src/features/transactions/selectors'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { selectInactiveAccounts } from 'wallet/src/features/wallet/selectors'
 
 const MAX_RECENT_RECIPIENTS = 15
@@ -153,15 +153,11 @@ export function useRecipients(
   } = useValidatedSearchedAddress(pattern, debounceDelayMs)
 
   const watchedWallets = useSelector(selectWatchedAddressSet)
+
   const isPatternEmpty = pattern.length === 0
 
   const sections = useMemo(() => {
     const sectionsArr = []
-
-    // Don't show default favorites as search result for recipient
-    for (const address of DEFAULT_WATCHED_ADDRESSES) {
-      watchedWallets.delete(address)
-    }
 
     if (validatedAddressRecipients.length && !isPatternEmpty) {
       sectionsArr.push({

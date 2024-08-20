@@ -1,35 +1,11 @@
 import { useMemo } from 'react'
 import { useExtractedColors, useSporeColors } from 'ui/src'
-import { colors as GlobalColors, GlobalPalette, colorsLight } from 'ui/src/theme'
+import { GlobalColorNames, colors as GlobalColors, GlobalPalette, colorsLight, opacify } from 'ui/src/theme'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { assert } from 'utilities/src/errors'
 import { hex } from 'wcag-contrast'
 
 export const MIN_COLOR_CONTRAST_THRESHOLD = 3
-
-/**
- * Add opacity information to a hex color
- * @param amount opacity value from 0 to 100
- * @param hexColor
- */
-export function opacify(amount: number, hexColor: string): string {
-  if (!hexColor.startsWith('#')) {
-    return hexColor
-  }
-
-  if (hexColor.length !== 7) {
-    throw new Error(`opacify: provided color ${hexColor} was not in hexadecimal format (e.g. #000000)`)
-  }
-
-  if (amount < 0 || amount > 100) {
-    throw new Error('opacify: provided amount should be between 0 and 100')
-  }
-
-  const opacityHex = Math.round((amount / 100) * 255).toString(16)
-  const opacifySuffix = opacityHex.length < 2 ? `0${opacityHex}` : opacityHex
-
-  return `${hexColor.slice(0, 7)}${opacifySuffix}`
-}
 
 export function getNetworkColorKey(chainId: WalletChainId): `chain_${WalletChainId}` {
   return `chain_${chainId}`
@@ -56,14 +32,14 @@ export function useNetworkColors(chainId: WalletChainId): {
  * Picks a contrast-passing text color to put on top of a given background color.
  * The threshold right now is 3.0, which is the WCAG AA standard.
  * @param backgroundColor The hex value of the background color to check contrast against
- * @returns either 'sporeWhite' or 'sporeBlack'
+ * @returns either 'white' or 'black'
  */
-export function getContrastPassingTextColor(backgroundColor: string): '$sporeWhite' | '$sporeBlack' {
-  const lightText = colorsLight.sporeWhite
+export function getContrastPassingTextColor(backgroundColor: string): '$white' | '$black' {
+  const lightText = colorsLight.white
   if (hex(lightText, backgroundColor) >= MIN_COLOR_CONTRAST_THRESHOLD) {
-    return '$sporeWhite'
+    return '$white'
   }
-  return '$sporeBlack'
+  return '$black'
 }
 
 /**
@@ -100,43 +76,32 @@ export enum AdjustmentType {
   Lighten = 'lighten',
 }
 
-const ColorVariant = {
-  [AdjustmentType.Darken]: '900',
-  [AdjustmentType.Lighten]: '200',
-}
+const colorPostfixes = ['Light', 'Pastel', 'Base', 'Vibrant', 'Dark']
 
 /**
  * Replaces a GlobalPalette color variant with a dark or lighter version.
  * Example: blue200 -> blue900
  */
 export function adjustColorVariant(
-  colorName: string | undefined,
+  colorName: GlobalColorNames | undefined,
   adjustmentType: AdjustmentType,
 ): keyof GlobalPalette | undefined {
   if (!colorName) {
     return undefined
   }
-  const newVariantSuffix = ColorVariant[adjustmentType]
-  // Check for non-numerical "vibrant" color key
-  if (colorName.includes('Vibrant')) {
-    const updatedColorKey = colorName.replace('Vibrant', newVariantSuffix)
-    // enforce we have a valid theme color
-    if (updatedColorKey in GlobalColors) {
-      return updatedColorKey as keyof GlobalPalette
-    }
-  }
 
-  // Check that we arrive at a valid color key from theme with a numbered variant (ignore black/white)
-  const matchesColorName = colorName.match(/\d+/g)
-  if (!matchesColorName) {
+  const postfix = colorPostfixes.find((p) => colorName.endsWith(p))
+  if (!postfix) {
     return undefined
   }
 
-  // Replace hex value and any digits with 900, the darkest color code in theme
-  const updatedColorKey = colorName.replace(/\d+/g, newVariantSuffix)
-  if (updatedColorKey in GlobalColors) {
-    return updatedColorKey as keyof GlobalPalette
+  const nextPostfix = colorPostfixes.indexOf(postfix) + (adjustmentType === AdjustmentType.Darken ? 1 : -1)
+  const nextColor = colorName.replace(postfix, '') + colorPostfixes[nextPostfix]
+
+  if (nextColor in GlobalColors) {
+    return nextColor as keyof GlobalPalette
   }
+
   return undefined
 }
 

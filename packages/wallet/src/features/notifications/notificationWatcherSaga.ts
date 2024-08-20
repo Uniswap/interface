@@ -1,6 +1,7 @@
 import { put, takeLatest } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -116,9 +117,12 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
   }
 }
 
+export const STALE_TRANSACTION_TIME_MS = ONE_MINUTE_MS * 30
+
 // If a wrap or approve tx is submitted with a swap, then suppress the notification.
-function shouldSuppressNotification(tx: TransactionDetails) {
-  return (
+export function shouldSuppressNotification(tx: TransactionDetails) {
+  const staleTransaction = Date.now() > tx.addedTime + STALE_TRANSACTION_TIME_MS
+  const chainedTransaction =
     (tx.typeInfo.type === TransactionType.Approve || tx.typeInfo.type === TransactionType.Wrap) && tx.typeInfo.swapTxId
-  )
+  return chainedTransaction || staleTransaction
 }

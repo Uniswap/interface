@@ -4,6 +4,7 @@ import { AnimatePresence, Flex, SpinningLoader, Text, TouchableArea, isWeb, useS
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { AlertTriangle, UniswapX } from 'ui/src/components/icons'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
@@ -19,7 +20,6 @@ import {
 } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useIsQueuedTransaction } from 'wallet/src/features/transactions/hooks'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { openTransactionLink } from 'wallet/src/utils/linking'
 

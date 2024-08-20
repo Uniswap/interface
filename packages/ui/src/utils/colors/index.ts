@@ -153,9 +153,11 @@ export function useExtractedTokenColor(
   const logolessColorScheme = useLogolessColorScheme(tokenName ?? '')
 
   useEffect(() => {
-    if (!colorsLoading && !!colors) {
-      setTokenColor(pickContrastPassingTokenColor(colors, backgroundColor))
+    if (!colorsLoading) {
       setTokenColorLoading(false)
+      if (colors !== undefined) {
+        setTokenColor(pickContrastPassingTokenColor(colors, backgroundColor))
+      }
     }
   }, [backgroundColor, colors, colorsLoading])
 

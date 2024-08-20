@@ -56,6 +56,11 @@ export function useRoutingAPIArguments({
     ArbitrumXV2OpenOrderProperties.DeadlineBufferSecs,
     30,
   )
+  const arbitrumXV2SlippageTolerance = useExperimentValue(
+    Experiments.ArbitrumXV2OpenOrders,
+    ArbitrumXV2OpenOrderProperties.SlippageTolerance,
+    '0.5',
+  )
   // Don't enable fee logic if this is a quote for pricing
   const sendPortionEnabled = routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE
 
@@ -85,6 +90,7 @@ export function useRoutingAPIArguments({
             priceImprovementBps,
             forceOpenOrders,
             deadlineBufferSecs,
+            arbitrumXV2SlippageTolerance,
           },
     [
       tokenIn,
@@ -101,6 +107,7 @@ export function useRoutingAPIArguments({
       priceImprovementBps,
       forceOpenOrders,
       deadlineBufferSecs,
+      arbitrumXV2SlippageTolerance,
     ],
   )
 }

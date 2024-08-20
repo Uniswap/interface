@@ -3,7 +3,7 @@ import { useEffect, useRef } from 'react'
 import { SectionList } from 'react-native'
 import { useDeviceInsets } from 'ui/src'
 import { TokenSectionBaseListProps } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
-import { SuggestedTokenSection, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 
 export function TokenSectionBaseList({
   sectionListRef,
@@ -28,7 +28,7 @@ export function TokenSectionBaseList({
   }, [sectionListRef])
 
   return (
-    <BottomSheetSectionList<TokenOption | TokenOption[], SuggestedTokenSection | TokenSection>
+    <BottomSheetSectionList<TokenOption | TokenOption[], TokenSection>
       ref={ref}
       ListEmptyComponent={ListEmptyComponent}
       bounces={true}

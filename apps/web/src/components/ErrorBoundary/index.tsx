@@ -123,7 +123,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
             <>
               <Column gap="sm">
                 <Title textAlign="center">
-                  <Trans i18nKey="common.somethingWentWrong.error" />
+                  <Trans i18nKey="common.card.error.description" />
                 </Title>
                 <Description textAlign="center" color="neutral2">
                   <Trans i18nKey="error.request.provideId" />
@@ -152,7 +152,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
             <>
               <Column gap="sm">
                 <Title textAlign="center">
-                  <Trans i18nKey="common.somethingWentWrong.error" />
+                  <Trans i18nKey="common.card.error.description" />
                 </Title>
                 <Description textAlign="center" color="neutral2">
                   <Trans i18nKey="common.error.request" />

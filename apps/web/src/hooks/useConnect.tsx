@@ -1,5 +1,6 @@
 import { InterfaceEventName, WalletConnectionResult } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
+import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
 import { useDisconnect } from 'hooks/useDisconnect'
 import { PropsWithChildren, createContext, useContext, useEffect } from 'react'
 import { useLocation } from 'react-router-dom'
@@ -37,7 +38,8 @@ export function ConnectionProvider({ children }: PropsWithChildren) {
 
         sendAnalyticsEvent(InterfaceEventName.WALLET_CONNECTED, {
           result: WalletConnectionResult.FAILED,
-          wallet_type: connector.name,
+          wallet_name: connector.name,
+          wallet_type: walletTypeToAmplitudeWalletType('type' in connector ? connector.type : undefined),
           page: getCurrentPageFromLocation(pathname),
           error: error.message,
         })

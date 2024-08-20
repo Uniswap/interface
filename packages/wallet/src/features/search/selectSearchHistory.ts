@@ -1,6 +1,6 @@
 import { SearchResult } from 'wallet/src/features/search/SearchResult'
-import { SharedState } from 'wallet/src/state/reducer'
+import { WalletState } from 'wallet/src/state/walletReducer'
 
-export const selectSearchHistory = (state: SharedState): SearchResult[] => {
+export const selectSearchHistory = (state: WalletState): SearchResult[] => {
   return state.searchHistory.results
 }

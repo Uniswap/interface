@@ -95,22 +95,105 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
       }
     }
   >
-    <svg
-      color="#CECECE"
-      data-file-name="SvgArrowDown"
-      height={20}
+    <RNSVGSvgView
+      align="xMidYMid"
+      bbHeight="20"
+      bbWidth="20"
+      fill="none"
+      focusable={false}
+      meetOrSlice={0}
+      minX={0}
+      minY={0}
       strokeWidth={2}
       style={
-        {
-          "transform": [
-            {
-              "rotate": "0deg",
-            },
-          ],
-        }
+        [
+          {
+            "backgroundColor": "transparent",
+            "borderWidth": 0,
+          },
+          {
+            "color": "#CECECE",
+            "height": 20,
+            "transform": [
+              {
+                "rotateZ": "0deg",
+              },
+            ],
+            "width": 20,
+          },
+          {
+            "flex": 0,
+            "height": 20,
+            "width": 20,
+          },
+        ]
       }
-      width={20}
-    />
+      tintColor="#CECECE"
+      vbHeight={24}
+      vbWidth={24}
+    >
+      <RNSVGGroup
+        fill={null}
+        propList={
+          [
+            "fill",
+            "strokeWidth",
+          ]
+        }
+        strokeWidth="2"
+      >
+        <RNSVGPath
+          d="M12 5V19"
+          fill={
+            {
+              "payload": 4278190080,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "type": 2,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth="2"
+        />
+        <RNSVGPath
+          d="M19 12L12 19L5 12"
+          fill={
+            {
+              "payload": 4278190080,
+              "type": 0,
+            }
+          }
+          propList={
+            [
+              "stroke",
+              "strokeWidth",
+              "strokeLinecap",
+              "strokeLinejoin",
+            ]
+          }
+          stroke={
+            {
+              "type": 2,
+            }
+          }
+          strokeLinecap={1}
+          strokeLinejoin={1}
+          strokeWidth="2"
+        />
+      </RNSVGGroup>
+    </RNSVGSvgView>
   </View>
   <View
     cancelable={true}

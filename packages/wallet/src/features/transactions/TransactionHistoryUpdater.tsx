@@ -13,6 +13,7 @@ import {
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
+import { shouldSuppressNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
 import { selectLastTxNotificationUpdate } from 'wallet/src/features/notifications/selectors'
 import {
   pushNotification,
@@ -231,6 +232,11 @@ export function getReceiveNotificationFromData(
     )
 
   if (!latestReceivedTx) {
+    return
+  }
+
+  // Suppress notification if rules apply
+  if (shouldSuppressNotification(latestReceivedTx)) {
     return
   }
 

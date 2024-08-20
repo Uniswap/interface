@@ -60,7 +60,7 @@ describe('LimitDetailActivityRow', () => {
         selected={false}
       />,
     )
-    expect(container.firstChild?.firstChild?.firstChild).toBeNull()
+    expect(container.firstChild?.firstChild?.firstChild?.firstChild).toBeNull()
   })
 
   it('should not render with invalid amounts', () => {
@@ -71,7 +71,7 @@ describe('LimitDetailActivityRow', () => {
         order={{ ...mockOrder, offchainOrderDetails: { ...mockOrderDetails, swapInfo: undefined as any } }}
       />,
     )
-    expect(container.firstChild?.firstChild?.firstChild).toBeNull()
+    expect(container.firstChild?.firstChild?.firstChild?.firstChild).toBeNull()
   })
 
   it('should render with valid details', () => {

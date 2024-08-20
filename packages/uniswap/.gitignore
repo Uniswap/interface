@@ -8,5 +8,3 @@ src/abis/types
 
 # generated graphql files
 src/**/__generated__
-
-src/i18n/locales/web-translations/*.json

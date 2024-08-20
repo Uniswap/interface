@@ -3,11 +3,10 @@ import { dappRequestReducer } from 'src/app/features/dappRequests/slice'
 import { alertsReducer } from 'src/app/features/onboarding/alerts/slice'
 import { popupsReducer } from 'src/app/features/popups/slice'
 import { monitoredSagaReducers } from 'src/app/saga'
-import { RootState } from 'wallet/src/state'
-import { sharedReducers } from 'wallet/src/state/reducer'
+import { walletPersistedStateList, walletReducers } from 'wallet/src/state/walletReducer'
 
-export const extensionReducers = {
-  ...sharedReducers,
+const extensionReducers = {
+  ...walletReducers,
   saga: monitoredSagaReducers,
   dappRequests: dappRequestReducer,
   popups: popupsReducer,
@@ -16,5 +15,13 @@ export const extensionReducers = {
 
 export const extensionReducer = combineReducers(extensionReducers)
 
-export type ExtensionState = ReturnType<typeof extensionReducer> & RootState
-export type ReducerNames = keyof typeof extensionReducers
+// Only include here things that need to be persisted and shared between different instances of the sidebar.
+// Only one sidebar can write to the storage at a time, so we need to be careful about what we persist.
+// Things that only belong to a single instance of the sidebar (for example, dapp requests) should not be whitelisted.
+export const extensionPersistedStateList: Array<keyof typeof extensionReducers> = [
+  ...walletPersistedStateList,
+  'dappRequests',
+  'alerts',
+]
+
+export type ExtensionState = ReturnType<typeof extensionReducer>

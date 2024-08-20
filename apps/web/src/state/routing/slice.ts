@@ -62,7 +62,7 @@ function getRoutingAPIConfig(args: GetQuoteArgs): RoutingConfig {
   }
 
   const uniswapXv2: UniswapXv2Config = {
-    useSyntheticQuotes: uniswapXForceSyntheticQuotes,
+    useSyntheticQuotes: uniswapXForceSyntheticQuotes || isXv2Arbitrum,
     swapper: account,
     routingType: URAQuoteType.DUTCH_V2,
     ...(isXv2Arbitrum
@@ -110,6 +110,7 @@ export const routingApi = createApi({
             amount,
             tradeType,
             sendPortionEnabled,
+            arbitrumXV2SlippageTolerance,
           } = args
 
           const requestBody = {
@@ -125,6 +126,7 @@ export const routingApi = createApi({
             configs: getRoutingAPIConfig(args),
             useUniswapX: args.routerPreference === RouterPreference.X,
             swapper: args.account,
+            slippageTolerance: arbitrumXV2SlippageTolerance,
           }
 
           try {

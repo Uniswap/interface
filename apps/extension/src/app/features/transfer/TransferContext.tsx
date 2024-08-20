@@ -19,6 +19,7 @@ import { useDerivedTransferInfo } from 'wallet/src/features/transactions/transfe
 import { useTransferTransactionRequest } from 'wallet/src/features/transactions/transfer/hooks/useTransferTransactionRequest'
 import { useTransferWarnings } from 'wallet/src/features/transactions/transfer/hooks/useTransferWarnings'
 import { WarningAction } from 'wallet/src/features/transactions/WarningModal/types'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export enum TransferScreen {
   SendForm,
@@ -51,6 +52,8 @@ export function TransferContextProvider({
 }): JSX.Element {
   const { t } = useTranslation()
 
+  const account = useActiveAccountWithThrow()
+
   // state and reducers
   const [transferFormState, dispatch] = useReducer(transactionStateReducer, {
     ...(prefilledTransactionState ?? INITIAL_TRANSACTION_STATE),
@@ -77,6 +80,7 @@ export function TransferContextProvider({
   )
 
   const gasWarning = useTransactionGasWarning({
+    account,
     derivedInfo: derivedTransferInfo,
     gasFee: gasFee?.value,
   })

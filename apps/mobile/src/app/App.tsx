@@ -1,5 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
-import { DatadogProvider, DatadogProviderConfiguration, SdkVerbosity } from '@datadog/mobile-react-native'
+import { DatadogProvider, DatadogProviderConfiguration, DdRum, SdkVerbosity } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
@@ -40,12 +40,12 @@ import {
 } from 'src/features/widgets/widgets'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getSentryTracesSamplingRate, getStatsigEnvironmentTier } from 'src/utils/version'
-import { flexStyles, useIsDarkMode } from 'ui/src'
+import { flexStyles, useHapticFeedback, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
-import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
+import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
 import { Statsig, StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
@@ -66,6 +66,7 @@ import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
+import { selectHapticsEnabled } from 'wallet/src/features/appearance/slice'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
@@ -123,7 +124,7 @@ const datadogConfig = new DatadogProviderConfiguration(
 datadogConfig.site = 'US1'
 datadogConfig.longTaskThresholdMs = 100
 datadogConfig.nativeCrashReportEnabled = true
-datadogConfig.verbosity = SdkVerbosity.WARN
+datadogConfig.verbosity = SdkVerbosity.INFO
 
 // Log boxes on simulators can block detox tap event when they cover buttons placed at
 // the bottom of the screen and cause tests to fail.
@@ -174,24 +175,26 @@ function App(): JSX.Element | null {
 
   return (
     <StatsigProvider {...statSigOptions}>
-      <Trace>
-        <StrictMode>
-          <I18nextProvider i18n={i18n}>
-            <SentryTags>
-              <SafeAreaProvider>
-                <SharedProvider reduxStore={store}>
-                  <AnalyticsNavigationContextProvider
-                    shouldLogScreen={shouldLogScreen}
-                    useIsPartOfNavigationTree={useIsPartOfNavigationTree}
-                  >
-                    <AppOuter />
-                  </AnalyticsNavigationContextProvider>
-                </SharedProvider>
-              </SafeAreaProvider>
-            </SentryTags>
-          </I18nextProvider>
-        </StrictMode>
-      </Trace>
+      <DatadogProviderWrapper>
+        <Trace>
+          <StrictMode>
+            <I18nextProvider i18n={i18n}>
+              <SentryTags>
+                <SafeAreaProvider>
+                  <SharedProvider reduxStore={store}>
+                    <AnalyticsNavigationContextProvider
+                      shouldLogScreen={shouldLogScreen}
+                      useIsPartOfNavigationTree={useIsPartOfNavigationTree}
+                    >
+                      <AppOuter />
+                    </AnalyticsNavigationContextProvider>
+                  </SharedProvider>
+                </SafeAreaProvider>
+              </SentryTags>
+            </I18nextProvider>
+          </StrictMode>
+        </Trace>
+      </DatadogProviderWrapper>
     </StatsigProvider>
   )
 }
@@ -207,8 +210,18 @@ function DatadogProviderWrapper({ children }: PropsWithChildren): JSX.Element {
 
 function SentryTags({ children }: PropsWithChildren): JSX.Element {
   useEffect(() => {
+    const isDatadogEnabled = Statsig.checkGateWithExposureLoggingDisabled(getFeatureFlagName(FeatureFlags.Datadog))
+
     for (const [_, flagKey] of WALLET_FEATURE_FLAG_NAMES.entries()) {
       Sentry.setTag(`featureFlag.${flagKey}`, Statsig.checkGateWithExposureLoggingDisabled(flagKey))
+      if (isDatadogEnabled) {
+        DdRum.addFeatureFlagEvaluation(
+          // Datadog has a limited set of accepted symbols in feature flags
+          // https://docs.datadoghq.com/real_user_monitoring/guide/setup-feature-flag-data-collection/?tab=reactnative#feature-flag-naming
+          flagKey.replaceAll('-', '_'),
+          Statsig.checkGateWithExposureLoggingDisabled(flagKey),
+        ).catch(() => undefined)
+      }
     }
 
     for (const experiment of Object.values(Experiments)) {
@@ -216,6 +229,14 @@ function SentryTags({ children }: PropsWithChildren): JSX.Element {
         `experiment.${experiment}`,
         Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName(),
       )
+      if (isDatadogEnabled) {
+        DdRum.addFeatureFlagEvaluation(
+          // Datadog has a limited set of accepted symbols in feature flags
+          // https://docs.datadoghq.com/real_user_monitoring/guide/setup-feature-flag-data-collection/?tab=reactnative#feature-flag-naming
+          `experiment_${experiment.replaceAll('-', '_')}`,
+          Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName(),
+        ).catch(() => undefined)
+      }
     }
   }, [])
 
@@ -245,40 +266,38 @@ function AppOuter(): JSX.Element | null {
     <ApolloProvider client={client}>
       <PersistGate loading={null} persistor={persistor}>
         <ErrorBoundary>
-          <DatadogProviderWrapper>
-            <LocalizationContextProvider>
-              <GestureHandlerRootView style={flexStyles.fill}>
-                <WalletContextProvider>
-                  <UnitagUpdaterContextProvider>
-                    <BiometricContextProvider>
-                      <LockScreenContextProvider>
-                        <Sentry.TouchEventBoundary>
-                          <DataUpdaters />
-                          <NavigationContainer
-                            onReady={(navigationRef): void => {
-                              routingInstrumentation.registerNavigationContainer(navigationRef)
-                            }}
-                          >
-                            <MobileWalletNavigationProvider>
-                              <OpenAIContextProvider>
-                                <BottomSheetModalProvider>
-                                  <AppModals />
-                                  <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                    <AppInner />
-                                  </PerformanceProfiler>
-                                </BottomSheetModalProvider>
-                                <NotificationToastWrapper />
-                              </OpenAIContextProvider>
-                            </MobileWalletNavigationProvider>
-                          </NavigationContainer>
-                        </Sentry.TouchEventBoundary>
-                      </LockScreenContextProvider>
-                    </BiometricContextProvider>
-                  </UnitagUpdaterContextProvider>
-                </WalletContextProvider>
-              </GestureHandlerRootView>
-            </LocalizationContextProvider>
-          </DatadogProviderWrapper>
+          <LocalizationContextProvider>
+            <GestureHandlerRootView style={flexStyles.fill}>
+              <WalletContextProvider>
+                <UnitagUpdaterContextProvider>
+                  <BiometricContextProvider>
+                    <LockScreenContextProvider>
+                      <Sentry.TouchEventBoundary>
+                        <DataUpdaters />
+                        <NavigationContainer
+                          onReady={(navigationRef): void => {
+                            routingInstrumentation.registerNavigationContainer(navigationRef)
+                          }}
+                        >
+                          <MobileWalletNavigationProvider>
+                            <OpenAIContextProvider>
+                              <BottomSheetModalProvider>
+                                <AppModals />
+                                <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                  <AppInner />
+                                </PerformanceProfiler>
+                              </BottomSheetModalProvider>
+                              <NotificationToastWrapper />
+                            </OpenAIContextProvider>
+                          </MobileWalletNavigationProvider>
+                        </NavigationContainer>
+                      </Sentry.TouchEventBoundary>
+                    </LockScreenContextProvider>
+                  </BiometricContextProvider>
+                </UnitagUpdaterContextProvider>
+              </WalletContextProvider>
+            </GestureHandlerRootView>
+          </LocalizationContextProvider>
         </ErrorBoundary>
       </PersistGate>
     </ApolloProvider>
@@ -290,7 +309,13 @@ function AppInner(): JSX.Element {
   const isDarkMode = useIsDarkMode()
   const themeSetting = useCurrentAppearanceSetting()
   const allowAnalytics = useSelector(selectAllowAnalytics)
+  const hapticsUserEnabled = useSelector(selectHapticsEnabled)
+  const { setHapticsEnabled } = useHapticFeedback()
 
+  // WALL-4357 Remove when A/A test is done, using it to check statsig migration
+  useFeatureFlag(FeatureFlags.AATest)
+
+  // handles AppsFlyer enable/disable based on the allow analytics toggle
   useEffect(() => {
     if (allowAnalytics) {
       appsFlyer.startSdk()
@@ -305,6 +330,11 @@ function AppInner(): JSX.Element {
       })
     }
   }, [allowAnalytics])
+
+  // Sets haptics for the UI library based on the user redux setting
+  useEffect(() => {
+    setHapticsEnabled(hapticsUserEnabled)
+  }, [hapticsUserEnabled, setHapticsEnabled])
 
   useEffect(() => {
     dispatch(clearNotificationQueue()) // clear all in-app toasts on app start

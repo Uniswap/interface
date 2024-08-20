@@ -2,7 +2,7 @@ import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { HapticFeedback } from 'ui/src'
+import { useHapticFeedback } from 'ui/src'
 import { PlusMinusButtonType } from 'wallet/src/components/buttons/PlusMinusButton'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE, MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
@@ -48,6 +48,7 @@ export function useSlippageSettings({
     customSlippageTolerance?.toFixed(2)?.toString() ?? '',
   )
   const [inputWarning, setInputWarning] = useState<string | undefined>()
+  const { hapticFeedback } = useHapticFeedback()
 
   // Fall back to default slippage if there is no trade specified.
   // Separate from inputSlippageTolerance since autoSlippage updates when the trade quote updates
@@ -121,14 +122,14 @@ export function useSlippageSettings({
        */
       if (isInvalidNumber || overMaxTolerance || moreThanOneDecimalSymbol || moreThanTwoDecimals) {
         inputShakeX.value = errorShakeAnimation(inputShakeX)
-        await HapticFeedback.impact()
+        await hapticFeedback.impact()
         return
       }
 
       setInputSlippageTolerance(value)
       onSlippageChange(parsedValue)
     },
-    [inputShakeX, onSlippageChange, t],
+    [hapticFeedback, inputShakeX, onSlippageChange, t],
   )
 
   const onFocusSlippageInput = useCallback((): void => {

@@ -33,7 +33,7 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
           p="$spacing2"
           width={iconSizes.icon20}
         >
-          {checked ? <Check color={isDarkMode ? '$sporeBlack' : '$sporeWhite'} size="$icon.16" /> : null}
+          {checked ? <Check color={isDarkMode ? '$black' : '$white'} size="$icon.16" /> : null}
         </Flex>
         <Flex shrink>
           {typeof text === 'string' ? (

@@ -959,7 +959,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     infoLink: 'https://app.uniswap.org/explore/tokens/zora',
     infuraPrefix: undefined,
     interfaceName: 'zora',
-    label: 'Zora',
+    label: 'Zora Network',
     logo: ZORA_LOGO,
     networkLayer: NetworkLayer.L2,
     nativeCurrency: {

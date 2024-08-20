@@ -1,5 +1,7 @@
+import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
+
 export interface SearchContext {
-  category?: string
+  category?: TokenOptionSection
   query?: string
   position?: number
   suggestionCount?: number

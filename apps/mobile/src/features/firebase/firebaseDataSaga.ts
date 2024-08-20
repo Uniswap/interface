@@ -4,6 +4,7 @@ import firestore from '@react-native-firebase/firestore'
 import { getFirebaseUidOrError, getFirestoreMetadataRef, getFirestoreUidRef } from 'src/features/firebase/utils'
 import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
 import { all, call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { logger } from 'utilities/src/logger/logger'
 import { getKeys } from 'utilities/src/primitives/objects'
 import { Language } from 'wallet/src/features/language/constants'
@@ -14,7 +15,7 @@ import {
   TogglePushNotificationParams,
   editAccountActions,
 } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { makeSelectAccountNotificationSetting, selectAccounts } from 'wallet/src/features/wallet/selectors'
 import { addAccounts, editAccount } from 'wallet/src/features/wallet/slice'
 

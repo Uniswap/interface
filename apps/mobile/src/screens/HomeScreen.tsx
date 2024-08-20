@@ -49,7 +49,7 @@ import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { hideSplashScreen } from 'src/utils/splashScreen'
-import { Flex, HapticFeedback, Text, TouchableArea, useDeviceInsets, useMedia, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useDeviceInsets, useHapticFeedback, useMedia, useSporeColors } from 'ui/src'
 import ReceiveIcon from 'ui/src/assets/icons/arrow-down-circle.svg'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
 import ScanIcon from 'ui/src/assets/icons/scan-home.svg'
@@ -57,6 +57,7 @@ import SendIcon from 'ui/src/assets/icons/send-action.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { Experiments, OnboardingRedesignHomeScreenProperties } from 'uniswap/src/features/gating/experiments'
@@ -83,7 +84,6 @@ import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type HomeRoute = {
@@ -109,6 +109,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const isFocused = useIsFocused()
   const isModalOpen = useSelector(selectSomeModalOpen)
   const isHomeScreenBlur = !isFocused || isModalOpen
+  const { hapticFeedback } = useHapticFeedback()
 
   const hasSkippedUnitagPrompt = useSelector(selectHasSkippedUnitagPrompt)
 
@@ -414,7 +415,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const promoBanner = useMemo(() => {
     if (showOnboardingRedesign) {
       return (
-        <Flex pt="$spacing4">
+        <Flex pt="$spacing12">
           <OnboardingIntroCardStack />
         </Flex>
       )
@@ -433,7 +434,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       <Flex
         backgroundColor="$surface1"
         gap="$spacing8"
-        pb={showOnboardingRedesign ? '$spacing12' : '$spacing16'}
+        pb={showOnboardingRedesign ? '$spacing8' : '$spacing16'}
         px="$spacing12"
       >
         <AccountHeader />
@@ -464,7 +465,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     promoBanner,
   ])
 
-  const paddingTop = headerHeight + TAB_BAR_HEIGHT + TAB_STYLES.tabListInner.paddingTop
+  const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showOnboardingRedesign ? 0 : TAB_STYLES.tabListInner.paddingTop)
   const paddingBottom = insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(
@@ -557,7 +558,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                 ]}
                 tabStyle={style}
                 onTabPress={async (): Promise<void> => {
-                  await HapticFeedback.impact()
+                  await hapticFeedback.impact()
                 }}
               />
             </Animated.View>
@@ -576,6 +577,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       routes,
       tabBarStyle,
       tabIndex,
+      hapticFeedback,
     ],
   )
 
@@ -796,13 +798,7 @@ function ActionButton({
   return (
     <Trace logPress element={name} eventOnTrigger={eventName}>
       <TouchableArea hapticFeedback flex={flex} scaleTo={activeScale} onPress={onPress}>
-        <AnimatedFlex
-          centered
-          fill
-          backgroundColor="$DEP_backgroundActionButton"
-          borderRadius="$rounded20"
-          p="$spacing16"
-        >
+        <AnimatedFlex centered fill backgroundColor="$accent2" borderRadius="$rounded20" p="$spacing16">
           <Icon
             color={colors.accent1.get()}
             height={iconSize * iconScale}

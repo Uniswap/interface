@@ -36,7 +36,7 @@ export function SelectTokenButton({ selectedCurrencyInfo, onPress, testID }: Sel
         </Flex>
       ) : (
         <Flex centered row gap="$spacing4" pl="$spacing8" pr={isWeb ? '$spacing4' : '$spacing8'} py="$spacing4">
-          <Text color="$sporeWhite" testID={`${testID}-label`} variant="buttonLabel2">
+          <Text color="$white" testID={`${testID}-label`} variant="buttonLabel2">
             {t('tokens.selector.button.choose')}
           </Text>
           {isWeb && (

@@ -10,7 +10,7 @@ describe('useConnectedWallets', () => {
   it('should add a wallet', () => {
     const { result } = renderHook(() => useConnectedWallets())
     const wallet: Wallet = {
-      walletType: 'injected',
+      walletName: 'Uniswap Extension',
       account: '0x123',
     }
     act(() => {

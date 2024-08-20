@@ -1,161 +1,104 @@
-import { opacify } from 'ui/src/theme/color/utils'
+import { opacifyRaw } from 'ui/src/theme/color/utils'
+
+const accentColors = {
+  pinkLight: '#FEF4FF',
+  pinkPastel: '#FDAFF0',
+  pinkBase: '#FC74FE',
+  pinkVibrant: '#F50DB4',
+  pinkDark: '#361A37',
+
+  redLight: '#FFF2F1',
+  redPastel: '#FDCFC4',
+  redBase: '#FF5F52',
+  redVibrant: '#FF0000',
+  redDark: '#220D0C',
+
+  orangeLight: '#FEF5EA',
+  orangePastel: '#FFE8BC',
+  orangeBase: '#FF8934',
+  orangeVibrant: '#FF4D00',
+  orangeDark: '#371B0C',
+
+  yellowLight: '#FFFE8B',
+  yellowPastel: '#FFF8B4',
+  yellowBase: '#FFBF17',
+  yellowVibrant: '#FFF612',
+  yellowDark: '#1F1E02',
+
+  brownLight: '#F7F6F1',
+  brownPastel: '#E2E0CD',
+  brownBase: '#85754A',
+  brownVibrant: '#996F01',
+  brownDark: '#231E0F',
+
+  greenLight: '#EEFBF1',
+  greenPastel: '#C2E7D0',
+  greenBase: '#0C8911',
+  greenVibrant: '#21C95E',
+  greenDark: '#0F2C1A',
+
+  limeLight: '#F7FEEB',
+  limePastel: '#E4F6C4',
+  limeBase: '#78E744',
+  limeVibrant: '#B1F13C',
+  limeDark: '#232917',
+
+  turquoiseLight: '#F7FEEB',
+  turquoisePastel: '#CAFFDF',
+  turquoiseBase: '#00C3A0',
+  turquoiseVibrant: '#5CFE9D',
+  turquoiseDark: '#1A2A21',
+
+  cyanLight: '#EBF8FF',
+  cyanPastel: '#B9E3F8',
+  cyanBase: '#23A3FF',
+  cyanVibrant: '#3ADCFF',
+  cyanDark: '#15242B',
+
+  blueLight: '#EFF4FF',
+  bluePastel: '#D0D9F8',
+  blueBase: '#4981FF',
+  blueVibrant: '#0047FF',
+  blueDark: '#10143D',
+
+  purpleLight: '#FAF5FF',
+  purplePastel: '#E9D8FD',
+  purpleBase: '#9E62FF',
+  purpleVibrant: '#4300B0',
+  purpleDark: '#1A0040',
+}
 
 export const colors = {
   white: '#FFFFFF',
   black: '#000000',
-  gray50: '#F5F6FC',
-  gray100: '#E8ECFB',
-  gray150: '#D2D9EE',
-  gray200: '#B8C0DC',
-  gray250: '#A6AFCA',
-  gray300: '#98A1C0',
-  gray350: '#888FAB',
-  gray400: '#7780A0',
-  gray450: '#6B7594',
-  gray500: '#5D6785',
-  gray550: '#505A78',
-  gray600: '#404A67',
-  gray650: '#333D59',
-  gray700: '#293249',
-  gray750: '#1B2236',
-  gray800: '#131A2A',
-  gray850: '#0E1524',
-  gray900: '#0D111C',
-  pink50: '#FFF2F7',
-  pink100: '#FFD9E4',
-  pink200: '#FBA4C0',
-  pink300: '#FF6FA3',
-  pink400: '#FB118E',
-  pink500: '#C41A69',
-  pink600: '#8C0F49',
-  pink700: '#55072A',
-  pink800: '#39061B',
-  pink900: '#2B000B',
-  pinkVibrant: '#F51A70',
-  red50: '#FEF0EE',
-  red100: '#FED5CF',
-  red200: '#FEA79B',
-  red300: '#FD766B',
-  red400: '#FA2B39',
-  red500: '#C4292F',
-  red600: '#891E20',
-  red700: '#530F0F',
-  red800: '#380A03',
-  red900: '#240800',
-  redVibrant: '#F14544',
-  yellow50: '#FEF8C4',
-  yellow100: '#F0E49A',
-  yellow200: '#DBBC19',
-  yellow300: '#BB9F13',
-  yellow400: '#A08116',
-  yellow500: '#866311',
-  yellow600: '#5D4204',
-  yellow700: '#3E2B04',
-  yellow800: '#231902',
-  yellow900: '#180F02',
-  yellowVibrant: '#FAF40A',
-  gold50: '#FFF5E8',
-  gold100: '#F8DEB6',
-  gold200: '#EEB317',
-  gold300: '#DB900B',
-  gold400: '#B17900',
-  gold500: '#905C10',
-  gold600: '#643F07',
-  gold700: '#3F2208',
-  gold800: '#29160F',
-  gold900: '#161007',
-  goldVibrant: '#FEB239',
-  green50: '#EDFDF0',
-  green100: '#BFEECA',
-  green200: '#76D191',
-  green300: '#40B66B',
-  green400: '#209853',
-  green500: '#0B783E',
-  green600: '#0C522A',
-  green700: '#053117',
-  green800: '#091F10',
-  green900: '#09130B',
-  greenVibrant: '#5CFE9D',
-  blue50: '#F3F5FE',
-  blue100: '#DEE1FF',
+  scrim: 'rgba(0,0,0,0.60)',
+
+  ...accentColors,
+
+  uniswapXViolet: '#4673FA',
+  uniswapXPurple: '#9646FA',
+
+  fiatOnRampBanner: '#FB36D0',
+}
+
+export const DEP_accentColors = {
   blue200: '#ADBCFF',
   blue300: '#869EFF',
   blue400: '#4C82FB',
-  blue500: '#1267D6',
-  blue600: '#1D4294',
-  blue700: '#09265E',
-  blue800: '#0B193F',
-  blue900: '#040E34',
-  blueVibrant: '#587BFF',
-  lime50: '#F2FEDB',
-  lime100: '#D3EBA3',
-  lime200: '#9BCD46',
-  lime300: '#7BB10C',
-  lime400: '#649205',
-  lime500: '#527318',
-  lime600: '#344F00',
-  lime700: '#233401',
-  lime800: '#171D00',
-  lime900: '#0E1300',
-  limeVibrant: '#B1F13C',
-  orange50: '#FEEDE5',
-  orange100: '#FCD9C8',
-  orange200: '#FBAA7F',
-  orange300: '#F67E3E',
-  orange400: '#DC5B14',
-  orange500: '#AF460A',
-  orange600: '#76330F',
-  orange700: '#4D220B',
-  orange800: '#2A1505',
-  orange900: '#1C0E03',
-  orangeVibrant: '#FF6F1E',
-  magenta50: '#FFF1FE',
+  gold200: '#EEB317',
+  goldVibrant: '#FEB239',
+  green300: '#40B66B',
+  green400: '#209853',
   magenta100: '#FAD8F8',
-  magenta200: '#F5A1F5',
-  magenta300: '#F06DF3',
-  magenta400: '#DC39E3',
-  magenta500: '#AF2EB4',
-  magenta600: '#7A1C7D',
-  magenta700: '#550D56',
-  magenta800: '#330733',
-  magenta900: '#250225',
+  magenta50: '#FFF1FE',
   magentaVibrant: '#FC72FF',
-  violet50: '#F1EFFE',
-  violet100: '#E2DEFD',
+  red200: '#FEA79B',
+  red300: '#FD766B',
+  red400: '#FA2B39',
   violet200: '#BDB8FA',
-  violet300: '#9D99F5',
   violet400: '#7A7BEB',
-  violet500: '#515EDC',
-  violet600: '#343F9E',
-  violet700: '#232969',
-  violet800: '#121643',
-  violet900: '#0E0D30',
-  violetVibrant: '#5065FD',
-  uniswapXViolet: '#4673FA',
-  uniswapXPurple: '#9646FA',
-  cyan50: '#D6F5FE',
-  cyan100: '#B0EDFE',
-  cyan200: '#63CDE8',
-  cyan300: '#2FB0CC',
-  cyan400: '#2092AB',
-  cyan500: '#117489',
-  cyan600: '#014F5F',
-  cyan700: '#003540',
-  cyan800: '#011E26',
-  cyan900: '#011418',
-  cyanVibrant: '#36DBFF',
-  slate50: '#F1FCEF',
-  slate100: '#DAE6D8',
-  slate200: '#B8C3B7',
-  slate300: '#9AA498',
-  slate400: '#7E887D',
-  slate500: '#646B62',
-  slate600: '#434942',
-  slate700: '#2C302C',
-  slate800: '#181B18',
-  slate900: '#0F120E',
-  slateVibrant: '#7E887D',
-  fiatOnRampBanner: '#FB36D0',
+  yellow100: '#F0E49A',
+  yellow200: '#DBBC19',
 }
 
 export const networkColors = {
@@ -205,39 +148,40 @@ export const networkColors = {
   },
 }
 
-// TODO: map named colors to new Spore colors
-// TODO: consolidate Spore colors and raw color palette
-
 const sporeLight = {
-  sporeWhite: '#FFFFFF',
-  sporeBlack: '#000000',
-
-  surface1: '#FFFFFF',
-  surface1Hovered: '#F5F5F5',
-  surface2: '#F9F9F9',
-  surface2Hovered: '#F2F2F2',
-  surface3: '#2222220D', //0D = 5%
-  surface4: '#FFFFFFA3', //A3 = 64%
-  surface5: '#0000000A', //0A = 4%
-
-  scrim: '#00000099', //99 = 40%,
+  white: colors.white,
+  black: colors.black,
+  scrim: colors.scrim,
 
   neutral1: '#222222',
   neutral2: '#7D7D7D',
   neutral3: '#CECECE',
 
+  surface1: colors.white,
+  surface1Hovered: '#F5F5F5',
+  surface2: '#F9F9F9',
+  surface2Hovered: '#F2F2F2',
+  surface3: 'rgba(34,34,34,0.05)',
+  surface3Hovered: 'rgba(34,34,34,0.09)',
+  surface4: 'rgba(255,255,255,0.64)',
+  surface5: 'rgba(0,0,0,0.04)',
+
   accent1: '#FC72FF',
   accent1Hovered: '#FA5BEC',
   accent2: '#FEF4FF',
   accent2Hovered: '#FFE6FA',
-  accent3: '#4C82FB',
-  accent3Hovered: '#F5F5F5',
+  accent3: colors.black,
+  accent3Hovered: '#131313',
 
-  accentSoft: '#FC72FF33', //33 = 20%
+  DEP_accentSoft: '#FC72FF33', //33 = 20%
 
-  statusActive: '#236EFF',
-  statusSuccess: '#40B66B',
+  statusSuccess: '#21C95E',
+  statusSuccessHovered: '#15863C',
   statusSuccess2: '#EEFBF1',
+  statusWarning: '#FFBF17',
+  statusWarningHovered: '#FFDD0D',
+  statusWarning2: '#FFFBEB',
+  statusWarning2Hovered: '#FFFBD7',
   statusCritical: '#FF5F52',
   statusCriticalHovered: '#FF3931',
   statusCritical2: '#FFF2F1',
@@ -245,35 +189,42 @@ const sporeLight = {
 }
 
 const sporeDark = {
-  sporeWhite: '#FFFFFF',
-  sporeBlack: '#000000',
+  none: 'transparent',
 
-  surface1: '#131313',
-  surface1Hovered: '#181818',
-  surface2: '#1B1B1B',
-  surface2Hovered: '#242424',
-  surface3: '#FFFFFF1F', //1F = 12%
-  surface4: '#FFFFFF33', //33 = 20%
-  surface5: '#0000000A', //0A = 4%
+  white: colors.white,
+  black: colors.black,
+  scrim: colors.scrim,
 
-  scrim: '#00000099', //99 = 40%
-
-  neutral1: '#FFFFFF',
+  neutral1: colors.white,
   neutral2: '#9B9B9B',
   neutral3: '#5E5E5E',
+
+  surface1: '#131313',
+  surface1Hovered: 'rgba(24,24,24,1.00)',
+  surface2: '#1B1B1B',
+  surface2Hovered: 'rgba(36,36,36,1.00)',
+  surface3: 'rgba(255,255,255,0.12)',
+  surface3Hovered: 'rgba(255,255,255,0.16)',
+  surface4: 'rgba(255,255,255,0.20)',
+  surface5: 'rgba(0,0,0,0.04)',
 
   accent1: '#FC72FF',
   accent1Hovered: '#FD3CFE',
   accent2: '#311C31',
   accent2Hovered: '#510D43',
-  accent3: '#4C82FB',
+  accent3: colors.white,
   accent3Hovered: '#F5F5F5',
 
-  accentSoft: '#FC72FF33', //33 = 20%
+  DEP_accentSoft: '#FC72FF33', //33 = 20%
 
-  statusActive: '#236EFF',
-  statusSuccess: '#40B66B',
+  statusSuccess: '#21C95E',
+  statusSuccessHovered: '#15863C',
   statusSuccess2: '#0F2C1A',
+  statusSuccess2Hovered: '#093A16',
+  statusWarning: '#FFBF17',
+  statusWarningHovered: '#FFDD0D',
+  statusWarning2: '#1F1E02',
+  statusWarning2Hovered: '#302E03',
   statusCritical: '#FF5F52',
   statusCriticalHovered: '#FF3931',
   statusCritical2: '#220D0C',
@@ -283,8 +234,13 @@ const sporeDark = {
 export const colorsLight = {
   none: 'transparent',
 
-  sporeWhite: sporeLight.sporeWhite,
-  sporeBlack: sporeLight.sporeBlack,
+  white: sporeLight.white,
+  black: sporeLight.black,
+  scrim: sporeLight.scrim,
+
+  neutral1: sporeLight.neutral1,
+  neutral2: sporeLight.neutral2,
+  neutral3: sporeLight.neutral3,
 
   surface1: sporeLight.surface1,
   surface1Hovered: sporeLight.surface1Hovered,
@@ -294,20 +250,12 @@ export const colorsLight = {
   surface4: sporeLight.surface4,
   surface5: sporeLight.surface5,
 
-  scrim: sporeLight.scrim,
-  // TODO: Revisit Spore colors
-  DEP_scrimSoft: opacify(50, colors.gray150),
-
-  neutral1: sporeLight.neutral1,
-  neutral2: sporeLight.neutral2,
-  neutral3: sporeLight.neutral3,
-
   accent1: sporeLight.accent1,
   accent1Hovered: sporeLight.accent1Hovered,
   accent2: sporeLight.accent2,
   accent2Hovered: sporeLight.accent2Hovered,
 
-  accentSoft: sporeLight.accentSoft,
+  DEP_accentSoft: sporeLight.DEP_accentSoft,
 
   statusSuccess: sporeLight.statusSuccess,
   statusSuccess2: sporeLight.statusSuccess2,
@@ -317,21 +265,19 @@ export const colorsLight = {
   statusCritical2Hovered: sporeLight.statusCritical2Hovered,
 
   DEP_backgroundBranded: '#FCF7FF',
-  DEP_backgroundActionButton: colors.magenta50,
-  DEP_backgroundOverlay: opacify(60, colors.white),
+  DEP_backgroundOverlay: opacifyRaw(60, colors.white),
 
-  DEP_accentWarning: colors.goldVibrant,
+  DEP_accentWarning: DEP_accentColors.goldVibrant,
 
-  DEP_accentBranded: colors.magentaVibrant,
-  DEP_shadowBranded: colors.magentaVibrant,
+  DEP_accentBranded: DEP_accentColors.magentaVibrant,
+  DEP_shadowBranded: colors.purpleVibrant,
 
-  DEP_accentSuccessSoft: opacify(24, colors.green300),
-  DEP_accentWarningSoft: opacify(24, colors.goldVibrant),
-  DEP_accentCriticalSoft: opacify(12, colors.red400),
+  DEP_accentSuccessSoft: opacifyRaw(24, DEP_accentColors.green400),
+  DEP_accentWarningSoft: opacifyRaw(24, DEP_accentColors.goldVibrant),
+  DEP_accentCriticalSoft: opacifyRaw(12, DEP_accentColors.red400),
 
-  DEP_blue300: colors.blue300,
-  DEP_brandedAccentSoft: colors.magenta100,
-  DEP_magentaDark: opacify(12, colors.magentaVibrant),
+  DEP_brandedAccentSoft: colors.purpleVibrant,
+  DEP_magentaDark: opacifyRaw(12, DEP_accentColors.magentaVibrant),
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
@@ -349,9 +295,9 @@ export const colorsLight = {
   chain_324: networkColors.zksync.light,
 
   // Testnets
-  chain_3: colors.yellow400,
-  chain_4: colors.pink400,
-  chain_5: colors.green400,
+  chain_3: colors.yellowVibrant,
+  chain_4: colors.pinkVibrant,
+  chain_5: colors.greenVibrant,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -359,8 +305,8 @@ export type ColorKeys = keyof typeof colorsLight
 export const colorsDark = {
   none: 'transparent',
 
-  sporeWhite: sporeDark.sporeWhite,
-  sporeBlack: sporeDark.sporeBlack,
+  white: sporeDark.white,
+  black: sporeDark.black,
 
   surface1: sporeDark.surface1,
   surface1Hovered: sporeDark.surface1Hovered,
@@ -371,8 +317,6 @@ export const colorsDark = {
   surface5: sporeDark.surface5,
 
   scrim: sporeDark.scrim,
-  // TODO: Revisit Spore colors
-  DEP_scrimSoft: opacify(50, colors.gray750),
 
   neutral1: sporeDark.neutral1,
   neutral2: sporeDark.neutral2,
@@ -383,7 +327,7 @@ export const colorsDark = {
   accent2: sporeDark.accent2,
   accent2Hovered: sporeDark.accent2Hovered,
 
-  accentSoft: sporeDark.accentSoft,
+  DEP_accentSoft: sporeDark.DEP_accentSoft,
 
   statusSuccess: sporeDark.statusSuccess,
   statusSuccess2: sporeDark.statusSuccess2,
@@ -393,22 +337,20 @@ export const colorsDark = {
   statusCritical2Hovered: sporeDark.statusCritical2Hovered,
 
   DEP_backgroundBranded: '#100D1C',
-  DEP_backgroundActionButton: opacify(12, colors.magentaVibrant),
-  DEP_backgroundOverlay: opacify(10, colors.white),
+  DEP_backgroundOverlay: opacifyRaw(10, colors.white),
 
-  DEP_accentWarning: colors.goldVibrant,
+  DEP_accentWarning: colors.yellowVibrant,
 
-  DEP_accentBranded: colors.magentaVibrant,
+  DEP_accentBranded: colors.purpleVibrant,
   // TODO(MOB-160): accommodate one-off color in cleaner way
   DEP_shadowBranded: '#B60ACF',
 
-  DEP_accentSuccessSoft: opacify(24, colors.green400),
-  DEP_accentWarningSoft: opacify(24, colors.gold200),
-  DEP_accentCriticalSoft: opacify(12, colors.red400),
+  DEP_accentSuccessSoft: opacifyRaw(24, colors.greenVibrant),
+  DEP_accentWarningSoft: opacifyRaw(24, colors.yellowBase),
+  DEP_accentCriticalSoft: opacifyRaw(12, colors.redVibrant),
 
-  DEP_blue300: colors.blue300,
   DEP_brandedAccentSoft: '#46244F', // git blame Chelsy
-  DEP_magentaDark: opacify(12, colors.magentaVibrant),
+  DEP_magentaDark: opacifyRaw(12, colors.purpleVibrant),
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
@@ -426,7 +368,7 @@ export const colorsDark = {
   chain_324: networkColors.zksync.dark,
 
   // Testnets
-  chain_3: colors.yellow400,
-  chain_4: colors.pink400,
-  chain_5: colors.green400,
+  chain_3: colors.yellowVibrant,
+  chain_4: colors.pinkVibrant,
+  chain_5: colors.greenVibrant,
 }

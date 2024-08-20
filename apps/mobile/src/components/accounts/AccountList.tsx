@@ -7,10 +7,11 @@ import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify, spacing } from 'ui/src/theme'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 type AccountListProps = Pick<ComponentProps<typeof AccountCardItem>, 'onPress'> & {
   accounts: Account[]

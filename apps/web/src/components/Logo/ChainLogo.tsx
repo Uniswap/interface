@@ -97,13 +97,13 @@ export function getChainUI(chainId: InterfaceChainId, darkMode: boolean): ChainU
       return darkMode
         ? {
             symbol: ZORA_LOGO,
-            bgColor: 'rgba(174, 180, 255, 0.08)',
-            textColor: '#AEB4FF',
+            bgColor: 'rgba(255, 255, 255, 0.12)',
+            textColor: '#FFFFFF',
           }
         : {
             symbol: ZORA_LOGO,
-            bgColor: 'rgba(65, 71, 148, 0.12)',
-            textColor: '#414794',
+            bgColor: 'rgba(0, 0, 0, 0.12)',
+            textColor: '#000000',
           }
     case UniverseChainId.Zksync:
       return darkMode

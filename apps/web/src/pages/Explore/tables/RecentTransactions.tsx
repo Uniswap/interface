@@ -19,6 +19,7 @@ import { OrderDirection, getSupportedGraphQlChain } from 'graphql/data/util'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useMemo, useReducer, useState } from 'react'
 import { ThemedText } from 'theme/components'
+import { Text } from 'ui/src'
 import {
   PoolTransaction,
   PoolTransactionType,
@@ -104,27 +105,25 @@ export default function RecentTransactions() {
 
           return (
             <Cell loading={showLoadingSkeleton} minWidth={276} justifyContent="flex-start" grow>
-              <Row gap="8px">
-                <ThemedText.BodySecondary>
-                  {transaction.getValue?.().type === PoolTransactionType.Swap ? (
-                    <Trans
-                      i18nKey="activity.transaction.swap.descriptor.formatted"
-                      components={{
-                        amountWithSymbolA,
-                        amountWithSymbolB,
-                      }}
-                    />
-                  ) : (
-                    <Trans
-                      i18nKey="activity.transaction.tokens.descriptor.formatted"
-                      components={{
-                        amountWithSymbolA,
-                        amountWithSymbolB,
-                      }}
-                    />
-                  )}
-                </ThemedText.BodySecondary>
-              </Row>
+              <Text variant="body2" display="flex" flexDirection="row" gap="$spacing8">
+                {transaction.getValue?.().type === PoolTransactionType.Swap ? (
+                  <Trans
+                    i18nKey="activity.transaction.swap.descriptor.formatted"
+                    components={{
+                      amountWithSymbolA,
+                      amountWithSymbolB,
+                    }}
+                  />
+                ) : (
+                  <Trans
+                    i18nKey="activity.transaction.tokens.descriptor.formatted"
+                    components={{
+                      amountWithSymbolA,
+                      amountWithSymbolB,
+                    }}
+                  />
+                )}
+              </Text>
             </Cell>
           )
         },

@@ -16,7 +16,16 @@ import { BlurredImageBackground } from 'src/features/nfts/item/BlurredImageBackg
 import { CollectionPreviewCard } from 'src/features/nfts/item/CollectionPreviewCard'
 import { NFTTraitList } from 'src/features/nfts/item/traits'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
-import { Flex, HapticFeedback, Text, Theme, TouchableArea, getTokenValue, passesContrast, useSporeColors } from 'ui/src'
+import {
+  Flex,
+  Text,
+  Theme,
+  TouchableArea,
+  getTokenValue,
+  passesContrast,
+  useHapticFeedback,
+  useSporeColors,
+} from 'ui/src'
 import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
 import ShareIcon from 'ui/src/assets/icons/share.svg'
 import { colorsDark, fonts, iconSizes } from 'ui/src/theme'
@@ -74,6 +83,7 @@ function NFTItemScreenContents({
   const dispatch = useDispatch()
   const colors = useSporeColors()
   const navigation = useAppStackNavigation()
+  const { hapticFeedback } = useHapticFeedback()
 
   const {
     data,
@@ -171,7 +181,7 @@ function NFTItemScreenContents({
 
   const onLongPressNFTImage = async (): Promise<void> => {
     await setClipboardImage(imageUrl)
-    await HapticFeedback.impact()
+    await hapticFeedback.impact()
     dispatch(
       pushNotification({
         type: AppNotificationType.Copied,
@@ -229,7 +239,7 @@ function NFTItemScreenContents({
                 <Flex
                   gap="$spacing12"
                   px="$spacing24"
-                  shadowColor="$sporeBlack"
+                  shadowColor="$black"
                   shadowOffset={{ width: 0, height: 16 }}
                   shadowOpacity={0.2}
                   shadowRadius={16}

@@ -3,7 +3,7 @@ import { ImpactFeedbackStyle, isWeb, TouchableArea, useSporeColors } from 'ui/sr
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { Pill } from 'uniswap/src/components/pill/Pill'
-import { OnSelectCurrency, SuggestedTokenSection, TokenOption } from 'uniswap/src/components/TokenSelector/types'
+import { OnSelectCurrency, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 function _SuggestedToken({
@@ -15,7 +15,7 @@ function _SuggestedToken({
   onSelectCurrency: OnSelectCurrency
   token: TokenOption
   index: number
-  section: SuggestedTokenSection
+  section: TokenSection
 }): JSX.Element {
   const { currency, logoUrl } = token.currencyInfo
   const colors = useSporeColors()

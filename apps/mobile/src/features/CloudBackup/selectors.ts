@@ -1,4 +1,4 @@
-import { MobileState } from 'src/app/reducer'
+import { MobileState } from 'src/app/mobileReducer'
 import { CloudStorageMnemonicBackup } from 'src/features/CloudBackup/types'
 
 export const selectCloudBackups = (state: MobileState): CloudStorageMnemonicBackup[] => {

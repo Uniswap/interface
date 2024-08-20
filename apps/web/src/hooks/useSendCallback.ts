@@ -1,4 +1,5 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
+import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
@@ -9,6 +10,7 @@ import { useCallback, useRef } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { SendTransactionInfo, TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { currencyId } from 'utils/currencyId'
 import { UserRejectedRequestError, toReadableError } from 'utils/errors'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -57,15 +59,19 @@ export function useSendCallback({
             async (walletTrace) => {
               try {
                 const account = accountRef.current
-                const provider = providerRef.current
+                let provider = providerRef.current
                 if (account.status !== 'connected') {
                   throw new Error('wallet must be connected to send')
                 }
-                if (!provider) {
-                  throw new Error('missing provider')
-                }
                 if (account.chainId !== supportedTransactionChainId) {
                   await switchChain(supportedTransactionChainId)
+                  // We need to reassign the provider after switching chains
+                  // otherwise sendTransaction will use the provider that is
+                  // not connected to the correct chain
+                  provider = providerRef.current
+                }
+                if (!provider) {
+                  throw new Error('missing provider')
                 }
                 return await provider.getSigner().sendTransaction({
                   ...transactionRequest,
@@ -88,6 +94,11 @@ export function useSendCallback({
             recipient,
           }
           addTransaction(response, sendInfo)
+          sendAnalyticsEvent(InterfaceEventName.SEND_INITIATED, {
+            currencyId: sendInfo.currencyId,
+            amount: sendInfo.amount,
+            recipient: sendInfo.recipient,
+          })
         } catch (error) {
           if (error instanceof UserRejectedRequestError) {
             trace.setStatus('cancelled')

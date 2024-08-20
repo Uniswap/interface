@@ -172,6 +172,7 @@ module.exports = (env) => {
       sidebar: './src/sidebar/sidebar.tsx',
       injected: './src/contentScript/injected.ts',
       ethereum: './src/contentScript/ethereum.ts',
+      popup: './src/popup/popup.tsx',
     },
     output: {
       filename: '[name].js',

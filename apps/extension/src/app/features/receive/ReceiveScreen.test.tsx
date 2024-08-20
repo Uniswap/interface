@@ -1,8 +1,8 @@
 import { ReceiveScreen } from 'src/app/features/receive/ReceiveScreen'
 import { cleanup, render, screen } from 'src/test/test-utils'
-import { ACCOUNT, preloadedSharedState } from 'wallet/src/test/fixtures'
+import { ACCOUNT, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 
-const preloadedState = preloadedSharedState({
+const preloadedState = preloadedWalletPackageState({
   account: ACCOUNT,
 })
 

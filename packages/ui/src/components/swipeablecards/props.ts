@@ -10,6 +10,7 @@ export type SwipeableCardProps = PropsWithChildren<{
 
 export type SwipeableCardStackProps<T> = {
   cards: T[]
+  keyExtractor: (card: T) => string
   renderCard: (card: T, index: number) => JSX.Element
-  onSwiped?: (index: number) => void
+  onSwiped?: (card: T, index: number) => void
 }

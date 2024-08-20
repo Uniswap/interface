@@ -21,7 +21,7 @@ export default function getNetworkLogoUrl(network: string, origin: string) {
     case Chain.Zora:
       return origin + '/images/logos/Zora_Logo.png'
     case Chain.Zksync:
-      return origin + '/images/logos/Zora_Logo.png'
+      return origin + '/images/logos/zkSync_Logo.png'
     default:
       return ''
   }

@@ -4,6 +4,7 @@
 export const TestID = {
   AccountCard: 'account-card',
   AccountHeaderAvatar: 'account-header-avatar',
+  AccountHeaderSettings: 'account-header-settings-icon',
   AccountHeaderCopyAddress: 'account-header-copy-address',
   ActivityTab: 'activity-tab',
   AddCloudBackup: 'add-cloud-backup',

@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/flowToModalName'
-import { TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { TokenOption, TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import {
   createEmptyBalanceOption,
   formatSearchResults,
-  getTokenOptionsSection,
+  useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { DAI, USDC, USDT, WBTC } from 'uniswap/src/constants/tokens'
@@ -334,10 +333,14 @@ export function useFilterCallbacks(
   }
 }
 
-export function filterRecentlySearchedTokenOptions(searchHistory?: TokenSearchResult[]): TokenOption[] | undefined {
+export function filterRecentlySearchedTokenOptions(
+  chainFilter: UniverseChainId | null,
+  searchHistory?: TokenSearchResult[],
+): TokenOption[] | undefined {
   return currencyInfosToTokenOptions(
     searchHistory
       ?.filter((searchResult): searchResult is TokenSearchResult => searchResult.type === SearchResultType.Token)
+      ?.filter((searchResult) => (chainFilter ? searchResult.chainId === chainFilter : true))
       .map(searchResultToCurrencyInfo),
   )
 }
@@ -349,8 +352,6 @@ export function useTokenSectionsForSearchResults(
   isBalancesOnlySearch: boolean,
   valueModifiers?: PortfolioValueModifier[],
 ): GqlResult<TokenSection[]> {
-  const { t } = useTranslation()
-
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
@@ -380,14 +381,10 @@ export function useTokenSectionsForSearchResults(
   const loading =
     portfolioTokenOptionsLoading || portfolioBalancesByIdLoading || (!isBalancesOnlySearch && searchTokensLoading)
 
-  const sections = useMemo(
-    () =>
-      getTokenOptionsSection(
-        t('tokens.selector.section.search'),
-        // Use local search when only searching balances
-        isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
-      ),
-    [isBalancesOnlySearch, portfolioTokenOptions, searchResults, t],
+  const sections = useTokenOptionsSection(
+    TokenOptionSection.SearchResults,
+    // Use local search when only searching balances
+    isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
   )
 
   const error =

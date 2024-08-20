@@ -3,7 +3,7 @@ import { PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { ColorTokens, Flex, HapticFeedback, SpaceTokens, Text, TextProps, TouchableArea } from 'ui/src'
+import { ColorTokens, Flex, SpaceTokens, Text, TextProps, TouchableArea, useHapticFeedback } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -104,6 +104,7 @@ export function AddressDisplay({
   const dispatch = useDispatch()
   const displayName = useDisplayName(address, { includeUnitagSuffix, overrideDisplayName })
   const { avatar } = useAvatar(address)
+  const { hapticFeedback } = useHapticFeedback()
 
   const showAddressAsSubtitle = !hideAddressInSubtitle && displayName?.type !== DisplayNameType.Address
 
@@ -111,7 +112,7 @@ export function AddressDisplay({
     if (!address) {
       return
     }
-    await HapticFeedback.impact()
+    await hapticFeedback.impact()
     await setClipboard(address)
     dispatch(
       pushNotification({

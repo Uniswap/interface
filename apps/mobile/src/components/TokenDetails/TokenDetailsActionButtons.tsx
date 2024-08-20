@@ -27,7 +27,7 @@ function CTAButton({
       <Button
         fill
         hapticFeedback
-        color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$sporeWhite'}
+        color={tokenColor ? getContrastPassingTextColor(tokenColor) : '$white'}
         pressStyle={{ backgroundColor: validColor(opacify(60, tokenColor ?? colors.accent1.val)) }}
         // idk why this eslint warning is coming up because it auto-sorts it back on format to invalid order
         // eslint-disable-next-line react/jsx-sort-props

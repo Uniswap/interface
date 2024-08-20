@@ -21,7 +21,7 @@ import { arbitrumDaiCurrencyInfo, ethCurrencyInfo, usdcCurrencyInfo } from 'unis
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useFavoriteCurrencies, useFavoriteTokensOptions } from 'wallet/src/components/TokenSelector/hooks'
-import { SharedState } from 'wallet/src/state/reducer'
+import { WalletState } from 'wallet/src/state/walletReducer'
 import {
   SAMPLE_SEED_ADDRESS_1,
   daiToken,
@@ -56,7 +56,7 @@ const favoriteCurrencyIds = favoriteTokens.map((t) =>
   buildCurrencyId(fromGraphQLChain(t.chain) ?? UniverseChainId.Mainnet, t.address),
 )
 
-const preloadedState: PreloadedState<SharedState> = {
+const preloadedState: PreloadedState<WalletState> = {
   favorites: {
     tokens: favoriteCurrencyIds,
     watchedAddresses: [],

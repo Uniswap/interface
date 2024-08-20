@@ -3,12 +3,12 @@ import {
   TransactionPopupContent,
   UniswapXOrderPopupContent,
 } from 'components/Popups/PopupContent'
+import { ToastRegularSimple } from 'components/Popups/ToastRegularSimple'
 import { useSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useEffect } from 'react'
 import { useRemovePopup } from 'state/application/hooks'
 import { PopupContent, PopupType } from 'state/application/reducer'
-import { ToastSimple } from 'ui/src'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { t } from 'uniswap/src/i18n'
@@ -58,10 +58,10 @@ export default function PopupItem({
     }
     case PopupType.SwitchNetwork: {
       return (
-        <ToastSimple onDismiss={onClose}>
+        <ToastRegularSimple onDismiss={onClose}>
           <NetworkLogo chainId={content.chainId} />{' '}
           {getSwitchNetworkTitle(content.action, content.chainId as UniverseChainId)}
-        </ToastSimple>
+        </ToastRegularSimple>
       )
     }
   }

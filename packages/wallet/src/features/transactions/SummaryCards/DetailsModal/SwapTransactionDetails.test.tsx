@@ -9,7 +9,7 @@ import {
 } from 'uniswap/src/test/fixtures'
 import { SwapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/SwapTransactionDetails'
 import { SwapTypeTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
-import { ACCOUNT, preloadedSharedState } from 'wallet/src/test/fixtures'
+import { ACCOUNT, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 import { render } from 'wallet/src/test/test-utils'
 
 // Function to set up mocks
@@ -49,7 +49,7 @@ jest.mock('uniswap/src/features/gating/hooks', () => ({
   useFeatureFlag: jest.fn().mockReturnValue(true),
 }))
 
-const preloadedState = preloadedSharedState({ account: ACCOUNT })
+const preloadedState = preloadedWalletPackageState({ account: ACCOUNT })
 const swapTypeInfo = {
   type: 'swap',
   inputCurrencyId: '9920dbad-ff24-47c8-814a-094566fc45ff',

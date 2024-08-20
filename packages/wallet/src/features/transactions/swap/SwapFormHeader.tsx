@@ -4,6 +4,7 @@ import { Keyboard } from 'react-native'
 import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { Eye, Settings, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -11,16 +12,13 @@ import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/Sw
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { ViewOnlyModal } from 'wallet/src/features/transactions/swap/modals/ViewOnlyModal'
 import { SwapSettingsModal } from 'wallet/src/features/transactions/swap/modals/settings/SwapSettingsModal'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function SwapFormHeader(): JSX.Element {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const colors = useSporeColors()
-  const account = useActiveAccountWithThrow()
 
-  const { onClose } = useTransactionModalContext()
+  const { account, onClose } = useTransactionModalContext()
   const { updateSwapForm, customSlippageTolerance, derivedSwapInfo, tradeProtocolPreference } = useSwapFormContext()
 
   const [showSwapSettingsModal, setShowSettingsModal] = useState(false)

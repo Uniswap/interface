@@ -310,278 +310,283 @@ exports[`LimitsMenu should render when there are two open orders 1`] = `
 
 <div>
   <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2"
+          class="c0 c1"
         >
-          <svg
-            class="c3"
-            data-testid="wallet-back"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="c2"
           >
-            <line
-              x1="19"
-              x2="5"
-              y1="12"
-              y2="12"
-            />
-            <polyline
-              points="12 19 5 12 12 5"
-            />
-          </svg>
-          <span
-            class="c4"
-          >
-            <div
-              class="c5 css-n8z49y"
+            <svg
+              class="c3"
+              data-testid="wallet-back"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              Open limits
-            </div>
-          </span>
-        </div>
-        <div
-          class="c6 c7 c8"
-        >
-          <div
-            class="c9 c10 css-1m65e73"
-          >
-            Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
-          </div>
-          <div
-            class="c9 c10 css-1m65e73"
-          >
-            Canceling a limit has a network cost.
-          </div>
-          <div
-            class="c9 c10 css-1m65e73"
-          >
-            <a
-              class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Learn more
-            </a>
-          </div>
-        </div>
-        <div
-          class="c0 c12"
-          data-testid="LimitsMenuContainer"
-        >
-          <div
-            class="c13 c14"
-          >
-            <div
-              class="c13 c14 c15 c16"
+              <line
+                x1="19"
+                x2="5"
+                y1="12"
+                y2="12"
+              />
+              <polyline
+                points="12 19 5 12 12 5"
+              />
+            </svg>
+            <span
+              class="c4"
             >
               <div
-                class="c17"
+                class="c5 css-n8z49y"
+              >
+                Open limits
+              </div>
+            </span>
+          </div>
+          <div
+            class="c6 c7 c8"
+          >
+            <div
+              class="c9 c10 css-1m65e73"
+            >
+              Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
+            </div>
+            <div
+              class="c9 c10 css-1m65e73"
+            >
+              Canceling a limit has a network cost.
+            </div>
+            <div
+              class="c9 c10 css-1m65e73"
+            >
+              <a
+                class="c11"
+                href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
+          <div
+            class="c0 c12"
+            data-testid="LimitsMenuContainer"
+          >
+            <div
+              class="c13 c14"
+            >
+              <div
+                class="c13 c14 c15 c16"
               >
                 <div
-                  class="c9 css-15li2d9"
-                >
-                  Expires January 26, 2024 at 1:52PM
-                </div>
-                <div
-                  class="c0"
+                  class="c17"
                 >
                   <div
-                    class="c13 c18 c19"
+                    class="c9 css-15li2d9"
                   >
-                    <div
-                      class="c5 css-n8z49y"
-                    >
-                      252.074
-                       
-                      DAI
-                    </div>
-                    <svg
-                      fill="none"
-                      height="12px"
-                      stroke="#222222"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="12px"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <line
-                        x1="5"
-                        x2="19"
-                        y1="12"
-                        y2="12"
-                      />
-                      <polyline
-                        points="12 5 19 12 12 19"
-                      />
-                    </svg>
-                    <div
-                      class="c5 css-n8z49y"
-                    >
-                      0.10684
-                       
-                      WETH
-                    </div>
+                    Expires January 26, 2024 at 1:52PM
                   </div>
                   <div
-                    class="c20 css-142zc9n"
+                    class="c0"
                   >
-                    when 0.00042 WETH/DAI
+                    <div
+                      class="c13 c18 c19"
+                    >
+                      <div
+                        class="c5 css-n8z49y"
+                      >
+                        252.074
+                         
+                        DAI
+                      </div>
+                      <svg
+                        fill="none"
+                        height="12px"
+                        stroke="#222222"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="12px"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <line
+                          x1="5"
+                          x2="19"
+                          y1="12"
+                          y2="12"
+                        />
+                        <polyline
+                          points="12 5 19 12 12 19"
+                        />
+                      </svg>
+                      <div
+                        class="c5 css-n8z49y"
+                      >
+                        0.10684
+                         
+                        WETH
+                      </div>
+                    </div>
+                    <div
+                      class="c20 css-142zc9n"
+                    >
+                      when 0.00042 WETH/DAI
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <label
-              class="c21 c22"
-            >
-              <span
-                aria-hidden="true"
-                class="c23"
-                size="18"
-              />
-              <input
-                class="c24"
-                size="18"
-                type="checkbox"
-              />
-              <svg
-                class="c25"
-                fill="none"
-                height="16"
-                size="18"
-                viewBox="0 0 16 16"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
+              <label
+                class="c21 c22"
               >
-                <g
-                  id="Icon"
+                <span
+                  aria-hidden="true"
+                  class="c23"
+                  size="18"
+                />
+                <input
+                  class="c24"
+                  size="18"
+                  type="checkbox"
+                />
+                <svg
+                  class="c25"
+                  fill="none"
+                  height="16"
+                  size="18"
+                  viewBox="0 0 16 16"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    d="M5.99993 11.3333C5.99927 11.3333 5.9986 11.3333 5.99727 11.3333C5.81927 11.3326 5.64993 11.2613 5.52526 11.1346L2.8586 8.42664C2.59993 8.16397 2.60327 7.74197 2.86594 7.48397C3.1286 7.22597 3.54993 7.22863 3.8086 7.4913L6.00393 9.72063L12.1959 3.5293C12.4566 3.26863 12.8779 3.26863 13.1386 3.5293C13.3993 3.7893 13.3993 4.21197 13.1386 4.47197L6.47193 11.1386C6.34659 11.2633 6.1766 11.3333 5.99993 11.3333Z"
-                    fill="white"
-                    id="Vector"
-                  />
-                </g>
-              </svg>
-            </label>
-          </div>
-          <div
-            class="c13 c14"
-          >
+                  <g
+                    id="Icon"
+                  >
+                    <path
+                      d="M5.99993 11.3333C5.99927 11.3333 5.9986 11.3333 5.99727 11.3333C5.81927 11.3326 5.64993 11.2613 5.52526 11.1346L2.8586 8.42664C2.59993 8.16397 2.60327 7.74197 2.86594 7.48397C3.1286 7.22597 3.54993 7.22863 3.8086 7.4913L6.00393 9.72063L12.1959 3.5293C12.4566 3.26863 12.8779 3.26863 13.1386 3.5293C13.3993 3.7893 13.3993 4.21197 13.1386 4.47197L6.47193 11.1386C6.34659 11.2633 6.1766 11.3333 5.99993 11.3333Z"
+                      fill="white"
+                      id="Vector"
+                    />
+                  </g>
+                </svg>
+              </label>
+            </div>
             <div
-              class="c13 c14 c15 c16"
+              class="c13 c14"
             >
               <div
-                class="c17"
+                class="c13 c14 c15 c16"
               >
                 <div
-                  class="c9 css-15li2d9"
-                >
-                  Expires January 26, 2024 at 1:52PM
-                </div>
-                <div
-                  class="c0"
+                  class="c17"
                 >
                   <div
-                    class="c13 c18 c19"
+                    class="c9 css-15li2d9"
                   >
-                    <div
-                      class="c5 css-n8z49y"
-                    >
-                      252.074
-                       
-                      DAI
-                    </div>
-                    <svg
-                      fill="none"
-                      height="12px"
-                      stroke="#222222"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="12px"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <line
-                        x1="5"
-                        x2="19"
-                        y1="12"
-                        y2="12"
-                      />
-                      <polyline
-                        points="12 5 19 12 12 19"
-                      />
-                    </svg>
-                    <div
-                      class="c5 css-n8z49y"
-                    >
-                      0.10684
-                       
-                      WETH
-                    </div>
+                    Expires January 26, 2024 at 1:52PM
                   </div>
                   <div
-                    class="c20 css-142zc9n"
+                    class="c0"
                   >
-                    when 0.00042 WETH/DAI
+                    <div
+                      class="c13 c18 c19"
+                    >
+                      <div
+                        class="c5 css-n8z49y"
+                      >
+                        252.074
+                         
+                        DAI
+                      </div>
+                      <svg
+                        fill="none"
+                        height="12px"
+                        stroke="#222222"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="12px"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <line
+                          x1="5"
+                          x2="19"
+                          y1="12"
+                          y2="12"
+                        />
+                        <polyline
+                          points="12 5 19 12 12 19"
+                        />
+                      </svg>
+                      <div
+                        class="c5 css-n8z49y"
+                      >
+                        0.10684
+                         
+                        WETH
+                      </div>
+                    </div>
+                    <div
+                      class="c20 css-142zc9n"
+                    >
+                      when 0.00042 WETH/DAI
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <label
-              class="c21 c22"
-            >
-              <span
-                aria-hidden="true"
-                class="c23"
-                size="18"
-              />
-              <input
-                class="c24"
-                size="18"
-                type="checkbox"
-              />
-              <svg
-                class="c25"
-                fill="none"
-                height="16"
-                size="18"
-                viewBox="0 0 16 16"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
+              <label
+                class="c21 c22"
               >
-                <g
-                  id="Icon"
+                <span
+                  aria-hidden="true"
+                  class="c23"
+                  size="18"
+                />
+                <input
+                  class="c24"
+                  size="18"
+                  type="checkbox"
+                />
+                <svg
+                  class="c25"
+                  fill="none"
+                  height="16"
+                  size="18"
+                  viewBox="0 0 16 16"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    d="M5.99993 11.3333C5.99927 11.3333 5.9986 11.3333 5.99727 11.3333C5.81927 11.3326 5.64993 11.2613 5.52526 11.1346L2.8586 8.42664C2.59993 8.16397 2.60327 7.74197 2.86594 7.48397C3.1286 7.22597 3.54993 7.22863 3.8086 7.4913L6.00393 9.72063L12.1959 3.5293C12.4566 3.26863 12.8779 3.26863 13.1386 3.5293C13.3993 3.7893 13.3993 4.21197 13.1386 4.47197L6.47193 11.1386C6.34659 11.2633 6.1766 11.3333 5.99993 11.3333Z"
-                    fill="white"
-                    id="Vector"
-                  />
-                </g>
-              </svg>
-            </label>
+                  <g
+                    id="Icon"
+                  >
+                    <path
+                      d="M5.99993 11.3333C5.99927 11.3333 5.9986 11.3333 5.99727 11.3333C5.81927 11.3326 5.64993 11.2613 5.52526 11.1346L2.8586 8.42664C2.59993 8.16397 2.60327 7.74197 2.86594 7.48397C3.1286 7.22597 3.54993 7.22863 3.8086 7.4913L6.00393 9.72063L12.1959 3.5293C12.4566 3.26863 12.8779 3.26863 13.1386 3.5293C13.3993 3.7893 13.3993 4.21197 13.1386 4.47197L6.47193 11.1386C6.34659 11.2633 6.1766 11.3333 5.99993 11.3333Z"
+                      fill="white"
+                      id="Vector"
+                    />
+                  </g>
+                </svg>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </div>
@@ -897,180 +902,185 @@ exports[`LimitsMenu should render when there is one open order 1`] = `
 
 <div>
   <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2"
+          class="c0 c1"
         >
-          <svg
-            class="c3"
-            data-testid="wallet-back"
-            fill="none"
-            height="24"
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-            width="24"
-            xmlns="http://www.w3.org/2000/svg"
+          <div
+            class="c2"
           >
-            <line
-              x1="19"
-              x2="5"
-              y1="12"
-              y2="12"
-            />
-            <polyline
-              points="12 19 5 12 12 5"
-            />
-          </svg>
-          <span
-            class="c4"
-          >
-            <div
-              class="c5 css-n8z49y"
+            <svg
+              class="c3"
+              data-testid="wallet-back"
+              fill="none"
+              height="24"
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+              width="24"
+              xmlns="http://www.w3.org/2000/svg"
             >
-              Open limits
-            </div>
-          </span>
-        </div>
-        <div
-          class="c6 c7 c8"
-        >
-          <div
-            class="c9 c10 css-1m65e73"
-          >
-            Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
-          </div>
-          <div
-            class="c9 c10 css-1m65e73"
-          >
-            Canceling a limit has a network cost.
-          </div>
-          <div
-            class="c9 c10 css-1m65e73"
-          >
-            <a
-              class="c11"
-              href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
-              rel="noopener noreferrer"
-              target="_blank"
-            >
-              Learn more
-            </a>
-          </div>
-        </div>
-        <div
-          class="c0 c12"
-          data-testid="LimitsMenuContainer"
-        >
-          <div
-            class="c13 c14"
-          >
-            <div
-              class="c13 c14 c15 c16"
+              <line
+                x1="19"
+                x2="5"
+                y1="12"
+                y2="12"
+              />
+              <polyline
+                points="12 19 5 12 12 5"
+              />
+            </svg>
+            <span
+              class="c4"
             >
               <div
-                class="c17"
+                class="c5 css-n8z49y"
+              >
+                Open limits
+              </div>
+            </span>
+          </div>
+          <div
+            class="c6 c7 c8"
+          >
+            <div
+              class="c9 c10 css-1m65e73"
+            >
+              Please be aware that the execution for limits may vary based on real-time market fluctuations and Ethereum network congestion. Limits may not execute exactly when tokens reach the specified price.
+            </div>
+            <div
+              class="c9 c10 css-1m65e73"
+            >
+              Canceling a limit has a network cost.
+            </div>
+            <div
+              class="c9 c10 css-1m65e73"
+            >
+              <a
+                class="c11"
+                href="https://support.uniswap.org/hc/en-us/articles/24300813697933"
+                rel="noopener noreferrer"
+                target="_blank"
+              >
+                Learn more
+              </a>
+            </div>
+          </div>
+          <div
+            class="c0 c12"
+            data-testid="LimitsMenuContainer"
+          >
+            <div
+              class="c13 c14"
+            >
+              <div
+                class="c13 c14 c15 c16"
               >
                 <div
-                  class="c9 css-15li2d9"
-                >
-                  Expires January 26, 2024 at 1:52PM
-                </div>
-                <div
-                  class="c0"
+                  class="c17"
                 >
                   <div
-                    class="c13 c18 c19"
+                    class="c9 css-15li2d9"
                   >
-                    <div
-                      class="c5 css-n8z49y"
-                    >
-                      252.074
-                       
-                      DAI
-                    </div>
-                    <svg
-                      fill="none"
-                      height="12px"
-                      stroke="#222222"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      viewBox="0 0 24 24"
-                      width="12px"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <line
-                        x1="5"
-                        x2="19"
-                        y1="12"
-                        y2="12"
-                      />
-                      <polyline
-                        points="12 5 19 12 12 19"
-                      />
-                    </svg>
-                    <div
-                      class="c5 css-n8z49y"
-                    >
-                      0.10684
-                       
-                      WETH
-                    </div>
+                    Expires January 26, 2024 at 1:52PM
                   </div>
                   <div
-                    class="c20 css-142zc9n"
+                    class="c0"
                   >
-                    when 0.00042 WETH/DAI
+                    <div
+                      class="c13 c18 c19"
+                    >
+                      <div
+                        class="c5 css-n8z49y"
+                      >
+                        252.074
+                         
+                        DAI
+                      </div>
+                      <svg
+                        fill="none"
+                        height="12px"
+                        stroke="#222222"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        viewBox="0 0 24 24"
+                        width="12px"
+                        xmlns="http://www.w3.org/2000/svg"
+                      >
+                        <line
+                          x1="5"
+                          x2="19"
+                          y1="12"
+                          y2="12"
+                        />
+                        <polyline
+                          points="12 5 19 12 12 19"
+                        />
+                      </svg>
+                      <div
+                        class="c5 css-n8z49y"
+                      >
+                        0.10684
+                         
+                        WETH
+                      </div>
+                    </div>
+                    <div
+                      class="c20 css-142zc9n"
+                    >
+                      when 0.00042 WETH/DAI
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <label
-              class="c21 c22"
-            >
-              <span
-                aria-hidden="true"
-                class="c23"
-                size="18"
-              />
-              <input
-                class="c24"
-                size="18"
-                type="checkbox"
-              />
-              <svg
-                class="c25"
-                fill="none"
-                height="16"
-                size="18"
-                viewBox="0 0 16 16"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
+              <label
+                class="c21 c22"
               >
-                <g
-                  id="Icon"
+                <span
+                  aria-hidden="true"
+                  class="c23"
+                  size="18"
+                />
+                <input
+                  class="c24"
+                  size="18"
+                  type="checkbox"
+                />
+                <svg
+                  class="c25"
+                  fill="none"
+                  height="16"
+                  size="18"
+                  viewBox="0 0 16 16"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
                 >
-                  <path
-                    d="M5.99993 11.3333C5.99927 11.3333 5.9986 11.3333 5.99727 11.3333C5.81927 11.3326 5.64993 11.2613 5.52526 11.1346L2.8586 8.42664C2.59993 8.16397 2.60327 7.74197 2.86594 7.48397C3.1286 7.22597 3.54993 7.22863 3.8086 7.4913L6.00393 9.72063L12.1959 3.5293C12.4566 3.26863 12.8779 3.26863 13.1386 3.5293C13.3993 3.7893 13.3993 4.21197 13.1386 4.47197L6.47193 11.1386C6.34659 11.2633 6.1766 11.3333 5.99993 11.3333Z"
-                    fill="white"
-                    id="Vector"
-                  />
-                </g>
-              </svg>
-            </label>
+                  <g
+                    id="Icon"
+                  >
+                    <path
+                      d="M5.99993 11.3333C5.99927 11.3333 5.9986 11.3333 5.99727 11.3333C5.81927 11.3326 5.64993 11.2613 5.52526 11.1346L2.8586 8.42664C2.59993 8.16397 2.60327 7.74197 2.86594 7.48397C3.1286 7.22597 3.54993 7.22863 3.8086 7.4913L6.00393 9.72063L12.1959 3.5293C12.4566 3.26863 12.8779 3.26863 13.1386 3.5293C13.3993 3.7893 13.3993 4.21197 13.1386 4.47197L6.47193 11.1386C6.34659 11.2633 6.1766 11.3333 5.99993 11.3333Z"
+                      fill="white"
+                      id="Vector"
+                    />
+                  </g>
+                </svg>
+              </label>
+            </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </div>

@@ -1,11 +1,11 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { DownloadWalletOption } from 'components/WalletModal/DownloadWalletOption'
+import { DetectedBadge } from 'components/WalletModal/shared'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import { useConnect } from 'hooks/useConnect'
 import styled from 'lib/styled-components'
-import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { Image, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
@@ -39,12 +39,6 @@ export const AppIcon = styled.img`
   filter: drop-shadow(0px 1.179px 3.537px rgba(255, 117, 249, 0.24));
 `
 
-const TagContainer = styled.div`
-  @media screen and (max-width: ${BREAKPOINTS.xs}px) {
-    display: none;
-  }
-`
-
 export function UniswapWalletOptions() {
   const uniswapExtensionConnector = useConnectorWithId(CONNECTION.UNISWAP_EXTENSION_RDNS)
   const uniswapWalletConnectConnector = useConnectorWithId(CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID, {
@@ -69,11 +63,7 @@ export function UniswapWalletOptions() {
                 <Trans i18nKey="common.extension" />
               </Text>
             </Row>
-            <TagContainer>
-              <Text lineHeight={16} fontSize={12} color="$neutral2">
-                <Trans i18nKey="common.detected" />
-              </Text>
-            </TagContainer>
+            <DetectedBadge />
           </OptionContainer>
         ) : // If the extension is not detected, show the option to download the app
         extensionIsLaunched ? (

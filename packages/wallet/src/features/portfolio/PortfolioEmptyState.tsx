@@ -6,10 +6,10 @@ import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } fro
 import { ArrowDownCircle, Buy as BuyIcon, PaperStack } from 'ui/src/components/icons'
 import { borderRadii } from 'ui/src/theme'
 import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 enum ActionOption {

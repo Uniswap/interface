@@ -1,5 +1,5 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
-import { MobileState } from 'src/app/reducer'
+import { MobileState } from 'src/app/mobileReducer'
 import {
   WalletConnectPendingSession,
   WalletConnectRequest,

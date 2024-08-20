@@ -70,6 +70,7 @@ export interface GetQuoteArgs {
   priceImprovementBps: number
   forceOpenOrders: boolean
   deadlineBufferSecs: number
+  arbitrumXV2SlippageTolerance: string
 }
 
 export type GetQuickQuoteArgs = {
@@ -849,6 +850,7 @@ export type UniswapXv2Config = {
   swapper?: string
   deadlineBufferSecs?: number
   useSyntheticQuotes?: boolean
+  slippageTolerance?: string
 }
 
 export type RoutingConfig = (UniswapXConfig | UniswapXv2Config | ClassicAPIConfig)[]

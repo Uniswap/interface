@@ -49,7 +49,7 @@ export function MaxAmountButton({
     >
       <TouchableArea
         hapticFeedback
-        backgroundColor={disableMaxButton ? '$surface3' : '$accentSoft'}
+        backgroundColor={disableMaxButton ? '$surface3' : '$DEP_accentSoft'}
         borderRadius="$rounded8"
         opacity={disableMaxButton ? 0.5 : 1}
         px="$spacing4"

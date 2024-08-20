@@ -1,5 +1,6 @@
 import * as StoreReview from 'expo-store-review'
 import { Alert } from 'react-native'
+import { MobileState } from 'src/app/mobileReducer'
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
 import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
@@ -13,7 +14,6 @@ import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'
-import { RootState } from 'wallet/src/state'
 
 // at most once per reminder period (120 days)
 const MIN_PROMPT_REMINDER_MS = 120 * ONE_DAY_MS
@@ -47,13 +47,13 @@ function* maybeRequestAppRating() {
     }
 
     // Conditions
-    const appRatingProvidedMs = yield* select((state: RootState) => state.wallet.appRatingProvidedMs)
+    const appRatingProvidedMs = yield* select((state: MobileState) => state.wallet.appRatingProvidedMs)
     if (appRatingProvidedMs) {
       return
     } // avoids prompting again
 
-    const appRatingPromptedMs = yield* select((state: RootState) => state.wallet.appRatingPromptedMs)
-    const appRatingFeedbackProvidedMs = yield* select((state: RootState) => state.wallet.appRatingFeedbackProvidedMs)
+    const appRatingPromptedMs = yield* select((state: MobileState) => state.wallet.appRatingPromptedMs)
+    const appRatingFeedbackProvidedMs = yield* select((state: MobileState) => state.wallet.appRatingFeedbackProvidedMs)
 
     const consecutiveSwapsCondition = yield* select(hasConsecutiveRecentSwapsSelector)
 

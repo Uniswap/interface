@@ -7,7 +7,16 @@ import { useTheme } from 'lib/styled-components'
 import { useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { CopyToClipboard } from 'theme/components'
-import { Button, Flex, GeneratedIcon, ImpactFeedbackStyle, Separator, Text, TouchableArea } from 'ui/src'
+import {
+  Button,
+  Flex,
+  GeneratedIcon,
+  HeightAnimator,
+  ImpactFeedbackStyle,
+  Separator,
+  Text,
+  TouchableArea,
+} from 'ui/src'
 import { CopySheets, QrCode } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -105,26 +114,30 @@ export function ChooseProvider({ setConnectedProvider, setErrorProvider }: Choos
       <Flex gap="$spacing12">
         <AccountCardItem onClose={toggleModal} />
         {providers.length > 0 && (
-          <Flex centered row shrink gap="$spacing12">
-            <Separator />
-            <Text color="$neutral2" textAlign="center" variant="body3">
-              {t('fiatOnRamp.receiveCrypto.modal.sectionTitle.fromAccount')}
-            </Text>
-            <Separator />
-          </Flex>
-        )}
-        {account.address && (
-          <Flex grow gap="$spacing12">
-            {providers.map((serviceProvider) => (
-              <ProviderOption
-                key={serviceProvider.name}
-                serviceProvider={serviceProvider}
-                walletAddress={account.address!}
-                setConnectedProvider={setConnectedProvider}
-                setErrorProvider={setErrorProvider}
-              />
-            ))}
-          </Flex>
+          <HeightAnimator animation="fastHeavy">
+            <Flex gap="$spacing12">
+              <Flex centered row shrink gap="$spacing12">
+                <Separator />
+                <Text color="$neutral2" textAlign="center" variant="body3">
+                  {t('fiatOnRamp.receiveCrypto.modal.sectionTitle.fromAccount')}
+                </Text>
+                <Separator />
+              </Flex>
+              {account.address && (
+                <Flex grow gap="$spacing12">
+                  {providers.map((serviceProvider) => (
+                    <ProviderOption
+                      key={serviceProvider.name}
+                      serviceProvider={serviceProvider}
+                      walletAddress={account.address!}
+                      setConnectedProvider={setConnectedProvider}
+                      setErrorProvider={setErrorProvider}
+                    />
+                  ))}
+                </Flex>
+              )}
+            </Flex>
+          </HeightAnimator>
         )}
       </Flex>
     </Flex>

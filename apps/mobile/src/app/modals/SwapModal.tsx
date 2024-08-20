@@ -6,9 +6,10 @@ import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { updateSwapStartTimestamp } from 'wallet/src/features/timing/slice'
+import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
 import { SwapFlow } from 'wallet/src/features/transactions/swap/SwapFlow'
 import { useSwapPrefilledState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function SwapModal(): JSX.Element {
   const appDispatch = useDispatch()
@@ -29,10 +30,12 @@ export function SwapModal(): JSX.Element {
 
   const { requiredForTransactions: requiresBiometrics } = useBiometricAppSettings()
   const { trigger: biometricsTrigger } = useBiometricPrompt()
+  const account = useActiveAccountWithThrow()
 
   return (
     <SwapFlow
       BiometricsIcon={<SwapBiometricsIcon />}
+      account={account}
       authTrigger={requiresBiometrics ? biometricsTrigger : undefined}
       openWalletRestoreModal={openWalletRestoreModal}
       prefilledState={swapPrefilledState}

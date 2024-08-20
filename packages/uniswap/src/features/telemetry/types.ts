@@ -193,6 +193,18 @@ type InterfaceTokenSelectedProperties = {
   total_balances_usd?: number
 }
 
+export enum DappRequestAction {
+  Accept = 'Accept',
+  Reject = 'Reject',
+}
+
+export enum OnboardingCardLoggingName {
+  WelcomeWallet = 'welcome_wallet',
+  FundWallet = 'fund_wallet',
+  RecoveryBackup = 'recovery_backup',
+  ClaimUnitag = 'claim_unitag',
+}
+
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {
   [ExtensionEventName.OnboardingLoad]: undefined
@@ -201,6 +213,7 @@ export type UniverseEventProperties = {
   [ExtensionEventName.ChangeLockedState]: { locked: boolean; location: 'background' | 'sidebar' }
   [ExtensionEventName.DappConnect]: DappContextProperties
   [ExtensionEventName.DappConnectRequest]: DappContextProperties
+  [ExtensionEventName.DappRequest]: DappContextProperties & { action: DappRequestAction; requestType: string } // TODO: requestType should be of the type DappRequestType
   [ExtensionEventName.DappChangeChain]: Omit<DappContextProperties, 'connectedAddresses'>
   [ExtensionEventName.DappTroubleConnecting]: Pick<DappContextProperties, 'dappUrl'>
   [ExtensionEventName.PasswordChanged]: undefined
@@ -243,6 +256,7 @@ export type UniverseEventProperties = {
   }
   [InterfaceEventName.WALLET_CONNECTED]: {
     result: WalletConnectionResult
+    wallet_name: string
     wallet_type: string
     wallet_address?: string
     is_reconnect?: boolean
@@ -284,6 +298,7 @@ export type UniverseEventProperties = {
     received_swap_quote?: boolean
   }
   [InterfaceEventName.WALLET_SELECTED]: {
+    wallet_name: string
     wallet_type: string
   }
   [InterfaceEventNameLocal.PortfolioMenuOpened]: { name: string }
@@ -316,6 +331,10 @@ export type UniverseEventProperties = {
     response: unknown
     routerPreference: 'price' | 'uniswapx' | 'api'
   }
+  [InterfaceEventNameLocal.UniswapXSignatureDeadlineExpired]: {
+    deadline: number
+    resultTime: number
+  }
   [InterfaceEventNameLocal.UniswapXSignatureRequested]: Record<string, unknown> // TODO specific type
   [InterfaceEventNameLocal.UniswapXOrderPostError]: Record<string, unknown> // TODO specific type
   [InterfaceEventNameLocal.UniswapXOrderSubmitted]: Record<string, unknown> // TODO specific type
@@ -332,7 +351,16 @@ export type UniverseEventProperties = {
     page?: InterfacePageName
   }
   [InterfaceEventName.EXPLORE_SEARCH_SELECTED]: undefined
+  [InterfaceEventName.LANGUAGE_SELECTED]: {
+    previous_language: string
+    new_language: string
+  }
   [InterfaceEventName.NAVBAR_SEARCH_SELECTED]: ITraceContext
+  [InterfaceEventName.SEND_INITIATED]: {
+    currencyId: string
+    amount: string
+    recipient: string
+  }
   [InterfaceEventName.TOKEN_SELECTOR_OPENED]: undefined
   [LiquidityEventName.COLLECT_LIQUIDITY_SUBMITTED]: {
     source: LiquiditySource
@@ -421,6 +449,9 @@ export type UniverseEventProperties = {
     enabled: boolean
   }
   [MobileEventName.OnboardingCompleted]: OnboardingCompletedProps & ITraceContext
+  [MobileEventName.OnboardingIntroCardSwiped]: ITraceContext & {
+    card_name: OnboardingCardLoggingName
+  }
   [MobileEventName.PerformanceReport]: RenderPassReport
   [MobileEventName.ShareLinkOpened]: {
     entity: ShareableEntity

@@ -1,8 +1,4 @@
-Here are the latest updates:
+We are back with some new updates! Here’s the latest:
 
-Native Asset Top Up: Easily access our fiat on ramp feature if you don’t have enough native asset on a network to complete a transaction.
-
-Other changes:
-
+- Improved swap context menu linkouts
 - Various bug fixes and performance improvements
-- Improved gas estimation for Send transactions

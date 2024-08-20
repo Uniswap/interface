@@ -1,5 +1,6 @@
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileAppsFlyerEvents, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
@@ -20,7 +21,7 @@ import {
   recordWalletFunded,
   shouldReportBalances,
 } from 'wallet/src/features/telemetry/slice'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 export function useLastBalancesReporter(): void {

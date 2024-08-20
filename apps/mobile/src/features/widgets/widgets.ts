@@ -1,6 +1,7 @@
 import { NativeModules } from 'react-native'
 import { getItem, reloadAllTimelines, setItem } from 'react-native-widgetkit'
 import { getBuildVariant } from 'src/utils/version'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -9,7 +10,7 @@ import { WidgetEvent } from 'uniswap/src/types/widgets'
 import { isAndroid } from 'utilities/src/platform'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 const APP_GROUP = 'group.com.uniswap.widgets'
 const KEY_WIDGET_EVENTS = getBuildVariant() + '.widgets.configuration.events'

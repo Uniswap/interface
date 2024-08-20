@@ -1,14 +1,15 @@
 import { ForwardedRef, forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { FlatList, LayoutRectangle, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
+import { useSelector } from 'react-redux'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
-import { Flex, LinearGradient, Text, useDeviceInsets, useSporeColors } from 'ui/src'
+import { AnimatePresence, Flex, LinearGradient, Text, useDeviceInsets, useIsDarkMode, useSporeColors } from 'ui/src'
 import { SwirlyArrowDown } from 'ui/src/components/icons'
-import { zIndices } from 'ui/src/theme'
+import { spacing, zIndices } from 'ui/src/theme'
 import {
   Chain,
   ContractInput,
@@ -21,6 +22,7 @@ import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
 import { isAndroid } from 'utilities/src/platform'
+import { selectHasUsedExplore } from 'wallet/src/features/behaviorHistory/selectors'
 import { useAppFiatCurrency } from 'wallet/src/features/fiatCurrency/hooks'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
@@ -31,31 +33,29 @@ export const HomeExploreTab = memo(
     { containerProps, scrollHandler, headerHeight, refreshing, onRefresh },
     ref,
   ) {
+    const isDarkMode = useIsDarkMode()
     const colors = useSporeColors()
     const insets = useDeviceInsets()
     const appFiatCurrency = useAppFiatCurrency()
     const [maxTokenPriceWrapperWidth, setMaxTokenPriceWrapperWidth] = useState(0)
 
-    const chainId = useExperimentValue(
+    const ethChainId = useExperimentValue(
       Experiments.OnboardingRedesignHomeScreen,
-      OnboardingRedesignHomeScreenProperties.ExploreChainId,
+      OnboardingRedesignHomeScreenProperties.ExploreEthChainId,
       Chain.Ethereum,
       (x): x is Chain => Object.values(Chain).includes(x as Chain),
     )
-    const tokenAddresses = useExperimentValue(
+    const recommendedTokens = useExperimentValue(
       Experiments.OnboardingRedesignHomeScreen,
-      OnboardingRedesignHomeScreenProperties.ExploreTokenAddresses,
-      [] as string[],
-      (x): x is string[] => Array.isArray(x) && x.every((val) => typeof val === 'string'),
+      OnboardingRedesignHomeScreenProperties.ExploreTokens,
+      [] as ContractInput[],
+      (x): x is ContractInput[] =>
+        Array.isArray(x) &&
+        x.every((val) => typeof val.chain === 'string' && (!val.address || typeof val.address === 'string')),
     )
-    const recommendedTokens: ContractInput[] = useMemo(
-      () => tokenAddresses.map((address) => ({ chain: chainId, address })),
-      [chainId, tokenAddresses],
-    )
-
     const { onContentSizeChange } = useAdaptiveFooter(containerProps?.contentContainerStyle)
 
-    const { data } = useHomeScreenTokensQuery({ variables: { contracts: recommendedTokens, chain: chainId } })
+    const { data } = useHomeScreenTokensQuery({ variables: { contracts: recommendedTokens, chain: ethChainId } })
     const tokenDataList = useMemo(
       () =>
         [data?.eth, ...(data?.tokens ?? [])]
@@ -75,6 +75,10 @@ export const HomeExploreTab = memo(
 
     const renderToken = useCallback(
       ({ item, index }: { item: TokenItemData; index: number }) => {
+        const gradientColor = isDarkMode ? 'rgba(0, 0, 0, 0)' : 'rgba(255, 255, 255, 0)'
+
+        // Used to position each row properly along the gradient to align with the overall layout
+        // Needed because can't apply single gradient to flat list as it's built for virtualization
         const gradientYStart = -index
         const gradientYEnd = tokenDataList.length - index
 
@@ -90,7 +94,7 @@ export const HomeExploreTab = memo(
               overlay={
                 <Flex height="100%" position="absolute" width="100%" zIndex={zIndices.mask}>
                   <LinearGradient
-                    colors={['rgba(255, 255, 255, 0)', '$surface1']}
+                    colors={[gradientColor, '$surface1']}
                     end={{ x: 0, y: gradientYEnd }}
                     height="100%"
                     start={{ x: 0, y: gradientYStart }}
@@ -105,7 +109,7 @@ export const HomeExploreTab = memo(
           </Flex>
         )
       },
-      [tokenDataList.length, maxTokenPriceWrapperWidth, onTokenLayout],
+      [isDarkMode, tokenDataList.length, maxTokenPriceWrapperWidth, onTokenLayout],
     )
 
     const refreshControl = useMemo(() => {
@@ -120,7 +124,8 @@ export const HomeExploreTab = memo(
     }, [refreshing, headerHeight, onRefresh, colors.neutral3, insets.top])
 
     return (
-      <Flex grow>
+      // Negative top margin used to offset padding from tab bar that's difficult to change
+      <Flex grow mt={-spacing.spacing12}>
         <AnimatedFlatList
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ref={ref as ForwardedRef<Animated.FlatList<any>>}
@@ -146,14 +151,26 @@ export const HomeExploreTab = memo(
 
 function FooterElement(): JSX.Element {
   const { t } = useTranslation()
+  const hasUsedExplore = useSelector(selectHasUsedExplore)
 
   return (
-    <Flex row alignItems="flex-end" px="$spacing28">
-      <Text color="$neutral3" variant="subheading2" width="65%">
-        {t('home.explore.footer')}
-      </Text>
-      <SwirlyArrowDown color="$neutral3" size="$icon.28" />
-    </Flex>
+    <AnimatePresence>
+      {!hasUsedExplore && (
+        <Flex
+          centered
+          animation="quick"
+          enterStyle={{ opacity: 0 }}
+          exitStyle={{ opacity: 0 }}
+          gap="$spacing8"
+          pt="$spacing8"
+        >
+          <Text color="$neutral3" variant="subheading2">
+            {t('home.explore.footer')}
+          </Text>
+          <SwirlyArrowDown color="$neutral3" size="$icon.28" />
+        </Flex>
+      )}
+    </AnimatePresence>
   )
 }
 

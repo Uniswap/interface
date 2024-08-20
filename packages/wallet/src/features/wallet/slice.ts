@@ -10,7 +10,7 @@ export enum SwapProtectionSetting {
   Off = 'off',
 }
 
-export interface WalletState {
+export interface WalletSliceState {
   accounts: Record<Address, Account>
   activeAccountAddress: Address | null
   finishedOnboarding?: boolean
@@ -32,7 +32,7 @@ export interface WalletState {
   appRatingFeedbackProvidedMs?: number // last time user provided feedback (form)
 }
 
-export const initialWalletState: WalletState = {
+export const initialWalletState: WalletSliceState = {
   accounts: {},
   activeAccountAddress: null,
   settings: {

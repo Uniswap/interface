@@ -4,7 +4,7 @@ exports[`renders trait card 1`] = `
 <View
   style={
     {
-      "backgroundColor": "#2222220D",
+      "backgroundColor": "rgba(34,34,34,0.05)",
       "borderBottomLeftRadius": 16,
       "borderBottomRightRadius": 16,
       "borderTopLeftRadius": 16,

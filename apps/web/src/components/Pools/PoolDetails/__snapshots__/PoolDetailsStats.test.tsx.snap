@@ -274,205 +274,210 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2 css-vurnku"
-        >
-          Stats
-        </div>
-        <div
-          class="c0 c3"
+          class="c0 c1"
         >
           <div
-            class="c4 css-1urox24"
+            class="c2 css-vurnku"
           >
-            Pool balances
+            Stats
           </div>
           <div
-            class="c5 c6 c7"
+            class="c0 c3"
           >
             <div
-              class="c5 c6 c8"
+              class="c4 css-1urox24"
+            >
+              Pool balances
+            </div>
+            <div
+              class="c5 c6 c7"
             >
               <div
-                class="c9"
-                style="height: 20px; width: 20px; margin-right: 8px;"
+                class="c5 c6 c8"
               >
                 <div
-                  class="c10"
+                  class="c9"
+                  style="height: 20px; width: 20px; margin-right: 8px;"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
+                    class="c10"
                   >
                     <div
-                      class="c11"
-                      size="20"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
                     >
-                       
-                      <img
-                        class="c12"
+                      <div
+                        class="c11"
                         size="20"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                      />
+                      >
+                         
+                        <img
+                          class="c12"
+                          size="20"
+                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
+                90.9M 
+                <a
+                  class="c13"
+                  href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+                >
+                  USDC
+                </a>
               </div>
-              90.9M 
-              <a
-                class="c13"
-                href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-              >
-                USDC
-              </a>
-            </div>
-            <div
-              class="c5 c6 c8"
-            >
               <div
-                class="c9"
-                style="height: 20px; width: 20px; margin-right: 8px;"
+                class="c5 c6 c8"
               >
                 <div
-                  class="c10"
+                  class="c9"
+                  style="height: 20px; width: 20px; margin-right: 8px;"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
+                    class="c10"
                   >
                     <div
-                      class="c11"
-                      size="20"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
                     >
-                       
-                      <img
-                        class="c12"
+                      <div
+                        class="c11"
                         size="20"
-                        src="ethereum-logo.png"
-                      />
+                      >
+                         
+                        <img
+                          class="c12"
+                          size="20"
+                          src="ethereum-logo.png"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
+                82.5K 
+                <a
+                  class="c13"
+                  href="/explore/tokens/ethereum/NATIVE"
+                >
+                  ETH
+                </a>
               </div>
-              82.5K 
-              <a
-                class="c13"
-                href="/explore/tokens/ethereum/NATIVE"
-              >
-                ETH
-              </a>
             </div>
           </div>
-        </div>
-        <div
-          class="c0 c3"
-        >
           <div
-            class="c4 css-1urox24"
-          >
-            TVL
-          </div>
-          <div
-            class="c5 c6 c14"
+            class="c0 c3"
           >
             <div
-              class="c15 css-vurnku"
+              class="c4 css-1urox24"
             >
-              $223.2M
+              TVL
             </div>
             <div
-              class="c16 c17"
-              width="max-content"
+              class="c5 c6 c14"
             >
-              <svg
-                aria-label="down"
-                class="c18"
-                fill="none"
-                height="16"
-                viewBox="0 0 24 24"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
-                  fill="currentColor"
-                />
-              </svg>
               <div
-                class="c4 css-1urox24"
+                class="c15 css-vurnku"
               >
-                0.37%
+                $223.2M
               </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="c0 c3"
-        >
-          <div
-            class="c4 css-1urox24"
-          >
-            24H volume
-          </div>
-          <div
-            class="c5 c6 c14"
-          >
-            <div
-              class="c15 css-vurnku"
-            >
-              $194.3M
-            </div>
-            <div
-              class="c16 c17"
-              width="max-content"
-            >
-              <svg
-                aria-label="down"
-                class="c18"
-                fill="none"
-                height="16"
-                viewBox="0 0 24 24"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
-                  fill="currentColor"
-                />
-              </svg>
               <div
-                class="c4 css-1urox24"
+                class="c16 c17"
+                width="max-content"
               >
-                17.75%
+                <svg
+                  aria-label="down"
+                  class="c18"
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <div
+                  class="c4 css-1urox24"
+                >
+                  0.37%
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c0 c3"
+          >
+            <div
+              class="c4 css-1urox24"
+            >
+              24H volume
+            </div>
+            <div
+              class="c5 c6 c14"
+            >
+              <div
+                class="c15 css-vurnku"
+              >
+                $194.3M
+              </div>
+              <div
+                class="c16 c17"
+                width="max-content"
+              >
+                <svg
+                  aria-label="down"
+                  class="c18"
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <div
+                  class="c4 css-1urox24"
+                >
+                  17.75%
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c0 c3"
+          >
+            <div
+              class="c4 css-1urox24"
+            >
+              24H fees
+            </div>
+            <div
+              class="c5 c6 c14"
+            >
+              <div
+                class="c15 css-vurnku"
+              >
+                $97.1K
               </div>
             </div>
           </div>
         </div>
-        <div
-          class="c0 c3"
-        >
-          <div
-            class="c4 css-1urox24"
-          >
-            24H fees
-          </div>
-          <div
-            class="c5 c6 c14"
-          >
-            <div
-              class="c15 css-vurnku"
-            >
-              $97.1K
-            </div>
-          </div>
-        </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -770,216 +775,221 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
 }
 
 <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2 css-vurnku"
-        >
-          Stats
-        </div>
-        <div
-          class="c0 c3"
+          class="c0 c1"
         >
           <div
-            class="c4 css-1urox24"
+            class="c2 css-vurnku"
           >
-            Pool balances
+            Stats
           </div>
           <div
-            class="c5 c6 c7"
+            class="c0 c3"
           >
             <div
-              class="c5 c6 c8"
+              class="c4 css-1urox24"
             >
-              90.9M 
-              <a
-                class="c9"
-                href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
-              >
-                <div
-                  class="c10"
-                  style="height: 16px; width: 16px; margin-right: 4px; margin-left: 4px;"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
-                    >
-                      <div
-                        class="c12"
-                        size="16"
-                      >
-                         
-                        <img
-                          class="c13"
-                          size="16"
-                          src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                USDC
-              </a>
+              Pool balances
             </div>
             <div
-              class="c5 c6 c8"
+              class="c5 c6 c7"
             >
-              82.5K 
-              <a
-                class="c9"
-                href="/explore/tokens/ethereum/NATIVE"
-              >
-                <div
-                  class="c10"
-                  style="height: 16px; width: 16px; margin-right: 4px; margin-left: 4px;"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _position-relative"
-                    >
-                      <div
-                        class="c12"
-                        size="16"
-                      >
-                         
-                        <img
-                          class="c13"
-                          size="16"
-                          src="ethereum-logo.png"
-                        />
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                ETH
-              </a>
-            </div>
-          </div>
-          <div
-            class="c5 c6"
-            data-testid="pool-balance-chart"
-          >
-            <div
-              class="c14"
-            />
-            <div
-              class="c15"
-            />
-          </div>
-        </div>
-        <div
-          class="c0 c3"
-        >
-          <div
-            class="c4 css-1urox24"
-          >
-            TVL
-          </div>
-          <div
-            class="c5 c6 c16"
-          >
-            <div
-              class="c17 css-vurnku"
-            >
-              $223.2M
-            </div>
-            <div
-              class="c18 c19"
-              width="max-content"
-            >
-              <svg
-                aria-label="down"
-                class="c20"
-                fill="none"
-                height="16"
-                viewBox="0 0 24 24"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
-                  fill="currentColor"
-                />
-              </svg>
               <div
-                class="c4 css-1urox24"
+                class="c5 c6 c8"
               >
-                0.37%
+                90.9M 
+                <a
+                  class="c9"
+                  href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
+                >
+                  <div
+                    class="c10"
+                    style="height: 16px; width: 16px; margin-right: 4px; margin-left: 4px;"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c12"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c13"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  USDC
+                </a>
+              </div>
+              <div
+                class="c5 c6 c8"
+              >
+                82.5K 
+                <a
+                  class="c9"
+                  href="/explore/tokens/ethereum/NATIVE"
+                >
+                  <div
+                    class="c10"
+                    style="height: 16px; width: 16px; margin-right: 4px; margin-left: 4px;"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c12"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c13"
+                            size="16"
+                            src="ethereum-logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  ETH
+                </a>
+              </div>
+            </div>
+            <div
+              class="c5 c6"
+              data-testid="pool-balance-chart"
+            >
+              <div
+                class="c14"
+              />
+              <div
+                class="c15"
+              />
+            </div>
+          </div>
+          <div
+            class="c0 c3"
+          >
+            <div
+              class="c4 css-1urox24"
+            >
+              TVL
+            </div>
+            <div
+              class="c5 c6 c16"
+            >
+              <div
+                class="c17 css-vurnku"
+              >
+                $223.2M
+              </div>
+              <div
+                class="c18 c19"
+                width="max-content"
+              >
+                <svg
+                  aria-label="down"
+                  class="c20"
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <div
+                  class="c4 css-1urox24"
+                >
+                  0.37%
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c0 c3"
+          >
+            <div
+              class="c4 css-1urox24"
+            >
+              24H volume
+            </div>
+            <div
+              class="c5 c6 c16"
+            >
+              <div
+                class="c17 css-vurnku"
+              >
+                $194.3M
+              </div>
+              <div
+                class="c18 c19"
+                width="max-content"
+              >
+                <svg
+                  aria-label="down"
+                  class="c20"
+                  fill="none"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  width="16"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
+                    fill="currentColor"
+                  />
+                </svg>
+                <div
+                  class="c4 css-1urox24"
+                >
+                  17.75%
+                </div>
+              </div>
+            </div>
+          </div>
+          <div
+            class="c0 c3"
+          >
+            <div
+              class="c4 css-1urox24"
+            >
+              24H fees
+            </div>
+            <div
+              class="c5 c6 c16"
+            >
+              <div
+                class="c17 css-vurnku"
+              >
+                $97.1K
               </div>
             </div>
           </div>
         </div>
-        <div
-          class="c0 c3"
-        >
-          <div
-            class="c4 css-1urox24"
-          >
-            24H volume
-          </div>
-          <div
-            class="c5 c6 c16"
-          >
-            <div
-              class="c17 css-vurnku"
-            >
-              $194.3M
-            </div>
-            <div
-              class="c18 c19"
-              width="max-content"
-            >
-              <svg
-                aria-label="down"
-                class="c20"
-                fill="none"
-                height="16"
-                viewBox="0 0 24 24"
-                width="16"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  d="M10.6979 16.2453L6.31787 9.75247C5.58184 8.66118 6.2058 7 7.35185 7L16.6482 7C17.7942 7 18.4182 8.66243 17.6821 9.75247L13.3021 16.2453C12.623 17.2516 11.377 17.2516 10.6979 16.2453Z"
-                  fill="currentColor"
-                />
-              </svg>
-              <div
-                class="c4 css-1urox24"
-              >
-                17.75%
-              </div>
-            </div>
-          </div>
-        </div>
-        <div
-          class="c0 c3"
-        >
-          <div
-            class="c4 css-1urox24"
-          >
-            24H fees
-          </div>
-          <div
-            class="c5 c6 c16"
-          >
-            <div
-              class="c17 css-vurnku"
-            >
-              $97.1K
-            </div>
-          </div>
-        </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>

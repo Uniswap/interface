@@ -1,4 +1,4 @@
-import { isEqual } from 'es-toolkit'
+import isEqual from 'lodash/isEqual'
 import React, { CSSProperties, Key, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { VariableSizeList as List } from 'react-window'
@@ -58,8 +58,8 @@ export function TokenSectionBaseList({
   const items = useMemo(() => {
     return sections.reduce((acc: BaseListData[], section) => {
       const sectionInfo: BaseListSectionRowInfo = {
-        section: { title: section.title, rightElement: section.rightElement },
-        key: section.title,
+        section: { sectionKey: section.sectionKey, rightElement: section.rightElement },
+        key: section.sectionKey,
         renderSectionHeader,
       }
       acc.push(sectionInfo)
@@ -210,7 +210,7 @@ function _Row({ index, itemData, style, windowWidth, updateRowHeight }: RowProps
       }
       updateRowHeight(index, height)
     }, 0)
-  }, [updateRowHeight, index, windowWidth])
+  }, [updateRowHeight, index, windowWidth, itemData.key])
 
   return (
     <Flex key={itemData?.key ?? index} style={style}>

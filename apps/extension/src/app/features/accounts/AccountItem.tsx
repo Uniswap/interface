@@ -7,14 +7,12 @@ import { removeAllDappConnectionsForAccount } from 'src/app/features/dapp/action
 import { ContextMenu, Flex, MenuContentItem, Text, TouchableArea } from 'ui/src'
 import { CopySheets, Edit, TrashFilled, TripleDots } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -26,16 +24,15 @@ import { DisplayNameType } from 'wallet/src/features/wallet/types'
 type AccountItemProps = {
   address: Address
   onAccountSelect?: () => void
+  balanceUSD?: number
 }
 
-export function AccountItem({ address, onAccountSelect }: AccountItemProps): JSX.Element {
+export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountItemProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const valueModifiers = usePortfolioValueModifiers() ?? []
-  const { data, loading, error } = usePortfolioTotalValue({ address, valueModifiers })
-  const { balanceUSD } = data || {}
 
   const { convertFiatAmountFormatted } = useLocalizationContext()
+
   const formattedBalance = convertFiatAmountFormatted(balanceUSD, NumberType.PortfolioBalance)
 
   const [showEditLabelModal, setShowEditLabelModal] = useState(false)
@@ -173,7 +170,7 @@ export function AccountItem({ address, onAccountSelect }: AccountItemProps): JSX
               transform="translateY(-50%)"
               variant="body3"
             >
-              {loading || error ? '' : formattedBalance}
+              {formattedBalance}
             </Text>
             <ContextMenu closeOnClick itemId={address} menuOptions={menuOptions} onLeftClick>
               <Flex

@@ -6,6 +6,7 @@ import { AnglesDownUp, SortVertical, TripleDots, UniswapX } from 'ui/src/compone
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
 import { FORMAT_DATE_TIME_MEDIUM, useFormattedDateTime } from 'wallet/src/features/language/localizedDayjs'
@@ -36,7 +37,6 @@ import { useTransactionActions } from 'wallet/src/features/transactions/SummaryC
 import { getTransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { TransactionDetails, TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 import { getIsCancelable } from 'wallet/src/features/transactions/utils'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type TransactionDetailsModalProps = {
@@ -166,7 +166,6 @@ export function TransactionDetailsModal({
 
   const transactionActions = useTransactionActions({
     authTrigger,
-    onNavigateAway: onClose,
     transaction: transactionDetails,
   })
 

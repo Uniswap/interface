@@ -509,14 +509,19 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
     aria-hidden="true"
   >
     <span
-      class=" _dsp_contents"
+      class=""
+      style="display: contents;"
     >
       <span
-        class=" t_light _dsp_contents is_Theme"
+        class=" _dsp_contents"
       >
-        <div
-          tabindex="0"
-        />
+        <span
+          class=" t_light _dsp_contents is_Theme"
+        >
+          <div
+            tabindex="0"
+          />
+        </span>
       </span>
     </span>
   </div>
@@ -547,10 +552,10 @@ exports[`CancelOrdersDialog should render limit order text 1`] = `
               class="c2 c3 c4"
             >
               <div
-                class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-441309761 _alignItems-center _gap-1481558307 _width-10037 c5"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761 _alignItems-center _gap-1481558307 _width-10037 c5"
               >
                 <div
-                  class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
                 >
                   <a
                     class="c6 c7"
@@ -1221,14 +1226,19 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
     aria-hidden="true"
   >
     <span
-      class="t_light is_inversed _dsp_contents"
+      class=""
+      style="display: contents;"
     >
       <span
-        class=" t_light _dsp_contents is_Theme"
+        class=" _dsp_contents"
       >
-        <div
-          tabindex="0"
-        />
+        <span
+          class=" t_light _dsp_contents is_Theme"
+        >
+          <div
+            tabindex="0"
+          />
+        </span>
       </span>
     </span>
   </div>
@@ -1259,10 +1269,10 @@ exports[`CancelOrdersDialog should render order cancel correctly 1`] = `
               class="c2 c3 c4"
             >
               <div
-                class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _justifyContent-441309761 _alignItems-center _gap-1481558307 _width-10037 c5"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761 _alignItems-center _gap-1481558307 _width-10037 c5"
               >
                 <div
-                  class="_display-flex _flexDirection-row _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-1 _flexDirection-row _flexGrow-1 _justifyContent-flex-end _alignItems-center _gap-10px"
                 >
                   <a
                     class="c6 c7"

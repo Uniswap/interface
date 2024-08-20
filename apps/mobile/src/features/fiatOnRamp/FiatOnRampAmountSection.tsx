@@ -4,8 +4,9 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { ColorTokens, Flex, HapticFeedback, Text, useSporeColors } from 'ui/src'
+import { ColorTokens, Flex, Text, useHapticFeedback, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, spacing } from 'ui/src/theme'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
@@ -21,6 +22,7 @@ import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 const MAX_INPUT_FONT_SIZE = 56
 const MIN_INPUT_FONT_SIZE = 32
+const MIN_SCREEN_HEIGHT = 667 // iPhone SE 3rd Gen
 
 // if font changes from `fontFamily.sansSerif.regular` or `MAX_INPUT_FONT_SIZE`
 // changes from 36 then width value must be adjusted
@@ -93,6 +95,8 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       onSetFontSize,
     } = useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE)
     const prevErrorText = usePrevious(errorText)
+    const { fullHeight } = useDeviceDimensions()
+    const { hapticFeedback } = useHapticFeedback()
 
     const inputRef = useRef<TextInput>(null)
 
@@ -132,12 +136,12 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
     useEffect(() => {
       async function shake(): Promise<void> {
         triggerShakeAnimation()
-        await HapticFeedback.impact()
+        await hapticFeedback.impact()
       }
       if (errorText && prevErrorText !== errorText) {
         shake().catch(() => undefined)
       }
-    }, [errorText, inputShakeX, prevErrorText, triggerShakeAnimation])
+    }, [errorText, inputShakeX, prevErrorText, triggerShakeAnimation, hapticFeedback])
 
     // Design has asked to make it around 100ms and DEFAULT_DELAY is 200ms
     const debouncedErrorText = useDebounce(errorText, DEFAULT_DELAY / 2)
@@ -155,17 +159,17 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
     )
 
     return (
-      <Flex alignItems="center" gap="$spacing8" justifyContent="center" onLayout={onInputLayout}>
-        <Flex
-          height={spacing.spacing24}
-          /* We want to reserve the space here, so when error occurs - layout does not jump */
-          mt={appFiatCurrencySupported ? '$spacing48' : '$spacing24'}
-        >
-          {debouncedErrorText && errorColor && (
-            <Text color={errorColor} textAlign="center" variant="buttonLabel4">
-              {debouncedErrorText}
-            </Text>
-          )}
+      <Flex
+        alignItems="center"
+        gap="$spacing8"
+        justifyContent="center"
+        style={{ marginTop: (fullHeight - MIN_SCREEN_HEIGHT) / 4 }} // 4 was chosen empirically
+        onLayout={onInputLayout}
+      >
+        <Flex minHeight={spacing.spacing20}>
+          <Text color={errorColor} lineHeight={spacing.spacing20} textAlign="center" variant="buttonLabel4">
+            {debouncedErrorText}
+          </Text>
         </Flex>
         <AnimatedFlex style={inputAnimatedStyle} width="100%">
           <Flex row alignItems="center" justifyContent="center">
@@ -216,7 +220,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
           />
         )}
         {predefinedAmountsSupported ? (
-          <Flex centered row gap="$spacing12" mt="$spacing16" pb="$spacing4">
+          <Flex centered row gap="$spacing12" pb="$spacing4">
             {PREDEFINED_AMOUNTS.map((amount) => (
               <PredefinedAmount
                 key={amount}
@@ -260,6 +264,7 @@ function PredefinedAmount({
     currencyCode: fiatCurrencyInfo.code,
     currencySymbol: fiatCurrencyInfo.symbol,
   })
+  const { hapticFeedback } = useHapticFeedback()
 
   const highlighted = currentAmount === amount.toString()
 
@@ -267,7 +272,7 @@ function PredefinedAmount({
     <TouchableOpacity
       disabled={disabled}
       onPress={async (): Promise<void> => {
-        await HapticFeedback.impact()
+        await hapticFeedback.impact()
         onPress(amount.toString())
       }}
     >

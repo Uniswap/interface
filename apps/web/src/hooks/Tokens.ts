@@ -6,7 +6,7 @@ import {
   isSupportedChainId,
   useSupportedChainId,
 } from 'constants/chains'
-import { COMMON_BASES } from 'constants/routing'
+import { COMMON_BASES, buildCurrencyInfo } from 'constants/routing'
 import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL } from 'constants/tokens'
 import { arrayify, parseBytes32String } from 'ethers/lib/utils'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
@@ -140,6 +140,13 @@ export function useCurrencyInfo(
     fetchPolicy: 'cache-first',
   })
 
+  // Some chains are not supported by the backend, so we need to fetch token
+  // details directly from the blockchain.
+  const networkToken = useTokenFromActiveNetwork(
+    address,
+    getChain({ chainId: chainId ?? connectedChainId })?.backendChain.backendSupported,
+  )
+
   return useMemo(() => {
     if (commonBase) {
       return commonBase
@@ -157,30 +164,24 @@ export function useCurrencyInfo(
     }
 
     if (!data?.token || !address || skip) {
-      return
+      return networkToken ? buildCurrencyInfo(networkToken) : undefined
     }
 
     return gqlTokenToCurrencyInfo(data.token as GqlToken)
-  }, [commonBase, fallbackListTokens, address, skip, data?.token])
+  }, [commonBase, fallbackListTokens, address, skip, data?.token, networkToken])
 }
 
 export function useToken(tokenAddress?: string, chainId?: SupportedInterfaceChainId): Maybe<Token> {
   const formattedAddress = isAddress(tokenAddress)
   const { chainId: connectedChainId } = useAccount()
   const currency = useCurrency(formattedAddress ? formattedAddress : undefined, chainId ?? connectedChainId)
-  // Some chains are not supported by the backend, so we need to fetch token
-  // details directly from the blockchain.
-  const networkToken = useTokenFromActiveNetwork(
-    formattedAddress ? formattedAddress : undefined,
-    getChain({ chainId: chainId ?? connectedChainId })?.backendChain.backendSupported,
-  )
 
   return useMemo(() => {
     if (currency && currency.isToken) {
       return currency
     }
-    return networkToken
-  }, [currency, networkToken])
+    return undefined
+  }, [currency])
 }
 
 // parse a name or symbol from a token response

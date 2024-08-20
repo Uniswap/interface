@@ -1,4 +1,3 @@
-import { AnimatedSlider } from 'components/AnimatedSlider'
 import { useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { DownloadApp } from 'components/NavBar/CompanyMenu/DownloadAppCTA'
 import { MenuLink } from 'components/NavBar/CompanyMenu/MenuDropdown'
@@ -13,7 +12,7 @@ import styled, { useTheme } from 'lib/styled-components'
 import { Socials } from 'pages/Landing/sections/Footer'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { ChevronDown } from 'react-feather'
-import { Accordion, Flex, Square, Text } from 'ui/src'
+import { Accordion, AnimateTransition, Flex, Square, Text } from 'ui/src'
 import { useTranslation } from 'uniswap/src/i18n'
 
 const StyledMenuLink = styled(MenuLink)`
@@ -89,9 +88,9 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
   return (
     <NavDropdown dropdownRef={dropdownRef} isOpen={isOpen} dataTestId="company-menu-mobile-drawer">
       <Flex pt="$spacing12" pb="$spacing32" px="$spacing24">
-        <AnimatedSlider
+        <AnimateTransition
           currentIndex={getSettingsViewIndex(settingsView)}
-          slideDirection={settingsView === PreferencesView.SETTINGS ? 'forward' : 'backward'}
+          animationType={settingsView === PreferencesView.SETTINGS ? 'forward' : 'backward'}
         >
           <Accordion
             overflow="hidden"
@@ -138,7 +137,7 @@ export function MobileMenuDrawer({ isOpen, closeMenu }: { isOpen: boolean; close
 
           <LanguageSettings onExitMenu={onExitPreferencesMenu} />
           <CurrencySettings onExitMenu={onExitPreferencesMenu} />
-        </AnimatedSlider>
+        </AnimateTransition>
       </Flex>
     </NavDropdown>
   )

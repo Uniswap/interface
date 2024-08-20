@@ -3,7 +3,17 @@ import { SwipeableCardStack } from 'ui/src/components/swipeablecards/SwipeableCa
 
 type IntroCardStackProps = {
   cards: IntroCardProps[]
+
+  keyExtractor: (card: IntroCardProps) => string
+  onSwiped?: (card: IntroCardProps, index: number) => void
 }
-export function IntroCardStack({ cards }: IntroCardStackProps): JSX.Element {
-  return <SwipeableCardStack cards={cards} renderCard={(card) => <IntroCard {...card} />} />
+export function IntroCardStack({ cards, keyExtractor, onSwiped }: IntroCardStackProps): JSX.Element {
+  return (
+    <SwipeableCardStack
+      cards={cards}
+      keyExtractor={keyExtractor}
+      renderCard={(card) => <IntroCard {...card} />}
+      onSwiped={onSwiped}
+    />
+  )
 }

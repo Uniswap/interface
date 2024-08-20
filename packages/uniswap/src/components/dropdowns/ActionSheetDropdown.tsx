@@ -345,7 +345,7 @@ function Backdrop({ handleClose, opacity: opacityProp }: BackdropProps): JSX.Ele
   return (
     <TouchableWhenOpen
       animation="100ms"
-      backgroundColor="$sporeBlack"
+      backgroundColor="$black"
       enterStyle={{
         opacity: 0,
       }}

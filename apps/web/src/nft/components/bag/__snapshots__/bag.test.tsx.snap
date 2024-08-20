@@ -3,11 +3,16 @@
 exports[`Bag.tsx matches base snapshot 1`] = `
 <DocumentFragment>
   <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
-    />
+      class=" _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      />
+    </span>
   </span>
 </DocumentFragment>
 `;

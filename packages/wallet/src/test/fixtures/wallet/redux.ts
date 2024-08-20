@@ -1,15 +1,15 @@
 import { PreloadedState } from 'redux'
 import { createFixture } from 'uniswap/src/test/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { WalletState, initialWalletState } from 'wallet/src/features/wallet/slice'
-import { SharedState } from 'wallet/src/state/reducer'
+import { WalletSliceState, initialWalletState } from 'wallet/src/features/wallet/slice'
+import { WalletState as WalletPackageState } from 'wallet/src/state/walletReducer'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures/wallet/accounts'
 
-type WalletPreloaedStateOptions = {
+type WalletPreloadedStateOptions = {
   account: Account
 }
 
-export const preloadedWalletState = createFixture<WalletState, WalletPreloaedStateOptions>(() => ({
+export const preloadedWalletReducerState = createFixture<WalletSliceState, WalletPreloadedStateOptions>(() => ({
   account: signerMnemonicAccount(),
 }))(({ account }) => ({
   ...initialWalletState,
@@ -21,8 +21,11 @@ type PreloadedSharedStateOptions = {
   account: Account | undefined
 }
 
-export const preloadedSharedState = createFixture<PreloadedState<SharedState>, PreloadedSharedStateOptions>({
+export const preloadedWalletPackageState = createFixture<
+  PreloadedState<WalletPackageState>,
+  PreloadedSharedStateOptions
+>({
   account: undefined,
 })(({ account }) => ({
-  wallet: preloadedWalletState({ account }),
+  wallet: preloadedWalletReducerState({ account }),
 }))

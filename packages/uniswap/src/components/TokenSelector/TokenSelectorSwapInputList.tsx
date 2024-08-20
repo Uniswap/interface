@@ -1,16 +1,16 @@
 import { memo, useCallback, useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { filterRecentlySearchedTokenOptions } from 'uniswap/src/components/TokenSelector/hooks'
 import {
   ConvertFiatAmountFormattedCallback,
   OnSelectCurrency,
+  TokenOptionSection,
   TokenSection,
   TokenSectionsForSwapInput,
   TokenSelectorListSections,
   TokenWarningDismissedHook,
 } from 'uniswap/src/components/TokenSelector/types'
-import { getTokenOptionsSection, tokenOptionDifference } from 'uniswap/src/components/TokenSelector/utils'
+import { tokenOptionDifference, useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -25,8 +25,6 @@ function useTokenSectionsForSwapInput({
   usePopularTokensOptionsHook,
   usePortfolioTokenOptionsHook,
 }: TokenSectionsForSwapInput): GqlResult<TokenSelectorListSections> {
-  const { t } = useTranslation()
-
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
@@ -49,7 +47,7 @@ function useTokenSectionsForSwapInput({
     loading: favoriteTokenOptionsLoading,
   } = useFavoriteTokensOptionsHook(activeAccountAddress, chainFilter, valueModifiers)
 
-  const recentlySearchedTokenOptions = filterRecentlySearchedTokenOptions(searchHistory)
+  const recentlySearchedTokenOptions = filterRecentlySearchedTokenOptions(chainFilter, searchHistory)
 
   const error =
     (!portfolioTokenOptions && portfolioTokenOptionsError) ||
@@ -64,22 +62,26 @@ function useTokenSectionsForSwapInput({
     refetchFavoriteTokenOptions?.()
   }, [refetchPopularTokenOptions, refetchPortfolioTokenOptions, refetchFavoriteTokenOptions])
 
+  const portfolioSection = useTokenOptionsSection(TokenOptionSection.YourTokens, portfolioTokenOptions)
+  const recentSection = useTokenOptionsSection(TokenOptionSection.RecentTokens, recentlySearchedTokenOptions)
+  const favoriteSection = useTokenOptionsSection(TokenOptionSection.FavoriteTokens, favoriteTokenOptions)
+  const popularMinusPortfolioTokens = tokenOptionDifference(popularTokenOptions, portfolioTokenOptions)
+  const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularMinusPortfolioTokens)
+
   const sections = useMemo(() => {
-    if (loading && (!portfolioTokenOptions || !popularTokenOptions)) {
+    if (loading && (!portfolioSection || !popularSection)) {
       return
     }
 
-    const popularMinusPortfolioTokens = tokenOptionDifference(popularTokenOptions, portfolioTokenOptions)
-
     return [
-      ...(getTokenOptionsSection(t('tokens.selector.section.yours'), portfolioTokenOptions) ?? []),
-      ...(getTokenOptionsSection(t('tokens.selector.section.recent'), recentlySearchedTokenOptions) ?? []),
+      ...(portfolioSection ?? []),
+      ...(recentSection ?? []),
       // TODO(WEB-3061): Favorited wallets/tokens
       // Extension does not support favoriting but has a default list, so we can't rely on empty array check
-      ...(isExtension ? [] : getTokenOptionsSection(t('tokens.selector.section.favorite'), favoriteTokenOptions) ?? []),
-      ...(getTokenOptionsSection(t('tokens.selector.section.popular'), popularMinusPortfolioTokens) ?? []),
+      ...(isExtension ? [] : favoriteSection ?? []),
+      ...(popularSection ?? []),
     ] satisfies TokenSection[]
-  }, [loading, popularTokenOptions, portfolioTokenOptions, recentlySearchedTokenOptions, favoriteTokenOptions, t])
+  }, [favoriteSection, loading, popularSection, portfolioSection, recentSection])
 
   return useMemo(
     () => ({

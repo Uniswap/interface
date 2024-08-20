@@ -255,6 +255,7 @@ export const SearchBar = ({
                   ref={inputRef}
                   width="100%"
                   height="100%"
+                  fontWeight="$book"
                   backgroundColor="$transparent"
                   placeholder={placeholderText}
                   placeholderTextColor={theme.neutral2}

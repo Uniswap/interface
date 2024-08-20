@@ -8,6 +8,7 @@ import {
   CreateSwapResponse,
   TransactionFailureReason,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -40,10 +41,12 @@ export interface TransactionRequestInfo {
 export function useTransactionRequestInfo({
   derivedSwapInfo,
   tokenApprovalInfo,
+  account,
   skip,
 }: {
   derivedSwapInfo: DerivedSwapInfo
   tokenApprovalInfo: TokenApprovalInfo | undefined
+  account: AccountMeta
   skip: boolean
 }): TransactionRequestInfo {
   const formatter = useLocalizationContext()
@@ -57,11 +60,12 @@ export function useTransactionRequestInfo({
   // Quote indicates we need to include a signed permit message
   const requiresPermit2Sig = !!permitData
 
-  const signatureInfo = usePermit2SignatureWithData(
-    currencyAmounts[CurrencyField.INPUT],
+  const signatureInfo = usePermit2SignatureWithData({
+    currencyInAmount: currencyAmounts[CurrencyField.INPUT],
     permitData,
-    /**skip=*/ !requiresPermit2Sig || skip,
-  )
+    account,
+    skip: !requiresPermit2Sig || skip,
+  })
 
   /**
    * Simulate transactions to ensure they will not fail on-chain. Do not simulate for txs that need an approval as those require Tenderly to simulate and it is not currently integrated into the gas servic
@@ -109,7 +113,7 @@ export function useTransactionRequestInfo({
   // Wrap transaction request
   const isUniswapXWrap = trade && isUniswapX(trade) && trade.needsWrap
   const isWrapApplicable = derivedSwapInfo.wrapType !== WrapType.NotApplicable || isUniswapXWrap
-  const wrapTxRequest = useWrapTransactionRequest(derivedSwapInfo)
+  const wrapTxRequest = useWrapTransactionRequest(derivedSwapInfo, account)
   const wrapGasFee = useTransactionGasFee(wrapTxRequest, GasSpeed.Urgent, !isWrapApplicable)
 
   const skipTransactionRequest = !swapRequestArgs || isWrapApplicable || skip

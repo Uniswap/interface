@@ -1,8 +1,10 @@
-import { createContext, ReactNode, useContext, useMemo } from 'react'
+import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 import { StyleProp, ViewStyle } from 'react-native'
+import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
 
 export type TransactionModalContextState = {
+  account: AccountMeta
   bottomSheetViewStyles: StyleProp<ViewStyle>
   openWalletRestoreModal?: () => void
   walletNeedsRestore?: boolean
@@ -14,6 +16,7 @@ export type TransactionModalContextState = {
 export const TransactionModalContext = createContext<TransactionModalContextState | undefined>(undefined)
 
 export function TransactionModalContextProvider({
+  account,
   children,
   BiometricsIcon,
   authTrigger,
@@ -21,17 +24,10 @@ export function TransactionModalContextProvider({
   onClose,
   openWalletRestoreModal,
   walletNeedsRestore,
-}: {
-  children: ReactNode
-  BiometricsIcon?: TransactionModalContextState['BiometricsIcon']
-  authTrigger?: TransactionModalContextState['authTrigger']
-  bottomSheetViewStyles: TransactionModalContextState['bottomSheetViewStyles']
-  onClose: () => void
-  openWalletRestoreModal?: TransactionModalContextState['openWalletRestoreModal']
-  walletNeedsRestore?: TransactionModalContextState['walletNeedsRestore']
-}): JSX.Element {
+}: PropsWithChildren<TransactionModalContextState>): JSX.Element {
   const state = useMemo<TransactionModalContextState>(
     (): TransactionModalContextState => ({
+      account,
       BiometricsIcon,
       authTrigger,
       bottomSheetViewStyles,
@@ -39,7 +35,7 @@ export function TransactionModalContextProvider({
       openWalletRestoreModal,
       walletNeedsRestore,
     }),
-    [BiometricsIcon, authTrigger, bottomSheetViewStyles, onClose, openWalletRestoreModal, walletNeedsRestore],
+    [BiometricsIcon, account, authTrigger, bottomSheetViewStyles, onClose, openWalletRestoreModal, walletNeedsRestore],
   )
 
   return <TransactionModalContext.Provider value={state}>{children}</TransactionModalContext.Provider>

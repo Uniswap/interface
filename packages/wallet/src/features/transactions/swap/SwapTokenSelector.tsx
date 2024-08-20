@@ -36,16 +36,16 @@ import { useLocalizationContext } from 'wallet/src/features/language/Localizatio
 import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
 import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 import { SwapFormState, useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 
 export function SwapTokenSelector(): JSX.Element {
+  const { account } = useTransactionModalContext()
   const swapContext = useSwapFormContext()
-  const activeAccountAddress = useActiveAccountAddressWithThrow()
   const { updateSwapForm, exactCurrencyField, selectingCurrencyField, output, input } = swapContext
   const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
-  const address = useActiveAccountAddressWithThrow()
+  const activeAccountAddress = account.address
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
-  const valueModifiers = usePortfolioValueModifiers(address)
+  const valueModifiers = usePortfolioValueModifiers(activeAccountAddress)
   const { registerSearch } = useAddToSearchHistory()
   const searchHistory = useSelector(selectSearchHistory)
 

@@ -1,17 +1,17 @@
+import { MobileState } from 'src/app/mobileReducer'
 import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { TransactionDetails, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { RootState } from 'wallet/src/state'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
-import { preloadedWalletState } from 'wallet/src/test/fixtures/wallet/redux'
+import { preloadedWalletReducerState } from 'wallet/src/test/fixtures/wallet/redux'
 
 const account = signerMnemonicAccount()
 
 const MOCK_DATE_PROMPTED = Date.now()
 
 const state = {
-  ...preloadedWalletState(),
+  ...preloadedWalletReducerState(),
   wallet: {
     appRatingProvidedMs: MOCK_DATE_PROMPTED,
   },
@@ -36,7 +36,7 @@ const state = {
       },
     },
   },
-} as unknown as RootState
+} as unknown as MobileState
 
 describe('consecutiveSwapsSelector', () => {
   it('returns false for empty state', () => {
@@ -52,7 +52,7 @@ describe('consecutiveSwapsSelector', () => {
     const condition = hasConsecutiveRecentSwapsSelector({
       ...state,
       wallet: { appRatingPromptedMs: MOCK_DATE_PROMPTED + 2000 },
-    } as RootState)
+    } as unknown as MobileState)
 
     expect(condition).toBeFalsy()
   })

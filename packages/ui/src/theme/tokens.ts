@@ -7,11 +7,11 @@ import { colors as color } from 'ui/src/theme/color/colors'
 import { fonts } from 'ui/src/theme/fonts'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { imageSizes } from 'ui/src/theme/imageSizes'
-import { spacing } from 'ui/src/theme/spacing'
+import { gap, padding, spacing } from 'ui/src/theme/spacing'
 import { themes } from 'ui/src/theme/themes'
 import { zIndices } from 'ui/src/theme/zIndices'
 
-const space = { ...spacing, true: spacing.spacing8 }
+const space = { ...spacing, ...padding, ...gap, true: spacing.spacing8 }
 
 const size = space
 

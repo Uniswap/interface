@@ -4,9 +4,10 @@ import { useSettingsStackNavigation } from 'src/app/navigation/types'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { AccountType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
 const DEFAULT_ACCOUNTS_TO_DISPLAY = 6

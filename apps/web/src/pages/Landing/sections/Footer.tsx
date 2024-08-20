@@ -21,11 +21,6 @@ const SocialIcon = deprecatedStyled(Wiggle)`
     fill: ${(props) => props.$hoverColor};
   }
 `
-const SocialLink = styled(Anchor, {
-  target: '_blank',
-  animateOnly: ['color'],
-  animation: '100ms',
-})
 const PolicyLink = styled(Text, {
   variant: 'body3',
   animation: '100ms',
@@ -38,19 +33,19 @@ export function Socials({ iconSize }: { iconSize?: string }) {
   return (
     <Flex row gap="$spacing24" maxHeight={iconSize} alignItems="flex-start">
       <SocialIcon $hoverColor="#00C32B">
-        <SocialLink href="https://github.com/Uniswap" target="_blank">
+        <Anchor href="https://github.com/Uniswap" target="_blank">
           <Github size={iconSize} fill="inherit" />
-        </SocialLink>
+        </Anchor>
       </SocialIcon>
       <SocialIcon $hoverColor="#20BAFF">
-        <SocialLink href="https://x.com/Uniswap" target="_blank">
+        <Anchor href="https://x.com/Uniswap" target="_blank">
           <Twitter size={iconSize} fill="inherit" />
-        </SocialLink>
+        </Anchor>
       </SocialIcon>
       <SocialIcon $hoverColor="#5F51FF">
-        <SocialLink href="https://discord.com/invite/uniswap" target="_blank">
+        <Anchor href="https://discord.com/invite/uniswap" target="_blank">
           <Discord size={iconSize} fill="inherit" />
-        </SocialLink>
+        </Anchor>
       </SocialIcon>
     </Flex>
   )

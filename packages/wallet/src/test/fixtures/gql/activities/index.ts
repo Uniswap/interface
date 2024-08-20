@@ -8,6 +8,8 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { MAX_FIXTURE_TIMESTAMP, faker } from 'uniswap/src/test/shared'
 import { createFixture } from 'uniswap/src/test/utils'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { STALE_TRANSACTION_TIME_MS } from 'wallet/src/features/notifications/notificationWatcherSaga'
 import {
   erc20ApproveAssetChange,
   erc20TokenTransferOut,
@@ -67,11 +69,26 @@ export const erc20SwapAssetActivity = createFixture<AssetActivity>()(() =>
   }),
 )
 
-export const erc20ReceiveAssetActivity = createFixture<AssetActivity>()(() =>
+export const erc20RecentReceiveAssetActivity = createFixture<AssetActivity>()(() =>
   assetActivity({
     chain: Chain.Ethereum,
     /** @deprecated use type field in details */
     type: ActivityType.Receive,
+    timestamp: (Date.now() - ONE_MINUTE_MS * 5) / 1000,
+    details: gqlTransactionDetails({
+      type: TransactionType.Receive,
+      transactionStatus: TransactionStatus.Confirmed,
+      assetChanges: [erc20TransferIn()],
+    }),
+  }),
+)
+
+export const erc20StaleReceiveAssetActivity = createFixture<AssetActivity>()(() =>
+  assetActivity({
+    chain: Chain.Ethereum,
+    /** @deprecated use type field in details */
+    type: ActivityType.Receive,
+    timestamp: (Date.now() - STALE_TRANSACTION_TIME_MS * 2) / 1000,
     details: gqlTransactionDetails({
       type: TransactionType.Receive,
       transactionStatus: TransactionStatus.Confirmed,

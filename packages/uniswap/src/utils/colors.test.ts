@@ -1,11 +1,10 @@
-import { colorsLight } from 'ui/src/theme'
+import { colorsLight, opacify } from 'ui/src/theme'
 import {
-  adjustColorVariant,
   AdjustmentType,
+  adjustColorVariant,
   findNearestThemeColor,
   getColorDiffScore,
   hexToRGB,
-  opacify,
 } from 'uniswap/src/utils/colors'
 
 it('returns an hex color with opacity', () => {
@@ -27,26 +26,22 @@ it('throws when amount is not valid', () => {
 })
 
 describe('adjustColorVariant', () => {
-  it('handles udnefined', () => {
+  it('handles undefined', () => {
     expect(adjustColorVariant(undefined, AdjustmentType.Lighten)).toEqual(undefined)
   })
 
   it('lightens color', () => {
-    expect(adjustColorVariant('blue400', AdjustmentType.Lighten)).toEqual('blue200')
+    expect(adjustColorVariant('bluePastel', AdjustmentType.Lighten)).toEqual('blueLight')
   })
 
   it('darkens color', () => {
-    expect(adjustColorVariant('blue400', AdjustmentType.Darken)).toEqual('blue900')
-  })
-
-  it('handles vibrant color', () => {
-    expect(adjustColorVariant('blueVibrant', AdjustmentType.Darken)).toEqual('blue900')
+    expect(adjustColorVariant('blueVibrant', AdjustmentType.Darken)).toEqual('blueDark')
   })
 })
 
 describe('findNearestThemeColor', () => {
   it('Finds correct theme color for color in theme', () => {
-    expect(findNearestThemeColor(colorsLight.accent1)).toEqual('magentaVibrant')
+    expect(findNearestThemeColor(colorsLight.accent1)).toEqual('pinkBase')
   })
 })
 

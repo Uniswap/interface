@@ -4,6 +4,7 @@ import { MissingImageLogo } from 'components/Logo/AssetLogo'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import styled, { css } from 'lib/styled-components'
+import { useState } from 'react'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { useLogolessColorScheme } from 'ui/src'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
@@ -28,22 +29,26 @@ export function DoubleCurrencyLogo({
   size?: number
 }) {
   const currencyInfos = [useCurrencyInfo(currencies?.[0]), useCurrencyInfo(currencies?.[1])]
+  const [error0, setError0] = useState(false)
+  const [error1, setError1] = useState(false)
+  const invalidCurrencyLogo0 = error0 || !currencyInfos[0]?.logoUrl
+  const invalidCurrencyLogo1 = error1 || !currencyInfos[1]?.logoUrl
 
-  if (!currencyInfos[0]?.logoUrl && !currencyInfos[1]?.logoUrl) {
+  if (invalidCurrencyLogo0 && invalidCurrencyLogo1) {
     return <LogolessPlaceholder currency={currencies?.[0]} size={size + 'px'} />
   }
-  if (!currencyInfos[0]?.logoUrl && currencyInfos[1]?.logoUrl) {
+  if (invalidCurrencyLogo0 && currencyInfos[1]?.logoUrl && !error1) {
     return (
       <SingleLogoContainer size={size}>
-        <CircleLogoImage src={currencyInfos[1].logoUrl} size={size} />
+        <CircleLogoImage onError={() => setError1(true)} src={currencyInfos[1].logoUrl} size={size} />
       </SingleLogoContainer>
     )
   }
-  if (currencyInfos[0]?.logoUrl && !currencyInfos[1]?.logoUrl) {
+  if (invalidCurrencyLogo1 && currencyInfos[0]?.logoUrl && !error0) {
     return (
       <SingleLogoContainer size={size}>
         {' '}
-        <CircleLogoImage src={currencyInfos[0].logoUrl} size={size} />
+        <CircleLogoImage src={currencyInfos[0].logoUrl} size={size} onError={() => setError0(true)} />
       </SingleLogoContainer>
     )
   }

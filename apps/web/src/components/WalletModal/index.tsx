@@ -107,7 +107,7 @@ export default function WalletModal() {
         <Row flex="1" align="flex-start">
           <OptionGrid data-testid="option-grid" closed={isUniExtensionAvailable && !showOtherWallets}>
             {connectors.map((c) => (
-              <Option connector={c} key={c.uid} />
+              <Option connector={c} key={c.uid} detected={c.isInjected} />
             ))}
           </OptionGrid>
         </Row>
