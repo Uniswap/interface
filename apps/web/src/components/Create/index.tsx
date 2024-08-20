@@ -12,7 +12,7 @@ import utc from 'dayjs/plugin/utc';
 import TimePickerValue from './TimePickerValue';
 import { useEffect, useState } from 'react';
 import { ethers } from 'ethers';
-import UniswapV3StakerABI from './UniswapV3StakerABI.json'; // Import your contract ABI
+import { useV3StakerContract } from './Hook';
 
 dayjs.extend(utc);
 
@@ -131,6 +131,8 @@ export default function Create() {
     const today = dayjs().utc().format("YYYY-MM-DD");
     const tomorrow = dayjs().add(1, 'day').utc().format("YYYY-MM-DD");
 
+    const v3StakerContract = useV3StakerContract(true);
+
     const [startDate, setStartDate] = useState(today);
     const [endDate, setEndDate] = useState(tomorrow);
     const [startTime, setStartTime] = useState("12:00");
@@ -219,19 +221,9 @@ export default function Create() {
 
         if (rewardTokenAddress && rewardsAmount && poolAddress && vestingPeriod && refundeeAddress) {
             try {
-                // Connect to Ethereum
-                const provider = new ethers.providers.Web3Provider(window.ethereum as ethers.providers.ExternalProvider);
-                const signer = provider.getSigner();
-
-                // Create contract instance
-                const contractAddress = '0x1dfE3eEcbC234F2795Df358DD8Cc8DFAbdF38715';
-                const contract = new ethers.Contract(contractAddress, UniswapV3StakerABI as any, signer);
-
-                // Prepare parameters for createIncentive function
                 const startedTime = Math.floor(new Date(`${startDate} ${startTime}`).getTime() / 1000);
                 const endedTime = Math.floor(new Date(`${endDate} ${endTime}`).getTime() / 1000);
-                const reward = ethers.utils.parseUnits(rewardsAmount, 18); // Adjust decimals as needed
-
+                const reward = ethers.utils.parseUnits(rewardsAmount, 18);
                 const incentiveKey = {
                     rewardToken: rewardTokenAddress,
                     pool: poolAddress,
@@ -240,11 +232,14 @@ export default function Create() {
                     refundee: refundeeAddress,
                 };
 
-                // Call createIncentive function
-                const tx = await contract.createIncentive(incentiveKey, reward);
-                await tx.wait(); // Wait for the transaction to be mined
+                if (v3StakerContract) {
+                    const tx = await v3StakerContract.createIncentive(incentiveKey, reward);
+                    await tx.wait();
 
-                alert('Incentive created successfully!');
+                    alert('Incentive created successfully!');
+                } else {
+                    alert('Contract is not available.');
+                }
             } catch (error) {
                 console.error(error);
                 alert('Failed to create incentive: ' + error.message);
