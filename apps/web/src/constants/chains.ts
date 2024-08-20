@@ -9,7 +9,7 @@ import { FeatureFlags } from "uniswap/src/features/gating/flags";
 import { useFeatureFlag } from "uniswap/src/features/gating/hooks";
 import { NetworkLayer, UniverseChainId } from "uniswap/src/types/chains";
 
-export const AVERAGE_L1_BLOCK_TIME = ms(`12s`);
+export const AVERAGE_L1_BLOCK_TIME = ms(`4s`);
 
 export const SUPPORTED_INTERFACE_CHAIN_IDS = [
   ChainId.MAINNET,
