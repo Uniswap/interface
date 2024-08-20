@@ -10,6 +10,14 @@
     },
     {
       "chainId": 841,
+      "address": "0x5a51fadEF313f503239D1FE0b25DE2486B022c02",
+      "name": "Test Tether",
+      "symbol": "TUSDT",
+      "decimals": 6,
+      "logoURI": "https://tse3.mm.bing.net/th?id=OIP.pEDUtRL00rm2PTq4gY_J4wHaHa&pid=Api"
+    },
+    {
+      "chainId": 841,
       "address": "0x063F255689b00A877F6be55109b3ECA24e266809",
       "name": "HerbSwap Token",
       "symbol": "HERB",

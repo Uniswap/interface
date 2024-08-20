@@ -83,6 +83,7 @@ import {
   polygon,
   polygonMumbai,
   sepolia,
+  taraxa,
   taraxaTestnet,
   zkSync,
   zora,
@@ -1201,7 +1202,7 @@ export const UNIVERSE_CHAIN_INFO = {
     },
   } as const satisfies UniverseChainInfo,
   [UniverseChainId.Taraxa]: {
-    ...taraxaTestnet,
+    ...taraxa,
     id: UniverseChainId.TARAXA,
     assetRepoNetworkName: "taraxa",
     backendChain: {
