@@ -15,6 +15,7 @@ import {
 } from '@ubeswap/sdk-core'
 import IUniswapV2PairJson from '@uniswap/v2-core/build/IUniswapV2Pair.json'
 import IUniswapV2Router02Json from '@uniswap/v2-periphery/build/IUniswapV2Router02.json'
+import V3_POOL_ABI from '@uniswap/v3-core/artifacts/contracts/interfaces/IUniswapV3Pool.sol/IUniswapV3Pool.json'
 import NonfungiblePositionManagerJson from '@uniswap/v3-periphery/artifacts/contracts/NonfungiblePositionManager.sol/NonfungiblePositionManager.json'
 import V3MigratorJson from '@uniswap/v3-periphery/artifacts/contracts/V3Migrator.sol/V3Migrator.json'
 import UniswapInterfaceMulticallJson from '@uniswap/v3-periphery/artifacts/contracts/lens/UniswapInterfaceMulticall.sol/UniswapInterfaceMulticall.json'
@@ -52,7 +53,7 @@ import {
   UbeToken,
   Weth,
 } from 'uniswap/src/abis/types'
-import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
+import { NonfungiblePositionManager, UniswapInterfaceMulticall, UniswapV3Pool } from 'uniswap/src/abis/types/v3'
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import UBE_CONVERT_ABI from 'uniswap/src/abis/ube-convert.json'
 import UBE_TOKEN_ABI from 'uniswap/src/abis/ube-token.json'
@@ -227,4 +228,8 @@ export function useMoolaStakingRewardsContract(
 
 export function usePoolManagerContract(address?: string, withSignerIfPossible?: boolean): PoolManager | null {
   return useContract<PoolManager>(address, POOL_MANAGER_ABI, withSignerIfPossible)
+}
+
+export function usePoolContract(address?: string) {
+  return useContract<UniswapV3Pool>(address, V3_POOL_ABI.abi, true)
 }

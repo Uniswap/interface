@@ -16,6 +16,7 @@ export enum InterfacePageName {
   TOKENS_PAGE = 'tokens-page',
   TOKEN_DETAILS_PAGE = 'token-details',
   VOTE_PAGE = 'vote-page',
+  FARM_V3 = 'farm_v3',
 }
 
 /**

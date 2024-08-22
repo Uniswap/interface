@@ -37,6 +37,7 @@ const FarmManageSingle = lazy(() => import('pages/Farm/ManageSingle'))
 const ClaimNewUbe = lazy(() => import('pages/ClaimNewUbe'))
 const ClaimNewPact = lazy(() => import('pages/ClaimNewPact'))
 const RedirectEarn = lazy(() => import('pages/Earn/redirects'))
+const FarmV3 = lazy(() => import('pages/FarmV3'))
 const Debug = lazy(() => import('pages/Debug'))
 
 // this is the same svg defined in assets/images/blue-loader.svg
@@ -316,6 +317,11 @@ export const routes: RouteDefinition[] = [
     path: '/farm/:currencyId/:stakingAddress',
     getElement: () => <FarmManageSingle />,
     getTitle: () => t`Manage Farm`,
+  }),
+  createRouteDefinition({
+    path: '/farmv3/:poolAddress',
+    getElement: () => <FarmV3 />,
+    getTitle: () => t`Manage V3 Farm`,
   }),
   createRouteDefinition({
     path: '/claim-new-ube',
