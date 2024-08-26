@@ -1,4 +1,11 @@
 We are back with some new updates! Here’s the latest:
 
-- Improved swap context menu linkouts
+Onboarding Improvements: New unfunded wallets will experience our upgraded homepage, which gives a preview of our token explore page, as well as a card stack of onboarding steps to complete. 
+
+Haptic Touch Settings: Users can now toggle their haptic touch preferences on the Settings page. 
+
+Other changes: 
+
+- Improved context menus on Swap Activity Items
+- Increased fiat onramp options for stablecoins on the Polygon network
 - Various bug fixes and performance improvements
