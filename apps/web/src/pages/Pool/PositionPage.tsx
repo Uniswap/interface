@@ -1030,7 +1030,7 @@ function PositionPageContent() {
 
                       {inRange && (
                         <Text fontSize={11} color="$neutral3">
-                          <Trans i18nKey="pool.position.100" />
+                          <Trans i18nKey="pool.position.100.at" values={{ symbol: currencyBase?.symbol }} />
                         </Text>
                       )}
                     </AutoColumn>
