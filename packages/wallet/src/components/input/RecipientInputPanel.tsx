@@ -1,6 +1,5 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAllTransactionsBetweenAddresses } from 'wallet/src/features/transactions/hooks/useAllTransactionsBetweenAddresses'
@@ -21,12 +20,8 @@ export function RecipientInputPanel({
 }: RecipientInputPanelProps): JSX.Element {
   return (
     <TouchableArea px="$spacing32" py="$spacing16" testID={TestID.SelectRecipient} onPress={onShowRecipientSelector}>
-      <Flex gap="$spacing8" py="$spacing24">
-        <Flex centered row gap="$spacing4">
-          <AddressDisplay hideAddressInSubtitle address={recipientAddress} variant="heading3" />
-          <RotatableChevron color="$neutral1" direction="end" />
-        </Flex>
-
+      <Flex centered gap="$spacing4" py="$spacing12">
+        <AddressDisplay hideAddressInSubtitle address={recipientAddress} variant="heading3" />
         {recipientAddress && <RecipientPrevTransfers recipient={recipientAddress} />}
       </Flex>
     </TouchableArea>

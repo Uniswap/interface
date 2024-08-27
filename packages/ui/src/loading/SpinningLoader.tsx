@@ -5,52 +5,52 @@ import { SpinningLoaderProps } from 'ui/src/loading/types'
 const rotateCSS = `
   @keyframes rotate360 {
       from {
-          transform: rotate(0deg);
+          transform: rotate(45deg);
       }
       to {
-          transform: rotate(360deg);
+          transform: rotate(405deg);
       }
   }
 
   .RotateElement {
-      animation: rotate360 3s linear infinite;
+      animation: rotate360 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
       transform-origin: center center;
   }
 `
 
-export function SpinningLoader({ size = 20, disabled, color }: SpinningLoaderProps): JSX.Element {
+export function SpinningLoader({ size = 20, width = 3, disabled, color }: SpinningLoaderProps): JSX.Element {
   if (disabled) {
     return <EmptySpinner color="$neutral3" size={size} />
   }
   return (
     <>
       <style>{rotateCSS}</style>
-      <Flex
-        alignItems="center"
-        className="RotateElement"
-        height={16}
-        justifyContent="center"
-        marginEnd={2}
-        marginStart={2}
-        width={16}
-      >
-        <Flex borderRadius="$roundedFull" height={8} minHeight={8} minWidth={8} position="relative" width={8}>
+      <Flex alignItems="center" height={size} justifyContent="center" marginEnd={2} marginStart={2} width={size}>
+        <Flex height={size} minHeight={8} minWidth={8} p={1.66667} position="relative" width={size}>
+          <Flex
+            backgroundColor="transparent"
+            borderColor={color ?? '$neutral1'}
+            borderRadius="$roundedFull"
+            borderWidth={width}
+            height={size}
+            opacity={0.1}
+            position="absolute"
+            width={size}
+          />
           <Flex
             backgroundColor="transparent"
             borderBottomColor="transparent"
-            borderBottomWidth={1}
-            borderLeftColor={color ?? '$neutral1'}
-            borderLeftWidth={2}
+            borderBottomWidth={width}
+            borderLeftColor="transparent"
+            borderLeftWidth={width}
             borderRadius="$roundedFull"
             borderRightColor="transparent"
-            borderRightWidth={1}
-            borderTopColor="transparent"
-            borderTopWidth={1}
+            borderRightWidth={width}
+            borderTopColor={color ?? '$neutral1'}
+            borderTopWidth={width}
             className="RotateElement"
             height={size}
-            left={-6}
-            position="relative"
-            top={-6}
+            position="absolute"
             width={size}
           />
         </Flex>

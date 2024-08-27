@@ -1,31 +1,75 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { Gesture, GestureDetector, State } from 'react-native-gesture-handler'
+import Animated, { runOnJS, useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
+import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { openModal } from 'src/features/modals/modalSlice'
-import { Flex, HapticFeedback, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { CopyAlt, Settings } from 'ui/src/components/icons'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { isDevEnv } from 'utilities/src/environment'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
+import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { setClipboard } from 'wallet/src/utils/clipboard'
+
+const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }): JSX.Element => {
+  const isScreenFocused = useIsFocused()
+  const pressProgress = useSharedValue(0)
+
+  useEffect(() => {
+    if (isScreenFocused) {
+      pressProgress.value = withDelay(50, withTiming(0))
+    }
+  }, [isScreenFocused, pressProgress])
+
+  const tap = Gesture.Tap()
+    .shouldCancelWhenOutside(true)
+    .onBegin(() => {
+      pressProgress.value = withTiming(1)
+    })
+    .onFinalize(({ state }) => {
+      if (state === State.FAILED) {
+        pressProgress.value = withTiming(0)
+      } else if (state === State.END) {
+        runOnJS(onPressSettings)()
+      }
+    })
+
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotate: `${pressProgress.value * 120}deg` }, { scale: 1 - pressProgress.value / 10 }],
+      opacity: 1 - pressProgress.value / 2,
+      justifyContent: 'center',
+    }
+  })
+
+  return (
+    <GestureDetector gesture={tap}>
+      <Animated.View style={animatedStyle} testID={TestID.AccountHeaderSettings}>
+        <Settings color="$neutral2" opacity={0.8} size="$icon.24" />
+      </Animated.View>
+    </GestureDetector>
+  )
+}
 
 export function AccountHeader(): JSX.Element {
-  const activeAddress = useAppSelector(selectActiveAccountAddress)
-  const account = useAppSelector(selectActiveAccount)
-  const dispatch = useAppDispatch()
+  const activeAddress = useSelector(selectActiveAccountAddress)
+  const account = useSelector(selectActiveAccount)
+  const dispatch = useDispatch()
+  const { hapticFeedback } = useHapticFeedback()
 
   const { avatar } = useAvatar(activeAddress)
   const displayName = useDisplayName(activeAddress)
@@ -54,7 +98,7 @@ export function AccountHeader(): JSX.Element {
 
   const onPressCopyAddress = async (): Promise<void> => {
     if (activeAddress) {
-      await HapticFeedback.impact()
+      await hapticFeedback.impact()
       await setClipboard(activeAddress)
       dispatch(
         pushNotification({
@@ -83,10 +127,10 @@ export function AccountHeader(): JSX.Element {
               flexDirection="row"
               hapticStyle={ImpactFeedbackStyle.Medium}
               hitSlop={20}
-              testID={TestID.Manage}
+              testID={TestID.AccountHeaderAvatar}
               onLongPress={async (): Promise<void> => {
                 if (isDevEnv()) {
-                  await HapticFeedback.selection()
+                  await hapticFeedback.selection()
                   dispatch(openModal({ name: ModalName.Experiments }))
                 }
               }}
@@ -100,14 +144,7 @@ export function AccountHeader(): JSX.Element {
                 size={iconSize}
               />
             </TouchableArea>
-            <TouchableArea
-              hapticFeedback
-              hitSlop={20}
-              testID="account-header/settings-button"
-              onPress={onPressSettings}
-            >
-              <Settings color="$neutral2" opacity={0.8} size="$icon.24" />
-            </TouchableArea>
+            <RotatingSettingsIcon onPressSettings={onPressSettings} />
           </Flex>
           {walletHasName ? (
             <Flex
@@ -125,7 +162,7 @@ export function AccountHeader(): JSX.Element {
             <TouchableArea
               hapticFeedback
               hitSlop={20}
-              testID="account-header/address-only"
+              testID={TestID.AccountHeaderCopyAddress}
               onPress={onPressCopyAddress}
             >
               <Flex centered row shrink gap="$spacing4">

@@ -1,6 +1,6 @@
 import { createAction, createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { Language } from 'wallet/src/features/language/constants'
-import { RootState } from 'wallet/src/state'
+import { WalletState } from 'wallet/src/state/walletReducer'
 
 export interface LanguageState {
   currentLanguage: Language
@@ -26,6 +26,6 @@ export const { setCurrentLanguage, resetSettings } = slice.actions
 export const updateLanguage = createAction<Language | null>('language/updateLanguage')
 export const syncAppWithDeviceLanguage = (): ReturnType<typeof updateLanguage> => updateLanguage(null)
 
-export const selectCurrentLanguage = (state: RootState): Language => state.languageSettings.currentLanguage
+export const selectCurrentLanguage = (state: WalletState): Language => state.languageSettings.currentLanguage
 
 export const languageSettingsReducer = slice.reducer

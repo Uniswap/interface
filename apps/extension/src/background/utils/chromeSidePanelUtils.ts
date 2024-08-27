@@ -1,3 +1,4 @@
+import { focusOrCreateDappRequestWindow } from 'src/app/navigation/utils'
 import { logger } from 'utilities/src/logger/logger'
 
 export async function openSidePanel(tabId: number | undefined, windowId: number): Promise<void> {
@@ -8,6 +9,10 @@ export async function openSidePanel(tabId: number | undefined, windowId: number)
       windowId,
     })
   } catch (error) {
+    // TODO WALL-4313 - Backup for some broken chrome.sidePanel.open functionality
+    // Consider removing this once the issue is resolved or leaving as fallback
+    await focusOrCreateDappRequestWindow(tabId, windowId)
+
     logger.error(error, {
       tags: {
         file: 'background/background.ts',

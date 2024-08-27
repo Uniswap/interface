@@ -1,13 +1,13 @@
 import { useTranslation } from 'react-i18next'
 import { Linking } from 'react-native'
-import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Text } from 'ui/src'
 import { Language } from 'ui/src/components/icons'
+import { colors, opacify } from 'ui/src/theme'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isAndroid } from 'utilities/src/platform'
 import { SettingsLanguageModalProps } from 'wallet/src/components/settings/language/SettingsLanguageModalProps'
-import { opacify } from 'wallet/src/utils/colors'
 
 const openLanguageSettings = async (): Promise<void> => {
   if (isAndroid) {
@@ -19,13 +19,12 @@ const openLanguageSettings = async (): Promise<void> => {
 
 export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): JSX.Element {
   const { t } = useTranslation()
-  const colors = useSporeColors()
 
   return (
     <BottomSheetModal name={ModalName.LanguageSelector} onClose={onClose}>
       <Flex centered mt="$spacing16">
-        <Flex borderRadius="$rounded12" p="$spacing12" style={{ backgroundColor: opacify(10, colors.DEP_blue300.val) }}>
-          <Language color="$DEP_blue300" size="$icon.24" strokeWidth={1.5} />
+        <Flex backgroundColor={opacify(10, colors.bluePastel)} borderRadius="$rounded12" p="$spacing12">
+          <Language color="$bluePastel" size="$icon.24" strokeWidth={1.5} />
         </Flex>
       </Flex>
       <Flex gap="$spacing24" pt="$spacing24" px="$spacing24">

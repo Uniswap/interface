@@ -2,10 +2,10 @@ import { Percent } from '@uniswap/sdk-core'
 import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { useMemo } from 'react'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { warningSeverity } from 'utils/prices'
 
@@ -61,7 +61,7 @@ export function FiatValue({
       </ThemedText.BodySmall>
       {priceImpact && (
         <ThemedText.BodySmall color={priceImpactColor}>
-          <MouseoverTooltip text={<Trans i18nKey="swap.estimatedDifference.label" />}>
+          <MouseoverTooltip placement="right" text={<Trans i18nKey="swap.estimatedDifference.label" />}>
             ({formatPercent(priceImpact.multiply(-1))})
           </MouseoverTooltip>
         </ThemedText.BodySmall>

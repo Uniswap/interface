@@ -1,8 +1,9 @@
 import { createContext, ReactNode, useContext } from 'react'
+import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getSwapPrefilledState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
-import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { getSendPrefilledState } from 'wallet/src/features/transactions/transfer/getSendPrefilledState'
 
 type NavigateToTransactionFlowTransactionState = {
@@ -73,6 +74,10 @@ export type NavigateToNftCollectionArgs = {
   collectionAddress: Address
 }
 
+export type NavigateToFiatOnRampArgs = {
+  prefilledCurrency?: FiatOnRampCurrency
+}
+
 export type ShareTokenArgs = {
   currencyId: string
 }
@@ -87,6 +92,7 @@ export type WalletNavigationContextState = {
   navigateToAccountTokenList: () => void
   // Action that should be taken when the user presses the "Buy crypto" or "Receive tokens" button when they open the Send flow with an empty wallet.
   navigateToBuyOrReceiveWithEmptyWallet: () => void
+  navigateToFiatOnRamp: (args: NavigateToFiatOnRampArgs) => void
   navigateToNftDetails: (args: NavigateToNftItemArgs) => void
   navigateToNftCollection: (args: NavigateToNftCollectionArgs) => void
   navigateToSwapFlow: (args: NavigateToSwapFlowArgs) => void

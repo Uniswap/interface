@@ -1,6 +1,7 @@
 import dayjs from 'dayjs'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { AccountType, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
 /**
  * Takes a list of existing mnemonic accounts to use as reference for pulling the next derivation index

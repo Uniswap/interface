@@ -1,11 +1,12 @@
+import styled from 'lib/styled-components'
 import { Box } from 'rebass/styled-components'
-import styled from 'styled-components'
 import { Gap } from 'theme'
 
 // TODO(WEB-1983):
 // Setting `width: 100%` by default prevents composability in complex flex layouts.
 // Same applies to `RowFixed` and its negative margins. This component needs to be
 // further investigated and improved to make UI work easier.
+/** @deprecated Please use `Flex` from `ui/src` going forward */
 const Row = styled(Box)<{
   width?: string
   align?: string
@@ -26,15 +27,18 @@ const Row = styled(Box)<{
   gap: ${({ gap, theme }) => gap && (theme.grids[gap as Gap] || gap)};
 `
 
+/** @deprecated Please use `Flex` from `ui/src` going forward */
 export const RowBetween = styled(Row)`
   justify-content: space-between;
 `
 
+/** @deprecated Please use `Flex` from `ui/src` going forward */
 export const RowFlat = styled.div`
   display: flex;
   align-items: flex-end;
 `
 
+/** @deprecated Please use `Flex` from `ui/src` going forward */
 export const AutoRow = styled(Row)<{ gap?: string; justify?: string }>`
   flex-wrap: wrap;
   margin: ${({ gap }) => gap && `-${gap}`};
@@ -45,7 +49,9 @@ export const AutoRow = styled(Row)<{ gap?: string; justify?: string }>`
   }
 `
 
+/** @deprecated Please use `Flex` from `ui/src` going forward */
 export const RowFixed = styled(Row)<{ gap?: string; justify?: string }>`
+  position: relative;
   width: fit-content;
   margin: ${({ gap }) => gap && `-${gap}`};
 `

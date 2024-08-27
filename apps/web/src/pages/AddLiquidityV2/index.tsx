@@ -32,7 +32,7 @@ import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { PairState } from 'hooks/useV2Pairs'
-import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { ConfirmAddModalBottom } from 'pages/AddLiquidityV2/ConfirmAddModalBottom'
 import { PoolPriceBar } from 'pages/AddLiquidityV2/PoolPriceBar'
 import AppBody from 'pages/App/AppBody'
@@ -45,11 +45,11 @@ import { useDerivedMintInfo, useMintActionHandlers, useMintState } from 'state/m
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionInfo, TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -496,7 +496,7 @@ export default function AddLiquidity() {
                           ) : (
                             <Trans
                               i18nKey="account.transactionSummary.approve"
-                              values={{ sym: currencies[Field.CURRENCY_A]?.symbol }}
+                              values={{ tokenSymbol: currencies[Field.CURRENCY_A]?.symbol }}
                             />
                           )}
                         </ButtonPrimary>
@@ -517,7 +517,7 @@ export default function AddLiquidity() {
                           ) : (
                             <Trans
                               i18nKey="account.transactionSummary.approve"
-                              values={{ sym: currencies[Field.CURRENCY_B]?.symbol }}
+                              values={{ tokenSymbols: currencies[Field.CURRENCY_B]?.symbol }}
                             />
                           )}
                         </ButtonPrimary>

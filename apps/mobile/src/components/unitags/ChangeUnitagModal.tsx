@@ -1,20 +1,21 @@
 import { useNavigation } from '@react-navigation/native'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, EmitterSubscription, Keyboard } from 'react-native'
+import { ActivityIndicator, Keyboard } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
+import { useDispatch } from 'react-redux'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { logger } from 'utilities/src/logger/logger'
-import { isIOS } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -24,7 +25,6 @@ import { useCanAddressClaimUnitag, useCanClaimUnitagName } from 'wallet/src/feat
 import { parseUnitagErrorCode } from 'wallet/src/features/unitags/utils'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccount } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch } from 'wallet/src/state'
 
 export function ChangeUnitagModal({
   unitag,
@@ -38,13 +38,12 @@ export function ChangeUnitagModal({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const navigation = useNavigation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { data: deviceId } = useAsyncData(getUniqueId)
   const account = useAccount(address)
   const signerManager = useWalletSigners()
 
   const [newUnitag, setNewUnitag] = useState(unitag)
-  const [keyboardHeight, setKeyboardHeight] = useState(0)
   const [showConfirmModal, setShowConfirmModal] = useState(false)
   const [isCheckingUnitag, setIsCheckingUnitag] = useState(false)
   const [isChangeResponseLoading, setIsChangeResponseLoading] = useState(false)
@@ -56,6 +55,7 @@ export function ChangeUnitagModal({
   )
   const { errorCode } = useCanAddressClaimUnitag(address, true)
   const { triggerRefetchUnitags } = useUnitagUpdater()
+  const { keyboardHeight } = useBottomSheetSafeKeyboard()
 
   const isUnitagEdited = unitag !== newUnitag
   const isUnitagInvalid = newUnitag === unitagToCheck && !!canClaimUnitagNameError && !loadingUnitagErrorCheck
@@ -151,36 +151,6 @@ export function ChangeUnitagModal({
     }
   }
 
-  // This useEffect makes KeyboardAvoidingView work when inside a BottomSheetModal
-  // Dynamically add bottom padding equal to keyboard height so that elements have room to shift up
-  useEffect(() => {
-    let showSubscription: EmitterSubscription
-    let hideSubscription: EmitterSubscription
-
-    if (isIOS) {
-      // Using keyboardWillShow makes it feel more responsive, but only available on iOS
-      showSubscription = Keyboard.addListener('keyboardWillShow', (e) => {
-        setKeyboardHeight(e.endCoordinates.height)
-      })
-      hideSubscription = Keyboard.addListener('keyboardWillHide', () => {
-        setKeyboardHeight(0)
-      })
-    } else {
-      // keyboardDidShow only emits after the keyboard has fully appeared
-      showSubscription = Keyboard.addListener('keyboardDidShow', (e) => {
-        setKeyboardHeight(e.endCoordinates.height)
-      })
-      hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-        setKeyboardHeight(0)
-      })
-    }
-
-    return () => {
-      showSubscription.remove()
-      hideSubscription.remove()
-    }
-  }, [])
-
   // When useUnitagError completes loading, if unitag is valid then continue to speedbump
   useEffect(() => {
     if (isCheckingUnitag && !!unitagToCheck && !loadingUnitagErrorCheck) {
@@ -275,7 +245,7 @@ export function ChangeUnitagModal({
             >
               {isCheckingUnitag || isChangeResponseLoading ? (
                 <Flex height={fonts.buttonLabel1.lineHeight}>
-                  <ActivityIndicator color={colors.sporeWhite.val} />
+                  <ActivityIndicator color={colors.white.val} />
                 </Flex>
               ) : (
                 t('unitags.editUsername.button.confirm')

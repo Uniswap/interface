@@ -3,11 +3,12 @@ import React, { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ListRenderItem, ListRenderItemInfo, StyleSheet, View } from 'react-native'
 import { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
 import { FavoriteTokensGrid } from 'src/components/explore/FavoriteTokensGrid'
 import { FavoriteWalletsGrid } from 'src/components/explore/FavoriteWalletsGrid'
 import { SortButton } from 'src/components/explore/SortButton'
-import { TokenItem, TokenItemData } from 'src/components/explore/TokenItem'
+import { TokenItem } from 'src/components/explore/TokenItem'
+import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { AnimatedBottomSheetFlatList } from 'src/components/layout/AnimatedFlatList'
 import { AutoScrollProps } from 'src/components/sortableGrid'
 import {
@@ -26,10 +27,11 @@ import {
   useExploreTokensTabQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
-import { usePersistedError } from 'wallet/src/features/dataApi/utils'
 import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'wallet/src/features/favorites/selectors'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
 
@@ -45,7 +47,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   const visibleListHeight = useSharedValue(0)
 
   // Top tokens sorting
-  const orderBy = useAppSelector(selectTokensOrderBy)
+  const orderBy = useSelector(selectTokensOrderBy)
   const tokenMetadataDisplayType = getTokenMetadataDisplayType(orderBy)
   const { clientOrderBy, serverOrderBy } = getTokensOrderByValues(orderBy)
 
@@ -60,6 +62,8 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
   } = useExploreTokensTabQuery({
     variables: {
       topTokensOrderBy: serverOrderBy,
+      chain: Chain.Ethereum,
+      pageSize: 100,
     },
     returnPartialData: true,
   })
@@ -105,7 +109,14 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
 
   const renderItem: ListRenderItem<TokenItemData> = useCallback(
     ({ item, index }: ListRenderItemInfo<TokenItemData>) => {
-      return <TokenItem index={index} metadataDisplayType={tokenMetadataDisplayType} tokenItemData={item} />
+      return (
+        <TokenItem
+          eventName={MobileEventName.ExploreTokenItemSelected}
+          index={index}
+          metadataDisplayType={tokenMetadataDisplayType}
+          tokenItemData={item}
+        />
+      )
     },
     [tokenMetadataDisplayType],
   )
@@ -191,6 +202,7 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
         contentContainerStyle={{ paddingBottom: insets.bottom }}
         data={showLoading ? undefined : topTokenItems}
         keyExtractor={tokenKey}
+        removeClippedSubviews={false}
         renderItem={renderItem}
         scrollEventThrottle={16}
         showsHorizontalScrollIndicator={false}
@@ -237,8 +249,8 @@ type FavoritesSectionProps = AutoScrollProps & {
 }
 
 function FavoritesSection(props: FavoritesSectionProps): JSX.Element | null {
-  const hasFavoritedTokens = useAppSelector(selectHasFavoriteTokens)
-  const hasFavoritedWallets = useAppSelector(selectHasWatchedWallets)
+  const hasFavoritedTokens = useSelector(selectHasFavoriteTokens)
+  const hasFavoritedWallets = useSelector(selectHasWatchedWallets)
 
   if (!hasFavoritedTokens && !hasFavoritedWallets) {
     return null

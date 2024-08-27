@@ -1,4 +1,4 @@
-import { useTranslation } from 'i18n/useTranslation'
+import { useTranslation } from 'uniswap/src/i18n'
 
 /**
  * Displays the time as a human-readable string.
@@ -18,14 +18,14 @@ export function useAbbreviatedTimeString(timestamp: number) {
   const monthsPassed = Math.floor(daysPassed / 30)
 
   if (monthsPassed > 0) {
-    return t(`{{monthsPassed}}mo ago`, { monthsPassed })
+    return t(`common.time.past.months`, { months: monthsPassed })
   } else if (daysPassed > 0) {
-    return t(`{{daysPassed}}d ago`, { daysPassed })
+    return t(`common.time.past.days`, { days: daysPassed })
   } else if (hoursPassed > 0) {
-    return t(`{{hoursPassed}}h ago`, { hoursPassed })
+    return t(`common.time.past.hours`, { hours: hoursPassed })
   } else if (minutesPassed > 0) {
-    return t(`{{minutesPassed}}m ago`, { minutesPassed })
+    return t(`common.time.past.minutes`, { minutes: minutesPassed })
   } else {
-    return t(`{{secondsPassed}}s ago`, { secondsPassed })
+    return t(`common.time.past.seconds`, { seconds: secondsPassed })
   }
 }

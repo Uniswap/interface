@@ -1,4 +1,4 @@
-import { AssetType } from 'wallet/src/entities/assets'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { ApproveNotification } from 'wallet/src/features/notifications/components/ApproveNotification'
 import { ChangeAssetVisibilityNotification } from 'wallet/src/features/notifications/components/ChangeAssetVisibilityNotification'
 import { ChooseCountryNotification } from 'wallet/src/features/notifications/components/ChooseCountryNotification'

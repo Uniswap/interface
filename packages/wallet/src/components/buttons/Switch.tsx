@@ -14,8 +14,8 @@ export function Switch({ value, onValueChange, disabled }: SwitchProps): JSX.Ele
   const enabledThumbColor = colors.accent1.val
   const disabledThumbColor = isAndroid ? colors.neutral3.val : colors.surface1.val
 
-  const enabledTrackColor = colors.accentSoft.val
-  const disabledTrackColor = isAndroid ? colors.surface3.val : colors.accentSoft.val
+  const enabledTrackColor = colors.accent2.val
+  const disabledTrackColor = isAndroid ? colors.surface3.val : colors.DEP_accentSoft.val
 
   return (
     <TamaguiSwitch

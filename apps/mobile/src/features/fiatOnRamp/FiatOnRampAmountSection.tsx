@@ -1,17 +1,12 @@
-import React, { useEffect } from 'react'
+import { useFocusEffect } from '@react-navigation/core'
+import React, { RefObject, forwardRef, useCallback, useEffect, useImperativeHandle, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import {
-  LayoutChangeEvent,
-  NativeSyntheticEvent,
-  TextInput,
-  TextInputProps,
-  TextInputSelectionChangeEventData,
-} from 'react-native'
+import { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useFormatExactCurrencyAmount } from 'src/features/fiatOnRamp/hooks'
-import { ColorTokens, Flex, HapticFeedback, Text, useSporeColors } from 'ui/src'
+import { ColorTokens, Flex, Text, useHapticFeedback, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, spacing } from 'ui/src/theme'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
@@ -20,12 +15,14 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
+import { useFormatExactCurrencyAmount } from 'wallet/src/features/fiatOnRamp/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { errorShakeAnimation } from 'wallet/src/utils/animations'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 const MAX_INPUT_FONT_SIZE = 56
 const MIN_INPUT_FONT_SIZE = 32
+const MIN_SCREEN_HEIGHT = 667 // iPhone SE 3rd Gen
 
 // if font changes from `fontFamily.sansSerif.regular` or `MAX_INPUT_FONT_SIZE`
 // changes from 36 then width value must be adjusted
@@ -45,14 +42,9 @@ function OnRampError({ errorText, color }: { errorText: string; color: ColorToke
   )
 }
 
-interface Props {
-  showNativeKeyboard: boolean
-  onInputPanelLayout: (event: LayoutChangeEvent) => void
-  inputRef: React.RefObject<TextInput>
+interface FiatOnRampAmountSectionProps {
   disabled?: boolean
-  showSoftInputOnFocus: boolean
   value: string
-  setSelection: (selection: TextInputProps['selection']) => void
   errorColor: ColorTokens | undefined
   errorText: string | undefined
   currency: FiatOnRampCurrency
@@ -66,87 +58,119 @@ interface Props {
   appFiatCurrencySupported: boolean
   notAvailableInThisRegion?: boolean
   fiatCurrencyInfo: FiatCurrencyInfo
+  onSelectionChange?: (start: number, end: number) => void
 }
 
-export function FiatOnRampAmountSection({
-  showNativeKeyboard,
-  onInputPanelLayout,
-  inputRef,
-  disabled,
-  showSoftInputOnFocus,
-  value,
-  setSelection,
-  errorColor,
-  errorText,
-  currency,
-  onEnterAmount,
-  onChoosePredifendAmount,
-  quoteAmount,
-  quoteCurrencyAmountReady,
-  selectTokenLoading,
-  onTokenSelectorPress,
-  predefinedAmountsSupported,
-  appFiatCurrencySupported,
-  notAvailableInThisRegion,
-  fiatCurrencyInfo,
-}: Props): JSX.Element {
-  const { t } = useTranslation()
-  const {
-    onLayout: onInputLayout,
-    fontSize,
-    onSetFontSize,
-  } = useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE)
-  const prevErrorText = usePrevious(errorText)
+export type FiatOnRampAmountSectionRef = {
+  textInputRef: RefObject<TextInput>
+  triggerShakeAnimation: () => void
+}
 
-  const onChangeValue =
-    (next: OnChangeAmount) =>
-    (newAmount: string): void => {
-      onSetFontSize(newAmount)
-      next(newAmount)
-    }
-
-  const onSelectionChange = ({
-    nativeEvent: {
-      selection: { start, end },
+export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, FiatOnRampAmountSectionProps>(
+  function _FiatOnRampAmountSection(
+    {
+      disabled,
+      value,
+      onSelectionChange: selectionChange,
+      errorColor,
+      errorText,
+      currency,
+      onEnterAmount,
+      onChoosePredifendAmount,
+      quoteAmount,
+      quoteCurrencyAmountReady,
+      selectTokenLoading,
+      onTokenSelectorPress,
+      predefinedAmountsSupported,
+      appFiatCurrencySupported,
+      notAvailableInThisRegion,
+      fiatCurrencyInfo,
     },
-  }: NativeSyntheticEvent<TextInputSelectionChangeEventData>): void => {
-    setSelection({ start, end })
-  }
+    forwardedRef,
+  ): JSX.Element {
+    const { t } = useTranslation()
+    const {
+      onLayout: onInputLayout,
+      fontSize,
+      onSetFontSize,
+    } = useDynamicFontSizing(MAX_CHAR_PIXEL_WIDTH, MAX_INPUT_FONT_SIZE, MIN_INPUT_FONT_SIZE)
+    const prevErrorText = usePrevious(errorText)
+    const { fullHeight } = useDeviceDimensions()
+    const { hapticFeedback } = useHapticFeedback()
 
-  const inputShakeX = useSharedValue(0)
-  const inputAnimatedStyle = useAnimatedStyle(() => ({
-    transform: [{ translateX: inputShakeX.value }],
-  }))
+    const inputRef = useRef<TextInput>(null)
 
-  useEffect(() => {
-    async function shake(): Promise<void> {
+    useImperativeHandle(forwardedRef, () => ({
+      textInputRef: inputRef,
+      triggerShakeAnimation,
+    }))
+
+    // This is needed to ensure that the text resizes when modified from outside the component (e.g. custom numpad)
+    useEffect(() => {
+      if (value) {
+        onSetFontSize(value)
+        // Always set font size if focused to format placeholder size, we need to pass in a non-empty string to avoid formatting crash
+      } else {
+        onSetFontSize('0')
+      }
+    }, [onSetFontSize, value])
+
+    const onSelectionChange = useCallback(
+      ({
+        nativeEvent: {
+          selection: { start, end },
+        },
+      }: NativeSyntheticEvent<TextInputSelectionChangeEventData>) => selectionChange?.(start, end),
+      [selectionChange],
+    )
+
+    const inputShakeX = useSharedValue(0)
+    const inputAnimatedStyle = useAnimatedStyle(() => ({
+      transform: [{ translateX: inputShakeX.value }],
+    }))
+
+    const triggerShakeAnimation = useCallback(() => {
       inputShakeX.value = errorShakeAnimation(inputShakeX)
-      await HapticFeedback.impact()
-    }
-    if (errorText && prevErrorText !== errorText) {
-      shake().catch(() => undefined)
-    }
-  }, [errorText, inputShakeX, prevErrorText])
+    }, [inputShakeX])
 
-  // Design has asked to make it around 100ms and DEFAULT_DELAY is 200ms
-  const debouncedErrorText = useDebounce(errorText, DEFAULT_DELAY / 2)
+    useEffect(() => {
+      async function shake(): Promise<void> {
+        triggerShakeAnimation()
+        await hapticFeedback.impact()
+      }
+      if (errorText && prevErrorText !== errorText) {
+        shake().catch(() => undefined)
+      }
+    }, [errorText, inputShakeX, prevErrorText, triggerShakeAnimation, hapticFeedback])
 
-  const formattedAmount = useFormatExactCurrencyAmount(quoteAmount.toString(), currency.currencyInfo?.currency)
+    // Design has asked to make it around 100ms and DEFAULT_DELAY is 200ms
+    const debouncedErrorText = useDebounce(errorText, DEFAULT_DELAY / 2)
 
-  return (
-    <Flex onLayout={onInputPanelLayout}>
-      <Flex grow alignItems="center" gap="$spacing8" justifyContent="center" onLayout={onInputLayout}>
-        <AnimatedFlex
-          height={spacing.spacing24}
-          /* We want to reserve the space here, so when error occurs - layout does not jump */
-          mt={appFiatCurrencySupported ? '$spacing48' : '$spacing24'}
-        >
-          {debouncedErrorText && errorColor && (
-            <Text color={errorColor} textAlign="center" variant="buttonLabel4">
-              {debouncedErrorText}
-            </Text>
-          )}
-        </AnimatedFlex>
+    const formattedAmount = useFormatExactCurrencyAmount(quoteAmount.toString(), currency.currencyInfo?.currency)
+
+    // we want to always focus amount input
+    const isTextInputRefActuallyFocused = inputRef.current?.isFocused()
+    useFocusEffect(
+      useCallback(() => {
+        if (!isTextInputRefActuallyFocused) {
+          inputRef.current?.focus()
+        }
+      }, [inputRef, isTextInputRefActuallyFocused]),
+    )
+
+    return (
+      <Flex
+        alignItems="center"
+        gap="$spacing8"
+        justifyContent="center"
+        style={{ marginTop: (fullHeight - MIN_SCREEN_HEIGHT) / 4 }} // 4 was chosen empirically
+        onLayout={onInputLayout}
+      >
+        <Flex minHeight={spacing.spacing20}>
+          <Text color={errorColor} lineHeight={spacing.spacing20} textAlign="center" variant="buttonLabel4">
+            {debouncedErrorText}
+          </Text>
+        </Flex>
         <AnimatedFlex style={inputAnimatedStyle} width="100%">
           <Flex row alignItems="center" justifyContent="center">
             <Text
@@ -165,7 +189,6 @@ export function FiatOnRampAmountSection({
               alignSelf="stretch"
               backgroundColor="$transparent"
               borderWidth={0}
-              caretHidden={!showNativeKeyboard}
               disabled={disabled}
               fiatCurrencyInfo={fiatCurrencyInfo}
               fontFamily="$heading"
@@ -176,11 +199,11 @@ export function FiatOnRampAmountSection({
               placeholderTextColor="$neutral3"
               px="$none"
               py="$none"
-              returnKeyType={showSoftInputOnFocus ? 'done' : undefined}
-              showSoftInputOnFocus={showSoftInputOnFocus}
+              returnKeyType={undefined}
+              showSoftInputOnFocus={false}
               textAlign="left"
               value={value}
-              onChangeText={onChangeValue(onEnterAmount)}
+              onChangeText={onEnterAmount}
               onSelectionChange={onSelectionChange}
             />
           </Flex>
@@ -197,7 +220,7 @@ export function FiatOnRampAmountSection({
           />
         )}
         {predefinedAmountsSupported ? (
-          <Flex centered row gap="$spacing12" mt="$spacing16" pb="$spacing4">
+          <Flex centered row gap="$spacing12" pb="$spacing4">
             {PREDEFINED_AMOUNTS.map((amount) => (
               <PredefinedAmount
                 key={amount}
@@ -216,9 +239,9 @@ export function FiatOnRampAmountSection({
           <OnRampError color="$neutral3" errorText={t('fiatOnRamp.error.usd')} />
         ) : null}
       </Flex>
-    </Flex>
-  )
-}
+    )
+  },
+)
 
 // Predefined amount is only supported for certain currencies
 function PredefinedAmount({
@@ -241,6 +264,7 @@ function PredefinedAmount({
     currencyCode: fiatCurrencyInfo.code,
     currencySymbol: fiatCurrencyInfo.symbol,
   })
+  const { hapticFeedback } = useHapticFeedback()
 
   const highlighted = currentAmount === amount.toString()
 
@@ -248,7 +272,7 @@ function PredefinedAmount({
     <TouchableOpacity
       disabled={disabled}
       onPress={async (): Promise<void> => {
-        await HapticFeedback.impact()
+        await hapticFeedback.impact()
         onPress(amount.toString())
       }}
     >

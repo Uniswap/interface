@@ -1,0 +1,44 @@
+import { Result } from 'ethers/lib/utils'
+import { TransactionDescription } from 'no-yolo-signatures'
+import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { WalletChainId } from 'uniswap/src/types/chains'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { isAddress } from 'utilities/src/addresses'
+
+export function useTransactionCurrencies(args: {
+  chainId?: WalletChainId
+  to?: string
+  parsedTransactionData?: TransactionDescription
+}): CurrencyInfo[] {
+  const { chainId, to, parsedTransactionData } = args
+  const addresses = parseAddressesFromArgData(parsedTransactionData?.args)
+
+  const addressesFound = [...(to ? [to] : []), ...addresses]
+  const currencyIdsInvolved = chainId ? addressesFound.map((address) => buildCurrencyId(chainId, address)) : []
+  const currenciesInvolved = useTokenProjects(currencyIdsInvolved)
+  const chainCurrencies = currenciesInvolved?.data?.filter(
+    (c) => c.currency.chainId === chainId && !c.currency.isNative,
+  )
+
+  return chainCurrencies || []
+}
+
+// recursively parse smart contract arguments and finds all addresses involved in a transaction
+function parseAddressesFromArgData(args?: Result): string[] {
+  const addresses: string[] = []
+
+  args?.forEach((arg) => {
+    if (Array.isArray(arg)) {
+      parseAddressesFromArgData(arg)
+    }
+
+    if (typeof arg === 'string' && isAddress(arg)) {
+      if (!addresses.includes(arg)) {
+        addresses.push(arg)
+      }
+    }
+  })
+
+  return addresses
+}

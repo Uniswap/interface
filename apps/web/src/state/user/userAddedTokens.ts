@@ -22,3 +22,14 @@ function useUserAddedTokensOnChain(chainId: number | undefined | null): Token[] 
 export function useUserAddedTokens(): Token[] {
   return useUserAddedTokensOnChain(useAccount().chainId)
 }
+
+export function useAllUserAddedTokens(): Token[] {
+  const serializedTokensMap = useAppSelector(({ user: { tokens } }) => tokens)
+
+  return useMemo(() => {
+    const tokenMap: Token[] = Object.values(serializedTokensMap).flatMap((chainTokens) =>
+      Object.values(chainTokens).map((value) => deserializeToken(value, UserAddedToken)),
+    )
+    return tokenMap
+  }, [serializedTokensMap])
+}

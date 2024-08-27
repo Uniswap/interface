@@ -26,7 +26,7 @@ exports[`BackButton renders without error 1`] = `
       ],
     }
   }
-  testID="buttons/back-button"
+  testID="back"
 >
   <View
     style={

@@ -1,8 +1,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { Screen } from 'src/components/layout/Screen'
-import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { Flex, useIsDarkMode } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
@@ -13,13 +12,15 @@ import { getServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { InstitutionTransferEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { openUri } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
+import { useFiatOnRampTransactionCreator } from 'wallet/src/features/fiatOnRamp/hooks'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { FiatPurchaseTransactionInfo } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { openUri } from 'wallet/src/utils/linking'
 
 // Design decision
 const CONNECTING_TIMEOUT = 2 * ONE_SECOND_MS
@@ -32,15 +33,19 @@ export function ExchangeTransferConnecting({
   onClose: () => void
 }): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
 
-  const initialTypeInfo = useMemo(() => ({ serviceProviderLogo: serviceProvider.logos }), [serviceProvider.logos])
+  const initialTypeInfo = useMemo<Partial<FiatPurchaseTransactionInfo>>(
+    () => ({ serviceProviderLogo: serviceProvider.logos, serviceProvider: serviceProvider.serviceProvider }),
+    [serviceProvider],
+  )
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
     UniverseChainId.Mainnet,
+    serviceProvider.serviceProvider,
     initialTypeInfo,
   )
 

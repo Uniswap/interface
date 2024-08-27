@@ -5,6 +5,7 @@ import {
   TransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import {
   TransactionHistoryUpdater,
   getReceiveNotificationFromData,
@@ -13,13 +14,14 @@ import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import {
-  erc20ReceiveAssetActivity,
+  erc20RecentReceiveAssetActivity,
+  erc20StaleReceiveAssetActivity,
   portfolio,
   readOnlyAccount,
   receiveCurrencyTxNotification,
   signerMnemonicAccount,
 } from 'wallet/src/test/fixtures'
-import { MAX_FIXTURE_TIMESTAMP, faker, render } from 'wallet/src/test/test-utils'
+import { faker, render } from 'wallet/src/test/test-utils'
 import { queryResolvers } from 'wallet/src/test/utils'
 
 const mockedRefetchQueries = jest.fn()
@@ -30,6 +32,8 @@ jest.mock('@apollo/client', () => ({
     refetchQueries: mockedRefetchQueries,
   })),
 }))
+
+const now = Date.now()
 
 const present = dayjs('2022-02-01')
 const past = present.subtract(1, 'month')
@@ -88,14 +92,18 @@ const portfolios = [
   portfolio({ ownerAddress: account2.address, assetActivities: assetActivities2 }),
 ]
 
-const receiveAssetActivity = erc20ReceiveAssetActivity()
+const receiveAssetActivity = erc20RecentReceiveAssetActivity()
 const portfolioWithReceive = portfolio({
   ownerAddress: account1.address,
   assetActivities: [receiveAssetActivity],
 })
+const portfolioWithStaleReceive = portfolio({
+  ownerAddress: account1.address,
+  assetActivities: [erc20StaleReceiveAssetActivity()],
+})
 
 const { resolvers } = queryResolvers({
-  portfolios: () => portfolios,
+  portfolios: (_, { ownerAddresses }) => portfolios.filter((p) => ownerAddresses.includes(p.ownerAddress)),
 })
 
 describe(TransactionHistoryUpdater, () => {
@@ -120,7 +128,10 @@ describe(TransactionHistoryUpdater, () => {
 
   it('updates notification status when there are new transactions', async () => {
     const reduxState = {
-      wallet: walletSlice,
+      wallet: {
+        ...walletSlice,
+        activeAccountAddress: account1.address,
+      },
       notifications: {
         notificationQueue: [],
         notificationStatus: {},
@@ -237,13 +248,28 @@ describe(getReceiveNotificationFromData, () => {
     expect(notification).toBeUndefined()
   })
 
-  it('returns undefined if receive is older than lastest status update timestamp', () => {
+  it('returns undefined if receive is older than latest status update timestamp', () => {
+    MockDate.set(now)
     const txnData = { portfolios: [portfolioWithReceive] }
 
     // Ensure all transactions will be "old" compared to this
-    const oldTimestamp = (MAX_FIXTURE_TIMESTAMP + 1) * 1000 // convert to ms
+    // mocked receive is made to be 5 minutes ago
+    const oldTimestamp = Date.now() - ONE_MINUTE_MS
 
     const notification = getReceiveNotificationFromData(txnData, account1.address, oldTimestamp)
+
+    expect(notification).toBeUndefined()
+  })
+
+  it('returns undefined if receive is too stale to notify', () => {
+    MockDate.set(now)
+    const txnData = { portfolios: [portfolioWithStaleReceive] }
+
+    // Ensure all transactions will be "old" compared to this
+    // mocked receive is made to be 5 minutes ago
+    const newTimestamp = 1
+
+    const notification = getReceiveNotificationFromData(txnData, account1.address, newTimestamp)
 
     expect(notification).toBeUndefined()
   })

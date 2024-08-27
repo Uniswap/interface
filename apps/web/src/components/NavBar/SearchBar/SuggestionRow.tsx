@@ -2,7 +2,6 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
 import { useAddRecentlySearchedAsset } from 'components/NavBar/SearchBar/RecentlySearchedAssets'
-import Row from 'components/Row'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
@@ -11,15 +10,18 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SearchToken } from 'graphql/data/SearchTokens'
 import { getPoolDetailsURL, getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { Trans } from 'i18n'
+import styled, { css } from 'lib/styled-components'
+import { searchGenieCollectionToTokenSearchResult, searchTokenToTokenSearchResult } from 'lib/utils/searchBar'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import styled, { css } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
+import { Flex } from 'ui/src'
 import { Verified } from 'ui/src/components/icons'
-import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -103,6 +105,7 @@ export function SuggestionRow({
   index,
   eventProperties,
 }: SuggestionRowProps) {
+  const { t } = useTranslation()
   const isToken = suggestionIsToken(suggestion)
   const isPool = suggestionIsSmartPool(suggestion)
   const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
@@ -117,9 +120,16 @@ export function SuggestionRow({
   const handleClick = useCallback(() => {
     const address =
       !suggestion.address && suggestion.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : suggestion.address
-    const asset = isToken
-      ? address && { address, chain: suggestion.chain }
-      : { ...suggestion, isNft: true, chain: Chain.Ethereum }
+    const asset =
+      isToken && address
+        ? searchTokenToTokenSearchResult({
+            ...suggestion,
+            address,
+            chainId: supportedChainIdFromGQLChain(suggestion.chain) as UniverseChainId,
+            isNative: suggestion.address === NATIVE_CHAIN_ID,
+            isToken: suggestion.standard === TokenStandard.Erc20,
+          })
+        : searchGenieCollectionToTokenSearchResult(suggestion as GenieCollection)
     asset && addRecentlySearchedAsset(asset)
 
     toggleOpen()
@@ -156,7 +166,7 @@ export function SuggestionRow({
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
       data-testid={isToken ? `searchbar-token-row-${suggestion.chain}-${suggestion.address ?? NATIVE_CHAIN_ID}` : ''}
     >
-      <Row width="60%" gap="sm">
+      <Flex row width="60%" gap="$spacing8">
         {isToken ? (
           <QueryTokenLogo
             token={suggestion}
@@ -174,31 +184,28 @@ export function SuggestionRow({
           />
         )}
         <PrimaryContainer>
-          <Row gap="xs">
+          <Flex row gap="$spacing4" centered>
             <PrimaryText lineHeight="24px">{suggestion.name}</PrimaryText>
-            {isToken ? <TokenSafetyIcon warning={warning} /> : suggestion.isVerified && <Verified />}
-          </Row>
+            {isToken ? <TokenSafetyIcon warning={warning} /> : suggestion.isVerified && <Verified size={14} />}
+          </Flex>
           <ThemedText.SubHeaderSmall lineHeight="20px">
-            {isToken ? (
-              suggestion.symbol
-            ) : (
-              <>
-                {formatNumberOrString({ input: suggestion?.stats?.total_supply, type: NumberType.WholeNumber })}&nbsp;
-                <Trans i18nKey="common.items" />
-              </>
-            )}
+            {isToken
+              ? suggestion.symbol
+              : t('search.results.count', {
+                  count: suggestion?.stats?.total_supply ?? 0,
+                })}
           </ThemedText.SubHeaderSmall>
         </PrimaryContainer>
-      </Row>
+      </Flex>
 
       <SecondaryContainer>
-        <Row gap="xs">
+        <Flex row gap="$spacing4">
           <PrimaryText width="100%">
             {isToken
               ? formatFiatPrice({ price: suggestion.market?.price?.value })
               : `${formatNumberOrString({ input: suggestion.stats?.floor_price, type: NumberType.NFTToken })} ETH`}
           </PrimaryText>
-        </Row>
+        </Flex>
 
         <PriceChangeContainer>
           {isToken ? (
@@ -228,20 +235,20 @@ const SkeletonContent = styled(Column)`
 export function SkeletonRow() {
   return (
     <SkeletonSuggestionRow $isFocused={false}>
-      <Row>
+      <Flex row width="100%" gap="$gap4">
         <BrokenCollectionImage />
         <SkeletonContent gap="sm">
-          <Row justify="space-between">
+          <Flex row justifyContent="space-between">
             <LoadingBubble height="20px" width="180px" />
             <LoadingBubble height="20px" width="48px" />
-          </Row>
+          </Flex>
 
-          <Row justify="space-between">
+          <Flex row justifyContent="space-between">
             <LoadingBubble height="16px" width="120px" />
             <LoadingBubble height="16px" width="48px" />
-          </Row>
+          </Flex>
         </SkeletonContent>
-      </Row>
+      </Flex>
     </SkeletonSuggestionRow>
   )
 }

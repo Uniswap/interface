@@ -14,6 +14,7 @@ import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider
 import { PortfolioToken } from 'graphql/data/portfolios'
 import { /*getTokenDetailsURL,*/ gqlToCurrency } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
+import styled from 'lib/styled-components'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { /*useCallback,*/ useMemo, useState } from 'react'
 //import { useNavigate } from 'react-router-dom'

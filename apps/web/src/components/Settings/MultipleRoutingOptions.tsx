@@ -5,13 +5,13 @@ import QuestionHelper from 'components/QuestionHelper'
 import Row, { RowBetween } from 'components/Row'
 import Toggle from 'components/Toggle'
 import { isUniswapXSupportedChain } from 'constants/chains'
-import { Trans, t } from 'i18n'
 import { atom, useAtom } from 'jotai'
+import styled from 'lib/styled-components'
 import { ReactNode, useCallback } from 'react'
 import { RouterPreference } from 'state/routing/types'
-import styled from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { Trans, t } from 'uniswap/src/i18n'
 
 const LabelWrapper = styled(Column)`
   height: 100%;
@@ -67,7 +67,7 @@ function UniswapXPreferenceLabel() {
           <>
             <Trans i18nKey="routing.aggregateLiquidity" />{' '}
             <ExternalLink href={uniswapUrls.helpArticleUrls.uniswapXInfo}>
-              <Trans i18nKey="common.learnMore.link" />
+              <Trans i18nKey="common.button.learn" />
             </ExternalLink>
           </>
         }

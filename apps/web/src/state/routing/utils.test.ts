@@ -42,6 +42,7 @@ function constructArgs(currencyIn: Currency, currencyOut: Currency, isXv2?: bool
     priceImprovementBps: 0,
     forceOpenOrders: false,
     deadlineBufferSecs: 30,
+    arbitrumXV2SlippageTolerance: '0.5',
   }
 }
 

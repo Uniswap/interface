@@ -1,36 +1,37 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { NativeSyntheticEvent } from 'react-native'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
-import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
+import {
+  InputValidatedEvent,
+  MnemonicStoredEvent,
+  NativeSeedPhraseInputRef,
+  SeedPhraseInput,
+  StringKey,
+  handleSubmit,
+} from 'src/screens/Import/SeedPhraseInput'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { openUri } from 'uniswap/src/utils/linking'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
-import { openUri } from 'wallet/src/utils/linking'
-import {
-  MnemonicValidationError,
-  translateMnemonicErrorMessage,
-  userFinishedTypingWord,
-  validateMnemonic,
-  validateSetOfWords,
-} from 'wallet/src/utils/mnemonics'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.SeedPhraseInput>
 
 export function SeedPhraseInputScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const { generateImportedAccountsByMnemonic } = useOnboardingContext()
+  const { generateImportedAccounts } = useOnboardingContext()
 
   /**
    * If paste permission modal is open, we need to manually disable the splash screen that appears on blur,
@@ -42,69 +43,26 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   const [pastePermissionModalOpen, setPastePermissionModalOpen] = useState(false)
   useLockScreenOnBlur(pastePermissionModalOpen)
 
-  const [value, setValue] = useState<string | undefined>(undefined)
-  const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
-
+  const [submitEnabled, setSubmitEnabled] = useState(false)
+  const seedPhraseInputRef = useRef<NativeSeedPhraseInputRef>(null)
   const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
 
   useAddBackButton(navigation)
 
   const signerAccounts = useSignerAccounts()
-  const mnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
+  const targetMnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
 
-  // Add all accounts from mnemonic.
-  const onSubmit = useCallback(async () => {
-    // Check phrase validation
-    const { validMnemonic, error, invalidWord } = validateMnemonic(value)
+  const handleNext = useCallback(
+    async (storedMnemonicId: string) => {
+      await generateImportedAccounts(storedMnemonicId, BackupType.Manual)
 
-    if (error) {
-      setErrorMessage(translateMnemonicErrorMessage(error, invalidWord, t))
-      return
-    }
-
-    if (!validMnemonic) {
-      return
-    }
-
-    if (mnemonicId && validMnemonic) {
-      const generatedMnemonicId = await Keyring.generateAddressForMnemonic(validMnemonic, 0)
-      if (generatedMnemonicId !== mnemonicId) {
-        setErrorMessage(t('account.recoveryPhrase.error.wrong'))
-        return
+      // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
+      if (!isRestoringMnemonic) {
+        navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
       }
-    }
-
-    await generateImportedAccountsByMnemonic(validMnemonic, undefined, BackupType.Manual)
-
-    // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
-    if (!isRestoringMnemonic) {
-      navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
-    }
-  }, [value, mnemonicId, generateImportedAccountsByMnemonic, isRestoringMnemonic, t, navigation, params])
-
-  const onBlur = useCallback(() => {
-    const { error, invalidWord } = validateMnemonic(value)
-    if (error) {
-      setErrorMessage(translateMnemonicErrorMessage(error, invalidWord, t))
-    }
-  }, [t, value])
-
-  const onChange = (text: string | undefined): void => {
-    const { error, invalidWord } = validateSetOfWords(text)
-
-    // suppress error messages if the  user is not done typing a word
-    const suppressError =
-      (error === MnemonicValidationError.InvalidWord && !userFinishedTypingWord(text)) ||
-      error === MnemonicValidationError.NotEnoughWords
-
-    if (!error || suppressError) {
-      setErrorMessage(undefined)
-    } else {
-      setErrorMessage(translateMnemonicErrorMessage(error, invalidWord, t))
-    }
-
-    setValue(text)
-  }
+    },
+    [generateImportedAccounts, isRestoringMnemonic, navigation, params],
+  )
 
   const onPressRecoveryHelpButton = (): Promise<void> => openUri(uniswapUrls.helpArticleUrls.recoveryPhraseHowToImport)
 
@@ -114,6 +72,22 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
 
   return (
     <SafeKeyboardOnboardingScreen
+      footer={
+        <Trace logPress element={ElementName.Next}>
+          <Button
+            disabled={!submitEnabled}
+            mx="$spacing16"
+            my="$spacing12"
+            testID={TestID.Continue}
+            onPress={(): void => {
+              handleSubmit(seedPhraseInputRef)
+            }}
+          >
+            {t('common.button.continue')}
+          </Button>
+        </Trace>
+      }
+      minHeightWhenKeyboardExpanded={false}
       subtitle={
         isRestoringMnemonic
           ? t('account.recoveryPhrase.subtitle.restoring')
@@ -123,44 +97,46 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
         isRestoringMnemonic ? t('account.recoveryPhrase.title.restoring') : t('account.recoveryPhrase.title.import')
       }
     >
-      <Flex $short={{ gap: '$spacing12' }} gap="$spacing16">
-        <Flex px="$spacing8">
-          <GenericImportForm
-            blurOnSubmit
-            liveCheck
-            afterPasteButtonPress={(): void => setPastePermissionModalOpen(false)}
-            beforePasteButtonPress={(): void => setPastePermissionModalOpen(true)}
-            errorMessage={errorMessage}
-            inputAlignment="flex-start"
-            placeholderLabel={t('account.recoveryPhrase.input')}
-            textAlign="left"
-            value={value}
-            onBlur={onBlur}
-            onChange={onChange}
-          />
-        </Flex>
-        <Flex centered>
-          <Trace logPress element={ElementName.RecoveryHelpButton}>
-            <TouchableArea
-              flexDirection="row"
-              gap="$spacing8"
-              onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}
-            >
-              <QuestionInCircleFilled color="$neutral3" size="$icon.20" />
-              <Text $short={{ variant: 'body3' }} color="$neutral3" variant="body2">
-                {isRestoringMnemonic
-                  ? t('account.recoveryPhrase.helpText.restoring')
-                  : t('account.recoveryPhrase.helpText.import')}
-              </Text>
-            </TouchableArea>
-          </Trace>
-        </Flex>
+      <SeedPhraseInput
+        ref={seedPhraseInputRef}
+        navigation={navigation}
+        strings={{
+          [StringKey.InputPlaceholder]: t('account.recoveryPhrase.input'),
+          [StringKey.PasteButton]: t('common.button.paste'),
+          // No good way to pass interpolated strings to native code, but an empty string is okay here
+          [StringKey.ErrorInvalidWord]: t('account.recoveryPhrase.error.invalidWord', { word: '' }),
+          [StringKey.ErrorPhraseLength]: t('account.recoveryPhrase.error.phraseLength'),
+          [StringKey.ErrorWrongPhrase]: t('account.recoveryPhrase.error.wrong'),
+          [StringKey.ErrorInvalidPhrase]: t('account.recoveryPhrase.error.invalid'),
+        }}
+        targetMnemonicId={targetMnemonicId}
+        testID={TestID.ImportAccountInput}
+        onInputValidated={(e: NativeSyntheticEvent<InputValidatedEvent>): void =>
+          setSubmitEnabled(e.nativeEvent.canSubmit)
+        }
+        onMnemonicStored={(e: NativeSyntheticEvent<MnemonicStoredEvent>): Promise<void> =>
+          handleNext(e.nativeEvent.mnemonicId)
+        }
+        onPasteEnd={(): void => {
+          setPastePermissionModalOpen(false)
+        }}
+        onPasteStart={(): void => {
+          setPastePermissionModalOpen(true)
+        }}
+      />
+
+      <Flex row justifyContent="center" pt="$spacing24">
+        <TouchableArea onPress={isRestoringMnemonic ? onPressTryAgainButton : onPressRecoveryHelpButton}>
+          <Flex row alignItems="center" gap="$spacing4">
+            <QuestionInCircleFilled color="$neutral3" size="$icon.20" />
+            <Text color="$neutral3" variant="body2">
+              {isRestoringMnemonic
+                ? t('account.recoveryPhrase.helpText.restoring')
+                : t('account.recoveryPhrase.helpText.import')}
+            </Text>
+          </Flex>
+        </TouchableArea>
       </Flex>
-      <Trace logPress element={ElementName.Next}>
-        <Button disabled={!!errorMessage || !value} testID={ElementName.Continue} onPress={onSubmit}>
-          {t('common.button.continue')}
-        </Button>
-      </Trace>
     </SafeKeyboardOnboardingScreen>
   )
 }

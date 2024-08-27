@@ -3,10 +3,10 @@ import {
   SwapOrderType,
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { deriveCurrencyAmountFromAssetResponse } from 'wallet/src/features/transactions/history/utils'
 import {
   ConfirmedSwapTransactionInfo,

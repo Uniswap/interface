@@ -13,15 +13,15 @@ import { useChainFromUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getSupportedGraphQlChain } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { Trans } from 'i18n'
+import styled, { css } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useParams } from 'react-router-dom'
-import styled, { css } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ClickableStyle } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { capitalize } from 'tsafe'
+import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const SWAP_COMPONENT_WIDTH = 360
@@ -193,9 +193,8 @@ export function getLoadingTitle(
   } else {
     tokenName = tokenAddress || ''
   }
-  const chainSuffix = chainName ? ` on ${capitalize(chainName)}` : ''
   const tokenLink = token?.isNative ? (
-    tokenName
+    <>{tokenName}</>
   ) : (
     <LoadingFooterLink
       href={getExplorerLink(chainId, tokenAddress, ExplorerDataType.TOKEN)}
@@ -205,7 +204,15 @@ export function getLoadingTitle(
       {tokenName}
     </LoadingFooterLink>
   )
-  return <Trans i18nKey="tdp.loading.title" values={{ tokenLink, chainSuffix }} />
+  return chainName ? (
+    <Trans
+      i18nKey="tdp.loading.title.withChain"
+      values={{ chainName: capitalize(chainName) }}
+      components={{ tokenLink }}
+    />
+  ) : (
+    <Trans i18nKey="tdp.loading.title.default" components={{ tokenLink }} />
+  )
 }
 
 export function LoadingChart() {

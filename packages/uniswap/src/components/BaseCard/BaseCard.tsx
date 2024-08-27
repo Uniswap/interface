@@ -17,13 +17,11 @@ export function Shadow({ children, ...rest }: FlexProps): JSX.Element {
     <Flex
       borderRadius="$rounded16"
       p="$spacing12"
-      shadowColor={isDarkMode ? '$sporeBlack' : '$transparent'}
+      shadowColor={isDarkMode ? '$black' : '$transparent'}
       shadowOffset={SHADOW_OFFSET_SMALL}
       shadowOpacity={0.0075}
       shadowRadius={10}
-      style={
-        hasBackgroundColor ? undefined : { backgroundColor: opacify(isDarkMode ? 10 : 100, colors.sporeWhite.val) }
-      }
+      style={hasBackgroundColor ? undefined : { backgroundColor: opacify(isDarkMode ? 10 : 100, colors.white.val) }}
       {...rest}
     >
       {children}

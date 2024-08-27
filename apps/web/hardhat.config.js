@@ -18,6 +18,10 @@ const forks = {
     url: `https://polygon-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
     ...forkingConfig,
   },
+  [ChainId.OPTIMISM]: {
+    url: `https://optimism-mainnet.infura.io/v3/${process.env.REACT_APP_INFURA_KEY}`,
+    ...forkingConfig,
+  },
 }
 
 module.exports = {

@@ -1,9 +1,9 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { AppNotification } from 'wallet/src/features/notifications/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
-import { SharedState } from 'wallet/src/state/reducer'
+import { WalletState } from 'wallet/src/state/walletReducer'
 
-const selectNotificationQueue = (state: SharedState): AppNotification[] => state.notifications.notificationQueue
+const selectNotificationQueue = (state: WalletState): AppNotification[] => state.notifications.notificationQueue
 
 export const selectActiveAccountNotifications = createSelector(
   selectNotificationQueue,
@@ -18,15 +18,15 @@ export const selectActiveAccountNotifications = createSelector(
 )
 
 const selectNotificationStatus = (
-  state: SharedState,
+  state: WalletState,
 ): {
   [userAddress: string]: boolean | undefined
 } => state.notifications.notificationStatus
 
-export const makeSelectHasNotifications = (): Selector<SharedState, boolean | undefined, [Address | null]> =>
+export const makeSelectHasNotifications = (): Selector<WalletState, boolean | undefined, [Address | null]> =>
   createSelector(
     selectNotificationStatus,
-    (_: SharedState, address: Address | null) => address,
+    (_: WalletState, address: Address | null) => address,
     (notificationStatuses, address) => {
       if (!address) {
         return undefined
@@ -36,7 +36,7 @@ export const makeSelectHasNotifications = (): Selector<SharedState, boolean | un
   )
 
 export const selectLastTxNotificationUpdate = (
-  state: SharedState,
+  state: WalletState,
 ): {
   [address: string]: number | undefined
 } => state.notifications.lastTxNotificationUpdate

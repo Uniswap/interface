@@ -1,8 +1,6 @@
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Currency, useConvertQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { FiatNumberType } from 'utilities/src/format/types'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { getFiatCurrencyCode, useAppFiatCurrency } from 'wallet/src/features/fiatCurrency/hooks'
@@ -84,14 +82,6 @@ export interface FiatConverter {
   ) => string
 }
 
-// Temporary function for feature turned off
-function convertFiatAmountDefault(amount: number): { amount: number; currency: FiatCurrency } {
-  return {
-    amount,
-    currency: FiatCurrency.UnitedStatesDollar,
-  }
-}
-
 const SOURCE_CURRENCY = Currency.Usd // Assuming all currency data comes from USD
 
 /**
@@ -105,7 +95,6 @@ const SOURCE_CURRENCY = Currency.Usd // Assuming all currency data comes from US
 export function useFiatConverter({
   formatNumberOrString,
 }: Pick<LocalizationContextState, 'formatNumberOrString'>): FiatConverter {
-  const featureEnabled = useFeatureFlag(FeatureFlags.CurrencyConversion)
   const appCurrency = useAppFiatCurrency()
   const toCurrency = mapFiatCurrencyToServerCurrency[appCurrency]
 
@@ -159,9 +148,9 @@ export function useFiatConverter({
 
   return useMemo(
     () => ({
-      convertFiatAmount: featureEnabled ? convertFiatAmountInner : convertFiatAmountDefault,
+      convertFiatAmount: convertFiatAmountInner,
       convertFiatAmountFormatted: convertFiatAmountFormattedInner,
     }),
-    [convertFiatAmountFormattedInner, convertFiatAmountInner, featureEnabled],
+    [convertFiatAmountFormattedInner, convertFiatAmountInner],
   )
 }

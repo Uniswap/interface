@@ -4,11 +4,11 @@ import { DialogButtonType, DialogContent } from 'components/Dialog/Dialog'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { RigoblockUrls } from 'constants/rigoblockUrls'
 import { SwapResult } from 'hooks/useSwapCallback'
-import { Trans } from 'i18n'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTrade } from 'state/routing/utils'
 import { ExternalLink } from 'theme/components'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 export enum PendingModalError {
@@ -106,7 +106,7 @@ export default function Error({ errorType, trade, showTrade, swapResult, onRetry
           {showTrade && trade && <TradeSummary trade={trade} />}
           {supportArticleURL && (
             <ExternalLink href={supportArticleURL}>
-              <Trans i18nKey="common.learnMore.link" />
+              <Trans i18nKey="common.button.learn" />
             </ExternalLink>
           )}
           {swapResult && swapResult.type === TradeFillType.Classic && (

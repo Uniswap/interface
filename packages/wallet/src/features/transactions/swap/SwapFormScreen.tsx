@@ -2,23 +2,29 @@
 /* eslint-disable max-lines */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { LayoutChangeEvent, StyleSheet, TextInputProps } from 'react-native'
+import { StyleSheet, TextInputProps } from 'react-native'
 import { AnimatePresence, Flex, Text, TouchableArea, isWeb, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { NumberType } from 'utilities/src/format/types'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
+import { SwapScreen, useSwapScreenContext } from 'wallet/src/features/transactions/contexts/SwapScreenContext'
 import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useSyncFiatAndTokenAmountUpdater } from 'wallet/src/features/transactions/hooks/useSyncFiatAndTokenAmountUpdater'
 import { CurrencyInputPanel, CurrencyInputPanelRef } from 'wallet/src/features/transactions/swap/CurrencyInputPanel'
-import { DecimalPadInput, DecimalPadInputRef } from 'wallet/src/features/transactions/swap/DecimalPadInput'
+import {
+  DecimalPadCalculateSpace,
+  DecimalPadInput,
+  DecimalPadInputRef,
+} from 'wallet/src/features/transactions/swap/DecimalPadInput'
 import { GasAndWarningRows } from 'wallet/src/features/transactions/swap/GasAndWarningRows'
 import { SwapArrowButton } from 'wallet/src/features/transactions/swap/SwapArrowButton'
 import { SwapFormButton } from 'wallet/src/features/transactions/swap/SwapFormButton'
@@ -28,7 +34,6 @@ import { TransactionModalInnerContainer } from 'wallet/src/features/transactions
 import { useExactOutputWillFail } from 'wallet/src/features/transactions/swap/hooks/useExactOutputWillFail'
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/trade/hooks/useShowSwapNetworkNotification'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'wallet/src/features/transactions/utils'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
@@ -50,6 +55,10 @@ const WEB_CURRENCY_PANEL_INACTIVE_OPACITY = 0.6
 
 const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
 
+/**
+ * IMPORTANT: In the Extension, this component remains mounted when the user moves to the `SwapReview` screen.
+ *            Make sure you take this into consideration when adding/modifying any hooks that run on this component.
+ */
 export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
   const { selectingCurrencyField } = useSwapFormContext()
@@ -73,6 +82,8 @@ function SwapFormContent(): JSX.Element {
   const isShortMobileDevice = useIsShortMobileDevice()
 
   const { walletNeedsRestore, openWalletRestoreModal } = useTransactionModalContext()
+
+  const { screen } = useSwapScreenContext()
 
   const {
     amountUpdatedTimeRef,
@@ -104,8 +115,13 @@ function SwapFormContent(): JSX.Element {
   const showWebOutputTokenSelector = selectingCurrencyField === CurrencyField.OUTPUT && isWeb
   const showSwitchCurrencies = !showWebInputTokenSelector && !showWebOutputTokenSelector
 
-  // Updaters
-  useSyncFiatAndTokenAmountUpdater()
+  // When using fiat input mode, this hook updates the token amount based on the latest fiat conversion rate (currently polled every 15s).
+  // In the Extension, the `SwapForm` is not unmounted when the user moves to the `SwapReview` screen,
+  // so we need to skip these updates because we don't want the amounts being reviewed to keep changing.
+  // If we don't skip this, it also causes a cache-miss on `useTrade`, which would trigger a loading spinner because of a missing `trade`.
+  useSyncFiatAndTokenAmountUpdater({ skip: screen !== SwapScreen.SwapForm })
+
+  // Display a toast notification when the user switches networks.
   useShowSwapNetworkNotification(chainId)
 
   const onRestorePress = (): void => {
@@ -228,10 +244,6 @@ function SwapFormContent(): JSX.Element {
   )
 
   const [decimalPadReady, setDecimalPadReady] = useState(false)
-
-  const onBottomScreenLayout = useCallback((event: LayoutChangeEvent): void => {
-    decimalPadRef.current?.setMaxHeight(event.nativeEvent.layout.height)
-  }, [])
 
   const onDecimalPadReady = useCallback(() => setDecimalPadReady(true), [])
 
@@ -594,17 +606,10 @@ function SwapFormContent(): JSX.Element {
             )}
           </>
         )}
-        {isWeb && <Flex mt="$spacing48" />}
       </Flex>
       {!isWeb && (
         <>
-          {/*
-          This container is used to calculate the space that the `DecimalPad` can use.
-          We position the `DecimalPad` with `position: absolute` at the bottom of the screen instead of
-          putting it inside this container in order to avoid any overflows while the `DecimalPad`
-          is automatically resizing to find the right size for the screen.
-          */}
-          <Flex fill mt={isShortMobileDevice ? '$spacing2' : '$spacing8'} onLayout={onBottomScreenLayout} />
+          <DecimalPadCalculateSpace decimalPadRef={decimalPadRef} isShortMobileDevice={isShortMobileDevice} />
           <Flex
             $short={{ gap: '$none' }}
             animation="quick"

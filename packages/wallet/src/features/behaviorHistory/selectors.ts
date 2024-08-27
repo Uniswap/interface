@@ -1,19 +1,17 @@
-import { ExtensionBetaFeedbackState, ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
-import { SharedState } from 'wallet/src/state/reducer'
+import { WalletState } from 'wallet/src/state/walletReducer'
 
-export const selectHasViewedReviewScreen = (state: SharedState): boolean => state.behaviorHistory.hasViewedReviewScreen
+export const selectHasViewedReviewScreen = (state: WalletState): boolean => state.behaviorHistory.hasViewedReviewScreen
 
-export const selectHasSubmittedHoldToSwap = (state: SharedState): boolean =>
+export const selectHasSubmittedHoldToSwap = (state: WalletState): boolean =>
   state.behaviorHistory.hasSubmittedHoldToSwap
 
-export const selectHasSkippedUnitagPrompt = (state: SharedState): boolean =>
+export const selectHasSkippedUnitagPrompt = (state: WalletState): boolean =>
   state.behaviorHistory.hasSkippedUnitagPrompt
 
-export const selectHasCompletedUnitagsIntroModal = (state: SharedState): boolean =>
+export const selectHasCompletedUnitagsIntroModal = (state: WalletState): boolean =>
   state.behaviorHistory.hasCompletedUnitagsIntroModal
 
-export const selectExtensionOnboardingState = (state: SharedState): ExtensionOnboardingState =>
-  state.behaviorHistory.extensionOnboardingState
+export const selectHasViewedWelcomeWalletCard = (state: WalletState): boolean =>
+  state.behaviorHistory.hasViewedWelcomeWalletCard
 
-export const selectExtensionBetaFeedbackState = (state: SharedState): ExtensionBetaFeedbackState | undefined =>
-  state.behaviorHistory.extensionBetaFeedbackState
+export const selectHasUsedExplore = (state: WalletState): boolean => state.behaviorHistory.hasUsedExplore

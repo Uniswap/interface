@@ -15,52 +15,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   justify-content: flex-start;
 }
 
-.c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 20;
-}
-
-.c3 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
 .c7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4;
-}
-
-.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -75,13 +30,13 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   gap: 8px;
 }
 
-.c4 {
+.c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c5 {
+.c3 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -100,40 +55,6 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
 }
 
 .c9 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c13 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c14 {
   border-radius: 12px;
   border-radius: 12px;
   height: 20px;
@@ -148,7 +69,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   background-size: 400%;
 }
 
-.c15 {
+.c10 {
   border-radius: 12px;
   border-radius: 12px;
   height: 20px;
@@ -163,7 +84,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   background-size: 400%;
 }
 
-.c16 {
+.c11 {
   border-radius: 12px;
   border-radius: 12px;
   height: 16px;
@@ -178,7 +99,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   background-size: 400%;
 }
 
-.c17 {
+.c12 {
   border-radius: 12px;
   border-radius: 12px;
   height: 16px;
@@ -193,7 +114,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   background-size: 400%;
 }
 
-.c8 {
+.c5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -216,11 +137,11 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   transition: background 250ms ease;
 }
 
-.c8:hover {
+.c5:hover {
   background: #22222212;
 }
 
-.c10 {
+.c6 {
   width: 36px;
   height: 36px;
   border-radius: 9999px;
@@ -230,7 +151,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   flex-shrink: 0;
 }
 
-.c12 {
+.c8 {
   width: 100%;
 }
 
@@ -244,7 +165,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   opacity: 1;
 }
 
-.c6 {
+.c4 {
   color: #7D7D7D;
   line-height: 20px;
   padding: 4px 16px;
@@ -254,172 +175,177 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
 
 <div>
   <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2"
+          class="c0 c1"
         >
           <div
-            class="c3"
-            data-testid="searchbar-dropdown"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558152"
           >
             <div
-              class="c4 c5 c6"
-            >
-              <svg
-                fill="none"
-                height="20"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <polyline
-                  points="23 6 13.5 15.5 8.5 10.5 1 18"
-                />
-                <polyline
-                  points="17 6 23 6 23 12"
-                />
-              </svg>
-              Popular tokens
-            </div>
-            <div
-              class="c7"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558307"
+              data-testid="searchbar-dropdown"
             >
               <div
-                class="c8"
+                class="c2 c3 c4"
+              >
+                <svg
+                  fill="none"
+                  height="20"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="23 6 13.5 15.5 8.5 10.5 1 18"
+                  />
+                  <polyline
+                    points="17 6 23 6 23 12"
+                  />
+                </svg>
+                Popular tokens
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558307"
               >
                 <div
-                  class="c4 c9"
+                  class="c5"
                 >
                   <div
-                    class="c10"
-                  />
-                  <div
-                    class="c11 c12"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c4 c13"
-                    >
-                      <div
-                        class="c14"
-                        height="20px"
-                        width="180px"
-                      />
-                      <div
-                        class="c15"
-                        height="20px"
-                        width="48px"
-                      />
-                    </div>
+                      class="c6"
+                    />
                     <div
-                      class="c4 c13"
+                      class="c7 c8"
                     >
                       <div
-                        class="c16"
-                        height="16px"
-                        width="120px"
-                      />
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c9"
+                          height="20px"
+                          width="180px"
+                        />
+                        <div
+                          class="c10"
+                          height="20px"
+                          width="48px"
+                        />
+                      </div>
                       <div
-                        class="c17"
-                        height="16px"
-                        width="48px"
-                      />
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c11"
+                          height="16px"
+                          width="120px"
+                        />
+                        <div
+                          class="c12"
+                          height="16px"
+                          width="48px"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div
-                class="c8"
-              >
                 <div
-                  class="c4 c9"
+                  class="c5"
                 >
                   <div
-                    class="c10"
-                  />
-                  <div
-                    class="c11 c12"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c4 c13"
-                    >
-                      <div
-                        class="c14"
-                        height="20px"
-                        width="180px"
-                      />
-                      <div
-                        class="c15"
-                        height="20px"
-                        width="48px"
-                      />
-                    </div>
+                      class="c6"
+                    />
                     <div
-                      class="c4 c13"
+                      class="c7 c8"
                     >
                       <div
-                        class="c16"
-                        height="16px"
-                        width="120px"
-                      />
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c9"
+                          height="20px"
+                          width="180px"
+                        />
+                        <div
+                          class="c10"
+                          height="20px"
+                          width="48px"
+                        />
+                      </div>
                       <div
-                        class="c17"
-                        height="16px"
-                        width="48px"
-                      />
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c11"
+                          height="16px"
+                          width="120px"
+                        />
+                        <div
+                          class="c12"
+                          height="16px"
+                          width="48px"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div
-                class="c8"
-              >
                 <div
-                  class="c4 c9"
+                  class="c5"
                 >
                   <div
-                    class="c10"
-                  />
-                  <div
-                    class="c11 c12"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c4 c13"
-                    >
-                      <div
-                        class="c14"
-                        height="20px"
-                        width="180px"
-                      />
-                      <div
-                        class="c15"
-                        height="20px"
-                        width="48px"
-                      />
-                    </div>
+                      class="c6"
+                    />
                     <div
-                      class="c4 c13"
+                      class="c7 c8"
                     >
                       <div
-                        class="c16"
-                        height="16px"
-                        width="120px"
-                      />
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c9"
+                          height="20px"
+                          width="180px"
+                        />
+                        <div
+                          class="c10"
+                          height="20px"
+                          width="48px"
+                        />
+                      </div>
                       <div
-                        class="c17"
-                        height="16px"
-                        width="48px"
-                      />
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c11"
+                          height="16px"
+                          width="120px"
+                        />
+                        <div
+                          class="c12"
+                          height="16px"
+                          width="48px"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -427,7 +353,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
             </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </div>
@@ -448,52 +374,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   justify-content: flex-start;
 }
 
-.c2 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 20;
-}
-
-.c3 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
 .c7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4;
-}
-
-.c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -508,13 +389,13 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   gap: 8px;
 }
 
-.c4 {
+.c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c5 {
+.c3 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -533,40 +414,6 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
 }
 
 .c9 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c13 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-}
-
-.c14 {
   border-radius: 12px;
   border-radius: 12px;
   height: 20px;
@@ -581,7 +428,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   background-size: 400%;
 }
 
-.c15 {
+.c10 {
   border-radius: 12px;
   border-radius: 12px;
   height: 20px;
@@ -596,7 +443,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   background-size: 400%;
 }
 
-.c16 {
+.c11 {
   border-radius: 12px;
   border-radius: 12px;
   height: 16px;
@@ -611,7 +458,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   background-size: 400%;
 }
 
-.c17 {
+.c12 {
   border-radius: 12px;
   border-radius: 12px;
   height: 16px;
@@ -626,7 +473,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   background-size: 400%;
 }
 
-.c8 {
+.c5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -649,11 +496,11 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   transition: background 250ms ease;
 }
 
-.c8:hover {
+.c5:hover {
   background: #22222212;
 }
 
-.c10 {
+.c6 {
   width: 36px;
   height: 36px;
   border-radius: 9999px;
@@ -663,7 +510,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   flex-shrink: 0;
 }
 
-.c12 {
+.c8 {
   width: 100%;
 }
 
@@ -677,7 +524,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   opacity: 1;
 }
 
-.c6 {
+.c4 {
   color: #7D7D7D;
   line-height: 20px;
   padding: 4px 16px;
@@ -687,290 +534,295 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
 
 <div>
   <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2"
+          class="c0 c1"
         >
           <div
-            class="c3"
-            data-testid="searchbar-dropdown"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558152"
           >
             <div
-              class="c4 c5 c6"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558307"
+              data-testid="searchbar-dropdown"
             >
-              <svg
-                fill="none"
-                height="20"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
+              <div
+                class="c2 c3 c4"
               >
-                <polyline
-                  points="23 6 13.5 15.5 8.5 10.5 1 18"
-                />
-                <polyline
-                  points="17 6 23 6 23 12"
-                />
-              </svg>
-              Popular tokens
+                <svg
+                  fill="none"
+                  height="20"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="23 6 13.5 15.5 8.5 10.5 1 18"
+                  />
+                  <polyline
+                    points="17 6 23 6 23 12"
+                  />
+                </svg>
+                Popular tokens
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558307"
+              >
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
+                  >
+                    <div
+                      class="c6"
+                    />
+                    <div
+                      class="c7 c8"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c9"
+                          height="20px"
+                          width="180px"
+                        />
+                        <div
+                          class="c10"
+                          height="20px"
+                          width="48px"
+                        />
+                      </div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c11"
+                          height="16px"
+                          width="120px"
+                        />
+                        <div
+                          class="c12"
+                          height="16px"
+                          width="48px"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
+                  >
+                    <div
+                      class="c6"
+                    />
+                    <div
+                      class="c7 c8"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c9"
+                          height="20px"
+                          width="180px"
+                        />
+                        <div
+                          class="c10"
+                          height="20px"
+                          width="48px"
+                        />
+                      </div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c11"
+                          height="16px"
+                          width="120px"
+                        />
+                        <div
+                          class="c12"
+                          height="16px"
+                          width="48px"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
+                  >
+                    <div
+                      class="c6"
+                    />
+                    <div
+                      class="c7 c8"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c9"
+                          height="20px"
+                          width="180px"
+                        />
+                        <div
+                          class="c10"
+                          height="20px"
+                          width="48px"
+                        />
+                      </div>
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c11"
+                          height="16px"
+                          width="120px"
+                        />
+                        <div
+                          class="c12"
+                          height="16px"
+                          width="48px"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
             <div
-              class="c7"
+              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558307"
+              data-testid="searchbar-dropdown"
             >
               <div
-                class="c8"
+                class="c2 c3 c4"
+              >
+                <svg
+                  fill="none"
+                  height="20"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                  width="20"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <polyline
+                    points="23 6 13.5 15.5 8.5 10.5 1 18"
+                  />
+                  <polyline
+                    points="17 6 23 6 23 12"
+                  />
+                </svg>
+                Popular NFT collections
+              </div>
+              <div
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558307"
               >
                 <div
-                  class="c4 c9"
+                  class="c5"
                 >
                   <div
-                    class="c10"
-                  />
-                  <div
-                    class="c11 c12"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c4 c13"
-                    >
-                      <div
-                        class="c14"
-                        height="20px"
-                        width="180px"
-                      />
-                      <div
-                        class="c15"
-                        height="20px"
-                        width="48px"
-                      />
-                    </div>
+                      class="c6"
+                    />
                     <div
-                      class="c4 c13"
+                      class="c7 c8"
                     >
                       <div
-                        class="c16"
-                        height="16px"
-                        width="120px"
-                      />
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c9"
+                          height="20px"
+                          width="180px"
+                        />
+                        <div
+                          class="c10"
+                          height="20px"
+                          width="48px"
+                        />
+                      </div>
                       <div
-                        class="c17"
-                        height="16px"
-                        width="48px"
-                      />
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c11"
+                          height="16px"
+                          width="120px"
+                        />
+                        <div
+                          class="c12"
+                          height="16px"
+                          width="48px"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div
-                class="c8"
-              >
                 <div
-                  class="c4 c9"
+                  class="c5"
                 >
                   <div
-                    class="c10"
-                  />
-                  <div
-                    class="c11 c12"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c4 c13"
-                    >
-                      <div
-                        class="c14"
-                        height="20px"
-                        width="180px"
-                      />
-                      <div
-                        class="c15"
-                        height="20px"
-                        width="48px"
-                      />
-                    </div>
+                      class="c6"
+                    />
                     <div
-                      class="c4 c13"
+                      class="c7 c8"
                     >
                       <div
-                        class="c16"
-                        height="16px"
-                        width="120px"
-                      />
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c9"
+                          height="20px"
+                          width="180px"
+                        />
+                        <div
+                          class="c10"
+                          height="20px"
+                          width="48px"
+                        />
+                      </div>
                       <div
-                        class="c17"
-                        height="16px"
-                        width="48px"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c8"
-              >
-                <div
-                  class="c4 c9"
-                >
-                  <div
-                    class="c10"
-                  />
-                  <div
-                    class="c11 c12"
-                  >
-                    <div
-                      class="c4 c13"
-                    >
-                      <div
-                        class="c14"
-                        height="20px"
-                        width="180px"
-                      />
-                      <div
-                        class="c15"
-                        height="20px"
-                        width="48px"
-                      />
-                    </div>
-                    <div
-                      class="c4 c13"
-                    >
-                      <div
-                        class="c16"
-                        height="16px"
-                        width="120px"
-                      />
-                      <div
-                        class="c17"
-                        height="16px"
-                        width="48px"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3"
-            data-testid="searchbar-dropdown"
-          >
-            <div
-              class="c4 c5 c6"
-            >
-              <svg
-                fill="none"
-                height="20"
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                width="20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <polyline
-                  points="23 6 13.5 15.5 8.5 10.5 1 18"
-                />
-                <polyline
-                  points="17 6 23 6 23 12"
-                />
-              </svg>
-              Popular NFT collections
-            </div>
-            <div
-              class="c7"
-            >
-              <div
-                class="c8"
-              >
-                <div
-                  class="c4 c9"
-                >
-                  <div
-                    class="c10"
-                  />
-                  <div
-                    class="c11 c12"
-                  >
-                    <div
-                      class="c4 c13"
-                    >
-                      <div
-                        class="c14"
-                        height="20px"
-                        width="180px"
-                      />
-                      <div
-                        class="c15"
-                        height="20px"
-                        width="48px"
-                      />
-                    </div>
-                    <div
-                      class="c4 c13"
-                    >
-                      <div
-                        class="c16"
-                        height="16px"
-                        width="120px"
-                      />
-                      <div
-                        class="c17"
-                        height="16px"
-                        width="48px"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c8"
-              >
-                <div
-                  class="c4 c9"
-                >
-                  <div
-                    class="c10"
-                  />
-                  <div
-                    class="c11 c12"
-                  >
-                    <div
-                      class="c4 c13"
-                    >
-                      <div
-                        class="c14"
-                        height="20px"
-                        width="180px"
-                      />
-                      <div
-                        class="c15"
-                        height="20px"
-                        width="48px"
-                      />
-                    </div>
-                    <div
-                      class="c4 c13"
-                    >
-                      <div
-                        class="c16"
-                        height="16px"
-                        width="120px"
-                      />
-                      <div
-                        class="c17"
-                        height="16px"
-                        width="48px"
-                      />
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
+                      >
+                        <div
+                          class="c11"
+                          height="16px"
+                          width="120px"
+                        />
+                        <div
+                          class="c12"
+                          height="16px"
+                          width="48px"
+                        />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -978,7 +830,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
             </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </div>

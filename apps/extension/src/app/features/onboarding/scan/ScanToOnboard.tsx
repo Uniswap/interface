@@ -12,7 +12,6 @@ import { SpringConfig } from 'react-native-reanimated/lib/typescript/reanimated2
 import QRCode from 'react-qr-code' //TODO(EXT-476): Replace with custom QR code designs
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
-import { Terms } from 'src/app/features/onboarding/Terms'
 import { useScantasticContext } from 'src/app/features/onboarding/scan/ScantasticContextProvider'
 import { getScantasticUrl } from 'src/app/features/onboarding/scan/utils'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
@@ -24,8 +23,6 @@ import { Mobile, Wifi } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, zIndices } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
@@ -185,8 +182,6 @@ export function ScanToOnboard(): JSX.Element {
     }
   }, [qrScale])
 
-  const scantasticOnboardingOnly = useFeatureFlag(FeatureFlags.ScantasticOnboardingOnly)
-
   return (
     <Trace
       logImpression
@@ -205,27 +200,17 @@ export function ScanToOnboard(): JSX.Element {
           </Square>
         }
         nextButtonEnabled={false}
-        nextButtonText={
-          scantasticOnboardingOnly
-            ? undefined
-            : errorDerivingQR
-              ? t('common.button.retry')
-              : t('onboarding.scan.button')
-        }
+        nextButtonText={errorDerivingQR ? t('common.button.retry') : t('onboarding.scan.button')}
         nextButtonTheme="secondary"
         subtitle={t('onboarding.scan.subtitle')}
         title={t('onboarding.scan.title')}
-        onBack={
-          scantasticOnboardingOnly
-            ? undefined
-            : (): void => navigate(`/${TopLevelRoutes.Onboarding}`, { replace: true })
-        }
+        onBack={(): void => navigate(`/${TopLevelRoutes.Onboarding}`, { replace: true })}
       >
         <Flex alignItems="center" width="100%">
           <Flex
             alignContent="center"
             alignItems="center"
-            backgroundColor={colors.sporeWhite.val}
+            backgroundColor={colors.white.val}
             borderColor="$surface3"
             borderRadius="$rounded16"
             borderWidth="$spacing1"
@@ -274,7 +259,7 @@ export function ScanToOnboard(): JSX.Element {
                   >
                     <QRCode
                       bgColor="transparent"
-                      fgColor={colors.sporeBlack.val}
+                      fgColor={colors.black.val}
                       size={QR_CODE_SIZE}
                       value={scantasticValue}
                     />
@@ -298,12 +283,6 @@ export function ScanToOnboard(): JSX.Element {
               {t('onboarding.scan.wifi')}
             </Text>
           </Flex>
-
-          {scantasticOnboardingOnly && (
-            <Flex px="$spacing60">
-              <Terms />
-            </Flex>
-          )}
         </Flex>
       </OnboardingScreen>
     </Trace>

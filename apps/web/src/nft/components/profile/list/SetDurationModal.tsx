@@ -1,5 +1,5 @@
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { Plural, t } from 'i18n'
+import styled from 'lib/styled-components'
 import ms from 'ms'
 import { Column, Row } from 'nft/components/Flex'
 import { NumericInput } from 'nft/components/layout/Input'
@@ -9,8 +9,8 @@ import { useSellAsset } from 'nft/hooks'
 import { DropDownOption } from 'nft/types'
 import { useEffect, useMemo, useReducer, useRef, useState } from 'react'
 import { AlertTriangle, ChevronDown } from 'react-feather'
-import styled from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
+import { Plural, useTranslation } from 'uniswap/src/i18n'
 
 const ModalWrapper = styled(Column)`
   gap: 4px;
@@ -91,6 +91,7 @@ enum ErrorState {
 }
 
 export const SetDurationModal = () => {
+  const { t } = useTranslation()
   const [duration, setDuration] = useState(Duration.day)
   const [amount, setAmount] = useState('7')
   const [errorState, setErrorState] = useState(ErrorState.valid)
@@ -106,7 +107,7 @@ export const SetDurationModal = () => {
   const durationOptions: DropDownOption[] = useMemo(
     () => [
       {
-        displayText: 'hours',
+        displayText: t('common.time.hours'),
         isSelected: duration === Duration.hour,
         onClick: () => {
           setDuration(Duration.hour)
@@ -114,7 +115,7 @@ export const SetDurationModal = () => {
         },
       },
       {
-        displayText: 'days',
+        displayText: t('common.time.days'),
         isSelected: duration === Duration.day,
         onClick: () => {
           setDuration(Duration.day)
@@ -122,7 +123,7 @@ export const SetDurationModal = () => {
         },
       },
       {
-        displayText: 'weeks',
+        displayText: t('common.time.weeks'),
         isSelected: duration === Duration.week,
         onClick: () => {
           setDuration(Duration.week)
@@ -130,7 +131,7 @@ export const SetDurationModal = () => {
         },
       },
       {
-        displayText: 'months',
+        displayText: t('common.time.months'),
         isSelected: duration === Duration.month,
         onClick: () => {
           setDuration(Duration.month)
@@ -138,22 +139,22 @@ export const SetDurationModal = () => {
         },
       },
     ],
-    [duration],
+    [duration, t],
   )
 
   let prompt
   switch (duration) {
     case Duration.hour:
-      prompt = <Plural value={+amount} one={t('hour')} other={t('hours')} />
+      prompt = <Plural value={+amount} one={t('common.time.hour')} other={t('common.time.hours')} />
       break
     case Duration.day:
-      prompt = <Plural value={+amount} one={t('day')} other={t('days')} />
+      prompt = <Plural value={+amount} one={t('common.time.day')} other={t('common.time.days')} />
       break
     case Duration.week:
-      prompt = <Plural value={+amount} one={t('week')} other={t('weeks')} />
+      prompt = <Plural value={+amount} one={t('common.time.week')} other={t('common.time.weeks')} />
       break
     case Duration.month:
-      prompt = <Plural value={+amount} one={t('month')} other={t('months')} />
+      prompt = <Plural value={+amount} one={t('common.time.month')} other={t('common.time.months')} />
       break
     default:
       break

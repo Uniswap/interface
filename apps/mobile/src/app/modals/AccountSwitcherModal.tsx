@@ -1,8 +1,8 @@
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
+import { useDispatch, useSelector } from 'react-redux'
 import { Action } from 'redux'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { AccountList } from 'src/components/accounts/AccountList'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
@@ -13,6 +13,7 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { ActionSheetModal, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -22,7 +23,7 @@ import { isAndroid } from 'utilities/src/platform'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
-import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useActiveAccountAddress, useNativeAccountExists } from 'wallet/src/features/wallet/hooks'
 import { selectAllAccountsSorted, selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
@@ -30,7 +31,7 @@ import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { openSettings } from 'wallet/src/utils/linking'
 
 export function AccountSwitcherModal(): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const colors = useSporeColors()
 
   return (
@@ -59,14 +60,14 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
   const dimensions = useDeviceDimensions()
   const { t } = useTranslation()
   const activeAccountAddress = useActiveAccountAddress()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const hasImportedSeedPhrase = useNativeAccountExists()
-  const modalState = useAppSelector(selectModalState(ModalName.AccountSwitcher))
-  const sortedMnemonicAccounts = useAppSelector(selectSortedSignerMnemonicAccounts)
+  const modalState = useSelector(selectModalState(ModalName.AccountSwitcher))
+  const sortedMnemonicAccounts = useSelector(selectSortedSignerMnemonicAccounts)
 
   const [showAddWalletModal, setShowAddWalletModal] = useState(false)
 
-  const accounts = useAppSelector(selectAllAccountsSorted)
+  const accounts = useSelector(selectAllAccountsSorted)
 
   const onPressAccount = useCallback(
     (address: Address) => {
@@ -269,7 +270,9 @@ export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Eleme
           </Button>
         </Flex>
       </Flex>
-      <AccountList accounts={accountsWithoutActive} isVisible={modalState.isOpen} onPress={onPressAccount} />
+      <Flex maxHeight={fullScreenContentHeight / 2}>
+        <AccountList accounts={accountsWithoutActive} isVisible={modalState.isOpen} onPress={onPressAccount} />
+      </Flex>
       <TouchableArea hapticFeedback mt="$spacing16" onPress={onPressAddWallet}>
         <Flex row alignItems="center" gap="$spacing8" ml="$spacing24">
           <PlusCircle />

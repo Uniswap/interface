@@ -1,4 +1,6 @@
 import { useEffect, useMemo } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileAppsFlyerEvents, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
@@ -19,17 +21,16 @@ import {
   recordWalletFunded,
   shouldReportBalances,
 } from 'wallet/src/features/telemetry/slice'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 
 export function useLastBalancesReporter(): void {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const accounts = useAccounts()
-  const lastBalancesReport = useAppSelector(selectLastBalancesReport)
-  const lastBalancesReportValue = useAppSelector(selectLastBalancesReportValue)
-  const walletIsFunded = useAppSelector(selectWalletIsFunded)
+  const lastBalancesReport = useSelector(selectLastBalancesReport)
+  const lastBalancesReportValue = useSelector(selectLastBalancesReportValue)
+  const walletIsFunded = useSelector(selectWalletIsFunded)
 
   const signerAccountAddresses = useMemo(() => {
     return Object.values(accounts)
@@ -87,9 +88,9 @@ export function useLastBalancesReporter(): void {
 // Returns a function that checks if the app needs to send a heartbeat action to record anonymous DAU
 // Only logs when the user has allowing product analytics off and a heartbeat has not been sent for the user's local day
 export function useHeartbeatReporter(): void {
-  const dispatch = useAppDispatch()
-  const allowAnalytics = useAppSelector(selectAllowAnalytics)
-  const lastHeartbeat = useAppSelector(selectLastHeartbeat)
+  const dispatch = useDispatch()
+  const allowAnalytics = useSelector(selectAllowAnalytics)
+  const lastHeartbeat = useSelector(selectLastHeartbeat)
 
   const nowDate = new Date(Date.now())
   const lastHeartbeatDate = new Date(lastHeartbeat)

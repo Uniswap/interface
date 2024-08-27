@@ -1,3 +1,4 @@
+import { useSelector } from 'react-redux'
 import { DappConnectedNotification } from 'wallet/src/features/notifications/components/DappConnectedNotification'
 import { DappDisconnectedNotification } from 'wallet/src/features/notifications/components/DappDisconnectedNotification'
 import { NotSupportedNetworkNotification } from 'wallet/src/features/notifications/components/NotSupportedNetworkNotification'
@@ -5,10 +6,9 @@ import { PasswordChangedNotification } from 'wallet/src/features/notifications/c
 import { SharedNotificationToastRouter } from 'wallet/src/features/notifications/components/SharedNotificationToastRouter'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
 import { AppNotification, AppNotificationType } from 'wallet/src/features/notifications/types'
-import { useAppSelector } from 'wallet/src/state'
 
 export function NotificationToastWrapper(): JSX.Element | null {
-  const notifications = useAppSelector(selectActiveAccountNotifications)
+  const notifications = useSelector(selectActiveAccountNotifications)
   const notification = notifications?.[0]
 
   if (!notification) {

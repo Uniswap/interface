@@ -1,10 +1,8 @@
-import { RemoveScroll } from '@tamagui/remove-scroll'
 import { ScrollBarStyles } from 'components/Common'
 import { NAV_BREAKPOINT, useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
-import Row from 'components/Row'
+import styled from 'lib/styled-components'
 import { ReactNode, RefObject } from 'react'
-import styled from 'styled-components'
-import { Popover } from 'ui/src'
+import { Flex, Popover, RemoveScroll } from 'ui/src'
 
 const NavDropdownContent = styled.div<{ $width?: number }>`
   border-radius: 16px;
@@ -35,9 +33,10 @@ interface NavDropdownProps {
   isOpen: boolean
   width?: number
   dropdownRef?: RefObject<HTMLDivElement>
+  dataTestId?: string
 }
 
-export function NavDropdown({ children, width, dropdownRef, isOpen }: NavDropdownProps) {
+export function NavDropdown({ children, width, dropdownRef, isOpen, dataTestId }: NavDropdownProps) {
   const isMobileDrawer = useIsMobileDrawer()
 
   return (
@@ -56,9 +55,10 @@ export function NavDropdown({ children, width, dropdownRef, isOpen }: NavDropdow
             },
           },
         ]}
+        data-testid={dataTestId}
       >
         <Popover.Arrow />
-        <NavDropdownContent ref={dropdownRef} $width={width}>
+        <NavDropdownContent data-testid={dataTestId} ref={dropdownRef} $width={width}>
           {children}
         </NavDropdownContent>
       </Popover.Content>
@@ -75,9 +75,9 @@ export function NavDropdown({ children, width, dropdownRef, isOpen }: NavDropdow
             />
             <Popover.Sheet.Frame borderTopLeftRadius="$rounded16" borderTopRightRadius="$rounded16">
               <Popover.Sheet.ScrollView>
-                <Row width="full" justify="center" mt={2}>
+                <Flex row justifyContent="center" mt="$spacing8">
                   <Popover.Sheet.Handle width={32} height={4} backgroundColor="$surface3" />
-                </Row>
+                </Flex>
                 <Popover.Adapt.Contents dismissOnSnapToBottom />
               </Popover.Sheet.ScrollView>
             </Popover.Sheet.Frame>

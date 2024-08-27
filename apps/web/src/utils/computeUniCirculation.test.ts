@@ -21,17 +21,17 @@ describe('computeUniCirculation', () => {
   })
   it('mid staking', () => {
     expect(computeUniCirculation(token, BigNumber.from(1600387200 + 15 * 24 * 60 * 60), undefined)).toEqual(
-      tokenAmount(155_000_000)
+      tokenAmount(155_000_000),
     )
   })
   it('after staking and treasury vesting cliff', () => {
     expect(computeUniCirculation(token, BigNumber.from(1600387200 + 60 * 24 * 60 * 60), undefined)).toEqual(
-      tokenAmount(224_575_341)
+      tokenAmount(224_575_341),
     )
   })
   it('subtracts unclaimed uni', () => {
     expect(computeUniCirculation(token, BigNumber.from(1600387200 + 15 * 24 * 60 * 60), tokenAmount(1000))).toEqual(
-      tokenAmount(154_999_000)
+      tokenAmount(154_999_000),
     )
   })
 })

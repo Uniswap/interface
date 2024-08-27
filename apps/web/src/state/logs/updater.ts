@@ -14,7 +14,7 @@ export default function Updater(): null {
   const { chainId } = useAccount()
   const { provider } = useWeb3React()
 
-  const blockNumber = useBlockNumber()
+  const blockNumber = useBlockNumber
 
   const filtersNeedFetch: Filter[] = useMemo(() => {
     if (!chainId || typeof blockNumber !== 'number') {

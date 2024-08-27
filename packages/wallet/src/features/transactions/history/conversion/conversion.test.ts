@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
+import { DAI } from 'uniswap/src/constants/tokens'
 import {
   Chain,
   Currency,
@@ -10,7 +11,6 @@ import {
   TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { DAI } from 'wallet/src/constants/tokens'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
 import parseApproveTransaction from 'wallet/src/features/transactions/history/conversion/parseApproveTransaction'
@@ -19,11 +19,7 @@ import parseOnRampTransaction from 'wallet/src/features/transactions/history/con
 import parseReceiveTransaction from 'wallet/src/features/transactions/history/conversion/parseReceiveTransaction'
 import parseSendTransaction from 'wallet/src/features/transactions/history/conversion/parseSendTransaction'
 import parseTradeTransaction from 'wallet/src/features/transactions/history/conversion/parseTradeTransaction'
-import {
-  NFTTradeType,
-  TransactionListQueryResponse,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
+import { NFTTradeType, TransactionListQueryResponse, TransactionType } from 'wallet/src/features/transactions/types'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
 
 /**
@@ -151,6 +147,7 @@ const ONRAMP_TRANSFER_ASSET_CHANGE = {
   __typename: 'OnRampTransfer' as const,
   id: ASSET_CHANGE_ID,
   transactionReferenceId: 'transaction_reference_id',
+  externalSessionId: 'external_session_id',
   token: {
     id: 'asset_id',
     symbol: 'asset_symbol',

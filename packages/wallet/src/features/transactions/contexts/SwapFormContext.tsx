@@ -10,11 +10,14 @@ import {
   useState,
 } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { CurrencyField, TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
+import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 import { useSwapAnalytics } from 'wallet/src/features/transactions/swap/analytics'
 import { useDerivedSwapInfo } from 'wallet/src/features/transactions/swap/trade/hooks/useDerivedSwapInfo'
-import { CurrencyField, TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
 
 export type SwapFormState = {
   customSlippageTolerance?: number
@@ -50,7 +53,7 @@ const ETH_TRADEABLE_ASSET: Readonly<TradeableAsset> = {
   type: AssetType.Currency,
 }
 
-const DEFAULT_STATE: Readonly<SwapFormState> = {
+const DEFAULT_STATE: Readonly<Omit<SwapFormState, 'account'>> = {
   exactAmountFiat: undefined,
   exactAmountToken: '',
   exactCurrencyField: CurrencyField.INPUT,
@@ -75,6 +78,7 @@ export function SwapFormContextProvider({
   const exactAmountFiatRef = useRef<string>('')
   const exactAmountTokenRef = useRef<string>('')
   const [swapForm, setSwapForm] = useState<SwapFormState>(prefilledState ?? DEFAULT_STATE)
+  const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
 
   const updateSwapForm = useCallback(
     (newState: Parameters<SwapFormContextState['updateSwapForm']>[0]): void => {
@@ -90,9 +94,13 @@ export function SwapFormContextProvider({
         exactAmountTokenRef.current = newState.exactAmountToken ?? ''
       }
 
-      setSwapForm((prevState) => ({ ...prevState, ...newState }))
+      setSwapForm((prevState) => {
+        const updatedState = { ...prevState, ...newState }
+        logContextUpdate('SwapFormContext', updatedState, datadogEnabled)
+        return updatedState
+      })
     },
-    [setSwapForm],
+    [setSwapForm, datadogEnabled],
   )
 
   const derivedSwapInfo = useDerivedSwapInfo({

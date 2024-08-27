@@ -10,11 +10,11 @@ import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
 import Column from 'components/Column'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
-import { Plural, Trans, t } from 'i18n'
+import styled from 'lib/styled-components'
 import { useMemo, useState } from 'react'
 import { UniswapXOrderDetails } from 'state/signatures/types'
-import styled from 'styled-components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { Trans, t } from 'uniswap/src/i18n'
 
 const Container = styled(Column)`
   height: 100%;
@@ -72,11 +72,7 @@ export function LimitsMenu({ onClose, account }: { account: string; onClose: () 
             size={ButtonSize.medium}
             disabled={cancelState !== CancellationState.NOT_STARTED || selectedOrders.length === 0}
           >
-            <Plural
-              value={selectedOrders.length}
-              one={t('common.limit.cancel')}
-              other={t('common.limit.cancel.amount', { count: selectedOrders.length })}
-            />
+            {t('common.limit.cancel', { count: selectedOrders.length })}
           </StyledCancelButton>
         )}
       </Container>

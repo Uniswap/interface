@@ -29,15 +29,15 @@ test.each([...collections])('should inject metadata for collections', async (col
   expect(body).toContain(`<meta property="og:type" content="website" data-rh="true">`)
   expect(body).toContain(`<meta property="og:url" content="${url}" data-rh="true">`)
   expect(body).toContain(
-    `<meta property="og:image:alt" content="${collection.collectionName} on Uniswap" data-rh="true">`
+    `<meta property="og:image:alt" content="${collection.collectionName} on Uniswap" data-rh="true">`,
   )
   expect(body).toContain(`<meta property="twitter:card" content="summary_large_image" data-rh="true">`)
   expect(body).toContain(
-    `<meta property="twitter:title" content="${collection.collectionName} on Uniswap" data-rh="true">`
+    `<meta property="twitter:title" content="${collection.collectionName} on Uniswap" data-rh="true">`,
   )
   expect(body).toContain(`<meta property="twitter:image" content="${collection.image}" data-rh="true">`)
   expect(body).toContain(
-    `<meta property="twitter:image:alt" content="${collection.collectionName} on Uniswap" data-rh="true">`
+    `<meta property="twitter:image:alt" content="${collection.collectionName} on Uniswap" data-rh="true">`,
   )
 })
 
@@ -69,5 +69,5 @@ test.each([...invalidCollections, ...nonexistentCollections])(
     expect(body).not.toContain('twitter:title')
     expect(body).not.toContain('twitter:image')
     expect(body).not.toContain('twitter:image:alt')
-  }
+  },
 )

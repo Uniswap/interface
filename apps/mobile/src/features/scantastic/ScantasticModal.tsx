@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { closeAllModals } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
@@ -14,7 +14,6 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
-import { ExtensionOnboardingState, setExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -35,7 +34,7 @@ interface OtpStateApiResponse {
 export function ScantasticModal(): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   // Use the first mnemonic account because zero-balance mnemonic accounts will fail to retrieve the mnemonic from rnEthers
   const account = useSignerAccounts().sort(
@@ -46,7 +45,7 @@ export function ScantasticModal(): JSX.Element | null {
     throw new Error('This should not be accessed with no mnemonic accounts')
   }
 
-  const { initialState } = useAppSelector(selectModalState(ModalName.Scantastic))
+  const { initialState } = useSelector(selectModalState(ModalName.Scantastic))
   const params = initialState?.params
 
   const [OTP, setOTP] = useState('')
@@ -78,7 +77,6 @@ export function ScantasticModal(): JSX.Element | null {
         hideDelay: 6 * ONE_SECOND_MS,
       }),
     )
-    dispatch(setExtensionOnboardingState(ExtensionOnboardingState.Completed))
     dispatch(closeAllModals())
   }
 

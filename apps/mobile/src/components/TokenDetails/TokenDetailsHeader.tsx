@@ -7,6 +7,7 @@ import {
   TokenDetailsScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export interface TokenDetailsHeaderProps {
   data?: TokenDetailsScreenQuery
@@ -31,7 +32,14 @@ export function TokenDetailsHeader({
         url={tokenProject?.logoUrl ?? undefined}
       />
       <Flex row alignItems="center" gap="$spacing8">
-        <Text color="$neutral1" loading={loading} numberOfLines={1} style={flexStyles.shrink} variant="subheading1">
+        <Text
+          color="$neutral1"
+          loading={loading}
+          numberOfLines={1}
+          style={flexStyles.shrink}
+          testID={TestID.TokenDetailsHeaderText}
+          variant="subheading1"
+        >
           {tokenProject?.name ?? '—'}
         </Text>
         {/* Suppress warning icon on low warning level */}

@@ -12,7 +12,7 @@ import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useMemo } from 'react'
 import { SendState } from 'state/send/SendContext'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useUnitagByAddress, useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { isAddress } from 'utilities/src/addresses'
 import { useCreateTransferTransaction } from 'utils/transfer'
@@ -86,7 +86,11 @@ export function useDerivedSendInfo(state: SendState): SendInfo {
     useMemo(() => [inputCurrency, nativeCurrency], [inputCurrency, nativeCurrency]),
   )
 
-  const exactAmountOut = useUSDTokenUpdater(inputInFiat, exactAmountToken ?? exactAmountFiat, inputCurrency)
+  const { formattedAmount: exactAmountOut } = useUSDTokenUpdater(
+    inputInFiat,
+    exactAmountToken ?? exactAmountFiat,
+    inputCurrency,
+  )
   const parsedTokenAmount = useMemo(() => {
     return tryParseCurrencyAmount(inputInFiat ? exactAmountOut : exactAmountToken, inputCurrency)
   }, [exactAmountOut, exactAmountToken, inputCurrency, inputInFiat])

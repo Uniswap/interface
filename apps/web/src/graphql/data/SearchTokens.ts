@@ -8,10 +8,9 @@ import {
   Token,
   useSearchTokensWebQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 
 const ARB_ADDRESS = ARB.address.toLowerCase()
-
-export type SearchToken = NonNullable<NonNullable<SearchTokensWebQuery['searchTokens']>[number]>
 
 /* Returns the more relevant cross-chain token based on native status and search chain */
 function dedupeCrosschainTokens(current: SearchToken, existing: SearchToken | undefined, searchChain: Chain) {
@@ -107,3 +106,14 @@ export function useSearchTokens(searchQuery: string | undefined, chainId: Suppor
     error,
   }
 }
+
+export type TokenSearchResultWeb = Omit<TokenSearchResult, 'type'> & {
+  type: SearchResultType.Token | SearchResultType.NFTCollection
+  address: string
+  chain: Chain
+  isNft?: boolean
+  isToken?: boolean
+  isNative?: boolean
+}
+
+export type SearchToken = NonNullable<NonNullable<SearchTokensWebQuery['searchTokens']>[number]>

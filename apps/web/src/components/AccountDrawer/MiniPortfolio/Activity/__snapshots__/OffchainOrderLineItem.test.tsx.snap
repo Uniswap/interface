@@ -83,36 +83,41 @@ exports[`OffchainOrderLineItem should render type EXCHANGE_RATE 1`] = `
 }
 
 <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1 c2"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c3 c4 css-142zc9n"
-          data-testid="swap-li-label"
+          class="c0 c1 c2"
         >
-          Rate
-        </div>
-        <div
-          class="c3 c5 css-142zc9n"
-        >
-          <button
-            class="c6"
-            title="1 USDC = <0.00001 DAI "
+          <div
+            class="c3 c4 css-142zc9n"
+            data-testid="swap-li-label"
           >
-            <div
-              class="c3 css-142zc9n"
+            Rate
+          </div>
+          <div
+            class="c3 c5 css-142zc9n"
+          >
+            <button
+              class="c6"
+              title="1 USDC = <0.00001 DAI "
             >
-              1 USDC = &lt;0.00001 DAI 
-            </div>
-             
-          </button>
+              <div
+                class="c3 css-142zc9n"
+              >
+                1 USDC = &lt;0.00001 DAI 
+              </div>
+               
+            </button>
+          </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -169,28 +174,33 @@ exports[`OffchainOrderLineItem should render type NETWORK_COST 1`] = `
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1 c2"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c3 c4 css-142zc9n"
-          data-testid="swap-li-label"
+          class="c0 c1 c2"
         >
-          Network cost
+          <div
+            class="c3 c4 css-142zc9n"
+            data-testid="swap-li-label"
+          >
+            Network cost
+          </div>
+          <div
+            class="c3 c5 css-142zc9n"
+          >
+            <span>
+              $0
+            </span>
+          </div>
         </div>
-        <div
-          class="c3 c5 css-142zc9n"
-        >
-          <span>
-            $0
-          </span>
-        </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -266,33 +276,38 @@ exports[`OffchainOrderLineItem should render type TRANSACTION_ID 1`] = `
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1 c2"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c3 c4 css-142zc9n"
-          data-testid="swap-li-label"
+          class="c0 c1 c2"
         >
-          Transaction ID
-        </div>
-        <div
-          class="c3 c5 css-142zc9n"
-        >
-          <a
-            class="c6"
-            href="https://etherscan.io/tx/0x123"
-            rel="noopener noreferrer"
-            target="_blank"
+          <div
+            class="c3 c4 css-142zc9n"
+            data-testid="swap-li-label"
           >
-            0x12...x123
-          </a>
+            Transaction ID
+          </div>
+          <div
+            class="c3 c5 css-142zc9n"
+          >
+            <a
+              class="c6"
+              href="https://etherscan.io/tx/0x123"
+              rel="noopener noreferrer"
+              target="_blank"
+            >
+              0x12...x123
+            </a>
+          </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>

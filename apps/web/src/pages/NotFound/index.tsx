@@ -3,12 +3,12 @@ import darkImage from 'assets/images/404-page-dark.png'
 import lightImage from 'assets/images/404-page-light.png'
 import { SmallButtonPrimary } from 'components/Button'
 import { useIsMobile } from 'hooks/screenSize'
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 
 const Image = styled.img`
   max-width: 510px;

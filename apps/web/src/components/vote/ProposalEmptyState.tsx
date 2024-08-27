@@ -1,7 +1,7 @@
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const EmptyProposals = styled.div`

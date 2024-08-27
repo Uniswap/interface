@@ -84,6 +84,12 @@ if (isCI && sentryPropertiesAvailable && !isDetox) {
   }
 }
 
+boolean datadogPropertiesAvailable = System.getenv('DATADOG_API_KEY') != null
+
+if (isCI && datadogPropertiesAvailable && !isDetox) {
+  apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
+}
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 
@@ -131,17 +137,17 @@ android {
       dev {
         isDefault(true)
         applicationIdSuffix ".dev"
-        versionName "1.31"
+        versionName "1.33"
         dimension "variant"
       }
       beta {
         applicationIdSuffix ".beta"
-        versionName "1.31"
+        versionName "1.33"
         dimension "variant"
       }
       prod {
         dimension "variant"
-        versionName "1.31"
+        versionName "1.33"
       }
     }
 

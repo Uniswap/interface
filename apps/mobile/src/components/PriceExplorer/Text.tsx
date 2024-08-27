@@ -6,6 +6,7 @@ import { useLineChartPrice, useLineChartRelativeChange } from 'src/components/Pr
 import { AnimatedText } from 'src/components/text/AnimatedText'
 import { Flex, useSporeColors } from 'ui/src'
 import { AnimatedCaretChange } from 'ui/src/components/icons'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isAndroid } from 'utilities/src/platform'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
@@ -32,7 +33,7 @@ export function PriceText({ maxWidth }: { loading: boolean; maxWidth?: number })
       maxWidth={maxWidth}
       number={price}
       separator={decimalSeparator}
-      testID="price-text"
+      testID={TestID.PriceText}
       variant="heading1"
     />
   )
@@ -60,7 +61,13 @@ export function RelativeChangeText({ loading }: { loading: boolean }): JSX.Eleme
   }
 
   return (
-    <Flex row alignItems={isAndroid ? 'center' : 'flex-end'} gap="$spacing2" mt={isAndroid ? '$none' : '$spacing2'}>
+    <Flex
+      row
+      alignItems={isAndroid ? 'center' : 'flex-end'}
+      gap="$spacing2"
+      mt={isAndroid ? '$none' : '$spacing2'}
+      testID={TestID.RelativePriceChange}
+    >
       <AnimatedCaretChange
         size="$icon.16"
         strokeWidth={2}

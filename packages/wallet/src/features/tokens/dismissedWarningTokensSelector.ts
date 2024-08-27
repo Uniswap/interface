@@ -1,9 +1,9 @@
-import type { SharedState } from 'wallet/src/state/reducer'
+import type { WalletState } from 'wallet/src/state/walletReducer'
 
 // selectors
 
 export const dismissedWarningTokensSelector = (
-  state: SharedState,
+  state: WalletState,
 ): {
   [currencyId: string]: boolean
 } => state.tokens.dismissedWarningTokens

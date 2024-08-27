@@ -32,15 +32,15 @@ test.each(assets)('should inject metadata for valid assets', async (nft) => {
   expect(body).toContain(`<meta property="og:type" content="website" data-rh="true">`)
   expect(body).toContain(`<meta property="og:url" content="${url}" data-rh="true">`)
   expect(body).toContain(
-    `<meta property="og:image:alt" content="${nft.collectionName} #${nft.assetId}" data-rh="true">`
+    `<meta property="og:image:alt" content="${nft.collectionName} #${nft.assetId}" data-rh="true">`,
   )
   expect(body).toContain(`<meta property="twitter:card" content="summary_large_image" data-rh="true">`)
   expect(body).toContain(
-    `<meta property="twitter:title" content="${nft.collectionName} #${nft.assetId}" data-rh="true">`
+    `<meta property="twitter:title" content="${nft.collectionName} #${nft.assetId}" data-rh="true">`,
   )
   expect(body).toContain(`<meta property="twitter:image" content="${nft.image}" data-rh="true">`)
   expect(body).toContain(
-    `<meta property="twitter:image:alt" content="${nft.collectionName} #${nft.assetId}" data-rh="true">`
+    `<meta property="twitter:image:alt" content="${nft.collectionName} #${nft.assetId}" data-rh="true">`,
   )
 })
 

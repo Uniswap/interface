@@ -9,6 +9,7 @@ import {
 } from 'wallet/src/features/transactions/swap/TransactionModalProps'
 
 export function TransactionModal({
+  account,
   children,
   onClose,
   openWalletRestoreModal,
@@ -17,6 +18,7 @@ export function TransactionModal({
   return (
     <Flex fill justifyContent="flex-end">
       <TransactionModalContextProvider
+        account={account}
         bottomSheetViewStyles={{}}
         openWalletRestoreModal={openWalletRestoreModal}
         walletNeedsRestore={walletNeedsRestore}

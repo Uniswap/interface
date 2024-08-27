@@ -1,3 +1,6 @@
+import { AssetType } from 'uniswap/src/entities/assets'
+import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
+import { createFixture } from 'uniswap/src/test/utils'
 import { UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import {
@@ -6,11 +9,9 @@ import {
   LogoWithTxStatus,
   LogoWithTxStatusProps,
 } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import { AssetType } from 'wallet/src/entities/assets'
 import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'wallet/src/test/fixtures/wallet/currencies'
 import { render } from 'wallet/src/test/test-utils'
-import { createFixture, randomChoice, randomEnumValue } from 'wallet/src/test/utils'
+import { randomChoice, randomEnumValue } from 'wallet/src/test/utils'
 
 const currencyLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
   assetType: AssetType.Currency,

@@ -29,7 +29,7 @@ exports[`renders a relative change 1`] = `
           "borderWidth": 0,
         },
         {
-          "color": "#40B66B",
+          "color": "#21C95E",
           "height": 16,
           "transform": [
             {
@@ -45,7 +45,7 @@ exports[`renders a relative change 1`] = `
         },
       ]
     }
-    tintColor="#40B66B"
+    tintColor="#21C95E"
     vbHeight={24}
     vbWidth={24}
   >
@@ -93,6 +93,7 @@ exports[`renders a relative change 1`] = `
         }
       }
       suppressHighlighting={true}
+      testID="portfolio-relative-change"
     >
       12%
     </Text>
@@ -129,7 +130,7 @@ exports[`renders placeholders with absolute change 1`] = `
           "borderWidth": 0,
         },
         {
-          "color": "#40B66B",
+          "color": "#21C95E",
           "height": 16,
           "transform": [
             {
@@ -145,7 +146,7 @@ exports[`renders placeholders with absolute change 1`] = `
         },
       ]
     }
-    tintColor="#40B66B"
+    tintColor="#21C95E"
     vbHeight={24}
     vbWidth={24}
   >
@@ -193,6 +194,7 @@ exports[`renders placeholders with absolute change 1`] = `
         }
       }
       suppressHighlighting={true}
+      testID="portfolio-relative-change"
     >
       $100.00 (12%)
     </Text>
@@ -231,6 +233,7 @@ exports[`renders placeholders without a change 1`] = `
         }
       }
       suppressHighlighting={true}
+      testID="portfolio-relative-change"
     >
       -
     </Text>

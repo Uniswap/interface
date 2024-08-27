@@ -1,16 +1,17 @@
 import React, { PropsWithChildren, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { ImpactFeedbackStyle, TouchableArea } from 'ui/src'
+import { SearchContext } from 'uniswap/src/features/search/SearchContext'
+import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
-import { SearchContext } from 'wallet/src/features/search/SearchContext'
-import { SearchResultType, WalletSearchResult, extractDomain } from 'wallet/src/features/search/SearchResult'
+import { WalletSearchResult, extractDomain } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 
 type SearchWalletItemBaseProps = {
@@ -24,10 +25,10 @@ export function SearchWalletItemBase({
   searchContext,
 }: PropsWithChildren<SearchWalletItemBaseProps>): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { preload, navigate } = useEagerExternalProfileNavigation()
   const { address, type } = searchResult
-  const isFavorited = useAppSelector(selectWatchedAddressSet).has(address)
+  const isFavorited = useSelector(selectWatchedAddressSet).has(address)
 
   const onPress = (): void => {
     navigate(address)

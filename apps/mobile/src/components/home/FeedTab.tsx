@@ -2,7 +2,7 @@ import { ForwardedRef, forwardRef, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { AnimatedFlatList } from 'src/components/layout/AnimatedFlatList'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
@@ -18,7 +18,6 @@ import { isAndroid } from 'utilities/src/platform'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useFormattedTransactionDataForFeed } from 'wallet/src/features/activity/hooks'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 
@@ -40,11 +39,11 @@ export const FeedTab = memo(
     ref,
   ) {
     const { t } = useTranslation()
-    const dispatch = useAppDispatch()
+    const dispatch = useDispatch()
     const colors = useSporeColors()
     const insets = useDeviceInsets()
 
-    const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
+    const watchedWalletsSet = useSelector(selectWatchedAddressSet)
     const watchedWalletsList = useMemo(() => Array.from(watchedWalletsSet), [watchedWalletsSet])
 
     const { onContentSizeChange } = useAdaptiveFooter(containerProps?.contentContainerStyle)
@@ -53,13 +52,7 @@ export const FeedTab = memo(
     const hideSpamTokens = useHideSpamTokensSetting()
 
     const renderActivityItem = useMemo(() => {
-      return generateActivityItemRenderer(
-        TransactionSummaryLayout,
-        <Loader.Transaction />,
-        SectionTitle,
-        undefined,
-        undefined,
-      )
+      return generateActivityItemRenderer(<Loader.Transaction />, SectionTitle, undefined, undefined)
     }, [])
 
     const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } = useFormattedTransactionDataForFeed(

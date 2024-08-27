@@ -15,7 +15,7 @@ export type WarningModalProps = {
   onConfirm?: () => void
   modalName: ModalNameType
   title: ReactNode
-  caption?: string
+  caption?: ReactNode
   closeText?: string
   confirmText?: string
   severity?: WarningSeverity
@@ -89,7 +89,7 @@ export function WarningModal({
           {title}
         </Text>
         {caption && (
-          <Text color="$neutral2" textAlign="center" variant={isWeb ? 'body3' : 'body2'}>
+          <Text color="$neutral2" textAlign="center" variant="body3">
             {caption}
           </Text>
         )}

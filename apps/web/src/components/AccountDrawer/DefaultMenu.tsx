@@ -2,11 +2,13 @@ import AuthenticatedHeader from 'components/AccountDrawer/AuthenticatedHeader'
 import LanguageMenu from 'components/AccountDrawer/LanguageMenu'
 import LocalCurrencyMenu from 'components/AccountDrawer/LocalCurrencyMenu'
 import { LimitsMenu } from 'components/AccountDrawer/MiniPortfolio/Limits/LimitsMenu'
+import { UniExtensionPoolsMenu } from 'components/AccountDrawer/MiniPortfolio/Pools/UniExtensionPoolsMenu'
 import SettingsMenu from 'components/AccountDrawer/SettingsMenu'
 import Column from 'components/Column'
 import WalletModal from 'components/WalletModal'
 import { useAccount } from 'hooks/useAccount'
 import { atom, useAtom } from 'jotai'
+import styled from 'lib/styled-components'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
@@ -25,6 +27,7 @@ export enum MenuState {
   LANGUAGE_SETTINGS = 'language_settings',
   LOCAL_CURRENCY_SETTINGS = 'local_currency_settings',
   LIMITS = 'limits',
+  POOLS = 'pools',
 }
 
 export const miniPortfolioMenuStateAtom = atom(MenuState.DEFAULT)
@@ -73,7 +76,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
             openSettings={openSettings}
           />
         ) : (
-          <WalletModal openSettings={openSettings} />
+          <WalletModal />
         )
       case MenuState.SETTINGS:
         return (
@@ -89,6 +92,8 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
         return <LocalCurrencyMenu onClose={openSettings} />
       case MenuState.LIMITS:
         return account.address ? <LimitsMenu onClose={closeLimitsMenu} account={account.address} /> : null
+      case MenuState.POOLS:
+        return account.address ? <UniExtensionPoolsMenu account={account.address} onClose={closeLimitsMenu} /> : null
     }
   }, [
     account.address,

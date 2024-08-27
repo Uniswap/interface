@@ -1,22 +1,21 @@
 import { providers } from 'ethers'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { iconSizes } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { NumberType } from 'utilities/src/format/types'
-import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
+import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import { TransactionReview } from 'wallet/src/features/transactions/TransactionReview/TransactionReview'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountAddressWithThrow, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TransferFormProps {
@@ -119,7 +118,7 @@ export function TransferReview({
         recipient={recipient}
         transactionDetails={
           <TransactionDetails
-            AccountDetails={<AccountDetails address={userAddress} iconSize={iconSizes.icon20} />}
+            AccountDetails={<AddressFooter activeAccountAddress={userAddress} />}
             chainId={chainId}
             gasFee={gasFee}
             showWarning={Boolean(transferWarning)}

@@ -151,136 +151,149 @@ exports[`SwapPreview.tsx matches base snapshot, test trade exact input 1`] = `
 }
 
 <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2"
+          class="c0 c1"
         >
           <div
-            class="c3 c4"
+            class="c2"
           >
             <div
-              class="c5"
+              class="c3 c4"
             >
-              <div
-                class="c6 css-1urox24"
-              >
-                <div
-                  class="c7"
-                >
-                  <div>
-                    <div
-                      class="c8 c9 css-142zc9n"
-                    >
-                      Sell
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div
                 class="c5"
               >
                 <div
-                  class="c10 css-15popx1"
-                  data-testid="INPUT-amount"
+                  class="c6 css-1urox24"
                 >
-                  &lt;0.00001 ABC
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  -
-                </div>
-              </div>
-            </div>
-            <div
-              class="c11"
-              style="height: 36px; width: 36px;"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c13"
-                  size="36"
-                >
-                   
-                  <img
-                    class="c14"
-                    size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4"
-          >
-            <div
-              class="c5"
-            >
-              <div
-                class="c6 css-1urox24"
-              >
-                <div
-                  class="c7"
-                >
-                  <div>
-                    <div
-                      class="c8 c15 css-142zc9n"
-                      cursor="help"
-                    >
-                      Buy
+                  <div
+                    class="c7"
+                  >
+                    <div>
+                      <div
+                        class="c8 c9 css-142zc9n"
+                      >
+                        Sell
+                      </div>
                     </div>
+                  </div>
+                </div>
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="c10 css-15popx1"
+                    data-testid="INPUT-amount"
+                  >
+                    &lt;0.00001 ABC
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    -
                   </div>
                 </div>
               </div>
               <div
-                class="c5"
+                class="c11"
+                style="height: 36px; width: 36px;"
               >
                 <div
-                  class="c10 css-15popx1"
-                  data-testid="OUTPUT-amount"
+                  class="c12"
                 >
-                  &lt;0.00001 DEF
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  -
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                  >
+                    <div
+                      class="c13"
+                      size="36"
+                    >
+                       
+                      <img
+                        class="c14"
+                        size="36"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div
-              class="c11"
-              style="height: 36px; width: 36px;"
+              class="c3 c4"
             >
               <div
-                class="c12"
+                class="c5"
               >
                 <div
-                  class="c13"
-                  size="36"
+                  class="c6 css-1urox24"
                 >
-                   
-                  <img
-                    class="c14"
-                    size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                  />
+                  <div
+                    class="c7"
+                  >
+                    <div>
+                      <div
+                        class="c8 c15 css-142zc9n"
+                        cursor="help"
+                      >
+                        Buy
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="c10 css-15popx1"
+                    data-testid="OUTPUT-amount"
+                  >
+                    &lt;0.00001 DEF
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    -
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c11"
+                style="height: 36px; width: 36px;"
+              >
+                <div
+                  class="c12"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                  >
+                    <div
+                      class="c13"
+                      size="36"
+                    >
+                       
+                      <img
+                        class="c14"
+                        size="36"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -437,136 +450,149 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX swap 
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2"
+          class="c0 c1"
         >
           <div
-            class="c3 c4"
+            class="c2"
           >
             <div
-              class="c5"
+              class="c3 c4"
             >
-              <div
-                class="c6 css-1urox24"
-              >
-                <div
-                  class="c7"
-                >
-                  <div>
-                    <div
-                      class="c8 c9 css-142zc9n"
-                    >
-                      Sell
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div
                 class="c5"
               >
                 <div
-                  class="c10 css-15popx1"
-                  data-testid="INPUT-amount"
+                  class="c6 css-1urox24"
                 >
-                  &lt;0.00001 ETH
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  -
-                </div>
-              </div>
-            </div>
-            <div
-              class="c11"
-              style="height: 36px; width: 36px;"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c13"
-                  size="36"
-                >
-                   
-                  <img
-                    class="c14"
-                    size="36"
-                    src="ethereum-logo.png"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4"
-          >
-            <div
-              class="c5"
-            >
-              <div
-                class="c6 css-1urox24"
-              >
-                <div
-                  class="c7"
-                >
-                  <div>
-                    <div
-                      class="c8 c15 css-142zc9n"
-                      cursor="help"
-                    >
-                      Buy
+                  <div
+                    class="c7"
+                  >
+                    <div>
+                      <div
+                        class="c8 c9 css-142zc9n"
+                      >
+                        Sell
+                      </div>
                     </div>
+                  </div>
+                </div>
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="c10 css-15popx1"
+                    data-testid="INPUT-amount"
+                  >
+                    &lt;0.00001 ETH
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    -
                   </div>
                 </div>
               </div>
               <div
-                class="c5"
+                class="c11"
+                style="height: 36px; width: 36px;"
               >
                 <div
-                  class="c10 css-15popx1"
-                  data-testid="OUTPUT-amount"
+                  class="c12"
                 >
-                  &lt;0.00001 DEF
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  -
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                  >
+                    <div
+                      class="c13"
+                      size="36"
+                    >
+                       
+                      <img
+                        class="c14"
+                        size="36"
+                        src="ethereum-logo.png"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div
-              class="c11"
-              style="height: 36px; width: 36px;"
+              class="c3 c4"
             >
               <div
-                class="c12"
+                class="c5"
               >
                 <div
-                  class="c13"
-                  size="36"
+                  class="c6 css-1urox24"
                 >
-                   
-                  <img
-                    class="c14"
-                    size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                  />
+                  <div
+                    class="c7"
+                  >
+                    <div>
+                      <div
+                        class="c8 c15 css-142zc9n"
+                        cursor="help"
+                      >
+                        Buy
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="c10 css-15popx1"
+                    data-testid="OUTPUT-amount"
+                  >
+                    &lt;0.00001 DEF
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    -
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c11"
+                style="height: 36px; width: 36px;"
+              >
+                <div
+                  class="c12"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                  >
+                    <div
+                      class="c13"
+                      size="36"
+                    >
+                       
+                      <img
+                        class="c14"
+                        size="36"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -723,136 +749,149 @@ exports[`SwapPreview.tsx renders ETH input token for an ETH input UniswapX v2 sw
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2"
+          class="c0 c1"
         >
           <div
-            class="c3 c4"
+            class="c2"
           >
             <div
-              class="c5"
+              class="c3 c4"
             >
-              <div
-                class="c6 css-1urox24"
-              >
-                <div
-                  class="c7"
-                >
-                  <div>
-                    <div
-                      class="c8 c9 css-142zc9n"
-                    >
-                      Sell
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div
                 class="c5"
               >
                 <div
-                  class="c10 css-15popx1"
-                  data-testid="INPUT-amount"
+                  class="c6 css-1urox24"
                 >
-                  &lt;0.00001 ETH
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  -
-                </div>
-              </div>
-            </div>
-            <div
-              class="c11"
-              style="height: 36px; width: 36px;"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c13"
-                  size="36"
-                >
-                   
-                  <img
-                    class="c14"
-                    size="36"
-                    src="ethereum-logo.png"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4"
-          >
-            <div
-              class="c5"
-            >
-              <div
-                class="c6 css-1urox24"
-              >
-                <div
-                  class="c7"
-                >
-                  <div>
-                    <div
-                      class="c8 c15 css-142zc9n"
-                      cursor="help"
-                    >
-                      Buy
+                  <div
+                    class="c7"
+                  >
+                    <div>
+                      <div
+                        class="c8 c9 css-142zc9n"
+                      >
+                        Sell
+                      </div>
                     </div>
+                  </div>
+                </div>
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="c10 css-15popx1"
+                    data-testid="INPUT-amount"
+                  >
+                    &lt;0.00001 ETH
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    -
                   </div>
                 </div>
               </div>
               <div
-                class="c5"
+                class="c11"
+                style="height: 36px; width: 36px;"
               >
                 <div
-                  class="c10 css-15popx1"
-                  data-testid="OUTPUT-amount"
+                  class="c12"
                 >
-                  &lt;0.00001 DEF
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  -
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                  >
+                    <div
+                      class="c13"
+                      size="36"
+                    >
+                       
+                      <img
+                        class="c14"
+                        size="36"
+                        src="ethereum-logo.png"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div
-              class="c11"
-              style="height: 36px; width: 36px;"
+              class="c3 c4"
             >
               <div
-                class="c12"
+                class="c5"
               >
                 <div
-                  class="c13"
-                  size="36"
+                  class="c6 css-1urox24"
                 >
-                   
-                  <img
-                    class="c14"
-                    size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                  />
+                  <div
+                    class="c7"
+                  >
+                    <div>
+                      <div
+                        class="c8 c15 css-142zc9n"
+                        cursor="help"
+                      >
+                        Buy
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="c10 css-15popx1"
+                    data-testid="OUTPUT-amount"
+                  >
+                    &lt;0.00001 DEF
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    -
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c11"
+                style="height: 36px; width: 36px;"
+              >
+                <div
+                  class="c12"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                  >
+                    <div
+                      class="c13"
+                      size="36"
+                    >
+                       
+                      <img
+                        class="c14"
+                        size="36"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -1009,136 +1048,149 @@ exports[`SwapPreview.tsx renders preview trades with loading states 1`] = `
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2"
+          class="c0 c1"
         >
           <div
-            class="c3 c4"
+            class="c2"
           >
             <div
-              class="c5"
+              class="c3 c4"
             >
-              <div
-                class="c6 css-1urox24"
-              >
-                <div
-                  class="c7"
-                >
-                  <div>
-                    <div
-                      class="c8 c9 css-142zc9n"
-                    >
-                      Sell
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div
                 class="c5"
               >
                 <div
-                  class="c10 css-15popx1"
-                  data-testid="INPUT-amount"
+                  class="c6 css-1urox24"
                 >
-                  &lt;0.00001 DEF
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  -
-                </div>
-              </div>
-            </div>
-            <div
-              class="c11"
-              style="height: 36px; width: 36px;"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c13"
-                  size="36"
-                >
-                   
-                  <img
-                    class="c14"
-                    size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4"
-          >
-            <div
-              class="c5"
-            >
-              <div
-                class="c6 css-1urox24"
-              >
-                <div
-                  class="c7"
-                >
-                  <div>
-                    <div
-                      class="c8 c15 css-142zc9n"
-                      cursor="help"
-                    >
-                      Buy
+                  <div
+                    class="c7"
+                  >
+                    <div>
+                      <div
+                        class="c8 c9 css-142zc9n"
+                      >
+                        Sell
+                      </div>
                     </div>
+                  </div>
+                </div>
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="c10 css-15popx1"
+                    data-testid="INPUT-amount"
+                  >
+                    &lt;0.00001 DEF
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    -
                   </div>
                 </div>
               </div>
               <div
-                class="c5"
+                class="c11"
+                style="height: 36px; width: 36px;"
               >
                 <div
-                  class="c6 css-15popx1"
-                  data-testid="OUTPUT-amount"
+                  class="c12"
                 >
-                  &lt;0.00001 DEF
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  -
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                  >
+                    <div
+                      class="c13"
+                      size="36"
+                    >
+                       
+                      <img
+                        class="c14"
+                        size="36"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div
-              class="c11"
-              style="height: 36px; width: 36px;"
+              class="c3 c4"
             >
               <div
-                class="c12"
+                class="c5"
               >
                 <div
-                  class="c13"
-                  size="36"
+                  class="c6 css-1urox24"
                 >
-                   
-                  <img
-                    class="c14"
-                    size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                  />
+                  <div
+                    class="c7"
+                  >
+                    <div>
+                      <div
+                        class="c8 c15 css-142zc9n"
+                        cursor="help"
+                      >
+                        Buy
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="c6 css-15popx1"
+                    data-testid="OUTPUT-amount"
+                  >
+                    &lt;0.00001 DEF
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    -
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c11"
+                style="height: 36px; width: 36px;"
+              >
+                <div
+                  class="c12"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                  >
+                    <div
+                      class="c13"
+                      size="36"
+                    >
+                       
+                      <img
+                        class="c14"
+                        size="36"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -1295,136 +1347,149 @@ exports[`SwapPreview.tsx test trade exact output, no recipient 1`] = `
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2"
+          class="c0 c1"
         >
           <div
-            class="c3 c4"
+            class="c2"
           >
             <div
-              class="c5"
+              class="c3 c4"
             >
-              <div
-                class="c6 css-1urox24"
-              >
-                <div
-                  class="c7"
-                >
-                  <div>
-                    <div
-                      class="c8 c9 css-142zc9n"
-                    >
-                      Sell
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div
                 class="c5"
               >
                 <div
-                  class="c10 css-15popx1"
-                  data-testid="INPUT-amount"
+                  class="c6 css-1urox24"
                 >
-                  &lt;0.00001 ABC
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  -
-                </div>
-              </div>
-            </div>
-            <div
-              class="c11"
-              style="height: 36px; width: 36px;"
-            >
-              <div
-                class="c12"
-              >
-                <div
-                  class="c13"
-                  size="36"
-                >
-                   
-                  <img
-                    class="c14"
-                    size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                  />
-                </div>
-              </div>
-            </div>
-          </div>
-          <div
-            class="c3 c4"
-          >
-            <div
-              class="c5"
-            >
-              <div
-                class="c6 css-1urox24"
-              >
-                <div
-                  class="c7"
-                >
-                  <div>
-                    <div
-                      class="c8 c15 css-142zc9n"
-                      cursor="help"
-                    >
-                      Buy
+                  <div
+                    class="c7"
+                  >
+                    <div>
+                      <div
+                        class="c8 c9 css-142zc9n"
+                      >
+                        Sell
+                      </div>
                     </div>
+                  </div>
+                </div>
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="c10 css-15popx1"
+                    data-testid="INPUT-amount"
+                  >
+                    &lt;0.00001 ABC
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    -
                   </div>
                 </div>
               </div>
               <div
-                class="c5"
+                class="c11"
+                style="height: 36px; width: 36px;"
               >
                 <div
-                  class="c10 css-15popx1"
-                  data-testid="OUTPUT-amount"
+                  class="c12"
                 >
-                  &lt;0.00001 GHI
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  -
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                  >
+                    <div
+                      class="c13"
+                      size="36"
+                    >
+                       
+                      <img
+                        class="c14"
+                        size="36"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
             <div
-              class="c11"
-              style="height: 36px; width: 36px;"
+              class="c3 c4"
             >
               <div
-                class="c12"
+                class="c5"
               >
                 <div
-                  class="c13"
-                  size="36"
+                  class="c6 css-1urox24"
                 >
-                   
-                  <img
-                    class="c14"
-                    size="36"
-                    src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
-                  />
+                  <div
+                    class="c7"
+                  >
+                    <div>
+                      <div
+                        class="c8 c15 css-142zc9n"
+                        cursor="help"
+                      >
+                        Buy
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c5"
+                >
+                  <div
+                    class="c10 css-15popx1"
+                    data-testid="OUTPUT-amount"
+                  >
+                    &lt;0.00001 GHI
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    -
+                  </div>
+                </div>
+              </div>
+              <div
+                class="c11"
+                style="height: 36px; width: 36px;"
+              >
+                <div
+                  class="c12"
+                >
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                  >
+                    <div
+                      class="c13"
+                      size="36"
+                    >
+                       
+                      <img
+                        class="c14"
+                        size="36"
+                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
+                      />
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>

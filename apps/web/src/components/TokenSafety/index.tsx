@@ -11,12 +11,12 @@ import {
   useTokenWarning,
   Warning,
 } from 'constants/tokenSafety'
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
 import { useAddUserToken } from 'state/user/hooks'
-import styled from 'styled-components'
 import { ButtonText, CopyLinkIcon, ExternalLink } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const Wrapper = styled.div`
@@ -92,9 +92,9 @@ const Buttons = ({
     <>
       <StyledButton onClick={onContinue}>
         {!displayWarningLabel(warning) ? (
-          <Trans i18nKey="common.continue.button" />
+          <Trans i18nKey="common.button.continue" />
         ) : (
-          <Trans i18nKey="common.acknowledge" />
+          <Trans i18nKey="common.button.understand" />
         )}
       </StyledButton>
       {showCancel && <StyledCancelButton onClick={onCancel}>Cancel</StyledCancelButton>}
@@ -249,7 +249,7 @@ export default function TokenSafety({ token0, token1, onContinue, onCancel, onBl
   const { heading, description } = getWarningCopy(displayWarning, plural)
   const learnMoreUrl = (
     <StyledExternalLink href={TOKEN_SAFETY_ARTICLE}>
-      <Trans i18nKey="common.learnMore.link" />
+      <Trans i18nKey="common.button.learn" />
     </StyledExternalLink>
   )
 

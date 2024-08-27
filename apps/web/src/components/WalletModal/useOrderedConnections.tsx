@@ -65,7 +65,8 @@ function getInjectedConnectors(connectors: readonly Connector[], excludeUniswapC
   return { injectedConnectors, isCoinbaseWalletBrowser }
 }
 
-export function useOrderedConnections(excludeUniswapConnections?: boolean) {
+type InjectableConnector = Connector & { isInjected?: boolean }
+export function useOrderedConnections(excludeUniswapConnections?: boolean): InjectableConnector[] {
   const { connectors } = useConnect()
   const recentConnectorId = useRecentConnectorId()
 
@@ -83,7 +84,11 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean) {
   )
 
   return useMemo(() => {
-    const { injectedConnectors, isCoinbaseWalletBrowser } = getInjectedConnectors(connectors, excludeUniswapConnections)
+    const { injectedConnectors: injectedConnectorsBase, isCoinbaseWalletBrowser } = getInjectedConnectors(
+      connectors,
+      excludeUniswapConnections,
+    )
+    const injectedConnectors = injectedConnectorsBase.map((c) => ({ ...c, isInjected: true }))
 
     const coinbaseSdkConnector = getConnectorWithId(connectors, CONNECTION.COINBASE_SDK_CONNECTOR_ID, SHOULD_THROW)
     const walletConnectConnector = getConnectorWithId(connectors, CONNECTION.WALLET_CONNECT_CONNECTOR_ID, SHOULD_THROW)
@@ -106,7 +111,7 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean) {
       return [coinbaseSdkConnector]
     }
 
-    const orderedConnectors: Connector[] = []
+    const orderedConnectors: InjectableConnector[] = []
     const shouldDisplayUniswapWallet = !excludeUniswapConnections && (isWebIOS || isWebAndroid || !isTouchable)
 
     // Place the Uniswap Wallet at the top of the list by default.
@@ -125,4 +130,42 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean) {
     orderedConnectors.sort(sortByRecent)
     return orderedConnectors
   }, [connectors, excludeUniswapConnections, sortByRecent])
+}
+
+export enum ExtensionRequestMethods {
+  OPEN_SIDEBAR = 'uniswap_openSidebar',
+}
+
+const ExtensionRequestArguments = {
+  [ExtensionRequestMethods.OPEN_SIDEBAR]: ['Tokens', 'Activity'],
+} as const
+
+export function useUniswapExtensionConnector() {
+  const connector = useConnectorWithId(CONNECTION.UNISWAP_EXTENSION_RDNS)
+  const extensionRequest = useCallback(
+    async <
+      Type extends keyof typeof ExtensionRequestArguments,
+      Key extends (typeof ExtensionRequestArguments)[Type][number],
+    >(
+      method: Type,
+      arg: Key,
+    ) => {
+      const provider = (await connector?.getProvider()) as {
+        request?: (params: { method: Type; params: Key[] }) => Promise<void>
+      }
+      if (!provider.request) {
+        return
+      }
+
+      await provider.request({
+        method,
+        params: [arg],
+      })
+    },
+    [connector],
+  )
+
+  return useMemo(() => {
+    return connector ? { ...connector, extensionRequest } : undefined
+  }, [connector, extensionRequest])
 }

@@ -1,10 +1,10 @@
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { Box, H2 } from 'pages/Landing/components/Generics'
 import { DocumentationCard } from 'pages/Landing/components/cards/DocumentationCard'
 import { DownloadWalletCard } from 'pages/Landing/components/cards/DownloadWalletCard'
 import { LiquidityCard } from 'pages/Landing/components/cards/LiquidityCard'
 import { WebappCard } from 'pages/Landing/components/cards/WebappCard'
-import styled from 'styled-components'
+import { Trans } from 'uniswap/src/i18n'
 
 const SectionLayout = styled.div`
   display: flex;

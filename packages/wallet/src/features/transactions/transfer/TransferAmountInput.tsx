@@ -5,12 +5,12 @@ import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type TransferAmountInputProps = {
@@ -98,16 +98,7 @@ export function TransferAmountInput({
 
   // We ignore this specific warning type because we have dedicated UI for this in the review button
   const warning = insufficientGasFunds ? undefined : formScreenWarning
-
-  const subTextValue = warning
-    ? warning.warning.title
-    : !tokenOrFiatEquivalentAmount
-      ? // Override empty string from useTokenAndFiatDisplayAmounts to keep UI placeholder text consistent
-        isFiatInput
-        ? '0'
-        : '$0'
-      : tokenOrFiatEquivalentAmount
-
+  const subTextValue = warning ? warning.warning.title : tokenOrFiatEquivalentAmount
   const subTextValueColor = warning ? '$statusCritical' : '$neutral2'
   const inputColor = !value ? '$neutral3' : '$neutral1'
 

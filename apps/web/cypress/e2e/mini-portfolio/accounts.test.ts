@@ -115,8 +115,8 @@ describe('Mini Portfolio account drawer', () => {
     cy.get(getTestSelector('close-account-drawer')).click()
 
     // Switch chain to Polygon
-    cy.get(getTestSelector('chain-selector')).eq(1).click()
-    cy.contains('Polygon').click()
+    cy.get(getTestSelector('chain-selector')).click()
+    cy.contains('Polygon').click({ force: true })
 
     //Reopen account drawer
     cy.get(getTestSelector('web3-status-connected')).click()

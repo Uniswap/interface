@@ -10,13 +10,13 @@ import { LoaderV2 } from 'components/Icons/LoadingSpinner'
 import { AutoRow } from 'components/Row'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
-import { Trans } from 'i18n'
 import { atom, useAtom } from 'jotai'
+import styled, { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'
-import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 
 const lastPageAtom = atom(0)
 

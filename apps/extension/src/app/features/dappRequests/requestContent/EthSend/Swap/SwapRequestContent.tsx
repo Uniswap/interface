@@ -1,10 +1,9 @@
-/* eslint-disable complexity */
-import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
-import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
+import { SwapDisplay } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapDisplay'
+import { ETH_ADDRESS } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/constants'
 import { formatUnits } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/utils'
-import { SwapSendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { SignTypedDataRequest, SwapSendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import {
   AmountInMaxParam,
   AmountInParam,
@@ -18,23 +17,15 @@ import {
   isAmountOutParam,
   isURCommandASwap,
 } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
-import { Flex, Separator, Text } from 'ui/src'
-import { ArrowDown } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
-import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { assert } from 'utilities/src/errors'
-import { NumberType } from 'utilities/src/format/types'
-import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
+import { useCurrencyInfo, useNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
-import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 function extractPathValues(commands: UniversalRouterCommand[]): {
   inputAddress: string | undefined
@@ -132,10 +123,8 @@ export function SwapRequestContent({
   onCancel,
   onConfirm,
 }: SwapRequestContentProps): JSX.Element {
-  const { t } = useTranslation()
   const { dappUrl } = useDappRequestQueueContext()
-  const { formatCurrencyAmount } = useLocalizationContext()
-  const activeChain = useDappLastChainId(dappUrl)
+  const activeChain = useDappLastChainId(dappUrl) || UniverseChainId.Mainnet
 
   const { inputIdentifier, outputIdentifier } = useSwapCurrencyIdentifiers(dappRequest, dappUrl)
 
@@ -146,12 +135,15 @@ export function SwapRequestContent({
   const isLastCommandUnwrappingEth =
     dappRequest.parsedCalldata.commands[dappRequest.parsedCalldata.commands.length - 1]?.commandName === 'UnwrapWeth'
 
-  const nativeCurrency = NativeCurrency.onChain(activeChain || UniverseChainId.Mainnet)
+  const nativeCurrencyInfo = useNativeCurrencyInfo(activeChain)
+  const nativeCurrency = nativeCurrencyInfo?.currency
 
-  const nativeInput = isFirstCommandWrappingEth && inputCurrencyInfo?.currency.equals(nativeCurrency.wrapped)
-  const nativeOutput = isLastCommandUnwrappingEth && outputCurrencyInfo?.currency.equals(nativeCurrency.wrapped)
-  const currency0 = nativeInput ? nativeCurrency : inputCurrencyInfo?.currency
-  const currency1 = nativeOutput ? nativeCurrency : outputCurrencyInfo?.currency
+  const nativeInput =
+    isFirstCommandWrappingEth && nativeCurrency && inputCurrencyInfo?.currency.equals(nativeCurrency.wrapped)
+  const nativeOutput =
+    isLastCommandUnwrappingEth && nativeCurrency && outputCurrencyInfo?.currency.equals(nativeCurrency.wrapped)
+  const currencyInfo0 = nativeInput ? nativeCurrencyInfo : inputCurrencyInfo
+  const currencyInfo1 = nativeOutput ? nativeCurrencyInfo : outputCurrencyInfo
 
   const firstSwapCommand = dappRequest.parsedCalldata.commands.find(isURCommandASwap)
   const lastSwapCommand = dappRequest.parsedCalldata.commands.findLast(isURCommandASwap)
@@ -187,23 +179,6 @@ export function SwapRequestContent({
     outputCurrencyInfo?.currency.decimals || 18,
   )
 
-  const inputCurrencyAmount = getCurrencyAmount({
-    value: inputAmount,
-    valueType: ValueType.Exact,
-    currency: inputCurrencyInfo?.currency,
-  })
-  const inputValue = useUSDCValue(inputCurrencyAmount)
-
-  const outputCurrencyAmount = getCurrencyAmount({
-    value: outputAmount,
-    valueType: ValueType.Exact,
-    currency: outputCurrencyInfo?.currency,
-  })
-  const outputValue = useUSDCValue(outputCurrencyAmount)
-
-  const showSwapDetails = Boolean(currency0?.symbol && currency1?.symbol)
-  const showSplitLogo = Boolean(inputCurrencyInfo?.logoUrl && outputCurrencyInfo?.logoUrl)
-
   // TODO (EXT-1083): add USDC values to SwapTransactionTypeInfo and display on notification toast
   // Need the raw uint256 amounts, not the exact floating point amounts
   const inputAmountRaw = formatUnits(
@@ -215,77 +190,63 @@ export function SwapRequestContent({
     0,
   )
   const transactionTypeInfo = getTransactionTypeInfo({
-    inputCurrencyInfo,
-    outputCurrencyInfo,
+    inputCurrencyInfo: currencyInfo0,
+    outputCurrencyInfo: currencyInfo1,
     inputAmountRaw,
     outputAmountRaw,
   })
   const onConfirmWithTransactionTypeInfo = (): Promise<void> => onConfirm(transactionTypeInfo)
 
   return (
-    <DappRequestContent
-      showNetworkCost
-      confirmText={t('swap.button.swap')}
-      headerIcon={
-        showSplitLogo ? (
-          <SplitLogo
-            chainId={activeChain || UniverseChainId.Mainnet}
-            inputCurrencyInfo={inputCurrencyInfo}
-            outputCurrencyInfo={outputCurrencyInfo}
-            size={iconSizes.icon40}
-          />
-        ) : undefined
-      }
-      title={
-        currency0?.symbol && currency1?.symbol
-          ? t('swap.request.title.full', {
-              inputCurrencySymbol: currency0?.symbol,
-              outputCurrencySymbol: currency1?.symbol,
-            })
-          : t('swap.request.title.short')
-      }
+    <SwapDisplay
+      chainId={activeChain}
+      inputAmount={inputAmount}
+      inputCurrencyInfo={currencyInfo0}
+      outputAmount={outputAmount}
+      outputCurrencyInfo={currencyInfo1}
       transactionGasFeeResult={transactionGasFeeResult}
       onCancel={onCancel}
       onConfirm={onConfirmWithTransactionTypeInfo}
-    >
-      {showSwapDetails && (
-        <>
-          <Separator />
-          <Flex
-            alignItems="flex-start"
-            flexDirection="column"
-            flexGrow={1}
-            gap="$spacing12"
-            justifyContent="flex-start"
-            px="$spacing8"
-            py="$spacing16"
-          >
-            <Flex flexDirection="row" justifyContent="space-between" width="100%">
-              <Flex flexDirection="column">
-                <Text color="$neutral1" variant="heading3">
-                  {formatCurrencyAmount({ value: inputCurrencyAmount, type: NumberType.TokenTx })} {currency0?.symbol}
-                </Text>
-                <Text color="$neutral2" variant="body3">
-                  {formatCurrencyAmount({ value: inputValue, type: NumberType.FiatTokenPrice })}
-                </Text>
-              </Flex>
-              <CurrencyLogo currencyInfo={inputCurrencyInfo} />
-            </Flex>
-            <ArrowDown color="$neutral3" size="$icon.24" />
-            <Flex flexDirection="row" justifyContent="space-between" width="100%">
-              <Flex flexDirection="column">
-                <Text color="$neutral1" variant="heading3">
-                  {formatCurrencyAmount({ value: outputCurrencyAmount, type: NumberType.TokenTx })} {currency1?.symbol}
-                </Text>
-                <Text color="$neutral2" variant="body3">
-                  {formatCurrencyAmount({ value: outputValue, type: NumberType.FiatTokenPrice })}
-                </Text>
-              </Flex>
-              <CurrencyLogo currencyInfo={outputCurrencyInfo} />
-            </Flex>
-          </Flex>
-        </>
-      )}
-    </DappRequestContent>
+    />
+  )
+}
+
+// this is a special cased version of SwapRequestContent used for UniswapX swaps
+export function UniswapXSwapRequestContent({ dappRequest }: { dappRequest: SignTypedDataRequest }): JSX.Element {
+  const parsedTypedData = JSON.parse(dappRequest.typedData)
+  const { chainId: domainChainId } = parsedTypedData?.domain || {}
+  const activeChain = toSupportedChainId(domainChainId) || UniverseChainId.Mainnet
+
+  const { token: inputToken, amount: firstAmountInParam } = parsedTypedData?.message?.permitted || {}
+  const { token: outputToken, startAmount: lastAmountOutParam } =
+    parsedTypedData?.message?.witness?.baseOutputs[0] || {}
+
+  const inputCurrencyInfo = useCurrencyInfo(buildCurrencyId(activeChain, inputToken))
+  const nativeEthOrOutputToken = outputToken === ETH_ADDRESS ? DEFAULT_NATIVE_ADDRESS : outputToken
+  const outputCurrencyInfo = useCurrencyInfo(buildCurrencyId(activeChain, nativeEthOrOutputToken))
+
+  assert(
+    firstAmountInParam && lastAmountOutParam,
+    'SwapRequestContent: All swaps must have a defined input and output amount parameter.',
+  )
+
+  const inputAmount = formatUnits(
+    firstAmountInParam || '0', // should always be defined--`assert` above catches this case
+    inputCurrencyInfo?.currency.decimals || 18,
+  )
+  const outputAmount = formatUnits(
+    lastAmountOutParam || '0', // should always be defined--`assert` above catches this case
+    outputCurrencyInfo?.currency.decimals || 18,
+  )
+
+  return (
+    <SwapDisplay
+      isUniswapX
+      chainId={activeChain}
+      inputAmount={inputAmount}
+      inputCurrencyInfo={inputCurrencyInfo}
+      outputAmount={outputAmount}
+      outputCurrencyInfo={outputCurrencyInfo}
+    />
   )
 }

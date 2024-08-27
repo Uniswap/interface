@@ -1,7 +1,7 @@
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
+import styled from 'lib/styled-components'
 import { ArrowLeft } from 'react-feather'
-import styled from 'styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'
 
 const Menu = styled(Column)`

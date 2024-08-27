@@ -1,13 +1,15 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import Badge, { BadgeVariant } from 'components/Badge'
 import Loader from 'components/Icons/LoadingSpinner'
+import { DetectedBadge } from 'components/WalletModal/shared'
 import { CONNECTOR_ICON_OVERRIDE_MAP, useRecentConnectorId } from 'components/Web3Provider/constants'
+import { walletTypeToAmplitudeWalletType } from 'components/Web3Provider/walletConnect'
 import { useConnect } from 'hooks/useConnect'
-import { Trans } from 'i18n'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 import { isIFramed } from 'utils/isIFramed'
 import { Connector } from 'wagmi'
 
@@ -90,23 +92,38 @@ const RecentBadge = () => (
   </StyledBadge>
 )
 
-export function Option({ connector }: { connector: Connector }) {
+export function Option({ connector, detected }: { connector: Connector; detected?: boolean }) {
   const connection = useConnect()
 
   const isPendingConnection = connection.isPending && connection.variables?.connector === connector
 
   const isRecent = connector.id === useRecentConnectorId()
-  const rightSideDetail = isPendingConnection ? <Loader /> : isRecent ? <RecentBadge /> : null
   const icon = CONNECTOR_ICON_OVERRIDE_MAP[connector.id] ?? connector.icon
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
   const isDisabled = Boolean(connection?.isPending && !isIFramed())
+
+  const RightSideDetail = () => {
+    if (isPendingConnection) {
+      return <Loader />
+    }
+
+    if (isRecent) {
+      return <RecentBadge />
+    }
+
+    if (detected) {
+      return <DetectedBadge />
+    }
+
+    return null
+  }
 
   return (
     <Wrapper disabled={isDisabled}>
       <Trace
         logPress
         eventOnTrigger={InterfaceEventName.WALLET_SELECTED}
-        properties={{ wallet_type: connector.name }}
+        properties={{ wallet_name: connector.name, wallet_type: walletTypeToAmplitudeWalletType(connector.type) }}
         element={InterfaceElementName.WALLET_TYPE_OPTION}
       >
         <OptionCardClickable
@@ -121,7 +138,7 @@ export function Option({ connector }: { connector: Connector }) {
             </IconWrapper>
             <HeaderText>{connector.name}</HeaderText>
           </OptionCardLeft>
-          {rightSideDetail}
+          <RightSideDetail />
         </OptionCardClickable>
       </Trace>
     </Wrapper>

@@ -1,21 +1,15 @@
 import dayjs from 'dayjs'
 import { expectSaga } from 'redux-saga-test-plan'
-import {
-  Account,
-  AccountType,
-  SignerMnemonicAccount,
-} from 'wallet/src/features/wallet/accounts/types'
-import {
-  CreateAccountsParams,
-  createAccounts,
-} from 'wallet/src/features/wallet/create/createAccountsSaga'
-import { sharedRootReducer } from 'wallet/src/state/reducer'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { CreateAccountsParams, createAccounts } from 'wallet/src/features/wallet/create/createAccountsSaga'
+import { walletRootReducer } from 'wallet/src/state/walletReducer'
 import { ACCOUNT, ACCOUNT2, ACCOUNT3 } from 'wallet/src/test/fixtures'
 
 const createNativeAccounts = async (
   payload: CreateAccountsParams,
   initialAccounts = {},
-  timeout = 250
+  timeout = 250,
 ): Promise<{
   wallet: {
     accounts: Account
@@ -23,7 +17,7 @@ const createNativeAccounts = async (
   }
 }> => {
   const { storeState } = await expectSaga(createAccounts, payload)
-    .withReducer(sharedRootReducer)
+    .withReducer(walletRootReducer)
     .withState({
       wallet: {
         accounts: initialAccounts as { [key: string]: Account },
@@ -78,7 +72,7 @@ describe(createAccounts, () => {
           name: 'READONLY ACCOUNT',
           timeImportedMs: dayjs().valueOf(),
         },
-      }
+      },
     )
 
     const wallets = state.wallet.accounts
@@ -103,7 +97,7 @@ describe(createAccounts, () => {
           name: 'READONLY ACCOUNT',
           timeImportedMs: dayjs().valueOf(),
         },
-      }
+      },
     )
 
     const wallets = state.wallet.accounts
@@ -123,7 +117,7 @@ describe(createAccounts, () => {
       { accounts: [ACCOUNT2, ACCOUNT] },
       {
         [ACCOUNT3.address]: ACCOUNT3,
-      }
+      },
     )
 
     const wallets = state.wallet.accounts
@@ -142,7 +136,7 @@ describe(createAccounts, () => {
       { accounts: [ACCOUNT2, ACCOUNT] },
       {
         [ACCOUNT3.address]: ACCOUNT3,
-      }
+      },
     )
 
     const wallets = state.wallet.accounts

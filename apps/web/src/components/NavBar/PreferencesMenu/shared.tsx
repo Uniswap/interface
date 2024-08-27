@@ -1,5 +1,4 @@
-import Column from 'components/Column'
-import styled from 'styled-components'
+import { Flex, styled } from 'ui/src'
 
 export enum PreferencesView {
   SETTINGS = 'Settings',
@@ -7,7 +6,6 @@ export enum PreferencesView {
   CURRENCY = 'Currency',
 }
 
-export const SettingsColumn = styled(Column)`
-  width: 100%;
-  overflow: auto;
-`
+export const SettingsColumn = styled(Flex, {
+  width: '100%',
+})

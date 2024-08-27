@@ -4,6 +4,9 @@ import { Eip1193 } from 'cypress-hardhat/lib/browser/eip1193'
 import { FeatureFlagClient, FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { UserState, initialState } from '../../src/state/user/reducer'
 import { setInitialUserState } from '../utils/user-state'
+import {
+  ALLOW_ANALYTICS_ATOM_KEY,
+} from 'utilities/src/telemetry/analytics/constants'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -51,105 +54,108 @@ declare global {
   }
 }
 
-// sets up the injected provider to be a mock ethereum provider with the given mnemonic/index
-// eslint-disable-next-line no-undef
-Cypress.Commands.overwrite(
-  'visit',
-  (original, url: string | Partial<Cypress.VisitOptions>, options?: Partial<Cypress.VisitOptions>) => {
-    if (typeof url !== 'string') {
-      throw new Error('Invalid arguments. The first argument to cy.visit must be the path.')
-    }
-
-    // Parse overrides
-    const flagsOn: FeatureFlags[] = []
-    const flagsOff: FeatureFlags[] = []
-    options?.featureFlags?.forEach((f) => {
-      if (f.value) {
-        flagsOn.push(f.flag)
-      } else {
-        flagsOff.push(f.flag)
+export function registerCommands() {
+  // sets up the injected provider to be a mock ethereum provider with the given mnemonic/index
+  // eslint-disable-next-line no-undef
+  Cypress.Commands.overwrite(
+    'visit',
+    (original, url: string | Partial<Cypress.VisitOptions>, options?: Partial<Cypress.VisitOptions>) => {
+      if (typeof url !== 'string') {
+        throw new Error('Invalid arguments. The first argument to cy.visit must be the path.')
       }
-    })
 
-    // Format into URL parameters
-    const overrideParams = new URLSearchParams()
-    if (flagsOn.length > 0) {
-      overrideParams.append(
-        'featureFlagOverride',
-        flagsOn.map((flag) => getFeatureFlagName(flag, FeatureFlagClient.Web)).join(',')
-      )
-    }
-    if (flagsOff.length > 0) {
-      overrideParams.append(
-        'featureFlagOverrideOff',
-        flagsOn.map((flag) => getFeatureFlagName(flag, FeatureFlagClient.Web)).join(',')
-      )
-    }
-
-    return cy.provider().then((provider) =>
-      original({
-        ...options,
-        url:
-          [...overrideParams.entries()].length === 0
-            ? url
-            : url.includes('?')
-            ? `${url}&${overrideParams.toString()}`
-            : `${url}?${overrideParams.toString()}`,
-        onBeforeLoad(win) {
-          options?.onBeforeLoad?.(win)
-
-          setInitialUserState(win, {
-            ...initialState,
-            ...(options?.userState ?? {}),
-          })
-
-          win.ethereum = provider
-          win.Cypress.eagerlyConnect = options?.eagerlyConnect ?? true
-        },
+      // Parse overrides
+      const flagsOn: FeatureFlags[] = []
+      const flagsOff: FeatureFlags[] = []
+      options?.featureFlags?.forEach((f) => {
+        if (f.value) {
+          flagsOn.push(f.flag)
+        } else {
+          flagsOff.push(f.flag)
+        }
       })
-    )
-  }
-)
 
-Cypress.Commands.add('waitForAmplitudeEvent', (eventName, requiredProperties) => {
-  function findAndDiscardEventsUpToTarget() {
-    const events = Cypress.env('amplitudeEventCache')
-    const targetEventIndex = events.findIndex((event) => {
-      if (event.event_type !== eventName) {
-        return false
+      // Format into URL parameters
+      const overrideParams = new URLSearchParams()
+      if (flagsOn.length > 0) {
+        overrideParams.append(
+          'featureFlagOverride',
+          flagsOn.map((flag) => getFeatureFlagName(flag, FeatureFlagClient.Web)).join(','),
+        )
       }
-      if (requiredProperties) {
-        return requiredProperties.every((prop) => event.event_properties[prop])
+      if (flagsOff.length > 0) {
+        overrideParams.append(
+          'featureFlagOverrideOff',
+          flagsOn.map((flag) => getFeatureFlagName(flag, FeatureFlagClient.Web)).join(','),
+        )
       }
-      return true
+
+      return cy.provider().then((provider) =>
+        original({
+          ...options,
+          url:
+            [...overrideParams.entries()].length === 0
+              ? url
+              : url.includes('?')
+                ? `${url}&${overrideParams.toString()}`
+                : `${url}?${overrideParams.toString()}`,
+          onBeforeLoad(win) {
+            options?.onBeforeLoad?.(win)
+
+            setInitialUserState(win, {
+              ...initialState,
+              ...(options?.userState ?? {}),
+            })
+
+            win.ethereum = provider
+            win.Cypress.eagerlyConnect = options?.eagerlyConnect ?? true
+            win.localStorage.setItem(ALLOW_ANALYTICS_ATOM_KEY, 'true')
+          },
+        }),
+      )
+    },
+  )
+
+  Cypress.Commands.add('waitForAmplitudeEvent', (eventName, requiredProperties) => {
+    function findAndDiscardEventsUpToTarget() {
+      const events = Cypress.env('amplitudeEventCache')
+      const targetEventIndex = events.findIndex((event) => {
+        if (event.event_type !== eventName) {
+          return false
+        }
+        if (requiredProperties) {
+          return requiredProperties.every((prop) => event.event_properties[prop])
+        }
+        return true
+      })
+
+      if (targetEventIndex !== -1) {
+        const event = events[targetEventIndex]
+        Cypress.env('amplitudeEventCache', events.slice(targetEventIndex + 1))
+        return cy.wrap(event)
+      } else {
+        // If not found, retry after waiting for more events to be sent.
+        return cy.wait('@amplitude').then(findAndDiscardEventsUpToTarget)
+      }
+    }
+    return findAndDiscardEventsUpToTarget()
+  })
+
+  Cypress.Commands.add('interceptGraphqlOperation', (operationName, fixturePath) => {
+    return cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v1\/graphql/, (req) => {
+      req.headers['origin'] = 'https://app.uniswap.org'
+      if (req.body.operationName === operationName) {
+        req.reply({ fixture: fixturePath })
+      } else {
+        req.continue()
+      }
     })
+  })
 
-    if (targetEventIndex !== -1) {
-      const event = events[targetEventIndex]
-      Cypress.env('amplitudeEventCache', events.slice(targetEventIndex + 1))
-      return cy.wrap(event)
-    } else {
-      // If not found, retry after waiting for more events to be sent.
-      return cy.wait('@amplitude').then(findAndDiscardEventsUpToTarget)
-    }
-  }
-  return findAndDiscardEventsUpToTarget()
-})
-
-Cypress.Commands.add('interceptGraphqlOperation', (operationName, fixturePath) => {
-  return cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v1\/graphql/, (req) => {
-    req.headers['origin'] = 'https://app.uniswap.org'
-    if (req.body.operationName === operationName) {
+  Cypress.Commands.add('interceptQuoteRequest', (fixturePath) => {
+    return cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v2\/quote/, (req) => {
+      req.headers['origin'] = 'https://app.uniswap.org'
       req.reply({ fixture: fixturePath })
-    } else {
-      req.continue()
-    }
+    })
   })
-})
-
-Cypress.Commands.add('interceptQuoteRequest', (fixturePath) => {
-  return cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v2\/quote/, (req) => {
-    req.headers['origin'] = 'https://app.uniswap.org'
-    req.reply({ fixture: fixturePath })
-  })
-})
+}

@@ -2,13 +2,13 @@ import { ChartType } from 'components/Charts/utils'
 import Column from 'components/Column'
 import Row from 'components/Row'
 import { MissingDataIcon } from 'components/Table/icons'
-import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { lighten } from 'polished'
 import { PropsWithChildren, ReactNode } from 'react'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { opacify } from 'theme/utils'
+import { Trans } from 'uniswap/src/i18n'
 
 const ChartErrorContainer = styled(Row)`
   position: absolute;

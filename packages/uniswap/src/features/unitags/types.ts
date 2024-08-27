@@ -96,18 +96,6 @@ export type UnitagChangeUsernameRequestBody = {
   deviceId: string
 }
 
-export type UnitagWaitlistPositionResponse =
-  | {
-      isAccepted: false
-      waitlistPosition?: never
-      address?: never
-    }
-  | {
-      isAccepted: true
-      waitlistPosition: number
-      address: Address
-    }
-
 // Copied enum from unitags backend code -- needs to be up-to-date
 export enum UnitagErrorCodes {
   UnitagNotAvailable = 'unitags-1',

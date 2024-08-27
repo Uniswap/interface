@@ -1,4 +1,4 @@
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 
 export function isUniswapX<T extends { routing: Routing }>(
   obj: T,

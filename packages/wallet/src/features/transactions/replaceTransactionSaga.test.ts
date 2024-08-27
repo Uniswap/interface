@@ -4,27 +4,15 @@ import { BigNumber, providers } from 'ethers'
 import MockDate from 'mockdate'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
-import {
-  sendTransaction,
-  signAndSendTransaction,
-} from 'wallet/src/features/transactions/sendTransactionSaga'
+import { sendTransaction, signAndSendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { addTransaction } from 'wallet/src/features/transactions/slice'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import * as TxnUtils from 'wallet/src/features/transactions/utils'
-import {
-  getProvider,
-  getProviderManager,
-  getSignerManager,
-} from 'wallet/src/features/wallet/context'
+import { getProvider, getProviderManager, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
-import {
-  ACCOUNT,
-  ethersTransactionRequest,
-  getTxFixtures,
-  transactionDetails,
-} from 'wallet/src/test/fixtures'
+import { ACCOUNT, ethersTransactionRequest, getTxFixtures, transactionDetails } from 'wallet/src/test/fixtures'
 import { provider, providerManager, signerManager } from 'wallet/src/test/mocks'
 
 const NEW_UNIQUE_ID = faker.datatype.uuid()
@@ -83,7 +71,7 @@ describe(sendTransaction, () => {
             transaction.options.request,
             ACCOUNT,
             provider as providers.Provider,
-            signerManager
+            signerManager,
           ),
           { transactionResponse: txResponse, populatedRequest: txRequest },
         ],
@@ -114,7 +102,7 @@ describe(sendTransaction, () => {
               maxFeePerGas: undefined,
             },
           },
-        })
+        }),
       )
       .silentRun()
   })

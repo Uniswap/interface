@@ -36,9 +36,9 @@ import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { useV3PositionFees } from 'hooks/useV3PositionFees'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { Trans, t } from 'i18n'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
+import styled, { useTheme } from 'lib/styled-components'
 import { LoadingRows } from 'pages/Pool/styled'
 import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
@@ -47,11 +47,11 @@ import { useActiveSmartPool } from 'state/application/hooks'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
-import styled, { useTheme } from 'styled-components'
 import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans, t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -501,8 +501,8 @@ function PositionPageContent() {
   const [showConfirm, setShowConfirm] = useState(false)
 
   // usdc prices always in terms of tokens
-  const price0 = useStablecoinPrice(token0 ?? undefined)
-  const price1 = useStablecoinPrice(token1 ?? undefined)
+  const { price: price0 } = useStablecoinPrice(token0 ?? undefined)
+  const { price: price1 } = useStablecoinPrice(token1 ?? undefined)
 
   const fiatValueOfFees: CurrencyAmount<Currency> | null = useMemo(() => {
     if (!price0 || !price1 || !feeValue0 || !feeValue1) {
@@ -703,7 +703,7 @@ function PositionPageContent() {
       <>
         <Helmet>
           <title>
-            {t(`Manage {{quoteSymbol}}/{{baseSymbol}} pool liquidity on Rigoblock`, {
+            {t(`liquidityPool.positions.page.title`, {
               quoteSymbol: currencyQuote?.symbol,
               baseSymbol: currencyBase?.symbol,
             })}
@@ -858,9 +858,7 @@ function PositionPageContent() {
                             </ThemedText.DeprecatedMain>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <BadgeText>
-                                  <Trans i18nKey="common.percentage" values={{ pct: inverted ? ratio : 100 - ratio }} />
-                                </BadgeText>
+                                <BadgeText>{inverted ? ratio : 100 - ratio}%</BadgeText>
                               </Badge>
                             ) : null}
                           </RowFixed>
@@ -876,9 +874,7 @@ function PositionPageContent() {
                             </ThemedText.DeprecatedMain>
                             {typeof ratio === 'number' && !removed ? (
                               <Badge style={{ marginLeft: '10px' }}>
-                                <BadgeText>
-                                  <Trans i18nKey="common.percentage" values={{ pct: inverted ? 100 - ratio : ratio }} />
-                                </BadgeText>
+                                <BadgeText>{inverted ? 100 - ratio : ratio}%</BadgeText>
                               </Badge>
                             ) : null}
                           </RowFixed>

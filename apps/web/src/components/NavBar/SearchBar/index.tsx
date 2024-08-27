@@ -16,6 +16,7 @@ import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
 import { KeyAction, useKeyPress } from 'hooks/useKeyPress'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
+import styled, { css, useTheme } from 'lib/styled-components'
 import { useTranslation } from 'i18n/useTranslation'
 import { getTokenFilter } from 'lib/hooks/useTokenList/filtering'
 import { organizeSearchResults } from 'lib/utils/searchBar'
@@ -23,7 +24,6 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Search, X } from 'react-feather'
 import { useLocation } from 'react-router-dom'
 import { PoolRegisteredLog, usePoolsFromList, useRegisteredPools, useRegistryContract } from 'state/pool/hooks'
-import styled, { css, useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { Input } from 'ui/src'
@@ -297,11 +297,11 @@ export const SearchBar = ({
     ...trace,
   }
 
-  const placeholderText = shouldDisableNFTRoutes ? t('common.searchSmartPools') : t('common.searchTokensNFT')
+  const placeholderText = shouldDisableNFTRoutes ? t('smartPools.selector.search.placeholder') : t('common.searchTokensNFT')
 
   return (
     <Trace section={InterfaceSectionName.NAVBAR_SEARCH}>
-      <Anchor $fullScreen={fullScreen}>
+      <Anchor $fullScreen={fullScreen} data-cy="nav-search-container">
         <SearchContainer
           ref={searchRef}
           $isOpen={isOpen}
@@ -312,7 +312,7 @@ export const SearchBar = ({
         >
           {(!!isNavSearchInputVisible || isOpen) && (
             <SearchInput $isOpen={isOpen} $fullScreen={fullScreen}>
-              <SearchIcon>
+              <SearchIcon data-cy="nav-search-icon">
                 <Search width="20px" height="20px" color={theme.neutral2} />
               </SearchIcon>
               <Trace
@@ -323,9 +323,9 @@ export const SearchBar = ({
               >
                 <Input
                   ref={inputRef}
-                  data-cy="search-bar-input"
                   width="100%"
                   height="100%"
+                  fontWeight="$book"
                   backgroundColor="$transparent"
                   placeholder={placeholderText}
                   placeholderTextColor={theme.neutral2}
@@ -360,7 +360,7 @@ export const SearchBar = ({
         </SearchContainer>
         {!isNavSearchInputVisible && (
           <NavIcon onClick={toggleOpen} label={placeholderText}>
-            <SearchIcon>
+            <SearchIcon data-cy="nav-search-icon">
               <Search width="20px" height="20px" color={theme.neutral2} />
             </SearchIcon>
           </NavIcon>

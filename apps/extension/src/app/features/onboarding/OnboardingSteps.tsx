@@ -1,4 +1,5 @@
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useSelector } from 'react-redux'
 import { OnboardingPaneAnimatedContents } from 'src/app/features/onboarding/OnboardingPaneAnimatedContents'
 import { OnboardingScreenFrame } from 'src/app/features/onboarding/OnboardingScreenFrame'
 import { OnboardingScreenProps } from 'src/app/features/onboarding/OnboardingScreenProps'
@@ -12,7 +13,6 @@ import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import { AnimatePresence, Flex, styled, useWindowDimensions } from 'ui/src'
-import { useAppSelector } from 'wallet/src/state'
 
 export * from './OnboardingStepsContext'
 
@@ -53,7 +53,7 @@ export function OnboardingStepsProvider({
   isResetting?: boolean
   ContainerComponent?: React.ComponentType<React.PropsWithChildren>
 }): JSX.Element {
-  const isOnboarded = useAppSelector(isOnboardedSelector)
+  const isOnboarded = useSelector(isOnboardedSelector)
   const wasAlreadyOnboardedWhenPageLoaded = useRef(isOnboarded)
 
   useEffect(() => {

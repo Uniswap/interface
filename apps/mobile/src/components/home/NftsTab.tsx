@@ -7,6 +7,7 @@ import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
@@ -37,7 +38,7 @@ export const NftsTab = memo(
     )
 
     const renderNFTItem = useCallback(
-      (item: NFTItem) => {
+      (item: NFTItem, index: number) => {
         const onPressNft = (): void => {
           navigation.navigate(MobileScreens.NFTItem, {
             owner,
@@ -48,7 +49,7 @@ export const NftsTab = memo(
           })
         }
 
-        return <NftView item={item} owner={owner} onPress={onPressNft} />
+        return <NftView index={index} item={item} owner={owner} onPress={onPressNft} />
       },
       [owner, navigation],
     )
@@ -65,7 +66,7 @@ export const NftsTab = memo(
     }, [refreshing, headerHeight, onRefresh, colors.neutral3, insets.top])
 
     return (
-      <Flex grow px="$spacing12">
+      <Flex grow px="$spacing12" testID={TestID.NFTsTab}>
         <NftsList
           ref={ref}
           ListFooterComponent={isExternalProfile ? null : adaptiveFooter}

@@ -3,9 +3,10 @@ import { AutoColumn, ColumnCenter } from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { useAccount } from 'hooks/useAccount'
 import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { ArrowUpCircle, CheckCircle } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
 import { CloseIcon, CustomLightSpinner, ExternalLink, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const ConfirmOrLoadingWrapper = styled.div`

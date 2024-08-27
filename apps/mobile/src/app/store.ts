@@ -1,18 +1,15 @@
-import type { Middleware, PayloadAction, PreloadedState } from '@reduxjs/toolkit'
-import { isRejectedWithValue } from '@reduxjs/toolkit'
+import type { Middleware, PreloadedState } from '@reduxjs/toolkit'
 import * as Sentry from '@sentry/react'
 import { MMKV } from 'react-native-mmkv'
 import { Storage, persistReducer, persistStore } from 'redux-persist'
 import { MOBILE_STATE_VERSION, migrations } from 'src/app/migrations'
-import { MobileState, ReducerNames, mobileReducer } from 'src/app/reducer'
-import { mobileSaga } from 'src/app/saga'
-import { fiatOnRampAggregatorApi as sharedFiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { MobileState, mobilePersistedStateList, mobileReducer } from 'src/app/mobileReducer'
+import { rootMobileSaga } from 'src/app/saga'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { isNonJestDev } from 'utilities/src/environment/constants'
-import { logger } from 'utilities/src/logger/logger'
-import { fiatOnRampAggregatorApi, fiatOnRampApi } from 'wallet/src/features/fiatOnRamp/api'
+import { createDatadogReduxEnhancer } from 'utilities/src/logger/Datadog'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
-import { RootReducerNames, sharedPersistedStateWhitelist } from 'wallet/src/state/reducer'
 
 const storage = new MMKV()
 
@@ -31,40 +28,10 @@ export const reduxStorage: Storage = {
   },
 }
 
-const rtkQueryErrorLogger: Middleware = () => (next) => (action: PayloadAction<unknown>) => {
-  if (!isRejectedWithValue(action)) {
-    return next(action)
-  }
-
-  logger.error(action.error, {
-    tags: {
-      file: 'store',
-      function: 'rtkQueryErrorLogger',
-    },
-    extra: {
-      type: action.type,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      endpointName: (action.meta as any)?.arg?.endpointName,
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      status: (action.payload as any)?.status,
-    },
-  })
-
-  return next(action)
-}
-
-const whitelist: Array<ReducerNames | RootReducerNames> = [
-  ...sharedPersistedStateWhitelist,
-  'biometricSettings',
-  'passwordLockout',
-  'tweaks',
-  'cloudBackup',
-]
-
 export const persistConfig = {
   key: 'root',
   storage: reduxStorage,
-  whitelist,
+  whitelist: mobilePersistedStateList,
   version: MOBILE_STATE_VERSION,
   migrate: createMigrate(migrations),
 }
@@ -82,11 +49,14 @@ const sentryReduxEnhancer = Sentry.createReduxEnhancer({
   },
 })
 
-const middlewares: Middleware[] = [
-  fiatOnRampApi.middleware,
-  fiatOnRampAggregatorApi.middleware,
-  sharedFiatOnRampAggregatorApi.middleware,
-]
+const dataDogReduxEnhancer = createDatadogReduxEnhancer({
+  shouldLogReduxState: (state: MobileState): boolean => {
+    // Do not log the state if a user has opted out of analytics.
+    return !!state.telemetry.allowAnalytics
+  },
+})
+
+const middlewares: Middleware[] = [fiatOnRampAggregatorApi.middleware]
 if (isNonJestDev) {
   const createDebugger = require('redux-flipper').default
   middlewares.push(createDebugger())
@@ -99,14 +69,11 @@ export const setupStore = (
   return createStore({
     reducer: persistedReducer,
     preloadedState,
-    additionalSagas: [mobileSaga],
-    middlewareAfter: [rtkQueryErrorLogger, ...middlewares],
-    enhancers: [sentryReduxEnhancer],
+    additionalSagas: [rootMobileSaga],
+    middlewareAfter: [...middlewares],
+    enhancers: [sentryReduxEnhancer, dataDogReduxEnhancer],
   })
 }
 export const store = setupStore()
 
 export const persistor = persistStore(store)
-
-export type AppDispatch = typeof store.dispatch
-export type AppStore = typeof store

@@ -1,6 +1,6 @@
+import { useTheme } from 'lib/styled-components'
 import { useMemo } from 'react'
 import { ClassicTrade } from 'state/routing/types'
-import { useTheme } from 'styled-components'
 import { useFormatter } from 'utils/formatNumbers'
 import { computeRealizedPriceImpact, getPriceImpactWarning } from 'utils/prices'
 

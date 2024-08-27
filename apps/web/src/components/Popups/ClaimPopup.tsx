@@ -4,7 +4,7 @@ import { ButtonPrimary } from 'components/Button'
 import { AutoColumn } from 'components/Column'
 import { CardBGImage, CardNoise } from 'components/earn/styled'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
+import styled, { keyframes } from 'lib/styled-components'
 import { useCallback, useEffect } from 'react'
 import { Heart, X } from 'react-feather'
 import {
@@ -15,8 +15,8 @@ import {
 } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
-import styled, { keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 const StyledClaimPopup = styled(AutoColumn)`
   background: radial-gradient(76.02% 75.41% at 1.84% 0%, #ffae00 0%, #021d43 100%);

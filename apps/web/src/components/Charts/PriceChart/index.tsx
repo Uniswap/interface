@@ -8,7 +8,7 @@ import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
 import { PriceChartType } from 'components/Charts/utils'
 import { RowBetween } from 'components/Row'
 import { DeltaArrow, DeltaText, calculateDelta } from 'components/Tokens/TokenDetails/Delta'
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import {
   AreaData,
   AreaSeriesPartialOptions,
@@ -22,9 +22,9 @@ import {
   UTCTimestamp,
 } from 'lightweight-charts'
 import { useMemo } from 'react'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
+import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export type PriceChartData = CandlestickData<UTCTimestamp> & AreaData<UTCTimestamp>
@@ -238,19 +238,19 @@ function CandlestickTooltip({ data }: { data: PriceChartData }) {
     <>
       <TooltipText>
         <RowBetween gap="sm">
-          <Trans i18nKey="chart.price.open" />
+          <Trans i18nKey="chart.price.label.open" />
           <div>{formatFiatPrice({ price: data.open })}</div>
         </RowBetween>
         <RowBetween gap="sm">
-          <Trans i18nKey="chart.price.high" />
+          <Trans i18nKey="chart.price.label.high" />
           <div>{formatFiatPrice({ price: data.high })}</div>
         </RowBetween>
         <RowBetween gap="sm">
-          <Trans i18nKey="chart.price.low" />
+          <Trans i18nKey="chart.price.label.low" />
           <div>{formatFiatPrice({ price: data.low })}</div>
         </RowBetween>
         <RowBetween gap="sm">
-          <Trans i18nKey="common.close" />
+          <Trans i18nKey="chart.price.label.close" />
           <div>{formatFiatPrice({ price: data.close })}</div>
         </RowBetween>
       </TooltipText>

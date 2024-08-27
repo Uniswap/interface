@@ -79,6 +79,8 @@ const MOCK_ARGS: GetQuoteArgs = {
   priceImprovementBps: 0,
   forceOpenOrders: false,
   deadlineBufferSecs: 0,
+  arbitrumXV2SlippageTolerance: undefined as any,
+  protocolPreferences: undefined,
 }
 
 describe('#useRoutingAPITrade ExactIn', () => {
@@ -86,7 +88,7 @@ describe('#useRoutingAPITrade ExactIn', () => {
     mocked(useIsWindowVisible).mockReturnValue(false)
 
     const { result } = renderHook(() =>
-      useRoutingAPITrade(false, TradeType.EXACT_INPUT, USDCAmount, ETH_MAINNET, RouterPreference.API)
+      useRoutingAPITrade(false, TradeType.EXACT_INPUT, USDCAmount, ETH_MAINNET, RouterPreference.API),
     )
 
     expect(useGetQuoteQuery).toHaveBeenCalledWith(skipToken, {
@@ -113,7 +115,7 @@ describe('#useRoutingAPITrade pricing', () => {
     mocked(useIsWindowVisible).mockReturnValue(false)
 
     const { result } = renderHook(() =>
-      useRoutingAPITrade(false, TradeType.EXACT_INPUT, USDCAmount, ETH_MAINNET, INTERNAL_ROUTER_PREFERENCE_PRICE)
+      useRoutingAPITrade(false, TradeType.EXACT_INPUT, USDCAmount, ETH_MAINNET, INTERNAL_ROUTER_PREFERENCE_PRICE),
     )
 
     expect(useGetQuoteQuery).toHaveBeenCalledWith(skipToken, {
@@ -127,7 +129,7 @@ describe('#useRoutingAPITrade pricing', () => {
     mocked(useIsWindowVisible).mockReturnValue(true)
 
     renderHook(() =>
-      useRoutingAPITrade(false, TradeType.EXACT_INPUT, USDCAmount, ETH_MAINNET, INTERNAL_ROUTER_PREFERENCE_PRICE)
+      useRoutingAPITrade(false, TradeType.EXACT_INPUT, USDCAmount, ETH_MAINNET, INTERNAL_ROUTER_PREFERENCE_PRICE),
     )
 
     expect(useGetQuoteQuery).toHaveBeenCalledWith(
@@ -135,7 +137,7 @@ describe('#useRoutingAPITrade pricing', () => {
       {
         pollingInterval: ms(`1m`),
         refetchOnMountOrArgChange: 2 * 60,
-      }
+      },
     )
   })
 })

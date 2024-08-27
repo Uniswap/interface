@@ -13,8 +13,6 @@ import usePrevious from 'hooks/usePrevious'
 import { useCallback, useMemo } from 'react'
 import { Bound } from 'state/mint/v3/actions'
 import { Currency as GqlCurrency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 type Nullish<T> = T | null | undefined
 type NumberFormatOptions = Intl.NumberFormatOptions
@@ -41,7 +39,7 @@ const NO_DECIMALS: NumberFormatOptions = {
   minimumFractionDigits: 0,
 }
 
-export const NO_DECIMALS_CURRENCY: NumberFormatOptions = {
+const NO_DECIMALS_CURRENCY: NumberFormatOptions = {
   notation: 'standard',
   maximumFractionDigits: 0,
   minimumFractionDigits: 0,
@@ -810,20 +808,12 @@ export function useFormatterLocales(): {
   formatterLocale: SupportedLocale
   formatterLocalCurrency: SupportedLocalCurrency
 } {
-  const currencyConversionEnabled = useFeatureFlag(FeatureFlags.CurrencyConversion)
   const activeLocale = useActiveLocale()
   const activeLocalCurrency = useActiveLocalCurrency()
 
-  if (currencyConversionEnabled) {
-    return {
-      formatterLocale: activeLocale,
-      formatterLocalCurrency: activeLocalCurrency,
-    }
-  }
-
   return {
-    formatterLocale: DEFAULT_LOCALE,
-    formatterLocalCurrency: DEFAULT_LOCAL_CURRENCY,
+    formatterLocale: activeLocale,
+    formatterLocalCurrency: activeLocalCurrency,
   }
 }
 

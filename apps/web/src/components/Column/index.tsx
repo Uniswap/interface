@@ -1,6 +1,7 @@
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 import { Gap } from 'theme'
 
+/** @deprecated Please use `Flex` from `ui/src` going forward */
 export const Column = styled.div<{
   gap?: Gap | string
   flex?: string
@@ -11,6 +12,8 @@ export const Column = styled.div<{
   gap: ${({ gap, theme }) => (gap && theme.grids[gap as Gap]) || gap};
   ${({ flex }) => flex && `flex: ${flex};`}
 `
+
+/** @deprecated Please use `Flex` from `ui/src` going forward */
 export const ColumnCenter = styled(Column)`
   width: 100%;
   align-items: center;

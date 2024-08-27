@@ -3,6 +3,7 @@ import { createAdaptiveRefetchContext } from 'graphql/data/apollo/AdaptiveRefetc
 import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
+import ms from 'ms'
 import {
   PropsWithChildren,
   createContext,
@@ -15,6 +16,7 @@ import {
 } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
+import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
 import {
   ActivityWebQueryResult,
   AssetActivityPartsFragment,
@@ -26,6 +28,7 @@ import {
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { logger } from 'utilities/src/logger/logger'
+import { useInterval } from 'utilities/src/time/timing'
 import { v4 as uuidV4 } from 'uuid'
 
 const { Provider: AdaptiveAssetActivityProvider, useQuery: useAssetActivityQuery } =
@@ -63,11 +66,34 @@ export function AssetActivityProvider({ children }: PropsWithChildren) {
     },
   })
 
+  const fiatOnRampTransactions = useFiatOnRampTransactions()
+
   const [lazyFetch, query] = useActivityWebLazyQuery()
   const fetch = useCallback(
-    () => lazyFetch({ variables: { account: contextAddress ?? '', chains: GQL_MAINNET_CHAINS_MUTABLE } }),
-    [contextAddress, lazyFetch],
+    () =>
+      lazyFetch({
+        variables: {
+          account: contextAddress ?? '',
+          chains: GQL_MAINNET_CHAINS_MUTABLE,
+          // Include the externalsessionIDs of all fiat on-ramp transactions in the local store,
+          // so that the backend can find the transactions without signature authentication.
+          onRampTransactionIDs: Object.values(fiatOnRampTransactions).map(
+            (transaction) => transaction.externalSessionId,
+          ),
+        },
+      }),
+    [contextAddress, fiatOnRampTransactions, lazyFetch],
   )
+
+  useInterval(async () => {
+    if (
+      Object.values(fiatOnRampTransactions).some(
+        (transaction) => !transaction.syncedWithBackend && transaction.forceFetched,
+      )
+    ) {
+      fetch()
+    }
+  }, ms('15s'))
 
   return (
     <SubscriptionContext.Provider value={result}>

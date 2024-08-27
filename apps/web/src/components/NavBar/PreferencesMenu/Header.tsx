@@ -1,6 +1,6 @@
+import styled, { css } from 'lib/styled-components'
 import { ReactNode, useCallback } from 'react'
 import { ChevronLeft } from 'react-feather'
-import styled, { css } from 'styled-components'
 import { Text } from 'ui/src'
 
 const StyledChevron = styled(ChevronLeft)`

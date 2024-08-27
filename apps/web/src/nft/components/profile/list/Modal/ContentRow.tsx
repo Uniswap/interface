@@ -1,15 +1,15 @@
 import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
+import styled, { css, useTheme } from 'lib/styled-components'
 import { VerifiedIcon } from 'nft/components/icons'
 import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { useEffect, useRef } from 'react'
 import { Check, XOctagon } from 'react-feather'
-import styled, { css, useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
+import { Trans } from 'uniswap/src/i18n'
 
 const ContentColumn = styled(Column)<{ failed: boolean }>`
   background-color: ${({ theme, failed }) => failed && opacify(12, theme.critical)};
@@ -177,7 +177,7 @@ export const ContentRow = ({
             <Trans i18nKey="common.remove.label" />
           </RemoveButton>
           <RetryButton onClick={row.callback}>
-            <Trans i18nKey="common.retry" />
+            <Trans i18nKey="common.button.retry" />
           </RetryButton>
         </ButtonRow>
       )}

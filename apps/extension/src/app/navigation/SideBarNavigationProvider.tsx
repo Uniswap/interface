@@ -1,16 +1,17 @@
 import { PropsWithChildren, useCallback } from 'react'
 import { createSearchParams, useNavigate } from 'react-router-dom'
+import { navigateToInterfaceFiatOnRamp } from 'src/app/features/for/utils'
 import { useCopyToClipboard } from 'src/app/hooks/useOnCopyToClipboard'
 import { AppRoutes, HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { focusOrCreateTokensExploreTab } from 'src/app/navigation/utils'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { SidebarLocationState, focusOrCreateTokensExploreTab } from 'src/app/navigation/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
 import {
+  NavigateToFiatOnRampArgs,
   NavigateToNftItemArgs,
   NavigateToSendFlowArgs,
   NavigateToSwapFlowArgs,
@@ -21,14 +22,7 @@ import {
   getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
 import { CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { ExplorerDataType, getExplorerLink, getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
-
-export type SidebarLocationState =
-  | {
-      initialTransactionState?: TransactionState
-    }
-  | undefined
 
 export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.Element {
   const handleShareNft = useHandleShareNft()
@@ -44,6 +38,7 @@ export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.
   const navigateToNftCollection = useCallback(() => {
     // no-op until we have proper NFT collection
   }, [])
+  const navigateToFiatOnRamp = useNavigateToFiatOnRamp()
 
   return (
     <WalletNavigationProvider
@@ -52,6 +47,7 @@ export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
+      navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToNftCollection={navigateToNftCollection}
       navigateToNftDetails={navigateToNftDetails}
       navigateToReceive={navigateToReceive}
@@ -179,8 +175,12 @@ function useNavigateToNftDetails(): (args: NavigateToNftItemArgs) => void {
 
 function useNavigateToBuyOrReceiveWithEmptyWallet(): () => void {
   return useCallback((): void => {
-    // TODO(EXT-669): replace this once we have an onramp in the Extension.
-    // eslint-disable-next-line security/detect-non-literal-fs-filename
-    window.open(uniswapUrls.helpArticleUrls.moonpayHelp, '_blank')
+    navigateToInterfaceFiatOnRamp()
+  }, [])
+}
+
+function useNavigateToFiatOnRamp(): (args: NavigateToFiatOnRampArgs) => void {
+  return useCallback(({ prefilledCurrency }: NavigateToFiatOnRampArgs): void => {
+    navigateToInterfaceFiatOnRamp(prefilledCurrency?.currencyInfo?.currency.chainId)
   }, [])
 }

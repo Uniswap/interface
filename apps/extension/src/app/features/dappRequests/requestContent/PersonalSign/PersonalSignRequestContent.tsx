@@ -19,13 +19,23 @@ export function PersonalSignRequestContent({ dappRequest }: PersonalSignRequestP
   const { t } = useTranslation()
 
   const [viewEncoding, setViewEncoding] = useState(ViewEncoding.UTF8)
+  const [utf8Message, setUtf8Message] = useState<string | undefined>()
+
   const toggleViewEncoding = (): void =>
     setViewEncoding(viewEncoding === ViewEncoding.UTF8 ? ViewEncoding.HEX : ViewEncoding.UTF8)
 
   const hexMessage = dappRequest.messageHex
-  const utf8Message = ethers.utils.toUtf8String(hexMessage) // Already validated in schema
-
-  const containsUnrenderableCharacters = containsNonPrintableChars(utf8Message)
+  const containsUnrenderableCharacters = !utf8Message || containsNonPrintableChars(utf8Message)
+  useEffect(() => {
+    try {
+      const decodedMessage = ethers.utils.toUtf8String(hexMessage)
+      setUtf8Message(decodedMessage)
+    } catch {
+      // If the message is not valid UTF-8, we'll show the hex message instead (e.g. Polymark claim deposit message )
+      setViewEncoding(ViewEncoding.HEX)
+      setUtf8Message(undefined)
+    }
+  }, [hexMessage])
 
   const [isScrollable, setIsScrollable] = useState(false)
   const messageRef = useRef<HTMLElement>(null)
@@ -111,6 +121,7 @@ export function PersonalSignRequestContent({ dappRequest }: PersonalSignRequestP
           flexDirection="row"
           gap="$spacing8"
           justifyContent="flex-start"
+          mt="$spacing12"
           p="$spacing12"
         >
           <AlertTriangle color="$neutral2" minWidth="$spacing20" size="$icon.20" />

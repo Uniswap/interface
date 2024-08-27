@@ -2,10 +2,10 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
 import 'react-native-reanimated'
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
 import { QRCodeScanner } from 'src/components/QRCodeScanner/QRCodeScanner'
-import { getSupportedURI, URIType } from 'src/components/WalletConnect/ScanSheet/util'
-import { Flex, HapticFeedback, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import { getSupportedURI, URIType } from 'src/components/Requests/ScanSheet/util'
+import { Flex, Text, TouchableArea, useHapticFeedback, useIsDarkMode, useSporeColors } from 'ui/src'
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
@@ -24,9 +24,10 @@ type Props = {
 export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const activeAddress = useAppSelector(selectActiveAccountAddress)
+  const activeAddress = useSelector(selectActiveAccountAddress)
   const [currentScreenState, setCurrentScreenState] = useState<ScannerModalState>(ScannerModalState.ScanQr)
   const [shouldFreezeCamera, setShouldFreezeCamera] = useState(false)
+  const { hapticFeedback } = useHapticFeedback()
 
   const onScanCode = async (uri: string): Promise<void> => {
     // don't scan any QR codes if camera is frozen
@@ -34,7 +35,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
       return
     }
 
-    await HapticFeedback.selection()
+    await hapticFeedback.selection()
     setShouldFreezeCamera(true)
     const supportedURI = await getSupportedURI(uri)
 

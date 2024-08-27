@@ -144,7 +144,7 @@ export function NFTCollectionScreen({
       marginRight: middle ? spacing.spacing8 : last ? spacing.spacing16 : 0,
       marginBottom: spacing.spacing8,
     }
-    const priceColor = isIOS ? '$sporeWhite' : '$neutral1'
+    const priceColor = isIOS ? '$white' : '$neutral1'
 
     return (
       <Flex

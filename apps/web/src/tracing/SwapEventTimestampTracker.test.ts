@@ -26,7 +26,7 @@ describe('SwapEventTimestampTracker', () => {
     expect(swapSuccessTime).toBeDefined()
     expect(swapActionTime).toBeDefined()
     expect(instance.getElapsedTime(SwapEventType.FIRST_SWAP_SUCCESS, SwapEventType.FIRST_SWAP_ACTION)).toEqual(
-      (swapSuccessTime as number) - (swapActionTime as number)
+      (swapSuccessTime as number) - (swapActionTime as number),
     )
   })
 

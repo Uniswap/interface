@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItemWithDropdown'
 import { Accordion, Flex, ScrollView } from 'ui/src'
@@ -8,11 +9,10 @@ import { GatingOverrides } from 'wallet/src/components/gating/GatingOverrides'
 import { Language, SUPPORTED_LANGUAGES } from 'wallet/src/features/language/constants'
 import { getLanguageInfo, useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { setCurrentLanguage } from 'wallet/src/features/language/slice'
-import { useAppDispatch } from 'wallet/src/state'
 
 export function DevMenuScreen(): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   // Changing extension language requires changing system settings, so allowing for easy override here
   const currentLanguageInfo = useCurrentLanguageInfo()

@@ -3,7 +3,7 @@ import { DEFAULT_NFT_QUERY_AMOUNT } from 'components/AccountDrawer/MiniPortfolio
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { TabButton } from 'components/AccountDrawer/MiniPortfolio/shared'
 import { useNftBalance } from 'graphql/data/nft/NftBalance'
-import { t } from 'i18n'
+import styled from 'lib/styled-components'
 import { LoadingAssets } from 'nft/components/collection/CollectionAssetLoading'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
@@ -11,11 +11,11 @@ import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
 import InfiniteScroll from 'react-infinite-scroll-component'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
 import { Gallery } from 'ui/src/components/icons'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { t } from 'uniswap/src/i18n'
 
 const StyledTabButton = styled(TabButton)`
   width: calc(100% - 32px);
@@ -23,7 +23,7 @@ const StyledTabButton = styled(TabButton)`
 `
 
 export default function NFTs({ account }: { account: string }) {
-  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregatorWeb)
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)

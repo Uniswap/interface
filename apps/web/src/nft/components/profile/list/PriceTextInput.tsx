@@ -1,6 +1,6 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { BrokenLinkIcon } from 'nft/components/icons'
 import { NumericInput } from 'nft/components/layout/Input'
 import { WarningType } from 'nft/components/profile/list/shared'
@@ -10,9 +10,9 @@ import { useSellAsset } from 'nft/hooks'
 import { WalletAsset } from 'nft/types'
 import { Dispatch, useRef, useState } from 'react'
 import { AlertTriangle, Link } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { colors } from 'theme/colors'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PriceTextInputWrapper = styled(Column)`
@@ -73,19 +73,6 @@ const WarningAction = styled.div`
   color: ${({ theme }) => theme.accent1};
 `
 
-const getWarningMessage = (warning: WarningType) => {
-  let message = <></>
-  switch (warning) {
-    case WarningType.BELOW_FLOOR:
-      message = <Trans i18nKey="nft.belowFloorEnd" />
-      break
-    case WarningType.ALREADY_LISTED:
-      message = <Trans i18nKey="nft.alreadyListedAt" />
-      break
-  }
-  return message
-}
-
 interface PriceTextInputProps {
   listPrice?: number
   setListPrice: Dispatch<number | undefined>
@@ -103,6 +90,7 @@ export const PriceTextInput = ({
   globalOverride,
   asset,
 }: PriceTextInputProps) => {
+  const { t } = useTranslation()
   const { formatNumberOrString, formatDelta } = useFormatter()
   const [warningType, setWarningType] = useState(WarningType.NONE)
   const removeSellAsset = useSellAsset((state) => state.removeSellAsset)
@@ -128,6 +116,23 @@ export const PriceTextInput = ({
     }
     const val = parseFloat(event.target.value)
     setListPrice(isNaN(val) ? undefined : val)
+  }
+
+  let warningMessage = ''
+  switch (warningType) {
+    case WarningType.BELOW_FLOOR:
+      warningMessage = t('nft.profile.priceInput.warning.belowFloor', {
+        percentage: formatDelta(percentBelowFloor),
+      })
+      break
+    case WarningType.ALREADY_LISTED:
+      warningMessage = t('nft.profile.priceInput.warning.alreadyListed', {
+        tokenAmountWithSymbol: `${formatNumberOrString({
+          input: asset?.floor_sell_order_price ?? 0,
+          type: NumberType.NFTToken,
+        })} ETH`,
+      })
+      break
   }
 
   useUpdateInputAndWarnings(setWarningType, inputRef, asset, listPrice)
@@ -158,16 +163,7 @@ export const PriceTextInput = ({
         {warningType !== WarningType.NONE && (
           <WarningRow>
             <AlertTriangle height={16} width={16} color={warningColor} />
-            <span>
-              {warningType === WarningType.BELOW_FLOOR && `${formatDelta(percentBelowFloor)} `}
-              {getWarningMessage(warningType)}
-              &nbsp;
-              {warningType === WarningType.ALREADY_LISTED &&
-                `${formatNumberOrString({
-                  input: asset?.floor_sell_order_price ?? 0,
-                  type: NumberType.NFTToken,
-                })} ETH`}
-            </span>
+            <span>{warningMessage}</span>
             <WarningAction
               onClick={() => {
                 warningType === WarningType.ALREADY_LISTED && removeSellAsset(asset)

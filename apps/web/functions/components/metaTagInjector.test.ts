@@ -13,7 +13,7 @@ test('should append meta tag to element', () => {
       image: 'testImage',
       description: 'testDescription',
     },
-    new Request('http://localhost')
+    new Request('http://localhost'),
   )
   injector.appendProperty(element, property, content)
   expect(element.append).toHaveBeenCalledWith(`<meta property="${property}" content="${content}" data-rh="true">`, {
@@ -31,7 +31,7 @@ test('should append meta tag to element', () => {
     `<meta property="og:description" content="testDescription" data-rh="true">`,
     {
       html: true,
-    }
+    },
   )
   expect(element.append).toHaveBeenCalledWith(`<meta property="og:image" content="testImage" data-rh="true">`, {
     html: true,
@@ -56,7 +56,7 @@ test('should append meta tag to element', () => {
     `<meta property="twitter:card" content="summary_large_image" data-rh="true">`,
     {
       html: true,
-    }
+    },
   )
   expect(element.append).toHaveBeenCalledWith(`<meta property="twitter:title" content="test" data-rh="true">`, {
     html: true,
@@ -84,7 +84,7 @@ test('should pass through header blocked paths', () => {
       image: 'testImage',
       description: 'testDescription',
     },
-    request
+    request,
   )
   injector.element(element)
   expect(element.append).toHaveBeenCalledWith(`<meta property="x:blocked-paths" content="/" data-rh="true">`, {

@@ -1,6 +1,6 @@
 import { ArrowChangeDown } from 'components/Icons/ArrowChangeDown'
 import { ArrowChangeUp } from 'components/Icons/ArrowChangeUp'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 
 const StyledUpArrow = styled(ArrowChangeUp)<{ $noColor?: boolean }>`
   color: ${({ theme, $noColor }) => ($noColor ? theme.neutral2 : theme.success)};

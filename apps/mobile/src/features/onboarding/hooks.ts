@@ -1,5 +1,5 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { OnboardingStackBaseParams, useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { MobileAppsFlyerEvents } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
@@ -20,7 +20,7 @@ export function useCompleteOnboardingCallback({
   entryPoint,
   importType,
 }: OnboardingStackBaseParams): () => Promise<void> {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { getAllOnboardingAccounts, finishOnboarding } = useOnboardingContext()
   const navigation = useOnboardingStackNavigation()
 

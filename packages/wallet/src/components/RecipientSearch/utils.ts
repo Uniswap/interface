@@ -4,11 +4,13 @@ import { SearchableRecipient } from 'wallet/src/features/address/types'
 export function filterSections(
   sections: SectionListData<SearchableRecipient>[],
   filteredAddresses: string[],
-): { title: string; data: SearchableRecipient[] }[] {
+  includeTitle = true,
+): ({ title: string; data: SearchableRecipient[] } | { data: SearchableRecipient[] })[] {
   return sections
     .map((section) => {
       const { title, data } = section
-      return { title, data: data.filter((item) => filteredAddresses.includes(item.address)) }
+      const filteredData = data.filter((item) => filteredAddresses.includes(item.address))
+      return includeTitle ? { title, data: filteredData } : { data: filteredData }
     })
     .filter((section) => section.data.length > 0)
 }

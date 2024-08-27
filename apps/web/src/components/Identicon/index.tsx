@@ -2,7 +2,7 @@ import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import ENSAvatarIcon from 'components/Identicon/ENSAvatarIcon'
 import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
 import useENSAvatar from 'hooks/useENSAvatar'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 import { fadeInAnimation } from 'theme/components/FadePresence'
 import { Unicon } from 'ui/src'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
@@ -21,12 +21,15 @@ export function useIdenticonType(account?: string) {
   if (!account) {
     return undefined
   }
-  if (unitagLoading || ensAvatarLoading) {
+
+  if (unitagLoading) {
     return IdenticonType.LOADING
   } else if (unitag?.metadata?.avatar) {
     return IdenticonType.UNITAG_PROFILE_PICTURE
   } else if (avatar) {
     return IdenticonType.ENS_AVATAR
+  } else if (ensAvatarLoading) {
+    return IdenticonType.LOADING
   } else {
     return IdenticonType.UNICON
   }

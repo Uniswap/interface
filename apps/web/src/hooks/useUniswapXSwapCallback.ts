@@ -8,7 +8,7 @@ import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalanc
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
-import { useCallback } from 'react'
+import { useCallback, useRef } from 'react'
 import {
   DutchOrderTrade,
   LimitOrderTrade,
@@ -16,6 +16,7 @@ import {
   TradeFillType,
   V2DutchOrderTrade,
 } from 'state/routing/types'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { trace } from 'tracing/trace'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -81,8 +82,13 @@ export function useUniswapXSwapCallback({
   allowedSlippage: Percent
 }) {
   const account = useAccount()
-  const provider = useEthersWeb3Provider()
-  const connectorName = useAccount().connector?.name
+  const accountRef = useRef(account)
+  accountRef.current = account
+
+  const { chainId } = useSwapAndLimitContext()
+  const provider = useEthersWeb3Provider({ chainId })
+  const providerRef = useRef(provider)
+  providerRef.current = provider
 
   const analyticsContext = useTrace()
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
@@ -90,6 +96,8 @@ export function useUniswapXSwapCallback({
   return useCallback(
     () =>
       trace({ name: 'Swap (Dutch)', op: 'swap.x.dutch' }, async (trace) => {
+        const account = accountRef.current
+        const provider = providerRef.current
         if (account.status !== 'connected') {
           throw new Error('wallet not connected')
         }
@@ -100,7 +108,7 @@ export function useUniswapXSwapCallback({
           throw new Error('missing trade')
         }
         const connectedChainId = await provider.getSigner().getChainId()
-        if (account.chainId !== connectedChainId) {
+        if (account.chainId !== connectedChainId || account.chainId !== chainId) {
           throw new WrongChainError()
         }
 
@@ -160,6 +168,11 @@ export function useUniswapXSwapCallback({
 
           const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async (walletTrace) => {
             try {
+              const provider = providerRef.current
+              if (!provider) {
+                throw new Error('missing provider')
+              }
+              const account = accountRef.current
               return await signTypedData(provider.getSigner(account.address), domain, types, values)
             } catch (error) {
               if (didUserReject(error)) {
@@ -170,7 +183,19 @@ export function useUniswapXSwapCallback({
               }
             }
           })
-          if (deadline < Math.floor(Date.now() / 1000)) {
+          const resultTime = Math.floor(Date.now() / 1000)
+          if (deadline < resultTime) {
+            sendAnalyticsEvent(InterfaceEventNameLocal.UniswapXSignatureDeadlineExpired, {
+              ...formatSwapSignedAnalyticsEventProperties({
+                trade,
+                allowedSlippage,
+                fiatValues,
+                portfolioBalanceUsd,
+              }),
+              ...analyticsContext,
+              deadline,
+              resultTime,
+            })
             throw new SignatureExpiredError()
           }
           sendAnalyticsEvent(SwapEventName.SWAP_SIGNED, {
@@ -184,7 +209,7 @@ export function useUniswapXSwapCallback({
             ...analyticsContext,
             // TODO (WEB-2993): remove these after debugging missing user properties.
             [CustomUserProperties.WALLET_ADDRESS]: account.address,
-            [CustomUserProperties.WALLET_TYPE]: connectorName,
+            [CustomUserProperties.WALLET_TYPE]: account.connector.name,
             [CustomUserProperties.PEER_WALLET_AGENT]: provider ? getWalletMeta(provider)?.agent : undefined,
           })
 
@@ -278,17 +303,6 @@ export function useUniswapXSwapCallback({
           }
         }
       }),
-    [
-      account.status,
-      account.address,
-      account.chainId,
-      provider,
-      trade,
-      allowedSlippage,
-      fiatValues,
-      portfolioBalanceUsd,
-      analyticsContext,
-      connectorName,
-    ],
+    [chainId, trade, allowedSlippage, fiatValues, portfolioBalanceUsd, analyticsContext],
   )
 }

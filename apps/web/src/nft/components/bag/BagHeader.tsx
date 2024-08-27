@@ -1,9 +1,9 @@
 import { OpacityHoverState } from 'components/Common'
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { BagCloseIcon } from 'nft/components/icons'
 import { useMemo } from 'react'
-import styled from 'styled-components'
 import { ButtonText, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 const ClearButton = styled(ButtonText)`
   color: ${({ theme }) => theme.neutral2};
@@ -85,7 +85,7 @@ export const BagHeader = ({ numberOfAssets, closeBag, resetFlow, isProfilePage }
         <>
           <CounterDot sizing={sizing}>{numberOfAssets}</CounterDot>
           <ClearButton onClick={resetFlow}>
-            <Trans i18nKey="common.clearAll" />
+            <Trans i18nKey="tokens.selector.button.clear" />
           </ClearButton>
         </>
       )}

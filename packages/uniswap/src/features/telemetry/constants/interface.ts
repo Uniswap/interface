@@ -3,6 +3,7 @@ export enum InterfaceEventNameLocal {
   UniswapXOrderDetailsSheetOpened = 'UniswapX Order Details Sheet Opened',
   UniswapXOrderCancelInitiated = 'UniswapX Order Cancel Initiated',
   UniswapXSignatureRequested = 'UniswapX Signature Requested',
+  UniswapXSignatureDeadlineExpired = 'UniswapX Signature Deadline Expired',
   UniswapXOrderPostError = 'UniswapX Order Post Error',
   UniswapXOrderSubmitted = 'UniswapX Order Submitted',
   LimitPresetRateSelected = 'Limit Preset Rate Selected',

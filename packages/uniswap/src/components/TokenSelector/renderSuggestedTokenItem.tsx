@@ -1,6 +1,6 @@
 import { Flex } from 'ui/src'
 import { SuggestedToken } from 'uniswap/src/components/TokenSelector/SuggestedToken'
-import { OnSelectCurrency, SuggestedTokenSection, TokenOption } from 'uniswap/src/components/TokenSelector/types'
+import { OnSelectCurrency, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 
 export function renderSuggestedTokenItem({
   item: suggestedTokens,
@@ -9,7 +9,7 @@ export function renderSuggestedTokenItem({
   onSelectCurrency,
 }: {
   item: TokenOption[]
-  section: SuggestedTokenSection
+  section: TokenSection
   index: number
   onSelectCurrency: OnSelectCurrency
 }): JSX.Element {

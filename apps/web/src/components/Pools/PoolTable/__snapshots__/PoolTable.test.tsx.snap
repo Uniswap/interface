@@ -169,6 +169,11 @@ exports[`PoolTable renders data filled state 1`] = `
   background: #FFFFFF;
 }
 
+.c3:before {
+  content: '';
+  height: 12px;
+}
+
 .c18 {
   width: 100%;
   position: relative;
@@ -429,200 +434,28 @@ exports[`PoolTable renders data filled state 1`] = `
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0"
-        data-testid="top-pools-explore-table"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
-        <div>
-          <div
-            class="c1 c2"
-          >
+        <div
+          class="c0"
+          data-testid="top-pools-explore-table"
+        >
+          <div>
             <div
-              class="c3"
+              class="c1 c2"
             >
               <div
-                class="c4 c5 c6 c7"
+                class="c3"
               >
                 <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c10 css-1urox24"
-                    >
-                      #
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c10 css-1urox24"
-                    >
-                      Pool
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c13"
-                    >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <div
-                            class="c10 css-1urox24"
-                          >
-                            Transactions
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c13"
-                    >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <svg
-                            class="c15"
-                            direction="desc"
-                            fill="none"
-                            height="24"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            viewBox="0 0 24 24"
-                            width="24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <line
-                              x1="12"
-                              x2="12"
-                              y1="5"
-                              y2="19"
-                            />
-                            <polyline
-                              points="19 12 12 19 5 12"
-                            />
-                          </svg>
-                          <div
-                            class="c10 c16 css-1urox24"
-                          >
-                            TVL
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c13"
-                    >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <div
-                            class="c10 css-1urox24"
-                          >
-                            1 day volume
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c13"
-                    >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <div
-                            class="c10 css-1urox24"
-                          >
-                            7 day volume
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c13"
-                    >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <div
-                            class="c10 css-1urox24"
-                          >
-                            1 day APR
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c1 c18"
-            >
-              <a
-                class="c19"
-                href="/explore/pools/ethereum/0x123"
-              >
-                <div
-                  class="c4 c5 c6 c20"
+                  class="c4 c5 c6 c7"
                 >
                   <div
                     class="c8"
@@ -633,7 +466,7 @@ exports[`PoolTable renders data filled state 1`] = `
                       <div
                         class="c10 css-1urox24"
                       >
-                        1
+                        #
                       </div>
                     </div>
                   </div>
@@ -644,36 +477,100 @@ exports[`PoolTable renders data filled state 1`] = `
                       class="c11"
                     >
                       <div
-                        class="c4 c21"
+                        class="c10 css-1urox24"
                       >
-                        <div
-                          class="c22"
-                        >
+                        Pool
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c13"
+                      >
+                        <div>
                           <div
-                            class="c23"
-                            size="28"
+                            class="c4 c5 c14"
                           >
-                            <img
-                              class="c24"
-                              size="28"
-                              src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                            />
-                            <img
-                              class="c24"
-                              size="28"
-                              src="ethereum-logo.png"
-                            />
+                            <div
+                              class="c10 css-1urox24"
+                            >
+                              Transactions
+                            </div>
                           </div>
                         </div>
-                        <div
-                          class="c25 c26 css-1urox24"
-                        >
-                          USDC/ETH
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c13"
+                      >
+                        <div>
+                          <div
+                            class="c4 c5 c14"
+                          >
+                            <svg
+                              class="c15"
+                              direction="desc"
+                              fill="none"
+                              height="24"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <line
+                                x1="12"
+                                x2="12"
+                                y1="5"
+                                y2="19"
+                              />
+                              <polyline
+                                points="19 12 12 19 5 12"
+                              />
+                            </svg>
+                            <div
+                              class="c10 c16 css-1urox24"
+                            >
+                              TVL
+                            </div>
+                          </div>
                         </div>
-                        <div
-                          class="c10 c27 css-1m65e73"
-                        >
-                          1%
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c13"
+                      >
+                        <div>
+                          <div
+                            class="c4 c5 c14"
+                          >
+                            <div
+                              class="c10 css-1urox24"
+                            >
+                              1 day volume
+                            </div>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -685,48 +582,19 @@ exports[`PoolTable renders data filled state 1`] = `
                       class="c12"
                     >
                       <div
-                        class="c25 css-1urox24"
+                        class="c13"
                       >
-                        200
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="c8"
-                  >
-                    <div
-                      class="c12"
-                    >
-                      <div
-                        class="c25 css-1urox24"
-                      >
-                        $300.00
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="c8"
-                  >
-                    <div
-                      class="c12"
-                    >
-                      <div
-                        class="c25 css-1urox24"
-                      >
-                        $400.00
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="c8"
-                  >
-                    <div
-                      class="c12"
-                    >
-                      <div
-                        class="c25 css-1urox24"
-                      >
-                        $500.00
+                        <div>
+                          <div
+                            class="c4 c5 c14"
+                          >
+                            <div
+                              class="c10 css-1urox24"
+                            >
+                              7 day volume
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -737,41 +605,183 @@ exports[`PoolTable renders data filled state 1`] = `
                       class="c17"
                     >
                       <div
-                        class="c25 css-1urox24"
+                        class="c13"
                       >
-                        6%
+                        <div>
+                          <div
+                            class="c4 c5 c14"
+                          >
+                            <div
+                              class="c10 css-1urox24"
+                            >
+                              1 day APR
+                            </div>
+                          </div>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </a>
-            </div>
-            <div
-              class="c4 c5 c28"
-            >
+              </div>
               <div
-                class="c4 c5 c29"
+                class="c1 c18"
               >
-                <svg
-                  class="c30 c31"
-                  fill="none"
-                  stroke="#FC72FF"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
+                <a
+                  class="c19"
+                  href="/explore/pools/ethereum/0x123"
                 >
-                  <path
-                    d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2.5"
-                  />
-                </svg>
-                Loading
+                  <div
+                    class="c4 c5 c6 c20"
+                  >
+                    <div
+                      class="c8"
+                    >
+                      <div
+                        class="c9"
+                      >
+                        <div
+                          class="c10 css-1urox24"
+                        >
+                          1
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c8"
+                    >
+                      <div
+                        class="c11"
+                      >
+                        <div
+                          class="c4 c21"
+                        >
+                          <div
+                            class="c22"
+                          >
+                            <div
+                              class="c23"
+                              size="28"
+                            >
+                              <img
+                                class="c24"
+                                size="28"
+                                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                              />
+                              <img
+                                class="c24"
+                                size="28"
+                                src="ethereum-logo.png"
+                              />
+                            </div>
+                          </div>
+                          <div
+                            class="c25 c26 css-1urox24"
+                          >
+                            USDC/ETH
+                          </div>
+                          <div
+                            class="c10 c27 css-1m65e73"
+                          >
+                            1%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c8"
+                    >
+                      <div
+                        class="c12"
+                      >
+                        <div
+                          class="c25 css-1urox24"
+                        >
+                          200
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c8"
+                    >
+                      <div
+                        class="c12"
+                      >
+                        <div
+                          class="c25 css-1urox24"
+                        >
+                          $300.00
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c8"
+                    >
+                      <div
+                        class="c12"
+                      >
+                        <div
+                          class="c25 css-1urox24"
+                        >
+                          $400.00
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c8"
+                    >
+                      <div
+                        class="c12"
+                      >
+                        <div
+                          class="c25 css-1urox24"
+                        >
+                          $500.00
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c8"
+                    >
+                      <div
+                        class="c17"
+                      >
+                        <div
+                          class="c25 css-1urox24"
+                        >
+                          6%
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div
+                class="c4 c5 c28"
+              >
+                <div
+                  class="c4 c5 c29"
+                >
+                  <svg
+                    class="c30 c31"
+                    fill="none"
+                    stroke="#FC72FF"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <path
+                      d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2.5"
+                    />
+                  </svg>
+                  Loading
+                </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -917,6 +927,11 @@ exports[`PoolTable renders error state 1`] = `
   -ms-flex-pack: end;
   justify-content: flex-end;
   background: #FFFFFF;
+}
+
+.c3:before {
+  content: '';
+  height: 12px;
 }
 
 .c18 {
@@ -1181,885 +1196,890 @@ exports[`PoolTable renders error state 1`] = `
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0"
-        data-testid="top-pools-explore-table"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
-        <div>
-          <div
-            class="c1 c2"
-          >
+        <div
+          class="c0"
+          data-testid="top-pools-explore-table"
+        >
+          <div>
             <div
-              class="c3"
+              class="c1 c2"
             >
               <div
-                class="c4 c5 c6 c7"
+                class="c3"
               >
                 <div
-                  class="c8"
+                  class="c4 c5 c6 c7"
                 >
                   <div
-                    class="c9"
+                    class="c8"
                   >
                     <div
-                      class="c10 css-1urox24"
+                      class="c9"
                     >
-                      #
+                      <div
+                        class="c10 css-1urox24"
+                      >
+                        #
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  class="c8"
-                >
                   <div
-                    class="c11"
+                    class="c8"
                   >
                     <div
-                      class="c10 css-1urox24"
+                      class="c11"
                     >
-                      Pool
+                      <div
+                        class="c10 css-1urox24"
+                      >
+                        Pool
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  class="c8"
-                >
                   <div
-                    class="c12"
+                    class="c8"
                   >
                     <div
-                      class="c13"
+                      class="c12"
                     >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
+                      <div
+                        class="c13"
+                      >
+                        <div>
                           <div
-                            class="c10 css-1urox24"
+                            class="c4 c5 c14"
                           >
-                            Transactions
+                            <div
+                              class="c10 css-1urox24"
+                            >
+                              Transactions
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c13"
+                      >
+                        <div>
+                          <div
+                            class="c4 c5 c14"
+                          >
+                            <svg
+                              class="c15"
+                              direction="desc"
+                              fill="none"
+                              height="24"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <line
+                                x1="12"
+                                x2="12"
+                                y1="5"
+                                y2="19"
+                              />
+                              <polyline
+                                points="19 12 12 19 5 12"
+                              />
+                            </svg>
+                            <div
+                              class="c10 c16 css-1urox24"
+                            >
+                              TVL
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c13"
+                      >
+                        <div>
+                          <div
+                            class="c4 c5 c14"
+                          >
+                            <div
+                              class="c10 css-1urox24"
+                            >
+                              1 day volume
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c13"
+                      >
+                        <div>
+                          <div
+                            class="c4 c5 c14"
+                          >
+                            <div
+                              class="c10 css-1urox24"
+                            >
+                              7 day volume
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c13"
+                      >
+                        <div>
+                          <div
+                            class="c4 c5 c14"
+                          >
+                            <div
+                              class="c10 css-1urox24"
+                            >
+                              1 day APR
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
+              <div
+                class="c1 c18"
+              >
                 <div
-                  class="c8"
+                  class="c4 c5 c6 c19"
                 >
                   <div
-                    class="c12"
+                    class="c8"
                   >
                     <div
-                      class="c13"
+                      class="c9"
                     >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <svg
-                            class="c15"
-                            direction="desc"
-                            fill="none"
-                            height="24"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            viewBox="0 0 24 24"
-                            width="24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <line
-                              x1="12"
-                              x2="12"
-                              y1="5"
-                              y2="19"
-                            />
-                            <polyline
-                              points="19 12 12 19 5 12"
-                            />
-                          </svg>
-                          <div
-                            class="c10 c16 css-1urox24"
-                          >
-                            TVL
-                          </div>
-                        </div>
-                      </div>
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c8"
+                  class="c4 c5 c6 c19"
                 >
                   <div
-                    class="c12"
+                    class="c8"
                   >
                     <div
-                      class="c13"
+                      class="c9"
                     >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <div
-                            class="c10 css-1urox24"
-                          >
-                            1 day volume
-                          </div>
-                        </div>
-                      </div>
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c8"
+                  class="c4 c5 c6 c19"
                 >
                   <div
-                    class="c12"
+                    class="c8"
                   >
                     <div
-                      class="c13"
+                      class="c9"
                     >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <div
-                            class="c10 css-1urox24"
-                          >
-                            7 day volume
-                          </div>
-                        </div>
-                      </div>
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c8"
+                  class="c4 c5 c6 c19"
                 >
                   <div
-                    class="c17"
+                    class="c8"
                   >
                     <div
-                      class="c13"
+                      class="c9"
                     >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <div
-                            class="c10 css-1urox24"
-                          >
-                            1 day APR
-                          </div>
-                        </div>
-                      </div>
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c4 c5 c6 c19"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c9"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c4 c5 c6 c19"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c9"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c4 c5 c6 c19"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c9"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c22"
+                  data-testid="table-error-modal"
+                >
+                  <div>
+                    <svg
+                      fill="none"
+                      height="40"
+                      viewBox="0 0 40 40"
+                      width="40"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <rect
+                        fill="#fff"
+                        fill-opacity=".12"
+                        height="40"
+                        rx="12"
+                        width="40"
+                      />
+                      <path
+                        clip-rule="evenodd"
+                        d="m19.5833 27.5h.8334c.8333 0 1.25-.4167 1.25-1.25v-2.2203l-3.3326 2.2802c.0197.7934.4361 1.1901 1.2492 1.1901zm-1.25-8.4596v-5.2904c0-.8333.4167-1.25 1.25-1.25h.8334c.8333 0 1.25.4167 1.25 1.25v3.0097zm5.8334 3.2788 3.3333-2.2807v6.2115c0 .8333-.4167 1.25-1.25 1.25h-.8333c-.8334 0-1.25-.4167-1.25-1.25zm-8.3866-1.5318-3.2801 2.2443v-1.7817c0-.8333.4167-1.25 1.25-1.25h.8333c.6614 0 1.0603.2625 1.1968.7874zm-2.862 6.4904-.3496-.511c.0672.2197.1837.39.3496.511z"
+                        fill="#9b9b9b"
+                        fill-rule="evenodd"
+                      />
+                      <path
+                        d="m12.5 26.6667 15.8333-10.8333"
+                        stroke="#9b9b9b"
+                        stroke-linecap="round"
+                        stroke-width="2"
+                      />
+                    </svg>
+                  </div>
+                  <div
+                    class="c1"
+                  >
+                    <div
+                      class="c23 css-n8z49y"
+                    >
+                      Error loading data
+                    </div>
+                    <div
+                      class="c10 css-142zc9n"
+                    >
+                      Data is unavailable at the moment; we’re working on a fix
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              class="c1 c18"
-            >
               <div
-                class="c4 c5 c6 c19"
+                class="c4 c5 c24"
               >
                 <div
-                  class="c8"
+                  class="c4 c5 c25"
                 >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c6 c19"
-              >
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c6 c19"
-              >
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c6 c19"
-              >
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c6 c19"
-              >
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c6 c19"
-              >
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c6 c19"
-              >
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c22"
-                data-testid="table-error-modal"
-              >
-                <div>
                   <svg
+                    class="c26 c27"
                     fill="none"
-                    height="40"
-                    viewBox="0 0 40 40"
-                    width="40"
+                    stroke="#FC72FF"
+                    viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
-                    <rect
-                      fill="#fff"
-                      fill-opacity=".12"
-                      height="40"
-                      rx="12"
-                      width="40"
-                    />
                     <path
-                      clip-rule="evenodd"
-                      d="m19.5833 27.5h.8334c.8333 0 1.25-.4167 1.25-1.25v-2.2203l-3.3326 2.2802c.0197.7934.4361 1.1901 1.2492 1.1901zm-1.25-8.4596v-5.2904c0-.8333.4167-1.25 1.25-1.25h.8334c.8333 0 1.25.4167 1.25 1.25v3.0097zm5.8334 3.2788 3.3333-2.2807v6.2115c0 .8333-.4167 1.25-1.25 1.25h-.8333c-.8334 0-1.25-.4167-1.25-1.25zm-8.3866-1.5318-3.2801 2.2443v-1.7817c0-.8333.4167-1.25 1.25-1.25h.8333c.6614 0 1.0603.2625 1.1968.7874zm-2.862 6.4904-.3496-.511c.0672.2197.1837.39.3496.511z"
-                      fill="#9b9b9b"
-                      fill-rule="evenodd"
-                    />
-                    <path
-                      d="m12.5 26.6667 15.8333-10.8333"
-                      stroke="#9b9b9b"
+                      d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
                       stroke-linecap="round"
-                      stroke-width="2"
+                      stroke-linejoin="round"
+                      stroke-width="2.5"
                     />
                   </svg>
+                  Loading
                 </div>
-                <div
-                  class="c1"
-                >
-                  <div
-                    class="c23 css-n8z49y"
-                  >
-                    Error loading data
-                  </div>
-                  <div
-                    class="c10 css-142zc9n"
-                  >
-                    Data is unavailable at the moment; we’re working on a fix
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c4 c5 c24"
-            >
-              <div
-                class="c4 c5 c25"
-              >
-                <svg
-                  class="c26 c27"
-                  fill="none"
-                  stroke="#FC72FF"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2.5"
-                  />
-                </svg>
-                Loading
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -2167,6 +2187,11 @@ exports[`PoolTable renders loading state 1`] = `
   -ms-flex-pack: end;
   justify-content: flex-end;
   background: #FFFFFF;
+}
+
+.c3:before {
+  content: '';
+  height: 12px;
 }
 
 .c18 {
@@ -2430,837 +2455,842 @@ exports[`PoolTable renders loading state 1`] = `
 }
 
 <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0"
-        data-testid="top-pools-explore-table"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
-        <div>
-          <div
-            class="c1 c2"
-          >
+        <div
+          class="c0"
+          data-testid="top-pools-explore-table"
+        >
+          <div>
             <div
-              class="c3"
+              class="c1 c2"
             >
               <div
-                class="c4 c5 c6 c7"
+                class="c3"
               >
                 <div
-                  class="c8"
+                  class="c4 c5 c6 c7"
                 >
                   <div
-                    class="c9"
+                    class="c8"
                   >
                     <div
-                      class="c10 css-1urox24"
+                      class="c9"
                     >
-                      #
+                      <div
+                        class="c10 css-1urox24"
+                      >
+                        #
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  class="c8"
-                >
                   <div
-                    class="c11"
+                    class="c8"
                   >
                     <div
-                      class="c10 css-1urox24"
+                      class="c11"
                     >
-                      Pool
+                      <div
+                        class="c10 css-1urox24"
+                      >
+                        Pool
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div
-                  class="c8"
-                >
                   <div
-                    class="c12"
+                    class="c8"
                   >
                     <div
-                      class="c13"
+                      class="c12"
                     >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
+                      <div
+                        class="c13"
+                      >
+                        <div>
                           <div
-                            class="c10 css-1urox24"
+                            class="c4 c5 c14"
                           >
-                            Transactions
+                            <div
+                              class="c10 css-1urox24"
+                            >
+                              Transactions
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c13"
+                      >
+                        <div>
+                          <div
+                            class="c4 c5 c14"
+                          >
+                            <svg
+                              class="c15"
+                              direction="desc"
+                              fill="none"
+                              height="24"
+                              stroke="currentColor"
+                              stroke-linecap="round"
+                              stroke-linejoin="round"
+                              stroke-width="2"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <line
+                                x1="12"
+                                x2="12"
+                                y1="5"
+                                y2="19"
+                              />
+                              <polyline
+                                points="19 12 12 19 5 12"
+                              />
+                            </svg>
+                            <div
+                              class="c10 c16 css-1urox24"
+                            >
+                              TVL
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c13"
+                      >
+                        <div>
+                          <div
+                            class="c4 c5 c14"
+                          >
+                            <div
+                              class="c10 css-1urox24"
+                            >
+                              1 day volume
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c13"
+                      >
+                        <div>
+                          <div
+                            class="c4 c5 c14"
+                          >
+                            <div
+                              class="c10 css-1urox24"
+                            >
+                              7 day volume
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c13"
+                      >
+                        <div>
+                          <div
+                            class="c4 c5 c14"
+                          >
+                            <div
+                              class="c10 css-1urox24"
+                            >
+                              1 day APR
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
+              </div>
+              <div
+                class="c1 c18"
+              >
                 <div
-                  class="c8"
+                  class="c4 c5 c6 c19"
                 >
                   <div
-                    class="c12"
+                    class="c8"
                   >
                     <div
-                      class="c13"
+                      class="c9"
                     >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <svg
-                            class="c15"
-                            direction="desc"
-                            fill="none"
-                            height="24"
-                            stroke="currentColor"
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            viewBox="0 0 24 24"
-                            width="24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <line
-                              x1="12"
-                              x2="12"
-                              y1="5"
-                              y2="19"
-                            />
-                            <polyline
-                              points="19 12 12 19 5 12"
-                            />
-                          </svg>
-                          <div
-                            class="c10 c16 css-1urox24"
-                          >
-                            TVL
-                          </div>
-                        </div>
-                      </div>
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c8"
+                  class="c4 c5 c6 c19"
                 >
                   <div
-                    class="c12"
+                    class="c8"
                   >
                     <div
-                      class="c13"
+                      class="c9"
                     >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <div
-                            class="c10 css-1urox24"
-                          >
-                            1 day volume
-                          </div>
-                        </div>
-                      </div>
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c8"
+                  class="c4 c5 c6 c19"
                 >
                   <div
-                    class="c12"
+                    class="c8"
                   >
                     <div
-                      class="c13"
+                      class="c9"
                     >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <div
-                            class="c10 css-1urox24"
-                          >
-                            7 day volume
-                          </div>
-                        </div>
-                      </div>
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c8"
+                  class="c4 c5 c6 c19"
                 >
                   <div
-                    class="c17"
+                    class="c8"
                   >
                     <div
-                      class="c13"
+                      class="c9"
                     >
-                      <div>
-                        <div
-                          class="c4 c5 c14"
-                        >
-                          <div
-                            class="c10 css-1urox24"
-                          >
-                            1 day APR
-                          </div>
-                        </div>
-                      </div>
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c4 c5 c6 c19"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c9"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c4 c5 c6 c19"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c9"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div
+                  class="c4 c5 c6 c19"
+                >
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c9"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c11"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c12"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
+                    </div>
+                  </div>
+                  <div
+                    class="c8"
+                  >
+                    <div
+                      class="c17"
+                    >
+                      <div
+                        class="c20 c21"
+                        data-testid="cell-loading-bubble"
+                      />
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
-            <div
-              class="c1 c18"
-            >
               <div
-                class="c4 c5 c6 c19"
+                class="c4 c5 c22"
               >
                 <div
-                  class="c8"
+                  class="c4 c5 c23"
                 >
-                  <div
-                    class="c9"
+                  <svg
+                    class="c24 c25"
+                    fill="none"
+                    stroke="#FC72FF"
+                    viewBox="0 0 24 24"
+                    xmlns="http://www.w3.org/2000/svg"
                   >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
+                    <path
+                      d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2.5"
                     />
-                  </div>
+                  </svg>
+                  Loading
                 </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c6 c19"
-              >
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c6 c19"
-              >
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c6 c19"
-              >
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c6 c19"
-              >
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c6 c19"
-              >
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c6 c19"
-              >
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c9"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c11"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c12"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-                <div
-                  class="c8"
-                >
-                  <div
-                    class="c17"
-                  >
-                    <div
-                      class="c20 c21"
-                      data-testid="cell-loading-bubble"
-                    />
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div
-              class="c4 c5 c22"
-            >
-              <div
-                class="c4 c5 c23"
-              >
-                <svg
-                  class="c24 c25"
-                  fill="none"
-                  stroke="#FC72FF"
-                  viewBox="0 0 24 24"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2.5"
-                  />
-                </svg>
-                Loading
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>

@@ -2,18 +2,16 @@ import { LinearGradient } from 'expo-linear-gradient'
 import { ComponentProps, default as React, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleSheet } from 'react-native'
+import { FlatList } from 'react-native-gesture-handler'
 import { AccountCardItem } from 'src/components/accounts/AccountCardItem'
-import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { opacify, spacing } from 'ui/src/theme'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
-
-// Most screens can fit more but this is set conservatively
-const MIN_ACCOUNTS_TO_ENABLE_SCROLL = 5
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 type AccountListProps = Pick<ComponentProps<typeof AccountCardItem>, 'onPress'> & {
   accounts: Account[]
@@ -26,7 +24,7 @@ type AccountWithPortfolioValue = {
   portfolioValue: number | undefined
 }
 
-const ViewOnlyHeader = (): JSX.Element => {
+const ViewOnlyHeaderContent = (): JSX.Element => {
   const { t } = useTranslation()
   return (
     <Flex fill px="$spacing24" py="$spacing8">
@@ -36,6 +34,19 @@ const ViewOnlyHeader = (): JSX.Element => {
     </Flex>
   )
 }
+
+enum AccountListItemType {
+  SignerHeader,
+  SignerAccount,
+  ViewOnlyHeader,
+  ViewOnlyAccount,
+}
+
+type AccountListItem =
+  | { type: AccountListItemType.SignerHeader }
+  | { type: AccountListItemType.SignerAccount; account: AccountWithPortfolioValue }
+  | { type: AccountListItemType.ViewOnlyHeader }
+  | { type: AccountListItemType.ViewOnlyAccount; account: AccountWithPortfolioValue }
 
 const SignerHeader = (): JSX.Element => {
   const { t } = useTranslation()
@@ -107,6 +118,45 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
     [onPress],
   )
 
+  const accountsToRender = useMemo(() => {
+    const items: AccountListItem[] = []
+
+    if (hasSignerAccounts) {
+      items.push({ type: AccountListItemType.SignerHeader })
+      items.push(...signerAccounts.map((account) => ({ type: AccountListItemType.SignerAccount, account })))
+    }
+
+    if (hasViewOnlyAccounts) {
+      items.push({ type: AccountListItemType.ViewOnlyHeader })
+      items.push(...viewOnlyAccounts.map((account) => ({ type: AccountListItemType.ViewOnlyAccount, account })))
+    }
+
+    return items
+  }, [hasSignerAccounts, hasViewOnlyAccounts, signerAccounts, viewOnlyAccounts])
+
+  const renderItem = useCallback(
+    ({ item }: { item: AccountListItem }) => {
+      switch (item.type) {
+        case AccountListItemType.SignerHeader:
+          return <SignerHeader />
+        case AccountListItemType.ViewOnlyHeader:
+          return <ViewOnlyHeaderContent />
+        case AccountListItemType.SignerAccount:
+        case AccountListItemType.ViewOnlyAccount:
+          return renderAccountCardItem(item.account)
+      }
+    },
+    [renderAccountCardItem],
+  )
+
+  const keyExtractor = useCallback(
+    (item: AccountListItem, index: number) =>
+      item.type === AccountListItemType.SignerAccount || item.type === AccountListItemType.ViewOnlyAccount
+        ? item.account.account.address
+        : item.type.toString() + index,
+    [],
+  )
+
   return (
     <Flex shrink>
       {/* TODO(MOB-646): attempt to switch gradients to react-native-svg#LinearGradient and avoid new clear color */}
@@ -116,24 +166,7 @@ export function AccountList({ accounts, onPress, isVisible }: AccountListProps):
         start={{ x: 0, y: 1 }}
         style={ListSheet.topGradient}
       />
-      <VirtualizedList
-        bounces={false}
-        scrollEnabled={accountsWithPortfolioValue.length >= MIN_ACCOUNTS_TO_ENABLE_SCROLL}
-        showsVerticalScrollIndicator={false}
-      >
-        {hasSignerAccounts && (
-          <>
-            <SignerHeader />
-            {signerAccounts.map(renderAccountCardItem)}
-          </>
-        )}
-        {hasViewOnlyAccounts && (
-          <>
-            <ViewOnlyHeader />
-            {viewOnlyAccounts.map(renderAccountCardItem)}
-          </>
-        )}
-      </VirtualizedList>
+      <FlatList data={accountsToRender} keyExtractor={keyExtractor} renderItem={renderItem} />
       <LinearGradient
         colors={[opacify(0, colors.surface1.val), colors.surface1.val]}
         end={{ x: 0, y: 1 }}

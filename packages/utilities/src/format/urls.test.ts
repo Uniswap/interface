@@ -19,9 +19,7 @@ describe(uriToHttpUrls, () => {
     ])
   })
   it('returns ipfs gateways for wrongly formated ipfs:// urls', () => {
-    expect(
-      uriToHttpUrls('ipfs://ipfs/QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif')
-    ).toEqual([
+    expect(uriToHttpUrls('ipfs://ipfs/QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif')).toEqual([
       'https://cloudflare-ipfs.com/ipfs/QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif/',
       'https://ipfs.io/ipfs/QmSP4nq9fnN9dAiCj42ug9Wa79rqmQerZXZch82VqpiH7U/image.gif/',
     ])
@@ -150,6 +148,11 @@ describe(isGifUri, () => {
 })
 
 describe(formatDappURL, () => {
+  it('removes query params from url', () => {
+    expect(formatDappURL('example.com?test=true')).toEqual('example.com')
+    expect(formatDappURL('example.com?test=true&test2=false')).toEqual('example.com')
+  })
+
   it('removes prefix from url', () => {
     expect(formatDappURL('https://example.com')).toEqual('example.com')
     expect(formatDappURL('https://www.example.com')).toEqual('example.com')

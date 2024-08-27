@@ -12,8 +12,13 @@ import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
-import { SpendingDetails } from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
+import {
+  SpendingDetails,
+  SpendingEthDetails,
+} from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
 import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
+import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
+import { useTransactionCurrencies } from 'wallet/src/utils/useTransactionCurrencies'
 
 interface FallbackEthSendRequestProps {
   transactionGasFeeResult: GasFeeResult
@@ -48,6 +53,8 @@ export function FallbackEthSendRequestContent({
       }),
     [calldata, copyToClipboard],
   )
+  const { parsedTransactionData } = useNoYoloParser(dappRequest.transaction, chainId)
+  const transactionCurrencies = useTransactionCurrencies({ chainId, to: toAddress, parsedTransactionData })
 
   return (
     <DappRequestContent
@@ -67,9 +74,19 @@ export function FallbackEthSendRequestContent({
         p="$spacing16"
         width="100%"
       >
-        {sending && !BigNumber.from(sending).eq(0) && chainId && <SpendingDetails chainId={chainId} value={sending} />}
+        {sending && !BigNumber.from(sending).eq(0) && chainId && (
+          <SpendingEthDetails chainId={chainId} value={sending} />
+        )}
+        {transactionCurrencies?.map((currencyInfo, i) => (
+          <SpendingDetails
+            key={currencyInfo.currencyId}
+            currencyInfo={currencyInfo}
+            showLabel={i === 0}
+            tokenCount={transactionCurrencies.length}
+          />
+        ))}
         {toAddress && (
-          <ContentRow label={t('common.text.recipient')}>
+          <ContentRow label={t('common.text.contract')}>
             <Anchor href={recipientLink} rel="noopener noreferrer" target="_blank" textDecorationLine="none">
               <Flex row alignItems="center" gap="$spacing8">
                 <Text color="$neutral1" variant="body4">
@@ -92,7 +109,7 @@ export function FallbackEthSendRequestContent({
             // variant="monospace"
             variant="body4"
           >
-            {contractFunction || t('common.text.unknown')}
+            {parsedTransactionData?.name || contractFunction || t('common.text.unknown')}
           </Text>
         </ContentRow>
         {calldata && (

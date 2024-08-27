@@ -6,12 +6,13 @@ const { readFileSync } = require('fs')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
-const { IgnorePlugin, ProvidePlugin } = require('webpack')
+const { IgnorePlugin, ProvidePlugin, DefinePlugin } = require('webpack')
 const { RetryChunkLoadPlugin } = require('webpack-retry-chunk-load-plugin')
 const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 
 const commitHash = execSync('git rev-parse HEAD').toString().trim()
 const isProduction = process.env.NODE_ENV === 'production'
+const isDev =  process.env.NODE_ENV === 'development'
 
 process.env.REACT_APP_GIT_COMMIT_HASH = commitHash
 
@@ -64,7 +65,7 @@ module.exports = {
         cacheDirectory: getCacheDirectory('jest'),
         transform: {
           ...Object.entries(jestConfig.transform).reduce((transform, [key, value]) => {
-            if (value.match(/babel/)) return transform
+            if (value.match(/babel/)) {return transform}
             return { ...transform, [key]: value }
           }, {}),
           // Transform vanilla-extract using its own transformer.
@@ -85,6 +86,9 @@ module.exports = {
   },
   webpack: {
     plugins: [
+      new DefinePlugin({
+        __DEV__: isDev,
+      }),
       // Webpack 5 does not polyfill node globals, so we do so for those necessary:
       new ProvidePlugin({
         // - react-markdown requires process.cwd
@@ -103,6 +107,10 @@ module.exports = {
       }),
     ],
     configure: (webpackConfig) => {
+      webpackConfig.resolve.extensions.unshift('.web.tsx')
+      webpackConfig.resolve.extensions.unshift('.web.ts')
+      webpackConfig.resolve.extensions.unshift('.web.js')
+      
       if (isProduction || process.env.UNISWAP_ANALYZE_BUNDLE_SIZE) {
         // do bundle analysis
         webpackConfig.plugins.push(
@@ -133,10 +141,10 @@ module.exports = {
         .filter((plugin) => {
           // Case sensitive paths are already enforced by TypeScript.
           // See https://www.typescriptlang.org/tsconfig#forceConsistentCasingInFileNames.
-          if (plugin instanceof CaseSensitivePathsPlugin) return false
+          if (plugin instanceof CaseSensitivePathsPlugin) {return false}
 
           // IgnorePlugin is used to tree-shake moment locales, but we do not use moment in this project.
-          if (plugin instanceof IgnorePlugin) return false
+          if (plugin instanceof IgnorePlugin) {return false}
 
           return true
         })
@@ -148,7 +156,6 @@ module.exports = {
           '@web3-react/core': path.resolve(__dirname, 'src/connection/web3reactShim.ts'),
           crypto: require.resolve('expo-crypto'),
           'react-native-gesture-handler$': require.resolve('react-native-gesture-handler'),
-          'react-native-svg$': require.resolve('@tamagui/react-native-svg'),
           'react-native$': 'react-native-web',
         },
         plugins: webpackConfig.resolve.plugins.map((plugin) => {
@@ -190,6 +197,47 @@ module.exports = {
           }
         }
         return rule
+      })
+
+      // add tamagui compiler for web files
+      // it does three stages (loaders run last to first):
+      //   1. esbuild-loader just to strip types
+      //   2. tamagui-loader optimizes and adds helpful dev data- attributes
+      //   3. then swc finishes using our options
+      webpackConfig.module.rules[1].oneOf.unshift({
+        test: /.tsx?$/,
+        exclude: (file) => file.includes('node_modules'),
+        use: [
+          // one after to remove the jsx
+          {
+            loader: 'swc-loader',
+            options: swcrc
+          },
+
+          // tamagui optimizes the jsx
+          {
+            loader: 'tamagui-loader',
+            options: {
+              config: '../../packages/ui/src/tamagui.config.ts',
+              components: ['ui'],
+              // add files here that should be parsed by the compiler from within any of the apps/*
+              // for example if you have constants.ts then constants.js goes here and it will eval them
+              // at build time and if it can flatten views even if they use imports from that file
+              importsWhitelist: ['constants.js'],
+              disableExtraction: process.env.NODE_ENV === 'development',
+            },
+          },
+
+          // one before just to remove types
+          {
+            loader: 'esbuild-loader',
+            options: {
+              target: 'es2022',
+              jsx: 'preserve',
+              minify: false,
+            },
+          },
+        ],
       })
 
       // since wallet package uses react-native-dotenv and that needs a babel plugin

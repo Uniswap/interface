@@ -1,61 +1,30 @@
 import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
-import Column from 'components/Column'
-import { DropdownSelector, StyledMenuContent } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import ChainSelectorRow from 'components/NavBar/ChainSelector/ChainSelectorRow'
 import { NavDropdown } from 'components/NavBar/NavDropdown/NavDropdown'
+import { NavIcon } from 'components/NavBar/NavIcon'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import {
+  ALL_CHAIN_IDS,
   CHAIN_IDS_TO_NAMES,
-  L1_CHAIN_IDS,
-  L2_CHAIN_IDS,
   TESTNET_CHAIN_IDS,
   getChainPriority,
   useIsSupportedChainIdCallback,
 } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
-import { t } from 'i18n'
 import { useAtomValue } from 'jotai/utils'
+import { useTheme } from 'lib/styled-components'
 import { useCallback, useMemo, useRef, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useSearchParams } from 'react-router-dom'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
-import styled, { css, useTheme } from 'styled-components'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Flex, Popover } from 'ui/src'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { Connector } from 'wagmi'
-
-const NETWORK_SELECTOR_CHAINS = [...L1_CHAIN_IDS, ...L2_CHAIN_IDS]
-
-const StyledDropdownButton = css`
-  display: flex;
-  flex-direction: row;
-  padding: 10px 8px;
-  background: none;
-  gap: 4px;
-  border: none;
-  & ${StyledMenuContent} {
-    gap: 4px;
-  }
-`
-const ChainsList = styled(Column)`
-  width: 240px;
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
-    width: 100%;
-  }
-`
-const styledMobileMenuCss = css`
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
-    bottom: 50px;
-  }
-`
-const ChainsDropdownWrapper = styled(Column)`
-  padding: 8px;
-`
 
 type WalletConnectConnector = Connector & {
   type: typeof CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
@@ -71,13 +40,17 @@ function useWalletSupportedChains(): InterfaceChainId[] {
       // Wagmi currently offers no way to discriminate a Connector as a WalletConnect connector providing access to getNamespaceChainsIds.
       return (connector as WalletConnectConnector).getNamespaceChainsIds?.().length
         ? (connector as WalletConnectConnector).getNamespaceChainsIds?.()
-        : NETWORK_SELECTOR_CHAINS
+        : ALL_CHAIN_IDS
     default:
-      return NETWORK_SELECTOR_CHAINS
+      return ALL_CHAIN_IDS
   }
 }
 
-export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
+type ChainSelectorProps = {
+  isNavSelector?: boolean
+  hideArrow?: boolean
+}
+export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) => {
   const { chainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
   // multichainFlagEnabled is different from multichainUXEnabled, multichainUXEnabled applies to swap
   // flag can be true but multichainUXEnabled can be false (TDP page)
@@ -88,13 +61,12 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
   const walletSupportsChain = useWalletSupportedChains()
   const isSupportedChain = useIsSupportedChainIdCallback()
   const showTestnets = useAtomValue(showTestnetsAtom)
-  const navRefreshEnabled = useFeatureFlag(FeatureFlags.NavRefresh)
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const selectChain = useSelectChain()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const [supportedChains, unsupportedChains] = useMemo(() => {
-    const { supported, unsupported } = NETWORK_SELECTOR_CHAINS.filter((chain: number) => {
+    const { supported, unsupported } = ALL_CHAIN_IDS.filter((chain: number) => {
       return isSupportedChain(chain) && (showTestnets || !TESTNET_CHAIN_IDS.includes(chain))
     })
       .sort((a, b) => getChainPriority(a) - getChainPriority(b))
@@ -134,11 +106,6 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
     [multichainUXEnabled, setSelectedChainId, selectChain, searchParams, setSearchParams],
   )
 
-  const styledMenuCss = css`
-    ${leftAlign ? 'left: 0;' : 'right: 0;'}
-    ${styledMobileMenuCss};
-  `
-
   const menuLabel = !chainId ? (
     <AlertTriangle size={20} color={theme.neutral2} />
   ) : (
@@ -147,54 +114,26 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
 
   if (multichainFlagEnabled) {
     return (
-      <Flex px={4}>
-        <NetworkFilter includeAllNetworks selectedChain={chainId ?? null} onPressChain={onSelectChain} />
+      <Flex px={8}>
+        <NetworkFilter
+          selectedChain={chainId ?? null}
+          onPressChain={onSelectChain}
+          hideArrow={hideArrow}
+          styles={{
+            sticky: true,
+          }}
+        />
       </Flex>
     )
   }
 
-  if (navRefreshEnabled) {
-    return (
-      <Popover ref={popoverRef} placement="bottom" stayInFrame allowFlip onOpenChange={setIsOpen}>
-        <Popover.Trigger padding={8} cursor="pointer">
-          {menuLabel}
-        </Popover.Trigger>
-        <NavDropdown width={240} isOpen={isOpen}>
-          <ChainsDropdownWrapper>
-            {supportedChains.map((selectorChain) => (
-              <ChainSelectorRow
-                disabled={!walletSupportsChain.includes(selectorChain)}
-                onSelectChain={onSelectChain}
-                targetChain={selectorChain}
-                key={selectorChain}
-                isPending={selectorChain === pendingChainId}
-              />
-            ))}
-            {unsupportedChains.map((selectorChain) => (
-              <ChainSelectorRow
-                disabled
-                onSelectChain={() => undefined}
-                targetChain={selectorChain}
-                key={selectorChain}
-                isPending={false}
-              />
-            ))}
-          </ChainsDropdownWrapper>
-        </NavDropdown>
-      </Popover>
-    )
-  }
-
   return (
-    <DropdownSelector
-      isOpen={isOpen}
-      toggleOpen={() => setIsOpen(!isOpen)}
-      menuLabel={menuLabel}
-      tooltipText={chainId ? undefined : t`wallet.networkUnsupported`}
-      dataTestId="chain-selector"
-      optionsContainerTestId="chain-selector-options"
-      internalMenuItems={
-        <ChainsList>
+    <Popover ref={popoverRef} placement="bottom" stayInFrame allowFlip onOpenChange={setIsOpen}>
+      <Popover.Trigger padding={8} cursor="pointer" data-testid="chain-selector">
+        {isNavSelector ? <NavIcon isActive={isOpen}>{menuLabel}</NavIcon> : menuLabel}
+      </Popover.Trigger>
+      <NavDropdown width={240} isOpen={isOpen}>
+        <Flex p="$spacing8" data-testid="chain-selector-options">
           {supportedChains.map((selectorChain) => (
             <ChainSelectorRow
               disabled={!walletSupportsChain.includes(selectorChain)}
@@ -213,10 +152,8 @@ export const ChainSelector = ({ leftAlign }: { leftAlign?: boolean }) => {
               isPending={false}
             />
           ))}
-        </ChainsList>
-      }
-      buttonCss={StyledDropdownButton}
-      menuFlyoutCss={styledMenuCss}
-    />
+        </Flex>
+      </NavDropdown>
+    </Popover>
   )
 }

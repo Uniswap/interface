@@ -1,7 +1,7 @@
 import { loadingOpacityMixin } from 'components/Loader/styled'
 import { SupportedLocale } from 'constants/locales'
+import styled from 'lib/styled-components'
 import React, { forwardRef } from 'react'
-import styled from 'styled-components'
 import { escapeRegExp } from 'utils'
 import { useFormatterLocales } from 'utils/formatNumbers'
 
@@ -58,6 +58,7 @@ export interface InputProps extends Omit<React.HTMLProps<HTMLInputElement>, 'ref
   align?: 'right' | 'left'
   prependSymbol?: string
   maxDecimals?: number
+  testId?: string
 }
 
 export function isInputGreaterThanDecimals(value: string, maxDecimals?: number): boolean {
@@ -66,7 +67,7 @@ export function isInputGreaterThanDecimals(value: string, maxDecimals?: number):
 }
 
 const Input = forwardRef<HTMLInputElement, InputProps>(
-  ({ value, onUserInput, placeholder, prependSymbol, maxDecimals, ...rest }: InputProps, ref) => {
+  ({ value, onUserInput, placeholder, prependSymbol, maxDecimals, testId, ...rest }: InputProps, ref) => {
     const { formatterLocale } = useFormatterLocales()
 
     const enforcer = (nextUserInput: string) => {
@@ -91,6 +92,7 @@ const Input = forwardRef<HTMLInputElement, InputProps>(
         {...rest}
         ref={ref}
         value={prependSymbol && value ? prependSymbol + valueFormattedWithLocale : valueFormattedWithLocale}
+        data-testid={testId}
         onChange={(event) => {
           if (prependSymbol) {
             const value = event.target.value

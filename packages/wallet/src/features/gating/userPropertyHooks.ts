@@ -1,10 +1,10 @@
 import { useEffect } from 'react'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useENSName } from 'wallet/src/features/ens/api'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 export function useGatingUserPropertyUsernames(): void {

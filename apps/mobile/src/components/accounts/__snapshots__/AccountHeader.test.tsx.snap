@@ -60,7 +60,7 @@ exports[`AccountHeader renders correctly 1`] = `
             ],
           }
         }
-        testID="manage"
+        testID="account-header-avatar"
       >
         <View
           style={
@@ -150,30 +150,38 @@ exports[`AccountHeader renders correctly 1`] = `
         </View>
       </View>
       <View
-        cancelable={true}
-        disabled={false}
-        focusable={true}
-        hitSlop={[Function]}
-        minPressDuration={0}
-        onBlur={[Function]}
-        onFocus={[Function]}
-        onMouseEnter={[Function]}
-        onMouseLeave={[Function]}
-        onPress={[Function]}
-        onPressIn={[Function]}
-        onPressOut={[Function]}
+        collapsable={false}
+        jestAnimatedStyle={
+          {
+            "value": {
+              "justifyContent": "center",
+              "opacity": 1,
+              "transform": [
+                {
+                  "rotate": "0deg",
+                },
+                {
+                  "scale": 1,
+                },
+              ],
+            },
+          }
+        }
         style={
           {
-            "flexDirection": "column",
+            "justifyContent": "center",
             "opacity": 1,
             "transform": [
+              {
+                "rotate": "0deg",
+              },
               {
                 "scale": 1,
               },
             ],
           }
         }
-        testID="account-header/settings-button"
+        testID="account-header-settings-icon"
       >
         <RNSVGSvgView
           align="xMidYMid"
@@ -343,6 +351,7 @@ exports[`AccountHeader renders correctly 1`] = `
                     "value": {
                       "color": "#CECECE",
                       "fontSize": 19,
+                      "lineHeight": 24,
                       "opacity": 0,
                     },
                   }
@@ -387,6 +396,7 @@ exports[`AccountHeader renders correctly 1`] = `
                   ],
                 }
               }
+              testID="account-header-copy-address"
             >
               <View
                 style={

@@ -322,6 +322,7 @@ exports[`RelativeChangeText renders without error 1`] = `
       "marginTop": 2,
     }
   }
+  testID="relative-price-change"
 >
   <RNSVGSvgView
     align="xMidYMid"

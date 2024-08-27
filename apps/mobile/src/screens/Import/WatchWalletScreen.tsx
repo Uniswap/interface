@@ -4,7 +4,7 @@ import { TFunction } from 'i18next'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
@@ -12,6 +12,7 @@ import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
 import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Text } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
+import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -19,7 +20,7 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
-import { usePortfolioBalances } from 'wallet/src/features/dataApi/balances'
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { createViewOnlyAccount } from 'wallet/src/features/onboarding/createViewOnlyAccount'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
@@ -31,21 +32,21 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 const LIVE_CHECK_DELAY = 1000
 
 const validateForm = ({
-  isAddress,
+  validAddress,
   name,
   walletExists,
   loading,
   isSmartContractAddress,
   isValidSmartContract,
 }: {
-  isAddress: string | null
+  validAddress: string | null
   name: string | null
   walletExists: boolean
   loading: boolean
   isSmartContractAddress: boolean
   isValidSmartContract: boolean
 }): boolean => {
-  return (!!isAddress || !!name) && !walletExists && !loading && (!isSmartContractAddress || isValidSmartContract)
+  return (!!validAddress || !!name) && !walletExists && !loading && (!isSmartContractAddress || isValidSmartContract)
 }
 
 const getErrorText = ({
@@ -71,7 +72,7 @@ const getErrorText = ({
 
 export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const accounts = useAccounts()
   const initialAccounts = useRef(accounts)
 
@@ -85,28 +86,31 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   const normalizedValue = normalizeTextInput(value ?? '')
   const hasSuffixIncluded = normalizedValue.includes('.')
   const { address: resolvedAddress, name } = useENS(UniverseChainId.Mainnet, normalizedValue, !hasSuffixIncluded)
-  const isAddress = getValidAddress(normalizedValue, true, false)
+  const validAddress = getValidAddress(normalizedValue, true, false)
   const { isSmartContractAddress, loading } = useIsSmartContractAddress(
-    (isAddress || resolvedAddress) ?? undefined,
+    (validAddress || resolvedAddress) ?? undefined,
     UniverseChainId.Mainnet,
   )
+  const address = isSmartContractAddress ? (validAddress || resolvedAddress) ?? undefined : undefined
+  const valueModifiers = usePortfolioValueModifiers(address)
   // Allow smart contracts with non-null balances
   const { data: balancesById } = usePortfolioBalances({
-    address: isSmartContractAddress ? (isAddress || resolvedAddress) ?? undefined : undefined,
+    address,
     fetchPolicy: 'cache-and-network',
+    valueModifiers,
   })
   const isValidSmartContract = isSmartContractAddress && !!balancesById
 
   const onCompleteOnboarding = useCompleteOnboardingCallback(params)
 
-  const walletExists = Object.keys(initialAccounts).some(
+  const walletExists = Object.keys(initialAccounts.current).some(
     (accountAddress) =>
-      areAddressesEqual(accountAddress, resolvedAddress) || areAddressesEqual(accountAddress, normalizedValue),
+      areAddressesEqual(accountAddress, resolvedAddress) || areAddressesEqual(accountAddress, validAddress),
   )
 
   // Form validation.
   const isValid = validateForm({
-    isAddress,
+    validAddress,
     name,
     walletExists,
     loading,
@@ -159,7 +163,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           blurOnSubmit
           errorMessage={errorText}
           inputAlignment="flex-start"
-          inputSuffix={isAddress || hasSuffixIncluded ? undefined : '.eth'}
+          inputSuffix={validAddress || hasSuffixIncluded ? undefined : '.eth'}
           liveCheck={showLiveCheck}
           placeholderLabel={t('account.wallet.watch.placeholder')}
           shouldUseMinHeight={false}
@@ -185,7 +189,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           </Text>
         </Flex>
       </Flex>
-      <Button disabled={!isValid} testID={TestID.Next} onPress={onSubmit}>
+      <Button disabled={!isValid} mt="$spacing24" testID={TestID.Next} onPress={onSubmit}>
         {t('common.button.continue')}
       </Button>
     </SafeKeyboardOnboardingScreen>

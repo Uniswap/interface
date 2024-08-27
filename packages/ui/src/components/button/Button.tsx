@@ -15,7 +15,8 @@ import {
   XStack,
 } from 'tamagui'
 import type { IconProps } from 'ui/src/components/factories/createIcon'
-import { HapticFeedback, HapticFeedbackStyle } from 'ui/src/utils/haptics/HapticFeedback'
+import { HapticFeedbackStyle } from 'ui/src/utils/haptics/helpers'
+import { useHapticFeedback } from 'ui/src/utils/haptics/useHapticFeedback'
 
 type ButtonSize = 'small' | 'medium' | 'large'
 
@@ -182,6 +183,7 @@ export type ButtonProps = CustomButtonProps &
 
 const ButtonComponent = CustomButtonFrame.styleable<ButtonProps>((props, ref) => {
   const { props: buttonProps } = useButton(props)
+  const { hapticFeedback } = useHapticFeedback()
   return (
     <CustomButtonFrame
       ref={ref}
@@ -189,7 +191,7 @@ const ButtonComponent = CustomButtonFrame.styleable<ButtonProps>((props, ref) =>
         buttonProps.hapticFeedback
           ? (): void => {
               // eslint-disable-next-line no-void
-              void HapticFeedback.impact(buttonProps.hapticStyle)
+              void hapticFeedback.impact(buttonProps.hapticStyle)
             }
           : undefined
       }

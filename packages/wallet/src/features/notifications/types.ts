@@ -1,8 +1,8 @@
 import { TradeType } from '@uniswap/sdk-core'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
-import { AssetType } from 'wallet/src/entities/assets'
 import { FinalizedTransactionStatus, TransactionType, WrapType } from 'wallet/src/features/transactions/types'
 
 export enum AppNotificationType {

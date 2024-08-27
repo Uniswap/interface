@@ -1,5 +1,5 @@
 import { PoolData } from 'graphql/data/pools/usePoolData'
-import { t } from 'i18n'
+import { t } from 'uniswap/src/i18n'
 
 export const getPoolDetailPageTitle = (poolData?: PoolData) => {
   const token0Symbol = poolData?.token0.symbol

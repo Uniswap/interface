@@ -1,11 +1,11 @@
-import React, { useEffect, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { Keyboard, TextInput as NativeTextInput } from 'react-native'
 import InputWithSuffix from 'src/features/import/InputWithSuffix'
-import { Flex, Text, useMedia } from 'ui/src'
+import { ColorTokens, Flex, Text, useMedia } from 'ui/src'
 import { fonts } from 'ui/src/theme'
+import PasteButton from 'uniswap/src/components/buttons/PasteButton'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
-import PasteButton from 'wallet/src/components/buttons/PasteButton'
 
 interface Props {
   value: string | undefined
@@ -92,6 +92,13 @@ export function GenericImportForm({
 
   const showError = errorMessage && value && (liveCheck || !focused)
 
+  const borderColor: ColorTokens = useMemo(() => {
+    if (value && (liveCheck || !focused)) {
+      return errorMessage ? '$statusCritical' : '$statusSuccess'
+    }
+    return '$surface3'
+  }, [value, liveCheck, focused, errorMessage])
+
   return (
     <Trace section={SectionName.ImportAccountForm}>
       <Flex
@@ -111,7 +118,7 @@ export function GenericImportForm({
             minHeight: shouldUseMinHeight ? INPUT_MIN_HEIGHT_SHORT : undefined,
           }}
           backgroundColor="$surface1"
-          borderColor={showError ? '$statusCritical' : '$surface3'}
+          borderColor={borderColor}
           borderRadius="$rounded20"
           borderWidth={1}
           minHeight={shouldUseMinHeight ? INPUT_MIN_HEIGHT : undefined}

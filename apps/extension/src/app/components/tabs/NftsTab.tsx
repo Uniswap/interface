@@ -1,5 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { memo, useCallback } from 'react'
+import { useSelector } from 'react-redux'
 import { ContextMenu, Flex } from 'ui/src'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -12,7 +13,6 @@ import { ESTIMATED_NFT_LIST_ITEM_SIZE } from 'wallet/src/features/nfts/constants
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
 import { getIsNftHidden } from 'wallet/src/features/nfts/utils'
-import { useAppSelector } from 'wallet/src/state'
 
 export const NftsTab = memo(function _NftsTab({ owner }: { owner: Address }): JSX.Element {
   const renderNFTItem = useCallback(
@@ -55,7 +55,7 @@ function NftView({ owner, item, onPress }: { owner: Address; item: NFTItem; onPr
     destructive: action.destructive,
   }))
 
-  const nftVisibility = useAppSelector(selectNftsVisibility)
+  const nftVisibility = useSelector(selectNftsVisibility)
   const hidden = getIsNftHidden({
     contractAddress: item.contractAddress,
     tokenId: item.tokenId,

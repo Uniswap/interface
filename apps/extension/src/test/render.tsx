@@ -9,8 +9,8 @@ import {
   RenderResult,
 } from '@testing-library/react'
 import React, { PropsWithChildren } from 'react'
+import { ExtensionState, extensionReducer } from 'src/store/extensionReducer'
 import { AppStore } from 'src/store/store'
-import { WebState, webReducer } from 'src/store/webReducer'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { SharedProvider } from 'wallet/src/provider'
@@ -20,7 +20,7 @@ import { AutoMockedApolloProvider } from 'wallet/src/test/mocks'
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderOptions = RenderOptions & {
   resolvers?: Resolvers
-  preloadedState?: PreloadedState<WebState>
+  preloadedState?: PreloadedState<ExtensionState>
   store?: AppStore
 }
 
@@ -38,7 +38,7 @@ export function renderWithProviders(
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
     store = configureStore({
-      reducer: webReducer,
+      reducer: extensionReducer,
       preloadedState,
       middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     }),
@@ -65,7 +65,7 @@ export function renderWithProviders(
 // as allows the user to specify other things such as initialState, store.
 type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
   resolvers?: Resolvers
-  preloadedState?: PreloadedState<WebState>
+  preloadedState?: PreloadedState<ExtensionState>
   store?: AppStore
 }
 
@@ -102,7 +102,7 @@ export function renderHookWithProviders<P, R>(
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
     store = configureStore({
-      reducer: webReducer,
+      reducer: extensionReducer,
       preloadedState,
       middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     }),

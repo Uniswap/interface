@@ -1,7 +1,7 @@
 import { Currency } from '@uniswap/sdk-core'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
+import styled from 'lib/styled-components'
 import React from 'react'
-import styled from 'styled-components'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const MissingImageLogo = styled.div<{ $size?: string; $textColor: string; $backgroundColor: string }>`
@@ -26,6 +26,7 @@ export type AssetLogoBaseProps = {
   size?: number
   style?: React.CSSProperties
   currency?: Currency | null
+  loading?: boolean
 }
 type AssetLogoProps = AssetLogoBaseProps & { isNative?: boolean; address?: string | null; chainId?: number }
 
@@ -37,10 +38,16 @@ const LogoContainer = styled.div`
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback triangle alert
  */
-export default function AssetLogo({ currency, chainId = UniverseChainId.Mainnet, size = 24, style }: AssetLogoProps) {
+export default function AssetLogo({
+  currency,
+  chainId = UniverseChainId.Mainnet,
+  size = 24,
+  style,
+  loading,
+}: AssetLogoProps) {
   return (
     <LogoContainer style={{ height: size, width: size, ...style }}>
-      <PortfolioLogo currencies={currency ? [currency] : []} size={size} chainId={chainId} />
+      <PortfolioLogo currencies={currency ? [currency] : []} size={size} chainId={chainId} loading={loading} />
     </LogoContainer>
   )
 }

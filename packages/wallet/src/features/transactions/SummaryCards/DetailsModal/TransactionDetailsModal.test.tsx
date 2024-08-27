@@ -1,23 +1,22 @@
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { TransactionDetailsInfoRows } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsInfoRows'
 import {
-  TransactionDetailsContent,
-  TransactionDetailsHeader,
-} from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
-import { TransactionDetails } from 'wallet/src/features/transactions/types'
-import {
-  ACCOUNT,
   ARBITRUM_DAI_CURRENCY_INFO,
   BASE_CURRENCY,
   ETH_CURRENCY_INFO,
   OPTIMISM_CURRENCY,
   POLYGON_CURRENCY,
   currencyInfo,
-  preloadedSharedState,
-} from 'wallet/src/test/fixtures'
-import { renderWithProviders } from 'wallet/src/test/render'
+} from 'uniswap/src/test/fixtures'
+import { TransactionDetailsInfoRows } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsInfoRows'
+import {
+  TransactionDetailsContent,
+  TransactionDetailsHeader,
+} from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
+import { TransactionDetails } from 'wallet/src/features/transactions/types'
+import { ACCOUNT, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
+import { render } from 'wallet/src/test/test-utils'
 
-const preloadedState = preloadedSharedState({ account: ACCOUNT })
+const preloadedState = preloadedWalletPackageState({ account: ACCOUNT })
 const mockTransaction = {
   id: '9920dbad-ff24-47c8-814a-094566fc45ff',
   chainId: 81457,
@@ -43,7 +42,7 @@ const mockTransaction = {
   },
 } as TransactionDetails
 
-// Helper function to get currency info based on chain ID
+// Function to set up mocks
 const getCurrencyInfoForChain = (chainId: number): CurrencyInfo => {
   switch (chainId) {
     case 1: // Mainnet
@@ -61,19 +60,23 @@ const getCurrencyInfoForChain = (chainId: number): CurrencyInfo => {
   }
 }
 
-// Mock useCurrencyInfo
 jest.mock('wallet/src/features/tokens/useCurrencyInfo', () => ({
-  useCurrencyInfo: (currencyId: string | undefined): Maybe<CurrencyInfo> => {
-    if (!currencyId) {
+  useCurrencyInfo: (currencyIdString: string | undefined): Maybe<CurrencyInfo> => {
+    if (!currencyIdString) {
       return null
     }
-    const [, chainIdStr] = currencyId.split(':')
+    const [, chainIdStr] = currencyIdString.split(':')
     if (!chainIdStr) {
       return null
     }
     const chainId = parseInt(chainIdStr, 10)
     return getCurrencyInfoForChain(chainId)
   },
+}))
+
+jest.mock('uniswap/src/features/gating/hooks', () => ({
+  useDynamicConfigValue: jest.fn().mockReturnValue(1000),
+  useFeatureFlag: jest.fn().mockReturnValue(true),
 }))
 
 jest.mock('wallet/src/features/language/localizedDayjs', () => ({
@@ -90,32 +93,37 @@ describe('TransactionDetails Components', () => {
       menuItems: [],
     }
 
-    const { toJSON } = renderWithProviders(
+    const tree = render(
       <TransactionDetailsHeader transactionActions={transactionActions} transactionDetails={mockTransaction} />,
       { preloadedState },
     )
 
-    expect(toJSON()).toMatchSnapshot()
+    expect(tree).toMatchSnapshot()
   })
 
   it('renders TransactionDetailsContent without error', () => {
     const onClose = jest.fn()
 
-    const { toJSON } = renderWithProviders(
-      <TransactionDetailsContent transactionDetails={mockTransaction} onClose={onClose} />,
-      {
-        preloadedState,
-      },
-    )
-
-    expect(toJSON()).toMatchSnapshot()
-  })
-
-  it('renders TransactionDetailsInfoRows without error', () => {
-    const { toJSON } = renderWithProviders(<TransactionDetailsInfoRows transactionDetails={mockTransaction} />, {
+    const tree = render(<TransactionDetailsContent transactionDetails={mockTransaction} onClose={onClose} />, {
       preloadedState,
     })
 
-    expect(toJSON()).toMatchSnapshot()
+    expect(tree).toMatchSnapshot()
+  })
+
+  it('renders TransactionDetailsInfoRows without error with isShowingMore false', () => {
+    const tree = render(<TransactionDetailsInfoRows isShowingMore={false} transactionDetails={mockTransaction} />, {
+      preloadedState,
+    })
+
+    expect(tree).toMatchSnapshot()
+  })
+
+  it('renders TransactionDetailsInfoRows without error with isShowingMore true', () => {
+    const tree = render(<TransactionDetailsInfoRows isShowingMore={true} transactionDetails={mockTransaction} />, {
+      preloadedState,
+    })
+
+    expect(tree).toMatchSnapshot()
   })
 })

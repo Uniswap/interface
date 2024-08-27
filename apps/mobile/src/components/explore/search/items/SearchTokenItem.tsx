@@ -1,6 +1,6 @@
 import { default as React } from 'react'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
@@ -8,13 +8,14 @@ import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'u
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { SearchContext } from 'uniswap/src/features/search/SearchContext'
+import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
-import { SearchContext } from 'wallet/src/features/search/SearchContext'
-import { SearchResultType, TokenSearchResult } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 
 type SearchTokenItemProps = {
@@ -24,11 +25,11 @@ type SearchTokenItemProps = {
 
 export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
   const { chainId, address, name, symbol, logoUrl, safetyLevel } = token
-  const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId)
+  const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId as WalletChainId)
 
   const onPress = (): void => {
     tokenDetailsNavigation.preload(currencyId)
@@ -61,7 +62,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
   }
 
   const { menuActions, onContextMenuPress } = useExploreTokenContextMenu({
-    chainId,
+    chainId: chainId as WalletChainId,
     currencyId,
     analyticsSection: SectionName.ExploreSearch,
   })
@@ -71,11 +72,11 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
       <TouchableArea
         hapticFeedback
         hapticStyle={ImpactFeedbackStyle.Light}
-        testID={TestID.SearchTokenItem}
+        testID={`${TestID.SearchTokenItem}-${name}-${chainId}`}
         onLongPress={disableOnPress}
         onPress={onPress}
       >
-        <Flex row alignItems="center" gap="$spacing12" px="$spacing8" py="$spacing12">
+        <Flex row alignItems="center" gap="$spacing12" px="$spacing24" py="$spacing12">
           <TokenLogo chainId={chainId} name={name} symbol={symbol} url={logoUrl ?? undefined} />
           <Flex shrink alignItems="flex-start">
             <Flex centered row gap="$spacing8">

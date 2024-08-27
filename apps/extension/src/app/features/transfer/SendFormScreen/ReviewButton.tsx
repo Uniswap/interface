@@ -3,8 +3,8 @@ import { useTransferContext } from 'src/app/features/transfer/TransferContext'
 import { Button, Flex, Text, isWeb } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { NativeCurrency } from 'wallet/src/features/tokens/NativeCurrency'
 import { WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
 
 type ReviewButtonProps = {

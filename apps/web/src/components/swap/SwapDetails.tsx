@@ -11,7 +11,7 @@ import SwapLineItem, { SwapLineItemProps, SwapLineItemType } from 'components/sw
 import { SwapCallbackError, SwapShowAcceptChanges } from 'components/swap/styled'
 import { Allowance, AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult } from 'hooks/useSwapCallback'
-import { Trans, t } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { ReactNode, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
@@ -20,10 +20,10 @@ import { Text } from 'rebass'
 import { InterfaceTrade, LimitOrderTrade, RouterPreference } from 'state/routing/types'
 import { isClassicTrade, isLimitTrade } from 'state/routing/utils'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
 import { SpinningLoader } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans, t } from 'uniswap/src/i18n'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 import { formatSwapButtonClickEventProperties } from 'utils/loggingFormatters'
@@ -209,8 +209,8 @@ export function SwapDetails({
             >
               {isLoading ? (
                 <ThemedText.HeadlineSmall color="neutral2">
-                  <Row>
-                    <SpinningLoader size={14} />
+                  <Row gap="8px">
+                    <SpinningLoader />
                     <Trans i18nKey="swap.finalizingQuote" />
                   </Row>
                 </ThemedText.HeadlineSmall>

@@ -1,6 +1,8 @@
 import { isEqual } from 'lodash'
 import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useUnitagByName } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
@@ -12,16 +14,14 @@ import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
-import { DEFAULT_WATCHED_ADDRESSES } from 'wallet/src/features/favorites/slice'
 import { selectRecipientsByRecency } from 'wallet/src/features/transactions/selectors'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { selectInactiveAccounts } from 'wallet/src/features/wallet/selectors'
-import { useAppSelector } from 'wallet/src/state'
 
 const MAX_RECENT_RECIPIENTS = 15
 
 type RecipientSection = {
-  title: string
+  title?: string
   data: SearchableRecipient[]
 }
 
@@ -128,7 +128,7 @@ export function useRecipients(
 } {
   const { t } = useTranslation()
 
-  const inactiveLocalAccounts = useAppSelector(selectInactiveAccounts)
+  const inactiveLocalAccounts = useSelector(selectInactiveAccounts)
   const { importedWallets, viewOnlyWallets } = useMemo(
     () =>
       inactiveLocalAccounts.reduce<{ importedWallets: Account[]; viewOnlyWallets: Account[] }>(
@@ -144,7 +144,7 @@ export function useRecipients(
       ),
     [inactiveLocalAccounts],
   )
-  const recentRecipients = useAppSelector(selectRecipientsByRecency).slice(0, MAX_RECENT_RECIPIENTS)
+  const recentRecipients = useSelector(selectRecipientsByRecency).slice(0, MAX_RECENT_RECIPIENTS)
 
   const {
     recipients: validatedAddressRecipients,
@@ -152,16 +152,12 @@ export function useRecipients(
     searchTerm,
   } = useValidatedSearchedAddress(pattern, debounceDelayMs)
 
-  const watchedWallets = useAppSelector(selectWatchedAddressSet)
+  const watchedWallets = useSelector(selectWatchedAddressSet)
+
   const isPatternEmpty = pattern.length === 0
 
   const sections = useMemo(() => {
     const sectionsArr = []
-
-    // Don't show default favorites as search result for recipient
-    for (const address of DEFAULT_WATCHED_ADDRESSES) {
-      watchedWallets.delete(address)
-    }
 
     if (validatedAddressRecipients.length && !isPatternEmpty) {
       sectionsArr.push({
@@ -247,11 +243,20 @@ export function useFilteredRecipientSections(searchPattern: string, debounceDela
     return filterSections(sections, filteredAddresses)
   }, [debouncedPattern, searchableRecipientOptions, sections])
 
+  const getFilteredRecipientList = useCallback(
+    () => filterRecipientByNameAndAddress(debouncedPattern, searchableRecipientOptions).map((item) => item.data),
+    [debouncedPattern, searchableRecipientOptions],
+  )
+
   // Update displayed sections only if debouncing is finished and the new result is not being loaded
   if (searchPattern === debouncedPattern && !loading) {
-    const filteredSections = getFilteredSections()
-    const noResult = debouncedPattern.length > 0 && filteredSections.length === 0
-    sectionsRef.current = noResult ? [] : filteredSections.length ? filteredSections : sections
+    if (debouncedPattern.length > 0) {
+      const recipients = getFilteredRecipientList()
+      sectionsRef.current = recipients.length ? [{ data: recipients }] : []
+    } else {
+      const filteredSections = getFilteredSections()
+      sectionsRef.current = filteredSections.length ? filteredSections : sections
+    }
   }
 
   return sectionsRef.current

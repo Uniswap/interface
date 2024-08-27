@@ -2,12 +2,12 @@ import { meldSupportedCurrencyToCurrencyInfo } from 'graphql/data/types'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
-import { useTranslation } from 'react-i18next'
 import {
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
   useFiatOnRampAggregatorSupportedTokensQuery,
 } from 'uniswap/src/features/fiatOnRamp/api'
 import { FORCountry, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { useTranslation } from 'uniswap/src/i18n'
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 import { getFiatCurrencyName } from 'utils/fiatCurrency'
 
@@ -16,7 +16,7 @@ type FiatOnRampCurrencyInfo = {
   notAvailableInThisRegion: boolean
 }
 
-const fallbackCurrencyInfo: FiatCurrencyInfo = {
+export const fallbackCurrencyInfo: FiatCurrencyInfo = {
   ...getFiatCurrencyComponents('en-US', 'USD'),
   symbol: '$',
   name: 'United States Dollar',

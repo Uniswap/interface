@@ -3,7 +3,6 @@ import { nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useENSName from 'hooks/useENSName'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { VoteOption } from 'state/governance/types'
 import {
@@ -26,6 +25,7 @@ import {
   VoteTransactionInfo,
   WrapTransactionInfo,
 } from 'state/transactions/types'
+import { Trans } from 'uniswap/src/i18n'
 
 function formatAmount(amountRaw: string, decimals: number, sigFigs: number): string {
   return new Fraction(amountRaw, JSBI.exponentiate(JSBI.BigInt(10), JSBI.BigInt(decimals))).toSignificant(sigFigs)
@@ -71,7 +71,7 @@ function FormattedCurrencyAmountManaged({
 
 function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransactionInfo }) {
   const { ENSName } = useENSName()
-  const name = ENSName ?? recipient
+  const username = ENSName ?? recipient
   return typeof uniAmountRaw === 'string' ? (
     <Trans
       i18nKey="account.transactionSummary.claimFor"
@@ -79,11 +79,11 @@ function ClaimSummary({ info: { recipient, uniAmountRaw } }: { info: ClaimTransa
         currency: <FormattedCurrencyAmount rawAmount={uniAmountRaw} symbol="UNI" decimals={18} sigFigs={4} />,
       }}
       values={{
-        name,
+        username,
       }}
     />
   ) : (
-    <Trans i18nKey="account.transactionSummary.claimReward" values={{ name }} />
+    <Trans i18nKey="account.transactionSummary.claimReward" values={{ username }} />
   )
 }
 
@@ -95,7 +95,7 @@ function ApprovalSummary({ info }: { info: ApproveTransactionInfo }) {
   const token = useToken(info.tokenAddress)
 
   return BigNumber.from(info.amount)?.eq(0) ? (
-    <Trans i18nKey="account.transactionSummary.revoke" values={{ sym: token?.symbol }} />
+    <Trans i18nKey="account.transactionSummary.revoke" values={{ tokenSymbol: token?.symbol }} />
   ) : (
     <Trans i18nKey="account.transactionSummary.approve" values={{ sym: token?.symbol }} />
   )
@@ -140,8 +140,8 @@ function ExecuteSummary({ info }: { info: ExecuteTransactionInfo }) {
 
 function DelegateSummary({ info: { delegatee } }: { info: DelegateTransactionInfo }) {
   const { ENSName } = useENSName(delegatee)
-  const name = ENSName ?? delegatee
-  return <Trans i18nKey="account.transactionSummary.delegateSummary" values={{ name }} />
+  const username = ENSName ?? delegatee
+  return <Trans i18nKey="account.transactionSummary.delegateSummary" values={{ username }} />
 }
 
 function WrapSummary({ info: { chainId, currencyAmountRaw, unwrapped } }: { info: WrapTransactionInfo }) {
@@ -299,10 +299,10 @@ function AddLiquidityV2PoolSummary({
     <Trans
       i18nKey="account.transactionSummary.addLiquidityv2"
       components={{
-        base: (
+        baseAmountAndToken: (
           <FormattedCurrencyAmountManaged rawAmount={expectedAmountBaseRaw} currencyId={baseCurrencyId} sigFigs={3} />
         ),
-        quote: (
+        quoteAmountAndToken: (
           <FormattedCurrencyAmountManaged rawAmount={expectedAmountQuoteRaw} currencyId={quoteCurrencyId} sigFigs={3} />
         ),
       }}

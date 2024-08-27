@@ -2,11 +2,8 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Separator, Text, TouchableArea, useSporeColors } from 'ui/src'
-import AnglesMaximize from 'ui/src/assets/icons/angles-maximize.svg'
-import AnglesMinimize from 'ui/src/assets/icons/angles-minimize.svg'
-import { AlertTriangle } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
+import { Flex, Separator, Text, TouchableArea } from 'ui/src'
+import { AlertTriangle, AnglesMaximize, AnglesMinimize } from 'ui/src/components/icons'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
@@ -18,13 +15,14 @@ import {
 } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { SwapFee } from 'wallet/src/features/transactions/TransactionDetails/SwapFee'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
+import { UniswapXGasBreakdown } from 'wallet/src/features/transactions/swap/trade/api/hooks/useSwapTxAndGasInfo'
 import { SwapFeeInfo } from 'wallet/src/features/transactions/swap/trade/types'
 
 interface TransactionDetailsProps {
   banner?: ReactNode
   chainId: WalletChainId
   gasFee: GasFeeResult
-  preUniswapXGasFeeUSD?: number
+  uniswapXGasBreakdown?: UniswapXGasBreakdown
   showExpandedChildren?: boolean
   swapFeeInfo?: SwapFeeInfo
   showWarning?: boolean
@@ -42,7 +40,7 @@ export function TransactionDetails({
   showExpandedChildren,
   chainId,
   gasFee,
-  preUniswapXGasFeeUSD,
+  uniswapXGasBreakdown,
   swapFeeInfo,
   showWarning,
   warning,
@@ -52,7 +50,6 @@ export function TransactionDetails({
   transactionUSDValue,
   AccountDetails,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
-  const colors = useSporeColors()
   const { t } = useTranslation()
   const warningColor = getAlertColor(warning?.severity)
 
@@ -107,12 +104,12 @@ export function TransactionDetails({
             onPress={onPressToggleShowChildren}
           >
             <Text color="$neutral3" variant="body3">
-              {showChildren ? t('swap.details.action.less') : t('swap.details.action.more')}
+              {showChildren ? t('common.button.showLess') : t('common.button.showMore')}
             </Text>
             {showChildren ? (
-              <AnglesMinimize color={colors.neutral3.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
+              <AnglesMinimize color="$neutral3" size="$icon.20" />
             ) : (
-              <AnglesMaximize color={colors.neutral3.get()} height={iconSizes.icon20} width={iconSizes.icon20} />
+              <AnglesMaximize color="$neutral3" size="$icon.20" />
             )}
           </TouchableArea>
           <Separator />
@@ -125,8 +122,8 @@ export function TransactionDetails({
         <NetworkFee
           chainId={chainId}
           gasFee={gasFee}
-          preUniswapXGasFeeUSD={preUniswapXGasFeeUSD}
           transactionUSDValue={transactionUSDValue}
+          uniswapXGasBreakdown={uniswapXGasBreakdown}
         />
         {AccountDetails}
       </Flex>

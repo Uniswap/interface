@@ -1,7 +1,7 @@
 import { default as React, useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteWalletCard from 'src/components/explore/FavoriteWalletCard'
 import { Loader } from 'src/components/loading'
@@ -15,7 +15,6 @@ import { Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { setFavoriteWallets } from 'wallet/src/features/favorites/slice'
-import { useAppDispatch } from 'wallet/src/state'
 
 const NUM_COLUMNS = 2
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }
@@ -27,11 +26,11 @@ type FavoriteWalletsGridProps = AutoScrollProps & {
 /** Renders the favorite wallets section on the Explore tab */
 export function FavoriteWalletsGrid({ showLoading, ...rest }: FavoriteWalletsGridProps): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const [isEditing, setIsEditing] = useState(false)
   const isTokenDragged = useSharedValue(false)
-  const watchedWalletsSet = useAppSelector(selectWatchedAddressSet)
+  const watchedWalletsSet = useSelector(selectWatchedAddressSet)
   const watchedWalletsList = useMemo(() => Array.from(watchedWalletsSet), [watchedWalletsSet])
 
   // Reset edit mode when there are no favorite wallets

@@ -34,7 +34,7 @@ import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
-import { Trans } from 'i18n'
+import { useTheme } from 'lib/styled-components'
 import AppBody from 'pages/App/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { ClickableText, MaxButton, Wrapper } from 'pages/Pool/styled'
@@ -46,11 +46,11 @@ import { useBurnActionHandlers, useBurnState, useDerivedBurnInfo } from 'state/b
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { useTheme } from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -559,13 +559,13 @@ function RemoveLiquidity() {
                     <Slider value={innerLiquidityPercentage} onChange={setInnerLiquidityPercentage} />
                     <RowBetween>
                       <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '25')} width="20%">
-                        <Trans i18nKey="common.percentage" values={{ pct: '25' }} />
+                        25%
                       </MaxButton>
                       <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '50')} width="20%">
-                        <Trans i18nKey="common.percentage" values={{ pct: '50' }} />
+                        50%
                       </MaxButton>
                       <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '75')} width="20%">
-                        <Trans i18nKey="common.percentage" values={{ pct: '75' }} />
+                        75%
                       </MaxButton>
                       <MaxButton onClick={() => onUserInput(Field.LIQUIDITY_PERCENT, '100')} width="20%">
                         <Trans i18nKey="common.max" />

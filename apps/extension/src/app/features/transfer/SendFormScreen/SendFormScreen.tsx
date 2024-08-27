@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react'
+import { useCallback } from 'react'
 import { GasFeeRow } from 'src/app/features/transfer/SendFormScreen/GasFeeRow'
 import { RecipientPanel } from 'src/app/features/transfer/SendFormScreen/RecipientPanel'
 import { ReviewButton } from 'src/app/features/transfer/SendFormScreen/ReviewButton'
@@ -8,18 +8,17 @@ import { Flex, Separator, useSporeColors } from 'ui/src'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
 import { InsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useTokenFormActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenFormActionHandlers'
 import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenSelectorActionHandlers'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDTokenUpdater'
 import { transactionStateActions } from 'wallet/src/features/transactions/transactionState/transactionState'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { TokenSelectorPanel } from 'wallet/src/features/transactions/transfer/TokenSelectorPanel'
 import { TransferAmountInput } from 'wallet/src/features/transactions/transfer/TransferAmountInput'
-import { TransferFormSpeedbumps } from 'wallet/src/features/transactions/transfer/TransferFormWarnings'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/transfer/hooks/useShowSendNetworkNotification'
-import { TokenSelectorFlow, TransferSpeedbump } from 'wallet/src/features/transactions/transfer/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
@@ -60,33 +59,17 @@ export function SendFormScreen(): JSX.Element {
 
   const showTokenSelector = selectingCurrencyField === CurrencyField.INPUT
 
-  // warnings
-  const [showSpeedbumpModal, setShowSpeedbumpModal] = useState(false)
-  const [transferSpeedbump, setTransferSpeedbump] = useState<TransferSpeedbump>({
-    loading: true,
-    hasWarning: false,
-  })
-
   // blocked addresses
   const { isBlocked: isActiveBlocked, isBlockedLoading: isActiveBlockedLoading } = useIsBlockedActiveAddress()
   const { isBlocked: isRecipientBlocked, isBlockedLoading: isRecipientBlockedLoading } = useIsBlocked(recipient)
   const isBlocked = isActiveBlocked || isRecipientBlocked
   const isBlockedLoading = isActiveBlockedLoading || isRecipientBlockedLoading
 
-  const onShowReviewScreen = useCallback(() => {
-    setShowSpeedbumpModal(false)
+  const onPressReview = useCallback(() => {
     const txId = createTransactionId()
     dispatch(transactionStateActions.setTxId(txId))
     setScreen(TransferScreen.SendReview)
   }, [dispatch, setScreen])
-
-  const onPressReview = useCallback(() => {
-    if (transferSpeedbump.hasWarning) {
-      setShowSpeedbumpModal(true)
-    } else {
-      onShowReviewScreen()
-    }
-  }, [onShowReviewScreen, transferSpeedbump.hasWarning])
 
   const inputShadowProps = {
     shadowColor: colors.surface3.val,
@@ -102,14 +85,6 @@ export function SendFormScreen(): JSX.Element {
           <SendReviewScreen />
         </BottomSheetModal>
       )}
-      <TransferFormSpeedbumps
-        chainId={chainId}
-        recipient={recipient}
-        setShowSpeedbumpModal={setShowSpeedbumpModal}
-        setTransferSpeedbump={setTransferSpeedbump}
-        showSpeedbumpModal={showSpeedbumpModal}
-        onNext={onShowReviewScreen}
-      />
       <Flex fill gap="$spacing12">
         <Flex
           borderColor="$surface3"
@@ -158,7 +133,7 @@ export function SendFormScreen(): JSX.Element {
               py="$spacing12"
               {...inputShadowProps}
             >
-              <RecipientPanel />
+              <RecipientPanel chainId={chainId} />
             </Flex>
             {!showRecipientSelector && (
               <>

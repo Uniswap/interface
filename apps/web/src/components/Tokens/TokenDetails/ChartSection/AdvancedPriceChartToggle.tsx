@@ -4,9 +4,9 @@ import { CHART_TYPE_LABELS, PriceChartType } from 'components/Charts/utils'
 import Row from 'components/Row'
 import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
 import { useScreenSize } from 'hooks/screenSize'
-import { t } from 'i18n'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 import { EllipsisStyle } from 'theme/components'
+import { t } from 'uniswap/src/i18n'
 
 const ChartTypeRow = styled(Row)`
   ${EllipsisStyle}

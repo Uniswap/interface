@@ -4,12 +4,13 @@ import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { TestIDType } from 'uniswap/src/test/fixtures/testIDs'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 
 interface SelectTokenButtonProps {
   onPress: () => void
   selectedCurrencyInfo?: CurrencyInfo | null
-  testID?: string
+  testID?: TestIDType
 }
 
 export function SelectTokenButton({ selectedCurrencyInfo, onPress, testID }: SelectTokenButtonProps): JSX.Element {
@@ -26,7 +27,7 @@ export function SelectTokenButton({ selectedCurrencyInfo, onPress, testID }: Sel
       {selectedCurrencyInfo ? (
         <Flex centered row gap="$spacing4" p="$spacing4" pr={isWeb ? undefined : '$spacing12'}>
           <CurrencyLogo currencyInfo={selectedCurrencyInfo} size={iconSizes.icon28} />
-          <Text color="$neutral1" pl="$spacing4" variant="buttonLabel1">
+          <Text color="$neutral1" pl="$spacing4" testID={`${testID}-label`} variant="buttonLabel1">
             {getSymbolDisplayText(selectedCurrencyInfo.currency.symbol)}
           </Text>
           {isWeb && (
@@ -35,7 +36,7 @@ export function SelectTokenButton({ selectedCurrencyInfo, onPress, testID }: Sel
         </Flex>
       ) : (
         <Flex centered row gap="$spacing4" pl="$spacing8" pr={isWeb ? '$spacing4' : '$spacing8'} py="$spacing4">
-          <Text color="$sporeWhite" variant="buttonLabel2">
+          <Text color="$white" testID={`${testID}-label`} variant="buttonLabel2">
             {t('tokens.selector.button.choose')}
           </Text>
           {isWeb && (

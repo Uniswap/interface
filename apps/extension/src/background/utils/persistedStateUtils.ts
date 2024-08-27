@@ -1,11 +1,11 @@
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import { STATE_STORAGE_KEY } from 'src/store/constants'
+import { ExtensionState } from 'src/store/extensionReducer'
 import { readDeprecatedReduxedChromeStorage } from 'src/store/reduxedChromeStorageToReduxPersistMigration'
-import { WebState } from 'src/store/webReducer'
 
 export async function readReduxStateFromStorage(storageChanges?: {
   [key: string]: chrome.storage.StorageChange
-}): Promise<WebState | undefined> {
+}): Promise<ExtensionState | undefined> {
   const root = storageChanges
     ? storageChanges[STATE_STORAGE_KEY]?.newValue
     : (await chrome.storage.local.get(STATE_STORAGE_KEY))[STATE_STORAGE_KEY]
@@ -21,7 +21,7 @@ export async function readReduxStateFromStorage(storageChanges?: {
     rootParsed[key] = JSON.parse(rootParsed[key])
   })
 
-  return rootParsed as WebState
+  return rootParsed as ExtensionState
 }
 
 export async function readIsOnboardedFromStorage(): Promise<boolean> {

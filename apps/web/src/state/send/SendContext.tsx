@@ -10,7 +10,7 @@ import {
   useState,
 } from 'react'
 import { RecipientData, SendInfo, useDerivedSendInfo } from 'state/send/hooks'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 
 export type SendState = {
   readonly exactAmountToken?: string
@@ -70,6 +70,7 @@ export function useSendContext() {
 export function SendContextProvider({ children }: PropsWithChildren) {
   const {
     currencyState: { inputCurrency, outputCurrency },
+    setCurrencyState,
   } = useSwapAndLimitContext()
 
   const initialCurrency = useMemo(() => {
@@ -82,6 +83,21 @@ export function SendContextProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     setSendState((prev) => ({ ...prev, inputCurrency: initialCurrency }))
   }, [initialCurrency])
+
+  useEffect(() => {
+    setCurrencyState((prev) => {
+      if (prev.inputCurrency?.chainId !== sendState.inputCurrency?.chainId) {
+        // if token on different chain is selected, clear currency state
+        return { inputCurrency: sendState.inputCurrency }
+      } else if (outputCurrency && sendState.inputCurrency?.equals(outputCurrency)) {
+        // if selected token is same as currencyState's output token, clear output token
+        return { ...prev, outputCurrency: undefined, inputCurrency: sendState.inputCurrency }
+      } else {
+        // else update currencyState as usual
+        return { ...prev, inputCurrency: sendState.inputCurrency }
+      }
+    })
+  }, [outputCurrency, sendState, setCurrencyState])
 
   const value = useMemo(
     () => ({

@@ -102,6 +102,7 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 }
 
 .c19 {
+  position: relative;
   width: -webkit-fit-content;
   width: -moz-fit-content;
   width: fit-content;
@@ -317,10 +318,6 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
   align-items: center;
 }
 
-.c16::after {
-  content: 'Auto';
-}
-
 .c1 {
   padding: 0px 12px 8px;
 }
@@ -367,238 +364,245 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
-        <button
-          class="c2"
+        <div
+          class="c0 c1"
         >
-          <div
-            class="c3"
-          />
-          <div
-            class="c4"
+          <button
+            class="c2"
           >
             <div
-              class="c5 css-142zc9n"
-            >
-              Show more
-            </div>
-            <svg>
-              expando-icon-closed.svg
-            </svg>
-          </div>
-          <div
-            class="c3"
-          />
-        </button>
-        <div>
-          <div
-            class="c6 c7 c8"
-          >
+              class="c3"
+            />
             <div
-              class="c9 c10 css-142zc9n"
-              data-testid="swap-li-label"
+              class="c4"
             >
-              Rate
+              <div
+                class="c5 css-142zc9n"
+              >
+                Show more
+              </div>
+              <svg>
+                expando-icon-closed.svg
+              </svg>
             </div>
             <div
-              class="c11"
+              class="c3"
+            />
+          </button>
+          <div>
+            <div
+              class="c6 c7 c8"
             >
-              <div>
-                <div
-                  class="c9 c12 css-142zc9n"
-                >
-                  <button
-                    class="c13"
-                    title="1 DEF = 1.00 ABC "
+              <div
+                class="c9 c10 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Rate
+              </div>
+              <div
+                class="c11"
+              >
+                <div>
+                  <div
+                    class="c9 c12 css-142zc9n"
                   >
-                    <div
-                      class="c9 css-142zc9n"
+                    <button
+                      class="c13"
+                      title="1 DEF = 1.00 ABC "
                     >
-                      1 DEF = 1.00 ABC 
-                    </div>
-                     
-                  </button>
+                      <div
+                        class="c9 css-142zc9n"
+                      >
+                        1 DEF = 1.00 ABC 
+                      </div>
+                       
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div
-          style="height: 0px; margin-top: -8px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
-        >
-          <div>
-            <div
-              class="c0"
-            >
+          <div
+            style="height: 0px; margin-top: -8px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
+          >
+            <div>
               <div
-                style="opacity: 0;"
+                class="c0"
               >
                 <div
-                  class="c6 c7 c8"
+                  style="opacity: 0;"
                 >
                   <div
-                    class="c9 c10 css-142zc9n"
-                    data-testid="swap-li-label"
+                    class="c6 c7 c8"
                   >
-                    Price impact
-                  </div>
-                  <div
-                    class="c11"
-                  >
-                    <div>
-                      <div
-                        class="c9 c12 css-142zc9n"
-                      >
-                        <span
-                          class="c14"
+                    <div
+                      class="c9 c10 css-142zc9n"
+                      data-testid="swap-li-label"
+                    >
+                      Price impact
+                    </div>
+                    <div
+                      class="c11"
+                    >
+                      <div>
+                        <div
+                          class="c9 c12 css-142zc9n"
                         >
-                          ~5%
-                        </span>
+                          <span
+                            class="c14"
+                          >
+                            5%
+                          </span>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-              <div
-                style="opacity: 0;"
-              >
                 <div
-                  class="c6 c7 c8"
+                  style="opacity: 0;"
                 >
                   <div
-                    class="c9 c10 css-142zc9n"
-                    data-testid="swap-li-label"
+                    class="c6 c7 c8"
                   >
-                    Max. slippage
-                  </div>
-                  <div
-                    class="c11"
-                  >
-                    <div>
-                      <div
-                        class="c9 c12 css-142zc9n"
-                      >
+                    <div
+                      class="c9 c10 css-142zc9n"
+                      data-testid="swap-li-label"
+                    >
+                      Max. slippage
+                    </div>
+                    <div
+                      class="c11"
+                    >
+                      <div>
                         <div
-                          class="c6 c15"
+                          class="c9 c12 css-142zc9n"
                         >
                           <div
-                            class="c5 c16 css-1lgneq0"
-                          />
-                           2%
+                            class="c6 c15"
+                          >
+                            <div
+                              class="c5 c16 css-1lgneq0"
+                            >
+                              Auto
+                            </div>
+                             2%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="opacity: 0;"
+                >
+                  <div
+                    class="c6 c7 c8"
+                  >
+                    <div
+                      class="c9 c10 css-142zc9n"
+                      data-testid="swap-li-label"
+                    >
+                      Receive at least
+                    </div>
+                    <div
+                      class="c11"
+                    >
+                      <div>
+                        <div
+                          class="c9 c12 css-142zc9n"
+                        >
+                          0.00000000000000098 DEF
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="c6 c7 c8"
+            >
               <div
-                style="opacity: 0;"
+                class="c9 c10 css-142zc9n"
+                data-testid="swap-li-label"
               >
-                <div
-                  class="c6 c7 c8"
-                >
+                Fee 
+              </div>
+              <div
+                class="c11"
+              >
+                <div>
                   <div
-                    class="c9 c10 css-142zc9n"
-                    data-testid="swap-li-label"
+                    class="c9 c12 css-142zc9n"
                   >
-                    Receive at least
-                  </div>
-                  <div
-                    class="c11"
-                  >
-                    <div>
-                      <div
-                        class="c9 c12 css-142zc9n"
-                      >
-                        0.00000000000000098 DEF
-                      </div>
-                    </div>
+                    0 DEF
                   </div>
                 </div>
               </div>
             </div>
           </div>
-        </div>
-        <div>
-          <div
-            class="c6 c7 c8"
-          >
+          <div>
             <div
-              class="c9 c10 css-142zc9n"
-              data-testid="swap-li-label"
+              class="c6 c7 c8"
             >
-              Fee 
-            </div>
-            <div
-              class="c11"
-            >
-              <div>
-                <div
-                  class="c9 c12 css-142zc9n"
-                >
-                  0 DEF
-                </div>
+              <div
+                class="c9 c10 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Network cost
               </div>
-            </div>
-          </div>
-        </div>
-        <div>
-          <div
-            class="c6 c7 c8"
-          >
-            <div
-              class="c9 c10 css-142zc9n"
-              data-testid="swap-li-label"
-            >
-              Network cost
-            </div>
-            <div
-              class="c11"
-            >
-              <div>
-                <div
-                  class="c9 c12 css-142zc9n"
-                >
+              <div
+                class="c11"
+              >
+                <div>
                   <div
-                    class="c11"
+                    class="c9 c12 css-142zc9n"
                   >
-                    <div>
-                      <div
-                        class="c17"
-                      >
+                    <div
+                      class="c11"
+                    >
+                      <div>
                         <div
-                          class="c6 c18 c19"
+                          class="c17"
                         >
-                          <svg
-                            class="c20"
-                            fill="none"
-                            height="24"
-                            viewBox="0 0 24 24"
-                            width="24"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <path
-                              clip-rule="evenodd"
-                              d="M15.3078 1.77827C15.7064 1.39599 16.3395 1.40923 16.7217 1.80783L20.9689 6.23633C21.2428 6.47474 21.4729 6.76205 21.6459 7.08464C21.8481 7.43172 22 7.84819 22 8.32698V16.7012C22 18.2484 20.7455 19.5 19.2 19.5C17.6536 19.5 16.4 18.2464 16.4 16.7V14.3999C16.4 13.8476 15.9523 13.3999 15.4 13.3999H14V20.5C14 20.569 13.9965 20.6372 13.9897 20.7045C13.9515 21.08 13.8095 21.4249 13.5927 21.7098C13.2274 22.19 12.6499 22.5 12 22.5H4C3.30964 22.5 2.70098 22.1502 2.34157 21.6182C2.12592 21.299 2.00001 20.9142 2 20.5V5.4999C2 3.84305 3.34315 2.4999 5 2.4999H11C12.6569 2.4999 14 3.84305 14 5.4999V11.3999H15.4C17.0569 11.3999 18.4 12.7431 18.4 14.3999V16.7C18.4 17.1418 18.7582 17.5 19.2 17.5C19.6427 17.5 20 17.1422 20 16.7012V11.3292C19.6872 11.4397 19.3506 11.4999 19 11.4999C17.3431 11.4999 16 10.1568 16 8.4999C16 7.28851 16.718 6.24482 17.7517 5.77117L15.2783 3.19217C14.896 2.79357 14.9092 2.16055 15.3078 1.77827ZM19.6098 7.70731C19.441 7.57725 19.2296 7.4999 19 7.4999C18.4477 7.4999 18 7.94762 18 8.4999C18 9.05219 18.4477 9.4999 19 9.4999C19.5523 9.4999 20 9.05219 20 8.4999C20 8.34084 19.9629 8.19045 19.8968 8.05693C19.8303 7.95164 19.7349 7.83559 19.6098 7.70731ZM5.21572 4.72463C4.66343 4.72463 4.21572 5.17235 4.21572 5.72463V9.72463C4.21572 10.2769 4.66343 10.7246 5.21572 10.7246H10.7157C11.268 10.7246 11.7157 10.2769 11.7157 9.72463V5.72463C11.7157 5.17235 11.268 4.72463 10.7157 4.72463H5.21572Z"
-                              fill="currentColor"
-                              fill-rule="evenodd"
-                            />
-                          </svg>
                           <div
-                            class="c5 css-142zc9n"
+                            class="c6 c18 c19"
                           >
-                            <div
-                              class="c6 c15"
+                            <svg
+                              class="c20"
+                              fill="none"
+                              height="24"
+                              viewBox="0 0 24 24"
+                              width="24"
+                              xmlns="http://www.w3.org/2000/svg"
                             >
-                              <div>
-                                $1.00
+                              <path
+                                clip-rule="evenodd"
+                                d="M15.3078 1.77827C15.7064 1.39599 16.3395 1.40923 16.7217 1.80783L20.9689 6.23633C21.2428 6.47474 21.4729 6.76205 21.6459 7.08464C21.8481 7.43172 22 7.84819 22 8.32698V16.7012C22 18.2484 20.7455 19.5 19.2 19.5C17.6536 19.5 16.4 18.2464 16.4 16.7V14.3999C16.4 13.8476 15.9523 13.3999 15.4 13.3999H14V20.5C14 20.569 13.9965 20.6372 13.9897 20.7045C13.9515 21.08 13.8095 21.4249 13.5927 21.7098C13.2274 22.19 12.6499 22.5 12 22.5H4C3.30964 22.5 2.70098 22.1502 2.34157 21.6182C2.12592 21.299 2.00001 20.9142 2 20.5V5.4999C2 3.84305 3.34315 2.4999 5 2.4999H11C12.6569 2.4999 14 3.84305 14 5.4999V11.3999H15.4C17.0569 11.3999 18.4 12.7431 18.4 14.3999V16.7C18.4 17.1418 18.7582 17.5 19.2 17.5C19.6427 17.5 20 17.1422 20 16.7012V11.3292C19.6872 11.4397 19.3506 11.4999 19 11.4999C17.3431 11.4999 16 10.1568 16 8.4999C16 7.28851 16.718 6.24482 17.7517 5.77117L15.2783 3.19217C14.896 2.79357 14.9092 2.16055 15.3078 1.77827ZM19.6098 7.70731C19.441 7.57725 19.2296 7.4999 19 7.4999C18.4477 7.4999 18 7.94762 18 8.4999C18 9.05219 18.4477 9.4999 19 9.4999C19.5523 9.4999 20 9.05219 20 8.4999C20 8.34084 19.9629 8.19045 19.8968 8.05693C19.8303 7.95164 19.7349 7.83559 19.6098 7.70731ZM5.21572 4.72463C4.66343 4.72463 4.21572 5.17235 4.21572 5.72463V9.72463C4.21572 10.2769 4.66343 10.7246 5.21572 10.7246H10.7157C11.268 10.7246 11.7157 10.2769 11.7157 9.72463V5.72463C11.7157 5.17235 11.268 4.72463 10.7157 4.72463H5.21572Z"
+                                fill="currentColor"
+                                fill-rule="evenodd"
+                              />
+                            </svg>
+                            <div
+                              class="c5 css-142zc9n"
+                            >
+                              <div
+                                class="c6 c15"
+                              >
+                                <div>
+                                  $1.00
+                                </div>
                               </div>
                             </div>
                           </div>
@@ -611,22 +615,22 @@ exports[`SwapDetails.tsx matches base snapshot, test trade exact input 1`] = `
             </div>
           </div>
         </div>
-      </div>
-      <div
-        class="c6 c7 c21"
-      >
-        <button
-          class="c22 c23 c24 c25"
-          data-testid="confirm-swap-button"
-          id="confirm-swap-or-send"
+        <div
+          class="c6 c7 c21"
         >
-          <div
-            class="css-1cmsyys"
+          <button
+            class="c22 c23 c24 c25"
+            data-testid="confirm-swap-button"
+            id="confirm-swap-or-send"
           >
-            Confirm swap
-          </div>
-        </button>
-      </div>
+            <div
+              class="css-1cmsyys"
+            >
+              Confirm swap
+            </div>
+          </button>
+        </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -921,10 +925,6 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
   align-items: center;
 }
 
-.c16::after {
-  content: 'Auto';
-}
-
 .c1 {
   padding: 0px 12px 8px;
 }
@@ -971,229 +971,239 @@ exports[`SwapDetails.tsx renders a preview trade while disabling submission 1`] 
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
-        <button
-          class="c2"
-        >
-          <div
-            class="c3"
-          />
-          <div
-            class="c4"
-          >
-            <div
-              class="c5 css-142zc9n"
-            >
-              Show more
-            </div>
-            <svg>
-              expando-icon-closed.svg
-            </svg>
-          </div>
-          <div
-            class="c3"
-          />
-        </button>
-        <div>
-          <div
-            class="c6 c7 c8"
-          >
-            <div
-              class="c9 c10 css-142zc9n"
-              data-testid="swap-li-label"
-            >
-              Rate
-            </div>
-            <div
-              class="c9 c11 css-142zc9n"
-            >
-              <button
-                class="c12"
-                title="1 DEF = 1.00 ABC "
-              >
-                <div
-                  class="c9 css-142zc9n"
-                >
-                  1 DEF = 1.00 ABC 
-                </div>
-                 
-              </button>
-            </div>
-          </div>
-        </div>
         <div
-          style="height: 0px; margin-top: -8px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
+          class="c0 c1"
         >
-          <div>
+          <button
+            class="c2"
+          >
             <div
-              class="c0"
+              class="c3"
+            />
+            <div
+              class="c4"
             >
               <div
-                style="opacity: 0;"
+                class="c5 css-142zc9n"
               >
-                <div
-                  class="c6 c7 c8"
+                Show more
+              </div>
+              <svg>
+                expando-icon-closed.svg
+              </svg>
+            </div>
+            <div
+              class="c3"
+            />
+          </button>
+          <div>
+            <div
+              class="c6 c7 c8"
+            >
+              <div
+                class="c9 c10 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Rate
+              </div>
+              <div
+                class="c9 c11 css-142zc9n"
+              >
+                <button
+                  class="c12"
+                  title="1 DEF = 1.00 ABC "
                 >
                   <div
-                    class="c9 c13 css-142zc9n"
-                    data-testid="swap-li-label"
+                    class="c9 css-142zc9n"
                   >
-                    Max. slippage
+                    1 DEF = 1.00 ABC 
                   </div>
+                   
+                </button>
+              </div>
+            </div>
+          </div>
+          <div
+            style="height: 0px; margin-top: -8px; overflow: hidden; width: 100%; min-width: min-content; will-change: height;"
+          >
+            <div>
+              <div
+                class="c0"
+              >
+                <div
+                  style="opacity: 0;"
+                >
                   <div
-                    class="c14"
+                    class="c6 c7 c8"
                   >
-                    <div>
-                      <div
-                        class="c9 c11 css-142zc9n"
-                      >
+                    <div
+                      class="c9 c13 css-142zc9n"
+                      data-testid="swap-li-label"
+                    >
+                      Max. slippage
+                    </div>
+                    <div
+                      class="c14"
+                    >
+                      <div>
                         <div
-                          class="c6 c15"
+                          class="c9 c11 css-142zc9n"
                         >
                           <div
-                            class="c5 c16 css-1lgneq0"
-                          />
-                           2%
+                            class="c6 c15"
+                          >
+                            <div
+                              class="c5 c16 css-1lgneq0"
+                            >
+                              Auto
+                            </div>
+                             2%
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div
+                  style="opacity: 0;"
+                >
+                  <div
+                    class="c6 c7 c8"
+                  >
+                    <div
+                      class="c9 c13 css-142zc9n"
+                      data-testid="swap-li-label"
+                    >
+                      Receive at least
+                    </div>
+                    <div
+                      class="c14"
+                    >
+                      <div>
+                        <div
+                          class="c9 c11 css-142zc9n"
+                        >
+                          0.00000000000000098 DEF
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
               </div>
+            </div>
+          </div>
+          <div>
+            <div
+              class="c6 c7 c8"
+            >
               <div
-                style="opacity: 0;"
+                class="c9 c10 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Fee
+              </div>
+              <div
+                class="c9 c11 css-142zc9n"
               >
                 <div
-                  class="c6 c7 c8"
-                >
-                  <div
-                    class="c9 c13 css-142zc9n"
-                    data-testid="swap-li-label"
-                  >
-                    Receive at least
-                  </div>
-                  <div
-                    class="c14"
-                  >
-                    <div>
-                      <div
-                        class="c9 c11 css-142zc9n"
-                      >
-                        0.00000000000000098 DEF
-                      </div>
-                    </div>
-                  </div>
-                </div>
+                  class="c17"
+                  data-testid="loading-row"
+                  height="15"
+                  width="50"
+                />
               </div>
             </div>
           </div>
-        </div>
-        <div>
-          <div
-            class="c6 c7 c8"
-          >
+          <div>
             <div
-              class="c9 c10 css-142zc9n"
-              data-testid="swap-li-label"
-            >
-              Fee
-            </div>
-            <div
-              class="c9 c11 css-142zc9n"
+              class="c6 c7 c8"
             >
               <div
-                class="c17"
-                data-testid="loading-row"
-                height="15"
-                width="50"
-              />
-            </div>
-          </div>
-        </div>
-        <div>
-          <div
-            class="c6 c7 c8"
-          >
-            <div
-              class="c9 c13 css-142zc9n"
-              data-testid="swap-li-label"
-            >
-              Network cost
-            </div>
-            <div
-              class="c14"
-            >
-              <div>
-                <div
-                  class="c9 c11 css-142zc9n"
-                >
+                class="c9 c13 css-142zc9n"
+                data-testid="swap-li-label"
+              >
+                Network cost
+              </div>
+              <div
+                class="c14"
+              >
+                <div>
                   <div
-                    class="c17"
-                    data-testid="loading-row"
-                    height="15"
-                    width="50"
-                  />
+                    class="c9 c11 css-142zc9n"
+                  >
+                    <div
+                      class="c17"
+                      data-testid="loading-row"
+                      height="15"
+                      width="50"
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
-      <div
-        class="c6 c7 c18"
-      >
-        <button
-          class="c19 c20 c21 c22"
-          data-testid="confirm-swap-button"
-          disabled=""
-          id="confirm-swap-or-send"
+        <div
+          class="c6 c7 c18"
         >
-          <div
-            class="c5 css-1jyz67g"
+          <button
+            class="c19 c20 c21 c22"
+            data-testid="confirm-swap-button"
+            disabled=""
+            id="confirm-swap-or-send"
           >
             <div
-              class="c6 c7"
+              class="c5 css-1jyz67g"
             >
-              <style>
-                
+              <div
+                class="c6 c15"
+              >
+                <style>
+                  
   @keyframes rotate360 {
       from {
-          transform: rotate(0deg);
+          transform: rotate(45deg);
       }
       to {
-          transform: rotate(360deg);
+          transform: rotate(405deg);
       }
   }
 
   .RotateElement {
-      animation: rotate360 3s linear infinite;
+      animation: rotate360 1s cubic-bezier(0.83, 0, 0.17, 1) infinite;
       transform-origin: center center;
   }
 
-              </style>
-              <div
-                class="_display-flex _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _alignItems-center _height-16px _justifyContent-center _marginEnd-2px _marginStart-2px _width-16px RotateElement"
-              >
+                </style>
                 <div
-                  class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _flexShrink-0 _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _height-8px _minHeight-8px _minWidth-8px _position-relative _width-8px"
+                  class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _height-20px _justifyContent-center _marginEnd-2px _marginStart-2px _width-20px"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _backgroundColor-transparent _borderBottomColor-transparent _borderBottomWidth-1px _borderLeftColor-843134974 _borderLeftWidth-2px _borderTopLeftRadius-1307610122 _borderTopRightRadius-1307610122 _borderBottomRightRadius-1307610122 _borderBottomLeftRadius-1307610122 _borderRightColor-transparent _borderRightWidth-1px _borderTopColor-transparent _borderTopWidth-1px _height-14px _left--6px _position-relative _top--6px _width-14px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid RotateElement"
-                  />
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _flexShrink-0 _flexDirection-column _height-20px _minHeight-8px _minWidth-8px _pt-1d0t66667px46 _pr-1d0t66667px46 _pb-1d0t66667px46 _pl-1d0t66667px46 _position-relative _width-20px"
+                  >
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderTopColor-843134974 _borderRightColor-843134974 _borderBottomColor-843134974 _borderLeftColor-843134974 _borderTopLeftRadius-1881200688 _borderTopRightRadius-1881200688 _borderBottomRightRadius-1881200688 _borderBottomLeftRadius-1881200688 _borderTopWidth-3px _borderRightWidth-3px _borderBottomWidth-3px _borderLeftWidth-3px _height-20px _opacity-0d0t146 _position-absolute _width-20px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                    />
+                    <div
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _backgroundColor-transparent _borderBottomColor-transparent _borderBottomWidth-3px _borderLeftColor-transparent _borderLeftWidth-3px _borderTopLeftRadius-1881200688 _borderTopRightRadius-1881200688 _borderBottomRightRadius-1881200688 _borderBottomLeftRadius-1881200688 _borderRightColor-transparent _borderRightWidth-3px _borderTopColor-843134974 _borderTopWidth-3px _height-20px _position-absolute _width-20px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid RotateElement"
+                    />
+                  </div>
                 </div>
+                Finalizing quote...
               </div>
-              Finalizing quote...
             </div>
-          </div>
-        </button>
-      </div>
+          </button>
+        </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -1221,21 +1231,26 @@ exports[`SwapDetails.tsx renders slippage tooltip 1`] = `
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      The maximum price movement before your transaction will revert.
-      <br />
-      <a
-        class="c0"
-        href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
-        rel="noopener noreferrer"
-        target="_blank"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
-        Learn more
-      </a>
+        The maximum price movement before your transaction will revert.
+        <br />
+        <a
+          class="c0"
+          href="https://support.uniswap.org/hc/en-us/articles/20131678274957"
+          rel="noopener noreferrer"
+          target="_blank"
+        >
+          Learn more
+        </a>
+      </span>
     </span>
   </span>
 </DocumentFragment>

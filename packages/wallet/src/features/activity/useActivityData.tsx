@@ -4,22 +4,21 @@ import { StyleProp, ViewStyle } from 'react-native'
 import { Flex, Loader, Text, isWeb } from 'ui/src'
 import { NoTransactions } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useFormattedTransactionDataForActivity } from 'wallet/src/features/activity/hooks'
 import { LoadingItem, SectionHeader } from 'wallet/src/features/activity/utils'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
 import { ActivityItemRenderer, generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useCreateSwapFormState, useMergeLocalAndRemoteTransactions } from 'wallet/src/features/transactions/hooks'
 import { useMostRecentSwapTx } from 'wallet/src/features/transactions/swap/hooks/useMostRecentSwapTx'
-import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
 import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 
-const SectionTitle = ({ title }: { title: string }): JSX.Element => (
+const SectionTitle = ({ title, index }: { title: string; index?: number }): JSX.Element => (
   <Flex px={isWeb ? '$spacing8' : '$none'} py="$spacing8">
-    <Text color="$neutral2" variant="subheading2">
+    <Text color="$neutral2" testID={`activity-list-item-${index}`} variant="subheading2">
       {title}
     </Text>
   </Flex>
@@ -35,7 +34,6 @@ type ActivityDataProps = {
 
 type ActivityData = {
   maybeEmptyComponent: JSX.Element | null
-  maybeLoaderComponent: JSX.Element | null
   renderActivityItem: ActivityItemRenderer
   sectionData: (TransactionDetails | SectionHeader | LoadingItem)[] | undefined
   keyExtractor: (item: TransactionDetails | SectionHeader | LoadingItem) => string
@@ -70,16 +68,10 @@ export function useActivityData({
   }, [navigateToSwapFlow])
 
   const renderActivityItem = useMemo(() => {
-    return generateActivityItemRenderer(
-      TransactionSummaryLayout,
-      <Loader.Transaction />,
-      SectionTitle,
-      swapCallbacks,
-      authTrigger,
-    )
+    return generateActivityItemRenderer(<Loader.Transaction />, SectionTitle, swapCallbacks, authTrigger)
   }, [swapCallbacks, authTrigger])
 
-  const { onRetry, hasData, isLoading, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(
+  const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(
     owner,
     hideSpamTokens,
     useMergeLocalAndRemoteTransactions,
@@ -111,13 +103,11 @@ export function useActivityData({
     </Flex>
   )
 
-  const maybeEmptyComponent = hasData ? null : isError ? errorCard : emptyListView
-  // We want to display the loading shimmer only on first load because items have their own loading shimmer
-  const maybeLoaderComponent = isLoading && !hasData ? <Loader.Transaction repeat={6} /> : null
+  // We check `sectionData` instead of `hasData` because `sectionData` has either transactions or a loading skeleton.
+  const maybeEmptyComponent = sectionData?.length ? null : isError ? errorCard : emptyListView
 
   return {
     maybeEmptyComponent,
-    maybeLoaderComponent,
     renderActivityItem,
     sectionData,
     keyExtractor,

@@ -4,8 +4,9 @@ import Animated, { FadeIn, FadeOut } from 'react-native-reanimated'
 import { LongText } from 'src/components/text/LongText'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ChartBar, ChartPie, Language as LanguageIcon, TrendDown, TrendUp } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
+import { DEP_accentColors, iconSizes, validColor } from 'ui/src/theme'
 import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Language } from 'wallet/src/features/language/constants'
@@ -139,7 +140,7 @@ export function TokenDetailsStats({
       {currentDescription && (
         <Flex gap="$spacing4">
           {name && (
-            <Text color="$neutral2" variant="subheading2">
+            <Text color="$neutral2" testID={TestID.TokenDetailsAboutHeader} variant="subheading2">
               {t('token.stats.section.about', { token: name })}
             </Text>
           )}
@@ -163,7 +164,7 @@ export function TokenDetailsStats({
                         {currentLanguageInfo.displayName}
                       </Text>
                     </Flex>
-                    <Text color="$blue400" variant="buttonLabel4">
+                    <Text color={validColor(DEP_accentColors.blue400)} variant="buttonLabel4">
                       {t('token.stats.translation.original')}
                     </Text>
                   </Flex>

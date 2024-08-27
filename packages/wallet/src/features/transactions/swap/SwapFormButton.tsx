@@ -2,9 +2,11 @@
 import { TFunction } from 'i18next'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { AnimatePresence, Button, Flex, SpinningLoader, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -26,10 +28,7 @@ import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { WrapType } from 'wallet/src/features/transactions/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
-import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useAppSelector } from 'wallet/src/state'
+import { useIsBlocked } from 'wallet/src/features/trm/hooks'
 
 export const HOLD_TO_SWAP_TIMEOUT = 3 * ONE_SECOND_MS
 const KEEP_OPEN_MSG_DELAY = 3 * ONE_SECOND_MS
@@ -38,9 +37,8 @@ export const SWAP_BUTTON_TEXT_VARIANT = isWeb ? 'buttonLabel2' : 'buttonLabel1'
 export function SwapFormButton(): JSX.Element {
   const { t } = useTranslation()
   const isShortMobileDevice = useIsShortMobileDevice()
-  const activeAccount = useActiveAccountWithThrow()
 
-  const { walletNeedsRestore } = useTransactionModalContext()
+  const { account: activeAccount, walletNeedsRestore } = useTransactionModalContext()
   const { screen, setScreen } = useSwapScreenContext()
   const { derivedSwapInfo, isSubmitting, updateSwapForm } = useSwapFormContext()
   const { blockingWarning } = useParsedSwapWarnings()
@@ -49,7 +47,7 @@ export function SwapFormButton(): JSX.Element {
 
   const { wrapType, trade } = derivedSwapInfo
 
-  const { isBlocked, isBlockedLoading } = useIsBlockedActiveAddress()
+  const { isBlocked, isBlockedLoading } = useIsBlocked(activeAccount.address)
 
   const noValidSwap = !isWrapAction(wrapType) && !trade.trade
 
@@ -58,8 +56,8 @@ export function SwapFormButton(): JSX.Element {
 
   const isHoldToSwapPressed = screen === SwapScreen.SwapReviewHoldingToSwap
 
-  const hasViewedReviewScreen = useAppSelector(selectHasViewedReviewScreen)
-  const hasSubmittedHoldToSwap = useAppSelector(selectHasSubmittedHoldToSwap)
+  const hasViewedReviewScreen = useSelector(selectHasViewedReviewScreen)
+  const hasSubmittedHoldToSwap = useSelector(selectHasSubmittedHoldToSwap)
 
   const isViewOnlyWallet = activeAccount.type === AccountType.Readonly
   const showHoldToSwapTip = hasViewedReviewScreen && !hasSubmittedHoldToSwap && !isViewOnlyWallet

@@ -1,6 +1,5 @@
 /* eslint-disable max-lines */
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -472,7 +471,8 @@ export const v62Schema = {
   ...v61Schema,
   behaviorHistory: {
     ...v61Schema.behaviorHistory,
-    extensionOnboardingState: ExtensionOnboardingState.Undefined,
+    // Removed in schema 69
+    extensionOnboardingState: 'Undefined',
   },
 }
 
@@ -505,6 +505,49 @@ export const v65Schema = { ...v64Schema }
 
 export const v66Schema = { ...v65Schema }
 
+export const v67Schema = { ...v66Schema }
+
+const v68SchemaIntermediate = {
+  ...v67Schema,
+  behaviorHistory: {
+    ...v67Schema.behaviorHistory,
+    extensionBetaFeedbackState: undefined,
+  },
+}
+
+delete v68SchemaIntermediate.behaviorHistory.extensionBetaFeedbackState
+
+export const v68Schema = v68SchemaIntermediate
+
+const v69SchemaIntermediate = {
+  ...v68Schema,
+  behaviorHistory: {
+    ...v68Schema.behaviorHistory,
+    extensionOnboardingState: undefined,
+  },
+}
+delete v69SchemaIntermediate.behaviorHistory.extensionOnboardingState
+export const v69Schema = v69SchemaIntermediate
+
+export const v70Schema = { ...v69Schema }
+
+export const v71Schema = {
+  ...v70Schema,
+  appearanceSettings: {
+    ...v70Schema.appearanceSettings,
+    hapticsEnabled: true,
+  },
+}
+
+export const v72Schema = {
+  ...v71Schema,
+  behaviorHistory: {
+    ...v71Schema.behaviorHistory,
+    hasViewedWelcomeWalletCard: false,
+    hasUsedExplore: false,
+  },
+}
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v65Schema => v65Schema
+export const getSchema = (): typeof v72Schema => v72Schema

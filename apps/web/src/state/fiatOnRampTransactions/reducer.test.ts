@@ -2,10 +2,10 @@ import { createStore, Store } from 'redux'
 import reducer, {
   addFiatOnRampTransaction,
   FiatOnRampTransactionDetails,
-  initialState,
   FiatOnRampTransactionsState,
-  updateFiatOnRampTransaction,
+  initialState,
   removeFiatOnRampTransaction,
+  updateFiatOnRampTransaction,
 } from 'state/fiatOnRampTransactions/reducer'
 import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from 'state/fiatOnRampTransactions/types'
 
@@ -17,7 +17,9 @@ const transaction: FiatOnRampTransactionDetails = {
   status: FiatOnRampTransactionStatus.INITIATED,
   forceFetched: false,
   addedAt: 1001,
-  type: FiatOnRampTransactionType.BUY
+  type: FiatOnRampTransactionType.BUY,
+  syncedWithBackend: false,
+  provider: 'COINBASE_PAY',
 }
 
 describe('fiatOnRampTransactions reducer', () => {
@@ -63,7 +65,9 @@ describe('fiatOnRampTransactions reducer', () => {
         },
       })
 
-      expect(() => store.dispatch(updateFiatOnRampTransaction({ ...transaction, externalSessionId: 'non existent id' }))).toThrow()
+      expect(() =>
+        store.dispatch(updateFiatOnRampTransaction({ ...transaction, externalSessionId: 'non existent id' })),
+      ).toThrow()
     })
   })
 

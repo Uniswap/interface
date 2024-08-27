@@ -1,8 +1,8 @@
 import { Extras } from '@sentry/types'
-import { logErrorToDatadog, logToDatadog } from 'utilities/src/logger/Datadog'
+import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/Datadog'
 import { Sentry } from 'utilities/src/logger/Sentry'
 import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
-import { isInterface, isWeb } from 'utilities/src/platform'
+import { isInterface, isMobile, isWeb } from 'utilities/src/platform'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:
@@ -60,8 +60,24 @@ function logMessage(
 
   if (level === 'warn') {
     Sentry.captureMessage('warning', `${fileName}#${functionName}`, message, ...args)
+    if (isMobile) {
+      logWarningToDatadog(message, {
+        level,
+        args,
+        functionName,
+        fileName,
+      })
+    }
   } else if (level === 'info') {
     Sentry.captureMessage('info', `${fileName}#${functionName}`, message, ...args)
+    if (isMobile) {
+      logToDatadog(message, {
+        level,
+        args,
+        functionName,
+        fileName,
+      })
+    }
   }
 
   if (isInterface) {
@@ -98,7 +114,7 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
   }
 
   Sentry.captureException(error, updatedContext)
-  if (isInterface) {
+  if (isInterface || isMobile) {
     logErrorToDatadog(error instanceof Error ? error : new Error(`${error}`), updatedContext)
   }
 }

@@ -1,12 +1,12 @@
 import Loader from 'components/Icons/LoadingSpinner'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { getChain, useSupportedChainId } from 'constants/chains'
-import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { Check } from 'react-feather'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
-import styled, { useTheme } from 'styled-components'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
+import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 const LOGO_SIZE = 20

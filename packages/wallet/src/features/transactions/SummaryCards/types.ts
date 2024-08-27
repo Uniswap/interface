@@ -1,6 +1,6 @@
+import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
-import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { TransactionDetails } from 'wallet/src/features/transactions/types'
 
 export interface TransactionSummaryLayoutProps {
@@ -10,14 +10,15 @@ export interface TransactionSummaryLayoutProps {
   caption: string
   postCaptionElement?: JSX.Element
   icon?: JSX.Element
+  index?: number
   onRetry?: () => void
 }
 
 export interface SummaryItemProps {
   authTrigger?: AuthTrigger
   transaction: TransactionDetails
-  layoutElement: React.FunctionComponent<TransactionSummaryLayoutProps>
   swapCallbacks?: SwapSummaryCallbacks
+  index?: number
 }
 
 export interface SwapSummaryCallbacks {

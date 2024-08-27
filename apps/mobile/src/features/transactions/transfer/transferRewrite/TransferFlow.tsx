@@ -1,5 +1,5 @@
 import { Dispatch, ReactNode, SetStateAction, useEffect, useMemo, useState } from 'react'
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { useOnCloseSendModal } from 'src/features/transactions/swap/hooks/useOnCloseSendModal'
 import { TransferFormScreen } from 'src/features/transactions/transfer/transferRewrite/TransferFormScreen'
@@ -11,10 +11,11 @@ import {
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
 import { SwapFormContextProvider, SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { TransactionModal } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { getFocusOnCurrencyFieldFromInitialState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
-import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 /**
  * @todo: The screens within this flow are not implemented.
@@ -26,10 +27,12 @@ export function TransferFlow(): JSX.Element {
   const fullscreen = screen === TransferScreen.TransferForm
   const onClose = useOnCloseSendModal()
 
+  const account = useActiveAccountWithThrow()
   const { walletNeedsRestore, openWalletRestoreModal } = useWalletRestore()
 
   return (
     <TransactionModal
+      account={account}
       fullscreen={fullscreen}
       modalName={ModalName.Send}
       openWalletRestoreModal={openWalletRestoreModal}
@@ -77,7 +80,7 @@ function TransferFormScreenDelayedRender(): JSX.Element {
 }
 
 function TransferContextsContainer({ children }: { children?: ReactNode }): JSX.Element {
-  const { initialState } = useAppSelector(selectModalState(ModalName.Send))
+  const { initialState } = useSelector(selectModalState(ModalName.Send))
 
   const prefilledState = useMemo(
     (): SwapFormState | undefined =>

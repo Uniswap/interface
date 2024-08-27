@@ -7,12 +7,13 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import {
   useTransferERC20Callback,
   useTransferNFTCallback,
@@ -26,6 +27,9 @@ export function SendReviewScreen(): JSX.Element {
 
   const { derivedTransferInfo, warnings, txRequest, gasFee, setScreen } = useTransferContext()
   const { txId, chainId, recipient, currencyInInfo, currencyAmounts, nftIn } = derivedTransferInfo
+
+  // for transfer analytics
+  const currencyAmountUSD = useUSDCValue(currencyAmounts[CurrencyField.INPUT])
 
   const triggerTransferPendingNotification = useCallback(() => {
     if (!currencyInInfo) {
@@ -56,6 +60,7 @@ export function SendReviewScreen(): JSX.Element {
     currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
     txRequest,
     onNext,
+    currencyAmountUSD,
   )
 
   const transferNFTCallback = useTransferNFTCallback(

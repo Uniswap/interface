@@ -2,30 +2,31 @@ import { CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isWeb } from 'ui/src'
+import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { useOnChainNativeCurrencyBalance } from 'wallet/src/features/portfolio/api'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
-import { hasSufficientFundsIncludingGas } from 'wallet/src/features/transactions/utils'
 import {
   Warning,
   WarningAction,
   WarningLabel,
   WarningSeverity,
 } from 'wallet/src/features/transactions/WarningModal/types'
-import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
+import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
+import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
+import { hasSufficientFundsIncludingGas } from 'wallet/src/features/transactions/utils'
 
 export function useTransactionGasWarning({
+  account,
   derivedInfo,
   gasFee,
 }: {
+  account: AccountMeta
   derivedInfo: DerivedSwapInfo | DerivedTransferInfo
   gasFee?: string
 }): Warning | undefined {
   const { chainId, currencyAmounts, currencyBalances } = derivedInfo
   const { t } = useTranslation()
-  const address = useActiveAccountAddressWithThrow()
-  const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(chainId, address)
+  const { balance: nativeCurrencyBalance } = useOnChainNativeCurrencyBalance(chainId, account.address)
 
   const currencyAmountIn = currencyAmounts[CurrencyField.INPUT]
   const currencyBalanceIn = currencyBalances[CurrencyField.INPUT]

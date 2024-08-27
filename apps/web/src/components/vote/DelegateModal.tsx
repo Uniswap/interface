@@ -12,6 +12,7 @@ import { useAccount } from 'hooks/useAccount'
 import useENS from 'hooks/useENS'
 import { Trans } from 'i18n'
 import JSBI from 'jsbi'
+import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode, useMemo, useState } from 'react'
 import { X } from 'react-feather'
 import { PoolInfo /*,useDerivedPoolInfo*/ } from 'state/buy/hooks'
@@ -21,13 +22,13 @@ import {
   usePoolExtendedContract,
   usePoolIdByAddress,
 } from 'state/governance/hooks'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { formatCurrencyAmount } from 'utils/formatCurrencyAmount'
 
 import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { Text } from 'ui/src'
+import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
 import useDebouncedChangeHandler from 'hooks/useDebouncedChangeHandler'

@@ -1,11 +1,13 @@
 import dayjs from 'dayjs'
+import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, ContextMenu, Flex, Separator, Text, TouchableArea, isWeb } from 'ui/src'
-import { TripleDots, UniswapX } from 'ui/src/components/icons'
+import { AnglesDownUp, SortVertical, TripleDots, UniswapX } from 'ui/src/components/icons'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { AssetType } from 'uniswap/src/entities/assets'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
-import { AssetType } from 'wallet/src/entities/assets'
 import { AuthTrigger } from 'wallet/src/features/auth/types'
 import { FORMAT_DATE_TIME_MEDIUM, useFormattedDateTime } from 'wallet/src/features/language/localizedDayjs'
 import { ApproveTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/ApproveTransactionDetails'
@@ -33,9 +35,8 @@ import {
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import { useTransactionActions } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActions'
 import { getTransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/utils'
-import { TransactionDetails, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
+import { TransactionDetails, TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 import { getIsCancelable } from 'wallet/src/features/transactions/utils'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type TransactionDetailsModalProps = {
@@ -151,6 +152,8 @@ export function TransactionDetailsModal({
 }: TransactionDetailsModalProps): JSX.Element {
   const { t } = useTranslation()
   const { typeInfo } = transactionDetails
+  const [isShowingMore, setIsShowingMore] = useState(false)
+  const hasMoreInfoRows = transactionDetails.typeInfo.type === TransactionType.Swap
 
   // Hide both separators if it's an Nft transaction. Hide top separator if it's an unknown type transaction.
   const isNftTransaction = isNFTActivity(typeInfo)
@@ -163,7 +166,6 @@ export function TransactionDetailsModal({
 
   const transactionActions = useTransactionActions({
     authTrigger,
-    onNavigateAway: onClose,
     transaction: transactionDetails,
   })
 
@@ -198,8 +200,11 @@ export function TransactionDetailsModal({
           <TransactionDetailsHeader transactionActions={transactionActions} transactionDetails={transactionDetails} />
           {!hideTopSeparator && <Separator />}
           <TransactionDetailsContent transactionDetails={transactionDetails} onClose={onClose} />
-          {!hideBottomSeparator && <Separator />}
-          <TransactionDetailsInfoRows transactionDetails={transactionDetails} />
+          {!hideBottomSeparator && hasMoreInfoRows && (
+            <ShowMoreSeparator isShowingMore={isShowingMore} setIsShowingMore={setIsShowingMore} />
+          )}
+          {!hideBottomSeparator && !hasMoreInfoRows && <Separator />}
+          <TransactionDetailsInfoRows isShowingMore={isShowingMore} transactionDetails={transactionDetails} />
           {buttons.length > 0 && (
             <Flex gap="$spacing8" pt="$spacing8">
               {buttons}
@@ -209,5 +214,38 @@ export function TransactionDetailsModal({
       </BottomSheetModal>
       {renderModals()}
     </>
+  )
+}
+
+function ShowMoreSeparator({
+  isShowingMore,
+  setIsShowingMore,
+}: {
+  isShowingMore: boolean
+  setIsShowingMore: (showMore: boolean) => void
+}): JSX.Element {
+  const { t } = useTranslation()
+
+  const onPressShowMore = (): void => {
+    setIsShowingMore(!isShowingMore)
+  }
+
+  return (
+    <Flex centered row gap="$spacing16">
+      <Separator />
+      <TouchableArea onPress={onPressShowMore}>
+        <Flex centered row gap="$spacing4">
+          <Text color="$neutral3" variant="body4">
+            {isShowingMore ? t('common.button.showLess') : t('common.button.showMore')}
+          </Text>
+          {isShowingMore ? (
+            <AnglesDownUp color="$neutral3" size="$icon.16" />
+          ) : (
+            <SortVertical color="$neutral3" size="$icon.16" />
+          )}
+        </Flex>
+      </TouchableArea>
+      <Separator />
+    </Flex>
   )
 }

@@ -41,6 +41,7 @@ exports[`TokenItem renders without error 1`] = `
       }
       style={
         {
+          "alignItems": "center",
           "flexDirection": "row",
           "flexGrow": 1,
           "gap": 12,
@@ -77,7 +78,7 @@ exports[`TokenItem renders without error 1`] = `
               {
                 "color": "#7D7D7D",
                 "fontFamily": "Basel-Medium",
-                "fontSize": 15,
+                "fontSize": 13,
                 "fontWeight": "500",
                 "lineHeight": 16,
               }
@@ -110,7 +111,7 @@ exports[`TokenItem renders without error 1`] = `
             style={
               {
                 "aspectRatio": undefined,
-                "backgroundColor": "#2222220D",
+                "backgroundColor": "rgba(34,34,34,0.05)",
                 "borderRadius": 20,
                 "flex": undefined,
               }
@@ -123,6 +124,7 @@ exports[`TokenItem renders without error 1`] = `
       <View
         style={
           {
+            "flex": 1,
             "flexDirection": "column",
             "flexShrink": 1,
             "gap": 2,
@@ -162,11 +164,11 @@ exports[`TokenItem renders without error 1`] = `
         />
       </View>
       <View
+        onLayout={[Function]}
         style={
           {
             "alignItems": "center",
             "flexDirection": "row",
-            "flexGrow": 1,
             "justifyContent": "flex-end",
           }
         }
@@ -234,6 +236,7 @@ exports[`TokenItem renders without error 1`] = `
                     }
                   }
                   suppressHighlighting={true}
+                  testID="portfolio-relative-change"
                 >
                   -
                 </Text>

@@ -26,8 +26,7 @@ import { isWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
 import { AppRoutes, HomeQueryParams } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
-import { appSelect } from 'src/store/store'
-import { call, put, take } from 'typed-redux-saga'
+import { call, put, select, take } from 'typed-redux-saga'
 import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -91,7 +90,7 @@ export function* handleRequest(requestParams: DappRequestNoDappInfo) {
     yield* put(confirmRequestNoDappInfo(requestParams))
     return
   }
-  const activeAccount = yield* appSelect(selectActiveAccount)
+  const activeAccount = yield* select(selectActiveAccount)
   if (!activeAccount) {
     const response: DappRequestRejectParams = {
       errorResponse: {
@@ -291,7 +290,7 @@ export function* changeChainSaga(request: ChangeChainRequest, { id, url }: Sende
   const updatedChainId = toSupportedChainId(hexadecimalStringToInt(request.chainId))
   const provider = updatedChainId ? yield* call(getProvider, updatedChainId) : undefined
   const dappUrl = extractBaseUrl(url)
-  const activeAccount = yield* appSelect(selectActiveAccount)
+  const activeAccount = yield* select(selectActiveAccount)
   const response = changeChain({
     provider,
     dappUrl,

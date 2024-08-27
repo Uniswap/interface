@@ -1,5 +1,7 @@
+/* eslint-disable complexity */
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import {
   Flex,
   Text,
@@ -14,25 +16,39 @@ import { borderRadii, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
+import { NumberType } from 'utilities/src/format/types'
 import { useENS } from 'wallet/src/features/ens/useENS'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
+import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useNetworkFee } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/hooks'
-import { shortenHash } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
+import { SwapTypeTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
+import {
+  getFormattedSwapRatio,
+  hasInterfaceFees,
+  shortenHash,
+} from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
+import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
-import { useAppDispatch } from 'wallet/src/state'
-import { setClipboard } from 'wallet/src/utils/clipboard'
-import { ExplorerDataType, getExplorerLink, openUri } from 'wallet/src/utils/linking'
+import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
+import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
+
+const UNISWAP_FEE = 0.0025
 
 export function TransactionDetailsInfoRows({
   transactionDetails,
+  isShowingMore,
 }: {
   transactionDetails: TransactionDetails
+  isShowingMore: boolean
 }): JSX.Element {
-  const rows = useTransactionDetailsInfoRows(transactionDetails)
+  const rows = useTransactionDetailsInfoRows(transactionDetails, isShowingMore)
 
   return (
     <Flex gap="$spacing8" px="$spacing8">
@@ -41,7 +57,10 @@ export function TransactionDetailsInfoRows({
   )
 }
 
-export function useTransactionDetailsInfoRows(transactionDetails: TransactionDetails): JSX.Element[] {
+export function useTransactionDetailsInfoRows(
+  transactionDetails: TransactionDetails,
+  isShowingMore: boolean,
+): JSX.Element[] {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 
@@ -92,6 +111,18 @@ export function useTransactionDetailsInfoRows(transactionDetails: TransactionDet
       )
       break
     case TransactionType.Swap:
+      if (isShowingMore) {
+        specificRows.push(<SwapRateRow key="swapRate" typeInfo={typeInfo} />)
+        // TODO (WALL-4189): blocked on backend. This is hard-coded to always return false for now
+        if (
+          hasInterfaceFees({
+            swapTimestampMs: transactionDetails.addedTime,
+          })
+        ) {
+          specificRows.push(<UniswapFeeRow key="uniswapFee" typeInfo={typeInfo} />)
+        }
+      }
+      break
     case TransactionType.Wrap:
     case TransactionType.FiatPurchase:
     case TransactionType.NFTTrade:
@@ -149,7 +180,7 @@ function NetworkFeeRow({ transactionDetails }: { transactionDetails: Transaction
 function TransactionHashRow({ transactionDetails }: { transactionDetails: TransactionDetails }): JSX.Element | null {
   const { hash } = transactionDetails
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   if (!hash && isUniswapX(transactionDetails)) {
     return null
@@ -227,6 +258,64 @@ function TransactionParticipantRow({ address, isSend = false }: { address: strin
     <InfoRow label={isSend ? t('common.text.recipient') : t('common.text.sender')}>
       <Text variant="body3">{personDisplayName}</Text>
       {unitag?.username && <Unitag size="$icon.16" />}
+    </InfoRow>
+  )
+}
+
+function SwapRateRow({ typeInfo }: { typeInfo: SwapTypeTransactionInfo }): JSX.Element {
+  const { t } = useTranslation()
+  const formatter = useLocalizationContext()
+
+  const inputCurrency = useCurrencyInfo(typeInfo.inputCurrencyId)
+  const outputCurrency = useCurrencyInfo(typeInfo.outputCurrencyId)
+
+  const formattedLine =
+    inputCurrency && outputCurrency
+      ? getFormattedSwapRatio({
+          typeInfo,
+          inputCurrency,
+          outputCurrency,
+          formatter,
+        })
+      : '-'
+
+  return (
+    <InfoRow label={t('transaction.details.swapRate')}>
+      <Text variant="body3">{formattedLine}</Text>
+    </InfoRow>
+  )
+}
+
+function UniswapFeeRow({ typeInfo }: { typeInfo: SwapTypeTransactionInfo }): JSX.Element {
+  const { t } = useTranslation()
+  const formatter = useLocalizationContext()
+
+  const outputCurrency = useCurrencyInfo(typeInfo.outputCurrencyId)
+  const { outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
+
+  const currencyAmount = getCurrencyAmount({
+    value: outputCurrencyAmountRaw,
+    valueType: ValueType.Raw,
+    currency: outputCurrency?.currency,
+  })
+
+  const amountExact = currencyAmount ? parseFloat(currencyAmount.toExact()) : null
+
+  // Using the equation (1 - 0.25 / 100) * (actualOutputValue + uniswapFee) = actualOutputValue
+  const approximateFee = amountExact ? (UNISWAP_FEE / (1 - UNISWAP_FEE)) * amountExact : null
+  const feeSymbol = outputCurrency?.currency.symbol ? ' ' + outputCurrency.currency.symbol : ''
+  const formattedApproximateFee = approximateFee
+    ? '~' +
+      formatter.formatNumberOrString({
+        value: approximateFee,
+        type: NumberType.TokenTx,
+      }) +
+      feeSymbol
+    : '-'
+
+  return (
+    <InfoRow label={t('transaction.details.uniswapFee', { feePercent: UNISWAP_FEE * 100 })}>
+      <Text variant="body3">{formattedApproximateFee}</Text>
     </InfoRow>
   )
 }

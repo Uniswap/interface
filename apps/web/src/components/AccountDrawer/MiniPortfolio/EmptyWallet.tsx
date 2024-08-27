@@ -1,11 +1,11 @@
-import { Trans, t } from 'i18n'
+import styled from 'lib/styled-components'
 import { useCallback, useMemo } from 'react'
-import styled from 'styled-components'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } from 'ui/src/assets'
 import { ArrowDownCircle, Buy as BuyIcon } from 'ui/src/components/icons'
 import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { Trans, t } from 'uniswap/src/i18n'
 
 export const EmptyWallet = ({
   handleBuyCryptoClick,
@@ -38,8 +38,8 @@ export const EmptyWallet = ({
         BackgroundImageWrapperCallback,
       },
       {
-        title: t('home.tokens.empty.action.receive.title'),
-        blurb: t('home.tokens.empty.action.receive.description'),
+        title: t('fiatOnRamp.receiveCrypto.title'),
+        blurb: t('fiatOnRamp.receiveCrypto.transferFunds'),
         elementName: ElementName.EmptyStateReceive,
         icon: <ArrowDownCircle color="$accent1" size="$icon.28" />,
         onPress: handleReceiveCryptoClick,

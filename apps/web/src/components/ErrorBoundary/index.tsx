@@ -3,12 +3,12 @@ import { ButtonLight, SmallButtonPrimary } from 'components/Button'
 import { Column } from 'components/Column'
 import { useIsMobile } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { ChevronUpIcon } from 'nft/components/icons'
 import { PropsWithChildren, useState } from 'react'
 import { Copy } from 'react-feather'
-import styled from 'styled-components'
 import { CopyToClipboard, ExternalLink, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { isRemoteReportingEnabled } from 'utils/env'
 
 const FallbackWrapper = styled.div`
@@ -123,7 +123,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
             <>
               <Column gap="sm">
                 <Title textAlign="center">
-                  <Trans i18nKey="common.somethingWentWrong.error" />
+                  <Trans i18nKey="common.card.error.description" />
                 </Title>
                 <Description textAlign="center" color="neutral2">
                   <Trans i18nKey="error.request.provideId" />
@@ -152,7 +152,7 @@ const Fallback = ({ error, eventId }: { error: Error; eventId: string | null }) 
             <>
               <Column gap="sm">
                 <Title textAlign="center">
-                  <Trans i18nKey="common.somethingWentWrong.error" />
+                  <Trans i18nKey="common.card.error.description" />
                 </Title>
                 <Description textAlign="center" color="neutral2">
                   <Trans i18nKey="common.error.request" />

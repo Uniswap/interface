@@ -1,11 +1,15 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
+import { useUpdateAtom } from 'jotai/utils'
+import { multicallUpdaterSwapChainIdAtom } from 'lib/hooks/useBlockNumber'
 import { PropsWithChildren, useEffect, useMemo, useState } from 'react'
 import { useDerivedSwapInfo } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext, SwapContext, SwapState, initialSwapState } from 'state/swap/types'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 
 export function SwapAndLimitContextProvider({
   children,
@@ -20,6 +24,7 @@ export function SwapAndLimitContextProvider({
   multichainUXEnabled?: boolean
 }>) {
   const [selectedChainId, setSelectedChainId] = useState<InterfaceChainId | undefined | null>(initialChainId)
+  const [isUserSelectedToken, setIsUserSelectedToken] = useState<boolean>(false)
   const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
 
   const [currencyState, setCurrencyState] = useState<CurrencyState>({
@@ -36,62 +41,60 @@ export function SwapAndLimitContextProvider({
   )
 
   const account = useAccount()
-  const previousConnectedChainId = usePrevious(account.chainId)
   const previousInitialInputCurrency = usePrevious(initialInputCurrency)
   const previousInitialOutputCurrency = usePrevious(initialOutputCurrency)
+  const previousInitialChainId = usePrevious(initialChainId)
 
   useEffect(() => {
-    if (!multichainUXEnabled) {
-      return
-    }
-
-    if (previousInitialInputCurrency && previousInitialInputCurrency !== initialInputCurrency) {
-      setCurrencyState((prev) => ({ ...prev, inputCurrency: initialInputCurrency }))
+    if (
+      !areCurrenciesEqual(previousInitialInputCurrency, initialInputCurrency) ||
+      !areCurrenciesEqual(previousInitialOutputCurrency, initialOutputCurrency)
+    ) {
+      // prefilled state may load in -- i.e. `outputCurrency` URL param pulling from gql
+      setCurrencyState(prefilledState)
     }
   }, [
-    multichainUXEnabled,
     initialInputCurrency,
     initialOutputCurrency,
+    prefilledState,
     previousInitialInputCurrency,
     previousInitialOutputCurrency,
   ])
 
-  const previousPrefilledState = usePrevious(prefilledState)
+  useEffect(() => {
+    if (
+      multichainUXEnabled &&
+      !isUserSelectedToken &&
+      previousInitialInputCurrency &&
+      areCurrenciesEqual(previousInitialInputCurrency, initialInputCurrency)
+    ) {
+      // if setting initial ETH input chain based on user's balance
+      setCurrencyState(prefilledState)
+    }
+  }, [initialInputCurrency, isUserSelectedToken, multichainUXEnabled, prefilledState, previousInitialInputCurrency])
 
   useEffect(() => {
-    const combinedCurrencyState = { ...currencyState, ...prefilledState }
-    const chainChanged = previousConnectedChainId && previousConnectedChainId !== account.chainId
-    const prefilledInputChanged = Boolean(
-      previousPrefilledState?.inputCurrency
-        ? !prefilledState.inputCurrency?.equals(previousPrefilledState.inputCurrency)
-        : prefilledState.inputCurrency,
-    )
-    const prefilledOutputChanged = Boolean(
-      previousPrefilledState?.outputCurrency
-        ? !prefilledState?.outputCurrency?.equals(previousPrefilledState.outputCurrency)
-        : prefilledState.outputCurrency,
-    )
-
-    if ((!multichainUXEnabled && chainChanged) || prefilledInputChanged || prefilledOutputChanged) {
-      setCurrencyState({
-        inputCurrency: combinedCurrencyState.inputCurrency ?? undefined,
-        outputCurrency: combinedCurrencyState.outputCurrency ?? undefined,
-      })
+    if (!isUserSelectedToken && initialChainId && previousInitialChainId !== initialChainId) {
+      setSelectedChainId(initialChainId)
+      if (!multichainUXEnabled) {
+        // if user hasn't manually selected tokens, reset back to prefilled state when chain changes
+        setCurrencyState(prefilledState)
+      }
     }
   }, [
+    initialChainId,
+    isUserSelectedToken,
     multichainUXEnabled,
-    account.chainId,
-    currencyState,
     prefilledState,
-    previousConnectedChainId,
-    previousPrefilledState,
+    previousInitialChainId,
+    setSelectedChainId,
   ])
 
+  const setMulticallUpdaterChainId = useUpdateAtom(multicallUpdaterSwapChainIdAtom)
   useEffect(() => {
-    if (initialChainId) {
-      setSelectedChainId(initialChainId)
-    }
-  }, [initialChainId, setSelectedChainId])
+    const chainId = (multichainUXEnabled ? selectedChainId : account.chainId) ?? undefined
+    setMulticallUpdaterChainId(chainId)
+  }, [account.chainId, multichainUXEnabled, selectedChainId, setMulticallUpdaterChainId])
 
   const value = useMemo(() => {
     return {
@@ -105,8 +108,19 @@ export function SwapAndLimitContextProvider({
       chainId: (multichainUXEnabled ? selectedChainId : account.chainId) ?? undefined,
       multichainUXEnabled,
       isSwapAndLimitContext: true,
+      isUserSelectedToken,
+      setIsUserSelectedToken,
     }
-  }, [initialChainId, account.chainId, selectedChainId, currencyState, currentTab, prefilledState, multichainUXEnabled])
+  }, [
+    initialChainId,
+    account.chainId,
+    selectedChainId,
+    currencyState,
+    currentTab,
+    prefilledState,
+    multichainUXEnabled,
+    isUserSelectedToken,
+  ])
 
   return <SwapAndLimitContext.Provider value={value}>{children}</SwapAndLimitContext.Provider>
 }
@@ -126,15 +140,22 @@ export function SwapContextProvider({
   const { chainId: connectedChainId } = useAccount()
   const previousConnectedChainId = usePrevious(connectedChainId)
 
+  const { chainId: swapChainId } = useSwapAndLimitContext()
+  const previousSwapChainId = usePrevious(swapChainId)
+
   useEffect(() => {
-    const chainChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
+    const connectedChainIdChanged = previousConnectedChainId && previousConnectedChainId !== connectedChainId
+    const swapChainIdChanged = previousSwapChainId && previousSwapChainId !== swapChainId
     if (multichainUXEnabled) {
+      if (swapChainIdChanged) {
+        setSwapState((prev) => ({ ...prev, typedValue: '' }))
+      }
       return
     }
-    if (chainChanged) {
+    if (connectedChainIdChanged) {
       setSwapState((prev) => ({ ...prev, typedValue: '' }))
     }
-  }, [connectedChainId, previousConnectedChainId, multichainUXEnabled])
+  }, [connectedChainId, previousConnectedChainId, swapChainId, previousSwapChainId, multichainUXEnabled])
 
   return <SwapContext.Provider value={{ swapState, setSwapState, derivedSwapInfo }}>{children}</SwapContext.Provider>
 }

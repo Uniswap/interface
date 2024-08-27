@@ -28,9 +28,9 @@ import { PoolState, usePool } from 'hooks/usePools'
 import { useTotalSupply } from 'hooks/useTotalSupply'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV2LiquidityTokenPermit } from 'hooks/useV2LiquidityTokenPermit'
-import { Trans, t } from 'i18n'
 import JSBI from 'jsbi'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
+import { useTheme } from 'lib/styled-components'
 import { BodyWrapper } from 'pages/App/AppBody'
 import { ReactNode, useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertCircle, AlertTriangle, ArrowDown } from 'react-feather'
@@ -42,10 +42,10 @@ import { useRangeHopCallbacks, useV3DerivedMintInfo, useV3MintActionHandlers } f
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import { useTheme } from 'styled-components'
 import { BackArrowLink, ExternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans, t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -489,8 +489,8 @@ function V2PairMigration({
                       <Trans
                         i18nKey="migrate.symbolPrice"
                         values={{
-                          name: isNotUniswap ? 'SushiSwap' : 'V2',
-                          sym: invertPrice ? currency1.symbol : currency0.symbol,
+                          protocolName: isNotUniswap ? 'SushiSwap' : 'V2',
+                          tokenSymbol: invertPrice ? currency1.symbol : currency0.symbol,
                         }}
                       />{' '}
                       {invertPrice

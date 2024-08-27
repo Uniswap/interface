@@ -6,7 +6,7 @@ import { LoadingBubble } from 'components/Tokens/loading'
 import { useCollection } from 'graphql/data/nft/Collection'
 import { useIsMobile, useScreenSize } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
-import { t } from 'i18n'
+import styled from 'lib/styled-components'
 import { BAG_WIDTH, XXXL_BAG_WIDTH } from 'nft/components/bag/Bag'
 import { MobileHoverBag } from 'nft/components/bag/MobileHoverBag'
 import { Activity, ActivitySwitcher, CollectionNfts, CollectionStats, Filters } from 'nft/components/collection'
@@ -22,11 +22,11 @@ import { Suspense, useEffect, useMemo } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { animated, easings, useSpring } from 'react-spring'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { t } from 'uniswap/src/i18n'
 
 const FILTER_WIDTH = 332
 const EMPTY_TRAIT_OBJ = {}
@@ -202,9 +202,7 @@ const Collection = () => {
     <>
       <Helmet>
         <title>
-          {t(`{{name}} | Explore and buy on Uniswap`, {
-            name: collectionStats.name,
-          })}
+          {collectionStats.name} | {t(`nft.collection.title`)}
         </title>
         {metaTags.map((tag, index) => (
           <meta key={index} {...tag} />

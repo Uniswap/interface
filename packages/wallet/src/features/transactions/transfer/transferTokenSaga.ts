@@ -4,11 +4,11 @@ import ERC1155_ABI from 'uniswap/src/abis/erc1155.json'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import ERC721_ABI from 'uniswap/src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'uniswap/src/abis/types'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
-import { AssetType } from 'wallet/src/entities/assets'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { TransferTokenParams } from 'wallet/src/features/transactions/transfer/types'
 import { SendTokenTransactionInfo, TransactionType } from 'wallet/src/features/transactions/types'
@@ -33,10 +33,16 @@ export function* transferToken(params: Params) {
       options: { request: txRequest },
       typeInfo,
     })
+
+    const amountUSD = params.transferTokenParams.currencyAmountUSD
+      ? parseFloat(params.transferTokenParams.currencyAmountUSD.toFixed(2))
+      : undefined
+
     sendAnalyticsEvent(WalletEventName.TransferSubmitted, {
       chainId: params.transferTokenParams.chainId,
       tokenAddress: params.transferTokenParams.tokenAddress,
       toAddress: params.transferTokenParams.toAddress,
+      amountUSD,
     })
     logger.debug('transferTokenSaga', 'transferToken', 'Transfer submitted')
   } catch (error) {
@@ -91,12 +97,13 @@ function* validateTransfer(transferTokenParams: TransferTokenParams) {
 }
 
 function getTransferTypeInfo(params: TransferTokenParams): SendTokenTransactionInfo {
-  const { type: assetType, toAddress, tokenAddress } = params
+  const { type: assetType, toAddress, tokenAddress, currencyAmountUSD } = params
   const typeInfo: SendTokenTransactionInfo = {
     assetType,
     recipient: toAddress,
     tokenAddress,
     type: TransactionType.Send,
+    currencyAmountUSD,
   }
 
   if (assetType === AssetType.ERC721 || assetType === AssetType.ERC1155) {

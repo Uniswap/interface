@@ -1,11 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { L2_CHAIN_IDS } from 'constants/chains'
 import { L2_DEADLINE_FROM_NOW } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useInterfaceMulticall } from 'hooks/useContract'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import { useCallback, useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 
 export default function useTransactionDeadline(): BigNumber | undefined {
   const { chainId } = useAccount()
@@ -19,9 +20,9 @@ export default function useTransactionDeadline(): BigNumber | undefined {
  * Should be used for any submitted transactions, as it uses an on-chain timestamp instead of a client timestamp.
  */
 export function useGetTransactionDeadline(): () => Promise<BigNumber | undefined> {
-  const { chainId } = useAccount()
+  const { chainId } = useSwapAndLimitContext()
   const ttl = useAppSelector((state) => state.user.userDeadline)
-  const multicall = useInterfaceMulticall()
+  const multicall = useInterfaceMulticall(chainId)
   return useCallback(async () => {
     const blockTimestamp = await multicall.getCurrentBlockTimestamp()
     return timestampToDeadline(chainId, blockTimestamp, ttl)
@@ -29,7 +30,7 @@ export function useGetTransactionDeadline(): () => Promise<BigNumber | undefined
 }
 
 function timestampToDeadline(chainId?: number, blockTimestamp?: BigNumber, ttl?: number) {
-  if (blockTimestamp && chainId && L2_CHAIN_IDS.includes(chainId)) {
+  if (blockTimestamp && isL2ChainId(chainId)) {
     return blockTimestamp.add(L2_DEADLINE_FROM_NOW)
   }
   if (blockTimestamp && ttl) {

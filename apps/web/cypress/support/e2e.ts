@@ -5,8 +5,13 @@
 // https://on.cypress.io/configuration
 // ***********************************************************
 
-import './commands'
-import './setupTests'
+import { registerCommands } from './commands'
+import { registerSetupTests } from './setupTests'
+// In order to use cypress commands with sideEffects set in package.json
+// we need to import the commands and setupTests files here.
+// See: https://github.com/cypress-io/cypress-documentation/pull/5454/files
+registerCommands()
+registerSetupTests()
 
 // Squelch logs from fetches, as they clutter the logs so much as to make them unusable.
 // See https://docs.cypress.io/api/commands/intercept#Disabling-logs-for-a-request.

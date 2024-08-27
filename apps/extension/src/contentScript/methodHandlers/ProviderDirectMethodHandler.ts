@@ -48,6 +48,8 @@ export class ProviderDirectMethodHandler extends BaseMethodHandler<WindowEthereu
       [ProviderDirectMethods.eth_getTransactionReceipt]: (provider, params) =>
         provider.getTransactionReceipt(params[0]),
       [ProviderDirectMethods.net_version]: async (provider, params) => provider.send('net_version', params),
+      [ProviderDirectMethods.web3_clientVersion]: async (provider, params) =>
+        provider.send('web3_clientVersion', params),
     }
   }
 

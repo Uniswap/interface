@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { ComingSoon } from 'src/app/components/ComingSoon'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { AccountItem } from 'src/app/features/accounts/AccountItem'
@@ -13,10 +13,10 @@ import { isConnectedAccount } from 'src/app/features/dapp/utils'
 import { PopupName, openPopup } from 'src/app/features/popups/slice'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { useAppDispatch } from 'src/store/store'
 import { Button, Flex, MenuContent, MenuContentItem, Popover, ScrollView, Text, useSporeColors } from 'ui/src'
 import { WalletFilled, X } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -27,9 +27,10 @@ import { sleep } from 'utilities/src/time/timing'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
+import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
-import { AccountType, BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useActiveAccountWithThrow, useDisplayName, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
@@ -40,7 +41,7 @@ const MIN_MENU_WIDTH = 200
 
 export function AccountSwitcherScreen(): JSX.Element {
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { t } = useTranslation()
 
   const activeAccount = useActiveAccountWithThrow()
@@ -137,6 +138,17 @@ export function AccountSwitcherScreen(): JSX.Element {
       onPress: (): void => setShowRemoveWalletModal(true),
     },
   ]
+  const { data: accountBalanceData } = useAccountList({
+    addresses: accountAddresses,
+    notifyOnNetworkStatusChange: true,
+  })
+
+  const sortedAddressesByBalance = accountAddresses
+    .map((address) => {
+      const wallet = accountBalanceData?.portfolios?.find((portfolio) => portfolio?.ownerAddress === address)
+      return { address, balance: wallet?.tokensTotalDenominatedValue?.value }
+    })
+    .sort((a, b) => (b.balance ?? 0) - (a.balance ?? 0))
 
   const contentShadowProps = {
     shadowColor: colors.shadowColor.val,
@@ -202,11 +214,12 @@ export function AccountSwitcherScreen(): JSX.Element {
             </Text>
           )}
           <Flex>
-            {accountAddresses.map((address: string) => {
+            {sortedAddressesByBalance.map(({ address, balance }) => {
               return (
                 <AccountItem
                   key={address}
                   address={address}
+                  balanceUSD={balance}
                   onAccountSelect={async (): Promise<void> => {
                     dispatch(setAccountAsActive(address))
                     await updateDappConnectedAddressFromExtension(address)

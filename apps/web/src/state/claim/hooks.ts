@@ -15,7 +15,12 @@ import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 function useMerkleDistributorContract() {
-  return useContract(MERKLE_DISTRIBUTOR_ADDRESS, MerkleDistributorJSON.abi, true)
+  const account = useAccount()
+  return useContract(
+    account.chainId ? MERKLE_DISTRIBUTOR_ADDRESS[account.chainId] : undefined,
+    MerkleDistributorJSON.abi,
+    true,
+  )
 }
 
 interface UserClaimData {

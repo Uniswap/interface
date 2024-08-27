@@ -13,9 +13,9 @@ import { BIG_INT_ZERO } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
 import { useV2Pairs } from 'hooks/useV2Pairs'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import { useRpcTokenBalancesWithLoadingIndicator } from 'lib/hooks/useCurrencyBalance'
+import styled, { useTheme } from 'lib/styled-components'
 import { PoolVersionMenu } from 'pages/Pool/shared'
 import { useMemo } from 'react'
 import { ChevronsRight } from 'react-feather'
@@ -23,10 +23,10 @@ import { Link } from 'react-router-dom'
 import { Text } from 'rebass'
 import { useStakingInfo } from 'state/stake/hooks'
 import { toV2LiquidityToken, useTrackedTokenPairs } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components'
 import { ExternalLink, HideSmall, ThemedText } from 'theme/components'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 
 const PageWrapper = styled(AutoColumn)`
   max-width: 640px;
@@ -217,14 +217,6 @@ export default function Pool() {
                   </EmptyProposals>
                 ) : allV2PairsWithLiquidity?.length > 0 || stakingPairs?.length > 0 ? (
                   <>
-                    <ButtonSecondary>
-                      <RowBetween>
-                        <ExternalLink href={'https://v2.info.uniswap.org/account/' + account}>
-                          <Trans i18nKey="pool.account.analyticsFees" />
-                        </ExternalLink>
-                        <span> ↗ </span>
-                      </RowBetween>
-                    </ButtonSecondary>
                     {v2PairsWithoutStakedAmount.map((v2Pair) => (
                       <FullPositionCard key={v2Pair.liquidityToken.address} pair={v2Pair} />
                     ))}

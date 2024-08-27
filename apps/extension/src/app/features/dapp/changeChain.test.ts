@@ -47,7 +47,7 @@ describe('changeChain', () => {
         providerErrors.custom({
           code: 4902,
           message: 'Uniswap Wallet does not support switching to this chain.',
-        })
+        }),
       ),
       requestId: mockRequestId,
     })

@@ -1,6 +1,6 @@
 import { PopupsState } from 'src/app/features/popups/slice'
-import { WebState } from 'src/store/webReducer'
+import { ExtensionState } from 'src/store/extensionReducer'
 
-export function selectPopupState<T extends keyof PopupsState>(name: T): (state: WebState) => PopupsState[T] {
+export function selectPopupState<T extends keyof PopupsState>(name: T): (state: ExtensionState) => PopupsState[T] {
   return (state) => state.popups[name]
 }
