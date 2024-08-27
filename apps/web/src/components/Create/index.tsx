@@ -54,7 +54,7 @@ const ValueInput = styled.input<ValueInputProps>`
   border-radius: 20px;
   border: 1px solid ${({ theme, error }) => (error ? 'red' : 'gray')};
   height: 100%;
-  width: 400px;
+  width: 300px;
   font-size: 18px;
   font-weight: 485;
   padding: 10px;
@@ -90,6 +90,7 @@ const CustomDiv = styled.div`
   margin: 0px;
   gap: 12px;
   display:flex;
+  flex-wrap: wrap;
   align-items: center;
 `;
 
@@ -315,14 +316,19 @@ export default function Create() {
                     <Trans i18nKey="common.create.incentives.set.incentives.description" />
                 </ThemedText.DeprecatedBody>
                 <CustomDiv>
+
                     <DatePickerValue date={today} labelName="Start Date" onDateChange={setStartDate} />
                     <TimePickerValue labelName="Start Time" onTimeChange={setStartTime} />
-                    <CustomP>Starts on {formattedStartDate} at {startTime}</CustomP>
+                    <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16, paddingLeft: 8 }}>
+                        <Trans>Starts on {formattedStartDate} at {startTime}</Trans>
+                    </ThemedText.DeprecatedBody>
                 </CustomDiv>
                 <CustomDiv>
                     <DatePickerValue date={tomorrow} labelName="End Date" onDateChange={setEndDate} />
                     <TimePickerValue labelName="End Time" onTimeChange={setEndTime} />
-                    <CustomP>Ends on {formattedEndDate} at {endTime}</CustomP>
+                    <ThemedText.DeprecatedBody style={{ alignItems: 'center', display: 'flex', fontWeight: 485, fontSize: 16, paddingLeft: 8 }}>
+                        <Trans>Ends on {formattedEndDate} at {endTime}</Trans>
+                    </ThemedText.DeprecatedBody>
                 </CustomDiv>
                 {errorMessages.date && <CustomP color="red"><Trans i18nKey={errorMessages.date} /></CustomP>}
             </ResponsiveColumn>
@@ -365,6 +371,7 @@ export default function Create() {
                     fontWeight={535}
                     $borderRadius="16px"
                     marginTop={2}
+                    marginBottom={3}
                 >
                     <Trans i18nKey="common.connectWallet.button" />
                 </ButtonLight>
@@ -373,6 +380,7 @@ export default function Create() {
                     fontWeight={535}
                     $borderRadius="16px"
                     marginTop={2}
+                    marginBottom={3}
                     onClick={createIncentive}
                 >
                     <Trans i18nKey="common.incentives.create.button" />

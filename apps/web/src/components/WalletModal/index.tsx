@@ -48,6 +48,7 @@ const Line = styled.div`
 export default function WalletModal({ openSettings }: { openSettings: () => void }) {
   const showMoonpayText = useShowMoonpayText()
   const showUniswapWalletOptions = useUniswapWalletOptions()
+  console.log("showUniswapWalletOptions", showUniswapWalletOptions);
   const connectors = useOrderedConnections(showUniswapWalletOptions)
 
   return (

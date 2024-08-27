@@ -5,15 +5,15 @@ import { useMemo } from 'react'
 
 // eslint-disable-next-line import/no-unused-modules -- shim is used via a build alias in craco.config.cjs
 export function useWeb3React() {
-  const account = useAccount()
-  const provider = useEthersProvider({ chainId: account.chainId })
+    const account = useAccount()
+    const provider = useEthersProvider({ chainId: account.chainId })
 
-  return useMemo(
-    () => ({
-      account: account.address,
-      chainId: account.chainId ?? ChainId.MAINNET,
-      provider,
-    }),
-    [account.address, account.chainId, provider]
-  )
+    return useMemo(
+        () => ({
+            account: account.address,
+            chainId: account.chainId ?? ChainId.MAINNET,
+            provider,
+        }),
+        [account.address, account.chainId, provider]
+    )
 }

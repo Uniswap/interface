@@ -45,6 +45,7 @@ const NavWrapper = styled.div`
 const TabBar = styled(AutoRow)`
   gap: 24px;
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
+    justify-content: center;
     gap: 16px;
   }
 `
@@ -55,7 +56,7 @@ const TabItem = styled(ThemedText.HeadlineMedium) <{ active?: boolean }>`
   transition: ${({ theme }) => `${theme.transition.duration.medium} ${theme.transition.timing.ease} color`};
 
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.md}px) {
-    font-size: 24px !important;
+    font-size: 20px !important;
     line-height: 32px !important;
   }
 `
@@ -113,6 +114,21 @@ const Farms = ({ initialTab }: { initialTab?: LiquidityTab }) => {
     return key
   }, [initialTab])
 
+  const useWindowWidth = () => {
+    const [windowWidth, setWindowWidth] = useState(window.innerWidth);
+
+    useEffect(() => {
+      const handleResize = () => setWindowWidth(window.innerWidth);
+
+      window.addEventListener('resize', handleResize);
+      return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    return windowWidth;
+  };
+
+  const windowWidth = useWindowWidth();
+
   useEffect(() => {
     if (tabNavRef.current && initialTab) {
       const offsetTop = tabNavRef.current.getBoundingClientRect().top + window.scrollY
@@ -148,12 +164,18 @@ const Farms = ({ initialTab }: { initialTab?: LiquidityTab }) => {
         <NavWrapper ref={tabNavRef}>
           <FiltersContainer>
             <TitleRow padding="0">
-              <ThemedText.H1Large>
-                <Trans i18nKey="common.liquidity.incentives" />
-              </ThemedText.H1Large>
+              {windowWidth > 768 ? (
+                <ThemedText.H1Large>
+                  <Trans i18nKey="common.liquidity.incentives" />
+                </ThemedText.H1Large>
+              ) : (
+                <ThemedText.H1Medium>
+                  <Trans i18nKey="common.liquidity.incentives" />
+                </ThemedText.H1Medium>
+              )}
             </TitleRow>
           </FiltersContainer>
-          <TabBar data-testid="explore-navbar" justify='end' width="auto">
+          <TabBar data-testid="explore-navbar" width="auto">
             {Pages.map(({ title, loggingElementName, key }, index) => {
               return (
                 <Trace

@@ -40,6 +40,9 @@ export function UniswapWalletOptions() {
     shouldThrow: true,
   })
 
+  console.log("uniswapExtensionConnector", uniswapExtensionConnector);
+  console.log("uniswapWalletConnectConnector", uniswapWalletConnectConnector);
+
   const { connect } = useConnect()
 
   return (
