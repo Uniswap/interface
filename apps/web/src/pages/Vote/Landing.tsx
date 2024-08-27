@@ -20,12 +20,11 @@ import { Button } from 'rebass/styled-components'
 import { useCloseModal, useModalIsOpen, useToggleDelegateModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ProposalData, ProposalState, useAllProposalData, useUserVotes } from 'state/governance/hooks'
-import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
-import { shortenAddress } from 'utilities/src/addresses'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+//import { shortenAddress } from 'utilities/src/addresses'
+//import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const PageWrapper = styled(AutoColumn)`
   padding-top: 68px;

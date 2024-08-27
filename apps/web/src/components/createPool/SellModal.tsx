@@ -1,10 +1,10 @@
 import type { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount /*, Token*/ } from '@uniswap/sdk-core'
 //import { useWeb3React } from '@web3-react/core'
-import { Trans } from 'i18n'
+import { Trans } from 'uniswap/src/i18n'
 import JSBI from 'jsbi'
 import { useCallback, useMemo, useState } from 'react'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 import { CloseIcon, ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 

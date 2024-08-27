@@ -43,7 +43,12 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 function useGovernanceProxyContract(): Contract | null {
-  return useContract(GOVERNANCE_PROXY_ADDRESSES, GOVERNANCE_RB_ABI, true)
+  const { chainId } = useAccount()
+  return useContract(
+    chainId ? GOVERNANCE_PROXY_ADDRESSES[chainId] : undefined,
+    GOVERNANCE_RB_ABI,
+    true,
+  )
 }
 
 const useLatestGovernanceContract = useGovernanceProxyContract
@@ -55,15 +60,30 @@ function useUniContract() {
 }
 
 function useRegistryContract(): Contract | null {
-  return useContract(RB_REGISTRY_ADDRESSES, RB_REGISTRY_ABI, true)
+  const { chainId } = useAccount()
+  return useContract(
+    chainId ? RB_REGISTRY_ADDRESSES[chainId] : undefined,
+    RB_REGISTRY_ABI,
+    true,
+  )
 }
 
 export function useStakingContract(): Contract | null {
-  return useContract(STAKING_PROXY_ADDRESSES, STAKING_ABI, true)
+  const { chainId } = useAccount()
+  return useContract(
+    chainId ? STAKING_PROXY_ADDRESSES[chainId] : undefined,
+    STAKING_ABI,
+    true,
+  )
 }
 
 export function useStakingProxyContract(): Contract | null {
-  return useContract(STAKING_PROXY_ADDRESSES, STAKING_PROXY_ABI, true)
+  const { chainId } = useAccount()
+  return useContract(
+    chainId ? STAKING_PROXY_ADDRESSES[chainId] : undefined,
+    STAKING_PROXY_ABI,
+    true,
+  )
 }
 
 export function usePoolExtendedContract(poolAddress: string | undefined): Contract | null {

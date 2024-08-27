@@ -71,7 +71,7 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { RowFixed } from 'components/Row'
 //import { PoolInitParams, PoolWithAddress } from '../../hooks/useSmartPools'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 
 const SWAP_FORM_CURRENCY_SEARCH_FILTERS = {
   showCommonBases: true,

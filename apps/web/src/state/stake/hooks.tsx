@@ -476,7 +476,12 @@ export function useHarvestCallback(): (poolIds: string[], isPool?: boolean) => u
 }
 
 export function usePopContract(): Contract | null {
-  return useContract(POP_ADDRESSES, POP_ABI, true)
+  const account = useAccount()
+  return useContract(
+    account.chainId ? POP_ADDRESSES[account.chainId] : undefined,
+    POP_ABI,
+    true,
+  )
 }
 
 export function useRaceCallback(): (poolAddress: string | undefined) => undefined | Promise<string> {

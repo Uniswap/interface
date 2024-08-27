@@ -1,19 +1,12 @@
 import RIGOBLOCK_LOGO_LARGE from 'assets/images/rigoblock-logo-large.png'
 import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
-import { Trans } from 'react-i18next'
-import styled from 'styled-components'
-import { Flex, Text, useIsDarkMode } from 'ui/src'
+//import styled from 'lib/styled-components'
+import { Button, Flex, Image, Text, useIsDarkMode } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { Trans } from 'uniswap/src/i18n'
-
-const Image = styled.img`
-  max-width: 510px;
-  width: 100%;
-  padding: 0 75px;
-`
 
 interface ProviderConnectionErrorProps {
   onBack: () => void

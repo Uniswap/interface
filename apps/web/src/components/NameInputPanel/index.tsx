@@ -1,7 +1,7 @@
-import { Trans, t } from 'i18n'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
-import styled, { useTheme } from 'styled-components'
+import styled, { useTheme } from 'lib/styled-components'
 import { flexColumnNoWrap } from 'theme/styles'
+import { Trans, t } from 'uniswap/src/i18n'
 
 import { ThemedText } from 'theme/components/text'
 import { AutoColumn } from 'components/Column'

@@ -1,6 +1,6 @@
 import { MendableSearchBar } from '@mendable/search'
 import { RowFixed } from 'components/Row'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 
 const StyledSearch = styled.div`

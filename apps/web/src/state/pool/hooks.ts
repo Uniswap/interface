@@ -36,11 +36,21 @@ import { calculateGasMargin } from 'utils/calculateGasMargin'
 const RegistryInterface = new Interface(RB_REGISTRY_ABI)
 
 export function useRegistryContract(): Contract | null {
-  return useContract(RB_REGISTRY_ADDRESSES, RB_REGISTRY_ABI, true)
+  const account = useAccount()
+  return useContract(
+    account.chainId ? RB_REGISTRY_ADDRESSES[account.chainId] : undefined,
+    RB_REGISTRY_ABI,
+    true,
+  )
 }
 
 function usePoolFactoryContract(): Contract | null {
-  return useContract(RB_FACTORY_ADDRESSES, RB_POOL_FACTORY_ABI, true)
+  const account = useAccount()
+  return useContract(
+    account.chainId ? RB_FACTORY_ADDRESSES[account.chainId] : undefined,
+    RB_POOL_FACTORY_ABI,
+    true,
+  )
 }
 
 export function usePoolExtendedContract(poolAddress: string | undefined): Contract | null {

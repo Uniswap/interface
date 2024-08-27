@@ -12,7 +12,6 @@ import styled from 'lib/styled-components'
 import { useCallback, useEffect, useMemo } from 'react'
 import { useLocation } from 'react-router-dom'
 import { useActiveSmartPool } from 'state/application/hooks'
-import styled from 'styled-components'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 

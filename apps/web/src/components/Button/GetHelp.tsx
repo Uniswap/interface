@@ -2,7 +2,6 @@ import { EnvelopeHeartIcon } from 'components/Icons/EnvelopeHeart'
 import Row from 'components/Row'
 import { RigoblockUrls } from 'constants/rigoblockUrls'
 import styled from 'lib/styled-components'
-import styled from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { Trans } from 'uniswap/src/i18n'
 

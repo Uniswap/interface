@@ -1,4 +1,4 @@
-import styled, { useTheme } from 'styled-components'
+import styled, { useTheme } from 'lib/styled-components'
 
 import { ThemedText } from 'theme/components/text'
 import { AutoColumn } from 'components/Column'

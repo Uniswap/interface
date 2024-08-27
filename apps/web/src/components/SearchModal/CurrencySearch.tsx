@@ -38,9 +38,7 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 export interface CurrencySearchFilters {
   onlyDisplaySmartPools?: boolean
 }
-const DEFAULT_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
-  onlyDisplaySmartPools: false,
-}
+
 interface CurrencySearchProps {
   currencyField: CurrencyField
   onCurrencySelect: (currency: Currency) => void
@@ -50,10 +48,7 @@ interface CurrencySearchProps {
 }
 
 export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, filters, operatedPools }: CurrencySearchProps) {
-  const { showCommonBases } = {
-    ...DEFAULT_CURRENCY_SEARCH_FILTERS,
-    ...filters,
-  }
+  // TODO: should also include select pool parts.
   const account = useAccount()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, currentTab, multichainUXEnabled } =
     useSwapAndLimitContext()
