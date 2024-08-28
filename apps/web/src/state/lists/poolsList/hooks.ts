@@ -1,14 +1,14 @@
 import { TokenAddressMap, tokensToChainTokenMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
-import { AppState } from 'state/reducer'
+import { InterfaceState } from 'state/webReducer'
 import { logger } from 'utilities/src/logger/logger'
 
 type Mutable<T> = {
   -readonly [P in keyof T]: Mutable<T[P]>
 }
 
-export function usePoolsList(): AppState['poolsList']['byUrl'] {
+export function usePoolsList(): InterfaceState['poolsList']['byUrl'] {
   return useAppSelector((state) => state.poolsList.byUrl)
 }
 

@@ -222,6 +222,6 @@ export function useSuppressPopups(popupTypes: PopupType[]): {
   }
 }
 
-export function useActiveSmartPool(): AppState['application']['smartPool'] {
-  return useAppSelector((state: AppState) => state.application.smartPool)
+export function useActiveSmartPool(): InterfaceState['application']['smartPool'] {
+  return useAppSelector((state: InterfaceState) => state.application.smartPool)
 }

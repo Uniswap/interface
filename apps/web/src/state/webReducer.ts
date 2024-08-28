@@ -4,6 +4,7 @@ import application from 'state/application/reducer'
 import burn from 'state/burn/reducer'
 import burnV3 from 'state/burn/v3/reducer'
 import fiatOnRampTransactions from 'state/fiatOnRampTransactions/reducer'
+import poolsList from 'state/lists/poolsList/reducer'
 import lists from 'state/lists/reducer'
 import logs from 'state/logs/slice'
 import mint from 'state/mint/reducer'
@@ -22,6 +23,7 @@ const interfaceReducers = {
   transactions,
   signatures,
   lists,
+  poolsList,
   fiatOnRampTransactions,
   application,
   wallets,
@@ -43,6 +45,7 @@ export const interfacePersistedStateList: Array<keyof typeof interfaceReducers> 
   'transactions',
   'signatures',
   'lists',
+  'poolsList',
   'fiatOnRampTransactions',
 ]
 

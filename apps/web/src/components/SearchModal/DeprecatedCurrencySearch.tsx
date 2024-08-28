@@ -1,5 +1,5 @@
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
 import Row, { RowBetween } from 'components/Row'
@@ -44,12 +44,14 @@ export interface CurrencySearchFilters {
   showCommonBases?: boolean
   disableNonToken?: boolean
   onlyShowCurrenciesWithBalance?: boolean
+  onlyDisplaySmartPools?: boolean
 }
 
 const DEFAULT_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
   showCommonBases: true,
   disableNonToken: false,
   onlyShowCurrenciesWithBalance: false,
+  onlyDisplaySmartPools: false,
 }
 
 interface CurrencySearchProps {
@@ -60,6 +62,7 @@ interface CurrencySearchProps {
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
   filters?: CurrencySearchFilters
+  operatedPools?: Token[]
 }
 
 export function DeprecatedCurrencySearch({
@@ -70,6 +73,7 @@ export function DeprecatedCurrencySearch({
   onDismiss,
   isOpen,
   filters,
+  operatedPools,
 }: CurrencySearchProps) {
   const { showCommonBases } = {
     ...DEFAULT_CURRENCY_SEARCH_FILTERS,
@@ -95,6 +99,7 @@ export function DeprecatedCurrencySearch({
     filters,
     selectedCurrency,
     otherSelectedCurrency,
+    operatedPools,
   })
 
   const { balanceMap } = useTokenBalances()
@@ -170,12 +175,18 @@ export function DeprecatedCurrencySearch({
         modal={InterfaceModalName.TOKEN_SELECTOR}
       >
         <PaddedColumn gap="16px">
-          <RowBetween>
+          {!filters?.onlyDisplaySmartPools ? (
+            <RowBetween>
+              <Text fontWeight={535} fontSize={16}>
+                <Trans i18nKey="common.selectToken.label" />
+              </Text>
+              <CloseIcon onClick={onDismiss} />
+            </RowBetween>
+          ) : (
             <Text fontWeight={535} fontSize={16}>
-              <Trans i18nKey="common.selectToken.label" />
+              <Trans i18nKey="common.selectSmartPool.label" />
             </Text>
-            <CloseIcon onClick={onDismiss} />
-          </RowBetween>
+          )}
           <Row gap="4px">
             <SearchInput
               type="text"
@@ -192,7 +203,7 @@ export function DeprecatedCurrencySearch({
               <ChainSelector />
             </ChainSelectorWrapper>
           </Row>
-          {showCommonBases && (
+          {showCommonBases && !filters?.onlyDisplaySmartPools && (
             <CommonBases
               chainId={chainId}
               onSelect={handleCurrencySelect}
@@ -239,6 +250,7 @@ export function DeprecatedCurrencySearch({
                   selectedCurrency={selectedCurrency}
                   fixedListRef={fixedList}
                   showCurrencyAmount={showCurrencyAmount}
+                  isSmartPool={filters?.onlyDisplaySmartPools}
                   isLoading={currencySearchResultsLoading}
                   searchQuery={searchQuery}
                   isAddressSearch={isAddressSearch}

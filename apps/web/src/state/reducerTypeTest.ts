@@ -57,6 +57,7 @@ type ExpectedAppState = CombinedState<{
   readonly signatures: SignatureState
   readonly fiatOnRampTransactions: FiatOnRampTransactionsState
   readonly lists: ListsState
+  readonly poolsList: PoolsListsState
   readonly application: ApplicationState
   readonly wallets: ConnectedWalletsState
   readonly mint: MintState
@@ -64,7 +65,6 @@ type ExpectedAppState = CombinedState<{
   readonly burn: BurnState
   readonly burnV3: BurnV3State
   readonly multicall: ReturnType<typeof multicall.reducer>
-  readonly poolsLists: PoolsListsState
   readonly logs: LogsState
   readonly [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
   readonly [quickRouteApi.reducerPath]: ReturnType<typeof quickRouteApi.reducer>

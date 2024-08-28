@@ -36,7 +36,7 @@ export const useMenuContent = (): MenuSection[] => {
     {
       title: t('common.needHelp'),
       items: [
-        { label: t('common.helpCenter'), href: 'https://discord.gg/FXd8EU8' },
+        { label: t('common.helpCenter'), href: 'https://discord.gg/invite/FXd8EU8' },
       ],
     },
   ]

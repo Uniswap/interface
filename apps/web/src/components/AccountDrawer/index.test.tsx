@@ -21,7 +21,8 @@ describe('AccountDrawer tests', () => {
   })
 
   it('AccountDrawer styles when isUniExtensionAvailable is true', () => {
-    mocked(useUniswapWalletOptions).mockReturnValue(true)
+    // TODO: the following list should mock "true", but we do not prompt display wallet available
+    mocked(useUniswapWalletOptions).mockReturnValue(false)
     mocked(useIsUniExtensionAvailable).mockReturnValue(true)
 
     const { asFragment } = render(<AccountDrawer />)

@@ -1,7 +1,7 @@
-import RIGOBLOCK_LOGO_LARGE from 'assets/images/rigoblock-logo-large.png'
 import { ConnectingViewWrapper } from 'pages/Swap/Buy/shared'
 //import styled from 'lib/styled-components'
 import { Button, Flex, Image, Text, useIsDarkMode } from 'ui/src'
+import { RIGOBLOCK_LOGO_LARGE } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'

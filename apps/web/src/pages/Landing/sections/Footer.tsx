@@ -43,7 +43,7 @@ export function Socials({ iconSize }: { iconSize?: string }) {
         </Anchor>
       </SocialIcon>
       <SocialIcon $hoverColor="#5F51FF">
-        <Anchor href="https://discord.com/FXd8EU8" target="_blank">
+        <Anchor href="https://discord.com/invite/FXd8EU8" target="_blank">
           <Discord size={iconSize} fill="inherit" />
         </Anchor>
       </SocialIcon>
