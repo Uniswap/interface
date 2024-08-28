@@ -33,9 +33,11 @@ import {
   InterfaceEventNameLocal,
   MobileAppsFlyerEvents,
   MobileEventName,
+  UniswapEventName,
   UnitagEventName,
   WalletEventName,
 } from 'uniswap/src/features/telemetry/constants'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { UnitagClaimContext } from 'uniswap/src/features/unitags/types'
 import { RenderPassReport } from 'uniswap/src/types/RenderPassReport'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
@@ -47,7 +49,6 @@ import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { WidgetEvent, WidgetType } from 'uniswap/src/types/widgets'
-import { WrapType } from 'uniswap/src/types/wrap'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 // Events related to Moonpay internal transactions
@@ -81,6 +82,7 @@ type OnboardingCompletedProps = {
 }
 
 export type SwapTradeBaseProperties = {
+  transactionOriginType: string
   allowed_slippage_basis_points?: number
   token_in_symbol?: string
   token_out_symbol?: string
@@ -99,6 +101,7 @@ export type SwapTradeBaseProperties = {
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
+  transactionOriginType: string
   time_to_swap?: number
   time_to_swap_since_first_input?: number
   address?: string
@@ -190,7 +193,9 @@ type NFTBagProperties = {
 
 type InterfaceTokenSelectedProperties = {
   is_imported_by_user: boolean
+  // TODO(WEB-4739): Remove total_balances_usd when we clean up old token selector
   total_balances_usd?: number
+  token_balance_usd?: number
 }
 
 export enum DappRequestAction {
@@ -220,6 +225,8 @@ export type UniverseEventProperties = {
   [ExtensionEventName.ProviderDirectMethodRequest]: WindowEthereumRequestProperties
   [ExtensionEventName.ExtensionEthMethodRequest]: WindowEthereumRequestProperties
   [ExtensionEventName.DeprecatedMethodRequest]: WindowEthereumRequestProperties
+  [ExtensionEventName.UnsupportedMethodRequest]: WindowEthereumRequestProperties
+  [ExtensionEventName.UnrecognizedMethodRequest]: WindowEthereumRequestProperties
   [ExtensionEventName.SidebarSwitchChain]: {
     previousChainId?: number
     newChainId: number
@@ -418,11 +425,6 @@ export type UniverseEventProperties = {
     hasUnitag: boolean
     hasENS: boolean
   }
-  [MobileEventName.BalancesReport]: {
-    total_balances_usd: number
-    wallets: string[]
-    balances: number[]
-  }
   [MobileEventName.DeepLinkOpened]: {
     url: string
     screen: 'swap' | 'transaction'
@@ -618,6 +620,18 @@ export type UniverseEventProperties = {
     output?: Currency
   }
   [SwapEventName.SWAP_TOKENS_REVERSED]: undefined
+  [UniswapEventName.BalancesReport]: {
+    total_balances_usd: number
+    wallets: string[]
+    balances: number[]
+  }
+  [UniswapEventName.TokenSelected]:
+    | (ITraceContext &
+        AssetDetailsBaseProperties &
+        SearchResultContextProperties & {
+          field: CurrencyField
+        })
+    | InterfaceTokenSelectedProperties
   [UnitagEventName.UnitagBannerActionTaken]: {
     action: 'claim' | 'dismiss'
     entryPoint: 'home' | 'settings'
@@ -636,13 +650,6 @@ export type UniverseEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
-  [WalletEventName.TokenSelected]:
-    | (ITraceContext &
-        AssetDetailsBaseProperties &
-        SearchResultContextProperties & {
-          field: CurrencyField
-        })
-    | InterfaceTokenSelectedProperties
   [WalletEventName.TokenVisibilityChanged]: { currencyId: string; visible: boolean }
   [WalletEventName.TransferSubmitted]: TransferProperties
   [WalletEventName.WalletAdded]: OnboardingCompletedProps & ITraceContext

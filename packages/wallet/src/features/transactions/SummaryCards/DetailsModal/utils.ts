@@ -1,11 +1,11 @@
 import { Currency } from '@uniswap/sdk-core'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { NumberType } from 'utilities/src/format/types'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { SwapTypeTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
-import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
-import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 const INTERFACE_FEE_SWITCH_TIMESTAMP = 1712772000000 // April 10th 2024 2pm EST
 

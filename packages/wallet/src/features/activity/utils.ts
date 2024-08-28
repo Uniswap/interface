@@ -1,4 +1,4 @@
-import { TransactionDetails } from 'wallet/src/features/transactions/types'
+import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export type LoadingItem = {
   itemType: 'LOADING'

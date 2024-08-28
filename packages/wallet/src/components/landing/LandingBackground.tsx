@@ -19,7 +19,7 @@ import { ONBOARDING_LANDING_DARK, ONBOARDING_LANDING_LIGHT, UNISWAP_LOGO } from 
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { imageSizes } from 'ui/src/theme'
-import { isAndroid, isMobile } from 'utilities/src/platform'
+import { isAndroid, isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import {
@@ -355,7 +355,7 @@ export const LandingBackground = ({
   if (
     // Android Platform.Version is always a number
     (isAndroid && typeof Platform.Version === 'number' && Platform.Version < 30) ||
-    (language !== Language.English && isMobile)
+    (language !== Language.English && isMobileApp)
   ) {
     return <OnboardingStaticImage />
   }

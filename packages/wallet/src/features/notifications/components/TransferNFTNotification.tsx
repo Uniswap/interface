@@ -1,12 +1,12 @@
+import { useENS } from 'uniswap/src/features/ens/useENS'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { useENS } from 'wallet/src/features/ens/useENS'
 import { useNFT } from 'wallet/src/features/nfts/hooks'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { TransferNFTTxNotification } from 'wallet/src/features/notifications/types'
 import { formTransferNFTNotificationTitle } from 'wallet/src/features/notifications/utils'
-import { TransactionType } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function TransferNFTNotification({ notification }: { notification: TransferNFTTxNotification }): JSX.Element {

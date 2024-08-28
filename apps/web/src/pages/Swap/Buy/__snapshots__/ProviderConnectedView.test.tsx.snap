@@ -2,35 +2,6 @@
 
 exports[`ProviderConnectedView should render the component and call callbacks 1`] = `
 .c0 {
-  display: grid;
-  grid-auto-rows: auto;
-  grid-row-gap: 16px;
-}
-
-.c4 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c7 {
   color: #7D7D7D;
   cursor: pointer;
   -webkit-text-decoration: none;
@@ -40,15 +11,15 @@ exports[`ProviderConnectedView should render the component and call callbacks 1`
   transition-duration: 125ms;
 }
 
-.c7:hover {
+.c0:hover {
   opacity: 0.6;
 }
 
-.c7:active {
+.c0:active {
   opacity: 0.4;
 }
 
-.c9 {
+.c1 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -59,56 +30,15 @@ exports[`ProviderConnectedView should render the component and call callbacks 1`
   font-weight: 500;
 }
 
-.c9:hover {
+.c1:hover {
   opacity: 0.6;
 }
 
-.c9:active {
+.c1:active {
   opacity: 0.4;
 }
 
-.c1 {
-  position: relative;
-}
-
 .c2 {
-  position: absolute;
-  z-index: 0;
-}
-
-.c3 {
-  position: absolute;
-  z-index: 1;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  background: radial-gradient(70% 50% at center,transparent 0%,#FFFFFF 100%);
-}
-
-.c8 {
-  margin: 40px 0 0 0;
-  z-index: 2;
-  height: 100%;
-  width: 100%;
-}
-
-.c6 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  z-index: 2;
-  -webkit-flex-direction: row-reverse;
-  -ms-flex-direction: row-reverse;
-  flex-direction: row-reverse;
-}
-
-.c10 {
   font-weight: 535;
   color: #CECECE;
 }
@@ -124,22 +54,21 @@ exports[`ProviderConnectedView should render the component and call callbacks 1`
       class=" t_light _dsp_contents is_Theme"
     >
       <div
-        class="c0 c1"
+        class="_pr-_sm_1481558245 _pl-_sm_1481558245 _pb-_sm_1481558183 _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558183 _position-relative"
       >
         <svg
-          class="c2"
-          color="#7D7D7D"
+          style="position: absolute; z-index: 0; color: rgb(125, 125, 125);"
         >
           for-connecting-v2.svg
         </svg>
         <div
-          class="c3"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-absolute _zIndex-1 _width-10037 _height-10037 _top-0px _left-0px _background-737631841"
         />
         <div
-          class="c4 c5 c6"
+          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-1448970769 _alignItems-center _justifyContent-441309761 _zIndex-2"
         >
           <svg
-            class="c7"
+            class="c0"
             data-testid="ConnectingViewWrapper-close"
             fill="none"
             height="24"
@@ -166,7 +95,7 @@ exports[`ProviderConnectedView should render the component and call callbacks 1`
           </svg>
         </div>
         <div
-          class="c8"
+          class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mt-1316330238 _zIndex-2 _width-10037 _height-10037"
         >
           <div
             class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _gap-1316330269"
@@ -203,7 +132,7 @@ exports[`ProviderConnectedView should render the component and call callbacks 1`
             >
               By continuing, you acknowledge that you’ll be subject to the 
               <a
-                class="c9 c10"
+                class="c1 c2"
                 color="#CECECE"
                 href="https://uniswap.org/terms-of-service/"
                 rel="noopener noreferrer"
@@ -213,7 +142,7 @@ exports[`ProviderConnectedView should render the component and call callbacks 1`
               </a>
                and 
               <a
-                class="c9 c10"
+                class="c1 c2"
                 color="#CECECE"
                 href="https://uniswap.org/privacy-policy"
                 rel="noopener noreferrer"

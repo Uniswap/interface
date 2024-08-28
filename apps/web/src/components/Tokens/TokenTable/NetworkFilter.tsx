@@ -9,48 +9,48 @@ import {
   useIsSupportedChainIdCallback,
 } from 'constants/chains'
 import { getSupportedGraphQlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import styled, { css, useTheme } from 'lib/styled-components'
+import deprecatedStyled, { useTheme } from 'lib/styled-components'
 import { ExploreTab } from 'pages/Explore'
 import { useExploreParams } from 'pages/Explore/redirects'
-import { useReducer } from 'react'
+import { useState } from 'react'
 import { Check } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import { EllipsisStyle } from 'theme/components'
+import { EllipsisTamaguiStyle } from 'theme/components'
+import { Flex, FlexProps, ScrollView, Text, styled } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useTranslation } from 'uniswap/src/i18n'
 
-const NetworkLabel = styled.div`
-  ${EllipsisStyle}
-  display: flex;
-  gap: 8px;
-  align-items: center;
-`
+const NetworkLabel = styled(Flex, {
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: '$gap8',
+})
 
-const Tag = styled(Badge)`
+const Tag = deprecatedStyled(Badge)`
   background-color: ${({ theme }) => theme.surface2};
   color: ${({ theme }) => theme.neutral2};
   font-size: 10px;
   opacity: 1;
   padding: 4px 6px;
 `
-const StyledButton = css`
-  height: 40px;
-`
-const StyledMenuFlyout = css`
-  max-height: 350px;
-  min-width: 256px;
-  right: 0px;
-  @media screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
-    left: 0px;
-  }
-`
+const StyledDropdown = {
+  maxHeight: 350,
+  minWidth: 256,
+  right: 0,
+  px: 0,
+  $lg: {
+    left: 0,
+    right: undefined,
+  },
+} satisfies FlexProps
+
 export default function TableNetworkFilter() {
   const { t } = useTranslation()
   const theme = useTheme()
   const navigate = useNavigate()
-  const [isMenuOpen, toggleMenu] = useReducer((s) => !s, false)
+  const [isMenuOpen, toggleMenu] = useState(false)
   const isSupportedChainCallback = useIsSupportedChainIdCallback()
   const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
 
@@ -73,18 +73,21 @@ export default function TableNetworkFilter() {
           </NetworkLabel>
         }
         internalMenuItems={
-          <>
+          <ScrollView px="$spacing8">
             {isMultichainExploreEnabled && (
               <InternalMenuItem
                 key="All networks"
                 data-testid="tokens-network-filter-option-all-networks"
-                onClick={() => {
+                onPress={() => {
                   navigate(`/explore/${tab ?? ExploreTab.Tokens}`)
-                  toggleMenu()
+                  toggleMenu(false)
                 }}
               >
                 <NetworkLabel>
-                  <AllNetworksIcon /> {t('transaction.network.all')}
+                  <AllNetworksIcon />{' '}
+                  <Text variant="body2" {...EllipsisTamaguiStyle}>
+                    {t('transaction.network.all')}
+                  </Text>
                 </NetworkLabel>
                 {!exploreParams.chainName && <Check size={16} color={theme.accent1} />}
               </InternalMenuItem>
@@ -97,13 +100,16 @@ export default function TableNetworkFilter() {
                 <InternalMenuItem
                   key={network}
                   data-testid={`tokens-network-filter-option-${network.toLowerCase()}`}
-                  onClick={() => {
+                  onPress={() => {
                     navigate(`/explore/${tab ?? ExploreTab.Tokens}/${network.toLowerCase()}`)
-                    toggleMenu()
+                    toggleMenu(false)
                   }}
                 >
                   <NetworkLabel>
-                    <ChainLogo chainId={chainId} size={20} /> {chainInfo?.label}
+                    <ChainLogo chainId={chainId} size={20} />{' '}
+                    <Text variant="body2" {...EllipsisTamaguiStyle}>
+                      {chainInfo?.label}
+                    </Text>
                   </NetworkLabel>
                   {network === currentChain.backendChain.chain && exploreParams.chainName && (
                     <Check size={16} color={theme.accent1} />
@@ -117,16 +123,19 @@ export default function TableNetworkFilter() {
               return chainInfo ? (
                 <InternalMenuItem key={network} data-testid={`tokens-network-filter-option-${network}-chain`} disabled>
                   <NetworkLabel>
-                    <ChainLogo chainId={network} size={20} /> {chainInfo.label}
+                    <ChainLogo chainId={network} size={20} />{' '}
+                    <Text variant="body2" {...EllipsisTamaguiStyle}>
+                      {chainInfo.label}
+                    </Text>
                   </NetworkLabel>
                   <Tag>Coming soon</Tag>
                 </InternalMenuItem>
               ) : null
             })}
-          </>
+          </ScrollView>
         }
-        buttonCss={StyledButton}
-        menuFlyoutCss={StyledMenuFlyout}
+        buttonStyle={{ height: 40 }}
+        dropdownStyle={StyledDropdown}
       />
     </div>
   )

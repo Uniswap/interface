@@ -65,8 +65,8 @@ import {
   Wrapper,
 } from 'pages/AddLiquidity/styled'
 import { BodyWrapper } from 'pages/App/AppBody'
-import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
-import { Dots } from 'pages/Pool/styled'
+import { PositionPageUnsupportedContent } from 'pages/LegacyPool/PositionPage'
+import { Dots } from 'pages/LegacyPool/styled'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { Helmet } from 'react-helmet-async/lib/index'
@@ -622,7 +622,9 @@ function AddLiquidity() {
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
         >
-          <Text fontWeight="$medium">{errorMessage ? errorMessage : <Trans i18nKey="common.preview" />}</Text>
+          <Text fontWeight="$medium" color="neutralContrast">
+            {errorMessage ? errorMessage : <Trans i18nKey="common.preview" />}
+          </Text>
         </ButtonError>
       </AutoColumn>
     )
@@ -700,7 +702,7 @@ function AddLiquidity() {
               )}
               bottomContent={() => (
                 <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
-                  <Text fontWeight="$medium" fontSize={20}>
+                  <Text fontWeight="$medium" fontSize={20} color="neutralContrast">
                     <Trans i18nKey="common.add.label" />
                   </Text>
                 </ButtonPrimary>

@@ -12,10 +12,9 @@ import ClockIcon from 'ui/src/assets/icons/clock.svg'
 import { TrendUp } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
-import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
-import { WalletSearchResult } from 'wallet/src/features/search/SearchResult'
-import { clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
-import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
+import { SearchResultType, WalletSearchResult } from 'uniswap/src/features/search/SearchResult'
+import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
+import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 
 const TrendUpIcon = <TrendUp color="$neutral2" size="$icon.24" />
 
@@ -48,7 +47,14 @@ export function SearchEmptySection(): JSX.Element {
         <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
           <FlatList
             ListHeaderComponent={
-              <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between" mb="$spacing4">
+              <Flex
+                row
+                alignItems="center"
+                gap="$spacing16"
+                justifyContent="space-between"
+                mb="$spacing4"
+                pr="$spacing20"
+              >
                 <SectionHeaderText icon={<RecentIcon />} title={t('explore.search.section.recent')} />
                 <TouchableArea onPress={onPressClearSearchHistory}>
                   <Text color="$accent1" variant="buttonLabel3">

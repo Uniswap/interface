@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { Flex, Shine, Text, isWeb } from 'ui/src'
+import { Flex, Shine } from 'ui/src'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { NumberType } from 'utilities/src/format/types'
@@ -10,8 +10,6 @@ import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
-
-const WEB_BALANCE_FONT_WEIGHT = 535
 
 interface PortfolioBalanceProps {
   owner: Address
@@ -44,20 +42,15 @@ export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: Portf
 
   return (
     <Flex gap="$spacing4">
-      {/* Web currently doesnt support reanimated, so can not use the annimated number component */}
-      {isWeb ? (
-        <WebBalanceWithFadedDecimals value={totalBalance} />
-      ) : (
-        <AnimatedNumber
-          disableAnimations
-          colorIndicationDuration={2000}
-          loading={isLoading}
-          loadingPlaceholderText="000000.00"
-          shouldFadeDecimals={shouldFadePortfolioDecimals}
-          value={totalBalance}
-          warmLoading={isWarmLoading}
-        />
-      )}
+      <AnimatedNumber
+        balance={balanceUSD}
+        colorIndicationDuration={2000}
+        loading={isLoading}
+        loadingPlaceholderText="000000.00"
+        shouldFadeDecimals={shouldFadePortfolioDecimals}
+        value={totalBalance}
+        warmLoading={isWarmLoading}
+      />
       <Shine disabled={!isWarmLoading}>
         <RelativeChange
           absoluteChange={absoluteChange}
@@ -72,29 +65,3 @@ export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: Portf
     </Flex>
   )
 })
-
-const WebBalanceWithFadedDecimals = ({ value }: { value: string }): JSX.Element | null => {
-  const currency = useAppFiatCurrencyInfo()
-  const amountOfCurrency = value?.split(currency.decimalSeparator)
-  if (amountOfCurrency?.length > 0) {
-    return (
-      <Text
-        allowFontScaling={false}
-        color="$neutral1"
-        style={{
-          fontWeight: WEB_BALANCE_FONT_WEIGHT,
-        }}
-        variant="heading2"
-      >
-        {amountOfCurrency[0]}
-        {amountOfCurrency.length > 1 && (
-          <Text color="$neutral3" variant="heading2">
-            {currency.decimalSeparator}
-            {amountOfCurrency[1]}
-          </Text>
-        )}
-      </Text>
-    )
-  }
-  return null
-}

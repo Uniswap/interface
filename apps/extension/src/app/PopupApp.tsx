@@ -27,6 +27,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { syncAppWithDeviceLanguage } from 'wallet/src/features/language/slice'
+import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { SharedProvider } from 'wallet/src/provider'
 
 getLocalUserId()
@@ -132,10 +133,12 @@ export default function PopupApp(): JSX.Element {
                 <GraphqlProvider>
                   <LocalizationContextProvider>
                     <UnitagUpdaterContextProvider>
-                      <TraceUserProperties />
-                      <DappContextProvider>
-                        <RouterProvider router={router} />
-                      </DappContextProvider>
+                      <WalletUniswapProvider>
+                        <TraceUserProperties />
+                        <DappContextProvider>
+                          <RouterProvider router={router} />
+                        </DappContextProvider>
+                      </WalletUniswapProvider>
                     </UnitagUpdaterContextProvider>
                   </LocalizationContextProvider>
                 </GraphqlProvider>

@@ -2,10 +2,13 @@ import React, { ErrorInfo, PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, StyleSheet } from 'react-native'
 import { useDispatch } from 'react-redux'
+import { Dispatch } from 'redux'
 import { Button, Flex, Text } from 'ui/src'
 import { DEAD_LUNI } from 'ui/src/assets'
 import { logger } from 'utilities/src/logger/logger'
 import { restartApp } from 'wallet/src/components/ErrorBoundary/restart'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { setFinishedOnboarding } from 'wallet/src/features/wallet/slice'
 
@@ -13,10 +16,24 @@ interface ErrorBoundaryState {
   error: Error | null
 }
 
+interface ErrorBoundariesDispatchProps {
+  dispatch: Dispatch
+}
+
+interface ErrorBoundariesOwnProps {
+  onError?: (error: Error | null) => void
+  fallback?: React.ReactNode
+  name?: string
+  notificationText?: string
+}
+
 // Uncaught errors during renders of subclasses will be caught here
 // Errors in handlers (e.g. press handler) will not reach here
-export class ErrorBoundary extends React.Component<PropsWithChildren<unknown>, ErrorBoundaryState> {
-  constructor(props: PropsWithChildren<unknown>) {
+class InternalErrorBoundary extends React.Component<
+  PropsWithChildren<ErrorBoundariesOwnProps & ErrorBoundariesDispatchProps>,
+  ErrorBoundaryState
+> {
+  constructor(props: PropsWithChildren<ErrorBoundariesOwnProps & ErrorBoundariesDispatchProps>) {
     super(props)
     this.state = { error: null }
   }
@@ -37,18 +54,56 @@ export class ErrorBoundary extends React.Component<PropsWithChildren<unknown>, E
       tags: {
         file: 'ErrorBoundary',
         function: 'componentDidCatch',
+        errorBoundaryName: this.props.name ?? 'Global',
       },
     })
+
+    this.props.onError?.(error)
+
+    if (this.props.notificationText) {
+      this.props.dispatch(
+        pushNotification({
+          type: AppNotificationType.Error,
+          errorMessage: this.props.notificationText,
+        }),
+      )
+    }
   }
 
   render(): React.ReactNode {
     const { error } = this.state
+    const { fallback } = this.props
+
     if (error !== null) {
-      return <ErrorScreen error={error} />
+      return fallback === null ? null : <ErrorScreen error={error} />
     }
 
     return this.props.children
   }
+}
+
+export const ErrorBoundary = ({
+  notificationText,
+  showNotification = false,
+  ...props
+}: PropsWithChildren<ErrorBoundariesOwnProps> & { showNotification?: boolean }): JSX.Element => {
+  const dispatch = useDispatch()
+  const { t } = useTranslation()
+
+  // We want to temporary disable non global error boundaries until https://linear.app/uniswap/issue/WALL-4461 is done
+  const disableLocalErrorBoundaries = true
+  // we do not pass `name` to global error boundary
+  if (disableLocalErrorBoundaries && props.name) {
+    return <>{props.children}</>
+  }
+
+  return (
+    <InternalErrorBoundary
+      dispatch={dispatch}
+      notificationText={showNotification ? notificationText ?? t('common.error.somethingWrong') : undefined}
+      {...props}
+    />
+  )
 }
 
 const LUNI_SIZE = 150

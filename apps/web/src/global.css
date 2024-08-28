@@ -1,0 +1,59 @@
+/* Add styles here only for things Tamagui doesn't support. Ideally very few
+   things go here, but stuff like keyframe CSS animations that Tamagui doesn't
+   support can be added here. Be sure to try `$platform-web` style prop first as
+   that should avoid needing to add here.  */
+
+.text-wrap-pretty {
+  text-wrap: pretty;
+}
+
+.text-decoration-none {
+  text-decoration: none;
+}
+
+@media screen and (max-width: 864px) {
+  /* the :root:root:root is to have higher specificity than tamagui */
+  :root:root:root .connect-with-us-layout {
+    display: flex;
+    flex-direction: column;
+  }
+}
+
+@keyframes token-float-animation {
+  0% {
+    transform: translateY(-8px);
+  }
+  50% {
+    transform: translateY(8px);
+  }
+  100% {
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes token-rotate-animation {
+  0% {
+    transform: rotate(-22deg);
+  }
+  100% {
+    transform: rotate(22deg);
+  }
+}
+
+.scrollbar-hidden {
+  ::-webkit-scrollbar {
+    display: none;
+  }
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.last-child-flex-end {
+  &:last-child {
+    justify-content: flex-end;
+  }
+}
+.first-child-flex-grow-0 {
+  &:first-child {
+    flex-grow: 0;
+  }
+}

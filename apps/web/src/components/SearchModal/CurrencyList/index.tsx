@@ -1,9 +1,8 @@
+import { TextStyle } from '@tamagui/core'
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import Column, { AutoColumn } from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import Row, { RowFixed } from 'components/Row'
 import { scrollbarStyle } from 'components/SearchModal/CurrencyList/index.css'
 import { LoadingRows, MenuItem } from 'components/SearchModal/styled'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
@@ -13,15 +12,14 @@ import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalanc
 import { useIsUserAddedToken } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
-import styled from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { CSSProperties, MutableRefObject, useCallback } from 'react'
 import { FixedSizeList } from 'react-window'
-import { Text } from 'rebass'
 import { TokenFromList } from 'state/lists/tokenFromList'
 import { ThemedText } from 'theme/components'
+import { Flex, Text, styled } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
 import { currencyKey } from 'utils/currencyKey'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -40,48 +38,38 @@ function currencyListRowKey(data: Currency | CurrencyListRow): string {
 
 const ROW_ITEM_SIZE = 56
 
-const StyledBalanceText = styled(Text)`
-  white-space: nowrap;
-  overflow: hidden;
-  max-width: 5rem;
-  text-overflow: ellipsis;
-`
+const TextOverflowStyle = {
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+} satisfies TextStyle
 
-const CurrencyName = styled(Text)`
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-`
+const StyledBalanceText = styled(Text, {
+  ...TextOverflowStyle,
+  maxWidth: '80px',
+})
 
-const Tag = styled.div`
-  background-color: ${({ theme }) => theme.surface2};
-  color: ${({ theme }) => theme.neutral2};
-  font-size: 14px;
-  border-radius: 4px;
-  padding: 0.25rem 0.3rem 0.25rem 0.3rem;
-  max-width: 6rem;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-  justify-self: flex-end;
-  margin-right: 4px;
-`
+const CurrencyName = styled(Text, TextOverflowStyle)
 
-const WarningContainer = styled.div`
-  margin-left: 0.3em;
-`
-
-const LabelContainer = styled.div`
-  display: flex;
-  align-items: center;
-  padding: 0 20px;
-`
+const Tag = styled(Text, {
+  backgroundColor: '$surface2',
+  color: '$neutral2',
+  fontSize: '14px',
+  borderRadius: '$rounded4',
+  p: '$spacing4',
+  maxWidth: '100px',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  alignSelf: 'flex-end',
+  mr: '$spacing4',
+})
 
 function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
   const { formatNumberOrString } = useFormatter()
 
   return (
-    <StyledBalanceText title={balance.toExact()}>
+    <StyledBalanceText>
       {formatNumberOrString({
         input: balance.toExact(),
         type: NumberType.TokenNonTx,
@@ -89,11 +77,6 @@ function Balance({ balance }: { balance: CurrencyAmount<Currency> }) {
     </StyledBalanceText>
   )
 }
-
-const TagContainer = styled.div`
-  display: flex;
-  justify-content: flex-end;
-`
 
 function TokenTags({ currency }: { currency: Currency }) {
   if (!(currency instanceof TokenFromList)) {
@@ -108,7 +91,7 @@ function TokenTags({ currency }: { currency: Currency }) {
   const tag = tags[0]
 
   return (
-    <TagContainer>
+    <Flex justifyContent="flex-end">
       <MouseoverTooltip text={tag.description}>
         <Tag key={tag.id}>{tag.name}</Tag>
       </MouseoverTooltip>
@@ -122,7 +105,7 @@ function TokenTags({ currency }: { currency: Currency }) {
           <Tag>...</Tag>
         </MouseoverTooltip>
       ) : null}
-    </TagContainer>
+    </Flex>
   )
 }
 
@@ -133,9 +116,10 @@ const getDisplayName = (name: string | undefined) => {
   return name
 }
 
-const RowWrapper = styled(Row)`
-  height: 60px;
-`
+const RowWrapper = styled(Flex, {
+  flexDirection: 'row',
+  height: '$spacing60',
+})
 
 export function CurrencyRow({
   currency,
@@ -178,7 +162,7 @@ export function CurrencyRow({
     <Trace
       logPress
       logKeyPress
-      eventOnTrigger={WalletEventName.TokenSelected}
+      eventOnTrigger={UniswapEventName.TokenSelected}
       properties={{ is_imported_by_user: customAdded, ...eventProperties, total_balances_usd: portfolioBalanceUsd }}
       element={InterfaceElementName.TOKEN_SELECTOR_ROW}
     >
@@ -195,39 +179,34 @@ export function CurrencyRow({
           selected={otherSelected || isSelected}
           dim={isBlockedToken}
           disabled={disabled}
+          style={{ outline: 'none' }}
         >
-          <Column>
-            <CurrencyLogo
-              currency={currency}
-              size={36}
-              style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }}
-            />
-          </Column>
-          <AutoColumn style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} gap="xs">
-            <Row>
-              <CurrencyName title={currencyName}>{currencyName}</CurrencyName>
-              <WarningContainer>
-                <TokenSafetyIcon warning={warning} />
-              </WarningContainer>
-            </Row>
-            <Row gap="sm">
-              <ThemedText.Caption ml="0px" color="neutral2">
+          <CurrencyLogo currency={currency} size={36} style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} />
+          <Flex style={{ opacity: isBlockedToken ? blockedTokenOpacity : '1' }} gap="$spacing2">
+            <Flex row alignItems="center" gap="$spacing4">
+              <CurrencyName variant="body2">{currencyName}</CurrencyName>
+              <TokenSafetyIcon warning={warning} />
+            </Flex>
+            <Flex row alignItems="center" gap="$spacing8">
+              <Text variant="body4" ml="0px" color="$neutral2">
                 {currency.symbol}
-              </ThemedText.Caption>
+              </Text>
               {showAddress && currency.isToken && (
-                <ThemedText.Caption color="neutral3">{shortenAddress(currency.address)}</ThemedText.Caption>
+                <Text variant="body4" color="$neutral3">
+                  {shortenAddress(currency.address)}
+                </Text>
               )}
-            </Row>
-          </AutoColumn>
-          <Column>
-            <RowFixed style={{ justifySelf: 'flex-end' }}>
+            </Flex>
+          </Flex>
+          <Flex>
+            <Flex row alignSelf="flex-end">
               <TokenTags currency={currency} />
-            </RowFixed>
-          </Column>
+            </Flex>
+          </Flex>
           {showCurrencyAmount && (
-            <RowFixed style={{ justifySelf: 'flex-end' }}>
+            <Flex row alignSelf="center" justifyContent="flex-end">
               {account.isConnected ? balance ? <Balance balance={balance} /> : <Loader /> : null}
-            </RowFixed>
+            </Flex>
           )}
         </MenuItem>
       </Wrapper>
@@ -324,9 +303,11 @@ export default function CurrencyList({
 
       if (row instanceof CurrencyListSectionTitle) {
         return (
-          <LabelContainer style={style}>
-            <ThemedText.BodySecondary>{row.label}</ThemedText.BodySecondary>
-          </LabelContainer>
+          <Flex justifyContent="center" px="$spacing20" style={style}>
+            <Text variant="subheading2" color="$neutral2">
+              {row.label}
+            </Text>
+          </Flex>
         )
       }
 

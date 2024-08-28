@@ -10,7 +10,6 @@ import { USE_DISCONNECTED_ACCOUNT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
-import 'test-utils/tokens/mocks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
@@ -66,6 +65,7 @@ describe('PoolDetailsStatsButton', () => {
   })
 
   it('renders both buttons correctly', () => {
+    window.history.pushState({}, '', '/swap')
     const { asFragment } = render(<PoolDetailsStatsButtons {...mockProps} />)
     expect(asFragment()).toMatchSnapshot()
 

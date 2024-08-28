@@ -7,6 +7,7 @@ export function OnboardingScreenFrame({
   Icon,
   children,
   nextButtonEnabled,
+  nextButtonIcon,
   nextButtonText = i18n.t('common.button.next'),
   nextButtonTheme = 'primary',
   onBack,
@@ -74,7 +75,13 @@ export function OnboardingScreenFrame({
       </Flex>
       <Flex row gap="$spacing12" width="100%">
         {Boolean(onSubmit) && nextButtonText && (
-          <Button disabled={!nextButtonEnabled} flexGrow={1} theme={nextButtonTheme} onPress={onSubmit}>
+          <Button
+            disabled={!nextButtonEnabled}
+            flexGrow={1}
+            icon={nextButtonIcon}
+            theme={nextButtonTheme}
+            onPress={onSubmit}
+          >
             {nextButtonText}
           </Button>
         )}

@@ -1,6 +1,7 @@
 import { AssetType } from 'uniswap/src/entities/assets'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
-import { createFixture } from 'uniswap/src/test/utils'
+import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
 import { UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import {
@@ -9,9 +10,7 @@ import {
   LogoWithTxStatus,
   LogoWithTxStatusProps,
 } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { render } from 'wallet/src/test/test-utils'
-import { randomChoice, randomEnumValue } from 'wallet/src/test/utils'
 
 const currencyLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
   assetType: AssetType.Currency,
@@ -46,16 +45,6 @@ describe(LogoWithTxStatus, () => {
   })
 
   describe('logo', () => {
-    it('shows Moonpay logo for fiat purchase', () => {
-      const { queryByTestId } = render(
-        <LogoWithTxStatus {...currencyLogoProps({ txType: TransactionType.FiatPurchase })} />,
-      )
-
-      expect(queryByTestId('moonpay-logo')).toBeTruthy()
-      expect(queryByTestId('token-logo')).toBeFalsy()
-      expect(queryByTestId('nft-viewer')).toBeFalsy()
-    })
-
     it('shows CurrencyLogo for currency', () => {
       const { queryByTestId } = render(<LogoWithTxStatus {...currencyLogoProps()} />)
 
@@ -103,7 +92,6 @@ describe(LogoWithTxStatus, () => {
         TransactionType.Approve,
         TransactionType.NFTApprove,
         TransactionType.Send,
-        TransactionType.FiatPurchase,
         TransactionType.OnRampPurchase,
         TransactionType.OnRampTransfer,
         TransactionType.Receive,

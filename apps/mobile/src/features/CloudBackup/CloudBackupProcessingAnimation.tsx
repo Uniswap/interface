@@ -40,12 +40,11 @@ export function CloudBackupProcessingAnimation({
 }: Props): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const { addBackupMethod, getImportedAccounts, getOnboardingAccount } = useOnboardingContext()
-  const onboardingAccount = getOnboardingAccount()
-  const importedAccounts = getImportedAccounts()
+  const { addBackupMethod, getOnboardingOrImportedAccount } = useOnboardingContext()
+  const onboardingContextAccount = getOnboardingOrImportedAccount()
   const activeAccount = useSignerAccountIfExists(accountAddress)
 
-  const account = activeAccount || onboardingAccount || importedAccounts?.[0]
+  const account = activeAccount || onboardingContextAccount
 
   if (!account) {
     throw Error('No account available for backup')

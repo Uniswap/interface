@@ -7,7 +7,7 @@ import { WarningTooltipProps } from 'wallet/src/components/modals/WarningModal/W
 
 type WarningInfoProps = {
   tooltipProps: Omit<WarningTooltipProps, 'button' | 'trigger'>
-  modalProps: Omit<WarningModalProps, 'onClose'>
+  modalProps: Omit<WarningModalProps, 'onClose' | 'isOpen'>
   infoButton?: ReactNode
   trigger?: ReactNode
   triggerPlacement?: 'start' | 'end'
@@ -43,11 +43,9 @@ export function WarningInfo({
           {triggerPlacement === 'end' && trigger}
         </Flex>
       </TouchableArea>
-      {showModal && (
-        <WarningModal {...modalProps} onClose={(): void => setShowModal(false)}>
-          {infoButton}
-        </WarningModal>
-      )}
+      <WarningModal isOpen={showModal} {...modalProps} onClose={(): void => setShowModal(false)}>
+        {infoButton}
+      </WarningModal>
     </>
   )
 }

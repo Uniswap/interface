@@ -19,6 +19,10 @@ type NFTItemScreenParams = {
   fallbackData?: NFTItem
 }
 
+export type BackupFormParams = {
+  address: Address
+}
+
 export type CloudBackupFormParams = {
   address: Address
   password: string
@@ -83,10 +87,8 @@ export type SharedUnitagScreenParams = {
 
 export type OnboardingStackParamList = {
   [OnboardingScreens.AppLoading]: undefined
-  [OnboardingScreens.BackupManual]: OnboardingStackBaseParams
-  [OnboardingScreens.BackupCloudPasswordCreate]: {
-    address: Address
-  } & OnboardingStackBaseParams
+  [OnboardingScreens.BackupManual]: BackupFormParams & OnboardingStackBaseParams
+  [OnboardingScreens.BackupCloudPasswordCreate]: BackupFormParams & OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudPasswordConfirm]: CloudBackupFormParams & OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudProcessing]: CloudBackupFormParams & OnboardingStackBaseParams
   [OnboardingScreens.Backup]: OnboardingStackBaseParams

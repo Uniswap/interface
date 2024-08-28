@@ -9,11 +9,11 @@ import { initialState as initialUserState } from 'state/user/reducer'
 
 const defaultState = {
   lists: {},
-  transactions: {},
+  localWebTransactions: {},
   user: {},
   _persist: {
     rehydrated: true,
-    version: 12,
+    version: 14,
   },
   application: {
     chainId: null,
@@ -92,11 +92,6 @@ describe('redux migrations', () => {
       // These are migrated values.
       lists: {
         byUrl: undefined,
-      },
-      transactions: {
-        1: {
-          test: { info: 'transactions' },
-        },
       },
       user: {
         test: 'user',

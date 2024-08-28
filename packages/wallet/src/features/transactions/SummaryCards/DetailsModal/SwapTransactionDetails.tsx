@@ -1,20 +1,20 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
-import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { Flex, Loader, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { fonts, iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { SwapTypeTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import { useFormattedCurrencyAmountAndUSDValue } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
-import { isConfirmedSwapTypeInfo } from 'wallet/src/features/transactions/types'
 
 export function SwapTransactionDetails({
   typeInfo,
@@ -131,9 +131,7 @@ export function SwapTransactionContent({
               {inputTilde}
               {inputAmount} {inputSymbol}
             </Text>
-            <Text color="$neutral2" variant="body3">
-              {inputValue}
-            </Text>
+            <ValueText value={inputValue} />
           </Flex>
           <CurrencyLogo hideNetworkLogo currencyInfo={inputCurrency} size={iconSizes.icon40} />
         </Flex>
@@ -148,13 +146,22 @@ export function SwapTransactionContent({
               {outputTilde}
               {outputAmount} {outputSymbol}
             </Text>
-            <Text color="$neutral2" variant="body3">
-              {outputValue}
-            </Text>
+            <ValueText value={outputValue} />
           </Flex>
           <CurrencyLogo hideNetworkLogo currencyInfo={outputCurrency} size={iconSizes.icon40} />
         </Flex>
       </TouchableArea>
     </Flex>
+  )
+}
+
+function ValueText({ value }: { value: string }): JSX.Element {
+  const isLoading = value === '-'
+  return isLoading ? (
+    <Loader.Box height={fonts.body3.lineHeight} width={iconSizes.icon36} />
+  ) : (
+    <Text color="$neutral2" variant="body3">
+      {value}
+    </Text>
   )
 }

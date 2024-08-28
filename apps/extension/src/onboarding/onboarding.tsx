@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../../../index.d.ts" />
 
+import React from 'react'
 import { createRoot } from 'react-dom/client'
-import { OptionalStrictMode } from 'src/app/components/OptionalStrictMode'
 import OnboardingApp from 'src/app/OnboardingApp'
 import { initializeSentry, SentryAppNameTag } from 'src/app/sentry'
 import { getLocalUserId } from 'src/app/utils/storage'
@@ -28,11 +28,10 @@ async function initOnboarding(): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const container = document.getElementById('onboarding-root')!
   const root = createRoot(container)
-
   root.render(
-    <OptionalStrictMode>
+    <React.StrictMode>
       <OnboardingApp />
-    </OptionalStrictMode>,
+    </React.StrictMode>,
   )
 }
 

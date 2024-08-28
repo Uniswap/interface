@@ -1,6 +1,7 @@
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
 import Badge from 'components/Badge'
 import Column from 'components/Column'
+import { ScrollBarStyles } from 'components/Common'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { useRecentlySearchedAssets } from 'components/NavBar/SearchBar/RecentlySearchedAssets'
 import { SkeletonRow, SuggestionRow } from 'components/NavBar/SearchBar/SuggestionRow'
@@ -21,18 +22,20 @@ import { Clock, TrendingUp } from 'react-feather'
 import { useLocation } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 const SearchBarDropdownContainer = styled(Column)<{ $loading: boolean }>`
   width: 100%;
   backdrop-filter: blur(60px);
-  overflow-y: scroll;
+  overflow-y: auto;
   transition: 125;
   opacity: ${({ $loading }) => ($loading ? '0.3' : '1')};
+  ${ScrollBarStyles}
 `
 const DropdownHeader = styled(Row)`
   color: ${({ theme }) => theme.neutral2};
@@ -358,10 +361,8 @@ function SearchBarDropdownContents({
 }
 
 function ComingSoonText({ chainId }: { chainId: InterfaceChainId }) {
-  switch (chainId) {
-    case UniverseChainId.Avalanche:
-      return <Trans i18nKey="search.avalancheComing" />
-    default:
-      return null
-  }
+  const chainName = UNIVERSE_CHAIN_INFO[chainId]?.name
+  return BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.includes(chainId) ? (
+    <Trans i18nKey="search.chainComing" values={{ chainName }} />
+  ) : null
 }

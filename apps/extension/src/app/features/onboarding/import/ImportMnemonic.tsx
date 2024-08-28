@@ -123,36 +123,15 @@ export function ImportMnemonic(): JSX.Element {
     [errors],
   )
 
-  const onSubmit = useCallback(async () => {
-    if (isEmptyMnemonic) {
-      return
-    }
-
-    if (isResetting) {
-      // Remove all accounts before importing mnemonic.
-      await dispatch(
-        editAccountActions.trigger({
-          type: EditAccountAction.Remove,
-          accounts,
-        }),
-      )
-    }
-
-    addOnboardingAccountMnemonic(mnemonic)
-    goToNextStep()
-  }, [accounts, dispatch, goToNextStep, isResetting, mnemonic, addOnboardingAccountMnemonic, isEmptyMnemonic])
-
-  const debouncedMnemonic = useDebounce(mnemonic, 500)
-
   const { error: mnemonicValidationError, invalidWordCount } = useMemo(() => {
-    const mnemonicString = debouncedMnemonic.join(' ').toLowerCase()
+    const mnemonicString = mnemonic.join(' ').toLowerCase()
 
     if (!mnemonicString.trim()) {
       return { error: undefined, invalidWordCount: undefined }
     }
 
     return validateMnemonic(mnemonicString)
-  }, [debouncedMnemonic])
+  }, [mnemonic])
 
   const errorMessageToDisplay = useMemo(() => {
     // If all cells are filled, but there is an error, display the invalid phrase error
@@ -169,6 +148,29 @@ export function ImportMnemonic(): JSX.Element {
 
     return undefined
   }, [expanded, mnemonic, mnemonicValidationError, t, invalidWordCount])
+
+  const debouncedErrorMessageToDisplay = useDebounce(errorMessageToDisplay, 500)
+
+  const enableSubmit = !isEmptyMnemonic && !mnemonicValidationError && !errorMessageToDisplay
+
+  const onSubmit = useCallback(async () => {
+    if (!enableSubmit) {
+      return
+    }
+
+    if (isResetting) {
+      // Remove all accounts before importing mnemonic.
+      await dispatch(
+        editAccountActions.trigger({
+          type: EditAccountAction.Remove,
+          accounts,
+        }),
+      )
+    }
+
+    addOnboardingAccountMnemonic(mnemonic)
+    goToNextStep()
+  }, [accounts, dispatch, goToNextStep, isResetting, mnemonic, addOnboardingAccountMnemonic, enableSubmit])
 
   return (
     <Trace
@@ -218,12 +220,12 @@ export function ImportMnemonic(): JSX.Element {
           <>
             <Text
               color="$statusCritical"
-              opacity={errorMessageToDisplay ? 1 : 0}
+              opacity={debouncedErrorMessageToDisplay ? 1 : 0}
               py="$spacing8"
               textAlign="center"
               variant="body3"
             >
-              {errorMessageToDisplay ?? DUMMY_TEXT} {/* To prevent layout shift */}
+              {debouncedErrorMessageToDisplay ?? DUMMY_TEXT} {/* To prevent layout shift */}
             </Text>
             <Flex>
               <Flex row flexWrap="wrap" gap="$spacing16">
@@ -239,6 +241,7 @@ export function ImportMnemonic(): JSX.Element {
                           handleKeyPress={handleKeyPress}
                           index={index}
                           word={word}
+                          onSubmitEditing={onSubmit}
                         />
                       </Flex>
                     ),
@@ -276,8 +279,12 @@ const RecoveryPhraseWord = forwardRef<
     handleBlur: (index: number) => (event: NativeSyntheticEvent<TextInputFocusEventData>) => void
     handleChange: (index: number) => (event: NativeSyntheticEvent<TextInputChangeEventData>) => void
     handleKeyPress: (index: number) => (e: NativeSyntheticEvent<TextInputKeyPressEventData>) => void
+    onSubmitEditing: () => void
   }
->(function _RecoveryPhraseWord({ word, index, handleBlur, handleChange, handleKeyPress }, ref): JSX.Element {
+>(function _RecoveryPhraseWord(
+  { word, index, handleBlur, handleChange, handleKeyPress, onSubmitEditing },
+  ref,
+): JSX.Element {
   const debouncedWord = useDebounce(word, 500)
   const showError = isValidMnemonicWord(debouncedWord)
 
@@ -312,6 +319,7 @@ const RecoveryPhraseWord = forwardRef<
         onBlur={handleBlur(index)}
         onChange={handleChange(index)}
         onKeyPress={handleKeyPress(index)}
+        onSubmitEditing={onSubmitEditing}
         {...(showError && {
           backgroundColor: '$DEP_accentCriticalSoft',
           color: '$statusCritical',

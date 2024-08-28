@@ -4,8 +4,9 @@ import 'sideEffects'
 import { getDeviceId } from '@amplitude/analytics-browser'
 import { ApolloProvider } from '@apollo/client'
 import { PortalProvider } from '@tamagui/portal'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import Web3Provider from 'components/Web3Provider'
+import { WebUniswapProvider } from 'components/Web3Provider/WebUniswapContext'
 import { AssetActivityProvider } from 'graphql/data/apollo/AssetActivityProvider'
 import { TokenBalancesProvider } from 'graphql/data/apollo/TokenBalancesProvider'
 import { apolloClient } from 'graphql/data/apollo/client'
@@ -30,6 +31,7 @@ import { ThemeProvider, ThemedGlobalStyle } from 'theme'
 import RadialGradientByChainUpdater from 'theme/components/RadialGradientByChainUpdater'
 import { SystemThemeUpdater, ThemeColorMetaUpdater } from 'theme/components/ThemeToggle'
 import { TamaguiProvider } from 'theme/tamaguiProvider'
+import { SharedQueryClient } from 'uniswap/src/data/apiClients/SharedQueryClient'
 import { DUMMY_STATSIG_SDK_KEY } from 'uniswap/src/features/gating/constants'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { getEnvName } from 'utilities/src/environment'
@@ -97,23 +99,15 @@ function StatsigProvider({ children }: PropsWithChildren) {
   )
 }
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 1000 * 20, // 20 seconds
-    },
-  },
-})
-
 const container = document.getElementById('root') as HTMLElement
 
 const Router = isBrowserRouterEnabled() ? BrowserRouter : HashRouter
 
 createRoot(container).render(
-  <OptionalStrictMode>
+  <StrictMode>
     <HelmetProvider>
       <Provider store={store}>
-        <QueryClientProvider client={queryClient}>
+        <QueryClientProvider client={SharedQueryClient}>
           <Router>
             <LanguageProvider>
               <Web3Provider>
@@ -121,15 +115,17 @@ createRoot(container).render(
                   <GraphqlProviders>
                     <BlockNumberProvider>
                       <UnitagUpdaterContextProvider>
-                        <Updaters />
-                        <ThemeProvider>
-                          <TamaguiProvider>
-                            <PortalProvider>
-                              <ThemedGlobalStyle />
-                              <App />
-                            </PortalProvider>
-                          </TamaguiProvider>
-                        </ThemeProvider>
+                        <WebUniswapProvider>
+                          <Updaters />
+                          <ThemeProvider>
+                            <TamaguiProvider>
+                              <PortalProvider>
+                                <ThemedGlobalStyle />
+                                <App />
+                              </PortalProvider>
+                            </TamaguiProvider>
+                          </ThemeProvider>
+                        </WebUniswapProvider>
                       </UnitagUpdaterContextProvider>
                     </BlockNumberProvider>
                   </GraphqlProviders>
@@ -140,15 +136,8 @@ createRoot(container).render(
         </QueryClientProvider>
       </Provider>
     </HelmetProvider>
-  </OptionalStrictMode>,
+  </StrictMode>,
 )
-
-// TODO(EXT-1229): We had to remove `React.StrictMode` because it's not
-// currently supported by Reanimated Web. We should consider re-enabling
-// once Reanimated fixes this.
-function OptionalStrictMode(props: { children: React.ReactNode }): JSX.Element {
-  return process.env.ENABLE_STRICT_MODE ? <StrictMode>{props.children}</StrictMode> : <>{props.children}</>
-}
 
 // We once had a ServiceWorker, and users who have not visited since then may still have it registered.
 // This ensures it is truly gone.

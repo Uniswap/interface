@@ -1,3 +1,5 @@
+import 'test-utils/tokens/mocks'
+
 import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'

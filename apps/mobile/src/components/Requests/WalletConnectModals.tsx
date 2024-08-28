@@ -7,21 +7,28 @@ import { WalletConnectModal } from 'src/components/Requests/ScanSheet/WalletConn
 import { closeModal } from 'src/features/modals/modalSlice'
 import { useWalletConnect } from 'src/features/walletConnect/useWalletConnect'
 import {
+  WalletConnectRequest,
   removePendingSession,
   removeRequest,
   setDidOpenFromDeepLink,
-  WalletConnectRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { Flex, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { AccountDetails } from 'wallet/src/components/accounts/AccountDetails'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { useActiveAccount, useActiveAccountAddressWithThrow, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
+
+const WalletConnectModalName = {
+  Scan: ModalName.WalletConnectScan,
+  PendingSession: 'wallet-connect-pending-session',
+  Request: 'wallet-connect-request-modal',
+} as const
 
 export function WalletConnectModals(): JSX.Element {
   const activeAccount = useActiveAccount()
@@ -62,12 +69,37 @@ export function WalletConnectModals(): JSX.Element {
   return (
     <>
       {modalState.isOpen && (
-        <WalletConnectModal initialScreenState={modalState.initialState} onClose={onCloseWCModal} />
+        <ErrorBoundary
+          showNotification
+          fallback={null}
+          name={WalletConnectModalName.Scan}
+          onError={() => dispatch(closeModal({ name: ModalName.WalletConnectScan }))}
+        >
+          <WalletConnectModal initialScreenState={modalState.initialState} onClose={onCloseWCModal} />
+        </ErrorBoundary>
       )}
       {pendingSession ? (
-        <PendingConnectionModal pendingSession={pendingSession} onClose={onClosePendingConnection} />
+        <ErrorBoundary
+          showNotification
+          fallback={null}
+          name={WalletConnectModalName.PendingSession}
+          onError={onClosePendingConnection}
+        >
+          <PendingConnectionModal pendingSession={pendingSession} onClose={onClosePendingConnection} />
+        </ErrorBoundary>
       ) : null}
-      {currRequest ? <RequestModal currRequest={currRequest} /> : null}
+      {currRequest ? (
+        <ErrorBoundary
+          showNotification
+          fallback={null}
+          name={WalletConnectModalName.Request}
+          onError={() =>
+            dispatch(removeRequest({ requestInternalId: currRequest.internalId, account: currRequest.account }))
+          }
+        >
+          <RequestModal currRequest={currRequest} />{' '}
+        </ErrorBoundary>
+      ) : null}
     </>
   )
 }
@@ -100,6 +132,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         icon={
           <EyeIcon color={colors.neutral2.get()} height={iconSizes.icon24} strokeWidth={1.5} width={iconSizes.icon24} />
         }
+        isOpen={!isRequestFromSignerAccount}
         modalName={ModalName.WCViewOnlyWarning}
         severity={WarningSeverity.None}
         title={t('walletConnect.request.warning.title')}

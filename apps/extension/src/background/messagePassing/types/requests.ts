@@ -8,7 +8,7 @@ import { z } from 'zod'
 export enum ContentScriptUtilityMessageType {
   FocusOnboardingTab = 'FocusOnboardingTab',
   ErrorLog = 'Error',
-  InfoLog = 'Info',
+  AnalyticsLog = 'AnalyticsLog',
 }
 
 export const ErrorLogSchema = MessageSchema.extend({
@@ -20,14 +20,12 @@ export const ErrorLogSchema = MessageSchema.extend({
 })
 export type ErrorLog = z.infer<typeof ErrorLogSchema>
 
-export const InfoLogSchema = MessageSchema.extend({
-  type: z.literal(ContentScriptUtilityMessageType.InfoLog),
-  fileName: z.string(),
-  functionName: z.string(),
+export const AnalyticsLogSchema = MessageSchema.extend({
+  type: z.literal(ContentScriptUtilityMessageType.AnalyticsLog),
   message: z.string(),
   tags: z.record(z.string()),
 })
-export type InfoLog = z.infer<typeof InfoLogSchema>
+export type AnalyticsLog = z.infer<typeof AnalyticsLogSchema>
 
 export const FocusOnboardingMessageSchema = MessageSchema.extend({
   type: z.literal(ContentScriptUtilityMessageType.FocusOnboardingTab),

@@ -5,12 +5,12 @@ import { Gas } from 'ui/src/components/icons'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isMobile } from 'utilities/src/platform'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
+import { isMobileApp } from 'utilities/src/platform'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
 import { WarningTooltipProps } from 'wallet/src/components/modals/WarningModal/WarningTooltipProps'
 import { UniswapXFee } from 'wallet/src/components/network/NetworkFee'
 import { FormattedUniswapXGasFeeInfo } from 'wallet/src/components/network/hooks'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 
 export function NetworkFeeWarning({
   gasFeeHighRelativeToValue,
@@ -92,7 +92,7 @@ function UniswapXFeeContent({ uniswapXGasFeeInfo }: { uniswapXGasFeeInfo: Format
 
   return (
     <Flex gap="$spacing12">
-      <Flex row centered={isMobile} width="100%">
+      <Flex row centered={isMobileApp} width="100%">
         <LearnMoreLink
           textVariant={isWeb ? 'buttonLabel4' : undefined}
           url={uniswapUrls.helpArticleUrls.uniswapXInfo}

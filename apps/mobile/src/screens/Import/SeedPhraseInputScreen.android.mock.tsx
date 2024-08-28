@@ -31,7 +31,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 // Original SeedPhraseInputScreen component including JS input field. Used as a mock for Android Detox e2e testing.
 export function SeedPhraseInputScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const { generateImportedAccountsByMnemonic } = useOnboardingContext()
+  const { generateImportedAccounts } = useOnboardingContext()
 
   /**
    * If paste permission modal is open, we need to manually disable the splash screen that appears on blur,
@@ -73,15 +73,15 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
         setErrorMessage(t('account.recoveryPhrase.error.wrong'))
         return
       }
-    }
 
-    await generateImportedAccountsByMnemonic(validMnemonic, undefined, BackupType.Manual)
+      await generateImportedAccounts({ mnemonicId, backupType: BackupType.Manual })
+    }
 
     // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
     if (!isRestoringMnemonic) {
       navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
     }
-  }, [value, mnemonicId, generateImportedAccountsByMnemonic, isRestoringMnemonic, t, navigation, params])
+  }, [value, mnemonicId, generateImportedAccounts, isRestoringMnemonic, t, navigation, params])
 
   const onBlur = useCallback(() => {
     const { error, invalidWord } = validateMnemonic(value)

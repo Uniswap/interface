@@ -4,9 +4,9 @@
 import 'src/app/utils/devtools'
 import 'symbol-observable' // Needed by `reduxed-chrome-storage` as polyfill, order matters
 
+import React from 'react'
 import { createRoot } from 'react-dom/client'
 import SidebarApp from 'src/app/SidebarApp'
-import { OptionalStrictMode } from 'src/app/components/OptionalStrictMode'
 import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
 import { initializeReduxStore } from 'src/store/store'
@@ -26,11 +26,10 @@ async function initSidebar(): Promise<void> {
   // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
   const container = window.document.querySelector('#root')!
   const root = createRoot(container)
-
   root.render(
-    <OptionalStrictMode>
+    <React.StrictMode>
       <SidebarApp />
-    </OptionalStrictMode>,
+    </React.StrictMode>,
   )
 }
 

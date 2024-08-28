@@ -6,13 +6,12 @@ import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
-import { setHasSubmittedHoldToSwap } from 'wallet/src/features/behaviorHistory/slice'
+import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { ValidatedSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { swapActions } from 'wallet/src/features/transactions/swap/swapSaga'
-import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/api/utils'
-import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import { toStringish } from 'wallet/src/utils/number'
 
 interface SwapCallbackArgs {
@@ -24,7 +23,6 @@ interface SwapCallbackArgs {
   onSubmit: () => void
   onFailure: () => void
   txId?: string
-  isHoldToSwap?: boolean
   isFiatInputMode?: boolean
 }
 
@@ -45,7 +43,6 @@ export function useSwapCallback(): (args: SwapCallbackArgs) => void {
         currencyInAmountUSD,
         currencyOutAmountUSD,
         isAutoSlippage,
-        isHoldToSwap,
         isFiatInputMode,
       } = args
       const { trade, gasFee } = swapTxContext
@@ -63,17 +60,11 @@ export function useSwapCallback(): (args: SwapCallbackArgs) => void {
         swap_quote_block_number: blockNumber,
         is_auto_slippage: isAutoSlippage,
         swap_flow_duration_milliseconds: swapStartTimestamp ? Date.now() - swapStartTimestamp : undefined,
-        is_hold_to_swap: isHoldToSwap,
         is_fiat_input_mode: isFiatInputMode,
       })
 
       // Reset swap start timestamp now that the swap has been submitted
       appDispatch(updateSwapStartTimestamp({ timestamp: undefined }))
-
-      // Mark hold to swap persisted user behavior
-      if (isHoldToSwap) {
-        appDispatch(setHasSubmittedHoldToSwap(true))
-      }
     },
     [appDispatch, formatter, swapStartTimestamp],
   )

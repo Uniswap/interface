@@ -1,6 +1,6 @@
 import { memo } from 'react'
 import { Flex, Text, UniversalImage, useIsDarkMode, useSporeColors } from 'ui/src'
-import { iconSizes, spacing, validColor } from 'ui/src/theme'
+import { iconSizes, validColor } from 'ui/src/theme'
 import { useLogolessColorScheme } from 'ui/src/utils/colors'
 import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -23,13 +23,14 @@ export const TokenLogo = memo(function _TokenLogo({
   chainId,
   size = iconSizes.icon40,
   hideNetworkLogo,
-  networkLogoBorderWidth = spacing.spacing2,
+  networkLogoBorderWidth = 1.5,
 }: TokenLogoProps): JSX.Element {
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
   const logolessColorScheme = useLogolessColorScheme(name ?? symbol ?? '')
 
   const showNetworkLogo = !hideNetworkLogo && chainId && chainId !== UniverseChainId.Mainnet
+  const networkLogoSize = Math.round(size * STATUS_RATIO)
 
   const { foreground, background } = isDarkMode ? logolessColorScheme.dark : logolessColorScheme.light
   const fallback = (
@@ -44,6 +45,13 @@ export const TokenLogo = memo(function _TokenLogo({
     >
       <Text
         adjustsFontSizeToFit
+        $platform-web={{
+          // adjustFontSizeToFit is a react-native-only prop
+          fontSize: 10,
+          whiteSpace: 'nowrap',
+          overflow: 'hidden',
+          textOverflow: 'clip',
+        }}
         allowFontScaling={false}
         color={validColor(foreground)}
         fontFamily="$button"
@@ -77,15 +85,8 @@ export const TokenLogo = memo(function _TokenLogo({
     <Flex alignItems="center" height={size} justifyContent="center" testID="token-logo" width={size}>
       {tokenImage}
       {showNetworkLogo && (
-        <Flex
-          borderColor="$surface1"
-          borderRadius={spacing.spacing8}
-          borderWidth={networkLogoBorderWidth}
-          bottom={-2}
-          position="absolute"
-          right={-3}
-        >
-          <NetworkLogo chainId={chainId} size={Math.round(size * STATUS_RATIO)} />
+        <Flex bottom={-2} position="absolute" right={-3}>
+          <NetworkLogo borderWidth={networkLogoBorderWidth} chainId={chainId} size={networkLogoSize} />
         </Flex>
       )}
     </Flex>

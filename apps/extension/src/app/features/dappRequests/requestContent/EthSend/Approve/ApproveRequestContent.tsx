@@ -14,10 +14,10 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { TransactionType, TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
 
 function useDappRequestTokenRecipientInfo(request: DappRequestBaseType, dappUrl: string): Maybe<CurrencyInfo> {

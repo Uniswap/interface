@@ -14,7 +14,7 @@ import {
 import { OrderDirection, getSupportedGraphQlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import styled from 'lib/styled-components'
-import { useMemo, useReducer, useState } from 'react'
+import { useMemo, useReducer, useRef, useState } from 'react'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
@@ -72,6 +72,7 @@ export function PoolDetailsTransactionsTable({
   const activeLocalCurrency = useActiveLocalCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
+  const filterAnchorRef = useRef<HTMLDivElement>(null)
   const [filter, setFilters] = useState<PoolTableTransactionType[]>([
     PoolTableTransactionType.BUY,
     PoolTableTransactionType.SELL,
@@ -97,7 +98,7 @@ export function PoolDetailsTransactionsTable({
           <Cell minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Timestamp]} justifyContent="flex-start">
             <Row gap="4px">
               <HeaderArrow direction={OrderDirection.Desc} />
-              <HeaderSortText $active>
+              <HeaderSortText active>
                 <Trans i18nKey="common.time" />
               </HeaderSortText>
             </Row>
@@ -150,13 +151,14 @@ export function PoolDetailsTransactionsTable({
           id: 'swap-type',
           header: () => (
             <Cell minWidth={PoolTransactionColumnWidth[PoolTransactionColumn.Type]} justifyContent="flex-start">
-              <FilterHeaderRow modalOpen={filterModalIsOpen} onClick={() => toggleFilterModal()}>
+              <FilterHeaderRow clickable={filterModalIsOpen} onPress={() => toggleFilterModal()} ref={filterAnchorRef}>
                 <Filter
                   allFilters={Object.values(PoolTableTransactionType)}
                   activeFilter={filter}
                   setFilters={setFilters}
                   isOpen={filterModalIsOpen}
                   toggleFilterModal={toggleFilterModal}
+                  anchorRef={filterAnchorRef}
                 />
                 <ThemedText.BodySecondary>
                   <Trans i18nKey="common.type.label" />

@@ -4,6 +4,8 @@ import 'utilities/src/logger/mocks'
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
 import { mockLocalizationContext } from 'wallet/src/test/mocks/utils'
+import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
+import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
 
 jest.mock('react-native-localize', () => mockRNLocalize)
 jest.mock('wallet/src/features/language/LocalizationContext', () => mockLocalizationContext)
@@ -39,6 +41,11 @@ jest.mock('ui/src/components/Unicon', () => {
   return jest.requireActual('ui/src/components/Unicon/index.web.tsx')
 })
 
+// Use native modal
+jest.mock('uniswap/src/components/modals/Modal', () => {
+  return jest.requireActual('uniswap/src/components/modals/Modal.native.tsx')
+})
+
 import crypto from "crypto"
 Object.defineProperty(global, "crypto", {
   value: {
@@ -50,3 +57,7 @@ Object.defineProperty(global, "crypto", {
 import { TextEncoder, TextDecoder } from 'util';
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
+
+jest.mock('uniswap/src/data/apiClients/SharedPersistQueryClientProvider', () => mockSharedPersistQueryClientProvider)
+
+mockUIAssets()

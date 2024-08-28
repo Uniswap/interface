@@ -5,33 +5,25 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit'
  * We use this to show conditional UI, usually only for the first time a user views a new feature.
  */
 export interface BehaviorHistoryState {
-  hasViewedReviewScreen: boolean // used for hold to swap tip on swap UI
-  hasSubmittedHoldToSwap: boolean
   hasSkippedUnitagPrompt: boolean
   hasCompletedUnitagsIntroModal: boolean
   hasViewedWelcomeWalletCard: boolean
   hasUsedExplore: boolean
+  backupReminderLastSeenTs?: number
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
-  hasViewedReviewScreen: false,
-  hasSubmittedHoldToSwap: false,
   hasSkippedUnitagPrompt: false,
   hasCompletedUnitagsIntroModal: false,
   hasViewedWelcomeWalletCard: false,
   hasUsedExplore: false,
+  backupReminderLastSeenTs: undefined,
 }
 
 const slice = createSlice({
   name: 'behaviorHistory',
   initialState: initialBehaviorHistoryState,
   reducers: {
-    setHasViewedReviewScreen: (state, action: PayloadAction<boolean>) => {
-      state.hasViewedReviewScreen = action.payload
-    },
-    setHasSubmittedHoldToSwap: (state, action: PayloadAction<boolean>) => {
-      state.hasSubmittedHoldToSwap = action.payload
-    },
     setHasSkippedUnitagPrompt: (state, action: PayloadAction<boolean>) => {
       state.hasSkippedUnitagPrompt = action.payload
     },
@@ -44,16 +36,18 @@ const slice = createSlice({
     setHasUsedExplore: (state, action: PayloadAction<boolean>) => {
       state.hasUsedExplore = action.payload
     },
+    setBackupReminderLastSeenTs: (state, action: PayloadAction<number | undefined>) => {
+      state.backupReminderLastSeenTs = action.payload
+    },
   },
 })
 
 export const {
-  setHasViewedReviewScreen,
-  setHasSubmittedHoldToSwap,
   setHasSkippedUnitagPrompt,
   setHasCompletedUnitagsIntroModal,
   setHasViewedWelcomeWalletCard,
   setHasUsedExplore,
+  setBackupReminderLastSeenTs,
 } = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

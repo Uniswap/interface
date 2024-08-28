@@ -18,6 +18,7 @@ type SupportedServerCurrency = Extract<
   | Currency.Idr
   | Currency.Inr
   | Currency.Jpy
+  | Currency.Krw
   | Currency.Ngn
   | Currency.Pkr
   | Currency.Rub
@@ -39,6 +40,7 @@ const mapServerCurrencyToFiatCurrency: Record<Currency, FiatCurrency | undefined
   [Currency.Idr]: FiatCurrency.IndonesianRupiah,
   [Currency.Inr]: FiatCurrency.IndianRupee,
   [Currency.Jpy]: FiatCurrency.JapaneseYen,
+  [Currency.Krw]: FiatCurrency.SouthKoreanWon,
   [Currency.Ngn]: FiatCurrency.NigerianNaira,
   [Currency.Pkr]: FiatCurrency.PakistaniRupee,
   [Currency.Rub]: FiatCurrency.RussianRuble,
@@ -62,6 +64,7 @@ const mapFiatCurrencyToServerCurrency: Record<FiatCurrency, SupportedServerCurre
   [FiatCurrency.IndonesianRupiah]: Currency.Idr,
   [FiatCurrency.IndianRupee]: Currency.Inr,
   [FiatCurrency.JapaneseYen]: Currency.Jpy,
+  [FiatCurrency.SouthKoreanWon]: Currency.Krw,
   [FiatCurrency.NigerianNaira]: Currency.Ngn,
   [FiatCurrency.PakistaniRupee]: Currency.Pkr,
   [FiatCurrency.RussianRuble]: Currency.Rub,

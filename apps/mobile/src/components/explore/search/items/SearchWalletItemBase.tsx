@@ -6,13 +6,12 @@ import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import { useToggleWatchedWalletCallback } from 'src/features/favorites/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { ImpactFeedbackStyle, TouchableArea } from 'ui/src'
+import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
-import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { SearchResultType, WalletSearchResult, extractDomain } from 'uniswap/src/features/search/SearchResult'
+import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
-import { WalletSearchResult, extractDomain } from 'wallet/src/features/search/SearchResult'
-import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 
 type SearchWalletItemBaseProps = {
   searchResult: WalletSearchResult

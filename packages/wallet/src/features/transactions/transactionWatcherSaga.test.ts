@@ -4,10 +4,6 @@ import * as matchers from 'redux-saga-test-plan/matchers'
 import { call, delay } from 'redux-saga/effects'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { sleep } from 'utilities/src/time/timing'
-import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
-import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import {
   addTransaction,
   cancelTransaction,
@@ -15,7 +11,18 @@ import {
   forceFetchFiatOnRampTransactions,
   transactionActions,
   updateTransaction,
-} from 'wallet/src/features/transactions/slice'
+} from 'uniswap/src/features/transactions/slice'
+import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  approveTransactionInfo,
+  fiatPurchaseTransactionInfo,
+  getTxFixtures,
+  transactionDetails,
+} from 'uniswap/src/test/fixtures'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { sleep } from 'utilities/src/time/timing'
+import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
+import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
 import {
   deleteTransaction,
   transactionWatcher,
@@ -23,14 +30,7 @@ import {
   watchFiatOnRampTransaction,
   watchTransaction,
 } from 'wallet/src/features/transactions/transactionWatcherSaga'
-import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
-import {
-  approveTransactionInfo,
-  fiatPurchaseTransactionInfo,
-  getTxFixtures,
-  transactionDetails,
-} from 'wallet/src/test/fixtures'
 import { getTxProvidersMocks, mockApolloClient } from 'wallet/src/test/mocks'
 
 const {

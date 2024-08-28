@@ -1,16 +1,16 @@
-import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { CurrencyTransferContent } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransferTransactionDetails'
-import { useFormattedCurrencyAmountAndUSDValue } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
+import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   OnRampPurchaseInfo,
   OnRampTransferInfo,
   TransactionDetails,
   TransactionType,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { CurrencyTransferContent } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransferTransactionDetails'
+import { useFormattedCurrencyAmountAndUSDValue } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
-import { ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 export function OnRampTransactionDetails({
   transactionDetails,

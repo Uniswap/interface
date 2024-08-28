@@ -6,7 +6,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 
-export function SwapProtectionInfoModal({ onClose }: { onClose: () => void }): JSX.Element {
+export function SwapProtectionInfoModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }): JSX.Element {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
@@ -16,6 +16,7 @@ export function SwapProtectionInfoModal({ onClose }: { onClose: () => void }): J
       caption={t('swap.settings.protection.description')}
       closeText={t('common.button.close')}
       icon={<ShieldCheck color="$statusSuccess" size="$icon.24" />}
+      isOpen={isOpen}
       modalName={ModalName.SwapProtection}
       title={t('swap.settings.protection.title')}
       onClose={onClose}

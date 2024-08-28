@@ -5,15 +5,15 @@ import { Eye } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { PaginatedModalRenderer } from 'uniswap/src/components/modals/PaginatedModals'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 import { NewAddressWarningModal } from 'wallet/src/components/RecipientSearch/modals/NewAddressWarningModal'
 import { ConditionalModalRenderer, SpeedBumps } from 'wallet/src/components/modals/SpeedBumps'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useIsErc20Contract } from 'wallet/src/features/contracts/hooks'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { useAllTransactionsBetweenAddresses } from 'wallet/src/features/transactions/hooks/useAllTransactionsBetweenAddresses'
-import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
+import { useIsSmartContractAddress } from 'wallet/src/features/transactions/send/hooks/useIsSmartContractAddress'
 import {
   useActiveAccountAddressWithThrow,
   useSignerAccounts,
@@ -49,6 +49,7 @@ export function RecipientSelectSpeedBumps({
   const renderViewOnlyWarning = useCallback<PaginatedModalRenderer>(
     (props) => (
       <WarningModal
+        isOpen
         backgroundIconColor={colors.surface2.val}
         caption={t('send.recipient.warning.viewOnly.message')}
         closeText={t('common.button.goBack')}
@@ -71,6 +72,7 @@ export function RecipientSelectSpeedBumps({
   const renderSelfSendWarning = useCallback<PaginatedModalRenderer>(
     (props) => (
       <WarningModal
+        isOpen
         caption={t('send.warning.self.message')}
         closeText={t('common.button.cancel')}
         confirmText={t('common.button.understand')}
@@ -86,6 +88,7 @@ export function RecipientSelectSpeedBumps({
   const renderErc20Warning = useCallback<PaginatedModalRenderer>(
     (props) => (
       <WarningModal
+        isOpen
         caption={t('send.warning.erc20.message')}
         closeText={t('common.button.cancel')}
         confirmText={t('common.button.understand')}
@@ -101,6 +104,7 @@ export function RecipientSelectSpeedBumps({
   const renderSmartContractWarning = useCallback<PaginatedModalRenderer>(
     (props) => (
       <WarningModal
+        isOpen
         caption={t('send.warning.smartContract.message')}
         closeText={t('common.button.cancel')}
         confirmText={t('common.button.understand')}

@@ -3,8 +3,8 @@ import { expectSaga } from 'redux-saga-test-plan'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { handleOnRampReturnLink } from 'src/features/deepLinking/handleOnRampReturnLinkSaga'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
+import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { forceFetchFiatOnRampTransactions } from 'wallet/src/features/transactions/slice'
 import { dismissInAppBrowser } from 'wallet/src/utils/linking'
 
 describe(handleOnRampReturnLink, () => {

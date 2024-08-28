@@ -15,6 +15,8 @@ import {
   useTokenBalancesGroupedByVisibility,
 } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { FavoritesState, initialFavoritesState } from 'uniswap/src/features/favorites/slice'
+import { UserSettingsState, initialUserSettingsState } from 'uniswap/src/features/settings/slice'
 import {
   ARBITRUM_CURRENCY,
   BASE_CURRENCY,
@@ -24,8 +26,7 @@ import {
   currencyInfo,
 } from 'uniswap/src/test/fixtures'
 import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
-import { FavoritesState, initialFavoritesState } from 'wallet/src/features/favorites/slice'
-import { WalletSliceState, initialWalletState } from 'wallet/src/features/wallet/slice'
+import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import {
   ACCOUNT,
   ACCOUNT2,
@@ -62,12 +63,9 @@ describe(usePortfolioValueModifiers, () => {
     includeSpamTokens: false,
   }
 
-  const mockWalletState = (overrideSettings?: Partial<WalletSliceState['settings']>): WalletSliceState => ({
-    ...initialWalletState,
-    settings: {
-      ...initialWalletState.settings,
-      ...overrideSettings,
-    },
+  const mockUserSettingsState = (overrideSettings?: Partial<UserSettingsState>): UserSettingsState => ({
+    ...initialUserSettingsState,
+    ...overrideSettings,
   })
 
   const mockFavoritesState = (overrideTokensVisibility?: FavoritesState['tokensVisibility']): FavoritesState => ({
@@ -102,7 +100,7 @@ describe(usePortfolioValueModifiers, () => {
   describe('includeSmallBalances', () => {
     it('returns modifiers with includeSmallBalances set to true if hideSmallBalances settings is false', () => {
       const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
-        preloadedState: { wallet: mockWalletState({ hideSmallBalances: false }) },
+        preloadedState: { userSettings: mockUserSettingsState({ hideSmallBalances: false }) },
       })
 
       expect(result.current).toEqual([
@@ -113,7 +111,7 @@ describe(usePortfolioValueModifiers, () => {
 
     it('returns modifiers with includeSmallBalances set to false if hideSmallBalances settings is true', () => {
       const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
-        preloadedState: { wallet: mockWalletState({ hideSmallBalances: true }) },
+        preloadedState: { userSettings: mockUserSettingsState({ hideSmallBalances: true }) },
       })
 
       expect(result.current).toEqual([
@@ -126,7 +124,7 @@ describe(usePortfolioValueModifiers, () => {
   describe('includeSpamTokens', () => {
     it('returns modifiers with includeSpamTokens set to true if hideSpamTokens settings is false', () => {
       const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
-        preloadedState: { wallet: mockWalletState({ hideSpamTokens: false }) },
+        preloadedState: { userSettings: mockUserSettingsState({ hideSpamTokens: false }) },
       })
 
       expect(result.current).toEqual([
@@ -137,7 +135,7 @@ describe(usePortfolioValueModifiers, () => {
 
     it('returns modifiers with includeSpamTokens set to false if hideSpamTokens settings is true', () => {
       const { result } = renderHook(() => usePortfolioValueModifiers([SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2]), {
-        preloadedState: { wallet: mockWalletState({ hideSpamTokens: true }) },
+        preloadedState: { userSettings: mockUserSettingsState({ hideSpamTokens: true }) },
       })
 
       expect(result.current).toEqual([

@@ -1,10 +1,12 @@
-import { ApolloClient, from } from '@apollo/client'
+import { ApolloClient, ApolloLink, from } from '@apollo/client'
 import { RetryLink } from '@apollo/client/link/retry'
 import { RestLink } from 'apollo-link-rest'
 import { config } from 'uniswap/src/config'
 import { createNewInMemoryCache } from 'uniswap/src/data/cache'
 import { useRestQuery } from 'uniswap/src/data/rest'
 import { GqlResult } from 'uniswap/src/data/types'
+import { getDatadogApolloLink } from 'utilities/src/logger/datadogLink'
+import { isMobileApp } from 'utilities/src/platform'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 const restLink = new RestLink({
@@ -16,8 +18,13 @@ const restLink = new RestLink({
 
 const retryLink = new RetryLink()
 
+const linkList: ApolloLink[] = [retryLink, restLink]
+if (isMobileApp) {
+  linkList.push(getDatadogApolloLink())
+}
+
 const apolloClient = new ApolloClient({
-  link: from([retryLink, restLink]),
+  link: from(linkList),
   cache: createNewInMemoryCache(),
   defaultOptions: {
     watchQuery: {

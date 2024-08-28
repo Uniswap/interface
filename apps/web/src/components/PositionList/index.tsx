@@ -3,7 +3,7 @@ import styled from 'lib/styled-components'
 import React from 'react'
 import { MEDIA_WIDTHS } from 'theme'
 import { PositionDetails } from 'types/position'
-import { Trans } from 'uniswap/src/i18n'
+import { useTranslation } from 'uniswap/src/i18n'
 
 const DesktopHeader = styled.div`
   display: none;
@@ -70,11 +70,12 @@ export default function PositionList({
   setUserHideClosedPositions,
   userHideClosedPositions,
 }: PositionListProps) {
+  const { t } = useTranslation()
   return (
     <>
       <DesktopHeader>
         <div>
-          <Trans i18nKey="pool.position" />
+          {t('pool.positions.title')}
           {positions && ' (' + positions.length + ')'}
         </div>
 
@@ -84,18 +85,18 @@ export default function PositionList({
             setUserHideClosedPositions(!userHideClosedPositions)
           }}
         >
-          {userHideClosedPositions ? <Trans i18nKey="pool.showClosed" /> : <Trans i18nKey="pool.hideClosed" />}
+          {userHideClosedPositions ? t('pool.showClosed') : t('pool.hideClosed')}
         </ToggleLabel>
       </DesktopHeader>
       <MobileHeader>
-        <Trans i18nKey="pool.position" />
+        {t('pool.positions.title')}
         <ToggleWrap>
           <ToggleLabel
             onClick={() => {
               setUserHideClosedPositions(!userHideClosedPositions)
             }}
           >
-            {userHideClosedPositions ? <Trans i18nKey="pool.showClosed" /> : <Trans i18nKey="pool.hideClosed" />}
+            {userHideClosedPositions ? t('pool.showClosed') : t('pool.hideClosed')}
           </ToggleLabel>
         </ToggleWrap>
       </MobileHeader>

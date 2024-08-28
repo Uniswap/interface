@@ -132,8 +132,8 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
   >
     <RNSVGSvgView
       align="xMidYMid"
-      bbHeight="20"
-      bbWidth="20"
+      bbHeight={20}
+      bbWidth={20}
       fill="currentColor"
       focusable={false}
       meetOrSlice={0}
@@ -184,7 +184,7 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
           }
         }
         strokeLinecap={1}
-        strokeWidth="1"
+        strokeWidth={1}
       >
         <RNSVGPath
           d="M9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"

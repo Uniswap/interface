@@ -3,25 +3,26 @@ import { TradeType } from '@uniswap/sdk-core'
 import axios from 'axios'
 import { testSaga } from 'redux-saga-test-plan'
 import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TRADING_API_HEADERS } from 'uniswap/src/data/tradingApi/client'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { addTransaction, finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
+import {
+  QueuedOrderStatus,
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+  UniswapXOrderDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { addTransaction, finalizeTransaction, updateTransaction } from 'wallet/src/features/transactions/slice'
 import {
   ORDER_ENDPOINT,
   ORDER_STALENESS_THRESHOLD,
   SubmitUniswapXOrderParams,
   submitUniswapXOrder,
 } from 'wallet/src/features/transactions/swap/submitOrderSaga'
-import { TRADING_API_HEADERS } from 'wallet/src/features/transactions/swap/trade/api/client'
-import {
-  QueuedOrderStatus,
-  TransactionStatus,
-  TransactionType,
-  UniswapXOrderDetails,
-} from 'wallet/src/features/transactions/types'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const baseSubmitOrderParams = {
@@ -37,7 +38,9 @@ const baseSubmitOrderParams = {
     minimumOutputCurrencyAmountRaw: '300000',
     protocol: Protocol.V3,
   },
-  analytics: {},
+  analytics: {
+    transactionOriginType: TransactionOriginType.Internal,
+  },
   txId: '1',
   orderParams: { quote: { orderId: '0xMockOrderHash' } } as unknown as OrderRequest,
   onSubmit: jest.fn(),
@@ -54,6 +57,7 @@ const baseExpectedInitialOrderDetails: UniswapXOrderDetails = {
   addedTime: 1,
   status: TransactionStatus.Pending,
   queueStatus: QueuedOrderStatus.Waiting,
+  transactionOriginType: TransactionOriginType.Internal,
 }
 
 describe(submitUniswapXOrder, () => {
@@ -80,6 +84,7 @@ describe(submitUniswapXOrder, () => {
       .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
         routing: Routing.DUTCH_V2,
         order_hash: baseExpectedInitialOrderDetails.orderHash,
+        transactionOriginType: TransactionOriginType.Internal,
       })
       .next()
       .call(baseSubmitOrderParams.onSubmit)
@@ -141,6 +146,7 @@ describe(submitUniswapXOrder, () => {
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
           routing: Routing.DUTCH_V2,
           order_hash: baseExpectedInitialOrderDetails.orderHash,
+          transactionOriginType: TransactionOriginType.Internal,
         })
         .next()
         .call(baseSubmitOrderParams.onSubmit)
@@ -170,6 +176,7 @@ describe(submitUniswapXOrder, () => {
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
           routing: Routing.DUTCH_V2,
           order_hash: baseExpectedInitialOrderDetails.orderHash,
+          transactionOriginType: TransactionOriginType.Internal,
         })
         .next()
         .call(baseSubmitOrderParams.onSubmit)
@@ -199,6 +206,7 @@ describe(submitUniswapXOrder, () => {
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
           routing: Routing.DUTCH_V2,
           order_hash: baseExpectedInitialOrderDetails.orderHash,
+          transactionOriginType: TransactionOriginType.Internal,
         })
         .next()
         .call(baseSubmitOrderParams.onSubmit)

@@ -4,7 +4,7 @@ import { useDispatch } from 'react-redux'
 import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'utilities/src/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
@@ -13,11 +13,12 @@ import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type EditLabelModalProps = {
+  isOpen: boolean
   address: Address
   onClose: () => void
 }
 
-export function EditLabelModal({ address, onClose }: EditLabelModalProps): JSX.Element {
+export function EditLabelModal({ isOpen, address, onClose }: EditLabelModalProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
 
@@ -39,7 +40,7 @@ export function EditLabelModal({ address, onClose }: EditLabelModalProps): JSX.E
   }, [address, dispatch, inputText, onClose])
 
   return (
-    <BottomSheetModal name={ModalName.AccountEditLabel} onClose={onClose}>
+    <Modal isModalOpen={isOpen} name={ModalName.AccountEditLabel} onClose={onClose}>
       <Flex centered fill borderRadius="$rounded16" gap="$spacing24" mt="$spacing16">
         <Flex centered gap="$spacing12" width="100%">
           <AccountIcon address={address} size={iconSizes.icon48} />
@@ -69,6 +70,6 @@ export function EditLabelModal({ address, onClose }: EditLabelModalProps): JSX.E
           </Button>
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

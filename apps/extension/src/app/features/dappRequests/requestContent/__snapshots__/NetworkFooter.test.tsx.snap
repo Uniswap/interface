@@ -34,9 +34,8 @@ exports[`NetworksFooter renders without error 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="network-logo"
-                      style="border-radius: 6px; overflow: hidden;"
                     >
                       <div
                         class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -44,6 +43,13 @@ exports[`NetworksFooter renders without error 1`] = `
                       >
                         <div
                           class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                          style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+                        />
+                        <img
+                          alt=""
+                          class="css-accessibilityImage-9pa8cd"
+                          draggable="false"
+                          src="mock-asset-ETHEREUM_LOGO.png"
                         />
                       </div>
                     </div>
@@ -52,9 +58,8 @@ exports[`NetworksFooter renders without error 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="network-logo"
-                      style="border-radius: 6px; overflow: hidden;"
                     >
                       <div
                         class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -62,6 +67,13 @@ exports[`NetworksFooter renders without error 1`] = `
                       >
                         <div
                           class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                          style="background-image: url(mock-asset-POLYGON_LOGO.png);"
+                        />
+                        <img
+                          alt=""
+                          class="css-accessibilityImage-9pa8cd"
+                          draggable="false"
+                          src="mock-asset-POLYGON_LOGO.png"
                         />
                       </div>
                     </div>
@@ -70,9 +82,8 @@ exports[`NetworksFooter renders without error 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="network-logo"
-                      style="border-radius: 6px; overflow: hidden;"
                     >
                       <div
                         class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -80,6 +91,13 @@ exports[`NetworksFooter renders without error 1`] = `
                       >
                         <div
                           class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                          style="background-image: url(mock-asset-ARBITRUM_LOGO.png);"
+                        />
+                        <img
+                          alt=""
+                          class="css-accessibilityImage-9pa8cd"
+                          draggable="false"
+                          src="mock-asset-ARBITRUM_LOGO.png"
                         />
                       </div>
                     </div>
@@ -88,9 +106,8 @@ exports[`NetworksFooter renders without error 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="network-logo"
-                      style="border-radius: 6px; overflow: hidden;"
                     >
                       <div
                         class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -98,6 +115,13 @@ exports[`NetworksFooter renders without error 1`] = `
                       >
                         <div
                           class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                          style="background-image: url(mock-asset-OPTIMISM_LOGO.png);"
+                        />
+                        <img
+                          alt=""
+                          class="css-accessibilityImage-9pa8cd"
+                          draggable="false"
+                          src="mock-asset-OPTIMISM_LOGO.png"
                         />
                       </div>
                     </div>
@@ -106,9 +130,8 @@ exports[`NetworksFooter renders without error 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="network-logo"
-                      style="border-radius: 6px; overflow: hidden;"
                     >
                       <div
                         class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -116,6 +139,13 @@ exports[`NetworksFooter renders without error 1`] = `
                       >
                         <div
                           class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                          style="background-image: url(mock-asset-BASE_LOGO.png);"
+                        />
+                        <img
+                          alt=""
+                          class="css-accessibilityImage-9pa8cd"
+                          draggable="false"
+                          src="mock-asset-BASE_LOGO.png"
                         />
                       </div>
                     </div>
@@ -124,9 +154,8 @@ exports[`NetworksFooter renders without error 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="network-logo"
-                      style="border-radius: 6px; overflow: hidden;"
                     >
                       <div
                         class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -134,6 +163,13 @@ exports[`NetworksFooter renders without error 1`] = `
                       >
                         <div
                           class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                          style="background-image: url(mock-asset-BNB_LOGO.png);"
+                        />
+                        <img
+                          alt=""
+                          class="css-accessibilityImage-9pa8cd"
+                          draggable="false"
+                          src="mock-asset-BNB_LOGO.png"
                         />
                       </div>
                     </div>
@@ -142,9 +178,8 @@ exports[`NetworksFooter renders without error 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="network-logo"
-                      style="border-radius: 6px; overflow: hidden;"
                     >
                       <div
                         class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -152,6 +187,13 @@ exports[`NetworksFooter renders without error 1`] = `
                       >
                         <div
                           class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                          style="background-image: url(mock-asset-BLAST_LOGO.png);"
+                        />
+                        <img
+                          alt=""
+                          class="css-accessibilityImage-9pa8cd"
+                          draggable="false"
+                          src="mock-asset-BLAST_LOGO.png"
                         />
                       </div>
                     </div>
@@ -160,9 +202,8 @@ exports[`NetworksFooter renders without error 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="network-logo"
-                      style="border-radius: 6px; overflow: hidden;"
                     >
                       <div
                         class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -170,6 +211,13 @@ exports[`NetworksFooter renders without error 1`] = `
                       >
                         <div
                           class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                          style="background-image: url(mock-asset-AVALANCHE_LOGO.png);"
+                        />
+                        <img
+                          alt=""
+                          class="css-accessibilityImage-9pa8cd"
+                          draggable="false"
+                          src="mock-asset-AVALANCHE_LOGO.png"
                         />
                       </div>
                     </div>
@@ -178,9 +226,8 @@ exports[`NetworksFooter renders without error 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="network-logo"
-                      style="border-radius: 6px; overflow: hidden;"
                     >
                       <div
                         class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -188,6 +235,13 @@ exports[`NetworksFooter renders without error 1`] = `
                       >
                         <div
                           class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                          style="background-image: url(mock-asset-CELO_LOGO.png);"
+                        />
+                        <img
+                          alt=""
+                          class="css-accessibilityImage-9pa8cd"
+                          draggable="false"
+                          src="mock-asset-CELO_LOGO.png"
                         />
                       </div>
                     </div>
@@ -196,9 +250,8 @@ exports[`NetworksFooter renders without error 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="network-logo"
-                      style="border-radius: 6px; overflow: hidden;"
                     >
                       <div
                         class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -206,6 +259,13 @@ exports[`NetworksFooter renders without error 1`] = `
                       >
                         <div
                           class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                          style="background-image: url(mock-asset-ZORA_LOGO.png);"
+                        />
+                        <img
+                          alt=""
+                          class="css-accessibilityImage-9pa8cd"
+                          draggable="false"
+                          src="mock-asset-ZORA_LOGO.png"
                         />
                       </div>
                     </div>
@@ -214,9 +274,8 @@ exports[`NetworksFooter renders without error 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                   >
                     <div
-                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                       data-testid="network-logo"
-                      style="border-radius: 6px; overflow: hidden;"
                     >
                       <div
                         class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -224,6 +283,13 @@ exports[`NetworksFooter renders without error 1`] = `
                       >
                         <div
                           class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                          style="background-image: url(mock-asset-ZKSYNC_LOGO.png);"
+                        />
+                        <img
+                          alt=""
+                          class="css-accessibilityImage-9pa8cd"
+                          draggable="false"
+                          src="mock-asset-ZKSYNC_LOGO.png"
                         />
                       </div>
                     </div>
@@ -266,9 +332,8 @@ exports[`NetworksFooter renders without error 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="network-logo"
-                    style="border-radius: 6px; overflow: hidden;"
                   >
                     <div
                       class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -276,6 +341,13 @@ exports[`NetworksFooter renders without error 1`] = `
                     >
                       <div
                         class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                        style="background-image: url(mock-asset-ETHEREUM_LOGO.png);"
+                      />
+                      <img
+                        alt=""
+                        class="css-accessibilityImage-9pa8cd"
+                        draggable="false"
+                        src="mock-asset-ETHEREUM_LOGO.png"
                       />
                     </div>
                   </div>
@@ -284,9 +356,8 @@ exports[`NetworksFooter renders without error 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="network-logo"
-                    style="border-radius: 6px; overflow: hidden;"
                   >
                     <div
                       class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -294,6 +365,13 @@ exports[`NetworksFooter renders without error 1`] = `
                     >
                       <div
                         class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                        style="background-image: url(mock-asset-POLYGON_LOGO.png);"
+                      />
+                      <img
+                        alt=""
+                        class="css-accessibilityImage-9pa8cd"
+                        draggable="false"
+                        src="mock-asset-POLYGON_LOGO.png"
                       />
                     </div>
                   </div>
@@ -302,9 +380,8 @@ exports[`NetworksFooter renders without error 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="network-logo"
-                    style="border-radius: 6px; overflow: hidden;"
                   >
                     <div
                       class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -312,6 +389,13 @@ exports[`NetworksFooter renders without error 1`] = `
                     >
                       <div
                         class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                        style="background-image: url(mock-asset-ARBITRUM_LOGO.png);"
+                      />
+                      <img
+                        alt=""
+                        class="css-accessibilityImage-9pa8cd"
+                        draggable="false"
+                        src="mock-asset-ARBITRUM_LOGO.png"
                       />
                     </div>
                   </div>
@@ -320,9 +404,8 @@ exports[`NetworksFooter renders without error 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="network-logo"
-                    style="border-radius: 6px; overflow: hidden;"
                   >
                     <div
                       class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -330,6 +413,13 @@ exports[`NetworksFooter renders without error 1`] = `
                     >
                       <div
                         class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                        style="background-image: url(mock-asset-OPTIMISM_LOGO.png);"
+                      />
+                      <img
+                        alt=""
+                        class="css-accessibilityImage-9pa8cd"
+                        draggable="false"
+                        src="mock-asset-OPTIMISM_LOGO.png"
                       />
                     </div>
                   </div>
@@ -338,9 +428,8 @@ exports[`NetworksFooter renders without error 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="network-logo"
-                    style="border-radius: 6px; overflow: hidden;"
                   >
                     <div
                       class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -348,6 +437,13 @@ exports[`NetworksFooter renders without error 1`] = `
                     >
                       <div
                         class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                        style="background-image: url(mock-asset-BASE_LOGO.png);"
+                      />
+                      <img
+                        alt=""
+                        class="css-accessibilityImage-9pa8cd"
+                        draggable="false"
+                        src="mock-asset-BASE_LOGO.png"
                       />
                     </div>
                   </div>
@@ -356,9 +452,8 @@ exports[`NetworksFooter renders without error 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="network-logo"
-                    style="border-radius: 6px; overflow: hidden;"
                   >
                     <div
                       class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -366,6 +461,13 @@ exports[`NetworksFooter renders without error 1`] = `
                     >
                       <div
                         class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                        style="background-image: url(mock-asset-BNB_LOGO.png);"
+                      />
+                      <img
+                        alt=""
+                        class="css-accessibilityImage-9pa8cd"
+                        draggable="false"
+                        src="mock-asset-BNB_LOGO.png"
                       />
                     </div>
                   </div>
@@ -374,9 +476,8 @@ exports[`NetworksFooter renders without error 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="network-logo"
-                    style="border-radius: 6px; overflow: hidden;"
                   >
                     <div
                       class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -384,6 +485,13 @@ exports[`NetworksFooter renders without error 1`] = `
                     >
                       <div
                         class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                        style="background-image: url(mock-asset-BLAST_LOGO.png);"
+                      />
+                      <img
+                        alt=""
+                        class="css-accessibilityImage-9pa8cd"
+                        draggable="false"
+                        src="mock-asset-BLAST_LOGO.png"
                       />
                     </div>
                   </div>
@@ -392,9 +500,8 @@ exports[`NetworksFooter renders without error 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="network-logo"
-                    style="border-radius: 6px; overflow: hidden;"
                   >
                     <div
                       class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -402,6 +509,13 @@ exports[`NetworksFooter renders without error 1`] = `
                     >
                       <div
                         class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                        style="background-image: url(mock-asset-AVALANCHE_LOGO.png);"
+                      />
+                      <img
+                        alt=""
+                        class="css-accessibilityImage-9pa8cd"
+                        draggable="false"
+                        src="mock-asset-AVALANCHE_LOGO.png"
                       />
                     </div>
                   </div>
@@ -410,9 +524,8 @@ exports[`NetworksFooter renders without error 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="network-logo"
-                    style="border-radius: 6px; overflow: hidden;"
                   >
                     <div
                       class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -420,6 +533,13 @@ exports[`NetworksFooter renders without error 1`] = `
                     >
                       <div
                         class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                        style="background-image: url(mock-asset-CELO_LOGO.png);"
+                      />
+                      <img
+                        alt=""
+                        class="css-accessibilityImage-9pa8cd"
+                        draggable="false"
+                        src="mock-asset-CELO_LOGO.png"
                       />
                     </div>
                   </div>
@@ -428,9 +548,8 @@ exports[`NetworksFooter renders without error 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="network-logo"
-                    style="border-radius: 6px; overflow: hidden;"
                   >
                     <div
                       class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -438,6 +557,13 @@ exports[`NetworksFooter renders without error 1`] = `
                     >
                       <div
                         class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                        style="background-image: url(mock-asset-ZORA_LOGO.png);"
+                      />
+                      <img
+                        alt=""
+                        class="css-accessibilityImage-9pa8cd"
+                        draggable="false"
+                        src="mock-asset-ZORA_LOGO.png"
                       />
                     </div>
                   </div>
@@ -446,9 +572,8 @@ exports[`NetworksFooter renders without error 1`] = `
                   class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007293 _borderRightColor-568007293 _borderBottomColor-568007293 _borderLeftColor-568007293 _borderTopLeftRadius-8px _borderTopRightRadius-8px _borderBottomRightRadius-8px _borderBottomLeftRadius-8px _borderTopWidth-2px _borderRightWidth-2px _borderBottomWidth-2px _borderLeftWidth-2px _ml--8px _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _borderTopColor-568007324 _borderRightColor-568007324 _borderBottomColor-568007324 _borderLeftColor-568007324 _borderTopLeftRadius-4d0t8px46 _borderTopRightRadius-4d0t8px46 _borderBottomRightRadius-4d0t8px46 _borderBottomLeftRadius-4d0t8px46 _borderTopWidth-0px _borderRightWidth-0px _borderBottomWidth-0px _borderLeftWidth-0px _overflowX-hidden _overflowY-hidden _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
                     data-testid="network-logo"
-                    style="border-radius: 6px; overflow: hidden;"
                   >
                     <div
                       class="css-view-175oi2r r-flexBasis-1mlwlqe r-overflow-1udh08x r-zIndex-417010"
@@ -456,6 +581,13 @@ exports[`NetworksFooter renders without error 1`] = `
                     >
                       <div
                         class="css-view-175oi2r r-backgroundColor-1niwhzg r-backgroundPosition-vvn4in r-backgroundRepeat-u6sd8q r-bottom-1p0dtai r-height-1pi2tsx r-left-1d2f490 r-position-u8s1d r-right-zchlnj r-top-ipm5af r-width-13qz1uu r-zIndex-1wyyakw r-backgroundSize-ehq7j7"
+                        style="background-image: url(mock-asset-ZKSYNC_LOGO.png);"
+                      />
+                      <img
+                        alt=""
+                        class="css-accessibilityImage-9pa8cd"
+                        draggable="false"
+                        src="mock-asset-ZKSYNC_LOGO.png"
                       />
                     </div>
                   </div>

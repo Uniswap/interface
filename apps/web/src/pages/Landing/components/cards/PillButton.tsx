@@ -1,98 +1,69 @@
-import { motion, MotionProps } from 'framer-motion'
-import styled from 'lib/styled-components'
-import { Box } from 'pages/Landing/components/Generics'
 import { ArrowRight } from 'pages/Landing/components/Icons'
-
-const Button = styled(motion.button)<{ cursor?: string }>`
-  display: flex;
-  padding: 12px 16px;
-  border-radius: 24px;
-  gap: 8px;
-  align-items: center;
-  justify-content: center;
-  border: 0;
-  background-color: ${({ theme }) => theme.surface1};
-  overflow: hidden;
-  cursor: ${({ cursor }) => cursor ?? 'pointer'};
-  flex: none;
-`
-const Slider = styled(motion.div)`
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-`
-const Label = styled.span`
-  color: ${(props) => props.color};
-  font-family: Basel;
-  font-size: 20px;
-  @media (max-width: 1024px) {
-    font-size: 18px;
-  }
-  font-style: normal;
-  font-weight: 535;
-  line-height: 24px; /* 120% */
-  flex: none;
-`
-type OpacityProps = {
-  opacity: number
-}
-const Opacity = styled(motion.div)<OpacityProps & MotionProps>`
-  flex: 0;
-  display: flex;
-  overflow: visible;
-  opacity: ${(props) => props.opacity};
-`
+import { Flex, Text } from 'ui/src'
 
 type PillButtonProps = {
   label: string
   icon: React.ReactNode
   color?: string
-  cursor?: string
+  cursor?: 'pointer' | 'default'
   onClick?: () => void
 }
 
-export function PillButton(props: PillButtonProps) {
-  const variants = {
-    intial: {
-      x: 0,
-    },
-    hover: {
-      x: -24,
-    },
-  }
-  const icnVars = {
-    intial: {
-      opacity: 1,
-    },
-    hover: {
-      opacity: 0,
-    },
-  }
-
-  const arrowVars = {
-    intial: {
-      opacity: 0,
-    },
-    hover: {
-      opacity: 1,
-    },
-  }
-
+export function PillButton({ label, icon, color, onClick, cursor }: PillButtonProps) {
   return (
-    <Button transition={{ delayChildren: 0 }} cursor={props.cursor}>
-      <Slider variants={variants}>
-        <Opacity opacity={1} variants={icnVars}>
-          {props.icon}
-        </Opacity>
-        <Label color={props.color}>{props.label}</Label>
-        <Opacity opacity={0} variants={arrowVars}>
-          <Box width="0px" overflow="visible">
-            <ArrowRight size="24px" fill={props.color} />
-          </Box>
-        </Opacity>
-      </Slider>
-    </Button>
+    <Flex
+      px="$spacing16"
+      py="$spacing12"
+      borderRadius="$rounded24"
+      gap="$gap8"
+      centered
+      cursor={cursor}
+      borderWidth={0}
+      backgroundColor="$surface1"
+      overflow="hidden"
+      onPress={onClick}
+      userSelect="none"
+    >
+      <Flex
+        animation="quick"
+        row
+        centered
+        gap="$gap8"
+        $group-card-hover={{
+          x: -24,
+        }}
+        hoverStyle={{
+          x: -24,
+        }}
+      >
+        <Flex animation="quick" opacity={1} $group-card-hover={{ opacity: 0 }}>
+          {icon}
+        </Flex>
+        <Text
+          fontSize={20}
+          lineHeight={24}
+          fontWeight="$medium"
+          color={color}
+          $xl={{
+            fontSize: 18,
+          }}
+        >
+          {label}
+        </Text>
+        <Flex
+          animation="bouncy"
+          opacity={0}
+          width={24}
+          mr={-24}
+          $group-card-hover={{
+            opacity: 1,
+          }}
+        >
+          <Flex overflow="visible">
+            <ArrowRight size="24" fill={color} />
+          </Flex>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }

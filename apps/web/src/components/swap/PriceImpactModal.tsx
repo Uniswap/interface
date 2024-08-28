@@ -1,9 +1,8 @@
 import { Percent } from '@uniswap/sdk-core'
 import Modal from 'components/Modal'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
-import { useTheme } from 'lib/styled-components'
 import { Button, Flex, Text } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons'
+import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
 import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -14,7 +13,6 @@ interface PriceImpactModalProps {
 }
 
 export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }: PriceImpactModalProps) {
-  const theme = useTheme()
   const { formatPercent } = useFormatter()
   const impact = `${formatPercent(priceImpact)}`
 
@@ -23,7 +21,7 @@ export default function PriceImpactModal({ priceImpact, onDismiss, onContinue }:
       <Flex width="100%" px="$spacing24" py="$spacing16" rowGap="$spacing24" backgroundColor="$surface1">
         <GetHelpHeader closeModal={onDismiss} />
         <Flex rowGap="$spacing16" alignItems="center">
-          <Flex width="min-content" p="$spacing12" borderRadius="$rounded12" backgroundColor={theme.critical2}>
+          <Flex width="min-content" p="$spacing12" borderRadius="$rounded12" backgroundColor="$statusCritical2">
             <AlertTriangle color="$statusCritical" size="$icon.28" />
           </Flex>
           <Flex alignItems="center" rowGap="$spacing8">

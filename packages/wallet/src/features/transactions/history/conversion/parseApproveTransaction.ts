@@ -4,7 +4,7 @@ import {
   TransactionDetailsType,
   TransactionListQueryResponse,
   TransactionType,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export default function parseApproveTransaction(
   transaction: NonNullable<TransactionListQueryResponse>,

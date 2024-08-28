@@ -5,9 +5,9 @@ import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { apolloClient } from 'graphql/data/apollo/client'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
 import {
-  SimpleTokenDocument,
-  SimpleTokenQuery,
   Token,
+  TokenDocument,
+  TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isSameAddress } from 'utilities/src/addresses'
 
@@ -26,8 +26,8 @@ export async function getCurrency(
   if (commonBase) {
     return commonBase.currency
   }
-  const { data } = await apolloClient.query<SimpleTokenQuery>({
-    query: SimpleTokenDocument,
+  const { data } = await apolloClient.query<TokenQuery>({
+    query: TokenDocument,
     variables: {
       address: currencyId,
       chain: chainIdToBackendChain({ chainId }),

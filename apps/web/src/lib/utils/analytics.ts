@@ -2,6 +2,7 @@ import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-co
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { InterfaceTrade, QuoteMethod, SubmittableTrade } from 'state/routing/types'
 import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
+import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 export const getDurationUntilTimestampSeconds = (futureTimestampInSecondsSinceEpoch?: number): number | undefined => {
@@ -73,6 +74,7 @@ export function formatCommonPropertiesForTrade(
     token_out_detected_tax: formatPercentNumber(trade.outputTax),
     token_in_detected_tax: formatPercentNumber(trade.inputTax),
     offchain_order_type: isUniswapXTrade(trade) ? trade.offchainOrderType : undefined,
+    transactionOriginType: TransactionOriginType.Internal,
   }
 }
 
@@ -121,5 +123,6 @@ export const formatSwapQuoteReceivedEventProperties = (
     token_in_amount_max: trade.maximumAmountIn(allowedSlippage).toExact(),
     token_out_amount_min: trade.minimumAmountOut(allowedSlippage).toExact(),
     quote_latency_milliseconds: swapQuoteLatencyMs,
+    transactionOriginType: TransactionOriginType.Internal,
   }
 }

@@ -16,17 +16,21 @@ jest.mock('wallet/src/features/transactions/swap/hooks/useGasFeeHighRelativeToVa
 
 describe(NetworkFee, () => {
   it('renders a NetworkFee normally', () => {
-    const tree = render(<NetworkFee chainId={UniverseChainId.Mainnet} gasFee={{ value: '500', loading: false }} />)
+    const tree = render(
+      <NetworkFee chainId={UniverseChainId.Mainnet} gasFee={{ value: '500', isLoading: false, error: null }} />,
+    )
     expect(tree).toMatchSnapshot()
   })
 
   it('renders a NetworkFee in a loading state', () => {
-    const tree = render(<NetworkFee chainId={UniverseChainId.Mainnet} gasFee={{ loading: true }} />)
+    const tree = render(<NetworkFee chainId={UniverseChainId.Mainnet} gasFee={{ isLoading: true, error: null }} />)
     expect(tree).toMatchSnapshot()
   })
 
   it('renders a NetworkFee in an error state', () => {
-    const tree = render(<NetworkFee chainId={UniverseChainId.Mainnet} gasFee={{ error: true, loading: false }} />)
+    const tree = render(
+      <NetworkFee chainId={UniverseChainId.Mainnet} gasFee={{ error: new Error(), isLoading: false }} />,
+    )
     expect(tree).toMatchSnapshot()
   })
 })

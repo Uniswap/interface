@@ -6,11 +6,6 @@ import {
   TransactionDirection,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
-import {
-  deriveCurrencyAmountFromAssetResponse,
-  parseUSDValueFromAssetChange,
-} from 'wallet/src/features/transactions/history/utils'
 import {
   ConfirmedSwapTransactionInfo,
   NFTTradeTransactionInfo,
@@ -19,7 +14,12 @@ import {
   TransactionListQueryResponse,
   TransactionType,
   WrapTransactionInfo,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import {
+  deriveCurrencyAmountFromAssetResponse,
+  parseUSDValueFromAssetChange,
+} from 'wallet/src/features/transactions/history/utils'
 
 type TransferAssetChange = Extract<
   NonNullable<

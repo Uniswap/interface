@@ -1,8 +1,8 @@
-import Row from 'components/Row'
 import { motion } from 'framer-motion'
 import styled, { keyframes, useTheme } from 'lib/styled-components'
 import { parseToRgb } from 'polished'
 import { opacify } from 'theme/utils'
+import { Flex } from 'ui/src'
 
 const Mask = motion(styled.div`
   position: relative;
@@ -18,6 +18,7 @@ const Mask = motion(styled.div`
     min-height: 32px;
   }
 `)
+
 const Char = motion(styled.div<{ color: string }>`
   font-variant-numeric: lining-nums tabular-nums;
   font-family: Basel;
@@ -142,10 +143,10 @@ export function StatCard(props: StatCardProps) {
   const theme = useTheme()
   return (
     <Container live={props.live}>
-      <Row align="center" gap="sm">
+      <Flex row alignItems="center" gap="$gap4">
         <LiveIcon display={props.live ? 'block' : 'none'} />
         <Title color={props.live ? theme.success : theme.neutral2}>{props.title}</Title>
-      </Row>
+      </Flex>
       <StringInterpolationWithMotion
         prefix={props.prefix}
         suffix={props.suffix}

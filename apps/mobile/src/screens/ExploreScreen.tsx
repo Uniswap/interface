@@ -29,7 +29,7 @@ export function ExploreScreen(): JSX.Element {
   const { isSheetReady } = useBottomSheetContext()
 
   // The ExploreStack is not directly accessible from outside
-  // (e.g., navigating from Home to NFTItem within ExploreStack), due to its mount within BottomSheetModal.
+  // (e.g., navigating from Home to NFTItem within ExploreStack), due to its mount within Modal.
   // To bypass this limitation, we use an initialState to define a specific screen within ExploreStack.
   useEffect(() => {
     if (modalInitialState) {

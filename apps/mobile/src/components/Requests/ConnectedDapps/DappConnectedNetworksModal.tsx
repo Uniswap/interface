@@ -9,7 +9,7 @@ import { WalletConnectSession, removeSession } from 'src/features/walletConnect/
 import { Button, Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
@@ -58,7 +58,7 @@ export function DappConnectedNetworkModal({ session, onClose }: DappConnectedNet
   }
 
   return (
-    <BottomSheetModal name={ModalName.WCDappConnectedNetworks} onClose={onClose}>
+    <Modal name={ModalName.WCDappConnectedNetworks} onClose={onClose}>
       <Flex centered gap="$spacing16" px="$spacing24" py="$spacing12">
         <Flex alignItems="center" gap="$spacing8">
           <DappHeaderIcon dapp={dapp} />
@@ -102,6 +102,6 @@ export function DappConnectedNetworkModal({ session, onClose }: DappConnectedNet
           </Button>
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

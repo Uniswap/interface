@@ -18,7 +18,7 @@ import { useIsSwapPage } from 'hooks/useIsSwapPage'
 import styled, { css } from 'lib/styled-components'
 import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
-import { BREAKPOINTS } from 'theme'
+import { BREAKPOINTS, NAV_HEIGHT } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
@@ -26,7 +26,7 @@ import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 const Nav = styled.nav`
   padding: 0px 12px;
   width: 100%;
-  height: ${({ theme }) => theme.navHeight}px;
+  height: ${NAV_HEIGHT}px;
   z-index: ${Z_INDEX.sticky};
   display: flex;
   align-items: center;

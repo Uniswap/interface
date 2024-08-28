@@ -542,7 +542,7 @@ function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampAc
       hash: activity.id,
       chainId,
       timestamp: activity.timestamp,
-      logos: [onRampTransfer.token.project?.logo?.url],
+      logos: [onRampTransfer.token.project?.logoUrl],
       currencies: [gqlToCurrency(onRampTransfer.token)],
       title: t('fiatOnRamp.purchasedOn', {
         serviceProvider: onRampTransfer.serviceProvider.name,
@@ -572,7 +572,7 @@ function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampAc
       hash: activity.details.hash,
       chainId,
       timestamp: activity.timestamp,
-      logos: [onRampTransfer.token.project?.logo?.url],
+      logos: [onRampTransfer.token.project?.logoUrl],
       currencies: [gqlToCurrency(onRampTransfer.token)],
       title: t('fiatOnRamp.purchasedOn', {
         serviceProvider: onRampTransfer.serviceProvider.name,

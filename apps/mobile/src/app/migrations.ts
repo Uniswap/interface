@@ -7,12 +7,16 @@ import dayjs from 'dayjs'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TransactionsState } from 'uniswap/src/features/transactions/slice'
+import {
+  ChainIdToTxIdToDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
-import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
-import { ChainIdToTxIdToDetails, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import {
@@ -23,6 +27,8 @@ import {
   deleteBetaOnboardingState,
   deleteDefaultFavoritesFromFavoritesState,
   deleteExtensionOnboardingState,
+  deleteHoldToSwapBehaviorHistory,
+  moveUserSettings,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
 } from 'wallet/src/state/walletMigrations'
@@ -296,34 +302,31 @@ export const migrations = {
       { byChainId: {} },
     )
 
-    const transactionState: TransactionStateMap | undefined = newState?.transactions
-    const newTransactionState = Object.keys(transactionState ?? {}).reduce<TransactionStateMap>(
-      (tempState, address) => {
-        const txs = transactionState?.[address]
-        if (!txs) {
-          return tempState
+    const transactionState: TransactionsState | undefined = newState?.transactions
+    const newTransactionState = Object.keys(transactionState ?? {}).reduce<TransactionsState>((tempState, address) => {
+      const txs = transactionState?.[address]
+      if (!txs) {
+        return tempState
+      }
+
+      const newAddressTxState = Object.keys(txs).reduce<ChainIdToTxIdToDetails>((tempAddressState, chainIdString) => {
+        const chainId = toSupportedChainId(chainIdString)
+        if (!chainId) {
+          return tempAddressState
         }
 
-        const newAddressTxState = Object.keys(txs).reduce<ChainIdToTxIdToDetails>((tempAddressState, chainIdString) => {
-          const chainId = toSupportedChainId(chainIdString)
-          if (!chainId) {
-            return tempAddressState
-          }
-
-          const txInfo = txs[chainId]
-          if (!txInfo) {
-            return tempAddressState
-          }
-
-          tempAddressState[chainId] = txInfo
+        const txInfo = txs[chainId]
+        if (!txInfo) {
           return tempAddressState
-        }, {})
+        }
 
-        tempState[address] = newAddressTxState
-        return tempState
-      },
-      {},
-    )
+        tempAddressState[chainId] = txInfo
+        return tempAddressState
+      }, {})
+
+      tempState[address] = newAddressTxState
+      return tempState
+    }, {})
 
     return {
       ...newState,
@@ -439,7 +442,7 @@ export const migrations = {
             continue
           }
 
-          if (txDetails.typeInfo.type !== TransactionType.FiatPurchase) {
+          if (txDetails.typeInfo.type !== TransactionType.FiatPurchaseDeprecated) {
             newTransactionState[address] ??= {}
             newTransactionState[address][chainId] ??= {}
             newTransactionState[address][chainId][txId] = txDetails
@@ -461,7 +464,7 @@ export const migrations = {
           } = txDetails.typeInfo
 
           const newTypeInfo = {
-            type: TransactionType.FiatPurchase,
+            type: TransactionType.FiatPurchaseDeprecated,
             explorerUrl,
             inputCurrency: undefined,
             inputCurrencyAmount: outputCurrencyAmountFormatted / outputCurrencyAmountPrice,
@@ -557,7 +560,8 @@ export const migrations = {
           newTransactionState[address] ??= {}
           newTransactionState[address][chainId] ??= {}
           newTransactionState[address][chainId][txId] =
-            txDetails.typeInfo.type === TransactionType.FiatPurchase && txDetails.status === TransactionStatus.Failed
+            txDetails.typeInfo.type === TransactionType.FiatPurchaseDeprecated &&
+            txDetails.status === TransactionStatus.Failed
               ? {
                   ...txDetails,
                   typeInfo: {
@@ -906,6 +910,32 @@ export const migrations = {
   71: addHapticSetting,
 
   72: addExploreAndWelcomeBehaviorHistory,
+
+  73: moveUserSettings,
+
+  74: function deleteOldOnRampTxData(state: any) {
+    const newState = { ...state }
+
+    const transactionsState = newState.transactions
+
+    const addresses = Object.keys(transactionsState ?? {})
+    for (const address of addresses) {
+      const chainIds = Object.keys(transactionsState[address] ?? {})
+      for (const chainId of chainIds) {
+        const transactions = transactionsState[address][chainId]
+        const txIds = Object.keys(transactions ?? {})
+        for (const txId of txIds) {
+          if (transactions[txId]?.typeInfo?.type === TransactionType.FiatPurchaseDeprecated) {
+            delete transactionsState[address][chainId][txId]
+          }
+        }
+      }
+    }
+
+    return { ...newState, transactions: transactionsState }
+  },
+
+  75: deleteHoldToSwapBehaviorHistory,
 }
 
-export const MOBILE_STATE_VERSION = 72
+export const MOBILE_STATE_VERSION = 75

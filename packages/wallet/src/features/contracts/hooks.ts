@@ -3,7 +3,7 @@ import { useCallback } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { useIsSmartContractAddress } from 'wallet/src/features/transactions/transfer/hooks/useIsSmartContractAddress'
+import { useIsSmartContractAddress } from 'wallet/src/features/transactions/send/hooks/useIsSmartContractAddress'
 import { useProvider } from 'wallet/src/features/wallet/context'
 
 export function useIsErc20Contract(address: string | undefined, chainId: WalletChainId): boolean {

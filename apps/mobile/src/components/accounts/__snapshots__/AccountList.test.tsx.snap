@@ -177,6 +177,7 @@ exports[`AccountList renders without error 1`] = `
                 }
               >
                 <View
+                  onLayout={[Function]}
                   style={
                     {
                       "alignItems": "center",
@@ -324,6 +325,7 @@ exports[`AccountList renders without error 1`] = `
                               "fontFamily": "Basel-Book",
                               "fontSize": 19,
                               "lineHeight": 24,
+                              "overflow": "hidden",
                             }
                           }
                           suppressHighlighting={true}

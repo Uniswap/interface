@@ -73,7 +73,7 @@ export const PortfolioActionButtons = memo(function _PortfolioActionButtons(): J
       screen: ExtensionScreens.Home,
       element: ElementName.Send,
     })
-    navigate(AppRoutes.Transfer)
+    navigate(AppRoutes.Send)
   }
 
   const onSwapClick = (): void => {

@@ -1,10 +1,16 @@
 import { ApolloProvider } from '@apollo/client'
-import { DatadogProvider, DatadogProviderConfiguration, DdRum, SdkVerbosity } from '@datadog/mobile-react-native'
+import {
+  DatadogProvider,
+  DatadogProviderConfiguration,
+  DdRum,
+  DdSdkReactNative,
+  SdkVerbosity,
+} from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
 import { MMKVWrapper } from 'apollo3-cache-persist'
-import { PropsWithChildren, default as React, StrictMode, useCallback, useEffect } from 'react'
+import { PropsWithChildren, default as React, StrictMode, useCallback, useEffect, useState } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { LogBox, NativeModules, StatusBar } from 'react-native'
 import appsFlyer from 'react-native-appsflyer'
@@ -43,10 +49,15 @@ import { getSentryEnvironment, getSentryTracesSamplingRate, getStatsigEnvironmen
 import { flexStyles, useHapticFeedback, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import {
+  getFeatureFlagWithExposureLoggingDisabled,
+  useFeatureFlag,
+  useFeatureFlagWithExposureLoggingDisabled,
+} from 'uniswap/src/features/gating/hooks'
 import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
 import { Statsig, StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -56,6 +67,7 @@ import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/conte
 import i18n from 'uniswap/src/i18n/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { isDetoxBuild, isJestRun } from 'utilities/src/environment/constants'
+import { attachUnhandledRejectionHandler } from 'utilities/src/logger/Datadog'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -67,13 +79,13 @@ import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApo
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectHapticsEnabled } from 'wallet/src/features/appearance/slice'
-import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { syncAppWithDeviceLanguage } from 'wallet/src/features/language/slice'
 import { clearNotificationQueue } from 'wallet/src/features/notifications/slice'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
+import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
@@ -125,6 +137,15 @@ datadogConfig.site = 'US1'
 datadogConfig.longTaskThresholdMs = 100
 datadogConfig.nativeCrashReportEnabled = true
 datadogConfig.verbosity = SdkVerbosity.INFO
+// Datadog does not expose event type, hence we can not type return
+// eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+datadogConfig.errorEventMapper = (event) => {
+  // this is Sentry error, which is caused by the not complete closing of their SDK
+  if (event.message.includes('Native is disabled')) {
+    return null
+  }
+  return event
+}
 
 // Log boxes on simulators can block detox tap event when they cover buttons placed at
 // the bottom of the screen and cause tests to fail.
@@ -137,14 +158,33 @@ initAppsFlyer()
 initFirebaseAppCheck()
 
 function App(): JSX.Element | null {
+  // Here Statsig is not yet initialised
+  const [isDatadogEnabled, setIsDatadogEnabled] = useState(false)
+  useEffect(() => {
+    if (!__DEV__ && !isDetoxBuild && isDatadogEnabled) {
+      // We can not use both Datadog and Sentry because their error catchers conflict.
+      // We need to wait until Statsig loads feature flags to chose Datadog or Sentry.
+      // If we initialise Sentry async - some of its features do not work properly (for some reason)
+      // Hence we always initiliase and later close it if Datadog is enabled.
+      Sentry.close().catch(() => undefined)
+      attachUnhandledRejectionHandler()
+    }
+  }, [isDatadogEnabled])
+
   // We want to ensure deviceID is used as the identifier to link with analytics
   const fetchAndSetDeviceId = useCallback(async () => {
     const uniqueId = await getUniqueId()
-    Sentry.setUser({
-      id: uniqueId,
-    })
+    if (isDatadogEnabled) {
+      DdSdkReactNative.setUser({
+        id: uniqueId,
+      }).catch(() => undefined)
+    } else {
+      Sentry.setUser({
+        id: uniqueId,
+      })
+    }
     return uniqueId
-  }, [])
+  }, [isDatadogEnabled])
 
   const deviceId = useAsyncData(fetchAndSetDeviceId).data
 
@@ -161,7 +201,10 @@ function App(): JSX.Element | null {
       api: uniswapUrls.statsigProxyUrl,
       disableAutoMetricsLogging: true,
       disableErrorLogging: true,
-      initCompletionCallback: loadStatsigOverrides,
+      initCompletionCallback: () => {
+        loadStatsigOverrides()
+        setIsDatadogEnabled(Statsig.checkGate(getFeatureFlagName(FeatureFlags.Datadog)))
+      },
     },
     sdkKey: DUMMY_STATSIG_SDK_KEY,
     user: {
@@ -200,7 +243,7 @@ function App(): JSX.Element | null {
 }
 
 function DatadogProviderWrapper({ children }: PropsWithChildren): JSX.Element {
-  const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
+  const datadogEnabled = useFeatureFlagWithExposureLoggingDisabled(FeatureFlags.Datadog)
 
   if (isDetoxBuild || isJestRun || !datadogEnabled) {
     return <>{children}</>
@@ -210,10 +253,9 @@ function DatadogProviderWrapper({ children }: PropsWithChildren): JSX.Element {
 
 function SentryTags({ children }: PropsWithChildren): JSX.Element {
   useEffect(() => {
-    const isDatadogEnabled = Statsig.checkGateWithExposureLoggingDisabled(getFeatureFlagName(FeatureFlags.Datadog))
+    const isDatadogEnabled = getFeatureFlagWithExposureLoggingDisabled(FeatureFlags.Datadog)
 
     for (const [_, flagKey] of WALLET_FEATURE_FLAG_NAMES.entries()) {
-      Sentry.setTag(`featureFlag.${flagKey}`, Statsig.checkGateWithExposureLoggingDisabled(flagKey))
       if (isDatadogEnabled) {
         DdRum.addFeatureFlagEvaluation(
           // Datadog has a limited set of accepted symbols in feature flags
@@ -221,14 +263,12 @@ function SentryTags({ children }: PropsWithChildren): JSX.Element {
           flagKey.replaceAll('-', '_'),
           Statsig.checkGateWithExposureLoggingDisabled(flagKey),
         ).catch(() => undefined)
+      } else {
+        Sentry.setTag(`featureFlag.${flagKey}`, Statsig.checkGateWithExposureLoggingDisabled(flagKey))
       }
     }
 
     for (const experiment of Object.values(Experiments)) {
-      Sentry.setTag(
-        `experiment.${experiment}`,
-        Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName(),
-      )
       if (isDatadogEnabled) {
         DdRum.addFeatureFlagEvaluation(
           // Datadog has a limited set of accepted symbols in feature flags
@@ -236,6 +276,11 @@ function SentryTags({ children }: PropsWithChildren): JSX.Element {
           `experiment_${experiment.replaceAll('-', '_')}`,
           Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName(),
         ).catch(() => undefined)
+      } else {
+        Sentry.setTag(
+          `experiment.${experiment}`,
+          Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName(),
+        )
       }
     }
   }, [])
@@ -281,12 +326,14 @@ function AppOuter(): JSX.Element | null {
                         >
                           <MobileWalletNavigationProvider>
                             <OpenAIContextProvider>
-                              <BottomSheetModalProvider>
-                                <AppModals />
-                                <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                  <AppInner />
-                                </PerformanceProfiler>
-                              </BottomSheetModalProvider>
+                              <WalletUniswapProvider>
+                                <BottomSheetModalProvider>
+                                  <AppModals />
+                                  <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                    <AppInner />
+                                  </PerformanceProfiler>
+                                </BottomSheetModalProvider>
+                              </WalletUniswapProvider>
                               <NotificationToastWrapper />
                             </OpenAIContextProvider>
                           </MobileWalletNavigationProvider>

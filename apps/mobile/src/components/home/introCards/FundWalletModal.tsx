@@ -7,8 +7,10 @@ import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } fro
 import { ArrowDownCircle, Buy } from 'ui/src/components/icons'
 import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
 import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -19,6 +21,8 @@ export function FundWalletModal({ onClose }: { onClose: () => void }): JSX.Eleme
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const cexTransferProviders = useCexTransferProviders()
+
+  const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
 
   const BackgroundImageWrapperCallback = useCallback(
     ({ children }: { children: React.ReactNode }) => {
@@ -35,9 +39,16 @@ export function FundWalletModal({ onClose }: { onClose: () => void }): JSX.Eleme
   )
 
   const onPressBuy = useCallback(() => {
-    dispatch(openModal({ name: ModalName.FiatOnRampAggregator }))
-  }, [dispatch])
+    onClose()
+    dispatch(
+      openModal({
+        name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator,
+      }),
+    )
+  }, [disableForKorea, onClose, dispatch])
+
   const onPressReceive = useCallback(() => {
+    onClose()
     dispatch(
       openModal(
         cexTransferProviders.length > 0
@@ -51,7 +62,7 @@ export function FundWalletModal({ onClose }: { onClose: () => void }): JSX.Eleme
             },
       ),
     )
-  }, [cexTransferProviders, dispatch])
+  }, [cexTransferProviders, dispatch, onClose])
 
   const cards = useMemo(
     () =>
@@ -87,7 +98,7 @@ export function FundWalletModal({ onClose }: { onClose: () => void }): JSX.Eleme
     [BackgroundImageWrapperCallback, cexTransferProviders, onPressBuy, onPressReceive, t],
   )
   return (
-    <BottomSheetModal name={ModalName.FundWallet} onClose={onClose}>
+    <Modal name={ModalName.FundWallet} onClose={onClose}>
       <Flex gap="$spacing12" pb="$spacing12" px="$spacing16">
         {cards.map((card) => (
           <ActionCard
@@ -103,7 +114,7 @@ export function FundWalletModal({ onClose }: { onClose: () => void }): JSX.Eleme
           />
         ))}
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }
 

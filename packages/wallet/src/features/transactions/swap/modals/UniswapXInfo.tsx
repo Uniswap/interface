@@ -1,14 +1,14 @@
 import { PropsWithChildren } from 'react'
-import { Trans, useTranslation } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { UniswapXText, isWeb } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons'
 import { colors, opacify } from 'ui/src/theme'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
 import { WarningTooltipProps } from 'wallet/src/components/modals/WarningModal/WarningTooltipProps'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 
 export function UniswapXInfo({
   children,
@@ -30,7 +30,7 @@ export function UniswapXInfo({
       }
       modalProps={{
         backgroundIconColor: opacify(16, colors.uniswapXPurple),
-        caption: <Trans components={{ gradient: <></> }} i18nKey="uniswapx.description" />,
+        caption: t('uniswapx.description'),
         closeText: t('common.button.close'),
         icon: <UniswapX size="$icon.24" />,
         modalName: ModalName.UniswapXInfo,

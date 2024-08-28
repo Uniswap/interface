@@ -3,22 +3,14 @@ import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { useHapticFeedback } from 'ui/src'
+import { MAX_AUTO_SLIPPAGE_TOLERANCE, MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { PlusMinusButtonType } from 'wallet/src/components/buttons/PlusMinusButton'
-import { MAX_AUTO_SLIPPAGE_TOLERANCE, MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
-import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
+import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { errorShakeAnimation } from 'wallet/src/utils/animations'
 
 const SLIPPAGE_INCREMENT = 0.1
 
-export function useSlippageSettings({
-  derivedSwapInfo,
-  onSlippageChange,
-}: {
-  derivedSwapInfo: DerivedSwapInfo
-  onSlippageChange: (slippage: number | undefined) => void
-}): {
-  trade: Trade | null
+export function useSlippageSettings(): {
   isEditingSlippage: boolean
   autoSlippageEnabled: boolean
   showSlippageWarning: boolean
@@ -35,12 +27,8 @@ export function useSlippageSettings({
 } {
   const { t } = useTranslation()
 
-  const {
-    customSlippageTolerance,
-    autoSlippageTolerance: derivedAutoSlippageTolerance,
-    trade: tradeWithStatus,
-  } = derivedSwapInfo
-  const trade = tradeWithStatus.trade
+  const { derivedSwapInfo, updateSwapForm } = useSwapFormContext()
+  const { customSlippageTolerance, autoSlippageTolerance: derivedAutoSlippageTolerance } = derivedSwapInfo
 
   const [isEditingSlippage, setIsEditingSlippage] = useState<boolean>(false)
   const [autoSlippageEnabled, setAutoSlippageEnabled] = useState<boolean>(!customSlippageTolerance)
@@ -76,7 +64,7 @@ export function useSlippageSettings({
     setAutoSlippageEnabled(true)
     setInputWarning(undefined)
     setInputSlippageTolerance('')
-    onSlippageChange(undefined)
+    updateSwapForm({ customSlippageTolerance: undefined })
   }
 
   const onChangeSlippageInput = useCallback(
@@ -104,6 +92,7 @@ export function useSlippageSettings({
       const isZero = parsedValue === 0
 
       if (isZero) {
+        setInputSlippageTolerance('')
         setInputWarning(t('swap.settings.slippage.warning.min'))
       }
 
@@ -120,16 +109,16 @@ export function useSlippageSettings({
        * isZero is intentionally left out here because the user should be able to type "0"
        * without the input shaking (ex. typing 0.x shouldn't shake after typing char)
        */
-      if (isInvalidNumber || overMaxTolerance || moreThanOneDecimalSymbol || moreThanTwoDecimals) {
+      if (isZero || isInvalidNumber || overMaxTolerance || moreThanOneDecimalSymbol || moreThanTwoDecimals) {
         inputShakeX.value = errorShakeAnimation(inputShakeX)
         await hapticFeedback.impact()
         return
       }
 
       setInputSlippageTolerance(value)
-      onSlippageChange(parsedValue)
+      updateSwapForm({ customSlippageTolerance: parsedValue })
     },
-    [hapticFeedback, inputShakeX, onSlippageChange, t],
+    [hapticFeedback, inputShakeX, updateSwapForm, t],
   )
 
   const onFocusSlippageInput = useCallback((): void => {
@@ -148,12 +137,12 @@ export function useSlippageSettings({
     // Set autoSlippageEnabled to true if input is invalid (ex. '' or '.')
     if (isNaN(parsedInputSlippageTolerance)) {
       setAutoSlippageEnabled(true)
-      onSlippageChange(undefined)
+      updateSwapForm({ customSlippageTolerance: undefined })
       return
     }
 
     setInputSlippageTolerance(parsedInputSlippageTolerance.toFixed(2))
-  }, [parsedInputSlippageTolerance, onSlippageChange])
+  }, [parsedInputSlippageTolerance, updateSwapForm])
 
   const onPressPlusMinusButton = useCallback(
     (type: PlusMinusButtonType): void => {
@@ -175,13 +164,12 @@ export function useSlippageSettings({
       }
 
       setInputSlippageTolerance(constrainedNewSlippage.toFixed(2).toString())
-      onSlippageChange(constrainedNewSlippage)
+      updateSwapForm({ customSlippageTolerance: constrainedNewSlippage })
     },
-    [autoSlippageEnabled, currentSlippageToleranceNum, onSlippageChange, t],
+    [autoSlippageEnabled, currentSlippageToleranceNum, updateSwapForm, t],
   )
 
   return {
-    trade,
     isEditingSlippage,
     autoSlippageEnabled,
     showSlippageWarning,

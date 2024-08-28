@@ -1,16 +1,15 @@
 import dayjs from 'dayjs'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
-
-export const NUMBER_OF_WALLETS_TO_IMPORT = 10
 
 export const createImportedAccounts = async (
   mnemonicId: string,
   backupType?: BackupType.Cloud | BackupType.Manual,
 ): Promise<SignerMnemonicAccount[]> => {
   const addresses = await Promise.all(
-    Array(NUMBER_OF_WALLETS_TO_IMPORT)
+    Array(NUMBER_OF_WALLETS_TO_GENERATE)
       .fill(null)
       .map(async (_, index) => await Keyring.generateAndStorePrivateKey(mnemonicId, index)),
   )

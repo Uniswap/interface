@@ -45,6 +45,7 @@ export function InsufficientNativeTokenWarning({
 
       {showModal && (
         <WarningModal
+          isOpen
           backgroundIconColor={false}
           icon={<CurrencyLogo currencyInfo={nativeCurrencyInfo} />}
           modalName={ModalName.SwapWarning}

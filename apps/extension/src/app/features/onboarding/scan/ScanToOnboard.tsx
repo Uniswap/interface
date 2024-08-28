@@ -8,7 +8,7 @@ import {
   withSequence,
   withSpring,
 } from 'react-native-reanimated'
-import { SpringConfig } from 'react-native-reanimated/lib/typescript/reanimated2/animation/springUtils'
+import { SpringConfig } from 'react-native-reanimated/lib/typescript/animation/springUtils'
 import QRCode from 'react-qr-code' //TODO(EXT-476): Replace with custom QR code designs
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'

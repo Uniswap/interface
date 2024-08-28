@@ -27,7 +27,7 @@ function getNativeQueryAddress(chain: Chain) {
   return `NATIVE-${chain}`
 }
 
-export const recentlySearchedAssetsAtom = atomWithStorage<TokenSearchResultWeb[]>('recentlySearchedAssetsV2', [])
+export const recentlySearchedAssetsAtom = atomWithStorage<TokenSearchResultWeb[]>('recentlySearchedAssetsV3', [])
 
 // Used by TokenSelector
 export function useAddRecentlySearchedCurrency() {

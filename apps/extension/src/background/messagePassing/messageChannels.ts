@@ -63,6 +63,8 @@ import {
   SidebarOpenedMessageSchema,
 } from 'src/background/messagePassing/types/ExtensionMessages'
 import {
+  AnalyticsLog,
+  AnalyticsLogSchema,
   BackgroundToSidePanelRequestType,
   ContentScriptUtilityMessageType,
   DappRequestMessage,
@@ -74,8 +76,6 @@ import {
   ExtensionToDappRequestType,
   FocusOnboardingMessage,
   FocusOnboardingMessageSchema,
-  InfoLog,
-  InfoLogSchema,
   TabActivatedRequest,
   TabActivatedRequestSchema,
   UpdateConnectionRequest,
@@ -296,7 +296,7 @@ export function createExternalDappMessagePort(
 type ContentScriptUtilityMessageSchemas = {
   [ContentScriptUtilityMessageType.FocusOnboardingTab]: FocusOnboardingMessage
   [ContentScriptUtilityMessageType.ErrorLog]: ErrorLog
-  [ContentScriptUtilityMessageType.InfoLog]: InfoLog
+  [ContentScriptUtilityMessageType.AnalyticsLog]: AnalyticsLog
 }
 const contentScriptUtilityMessageParsers: MessageParsers<
   ContentScriptUtilityMessageType,
@@ -305,7 +305,7 @@ const contentScriptUtilityMessageParsers: MessageParsers<
   [ContentScriptUtilityMessageType.FocusOnboardingTab]: (message): FocusOnboardingMessage =>
     FocusOnboardingMessageSchema.parse(message),
   [ContentScriptUtilityMessageType.ErrorLog]: (message): ErrorLog => ErrorLogSchema.parse(message),
-  [ContentScriptUtilityMessageType.InfoLog]: (message): InfoLog => InfoLogSchema.parse(message),
+  [ContentScriptUtilityMessageType.AnalyticsLog]: (message): AnalyticsLog => AnalyticsLogSchema.parse(message),
 }
 
 export function createContentScriptUtilityMessageChannel(): TypedRuntimeMessageChannel<

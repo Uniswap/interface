@@ -42,18 +42,3 @@ const fadeIn = keyframes`
 export const textFadeIn = css`
   animation: ${fadeIn} ${transitions.duration.fast} ${transitions.timing.in};
 `
-
-const slideDown = keyframes`
-from {
-  transform: translateY(-20px);
-  opacity: 0;
-}
-to {
-  transform: translateY(0);
-  opacity: 1;
-}
-`
-
-export const dropdownSlideDown = css`
-  animation: ${slideDown} ${transitions.duration.fast} ${transitions.timing.inOut};
-`

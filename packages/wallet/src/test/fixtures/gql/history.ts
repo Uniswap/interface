@@ -4,10 +4,10 @@ import {
   TimestampedAmount,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { faker } from 'uniswap/src/test/shared'
-import { createFixture } from 'uniswap/src/test/utils'
+import { createFixture, randomEnumValue } from 'uniswap/src/test/utils'
 import { ONE_DAY_MS, ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { amount, timestampedAmount } from 'wallet/src/test/fixtures/gql/amounts'
-import { createArray, randomEnumValue } from 'wallet/src/test/utils'
+import { createArray } from 'wallet/src/test/utils'
 
 /**
  * Constants

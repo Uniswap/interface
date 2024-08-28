@@ -1,11 +1,11 @@
 import { useMemo } from 'react'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import { useNativeCurrencyInfo, useWrappedNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { TransactionDetails, WrapTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useNativeCurrencyInfo, useWrappedNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
-import { TransactionDetails, WrapTransactionInfo } from 'wallet/src/features/transactions/types'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
 export function WrapSummaryItem({

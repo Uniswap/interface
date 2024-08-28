@@ -5,12 +5,14 @@ import { useDispatch } from 'react-redux'
 import { MenuContentItem, useIsDarkMode } from 'ui/src'
 import { CopySheets, HelpCenter } from 'ui/src/components/icons'
 import { UNIVERSE_CHAIN_LOGO } from 'uniswap/src/assets/chainLogos'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { cancelTransaction } from 'uniswap/src/features/transactions/slice'
+import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { AuthTrigger } from 'wallet/src/features/auth/types'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { CancelConfirmationView } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/CancelConfirmationView'
@@ -18,8 +20,6 @@ import TransactionActionsModal, {
   getTransactionId,
   openSupportLink,
 } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionActionsModal'
-import { cancelTransaction } from 'wallet/src/features/transactions/slice'
-import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 import { getIsCancelable } from 'wallet/src/features/transactions/utils'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { openTransactionLink } from 'wallet/src/utils/linking'
@@ -112,7 +112,7 @@ export const useTransactionActions = ({
         />
       )}
       {showCancelModal && (
-        <BottomSheetModal hideHandlebar={false} name={ModalName.TransactionActions} onClose={handleCancelModalClose}>
+        <Modal hideHandlebar={false} name={ModalName.TransactionActions} onClose={handleCancelModalClose}>
           {transaction && (
             <CancelConfirmationView
               authTrigger={authTrigger}
@@ -121,7 +121,7 @@ export const useTransactionActions = ({
               onCancel={handleCancel}
             />
           )}
-        </BottomSheetModal>
+        </Modal>
       )}
     </>
   )

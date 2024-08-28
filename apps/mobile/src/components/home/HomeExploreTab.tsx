@@ -1,3 +1,4 @@
+import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { ForwardedRef, forwardRef, memo, useCallback, useEffect, useMemo, useState } from 'react'
 import { FlatList, LayoutRectangle, RefreshControl } from 'react-native'
 import Animated from 'react-native-reanimated'
@@ -21,6 +22,7 @@ import { Experiments, OnboardingRedesignHomeScreenProperties } from 'uniswap/src
 import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { useTranslation } from 'uniswap/src/i18n'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
 import { selectHasUsedExplore } from 'wallet/src/features/behaviorHistory/selectors'
 import { useAppFiatCurrency } from 'wallet/src/features/fiatCurrency/hooks'
@@ -124,27 +126,32 @@ export const HomeExploreTab = memo(
     }, [refreshing, headerHeight, onRefresh, colors.neutral3, insets.top])
 
     return (
-      // Negative top margin used to offset padding from tab bar that's difficult to change
-      <Flex grow mt={-spacing.spacing12}>
-        <AnimatedFlatList
-          // eslint-disable-next-line @typescript-eslint/no-explicit-any
-          ref={ref as ForwardedRef<Animated.FlatList<any>>}
-          ListFooterComponent={FooterElement}
-          data={tokenDataList}
-          estimatedItemSize={ESTIMATED_ITEM_SIZE}
-          initialNumToRender={20}
-          maxToRenderPerBatch={20}
-          refreshControl={refreshControl}
-          refreshing={refreshing}
-          renderItem={renderToken}
-          showsVerticalScrollIndicator={false}
-          updateCellsBatchingPeriod={10}
-          onContentSizeChange={onContentSizeChange}
-          onRefresh={onRefresh}
-          onScroll={scrollHandler}
-          {...containerProps}
-        />
-      </Flex>
+      <ReactNavigationPerformanceView screenName={MobileScreens.Home}>
+        <Flex
+          grow
+          // Negative top margin used to offset padding from tab bar that's difficult to change
+          mt={-spacing.spacing12}
+        >
+          <AnimatedFlatList
+            // eslint-disable-next-line @typescript-eslint/no-explicit-any
+            ref={ref as ForwardedRef<Animated.FlatList<any>>}
+            ListFooterComponent={FooterElement}
+            data={tokenDataList}
+            estimatedItemSize={ESTIMATED_ITEM_SIZE}
+            initialNumToRender={20}
+            maxToRenderPerBatch={20}
+            refreshControl={refreshControl}
+            refreshing={refreshing}
+            renderItem={renderToken}
+            showsVerticalScrollIndicator={false}
+            updateCellsBatchingPeriod={10}
+            onContentSizeChange={onContentSizeChange}
+            onRefresh={onRefresh}
+            onScroll={scrollHandler}
+            {...containerProps}
+          />
+        </Flex>
+      </ReactNavigationPerformanceView>
     )
   }),
 )

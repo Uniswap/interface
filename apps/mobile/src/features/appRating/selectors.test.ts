@@ -1,8 +1,12 @@
 import { MobileState } from 'src/app/mobileReducer'
 import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/selectors'
+import {
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { TransactionDetails, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { preloadedWalletReducerState } from 'wallet/src/test/fixtures/wallet/redux'
 

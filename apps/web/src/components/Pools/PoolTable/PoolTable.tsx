@@ -3,11 +3,10 @@ import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Percent } from '@uniswap/sdk-core'
 import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
-import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
-import { NameText } from 'components/Tokens/TokenTable'
+import { EllipsisText } from 'components/Tokens/TokenTable'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
@@ -18,9 +17,8 @@ import { PoolSortFields, TablePool, useTopPools } from 'graphql/data/pools/useTo
 import { OrderDirection, getSupportedGraphQlChain, gqlToCurrency, unwrapToken } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
-import styled from 'lib/styled-components'
 import { ReactElement, ReactNode, useCallback, useEffect, useMemo } from 'react'
-import { ThemedText } from 'theme/components'
+import { Flex, Text, styled } from 'ui/src'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
@@ -34,16 +32,19 @@ const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
   [PoolSortFields.OneDayApr]: <Trans i18nKey="pool.apr.feesNotice" />,
 }
 
-const TableWrapper = styled.div`
-  margin: 0 auto;
-  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-`
+const TableWrapper = styled(Flex, {
+  m: '0 auto',
+  maxWidth: MAX_WIDTH_MEDIA_BREAKPOINT,
+})
 
-const Badge = styled(ThemedText.LabelMicro)`
-  padding: 2px 6px;
-  background: ${({ theme }) => theme.surface2};
-  border-radius: 5px;
-`
+const Badge = styled(Text, {
+  py: 2,
+  px: 6,
+  backgroundColor: '$surface2',
+  borderRadius: '$rounded6',
+  variant: 'body4',
+  color: '$neutral2',
+})
 
 interface PoolTableValues {
   index: number
@@ -81,14 +82,14 @@ function PoolDescription({
 }) {
   const currencies = [gqlToCurrency(token0), gqlToCurrency(token1)]
   return (
-    <Row gap="sm">
+    <Flex row gap="$gap8" alignItems="center">
       <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={28} />
-      <NameText>
+      <EllipsisText>
         {token0.symbol}/{token1.symbol}
-      </NameText>
+      </EllipsisText>
       {protocolVersion === ProtocolVersion.V2 && <Badge>{protocolVersion.toLowerCase()}</Badge>}
       <Badge>{feeTier / BIPS_BASE}%</Badge>
-    </Row>
+    </Flex>
   )
 }
 
@@ -131,9 +132,9 @@ function PoolTableHeader({
   const handleSortCategory = useSetSortMethod(category)
   return (
     <MouseoverTooltip disabled={!HEADER_DESCRIPTIONS[category]} text={HEADER_DESCRIPTIONS[category]} placement="top">
-      <ClickableHeaderRow $justify="flex-end" onClick={handleSortCategory}>
+      <ClickableHeaderRow justifyContent="flex-end" onPress={handleSortCategory}>
         {isCurrentSortMethod && <HeaderArrow direction={direction} />}
-        <HeaderSortText $active={isCurrentSortMethod}>{HEADER_TEXT[category]}</HeaderSortText>
+        <HeaderSortText active={isCurrentSortMethod}>{HEADER_TEXT[category]}</HeaderSortText>
       </ClickableHeaderRow>
     </MouseoverTooltip>
   )
@@ -251,12 +252,16 @@ export function PoolsTable({
             id: 'index',
             header: () => (
               <Cell justifyContent="center" minWidth={44}>
-                <ThemedText.BodySecondary>#</ThemedText.BodySecondary>
+                <Text variant="body2" color="$neutral2">
+                  #
+                </Text>
               </Cell>
             ),
             cell: (index) => (
               <Cell justifyContent="center" loading={showLoadingSkeleton} minWidth={44}>
-                <ThemedText.BodySecondary>{index.getValue?.()}</ThemedText.BodySecondary>
+                <Text variant="body2" color="$neutral2">
+                  {index.getValue?.()}
+                </Text>
               </Cell>
             ),
           })
@@ -266,13 +271,13 @@ export function PoolsTable({
             id: 'poolDescription',
             header: () => (
               <Cell justifyContent="flex-start" width={240} grow>
-                <ThemedText.BodySecondary>
+                <Text variant="body2" color="$neutral2">
                   <Trans i18nKey="common.pool" />
-                </ThemedText.BodySecondary>
+                </Text>
               </Cell>
             ),
             cell: (poolDescription) => (
-              <Cell justifyContent="flex-start" loading={showLoadingSkeleton} width={240} grow>
+              <Cell justifyContent="flex-start" alignItems="center" loading={showLoadingSkeleton} width={240} grow>
                 {poolDescription.getValue?.()}
               </Cell>
             ),
@@ -282,7 +287,7 @@ export function PoolsTable({
         ? columnHelper.accessor((row) => row.txCount, {
             id: 'transactions',
             header: () => (
-              <Cell justifyContent="flex-end" minWidth={120} grow>
+              <Cell minWidth={120} grow>
                 <PoolTableHeader
                   category={PoolSortFields.TxCount}
                   isCurrentSortMethod={sortMethod === PoolSortFields.TxCount}
@@ -291,10 +296,10 @@ export function PoolsTable({
               </Cell>
             ),
             cell: (txCount) => (
-              <Cell justifyContent="flex-end" loading={showLoadingSkeleton} minWidth={120} grow>
-                <ThemedText.BodyPrimary>
+              <Cell loading={showLoadingSkeleton} minWidth={120} grow>
+                <Text variant="body2" color="$neutral1">
                   {formatNumber({ input: txCount.getValue?.(), type: NumberType.NFTCollectionStats })}
-                </ThemedText.BodyPrimary>
+                </Text>
               </Cell>
             ),
           })
@@ -313,9 +318,9 @@ export function PoolsTable({
             ),
             cell: (tvl) => (
               <Cell loading={showLoadingSkeleton} minWidth={120} grow>
-                <ThemedText.BodyPrimary>
+                <Text variant="body2" color="$neutral1">
                   {formatNumber({ input: tvl.getValue?.(), type: NumberType.FiatTokenStats })}
-                </ThemedText.BodyPrimary>
+                </Text>
               </Cell>
             ),
           })
@@ -334,9 +339,9 @@ export function PoolsTable({
             ),
             cell: (volume24h) => (
               <Cell minWidth={120} loading={showLoadingSkeleton} grow>
-                <ThemedText.BodyPrimary>
+                <Text variant="body2" color="$neutral1">
                   {formatNumber({ input: volume24h.getValue?.(), type: NumberType.FiatTokenStats })}
-                </ThemedText.BodyPrimary>
+                </Text>
               </Cell>
             ),
           })
@@ -355,9 +360,9 @@ export function PoolsTable({
             ),
             cell: (volumeWeek) => (
               <Cell minWidth={120} loading={showLoadingSkeleton} grow>
-                <ThemedText.BodyPrimary>
+                <Text variant="body2" color="$neutral1">
                   {formatNumber({ input: volumeWeek.getValue?.(), type: NumberType.FiatTokenStats })}
-                </ThemedText.BodyPrimary>
+                </Text>
               </Cell>
             ),
           })
@@ -376,7 +381,9 @@ export function PoolsTable({
             ),
             cell: (oneDayApr) => (
               <Cell minWidth={100} loading={showLoadingSkeleton} grow>
-                <ThemedText.BodyPrimary>{formatPercent(oneDayApr.getValue?.())}</ThemedText.BodyPrimary>
+                <Text variant="body2" color="$neutral1">
+                  {formatPercent(oneDayApr.getValue?.())}
+                </Text>
               </Cell>
             ),
           })

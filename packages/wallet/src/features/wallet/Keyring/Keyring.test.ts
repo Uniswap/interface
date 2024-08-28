@@ -1,5 +1,88 @@
 import { WebKeyring } from 'wallet/src/features/wallet/Keyring/Keyring.web'
-import { SAMPLE_PASSWORD, SAMPLE_SEED, SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
+import {
+  SAMPLE_PASSWORD,
+  SAMPLE_SEED,
+  SAMPLE_SEED_ADDRESS_1,
+  SAMPLE_SEED_ADDRESS_10,
+  SAMPLE_SEED_ADDRESS_2,
+  SAMPLE_SEED_ADDRESS_3,
+  SAMPLE_SEED_ADDRESS_4,
+  SAMPLE_SEED_ADDRESS_5,
+  SAMPLE_SEED_ADDRESS_6,
+  SAMPLE_SEED_ADDRESS_7,
+  SAMPLE_SEED_ADDRESS_8,
+  SAMPLE_SEED_ADDRESS_9,
+} from 'wallet/src/test/fixtures'
+
+type ChromeSessionStore = { [prop: string]: unknown }
+
+const mockSessionStorage = (): unknown => {
+  let store: ChromeSessionStore = {}
+
+  return {
+    get: async (
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      key: string | string[] | { [key: string]: any } | null,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+      callback: (items: { [key: string]: any }) => void,
+    ): Promise<Record<string, unknown>> => {
+      if (key === null) {
+        return Promise.resolve(store)
+      }
+
+      if (typeof key === 'string') {
+        return Promise.resolve({ [key]: store[key] })
+      }
+
+      if (Array.isArray(key)) {
+        return Promise.resolve(
+          key.reduce((acc, k) => {
+            acc[k] = store[k]
+            return acc
+          }, {}),
+        )
+      }
+
+      if (typeof key === 'object') {
+        return Promise.resolve(
+          Object.keys(key).reduce((acc, k) => {
+            const value = store[k] ?? key[k]
+            acc[k] = value
+            return acc
+          }, {} as ChromeSessionStore),
+        )
+      }
+
+      return Promise.resolve({})
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    set: async (obj: { [prop: string]: unknown }, callback: (items: { [key: string]: any }) => void): Promise<void> => {
+      for (const [key, value] of Object.entries(obj)) {
+        store[key] = value
+      }
+      return Promise.resolve()
+    },
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars, @typescript-eslint/no-explicit-any
+    remove: async (key: string | string[], callback: (items: { [key: string]: any }) => void): Promise<void> => {
+      if (Array.isArray(key)) {
+        key.forEach((k) => {
+          delete store[k]
+        })
+      } else {
+        delete store[key]
+      }
+      return Promise.resolve()
+    },
+    clear: async (): Promise<void> => {
+      store = {}
+      return Promise.resolve()
+    },
+  }
+}
+
+Object.defineProperty(chrome.storage, 'session', {
+  value: mockSessionStorage(),
+})
 
 const base64EncryptionKey = '9AUCx5ZQFC60vBL51aEwSCPIvAcalrZv3bRKVnRa3E8='
 jest.mock('./crypto', () => ({
@@ -52,8 +135,8 @@ describe(WebKeyring, () => {
     it('returns all mnemonic ids', async () => {
       await mockStore({
         data: {
-          'com.uniswap.web.mnemonic.address1': 'my mnemonic',
-          'com.uniswap.web.mnemonic.address2': 'my mnemonic',
+          'com.uniswap.web.mnemonic.address1': SAMPLE_SEED,
+          'com.uniswap.web.mnemonic.address2': SAMPLE_SEED,
           'com.uniswap.web.privateKey.address3': 'private-key',
         },
       })
@@ -85,46 +168,24 @@ describe(WebKeyring, () => {
     })
   })
 
-  describe('retrieveMnemonicUnlocked', () => {
-    beforeEach(() => {
-      jest.spyOn(chrome.storage.session, 'get').mockImplementation(() => {
-        return new Promise((resolve) => {
-          resolve({ [ENCRYPTION_KEY_KEY]: base64EncryptionKey })
-        })
-      })
-    })
-
-    it('returns mnemonic when unlocked', async () => {
-      const keyring = new WebKeyring()
-      await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
-      await keyring.unlock(SAMPLE_PASSWORD)
-
-      const mnemonic = await keyring.retrieveMnemonicUnlocked(SAMPLE_SEED_ADDRESS_1)
-      expect(mnemonic).toEqual(SAMPLE_SEED)
-    })
-  })
-
   describe('unlock', () => {
-    it('succeeds when password is valid', async () => {
-      const keyring = new WebKeyring()
-      await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
+    const keyring = new WebKeyring()
 
+    it('succeeds when password is valid', async () => {
+      await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
       const isUnlocked = await keyring.unlock(SAMPLE_PASSWORD)
 
       expect(isUnlocked).toBeTruthy()
     })
 
     it('fails when password is invalid', async () => {
-      const keyring = new WebKeyring()
       await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
+      const isUnlocked = await keyring.unlock('fail')
 
-      const action = (): Promise<boolean> => keyring.unlock('fail')
-
-      await expect(action()).rejects.toThrow()
+      expect(isUnlocked).toBe(false)
     })
 
     it('fails when password is valid, but stored mnemonic is not', async () => {
-      const keyring = new WebKeyring()
       await mockStore({
         data: {
           [`com.uniswap.web.mnemonic.${SAMPLE_SEED_ADDRESS_1}`]: JSON.stringify({
@@ -133,19 +194,41 @@ describe(WebKeyring, () => {
         },
       })
 
-      const action = (): Promise<boolean> => keyring.unlock(SAMPLE_PASSWORD)
+      const isUnlocked = await keyring.unlock(SAMPLE_PASSWORD)
+
+      expect(isUnlocked).toBe(false)
+    })
+
+    it('fails when there are no saved mnemonics', async () => {
+      const isUnlocked = await keyring.unlock(SAMPLE_PASSWORD)
+
+      expect(isUnlocked).toBe(false)
+    })
+  })
+
+  describe('retrieveMnemonicUnlocked', () => {
+    const keyring = new WebKeyring()
+
+    beforeEach(async () => {
+      await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
+      await keyring.lock()
+    })
+
+    it('does not return mnemonic when password is incorrect', async () => {
+      await keyring.unlock('fail')
+
+      const action = async (): Promise<string> => {
+        return keyring.retrieveMnemonicUnlocked(SAMPLE_SEED_ADDRESS_1)
+      }
 
       await expect(action()).rejects.toThrow()
     })
 
-    it('fails when there are no saved mnemonics', async () => {
-      const keyring = new WebKeyring()
+    it('returns mnemonic when unlocked', async () => {
+      await keyring.unlock(SAMPLE_PASSWORD)
 
-      const action = async (): Promise<boolean> => {
-        return keyring.unlock(SAMPLE_PASSWORD)
-      }
-
-      await expect(action()).rejects.toThrow()
+      const mnemonic = await keyring.retrieveMnemonicUnlocked(SAMPLE_SEED_ADDRESS_1)
+      expect(mnemonic).toEqual(SAMPLE_SEED)
     })
   })
 
@@ -159,6 +242,59 @@ describe(WebKeyring, () => {
 
       const allMnemonics = await keyring.getMnemonicIds()
       expect(allMnemonics).toEqual([])
+    })
+  })
+
+  describe('generateAddressesForMnemonicId', () => {
+    beforeEach(() => {
+      jest.spyOn(chrome.storage.session, 'get').mockImplementation(() => {
+        return new Promise((resolve) => {
+          resolve({ [ENCRYPTION_KEY_KEY]: base64EncryptionKey })
+        })
+      })
+    })
+
+    it('returns generated addresses from the mnemonicId when unlocked', async () => {
+      const keyring = new WebKeyring()
+      await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
+      await keyring.unlock(SAMPLE_PASSWORD)
+
+      const addresses = await keyring.generateAddressesForMnemonicId(SAMPLE_SEED_ADDRESS_1, 0, 9)
+      expect(addresses).toEqual([
+        SAMPLE_SEED_ADDRESS_1,
+        SAMPLE_SEED_ADDRESS_2,
+        SAMPLE_SEED_ADDRESS_3,
+        SAMPLE_SEED_ADDRESS_4,
+        SAMPLE_SEED_ADDRESS_5,
+        SAMPLE_SEED_ADDRESS_6,
+        SAMPLE_SEED_ADDRESS_7,
+        SAMPLE_SEED_ADDRESS_8,
+        SAMPLE_SEED_ADDRESS_9,
+        SAMPLE_SEED_ADDRESS_10,
+      ])
+    })
+
+    it('errors when keyring is not unlocked', async () => {
+      const keyring = new WebKeyring()
+      await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
+
+      const action = async (): Promise<string[]> => {
+        return keyring.generateAddressesForMnemonicId(SAMPLE_SEED_ADDRESS_1, 1, 0)
+      }
+
+      await expect(action()).rejects.toThrow()
+    })
+
+    it('errors when endDerivationIndex is not greater than startDerivationIndex', async () => {
+      const keyring = new WebKeyring()
+      await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
+      await keyring.unlock(SAMPLE_PASSWORD)
+
+      const action = async (): Promise<string[]> => {
+        return keyring.generateAddressesForMnemonicId(SAMPLE_SEED_ADDRESS_1, 0, 0)
+      }
+
+      await expect(action()).rejects.toThrow()
     })
   })
 })

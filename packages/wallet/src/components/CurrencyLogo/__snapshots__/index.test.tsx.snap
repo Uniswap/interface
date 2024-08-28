@@ -39,19 +39,6 @@ exports[`renders a currency logo with network logo 1`] = `
   <View
     style={
       {
-        "borderBottomColor": "#FFFFFF",
-        "borderBottomLeftRadius": 8,
-        "borderBottomRightRadius": 8,
-        "borderBottomWidth": 2,
-        "borderLeftColor": "#FFFFFF",
-        "borderLeftWidth": 2,
-        "borderRightColor": "#FFFFFF",
-        "borderRightWidth": 2,
-        "borderStyle": "solid",
-        "borderTopColor": "#FFFFFF",
-        "borderTopLeftRadius": 8,
-        "borderTopRightRadius": 8,
-        "borderTopWidth": 2,
         "bottom": -2,
         "flexDirection": "column",
         "position": "absolute",

@@ -20,12 +20,12 @@ import {
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { TransactionType, TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { assert } from 'utilities/src/errors'
-import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { useCurrencyInfo, useNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 
 function extractPathValues(commands: UniversalRouterCommand[]): {
   inputAddress: string | undefined

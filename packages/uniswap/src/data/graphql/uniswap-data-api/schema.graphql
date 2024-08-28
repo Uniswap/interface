@@ -211,6 +211,7 @@ enum Currency {
   IDR
   INR
   JPY
+  KRW
   MATIC
   NGN
   PKR

@@ -29,6 +29,7 @@ import { ExtensionEthMethods } from 'src/contentScript/methodHandlers/requestMet
 import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/extension'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { WindowEthereumRequestProperties } from 'uniswap/src/features/telemetry/types'
 import { RPCType } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
@@ -132,9 +133,25 @@ export function initMessageBridge(): void {
     })
   })
 
-  contentScriptUtilityMessageChannel.addMessageListener(ContentScriptUtilityMessageType.InfoLog, async (message) => {
-    logger.info(message.fileName, message.functionName, message.message, message.tags)
-  })
+  contentScriptUtilityMessageChannel.addMessageListener(
+    ContentScriptUtilityMessageType.AnalyticsLog,
+    async (message) => {
+      const properties: WindowEthereumRequestProperties = {
+        method: message.tags?.method ?? '',
+        dappUrl: message.tags?.dappUrl ?? '',
+      }
+      const eventName = message.message
+      switch (eventName) {
+        case ExtensionEventName.UnsupportedMethodRequest:
+        case ExtensionEventName.UnrecognizedMethodRequest:
+        case ExtensionEventName.DeprecatedMethodRequest:
+          sendAnalyticsEvent(eventName, properties)
+          break
+        default:
+          break
+      }
+    },
+  )
 
   contentScriptUtilityMessageChannel.addMessageListener(ContentScriptUtilityMessageType.FocusOnboardingTab, () => {
     focusOrCreateOnboardingTab().catch((error) =>

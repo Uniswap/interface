@@ -97,6 +97,8 @@ export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) 
       }
       searchParams.delete('inputCurrency')
       searchParams.delete('outputCurrency')
+      searchParams.delete('value')
+      searchParams.delete('field')
       targetChainId && searchParams.set('chain', CHAIN_IDS_TO_NAMES[targetChainId])
       setSearchParams(searchParams)
 

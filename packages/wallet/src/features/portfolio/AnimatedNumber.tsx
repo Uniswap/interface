@@ -1,10 +1,7 @@
 import { SCREEN_WIDTH } from '@gorhom/bottom-sheet'
-import { useEffect, useState } from 'react'
-import { I18nManager, LayoutChangeEvent, StyleSheet, Text } from 'react-native'
+import { useEffect, useMemo, useRef, useState } from 'react'
+import { I18nManager, LayoutChangeEvent, StyleSheet } from 'react-native'
 import Animated, {
-  FadeIn,
-  FadeOut,
-  Layout,
   useAnimatedStyle,
   useSharedValue,
   withDelay,
@@ -12,17 +9,19 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
-import { Flex, Shine, useSporeColors } from 'ui/src'
+import { Flex, Shine, Text, TextLoaderWrapper, isWeb, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { TextLoaderWrapper } from 'ui/src/components/text/Text'
 import { fonts } from 'ui/src/theme'
+import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 export const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 export const NUMBER_WIDTH_ARRAY = [29, 20, 29, 29, 29, 29, 29, 29, 29, 29] // width of digits in a font
+export const SPACE_SIZE = 8
 export const DIGIT_HEIGHT = 44
+export const DIGIT_MAX_WIDTH = 29
 export const ADDITIONAL_WIDTH_FOR_ANIMATIONS = 8
 
 // TODO: remove need to manually define width of each character
@@ -45,6 +44,7 @@ const RollNumber = ({
   chars,
   commonPrefixLength,
   shouldFadeDecimals,
+  currency,
 }: {
   chars: string[]
   digit?: string
@@ -52,20 +52,26 @@ const RollNumber = ({
   index: number
   commonPrefixLength: number
   shouldFadeDecimals: boolean
+  currency: FiatCurrencyInfo
 }): JSX.Element => {
   const colors = useSporeColors()
+  const lastChars = useRef([''])
+  const decimalSeparatorIndex = chars.indexOf(currency.decimalSeparator) - 1
   const fontColor = useSharedValue(
-    nextColor || (shouldFadeDecimals && index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val),
+    nextColor ||
+      (shouldFadeDecimals && currency && index > decimalSeparatorIndex ? colors.neutral3.val : colors.neutral1.val),
   )
   const yOffset = useSharedValue(digit && Number(digit) >= 0 ? DIGIT_HEIGHT * -digit : 0)
 
   useEffect(() => {
-    const finishColor = shouldFadeDecimals && index > chars.length - 4 ? colors.neutral3.val : colors.neutral1.val
-    if (nextColor && index > commonPrefixLength - 1) {
+    const finishColor =
+      shouldFadeDecimals && currency && index > decimalSeparatorIndex ? colors.neutral3.val : colors.neutral1.val
+    if (nextColor && index > commonPrefixLength - 1 && chars !== lastChars.current) {
       fontColor.value = withSequence(
         withTiming(nextColor, { duration: 250 }),
         withDelay(50, withTiming(finishColor, { duration: 310 })),
       )
+      lastChars.current = chars
     } else {
       fontColor.value = finishColor
     }
@@ -74,25 +80,41 @@ const RollNumber = ({
     nextColor,
     colors.neutral3,
     index,
-    chars.length,
+    chars,
     colors.neutral1,
     commonPrefixLength,
     fontColor,
     shouldFadeDecimals,
+    currency,
+    decimalSeparatorIndex,
   ])
 
   const animatedFontStyle = useAnimatedStyle(() => {
     return {
       color: fontColor.value,
     }
-  })
+  }, [fontColor.value])
 
   const numbers = NUMBER_ARRAY.map((char, idx) => {
-    return (
+    // Web doesn't like standard Animated.Text custom fonts but Text from Tamagui doesn't like color animations
+    return isWeb ? (
+      <Text
+        key={idx}
+        allowFontScaling={false}
+        fontFamily="$heading"
+        style={[animatedFontStyle, AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT }]}
+      >
+        {char}
+      </Text>
+    ) : (
       <Animated.Text
         key={idx}
         allowFontScaling={false}
-        style={[animatedFontStyle, AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT }]}
+        style={[
+          animatedFontStyle,
+          AnimatedFontStyles.fontStyle,
+          { height: DIGIT_HEIGHT, fontFamily: fonts.heading2.family },
+        ]}
       >
         {char}
       </Animated.Text>
@@ -102,15 +124,16 @@ const RollNumber = ({
   useEffect(() => {
     if (digit && Number(digit) >= 0) {
       const newOffset = DIGIT_HEIGHT * -digit
-      yOffset.value = withTiming(newOffset)
+      yOffset.value = newOffset
     }
   })
 
   const animatedWrapperStyle = useAnimatedStyle(() => {
     return {
-      transform: [{ translateY: yOffset.value }],
+      transform: [{ translateY: withTiming(yOffset.value) }],
     }
-  })
+  }, [yOffset.value])
+
   if (digit && !Number.isNaN(parseFloat(digit)) && Number(digit) >= 0) {
     return (
       <Animated.View
@@ -140,31 +163,51 @@ const RollNumber = ({
 const Char = ({
   index,
   chars,
+  currency,
+  charsSizes,
   nextColor,
   commonPrefixLength,
   shouldFadeDecimals,
 }: {
   index: number
   chars: string[]
+  currency: FiatCurrencyInfo
+  charsSizes: number[]
   nextColor?: string
   commonPrefixLength: number
   shouldFadeDecimals: boolean
 }): JSX.Element => {
+  const animatedLeft = useAnimatedStyle(
+    () => ({
+      marginLeft: withTiming(charsSizes[index - 1] || 0),
+    }),
+    [charsSizes, index],
+  )
   return (
-    <Animated.View
-      entering={nextColor ? FadeIn : undefined}
-      exiting={FadeOut}
-      layout={Layout}
-      style={[{ height: DIGIT_HEIGHT }, AnimatedCharStyles.wrapperStyle]}
-    >
-      <RollNumber
-        chars={chars}
-        commonPrefixLength={commonPrefixLength}
-        digit={chars[index]}
-        index={index}
-        nextColor={nextColor}
-        shouldFadeDecimals={shouldFadeDecimals}
-      />
+    <Animated.View style={{ height: DIGIT_HEIGHT }}>
+      <Animated.View
+        style={[
+          {
+            height: DIGIT_HEIGHT,
+            // Check if character can animate and if so make it DIGIT_MAX_WIDTH
+            // to make sure it won't be cropped during animation
+            width: NUMBER_WIDTH_ARRAY_SCALED[Number(chars[index])] && DIGIT_MAX_WIDTH,
+            position: NUMBER_WIDTH_ARRAY_SCALED[Number(chars[index])] ? 'absolute' : 'relative',
+          },
+          AnimatedCharStyles.wrapperStyle,
+          animatedLeft,
+        ]}
+      >
+        <RollNumber
+          chars={chars}
+          commonPrefixLength={commonPrefixLength}
+          currency={currency}
+          digit={chars[index]}
+          index={index}
+          nextColor={nextColor}
+          shouldFadeDecimals={shouldFadeDecimals}
+        />
+      </Animated.View>
     </Animated.View>
   )
 }
@@ -207,10 +250,15 @@ type AnimatedNumberProps = {
   loadingPlaceholderText: string
   loading: boolean | 'no-shimmer'
   value?: string
+  balance?: number
   colorIndicationDuration: number
   shouldFadeDecimals: boolean
   warmLoading: boolean
   disableAnimations?: boolean
+}
+
+interface ReanimatedNumberProps extends AnimatedNumberProps {
+  currency: FiatCurrencyInfo
 }
 
 const AnimatedNumber = (props: AnimatedNumberProps): JSX.Element => {
@@ -245,19 +293,21 @@ const AnimatedNumber = (props: AnimatedNumberProps): JSX.Element => {
     }
   }
 
-  return <ReanimatedNumber {...props} />
+  return <ReanimatedNumber {...props} currency={currency} />
 }
 
 const ReanimatedNumber = ({
+  balance,
+  currency,
   value,
   loading = false,
   loadingPlaceholderText,
   colorIndicationDuration,
   shouldFadeDecimals,
   warmLoading,
-}: AnimatedNumberProps): JSX.Element => {
+}: ReanimatedNumberProps): JSX.Element => {
   const prevValue = usePrevious(value)
-  const [chars, setChars] = useState<string[]>()
+  const prevBalance = usePrevious(balance)
   const [commonPrefixLength, setCommonPrefixLength] = useState<number>(0)
   const [nextColor, setNextColor] = useState<string>()
   const scale = useSharedValue(1)
@@ -269,7 +319,7 @@ const ReanimatedNumber = ({
     return {
       transform: [{ translateX: -SCREEN_WIDTH / 2 }, { scale: scale.value }, { translateX: SCREEN_WIDTH / 2 }],
     }
-  })
+  }, [scale.value])
 
   const fitBalanceOnLayout = (e: LayoutChangeEvent): void => {
     const newScale = (SCREEN_WIDTH - SCREEN_WIDTH_BUFFER) / e.nativeEvent.layout.width
@@ -285,22 +335,36 @@ const ReanimatedNumber = ({
   }
 
   useEffect(() => {
-    if (value && prevValue !== value) {
-      if (prevValue && value > prevValue) {
+    if (balance && value && value !== prevValue) {
+      if (prevBalance && balance > prevBalance) {
         setNextColor(colors.statusSuccess.val)
-      } else if (prevValue && value < prevValue) {
+      } else if (prevBalance && balance < prevBalance) {
         setNextColor(colors.neutral2.val)
       } else {
         setNextColor(undefined)
       }
-      const newChars = value.split('')
-      setChars(newChars)
-      setCommonPrefixLength(longestCommonPrefix(prevValue ?? '', value).length)
+      setCommonPrefixLength(longestCommonPrefix(String(value), String(prevValue)).length)
       setTimeout(() => {
         setNextColor(undefined)
       }, colorIndicationDuration)
     }
-  }, [colorIndicationDuration, colors.neutral2, colors.statusSuccess.val, prevValue, value])
+  }, [colorIndicationDuration, colors.neutral2, colors.statusSuccess.val, prevBalance, balance, prevValue, value])
+
+  const chars = useMemo(() => (value ? value.split('') : []), [value])
+  const charsSizes = useMemo(() => {
+    const lastSizes: number[] = []
+    return chars.map((char, index) => {
+      lastSizes.push(
+        char >= '0' && char <= '9'
+          ? (lastSizes[index - 1] || 0) + (NUMBER_WIDTH_ARRAY_SCALED[Number(char)] || 0)
+          : Number(char) === 0
+            ? SPACE_SIZE
+            : 0,
+      )
+
+      return lastSizes[index] || 0
+    })
+  }, [chars])
 
   if (loading) {
     const placeholderChars = [...loadingPlaceholderText]
@@ -312,7 +376,9 @@ const ReanimatedNumber = ({
             <Char
               key={index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${placeholderChars.length - index}`}
               chars={placeholderChars}
+              charsSizes={charsSizes}
               commonPrefixLength={commonPrefixLength}
+              currency={currency}
               index={index}
               nextColor={nextColor}
               shouldFadeDecimals={shouldFadeDecimals}
@@ -328,12 +394,14 @@ const ReanimatedNumber = ({
       <Flex row alignItems="flex-start" backgroundColor="$surface1" borderRadius="$rounded4" width={MAX_DEVICE_WIDTH}>
         <TopAndBottomGradient />
         <Shine disabled={!warmLoading}>
-          <AnimatedFlex row entering={FadeIn} width={MAX_DEVICE_WIDTH}>
-            {chars?.map((_, index) => (
+          <AnimatedFlex row width={MAX_DEVICE_WIDTH}>
+            {chars.map((_, index) => (
               <Char
                 key={index === 0 ? `$_sign_${colors.neutral1.val}` : `$_number_${chars.length - index}`}
                 chars={chars}
+                charsSizes={charsSizes}
                 commonPrefixLength={commonPrefixLength}
+                currency={currency}
                 index={index}
                 nextColor={nextColor}
                 shouldFadeDecimals={shouldFadeDecimals}
@@ -370,7 +438,6 @@ export const AnimatedCharStyles = StyleSheet.create({
 
 export const AnimatedFontStyles = StyleSheet.create({
   fontStyle: {
-    fontFamily: fonts.heading2.family,
     fontSize: fonts.heading2.fontSize,
     // special case for the home screen balance, instead of using the heading2 font weight
     fontWeight: '500',

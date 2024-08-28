@@ -18,7 +18,7 @@ import { quickRouteApi } from 'state/routing/quickRouteSlice'
 import { routingApi } from 'state/routing/slice'
 import { RouterPreference } from 'state/routing/types'
 import { SignatureState } from 'state/signatures/reducer'
-import { TransactionState } from 'state/transactions/reducer'
+import { LocalWebTransactionState } from 'state/transactions/reducer'
 import { TransactionDetails } from 'state/transactions/types'
 import { UserState } from 'state/user/reducer'
 import { SerializedPair, SerializedToken, SlippageTolerance } from 'state/user/types'
@@ -26,8 +26,13 @@ import { ConnectedWalletsState } from 'state/wallets/reducer'
 import { Wallet } from 'state/wallets/types'
 import { InterfaceState } from 'state/webReducer'
 import { Equals, assert } from 'tsafe'
+import { FavoritesState } from 'uniswap/src/features/favorites/slice'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { SearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
+import { UserSettingsState } from 'uniswap/src/features/settings/slice'
 import { TimingState } from 'uniswap/src/features/timing/slice'
+import { TokensState } from 'uniswap/src/features/tokens/slice/slice'
+import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 /**
@@ -52,7 +57,7 @@ import { InterfaceChainId } from 'uniswap/src/types/chains'
 type ExpectedAppState = CombinedState<{
   // Web State
   readonly user: UserState
-  readonly transactions: TransactionState
+  readonly localWebTransactions: LocalWebTransactionState
   readonly signatures: SignatureState
   readonly fiatOnRampTransactions: FiatOnRampTransactionsState
   readonly lists: ListsState
@@ -68,8 +73,13 @@ type ExpectedAppState = CombinedState<{
   readonly [quickRouteApi.reducerPath]: ReturnType<typeof quickRouteApi.reducer>
 
   // Uniswap State
-  readonly timing: TimingState
   readonly [fiatOnRampAggregatorApi.reducerPath]: ReturnType<typeof fiatOnRampAggregatorApi.reducer>
+  readonly favorites: FavoritesState
+  readonly searchHistory: Readonly<SearchHistoryState>
+  readonly timing: TimingState
+  readonly tokens: TokensState
+  readonly transactions: TransactionsState
+  readonly userSettings: UserSettingsState
 }>
 
 assert<Equals<InterfaceState, ExpectedAppState>>()
@@ -105,7 +115,7 @@ interface ExpectedTransactionState {
   }
 }
 
-assert<Equals<TransactionState, ExpectedTransactionState>>()
+assert<Equals<LocalWebTransactionState, ExpectedTransactionState>>()
 
 interface ExpectedListsState {
   readonly byUrl: {

@@ -1,80 +1,43 @@
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
-import Column from 'components/Column'
-import Row from 'components/Row'
 import { getProtocolColor, getProtocolName } from 'graphql/data/util'
-import styled, { useTheme } from 'lib/styled-components'
+import { useTheme } from 'lib/styled-components'
 import { UTCTimestamp } from 'lightweight-charts'
 import { ReactElement, ReactNode } from 'react'
-import { EllipsisStyle } from 'theme/components'
+import { EllipsisTamaguiStyle } from 'theme/components'
 import { ThemedText } from 'theme/components/text'
-import { textFadeIn } from 'theme/styles'
+import { Flex, Text } from 'ui/src'
 import { PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export type ChartHeaderProtocolInfo = { protocol: PriceSource; value?: number }
-
-const ChartHeaderWrapper = styled(Row)`
-  ${textFadeIn};
-  position: absolute;
-  width: 100%;
-  gap: 8px;
-  align-items: flex-start;
-`
-const ChartHeaderLeftDisplay = styled.div`
-  position: absolute;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  padding-bottom: 14px;
-  text-align: left;
-  pointer-events: none;
-  width: 70%;
-
-  * {
-    ${EllipsisStyle}
-  }
-`
-const ProtocolLegendWrapper = styled(Column)`
-  position: absolute;
-  right: 0px;
-  padding: 4px 12px;
-  gap: 12px;
-  text-align: left;
-  pointer-events: none;
-`
-const ProtocolBlip = styled.div<{ color: string }>`
-  background-color: ${({ color }) => color};
-  border-radius: 4px;
-  width: 12px;
-  height: 12px;
-`
-
-const ProtocolText = styled(ThemedText.Caption)`
-  width: 80px;
-  text-align: right;
-  ${EllipsisStyle}
-`
 
 function ProtocolLegend({ protocolData }: { protocolData?: ChartHeaderProtocolInfo[] }) {
   const { formatFiatPrice } = useFormatter()
   const theme = useTheme()
 
   return (
-    <ProtocolLegendWrapper>
+    <Flex position="absolute" gap="$gap12" py="$spacing4" px="$spacing12" right={0} pointerEvents="none">
       {protocolData
         ?.map(({ value, protocol }) => {
           const display = value
             ? formatFiatPrice({ price: value, type: NumberType.ChartFiatValue })
             : getProtocolName(protocol)
           return (
-            <Row gap="6px" justify="flex-end" key={protocol + '_blip'}>
-              <ProtocolText>{display}</ProtocolText>
-              <ProtocolBlip color={getProtocolColor(protocol, theme)} />
-            </Row>
+            <Flex row gap={6} justifyContent="flex-end" key={protocol + '_blip'}>
+              <Text variant="body4" width={80} textAlign="right" {...EllipsisTamaguiStyle}>
+                {display}
+              </Text>
+              <Flex
+                borderRadius="$rounded4"
+                width={12}
+                height={12}
+                backgroundColor={getProtocolColor(protocol, theme)}
+              />
+            </Flex>
           )
         })
         .reverse()}
-    </ProtocolLegendWrapper>
+    </Flex>
   )
 }
 
@@ -93,7 +56,9 @@ function HeaderValueDisplay({ value, valueFormatterType = NumberType.ChartFiatVa
   }
 
   return (
-    <ThemedText.HeadlineLarge>{formatFiatPrice({ price: value, type: valueFormatterType })}</ThemedText.HeadlineLarge>
+    <Text variant="heading2" {...EllipsisTamaguiStyle}>
+      {formatFiatPrice({ price: value, type: valueFormatterType })}
+    </Text>
   )
 }
 
@@ -124,15 +89,15 @@ export function ChartHeader({
   additionalFields,
 }: ChartHeaderProps) {
   return (
-    <ChartHeaderWrapper data-cy="chart-header">
-      <ChartHeaderLeftDisplay>
+    <Flex row position="absolute" width="100%" gap="$gap8" alignItems="flex-start" animation="fast" id="chart-header">
+      <Flex position="absolute" gap="$gap4" pb={14} pointerEvents="none" width="70%">
         <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} />
-        <Row gap="sm">
+        <Flex row gap="$gap8" {...EllipsisTamaguiStyle}>
           {additionalFields}
           <HeaderTimeDisplay time={time} timePlaceholder={timePlaceholder} />
-        </Row>
-      </ChartHeaderLeftDisplay>
+        </Flex>
+      </Flex>
       <ProtocolLegend protocolData={protocolData} />
-    </ChartHeaderWrapper>
+    </Flex>
   )
 }

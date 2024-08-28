@@ -1,15 +1,15 @@
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
-import {
-  deriveCurrencyAmountFromAssetResponse,
-  parseUSDValueFromAssetChange,
-} from 'wallet/src/features/transactions/history/utils'
 import {
   NFTMintTransactionInfo,
   TransactionDetailsType,
   TransactionListQueryResponse,
   TransactionType,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
+import {
+  deriveCurrencyAmountFromAssetResponse,
+  parseUSDValueFromAssetChange,
+} from 'wallet/src/features/transactions/history/utils'
 
 export default function parseNFTMintTransaction(
   transaction: NonNullable<TransactionListQueryResponse>,

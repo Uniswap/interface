@@ -6,8 +6,7 @@ import {
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { faker } from 'uniswap/src/test/shared'
-import { createFixture } from 'uniswap/src/test/utils'
-import { randomEnumValue } from 'wallet/src/test/utils'
+import { createFixture, randomEnumValue } from 'uniswap/src/test/utils'
 
 export const gqlTransaction = createFixture<Transaction>()(() => ({
   __typename: 'Transaction',

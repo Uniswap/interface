@@ -1,15 +1,15 @@
 import { PropsWithChildren, createContext, useContext, useEffect } from 'react'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
-import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import {
   SwapTxAndGasInfo,
   useSwapTxAndGasInfo,
 } from 'wallet/src/features/transactions/swap/trade/api/hooks/useSwapTxAndGasInfo'
-import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 
 export type ValidatedSwapTxContext = Required<SwapTxAndGasInfo> & {
   approvalError: false
@@ -34,12 +34,12 @@ function validateSwapTxContext(swapTxContext: SwapTxAndGasInfo): ValidatedSwapTx
   return undefined
 }
 
-type ValidatedGasFeeResult = GasFeeResult & { value: string; error: undefined }
+type ValidatedGasFeeResult = GasFeeResult & { value: string; error: null }
 function validateGasFeeResult(gasFee: GasFeeResult): ValidatedGasFeeResult | undefined {
   if (gasFee.value === undefined || gasFee.error) {
     return undefined
   }
-  return { ...gasFee, value: gasFee.value, error: undefined }
+  return { ...gasFee, value: gasFee.value, error: null }
 }
 
 export function isValidSwapTxContext(swapTxContext: SwapTxAndGasInfo): swapTxContext is ValidatedSwapTxContext {
@@ -50,7 +50,7 @@ export function isValidSwapTxContext(swapTxContext: SwapTxAndGasInfo): swapTxCon
 export const SwapTxContext = createContext<SwapTxAndGasInfo | undefined>(undefined)
 
 export function SwapTxContextProviderTradingApi({ children }: PropsWithChildren): JSX.Element {
-  const { account } = useTransactionModalContext()
+  const account = useAccountMeta()
   const { derivedSwapInfo } = useSwapFormContext()
   const swapTxContext = useSwapTxAndGasInfo({ derivedSwapInfo, account })
   const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)

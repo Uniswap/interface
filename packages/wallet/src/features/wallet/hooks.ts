@@ -1,10 +1,10 @@
 import { useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { trimToLength } from 'utilities/src/primitives/string'
-import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
@@ -17,8 +17,6 @@ import {
   selectSignerMnemonicAccountExists,
   selectSignerMnemonicAccounts,
   selectViewOnlyAccounts,
-  selectWalletHideSmallBalancesSetting,
-  selectWalletHideSpamTokensSetting,
   selectWalletSwapProtectionSetting,
 } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -61,7 +59,7 @@ export function useActiveAccount(): Account | null {
   return useSelector(selectActiveAccount)
 }
 
-export function useActiveSignerAccount(): Account | null {
+export function useActiveSignerAccount(): SignerMnemonicAccount | null {
   const activeAccount = useSelector(selectActiveAccount)
   return activeAccount?.type === AccountType.SignerMnemonic ? activeAccount : null
 }
@@ -110,14 +108,6 @@ export function useSwapProtectionSetting(): SwapProtectionSetting {
 export function useSelectAccountNotificationSetting(address: Address): boolean {
   const selectAccountNotificationSetting = useMemo(() => makeSelectAccountNotificationSetting(), [])
   return useSelector((state: WalletState) => selectAccountNotificationSetting(state, address))
-}
-
-export function useHideSmallBalancesSetting(): boolean {
-  return useSelector(selectWalletHideSmallBalancesSetting)
-}
-
-export function useHideSpamTokensSetting(): boolean {
-  return useSelector(selectWalletHideSpamTokensSetting)
 }
 
 type DisplayNameOptions = {

@@ -7,10 +7,10 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/TokenOptionItem'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { useTokenWarningDismissed } from 'uniswap/src/features/tokens/slice/hooks'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 
 interface Props {
   onSelectCurrency: (currency: FiatOnRampCurrency) => void

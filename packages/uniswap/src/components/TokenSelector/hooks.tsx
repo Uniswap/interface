@@ -1,13 +1,20 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/flowToModalName'
-import { TokenOption, TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import {
+  FilterCallbacksHookType,
+  TokenOption,
+  TokenOptionSection,
+  TokenSection,
+  TokenSelectorFlow,
+} from 'uniswap/src/components/TokenSelector/types'
 import {
   createEmptyBalanceOption,
   formatSearchResults,
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { DAI, USDC, USDT, WBTC } from 'uniswap/src/constants/tokens'
 import {
   PortfolioValueModifier,
@@ -27,10 +34,26 @@ import { buildCurrency, usePersistedError } from 'uniswap/src/features/dataApi/u
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import {
+  UniverseChainId,
+  WALLET_SUPPORTED_CHAIN_IDS,
+  WEB_SUPPORTED_CHAIN_IDS,
+  WalletChainId,
+} from 'uniswap/src/types/chains'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildNativeCurrencyId, buildWrappedNativeCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
+import { isInterface } from 'utilities/src/platform'
+
+const nativeCurrencyNames = (isInterface ? WEB_SUPPORTED_CHAIN_IDS : WALLET_SUPPORTED_CHAIN_IDS)
+  .map((chainId) => {
+    return UNIVERSE_CHAIN_INFO[chainId].testnet
+      ? false
+      : {
+          chainId,
+          name: UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.name.toLowerCase(),
+        }
+  })
+  .filter(Boolean) as { chainId: WalletChainId; name: string }[]
 
 // Use Mainnet base token addresses since TokenProjects query returns each token
 // on each network
@@ -121,7 +144,7 @@ export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> 
 }
 
 export function usePortfolioBalancesForAddressById(
-  address: Address,
+  address: Address | undefined,
   valueModifiers?: PortfolioValueModifier[],
 ): GqlResult<Record<Address, PortfolioBalance> | undefined> {
   const {
@@ -174,7 +197,7 @@ export function useCurrencyInfosToTokenOptions({
 }
 
 export function useCommonTokensOptions(
-  address: Address,
+  address: Address | undefined,
   chainFilter: UniverseChainId | null,
   valueModifiers?: PortfolioValueModifier[],
 ): GqlResult<TokenOption[] | undefined> {
@@ -219,7 +242,7 @@ export function useCommonTokensOptions(
 }
 
 export function usePopularTokensOptions(
-  address: Address,
+  address: Address | undefined,
   chainFilter: UniverseChainId,
   valueModifiers?: PortfolioValueModifier[],
 ): GqlResult<TokenOption[] | undefined> {
@@ -259,7 +282,7 @@ export function usePopularTokensOptions(
 }
 
 export function usePortfolioTokenOptions(
-  address: Address,
+  address: Address | undefined,
   chainFilter: UniverseChainId | null,
   valueModifiers?: PortfolioValueModifier[],
   searchFilter?: string,
@@ -293,15 +316,31 @@ export function usePortfolioTokenOptions(
 export function useFilterCallbacks(
   chainId: UniverseChainId | null,
   flow: TokenSelectorFlow,
-): {
-  chainFilter: UniverseChainId | null
-  searchFilter: string | null
-  onChangeChainFilter: (newChainFilter: UniverseChainId | null) => void
-  onClearSearchFilter: () => void
-  onChangeText: (newSearchFilter: string) => void
-} {
+): ReturnType<FilterCallbacksHookType> {
   const [chainFilter, setChainFilter] = useState<UniverseChainId | null>(chainId)
+  const [parsedChainFilter, setParsedChainFilter] = useState<UniverseChainId | null>(null)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
+  const [parsedSearchFilter, setParsedSearchFilter] = useState<string | null>(null)
+
+  // Parses the user input to determine if the user is searching for a chain + token
+  // i.e "eth dai"
+  // parsedChainFilter: 1
+  // parsedSearchFilter: "dai"
+  useEffect(() => {
+    const splitSearch = searchFilter?.split(' ')
+    const maybeChainName = splitSearch?.[0]?.toLowerCase()
+
+    const chainMatch = nativeCurrencyNames.find((currency) => currency.name.startsWith(maybeChainName ?? ''))
+    const search = splitSearch?.slice(1).join(' ')
+
+    if (!chainFilter && chainMatch && search) {
+      setParsedChainFilter(chainMatch.chainId)
+      setParsedSearchFilter(search)
+    } else {
+      setParsedChainFilter(null)
+      setParsedSearchFilter(null)
+    }
+  }, [searchFilter, chainFilter])
 
   useEffect(() => {
     setChainFilter(chainId)
@@ -326,7 +365,9 @@ export function useFilterCallbacks(
 
   return {
     chainFilter,
+    parsedChainFilter,
     searchFilter,
+    parsedSearchFilter,
     onChangeChainFilter,
     onClearSearchFilter,
     onChangeText,
@@ -346,7 +387,7 @@ export function filterRecentlySearchedTokenOptions(
 }
 
 export function useTokenSectionsForSearchResults(
-  address: string,
+  address: string | undefined,
   chainFilter: UniverseChainId | null,
   searchFilter: string | null,
   isBalancesOnlySearch: boolean,

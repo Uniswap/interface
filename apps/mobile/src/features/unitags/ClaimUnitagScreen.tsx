@@ -18,6 +18,8 @@ import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Pill } from 'uniswap/src/components/pill/Pill'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
+import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -145,10 +147,16 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
   }
 
   const onPressMaybeLater = (): void => {
+    const onboardingExperimentEnabled = getExperimentValue(
+      Experiments.OnboardingRedesignRecoveryBackup,
+      OnboardingRedesignRecoveryBackupProperties.Enabled,
+      false,
+    )
+
     sendAnalyticsEvent(UnitagEventName.UnitagOnboardingActionTaken, { action: 'later' })
     // Navigate to next screen if in onboarding
     navigate(MobileScreens.OnboardingStack, {
-      screen: OnboardingScreens.WelcomeWallet,
+      screen: onboardingExperimentEnabled ? OnboardingScreens.Notifications : OnboardingScreens.WelcomeWallet,
       params: {
         importType: ImportType.CreateNew,
         entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
@@ -377,18 +385,23 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
           )}
         </Button>
       </Flex>
-      {showInfoModal && <InfoModal unitagAddress={unitagAddress} onClose={(): void => setShowInfoModal(false)} />}
-      {showClaimPeriodInfoModal && (
-        <ClaimPeriodInfoModal username={unitagToCheck ?? ''} onClose={(): void => setShowClaimPeriodInfoModal(false)} />
-      )}
+      <InfoModal isOpen={showInfoModal} unitagAddress={unitagAddress} onClose={(): void => setShowInfoModal(false)} />
+
+      <ClaimPeriodInfoModal
+        isOpen={showClaimPeriodInfoModal}
+        username={unitagToCheck ?? ''}
+        onClose={(): void => setShowClaimPeriodInfoModal(false)}
+      />
     </SafeKeyboardOnboardingScreen>
   )
 }
 
 const InfoModal = ({
+  isOpen,
   unitagAddress,
   onClose,
 }: {
+  isOpen: boolean
   unitagAddress: string | undefined
   onClose: () => void
 }): JSX.Element => {
@@ -436,6 +449,7 @@ const InfoModal = ({
           </Pill>
         </Flex>
       }
+      isOpen={isOpen}
       modalName={ModalName.TooltipContent}
       title={t('unitags.onboarding.info.title')}
       onClose={onClose}
@@ -443,7 +457,15 @@ const InfoModal = ({
   )
 }
 
-const ClaimPeriodInfoModal = ({ onClose, username }: { onClose: () => void; username: string }): JSX.Element => {
+const ClaimPeriodInfoModal = ({
+  isOpen,
+  onClose,
+  username,
+}: {
+  isOpen: boolean
+  onClose: () => void
+  username: string
+}): JSX.Element => {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
@@ -453,6 +475,7 @@ const ClaimPeriodInfoModal = ({ onClose, username }: { onClose: () => void; user
       caption={t('unitags.onboarding.claimPeriod.description', { username })}
       closeText={t('common.button.close')}
       icon={<Image height={imageSizes.image48} resizeMode="contain" source={ENS_LOGO} width={imageSizes.image48} />}
+      isOpen={isOpen}
       modalName={ModalName.ENSClaimPeriod}
       title={t('unitags.onboarding.claimPeriod.title')}
       onClose={onClose}

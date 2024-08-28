@@ -146,7 +146,7 @@ function useNavigateToSend(): (args: NavigateToSendFlowArgs) => void {
 
     const state: SidebarLocationState = args ? { initialTransactionState: initialState } : undefined
 
-    navigate(AppRoutes.Transfer, { state })
+    navigate(AppRoutes.Send, { state })
   }, [])
 }
 

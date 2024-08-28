@@ -6,9 +6,8 @@ import {
   TransactionDirection,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { faker } from 'uniswap/src/test/shared'
-import { createFixture } from 'uniswap/src/test/utils'
+import { createFixture, randomEnumValue } from 'uniswap/src/test/utils'
 import { nftAsset } from 'wallet/src/test/fixtures/gql/assets'
-import { randomEnumValue } from 'wallet/src/test/utils'
 
 export const nftApproval = createFixture<NftApproval>()(() => ({
   __typename: 'NftApproval',

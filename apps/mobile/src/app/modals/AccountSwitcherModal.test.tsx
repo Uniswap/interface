@@ -3,8 +3,8 @@ import { AccountSwitcher } from 'src/app/modals/AccountSwitcherModal'
 import { preloadedMobileState, preloadedModalsState } from 'src/test/fixtures'
 import { cleanup, render } from 'src/test/test-utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { noOpFunction } from 'utilities/src/test/utils'
 import { ACCOUNT } from 'wallet/src/test/fixtures'
-import { noOpFunction } from 'wallet/src/test/mocks'
 
 const preloadedState = preloadedMobileState({
   account: ACCOUNT,
@@ -13,7 +13,7 @@ const preloadedState = preloadedMobileState({
   }),
 })
 
-// TODO [MOB-259]: Figure out how to do snapshot tests when there is a BottomSheetModal
+// TODO [MOB-259]: Figure out how to do snapshot tests when there is a Modal
 describe(AccountSwitcher, () => {
   it('renders correctly', async () => {
     const tree = render(<AccountSwitcher onClose={noOpFunction} />, { preloadedState })

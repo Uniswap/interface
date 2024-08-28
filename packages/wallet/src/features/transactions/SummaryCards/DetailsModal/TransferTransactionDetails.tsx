@@ -1,22 +1,22 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { Flex, Loader, Text, TouchableArea, isWeb } from 'ui/src'
+import { fonts, iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { NftTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/NftTransactionDetails'
-import { useFormattedCurrencyAmountAndUSDValue } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   ReceiveTokenTransactionInfo,
   SendTokenTransactionInfo,
   TransactionDetails,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { NftTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/NftTransactionDetails'
+import { useFormattedCurrencyAmountAndUSDValue } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
 import { buildCurrencyId } from 'wallet/src/utils/currencyId'
 
 export function TransferTransactionDetails({
@@ -85,15 +85,29 @@ export function CurrencyTransferContent({
     }
   }
 
+  const headingText = showValueAsHeading ? value : tokenAmountWithSymbol
+  const subtitleText = showValueAsHeading ? tokenAmountWithSymbol : value
+
+  const headingIsLoading = headingText === '-'
+  const subtitleIsLoading = subtitleText === '-'
+
   return (
     <TouchableArea onPress={onPressToken}>
       <Flex centered gap="$spacing8" p="$spacing32">
-        <Text variant="heading2">{showValueAsHeading ? value : tokenAmountWithSymbol}</Text>
+        {headingIsLoading ? (
+          <Loader.Box height={fonts.heading2.lineHeight} width={iconSizes.icon100} />
+        ) : (
+          <Text variant="heading2">{headingText}</Text>
+        )}
         <Flex centered row gap="$spacing8">
           <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon20} />
-          <Text color="$neutral2" variant="body2">
-            {showValueAsHeading ? tokenAmountWithSymbol : value}
-          </Text>
+          {subtitleIsLoading ? (
+            <Loader.Box height={fonts.body2.lineHeight} width={iconSizes.icon48} />
+          ) : (
+            <Text color="$neutral2" variant="body2">
+              {subtitleText}
+            </Text>
+          )}
         </Flex>
       </Flex>
     </TouchableArea>

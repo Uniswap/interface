@@ -1,7 +1,5 @@
-import { AutoColumn } from 'components/Column'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { useAccount } from 'hooks/useAccount'
-import styled from 'lib/styled-components'
 import ms from 'ms'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { ProviderConnectedView } from 'pages/Swap/Buy/ProviderConnectedView'
@@ -9,18 +7,13 @@ import { ProviderConnectionError } from 'pages/Swap/Buy/ProviderConnectionError'
 import { ProviderOption } from 'pages/Swap/Buy/ProviderOption'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { useMemo, useState } from 'react'
-import { AdaptiveWebModalSheet, Flex, Separator, Text } from 'ui/src'
-import { TimePast } from 'ui/src/components/icons'
+import { AdaptiveWebModal, Flex, Separator, Text } from 'ui/src'
+import { TimePast } from 'ui/src/components/icons/TimePast'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FORQuote, FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { useInterval } from 'utilities/src/time/timing'
-
-const ProviderListPaddedColumn = styled(AutoColumn)`
-  position: relative;
-  padding-bottom: 8px;
-`
 
 interface ChooseProviderModal {
   isOpen: boolean
@@ -86,7 +79,7 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
   }
 
   return (
-    <ProviderListPaddedColumn gap="24px" id="ChooseProviderModal">
+    <Flex gap="$spacing24" pb="$spacing8" $sm={{ px: '$spacing8', pb: '$spacing16' }} id="ChooseProviderModal">
       <GetHelpHeader
         title={<Trans i18nKey="fiatOnRamp.checkoutWith" />}
         link={uniswapUrls.helpArticleUrls.fiatOnRampHelp}
@@ -144,16 +137,16 @@ function ChooseProviderModalContent({ closeModal }: ChooseProviderModal) {
           <Trans i18nKey="fiatOnRamp.chooseProvider.description" />
         </Text>
       </Flex>
-    </ProviderListPaddedColumn>
+    </Flex>
   )
 }
 
 export function ChooseProviderModal(props: ChooseProviderModal) {
   return (
-    <AdaptiveWebModalSheet isOpen={props.isOpen} onClose={props.closeModal} width={420}>
+    <AdaptiveWebModal isOpen={props.isOpen} onClose={props.closeModal} width={420}>
       <ContentWrapper>
         <ChooseProviderModalContent {...props} />
       </ContentWrapper>
-    </AdaptiveWebModalSheet>
+    </AdaptiveWebModal>
   )
 }

@@ -1,22 +1,21 @@
-import Row from 'components/Row'
 import { TokenDetailsPoolsTable } from 'components/Tokens/TokenDetails/tables/TokenDetailsPoolsTable'
 import { TransactionsTable } from 'components/Tokens/TokenDetails/tables/TransactionsTable'
-import styled from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useState } from 'react'
-import { ClickableStyle, ThemedText } from 'theme/components'
+import { ClickableTamaguiStyle } from 'theme/components'
+import { Flex, styled, Text } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 
-const Container = styled.div`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-`
-const Tab = styled(ThemedText.HeadlineMedium)<{ isActive?: boolean }>`
-  cursor: pointer;
-  color: ${({ isActive, theme }) => (isActive ? theme.neutral1 : theme.neutral2)};
-  ${ClickableStyle};
-`
+const Container = styled(Flex, {
+  width: '100%',
+})
+
+const Tab = styled(Text, {
+  color: '$neutral1',
+  variant: 'heading3',
+  ...ClickableTamaguiStyle,
+})
+
 enum ActivityTab {
   Txs,
   Pools,
@@ -31,14 +30,20 @@ export function ActivitySection() {
   }
   return (
     <Container data-testid="token-details-activity-section">
-      <Row gap="24px" marginBottom="24px" id="activity-header">
-        <Tab isActive={activityInView === ActivityTab.Txs} onClick={() => setActivityInView(ActivityTab.Txs)}>
+      <Flex row gap="$spacing24" mb="$spacing24" id="activity-header">
+        <Tab
+          color={activityInView === ActivityTab.Txs ? '$neutral1' : '$neutral2'}
+          onPress={() => setActivityInView(ActivityTab.Txs)}
+        >
           <Trans i18nKey="common.transactions" />
         </Tab>
-        <Tab isActive={activityInView === ActivityTab.Pools} onClick={() => setActivityInView(ActivityTab.Pools)}>
+        <Tab
+          color={activityInView === ActivityTab.Pools ? '$neutral1' : '$neutral2'}
+          onPress={() => setActivityInView(ActivityTab.Pools)}
+        >
           <Trans i18nKey="common.pools" />
         </Tab>
-      </Row>
+      </Flex>
       {activityInView === ActivityTab.Txs && <TransactionsTable chainId={chainId} referenceToken={referenceToken} />}
       {activityInView === ActivityTab.Pools && (
         <TokenDetailsPoolsTable chainId={chainId} referenceToken={referenceToken} />

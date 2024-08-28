@@ -1,0 +1,30 @@
+import { createStore, Store } from '@reduxjs/toolkit'
+import {
+  setHideSmallBalances,
+  setHideSpamTokens,
+  userSettingsReducer,
+  UserSettingsState,
+} from 'uniswap/src/features/settings/slice'
+
+describe(userSettingsReducer, () => {
+  let store: Store<UserSettingsState>
+
+  beforeEach(() => {
+    store = createStore(userSettingsReducer, {
+      hideSmallBalances: true,
+      hideSpamTokens: true,
+    })
+  })
+
+  it('sets small balances setting from default', () => {
+    expect(store.getState().hideSpamTokens).toEqual(true)
+    store.dispatch(setHideSmallBalances(false))
+    expect(store.getState().hideSmallBalances).toEqual(false)
+  })
+
+  it('sets spam tokens setting from default', () => {
+    expect(store.getState().hideSpamTokens).toEqual(true)
+    store.dispatch(setHideSpamTokens(false))
+    expect(store.getState().hideSpamTokens).toEqual(false)
+  })
+})

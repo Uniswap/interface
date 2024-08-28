@@ -4,10 +4,10 @@ import { GestureResponderEvent, StyleProp, ViewStyle } from 'react-native'
 import { Text, TouchableArea } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { useMaxAmountSpend } from 'wallet/src/features/gas/useMaxAmountSpend'
-import { TransactionType } from 'wallet/src/features/transactions/types'
 
 interface MaxAmountButtonProps {
   currencyAmount: CurrencyAmount<Currency> | null | undefined

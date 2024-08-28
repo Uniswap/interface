@@ -64,6 +64,7 @@ exports[`renders wallet preview card 1`] = `
     }
   >
     <View
+      onLayout={[Function]}
       style={
         {
           "alignItems": "center",
@@ -177,6 +178,7 @@ exports[`renders wallet preview card 1`] = `
                   "fontFamily": "Basel-Book",
                   "fontSize": 18,
                   "lineHeight": 24,
+                  "overflow": "hidden",
                 }
               }
               suppressHighlighting={true}
@@ -200,8 +202,8 @@ exports[`renders wallet preview card 1`] = `
     >
       <RNSVGSvgView
         align="xMidYMid"
-        bbHeight="20"
-        bbWidth="20"
+        bbHeight={20}
+        bbWidth={20}
         fill="none"
         focusable={false}
         meetOrSlice={0}
@@ -238,7 +240,7 @@ exports[`renders wallet preview card 1`] = `
               "strokeWidth",
             ]
           }
-          strokeWidth="8"
+          strokeWidth={8}
         >
           <RNSVGPath
             d="M13.3334 4L6.00008 11.3333L2.66675 8"

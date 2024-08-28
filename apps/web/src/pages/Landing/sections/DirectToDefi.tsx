@@ -1,56 +1,29 @@
-import styled from 'lib/styled-components'
-import { Box, H2 } from 'pages/Landing/components/Generics'
+import { H2 } from 'pages/Landing/components/Generics'
 import { DocumentationCard } from 'pages/Landing/components/cards/DocumentationCard'
 import { DownloadWalletCard } from 'pages/Landing/components/cards/DownloadWalletCard'
 import { LiquidityCard } from 'pages/Landing/components/cards/LiquidityCard'
 import { WebappCard } from 'pages/Landing/components/cards/WebappCard'
+import { Flex } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 
-const SectionLayout = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 40px;
-  @media (max-width: 768px) {
-    padding: 0 48px;
-  }
-  @media (max-width: 468px) {
-    padding: 0 24px;
-  }
-`
-const RowToCol = styled(Box)`
-  height: auto;
-  flex-shrink: 1;
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`
-const SectionCol = styled(Box)`
-  flex-direction: column;
-  max-width: 1280px;
-  gap: 32px;
-  @media (max-width: 768px) {
-    gap: 24px;
-  }
-`
 export function DirectToDefi() {
   return (
-    <SectionLayout>
-      <SectionCol direction="column" gap="40px" maxWidth="1280px">
+    <Flex alignItems="center" px={40} $md={{ px: 48 }} $sm={{ px: 24 }}>
+      <Flex maxWidth={1280} gap={32} $md={{ gap: 24 }}>
         <H2>
           <Trans i18nKey="landing.directToDeFi" />
         </H2>
-        <Box direction="column" gap="16px">
-          <RowToCol direction="row" gap="16px">
+        <Flex gap="$gap16">
+          <Flex row flexWrap="wrap" height="auto" flex={1} gap="$gap16" $md={{ flexDirection: 'column' }}>
             <WebappCard />
             <DownloadWalletCard />
-          </RowToCol>
-          <RowToCol direction="row" gap="16px">
+          </Flex>
+          <Flex row flexWrap="wrap" height="auto" flex={1} gap="$gap16" $md={{ flexDirection: 'column' }}>
             <DocumentationCard />
             <LiquidityCard />
-          </RowToCol>
-        </Box>
-      </SectionCol>
-    </SectionLayout>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }

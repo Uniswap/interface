@@ -1,5 +1,6 @@
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
-import { mockLocalizedFormatter, noOpFunction } from 'wallet/src/test/mocks/utils'
+import { noOpFunction } from 'utilities/src/test/utils'
+import { mockLocalizedFormatter } from 'wallet/src/test/mocks/utils'
 import { getCurrencyDisplayText, getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
 describe(getFormattedCurrencyAmount, () => {

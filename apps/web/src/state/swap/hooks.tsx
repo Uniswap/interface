@@ -1,15 +1,13 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
-import { useSupportedChainId } from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES, useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
-import { useTokenBalances } from 'hooks/useTokenBalances'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -302,39 +300,89 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   )
 }
 
-function parseCurrencyFromURLParameter(urlParam: ParsedQs[string]): string {
+function parseFromURLParameter(urlParam: ParsedQs[string]): string | undefined {
+  if (typeof urlParam === 'string') {
+    return urlParam
+  }
+  return undefined
+}
+
+function parseCurrencyFromURLParameter(urlParam: ParsedQs[string]): string | undefined {
   if (typeof urlParam === 'string') {
     const valid = isAddress(urlParam)
     if (valid) {
       return valid
     }
+
     const upper = urlParam.toUpperCase()
     if (upper === 'ETH') {
       return 'ETH'
     }
+
+    if (urlParam === NATIVE_CHAIN_ID) {
+      return NATIVE_CHAIN_ID
+    }
   }
-  return ''
+  return undefined
+}
+
+export function serializeSwapStateToURLParameters(
+  state: CurrencyState & Partial<SwapState> & { chainId: UniverseChainId },
+): string {
+  const { inputCurrency, outputCurrency, typedValue, independentField, chainId } = state
+  const params = new URLSearchParams()
+
+  params.set('chain', CHAIN_IDS_TO_NAMES[chainId])
+
+  if (inputCurrency) {
+    params.set('inputCurrency', inputCurrency.isNative ? NATIVE_CHAIN_ID : inputCurrency.address)
+  }
+
+  if (outputCurrency) {
+    params.set('outputCurrency', outputCurrency.isNative ? NATIVE_CHAIN_ID : outputCurrency.address)
+  }
+
+  const hasValidInput = (inputCurrency || outputCurrency) && typedValue
+  if (hasValidInput) {
+    params.set('value', typedValue)
+  }
+
+  if (hasValidInput && independentField) {
+    params.set('field', independentField)
+  }
+
+  return '?' + params.toString()
 }
 
 export function queryParametersToCurrencyState(parsedQs: ParsedQs): SerializedCurrencyState {
-  const inputCurrency = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
-  let outputCurrency = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
+  const inputCurrencyId = parseCurrencyFromURLParameter(parsedQs.inputCurrency ?? parsedQs.inputcurrency)
+  const parsedOutputCurrencyId = parseCurrencyFromURLParameter(parsedQs.outputCurrency ?? parsedQs.outputcurrency)
+  const outputCurrencyId = parsedOutputCurrencyId === inputCurrencyId ? undefined : parsedOutputCurrencyId
+  const hasCurrencyInput = inputCurrencyId || outputCurrencyId
+  const value = hasCurrencyInput ? parseFromURLParameter(parsedQs.value) : undefined
+  const field = value ? parseFromURLParameter(parsedQs.field) : undefined
   const chainId = getParsedChainId(parsedQs)
-  if (inputCurrency === outputCurrency) {
-    // clear output if identical
-    outputCurrency = ''
-  }
 
   return {
-    inputCurrencyId: inputCurrency === '' ? undefined : inputCurrency ?? undefined,
-    outputCurrencyId: outputCurrency === '' ? undefined : outputCurrency ?? undefined,
+    inputCurrencyId,
+    outputCurrencyId,
+    value,
+    field,
     chainId,
   }
 }
 
+// Despite a lighter QuickTokenBalances query we've received feedback that the initial load time is too slow.
+// Removing the logic that uses user's balance to determine the initial currency.
+// We can revisit this if we find a way to make the initial load time faster.
+
+// When we get the speed up here is the PR that removed the beautiful code:
+// https://app.graphite.dev/github/pr/Uniswap/universe/11068/fix-web-default-to-eth-mainnet-on-multichain
 export function useInitialCurrencyState(): {
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
+  initialTypedValue?: string
+  initialField?: Field
   initialChainId: InterfaceChainId
   initialCurrencyLoading: boolean
 } {
@@ -346,7 +394,6 @@ export function useInitialCurrencyState(): {
     return queryParametersToCurrencyState(parsedQs)
   }, [parsedQs])
 
-  const account = useAccount()
   const supportedChainId = useSupportedChainId(parsedCurrencyState.chainId ?? chainId) ?? UniverseChainId.Mainnet
   const hasCurrencyQueryParams =
     parsedCurrencyState.inputCurrencyId || parsedCurrencyState.outputCurrencyId || parsedCurrencyState.chainId
@@ -357,11 +404,9 @@ export function useInitialCurrencyState(): {
     }
   }, [parsedCurrencyState.inputCurrencyId, parsedCurrencyState.outputCurrencyId, setIsUserSelectedToken])
 
-  const { balanceList, loading: balanceListLoading } = useTokenBalances({ cacheOnly: true })
-
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
-    // Default to ETH if multichain and balance list is not loaded and no query params
-    if (multichainUXEnabled && !balanceList && balanceListLoading && !hasCurrencyQueryParams) {
+    // Default to ETH if multichain
+    if (multichainUXEnabled && !hasCurrencyQueryParams) {
       return {
         initialInputCurrencyAddress: 'ETH',
         initialChainId: UniverseChainId.Mainnet,
@@ -373,44 +418,15 @@ export function useInitialCurrencyState(): {
         initialInputCurrencyAddress: parsedCurrencyState.inputCurrencyId,
         initialChainId: supportedChainId,
       }
-      // If multichain is disabled or account is disconnected or no balanceList
-      // return ETH or parsedCurrencyState
-    } else if (
-      !multichainUXEnabled ||
-      !account.isConnected ||
-      !balanceList ||
-      parsedCurrencyState.chainId ||
-      parsedCurrencyState.outputCurrencyId
-    ) {
-      return {
-        initialInputCurrencyAddress: parsedCurrencyState.outputCurrencyId ? undefined : 'ETH',
-        initialChainId: supportedChainId,
-      }
     }
-    // If no query params & connected, return the native token where user has the highest USD value
-    let highestBalance = 0
-    let highestBalanceNativeTokenAddress = 'ETH'
-    let highestBalanceChainId = UniverseChainId.Mainnet
-    balanceList.forEach((balance) => {
-      if (
-        balance?.token?.standard === NATIVE_CHAIN_ID &&
-        balance?.denominatedValue?.value &&
-        balance?.denominatedValue?.value > highestBalance
-      ) {
-        highestBalance = balance.denominatedValue.value
-        highestBalanceNativeTokenAddress = balance?.token.address ?? 'ETH'
-        highestBalanceChainId = supportedChainIdFromGQLChain(balance.token.chain) ?? UniverseChainId.Mainnet
-      }
-    })
-
-    return { initialInputCurrencyAddress: highestBalanceNativeTokenAddress, initialChainId: highestBalanceChainId }
+    // return ETH or parsedCurrencyState
+    return {
+      initialInputCurrencyAddress: parsedCurrencyState.outputCurrencyId ? undefined : 'ETH',
+      initialChainId: supportedChainId,
+    }
   }, [
-    balanceListLoading,
     hasCurrencyQueryParams,
-    account.isConnected,
-    balanceList,
     multichainUXEnabled,
-    parsedCurrencyState.chainId,
     parsedCurrencyState.inputCurrencyId,
     parsedCurrencyState.outputCurrencyId,
     supportedChainId,
@@ -425,13 +441,18 @@ export function useInitialCurrencyState(): {
   )
   const initialInputCurrency = useCurrency(initialInputCurrencyAddress, initialChainId)
   const initialOutputCurrency = useCurrency(initialOutputCurrencyAddress, initialChainId)
-  // We only care about loading if multichain UX is enabled
-  const initialCurrencyLoading = multichainUXEnabled && balanceListLoading && !hasCurrencyQueryParams
+  const initialTypedValue = initialInputCurrency || initialOutputCurrency ? parsedCurrencyState.value : undefined
+  const initialField =
+    initialTypedValue && parsedCurrencyState.field && parsedCurrencyState.field in Field
+      ? Field[parsedCurrencyState.field as keyof typeof Field]
+      : undefined
 
   return {
     initialInputCurrency,
     initialOutputCurrency,
+    initialTypedValue,
+    initialField,
     initialChainId,
-    initialCurrencyLoading,
+    initialCurrencyLoading: false,
   }
 }

@@ -10,7 +10,7 @@ import { useCallback } from 'react'
 import { useModalIsOpen, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { AdaptiveWebModalSheet, Flex, QRCodeDisplay, Text, useSporeColors } from 'ui/src'
+import { AdaptiveWebModal, Flex, QRCodeDisplay, Text, useSporeColors } from 'ui/src'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { Trans } from 'uniswap/src/i18n'
@@ -39,7 +39,7 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
   }, [toggleModal, openReceiveCryptoModal])
 
   return (
-    <AdaptiveWebModalSheet isOpen={isOpen} onClose={toggleModal} width={420}>
+    <AdaptiveWebModal isOpen={isOpen} onClose={toggleModal} width={420}>
       <Flex pb="$spacing16" gap="$spacing24">
         <GetHelpHeader goBack={goBack} closeModal={toggleModal} />
         <Flex gap="$spacing12">
@@ -86,6 +86,6 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
           </HelpCenterLink>
         </Flex>
       </Flex>
-    </AdaptiveWebModalSheet>
+    </AdaptiveWebModal>
   )
 }

@@ -7,15 +7,14 @@ import { GeneratedIcon, isWeb } from 'ui/src'
 import { CoinConvert, Eye, EyeOff, ReceiveAlt, SendAction } from 'ui/src/components/icons'
 import { usePortfolioCacheUpdater } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { toggleTokenVisibility } from 'uniswap/src/features/favorites/slice'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { CurrencyId } from 'uniswap/src/types/currency'
+import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { toggleTokenVisibility } from 'wallet/src/features/favorites/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -92,11 +91,11 @@ export function useTokenContextMenu({
           type: AppNotificationType.AssetVisibility,
           visible: !isHidden,
           hideDelay: 2 * ONE_SECOND_MS,
-          assetName: tokenSymbolForNotification,
+          assetName: t('walletConnect.request.details.label.token'),
         }),
       )
     }
-  }, [currencyId, dispatch, isHidden, tokenSymbolForNotification, updateCache, portfolioBalance])
+  }, [currencyId, dispatch, isHidden, tokenSymbolForNotification, updateCache, portfolioBalance, t])
 
   const menuActions = useMemo(
     (): MenuAction[] => [

@@ -1,56 +1,63 @@
-import { PropsWithChildren } from 'react'
-import { AnimatePresence } from 'ui/src'
+import { Flex, Text, TouchableArea, useMedia } from 'ui/src'
 import { X } from 'ui/src/components/icons/X'
-import { Flex } from 'ui/src/components/layout'
-import { TouchableArea } from 'ui/src/components/touchable'
 
 const MAX_WIDTH = 348
 
 // Temporary Spore-ish implementation for mweb until Spore project makes toasts consistent across all platforms
 export function ToastRegularSimple({
-  children,
+  icon,
+  text,
   onDismiss,
-}: PropsWithChildren<{ onDismiss?: () => void }>): JSX.Element {
+}: {
+  icon: JSX.Element
+  text: string
+  onDismiss?: () => void
+}): JSX.Element {
+  const media = useMedia()
+
   return (
-    <AnimatePresence>
-      <Flex
-        row
-        alignItems="center"
-        animation="fastHeavy"
-        backgroundColor="$surface1"
-        borderColor="$surface3"
-        borderRadius="$rounded16"
-        borderWidth="$spacing1"
-        enterStyle={{ left: MAX_WIDTH + 20 }}
-        exitStyle={{ left: MAX_WIDTH + 20 }}
-        justifyContent="space-between"
-        top="$none"
-        left={0}
-        mx={0}
-        $sm={{
-          left: 'unset',
-          mx: 'auto',
-          width: 'max-content',
-          enterStyle: { top: -20 },
-          exitStyle: { top: -20, opacity: 0 },
-        }}
-        p="$spacing16"
-        position="relative"
-        shadowColor="$shadowColor"
-        shadowOffset={{ width: 0, height: 25 }}
-        shadowOpacity={0.2}
-        shadowRadius={50}
-        width={MAX_WIDTH}
-      >
-        <Flex row alignItems="center" gap={12}>
-          {children}
-        </Flex>
-        {onDismiss ? (
-          <TouchableArea onPress={onDismiss}>
-            <X color="$neutral2" size={16} ml="$spacing8" />
-          </TouchableArea>
-        ) : null}
+    <Flex
+      row
+      alignItems="center"
+      animation="300ms"
+      backgroundColor="$surface1"
+      borderColor="$surface3"
+      borderRadius="$rounded16"
+      borderWidth="$spacing1"
+      enterStyle={media.sm ? { top: -58 } : { left: MAX_WIDTH + 20 }}
+      exitStyle={media.sm ? { top: -58, opacity: 0 } : { left: MAX_WIDTH + 20 }} // TODO(WEB-4712): small-screen animations defined here bc they don't work in $sm right now
+      justifyContent="space-between"
+      top={media.sm ? '$spacing16' : '$none'}
+      left={0}
+      mx={0}
+      $platform-web={
+        media.sm
+          ? {
+              position: 'fixed',
+              left: '50%',
+              width: 'max-content',
+              transform: [{ translateX: '-50%' }] as any, // TODO(WEB-4733): Tamagui transform needs array to work but type expects string
+            }
+          : {}
+      }
+      p="$spacing16"
+      position="relative"
+      shadowColor="$shadowColor"
+      shadowOffset={{ width: 0, height: 25 }}
+      shadowOpacity={0.2}
+      shadowRadius={50}
+      width={MAX_WIDTH}
+      opacity={1}
+    >
+      <Flex row alignItems="center" gap={12}>
+        {icon}
+        <Text variant="body2">{text}</Text>
       </Flex>
-    </AnimatePresence>
+      {onDismiss ? (
+        <TouchableArea onPress={onDismiss}>
+          <X color="$neutral2" size={16} ml="$spacing8" />
+        </TouchableArea>
+      ) : null}
+    </Flex>
   )
 }

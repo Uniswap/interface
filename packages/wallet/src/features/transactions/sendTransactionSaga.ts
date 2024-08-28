@@ -5,17 +5,18 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
-import { logger } from 'utilities/src/logger/logger'
-import { transactionActions } from 'wallet/src/features/transactions/slice'
-import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
+import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import {
   TransactionDetails,
   TransactionOptions,
+  TransactionOriginType,
   TransactionStatus,
   TransactionType,
   TransactionTypeInfo,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
+import { logger } from 'utilities/src/logger/logger'
+import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { createTransactionId, getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
@@ -29,6 +30,7 @@ export interface SendTransactionParams {
   account: AccountMeta
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
+  transactionOriginType: TransactionOriginType
   analytics?: ReturnType<typeof getBaseTradeAnalyticsProperties>
 }
 
@@ -82,7 +84,7 @@ export async function signAndSendTransaction(
 }
 
 function* addTransaction(
-  { chainId, typeInfo, account, options, txId, analytics }: SendTransactionParams,
+  { chainId, typeInfo, account, options, txId, analytics, transactionOriginType }: SendTransactionParams,
   hash: string,
   populatedRequest: providers.TransactionRequest,
 ) {
@@ -102,14 +104,18 @@ function* addTransaction(
       ...options,
       request,
     },
+    transactionOriginType,
   }
 
   if (transaction.typeInfo.type === TransactionType.Swap) {
     if (!analytics) {
-      logger.error(new Error('Missing `analytics` for swap when calling `addTransaction`'), {
-        tags: { file: 'sendTransaction', function: 'addTransaction' },
-        extra: { transaction },
-      })
+      // Don't expect swaps from WC or Dapps to always provide analytics object
+      if (transactionOriginType === TransactionOriginType.Internal) {
+        logger.error(new Error('Missing `analytics` for swap when calling `addTransaction`'), {
+          tags: { file: 'sendTransaction', function: 'addTransaction' },
+          extra: { transaction },
+        })
+      }
     } else {
       yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
         routing: transaction.routing,

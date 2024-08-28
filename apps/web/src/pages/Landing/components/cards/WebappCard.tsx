@@ -5,170 +5,15 @@ import { LDO, NATIVE_CHAIN_ID, UNI, USDC_BASE } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/screenSize'
-import styled from 'lib/styled-components'
-import { Box } from 'pages/Landing/components/Generics'
 import { Computer } from 'pages/Landing/components/Icons'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import ValuePropCard from 'pages/Landing/components/cards/ValuePropCard'
-import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Flex, Text } from 'ui/src'
 import { useTokenPromoQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-
-const Contents = styled.div`
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  align-items: center;
-  position: absolute;
-  width: 100%;
-  bottom: 0;
-  padding: 32px;
-  padding-bottom: 32px;
-  @media (max-width: 1024px) {
-    padding: 24px;
-    padding-bottom: 32px;
-  }
-  @media (max-width: 396px) {
-    padding: 16px;
-    padding-bottom: 24px;
-  }
-`
-
-const TokenRow = styled.div`
-  width: 100%;
-  height: 72px;
-  overflow: hidden;
-  padding: 16px;
-  padding-right: 24px;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  gap: 16px;
-  border-radius: 20px;
-  background-color: ${({ theme }) => theme.surface1};
-  @media (max-width: 1024px) {
-    height: 64px;
-    padding-right: 16px;
-  }
-  @media (max-width: 768px) {
-    height: 56px;
-    padding-right: 16px;
-  }
-  @media (max-width: 468px) {
-    height: 48px;
-    padding: 12px;
-    border-radius: 16px;
-  }
-  transition:
-    background-color 125ms ease-in,
-    transform 125ms ease-in;
-  &:hover {
-    background-color: ${({ theme }) => theme.surface2};
-    transform: scale(1.03);
-  }
-`
-const TokenName = styled.h3`
-  padding: 0;
-  margin: 0;
-  font-family: Basel;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 32px;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  color: ${(props) => props.color || props.theme.neutral1};
-  @media (max-width: 1024px) {
-    font-size: 18px;
-    line-height: 24px;
-  }
-  @media (max-width: 468px) {
-    font-size: 16px;
-    line-height: 20px;
-  }
-  @media (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
-    display: none;
-  }
-`
-const TokenTicker = styled.h3`
-  padding: 0;
-  margin: 0;
-  font-family: Basel;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 32px;
-  color: ${(props) => props.color || props.theme.neutral2};
-  @media (max-width: 1024px) {
-    font-size: 18px;
-    line-height: 24px;
-  }
-  @media (max-width: 468px) {
-    font-size: 16px;
-    line-height: 20px;
-  }
-  @media (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
-    color: ${(props) => props.color || props.theme.neutral1};
-  }
-`
-const TokenPrice = styled.h3`
-  padding: 0;
-  margin: 0;
-  font-family: Basel;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  line-height: 32px;
-  color: ${(props) => props.color || props.theme.neutral1};
-  @media (max-width: 1024px) {
-    font-size: 18px;
-    line-height: 24px;
-  }
-  @media (max-width: 468px) {
-    font-size: 16px;
-    line-height: 20px;
-  }
-`
-const DeltaText = styled.h3`
-  text-align: right;
-  padding: 0;
-  margin: 0;
-  font-family: Basel;
-  font-size: 24px;
-  font-style: normal;
-  font-weight: 500;
-  font-variant-numeric: tabular-nums;
-  line-height: 32px;
-  color: ${(props) => (props.color === 'red' ? props.theme.critical : props.theme.success)};
-  @media (max-width: 1024px) {
-    font-size: 18px;
-    line-height: 24px;
-    width: 50px;
-  }
-  @media (max-width: 468px) {
-    font-size: 16px;
-    line-height: 20px;
-    width: 50px;
-  }
-`
-const DeltaContainer = styled(Box)`
-  @media (min-width: 1030px) and (max-width: 1150px) {
-    display: none;
-  }
-  @media (min-width: 767px) and (max-width: 915px) {
-    display: none;
-  }
-`
-
-type WebappCardProps = {
-  isDarkMode?: boolean
-  tagText?: string
-}
 
 const primary = '#2ABDFF'
 
@@ -204,59 +49,185 @@ function Token({ chainId, address }: { chainId: SupportedInterfaceChainId; addre
   })
   const price = tokenPromoQuery.data?.token?.market?.price?.value ?? 0
   const pricePercentChange = tokenPromoQuery.data?.token?.market?.pricePercentChange?.value ?? 0
-  const handleClick = useCallback(
-    (e: React.MouseEvent<HTMLDivElement>) => {
-      e.stopPropagation()
-      navigate(
-        getTokenDetailsURL({
-          address: address === 'ETH' ? NATIVE_CHAIN_ID : address,
-          chain: chainIdToBackendChain({ chainId }),
-        }),
-      )
-    },
-    [address, chainId, navigate],
-  )
+
   return (
-    <TokenRow onClick={handleClick}>
+    <Flex
+      width="100%"
+      height={72}
+      overflow="hidden"
+      p={16}
+      pr={24}
+      row
+      alignItems="center"
+      gap="$gap16"
+      borderRadius="$rounded20"
+      backgroundColor="$surface1"
+      onPress={(e) => {
+        e.stopPropagation()
+        navigate(
+          getTokenDetailsURL({
+            address: address === 'ETH' ? NATIVE_CHAIN_ID : address,
+            chain: chainIdToBackendChain({ chainId }),
+          }),
+        )
+      }}
+      $platform-web={{
+        transition: 'background-color 125ms ease-in, transform 125ms ease-in',
+      }}
+      hoverStyle={{
+        backgroundColor: '$surface2',
+        scale: 1.03,
+      }}
+      $xl={{
+        height: 64,
+        pr: 16,
+      }}
+      $lg={{
+        height: 56,
+        pr: 16,
+      }}
+      $xs={{
+        height: 48,
+        p: 12,
+        borderRadius: 16,
+      }}
+    >
       <PortfolioLogo currencies={[currency]} chainId={chainId} size={screenIsSmall ? 32 : 24} />
-      <Box justify="space-between" gap="16px">
-        <Box width="auto" gap="8px" align="center" overflow="hidden">
-          <TokenName>{currency?.name}</TokenName>
-          <TokenTicker>{currency?.symbol}</TokenTicker>
-        </Box>
-        <Box width="auto" gap="8px" align="center">
-          <TokenPrice>
+      <Flex row flex={1} justifyContent="space-between" gap="$gap16">
+        <Flex row width="auto" gap="$gap8" alignItems="center" overflow="hidden">
+          <Text
+            fontWeight="$medium"
+            fontSize={24}
+            lineHeight={32}
+            overflow="hidden"
+            whiteSpace="nowrap"
+            textOverflow="ellipsis"
+            color="$neutral1"
+            $xl={{
+              fontSize: 18,
+              lineHeight: 24,
+            }}
+            $xs={{
+              fontSize: 16,
+              lineHeight: 20,
+              display: 'none',
+            }}
+          >
+            {currency?.name}
+          </Text>
+          <Text
+            fontWeight="$medium"
+            fontSize={24}
+            lineHeight={32}
+            color="$neutral2"
+            $xl={{
+              fontSize: 18,
+              lineHeight: 24,
+            }}
+            $xs={{
+              fontSize: 16,
+              lineHeight: 20,
+              color: '$neutral1',
+            }}
+          >
+            {currency?.symbol}
+          </Text>
+        </Flex>
+        <Flex row width="auto" gap="$gap8" alignItems="center">
+          <Text
+            fontWeight="$medium"
+            fontSize={24}
+            lineHeight={32}
+            color="$neutral1"
+            $xl={{
+              fontSize: 18,
+              lineHeight: 24,
+            }}
+            $xs={{
+              fontSize: 16,
+              lineHeight: 20,
+            }}
+          >
             {formatFiatPrice({
               price,
               type: NumberType.FiatTokenPrice,
             })}
-          </TokenPrice>
-          <DeltaContainer gap="4px" align="center" justify="flex-end">
+          </Text>
+          <Flex
+            row
+            gap="$gap4"
+            alignItems="center"
+            justifyContent="flex-end"
+            $xl={{
+              display: 'none',
+            }}
+            $lg={{
+              display: 'none',
+            }}
+          >
             <DeltaArrow delta={pricePercentChange} />
-            <DeltaText color={pricePercentChange < 0 ? 'red' : 'green'}>{formatDelta(pricePercentChange)}</DeltaText>
-          </DeltaContainer>
-        </Box>
-      </Box>
-    </TokenRow>
+            <Text
+              textAlign="right"
+              fontSize={24}
+              fontWeight="$medium"
+              lineHeight={32}
+              color={pricePercentChange < 0 ? '$statusCritical' : '$statusSuccess'}
+              $xl={{
+                fontSize: 18,
+                lineHeight: 24,
+                width: 50,
+              }}
+              $xs={{
+                fontSize: 16,
+                lineHeight: 20,
+                width: 50,
+              }}
+            >
+              {formatDelta(pricePercentChange)}
+            </Text>
+          </Flex>
+        </Flex>
+      </Flex>
+    </Flex>
   )
 }
 
-export function WebappCard(props: WebappCardProps) {
+export function WebappCard() {
   return (
     <ValuePropCard
       to="/tokens/ethereum"
-      minHeight="450px"
-      isDarkMode={props.isDarkMode}
-      textColor={primary}
-      backgroundColor={{ dark: 'rgba(0, 102, 255, 0.12)', light: 'rgba(0, 102, 255, 0.04)' }}
+      minHeight={500}
+      color={primary}
+      $theme-dark={{
+        backgroundColor: 'rgba(0, 102, 255, 0.12)',
+      }}
+      $theme-light={{
+        backgroundColor: 'rgba(0, 102, 255, 0.04)',
+      }}
       button={<PillButton color={primary} label={t('common.webApp')} icon={<Computer size="24px" fill={primary} />} />}
       titleText={t('landing.swapSimple')}
     >
-      <Contents>
+      <Flex
+        gap="$gap8"
+        alignItems="center"
+        position="absolute"
+        width="100%"
+        bottom={0}
+        p={32}
+        pb={32}
+        $xl={{
+          p: 24,
+          pb: 32,
+        }}
+        $xs={{
+          p: 16,
+          pb: 24,
+        }}
+      >
         {tokens.map((token) => (
           <Token key={`tokenRow-${token.address}`} chainId={token.chainId} address={token.address} />
         ))}
-      </Contents>
+      </Flex>
     </ValuePropCard>
   )
 }

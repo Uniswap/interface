@@ -24,7 +24,9 @@ export const useKeyPress = ({
     }
     const onKeyPress = (event: any) => {
       const wasAnyKeyPressed = keys.some((key) => event.key === key)
-      if (wasAnyKeyPressed) {
+      // Do not prevent default if the target element is an input
+      const targetWasNotAnInput = !['input', 'textarea'].includes(event.target.tagName.toLowerCase())
+      if (wasAnyKeyPressed && targetWasNotAnInput) {
         if (preventDefault) {
           event.preventDefault()
         }

@@ -4,7 +4,7 @@ import { AppTFunction } from 'ui/src/i18n/types'
 import { ThemeNames, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -59,7 +59,7 @@ export default function TokenWarningModal({
   const showWarningIcon = safetyLevel === SafetyLevel.StrongWarning || safetyLevel === SafetyLevel.Blocked
 
   return (
-    <BottomSheetModal isModalOpen={isVisible} maxWidth={420} name={ModalName.TokenWarningModal} onClose={onClose}>
+    <Modal isModalOpen={isVisible} maxWidth={420} name={ModalName.TokenWarningModal} onClose={onClose}>
       <Flex
         centered
         gap="$spacing16"
@@ -107,7 +107,7 @@ export default function TokenWarningModal({
           )}
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }
 

@@ -3,13 +3,13 @@ import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { WrapParams, tokenWrapActions } from 'wallet/src/features/transactions/swap/wrapSaga'
-import { WrapType } from 'wallet/src/features/transactions/types'
 
 export function useWrapCallback(
-  account: AccountMeta,
+  account: AccountMeta | undefined,
   inputCurrencyAmount: CurrencyAmount<Currency> | null | undefined,
   wrapType: WrapType,
   onSuccess: () => void,

@@ -1,9 +1,9 @@
-/* eslint-disable complexity */
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import {
   Flex,
+  Loader,
   Text,
   TouchableArea,
   UniswapXText,
@@ -12,19 +12,22 @@ import {
   useIsDarkMode,
 } from 'ui/src'
 import { CopyAlt, ExternalLink, UniswapX, Unitag } from 'ui/src/components/icons'
-import { borderRadii, iconSizes } from 'ui/src/theme'
+import { borderRadii, fonts, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { useENS } from 'uniswap/src/features/ens/useENS'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import { useENS } from 'wallet/src/features/ens/useENS'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useNetworkFee } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/hooks'
 import { SwapTypeTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import {
@@ -34,9 +37,6 @@ import {
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
-import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
-import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
 
 const UNISWAP_FEE = 0.0025
@@ -124,7 +124,6 @@ export function useTransactionDetailsInfoRows(
       }
       break
     case TransactionType.Wrap:
-    case TransactionType.FiatPurchase:
     case TransactionType.NFTTrade:
       // For now, these cases don't add any specific rows
       break
@@ -166,13 +165,18 @@ export function useTransactionDetailsInfoRows(
 function NetworkFeeRow({ transactionDetails }: { transactionDetails: TransactionDetails }): JSX.Element {
   const { t } = useTranslation()
   const { value: networkFeeValue } = useNetworkFee(transactionDetails)
+  const isLoading = networkFeeValue === '-'
 
   const Logo = isUniswapX(transactionDetails) ? UniswapX : NetworkLogo
   const GasText = isUniswapX(transactionDetails) ? UniswapXText : Text
   return (
     <InfoRow key="networkFee" label={t('transaction.details.networkFee')}>
       <Logo chainId={transactionDetails.chainId} size={iconSizes.icon16} />
-      <GasText variant="body3">{networkFeeValue}</GasText>
+      {isLoading ? (
+        <Loader.Box height={fonts.body3.lineHeight} width={iconSizes.icon36} />
+      ) : (
+        <GasText variant="body3">{networkFeeValue}</GasText>
+      )}
     </InfoRow>
   )
 }

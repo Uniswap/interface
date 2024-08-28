@@ -3,13 +3,13 @@ import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { TransactionRequest, UwuLinkErc20Request } from 'src/features/walletConnect/walletConnectSlice'
 import { call, put } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { TransactionOriginType, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { DappInfo, EthMethod, EthSignMethod, UwULinkMethod, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { SendTransactionParams, sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
-import { TransactionType } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { getSignerManager } from 'wallet/src/features/wallet/context'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
@@ -69,6 +69,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
           tokenAddress: params.request.tokenAddress,
           currencyAmountRaw: params.request.amount,
         },
+        transactionOriginType: TransactionOriginType.External,
       }
       const { transactionResponse } = yield* call(sendTransaction, txParams)
       signature = transactionResponse.hash
@@ -83,6 +84,7 @@ export function* signWcRequest(params: SignMessageParams | SignTransactionParams
           type: TransactionType.WCConfirm,
           dapp: params.dapp,
         },
+        transactionOriginType: TransactionOriginType.External,
       }
       const { transactionResponse } = yield* call(sendTransaction, txParams)
       signature = transactionResponse.hash

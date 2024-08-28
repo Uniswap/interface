@@ -1,10 +1,10 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useMultiplePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
-import { useENSName } from 'wallet/src/features/ens/api'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
 export type RecoveryWalletInfo = AddressWithIndex & {

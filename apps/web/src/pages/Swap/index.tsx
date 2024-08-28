@@ -3,6 +3,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import SwapHeader from 'components/swap/SwapHeader'
+import { Field } from 'components/swap/constants'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
 import { useSupportedChainId } from 'constants/chains'
 import { useScreenSize } from 'hooks/screenSize'
@@ -45,9 +46,17 @@ export function getIsReviewableQuote(
 export default function SwapPage({ className }: { className?: string }) {
   const location = useLocation()
   const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
+  // (WEB-4737): Remove this line after completing A/A Test on Web
+  useFeatureFlag(FeatureFlags.AATestWeb)
 
-  const { initialInputCurrency, initialOutputCurrency, initialChainId, initialCurrencyLoading } =
-    useInitialCurrencyState()
+  const {
+    initialInputCurrency,
+    initialOutputCurrency,
+    initialChainId,
+    initialTypedValue,
+    initialField,
+    initialCurrencyLoading,
+  } = useInitialCurrencyState()
   const isUnsupportedConnectedChain = useSupportedChainId(useAccount().chainId) === undefined
   const shouldDisableTokenInputs = multichainUXEnabled ? false : isUnsupportedConnectedChain
 
@@ -61,6 +70,8 @@ export default function SwapPage({ className }: { className?: string }) {
           disableTokenInputs={shouldDisableTokenInputs}
           initialInputCurrency={initialInputCurrency}
           initialOutputCurrency={initialOutputCurrency}
+          initialTypedValue={initialTypedValue}
+          initialIndependentField={initialField}
           initialCurrencyLoading={initialCurrencyLoading}
           syncTabToUrl={true}
         />
@@ -81,8 +92,11 @@ export function Swap({
   className,
   initialInputCurrency,
   initialOutputCurrency,
+  initialTypedValue,
+  initialIndependentField,
   initialCurrencyLoading = false,
   chainId,
+  hideHeader = false,
   onCurrencyChange,
   multichainUXEnabled = false,
   disableTokenInputs = false,
@@ -95,10 +109,13 @@ export function Swap({
   disableTokenInputs?: boolean
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
+  initialTypedValue?: string
+  initialIndependentField?: Field
   initialCurrencyLoading?: boolean
   compact?: boolean
   syncTabToUrl: boolean
   multichainUXEnabled?: boolean
+  hideHeader?: boolean
 }) {
   const isDark = useIsDarkMode()
   const screenSize = useScreenSize()
@@ -114,10 +131,14 @@ export function Swap({
       {/* TODO: Move SwapContextProvider inside Swap tab ONLY after SwapHeader removes references to trade / autoSlippage */}
       <SwapAndLimitContext.Consumer>
         {({ currentTab }) => (
-          <SwapContextProvider multichainUXEnabled={multichainUXEnabled}>
+          <SwapContextProvider
+            initialTypedValue={initialTypedValue}
+            initialIndependentField={initialIndependentField}
+            multichainUXEnabled={multichainUXEnabled}
+          >
             <Flex width="100%">
               <SwapWrapper isDark={isDark} className={className} id="swap-page">
-                <SwapHeader compact={compact || !screenSize.sm} syncTabToUrl={syncTabToUrl} />
+                {!hideHeader && <SwapHeader compact={compact || !screenSize.sm} syncTabToUrl={syncTabToUrl} />}
                 {currentTab === SwapTab.Swap && (
                   <SwapForm
                     onCurrencyChange={onCurrencyChange}

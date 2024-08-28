@@ -141,6 +141,8 @@ export function activatePendingAccounts(state: any): any {
   }
 }
 
+// Mobile: 68
+// Extension: 5
 export function deleteBetaOnboardingState(state: any): any {
   const newState = { ...state }
   delete newState?.behaviorHistory?.extensionBetaFeedbackState
@@ -157,6 +159,8 @@ export function deleteExtensionOnboardingState(state: any): any {
 const VITALIK_ETH_ADDRESS = '0xd8dA6BF26964aF9D7eEd9e03E53415D37aA96045'
 export const HAYDEN_ETH_ADDRESS = '0x50EC05ADe8280758E2077fcBC08D878D4aef79C3'
 
+// Mobile: 70
+// Extension: 7
 export function deleteDefaultFavoritesFromFavoritesState(state: any): any {
   const newState = { ...state }
 
@@ -174,6 +178,8 @@ export function deleteDefaultFavoritesFromFavoritesState(state: any): any {
   }
 }
 
+// Mobile: 71
+// Extension: 8
 export function addHapticSetting(state: any): any {
   const newState = { ...state }
 
@@ -185,9 +191,40 @@ export function addHapticSetting(state: any): any {
   return newState
 }
 
+// Mobile: 72
+// Extension: 9
 export function addExploreAndWelcomeBehaviorHistory(state: any): any {
   return {
     ...state,
     behaviorHistory: { ...state.behaviorHistory, hasViewedWelcomeWalletCard: false, hasUsedExplore: false },
   }
+}
+
+// Mobile: 73
+// Extension: 10
+export function moveUserSettings(state: any): any {
+  const newState = {
+    ...state,
+    userSettings: {
+      hideSmallBalances: state.wallet?.settings?.hideSmallBalances === false ? false : true,
+      hideSpamTokens: state.wallet?.settings?.hideSpamTokens === false ? false : true,
+    },
+  }
+
+  // Delete migrated settings
+  delete newState.wallet?.settings?.hideSmallBalances
+  delete newState.wallet?.settings?.hideSpamTokens
+
+  // Delete unused settings
+  delete newState.wallet?.settings?.nftViewType
+  return newState
+}
+
+// Mobile: 75
+// Extension: 11
+export function deleteHoldToSwapBehaviorHistory(state: any): any {
+  const newState = { ...state }
+  delete newState.behaviorHistory?.hasViewedReviewScreen
+  delete newState.behaviorHistory?.hasSubmittedHoldToSwap
+  return newState
 }

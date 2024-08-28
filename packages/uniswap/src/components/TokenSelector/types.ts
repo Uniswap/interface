@@ -2,7 +2,6 @@ import { PortfolioValueModifier } from 'uniswap/src/data/graphql/uniswap-data-ap
 import { GqlResult } from 'uniswap/src/data/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
-import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { FiatNumberType } from 'utilities/src/format/types'
 
@@ -13,21 +12,21 @@ export type TokenOption = {
 }
 
 export type TokenOptionsHookType = (
-  address: string,
+  address: string | undefined,
   chainFilter: UniverseChainId | null,
   valueModifiers?: PortfolioValueModifier[],
   searchFilter?: string,
 ) => GqlResult<TokenOption[] | undefined>
 
 export type TokenOptionsWithChainFilterHookType = (
-  address: string,
+  address: string | undefined,
   chainFilter: UniverseChainId,
   valueModifiers?: PortfolioValueModifier[],
   searchFilter?: string,
 ) => GqlResult<TokenOption[] | undefined>
 
 export type TokenOptionsWithBalanceOnlySearchHookType = (
-  address: string,
+  address: string | undefined,
   chainFilter: UniverseChainId | null,
   searchFilter: string | null,
   isBalancesOnlySearch: boolean,
@@ -61,8 +60,9 @@ export type TokenWarningDismissedHook = (currencyId: Maybe<string>) => {
 }
 
 export type TokenSectionsForSwap = {
-  activeAccountAddress: string
+  activeAccountAddress?: string
   chainFilter: UniverseChainId | null
+  isKeyboardOpen?: boolean
   searchHistory?: TokenSearchResult[]
   valueModifiers?: PortfolioValueModifier[]
   useFavoriteTokensOptionsHook: TokenOptionsHookType
@@ -92,8 +92,15 @@ export type FilterCallbacksHookType = (
   flow: TokenSelectorFlow,
 ) => {
   chainFilter: UniverseChainId | null
+  parsedChainFilter: UniverseChainId | null
   searchFilter: string | null
+  parsedSearchFilter: string | null
   onChangeChainFilter: (newChainFilter: UniverseChainId | null) => void
   onClearSearchFilter: () => void
   onChangeText: (newSearchFilter: string) => void
+}
+
+export enum TokenSelectorFlow {
+  Swap,
+  Send,
 }

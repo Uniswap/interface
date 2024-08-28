@@ -2,10 +2,10 @@ import { ReactNode } from 'react'
 import { Anchor, Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { zIndices } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 
-export interface BottomModalProps {
+export interface ModalProps {
   name: ModalNameType
   isOpen: boolean
   showCloseButton?: boolean
@@ -33,17 +33,11 @@ export function InfoModal({
   onButtonPress,
   linkText,
   linkUrl,
-}: React.PropsWithChildren<BottomModalProps>): JSX.Element {
+}: React.PropsWithChildren<ModalProps>): JSX.Element {
   const colors = useSporeColors()
 
   return (
-    <BottomSheetModal
-      alignment="bottom"
-      backgroundColor={colors.surface1.val}
-      isModalOpen={isOpen}
-      name={name}
-      onClose={onDismiss}
-    >
+    <Modal backgroundColor={colors.surface1.val} isModalOpen={isOpen} name={name} onClose={onDismiss}>
       {showCloseButton && (
         <TouchableArea
           p="$spacing16"
@@ -77,6 +71,6 @@ export function InfoModal({
           </Anchor>
         )}
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

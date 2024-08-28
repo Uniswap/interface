@@ -1,116 +1,89 @@
-import Column from 'components/Column'
 import FilterButton from 'components/DropdownSelector/FilterButton'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import styled, { css } from 'lib/styled-components'
-import React, { useRef } from 'react'
-import { dropdownSlideDown } from 'theme/styles'
-import { Z_INDEX } from 'theme/zIndex'
+import { useRef } from 'react'
+import { NAV_HEIGHT } from 'theme'
+import {
+  AnimatePresence,
+  Flex,
+  FlexProps,
+  Text,
+  WebBottomSheet,
+  styled,
+  useMedia,
+  useScrollbarStyles,
+  useShadowPropsMedium,
+} from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { zIndices } from 'ui/src/theme'
 import { iconSizes } from 'ui/src/theme/iconSizes'
 
-export const InternalMenuItem = styled.div<{ disabled?: boolean }>`
-  display: flex;
-  flex: 1;
-  padding: 12px 8px;
-  gap: 12px;
-  color: ${({ theme }) => theme.neutral1};
-  align-items: center;
-  justify-content: space-between;
-  text-decoration: none;
-  cursor: pointer;
-  border-radius: 8px;
+export const InternalMenuItem = styled(Text, {
+  display: 'flex',
+  flex: 1,
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  px: '$spacing8',
+  py: '$spacing12',
+  gap: '$gap12',
+  color: '$neutral1',
+  textDecorationLine: 'none',
+  cursor: 'pointer',
+  borderRadius: '$rounded8',
+  hoverStyle: {
+    backgroundColor: '$surface3',
+  },
+  variants: {
+    disabled: {
+      true: {
+        opacity: 0.6,
+        cursor: 'default',
+      },
+    },
+  } as const,
+})
 
-  :hover {
-    background-color: ${({ theme }) => theme.surface3};
-  }
+const MenuFlyout = styled(Text, {
+  display: 'flex',
+  flexDirection: 'column',
+  minWidth: 150,
+  backgroundColor: '$surface1',
+  borderWidth: 0.5,
+  borderStyle: 'solid',
+  borderColor: '$surface3',
+  borderRadius: '$rounded12',
+  p: '$spacing8',
+  fontSize: 16,
+  position: 'absolute',
+  top: 'calc(100% + 12px)',
+  zIndex: zIndices.dropdown,
+  animation: 'fastHeavy',
+  overflow: 'scroll',
+  enterStyle: { opacity: 0, y: -20 },
+  exitStyle: { opacity: 0, y: -20 },
+})
 
-  ${({ disabled }) =>
-    disabled &&
-    css`
-      opacity: 60%;
-      pointer-events: none;
-    `}
-`
-const MenuFlyout = styled(Column)<{ menuFlyoutCss?: string }>`
-  min-width: 150px;
-  overflow: auto;
-  background-color: ${({ theme }) => theme.surface1};
-  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
-  border: 0.5px solid ${({ theme }) => theme.surface3};
-  border-radius: 12px;
-  padding: 8px;
-  font-size: 16px;
-  position: absolute;
-  top: 48px;
-  z-index: ${Z_INDEX.dropdown};
-  ${dropdownSlideDown}
-
-  scrollbar-width: thin;
-  scrollbar-color: ${({ theme }) => `${theme.surface3} transparent`};
-
-  // safari and chrome scrollbar styling
-  ::-webkit-scrollbar {
-    background: transparent;
-    width: 8px;
-  }
-
-  ::-webkit-scrollbar-thumb {
-    background: ${({ theme }) => theme.surface3};
-    border-radius: 8px;
-  }
-
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.xs}px) {
-    position: fixed;
-    top: unset;
-    bottom: 0;
-    left: 0;
-    width: 100vw;
-    padding: 12px 16px;
-    background: ${({ theme }) => theme.surface2};
-    border: ${({ theme }) => `1px solid ${theme.surface3}`};
-    border-radius: 12px 12px 0 0;
-    z-index: ${Z_INDEX.modal};
-    animation: none;
-  }
-
-  ${({ menuFlyoutCss }) => menuFlyoutCss}
-`
-const StyledMenu = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-  border: none;
-  text-align: left;
-  width: 100%;
-`
-const StyledMenuContent = styled.div`
-  display: flex;
-  justify-content: space-between;
-  gap: 8px;
-  align-items: center;
-  border: none;
-  font-weight: 535;
-  width: 100%;
-  vertical-align: middle;
-  white-space: nowrap;
-`
-const StyledFilterButton = styled(FilterButton)<{ buttonCss?: string }>`
-  ${({ buttonCss }) => buttonCss}
-`
+const StyledMenu = styled(Text, {
+  justifyContent: 'center',
+  alignItems: 'center',
+  position: 'relative',
+  borderWidth: '$none',
+  textAlign: 'left',
+  width: '100%',
+})
 
 interface DropdownSelectorProps {
   isOpen: boolean
-  toggleOpen: React.DispatchWithoutAction
+  toggleOpen: (open: boolean) => void
   menuLabel: JSX.Element
   internalMenuItems: JSX.Element
   dataTestId?: string
   optionsContainerTestId?: string
   tooltipText?: string
   hideChevron?: boolean
-  buttonCss?: any
-  menuFlyoutCss?: any
+  buttonStyle?: FlexProps
+  dropdownStyle?: FlexProps
+  adaptToSheet?: boolean
 }
 
 export function DropdownSelector({
@@ -122,41 +95,71 @@ export function DropdownSelector({
   optionsContainerTestId,
   tooltipText,
   hideChevron,
-  buttonCss,
-  menuFlyoutCss,
+  buttonStyle,
+  dropdownStyle,
+  adaptToSheet = true,
 }: DropdownSelectorProps) {
   const node = useRef<HTMLDivElement | null>(null)
-  useOnClickOutside(node, isOpen ? toggleOpen : undefined)
+  useOnClickOutside(node, () => isOpen && toggleOpen(false))
+  const scrollbarStyles = useScrollbarStyles()
+  const shadowProps = useShadowPropsMedium()
+  const media = useMedia()
+  const isSheet = adaptToSheet && media.sm
 
   return (
-    <StyledMenu ref={node}>
-      <MouseoverTooltip
-        disabled={!tooltipText}
-        text={tooltipText}
-        size={TooltipSize.Max}
-        placement="top"
-        style={{ width: '100%' }}
-      >
-        <StyledFilterButton
-          onClick={toggleOpen}
-          active={isOpen}
-          aria-label={dataTestId}
-          data-testid={dataTestId}
-          buttonCss={buttonCss}
-        >
-          <StyledMenuContent>
-            {menuLabel}
-            {!hideChevron && (
-              <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
+    <>
+      <div ref={node} style={{ width: '100%' }}>
+        <StyledMenu id="Dropdown">
+          <MouseoverTooltip
+            disabled={!tooltipText}
+            text={tooltipText}
+            size={TooltipSize.Max}
+            placement="top"
+            style={{ width: '100%' }}
+          >
+            <FilterButton
+              onPress={() => toggleOpen(!isOpen)}
+              active={isOpen}
+              aria-label={dataTestId}
+              data-testid={dataTestId}
+              {...buttonStyle}
+            >
+              <Flex row justifyContent="space-between" alignItems="center" gap="$gap8" width="100%">
+                {menuLabel}
+                {!hideChevron && (
+                  <RotatableChevron
+                    animation="200ms"
+                    color="$neutral2"
+                    direction={isOpen ? 'up' : 'down'}
+                    height={iconSizes.icon20}
+                    width={iconSizes.icon20}
+                  />
+                )}
+              </Flex>
+            </FilterButton>
+          </MouseoverTooltip>
+          <AnimatePresence>
+            {isOpen && !isSheet && (
+              <MenuFlyout
+                data-testid={optionsContainerTestId}
+                {...dropdownStyle}
+                {...shadowProps}
+                style={scrollbarStyles}
+              >
+                {internalMenuItems}
+              </MenuFlyout>
             )}
-          </StyledMenuContent>
-        </StyledFilterButton>
-      </MouseoverTooltip>
-      {isOpen && (
-        <MenuFlyout data-testid={optionsContainerTestId} menuFlyoutCss={menuFlyoutCss}>
-          {internalMenuItems}
-        </MenuFlyout>
-      )}
-    </StyledMenu>
+          </AnimatePresence>
+        </StyledMenu>
+      </div>
+      <WebBottomSheet
+        isOpen={isOpen && isSheet}
+        onClose={() => toggleOpen(false)}
+        {...dropdownStyle}
+        maxHeight={`calc(100dvh - ${NAV_HEIGHT}px)`}
+      >
+        {internalMenuItems}
+      </WebBottomSheet>
+    </>
   )
 }

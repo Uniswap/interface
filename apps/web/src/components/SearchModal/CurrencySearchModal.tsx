@@ -6,6 +6,9 @@ import TokenSafety from 'components/TokenSafety'
 import useLast from 'hooks/useLast'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
+import { NAV_HEIGHT } from 'theme'
+import { AdaptiveWebModal } from 'ui/src'
+import { TOKEN_SELECTOR_WEB_MAX_WIDTH } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -97,7 +100,20 @@ export default memo(function CurrencySearchModal({
       }
       break
   }
-  return (
+  return multichainFlagEnabled ? (
+    <AdaptiveWebModal
+      isOpen={isOpen}
+      onClose={onDismiss}
+      maxHeight={modalView === CurrencyModalView.tokenSafety ? 400 : 700}
+      maxWidth={TOKEN_SELECTOR_WEB_MAX_WIDTH}
+      px={0}
+      py={0}
+      flex={1}
+      $sm={{ height: `calc(100dvh - ${NAV_HEIGHT}px)` }}
+    >
+      {content}
+    </AdaptiveWebModal>
+  ) : (
     <Modal
       isOpen={isOpen}
       onDismiss={onDismiss}

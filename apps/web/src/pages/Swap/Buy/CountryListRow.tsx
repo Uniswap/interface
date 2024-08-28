@@ -1,24 +1,22 @@
-import Row from 'components/Row'
-import styled, { CSSProperties } from 'lib/styled-components'
 import { ApprovedCheckmarkIcon } from 'nft/components/icons'
+import { CSSProperties } from 'react'
+import { Avatar, Flex, styled } from 'ui/src'
 import { Text } from 'ui/src/components/text/Text'
 import { iconSizes } from 'ui/src/theme'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
 
-const RowWrapper = styled(Row)`
-  height: 60px;
-  padding: 0 20px;
-  justify-content: space-between;
-  cursor: pointer;
-  &:hover {
-    background-color: ${({ theme }) => theme.surface2};
-  }
-`
-
-const StyledImage = styled.img`
-  border-radius: 50%;
-`
+const RowWrapper = styled(Flex, {
+  height: '$spacing60',
+  px: '$spacing20',
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  cursor: 'pointer',
+  hoverStyle: {
+    backgroundColor: '$surface2',
+  },
+})
 
 interface CountryRowProps {
   country?: FORCountry
@@ -33,16 +31,14 @@ export function CountryListRow({ style, country, selectedCountry, onClick }: Cou
   }
   const countryFlagUrl = getCountryFlagSvgUrl(country.countryCode)
   return (
-    <RowWrapper style={style} onClick={onClick}>
-      <Row gap="md">
-        <StyledImage
-          src={countryFlagUrl}
-          alt={country.countryCode}
-          height={iconSizes.icon32}
-          width={iconSizes.icon32}
-        />
+    <RowWrapper style={style} onPress={onClick}>
+      <Flex row alignItems="center" gap="$spacing12">
+        <Avatar circular size={iconSizes.icon32}>
+          <Avatar.Image accessibilityLabel="Country flag" src={countryFlagUrl} alt={country.countryCode} />
+          <Avatar.Fallback backgroundColor="$neutral3" />
+        </Avatar>
         <Text variant="body2">{country.displayName}</Text>
-      </Row>
+      </Flex>
       {selectedCountry?.countryCode === country.countryCode && <ApprovedCheckmarkIcon height={24} width={24} />}
     </RowWrapper>
   )

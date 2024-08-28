@@ -4,19 +4,19 @@ import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { AlertTriangle, AnglesMaximize, AnglesMinimize } from 'ui/src/components/icons'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Warning } from 'uniswap/src/features/transactions/WarningModal/types'
+import { SwapFeeInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
-import { GasFeeResult } from 'wallet/src/features/gas/types'
 import {
   FeeOnTransferFeeGroup,
   FeeOnTransferFeeGroupProps,
 } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { SwapFee } from 'wallet/src/features/transactions/TransactionDetails/SwapFee'
-import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
 import { UniswapXGasBreakdown } from 'wallet/src/features/transactions/swap/trade/api/hooks/useSwapTxAndGasInfo'
-import { SwapFeeInfo } from 'wallet/src/features/transactions/swap/trade/types'
 
 interface TransactionDetailsProps {
   banner?: ReactNode
