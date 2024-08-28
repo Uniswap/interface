@@ -43,12 +43,10 @@ interface CurrencySearchProps {
   currencyField: CurrencyField
   onCurrencySelect: (currency: Currency) => void
   onDismiss: () => void
-  filters?: CurrencySearchFilters
-  operatedPools?: Token[]
 }
 
-export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss, filters, operatedPools }: CurrencySearchProps) {
-  // TODO: should also include select pool parts.
+// TODO: we moved filtering by operate pool to currency search modal, check if needed
+export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: CurrencySearchProps) {
   const account = useAccount()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, currentTab, multichainUXEnabled } =
     useSwapAndLimitContext()
