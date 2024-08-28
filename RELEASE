@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmdkgTrLeXsNsutYMS3KcRCpLA69uupUtXk4fbLJTtxitL`
-- CIDv1: `bafybeihfa45bbn7mpgu5phtqvg5w3s3bmcabkb5kdp6gkndkcnunwdbffu`
+- CIDv0: `QmZPr5CPy9FEkEB3hD3UbCf1ZgPK1HS6CyVtwq9kUFV7d8`
+- CIDv1: `bafybeifeiis4hkmwrylskrtqbxi5gihb3ztslxofmhcdjzx5xargflvk44`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,54 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeihfa45bbn7mpgu5phtqvg5w3s3bmcabkb5kdp6gkndkcnunwdbffu.ipfs.dweb.link/
-- https://bafybeihfa45bbn7mpgu5phtqvg5w3s3bmcabkb5kdp6gkndkcnunwdbffu.ipfs.cf-ipfs.com/
-- [ipfs://QmdkgTrLeXsNsutYMS3KcRCpLA69uupUtXk4fbLJTtxitL/](ipfs://QmdkgTrLeXsNsutYMS3KcRCpLA69uupUtXk4fbLJTtxitL/)
+- https://bafybeifeiis4hkmwrylskrtqbxi5gihb3ztslxofmhcdjzx5xargflvk44.ipfs.dweb.link/
+- https://bafybeifeiis4hkmwrylskrtqbxi5gihb3ztslxofmhcdjzx5xargflvk44.ipfs.cf-ipfs.com/
+- [ipfs://QmZPr5CPy9FEkEB3hD3UbCf1ZgPK1HS6CyVtwq9kUFV7d8/](ipfs://QmZPr5CPy9FEkEB3hD3UbCf1ZgPK1HS6CyVtwq9kUFV7d8/)
 
-## 5.44.0 (2024-08-28)
-
-
-### Features
-
-* **web:** adding v4 everywhere feature flag (#10886) 5b065e9
-* **web:** enhanced dropdown component in prep for v4 changes (#11070) 6e4565c
-* **web:** new pools page and rename old pools pages (#11004) 7b774cc
-* **web:** tamaguify explore page (charts) (incl. snapshots) (#11117) 8485f71
-* **web:** tamaguify explore page (tables) (incl. snapshots) (#11118) e29104d
-* **web:** use uniswap currency info (#11064) 00da3f5
+### 5.44.1 (2024-08-28)
 
 
 ### Bug Fixes
 
-* **web:** add error policy all to balances web query (#11176) 1100abe
-* **web:** dont double format amountOut (#11111) d4d3df2
-* **web:** extraneous useClickOutside for DropdownSelector components (#11109) 501adb9
-* **web:** fallback to common bases (#11140) 0fac4f6
-* **web:** fix button label on add/v2 page (#11156) 31b7462
-* **web:** fix modal height for absolute-positioned modal contents (#11152) 0b2919c
-* **web:** fix switchChain for single-chain wallets (#11342) 9621efe
-* **web:** remove redirect from landing page when connected (#11207) dc75f2a
-* **web:** remove second language selection menu (#11263) 62eeedf
-* **web:** tdp pdp tamagui staging hotfix (#11311) fa0312e
-* **web:** Use neutralContrast for Add Liq and Preview buttons - staging (#11315) ca38bad
-* **web:** Use neutralContrast for Swap button (#11065) 962f3e5
-* **web:** use reduceRight instead of findLastIndex for activeIndex (#11201) 1adceb3
-* **web:** use updated Arb Xv2 experiment name & update UniswapX SDK (#11058) a54ba3e
-* **web:** Volume Explore chart TimeSelector colors - staging (#11322) 8e2a763
-
-
-### Continuous Integration
-
-* **web:** update sitemaps 3c8a16c
-
-
-### Code Refactoring
-
-* **web:** tamaguify buy form (#10981) 3743d77
-
-
-### Tests
-
-* **web:** useCurrencyInfo (#11085) 92adc3b
+* **web:** use input/output currency info for parsed trade amounts (#11392) 1c5baf6
 
 
