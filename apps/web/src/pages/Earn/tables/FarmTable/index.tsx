@@ -87,7 +87,7 @@ function PoolDescription({
 
 // Used to keep track of sorting state for Pool Tables
 // declared as atomWithReset because sortMethodAtom and sortAscendingAtom are shared across multiple Pool Table instances - want to be able to reset sorting state between instances
-export const sortMethodAtom = atomWithReset<FarmSortFields>(FarmSortFields.TVL)
+export const sortMethodAtom = atomWithReset<FarmSortFields>(FarmSortFields.APR)
 export const sortAscendingAtom = atomWithReset<boolean>(false)
 
 function useSetSortMethod(newSortMethod: FarmSortFields) {
@@ -220,6 +220,10 @@ export function FarmsTable({
     () =>
       pools?.map((pool, index) => {
         const poolSortRank = index + 1
+        const link =
+          pool.protocolVersion == ProtocolVersion.V3
+            ? `/farmv3/${pool.poolAddress}`
+            : `/farm/${pool.token0.address}/${pool.token1.address}/${pool.farmAddress}`
 
         return {
           index: poolSortRank,
@@ -235,7 +239,7 @@ export function FarmsTable({
           tvl: pool.tvl,
           apr: pool.apr,
           protocolVersion: pool.protocolVersion,
-          link: `/farm/${pool.token0.address}/${pool.token1.address}/${pool.farmAddress}`,
+          link,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
             properties: {

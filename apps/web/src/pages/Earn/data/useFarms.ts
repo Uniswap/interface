@@ -33,6 +33,7 @@ export const V2_BIPS = 3000
 export interface TableFarm {
   hash: string
   farmAddress: string
+  poolAddress: string
   token0: Token
   token1: Token
   token0Amount: Fraction
@@ -41,6 +42,7 @@ export interface TableFarm {
   apr: Percent
   feeTier: number
   protocolVersion: ProtocolVersion
+  incentiveIds: string[]
 }
 
 export enum FarmSortFields {
@@ -98,6 +100,7 @@ export function useInactiveFarms(sortState: FarmTableSortState, chainId?: ChainI
             return {
               hash: farm.stakingAddress,
               farmAddress: farm.stakingAddress,
+              poolAddress: '',
               token0: tokens[token0Address],
               token1: tokens[token1Address],
               token0Amount: new Fraction(0),
@@ -106,6 +109,7 @@ export function useInactiveFarms(sortState: FarmTableSortState, chainId?: ChainI
               apr: new Percent(0),
               feeTier: V2_BIPS,
               protocolVersion: 'V2',
+              incentiveIds: [],
             } as TableFarm
           }
           console.log(farm, token0Address, token1Address)
@@ -122,11 +126,32 @@ export function useInactiveFarms(sortState: FarmTableSortState, chainId?: ChainI
   return { farms: filteredFarms, loading }
 }
 
+export function useV3Farms(): TableFarm[] {
+  const tokens = useDefaultActiveTokens(ChainId.CELO)
+  return [
+    {
+      hash: '0x3efc8d831b754d3ed58a2b4c37818f2e69dadd19-v3',
+      farmAddress: '0x13b0a5Bf2589d603BB735c79813ee1AA6C12FB1d',
+      poolAddress: '0x3efc8d831b754d3ed58a2b4c37818f2e69dadd19',
+      token0: tokens['0x71e26d0E519D14591b9dE9a0fE9513A398101490'],
+      token1: tokens['0x471EcE3750Da237f93B8E339c536989b8978a438'],
+      token0Amount: new Fraction(0),
+      token1Amount: new Fraction(0),
+      tvl: 0,
+      apr: new Percent(0),
+      feeTier: 100,
+      protocolVersion: ProtocolVersion.V3,
+      incentiveIds: ['0xe9fb3b6fbeca26b4a8fb14b74843cc27a99593102dc531376a85cb4e15b7d2ff'],
+    },
+  ]
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function useActiveFarms(sortState: FarmTableSortState, chainId?: ChainId) {
   const farms = useFarmRegistry()
+  const v3Farms = useV3Farms()
   const tokens = useDefaultActiveTokens(ChainId.CELO)
-  const loading = farms.length == 0
+  const loading = farms.length == 0 || v3Farms.length == 0
 
   const unfilteredPools = useMemo(() => {
     const fff: TableFarm[] =
@@ -140,6 +165,7 @@ export function useActiveFarms(sortState: FarmTableSortState, chainId?: ChainId)
             return {
               hash: farm.stakingAddress,
               farmAddress: farm.stakingAddress,
+              poolAddress: '',
               token0: tokens[token0Address],
               token1: tokens[token1Address],
               token0Amount: new Fraction(0),
@@ -148,6 +174,7 @@ export function useActiveFarms(sortState: FarmTableSortState, chainId?: ChainId)
               apr: farm.apr,
               feeTier: V2_BIPS,
               protocolVersion: 'V2',
+              incentiveIds: [],
             } as TableFarm
           }
           console.log(farm, token0Address, token1Address)
@@ -156,10 +183,10 @@ export function useActiveFarms(sortState: FarmTableSortState, chainId?: ChainId)
         })
         .flat() ?? []
 
-    const rt = sortFarms([...fff], sortState)
+    const rt = sortFarms([...fff.concat(v3Farms)], sortState)
     console.log('active farms', rt)
     return rt
-  }, [farms, tokens, sortState])
+  }, [farms, tokens, sortState, v3Farms])
 
   const filteredFarms = useFilteredFarms(unfilteredPools).slice(0, 100)
   return { farms: filteredFarms, loading }
