@@ -1,14 +1,11 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { cloneElement, memo } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ComingSoon } from 'src/app/components/ComingSoon'
 import { useInterfaceBuyNavigator } from 'src/app/features/for/utils'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Flex, Text, getTokenValue, useMedia } from 'ui/src'
 import { ArrowDownCircle, Buy, CoinConvert, SendAction } from 'ui/src/components/icons'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
@@ -71,8 +68,6 @@ export const PortfolioActionButtons = memo(function _PortfolioActionButtons(): J
   const { t } = useTranslation()
   const media = useMedia()
 
-  const isExtensionBuyEnabled = useFeatureFlag(FeatureFlags.ExtensionBuyButton)
-
   const onSendClick = (): void => {
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       screen: ExtensionScreens.Home,
@@ -101,28 +96,11 @@ export const PortfolioActionButtons = memo(function _PortfolioActionButtons(): J
 
   const isGrid = media.sm
 
-  const ComingSoonBuyButton = (
-    <Flex fill backgroundColor="$accent2" borderRadius="$rounded16" flexBasis={1} opacity={0.5} p="$spacing12">
-      <ComingSoon placement="bottom">
-        <Flex fill alignItems="flex-start" gap="$spacing12" justifyContent="space-between" userSelect="none">
-          <Buy color={ICON_COLOR} size="$icon.24" />
-          <Text color="$accent1" fontWeight="600" variant="buttonLabel3">
-            {t('home.label.buy')}
-          </Text>
-        </Flex>
-      </ComingSoon>
-    </Flex>
-  )
-
   return (
     <Flex flexDirection={isGrid ? 'column' : 'row'} gap="$spacing8">
       <Flex row shrink gap="$spacing8" width={isGrid ? '100%' : '50%'}>
         <ActionButton Icon={<CoinConvert />} label={t('home.label.swap')} onClick={onSwapClick} />
-        {isExtensionBuyEnabled ? (
-          <ActionButton Icon={<Buy />} label={t('home.label.buy')} onClick={onBuyClick} />
-        ) : (
-          ComingSoonBuyButton
-        )}
+        <ActionButton Icon={<Buy />} label={t('home.label.buy')} onClick={onBuyClick} />
       </Flex>
       <Flex row shrink gap="$spacing8" width={isGrid ? '100%' : '50%'}>
         <ActionButton Icon={<SendAction />} label={t('home.label.send')} onClick={onSendClick} />

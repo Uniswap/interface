@@ -1,23 +1,17 @@
 import { EffectCallback, MutableRefObject } from 'react'
-import {
-  SuggestedTokenSection,
-  TokenOption,
-  TokenSection,
-  TokenSelectorListSections,
-} from 'uniswap/src/components/TokenSelector/types'
+import { TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/TokenSectionHeader'
+import { TokenOption, TokenSection, TokenSelectorListSections } from 'uniswap/src/components/TokenSelector/types'
 import { NotImplementedError } from 'utilities/src/errors'
-
-export type SectionHeaderProps = Pick<TokenSection, 'title' | 'rightElement'>
 
 export interface TokenSectionBaseListRef {
   scrollToLocation: (params: { itemIndex: number; sectionIndex: number; animated: boolean }) => void
 }
 
-export type SectionRowInfo = { section: SectionHeaderProps }
+export type SectionRowInfo = { section: TokenSectionHeaderProps }
 
 export interface ItemRowInfo {
   item: TokenOption | TokenOption[]
-  section: SuggestedTokenSection | TokenSection
+  section: TokenSection
   index: number
 }
 

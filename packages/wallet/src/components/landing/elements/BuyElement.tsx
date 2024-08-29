@@ -6,17 +6,17 @@ import { colors, opacify } from 'ui/src/theme'
 export const BuyElement = (): JSX.Element => {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
-  const mainColor = isDarkMode ? '$orange500' : '$orange300'
+  const mainColor = isDarkMode ? '$orangeVibrant' : '$orangeBase'
 
   return (
     <Flex
       centered
       row
+      backgroundColor={opacify(isDarkMode ? 10 : 20, colors.orangeBase)}
       borderRadius="$roundedFull"
       gap="$spacing4"
       px="$spacing12"
       py="$spacing8"
-      style={{ backgroundColor: opacify(isDarkMode ? 10 : 20, colors.orange200) }}
       transform={[{ rotateZ: '-1deg' }]}
     >
       <Buy color={mainColor} size="$icon.20" />

@@ -1,12 +1,12 @@
 import { ReactComponent as TooltipTriangle } from 'assets/svg/tooltip_triangle.svg'
 import { outboundLink } from 'components/analytics'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import { Trans } from 'i18n'
+import styled, { css, keyframes } from 'lib/styled-components'
 import React, {
-  forwardRef,
   HTMLProps,
   PropsWithChildren,
   ReactNode,
+  forwardRef,
   useCallback,
   useImperativeHandle,
   useRef,
@@ -14,8 +14,8 @@ import React, {
 } from 'react'
 import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, X } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled, { css, keyframes } from 'styled-components'
 import { Z_INDEX } from 'theme/zIndex'
+import { Trans } from 'uniswap/src/i18n'
 import { anonymizeLink } from 'utils/anonymizeLink'
 
 // TODO: Break this file into a components folder
@@ -34,8 +34,10 @@ export const ButtonText = styled.button`
   transition-timing-function: ease-in-out;
   transition-property: opacity, color, background-color;
 
-  :hover {
-    opacity: ${({ theme }) => theme.opacity.hover};
+  @media (hover: hover) and (pointer: fine) {
+    :hover {
+      opacity: ${({ theme }) => theme.opacity.hover};
+    }
   }
 
   :focus {

@@ -106,201 +106,230 @@ exports[`CommonBases renders without crashing 1`] = `
 
 <div>
   <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1 c2"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c3"
-          data-testid="common-base-ETH"
-          tabindex="0"
+          class="c0 c1 c2"
         >
           <div
-            class="c4"
-            style="height: 24px; width: 24px; margin-right: 8px;"
+            class="c3"
+            data-testid="common-base-ETH"
+            tabindex="0"
           >
             <div
-              class="c5"
+              class="c4"
+              style="height: 24px; width: 24px; margin-right: 8px;"
             >
               <div
-                class="c6"
-                size="24"
+                class="c5"
               >
-                 
-                <img
-                  class="c7"
-                  size="24"
-                  src="ethereum-logo.png"
-                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                >
+                  <div
+                    class="c6"
+                    size="24"
+                  >
+                     
+                    <img
+                      class="c7"
+                      size="24"
+                      src="ethereum-logo.png"
+                    />
+                  </div>
+                </div>
               </div>
+            </div>
+            <div
+              class="css-1qnq88a"
+            >
+              ETH
             </div>
           </div>
           <div
-            class="css-1qnq88a"
-          >
-            ETH
-          </div>
-        </div>
-        <div
-          class="c3"
-          data-testid="common-base-DAI"
-          tabindex="0"
-        >
-          <div
-            class="c4"
-            style="height: 24px; width: 24px; margin-right: 8px;"
+            class="c3"
+            data-testid="common-base-DAI"
+            tabindex="0"
           >
             <div
-              class="c5"
+              class="c4"
+              style="height: 24px; width: 24px; margin-right: 8px;"
             >
               <div
-                class="c6"
-                size="24"
+                class="c5"
               >
-                 
-                <img
-                  class="c7"
-                  size="24"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                >
+                  <div
+                    class="c6"
+                    size="24"
+                  >
+                     
+                    <img
+                      class="c7"
+                      size="24"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                    />
+                  </div>
+                </div>
               </div>
+            </div>
+            <div
+              class="css-1qnq88a"
+            >
+              DAI
             </div>
           </div>
           <div
-            class="css-1qnq88a"
-          >
-            DAI
-          </div>
-        </div>
-        <div
-          class="c3"
-          data-testid="common-base-USDC"
-          tabindex="0"
-        >
-          <div
-            class="c4"
-            style="height: 24px; width: 24px; margin-right: 8px;"
+            class="c3"
+            data-testid="common-base-USDC"
+            tabindex="0"
           >
             <div
-              class="c5"
+              class="c4"
+              style="height: 24px; width: 24px; margin-right: 8px;"
             >
               <div
-                class="c6"
-                size="24"
+                class="c5"
               >
-                 
-                <img
-                  class="c7"
-                  size="24"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                >
+                  <div
+                    class="c6"
+                    size="24"
+                  >
+                     
+                    <img
+                      class="c7"
+                      size="24"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                    />
+                  </div>
+                </div>
               </div>
+            </div>
+            <div
+              class="css-1qnq88a"
+            >
+              USDC
             </div>
           </div>
           <div
-            class="css-1qnq88a"
-          >
-            USDC
-          </div>
-        </div>
-        <div
-          class="c3"
-          data-testid="common-base-USDT"
-          tabindex="0"
-        >
-          <div
-            class="c4"
-            style="height: 24px; width: 24px; margin-right: 8px;"
+            class="c3"
+            data-testid="common-base-USDT"
+            tabindex="0"
           >
             <div
-              class="c5"
+              class="c4"
+              style="height: 24px; width: 24px; margin-right: 8px;"
             >
               <div
-                class="c6"
-                size="24"
+                class="c5"
               >
-                 
-                <img
-                  class="c7"
-                  size="24"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
-                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                >
+                  <div
+                    class="c6"
+                    size="24"
+                  >
+                     
+                    <img
+                      class="c7"
+                      size="24"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xdAC17F958D2ee523a2206206994597C13D831ec7/logo.png"
+                    />
+                  </div>
+                </div>
               </div>
+            </div>
+            <div
+              class="css-1qnq88a"
+            >
+              USDT
             </div>
           </div>
           <div
-            class="css-1qnq88a"
-          >
-            USDT
-          </div>
-        </div>
-        <div
-          class="c3"
-          data-testid="common-base-WBTC"
-          tabindex="0"
-        >
-          <div
-            class="c4"
-            style="height: 24px; width: 24px; margin-right: 8px;"
+            class="c3"
+            data-testid="common-base-WBTC"
+            tabindex="0"
           >
             <div
-              class="c5"
+              class="c4"
+              style="height: 24px; width: 24px; margin-right: 8px;"
             >
               <div
-                class="c6"
-                size="24"
+                class="c5"
               >
-                 
-                <img
-                  class="c7"
-                  size="24"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png"
-                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                >
+                  <div
+                    class="c6"
+                    size="24"
+                  >
+                     
+                    <img
+                      class="c7"
+                      size="24"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599/logo.png"
+                    />
+                  </div>
+                </div>
               </div>
+            </div>
+            <div
+              class="css-1qnq88a"
+            >
+              WBTC
             </div>
           </div>
           <div
-            class="css-1qnq88a"
-          >
-            WBTC
-          </div>
-        </div>
-        <div
-          class="c3"
-          data-testid="common-base-WETH"
-          tabindex="0"
-        >
-          <div
-            class="c4"
-            style="height: 24px; width: 24px; margin-right: 8px;"
+            class="c3"
+            data-testid="common-base-WETH"
+            tabindex="0"
           >
             <div
-              class="c5"
+              class="c4"
+              style="height: 24px; width: 24px; margin-right: 8px;"
             >
               <div
-                class="c6"
-                size="24"
+                class="c5"
               >
-                 
-                <img
-                  class="c7"
-                  size="24"
-                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
-                />
+                <div
+                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                >
+                  <div
+                    class="c6"
+                    size="24"
+                  >
+                     
+                    <img
+                      class="c7"
+                      size="24"
+                      src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2/logo.png"
+                    />
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-          <div
-            class="css-1qnq88a"
-          >
-            WETH
+            <div
+              class="css-1qnq88a"
+            >
+              WETH
+            </div>
           </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </div>

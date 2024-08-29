@@ -1,6 +1,6 @@
 import { AlertsState } from 'src/app/features/onboarding/alerts/slice'
-import { WebState } from 'src/store/webReducer'
+import { ExtensionState } from 'src/store/extensionReducer'
 
-export function selectAlertsState<T extends keyof AlertsState>(name: T): (state: WebState) => AlertsState[T] {
+export function selectAlertsState<T extends keyof AlertsState>(name: T): (state: ExtensionState) => AlertsState[T] {
   return (state) => state.alerts[name]
 }

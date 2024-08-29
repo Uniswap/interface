@@ -1,13 +1,13 @@
 import { ButtonGray } from 'components/Button'
 import { Pool } from 'components/Icons/Pool'
 import { FlyoutAlignment, Menu } from 'components/Menu'
-import { Trans } from 'i18n'
+import styled, { css } from 'lib/styled-components'
 import { ChevronDown } from 'react-feather'
 import { useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Trans } from 'uniswap/src/i18n'
 
 const PoolVersionItem = styled.div`
   align-items: center;
@@ -76,8 +76,8 @@ const menuItems = {
 }
 
 const titles = {
-  [ProtocolVersion.V3]: <Trans i18nKey="common.v3" />,
-  [ProtocolVersion.V2]: <Trans i18nKey="common.v2" />,
+  [ProtocolVersion.V3]: 'v3',
+  [ProtocolVersion.V2]: 'v2',
 }
 
 export function PoolVersionMenu({ protocolVersion }: { protocolVersion: ProtocolVersion }) {

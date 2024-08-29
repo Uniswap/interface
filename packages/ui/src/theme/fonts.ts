@@ -2,6 +2,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { createFont, isWeb } from '@tamagui/core'
 import { needsSmallFont } from 'ui/src/utils/needs-small-font'
+import { isInterface } from 'utilities/src/platform'
 
 // TODO(EXT-148): remove this type and use Tamagui's FontTokens
 export type TextVariantTokens = keyof typeof fonts
@@ -34,8 +35,23 @@ const platformFontFamily = (family: SansSerifFontFamilyKey): SansSerifFontFamily
   return fontFamily.sansSerif[family]
 }
 
+// NOTE: these may not match the actual font weights in the figma files,
+// but they are approved by design. If you want to change these or add new weights,
+// please consult with the design team.
+
+// default for non-button fonts
 const BOOK_WEIGHT = '400'
+const BOOK_WEIGHT_WEB = '485'
+
+// used for buttons
 const MEDIUM_WEIGHT = '500'
+const MEDIUM_WEIGHT_WEB = '535'
+
+const defaultWeights = {
+  book: isInterface ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
+  true: isInterface ? BOOK_WEIGHT_WEB : BOOK_WEIGHT,
+  medium: isInterface ? MEDIUM_WEIGHT_WEB : MEDIUM_WEIGHT,
+}
 
 export const fonts = {
   heading1: {
@@ -103,36 +119,36 @@ export const fonts = {
   },
   buttonLabel1: {
     family: platformFontFamily('medium'),
-    fontSize: adjustedSize(20),
+    fontSize: adjustedSize(18),
     lineHeight: 24,
     fontWeight: MEDIUM_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   buttonLabel2: {
     family: platformFontFamily('medium'),
-    fontSize: adjustedSize(18),
+    fontSize: adjustedSize(16),
     lineHeight: 24,
     fontWeight: MEDIUM_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   buttonLabel3: {
     family: platformFontFamily('medium'),
-    fontSize: adjustedSize(16),
-    lineHeight: 24,
+    fontSize: adjustedSize(14),
+    lineHeight: 20,
     fontWeight: MEDIUM_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   buttonLabel4: {
     family: platformFontFamily('medium'),
-    fontSize: adjustedSize(14),
+    fontSize: adjustedSize(12),
     lineHeight: 16,
     fontWeight: MEDIUM_WEIGHT,
     maxFontSizeMultiplier: 1.2,
   },
   monospace: {
     family: platformFontFamily('monospace'),
-    fontSize: adjustedSize(14),
-    lineHeight: 20,
+    fontSize: adjustedSize(12),
+    lineHeight: 16,
     maxFontSizeMultiplier: 1.2,
   },
 } as const
@@ -154,11 +170,7 @@ export const headingFont = createFont({
     true: fonts.heading2.fontSize,
     large: fonts.heading1.fontSize,
   },
-  weight: {
-    book: '400',
-    medium: '500',
-    true: fonts.heading1.fontWeight,
-  },
+  weight: defaultWeights,
   lineHeight: {
     small: fonts.heading3.lineHeight,
     medium: fonts.heading2.lineHeight,
@@ -175,11 +187,7 @@ export const subHeadingFont = createFont({
     large: fonts.subheading1.fontSize,
     true: fonts.subheading1.fontSize,
   },
-  weight: {
-    book: '400',
-    medium: '500',
-    true: fonts.subheading1.fontWeight,
-  },
+  weight: defaultWeights,
   lineHeight: {
     small: fonts.subheading2.lineHeight,
     large: fonts.subheading1.lineHeight,
@@ -194,23 +202,19 @@ export const bodyFont = createFont({
   family: baselBook,
   face: {},
   size: {
-    micro: fonts.body3.fontSize,
-    small: fonts.body2.fontSize,
+    micro: fonts.body4.fontSize,
+    small: fonts.body3.fontSize,
     medium: fonts.body2.fontSize,
-    large: fonts.body1.fontSize,
     true: fonts.body2.fontSize,
+    large: fonts.body1.fontSize,
   },
-  weight: {
-    book: '400',
-    medium: '500',
-    true: fonts.body1.fontWeight,
-  },
+  weight: defaultWeights,
   lineHeight: {
-    micro: fonts.body3.lineHeight,
-    small: fonts.body2.lineHeight,
+    micro: fonts.body4.lineHeight,
+    small: fonts.body3.lineHeight,
     medium: fonts.body2.lineHeight,
-    large: fonts.body1.lineHeight,
     true: fonts.body2.lineHeight,
+    large: fonts.body1.lineHeight,
   },
 })
 
@@ -224,9 +228,8 @@ export const buttonFont = createFont({
     true: fonts.buttonLabel2.fontSize,
   },
   weight: {
-    book: '400',
-    medium: '500',
-    true: fonts.buttonLabel1.fontWeight,
+    ...defaultWeights,
+    true: MEDIUM_WEIGHT,
   },
   lineHeight: {
     micro: fonts.buttonLabel4.lineHeight,
@@ -236,8 +239,6 @@ export const buttonFont = createFont({
     true: fonts.buttonLabel2.lineHeight,
   },
 })
-
-// TODO mono font
 
 export const allFonts = {
   heading: headingFont,

@@ -7,7 +7,17 @@ import { ESTIMATED_NFT_LIST_ITEM_SIZE, MAX_NFT_IMAGE_SIZE } from 'wallet/src/fea
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
 
-export function NftView({ owner, item, onPress }: { owner: Address; item: NFTItem; onPress: () => void }): JSX.Element {
+export function NftView({
+  owner,
+  item,
+  onPress,
+  index,
+}: {
+  owner: Address
+  item: NFTItem
+  index?: number
+  onPress: () => void
+}): JSX.Element {
   const { menuActions, onContextMenuPress } = useNFTContextMenu({
     contractAddress: item.contractAddress,
     tokenId: item.tokenId,
@@ -27,6 +37,7 @@ export function NftView({ owner, item, onPress }: { owner: Address; item: NFTIte
           hapticFeedback
           activeOpacity={1}
           hapticStyle={ImpactFeedbackStyle.Light}
+          testID={`nfts-list-item-${index ?? 0}`}
           // Needed to fix long press issue with context menu on Android
           onLongPress={noop}
           onPress={onPress}

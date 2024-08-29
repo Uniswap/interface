@@ -1,35 +1,49 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Keyboard } from 'react-native'
 import { useTransferContext } from 'src/app/features/transfer/TransferContext'
 import { Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron, WalletFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
+import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
 import { useFilteredRecipientSections } from 'wallet/src/components/RecipientSearch/hooks'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { SearchTextInput } from 'wallet/src/features/search/SearchTextInput'
 import { selectRecipient } from 'wallet/src/features/transactions/transactionState/transactionState'
 import {
   useOnToggleShowRecipientSelector,
   useSetShowRecipientSelector,
 } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
 
-export function RecipientPanel(): JSX.Element {
+type RecipientPanelProps = {
+  chainId?: WalletChainId
+}
+
+export function RecipientPanel({ chainId }: RecipientPanelProps): JSX.Element {
   const { t } = useTranslation()
 
   const [pattern, setPattern] = useState('')
+  const [selectedRecipient, setSelectedRecipient] = useState<string | undefined>()
+  const [checkSpeedBumps, setCheckSpeedBumps] = useState(false)
   const { recipient, dispatch, showRecipientSelector } = useTransferContext()
   const onToggleShowRecipientSelector = useOnToggleShowRecipientSelector(dispatch)
   const setShowRecipientSelector = useSetShowRecipientSelector(dispatch)
   const sections = useFilteredRecipientSections(pattern)
 
-  const onSelectRecipient = useCallback(
-    (newRecipient: string) => {
-      dispatch(selectRecipient({ recipient: newRecipient }))
-      setShowRecipientSelector(false)
-    },
-    [dispatch, setShowRecipientSelector],
-  )
+  const onSelectRecipient = useCallback((newRecipient: string) => {
+    setSelectedRecipient(newRecipient)
+    setCheckSpeedBumps(true)
+  }, [])
+
+  const onSpeedBumpConfirm = useCallback(() => {
+    if (!selectedRecipient) {
+      return
+    }
+    dispatch(selectRecipient({ recipient: selectedRecipient }))
+    setShowRecipientSelector(false)
+  }, [dispatch, selectedRecipient, setShowRecipientSelector])
 
   const onClose = (): void => {
     setShowRecipientSelector(false)
@@ -55,6 +69,7 @@ export function RecipientPanel(): JSX.Element {
               py="$none"
               value={pattern ?? ''}
               onChangeText={setPattern}
+              onDismiss={() => Keyboard.dismiss()}
               onFocus={() => setShowRecipientSelector(true)}
             />
           </Flex>
@@ -94,6 +109,13 @@ export function RecipientPanel(): JSX.Element {
           // Show either suggested recipients or filtered sections based on query
           <RecipientList sections={sections} onPress={onSelectRecipient} />
         ))}
+      <RecipientSelectSpeedBumps
+        chainId={chainId}
+        checkSpeedBumps={checkSpeedBumps}
+        recipientAddress={selectedRecipient}
+        setCheckSpeedBumps={setCheckSpeedBumps}
+        onConfirm={onSpeedBumpConfirm}
+      />
     </Flex>
   ) : (
     <TouchableArea onPress={onToggleShowRecipientSelector}>

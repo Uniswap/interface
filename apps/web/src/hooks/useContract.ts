@@ -53,7 +53,7 @@ const { abi: V2MigratorABI } = V3MigratorJson
 
 // returns null on errors
 export function useContract<T extends Contract = Contract>(
-  addressOrAddressMap: string | { [chainId: number]: string } | undefined,
+  address: string | undefined,
   ABI: any,
   withSignerIfPossible = true,
   chainId?: InterfaceChainId,
@@ -62,16 +62,7 @@ export function useContract<T extends Contract = Contract>(
   const provider = useEthersProvider({ chainId: chainId ?? account.chainId })
 
   return useMemo(() => {
-    if (!addressOrAddressMap || !ABI || !provider || !account.chainId) {
-      return null
-    }
-    let address: string | undefined
-    if (typeof addressOrAddressMap === 'string') {
-      address = addressOrAddressMap
-    } else {
-      address = addressOrAddressMap[chainId ?? account.chainId]
-    }
-    if (!address) {
+    if (!address || !ABI || !provider) {
       return null
     }
     try {
@@ -80,12 +71,12 @@ export function useContract<T extends Contract = Contract>(
       const wrappedError = new Error('failed to get contract', { cause: error })
       logger.warn('useContract', 'useContract', wrappedError.message, {
         error: wrappedError,
-        addressOrAddressMap,
-        address: account.address,
+        contractAddress: address,
+        accountAddress: account.address,
       })
       return null
     }
-  }, [addressOrAddressMap, ABI, provider, chainId, account.chainId, account.address, withSignerIfPossible]) as T
+  }, [address, ABI, provider, withSignerIfPossible, account.address]) as T
 }
 
 function useMainnetContract<T extends Contract = Contract>(address: string | undefined, ABI: any): T | null {
@@ -112,11 +103,16 @@ function useMainnetContract<T extends Contract = Contract>(address: string | und
 }
 
 export function useV2MigratorContract() {
-  return useContract<V3Migrator>(V3_MIGRATOR_ADDRESSES, V2MigratorABI, true)
+  const account = useAccount()
+  return useContract<V3Migrator>(
+    account.chainId ? V3_MIGRATOR_ADDRESSES[account.chainId] : undefined,
+    V2MigratorABI,
+    true,
+  )
 }
 
-export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean) {
-  return useContract<Erc20>(tokenAddress, ERC20_ABI, withSignerIfPossible)
+export function useTokenContract(tokenAddress?: string, withSignerIfPossible?: boolean, chainId?: InterfaceChainId) {
+  return useContract<Erc20>(tokenAddress, ERC20_ABI, withSignerIfPossible, chainId)
 }
 
 export function usePoolContract(poolAddress?: string) {
@@ -141,7 +137,12 @@ export function useERC1155Contract(nftAddress?: string) {
 }
 
 export function useArgentWalletDetectorContract() {
-  return useContract<ArgentWalletDetector>(ARGENT_WALLET_DETECTOR_ADDRESS, ARGENT_WALLET_DETECTOR_ABI, false)
+  const account = useAccount()
+  return useContract<ArgentWalletDetector>(
+    account.chainId ? ARGENT_WALLET_DETECTOR_ADDRESS[account.chainId] : undefined,
+    ARGENT_WALLET_DETECTOR_ABI,
+    false,
+  )
 }
 
 export function useENSRegistrarContract() {
@@ -169,8 +170,15 @@ export function useV2RouterContract(): Contract | null {
   return useContract(chainId ? V2_ROUTER_ADDRESSES[chainId] : undefined, IUniswapV2Router02ABI, true)
 }
 
-export function useInterfaceMulticall() {
-  return useContract<UniswapInterfaceMulticall>(MULTICALL_ADDRESSES, MulticallABI, false) as UniswapInterfaceMulticall
+export function useInterfaceMulticall(chainId?: InterfaceChainId) {
+  const account = useAccount()
+  const chain = chainId ?? account.chainId
+  return useContract<UniswapInterfaceMulticall>(
+    chain ? MULTICALL_ADDRESSES[chain] : undefined,
+    MulticallABI,
+    false,
+    chain,
+  ) as UniswapInterfaceMulticall
 }
 
 export function useMainnetInterfaceMulticall() {
@@ -183,7 +191,7 @@ export function useMainnetInterfaceMulticall() {
 export function useV3NFTPositionManagerContract(withSignerIfPossible?: boolean): NonfungiblePositionManager | null {
   const account = useAccount()
   const contract = useContract<NonfungiblePositionManager>(
-    NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+    account.chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[account.chainId] : undefined,
     NFTPositionManagerABI,
     withSignerIfPossible,
   )

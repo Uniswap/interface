@@ -11,10 +11,12 @@ import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensi
 import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
 import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
 import { Loader } from 'src/components/loading'
-import { Flex, HapticFeedback } from 'ui/src'
+import { Flex, useHapticFeedback } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyId } from 'uniswap/src/types/currency'
+import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
@@ -58,10 +60,12 @@ export const PriceExplorer = memo(function PriceExplorer({
 }): JSX.Element {
   const { data, loading, error, refetch, setDuration, selectedDuration, numberOfDigits } =
     useTokenPriceHistory(currencyId)
+  const { hapticFeedback } = useHapticFeedback()
 
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
-  const shouldShowAnimatedDot = selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour
+  const shouldShowAnimatedDot =
+    (selectedDuration === HistoryDuration.Day || selectedDuration === HistoryDuration.Hour) && !isDetoxBuild
   const additionalPadding = shouldShowAnimatedDot ? 40 : 0
 
   const { lastPricePoint, convertedPriceHistory } = useMemo(() => {
@@ -115,7 +119,7 @@ export const PriceExplorer = memo(function PriceExplorer({
   }
 
   return (
-    <LineChartProvider data={convertedPriceHistory ?? []} onCurrentIndexChange={HapticFeedback.light}>
+    <LineChartProvider data={convertedPriceHistory ?? []} onCurrentIndexChange={hapticFeedback.light}>
       <Flex gap="$spacing8" overflow="hidden">
         <PriceTextSection
           loading={loading}
@@ -151,10 +155,16 @@ function PriceExplorerChart({
 }): JSX.Element {
   const { chartHeight, chartWidth } = useChartDimensions()
   const isRTL = I18nManager.isRTL
+  const { hapticFeedback } = useHapticFeedback()
 
   return (
     // TODO(MOB-2166): remove forced LTR direction + scaleX horizontal flip technique once react-native-wagmi-charts fixes this: https://github.com/coinjar/react-native-wagmi-charts/issues/136
-    <Flex direction="ltr" my="$spacing24" style={{ transform: [{ scaleX: isRTL ? -1 : 1 }] }}>
+    <Flex
+      direction="ltr"
+      my="$spacing24"
+      style={{ transform: [{ scaleX: isRTL ? -1 : 1 }] }}
+      testID={TestID.PriceExplorerChart}
+    >
       <LineChart height={chartHeight} width={chartWidth - additionalPadding} yGutter={20}>
         <LineChart.Path color={tokenColor} pathProps={{ isTransitionEnabled: false }}>
           {shouldShowAnimatedDot && (
@@ -176,8 +186,8 @@ function PriceExplorerChart({
           minDurationMs={150}
           outerSize={CURSOR_SIZE}
           size={CURSOR_INNER_SIZE}
-          onActivated={HapticFeedback.light}
-          onEnded={HapticFeedback.light}
+          onActivated={hapticFeedback.light}
+          onEnded={hapticFeedback.light}
         />
       </LineChart>
     </Flex>

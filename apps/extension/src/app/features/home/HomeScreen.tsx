@@ -1,6 +1,7 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch, useSelector } from 'react-redux'
 import { ActivityTab } from 'src/app/components/tabs/ActivityTab'
 import { NftsTab } from 'src/app/components/tabs/NftsTab'
 import { PortfolioActionButtons } from 'src/app/features/home/PortfolioActionButtons'
@@ -12,7 +13,6 @@ import { AlertName, closeAlert } from 'src/app/features/onboarding/alerts/slice'
 import { useOptimizedSearchParams } from 'src/app/hooks/useOptimizedSearchParams'
 import { HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { useAppDispatch, useAppSelector } from 'src/store/store'
 import { Flex, Loader, Text, TouchableArea, styled } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
@@ -34,7 +34,7 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
 
   const address = useActiveAccountAddressWithThrow()
   const [selectedTab, setSelectedTab] = useSelectedTabState()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   // Record a heartbeat for anonymous user DAU
   useHeartbeatReporter()
@@ -50,7 +50,7 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
   }, [selectedTab])
 
   // defaults to true, but store state will persist to future loads once updated
-  const { isOpen: isPinRequestOpen } = useAppSelector(selectAlertsState(AlertName.PinToToolbar))
+  const { isOpen: isPinRequestOpen } = useSelector(selectAlertsState(AlertName.PinToToolbar))
   const onClosePinRequest = useCallback(() => dispatch(closeAlert(AlertName.PinToToolbar)), [dispatch])
 
   useEffect(() => {

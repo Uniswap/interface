@@ -1,4 +1,5 @@
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { Complete } from 'src/app/features/onboarding/Complete'
 import { SyncFromPhoneButton } from 'src/app/features/onboarding/SyncFromPhoneButton'
 import { Terms } from 'src/app/features/onboarding/Terms'
@@ -7,7 +8,6 @@ import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
-import { useAppSelector } from 'src/store/store'
 import { Button, Flex, Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
@@ -16,7 +16,7 @@ import { useTimeout } from 'utilities/src/time/timing'
 export function IntroScreen(): JSX.Element {
   const { t } = useTranslation()
 
-  const isOnboarded = useAppSelector(isOnboardedSelector)
+  const isOnboarded = useSelector(isOnboardedSelector)
 
   // Detections for some unsupported browsers may not work until stylesheet is loaded
   useTimeout(() => {

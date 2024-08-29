@@ -2,12 +2,12 @@ import { Currency } from '@uniswap/sdk-core'
 import Column from 'components/Column'
 import { LimitPriceErrorType } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { FadePresence, FadePresenceAnimationType } from 'theme/components/FadePresence'
+import { Trans } from 'uniswap/src/i18n'
 
 const Container = styled(Row)`
   padding: 12px;

@@ -1,5 +1,5 @@
 import { readIsOnboardedFromStorage, readReduxStateFromStorage } from 'src/background/utils/persistedStateUtils'
-import { WebState } from 'src/store/webReducer'
+import { ExtensionState } from 'src/store/extensionReducer'
 import { logger } from 'utilities/src/logger/logger'
 
 type BackgroundState = {
@@ -47,7 +47,7 @@ async function initInternal(): Promise<void> {
   }
 }
 
-async function updateFromReduxState(reduxState: WebState | undefined): Promise<void> {
+async function updateFromReduxState(reduxState: ExtensionState | undefined): Promise<void> {
   if (reduxState) {
     updateIsOnboarded(await readIsOnboardedFromStorage()) // Can replace this with selector after migration is complete
   }

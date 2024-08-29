@@ -2,6 +2,7 @@
 
 import { ethers, TypedDataDomain, TypedDataField, Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
+import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { ensureLeading0x } from 'uniswap/src/utils/addresses'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
@@ -30,7 +31,7 @@ export async function signTypedData(
   domain: TypedDataDomain,
   types: Record<string, TypedDataField[]>,
   value: Record<string, unknown>,
-  account: Account,
+  account: AccountMeta,
   signerManager: SignerManager,
   provider?: ethers.providers.JsonRpcProvider,
 ): Promise<string> {

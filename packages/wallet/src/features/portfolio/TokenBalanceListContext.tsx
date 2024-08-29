@@ -11,9 +11,10 @@ import {
   useState,
 } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { usePortfolioBalances, useTokenBalancesGroupedByVisibility } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
-import { usePortfolioBalances, useTokenBalancesGroupedByVisibility } from 'wallet/src/features/dataApi/balances'
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 
 type CurrencyId = string
 export const HIDDEN_TOKEN_BALANCES_ROW = 'HIDDEN_TOKEN_BALANCES_ROW' as const
@@ -43,6 +44,8 @@ export function TokenBalanceListContextProvider({
   isExternalProfile: boolean
   onPressToken: (currencyId: CurrencyId) => void
 }>): JSX.Element {
+  const valueModifiers = usePortfolioValueModifiers(owner) ?? []
+
   const {
     data: balancesById,
     networkStatus,
@@ -51,6 +54,7 @@ export function TokenBalanceListContextProvider({
     address: owner,
     pollInterval: PollingInterval.KindaFast,
     fetchPolicy: 'cache-and-network',
+    valueModifiers,
   })
 
   // re-order token balances to visible and hidden

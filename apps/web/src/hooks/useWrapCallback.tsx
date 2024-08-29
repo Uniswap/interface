@@ -2,18 +2,18 @@ import { InterfaceEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { usePoolContract, useWETHContract } from 'hooks/useContract'
-import { Trans } from 'i18n'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { formatToDecimal, getTokenAddress } from 'lib/utils/analytics'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
-import { useMemo, useState } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useCurrencyBalance } from 'state/connection/hooks'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import { WrapType } from 'uniswap/src/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -59,10 +59,14 @@ export default function useWrapCallback(
   typedValue: string | undefined,
 ): { wrapType: WrapType; execute?: () => Promise<string | undefined>; inputError?: WrapInputError } {
   const { chainId } = useSwapAndLimitContext()
+
   const wethContract = useWETHContract(true, chainId)
+  const wethContractRef = useRef(wethContract)
+  wethContractRef.current = wethContract
 
   const { address: smartPoolAddress } = useActiveSmartPool()
   const poolContract = usePoolContract(smartPoolAddress ?? undefined)
+
   const balance = useCurrencyBalance(smartPoolAddress ?? undefined, inputCurrency ?? undefined)
   // we can always parse the amount typed as the input currency, since wrapping is 1:1
   const inputAmount = useMemo(
@@ -79,7 +83,7 @@ export default function useWrapCallback(
   }
 
   return useMemo(() => {
-    if (!poolContract || !wethContract || !chainId || !inputCurrency || !outputCurrency) {
+    if (!poolContract || !wethContractRef.current || !chainId || !inputCurrency || !outputCurrency) {
       return NOT_APPLICABLE
     }
     const weth = WRAPPED_NATIVE_CURRENCY[chainId]
@@ -106,6 +110,10 @@ export default function useWrapCallback(
           sufficientBalance && inputAmount
             ? () =>
                 trace({ name: 'Wrap', op: 'swap.wrap' }, async (trace) => {
+                  const wethContract = wethContractRef.current
+                  if (!wethContract) {
+                    throw new Error('wethContract is null')
+                  }
                   const network = await wethContract.provider.getNetwork()
                   if (
                     network.chainId !== chainId ||
@@ -153,6 +161,10 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
             ? () =>
                 trace({ name: 'Wrap', op: 'swap.wrap' }, async (trace) => {
                   try {
+                    const wethContract = wethContractRef.current
+                    if (!wethContract) {
+                      throw new Error('wethContract is null')
+                    }
                     const txReceipt = await trace.child({ name: 'Withdraw', op: 'wallet.send_transaction' }, () =>
                       poolContract.unwrapWETH9(`0x${inputAmount.quotient.toString(16)}`),
                     )
@@ -182,5 +194,5 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
     } else {
       return NOT_APPLICABLE
     }
-  }, [poolContract, wethContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
+  }, [poolContract, chainId, inputCurrency, outputCurrency, inputAmount, balance, addTransaction])
 }

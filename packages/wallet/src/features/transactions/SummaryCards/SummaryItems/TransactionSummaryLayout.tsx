@@ -1,12 +1,13 @@
 import { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, SpinningLoader, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { AnimatePresence, Flex, SpinningLoader, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
 import { AlertTriangle, UniswapX } from 'ui/src/components/icons'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
 import { TransactionDetailsModal } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
 import { useTransactionActions } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActions'
 import { TransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryTitle'
@@ -19,7 +20,6 @@ import {
 } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useIsQueuedTransaction } from 'wallet/src/features/transactions/hooks'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { openTransactionLink } from 'wallet/src/utils/linking'
 
@@ -32,6 +32,7 @@ function TransactionSummaryLayout({
   caption,
   postCaptionElement,
   icon,
+  index,
   onRetry,
 }: TransactionSummaryLayoutProps): JSX.Element {
   const { t } = useTranslation()
@@ -100,7 +101,7 @@ function TransactionSummaryLayout({
 
   return (
     <>
-      <TouchableArea mb="$spacing4" overflow="hidden" onPress={onPress}>
+      <TouchableArea mb="$spacing4" overflow="hidden" testID={`activity-list-item-${index ?? 0}`} onPress={onPress}>
         <Flex
           grow
           row
@@ -157,13 +158,15 @@ function TransactionSummaryLayout({
           )}
         </Flex>
       </TouchableArea>
-      {showDetailsModal && (
-        <TransactionDetailsModal
-          authTrigger={authTrigger}
-          transactionDetails={transaction}
-          onClose={(): void => setShowDetailsModal(false)}
-        />
-      )}
+      <AnimatePresence>
+        {showDetailsModal && (
+          <TransactionDetailsModal
+            authTrigger={authTrigger}
+            transactionDetails={transaction}
+            onClose={(): void => setShowDetailsModal(false)}
+          />
+        )}
+      </AnimatePresence>
       {renderModals()}
     </>
   )

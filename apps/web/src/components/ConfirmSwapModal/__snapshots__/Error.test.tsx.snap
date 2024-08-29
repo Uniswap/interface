@@ -310,148 +310,161 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2 c1"
+          class="c0 c1"
         >
           <div
-            class="c3"
-          >
-            <svg
-              class="c4"
-              data-testid="pending-modal-failure-icon"
-              fill="#7D7D7D"
-              viewBox="0 0 28 28"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
-                fill="#9b9b9b"
-              />
-            </svg>
-          </div>
-          <div
-            class="c5 c1"
+            class="c2 c1"
           >
             <div
-              class="c6 c7 css-4kpdx7"
+              class="c3"
             >
-              Token approval failed
-            </div>
-            <div
-              class="c8 c9 css-1urox24"
-            >
-              This provides the Uniswap protocol access to your token for trading. For security, it expires after 30 days.
+              <svg
+                class="c4"
+                data-testid="pending-modal-failure-icon"
+                fill="#7D7D7D"
+                viewBox="0 0 28 28"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
+                  fill="#9b9b9b"
+                />
+              </svg>
             </div>
             <div
               class="c5 c1"
             >
               <div
-                class="c10 c11"
+                class="c6 c7 css-4kpdx7"
               >
-                <div
-                  class="c12"
-                  style="height: 16px; width: 16px;"
-                >
-                  <div
-                    class="c13"
-                  >
-                    <div
-                      class="c14"
-                      size="16"
-                    >
-                       
-                      <img
-                        class="c15"
-                        size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  &lt;0.00001 ABC
-                </div>
-                <svg
-                  fill="none"
-                  height="12px"
-                  stroke="#222222"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="12px"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="5"
-                    x2="19"
-                    y1="12"
-                    y2="12"
-                  />
-                  <polyline
-                    points="12 5 19 12 12 19"
-                  />
-                </svg>
-                <div
-                  class="c12"
-                  style="height: 16px; width: 16px;"
-                >
-                  <div
-                    class="c13"
-                  >
-                    <div
-                      class="c14"
-                      size="16"
-                    >
-                       
-                      <img
-                        class="c15"
-                        size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  &lt;0.00001 DEF
-                </div>
+                Token approval failed
               </div>
-              <a
-                class="c16"
-                href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
-                rel="noopener noreferrer"
-                target="_blank"
+              <div
+                class="c8 c9 css-1urox24"
               >
-                Learn more
-              </a>
+                This provides the Uniswap protocol access to your token for trading. For security, it expires after 30 days.
+              </div>
+              <div
+                class="c5 c1"
+              >
+                <div
+                  class="c10 c11"
+                >
+                  <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    &lt;0.00001 ABC
+                  </div>
+                  <svg
+                    fill="none"
+                    height="12px"
+                    stroke="#222222"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="12px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="5"
+                      x2="19"
+                      y1="12"
+                      y2="12"
+                    />
+                    <polyline
+                      points="12 5 19 12 12 19"
+                    />
+                  </svg>
+                  <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    &lt;0.00001 DEF
+                  </div>
+                </div>
+                <a
+                  class="c16"
+                  href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c10 c17"
-        >
-          <button
-            class="c18 c19"
+          <div
+            class="c10 c17"
           >
-            <div
-              class="c20 c21"
-            />
-            Try again
-          </button>
+            <button
+              class="c18 c19"
+            >
+              <div
+                class="c20 c21"
+              />
+              Try again
+            </button>
+          </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -767,148 +780,161 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2 c1"
+          class="c0 c1"
         >
           <div
-            class="c3"
-          >
-            <svg
-              class="c4"
-              data-testid="pending-modal-failure-icon"
-              fill="#7D7D7D"
-              viewBox="0 0 28 28"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
-                fill="#9b9b9b"
-              />
-            </svg>
-          </div>
-          <div
-            class="c5 c1"
+            class="c2 c1"
           >
             <div
-              class="c6 c7 css-4kpdx7"
+              class="c3"
             >
-              Permit approval failed
-            </div>
-            <div
-              class="c8 c9 css-1urox24"
-            >
-              permit.approval.fail.message
+              <svg
+                class="c4"
+                data-testid="pending-modal-failure-icon"
+                fill="#7D7D7D"
+                viewBox="0 0 28 28"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
+                  fill="#9b9b9b"
+                />
+              </svg>
             </div>
             <div
               class="c5 c1"
             >
               <div
-                class="c10 c11"
+                class="c6 c7 css-4kpdx7"
               >
-                <div
-                  class="c12"
-                  style="height: 16px; width: 16px;"
-                >
-                  <div
-                    class="c13"
-                  >
-                    <div
-                      class="c14"
-                      size="16"
-                    >
-                       
-                      <img
-                        class="c15"
-                        size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  &lt;0.00001 ABC
-                </div>
-                <svg
-                  fill="none"
-                  height="12px"
-                  stroke="#222222"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="12px"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="5"
-                    x2="19"
-                    y1="12"
-                    y2="12"
-                  />
-                  <polyline
-                    points="12 5 19 12 12 19"
-                  />
-                </svg>
-                <div
-                  class="c12"
-                  style="height: 16px; width: 16px;"
-                >
-                  <div
-                    class="c13"
-                  >
-                    <div
-                      class="c14"
-                      size="16"
-                    >
-                       
-                      <img
-                        class="c15"
-                        size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  &lt;0.00001 DEF
-                </div>
+                Permit approval failed
               </div>
-              <a
-                class="c16"
-                href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
-                rel="noopener noreferrer"
-                target="_blank"
+              <div
+                class="c8 c9 css-1urox24"
               >
-                Learn more
-              </a>
+                Permit2 allows token approvals to be shared and managed across different applications.
+              </div>
+              <div
+                class="c5 c1"
+              >
+                <div
+                  class="c10 c11"
+                >
+                  <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    &lt;0.00001 ABC
+                  </div>
+                  <svg
+                    fill="none"
+                    height="12px"
+                    stroke="#222222"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="12px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="5"
+                      x2="19"
+                      y1="12"
+                      y2="12"
+                    />
+                    <polyline
+                      points="12 5 19 12 12 19"
+                    />
+                  </svg>
+                  <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    &lt;0.00001 DEF
+                  </div>
+                </div>
+                <a
+                  class="c16"
+                  href="https://support.uniswap.org/hc/en-us/articles/8120520483085-What-is-an-approval-transaction"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c10 c17"
-        >
-          <button
-            class="c18 c19"
+          <div
+            class="c10 c17"
           >
-            <div
-              class="c20 c21"
-            />
-            Try again
-          </button>
+            <button
+              class="c18 c19"
+            >
+              <div
+                class="c20 c21"
+              />
+              Try again
+            </button>
+          </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -1224,148 +1250,161 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
 }
 
 <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2 c1"
+          class="c0 c1"
         >
           <div
-            class="c3"
-          >
-            <svg
-              class="c4"
-              data-testid="pending-modal-failure-icon"
-              fill="#7D7D7D"
-              viewBox="0 0 28 28"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
-                fill="#9b9b9b"
-              />
-            </svg>
-          </div>
-          <div
-            class="c5 c1"
+            class="c2 c1"
           >
             <div
-              class="c6 c7 css-4kpdx7"
+              class="c3"
             >
-              Swap failed
-            </div>
-            <div
-              class="c8 c9 css-1urox24"
-            >
-              Try adjusting slippage to a higher value.
+              <svg
+                class="c4"
+                data-testid="pending-modal-failure-icon"
+                fill="#7D7D7D"
+                viewBox="0 0 28 28"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
+                  fill="#9b9b9b"
+                />
+              </svg>
             </div>
             <div
               class="c5 c1"
             >
               <div
-                class="c10 c11"
+                class="c6 c7 css-4kpdx7"
               >
-                <div
-                  class="c12"
-                  style="height: 16px; width: 16px;"
-                >
-                  <div
-                    class="c13"
-                  >
-                    <div
-                      class="c14"
-                      size="16"
-                    >
-                       
-                      <img
-                        class="c15"
-                        size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  &lt;0.00001 ABC
-                </div>
-                <svg
-                  fill="none"
-                  height="12px"
-                  stroke="#222222"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="12px"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="5"
-                    x2="19"
-                    y1="12"
-                    y2="12"
-                  />
-                  <polyline
-                    points="12 5 19 12 12 19"
-                  />
-                </svg>
-                <div
-                  class="c12"
-                  style="height: 16px; width: 16px;"
-                >
-                  <div
-                    class="c13"
-                  >
-                    <div
-                      class="c14"
-                      size="16"
-                    >
-                       
-                      <img
-                        class="c15"
-                        size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  &lt;0.00001 DEF
-                </div>
+                Swap failed
               </div>
-              <a
-                class="c16"
-                href="https://support.uniswap.org/hc/en-us/articles/8643975058829-Why-did-my-transaction-fail-"
-                rel="noopener noreferrer"
-                target="_blank"
+              <div
+                class="c8 c9 css-1urox24"
               >
-                Learn more
-              </a>
+                Try adjusting slippage to a higher value.
+              </div>
+              <div
+                class="c5 c1"
+              >
+                <div
+                  class="c10 c11"
+                >
+                  <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    &lt;0.00001 ABC
+                  </div>
+                  <svg
+                    fill="none"
+                    height="12px"
+                    stroke="#222222"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="12px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="5"
+                      x2="19"
+                      y1="12"
+                      y2="12"
+                    />
+                    <polyline
+                      points="12 5 19 12 12 19"
+                    />
+                  </svg>
+                  <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    &lt;0.00001 DEF
+                  </div>
+                </div>
+                <a
+                  class="c16"
+                  href="https://support.uniswap.org/hc/en-us/articles/8643975058829-Why-did-my-transaction-fail-"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c10 c17"
-        >
-          <button
-            class="c18 c19"
+          <div
+            class="c10 c17"
           >
-            <div
-              class="c20 c21"
-            />
-            Try again
-          </button>
+            <button
+              class="c18 c19"
+            >
+              <div
+                class="c20 c21"
+              />
+              Try again
+            </button>
+          </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -1681,148 +1720,161 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2 c1"
+          class="c0 c1"
         >
           <div
-            class="c3"
-          >
-            <svg
-              class="c4"
-              data-testid="pending-modal-failure-icon"
-              fill="#7D7D7D"
-              viewBox="0 0 28 28"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
-                fill="#9b9b9b"
-              />
-            </svg>
-          </div>
-          <div
-            class="c5 c1"
+            class="c2 c1"
           >
             <div
-              class="c6 c7 css-4kpdx7"
+              class="c3"
             >
-              Wrap failed
-            </div>
-            <div
-              class="c8 c9 css-1urox24"
-            >
-              Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
+              <svg
+                class="c4"
+                data-testid="pending-modal-failure-icon"
+                fill="#7D7D7D"
+                viewBox="0 0 28 28"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
+                  fill="#9b9b9b"
+                />
+              </svg>
             </div>
             <div
               class="c5 c1"
             >
               <div
-                class="c10 c11"
+                class="c6 c7 css-4kpdx7"
               >
-                <div
-                  class="c12"
-                  style="height: 16px; width: 16px;"
-                >
-                  <div
-                    class="c13"
-                  >
-                    <div
-                      class="c14"
-                      size="16"
-                    >
-                       
-                      <img
-                        class="c15"
-                        size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  &lt;0.00001 ABC
-                </div>
-                <svg
-                  fill="none"
-                  height="12px"
-                  stroke="#222222"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="12px"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="5"
-                    x2="19"
-                    y1="12"
-                    y2="12"
-                  />
-                  <polyline
-                    points="12 5 19 12 12 19"
-                  />
-                </svg>
-                <div
-                  class="c12"
-                  style="height: 16px; width: 16px;"
-                >
-                  <div
-                    class="c13"
-                  >
-                    <div
-                      class="c14"
-                      size="16"
-                    >
-                       
-                      <img
-                        class="c15"
-                        size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  &lt;0.00001 DEF
-                </div>
+                Wrap failed
               </div>
-              <a
-                class="c16"
-                href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
-                rel="noopener noreferrer"
-                target="_blank"
+              <div
+                class="c8 c9 css-1urox24"
               >
-                Learn more
-              </a>
+                Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap, ETH is wrapped into WETH.
+              </div>
+              <div
+                class="c5 c1"
+              >
+                <div
+                  class="c10 c11"
+                >
+                  <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    &lt;0.00001 ABC
+                  </div>
+                  <svg
+                    fill="none"
+                    height="12px"
+                    stroke="#222222"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="12px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="5"
+                      x2="19"
+                      y1="12"
+                      y2="12"
+                    />
+                    <polyline
+                      points="12 5 19 12 12 19"
+                    />
+                  </svg>
+                  <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    &lt;0.00001 DEF
+                  </div>
+                </div>
+                <a
+                  class="c16"
+                  href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c10 c17"
-        >
-          <button
-            class="c18 c19"
+          <div
+            class="c10 c17"
           >
-            <div
-              class="c20 c21"
-            />
-            Try again
-          </button>
+            <button
+              class="c18 c19"
+            >
+              <div
+                class="c20 c21"
+              />
+              Try again
+            </button>
+          </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -2138,146 +2190,159 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2 c1"
+          class="c0 c1"
         >
           <div
-            class="c3"
-          >
-            <svg
-              class="c4"
-              data-testid="pending-modal-failure-icon"
-              fill="#7D7D7D"
-              viewBox="0 0 28 28"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
-                fill="#9b9b9b"
-              />
-            </svg>
-          </div>
-          <div
-            class="c5 c1"
+            class="c2 c1"
           >
             <div
-              class="c6 c7 css-4kpdx7"
+              class="c3"
             >
-              Limit failed
+              <svg
+                class="c4"
+                data-testid="pending-modal-failure-icon"
+                fill="#7D7D7D"
+                viewBox="0 0 28 28"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
+                  fill="#9b9b9b"
+                />
+              </svg>
             </div>
-            <div
-              class="c8 c9 css-1urox24"
-            />
             <div
               class="c5 c1"
             >
               <div
-                class="c10 c11"
+                class="c6 c7 css-4kpdx7"
               >
-                <div
-                  class="c12"
-                  style="height: 16px; width: 16px;"
-                >
-                  <div
-                    class="c13"
-                  >
-                    <div
-                      class="c14"
-                      size="16"
-                    >
-                       
-                      <img
-                        class="c15"
-                        size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  &lt;0.00001 DAI
-                </div>
-                <svg
-                  fill="none"
-                  height="12px"
-                  stroke="#222222"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="12px"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="5"
-                    x2="19"
-                    y1="12"
-                    y2="12"
-                  />
-                  <polyline
-                    points="12 5 19 12 12 19"
-                  />
-                </svg>
-                <div
-                  class="c12"
-                  style="height: 16px; width: 16px;"
-                >
-                  <div
-                    class="c13"
-                  >
-                    <div
-                      class="c14"
-                      size="16"
-                    >
-                       
-                      <img
-                        class="c15"
-                        size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  0.0001 USDC
-                </div>
+                Limit failed
               </div>
-              <a
-                class="c16"
-                href="https://support.uniswap.org/hc/en-us/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute"
-                rel="noopener noreferrer"
-                target="_blank"
+              <div
+                class="c8 c9 css-1urox24"
+              />
+              <div
+                class="c5 c1"
               >
-                Learn more
-              </a>
+                <div
+                  class="c10 c11"
+                >
+                  <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    &lt;0.00001 DAI
+                  </div>
+                  <svg
+                    fill="none"
+                    height="12px"
+                    stroke="#222222"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="12px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="5"
+                      x2="19"
+                      y1="12"
+                      y2="12"
+                    />
+                    <polyline
+                      points="12 5 19 12 12 19"
+                    />
+                  </svg>
+                  <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    0.0001 USDC
+                  </div>
+                </div>
+                <a
+                  class="c16"
+                  href="https://support.uniswap.org/hc/en-us/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c10 c17"
-        >
-          <button
-            class="c18 c19"
+          <div
+            class="c10 c17"
           >
-            <div
-              class="c20 c21"
-            />
-            Try again
-          </button>
+            <button
+              class="c18 c19"
+            >
+              <div
+                class="c20 c21"
+              />
+              Try again
+            </button>
+          </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>
@@ -2593,148 +2658,161 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
 }
 
 <span
-    class=" _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0 c1"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c2 c1"
+          class="c0 c1"
         >
           <div
-            class="c3"
-          >
-            <svg
-              class="c4"
-              data-testid="pending-modal-failure-icon"
-              fill="#7D7D7D"
-              viewBox="0 0 28 28"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
-                fill="#9b9b9b"
-              />
-            </svg>
-          </div>
-          <div
-            class="c5 c1"
+            class="c2 c1"
           >
             <div
-              class="c6 c7 css-4kpdx7"
+              class="c3"
             >
-              Wrap failed
-            </div>
-            <div
-              class="c8 c9 css-1urox24"
-            >
-              Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap ETH is wrapped into WETH.
+              <svg
+                class="c4"
+                data-testid="pending-modal-failure-icon"
+                fill="#7D7D7D"
+                viewBox="0 0 28 28"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="m25.2086 20.0103-7.7081-14.41555c-1.4933-2.793-5.5055-2.793-7 0l-7.70806 14.41555c-1.36966 2.562.49005 5.6559 3.40088 5.6559h15.61438c2.9097 0 4.7706-3.095 3.4009-5.6559zm-12.0831-8.3441c0-.483.392-.875.875-.875s.875.392.875.875v4.6667c0 .483-.392.875-.875.875s-.875-.392-.875-.875zm.8984 9.3333c-.644 0-1.1727-.5226-1.1727-1.1666s.517-1.1667 1.161-1.1667h.0117c.6452 0 1.1667.5227 1.1667 1.1667s-.5227 1.1666-1.1667 1.1666z"
+                  fill="#9b9b9b"
+                />
+              </svg>
             </div>
             <div
               class="c5 c1"
             >
               <div
-                class="c10 c11"
+                class="c6 c7 css-4kpdx7"
               >
-                <div
-                  class="c12"
-                  style="height: 16px; width: 16px;"
-                >
-                  <div
-                    class="c13"
-                  >
-                    <div
-                      class="c14"
-                      size="16"
-                    >
-                       
-                      <img
-                        class="c15"
-                        size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  &lt;0.00001 DAI
-                </div>
-                <svg
-                  fill="none"
-                  height="12px"
-                  stroke="#222222"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  viewBox="0 0 24 24"
-                  width="12px"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <line
-                    x1="5"
-                    x2="19"
-                    y1="12"
-                    y2="12"
-                  />
-                  <polyline
-                    points="12 5 19 12 12 19"
-                  />
-                </svg>
-                <div
-                  class="c12"
-                  style="height: 16px; width: 16px;"
-                >
-                  <div
-                    class="c13"
-                  >
-                    <div
-                      class="c14"
-                      size="16"
-                    >
-                       
-                      <img
-                        class="c15"
-                        size="16"
-                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div
-                  class="c6 css-142zc9n"
-                >
-                  0.0001 USDC
-                </div>
+                Wrap failed
               </div>
-              <a
-                class="c16"
-                href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
-                rel="noopener noreferrer"
-                target="_blank"
+              <div
+                class="c8 c9 css-1urox24"
               >
-                Learn more
-              </a>
+                Swaps on the Uniswap Protocol can start and end with ETH. However, during the swap, ETH is wrapped into WETH.
+              </div>
+              <div
+                class="c5 c1"
+              >
+                <div
+                  class="c10 c11"
+                >
+                  <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    &lt;0.00001 DAI
+                  </div>
+                  <svg
+                    fill="none"
+                    height="12px"
+                    stroke="#222222"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    viewBox="0 0 24 24"
+                    width="12px"
+                    xmlns="http://www.w3.org/2000/svg"
+                  >
+                    <line
+                      x1="5"
+                      x2="19"
+                      y1="12"
+                      y2="12"
+                    />
+                    <polyline
+                      points="12 5 19 12 12 19"
+                    />
+                  </svg>
+                  <div
+                    class="c12"
+                    style="height: 16px; width: 16px;"
+                  >
+                    <div
+                      class="c13"
+                    >
+                      <div
+                        class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
+                      >
+                        <div
+                          class="c14"
+                          size="16"
+                        >
+                           
+                          <img
+                            class="c15"
+                            size="16"
+                            src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="c6 css-142zc9n"
+                  >
+                    0.0001 USDC
+                  </div>
+                </div>
+                <a
+                  class="c16"
+                  href="https://support.uniswap.org/hc/en-us/articles/16015852009997-Why-do-ETH-swaps-involve-converting-to-WETH"
+                  rel="noopener noreferrer"
+                  target="_blank"
+                >
+                  Learn more
+                </a>
+              </div>
             </div>
           </div>
-        </div>
-        <div
-          class="c10 c17"
-        >
-          <button
-            class="c18 c19"
+          <div
+            class="c10 c17"
           >
-            <div
-              class="c20 c21"
-            />
-            Try again
-          </button>
+            <button
+              class="c18 c19"
+            >
+              <div
+                class="c20 c21"
+              />
+              Try again
+            </button>
+          </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>

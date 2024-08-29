@@ -1,16 +1,18 @@
-import React, { memo } from 'react'
+import React, { ReactNode, memo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { LayoutRectangle } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import { TokenItemChart } from 'src/components/explore/TokenItemChart'
+import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { TokenMetadata } from 'src/components/tokens/TokenMetadata'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea, ViewProps } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WalletChainId } from 'uniswap/src/types/chains'
 import {
   buildCurrencyId,
   buildNativeCurrencyId,
@@ -22,26 +24,31 @@ import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
-export type TokenItemData = {
-  name: string
-  logoUrl: string
-  chainId: WalletChainId
-  address: Address | null
-  symbol: string
-  price?: number
-  marketCap?: number
-  pricePercentChange24h?: number
-  volume24h?: number
-  totalValueLocked?: number
-}
-
 interface TokenItemProps {
   tokenItemData: TokenItemData
   index: number
+  eventName: MobileEventName.ExploreTokenItemSelected | MobileEventName.HomeExploreTokenItemSelected
   metadataDisplayType?: TokenMetadataDisplayType
+  containerProps?: ViewProps
+  hideNumberedList?: boolean
+  priceWrapperProps?: ViewProps
+  showChart?: boolean
+  overlay?: ReactNode
+  onPriceWrapperLayout?: (layout: LayoutRectangle) => void
 }
 
-export const TokenItem = memo(function _TokenItem({ tokenItemData, index, metadataDisplayType }: TokenItemProps) {
+export const TokenItem = memo(function _TokenItem({
+  tokenItemData,
+  index,
+  metadataDisplayType,
+  containerProps,
+  eventName,
+  hideNumberedList,
+  priceWrapperProps,
+  showChart,
+  overlay,
+  onPriceWrapperLayout,
+}: TokenItemProps) {
   const { t } = useTranslation()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
@@ -81,10 +88,10 @@ export const TokenItem = memo(function _TokenItem({ tokenItemData, index, metada
   const onPress = (): void => {
     tokenDetailsNavigation.preload(_currencyId)
     tokenDetailsNavigation.navigate(_currencyId)
-    sendAnalyticsEvent(MobileEventName.ExploreTokenItemSelected, {
+    sendAnalyticsEvent(eventName, {
       address: currencyIdToAddress(_currencyId),
       chain: currencyIdToChain(_currencyId) as number,
-      name,
+      name: tokenItemData.name,
       position: index + 1,
     })
   }
@@ -104,9 +111,10 @@ export const TokenItem = memo(function _TokenItem({ tokenItemData, index, metada
         onLongPress={disableOnPress}
         onPress={onPress}
       >
-        <AnimatedFlex grow row gap="$spacing12" px="$spacing24" py="$spacing8">
+        {overlay}
+        <AnimatedFlex grow row alignItems="center" gap="$spacing12" px="$spacing24" py="$spacing8" {...containerProps}>
           <Flex centered row gap="$spacing4" overflow="hidden">
-            {index !== undefined && (
+            {!hideNumberedList && (
               <Flex minWidth={16}>
                 <Text color="$neutral2" variant="buttonLabel4">
                   {index + 1}
@@ -115,7 +123,7 @@ export const TokenItem = memo(function _TokenItem({ tokenItemData, index, metada
             )}
             <TokenLogo name={name} symbol={symbol} url={logoUrl} />
           </Flex>
-          <Flex shrink gap="$spacing2">
+          <Flex fill shrink gap="$spacing2">
             <Text numberOfLines={1} variant="body1">
               {name}
             </Text>
@@ -123,7 +131,14 @@ export const TokenItem = memo(function _TokenItem({ tokenItemData, index, metada
               {getMetadataSubtitle()}
             </Text>
           </Flex>
-          <Flex grow row alignItems="center" justifyContent="flex-end">
+          {showChart && <TokenItemChart height={20} tokenItemData={tokenItemData} width={40} />}
+          <Flex
+            row
+            alignItems="center"
+            justifyContent="flex-end"
+            onLayout={(e) => onPriceWrapperLayout?.(e.nativeEvent.layout)}
+            {...priceWrapperProps}
+          >
             <TokenMetadata>
               <Text lineHeight={24} testID="token-item/price" variant="body1">
                 {convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}

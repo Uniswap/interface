@@ -17,13 +17,14 @@ import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
 import { OrderDirection, getSupportedGraphQlChain } from 'graphql/data/util'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { Trans } from 'i18n'
 import { useMemo, useReducer, useState } from 'react'
 import { ThemedText } from 'theme/components'
+import { Text } from 'ui/src'
 import {
   PoolTransaction,
   PoolTransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Trans } from 'uniswap/src/i18n'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
@@ -91,24 +92,41 @@ export default function RecentTransactions() {
             </FilterHeaderRow>
           </Cell>
         ),
-        cell: (transaction) => (
-          <Cell loading={showLoadingSkeleton} minWidth={276} justifyContent="flex-start" grow>
-            <Row gap="8px">
+        cell: (transaction) => {
+          const amountWithSymbolA = (
+            <>
               <ThemedText.BodySecondary>
                 {BETypeToTransactionType[transaction.getValue?.().type]}
               </ThemedText.BodySecondary>
               <TokenLinkCell token={transaction.getValue?.().token0} />
-              <ThemedText.BodySecondary>
+            </>
+          )
+          const amountWithSymbolB = <TokenLinkCell token={transaction.getValue?.().token1} />
+
+          return (
+            <Cell loading={showLoadingSkeleton} minWidth={276} justifyContent="flex-start" grow>
+              <Text variant="body2" display="flex" flexDirection="row" gap="$spacing8">
                 {transaction.getValue?.().type === PoolTransactionType.Swap ? (
-                  <Trans i18nKey="common.for" />
+                  <Trans
+                    i18nKey="activity.transaction.swap.descriptor.formatted"
+                    components={{
+                      amountWithSymbolA,
+                      amountWithSymbolB,
+                    }}
+                  />
                 ) : (
-                  <Trans i18nKey="common.endAdornment" />
+                  <Trans
+                    i18nKey="activity.transaction.tokens.descriptor.formatted"
+                    components={{
+                      amountWithSymbolA,
+                      amountWithSymbolB,
+                    }}
+                  />
                 )}
-              </ThemedText.BodySecondary>
-              <TokenLinkCell token={transaction.getValue?.().token1} />
-            </Row>
-          </Cell>
-        ),
+              </Text>
+            </Cell>
+          )
+        },
       }),
       columnHelper.accessor((transaction) => transaction.usdValue.value, {
         id: 'fiat-value',

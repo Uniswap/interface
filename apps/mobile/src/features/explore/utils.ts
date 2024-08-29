@@ -1,4 +1,4 @@
-import { TokenItemData } from 'src/components/explore/TokenItem'
+import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { TokenSortableField } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ClientTokensOrderBy, TokenMetadataDisplayType, TokensOrderBy } from 'wallet/src/features/wallet/types'

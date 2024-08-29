@@ -23,10 +23,6 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
   transition-property: opacity,color,background-color;
 }
 
-.c1:hover {
-  opacity: 0.6;
-}
-
 .c1:focus {
   -webkit-text-decoration: underline;
   text-decoration: underline;
@@ -50,24 +46,35 @@ exports[`SwapBuyFiatButton.tsx matches base snapshot 1`] = `
   text-decoration: none;
 }
 
+@media (hover:hover) and (pointer:fine) {
+  .c1:hover {
+    opacity: 0.6;
+  }
+}
+
 <span
-    class="t_light is_inversed _dsp_contents"
+    class=""
+    style="display: contents;"
   >
     <span
-      class=" t_light _dsp_contents is_Theme"
+      class=" _dsp_contents"
     >
-      <div
-        class="c0"
+      <span
+        class=" t_light _dsp_contents is_Theme"
       >
-        <div>
-          <button
-            class="c1 c2"
-            data-testid="buy-fiat-button"
-          >
-            Buy
-          </button>
+        <div
+          class="c0"
+        >
+          <div>
+            <button
+              class="c1 c2"
+              data-testid="buy-fiat-button"
+            >
+              Buy
+            </button>
+          </div>
         </div>
-      </div>
+      </span>
     </span>
   </span>
 </DocumentFragment>

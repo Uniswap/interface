@@ -1,7 +1,7 @@
 import { GRG } from 'constants/tokens'
 import { useCurrencyInfo } from 'hooks/Tokens'
-import { Plural, Trans, t } from 'i18n'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Trans, t } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 export const TOKEN_SAFETY_ARTICLE = 'https://support.uniswap.org/hc/en-us/articles/8723118437133'
@@ -32,39 +32,27 @@ export function getWarningCopy(warning: Warning | undefined, plural = false, tok
   if (warning) {
     switch (warning.level) {
       case SafetyLevel.MediumWarning:
-        heading = (
-          <Plural
-            value={plural ? 2 : 1}
-            one={t('common.warning.tokenNotTraded', {
-              name: tokenSymbol ?? 'This token',
-            })}
-            other={t('common.warning.tokensNotTraded')}
-          />
-        )
-        description = <Trans i18nKey="token.safetyWarning" />
+        heading = tokenSymbol
+          ? t('token.safety.warning.medium.heading.named', {
+              tokenSymbol,
+            })
+          : t('token.safety.warning.medium.heading.default', { count: plural ? 2 : 1 })
+        description = t('token.safety.warning.description')
         break
       case SafetyLevel.StrongWarning:
-        heading = (
-          <Plural
-            value={plural ? 2 : 1}
-            one={t('common.warning.tokenNotTradedOrSwapped', {
-              name: tokenSymbol ?? 'This token',
-            })}
-            other={t('common.warning.tokensNotTradedOrSwapped')}
-          />
-        )
-        description = <Trans i18nKey="token.safetyWarning" />
+        heading = tokenSymbol
+          ? t('token.safety.warning.strong.heading.named', {
+              tokenSymbol,
+            })
+          : t('token.safety.warning.strong.heading.default', { count: plural ? 2 : 1 })
+        description = t('token.safety.warning.description')
         break
       case SafetyLevel.Blocked:
-        description = (
-          <Plural
-            value={plural ? 2 : 1}
-            one={t(`token.safety.cantTrade`, {
-              name: tokenSymbol ?? 'this token',
-            })}
-            other={t('common.cantTradeTokens')}
-          />
-        )
+        description = tokenSymbol
+          ? t(`token.safety.warning.blocked.description.named`, {
+              tokenSymbol,
+            })
+          : t('token.safety.warning.blocked.description.default', { count: plural ? 2 : 1 })
         break
     }
   }
@@ -80,19 +68,19 @@ export type Warning = {
 
 export const MediumWarning: Warning = {
   level: SafetyLevel.MediumWarning,
-  message: <Trans i18nKey="common.caution.label" />,
+  message: <Trans i18nKey="token.safetyLevel.medium.header" />,
   canProceed: true,
 }
 
 export const StrongWarning: Warning = {
   level: SafetyLevel.StrongWarning,
-  message: <Trans i18nKey="common.warning" />,
+  message: <Trans i18nKey="token.safetyLevel.strong.header" />,
   canProceed: true,
 }
 
 export const BlockedWarning: Warning = {
   level: SafetyLevel.Blocked,
-  message: <Trans i18nKey="common.notAvailable" />,
+  message: <Trans i18nKey="token.safetyLevel.blocked.header" />,
   canProceed: false,
 }
 

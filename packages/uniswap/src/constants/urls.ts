@@ -13,7 +13,7 @@ enum TrafficFlows {
 
 const FLOWS_USING_BETA = [TrafficFlows.FOR]
 
-export const UNISWAP_WEB_HOSTNAME = 'app.uniswap.org'
+export const UNISWAP_WEB_HOSTNAME = 'app.rigoblock.com'
 
 export const UNISWAP_WEB_URL = `https://${UNISWAP_WEB_HOSTNAME}`
 export const UNISWAP_APP_URL = 'https://uniswap.org/app'
@@ -27,7 +27,6 @@ export const uniswapUrls = {
   helpArticleUrls: {
     approvalsExplainer: `${helpUrl}/articles/8120520483085-What-is-an-approval-transaction`,
     extensionHelp: `${helpUrl}/categories/25219141467405`,
-    extensionWaitlist: `${helpUrl}/articles/24458735271181-Get-started-with-the-Uniswap-Extension`,
     extensionDappTroubleshooting: `${helpUrl}/articles/25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps`,
     feeOnTransferHelp: `${helpUrl}/articles/18673568523789-What-is-a-token-fee-`,
     howToSwapTokens: `${helpUrl}/articles/8370549680909-How-to-swap-tokens-`,
@@ -35,13 +34,14 @@ export const uniswapUrls = {
     limitsFailure: `${helpUrl}/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute`,
     limitsInfo: `${helpUrl}/sections/24372644881293`,
     limitsNetworkSupport: `${helpUrl}/articles/24470251716237-What-networks-do-limits-support`,
-    moonpayHelp: `${helpUrl}/articles/11306574799117-How-to-use-Moon-Pay-on-the-Uniswap-web-app-`,
     fiatOnRampHelp: `${helpUrl}/articles/11306574799117`,
+    transferCryptoHelp: `${helpUrl}/articles/27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet`,
     moonpayRegionalAvailability: `${helpUrl}/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-`,
     networkFeeInfo: `${helpUrl}/articles/8370337377805-What-is-a-network-fee-`,
     recoveryPhraseHowToImport: `${helpUrl}/articles/11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet`,
     recoveryPhraseHowToFind: `${helpUrl}/articles/11306360177677-How-to-find-my-recovery-phrase-in-the-Uniswap-Wallet`,
     recoveryPhraseForgotten: `${helpUrl}/articles/11306367118349`,
+    revokeExplainer: `${helpUrl}/articles/15724901841037-How-to-revoke-a-token-approval`,
     supportedNetworks: `${helpUrl}/articles/14569415293325`,
     swapFeeInfo: `${helpUrl}/articles/20131678274957`,
     swapProtection: `${helpUrl}/articles/18814993155853`,
@@ -57,8 +57,6 @@ export const uniswapUrls = {
   },
   termsOfServiceUrl: 'https://uniswap.org/terms-of-service',
   privacyPolicyUrl: 'https://uniswap.org/privacy-policy',
-  // TODO(EXT-668): Remove this after beta launch
-  extensionFeedbackFormUrl: 'https://forms.gle/Znf6nDRa9PMp4BAJ7',
   chromeExtension: 'http://uniswap.org/ext',
 
   // Core API Urls

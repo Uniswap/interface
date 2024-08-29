@@ -1,7 +1,7 @@
-import { t } from 'i18n'
 import { TransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { t } from 'uniswap/src/i18n'
 
 // use even number because rows are in groups of 2
 export const DEFAULT_NFT_QUERY_AMOUNT = 26
@@ -48,7 +48,7 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Failed]: t('common.claim.failed'),
   },
   [TransactionType.BUY]: {
-    [TransactionStatus.Pending]: t('Buying'),
+    [TransactionStatus.Pending]: t('common.buying'),
     [TransactionStatus.Confirmed]: t('common.bought'),
     [TransactionStatus.Failed]: t('common.buy.failed'),
   },

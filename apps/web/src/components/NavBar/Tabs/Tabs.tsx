@@ -1,9 +1,9 @@
 import { NavDropdown, NavDropdownTabWrapper } from 'components/NavBar/NavDropdown/index'
 import { TabsItem, TabsSection, useTabsContent } from 'components/NavBar/Tabs/TabsContent'
 import { useKeyPress } from 'hooks/useKeyPress'
+import styled from 'lib/styled-components'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { NavLink, useLocation, useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
 import { Popover, Text } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -140,8 +140,8 @@ const Tab = ({
 
   return (
     <Popover ref={popoverRef} placement="bottom" hoverable stayInFrame allowFlip onOpenChange={setIsOpen}>
-      <Popover.Trigger>{Label}</Popover.Trigger>
-      <NavDropdown isOpen={isOpen}>
+      <Popover.Trigger data-testid={`${label}-tab`}>{Label}</Popover.Trigger>
+      <NavDropdown isOpen={isOpen} dataTestId={`${label}-menu`}>
         <NavDropdownTabWrapper>
           {items.map((item, index) => (
             <Item

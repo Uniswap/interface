@@ -1,23 +1,22 @@
 import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
-import { SearchToken } from 'graphql/data/SearchTokens'
+import { SearchToken, TokenSearchResultWeb } from 'graphql/data/SearchTokens'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue } from 'jotai/utils'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useMemo } from 'react'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   Chain,
   NftCollection,
   useRecentlySearchedAssetsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
-
-type RecentlySearchedAsset = {
-  isNft?: boolean
-  address: string
-  chain: Chain
-}
 
 // Temporary measure used until backend supports addressing by "NATIVE"
 const NATIVE_QUERY_ADDRESS_INPUT = null as unknown as string
@@ -28,18 +27,66 @@ function getNativeQueryAddress(chain: Chain) {
   return `NATIVE-${chain}`
 }
 
-const recentlySearchedAssetsAtom = atomWithStorage<RecentlySearchedAsset[]>('recentlySearchedAssets', [])
+export const recentlySearchedAssetsAtom = atomWithStorage<TokenSearchResultWeb[]>('recentlySearchedAssetsV2', [])
 
+// Used by TokenSelector
+export function useAddRecentlySearchedCurrency() {
+  const [searchHistory, updateSearchHistory] = useAtom(recentlySearchedAssetsAtom)
+
+  return useCallback(
+    (currencyInfo: CurrencyInfo) => {
+      // Removes the new currency if it was already in the array
+      const newHistory = searchHistory.filter((oldCurrency) => {
+        // Don't filter out NFTs of the same chainId when adding a native token to the search history
+        if (oldCurrency.isNft) {
+          return true
+        }
+        // Filter out tokens of the same address and chainId
+        if (currencyInfo.currency.isToken) {
+          return !(
+            oldCurrency.address === currencyInfo.currency.address &&
+            oldCurrency.chainId === currencyInfo.currency.chainId
+          )
+          // Filter out native tokens of the same chainId
+        } else {
+          return oldCurrency.chainId !== currencyInfo.currency.chainId
+        }
+      })
+      newHistory.unshift({
+        type: SearchResultType.Token,
+        chain: toGraphQLChain(currencyInfo.currency.chainId) ?? Chain.Ethereum,
+        chainId: currencyInfo.currency.chainId,
+        address: currencyInfo.currency.isToken
+          ? currencyInfo.currency.address
+          : UNIVERSE_CHAIN_INFO[currencyInfo.currency.chainId as UniverseChainId].nativeCurrency.address,
+        name: currencyInfo.currency.name ?? null,
+        symbol: currencyInfo.currency.symbol ?? '',
+        logoUrl: currencyInfo.logoUrl ?? null,
+        safetyLevel: currencyInfo.safetyLevel ?? null,
+        isToken: currencyInfo.currency.isToken,
+        isNative: currencyInfo.currency.isNative,
+      })
+      updateSearchHistory(newHistory)
+    },
+    [searchHistory, updateSearchHistory],
+  )
+}
+
+// Used by NavBar
 export function useAddRecentlySearchedAsset() {
   const [searchHistory, updateSearchHistory] = useAtom(recentlySearchedAssetsAtom)
 
   return useCallback(
-    (asset: RecentlySearchedAsset) => {
+    (asset: TokenSearchResultWeb) => {
       // Removes the new asset if it was already in the array
+      const address = asset.isNative ? UNIVERSE_CHAIN_INFO[asset.chainId].nativeCurrency.address : asset.address
       const newHistory = searchHistory.filter(
-        (oldAsset) => !(oldAsset.address === asset.address && oldAsset.chain === asset.chain),
+        (oldAsset) => !(oldAsset.address === address && oldAsset.chain === asset.chain),
       )
-      newHistory.unshift(asset)
+      newHistory.unshift({
+        ...asset,
+        address,
+      })
       updateSearchHistory(newHistory)
     },
     [searchHistory, updateSearchHistory],
@@ -56,7 +103,7 @@ export function useRecentlySearchedAssets() {
       contracts: shortenedHistory
         .filter((asset) => !asset.isNft)
         .map((token) => ({
-          address: token.address === NATIVE_CHAIN_ID ? getQueryAddress(token.chain) : token.address,
+          address: token.isNative ? getQueryAddress(token.chain) : token.address,
           chain: token.chain,
         })),
     },
@@ -96,7 +143,7 @@ export function useRecentlySearchedAssets() {
 
     const data: (SearchToken | GenieCollection)[] = []
     shortenedHistory.forEach((asset) => {
-      if (asset.address === NATIVE_CHAIN_ID) {
+      if (asset.isNative) {
         // Handles special case where wMATIC data needs to be used for MATIC
         const chain = supportedChainIdFromGQLChain(asset.chain)
         if (!chain) {

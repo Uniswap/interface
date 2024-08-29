@@ -1,11 +1,14 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
-import { Button, Flex, HapticFeedback, Separator, SpinningLoader, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { useDispatch, useSelector } from 'react-redux'
+import { Button, Flex, Separator, SpinningLoader, Text, isWeb, useHapticFeedback, useIsShortMobileDevice } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { selectHasViewedReviewScreen } from 'wallet/src/features/behaviorHistory/selectors'
@@ -27,36 +30,31 @@ import {
   TransactionModalFooterContainer,
   TransactionModalInnerContainer,
 } from 'wallet/src/features/transactions/swap/TransactionModal'
-import { SlippageInfoModal } from 'wallet/src/features/transactions/swap/modals/SlippageInfoModal'
 import { useAcceptedTrade } from 'wallet/src/features/transactions/swap/trade/hooks/useAcceptedTrade'
 import { useSwapCallback } from 'wallet/src/features/transactions/swap/trade/hooks/useSwapCallback'
 import { useWrapCallback } from 'wallet/src/features/transactions/swap/trade/hooks/useWrapCallback'
 import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { getActionName, isWrapAction } from 'wallet/src/features/transactions/swap/utils'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
-import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 
 // eslint-disable-next-line complexity
 export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX.Element | null {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const isShortMobileDevice = useIsShortMobileDevice()
 
-  const account = useActiveAccountWithThrow()
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const [showSlippageModal, setShowSlippageModal] = useState(false)
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
 
-  const { bottomSheetViewStyles, onClose, BiometricsIcon, authTrigger } = useTransactionModalContext()
+  const { account, bottomSheetViewStyles, onClose, BiometricsIcon, authTrigger } = useTransactionModalContext()
 
   const { screen, screenRef, setScreen } = useSwapScreenContext()
 
   const swapTxContext = useSwapTxContext()
   const { gasFee, trade } = swapTxContext
+  const uniswapXGasBreakdown = isUniswapX(swapTxContext) ? swapTxContext.gasFeeBreakdown : undefined
+  const { hapticFeedback } = useHapticFeedback()
 
   const {
     derivedSwapInfo,
@@ -125,6 +123,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   }, [onClose, triggerSwapPendingNotification])
 
   const { wrapCallback: onWrap } = useWrapCallback(
+    account,
     currencyAmounts[CurrencyField.INPUT],
     wrapType,
     navigateToNextScreen,
@@ -194,7 +193,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const onSubmitTransaction = useCallback(async () => {
     updateSwapForm({ isSubmitting: true })
 
-    await HapticFeedback.success()
+    await hapticFeedback.success()
 
     if (authTrigger) {
       await authTrigger({
@@ -204,7 +203,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     } else {
       submitTransaction()
     }
-  }, [authTrigger, onSubmitTransactionFailed, submitTransaction, updateSwapForm])
+  }, [authTrigger, hapticFeedback, onSubmitTransactionFailed, submitTransaction, updateSwapForm])
 
   const submitButtonDisabled =
     (!validSwap && !isWrap) || !!blockingWarning || newTradeRequiresAcceptance || isSubmitting
@@ -293,16 +292,8 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     setShowWarningModal(false)
   }, [])
 
-  const onShowSlippageModal = useCallback(() => {
-    setShowSlippageModal(true)
-  }, [])
-
-  const onCloseSlippageModal = useCallback(() => {
-    setShowSlippageModal(false)
-  }, [])
-
   // Flag review screen user behavior, used to show hold to swap tip
-  const hasViewedReviewScreen = useAppSelector(selectHasViewedReviewScreen)
+  const hasViewedReviewScreen = useSelector(selectHasViewedReviewScreen)
   useEffect(() => {
     if (!hasViewedReviewScreen) {
       dispatch(setHasViewedReviewScreen(true))
@@ -373,15 +364,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
           </Flex>
         ) : (
           <>
-            {showSlippageModal && acceptedTrade && (
-              <SlippageInfoModal
-                autoSlippageTolerance={autoSlippageTolerance}
-                isCustomSlippage={!!customSlippageTolerance}
-                trade={acceptedTrade}
-                onClose={onCloseSlippageModal}
-              />
-            )}
-
             <AnimatedFlex entering={FadeIn} gap="$spacing16" pt={isWeb ? '$spacing8' : undefined}>
               <TransactionAmountsReview
                 acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
@@ -405,9 +387,9 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
                   gasFee={gasFee}
                   newTradeRequiresAcceptance={newTradeRequiresAcceptance}
                   outputCurrencyPricePerUnitExact={outputCurrencyPricePerUnitExact}
+                  uniswapXGasBreakdown={uniswapXGasBreakdown}
                   warning={reviewScreenWarning?.warning}
                   onAcceptTrade={onAcceptTrade}
-                  onShowSlippageModal={onShowSlippageModal}
                   onShowWarning={onShowWarning}
                 />
               )}

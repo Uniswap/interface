@@ -6,8 +6,8 @@ import { MissingDataBars } from 'components/Table/icons'
 import { useScreenSize } from 'hooks/screenSize'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { Trans } from 'i18n'
 import { useUpdateAtom } from 'jotai/utils'
+import styled, { DefaultTheme, useTheme } from 'lib/styled-components'
 import {
   BarPrice,
   CrosshairMode,
@@ -20,10 +20,10 @@ import {
   createChart,
 } from 'lightweight-charts'
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
-import styled, { DefaultTheme, useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { Z_INDEX } from 'theme/zIndex'
+import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 import { v4 as uuidv4 } from 'uuid'
 

@@ -4,13 +4,13 @@ import UniswapXRouterLabel, { UniswapXGradient } from 'components/RouterLabel/Un
 import Row from 'components/Row'
 import { chainIdToBackendChain, useSupportedChainId } from 'constants/chains'
 import { nativeOnChain } from 'constants/tokens'
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { InterfaceTrade } from 'state/routing/types'
 import { isPreviewTrade, isUniswapXTrade } from 'state/routing/utils'
-import styled from 'styled-components'
 import { Divider, ExternalLink, ThemedText } from 'theme/components'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Container = styled(AutoColumn)`
@@ -90,7 +90,7 @@ function NetworkCostDescription({ native }: { native: Currency }) {
     <ThemedText.LabelMicro>
       <Trans i18nKey="swap.networkCost.paidIn" values={{ sym: native.symbol, chainName }} />{' '}
       {/*<ExternalLink href="https://support.uniswap.org/hc/en-us/articles/8370337377805-What-is-a-network-fee-">
-        <Trans i18nKey="common.learnMore.link" />
+        <Trans i18nKey="common.button.learn" />
       </ExternalLink>*/}
     </ThemedText.LabelMicro>
   )
@@ -109,7 +109,7 @@ export function UniswapXDescription() {
         }}
       />{' '}
       <ExternalLink href={uniswapUrls.helpArticleUrls.uniswapXInfo}>
-        <Trans i18nKey="common.learnMore.link" />
+        <Trans i18nKey="common.button.learn" />
       </ExternalLink>
     </ThemedText.Caption>
   )

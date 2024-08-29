@@ -1,5 +1,6 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { memo, useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { useDappConnectedAccounts } from 'src/app/features/dapp/hooks'
 import { SwitchNetworksModal } from 'src/app/features/home/SwitchNetworksModal'
@@ -8,7 +9,6 @@ import { selectPopupState } from 'src/app/features/popups/selectors'
 import { PopupName, closePopup, openPopup } from 'src/app/features/popups/slice'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { useAppDispatch, useAppSelector } from 'src/store/store'
 import { Circle, Flex, Image, Popover, Text, TouchableArea } from 'ui/src'
 import { animationPresets } from 'ui/src/animations'
 import { CopyAlt, Globe, RotatableChevron, Settings } from 'ui/src/components/icons'
@@ -18,13 +18,13 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { setClipboard } from 'wallet/src/utils/clipboard'
 
 const POPUP_SHADOW_RADIUS = 4
 
@@ -33,13 +33,13 @@ type PortfolioHeaderProps = {
 }
 
 export const PortfolioHeader = memo(function _PortfolioHeader({ address }: PortfolioHeaderProps): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const displayName = useDisplayName(address)
   const { avatar } = useAvatar(address)
   const walletHasName = displayName && displayName?.type !== DisplayNameType.Address
   const formattedAddress = sanitizeAddressText(shortenAddress(address))
-  const { isOpen: isPopupOpen } = useAppSelector(selectPopupState(PopupName.Connect))
+  const { isOpen: isPopupOpen } = useSelector(selectPopupState(PopupName.Connect))
 
   // Used to delay popup showing on initial render, which leads to improper anchoring
   const [initialized, setInitialized] = useState(false)

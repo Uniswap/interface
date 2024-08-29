@@ -123,7 +123,4 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
   }
 })
 
-jest.mock('wallet/src/features/fiatOnRamp/api', () => ({
-  ...jest.requireActual('wallet/src/features/fiatOnRamp/api'),
-  useFiatOnRampIpAddressQuery: jest.fn().mockReturnValue({}),
-}))
+jest.mock('openai')

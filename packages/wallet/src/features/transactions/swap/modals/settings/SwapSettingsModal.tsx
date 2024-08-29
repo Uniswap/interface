@@ -1,5 +1,6 @@
 import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { InfoCircleFilled, RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -8,6 +9,7 @@ import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { Switch, WebSwitch } from 'wallet/src/components/buttons/Switch'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
@@ -19,10 +21,8 @@ import {
 import { SlippageSettingsRow } from 'wallet/src/features/transactions/swap/modals/settings/SlippageSettingsRow'
 import { SlippageSettingsScreen } from 'wallet/src/features/transactions/swap/modals/settings/SlippageSettingsScreen'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
 import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting, setSwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { useAppDispatch } from 'wallet/src/state'
 
 enum SwapSettingsModalView {
   Options,
@@ -158,7 +158,6 @@ function SwapSettingsOptions({
   const { chainId } = derivedSwapInfo
 
   const isMevBlockerFeatureEnabled = useFeatureFlag(FeatureFlags.MevBlocker)
-  const isOptionalRoutingEnabled = useFeatureFlag(FeatureFlags.OptionalRouting)
 
   const tradeProtocolPreferenceTitle = getTitleFromProtocolPreference(tradeProtocolPreference, t)
 
@@ -171,31 +170,29 @@ function SwapSettingsOptions({
       />
       <Separator backgroundColor="$surface3" />
       {isMevBlockerFeatureEnabled && <SwapProtectionSettingsRow chainId={chainId} />}
-      {isOptionalRoutingEnabled && (
-        <>
-          <Separator backgroundColor="$surface3" />
-          <Flex centered row gap="$spacing16" justifyContent="space-between">
-            <Text color="$neutral1" flexShrink={1} variant="subheading2">
-              {t('swap.settings.routingPreference.title')}
-            </Text>
-            <TouchableArea flexShrink={1} onPress={(): void => setView(SwapSettingsModalView.RoutePreference)}>
-              <Flex row alignItems="center" gap="$spacing4" justifyContent="flex-end">
-                <Text color="$neutral2" flexWrap="wrap" variant="subheading2">
-                  {tradeProtocolPreferenceTitle}
-                </Text>
-                <RotatableChevron color="$neutral3" direction="right" height={iconSizes.icon24} />
-              </Flex>
-            </TouchableArea>
-          </Flex>
-        </>
-      )}
+      <>
+        <Separator backgroundColor="$surface3" />
+        <Flex centered row gap="$spacing16" justifyContent="space-between">
+          <Text color="$neutral1" flexShrink={1} variant="subheading2">
+            {t('swap.settings.routingPreference.title')}
+          </Text>
+          <TouchableArea flexShrink={1} onPress={(): void => setView(SwapSettingsModalView.RoutePreference)}>
+            <Flex row alignItems="center" gap="$spacing4" justifyContent="flex-end">
+              <Text color="$neutral2" flexWrap="wrap" variant="subheading2">
+                {tradeProtocolPreferenceTitle}
+              </Text>
+              <RotatableChevron color="$neutral3" direction="right" height={iconSizes.icon24} />
+            </Flex>
+          </TouchableArea>
+        </Flex>
+      </>
     </Flex>
   )
 }
 
 function SwapProtectionSettingsRow({ chainId }: { chainId: WalletChainId }): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const swapProtectionSetting = useSwapProtectionSetting()
 
   const toggleSwapProtectionSetting = useCallback(() => {

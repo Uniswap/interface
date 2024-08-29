@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion'
-import { t, Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { PillButton } from 'pages/Landing/components/cards/PillButton'
 import { Box, H2, H3 } from 'pages/Landing/components/Generics'
 import { BookOpen, ChatBubbles, HelpCircle } from 'pages/Landing/components/Icons'
-import styled, { useTheme } from 'styled-components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
+import { t, Trans } from 'uniswap/src/i18n'
 
 const SectionLayout = styled.div`
   width: 100%;

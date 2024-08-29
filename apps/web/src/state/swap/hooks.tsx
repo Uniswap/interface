@@ -11,49 +11,27 @@ import useParsedQueryString from 'hooks/useParsedQueryString'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { Trans } from 'i18n'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ParsedQs } from 'qs'
-import { ReactNode, useCallback, useContext, useMemo } from 'react'
+import { ReactNode, useCallback, useEffect, useMemo } from 'react'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useCurrencyBalance, useCurrencyBalances } from 'state/connection/hooks'
 import { usePoolExtendedContract } from 'state/pool/hooks'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
-import {
-  CurrencyState,
-  SerializedCurrencyState,
-  SwapAndLimitContext,
-  SwapContext,
-  SwapInfo,
-  SwapState,
-} from 'state/swap/types'
+import { CurrencyState, SerializedCurrencyState, SwapInfo, SwapState } from 'state/swap/types'
+import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
+import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress } from 'utilities/src/addresses'
 import { getParsedChainId } from 'utils/chains'
-
-export function useSwapContext() {
-  return useContext(SwapContext)
-}
-
-export function useSwapAndLimitContext() {
-  const account = useAccount()
-  const context = useContext(SwapAndLimitContext)
-
-  // Certain components are used both inside the swap and limit context, and outside of it.
-  // One example is the CurrencySearch component, which is used in the swap context, but also in
-  // the add/remove liquidity flows, nft flows, etc. In these cases, we want to use the chainId
-  // from the provider account (hooks/useAccount), instead of the swap context chainId.
-  return {
-    ...context,
-    chainId: context.isSwapAndLimitContext ? context.chainId : account.chainId,
-  }
-}
 
 export function useSwapActionHandlers(): {
   onCurrencySelection: (field: Field, currency: Currency) => void
@@ -62,6 +40,13 @@ export function useSwapActionHandlers(): {
 } {
   const { swapState, setSwapState } = useSwapContext()
   const { currencyState, setCurrencyState } = useSwapAndLimitContext()
+
+  const inputTokenProjects = useTokenProjects(
+    currencyState.inputCurrency ? [currencyId(currencyState.inputCurrency)] : [],
+  )
+  const outputTokenProjects = useTokenProjects(
+    currencyState.outputCurrency ? [currencyId(currencyState.outputCurrency)] : [],
+  )
 
   const onCurrencySelection = useCallback(
     (field: Field, currency: Currency) => {
@@ -80,10 +65,17 @@ export function useSwapActionHandlers(): {
         }))
         // multichain ux case where we set input or output to different chain
       } else if (otherCurrency?.chainId !== currency.chainId) {
+        const otherCurrencyTokenProjects = field === Field.INPUT ? outputTokenProjects : inputTokenProjects
+        const otherCurrency = otherCurrencyTokenProjects?.data?.find(
+          (project) => project?.currency.chainId === currency.chainId,
+        )
         setCurrencyState((state) => ({
           ...state,
           [currentCurrencyKey]: currency,
-          [otherCurrencyKey]: undefined,
+          [otherCurrencyKey]:
+            otherCurrency && !areCurrencyIdsEqual(currencyId(currency), otherCurrency.currencyId)
+              ? otherCurrency.currency
+              : undefined,
         }))
       } else {
         setCurrencyState((state) => ({
@@ -92,7 +84,7 @@ export function useSwapActionHandlers(): {
         }))
       }
     },
-    [currencyState, setCurrencyState, setSwapState],
+    [currencyState, inputTokenProjects, outputTokenProjects, setCurrencyState, setSwapState],
   )
 
   const onSwitchTokens = useCallback(
@@ -360,8 +352,10 @@ export function useInitialCurrencyState(): {
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
   initialChainId: InterfaceChainId
+  initialCurrencyLoading: boolean
 } {
   const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
+  const { chainId, setIsUserSelectedToken } = useSwapAndLimitContext()
 
   const parsedQs = useParsedQueryString()
   const parsedCurrencyState = useMemo(() => {
@@ -369,18 +363,34 @@ export function useInitialCurrencyState(): {
   }, [parsedQs])
 
   const account = useAccount()
-  const supportedChainId =
-    useSupportedChainId(parsedCurrencyState.chainId ?? account.chainId) ?? UniverseChainId.Mainnet
+  const supportedChainId = useSupportedChainId(parsedCurrencyState.chainId ?? chainId) ?? UniverseChainId.Mainnet
+  const hasCurrencyQueryParams =
+    parsedCurrencyState.inputCurrencyId || parsedCurrencyState.outputCurrencyId || parsedCurrencyState.chainId
 
-  const { balanceList } = useTokenBalances({ cacheOnly: true })
+  useEffect(() => {
+    if (parsedCurrencyState.inputCurrencyId || parsedCurrencyState.outputCurrencyId) {
+      setIsUserSelectedToken(true)
+    }
+  }, [parsedCurrencyState.inputCurrencyId, parsedCurrencyState.outputCurrencyId, setIsUserSelectedToken])
+
+  const { balanceList, loading: balanceListLoading } = useTokenBalances({ cacheOnly: true })
 
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
+    // Default to ETH if multichain and balance list is not loaded and no query params
+    if (multichainUXEnabled && !balanceList && balanceListLoading && !hasCurrencyQueryParams) {
+      return {
+        initialInputCurrencyAddress: 'ETH',
+        initialChainId: UniverseChainId.Mainnet,
+      }
+    }
     // Handle query params or disconnected state
     if (parsedCurrencyState.inputCurrencyId) {
       return {
         initialInputCurrencyAddress: parsedCurrencyState.inputCurrencyId,
         initialChainId: supportedChainId,
       }
+      // If multichain is disabled or account is disconnected or no balanceList
+      // return ETH or parsedCurrencyState
     } else if (
       !multichainUXEnabled ||
       !account.isConnected ||
@@ -408,8 +418,11 @@ export function useInitialCurrencyState(): {
         highestBalanceChainId = supportedChainIdFromGQLChain(balance.token.chain) ?? UniverseChainId.Mainnet
       }
     })
+
     return { initialInputCurrencyAddress: highestBalanceNativeTokenAddress, initialChainId: highestBalanceChainId }
   }, [
+    balanceListLoading,
+    hasCurrencyQueryParams,
     account.isConnected,
     balanceList,
     multichainUXEnabled,
@@ -428,6 +441,13 @@ export function useInitialCurrencyState(): {
   )
   const initialInputCurrency = useCurrency(initialInputCurrencyAddress, initialChainId)
   const initialOutputCurrency = useCurrency(initialOutputCurrencyAddress, initialChainId)
+  // We only care about loading if multichain UX is enabled
+  const initialCurrencyLoading = multichainUXEnabled && balanceListLoading && !hasCurrencyQueryParams
 
-  return { initialInputCurrency, initialOutputCurrency, initialChainId }
+  return {
+    initialInputCurrency,
+    initialOutputCurrency,
+    initialChainId,
+    initialCurrencyLoading,
+  }
 }

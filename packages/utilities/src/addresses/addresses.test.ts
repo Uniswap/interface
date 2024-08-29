@@ -8,18 +8,12 @@ describe('utils', () => {
     })
 
     it('returns the checksummed address', () => {
-      expect(isAddress('0xf164fc0ec4e93095b804a4795bbe1e041497b92a')).toBe(
-        '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a'
-      )
-      expect(isAddress('0xf164fC0Ec4E93095b804a4795bBe1e041497b92a')).toBe(
-        '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a'
-      )
+      expect(isAddress('0xf164fc0ec4e93095b804a4795bbe1e041497b92a')).toBe('0xf164fC0Ec4E93095b804a4795bBe1e041497b92a')
+      expect(isAddress('0xf164fC0Ec4E93095b804a4795bBe1e041497b92a')).toBe('0xf164fC0Ec4E93095b804a4795bBe1e041497b92a')
     })
 
     it('succeeds even without prefix', () => {
-      expect(isAddress('f164fc0ec4e93095b804a4795bbe1e041497b92a')).toBe(
-        '0xf164fC0Ec4E93095b804a4795bBe1e041497b92a'
-      )
+      expect(isAddress('f164fc0ec4e93095b804a4795bbe1e041497b92a')).toBe('0xf164fC0Ec4E93095b804a4795bBe1e041497b92a')
     })
 
     it('fails if too long', () => {
@@ -41,9 +35,7 @@ describe('utils', () => {
     })
 
     it('renders checksummed address', () => {
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC'.toLowerCase())).toBe(
-        '0x2E1b...54CC'
-      )
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC'.toLowerCase())).toBe('0x2E1b...54CC')
     })
 
     it('allows undefined', () => {
@@ -52,13 +44,9 @@ describe('utils', () => {
 
     it('allows custom amounts of start/end chars', () => {
       expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2)).toBe('0x2E...54CC')
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 6)).toBe(
-        '0x2E1b34...54CC'
-      )
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 6)).toBe('0x2E1b34...54CC')
       expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2, 2)).toBe('0x2E...CC')
-      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2, 6)).toBe(
-        '0x2E...c254CC'
-      )
+      expect(shortenAddress('0x2E1b342132A67Ea578e4E3B814bae2107dc254CC', 2, 6)).toBe('0x2E...c254CC')
     })
   })
 })

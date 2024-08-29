@@ -2,7 +2,7 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { SearchPopularNFTCollections } from 'src/components/explore/search/SearchPopularNFTCollections'
 import { SearchPopularTokens } from 'src/components/explore/search/SearchPopularTokens'
 import { renderSearchItem } from 'src/components/explore/search/SearchResultsSection'
@@ -12,7 +12,8 @@ import ClockIcon from 'ui/src/assets/icons/clock.svg'
 import { TrendUp } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
-import { SearchResultType, WalletSearchResult } from 'wallet/src/features/search/SearchResult'
+import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { WalletSearchResult } from 'wallet/src/features/search/SearchResult'
 import { clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
 
@@ -33,8 +34,8 @@ export const SUGGESTED_WALLETS: WalletSearchResult[] = [
 
 export function SearchEmptySection(): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
-  const searchHistory = useAppSelector(selectSearchHistory)
+  const dispatch = useDispatch()
+  const searchHistory = useSelector(selectSearchHistory)
 
   const onPressClearSearchHistory = (): void => {
     dispatch(clearSearchHistory())

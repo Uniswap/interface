@@ -7,7 +7,6 @@ import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
 import useSelectChain from 'hooks/useSelectChain'
 import { useSendCallback } from 'hooks/useSendCallback'
-import { Trans } from 'i18n'
 import { NewAddressSpeedBumpModal } from 'pages/Swap/Send/NewAddressSpeedBump'
 import SendCurrencyInputForm from 'pages/Swap/Send/SendCurrencyInputForm'
 import { SendRecipientForm } from 'pages/Swap/Send/SendRecipientForm'
@@ -15,11 +14,12 @@ import { SendReviewModal } from 'pages/Swap/Send/SendReviewModal'
 import { SmartContractSpeedBumpModal } from 'pages/Swap/Send/SmartContractSpeedBump'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { SendContextProvider, useSendContext } from 'state/send/SendContext'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
+import { Trans } from 'uniswap/src/i18n'
 import { useIsSmartContractAddress } from 'utils/transfer'
 
 type SendFormProps = {
@@ -208,13 +208,15 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
             />
           </ButtonPrimary>
         ) : (
-          <ButtonPrimary
-            fontWeight={535}
-            disabled={!!inputError || loadingSmartContractAddress || transfersLoading || sendButtonState.disabled}
-            onClick={() => handleSendButton()}
-          >
-            {sendButtonState.label}
-          </ButtonPrimary>
+          <Trace logPress element={InterfaceElementName.SEND_BUTTON}>
+            <ButtonPrimary
+              fontWeight={535}
+              disabled={!!inputError || loadingSmartContractAddress || transfersLoading || sendButtonState.disabled}
+              onClick={() => handleSendButton()}
+            >
+              {sendButtonState.label}
+            </ButtonPrimary>
+          </Trace>
         )}
       </Column>
       {sendFormModalState === SendFormModalState.REVIEW ? (

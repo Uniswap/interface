@@ -3,6 +3,7 @@ ignores: [
     '@graphql-codegen/*',
     '@commitlint/*',
     'i18next',
+    'moti',
     # Dependencies that depcheck thinks are missing but are actually present or never used
     '@yarnpkg/core',
     '@yarnpkg/cli',

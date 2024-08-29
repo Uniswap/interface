@@ -1,4 +1,4 @@
-import { css } from 'styled-components'
+import { css } from 'lib/styled-components'
 
 export const ScrollBarStyles = css<{ $isHorizontalScroll?: boolean }>`
   // Firefox scrollbar styling

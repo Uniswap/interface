@@ -85,4 +85,41 @@ delete v4SchemaIntermediate.dapp
 
 export const v4Schema = v4SchemaIntermediate
 
-export const getSchema = (): typeof v4Schema => v4Schema
+const v5SchemaIntermediate = {
+  ...v4Schema,
+  behaviorHistory: {
+    ...v4Schema.behaviorHistory,
+    extensionBetaFeedbackState: undefined,
+  },
+}
+
+delete v5SchemaIntermediate.behaviorHistory.extensionBetaFeedbackState
+
+export const v5Schema = v5SchemaIntermediate
+
+const v6SchemaIntermediate = {
+  ...v5Schema,
+  behaviorHistory: {
+    ...v5Schema.behaviorHistory,
+    extensionOnboardingState: undefined,
+  },
+}
+delete v6SchemaIntermediate.behaviorHistory.extensionOnboardingState
+export const v6Schema = v6SchemaIntermediate
+
+export const v7Schema = { ...v6Schema }
+
+export const v8Schema = {
+  ...v7Schema,
+  appearanceSettings: {
+    ...v7Schema.appearanceSettings,
+    hapticsEnabled: true,
+  },
+}
+
+export const v9Schema = {
+  ...v8Schema,
+  behaviorHistory: { ...v8Schema.behaviorHistory, hasViewedWelcomeWalletCard: false, hasUsedExplore: false },
+}
+
+export const getSchema = (): typeof v9Schema => v9Schema

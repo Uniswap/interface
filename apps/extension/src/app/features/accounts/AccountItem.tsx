@@ -1,6 +1,7 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { BaseSyntheticEvent, useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { EditLabelModal } from 'src/app/features/accounts/EditLabelModal'
 import { removeAllDappConnectionsForAccount } from 'src/app/features/dapp/actions'
 import { ContextMenu, Flex, MenuContentItem, Text, TouchableArea } from 'ui/src'
@@ -8,10 +9,10 @@ import { CopySheets, Edit, TrashFilled, TripleDots } from 'ui/src/components/ico
 import { iconSizes } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { usePortfolioTotalValue } from 'wallet/src/features/dataApi/balances'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
@@ -19,21 +20,19 @@ import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/t
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useActiveAccountWithThrow, useDisplayName, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
-import { useAppDispatch } from 'wallet/src/state'
-import { setClipboard } from 'wallet/src/utils/clipboard'
 
 type AccountItemProps = {
   address: Address
   onAccountSelect?: () => void
+  balanceUSD?: number
 }
 
-export function AccountItem({ address, onAccountSelect }: AccountItemProps): JSX.Element {
+export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountItemProps): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
-  const { data, loading, error } = usePortfolioTotalValue({ address })
-  const { balanceUSD } = data || {}
+  const dispatch = useDispatch()
 
   const { convertFiatAmountFormatted } = useLocalizationContext()
+
   const formattedBalance = convertFiatAmountFormatted(balanceUSD, NumberType.PortfolioBalance)
 
   const [showEditLabelModal, setShowEditLabelModal] = useState(false)
@@ -131,7 +130,7 @@ export function AccountItem({ address, onAccountSelect }: AccountItemProps): JSX
       {showRemoveWalletModal && (
         <WarningModal
           caption={t('account.recoveryPhrase.remove.mnemonic.description', {
-            walletName: activeAccountDisplayName?.name ?? '',
+            walletNames: [activeAccountDisplayName?.name ?? ''],
           })}
           closeText={t('common.button.cancel')}
           confirmText={t('common.button.continue')}
@@ -171,7 +170,7 @@ export function AccountItem({ address, onAccountSelect }: AccountItemProps): JSX
               transform="translateY(-50%)"
               variant="body3"
             >
-              {loading || error ? '' : formattedBalance}
+              {formattedBalance}
             </Text>
             <ContextMenu closeOnClick itemId={address} menuOptions={menuOptions} onLeftClick>
               <Flex

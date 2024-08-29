@@ -10,16 +10,17 @@ import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { navSearchInputVisibleSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
+import { atom, useAtom } from 'jotai'
+import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { darken } from 'polished'
-import { useCallback } from 'react'
+import { RefObject, useCallback, useEffect, useRef } from 'react'
 import { useAppSelector } from 'state/hooks'
-import styled from 'styled-components'
 import { flexRowNoWrap } from 'theme/styles'
 import { Unitag } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans } from 'uniswap/src/i18n'
 import { isIFramed } from 'utils/isIFramed'
 
 // https://stackoverflow.com/a/31617326
@@ -128,9 +129,18 @@ const StyledConnectButton = styled.button`
   color: inherit;
 `
 
+export const Web3StatusRef = atom<RefObject<HTMLElement> | undefined>(undefined)
+
 function Web3StatusInner() {
   const switchingChain = useAppSelector((state) => state.wallets.switchingChain)
   const account = useAccount()
+  const ref = useRef<HTMLDivElement>(null)
+  const [, setRef] = useAtom(Web3StatusRef)
+
+  // To share the Connect button ref with the AccountDrawer modal so it doesn't trigger useOnClickOutside
+  useEffect(() => {
+    setRef(ref)
+  }, [setRef])
 
   const accountDrawer = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
@@ -144,7 +154,7 @@ function Web3StatusInner() {
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
   if ((account.isConnecting || account.isReconnecting) && hasRecent && !isIFramed()) {
     return (
-      <Web3StatusConnecting disabled={true} onClick={handleWalletDropdownClick}>
+      <Web3StatusConnecting disabled={true} onClick={handleWalletDropdownClick} ref={ref}>
         <IconWrapper size={24}>
           <LoaderV3 size="24px" />
         </IconWrapper>
@@ -164,6 +174,7 @@ function Web3StatusInner() {
           data-testid="web3-status-connected"
           onClick={handleWalletDropdownClick}
           pending={hasPendingActivity}
+          ref={ref}
         >
           {!hasPendingActivity && <StatusIcon size={24} showMiniIcons={false} />}
           {hasPendingActivity ? (
@@ -193,6 +204,7 @@ function Web3StatusInner() {
           tabIndex={0}
           onKeyPress={(e) => e.key === 'Enter' && handleWalletDropdownClick()}
           onClick={handleWalletDropdownClick}
+          ref={ref}
         >
           <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
             <Trans i18nKey="common.connect.button" />

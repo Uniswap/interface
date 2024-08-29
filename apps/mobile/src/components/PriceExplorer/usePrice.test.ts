@@ -6,10 +6,7 @@ import {
   useLineChartPrice as useRNWagmiChartLineChartPrice,
 } from 'react-native-wagmi-charts'
 import { act } from 'react-test-renderer'
-import {
-  useLineChartPrice,
-  useLineChartRelativeChange,
-} from 'src/components/PriceExplorer/usePrice'
+import { useLineChartPrice, useLineChartRelativeChange } from 'src/components/PriceExplorer/usePrice'
 import { renderHookWithProviders } from 'src/test/render'
 
 jest.mock('react-native-wagmi-charts')
@@ -20,9 +17,7 @@ const cursorFormattedValue = makeMutable('-')
 const currentIndex = makeMutable(0)
 const isActive = makeMutable(false)
 
-const mockData = (
-  args: { data?: TLineChartData; currentIndex?: number; isActive?: boolean } = {}
-): void => {
+const mockData = (args: { data?: TLineChartData; currentIndex?: number; isActive?: boolean } = {}): void => {
   currentIndex.value = args.currentIndex ?? 0
   isActive.value = args.isActive ?? false
   // react-native-wagmi-charts is mocked so we can mock the return
@@ -52,9 +47,7 @@ describe(useLineChartPrice, () => {
   beforeEach(() => {
     const originalModule = jest.requireActual('react-native-wagmi-charts')
     ;(useLineChart as ReturnType<typeof jest.fn>).mockImplementation(originalModule.useLineChart)
-    ;(useRNWagmiChartLineChartPrice as ReturnType<typeof jest.fn>).mockImplementation(
-      originalModule.useLineChartPrice
-    )
+    ;(useRNWagmiChartLineChartPrice as ReturnType<typeof jest.fn>).mockImplementation(originalModule.useLineChartPrice)
   })
 
   afterAll(() => {
@@ -172,7 +165,7 @@ describe(useLineChartPrice, () => {
         expect.objectContaining({
           value: expect.objectContaining({ value: 1 }),
           formatted: expect.objectContaining({ value: '$1.00' }),
-        })
+        }),
       )
 
       mockCursorPrice('2') // updates shared values
@@ -182,7 +175,7 @@ describe(useLineChartPrice, () => {
           expect.objectContaining({
             value: expect.objectContaining({ value: 2 }),
             formatted: expect.objectContaining({ value: '$2.00' }),
-          })
+          }),
         )
       })
     })
@@ -199,7 +192,7 @@ describe(useLineChartPrice, () => {
           expect.objectContaining({
             value: expect.objectContaining({ value: 1 }),
             shouldAnimate: expect.objectContaining({ value: true }),
-          })
+          }),
         )
       })
 
@@ -212,7 +205,7 @@ describe(useLineChartPrice, () => {
           expect.objectContaining({
             value: expect.objectContaining({ value: 2 }),
             shouldAnimate: expect.objectContaining({ value: false }),
-          })
+          }),
         )
       })
     })
@@ -267,7 +260,7 @@ describe(useLineChartRelativeChange, () => {
         expect.objectContaining({
           value: expect.objectContaining({ value: 400 }),
           formatted: expect.objectContaining({ value: '400.00%' }),
-        })
+        }),
       )
 
       currentIndex.value = 2
@@ -279,7 +272,7 @@ describe(useLineChartRelativeChange, () => {
           expect.objectContaining({
             value: expect.objectContaining({ value: 900 }),
             formatted: expect.objectContaining({ value: '900.00%' }),
-          })
+          }),
         )
       })
     })

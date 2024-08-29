@@ -1,19 +1,19 @@
 import React from 'react'
 import { useColorScheme } from 'react-native'
 import renderer, { act } from 'react-test-renderer'
-import * as appHooks from 'src/app/hooks'
 import { TraceUserProperties } from 'src/components/Trace/TraceUserProperties'
 import * as biometricHooks from 'src/features/biometrics/hooks'
 import { AuthMethod } from 'src/features/telemetry/utils'
 import * as versionUtils from 'src/utils/version'
 import * as useIsDarkModeFile from 'ui/src/hooks/useIsDarkMode'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import * as fiatCurrencyHooks from 'wallet/src/features/fiatCurrency/hooks'
 import * as languageHooks from 'wallet/src/features/language/hooks'
-import { AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import * as walletHooks from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
@@ -32,6 +32,15 @@ jest.mock('wallet/src/features/wallet/Keyring/Keyring', () => {
     },
   }
 })
+
+const mockDispatch = jest.fn()
+const mockSelector = jest.fn()
+
+jest.mock('react-redux', () => ({
+  ...jest.requireActual('react-redux'),
+  useDispatch: (): jest.Mock => mockDispatch,
+  useSelector: (): jest.Mock => mockSelector,
+}))
 
 const address1 = '0x168fA52Da8A45cEb01318E72B299b2d6A17167BF'
 const address2 = '0x168fA52Da8A45cEb01318E72B299b2d6A17167BD'
@@ -87,7 +96,6 @@ describe('TraceUserProperties', () => {
     mockFn(useIsDarkModeFile, 'useIsDarkMode', true)
     mockFn(fiatCurrencyHooks, 'useAppFiatCurrency', FiatCurrency.UnitedStatesDollar)
     mockFn(languageHooks, 'useCurrentLanguageInfo', { loggingName: 'English' })
-    mockFn(appHooks, 'useAppSelector', { enabled: true })
 
     // mock setUserProperty
     const mocked = mockFn(analytics, 'setUserProperty', undefined)

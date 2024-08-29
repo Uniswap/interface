@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { SplitLogo } from 'wallet/src/components/CurrencyLogo/SplitLogo'
+import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'

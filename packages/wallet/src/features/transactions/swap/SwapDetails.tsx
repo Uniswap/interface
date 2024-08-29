@@ -2,22 +2,23 @@ import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
-import { InfoCircleFilled } from 'ui/src/components/icons'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { logger } from 'utilities/src/logger/logger'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { FeeOnTransferFeeGroupProps } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
+import { MaxSlippageRow } from 'wallet/src/features/transactions/swap/MaxSlippageRow'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
+import { UniswapXGasBreakdown } from 'wallet/src/features/transactions/swap/trade/api/hooks/useSwapTxAndGasInfo'
 import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
@@ -50,12 +51,12 @@ interface SwapDetailsProps {
   derivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
   gasFallbackUsed?: boolean
   gasFee: GasFeeResult
+  uniswapXGasBreakdown?: UniswapXGasBreakdown
   newTradeRequiresAcceptance: boolean
   outputCurrencyPricePerUnitExact?: string
   warning?: Warning
   onAcceptTrade: () => void
   onShowWarning?: () => void
-  onShowSlippageModal: () => void
 }
 
 export function SwapDetails({
@@ -64,12 +65,12 @@ export function SwapDetails({
   customSlippageTolerance,
   derivedSwapInfo,
   gasFee,
+  uniswapXGasBreakdown,
   newTradeRequiresAcceptance,
   outputCurrencyPricePerUnitExact,
   warning,
   onAcceptTrade,
   onShowWarning,
-  onShowSlippageModal,
 }: SwapDetailsProps): JSX.Element {
   const { t } = useTranslation()
 
@@ -88,7 +89,11 @@ export function SwapDetails({
   }
 
   const swapFeeUsd = getFeeAmountUsd(trade, outputCurrencyPricePerUnitExact)
-  const swapFeeFiatFormatted = convertFiatAmountFormatted(swapFeeUsd, NumberType.FiatGasPrice)
+  if (swapFeeUsd && isNaN(swapFeeUsd)) {
+    logger.warn('SwapDetails', '', `swapFeeUsd is NaN`, { trade, outputCurrencyPricePerUnitExact })
+  }
+  const formattedAmountFiat =
+    swapFeeUsd && !isNaN(swapFeeUsd) ? convertFiatAmountFormatted(swapFeeUsd, NumberType.FiatGasPrice) : undefined
 
   const swapFeeInfo = trade.swapFee
     ? {
@@ -97,12 +102,9 @@ export function SwapDetails({
         formattedAmount:
           getFormattedCurrencyAmount(trade.outputAmount.currency, trade.swapFee.amount, formatter) +
           getSymbolDisplayText(trade.outputAmount.currency.symbol),
-        formattedAmountFiat: swapFeeUsd ? swapFeeFiatFormatted : undefined,
+        formattedAmountFiat,
       }
     : undefined
-
-  // Make text the warning color if user is setting custom slippage higher than auto slippage value
-  const showSlippageWarning = autoSlippageTolerance ? acceptedTrade.slippageTolerance > autoSlippageTolerance : false
 
   const feeOnTransferProps: FeeOnTransferFeeGroupProps = useMemo(
     () => ({
@@ -123,8 +125,6 @@ export function SwapDetails({
     ],
   )
 
-  const preUniswapXGasFeeUSD = isUniswapX(trade) ? trade.quote.quote.classicGasUseEstimateUSD : undefined
-
   return (
     <TransactionDetails
       isSwap
@@ -140,11 +140,11 @@ export function SwapDetails({
       chainId={acceptedTrade.inputAmount.currency.chainId}
       feeOnTransferProps={feeOnTransferProps}
       gasFee={gasFee}
-      preUniswapXGasFeeUSD={preUniswapXGasFeeUSD}
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
       swapFeeInfo={swapFeeInfo}
       transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
+      uniswapXGasBreakdown={uniswapXGasBreakdown}
       warning={warning}
       onShowWarning={onShowWarning}
     >
@@ -156,28 +156,11 @@ export function SwapDetails({
           <SwapRateRatio trade={trade} />
         </Flex>
       </Flex>
-      <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-        <TouchableArea flexShrink={1} onPress={onShowSlippageModal}>
-          <Flex row alignItems="center" gap="$spacing4">
-            <Text color="$neutral2" numberOfLines={3} variant="body3">
-              {t('swap.details.slippage')}
-            </Text>
-            <InfoCircleFilled color="$neutral3" size="$icon.16" />
-          </Flex>
-        </TouchableArea>
-        <Flex centered row gap="$spacing8">
-          {!customSlippageTolerance ? (
-            <Flex centered backgroundColor="$surface3" borderRadius="$roundedFull" px="$spacing4" py="$spacing2">
-              <Text color="$neutral2" variant="buttonLabel4">
-                {t('swap.settings.slippage.control.auto')}
-              </Text>
-            </Flex>
-          ) : null}
-          <Text color={showSlippageWarning ? '$DEP_accentWarning' : '$neutral1'} variant="body3">
-            {formatPercent(acceptedTrade.slippageTolerance)}
-          </Text>
-        </Flex>
-      </Flex>
+      <MaxSlippageRow
+        acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+        autoSlippageTolerance={autoSlippageTolerance}
+        customSlippageTolerance={customSlippageTolerance}
+      />
     </TransactionDetails>
   )
 }
@@ -238,7 +221,7 @@ function AcceptNewQuoteRow({
       <Flex>
         <Trace logPress element={ElementName.AcceptNewRate}>
           <TouchableArea
-            backgroundColor="$accentSoft"
+            backgroundColor="$DEP_accentSoft"
             borderRadius="$rounded12"
             px="$spacing8"
             py="$spacing4"

@@ -1,7 +1,7 @@
 import Column from 'components/Column'
-import { Trans } from 'i18n'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 const Container = styled(Column)`
   background-color: ${({ theme }) => theme.surface2};
@@ -23,7 +23,7 @@ export function LimitDisclaimer({ className }: { className?: string }) {
       <DisclaimerText>Canceling a limit has a network cost.</DisclaimerText>
       <DisclaimerText>
         <ExternalLink href="https://support.uniswap.org/hc/en-us/articles/24300813697933">
-          <Trans i18nKey="common.learnMore.link" />
+          <Trans i18nKey="common.button.learn" />
         </ExternalLink>
       </DisclaimerText>
     </Container>

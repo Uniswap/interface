@@ -1,9 +1,7 @@
 import { providers as ethersProviders } from 'ethers'
-import { config } from 'uniswap/src/config'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { getInfuraChainName } from 'wallet/src/features/providers/utils'
 
 // Should use ProviderManager for provider access unless being accessed outside of ProviderManagerContext (e.g., Apollo initialization)
 export function createEthersProvider(
@@ -24,8 +22,7 @@ export function createEthersProvider(
       if (publicRPCUrl) {
         return new ethersProviders.JsonRpcProvider(publicRPCUrl)
       }
-
-      return new ethersProviders.InfuraProvider(getInfuraChainName(chainId), config.infuraProjectId)
+      throw new Error(`No public RPC available for chain ${chainId}`)
     } catch (error) {
       const altPublicRPCUrl = UNIVERSE_CHAIN_INFO[chainId].rpcUrls?.[RPCType.PublicAlt]?.http[0]
       return new ethersProviders.JsonRpcProvider(altPublicRPCUrl)

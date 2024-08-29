@@ -9,17 +9,17 @@ import {
   useIsSupportedChainIdCallback,
 } from 'constants/chains'
 import { getSupportedGraphQlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { Trans } from 'i18n'
+import styled, { css, useTheme } from 'lib/styled-components'
 import { ExploreTab } from 'pages/Explore'
 import { useExploreParams } from 'pages/Explore/redirects'
 import { useReducer } from 'react'
 import { Check } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
-import styled, { css, useTheme } from 'styled-components'
 import { EllipsisStyle } from 'theme/components'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useTranslation } from 'uniswap/src/i18n'
 
 const NetworkLabel = styled.div`
   ${EllipsisStyle}
@@ -40,17 +40,18 @@ const StyledButton = css`
 `
 const StyledMenuFlyout = css`
   max-height: 350px;
-  min-width: 240px;
+  min-width: 256px;
   right: 0px;
   @media screen and (max-width: ${({ theme }) => `${theme.breakpoint.lg}px`}) {
     left: 0px;
   }
 `
-export default function NetworkFilter() {
+export default function TableNetworkFilter() {
+  const { t } = useTranslation()
   const theme = useTheme()
   const navigate = useNavigate()
   const [isMenuOpen, toggleMenu] = useReducer((s) => !s, false)
-  const isSupportedChainCallaback = useIsSupportedChainIdCallback()
+  const isSupportedChainCallback = useIsSupportedChainIdCallback()
   const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
 
   const exploreParams = useExploreParams()
@@ -83,14 +84,14 @@ export default function NetworkFilter() {
                 }}
               >
                 <NetworkLabel>
-                  <AllNetworksIcon /> <Trans>All networks</Trans>
+                  <AllNetworksIcon /> {t('transaction.network.all')}
                 </NetworkLabel>
                 {!exploreParams.chainName && <Check size={16} color={theme.accent1} />}
               </InternalMenuItem>
             )}
             {BACKEND_SUPPORTED_CHAINS.map((network) => {
               const chainId = supportedChainIdFromGQLChain(network)
-              const isSupportedChain = isSupportedChainCallaback(chainId)
+              const isSupportedChain = isSupportedChainCallback(chainId)
               const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId] : undefined
               return (
                 <InternalMenuItem
@@ -111,7 +112,7 @@ export default function NetworkFilter() {
               )
             })}
             {BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS.map((network) => {
-              const isSupportedChain = isSupportedChainCallaback(network)
+              const isSupportedChain = isSupportedChainCallback(network)
               const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[network] : undefined
               return chainInfo ? (
                 <InternalMenuItem key={network} data-testid={`tokens-network-filter-option-${network}-chain`} disabled>

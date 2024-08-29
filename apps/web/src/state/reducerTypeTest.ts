@@ -15,7 +15,6 @@ import { Field } from 'state/mint/actions'
 import { MintState } from 'state/mint/reducer'
 import { Field as FieldV3 } from 'state/mint/v3/actions'
 import { FullRange, MintState as MintV3State } from 'state/mint/v3/reducer'
-import { AppState } from 'state/reducer'
 import { quickRouteApi } from 'state/routing/quickRouteSlice'
 import { routingApi } from 'state/routing/slice'
 import { RouterPreference } from 'state/routing/types'
@@ -24,10 +23,12 @@ import { TransactionState } from 'state/transactions/reducer'
 import { TransactionDetails } from 'state/transactions/types'
 import { UserState } from 'state/user/reducer'
 import { SerializedPair, SerializedToken, SlippageTolerance } from 'state/user/types'
-import { WalletState } from 'state/wallets/reducer'
+import { ConnectedWalletsState } from 'state/wallets/reducer'
 import { Wallet } from 'state/wallets/types'
+import { InterfaceState } from 'state/webReducer'
 import { Equals, assert } from 'tsafe'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
+import { TimingState } from 'uniswap/src/features/timing/slice'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 /**
@@ -50,26 +51,30 @@ import { InterfaceChainId } from 'uniswap/src/types/chains'
  */
 
 type ExpectedAppState = CombinedState<{
-  user: UserState
-  transactions: TransactionState
-  signatures: SignatureState
-  fiatOnRampTransactions: FiatOnRampTransactionsState
-  lists: ListsState
-  application: ApplicationState
-  wallets: WalletState
-  mint: MintState
-  mintV3: MintV3State
-  burn: BurnState
-  burnV3: BurnV3State
-  multicall: ReturnType<typeof multicall.reducer>
-  poolsList: PoolsListsState
-  logs: LogsState
-  [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
-  [quickRouteApi.reducerPath]: ReturnType<typeof quickRouteApi.reducer>
-  [fiatOnRampAggregatorApi.reducerPath]: ReturnType<typeof fiatOnRampAggregatorApi.reducer>
+  // Web State
+  readonly user: UserState
+  readonly transactions: TransactionState
+  readonly signatures: SignatureState
+  readonly fiatOnRampTransactions: FiatOnRampTransactionsState
+  readonly lists: ListsState
+  readonly poolsList: PoolsListsState
+  readonly application: ApplicationState
+  readonly wallets: ConnectedWalletsState
+  readonly mint: MintState
+  readonly mintV3: MintV3State
+  readonly burn: BurnState
+  readonly burnV3: BurnV3State
+  readonly multicall: ReturnType<typeof multicall.reducer>
+  readonly logs: LogsState
+  readonly [routingApi.reducerPath]: ReturnType<typeof routingApi.reducer>
+  readonly [quickRouteApi.reducerPath]: ReturnType<typeof quickRouteApi.reducer>
+
+  // Uniswap State
+  readonly timing: TimingState
+  readonly [fiatOnRampAggregatorApi.reducerPath]: ReturnType<typeof fiatOnRampAggregatorApi.reducer>
 }>
 
-assert<Equals<AppState, ExpectedAppState>>()
+assert<Equals<InterfaceState, ExpectedAppState>>()
 
 interface ExpectedUserState {
   lastUpdateVersionTimestamp?: number
@@ -134,7 +139,7 @@ interface ExpectedWalletState {
   switchingChain: InterfaceChainId | false
 }
 
-assert<Equals<WalletState, ExpectedWalletState>>()
+assert<Equals<ConnectedWalletsState, ExpectedWalletState>>()
 
 interface ExpectedMintState {
   readonly independentField: Field

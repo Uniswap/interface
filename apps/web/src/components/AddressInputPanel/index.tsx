@@ -2,11 +2,11 @@ import { AutoColumn } from 'components/Column'
 import { RowBetween } from 'components/Row'
 import { useAccount } from 'hooks/useAccount'
 import useENS from 'hooks/useENS'
-import { Trans, t } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { ChangeEvent, ReactNode, useCallback } from 'react'
-import styled, { useTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { flexColumnNoWrap } from 'theme/styles'
+import { Trans, t } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const InputPanel = styled.div`

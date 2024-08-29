@@ -1,5 +1,4 @@
-import { getTestSelector, getTestSelectorStartsWith } from '../utils'
-import { waitsForActiveChain } from './wallet-connection/switch-network.test'
+import { getTestSelector, getTestSelectorStartsWith, waitsForActiveChain } from '../utils'
 
 describe('Token explore', () => {
   before(() => {

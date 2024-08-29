@@ -5,12 +5,12 @@ import { scrollbarStyle } from 'components/SearchModal/CurrencyList/index.css'
 import { PaddedColumn } from 'components/SearchModal/styled'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { CSSProperties } from 'react'
-import { Trans } from 'react-i18next'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { CloseIcon } from 'theme/components'
 import { Text } from 'ui/src/components/text/Text'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { Trans } from 'uniswap/src/i18n'
 
 const ROW_ITEM_SIZE = 56
 
@@ -34,7 +34,7 @@ export function FiatOnRampCurrencyModal({
       <ContentWrapper>
         <PaddedColumn>
           <RowBetween>
-            <Text variant="body3">
+            <Text variant="subheading1">
               <Trans i18nKey="common.selectToken.label" />
             </Text>
             <CloseIcon data-testid="FiatOnRampCurrencyModal-close" onClick={onDismiss} />

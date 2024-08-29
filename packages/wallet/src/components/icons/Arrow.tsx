@@ -1,40 +1,25 @@
 import { memo } from 'react'
-import ArrowDown from 'ui/src/assets/icons/arrow-down.svg'
+import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
+
+type Direction = 'n' | 'e' | 's' | 'w' | 'ne' | 'se'
 
 type Props = {
   size?: number
-  direction?: 'n' | 'e' | 's' | 'w' | 'ne' | 'se'
+  direction?: Direction
   color?: string
 }
 
-export function _Arrow({ size = 24, color = '#000000', direction = 'e' }: Props): JSX.Element {
-  let degree: string
-  switch (direction) {
-    case 's':
-      degree = '0deg'
-      break
-    case 'w':
-      degree = '90deg'
-      break
-    case 'n':
-      degree = '180deg'
-      break
-    case 'ne':
-      degree = '225deg'
-      break
-    case 'e':
-      degree = '270deg'
-      break
-    case 'se':
-      degree = '315deg'
-      break
-    default:
-      throw new Error(`Invalid arrow direction ${direction}`)
-  }
+const DIRECTION_TO_DEGREE: Record<Direction, `${number}deg`> = {
+  s: '0deg',
+  w: '90deg',
+  n: '180deg',
+  ne: '225deg',
+  e: '270deg',
+  se: '315deg',
+}
 
-  return (
-    <ArrowDown color={color} height={size} strokeWidth={2} style={{ transform: [{ rotate: degree }] }} width={size} />
-  )
+export function _Arrow({ size = 24, color = '#000000', direction = 'e' }: Props): JSX.Element {
+  return <ArrowDown color={color} rotateZ={DIRECTION_TO_DEGREE[direction]} size={size} strokeWidth={2} />
 }
 
 export const Arrow = memo(_Arrow)

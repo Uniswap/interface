@@ -442,7 +442,10 @@ query MultiplePortfolioBalances(
   }
 }
 
-query SelectWalletScreen($ownerAddresses: [String!]!) {
+query SelectWalletScreen(
+  $ownerAddresses: [String!]!
+  $valueModifiers: [PortfolioValueModifier!]
+) {
   portfolios(
     ownerAddresses: $ownerAddresses
     chains: [
@@ -458,6 +461,7 @@ query SelectWalletScreen($ownerAddresses: [String!]!) {
       AVALANCHE
       ZKSYNC
     ]
+    valueModifiers: $valueModifiers
   ) {
     id
     ownerAddress
@@ -680,6 +684,7 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
           onRampTransfer {
             id
             transactionReferenceId
+            externalSessionId
             token {
               id
               symbol
@@ -779,6 +784,7 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
             ... on OnRampTransfer {
               id
               transactionReferenceId
+              externalSessionId
               token {
                 id
                 symbol
@@ -1101,19 +1107,87 @@ fragment TopTokenParts on Token {
   }
 }
 
-query ExploreTokensTab($topTokensOrderBy: TokenSortableField!) {
+query ExploreTokensTab($topTokensOrderBy: TokenSortableField!, $chain: Chain!, $pageSize: Int!) {
   topTokens(
-    chain: ETHEREUM
+    chain: $chain
     page: 1
-    pageSize: 100
+    pageSize: $pageSize
     orderBy: $topTokensOrderBy
   ) {
     ...TopTokenParts
   }
   # `topTokens` returns WETH rather than ETH
   # here we retrieve ETH information to swap out in the UI
-  eth: token(address: null, chain: ETHEREUM) {
+  eth: token(address: null, chain: $chain) {
     ...TopTokenParts
+  }
+}
+
+fragment AITopTokenParts on Token {
+  symbol
+  chain
+  address
+  market {
+    totalValueLocked {
+      value
+    }
+    volume(duration: DAY) {
+      value
+    }
+  }
+  project {
+    name
+    markets(currencies: [USD]) {
+      price {
+        value
+      }
+      pricePercentChange24h {
+        value
+      }
+      marketCap {
+        value
+      }
+    }
+  }
+}
+
+query AITopTokens($topTokensOrderBy: TokenSortableField!, $chain: Chain!, $pageSize: Int!) {
+  topTokens(
+    chain: $chain
+    page: 1
+    pageSize: $pageSize
+    orderBy: $topTokensOrderBy
+  ) {
+    ...AITopTokenParts
+  }
+}
+
+fragment HomeScreenTokenParts on Token {
+  symbol
+  chain
+  address
+  project {
+    id
+    name
+    logoUrl
+    markets(currencies: [USD]) {
+      id
+      price {
+        value
+      }
+      pricePercentChange24h {
+        value
+      }
+    }
+  }
+}
+
+query HomeScreenTokens($contracts: [ContractInput!]!, $chain: Chain!) {
+  tokens(contracts: $contracts) {
+    ...HomeScreenTokenParts
+  }
+  eth: token(address: null, chain: $chain) {
+    ...HomeScreenTokenParts
   }
 }
 

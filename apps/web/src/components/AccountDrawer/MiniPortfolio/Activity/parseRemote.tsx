@@ -11,7 +11,6 @@ import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { formatUnits, parseUnits } from 'ethers/lib/utils'
 import { gqlToCurrency, supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { t } from 'i18n'
 import ms from 'ms'
 import { useEffect, useState } from 'react'
 import { parseRemote as parseRemoteSignature } from 'state/signatures/parseRemote'
@@ -24,12 +23,15 @@ import {
   NftApprovalPartsFragment,
   NftApproveForAllPartsFragment,
   NftTransferPartsFragment,
+  OnRampTransactionDetailsPartsFragment,
+  OnRampTransferPartsFragment,
   TokenApprovalPartsFragment,
   TokenAssetPartsFragment,
   TokenTransferPartsFragment,
   TransactionDetailsPartsFragment,
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -159,7 +161,10 @@ function getSwapDescriptor({
   tokenOut: TokenAssetPartsFragment
   inputAmount: string
 }) {
-  return `${inputAmount} ${tokenIn.symbol} for ${outputAmount} ${tokenOut.symbol}`
+  return t('activity.transaction.swap.descriptor', {
+    amountWithSymbolA: `${inputAmount} ${tokenIn.symbol}`,
+    amountWithSymbolB: `${outputAmount} ${tokenOut.symbol}`,
+  })
 }
 
 /**
@@ -349,13 +354,17 @@ function parseLPTransfers(changes: TransactionChanges, formatNumberOrString: For
   const tokenBQuantity = formatNumberOrString({ input: poolTokenB.quantity, type: NumberType.TokenNonTx })
 
   return {
-    descriptor: `${tokenAQuanitity} ${poolTokenA.asset.symbol} and ${tokenBQuantity} ${poolTokenB.asset.symbol}`,
+    descriptor: t('activity.transaction.tokens.descriptor', {
+      amountWithSymbolA: `${tokenAQuanitity} ${poolTokenA.asset.symbol}`,
+      amountWithSymbolB: `${tokenBQuantity} ${poolTokenB.asset.symbol}`,
+    }),
     logos: [poolTokenA.asset.project?.logo?.url, poolTokenB.asset.project?.logo?.url],
     currencies: [gqlToCurrency(poolTokenA.asset), gqlToCurrency(poolTokenB.asset)],
   }
 }
 
 type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
+type FiatOnRampActivity = AssetActivityPartsFragment & { details: OnRampTransactionDetailsPartsFragment }
 
 function parseSendReceive(
   changes: TransactionChanges,
@@ -385,29 +394,39 @@ function parseSendReceive(
 
   if (transfer && assetName && amount) {
     const isMoonpayPurchase = MOONPAY_SENDER_ADDRESSES.some((address) => isSameAddress(address, transfer?.sender))
+    const otherAccount = isAddress(transfer.recipient) || undefined
 
     if (transfer.direction === 'IN') {
       return isMoonpayPurchase && transfer.__typename === 'TokenTransfer'
         ? {
             title: t('common.purchased'),
-            descriptor: `${amount} ${assetName} ${t('for')} ${formatNumberOrString({
-              input: getTransactedValue(transfer.transactedValue),
-              type: NumberType.FiatTokenPrice,
-            })}`,
+            descriptor: t('activity.transaction.swap.descriptor', {
+              amountWithSymbolA: `${amount} ${assetName}`,
+              amountWithSymbolB: formatNumberOrString({
+                input: getTransactedValue(transfer.transactedValue),
+                type: NumberType.FiatTokenPrice,
+              }),
+            }),
             logos: [moonpayLogoSrc],
             currencies,
           }
         : {
             title: t('common.received'),
-            descriptor: `${amount} ${assetName} ${t('common.from')} `,
-            otherAccount: isAddress(transfer.sender) || undefined,
+            descriptor: t('activity.transaction.receive.descriptor', {
+              amountWithSymbol: `${amount} ${assetName}`,
+              walletAddress: otherAccount,
+            }),
+            otherAccount,
             currencies,
           }
     } else {
       return {
         title: t('common.sent'),
-        descriptor: `${amount} ${assetName} ${t('common.to')} `,
-        otherAccount: isAddress(transfer.recipient) || undefined,
+        descriptor: t('activity.transaction.send.descriptor', {
+          amountWithSymbol: `${amount} ${assetName}`,
+          walletAddress: otherAccount,
+        }),
+        otherAccount,
         currencies,
       }
     }
@@ -503,6 +522,83 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
   }
 }
 
+function parseFiatOnRampTransaction(activity: TransactionActivity | FiatOnRampActivity): Activity {
+  const chainId = supportedChainIdFromGQLChain(activity.chain)
+  if (!chainId) {
+    const error = new Error('Invalid activity from unsupported chain received from GQL')
+    logger.error(error, {
+      tags: {
+        file: 'parseRemote',
+        function: 'parseRemote',
+      },
+      extra: { activity },
+    })
+    throw error
+  }
+  if (activity.details.__typename === 'OnRampTransactionDetails') {
+    const onRampTransfer = activity.details.onRampTransfer
+    return {
+      from: activity.details.receiverAddress,
+      hash: activity.id,
+      chainId,
+      timestamp: activity.timestamp,
+      logos: [onRampTransfer.token.project?.logo?.url],
+      currencies: [gqlToCurrency(onRampTransfer.token)],
+      title: t('fiatOnRamp.purchasedOn', {
+        serviceProvider: onRampTransfer.serviceProvider.name,
+      }),
+      descriptor: t('fiatOnRamp.exchangeRate', {
+        outputAmount: onRampTransfer.amount,
+        outputSymbol: onRampTransfer.token.symbol,
+        inputAmount: onRampTransfer.sourceAmount,
+        inputSymbol: onRampTransfer.sourceCurrency,
+      }),
+      suffixIconSrc: onRampTransfer.serviceProvider.logoDarkUrl,
+      status: activity.details.status,
+    }
+  } else if (activity.details.__typename === 'TransactionDetails') {
+    const assetChange = activity.details.assetChanges[0]
+    if (assetChange?.__typename !== 'OnRampTransfer') {
+      logger.error('Unexpected asset change type, expected OnRampTransfer', {
+        tags: {
+          file: 'parseRemote',
+          function: 'parseRemote',
+        },
+      })
+    }
+    const onRampTransfer = assetChange as OnRampTransferPartsFragment
+    return {
+      from: activity.details.from,
+      hash: activity.details.hash,
+      chainId,
+      timestamp: activity.timestamp,
+      logos: [onRampTransfer.token.project?.logo?.url],
+      currencies: [gqlToCurrency(onRampTransfer.token)],
+      title: t('fiatOnRamp.purchasedOn', {
+        serviceProvider: onRampTransfer.serviceProvider.name,
+      }),
+      descriptor: t('fiatOnRamp.exchangeRate', {
+        outputAmount: onRampTransfer.amount,
+        outputSymbol: onRampTransfer.token.symbol,
+        inputAmount: onRampTransfer.sourceAmount,
+        inputSymbol: onRampTransfer.sourceCurrency,
+      }),
+      suffixIconSrc: onRampTransfer.serviceProvider.logoDarkUrl,
+      status: activity.details.status,
+    }
+  } else {
+    const error = new Error('Invalid Fiat On Ramp activity type received from GQL')
+    logger.error(error, {
+      tags: {
+        file: 'parseRemote',
+        function: 'parseFiatOnRampTransaction',
+      },
+      extra: { activity },
+    })
+    throw error
+  }
+}
+
 function parseRemoteActivity(
   assetActivity: AssetActivityPartsFragment | undefined,
   account: string,
@@ -518,8 +614,12 @@ function parseRemoteActivity(
       return parseUniswapXOrder(assetActivity as OrderActivity)
     }
 
-    if (assetActivity.details.__typename === 'OnRampTransactionDetails') {
-      return undefined // TODO(WEB-4187): support onramp transactions
+    if (
+      assetActivity.details.__typename === 'OnRampTransactionDetails' ||
+      (assetActivity.details.__typename === 'TransactionDetails' &&
+        assetActivity.details.type === TransactionType.OnRamp)
+    ) {
+      return parseFiatOnRampTransaction(assetActivity as TransactionActivity)
     }
 
     const changes = assetActivity.details.assetChanges.reduce(

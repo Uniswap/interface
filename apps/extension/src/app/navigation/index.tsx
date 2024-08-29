@@ -1,8 +1,8 @@
 import { useCallback, useMemo, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import { Outlet, useLocation } from 'react-router-dom'
-import { FeedbackRequestModal } from 'src/app/components/modal/FeedbackRequestModal'
-import { DappRequestWrapper } from 'src/app/features/dappRequests/DappRequestContent'
 import { DappRequestQueueProvider } from 'src/app/features/dappRequests/DappRequestQueueContext'
+import { DappRequestWrapper } from 'src/app/features/dappRequests/DappRequestWrapper'
 import { HomeScreen } from 'src/app/features/home/HomeScreen'
 import { Locked } from 'src/app/features/lockScreen/Locked'
 import { NotificationToastWrapper } from 'src/app/features/notifications/NotificationToastWrapper'
@@ -14,7 +14,7 @@ import { AppRoutes } from 'src/app/navigation/constants'
 import { useRouterState } from 'src/app/navigation/state'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
-import { useAppSelector } from 'src/store/store'
+import { ExtensionState } from 'src/store/extensionReducer'
 import { AnimatePresence, Flex, SpinningLoader, styled } from 'ui/src'
 import { useIsChromeWindowFocusedWithTimeout } from 'uniswap/src/extension/useIsChromeWindowFocused'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -23,7 +23,7 @@ import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/Tran
 import { QueuedOrderModal } from 'wallet/src/features/transactions/swap/modals/QueuedOrderModal'
 
 export function MainContent(): JSX.Element {
-  const isOnboarded = useAppSelector(isOnboardedSelector)
+  const isOnboarded = useSelector(isOnboardedSelector)
 
   if (!isOnboarded) {
     // TODO: add an error state that takes the user to fullscreen onboarding
@@ -200,7 +200,7 @@ function LoggedIn(): JSX.Element {
    **/
   const outletContents = Outlet({})
   const contents = useConstant(outletContents)
-  const pendingDappRequests = useAppSelector((state) => state.dappRequests.pending)
+  const pendingDappRequests = useSelector((state: ExtensionState) => state.dappRequests.pending)
   const areRequestsPending = pendingDappRequests.length > 0
 
   // To avoid excessive API calls, we pause the transaction history updater a short time after the window loses focus.
@@ -209,8 +209,6 @@ function LoggedIn(): JSX.Element {
   return (
     <>
       {contents}
-
-      <FeedbackRequestModal />
 
       <QueuedOrderModal />
 
@@ -226,7 +224,7 @@ function LoggedIn(): JSX.Element {
 }
 
 function LoggedOut(): JSX.Element {
-  const isOnboarded = useAppSelector(isOnboardedSelector)
+  const isOnboarded = useSelector(isOnboardedSelector)
   const didOpenOnboarding = useRef(false)
 
   const handleOnboarding = useCallback(async () => {

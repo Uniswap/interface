@@ -4,12 +4,13 @@ import { RemoveWalletModalState } from 'src/components/RemoveWallet/RemoveWallet
 import { ExchangeTransferModalState } from 'src/features/fiatOnRamp/ExchangeTransferModalState'
 import { ModalsState } from 'src/features/modals/ModalsState'
 import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalState'
+import { FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getKeys } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 
 type AccountSwitcherModalParams = {
   name: typeof ModalName.AccountSwitcher
@@ -33,11 +34,9 @@ type FiatCurrencySelectorParams = {
   initialState?: undefined
 }
 
-type FiatOnRampModalParams = { name: typeof ModalName.FiatOnRamp; initialState?: undefined }
-
 type FiatOnRampAggregatorModalParams = {
   name: typeof ModalName.FiatOnRampAggregator
-  initialState?: undefined
+  initialState?: FiatOnRampModalState
 }
 
 type ReceiveCryptoModalParams = {
@@ -87,7 +86,6 @@ export type OpenModalParams =
   | ExperimentsModalParams
   | ExploreModalParams
   | FiatCurrencySelectorParams
-  | FiatOnRampModalParams
   | FiatOnRampAggregatorModalParams
   | ReceiveCryptoModalParams
   | LanguageSelectorModalParams
@@ -104,10 +102,6 @@ export type CloseModalParams = { name: keyof ModalsState }
 
 export const initialModalsState: ModalsState = {
   [ModalName.ExchangeTransferModal]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.FiatOnRamp]: {
     isOpen: false,
     initialState: undefined,
   },

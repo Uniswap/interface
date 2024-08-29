@@ -51,9 +51,8 @@ import {
   UniswapOpenSidebarRequestSchema,
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
-import { appSelect } from 'src/store/store'
-import { WebState } from 'src/store/webReducer'
-import { call, put, takeEvery } from 'typed-redux-saga'
+import { ExtensionState } from 'src/store/extensionReducer'
+import { call, put, select, takeEvery } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
 
 function* dappRequestApproval({
@@ -61,7 +60,7 @@ function* dappRequestApproval({
   payload: request,
 }: PayloadAction<DappRequestWithDappInfo | DappRequestNoDappInfo | DappRequestRejectParams>) {
   if (type === rejectAllRequests.type) {
-    const pendingRequests = yield* appSelect((state: WebState) => state.dappRequests.pending)
+    const pendingRequests = yield* select((state: ExtensionState) => state.dappRequests.pending)
 
     for (const pendingRequest of pendingRequests) {
       const errorResponse: ErrorResponse = {
@@ -92,7 +91,7 @@ function* dappRequestApproval({
   try {
     if (type === confirmRequest.type) {
       const confirmedRequest = request as DappRequestWithDappInfo
-      logger.info('dappRequestApprovalWatcher', 'confirmRequest', 'confirm request', request)
+      logger.debug('dappRequestApprovalWatcher', 'confirmRequest', 'confirm request', request)
 
       switch (confirmedRequest.dappRequest.type) {
         case DappRequestType.RequestPermissions: {
@@ -217,7 +216,7 @@ function* dappRequestApproval({
       }
     } else if (type === rejectRequest.type) {
       const rejectedRequest = request as DappRequestRejectParams
-      logger.info('dappRequestApprovalWatcher', 'rejectRequest', 'dapp request rejected', request)
+      logger.debug('dappRequestApprovalWatcher', 'rejectRequest', 'dapp request rejected', request)
 
       const errorResponse: ErrorResponse = {
         type: DappResponseType.ErrorResponse,

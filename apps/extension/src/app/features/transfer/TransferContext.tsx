@@ -3,6 +3,7 @@ import { providers } from 'ethers'
 import React, { createContext, ReactNode, useContext, useMemo, useReducer, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnyAction } from 'redux'
+import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
 import { GasFeeResult, GasSpeed } from 'wallet/src/features/gas/types'
 import {
@@ -14,11 +15,11 @@ import {
   INITIAL_TRANSACTION_STATE,
   transactionStateReducer,
 } from 'wallet/src/features/transactions/transactionState/transactionState'
-import { TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import { useDerivedTransferInfo } from 'wallet/src/features/transactions/transfer/hooks/useDerivedTransferInfo'
 import { useTransferTransactionRequest } from 'wallet/src/features/transactions/transfer/hooks/useTransferTransactionRequest'
 import { useTransferWarnings } from 'wallet/src/features/transactions/transfer/hooks/useTransferWarnings'
 import { WarningAction } from 'wallet/src/features/transactions/WarningModal/types'
+import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export enum TransferScreen {
   SendForm,
@@ -51,6 +52,8 @@ export function TransferContextProvider({
 }): JSX.Element {
   const { t } = useTranslation()
 
+  const account = useActiveAccountWithThrow()
+
   // state and reducers
   const [transferFormState, dispatch] = useReducer(transactionStateReducer, {
     ...(prefilledTransactionState ?? INITIAL_TRANSACTION_STATE),
@@ -77,6 +80,7 @@ export function TransferContextProvider({
   )
 
   const gasWarning = useTransactionGasWarning({
+    account,
     derivedInfo: derivedTransferInfo,
     gasFee: gasFee?.value,
   })

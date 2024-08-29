@@ -12,19 +12,19 @@ import Row from 'components/Row'
 import { useAccount } from 'hooks/useAccount'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'
-import { Trans, t } from 'i18n'
+import styled, { css } from 'lib/styled-components'
 import { ReactNode, useMemo, useRef } from 'react'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useOrder } from 'state/signatures/hooks'
 import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/transactions/hooks'
-import styled, { css } from 'styled-components'
 import { ExternalLink } from 'theme/components'
 import { AnimationType } from 'theme/components/FadePresence'
 import { ThemedText } from 'theme/components/text'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Trans, t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -135,7 +135,7 @@ export function Pending({
     if (swapResult && swapResult.type === TradeFillType.Classic) {
       txHash = swapResult.response.hash
     } else if (uniswapXOrder && uniswapXOrder.status === UniswapXOrderStatus.FILLED) {
-      txHash = uniswapXOrder.orderHash
+      txHash = uniswapXOrder.txHash
     } else {
       return
     }

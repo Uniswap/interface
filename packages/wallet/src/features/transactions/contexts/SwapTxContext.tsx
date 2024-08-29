@@ -1,10 +1,14 @@
-import { createContext, PropsWithChildren, useContext } from 'react'
+import { PropsWithChildren, createContext, useContext, useEffect } from 'react'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
+import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import {
   SwapTxAndGasInfo,
-  useSwapTxAndGasInfoTradingApi,
-} from 'wallet/src/features/transactions/swap/trade/tradingApi/hooks/useSwapTxAndGasInfoTradingApi'
+  useSwapTxAndGasInfo,
+} from 'wallet/src/features/transactions/swap/trade/api/hooks/useSwapTxAndGasInfo'
 import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 
 export type ValidatedSwapTxContext = Required<SwapTxAndGasInfo> & {
@@ -46,8 +50,14 @@ export function isValidSwapTxContext(swapTxContext: SwapTxAndGasInfo): swapTxCon
 export const SwapTxContext = createContext<SwapTxAndGasInfo | undefined>(undefined)
 
 export function SwapTxContextProviderTradingApi({ children }: PropsWithChildren): JSX.Element {
+  const { account } = useTransactionModalContext()
   const { derivedSwapInfo } = useSwapFormContext()
-  const swapTxContext = useSwapTxAndGasInfoTradingApi({ derivedSwapInfo })
+  const swapTxContext = useSwapTxAndGasInfo({ derivedSwapInfo, account })
+  const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
+
+  useEffect(() => {
+    logContextUpdate('SwapTxContext', swapTxContext, datadogEnabled)
+  }, [swapTxContext, datadogEnabled])
 
   return <SwapTxContext.Provider value={swapTxContext}>{children}</SwapTxContext.Provider>
 }

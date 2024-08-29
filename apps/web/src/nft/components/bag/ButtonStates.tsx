@@ -1,7 +1,7 @@
-import { Trans } from 'i18n'
+import { DefaultTheme } from 'lib/styled-components'
 import { PriceImpact } from 'nft/hooks/usePriceImpact'
 import { ReactNode } from 'react'
-import { DefaultTheme } from 'styled-components'
+import { Trans } from 'uniswap/src/i18n'
 
 export enum BuyButtonStates {
   WALLET_NOT_CONNECTED,
@@ -43,7 +43,7 @@ export function getBuyButtonStateData(
 ): BuyButtonStateData {
   const defaultBuyButtonState: BuyButtonStateData = {
     handleClick: () => undefined,
-    buttonText: <Trans i18nKey="common.somethingWentWrong.error" />,
+    buttonText: <Trans i18nKey="common.card.error.description" />,
     disabled: true,
     warningText: undefined,
     warningTextColor: theme.deprecated_accentWarning,

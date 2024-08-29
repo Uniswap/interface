@@ -15,7 +15,7 @@ import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { WalletNavigationContextState, WalletNavigationProvider } from 'wallet/src/contexts/WalletNavigationContext'
 import { SharedProvider } from 'wallet/src/provider'
-import { sharedRootReducer, type SharedState } from 'wallet/src/state/reducer'
+import { WalletStateReducersOnly, walletRootReducer } from 'wallet/src/state/walletReducer'
 import { AutoMockedApolloProvider } from 'wallet/src/test/mocks'
 
 // This type extends the default options for render from RTL, as well
@@ -23,14 +23,15 @@ import { AutoMockedApolloProvider } from 'wallet/src/test/mocks'
 type ExtendedRenderOptions = RenderOptions & {
   cache?: InMemoryCache
   resolvers?: Resolvers
-  preloadedState?: PreloadedState<SharedState>
-  store?: EnhancedStore<SharedState>
+  preloadedState?: PreloadedState<WalletStateReducersOnly>
+  store?: EnhancedStore<WalletStateReducersOnly>
 }
 
 const mockNavigationFunctions: WalletNavigationContextState = {
   navigateToAccountActivityList: jest.fn(),
   navigateToAccountTokenList: jest.fn(),
   navigateToBuyOrReceiveWithEmptyWallet: jest.fn(),
+  navigateToFiatOnRamp: jest.fn(),
   navigateToNftDetails: jest.fn(),
   navigateToNftCollection: jest.fn(),
   navigateToSwapFlow: jest.fn(),
@@ -56,7 +57,7 @@ export function renderWithProviders(
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
     store = configureStore({
-      reducer: sharedRootReducer,
+      reducer: walletRootReducer,
       preloadedState,
       middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     }),
@@ -86,8 +87,8 @@ export function renderWithProviders(
 type ExtendedRenderHookOptions<P> = RenderHookOptions<P> & {
   cache?: InMemoryCache
   resolvers?: Resolvers
-  preloadedState?: PreloadedState<SharedState>
-  store?: EnhancedStore<SharedState>
+  preloadedState?: PreloadedState<WalletStateReducersOnly>
+  store?: EnhancedStore<WalletStateReducersOnly>
 }
 
 type RenderHookWithProvidersResult<R, P extends any[] | undefined = undefined> = Omit<
@@ -127,7 +128,7 @@ export function renderHookWithProviders<P extends any[], R>(
     preloadedState = {},
     // Automatically create a store instance if no store was passed in
     store = configureStore({
-      reducer: sharedRootReducer,
+      reducer: walletRootReducer,
       preloadedState,
       middleware: (getDefaultMiddleware) => getDefaultMiddleware(),
     }),

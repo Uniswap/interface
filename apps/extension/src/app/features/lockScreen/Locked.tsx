@@ -1,18 +1,16 @@
 import { useCallback, useLayoutEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Input } from 'src/app/components/Input'
 import { PasswordInput } from 'src/app/components/PasswordInput'
 import { BottomModalProps, InfoModal } from 'src/app/components/modal/InfoModal'
 import { useSagaStatus } from 'src/app/hooks/useSagaStatus'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
-import { useAppDispatch } from 'src/store/store'
 import { Button, Flex, InputProps, Text, TouchableArea } from 'ui/src'
 import { AlertTriangle, Lock } from 'ui/src/components/icons'
 import { spacing, zIndices } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { LandingBackground } from 'wallet/src/components/landing/LandingBackground'
 import { authActions, authSagaName } from 'wallet/src/features/auth/saga'
@@ -47,7 +45,7 @@ const BACKGROUND_CIRCLE_INNER_SIZE = 140
 const BACKGROUND_CIRCLE_OUTER_SIZE = 250
 
 export function Locked(): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { t } = useTranslation()
   const { value: enteredPassword, onChangeText: onChangePasswordText } = usePasswordInput()
   const associatedAccounts = useSignerAccounts()
@@ -74,12 +72,9 @@ export function Locked(): JSX.Element {
 
   const [forgotPasswordModalOpen, setForgotPasswordModalOpen] = useState(false)
   const [modalStep, setModalStep] = useState(ForgotPasswordModalStep.Initial)
-  const scantasticOnboardingOnly = useFeatureFlag(FeatureFlags.ScantasticOnboardingOnly)
 
   const openRecoveryTab = (): Promise<void> =>
-    focusOrCreateOnboardingTab(
-      `${TopLevelRoutes.Onboarding}/${scantasticOnboardingOnly ? OnboardingRoutes.ResetScan : OnboardingRoutes.Reset}`,
-    )
+    focusOrCreateOnboardingTab(`${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Reset}`)
 
   const onStartResettingWallet = async (): Promise<void> => {
     const currAccount = associatedAccounts[0]

@@ -1,12 +1,13 @@
 import { createStore, Store } from '@reduxjs/toolkit'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import {
   addAccount,
   removeAccounts,
   setAccountAsActive,
   SwapProtectionSetting,
   walletReducer,
-  WalletState,
+  WalletSliceState,
 } from 'wallet/src/features/wallet/slice'
 
 const TEST_IMPORT_TIME_MS = 12345678912345
@@ -24,7 +25,7 @@ const ACCOUNT_2: Account = {
 }
 
 describe(walletReducer, () => {
-  let store: Store<WalletState>
+  let store: Store<WalletSliceState>
 
   beforeEach(() => {
     store = createStore(walletReducer, {
@@ -51,7 +52,7 @@ describe(walletReducer, () => {
 
   it('throws when setting unknown active account', () => {
     expect(() => store.dispatch(setAccountAsActive(ACCOUNT_1.address))).toThrow(
-      `Cannot activate missing account ${ACCOUNT_1.address}`
+      `Cannot activate missing account ${ACCOUNT_1.address}`,
     )
   })
 
@@ -89,13 +90,13 @@ describe(walletReducer, () => {
 
   it('throws when removing unknown active account', () => {
     expect(() => store.dispatch(removeAccounts([ACCOUNT_1.address]))).toThrow(
-      `Cannot remove missing account ${ACCOUNT_1.address}`
+      `Cannot remove missing account ${ACCOUNT_1.address}`,
     )
   })
 
   it('throws when removing unknown active accounts', () => {
     expect(() => store.dispatch(removeAccounts([ACCOUNT_1.address, ACCOUNT_2.address]))).toThrow(
-      `Cannot remove missing account ${ACCOUNT_1.address}`
+      `Cannot remove missing account ${ACCOUNT_1.address}`,
     )
   })
 })

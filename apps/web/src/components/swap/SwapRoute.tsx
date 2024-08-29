@@ -4,10 +4,10 @@ import RoutingDiagram from 'components/RoutingDiagram/RoutingDiagram'
 import { RowBetween } from 'components/Row'
 import { UniswapXDescription } from 'components/swap/GasBreakdownTooltip'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
-import { Trans } from 'i18n'
 import { ClassicTrade, SubmittableTrade } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
 import { Separator, ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import getRoutingDiagramEntries from 'utils/getRoutingDiagramEntries'
 
@@ -25,7 +25,9 @@ function useGasPrice({ gasUseEstimateUSD, inputAmount }: ClassicTrade) {
 function RouteLabel({ trade }: { trade: SubmittableTrade }) {
   return (
     <RowBetween>
-      <ThemedText.BodySmall color="neutral2">Order Routing</ThemedText.BodySmall>
+      <ThemedText.BodySmall color="neutral2">
+        <Trans i18nKey="swap.orderRouting" />
+      </ThemedText.BodySmall>
       <RouterLabel trade={trade} color="neutral1" />
     </RowBetween>
   )
@@ -36,7 +38,7 @@ function PriceImpactRow({ trade }: { trade: ClassicTrade }) {
   return (
     <ThemedText.BodySmall color="neutral2">
       <RowBetween>
-        <Trans i18nKey="swap.priceImpact.upperCase" />
+        <Trans i18nKey="swap.priceImpact" />
         <div>{formatPercent(trade.priceImpact)}</div>
       </RowBetween>
     </ThemedText.BodySmall>

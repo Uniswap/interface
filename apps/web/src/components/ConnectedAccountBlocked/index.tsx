@@ -1,10 +1,10 @@
 import Column from 'components/Column'
 import Modal from 'components/Modal'
 import { BlockedIcon } from 'components/TokenSafety/TokenSafetyIcon'
-import { Trans } from 'i18n'
-import styled, { useTheme } from 'styled-components'
+import styled, { useTheme } from 'lib/styled-components'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
+import { Trans } from 'uniswap/src/i18n'
 
 const ContentWrapper = styled(Column)`
   align-items: center;
@@ -30,25 +30,29 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
           {props.account}
         </Text>
         <ThemedText.DeprecatedMain fontSize={14} marginBottom={12}>
-          <Trans i18nKey="common.blocked.reason" />{' '}
-          <ExternalLink href="https://help.uniswap.org/en/articles/6149816">
-            <Trans i18nKey="common.blocked.activities" />
-          </ExternalLink>
-          .
+          <Trans
+            i18nKey="common.blocked.reason"
+            components={{ link: <ExternalLink href="https://help.uniswap.org/en/articles/6149816" /> }}
+          />
         </ThemedText.DeprecatedMain>
         <ThemedText.DeprecatedMain fontSize={12}>
-          <Trans i18nKey="common.blocked.ifError" />{' '}
+          <Trans
+            i18nKey="common.blocked.ifError"
+            components={{
+              emailAddress: (
+                <CopyHelper
+                  toCopy="compliance@uniswap.org"
+                  fontSize={14}
+                  iconSize={16}
+                  color={theme.accent1}
+                  iconPosition="right"
+                >
+                  compliance@uniswap.org
+                </CopyHelper>
+              ),
+            }}
+          />
         </ThemedText.DeprecatedMain>
-
-        <CopyHelper
-          toCopy="compliance@uniswap.org"
-          fontSize={14}
-          iconSize={16}
-          color={theme.accent1}
-          iconPosition="right"
-        >
-          compliance@uniswap.org
-        </CopyHelper>
       </ContentWrapper>
     </Modal>
   )

@@ -1,4 +1,4 @@
-process.env.TZ = 'America/New_York';
+process.env.TZ = 'America/New_York'
 
 module.exports = {
   globals: {
@@ -6,17 +6,22 @@ module.exports = {
     AMPLITUDE_EXPERIMENTS_DEPLOYMENT_KEY: 'key',
     APPSFLYER_API_KEY: 'key',
     APPSFLYER_APP_ID: 123,
-    MOONPAY_API_KEY: 'key',
-    MOONPAY_API_URL: 'https://api.moonpay.com',
-    MOONPAY_WIDGET_API_URL: 'https://api.moonpay.com',
+    DATADOG_CLIENT_TOKEN: 'key',
+    DATADOG_PROJECT_ID: 123,
     INFURA_KEY: 'key',
-    INFURA_PROJECT_ID: 123,
     ONESIGNAL_APP_ID: 123,
+    OPENAI_API_KEY: 'key',
     QUICKNODE_ARBITRUM_RPC_URL: 'https://api.uniswap.org',
     QUICKNODE_BNB_RPC_URL: 'https://api.uniswap.org',
     QUICKNODE_MAINNET_RPC_URL: 'https://api.uniswap.org',
     QUICKNODE_ZORA_RPC_URL: 'https://api.uniswap.org',
     QUICKNODE_ZKSYNC_RPC_URL: 'https://api.uniswap.org',
+    QUICKNODE_BLAST_RPC_URL: 'https://api.uniswap.org',
+    QUICKNODE_AVAX_RPC_URL: 'https://api.uniswap.org',
+    QUICKNODE_BASE_RPC_URL: 'https://api.uniswap.org',
+    QUICKNODE_CELO_RPC_URL: 'https://api.uniswap.org',
+    QUICKNODE_OP_RPC_URL: 'https://api.uniswap.org',
+    QUICKNODE_POLYGON_RPC_URL: 'https://api.uniswap.org',
     SENTRY_DSN: 'http://sentry.com',
     SHAKE_CLIENT_ID: 123,
     SHAKE_CLIENT_SECRET: 123,
@@ -26,6 +31,6 @@ module.exports = {
     TRADING_API_KEY: 'key',
     UNISWAP_API_KEY: 'key',
     WALLETCONNECT_PROJECT_ID: 123,
-    FIREBASE_APP_CHECK_DEBUG_TOKEN: 'token'
+    FIREBASE_APP_CHECK_DEBUG_TOKEN: 'token',
   },
-};
+}

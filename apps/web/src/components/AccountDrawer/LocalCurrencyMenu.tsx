@@ -1,11 +1,11 @@
-import { MenuColumn, MenuItem } from 'components/AccountDrawer/shared'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
-import { getLocalCurrencyIcon, SUPPORTED_LOCAL_CURRENCIES, SupportedLocalCurrency } from 'constants/localCurrencies'
+import { MenuColumn, MenuItem } from 'components/AccountDrawer/shared'
+import { SUPPORTED_LOCAL_CURRENCIES, SupportedLocalCurrency, getLocalCurrencyIcon } from 'constants/localCurrencies'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useLocalCurrencyLinkProps } from 'hooks/useLocalCurrencyLinkProps'
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { useMemo } from 'react'
-import styled from 'styled-components'
+import { Trans } from 'uniswap/src/i18n'
 
 const StyledLocalCurrencyIcon = styled.div`
   width: 20px;

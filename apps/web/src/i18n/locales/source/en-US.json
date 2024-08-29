@@ -579,7 +579,6 @@
   "currency.uah": "Ukrainian Hryvnia",
   "currency.usd": "United States Dollar",
   "currency.vnd": "Vietnamese Dong",
-  "common.vote": "Vote",
   "error.access.expiry": "This provides the Rigoblock protocol access to your token for trading. For security, it expires after 30 days.",
   "error.dataUnavailable": "Data is unavailable at the moment; we’re working on a fix",
   "error.id": "Error ID: {{eventId}}",

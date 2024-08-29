@@ -1,3 +1,4 @@
+export const ALL_NETWORKS_LOGO = require('./logos/png/all-networks-icon.png')
 export const ETHEREUM_LOGO = require('./logos/png/ethereum-logo.png')
 export const OPTIMISM_LOGO = require('./logos/png/optimism-logo.png')
 export const ARBITRUM_LOGO = require('./logos/png/arbitrum-logo.png')
@@ -11,6 +12,7 @@ export const ZORA_LOGO = require('./logos/png/zora-logo.png')
 export const ZKSYNC_LOGO = require('./logos/png/zksync-logo.png')
 export const GOERLI_LOGO = require('./logos/png/goerli-logo.png')
 export const MUMBAI_LOGO = require('./logos/png/mumbai-logo.png')
+export const RIGOBLOCK_LOGO_LARGE = require('./logos/png/rigoblock-logo-large.png')
 export const UNISWAP_LOGO = require('./logos/png/uniswap-logo.png')
 export const UNISWAP_LOGO_LARGE = require('./logos/png/uniswap-logo-large.png')
 export const UNISWAP_APP_ICON = require('./logos/png/uniswap-app-icon.png')
@@ -20,19 +22,12 @@ export const AVATARS_LIGHT = require('./misc/avatars-light.png')
 export const AVATARS_DARK = require('./misc/avatars-dark.png')
 export const APP_SCREENSHOT_LIGHT = require('./misc/app-screenshot-light.png')
 export const APP_SCREENSHOT_DARK = require('./misc/app-screenshot-dark.png')
+export const CHROME_LOGO = require('./logos/png/chrome-logo.png')
 export const DOT_GRID = require('./misc/dot-grid.png')
 export const UNITAGS_BANNER_VERTICAL_LIGHT = require('./graphics/unitags-banner-v-light.png')
 export const UNITAGS_BANNER_VERTICAL_DARK = require('./graphics/unitags-banner-v-dark.png')
 export const UNITAGS_INTRO_BANNER_LIGHT = require('./graphics/unitags-intro-banner-light.png')
 export const UNITAGS_INTRO_BANNER_DARK = require('./graphics/unitags-intro-banner-dark.png')
-
-export const EXTENSION_PROMO_BANNER_LIGHT = require('./graphics/extension-promo-banner-light.png')
-export const EXTENSION_PROMO_BANNER_DARK = require('./graphics/extension-promo-banner-dark.png')
-export const EXTENSION_PROMO_MODAL_LIGHT = require('./graphics/extension-promo-modal-light.png')
-export const EXTENSION_PROMO_MODAL_DARK = require('./graphics/extension-promo-modal-dark.png')
-
-export const EXTENSION_PROMO_BANNER_LIGHT_GA = require('./graphics/extension-promo-modal-light-ga.png')
-export const EXTENSION_PROMO_BANNER_DARK_GA = require('./graphics/extension-promo-modal-dark-ga.png')
 
 export const DAI_LOGO = require('./logos/png/dai-logo.png')
 export const USDC_LOGO = require('./logos/png/usdc-logo.png')
@@ -43,6 +38,9 @@ export const FROGGY = require('./graphics/froggy.png')
 
 export const UNITAG_DARK = require('./graphics/unitag-dark.png')
 export const UNITAG_LIGHT = require('./graphics/unitag-light.png')
+
+export const UNITAG_DARK_SMALL = require('./graphics/unitag-dark-small.png')
+export const UNITAG_LIGHT_SMALL = require('./graphics/unitag-light-small.png')
 
 export const ONBOARDING_LANDING_LIGHT = {
   ios: require(`./backgrounds/onboarding-landing-static-light.png`),

@@ -8,7 +8,9 @@ import {
 import { FeeOptions } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import { AppTFunction } from 'ui/src/i18n/types'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -20,13 +22,11 @@ import {
   currencyIdToChain,
 } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { AssetType } from 'wallet/src/entities/assets'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
-import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
+import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/api/utils'
 import { ClassicTrade, Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
-import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -66,7 +66,10 @@ export function isWrapAction(wrapType: WrapType): wrapType is WrapType.Unwrap | 
   return wrapType === WrapType.Unwrap || wrapType === WrapType.Wrap
 }
 
-export function tradeToTransactionInfo(trade: Trade): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
+export function tradeToTransactionInfo(
+  trade: Trade,
+  transactedUSDValue?: number,
+): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
 
   const { quote, slippageTolerance } = trade
@@ -84,6 +87,7 @@ export function tradeToTransactionInfo(trade: Trade): ExactInputSwapTransactionI
     gasUseEstimate,
     routeString,
     protocol: getProtocolVersionFromTrade(trade),
+    transactedUSDValue,
   }
 
   return trade.tradeType === TradeType.EXACT_INPUT

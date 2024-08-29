@@ -3,6 +3,7 @@ import 'src/app/Global.css'
 
 import { useEffect, useRef, useState } from 'react'
 import { I18nextProvider } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { RouterProvider, ScrollRestoration } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ExtensionStatsigProvider } from 'src/app/StatsigProvider'
@@ -36,7 +37,7 @@ import {
 } from 'src/background/messagePassing/messageChannels'
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
-import { getReduxPersistor, getReduxStore, useAppDispatch } from 'src/store/store'
+import { getReduxPersistor, getReduxStore } from 'src/store/store'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -134,7 +135,7 @@ const router = sentryCreateHashRouter([
 
 const PORT_PING_INTERVAL = 5 * ONE_SECOND_MS
 function useDappRequestPortListener(): void {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const [currentPortChannel, setCurrentPortChannel] = useState<DappBackgroundPortChannel | undefined>()
   const [windowId, setWindowId] = useState<string | undefined>()
 
@@ -194,7 +195,7 @@ function useDappRequestPortListener(): void {
 }
 
 function SidebarWrapper(): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   useDappRequestPortListener()
 
   useEffect(() => {

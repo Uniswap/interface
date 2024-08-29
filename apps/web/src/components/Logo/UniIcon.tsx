@@ -1,5 +1,5 @@
 import { GrgIcon } from 'nft/components/icons'
-import styled from 'styled-components'
+import styled from 'lib/styled-components'
 
 const Container = styled.div<{ clickable?: boolean }>`
   position: relative;

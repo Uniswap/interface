@@ -7,40 +7,42 @@ import { Keyboard, LayoutChangeEvent, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut, FadeOutDown } from 'react-native-reanimated'
 import { Button, Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
-import { AlertCircle } from 'ui/src/components/icons'
+import { AlertCircle, Gas } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { NumberType } from 'utilities/src/format/types'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { TransferArrowButton } from 'wallet/src/components/buttons/TransferArrowButton'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
 import { CurrencyInputPanelLegacy } from 'wallet/src/components/legacy/CurrencyInputPanelLegacy'
 import { DecimalPadLegacy } from 'wallet/src/components/legacy/DecimalPadLegacy'
 import { WarningModal, getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { NFTTransfer } from 'wallet/src/components/nfts/NFTTransfer'
+import { useUSDValue } from 'wallet/src/features/gas/hooks'
+import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { WarningAction, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { ParsedWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { useTokenFormActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenFormActionHandlers'
 import { useTokenSelectorActionHandlers } from 'wallet/src/features/transactions/hooks/useTokenSelectorActionHandlers'
+import { SwapArrowButton } from 'wallet/src/features/transactions/swap/SwapArrowButton'
+import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { useUSDTokenUpdater } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDTokenUpdater'
 import { transactionStateActions } from 'wallet/src/features/transactions/transactionState/transactionState'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { TransferFormSpeedbumps } from 'wallet/src/features/transactions/transfer/TransferFormWarnings'
 import { useSetShowRecipientSelector } from 'wallet/src/features/transactions/transfer/hooks/useOnToggleShowRecipientSelector'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/transfer/hooks/useShowSendNetworkNotification'
-import {
-  DerivedTransferInfo,
-  TokenSelectorFlow,
-  TransferSpeedbump,
-} from 'wallet/src/features/transactions/transfer/types'
+import { DerivedTransferInfo } from 'wallet/src/features/transactions/transfer/types'
+import { TransactionType } from 'wallet/src/features/transactions/types'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TransferTokenProps {
@@ -56,6 +58,7 @@ interface TransferTokenProps {
   isLayoutPending: boolean
   onInputPanelLayout?: (event: LayoutChangeEvent) => void
   setShowViewOnlyModal: (show: boolean) => void
+  gasFee: GasFeeResult
 }
 
 export function TransferTokenForm({
@@ -71,6 +74,7 @@ export function TransferTokenForm({
   isLayoutPending,
   onInputPanelLayout,
   setShowViewOnlyModal,
+  gasFee,
 }: TransferTokenProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -86,7 +90,6 @@ export function TransferTokenForm({
     isFiatInput = false,
     currencyInInfo,
     nftIn,
-    chainId,
   } = derivedTransferInfo
 
   const currencyIn = currencyInInfo?.currency
@@ -98,11 +101,6 @@ export function TransferTokenForm({
 
   const [currencyFieldFocused, setCurrencyFieldFocused] = useState(true)
   const [showWarningModal, setShowWarningModal] = useState(false)
-  const [showSpeedbumpModal, setShowSpeedbumpModal] = useState(false)
-  const [transferSpeedbump, setTransferSpeedbump] = useState<TransferSpeedbump>({
-    loading: true,
-    hasWarning: false,
-  })
 
   const { onShowTokenSelector } = useTokenSelectorActionHandlers(dispatch, TokenSelectorFlow.Transfer)
   const { onSetExactAmount, onSetMax } = useTokenFormActionHandlers(dispatch)
@@ -128,7 +126,6 @@ export function TransferTokenForm({
   const isViewOnlyWallet = account.type === AccountType.Readonly
   const actionButtonDisabled =
     warnings.warnings.some((warning) => warning.action === WarningAction.DisableReview) ||
-    transferSpeedbump.loading ||
     isBlocked ||
     isBlockedLoading ||
     walletNeedsRestore
@@ -142,20 +139,10 @@ export function TransferTokenForm({
   const onPressReview = useCallback(() => {
     if (isViewOnlyWallet) {
       setShowViewOnlyModal(true)
-    } else if (transferSpeedbump.hasWarning) {
-      setShowSpeedbumpModal(true)
     } else {
       goToNext()
     }
-  }, [goToNext, transferSpeedbump.hasWarning, isViewOnlyWallet, setShowViewOnlyModal])
-
-  const onSetTransferSpeedbump = useCallback(({ hasWarning, loading }: TransferSpeedbump) => {
-    setTransferSpeedbump({ hasWarning, loading })
-  }, [])
-
-  const onSetShowSpeedbumpModal = useCallback((showModal: boolean) => {
-    setShowSpeedbumpModal(showModal)
-  }, [])
+  }, [isViewOnlyWallet, setShowViewOnlyModal, goToNext])
 
   const [inputSelection, setInputSelection] = useState<TextInputProps['selection']>()
 
@@ -214,6 +201,10 @@ export function TransferTokenForm({
   const TRANSFER_DIRECTION_BUTTON_BORDER_WIDTH = spacing.spacing4
   const SendWarningIcon = transferWarning?.icon ?? AlertCircle
 
+  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const gasFeeUSD = useUSDValue(currencyInInfo?.currency.chainId, gasFee?.value)
+  const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
+
   return (
     <>
       {showWarningModal && transferWarning?.title && (
@@ -230,14 +221,6 @@ export function TransferTokenForm({
           onConfirm={(): void => setShowWarningModal(false)}
         />
       )}
-      <TransferFormSpeedbumps
-        chainId={chainId}
-        recipient={recipient}
-        setShowSpeedbumpModal={onSetShowSpeedbumpModal}
-        setTransferSpeedbump={onSetTransferSpeedbump}
-        showSpeedbumpModal={showSpeedbumpModal}
-        onNext={goToNext}
-      />
       <Flex grow gap="$spacing8" justifyContent="space-between">
         <AnimatedFlex
           entering={FadeIn}
@@ -249,7 +232,7 @@ export function TransferTokenForm({
           {nftIn ? (
             <NFTTransfer asset={nftIn} nftSize={fullHeight / 4} />
           ) : (
-            <Flex backgroundColor="$surface2" borderRadius="$rounded20" justifyContent="center">
+            <Flex borderColor="$surface3" borderRadius="$rounded20" borderWidth={1} justifyContent="center">
               <CurrencyInputPanelLegacy
                 currencyAmount={currencyAmounts[CurrencyField.INPUT]}
                 currencyBalance={currencyBalances[CurrencyField.INPUT]}
@@ -258,6 +241,7 @@ export function TransferTokenForm({
                 isFiatInput={isFiatInput}
                 isOnScreen={!showingSelectorScreen}
                 showSoftInputOnFocus={showNativeKeyboard}
+                transactionType={TransactionType.Send}
                 usdValue={inputCurrencyUSDValue}
                 value={isFiatInput ? exactAmountFiat : exactAmountToken}
                 warnings={warnings.warnings}
@@ -287,7 +271,7 @@ export function TransferTokenForm({
               style={StyleSheet.absoluteFill}
             >
               <Flex alignItems="center" bottom={TRANSFER_DIRECTION_BUTTON_SIZE / 2} position="absolute">
-                <TransferArrowButton disabled backgroundColor="$surface2" p="$spacing8" />
+                <SwapArrowButton disabled backgroundColor="$surface1" />
               </Flex>
             </Flex>
           </Flex>
@@ -297,8 +281,11 @@ export function TransferTokenForm({
               backgroundColor={recipient ? '$surface2' : '$transparent'}
               borderBottomLeftRadius={transferWarning || isBlocked ? '$none' : '$rounded20'}
               borderBottomRightRadius={transferWarning || isBlocked ? '$none' : '$rounded20'}
+              borderBottomWidth={transferWarning || isBlocked ? 0 : 1}
+              borderColor="$surface3"
               borderTopLeftRadius="$rounded20"
               borderTopRightRadius="$rounded20"
+              borderWidth={1}
               justifyContent="center"
             >
               {recipient && (
@@ -315,7 +302,7 @@ export function TransferTokenForm({
                     borderBottomLeftRadius="$rounded16"
                     borderBottomRightRadius="$rounded16"
                     borderTopColor="$surface1"
-                    borderTopWidth={1}
+                    borderTopWidth={0}
                     gap="$spacing8"
                     px="$spacing12"
                     py="$spacing12"
@@ -332,6 +319,18 @@ export function TransferTokenForm({
                 </TouchableArea>
               )}
             </Flex>
+            {gasFeeUSD && !transferWarning && !isBlocked && (
+              <Flex centered row py="$spacing12">
+                <NetworkFeeWarning tooltipTrigger={null}>
+                  <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
+                    <Gas color="$neutral2" size="$icon.16" />
+                    <Text color="$neutral2" variant="body3">
+                      {gasFeeFormatted}
+                    </Text>
+                  </AnimatedFlex>
+                </NetworkFeeWarning>
+              </Flex>
+            )}
             {transferWarning && !isBlocked ? (
               <TouchableArea mt="$spacing1" onPress={onTransferWarningClick}>
                 <Flex
@@ -367,8 +366,10 @@ export function TransferTokenForm({
                 backgroundColor="$surface2"
                 borderBottomLeftRadius="$rounded16"
                 borderBottomRightRadius="$rounded16"
+                borderColor="$surface3"
+                borderTopWidth={0}
+                borderWidth={1}
                 isRecipientBlocked={isRecipientBlocked}
-                mt="$spacing2"
                 px="$spacing16"
                 py="$spacing12"
               />

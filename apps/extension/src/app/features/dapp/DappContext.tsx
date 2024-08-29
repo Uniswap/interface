@@ -1,11 +1,11 @@
 import { createContext, ReactNode, useContext, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useDappConnectedAccounts, useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { isConnectedAccount } from 'src/app/features/dapp/utils'
 import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import { closePopup, PopupName } from 'src/app/features/popups/slice'
 import { backgroundToSidePanelMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
-import { useAppDispatch } from 'src/store/store'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
@@ -25,7 +25,7 @@ export function DappContextProvider({ children }: { children: ReactNode }): JSX.
   const activeAddress = useActiveAccountAddress()
   const connectedAccounts = useDappConnectedAccounts(dappUrl)
   const lastChainId = useDappLastChainId(dappUrl)
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const isConnected = !!activeAddress && isConnectedAccount(connectedAccounts, activeAddress)
 

@@ -7,10 +7,10 @@ export const PolygonElement = (): JSX.Element => {
 
   return (
     <Flex
+      backgroundColor={opacify(isDarkMode ? 10 : 20, colors.purplePastel)}
       borderRadius="$rounded12"
       opacity={isDarkMode ? 0.8 : 1}
       p="$spacing12"
-      style={{ backgroundColor: opacify(isDarkMode ? 10 : 20, colors.violet300) }}
       transform={[{ rotateZ: '-20deg' }]}
     >
       <PolygonPurple size={imageSizes.image24} />

@@ -1,7 +1,7 @@
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Action } from 'redux'
-import { useAppDispatch } from 'src/app/hooks'
 import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
@@ -13,7 +13,7 @@ import { useAppFiatCurrency, useFiatCurrencyInfo } from 'wallet/src/features/fia
 import { setCurrentFiatCurrency } from 'wallet/src/features/fiatCurrency/slice'
 
 export function SettingsFiatCurrencyModal(): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { t } = useTranslation()
 
   return (
@@ -55,7 +55,7 @@ interface FiatCurrencyOptionProps {
 }
 
 function FiatCurrencyOption({ active, currency, onPress }: FiatCurrencyOptionProps): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const colors = useSporeColors()
   const { name, code } = useFiatCurrencyInfo(currency)
 

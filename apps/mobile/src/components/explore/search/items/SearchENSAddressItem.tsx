@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { SearchWalletItemBase } from 'src/components/explore/search/items/SearchWalletItemBase'
 import { Flex, Text } from 'ui/src'
 import { imageSizes } from 'ui/src/theme'
+import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import { getCompletedENSName } from 'wallet/src/features/ens/useENS'
-import { SearchContext } from 'wallet/src/features/search/SearchContext'
 import { ENSAddressSearchResult } from 'wallet/src/features/search/SearchResult'
 
 type SearchENSAddressItemProps = {
@@ -47,7 +47,7 @@ export function SearchENSAddressItem({ searchResult, searchContext }: SearchENSA
 
   return (
     <SearchWalletItemBase searchContext={searchContext} searchResult={searchResult}>
-      <Flex row alignItems="center" gap="$spacing12" px="$spacing8" py="$spacing12">
+      <Flex row alignItems="center" gap="$spacing12" px="$spacing24" py="$spacing12">
         <AccountIcon address={address} avatarUri={avatar} size={imageSizes.image40} />
         <Flex shrink>
           <Text ellipsizeMode="tail" numberOfLines={1} testID={`address-display/name/${ensName}`} variant="body1">

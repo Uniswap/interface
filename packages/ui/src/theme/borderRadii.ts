@@ -1,6 +1,7 @@
 export const borderRadii = {
   none: 0,
   rounded4: 4,
+  rounded6: 6,
   rounded8: 8,
   rounded12: 12,
   rounded16: 16,

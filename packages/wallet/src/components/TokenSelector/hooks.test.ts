@@ -2,31 +2,29 @@
 import { ApolloError } from '@apollo/client'
 import { toIncludeSameMembers } from 'jest-extended'
 import { PreloadedState } from 'redux'
-import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
-import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
-import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import {
   useAllCommonBaseCurrencies,
   useCommonTokensOptions,
   useCurrencyInfosToTokenOptions,
-  useFavoriteCurrencies,
-  useFavoriteTokensOptions,
   useFilterCallbacks,
   usePopularTokensOptions,
   usePortfolioBalancesForAddressById,
   usePortfolioTokenOptions,
-} from 'wallet/src/components/TokenSelector/hooks'
-import { tokenProjectToCurrencyInfos } from 'wallet/src/features/dataApi/utils'
-import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
-import { SharedState } from 'wallet/src/state/reducer'
+} from 'uniswap/src/components/TokenSelector/hooks'
+import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
+import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
+import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/utils'
+import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
+import { arbitrumDaiCurrencyInfo, ethCurrencyInfo, usdcCurrencyInfo } from 'uniswap/src/test/fixtures'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { useFavoriteCurrencies, useFavoriteTokensOptions } from 'wallet/src/components/TokenSelector/hooks'
+import { WalletState } from 'wallet/src/state/walletReducer'
 import {
   SAMPLE_SEED_ADDRESS_1,
-  arbitrumDaiCurrencyInfo,
   daiToken,
-  ethCurrencyInfo,
   ethToken,
   portfolio,
   portfolioBalance,
@@ -36,7 +34,6 @@ import {
   tokenProject,
   usdcArbitrumToken,
   usdcBaseToken,
-  usdcCurrencyInfo,
   usdcToken,
 } from 'wallet/src/test/fixtures'
 import { act, createArray, renderHook, waitFor } from 'wallet/src/test/test-utils'
@@ -56,10 +53,10 @@ const favoriteTokens = [eth, dai, usdc]
 const favoriteTokenBalances = [ethBalance, daiBalance, usdcBalance]
 
 const favoriteCurrencyIds = favoriteTokens.map((t) =>
-  buildCurrencyId(fromGraphQLChain(t.chain) ?? UniverseChainId.Mainnet, t.address)
+  buildCurrencyId(fromGraphQLChain(t.chain) ?? UniverseChainId.Mainnet, t.address),
 )
 
-const preloadedState: PreloadedState<SharedState> = {
+const preloadedState: PreloadedState<WalletState> = {
   favorites: {
     tokens: favoriteCurrencyIds,
     watchedAddresses: [],
@@ -80,16 +77,8 @@ const queryResolver =
 describe(useAllCommonBaseCurrencies, () => {
   const projects = createArray(3, tokenProject)
 
-  const nonBridgedTokens = [
-    ethToken(),
-    daiToken(),
-    usdcToken(),
-    usdcBaseToken(),
-    usdcArbitrumToken(),
-  ]
-  const bridgedTokens = BRIDGED_BASE_ADDRESSES.map((address) =>
-    token({ address, chain: Chain.Ethereum })
-  )
+  const nonBridgedTokens = [ethToken(), daiToken(), usdcToken(), usdcBaseToken(), usdcArbitrumToken()]
+  const bridgedTokens = BRIDGED_BASE_ADDRESSES.map((address) => token({ address, chain: Chain.Ethereum }))
   const projectWithBridged = tokenProject({ tokens: [...nonBridgedTokens, ...bridgedTokens] })
   const tokenProjectWithoutBridged = {
     ...projectWithBridged, // Copy all props except tokens (leave only non-bridged tokens)
@@ -364,7 +353,7 @@ describe(usePortfolioBalancesForAddressById, () => {
     const { resolvers } = queryResolvers({
       portfolios: queryResolver(input),
     })
-    const { result } = renderHook(() => usePortfolioBalancesForAddressById(SAMPLE_SEED_ADDRESS_1), {
+    const { result } = renderHook(() => usePortfolioBalancesForAddressById(SAMPLE_SEED_ADDRESS_1, []), {
       resolvers,
     })
 
@@ -403,7 +392,7 @@ describe(usePortfolioTokenOptions, () => {
       const { resolvers } = queryResolvers({
         portfolios: queryResolver(input),
       })
-      const { result } = renderHook(() => usePortfolioTokenOptions(SAMPLE_SEED_ADDRESS_1, null), {
+      const { result } = renderHook(() => usePortfolioTokenOptions(SAMPLE_SEED_ADDRESS_1, null, []), {
         resolvers,
       })
 
@@ -443,7 +432,7 @@ describe(usePortfolioTokenOptions, () => {
     }[] = [
       {
         test: 'returns only shown tokens after data is fetched',
-        input: [SAMPLE_SEED_ADDRESS_1, null],
+        input: [SAMPLE_SEED_ADDRESS_1, null, []],
         output: {
           data: shownPortfolioBalances,
           loading: false,
@@ -453,7 +442,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens filtered by chain',
-        input: [SAMPLE_SEED_ADDRESS_1, fromGraphQLChain(usdcTokenBalance.token.chain)],
+        input: [SAMPLE_SEED_ADDRESS_1, fromGraphQLChain(usdcTokenBalance.token.chain), []],
         output: {
           data: [usdcPortfolioBalance],
           loading: false,
@@ -463,7 +452,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens starting with "et" (ETH) filtered by search filter',
-        input: [SAMPLE_SEED_ADDRESS_1, null, 'et'],
+        input: [SAMPLE_SEED_ADDRESS_1, null, [], 'et'],
         output: {
           data: [ethPortfolioBalance],
           loading: false,
@@ -473,7 +462,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns shown tokens starting with "us" (USDC) filtered by search filter',
-        input: [SAMPLE_SEED_ADDRESS_1, null, 'us'],
+        input: [SAMPLE_SEED_ADDRESS_1, null, [], 'us'],
         output: {
           data: [usdcPortfolioBalance],
           loading: false,
@@ -483,7 +472,7 @@ describe(usePortfolioTokenOptions, () => {
       },
       {
         test: 'returns no data when there is no token that matches both chain and search filter',
-        input: [SAMPLE_SEED_ADDRESS_1, UniverseChainId.Base, 'et'],
+        input: [SAMPLE_SEED_ADDRESS_1, UniverseChainId.Base, [], 'et'],
         output: {
           data: [],
           loading: false,
@@ -496,7 +485,7 @@ describe(usePortfolioTokenOptions, () => {
     it.each(cases)('$test', async ({ input, output }) => {
       const { result } = renderHook(
         () => usePortfolioTokenOptions(...(input as Parameters<typeof usePortfolioTokenOptions>)),
-        { resolvers }
+        { resolvers },
       )
 
       await waitFor(() => {
@@ -532,9 +521,7 @@ describe(usePopularTokensOptions, () => {
       test: 'returns popular token options when there is data',
       input: { portfolios: [portfolio({ tokenBalances })], topTokens },
       output: {
-        data: expect.toIncludeSameMembers(
-          tokenBalances.map((t) => portfolioBalance({ fromBalance: t }))
-        ),
+        data: expect.toIncludeSameMembers(tokenBalances.map((t) => portfolioBalance({ fromBalance: t }))),
         error: undefined,
       },
     },
@@ -542,14 +529,11 @@ describe(usePopularTokensOptions, () => {
 
   it.each(cases)('$test', async ({ input, output }) => {
     const { resolvers } = queryResolvers(
-      Object.fromEntries(
-        Object.entries(input).map(([name, resolver]) => [name, queryResolver(resolver)])
-      )
+      Object.fromEntries(Object.entries(input).map(([name, resolver]) => [name, queryResolver(resolver)])),
     )
-    const { result } = renderHook(
-      () => usePopularTokensOptions(SAMPLE_SEED_ADDRESS_1, UniverseChainId.ArbitrumOne),
-      { resolvers }
-    )
+    const { result } = renderHook(() => usePopularTokensOptions(SAMPLE_SEED_ADDRESS_1, UniverseChainId.ArbitrumOne), {
+      resolvers,
+    })
 
     expect(result.current.loading).toEqual(true)
 
@@ -590,9 +574,7 @@ describe(useCommonTokensOptions, () => {
         tokenProjects: [tokenProject({ tokens })],
       },
       output: {
-        data: expect.toIncludeSameMembers(
-          tokenBalances.map((t) => portfolioBalance({ fromBalance: t }))
-        ),
+        data: expect.toIncludeSameMembers(tokenBalances.map((t) => portfolioBalance({ fromBalance: t }))),
         error: undefined,
       },
     },
@@ -616,14 +598,9 @@ describe(useCommonTokensOptions, () => {
 
   it.each(cases)('$test', async ({ input: { chainFilter = null, ...resolverResults }, output }) => {
     const { resolvers } = queryResolvers(
-      Object.fromEntries(
-        Object.entries(resolverResults).map(([name, resolver]) => [name, queryResolver(resolver)])
-      )
+      Object.fromEntries(Object.entries(resolverResults).map(([name, resolver]) => [name, queryResolver(resolver)])),
     )
-    const { result } = renderHook(
-      () => useCommonTokensOptions(SAMPLE_SEED_ADDRESS_1, chainFilter),
-      { resolvers }
-    )
+    const { result } = renderHook(() => useCommonTokensOptions(SAMPLE_SEED_ADDRESS_1, chainFilter), { resolvers })
 
     expect(result.current.loading).toEqual(true)
 
@@ -664,7 +641,7 @@ describe(useFavoriteTokensOptions, () => {
       },
       output: {
         data: expect.toIncludeSameMembers(
-          favoriteTokenBalances.map((balance) => portfolioBalance({ fromBalance: balance }))
+          favoriteTokenBalances.map((balance) => portfolioBalance({ fromBalance: balance })),
         ),
         error: undefined,
       },
@@ -689,14 +666,12 @@ describe(useFavoriteTokensOptions, () => {
 
   it.each(cases)('$test', async ({ input: { chainFilter = null, ...resolverResults }, output }) => {
     const { resolvers } = queryResolvers(
-      Object.fromEntries(
-        Object.entries(resolverResults).map(([name, resolver]) => [name, queryResolver(resolver)])
-      )
+      Object.fromEntries(Object.entries(resolverResults).map(([name, resolver]) => [name, queryResolver(resolver)])),
     )
-    const { result } = renderHook(
-      () => useFavoriteTokensOptions(SAMPLE_SEED_ADDRESS_1, chainFilter),
-      { resolvers, preloadedState }
-    )
+    const { result } = renderHook(() => useFavoriteTokensOptions(SAMPLE_SEED_ADDRESS_1, chainFilter), {
+      resolvers,
+      preloadedState,
+    })
 
     expect(result.current.loading).toEqual(true)
 

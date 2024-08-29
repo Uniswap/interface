@@ -1,16 +1,17 @@
 import { default as React } from 'react'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { Verified } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { SearchContext } from 'uniswap/src/features/search/SearchContext'
+import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
-import { SearchContext } from 'wallet/src/features/search/SearchContext'
-import { NFTCollectionSearchResult, SearchResultType } from 'wallet/src/features/search/SearchResult'
+import { NFTCollectionSearchResult } from 'wallet/src/features/search/SearchResult'
 import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 
 type NFTCollectionItemProps = {
@@ -20,7 +21,7 @@ type NFTCollectionItemProps = {
 
 export function SearchNFTCollectionItem({ collection, searchContext }: NFTCollectionItemProps): JSX.Element {
   const { name, address, chainId, isVerified, imageUrl } = collection
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const navigation = useAppStackNavigation()
 
   const onPress = (): void => {
@@ -62,7 +63,7 @@ export function SearchNFTCollectionItem({ collection, searchContext }: NFTCollec
       testID={TestID.SearchNFTCollectionItem}
       onPress={onPress}
     >
-      <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" px="$spacing8" py="$spacing12">
+      <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" px="$spacing24" py="$spacing12">
         <Flex
           centered
           borderRadius="$roundedFull"

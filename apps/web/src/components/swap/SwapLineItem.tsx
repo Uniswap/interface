@@ -11,15 +11,15 @@ import { RoutingTooltip, SwapRoute } from 'components/swap/SwapRoute'
 import TradePrice from 'components/swap/TradePrice'
 import { SUPPORTED_GAS_ESTIMATE_CHAIN_IDS } from 'constants/chains'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { Trans, t } from 'i18n'
+import styled, { DefaultTheme } from 'lib/styled-components'
 import React, { ReactNode, useEffect, useState } from 'react'
 import { SpringValue, animated } from 'react-spring'
 import { InterfaceTrade, SubmittableTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isPreviewTrade, isUniswapXTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
-import styled, { DefaultTheme } from 'styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { Trans, t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { getPriceImpactColor } from 'utils/prices'
 
@@ -49,10 +49,6 @@ const AutoBadge = styled(ThemedText.LabelMicro).attrs({ fontWeight: 535 })`
   height: 20px;
   padding: 0 6px;
   align-items: center;
-
-  ::after {
-    content: '${t('common.automatic')}';
-  }
 `
 
 function BaseTooltipContent({ children, url }: { children: ReactNode; url: string }) {
@@ -61,7 +57,7 @@ function BaseTooltipContent({ children, url }: { children: ReactNode; url: strin
       {children}
       <br />
       <ExternalLink href={url}>
-        <Trans i18nKey="common.learnMore.link" />
+        <Trans i18nKey="common.button.learn" />
       </ExternalLink>
     </>
   )
@@ -107,10 +103,11 @@ function Loading({ width = 50 }: { width?: number }) {
   return <LoadingRow data-testid="loading-row" height={15} width={width} />
 }
 
-function ColoredPercentRow({ percent, estimate }: { percent: Percent; estimate?: boolean }) {
+function ColoredPercentRow({ percent }: { percent: Percent }) {
   const { formatPercent } = useFormatter()
-  const formattedPercent = (estimate ? '~' : '') + formatPercent(percent)
-  return <ColorWrapper textColor={getPriceImpactColor(percent)}>{formattedPercent}</ColorWrapper>
+  const formattedPercent = formatPercent(percent)
+  const positivePercent = percent.lessThan(0) ? percent.multiply(-1) : percent
+  return <ColorWrapper textColor={getPriceImpactColor(positivePercent)}>{formattedPercent}</ColorWrapper>
 }
 
 function CurrencyAmountRow({ amount }: { amount: CurrencyAmount<Currency> }) {
@@ -180,7 +177,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       return {
         Label: () => <Trans i18nKey="swap.priceImpact" />,
         TooltipBody: () => <Trans i18nKey="swap.impactOfTrade" />,
-        Value: () => (isPreview ? <Loading /> : <ColoredPercentRow percent={priceImpact} estimate />),
+        Value: () => (isPreview ? <Loading /> : <ColoredPercentRow percent={priceImpact} />),
       }
     case SwapLineItemType.MAX_SLIPPAGE:
       return {
@@ -188,18 +185,18 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
         TooltipBody: () => <SlippageTooltipContent />,
         Value: () => (
           <Row gap="8px">
-            {isAutoSlippage && <AutoBadge />} {formatPercent(allowedSlippage)}
+            {isAutoSlippage && <AutoBadge>{t(`common.automatic`)}</AutoBadge>} {formatPercent(allowedSlippage)}
           </Row>
         ),
       }
     case SwapLineItemType.SWAP_FEE: {
       if (isPreview) {
-        return { Label: () => <Trans i18nKey="common.fee.caps" />, Value: () => <Loading /> }
+        return { Label: () => <Trans i18nKey="common.fee" />, Value: () => <Loading /> }
       }
       return {
         Label: () => (
           <>
-            <Trans i18nKey="common.fee.caps" /> {trade.swapFee && `(${formatPercent(trade.swapFee.percent)})`}
+            <Trans i18nKey="common.fee" /> {trade.swapFee && `(${formatPercent(trade.swapFee.percent)})`}
           </>
         ),
         TooltipBody: () => <SwapFeeTooltipContent hasFee={Boolean(trade.swapFee)} />,
@@ -262,8 +259,12 @@ function getFOTLineItem({ type, trade }: SwapLineItemProps): LineItemData | unde
     return
   }
 
+  const tokenSymbol = currency.symbol ?? currency.name
+
   return {
-    Label: () => <>{t(`swap.namedFee`, { name: currency.symbol ?? currency.name ?? t('common.token') })}</>,
+    Label: () => (
+      <>{tokenSymbol ? t('swap.details.feeOnTransfer', { tokenSymbol }) : t('swap.details.feeOnTransfer.default')}</>
+    ),
     TooltipBody: FOTTooltipContent,
     Value: () => <ColoredPercentRow percent={tax} />,
   }

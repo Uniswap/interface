@@ -1,5 +1,5 @@
 import * as Sentry from '@sentry/react'
-import { AppState } from 'state/reducer'
+import { InterfaceState } from 'state/webReducer'
 import noop from 'utilities/src/react/noop'
 
 /* Utility type to mark all properties of a type as optional */
@@ -23,7 +23,7 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
    * Note: This function runs on every state update, so we're keeping it as fast as possible by avoiding any function
    * calls and deep object traversals.
    */
-  stateTransformer: (state: AppState): DeepPartial<AppState> => {
+  stateTransformer: (state: InterfaceState): DeepPartial<InterfaceState> => {
     const { application, user, transactions } = state
 
     return {

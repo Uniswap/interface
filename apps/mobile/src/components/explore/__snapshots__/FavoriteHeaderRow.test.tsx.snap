@@ -61,9 +61,9 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
         {
           "color": "#FC72FF",
           "fontFamily": "Basel-Medium",
-          "fontSize": 17,
+          "fontSize": 15,
           "fontWeight": "500",
-          "lineHeight": 24,
+          "lineHeight": 20,
         }
       }
       suppressHighlighting={true}

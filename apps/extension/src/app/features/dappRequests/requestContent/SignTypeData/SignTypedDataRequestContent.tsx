@@ -1,9 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
+import { UniswapXSwapRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapRequestContent'
 import { DomainContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/DomainContent'
 import { MaybeExplorerLinkedAddress } from 'src/app/features/dappRequests/requestContent/SignTypeData/MaybeExplorerLinkedAddress'
 import { Permit2RequestContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/Permit2/Permit2RequestContent'
-import { SignTypedDataRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { SignTypedDataRequest, isUniswapXSwapRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { EIP712Message, isEIP712TypedData } from 'src/app/features/dappRequests/types/EIP712Types'
 import { isPermit2 } from 'src/app/features/dappRequests/types/Permit2Types'
 import { Flex, Text } from 'ui/src'
@@ -46,6 +47,10 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
         </Flex>
       </DappRequestContent>
     )
+  }
+
+  if (isUniswapXSwapRequest(dappRequest)) {
+    return <UniswapXSwapRequestContent dappRequest={dappRequest} />
   }
 
   if (isPermit2(parsedTypedData)) {

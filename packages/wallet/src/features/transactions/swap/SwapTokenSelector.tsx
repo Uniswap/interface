@@ -1,25 +1,53 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
+import { Keyboard, LayoutAnimation } from 'react-native'
+import { useSelector } from 'react-redux'
 import { isWeb } from 'ui/src'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import {
   TokenSelector,
   TokenSelectorModal,
   TokenSelectorProps,
   TokenSelectorVariation,
-} from 'wallet/src/components/TokenSelector/TokenSelector'
-import { flowToModalName } from 'wallet/src/components/TokenSelector/flowToModalName'
-import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
-import { SearchContext } from 'wallet/src/features/search/SearchContext'
+} from 'uniswap/src/components/TokenSelector/TokenSelector'
+import { flowToModalName } from 'uniswap/src/components/TokenSelector/flowToModalName'
+import {
+  useCommonTokensOptions,
+  useFilterCallbacks,
+  usePopularTokensOptions,
+  usePortfolioTokenOptions,
+  useTokenSectionsForSearchResults,
+} from 'uniswap/src/components/TokenSelector/hooks'
+import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
+import { SearchContext } from 'uniswap/src/features/search/SearchContext'
+import { TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
+import { currencyAddress } from 'uniswap/src/utils/currencyId'
+import {
+  useAddToSearchHistory,
+  useFavoriteTokensOptions,
+  useTokenSectionsForEmptySearch,
+} from 'wallet/src/components/TokenSelector/hooks'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
+import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 import { SwapFormState, useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
+import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 
 export function SwapTokenSelector(): JSX.Element {
+  const { account } = useTransactionModalContext()
   const swapContext = useSwapFormContext()
   const { updateSwapForm, exactCurrencyField, selectingCurrencyField, output, input } = swapContext
+  const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
+  const activeAccountAddress = account.address
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
+  const valueModifiers = usePortfolioValueModifiers(activeAccountAddress)
+  const { registerSearch } = useAddToSearchHistory()
+  const searchHistory = useSelector(selectSearchHistory)
 
   if (!selectingCurrencyField) {
     throw new Error('TokenSelector rendered without `selectingCurrencyField`')
@@ -86,6 +114,7 @@ export function SwapTokenSelector(): JSX.Element {
 
   const props: TokenSelectorProps = {
     // we need to filter tokens using the chainId of the *other* currency
+    activeAccountAddress,
     chainId: selectingCurrencyField === CurrencyField.INPUT ? output?.chainId : input?.chainId,
     currencyField: selectingCurrencyField,
     flow: TokenSelectorFlow.Swap,
@@ -93,8 +122,24 @@ export function SwapTokenSelector(): JSX.Element {
       selectingCurrencyField === CurrencyField.INPUT
         ? TokenSelectorVariation.BalancesAndPopular
         : TokenSelectorVariation.SuggestedAndFavoritesAndPopular,
+    valueModifiers,
+    searchHistory: searchHistory as TokenSearchResult[],
     onClose: onHideTokenSelector,
+    onDismiss: () => Keyboard.dismiss(),
+    onPressAnimation: () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut),
     onSelectCurrency,
+    useCommonTokensOptionsHook: useCommonTokensOptions,
+    useFavoriteTokensOptionsHook: useFavoriteTokensOptions,
+    usePopularTokensOptionsHook: usePopularTokensOptions,
+    usePortfolioTokenOptionsHook: usePortfolioTokenOptions,
+    useTokenSectionsForEmptySearchHook: useTokenSectionsForEmptySearch,
+    useTokenSectionsForSearchResultsHook: useTokenSectionsForSearchResults,
+    useTokenWarningDismissedHook: useTokenWarningDismissed,
+    useFilterCallbacksHook: useFilterCallbacks,
+    navigateToBuyOrReceiveWithEmptyWalletCallback: navigateToBuyOrReceiveWithEmptyWallet,
+    convertFiatAmountFormattedCallback: convertFiatAmountFormatted,
+    formatNumberOrStringCallback: formatNumberOrString,
+    addToSearchHistoryCallback: registerSearch,
   }
   return isWeb ? <TokenSelector {...props} /> : <TokenSelectorModal {...props} />
 }

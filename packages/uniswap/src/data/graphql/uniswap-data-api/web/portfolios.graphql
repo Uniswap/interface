@@ -4,6 +4,7 @@ fragment QuickTokenBalanceParts on TokenBalance {
   denominatedValue {
     id
     value
+    currency
   }
   token {
     id

@@ -3,13 +3,9 @@ import { ScrollView } from 'ui/src'
 import { useActivityData } from 'wallet/src/features/activity/useActivityData'
 
 export const ActivityTab = memo(function _ActivityTab({ address }: { address: Address }): JSX.Element {
-  const { maybeLoaderComponent, maybeEmptyComponent, renderActivityItem, sectionData } = useActivityData({
+  const { maybeEmptyComponent, renderActivityItem, sectionData } = useActivityData({
     owner: address,
   })
-
-  if (maybeLoaderComponent) {
-    return maybeLoaderComponent
-  }
 
   if (maybeEmptyComponent) {
     return maybeEmptyComponent
@@ -17,7 +13,8 @@ export const ActivityTab = memo(function _ActivityTab({ address }: { address: Ad
 
   return (
     <ScrollView showsVerticalScrollIndicator={false} width="100%">
-      {(sectionData ?? []).map((item) => renderActivityItem({ item }))}
+      {/* `sectionData` will be either an array of transactions or an array of loading skeletons */}
+      {(sectionData ?? []).map((item, index) => renderActivityItem({ item, index }))}
     </ScrollView>
   )
 })

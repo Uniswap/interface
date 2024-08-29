@@ -79,7 +79,7 @@ export const monitoredSagas: Record<string, MonitoredSaga> = {
 
 export const monitoredSagaReducers = getMonitoredSagaReducers(monitoredSagas)
 
-export function* mobileSaga() {
+export function* rootMobileSaga() {
   // wait until redux-persist has finished rehydration
   while (true) {
     if (yield* select((state: { _persist?: PersistState }): boolean | undefined => state._persist?.rehydrated)) {

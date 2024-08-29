@@ -1,37 +1,30 @@
 import { createReduxEnhancer } from '@sentry/react'
-import { TypedUseSelectorHook, useDispatch, useSelector } from 'react-redux'
 import { PreloadedState } from 'redux'
 import { persistReducer, persistStore } from 'redux-persist'
 import { localStorage } from 'redux-persist-webextension-storage'
-import { webRootSaga } from 'src/app/saga'
+import { rootExtensionSaga } from 'src/app/saga'
 import { loggerMiddleware } from 'src/background/utils/loggerMiddleware'
 import { PERSIST_KEY } from 'src/store/constants'
 import { enhancePersistReducer } from 'src/store/enhancePersistReducer'
+import { ExtensionState, extensionPersistedStateList, extensionReducer } from 'src/store/extensionReducer'
 import { EXTENSION_STATE_VERSION, migrations } from 'src/store/migrations'
 import {
   deleteDeprecatedReduxedChromeStorage,
   readDeprecatedReduxedChromeStorage,
 } from 'src/store/reduxedChromeStorageToReduxPersistMigration'
-import { ReducerNames, WebState, webReducer } from 'src/store/webReducer'
-import { SagaGenerator, select } from 'typed-redux-saga'
+import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { createStore } from 'wallet/src/state'
 import { createMigrate } from 'wallet/src/state/createMigrate'
-import { RootReducerNames, sharedPersistedStateWhitelist } from 'wallet/src/state/reducer'
-
-// Only include here things that need to be persisted and shared between different instances of the sidebar.
-// Only one sidebar can write to the storage at a time, so we need to be careful about what we persist.
-// Things that only belong to a single instance of the sidebar (for example, dapp requests) should not be whitelisted.
-const whitelist: Array<ReducerNames | RootReducerNames> = [...sharedPersistedStateWhitelist, 'dappRequests', 'alerts']
 
 const persistConfig = {
   key: PERSIST_KEY,
   storage: localStorage,
-  whitelist,
+  whitelist: extensionPersistedStateList,
   version: EXTENSION_STATE_VERSION,
   migrate: createMigrate(migrations),
 }
 
-const persistedReducer = enhancePersistReducer(persistReducer(persistConfig, webReducer))
+const persistedReducer = enhancePersistReducer(persistReducer(persistConfig, extensionReducer))
 
 const sentryReduxEnhancer = createReduxEnhancer({
   // TODO(EXT-1022): uncomment this once we add an analytics opt-out setting.
@@ -45,12 +38,13 @@ const sentryReduxEnhancer = createReduxEnhancer({
   // },
 })
 
-const setupStore = (preloadedState?: PreloadedState<WebState>): ReturnType<typeof createStore> => {
+const setupStore = (preloadedState?: PreloadedState<ExtensionState>): ReturnType<typeof createStore> => {
   return createStore({
     reducer: persistedReducer,
     preloadedState,
-    additionalSagas: [webRootSaga],
+    additionalSagas: [rootExtensionSaga],
     middlewareBefore: __DEV__ ? [loggerMiddleware] : [],
+    middlewareAfter: [fiatOnRampAggregatorApi.middleware],
     enhancers: [sentryReduxEnhancer],
   })
 }
@@ -58,7 +52,7 @@ const setupStore = (preloadedState?: PreloadedState<WebState>): ReturnType<typeo
 let store: ReturnType<typeof setupStore> | undefined
 let persistor: ReturnType<typeof persistStore> | undefined
 
-export async function initializeReduxStore(): Promise<{
+export async function initializeReduxStore(args?: { readOnly?: boolean }): Promise<{
   store: ReturnType<typeof setupStore>
   persistor: ReturnType<typeof persistStore>
 }> {
@@ -68,6 +62,12 @@ export async function initializeReduxStore(): Promise<{
 
   store = setupStore(oldStore)
   persistor = persistStore(store)
+
+  if (args?.readOnly) {
+    // This means the store will be initialized with the persisted state from disk, but it won't persist any changes.
+    // Only useful for use cases where we don't want to modify the state (for example, a popup window instead of the sidebar).
+    persistor.pause()
+  }
 
   // We wait a few seconds to make sure the store is fully initialized and persisted before deleting the old storage.
   // This is needed because otherwise the background script might think the user is not onboarded if it reads the storage while it's being migrated.
@@ -92,16 +92,4 @@ export function getReduxPersistor(): ReturnType<typeof persistStore> {
   return persistor
 }
 
-// TODO(EXT-1021): consider removing this helper in favor of using `useDispatch` directly.
-export const useAppDispatch: () => AppDispatch = useDispatch
-export const useAppSelector: TypedUseSelectorHook<WebState> = useSelector
-
-// Use in sagas for better typing when selecting from redux state
-export function* appSelect<T>(fn: (state: WebState) => T): SagaGenerator<T> {
-  const state = yield* select(fn)
-  return state
-}
-
-export type AppDispatch = ReturnType<typeof setupStore>['dispatch']
 export type AppStore = ReturnType<typeof setupStore>
-export type AppSelector<T> = (state: WebState) => T

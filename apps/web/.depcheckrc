@@ -67,5 +67,6 @@ ignores: [
     "utils",
     "i18n",
     "tamagui.config",
-    "setupRive"
+    "setupRive",
+    "sideEffects"
   ]

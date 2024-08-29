@@ -2,14 +2,14 @@ import { DEFAULT_INACTIVE_LIST_URLS } from 'constants/lists'
 import { TokenAddressMap, tokensToChainTokenMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
-import { AppState } from 'state/reducer'
+import { InterfaceState } from 'state/webReducer'
 import { logger } from 'utilities/src/logger/logger'
 
 type Mutable<T> = {
   -readonly [P in keyof T]: Mutable<T[P]>
 }
 
-export function useAllLists(): AppState['lists']['byUrl'] {
+export function useAllLists(): InterfaceState['lists']['byUrl'] {
   return useAppSelector((state) => state.lists.byUrl)
 }
 

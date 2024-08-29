@@ -1,17 +1,38 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
+import { Keyboard, LayoutAnimation } from 'react-native'
+import { useSelector } from 'react-redux'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { TokenSelector, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
+import {
+  useCommonTokensOptions,
+  useFilterCallbacks,
+  usePopularTokensOptions,
+  usePortfolioTokenOptions,
+  useTokenSectionsForSearchResults,
+} from 'uniswap/src/components/TokenSelector/hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { SearchContext } from 'uniswap/src/features/search/SearchContext'
+import { TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
 import { NumberType } from 'utilities/src/format/types'
-import { TokenSelector, TokenSelectorVariation } from 'wallet/src/components/TokenSelector/TokenSelector'
+import {
+  useAddToSearchHistory,
+  useFavoriteTokensOptions,
+  useTokenSectionsForEmptySearch,
+} from 'wallet/src/components/TokenSelector/hooks'
 import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { SearchContext } from 'wallet/src/features/search/SearchContext'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
-import { TokenSelectorFlow } from 'wallet/src/features/transactions/transfer/types'
+import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
+import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
+import { TransactionType } from 'wallet/src/features/transactions/types'
+import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TokenSelectorPanelProps {
   currencyInfo: Maybe<CurrencyInfo>
@@ -35,7 +56,14 @@ export function TokenSelectorPanel({
   showTokenSelector,
 }: TokenSelectorPanelProps): JSX.Element {
   const { t } = useTranslation()
-  const { formatCurrencyAmount } = useLocalizationContext()
+  const address = useActiveAccountAddressWithThrow()
+  const valueModifiers = usePortfolioValueModifiers(address)
+  const { formatNumberOrString, convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
+  const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
+  const { registerSearch } = useAddToSearchHistory()
+  const searchHistory = useSelector(selectSearchHistory)
+
+  const activeAccountAddress = useActiveAccountAddressWithThrow()
 
   const showMaxButton = currencyBalance && !currencyBalance.equalTo(0)
   const formattedCurrencyBalance = formatCurrencyAmount({
@@ -47,11 +75,28 @@ export function TokenSelectorPanel({
     return (
       <Flex fill overflow="hidden">
         <TokenSelector
+          activeAccountAddress={activeAccountAddress}
+          addToSearchHistoryCallback={registerSearch}
+          convertFiatAmountFormattedCallback={convertFiatAmountFormatted}
           currencyField={CurrencyField.INPUT}
           flow={TokenSelectorFlow.Transfer}
+          formatNumberOrStringCallback={formatNumberOrString}
           isSurfaceReady={true}
+          navigateToBuyOrReceiveWithEmptyWalletCallback={navigateToBuyOrReceiveWithEmptyWallet}
+          searchHistory={searchHistory as TokenSearchResult[]}
+          useCommonTokensOptionsHook={useCommonTokensOptions}
+          useFavoriteTokensOptionsHook={useFavoriteTokensOptions}
+          useFilterCallbacksHook={useFilterCallbacks}
+          usePopularTokensOptionsHook={usePopularTokensOptions}
+          usePortfolioTokenOptionsHook={usePortfolioTokenOptions}
+          useTokenSectionsForEmptySearchHook={useTokenSectionsForEmptySearch}
+          useTokenSectionsForSearchResultsHook={useTokenSectionsForSearchResults}
+          useTokenWarningDismissedHook={useTokenWarningDismissed}
+          valueModifiers={valueModifiers}
           variation={TokenSelectorVariation.BalancesOnly}
           onClose={onHideTokenSelector}
+          onDismiss={() => Keyboard.dismiss()}
+          onPressAnimation={() => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)}
           onSelectCurrency={onSelectCurrency}
         />
       </Flex>
@@ -83,6 +128,7 @@ export function TokenSelectorPanel({
               currencyAmount={currencyAmount}
               currencyBalance={currencyBalance}
               currencyField={CurrencyField.INPUT}
+              transactionType={TransactionType.Send}
               onSetMax={onSetMax}
             />
           )}

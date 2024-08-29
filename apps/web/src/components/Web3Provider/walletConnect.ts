@@ -10,6 +10,26 @@ if (process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID === undefined) {
 }
 const WALLET_CONNECT_PROJECT_ID = <string>process.env.REACT_APP_WALLET_CONNECT_PROJECT_ID
 
+export const walletTypeToAmplitudeWalletType = (connectionType?: string) => {
+  switch (connectionType) {
+    case 'injected': {
+      return 'Browser Extension'
+    }
+    case 'walletConnect': {
+      return 'Wallet Connect'
+    }
+    case 'coinbaseWallet': {
+      return 'Coinbase Wallet'
+    }
+    case 'uniswapWalletConnect': {
+      return 'Wallet Connect'
+    }
+    default: {
+      return connectionType ?? 'Network'
+    }
+  }
+}
+
 export interface WalletConnectConnector extends Connector {
   type: typeof CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
   getNamespaceChainsIds: () => InterfaceChainId[]

@@ -44,7 +44,6 @@ export enum UnsupportedEthMethods {
   wallet_requestSnaps = 'wallet_requestSnaps',
   wallet_snap = 'wallet_snap',
   wallet_invokeSnap = 'wallet_invokeSnap',
-  web3_clientVersion = 'web3_clientVersion',
   eth_subscribe = 'eth_subscribe',
   eth_unsubscribe = 'eth_unsubscribe',
   eth_blobBaseFee = 'eth_blobBaseFee',
@@ -86,4 +85,5 @@ export enum ProviderDirectMethods {
   eth_getTransactionByHash = 'eth_getTransactionByHash',
   eth_getTransactionReceipt = 'eth_getTransactionReceipt',
   net_version = 'net_version',
+  web3_clientVersion = 'web3_clientVersion',
 }

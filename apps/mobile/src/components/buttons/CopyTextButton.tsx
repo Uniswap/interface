@@ -4,8 +4,8 @@ import { Button, useSporeColors } from 'ui/src'
 import CheckCircle from 'ui/src/assets/icons/check-circle.svg'
 import CopySheets from 'ui/src/assets/icons/copy-sheets.svg'
 import { iconSizes } from 'ui/src/theme'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { useTimeout } from 'utilities/src/time/timing'
-import { setClipboard } from 'wallet/src/utils/clipboard'
 
 interface Props {
   copyText?: string

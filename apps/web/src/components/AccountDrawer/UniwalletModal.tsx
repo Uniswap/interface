@@ -1,41 +1,19 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import MobileAppLogo from 'assets/svg/mobile-app-qr-logo.svg'
-import { DownloadButton } from 'components/AccountDrawer/DownloadButton'
-import Column, { AutoColumn } from 'components/Column'
+import MobileAppLogo from 'assets/svg/uniswap_app_logo.svg'
 import Modal from 'components/Modal'
-import { RowBetween } from 'components/Row'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { CONNECTION } from 'components/Web3Provider/constants'
 import { useConnect } from 'hooks/useConnect'
-import { Trans } from 'i18n'
-import { QRCodeSVG } from 'qrcode.react'
 import { useCallback, useEffect, useState } from 'react'
-import styled, { useTheme } from 'styled-components'
-import { CloseIcon, ThemedText } from 'theme/components'
+import { CloseIcon } from 'theme/components'
+import { Button, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useTranslation } from 'uniswap/src/i18n'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
-
-const UniwalletConnectWrapper = styled(RowBetween)`
-  display: flex;
-  flex-direction: column;
-  padding: 20px 16px 16px;
-`
-const HeaderRow = styled(RowBetween)`
-  display: flex;
-`
-const QRCodeWrapper = styled(RowBetween)`
-  aspect-ratio: 1;
-  border-radius: 12px;
-  background-color: ${({ theme }) => theme.white};
-  margin: 24px 32px 20px;
-  padding: 10px;
-`
-const Divider = styled.div`
-  border-bottom: 1px solid ${({ theme }) => theme.surface3};
-  width: 100%;
-`
+import { openDownloadApp } from 'utils/openDownloadApp'
 
 export default function UniwalletModal() {
+  const { t } = useTranslation()
   const [uri, setUri] = useState<string>()
   const connection = useConnect()
 
@@ -69,64 +47,57 @@ export default function UniwalletModal() {
   useEffect(() => {
     if (open) {
       sendAnalyticsEvent(InterfaceEventName.UNIWALLET_CONNECT_MODAL_OPENED)
+    } else {
+      setUri(undefined)
     }
   }, [open])
 
-  const theme = useTheme()
+  const colors = useSporeColors()
   return (
     <Modal isOpen={open} onDismiss={close}>
-      <UniwalletConnectWrapper>
-        <HeaderRow>
-          <ThemedText.SubHeader>
-            <Trans i18nKey="account.drawer.modal.scan" />
-          </ThemedText.SubHeader>
+      <Flex shrink grow p="$spacing20">
+        <Flex row justifyContent="space-between">
+          <Text variant="subheading1">{t('account.drawer.modal.scan')}</Text>
           <CloseIcon onClick={close} />
-        </HeaderRow>
-        <QRCodeWrapper>
+        </Flex>
+
+        <Flex row my="$spacing24" centered>
           {uri && (
-            <QRCodeSVG
-              value={uri}
-              width="100%"
-              height="100%"
-              level="M"
-              fgColor={theme.darkMode ? theme.surface1 : theme.black}
-              imageSettings={{
-                src: MobileAppLogo,
-                height: 33,
-                width: 33,
-                excavate: false,
-              }}
-            />
+            <QRCodeDisplay
+              hideOutline
+              errorCorrectionLevel="M"
+              color={colors.accent1.val}
+              containerBackgroundColor={colors.surface2.val}
+              displayShadow={false}
+              encodedValue={uri}
+              logoSize={81}
+              safeAreaColor={colors.surface1.val}
+              size={370}
+            >
+              <Flex borderRadius="$rounded32" borderWidth="$spacing8" borderColor="$surface2">
+                <Image src={MobileAppLogo} width={81} height={81} />
+              </Flex>
+            </QRCodeDisplay>
           )}
-        </QRCodeWrapper>
-        <Divider />
-        <InfoSection />
-      </UniwalletConnectWrapper>
+        </Flex>
+        <Separator />
+        <Flex centered row pt="$spacing20" justifyContent="space-between" gap="$spacing20">
+          <Flex shrink>
+            <Text variant="subheading2">{t('account.drawer.modal.dont')}</Text>
+            <Text variant="body3" color="$neutral2">
+              {t('account.drawer.modal.body')}
+            </Text>
+          </Flex>
+
+          <Button
+            size="small"
+            onPress={() => openDownloadApp({ element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON })}
+            height="fit-content"
+          >
+            {t('common.download')}
+          </Button>
+        </Flex>
+      </Flex>
     </Modal>
-  )
-}
-
-const InfoSectionWrapper = styled(RowBetween)`
-  display: flex;
-  flex-direction: row;
-  padding-top: 20px;
-  gap: 20px;
-`
-
-function InfoSection() {
-  return (
-    <InfoSectionWrapper>
-      <AutoColumn gap="4px">
-        <ThemedText.SubHeaderSmall color="neutral1">
-          <Trans i18nKey="account.drawer.modal.dont" />
-        </ThemedText.SubHeaderSmall>
-        <ThemedText.BodySmall color="neutral2">
-          <Trans i18nKey="account.drawer.modal.body" />
-        </ThemedText.BodySmall>
-      </AutoColumn>
-      <Column>
-        <DownloadButton element={InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON} />
-      </Column>
-    </InfoSectionWrapper>
   )
 }

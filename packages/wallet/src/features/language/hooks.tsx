@@ -1,15 +1,15 @@
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { Language, Locale, mapLanguageToLocale } from 'wallet/src/features/language/constants'
 import { selectCurrentLanguage } from 'wallet/src/features/language/slice'
-import { useAppSelector } from 'wallet/src/state'
 
 /**
  * Hook used to get the currently selected language for the app
  * @returns currently selected language enum
  */
 export function useCurrentLanguage(): Language {
-  return useAppSelector(selectCurrentLanguage)
+  return useSelector(selectCurrentLanguage)
 }
 
 export type LanguageInfo = {

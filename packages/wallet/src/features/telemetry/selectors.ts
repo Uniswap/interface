@@ -1,12 +1,12 @@
-import { SharedState } from 'wallet/src/state/reducer'
+import { WalletState } from 'wallet/src/state/walletReducer'
 
-export const selectLastBalancesReport = (state: SharedState): number => state.telemetry.lastBalancesReport
+export const selectLastBalancesReport = (state: WalletState): number => state.telemetry.lastBalancesReport
 
-export const selectLastBalancesReportValue = (state: SharedState): number | undefined =>
+export const selectLastBalancesReportValue = (state: WalletState): number | undefined =>
   state.telemetry.lastBalancesReportValue
 
-export const selectLastHeartbeat = (state: SharedState): number => state.telemetry.lastHeartbeat
+export const selectLastHeartbeat = (state: WalletState): number => state.telemetry.lastHeartbeat
 
-export const selectWalletIsFunded = (state: SharedState): boolean => state.telemetry.walletIsFunded
+export const selectWalletIsFunded = (state: WalletState): boolean => state.telemetry.walletIsFunded
 
-export const selectAllowAnalytics = (state: SharedState): boolean => state.telemetry.allowAnalytics
+export const selectAllowAnalytics = (state: WalletState): boolean => state.telemetry.allowAnalytics

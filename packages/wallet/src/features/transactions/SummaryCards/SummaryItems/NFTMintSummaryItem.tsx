@@ -4,11 +4,9 @@ import { NFTMintTransactionInfo, TransactionDetails, TransactionType } from 'wal
 
 export function NFTMintSummaryItem({
   transaction,
-  layoutElement,
+  index,
 }: SummaryItemProps & {
   transaction: TransactionDetails & { typeInfo: NFTMintTransactionInfo }
 }): JSX.Element {
-  return (
-    <NFTSummaryItem layoutElement={layoutElement} transaction={transaction} transactionType={TransactionType.NFTMint} />
-  )
+  return <NFTSummaryItem index={index} transaction={transaction} transactionType={TransactionType.NFTMint} />
 }

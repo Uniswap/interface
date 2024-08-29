@@ -1,4 +1,3 @@
-import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { EthereumRpcErrorSchema } from 'src/app/features/dappRequests/types/ErrorTypes'
 import {
   EthersTransactionRequestSchema,
@@ -303,11 +302,6 @@ export const DappResponseSchema = z.union([
 export type DappRequest = z.infer<typeof DappRequestSchema>
 export type DappResponse = z.infer<typeof DappResponseSchema>
 
-// Enforces that a request object in state is for an eth send txn request
-export interface DappRequestStoreItemForEthSendTxn extends DappRequestStoreItem {
-  dappRequest: SendTransactionRequest
-}
-
 // VALIDATORS / UTILS
 
 export function isValidDappRequest(message: unknown): message is DappRequest {
@@ -378,6 +372,13 @@ export function isSwapRequest(
   return SwapSendTransactionRequestSchema.safeParse(request).success
 }
 
+// TODO: EXT-1416 - find a more reliable way to detect UniswapX swap requests
+export function isUniswapXSwapRequest(request: SignTypedDataRequest): boolean {
+  const parsedTypedData = JSON.parse(request.typedData)
+
+  return parsedTypedData?.message?.spender === '0x00000011f84b9aa48e5f8aa8b9897600006289be'
+}
+
 export function isSignTypedDataRequest(request: DappRequest): request is SignTypedDataRequest {
   return SignTypedDataRequestSchema.safeParse(request).success
 }
@@ -396,12 +397,6 @@ export function isLPRequest(request: SendTransactionRequest): request is LPSendT
 
 export function isSendTransactionRequest(request: DappRequest): request is SendTransactionRequest {
   return SendTransactionRequestSchema.safeParse(request).success
-}
-
-export function isDappRequestStoreItemForEthSendTxn(
-  request: DappRequestStoreItem
-): request is DappRequestStoreItemForEthSendTxn {
-  return isSendTransactionRequest(request.dappRequest)
 }
 
 export function isGetAccountRequest(request: DappRequest): request is GetAccountRequest {

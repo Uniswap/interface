@@ -15,12 +15,12 @@ import {
   setSmartPoolValue,
 } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
-import { AppState } from 'state/reducer'
+import { InterfaceState } from 'state/webReducer'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 
 export function useModalIsOpen(modal: ApplicationModal): boolean {
-  const openModal = useAppSelector((state: AppState) => state.application.openModal)
+  const openModal = useAppSelector((state: InterfaceState) => state.application.openModal)
   return openModal === modal
 }
 
@@ -49,7 +49,7 @@ async function getMoonpayAvailability(): Promise<boolean> {
 
 export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () => void) {
   const dispatch = useAppDispatch()
-  const { available, availabilityChecked } = useAppSelector((state: AppState) => state.application.fiatOnramp)
+  const { available, availabilityChecked } = useAppSelector((state: InterfaceState) => state.application.fiatOnramp)
   const [error, setError] = useState<string | null>(null)
   const [loading, setLoading] = useState(false)
 
@@ -102,7 +102,7 @@ export function useToggleModal(modal: ApplicationModal): () => void {
 
 export function useCloseModal() {
   const dispatch = useAppDispatch()
-  const currentlyOpenModal = useAppSelector((state: AppState) => state.application.openModal)
+  const currentlyOpenModal = useAppSelector((state: InterfaceState) => state.application.openModal)
   return useCallback(
     (modalToClose?: ApplicationModal) => {
       if (!modalToClose) {
@@ -202,8 +202,8 @@ export function useSelectActiveSmartPool(): (smartPoolValue?: Currency) => void 
 }
 
 // get the list of active popups
-export function useActivePopups(): AppState['application']['popupList'] {
-  const list = useAppSelector((state: AppState) => state.application.popupList)
+export function useActivePopups(): InterfaceState['application']['popupList'] {
+  const list = useAppSelector((state: InterfaceState) => state.application.popupList)
   return useMemo(() => list.filter((item) => item.show), [list])
 }
 
@@ -222,6 +222,6 @@ export function useSuppressPopups(popupTypes: PopupType[]): {
   }
 }
 
-export function useActiveSmartPool(): AppState['application']['smartPool'] {
-  return useAppSelector((state: AppState) => state.application.smartPool)
+export function useActiveSmartPool(): InterfaceState['application']['smartPool'] {
+  return useAppSelector((state: InterfaceState) => state.application.smartPool)
 }

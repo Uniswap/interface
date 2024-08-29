@@ -3,11 +3,11 @@ import Column from 'components/Column'
 import Modal from 'components/Modal'
 import { RowBetween } from 'components/Row'
 import { MenuItem, PaddedColumn, Separator } from 'components/SearchModal/styled'
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { useCallback } from 'react'
 import { Text } from 'rebass'
-import styled from 'styled-components'
 import { CloseIcon } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 export enum ProposalAction {
   TRANSFER_TOKEN = 'Transfer Token',

@@ -1,21 +1,14 @@
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
 import { Keyboard } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
-import { navigate } from 'src/app/navigation/rootNavigation'
-import { openModal } from 'src/features/modals/modalSlice'
+import { useUnitagClaimHandler } from 'src/features/unitags/useUnitagClaimHandler'
 import { Flex, Image, Text, TouchableArea, TouchableAreaProps, useIsDarkMode, useIsShortMobileDevice } from 'ui/src'
 import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
-import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { selectHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/selectors'
-import { setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
-import { useAppSelector } from 'wallet/src/state'
 
 const IMAGE_ASPECT_RATIO = 0.42
 const IMAGE_SCREEN_WIDTH_PROPORTION = 0.18
@@ -30,11 +23,9 @@ export function UnitagBanner({
   compact?: boolean
   entryPoint: MobileScreens.Home | MobileScreens.Settings
 }): JSX.Element {
-  const dispatch = useAppDispatch()
   const { t } = useTranslation()
   const { fullWidth } = useDeviceDimensions()
   const isDarkMode = useIsDarkMode()
-  const hasCompletedUnitagsIntroModal = useAppSelector(selectHasCompletedUnitagsIntroModal)
   const isShortDevice = useIsShortMobileDevice()
 
   const imageWidth = compact
@@ -43,32 +34,15 @@ export function UnitagBanner({
   const imageHeight = imageWidth / IMAGE_ASPECT_RATIO
   const analyticsEntryPoint = entryPoint === MobileScreens.Home ? 'home' : 'settings'
 
+  const { handleClaim, handleDismiss } = useUnitagClaimHandler({
+    address,
+    entryPoint,
+    analyticsEntryPoint,
+  })
+
   const onPressClaimNow = (): void => {
     Keyboard.dismiss()
-    sendAnalyticsEvent(UnitagEventName.UnitagBannerActionTaken, {
-      action: 'claim',
-      entryPoint: analyticsEntryPoint,
-    })
-
-    if (hasCompletedUnitagsIntroModal) {
-      navigate(MobileScreens.UnitagStack, {
-        screen: UnitagScreens.ClaimUnitag,
-        params: {
-          entryPoint,
-          address,
-        },
-      })
-    } else {
-      dispatch(openModal({ name: ModalName.UnitagsIntro, initialState: { address, entryPoint } }))
-    }
-  }
-
-  const onPressMaybeLater = (): void => {
-    sendAnalyticsEvent(UnitagEventName.UnitagBannerActionTaken, {
-      action: 'dismiss',
-      entryPoint: analyticsEntryPoint,
-    })
-    dispatch(setHasSkippedUnitagPrompt(true))
+    handleClaim()
   }
 
   const baseButtonStyle: TouchableAreaProps = {
@@ -132,7 +106,7 @@ export function UnitagBanner({
               {...baseButtonStyle}
               backgroundColor="$transparent"
               testID={TestID.Cancel}
-              onPress={onPressMaybeLater}
+              onPress={() => handleDismiss()}
             >
               <Text color="$neutral2" variant="buttonLabel4">
                 {t('common.button.later')}

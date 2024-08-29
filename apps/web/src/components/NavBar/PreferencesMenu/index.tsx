@@ -1,4 +1,3 @@
-import { AnimatedSlider } from 'components/AnimatedSlider'
 import { NavDropdown, NavDropdownDefaultWrapper } from 'components/NavBar/NavDropdown/index'
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { CurrencySettings } from 'components/NavBar/PreferencesMenu/Currency'
@@ -6,7 +5,7 @@ import { LanguageSettings } from 'components/NavBar/PreferencesMenu/Language'
 import { PreferenceSettings } from 'components/NavBar/PreferencesMenu/Preferences'
 import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
 import { useCallback, useState } from 'react'
-import { Popover } from 'ui/src'
+import { AnimateTransition, Popover } from 'ui/src'
 import { Global } from 'ui/src/components/icons'
 
 export function getSettingsViewIndex(view: PreferencesView) {
@@ -42,14 +41,14 @@ export function PreferenceMenu() {
       </Popover.Trigger>
       <NavDropdown width={310} isOpen={isOpen}>
         <NavDropdownDefaultWrapper>
-          <AnimatedSlider
+          <AnimateTransition
             currentIndex={getSettingsViewIndex(settingsView)}
-            slideDirection={settingsView === PreferencesView.SETTINGS ? 'forward' : 'backward'}
+            animationType={settingsView === PreferencesView.SETTINGS ? 'forward' : 'backward'}
           >
             <PreferenceSettings setSettingsView={(view: PreferencesView) => setSettingsView(view)} />
             <LanguageSettings onExitMenu={handleExitMenu} />
             <CurrencySettings onExitMenu={handleExitMenu} />
-          </AnimatedSlider>
+          </AnimateTransition>
         </NavDropdownDefaultWrapper>
       </NavDropdown>
     </Popover>

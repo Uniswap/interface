@@ -1,9 +1,11 @@
-Developed by Uniswap Labs, the Uniswap Extension allows you to access and explore onchain apps while maintaining full control of your crypto assets. The Uniswap Extension is the first wallet extension to live in your browser’s sidebar, persisting no matter where you are on the web. So you can explore crypto without obstructing your window or losing your place.
+We are back with some new updates! Here’s the latest:
 
-- Connect to thousands of onchain apps across Ethereum, Base, Arbitrum and many other EVM blockchains
-- Explore tokens directly on Uniswap, one of the most trusted DeFi protocols with over $2 trillion in volume
-- View all of your crypto assets without switching, across Ethereum and other EVM-compatible blockchains
-- Easily create a new wallet or import your existing wallet
-- Safely send and receive crypto tokens with other wallets
+Onboarding Improvements: New unfunded wallets will experience our upgraded homepage, which gives a preview of our token explore page, as well as a card stack of onboarding steps to complete. 
 
-The Uniswap Extension’s source code is audited by the security firm Trail of Bits as an added measure to ensure that your crypto assets are safe.
+Haptic Touch Settings: Users can now toggle their haptic touch preferences on the Settings page. 
+
+Other changes: 
+
+- Improved context menus on Swap Activity Items
+- Increased fiat onramp options for stablecoins on the Polygon network
+- Various bug fixes and performance improvements

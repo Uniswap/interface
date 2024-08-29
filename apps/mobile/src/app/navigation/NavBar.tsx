@@ -11,32 +11,33 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { openModal } from 'src/features/modals/modalSlice'
 import {
   Flex,
   FlexProps,
-  HapticFeedback,
   LinearGradient,
   Text,
   TouchableArea,
   useDeviceInsets,
+  useHapticFeedback,
   useIsDarkMode,
   useSporeColors,
 } from 'ui/src'
 import { Search } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { borderRadii, fonts } from 'ui/src/theme'
+import { borderRadii, fonts, opacify } from 'ui/src/theme'
+import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid, isIOS } from 'utilities/src/platform'
-import { useHighestBalanceNativeCurrencyId } from 'wallet/src/features/dataApi/balances'
+import { setHasUsedExplore } from 'wallet/src/features/behaviorHistory/slice'
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { prepareSwapFormState } from 'wallet/src/features/transactions/swap/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { opacify } from 'wallet/src/utils/colors'
 
 export const NAV_BAR_HEIGHT_XS = 52
 export const NAV_BAR_HEIGHT_SM = 72
@@ -60,7 +61,7 @@ export function NavBar(): JSX.Element {
     <>
       <Flex opacity={isDarkMode ? 1 : 0.3} overflow="hidden" pointerEvents="none" style={StyleSheet.absoluteFill}>
         <LinearGradient
-          colors={[opacify(50, colors.sporeBlack.val), opacify(0, colors.sporeBlack.val)]}
+          colors={[opacify(50, colors.black.val), opacify(0, colors.black.val)]}
           end={[0, 0.8]}
           height="100%"
           start={[0, 1]}
@@ -106,12 +107,13 @@ type SwapTabBarButtonProps = {
 
 const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonProps) {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
+  const { hapticFeedback } = useHapticFeedback()
 
   const isDarkMode = useIsDarkMode()
-
   const activeAccountAddress = useActiveAccountAddressWithThrow()
-  const inputCurrencyId = useHighestBalanceNativeCurrencyId(activeAccountAddress)
+  const valueModifiers = usePortfolioValueModifiers(activeAccountAddress) ?? []
+  const inputCurrencyId = useHighestBalanceNativeCurrencyId(activeAccountAddress, valueModifiers)
 
   const onPress = useCallback(async () => {
     dispatch(
@@ -121,8 +123,8 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
       }),
     )
 
-    await HapticFeedback.impact()
-  }, [dispatch, inputCurrencyId])
+    await hapticFeedback.impact()
+  }, [dispatch, inputCurrencyId, hapticFeedback])
 
   const scale = useSharedValue(1)
   const animatedStyle = useAnimatedStyle(() => ({ transform: [{ scale: scale.value }] }), [scale])
@@ -164,7 +166,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
           >
             <LinearGradient colors={['#F160F9', '#E14EE9']} end={[0, 1]} height="100%" start={[0, 0]} width="100%" />
           </Flex>
-          <Text allowFontScaling={false} color="$sporeWhite" numberOfLines={1} variant="buttonLabel2">
+          <Text allowFontScaling={false} color="$white" numberOfLines={1} variant="buttonLabel2">
             {t('common.button.swap')}
           </Text>
         </AnimatedFlex>
@@ -182,13 +184,14 @@ type ExploreTabBarButtonProps = {
 }
 
 function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
   const { t } = useTranslation()
 
   const onPress = (): void => {
     dispatch(openModal({ name: ModalName.Explore }))
+    dispatch(setHasUsedExplore(true))
   }
   const scale = useSharedValue(1)
 

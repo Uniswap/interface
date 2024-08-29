@@ -1,16 +1,16 @@
 import Row from 'components/Row'
-import { Trans, t } from 'i18n'
+import styled from 'lib/styled-components'
 import { Body1, Box, H2 } from 'pages/Landing/components/Generics'
 import { StatCard } from 'pages/Landing/components/StatCard'
 import { useInView } from 'pages/Landing/sections/useInView'
 import { useMemo } from 'react'
 import { ArrowRightCircle } from 'react-feather'
-import styled from 'styled-components'
 import { ClickableStyle, ExternalLink } from 'theme/components'
 import {
   ProtocolVersion,
   useDailyProtocolVolumeQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Trans, t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Container = styled.div`
@@ -145,7 +145,7 @@ function LearnMore() {
   return (
     <LearnMoreButton href="/explore">
       <Row gap="sm" align="center">
-        <Trans i18nKey="common.learnMore.link" />
+        <Trans i18nKey="common.button.learn" />
         <LearnMoreArrow />
       </Row>
     </LearnMoreButton>
@@ -221,7 +221,7 @@ function Cards({ inView }: { inView: boolean }) {
       <LeftTop>
         <StatCard
           title={t('stats.allTimeVolume')}
-          value={formatNumber({ input: 2 * 10 ** 12, type: NumberType.FiatTokenStats })}
+          value={formatNumber({ input: 2.2 * 10 ** 12, type: NumberType.FiatTokenStats })}
           delay={0}
           inView={inView}
         />

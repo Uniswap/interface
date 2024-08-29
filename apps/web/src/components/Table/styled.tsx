@@ -9,13 +9,13 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { OrderDirection, getTokenDetailsURL, supportedChainIdFromGQLChain, unwrapToken } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useActiveLocale } from 'hooks/useActiveLocale'
-import { Trans } from 'i18n'
+import styled, { css } from 'lib/styled-components'
 import { ArrowDown, CornerLeftUp, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
-import styled, { css } from 'styled-components'
 import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const SHOW_RETURN_TO_TOP_OFFSET = 500
@@ -34,6 +34,11 @@ const StickyStyles = css<{ $top: number }>`
   position: -webkit-sticky;
   top: ${({ $top }) => $top}px;
   z-index: ${Z_INDEX.under_dropdown};
+
+  :before {
+    content: '';
+    height: 12px;
+  }
 `
 export const TableHead = styled.div<{ $isSticky?: boolean; $top: number }>`
   width: 100%;
@@ -240,6 +245,7 @@ const TokenSymbolText = styled(ThemedText.BodyPrimary)`
  * @returns JSX.Element showing the Token's Logo, Chain logo if non-mainnet, and Token Symbol
  */
 export const TokenLinkCell = ({ token }: { token: Token }) => {
+  const { t } = useTranslation()
   const chainId = supportedChainIdFromGQLChain(token.chain) ?? UniverseChainId.Mainnet
   const unwrappedToken = unwrapToken(chainId, token)
   const isNative = unwrappedToken.address === NATIVE_CHAIN_ID
@@ -258,7 +264,7 @@ export const TokenLinkCell = ({ token }: { token: Token }) => {
           images={isNative ? undefined : [token.project?.logo?.url]}
           currencies={isNative ? [nativeCurrency] : undefined}
         />
-        <TokenSymbolText>{unwrappedToken?.symbol ?? <Trans i18nKey="common.UNKNOWN" />}</TokenSymbolText>
+        <TokenSymbolText>{unwrappedToken?.symbol ?? t('common.unknown').toUpperCase()}</TokenSymbolText>
       </Row>
     </StyledInternalLink>
   )

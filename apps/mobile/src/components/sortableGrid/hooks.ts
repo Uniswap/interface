@@ -2,7 +2,7 @@ import { useCallback, useRef } from 'react'
 import { SharedValue, runOnJS, useAnimatedReaction, useSharedValue, withTiming } from 'react-native-reanimated'
 import { useAutoScrollContext, useDragContext, useLayoutContext } from 'src/components/sortableGrid/contexts'
 import { getColumnIndex, getRowIndex } from 'src/components/sortableGrid/utils'
-import { HapticFeedback, ImpactFeedbackStyle } from 'ui/src'
+import { ImpactFeedbackStyle, useHapticFeedback } from 'ui/src'
 
 export function useStableCallback<
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -60,14 +60,15 @@ export function useItemPosition(key: string): {
   return { x, y }
 }
 
-export function useItemOrderUpdater(numColumns: number, hapticFeedback: boolean): void {
+export function useItemOrderUpdater(numColumns: number, triggerHapticFeedback: boolean): void {
   const { keyToIndex, indexToKey, rowOffsets, targetContainerHeight, itemDimensions } = useLayoutContext()
   const { activeItemKey, activeItemPosition } = useDragContext()
   const { scrollOffsetDiff } = useAutoScrollContext()
+  const { hapticFeedback } = useHapticFeedback()
 
   const vibrate = useCallback(async () => {
-    await HapticFeedback.impact(ImpactFeedbackStyle.Light)
-  }, [])
+    await hapticFeedback.impact(ImpactFeedbackStyle.Light)
+  }, [hapticFeedback])
 
   useAnimatedReaction(
     () => ({
@@ -145,10 +146,10 @@ export function useItemOrderUpdater(numColumns: number, hapticFeedback: boolean)
         ]
       }
 
-      if (hapticFeedback) {
+      if (triggerHapticFeedback) {
         runOnJS(vibrate)()
       }
     },
-    [hapticFeedback],
+    [triggerHapticFeedback],
   )
 }

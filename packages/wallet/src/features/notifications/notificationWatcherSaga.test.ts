@@ -1,8 +1,8 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { expectSaga } from 'redux-saga-test-plan'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { AssetType } from 'wallet/src/entities/assets'
 import { pushTransactionNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -23,13 +23,12 @@ const finalizedTxAction = finalizedTransactionAction()
 
 const txId = 'uuid-4'
 
-export const createFinalizedTxAction = (
-  typeInfo: TransactionTypeInfo
-): ReturnType<typeof finalizeTransaction> => ({
+export const createFinalizedTxAction = (typeInfo: TransactionTypeInfo): ReturnType<typeof finalizeTransaction> => ({
   payload: {
     ...finalizedTxAction.payload,
     typeInfo,
     id: txId,
+    addedTime: Date.now(),
   },
   type: 'transactions/finalizeTransaction',
 })
@@ -65,7 +64,7 @@ describe(pushTransactionNotification, () => {
           tokenAddress: approveTypeInfo.tokenAddress,
           spender: approveTypeInfo.spender,
           txId,
-        })
+        }),
       )
       .silentRun()
   })
@@ -120,7 +119,7 @@ describe(pushTransactionNotification, () => {
           outputCurrencyAmountRaw: swapTypeInfo.outputCurrencyAmountRaw,
           tradeType: swapTypeInfo.tradeType,
           txId,
-        })
+        }),
       )
       .silentRun()
   })
@@ -149,7 +148,7 @@ describe(pushTransactionNotification, () => {
           currencyAmountRaw: '1000',
           recipient: sendCurrencyTypeInfo.recipient,
           txId,
-        })
+        }),
       )
       .silentRun()
   })
@@ -178,7 +177,7 @@ describe(pushTransactionNotification, () => {
           tokenId: '420',
           recipient: sendNftTypeInfo.recipient,
           txId,
-        })
+        }),
       )
       .silentRun()
   })
@@ -207,7 +206,7 @@ describe(pushTransactionNotification, () => {
           currencyAmountRaw: '1000',
           sender: receiveCurrencyTypeInfo.sender,
           txId,
-        })
+        }),
       )
       .silentRun()
   })
@@ -236,7 +235,7 @@ describe(pushTransactionNotification, () => {
           tokenId: '420',
           sender: receiveNftTypeInfo.sender,
           txId,
-        })
+        }),
       )
       .silentRun()
   })
@@ -259,7 +258,7 @@ describe(pushTransactionNotification, () => {
           txType: TransactionType.Unknown,
           tokenAddress: unknownTxTypeInfo.tokenAddress,
           txId,
-        })
+        }),
       )
       .silentRun()
   })

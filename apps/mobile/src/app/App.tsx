@@ -1,4 +1,5 @@
 import { ApolloProvider } from '@apollo/client'
+import { DatadogProvider, DatadogProviderConfiguration, DdRum, SdkVerbosity } from '@datadog/mobile-react-native'
 import { BottomSheetModalProvider } from '@gorhom/bottom-sheet'
 import * as Sentry from '@sentry/react-native'
 import { PerformanceProfiler, RenderPassReport } from '@shopify/react-native-performance'
@@ -12,9 +13,9 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { MMKV } from 'react-native-mmkv'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { enableFreeze } from 'react-native-screens'
+import { useDispatch, useSelector } from 'react-redux'
 import { PersistGate } from 'redux-persist/integration/react'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
 import { AppModals } from 'src/app/modals/AppModals'
 import { NavigationContainer } from 'src/app/navigation/NavigationContainer'
 import { useIsPartOfNavigationTree } from 'src/app/navigation/hooks'
@@ -27,6 +28,8 @@ import { LockScreenContextProvider } from 'src/features/authentication/lockScree
 import { BiometricContextProvider } from 'src/features/biometrics/context'
 import { NotificationToastWrapper } from 'src/features/notifications/NotificationToastWrapper'
 import { initOneSignal } from 'src/features/notifications/Onesignal'
+import { AIAssistantScreen } from 'src/features/openai/AIAssistantScreen'
+import { OpenAIContextProvider } from 'src/features/openai/OpenAIContext'
 import { shouldLogScreen } from 'src/features/telemetry/directLogScreens'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import {
@@ -37,12 +40,13 @@ import {
 } from 'src/features/widgets/widgets'
 import { useAppStateTrigger } from 'src/utils/useAppStateTrigger'
 import { getSentryEnvironment, getSentryTracesSamplingRate, getStatsigEnvironmentTier } from 'src/utils/version'
-import { flexStyles, useIsDarkMode } from 'ui/src'
+import { flexStyles, useHapticFeedback, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
-import { WALLET_FEATURE_FLAG_NAMES } from 'uniswap/src/features/gating/flags'
+import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
 import { Statsig, StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -51,7 +55,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
 import { CurrencyId } from 'uniswap/src/types/currency'
-import { isDetoxBuild } from 'utilities/src/environment/constants'
+import { isDetoxBuild, isJestRun } from 'utilities/src/environment/constants'
 import { registerConsoleOverrides } from 'utilities/src/logger/console'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -62,6 +66,7 @@ import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
+import { selectHapticsEnabled } from 'wallet/src/features/appearance/slice'
 import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
@@ -106,6 +111,20 @@ if (!__DEV__ && !isDetoxBuild) {
     beforeSend,
   })
 }
+
+// Datadog
+const datadogConfig = new DatadogProviderConfiguration(
+  config.datadogClientToken,
+  getSentryEnvironment(),
+  config.datadogProjectId,
+  !__DEV__, // trackInteractions
+  !__DEV__, // trackResources
+  !__DEV__, // trackErrors
+)
+datadogConfig.site = 'US1'
+datadogConfig.longTaskThresholdMs = 100
+datadogConfig.nativeCrashReportEnabled = true
+datadogConfig.verbosity = SdkVerbosity.INFO
 
 // Log boxes on simulators can block detox tap event when they cover buttons placed at
 // the bottom of the screen and cause tests to fail.
@@ -155,33 +174,54 @@ function App(): JSX.Element | null {
   }
 
   return (
-    <Trace>
-      <StrictMode>
-        <I18nextProvider i18n={i18n}>
-          <StatsigProvider {...statSigOptions}>
-            <SentryTags>
-              <SafeAreaProvider>
-                <SharedProvider reduxStore={store}>
-                  <AnalyticsNavigationContextProvider
-                    shouldLogScreen={shouldLogScreen}
-                    useIsPartOfNavigationTree={useIsPartOfNavigationTree}
-                  >
-                    <AppOuter />
-                  </AnalyticsNavigationContextProvider>
-                </SharedProvider>
-              </SafeAreaProvider>
-            </SentryTags>
-          </StatsigProvider>
-        </I18nextProvider>
-      </StrictMode>
-    </Trace>
+    <StatsigProvider {...statSigOptions}>
+      <DatadogProviderWrapper>
+        <Trace>
+          <StrictMode>
+            <I18nextProvider i18n={i18n}>
+              <SentryTags>
+                <SafeAreaProvider>
+                  <SharedProvider reduxStore={store}>
+                    <AnalyticsNavigationContextProvider
+                      shouldLogScreen={shouldLogScreen}
+                      useIsPartOfNavigationTree={useIsPartOfNavigationTree}
+                    >
+                      <AppOuter />
+                    </AnalyticsNavigationContextProvider>
+                  </SharedProvider>
+                </SafeAreaProvider>
+              </SentryTags>
+            </I18nextProvider>
+          </StrictMode>
+        </Trace>
+      </DatadogProviderWrapper>
+    </StatsigProvider>
   )
+}
+
+function DatadogProviderWrapper({ children }: PropsWithChildren): JSX.Element {
+  const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
+
+  if (isDetoxBuild || isJestRun || !datadogEnabled) {
+    return <>{children}</>
+  }
+  return <DatadogProvider configuration={datadogConfig}>{children}</DatadogProvider>
 }
 
 function SentryTags({ children }: PropsWithChildren): JSX.Element {
   useEffect(() => {
+    const isDatadogEnabled = Statsig.checkGateWithExposureLoggingDisabled(getFeatureFlagName(FeatureFlags.Datadog))
+
     for (const [_, flagKey] of WALLET_FEATURE_FLAG_NAMES.entries()) {
       Sentry.setTag(`featureFlag.${flagKey}`, Statsig.checkGateWithExposureLoggingDisabled(flagKey))
+      if (isDatadogEnabled) {
+        DdRum.addFeatureFlagEvaluation(
+          // Datadog has a limited set of accepted symbols in feature flags
+          // https://docs.datadoghq.com/real_user_monitoring/guide/setup-feature-flag-data-collection/?tab=reactnative#feature-flag-naming
+          flagKey.replaceAll('-', '_'),
+          Statsig.checkGateWithExposureLoggingDisabled(flagKey),
+        ).catch(() => undefined)
+      }
     }
 
     for (const experiment of Object.values(Experiments)) {
@@ -189,6 +229,14 @@ function SentryTags({ children }: PropsWithChildren): JSX.Element {
         `experiment.${experiment}`,
         Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName(),
       )
+      if (isDatadogEnabled) {
+        DdRum.addFeatureFlagEvaluation(
+          // Datadog has a limited set of accepted symbols in feature flags
+          // https://docs.datadoghq.com/real_user_monitoring/guide/setup-feature-flag-data-collection/?tab=reactnative#feature-flag-naming
+          `experiment_${experiment.replaceAll('-', '_')}`,
+          Statsig.getExperimentWithExposureLoggingDisabled(experiment).getGroupName(),
+        ).catch(() => undefined)
+      }
     }
   }, [])
 
@@ -199,7 +247,7 @@ const MAX_CACHE_SIZE_IN_BYTES = 1024 * 1024 * 25 // 25 MB
 
 // Ensures redux state is available inside usePersistedApolloClient for the custom endpoint
 function AppOuter(): JSX.Element | null {
-  const customEndpoint = useAppSelector(selectCustomEndpoint)
+  const customEndpoint = useSelector(selectCustomEndpoint)
   const client = usePersistedApolloClient({
     storageWrapper: new MMKVWrapper(new MMKV()),
     maxCacheSizeInBytes: MAX_CACHE_SIZE_IN_BYTES,
@@ -232,13 +280,15 @@ function AppOuter(): JSX.Element | null {
                           }}
                         >
                           <MobileWalletNavigationProvider>
-                            <BottomSheetModalProvider>
-                              <AppModals />
-                              <PerformanceProfiler onReportPrepared={onReportPrepared}>
-                                <AppInner />
-                              </PerformanceProfiler>
-                            </BottomSheetModalProvider>
-                            <NotificationToastWrapper />
+                            <OpenAIContextProvider>
+                              <BottomSheetModalProvider>
+                                <AppModals />
+                                <PerformanceProfiler onReportPrepared={onReportPrepared}>
+                                  <AppInner />
+                                </PerformanceProfiler>
+                              </BottomSheetModalProvider>
+                              <NotificationToastWrapper />
+                            </OpenAIContextProvider>
                           </MobileWalletNavigationProvider>
                         </NavigationContainer>
                       </Sentry.TouchEventBoundary>
@@ -255,11 +305,17 @@ function AppOuter(): JSX.Element | null {
 }
 
 function AppInner(): JSX.Element {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const isDarkMode = useIsDarkMode()
   const themeSetting = useCurrentAppearanceSetting()
-  const allowAnalytics = useAppSelector(selectAllowAnalytics)
+  const allowAnalytics = useSelector(selectAllowAnalytics)
+  const hapticsUserEnabled = useSelector(selectHapticsEnabled)
+  const { setHapticsEnabled } = useHapticFeedback()
 
+  // WALL-4357 Remove when A/A test is done, using it to check statsig migration
+  useFeatureFlag(FeatureFlags.AATest)
+
+  // handles AppsFlyer enable/disable based on the allow analytics toggle
   useEffect(() => {
     if (allowAnalytics) {
       appsFlyer.startSdk()
@@ -275,6 +331,11 @@ function AppInner(): JSX.Element {
     }
   }, [allowAnalytics])
 
+  // Sets haptics for the UI library based on the user redux setting
+  useEffect(() => {
+    setHapticsEnabled(hapticsUserEnabled)
+  }, [hapticsUserEnabled, setHapticsEnabled])
+
   useEffect(() => {
     dispatch(clearNotificationQueue()) // clear all in-app toasts on app start
     dispatch(syncAppWithDeviceLanguage())
@@ -286,8 +347,11 @@ function AppInner(): JSX.Element {
     NativeModules.ThemeModule.setColorScheme(themeSetting)
   }, [themeSetting])
 
+  const openAIAssistantEnabled = useFeatureFlag(FeatureFlags.OpenAIAssistant)
+
   return (
     <>
+      {openAIAssistantEnabled && <AIAssistantScreen />}
       <OfflineBanner />
       <AppStackNavigator />
       <StatusBar translucent backgroundColor="transparent" barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
@@ -296,7 +360,7 @@ function AppInner(): JSX.Element {
 }
 
 function DataUpdaters(): JSX.Element {
-  const favoriteTokens: CurrencyId[] = useAppSelector(selectFavoriteTokens)
+  const favoriteTokens: CurrencyId[] = useSelector(selectFavoriteTokens)
   const accountsMap: Record<string, Account> = useAccounts()
   const { locale } = useCurrentLanguageInfo()
   const { code } = useAppFiatCurrencyInfo()

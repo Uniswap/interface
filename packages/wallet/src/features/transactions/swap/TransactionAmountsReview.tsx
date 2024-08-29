@@ -4,11 +4,15 @@ import { ArrowDown, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
+import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
 import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { WrapType } from 'wallet/src/features/transactions/types'
 
 export function TransactionAmountsReview({
   acceptedDerivedSwapInfo,
@@ -21,55 +25,56 @@ export function TransactionAmountsReview({
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const { convertFiatAmountFormatted, formatCurrencyAmount, formatNumberOrString } = useLocalizationContext()
+  const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
+  const { exactCurrencyField, trade, wrapType, currencyAmounts } = acceptedDerivedSwapInfo
 
-  const { currencies, currencyAmounts, currencyAmountsUSDValue, exactAmountToken, exactCurrencyField } =
-    acceptedDerivedSwapInfo
+  const isWrap = wrapType !== WrapType.NotApplicable
 
-  const currencyInInfo = currencies[CurrencyField.INPUT]
-  const currencyOutInfo = currencies[CurrencyField.OUTPUT]
+  // For wraps, we need to detect if WETH is input or output, because we have logic in `useDerivedSwapInfo` that
+  // sets both currencAmounts to native currency, which would result in native ETH as both tokens for this UI.
+  const wrapInputCurrencyAmount =
+    wrapType === WrapType.Wrap ? currencyAmounts[CurrencyField.INPUT] : currencyAmounts[CurrencyField.INPUT]?.wrapped
+  const wrapOutputCurrencyAmount =
+    wrapType === WrapType.Wrap ? currencyAmounts[CurrencyField.OUTPUT]?.wrapped : currencyAmounts[CurrencyField.OUTPUT]
 
-  const usdAmountIn =
-    exactCurrencyField === CurrencyField.INPUT
-      ? currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
-      : acceptedDerivedSwapInfo?.currencyAmountsUSDValue[CurrencyField.INPUT]?.toExact()
+  // Token amounts
+  // On review screen, always show values directly from trade object, to match exactly what is submitted on chain
+  // For wraps, we have no trade object so use values from form state
+  const inputCurrencyAmount = isWrap ? wrapInputCurrencyAmount : trade.trade?.inputAmount
+  const outputCurrencyAmount = isWrap ? wrapOutputCurrencyAmount : trade.trade?.outputAmount
 
-  const usdAmountOut =
-    exactCurrencyField === CurrencyField.OUTPUT
-      ? currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
-      : acceptedDerivedSwapInfo?.currencyAmountsUSDValue[CurrencyField.OUTPUT]?.toExact()
+  // This should never happen. It's just to keep TS happy.
+  if (!inputCurrencyAmount || !outputCurrencyAmount) {
+    throw new Error('Missing required `currencyAmount` to render `TransactionAmountsReview`')
+  }
 
-  const formattedFiatAmountIn = convertFiatAmountFormatted(usdAmountIn, NumberType.FiatTokenQuantity)
-  const formattedFiatAmountOut = convertFiatAmountFormatted(usdAmountOut, NumberType.FiatTokenQuantity)
-
-  const derivedCurrencyField = exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
-
-  const derivedAmount = formatCurrencyAmount({
-    value: acceptedDerivedSwapInfo?.currencyAmounts[derivedCurrencyField],
+  const formattedTokenAmountIn = formatCurrencyAmount({
+    value: inputCurrencyAmount,
+    type: NumberType.TokenTx,
+  })
+  const formattedTokenAmountOut = formatCurrencyAmount({
+    value: outputCurrencyAmount,
     type: NumberType.TokenTx,
   })
 
-  const formattedExactAmountToken = formatNumberOrString({
-    value: exactAmountToken,
-    type: NumberType.TokenTx,
-  })
-
-  const [formattedTokenAmountIn, formattedTokenAmountOut] =
-    exactCurrencyField === CurrencyField.INPUT
-      ? [formattedExactAmountToken, derivedAmount]
-      : [derivedAmount, formattedExactAmountToken]
+  // USD amount
+  const usdAmountIn = useUSDCValue(inputCurrencyAmount)
+  const usdAmountOut = useUSDCValue(outputCurrencyAmount)
+  const formattedFiatAmountIn = convertFiatAmountFormatted(usdAmountIn?.toExact(), NumberType.FiatTokenQuantity)
+  const formattedFiatAmountOut = convertFiatAmountFormatted(usdAmountOut?.toExact(), NumberType.FiatTokenQuantity)
 
   const shouldDimInput = newTradeRequiresAcceptance && exactCurrencyField === CurrencyField.OUTPUT
   const shouldDimOutput = newTradeRequiresAcceptance && exactCurrencyField === CurrencyField.INPUT
 
-  if (
-    !currencyInInfo ||
-    !currencyOutInfo ||
-    !currencyAmounts[CurrencyField.INPUT] ||
-    !currencyAmounts[CurrencyField.OUTPUT] ||
-    !acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.INPUT] ||
-    !acceptedDerivedSwapInfo.currencyAmounts[CurrencyField.OUTPUT]
-  ) {
+  // Rebuild currency infos directly from trade object to ensure it matches what is submitted on chain
+  const currencyInInfo = useCurrencyInfo(
+    buildCurrencyId(inputCurrencyAmount.currency.chainId, currencyAddress(inputCurrencyAmount.currency)),
+  )
+  const currencyOutInfo = useCurrencyInfo(
+    buildCurrencyId(outputCurrencyAmount.currency.chainId, currencyAddress(outputCurrencyAmount.currency)),
+  )
+
+  if (!currencyInInfo || !currencyOutInfo) {
     // This should never happen. It's just to keep TS happy.
     throw new Error('Missing required props in `derivedSwapInfo` to render `TransactionAmountsReview` screen.')
   }

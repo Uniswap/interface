@@ -1,15 +1,15 @@
-import Column from 'components/Column'
 import { MenuItem, MenuSection, useMenuContent } from 'components/NavBar/CompanyMenu/Content'
 import { DownloadApp } from 'components/NavBar/CompanyMenu/DownloadAppCTA'
 import { NavDropdown } from 'components/NavBar/NavDropdown'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { useTabsContent } from 'components/NavBar/Tabs/TabsContent'
-import { t } from 'i18next'
+import styled, { css } from 'lib/styled-components'
 import { Socials } from 'pages/Landing/sections/Footer'
 import { useMemo } from 'react'
 import { Link } from 'react-router-dom'
-import styled, { css } from 'styled-components'
 import { ExternalLink, Separator, ThemedText } from 'theme/components'
+import { Flex } from 'ui/src'
+import { t } from 'uniswap/src/i18n'
 
 const Container = styled.div`
   width: 295px;
@@ -20,39 +20,40 @@ const Container = styled.div`
   height: unset;
   border-radius: 12px;
 `
-const LinkStyles = css`
+const LinkStyles = css<{ $hoverColor?: string }>`
   font-size: 16px;
   text-decoration: none;
   color: ${({ theme }) => theme.neutral2};
+  transition: color ${({ theme }) => theme.transition.duration.fast};
   padding: 4px 0;
   &:hover {
-    color: ${({ theme }) => theme.accent1};
+    color: ${({ theme, $hoverColor }) => $hoverColor || theme.accent1};
     opacity: 1;
   }
 `
-const StyledInternalLink = styled(Link)`
+const StyledInternalLink = styled(Link)<{ $hoverColor?: string }>`
   ${LinkStyles}
   padding: 0;
 `
-const StyledExternalLink = styled(ExternalLink)`
+const StyledExternalLink = styled(ExternalLink)<{ $hoverColor?: string }>`
   ${LinkStyles}
   padding: 0;
 `
 
-export function MenuLink({ label, href, internal, closeMenu }: MenuItem) {
+export function MenuLink({ label, href, internal, $hoverColor, closeMenu }: MenuItem & { $hoverColor?: string }) {
   return internal ? (
-    <StyledInternalLink to={href} onClick={closeMenu}>
+    <StyledInternalLink to={href} onClick={closeMenu} $hoverColor={$hoverColor}>
       {label}
     </StyledInternalLink>
   ) : (
-    <StyledExternalLink href={href} onClick={closeMenu}>
+    <StyledExternalLink href={href} onClick={closeMenu} $hoverColor={$hoverColor}>
       {label}
     </StyledExternalLink>
   )
 }
 function Section({ title, items, closeMenu }: MenuSection) {
   return (
-    <Column gap="8px">
+    <Flex gap="$spacing8">
       <ThemedText.SubHeader>{title}</ThemedText.SubHeader>
       {items.map((item, index) => (
         <MenuLink
@@ -64,7 +65,7 @@ function Section({ title, items, closeMenu }: MenuSection) {
           closeMenu={closeMenu}
         />
       ))}
-    </Column>
+    </Flex>
   )
 }
 export function MenuDropdown({ close }: { close?: () => void }) {
@@ -85,9 +86,9 @@ export function MenuDropdown({ close }: { close?: () => void }) {
   const shouldDisplayAppTab = false
 
   return (
-    <NavDropdown isOpen={false}>
-      <Container data-testid="nav-more-menu">
-        <Column gap="20px">
+    <NavDropdown isOpen={false} dataTestId="nav-company-dropdown">
+      <Container>
+        <Flex gap="$spacing20">
           {!areTabsVisible && <Section title={t('common.app')} items={tabsMenuItems} closeMenu={close} />}
           {menuContent.map((sectionContent, index) => (
             <Section
@@ -100,7 +101,7 @@ export function MenuDropdown({ close }: { close?: () => void }) {
           <Separator />
           {shouldDisplayAppTab && <DownloadApp onClick={close} />}
           <Socials iconSize="25px" />
-        </Column>
+        </Flex>
       </Container>
     </NavDropdown>
   )

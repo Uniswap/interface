@@ -26,21 +26,18 @@ import { ViewMnemonic } from 'src/app/features/onboarding/create/ViewMnemonic'
 import { ImportMnemonic } from 'src/app/features/onboarding/import/ImportMnemonic'
 import { SelectWallets } from 'src/app/features/onboarding/import/SelectWallets'
 import { IntroScreen } from 'src/app/features/onboarding/intro/IntroScreen'
-import { IntroScreenBetaWaitlist } from 'src/app/features/onboarding/intro/IntroScreenBetaWaitlist'
 import { UnsupportedBrowserScreen } from 'src/app/features/onboarding/intro/UnsupportedBrowserScreen'
 import { ResetComplete } from 'src/app/features/onboarding/reset/ResetComplete'
 import { OTPInput } from 'src/app/features/onboarding/scan/OTPInput'
 import { ScanToOnboard } from 'src/app/features/onboarding/scan/ScanToOnboard'
 import { ScantasticContextProvider } from 'src/app/features/onboarding/scan/ScantasticContextProvider'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
-import { navigate, setRouter, setRouterState } from 'src/app/navigation/state'
+import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
 import { getReduxPersistor, getReduxStore } from 'src/store/store'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -61,7 +58,7 @@ const unsupportedRoute: RouteObject = {
 const allRoutes = [
   {
     path: '',
-    element: <IntroScreenBehindFeatureFlag />,
+    element: <IntroScreen />,
   },
   {
     path: OnboardingRoutes.UnsupportedBrowser,
@@ -70,34 +67,30 @@ const allRoutes = [
   {
     path: OnboardingRoutes.Create,
     element: (
-      <MaybeRedirectToScantastic>
-        <OnboardingStepsProvider
-          key={OnboardingRoutes.Create}
-          steps={{
-            [CreateOnboardingSteps.Password]: <PasswordCreate />,
-            [CreateOnboardingSteps.ViewMnemonic]: <ViewMnemonic />,
-            [CreateOnboardingSteps.TestMnemonic]: <TestMnemonic />,
-            [CreateOnboardingSteps.Naming]: <NameWallet />,
-            [CreateOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.New} />,
-          }}
-        />
-      </MaybeRedirectToScantastic>
+      <OnboardingStepsProvider
+        key={OnboardingRoutes.Create}
+        steps={{
+          [CreateOnboardingSteps.Password]: <PasswordCreate />,
+          [CreateOnboardingSteps.ViewMnemonic]: <ViewMnemonic />,
+          [CreateOnboardingSteps.TestMnemonic]: <TestMnemonic />,
+          [CreateOnboardingSteps.Naming]: <NameWallet />,
+          [CreateOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.New} />,
+        }}
+      />
     ),
   },
   {
     path: OnboardingRoutes.Import,
     element: (
-      <MaybeRedirectToScantastic>
-        <OnboardingStepsProvider
-          key={OnboardingRoutes.Import}
-          steps={{
-            [ImportOnboardingSteps.Mnemonic]: <ImportMnemonic />,
-            [ImportOnboardingSteps.Password]: <PasswordImport flow={ExtensionOnboardingFlow.Import} />,
-            [ImportOnboardingSteps.Select]: <SelectWallets flow={ExtensionOnboardingFlow.Import} />,
-            [ImportOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.Import} />,
-          }}
-        />
-      </MaybeRedirectToScantastic>
+      <OnboardingStepsProvider
+        key={OnboardingRoutes.Import}
+        steps={{
+          [ImportOnboardingSteps.Mnemonic]: <ImportMnemonic />,
+          [ImportOnboardingSteps.Password]: <PasswordImport flow={ExtensionOnboardingFlow.Import} />,
+          [ImportOnboardingSteps.Select]: <SelectWallets flow={ExtensionOnboardingFlow.Import} />,
+          [ImportOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.Import} />,
+        }}
+      />
     ),
   },
   {
@@ -111,18 +104,16 @@ const allRoutes = [
   {
     path: OnboardingRoutes.Reset,
     element: (
-      <MaybeRedirectToScantastic>
-        <OnboardingStepsProvider
-          key={OnboardingRoutes.Reset}
-          isResetting
-          steps={{
-            [ResetSteps.Mnemonic]: <ImportMnemonic />,
-            [ResetSteps.Password]: <PasswordImport flow={ExtensionOnboardingFlow.Import} />,
-            [ResetSteps.Select]: <SelectWallets flow={ExtensionOnboardingFlow.Import} />,
-            [ResetSteps.Complete]: <ResetComplete />,
-          }}
-        />
-      </MaybeRedirectToScantastic>
+      <OnboardingStepsProvider
+        key={OnboardingRoutes.Reset}
+        isResetting
+        steps={{
+          [ResetSteps.Mnemonic]: <ImportMnemonic />,
+          [ResetSteps.Password]: <PasswordImport flow={ExtensionOnboardingFlow.Import} />,
+          [ResetSteps.Select]: <SelectWallets flow={ExtensionOnboardingFlow.Import} />,
+          [ResetSteps.Complete]: <ResetComplete />,
+        }}
+      />
     ),
   },
 ]
@@ -154,20 +145,6 @@ function ScantasticFlow({ isResetting = false }: { isResetting?: boolean }): JSX
       }}
     />
   )
-}
-
-function IntroScreenBehindFeatureFlag(): JSX.Element {
-  const scantasticOnboardingOnly = useFeatureFlag(FeatureFlags.ScantasticOnboardingOnly)
-  return scantasticOnboardingOnly ? <IntroScreenBetaWaitlist /> : <IntroScreen />
-}
-
-function MaybeRedirectToScantastic({ children }: { children: JSX.Element }): JSX.Element | null {
-  const scantasticOnboardingOnly = useFeatureFlag(FeatureFlags.ScantasticOnboardingOnly)
-  if (scantasticOnboardingOnly) {
-    navigate(`/${TopLevelRoutes.Onboarding}`, { replace: true })
-    return null
-  }
-  return children
 }
 
 /**

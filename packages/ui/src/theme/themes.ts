@@ -148,7 +148,7 @@ const light_primary_Button: BaseTheme = {
   background: colorsLight.accent1,
   backgroundHover: hoverColor(colorsLight.accent1),
   backgroundPress: pressedColor(colorsLight.accent1),
-  color: colorsLight.sporeWhite,
+  color: colorsLight.white,
 }
 
 // theme: dark
@@ -157,7 +157,7 @@ const dark_primary_Button: BaseTheme = {
   background: colorsDark.accent1,
   backgroundHover: hoverColor(colorsDark.accent1),
   backgroundPress: pressedColor(colorsDark.accent1),
-  color: colorsDark.sporeWhite,
+  color: colorsDark.white,
 }
 
 // secondary
@@ -167,7 +167,7 @@ const light_secondary_Button: BaseTheme = {
   background: colorsLight.surface3,
   backgroundHover: hoverColor(colorsLight.surface2),
   backgroundPress: pressedColor(colorsLight.surface2),
-  color: colorsLight.sporeBlack,
+  color: colorsLight.black,
 }
 
 // theme: dark
@@ -176,7 +176,7 @@ const dark_secondary_Button: BaseTheme = {
   background: colorsDark.surface3,
   backgroundHover: hoverColor(colorsDark.surface2),
   backgroundPress: pressedColor(colorsDark.surface2),
-  color: colorsDark.sporeWhite,
+  color: colorsDark.white,
 }
 
 // accentSecondary

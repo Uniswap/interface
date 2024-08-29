@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function HiddenTokensRow({
   padded = false,
@@ -23,7 +24,12 @@ export function HiddenTokensRow({
           {t('tokens.hidden.label', { numHidden })}
         </Text>
         {/* just used for opacity styling, the parent TouchableArea handles event */}
-        <TouchableArea hapticFeedback hapticStyle={ImpactFeedbackStyle.Light} onPress={onPress}>
+        <TouchableArea
+          hapticFeedback
+          hapticStyle={ImpactFeedbackStyle.Light}
+          testID={TestID.ShowHiddenTokens}
+          onPress={onPress}
+        >
           <Flex
             row
             alignItems="center"

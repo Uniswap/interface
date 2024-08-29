@@ -1,3 +1,4 @@
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
@@ -13,7 +14,7 @@ import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvid
 import { useAccount } from 'hooks/useAccount'
 import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { useUSDPrice } from 'hooks/useUSDPrice'
-import { Trans } from 'i18n'
+import styled, { css } from 'lib/styled-components'
 import {
   NumericalInputMimic,
   NumericalInputSymbolContainer,
@@ -24,11 +25,12 @@ import {
 import { useCallback, useMemo, useState } from 'react'
 import { useSendContext } from 'state/send/SendContext'
 import { SendInputError } from 'state/send/hooks'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
-import styled, { css } from 'styled-components'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import useResizeObserver from 'use-resize-observer'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -321,10 +323,12 @@ export default function SendCurrencyInputForm({
           />
           <NumericalInputMimic ref={hiddenObserver.ref}>{displayValue}</NumericalInputMimic>
         </NumericalInputWrapper>
-        <AlternateCurrencyDisplay
-          disabled={fiatCurrencyEqualsTransferCurrency}
-          onToggle={toggleFiatInputAmountEnabled}
-        />
+        <Trace logPress element={InterfaceElementName.SEND_FIAT_TOGGLE}>
+          <AlternateCurrencyDisplay
+            disabled={fiatCurrencyEqualsTransferCurrency}
+            onToggle={toggleFiatInputAmountEnabled}
+          />
+        </Trace>
         <InputError />
       </InputWrapper>
       <CurrencyInputWrapper>
@@ -357,9 +361,11 @@ export default function SendCurrencyInputForm({
           <StyledDropDown />
         </ClickableRowBetween>
         {showMaxButton && (
-          <MaxButton onClick={handleMaxInput}>
-            <Trans i18nKey="common.max" />
-          </MaxButton>
+          <Trace logPress element={InterfaceElementName.SEND_MAX_BUTTON}>
+            <MaxButton onClick={handleMaxInput}>
+              <Trans i18nKey="common.max" />
+            </MaxButton>
+          </Trace>
         )}
       </CurrencyInputWrapper>
       <CurrencySearchModal

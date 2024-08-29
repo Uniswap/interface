@@ -1,17 +1,17 @@
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
-import { memo, useCallback, useState } from 'react'
-import { Keyboard, ListRenderItemInfo, SectionList, SectionListData } from 'react-native'
+import { memo, useCallback } from 'react'
+import { ListRenderItemInfo, SectionList, SectionListData } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Text, TouchableArea, isWeb, useDeviceInsets } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { ViewOnlyRecipientModal } from 'wallet/src/components/RecipientSearch/ViewOnlyRecipientModal'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
-import { SearchResultType, extractDomain } from 'wallet/src/features/search/SearchResult'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { extractDomain } from 'wallet/src/features/search/SearchResult'
 
 interface RecipientListProps {
   renderedInModal?: boolean
@@ -21,27 +21,13 @@ interface RecipientListProps {
 
 export function RecipientList({ onPress, sections, renderedInModal = false }: RecipientListProps): JSX.Element {
   const insets = useDeviceInsets()
-  const [selectedViewOnlyRecipient, setSelectedViewOnlyRecipient] = useState<SearchableRecipient | null>(null)
 
   const onRecipientPress = useCallback(
     (recipient: SearchableRecipient) => {
-      if (recipient.type === AccountType.Readonly) {
-        Keyboard.dismiss()
-        setSelectedViewOnlyRecipient(recipient)
-      } else {
-        onPress(recipient.address)
-      }
+      onPress(recipient.address)
     },
     [onPress],
   )
-
-  const onConfirmViewOnlyRecipient = useCallback(() => {
-    const address = selectedViewOnlyRecipient?.address
-    if (address) {
-      setSelectedViewOnlyRecipient(null)
-      onPress(address)
-    }
-  }, [onPress, selectedViewOnlyRecipient])
 
   const renderItem = function ({ item }: ListRenderItemInfo<SearchableRecipient>): JSX.Element {
     return (
@@ -68,19 +54,12 @@ export function RecipientList({ onPress, sections, renderedInModal = false }: Re
         sections={sections}
         showsVerticalScrollIndicator={false}
       />
-
-      {selectedViewOnlyRecipient && (
-        <ViewOnlyRecipientModal
-          onCancel={(): void => setSelectedViewOnlyRecipient(null)}
-          onConfirm={onConfirmViewOnlyRecipient}
-        />
-      )}
     </>
   )
 }
 
-function SectionHeader(info: { section: SectionListData<SearchableRecipient> }): JSX.Element {
-  return (
+function SectionHeader(info: { section: SectionListData<SearchableRecipient> }): JSX.Element | null {
+  return info.section.title ? (
     <AnimatedFlex
       backgroundColor="$surface1"
       entering={FadeIn}
@@ -92,7 +71,7 @@ function SectionHeader(info: { section: SectionListData<SearchableRecipient> }):
         {info.section.title}
       </Text>
     </AnimatedFlex>
-  )
+  ) : null
 }
 
 function key(recipient: SearchableRecipient): string {
@@ -124,6 +103,7 @@ export const RecipientRow = memo(function RecipientRow({ recipient, onPress }: R
   return (
     <TouchableArea hapticFeedback onPress={onPressWithAnalytics}>
       <AddressDisplay
+        includeUnitagSuffix
         address={recipient.address}
         overrideDisplayName={isNonUnitagSubdomain && recipient.name ? recipient.name : undefined}
         showViewOnlyBadge={isViewOnlyWallet}

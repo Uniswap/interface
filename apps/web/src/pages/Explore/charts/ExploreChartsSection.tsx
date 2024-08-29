@@ -16,11 +16,11 @@ import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam 
 import { useDailyProtocolTVL, useHistoricalProtocolVolume } from 'graphql/data/protocolStats'
 import { TimePeriod, getProtocolColor, getSupportedGraphQlChain } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize'
-import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { ReactNode, useMemo, useState } from 'react'
-import styled, { useTheme } from 'styled-components'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { HistoryDuration, PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const EXPLORE_CHART_HEIGHT_PX = 368

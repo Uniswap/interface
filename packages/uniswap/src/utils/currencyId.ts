@@ -10,7 +10,7 @@ export function currencyId(currency: Currency): CurrencyId {
   return buildCurrencyId(currency.chainId, currencyAddress(currency))
 }
 
-export function buildCurrencyId(chainId: WalletChainId, address: string): string {
+export function buildCurrencyId(chainId: UniverseChainId, address: string): string {
   return `${chainId}-${address}`
 }
 
@@ -24,6 +24,13 @@ export function buildWrappedNativeCurrencyId(chainId: WalletChainId): string {
 
 export function areCurrencyIdsEqual(id1: CurrencyId, id2: CurrencyId): boolean {
   return id1.toLowerCase() === id2.toLowerCase()
+}
+
+export function areCurrenciesEqual(currency1?: Currency, currency2?: Currency): boolean {
+  if (!(currency1 && currency2)) {
+    return currency1 === currency2
+  }
+  return areCurrencyIdsEqual(currencyId(currency1), currencyId(currency2))
 }
 
 export function currencyAddress(currency: Currency): string {

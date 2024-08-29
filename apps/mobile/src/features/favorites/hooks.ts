@@ -1,5 +1,6 @@
 import { useCallback, useMemo } from 'react'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
+import { MobileState } from 'src/app/mobileReducer'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { CurrencyId } from 'uniswap/src/types/currency'
@@ -15,7 +16,7 @@ import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export function useToggleFavoriteCallback(id: CurrencyId, isFavoriteToken: boolean): () => void {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const token = useCurrencyInfo(id)
 
   return useCallback(() => {
@@ -34,8 +35,8 @@ export function useToggleFavoriteCallback(id: CurrencyId, isFavoriteToken: boole
 }
 
 export function useToggleWatchedWalletCallback(address: Address): () => void {
-  const dispatch = useAppDispatch()
-  const isFavoriteWallet = useAppSelector(selectWatchedAddressSet).has(address)
+  const dispatch = useDispatch()
+  const isFavoriteWallet = useSelector(selectWatchedAddressSet).has(address)
   const displayName = useDisplayName(address)
 
   return useCallback(() => {
@@ -54,5 +55,5 @@ export function useToggleWatchedWalletCallback(address: Address): () => void {
 
 export function useSelectHasTokenFavorited(currencyId: string): boolean {
   const selectHasTokenFavorited = useMemo(makeSelectHasTokenFavorited, [])
-  return useAppSelector((state) => selectHasTokenFavorited(state, currencyId))
+  return useSelector((state: MobileState) => selectHasTokenFavorited(state, currencyId))
 }

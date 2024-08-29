@@ -232,11 +232,16 @@ exports[`FavoriteWalletCard renders without error 1`] = `
             </View>
           </View>
           <View
-            cancelable={true}
             collapsable={false}
-            disabled={false}
-            focusable={true}
-            hitSlop={[Function]}
+            disabled={true}
+            hitSlop={
+              {
+                "bottom": 5,
+                "left": 5,
+                "right": 5,
+                "top": 5,
+              }
+            }
             jestAnimatedStyle={
               {
                 "value": {
@@ -244,14 +249,6 @@ exports[`FavoriteWalletCard renders without error 1`] = `
                 },
               }
             }
-            minPressDuration={0}
-            onBlur={[Function]}
-            onFocus={[Function]}
-            onMouseEnter={[Function]}
-            onMouseLeave={[Function]}
-            onPress={[Function]}
-            onPressIn={[Function]}
-            onPressOut={[Function]}
             style={
               {
                 "alignItems": "center",

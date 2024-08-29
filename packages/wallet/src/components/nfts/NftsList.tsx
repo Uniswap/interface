@@ -41,7 +41,7 @@ type NftsListProps = Omit<
       footerHeight?: SharedValue<number>
       isExternalProfile?: boolean
       renderedInModal?: boolean
-      renderNFTItem: (item: NFTItem) => JSX.Element
+      renderNFTItem: (item: NFTItem, index: number) => JSX.Element
       onPressEmptyState?: () => void
       loadingStateStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>
       errorStateStyle?: StyleProp<ViewStyle | CSSProperties | (ViewStyle & CSSProperties)>
@@ -124,9 +124,9 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
   }, [hiddenNftsExpanded, numHidden])
 
   const renderItem = useCallback(
-    ({ item }: ListRenderItemInfo<string | NFTItem>) => {
+    ({ item, index }: ListRenderItemInfo<string | NFTItem>) => {
       if (typeof item !== 'string') {
-        return renderNFTItem(item)
+        return renderNFTItem(item, index)
       }
       switch (item) {
         case LOADING_ITEM:

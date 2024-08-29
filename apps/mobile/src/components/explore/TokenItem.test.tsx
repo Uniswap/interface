@@ -3,6 +3,7 @@ import { TokenItem } from 'src/components/explore/TokenItem'
 import * as exploreHooks from 'src/components/explore/hooks'
 import { TOKEN_ITEM_DATA, tokenItemData } from 'src/test/fixtures'
 import { fireEvent, render, within } from 'src/test/test-utils'
+import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
@@ -23,28 +24,36 @@ describe('TokenItem', () => {
   })
 
   it('renders without error', () => {
-    const tree = render(<TokenItem index={0} tokenItemData={TOKEN_ITEM_DATA} />)
+    const tree = render(
+      <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={TOKEN_ITEM_DATA} />,
+    )
 
     expect(tree).toMatchSnapshot()
   })
 
   it('renders correct token number based on index', () => {
     const data = tokenItemData()
-    const { queryByText } = render(<TokenItem index={1} tokenItemData={data} />)
+    const { queryByText } = render(
+      <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={1} tokenItemData={data} />,
+    )
 
     expect(queryByText('2')).toBeTruthy()
   })
 
   it('renders proper token name', () => {
     const data = tokenItemData()
-    const { queryByText } = render(<TokenItem index={0} tokenItemData={data} />)
+    const { queryByText } = render(
+      <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
+    )
 
     expect(queryByText(data.name)).toBeTruthy()
   })
 
   it('navigates to the token details screen when pressed', () => {
     const data = tokenItemData()
-    const { getByTestId } = render(<TokenItem index={0} tokenItemData={data} />)
+    const { getByTestId } = render(
+      <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
+    )
 
     fireEvent.press(getByTestId(`token-item-${data.name}`), ON_PRESS_EVENT_PAYLOAD)
 
@@ -54,7 +63,9 @@ describe('TokenItem', () => {
   describe('token price', () => {
     it('renders token price if it is provided', () => {
       const data = tokenItemData({ price: 123.45 })
-      const { getByTestId } = render(<TokenItem index={0} tokenItemData={data} />)
+      const { getByTestId } = render(
+        <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
+      )
 
       const tokenPrice = getByTestId('token-item/price')
 
@@ -64,7 +75,9 @@ describe('TokenItem', () => {
 
     it('renders price placeholder if token price is not provided', () => {
       const data = tokenItemData({ price: undefined })
-      const { getByTestId } = render(<TokenItem index={0} tokenItemData={data} />)
+      const { getByTestId } = render(
+        <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
+      )
 
       const tokenPrice = getByTestId('token-item/price')
 
@@ -75,7 +88,9 @@ describe('TokenItem', () => {
   describe('token price change', () => {
     it('renders token price change if it is provided', () => {
       const data = tokenItemData({ pricePercentChange24h: 12.34 })
-      const { getByTestId } = render(<TokenItem index={0} tokenItemData={data} />)
+      const { getByTestId } = render(
+        <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
+      )
 
       const relativeChange = getByTestId('relative-change')
 
@@ -84,7 +99,9 @@ describe('TokenItem', () => {
 
     it('renders price change placeholder if token price change is not provided', () => {
       const data = tokenItemData({ pricePercentChange24h: undefined })
-      const { getByTestId } = render(<TokenItem index={0} tokenItemData={data} />)
+      const { getByTestId } = render(
+        <TokenItem eventName={MobileEventName.ExploreTokenItemSelected} index={0} tokenItemData={data} />,
+      )
 
       const relativeChange = getByTestId('relative-change')
 
@@ -107,7 +124,14 @@ describe('TokenItem', () => {
     ]
 
     it.each(cases)('renders $test metadata subtitle', ({ type, expected }) => {
-      const { getByTestId } = render(<TokenItem index={0} metadataDisplayType={type} tokenItemData={data} />)
+      const { getByTestId } = render(
+        <TokenItem
+          eventName={MobileEventName.ExploreTokenItemSelected}
+          index={0}
+          metadataDisplayType={type}
+          tokenItemData={data}
+        />,
+      )
 
       const metadataSubtitle = getByTestId('token-item/metadata-subtitle')
 

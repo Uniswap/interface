@@ -59,6 +59,18 @@ module.exports = {
           {
             paths: [
               {
+                name: 'react-i18next',
+                message: 'Import from `uniswap/src/i18n` instead.'
+              },
+              {
+                name: 'i18next',
+                message: 'Import from `uniswap/src/i18n` instead.'
+              },
+              {
+                name: 'styled-components',
+                message: 'Styled components is deprecated, please use Flex or styled from "ui/src" instead.'
+              },
+              {
                 name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
                 importNames: ['usePortfolioBalancesQuery', 'usePortfolioBalancesWebLazyQuery'],
                 message: 'Import cached/subscription-based balance hooks from `TokenBalancesProvider.tsx` instead.',
@@ -103,6 +115,16 @@ module.exports = {
                 name: 'wagmi',
                 importNames: ['useConnect'],
                 message: 'Import wrapped useConnect util from `hooks/useConnect` instead.',
+              },
+              {
+                name: 'wagmi',
+                importNames: ['useDisconnect'],
+                message: 'Import wrapped useDisconnect util from `hooks/useDisconnect` instead.',
+              },
+              {
+                name: 'wagmi',
+                importNames: ['useBlockNumber', 'useWatchBlockNumber'],
+                message: 'Import wrapped useBlockNumber util from `hooks/useBlockNumber` instead.',
               },
             ],
           },

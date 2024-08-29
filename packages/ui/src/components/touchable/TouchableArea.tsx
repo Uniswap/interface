@@ -4,7 +4,7 @@ import { TamaguiElement, YStack } from 'tamagui'
 import { withAnimated } from 'ui/src/components/factories/animated'
 import { TouchableAreaProps } from 'ui/src/components/touchable/types'
 import { defaultHitslopInset } from 'ui/src/theme'
-import { HapticFeedback } from 'ui/src/utils/haptics/HapticFeedback'
+import { useHapticFeedback } from 'ui/src/utils/haptics/useHapticFeedback'
 import { isTestEnv } from 'utilities/src/environment'
 
 /**
@@ -16,7 +16,7 @@ import { isTestEnv } from 'utilities/src/environment'
  */
 export const TouchableArea = forwardRef<TamaguiElement, TouchableAreaProps>(function TouchableArea(
   {
-    hapticFeedback = false,
+    hapticFeedback: triggerHapticFeedback = false,
     ignoreDragEvents = false,
     hapticStyle,
     scaleTo,
@@ -29,6 +29,7 @@ export const TouchableArea = forwardRef<TamaguiElement, TouchableAreaProps>(func
   ref,
 ): JSX.Element {
   const touchActivationPositionRef = useRef<Pick<GestureResponderEvent['nativeEvent'], 'pageX' | 'pageY'> | null>(null)
+  const { hapticFeedback } = useHapticFeedback()
 
   const onPressHandler = useCallback(
     async (event: GestureResponderEvent) => {
@@ -51,11 +52,11 @@ export const TouchableArea = forwardRef<TamaguiElement, TouchableAreaProps>(func
 
       onPress(event)
 
-      if (hapticFeedback) {
-        await HapticFeedback.impact(hapticStyle)
+      if (triggerHapticFeedback) {
+        await hapticFeedback.impact(hapticStyle)
       }
     },
-    [onPress, ignoreDragEvents, hapticFeedback, hapticStyle],
+    [onPress, ignoreDragEvents, triggerHapticFeedback, hapticFeedback, hapticStyle],
   )
 
   const onPressInHandler = useMemo(() => {

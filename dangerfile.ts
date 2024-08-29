@@ -105,9 +105,16 @@ async function processAddChanges() {
         "You've added a new call to `createSelector()`. This is Ok, but please make sure you're using it correctly and you're not creating a new selector on every render. See PR #5172 for details.",
       )
     }
-    if (/(useAppSelector|appSelect|select)\(\s*makeSelect/.test(concatenatedAddedLines)) {
+    if (/(useSelector|appSelect|select)\(\s*makeSelect/.test(concatenatedAddedLines)) {
       fail(
         `It appears you may be creating a new selector on every render. See PR #5172 for details on how to fix this.`,
+      )
+    }
+
+    // Check for discouraged usage of usePortfolioValueModifiers
+    if (concatenatedAddedLines.includes('usePortfolioValueModifiers')) {
+      warn(
+        "Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly. If you're using usePortfolioValueModifiers inside these hooks you can ignore this warning.",
       )
     }
   })

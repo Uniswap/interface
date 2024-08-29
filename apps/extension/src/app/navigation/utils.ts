@@ -1,13 +1,19 @@
 import { To, matchPath, useLocation } from 'react-router-dom'
-import { SidebarLocationState } from 'src/app/navigation/SideBarNavigationProvider'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { logger } from 'utilities/src/logger/logger'
 import { escapeRegExp } from 'utilities/src/primitives/string'
 import { getTokenUrl } from 'wallet/src/utils/linking'
+
+export type SidebarLocationState =
+  | {
+      initialTransactionState?: TransactionState
+    }
+  | undefined
 
 export function useRouteMatch(pathToMatch: string): boolean {
   const { pathname } = useLocation()
@@ -30,7 +36,7 @@ export const useExtensionNavigation = (): {
 export async function focusOrCreateOnboardingTab(page?: string): Promise<void> {
   const extension = await chrome.management.getSelf()
 
-  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/*` })
+  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/onboarding.html*` })
   const tab = tabs[0]
 
   const url = 'onboarding.html#/' + (page ? page : TopLevelRoutes.Onboarding)
@@ -60,6 +66,44 @@ export async function focusOrCreateOnboardingTab(page?: string): Promise<void> {
   await onboardingMessageChannel.sendMessage({
     type: OnboardingMessageType.HighlightOnboardingTab,
   })
+}
+
+export async function focusOrCreateDappRequestWindow(tabId: number | undefined, windowId: number): Promise<void> {
+  const extension = await chrome.management.getSelf()
+
+  const window = await chrome.windows.getCurrent()
+
+  const tabs = await chrome.tabs.query({ url: `chrome-extension://${extension.id}/popup.html*` })
+  const tab = tabs[0]
+
+  // Centering within current window
+  const height = 410
+  const width = 330
+  const top = Math.round((window.top ?? 0) + ((window.height ?? height) - height) / 2)
+  const left = Math.round((window.left ?? 0) + ((window.width ?? width) - width) / 2)
+  let url = `popup.html?windowId=${windowId}`
+  if (tabId) {
+    url += `&tabId=${tabId}`
+  }
+
+  if (!tab?.id) {
+    await chrome.windows.create({
+      url,
+      type: 'popup',
+      top,
+      left,
+      width,
+      height,
+    })
+    return
+  }
+
+  await chrome.tabs.update(tab.id, {
+    url,
+    active: true,
+    highlighted: true,
+  })
+  await chrome.windows.update(tab.windowId, { focused: true, top, left, width, height })
 }
 
 /**

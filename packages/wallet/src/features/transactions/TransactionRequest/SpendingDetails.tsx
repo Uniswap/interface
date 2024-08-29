@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -12,7 +13,7 @@ import { useNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInf
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
-export function SpendingDetails({ value, chainId }: { value: string; chainId: WalletChainId }): JSX.Element {
+export function SpendingEthDetails({ value, chainId }: { value: string; chainId: WalletChainId }): JSX.Element {
   const variant = isMobileApp ? 'body3' : 'body4'
 
   const { t } = useTranslation()
@@ -42,6 +43,31 @@ export function SpendingDetails({ value, chainId }: { value: string; chainId: Wa
         <Text color="$neutral2" loading={!usdValue} variant={variant}>
           ({fiatAmount})
         </Text>
+      </Flex>
+    </ContentRow>
+  )
+}
+
+export function SpendingDetails({
+  currencyInfo,
+  showLabel,
+  tokenCount,
+}: {
+  currencyInfo: CurrencyInfo
+  showLabel: boolean
+  tokenCount: number
+}): JSX.Element {
+  const variant = isMobileApp ? 'body3' : 'body4'
+
+  const { t } = useTranslation()
+  const labelCopy =
+    tokenCount > 1 ? t('walletConnect.request.details.label.tokens') : t('walletConnect.request.details.label.token')
+
+  return (
+    <ContentRow label={showLabel ? labelCopy : ''} variant={variant}>
+      <Flex row alignItems="center" gap="$spacing4">
+        <CurrencyLogo currencyInfo={currencyInfo} size={iconSizes.icon16} />
+        <Text variant={variant}>{getSymbolDisplayText(currencyInfo?.currency.symbol)}</Text>
       </Flex>
     </ContentRow>
   )

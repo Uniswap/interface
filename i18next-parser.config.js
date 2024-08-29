@@ -58,16 +58,7 @@ module.exports = {
 
   // An array of globs that describe where to look for source files
   // relative to the location of the configuration file
-  input: [
-    'apps/mobile/src/**/*.tsx',
-    'apps/mobile/src/**/*.ts',
-    'apps/extension/src/**/*.tsx',
-    'apps/extension/src/**/*.ts',
-    'packages/wallet/src/**/*.ts',
-    'packages/wallet/src/**/*.tsx',
-    'packages/uniswap/src/**/*.ts',
-    'packages/uniswap/src/**/*.tsx',
-  ],
+  input: ['apps/**/*.tsx', 'apps/**/*.ts', 'packages/**/*.ts', 'packages/**/*.tsx'],
 
   // Whether or not to sort the catalog. Can also be a [compareFunction](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort#parameters)
   sort: true,

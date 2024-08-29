@@ -27,7 +27,9 @@ function Wrapper(props: PropsWithChildren<WrapperProps>) {
         chainId: props.chainId ?? UniverseChainId.Mainnet,
         currentTab: SwapTab.Swap,
         setCurrentTab: props.setCurrentTab ?? jest.fn(),
+        setIsUserSelectedToken: jest.fn(),
         isSwapAndLimitContext: true,
+        isUserSelectedToken: false,
       }}
     >
       <SwapContext.Provider

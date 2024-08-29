@@ -2,23 +2,23 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import ContextMenu from 'react-native-context-menu-view'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { NotificationBadge } from 'src/components/notifications/Badge'
 import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, HapticFeedback, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { setClipboard } from 'wallet/src/utils/clipboard'
 
 type AccountCardItemProps = {
   address: Address
@@ -72,11 +72,11 @@ export function AccountCardItem({
   onPress,
 }: AccountCardItemProps): JSX.Element {
   const { t } = useTranslation()
-
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
+  const { hapticFeedback } = useHapticFeedback()
 
   const onPressCopyAddress = async (): Promise<void> => {
-    await HapticFeedback.impact()
+    await hapticFeedback.impact()
     await setClipboard(address)
     dispatch(
       pushNotification({

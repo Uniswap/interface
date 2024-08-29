@@ -7,9 +7,10 @@ import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { providers } from 'ethers'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { ClassicQuote, DutchQuoteV2, QuoteResponse, Routing } from 'wallet/src/data/tradingApi/__generated__/index'
-import { getSwapFee, transformToDutchOrderInfo } from 'wallet/src/features/transactions/swap/trade/tradingApi/utils'
-import { TradeProtocolPreference } from 'wallet/src/features/transactions/transactionState/types'
+import { ClassicQuote, DutchQuoteV2, QuoteResponse, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
+import { getSwapFee, transformToDutchOrderInfo } from 'wallet/src/features/transactions/swap/trade/api/utils'
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
 // See: https://linear.app/uniswap/issue/API-236/explore-changing-the-quote-schema-to-pull-out-a-basequoteresponse
@@ -130,6 +131,7 @@ export interface TradeWithStatus<T extends Trade = Trade> {
 }
 
 export interface UseTradeArgs {
+  account?: AccountMeta
   amountSpecified: Maybe<CurrencyAmount<Currency>>
   otherCurrency: Maybe<Currency>
   tradeType: TradeType

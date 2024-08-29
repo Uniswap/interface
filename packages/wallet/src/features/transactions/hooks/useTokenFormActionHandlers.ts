@@ -1,7 +1,7 @@
 import { AnyAction } from '@reduxjs/toolkit'
 import { useCallback } from 'react'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { transactionStateActions } from 'wallet/src/features/transactions/transactionState/transactionState'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 
 /** Set of handlers wrapping actions involving user input */
 export function useTokenFormActionHandlers(dispatch: React.Dispatch<AnyAction>): {

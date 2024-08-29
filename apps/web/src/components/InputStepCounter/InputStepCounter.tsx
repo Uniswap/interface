@@ -4,12 +4,12 @@ import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
 import { Input as NumericalInput } from 'components/NumericalInput'
-import { Trans } from 'i18n'
+import styled, { keyframes } from 'lib/styled-components'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
-import styled, { keyframes } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
+import { Trans } from 'uniswap/src/i18n'
 
 const pulse = (color: string) => keyframes`
   0% {

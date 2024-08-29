@@ -1,10 +1,10 @@
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { EmptyActivityIcon, EmptyNftsIcon, EmptyPoolsIcon, EmptyTokensIcon } from 'nft/components/profile/view/icons'
 import { headlineMedium } from 'nft/css/common.css'
 import { useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { Trans } from 'uniswap/src/i18n'
 
 const EmptyWalletContainer = styled.div`
   display: flex;
@@ -61,7 +61,7 @@ const EMPTY_WALLET_CONTENT: { [key in EmptyWalletContentType]: EmptyWalletConten
     icon: <EmptyNftsIcon />,
   },
   token: {
-    title: <Trans i18nKey="nft.noTokens" />,
+    title: <Trans i18nKey="tokens.selector.empty.title" />,
     subtitle: <Trans i18nKey="nft.buyTransferTokensToStart" />,
     actionText: <Trans i18nKey="common.exploreTokens" />,
     urlPath: '/tokens',

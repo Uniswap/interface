@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled, { css } from 'lib/styled-components'
 
 const H1Styles = css<{ color?: string }>`
   padding: 0;

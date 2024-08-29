@@ -11,34 +11,40 @@ exports[`AccountList renders without error 1`] = `
 >
   ExpoLinearGradient
   <RCTScrollView
-    CellRendererComponent={[Function]}
-    ListHeaderComponent={
-      <React.Fragment>
-        <React.Fragment>
-          <SignerHeader />
-          <AccountCardItem
-            address="0x82D56A352367453f74FC0dC7B071b311da373Fa6"
-            isPortfolioValueLoading={false}
-            isViewOnly={false}
-            onPress={[MockFunction]}
-            portfolioValue={55}
-          />
-        </React.Fragment>
-      </React.Fragment>
-    }
-    bounces={false}
     collapsable={false}
-    data={[]}
+    data={
+      [
+        {
+          "type": 0,
+        },
+        {
+          "account": {
+            "account": {
+              "address": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
+              "backups": [
+                "cloud",
+              ],
+              "derivationIndex": 0,
+              "mnemonicId": "0x82D56A352367453f74FC0dC7B071b311da373Fa6",
+              "name": "Test Account",
+              "timeImportedMs": 10,
+              "type": "signerMnemonic",
+            },
+            "isPortfolioValueLoading": false,
+            "portfolioValue": 55,
+          },
+          "type": 1,
+        },
+      ]
+    }
     getItem={[Function]}
     getItemCount={[Function]}
-    jestAnimatedStyle={
-      {
-        "value": {},
-      }
-    }
+    handlerTag={1}
+    handlerType="NativeViewGestureHandler"
     keyExtractor={[Function]}
-    keyboardShouldPersistTaps="always"
     onContentSizeChange={[Function]}
+    onGestureHandlerEvent={[Function]}
+    onGestureHandlerStateChange={[Function]}
     onLayout={[Function]}
     onMomentumScrollBegin={[Function]}
     onMomentumScrollEnd={[Function]}
@@ -47,18 +53,26 @@ exports[`AccountList renders without error 1`] = `
     onScrollEndDrag={[Function]}
     removeClippedSubviews={false}
     renderItem={[Function]}
-    scrollEnabled={false}
-    scrollEventThrottle={16}
-    sentry-label="VirtualizedList"
-    showsHorizontalScrollIndicator={false}
-    showsVerticalScrollIndicator={false}
+    renderScrollComponent={[Function]}
+    scrollEventThrottle={0.0001}
     stickyHeaderIndices={[]}
     viewabilityConfigCallbackPairs={[]}
+    waitFor={
+      [
+        {
+          "current": null,
+        },
+        {
+          "current": null,
+        },
+      ]
+    }
   >
     <View>
       <View
-        collapsable={false}
+        onFocusCapture={[Function]}
         onLayout={[Function]}
+        style={null}
       >
         <View
           style={
@@ -88,6 +102,12 @@ exports[`AccountList renders without error 1`] = `
             Your other wallets
           </Text>
         </View>
+      </View>
+      <View
+        onFocusCapture={[Function]}
+        onLayout={[Function]}
+        style={null}
+      >
         <View
           actions={
             [

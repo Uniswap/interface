@@ -11,14 +11,15 @@ import {
 } from '@testing-library/react-native'
 import React, { PropsWithChildren } from 'react'
 import { MobileWalletNavigationProvider } from 'src/app/MobileWalletNavigationProvider'
+import type { MobileState } from 'src/app/mobileReducer'
 import { navigationRef } from 'src/app/navigation/NavigationContainer'
-import type { MobileState } from 'src/app/reducer'
-import type { AppStore } from 'src/app/store'
-import { persistedReducer } from 'src/app/store'
+import { store as appStore, persistedReducer } from 'src/app/store'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { SharedProvider } from 'wallet/src/provider'
 import { AutoMockedApolloProvider } from 'wallet/src/test/mocks/gql/provider'
+
+type AppStore = typeof appStore
 
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.

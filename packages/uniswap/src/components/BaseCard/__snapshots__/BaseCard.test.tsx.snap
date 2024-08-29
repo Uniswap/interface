@@ -142,7 +142,7 @@ exports[`Header renders without error 1`] = `
   onPressOut={[Function]}
   style={
     {
-      "borderBottomColor": "#FFFFFF1F",
+      "borderBottomColor": "rgba(255,255,255,0.12)",
       "borderBottomWidth": 0.25,
       "borderStyle": "solid",
       "flexDirection": "column",

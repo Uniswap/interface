@@ -1,3 +1,4 @@
+import { BigNumber } from 'ethers'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
@@ -10,13 +11,14 @@ import {
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
+import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
 
 function useDappRequestTokenRecipientInfo(request: DappRequestBaseType, dappUrl: string): Maybe<CurrencyInfo> {
   const activeChain = useDappLastChainId(dappUrl)
@@ -63,6 +65,16 @@ export function ApproveRequestContent({
 }: ApproveRequestContentProps): JSX.Element {
   const { t } = useTranslation()
   const { dappUrl } = useDappRequestQueueContext()
+  const activeChain = useDappLastChainId(dappUrl)
+  const { parsedTransactionData } = useNoYoloParser(dappRequest.transaction, activeChain)
+
+  // To detect a revoke, both the transaction value and the parsed arg amount value must be zero
+  const isArgAmountZero = parsedTransactionData?.args.some((arg) => {
+    if (typeof arg === 'object' && arg._hex) {
+      return BigNumber.from(arg._hex).isZero()
+    }
+  })
+  const isRevoke = dappRequest.transaction.value === '0x0' && isArgAmountZero
 
   const tokenInfo = useDappRequestTokenRecipientInfo(dappRequest, dappUrl)
   const tokenSymbol = tokenInfo?.currency.symbol
@@ -75,13 +87,18 @@ export function ApproveRequestContent({
       }
     : undefined
   const onConfirmWithTransactionTypeInfo = (): Promise<void> => onConfirm(transactionTypeInfo)
+  const titleCopy = tokenSymbol
+    ? isRevoke
+      ? t('dapp.request.revoke.title', { tokenSymbol })
+      : t('dapp.request.approve.title', { tokenSymbol })
+    : t('dapp.request.approve.fallbackTitle')
 
   return (
     <DappRequestContent
       showNetworkCost
-      confirmText={t('dapp.request.approve.action')}
+      confirmText={isRevoke ? t('dapp.request.revoke.action') : t('dapp.request.approve.action')}
       headerIcon={<CurrencyLogo hideNetworkLogo currencyInfo={tokenInfo} size={iconSizes.icon40} />}
-      title={tokenSymbol ? t('dapp.request.approve.title', { tokenSymbol }) : t('dapp.request.approve.fallbackTitle')}
+      title={titleCopy}
       transactionGasFeeResult={transactionGasFeeResult}
       onCancel={onCancel}
       onConfirm={onConfirmWithTransactionTypeInfo}
@@ -95,9 +112,12 @@ export function ApproveRequestContent({
         p="$spacing12"
       >
         <Text color="$neutral2" variant="body4">
-          {t('dapp.request.approve.helptext')}
+          {isRevoke ? t('dapp.request.revoke.helptext') : t('dapp.request.approve.helptext')}
         </Text>
-        <LearnMoreLink textVariant="body4" url={uniswapUrls.helpArticleUrls.approvalsExplainer} />
+        <LearnMoreLink
+          textVariant="body4"
+          url={isRevoke ? uniswapUrls.helpArticleUrls.revokeExplainer : uniswapUrls.helpArticleUrls.approvalsExplainer}
+        />
       </Flex>
     </DappRequestContent>
   )

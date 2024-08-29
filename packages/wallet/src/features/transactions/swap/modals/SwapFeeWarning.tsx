@@ -3,9 +3,9 @@ import { useTranslation } from 'react-i18next'
 import { Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { openUri } from 'uniswap/src/utils/linking'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
-import { openUri } from 'wallet/src/utils/linking'
 
 export function SwapFeeWarning({ noFee, children }: PropsWithChildren<{ noFee: boolean }>): JSX.Element {
   const colors = useSporeColors()
@@ -21,7 +21,7 @@ export function SwapFeeWarning({ noFee, children }: PropsWithChildren<{ noFee: b
     <WarningInfo
       infoButton={
         <TouchableArea onPress={onPressLearnMore}>
-          <Text color="$magentaVibrant" variant={isWeb ? 'buttonLabel4' : 'buttonLabel3'}>
+          <Text color="$purpleVibrant" variant={isWeb ? 'buttonLabel4' : 'buttonLabel3'}>
             {t('common.button.learn')}
           </Text>
         </TouchableArea>

@@ -1,5 +1,5 @@
 import { BigNumber, providers } from 'ethers'
-import { call, put } from 'typed-redux-saga'
+import { call, put, select } from 'typed-redux-saga'
 import i18n from 'uniswap/src/i18n/i18n'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -15,7 +15,6 @@ import {
 import { createTransactionId, getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
-import { appSelect } from 'wallet/src/state'
 
 export function* attemptReplaceTransaction(
   transaction: ClassicTransactionDetails,
@@ -32,7 +31,7 @@ export function* attemptReplaceTransaction(
       throw new Error(`Cannot replace invalid transaction: ${hash}`)
     }
 
-    const accounts = yield* appSelect(selectAccounts)
+    const accounts = yield* select(selectAccounts)
     const checksummedAddress = getValidAddress(from, true, false)
     if (!checksummedAddress) {
       throw new Error(`Cannot replace transaction, address is invalid: ${checksummedAddress}`)

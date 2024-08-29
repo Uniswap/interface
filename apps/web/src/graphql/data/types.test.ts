@@ -108,7 +108,7 @@ describe('gqlTokenToCurrencyInfo', () => {
             url: 'dai_url',
           },
         },
-      })
+      }),
     ).toThrow()
   })
 

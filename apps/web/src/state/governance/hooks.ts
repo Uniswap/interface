@@ -25,7 +25,6 @@ import { GRG, UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useContract } from 'hooks/useContract'
-import { t } from 'i18n'
 import { useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
 import { useCallback, useMemo } from 'react'
@@ -39,11 +38,17 @@ import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
 import RB_REGISTRY_ABI from 'uniswap/src/abis/rb-registry.json'
 import STAKING_ABI from 'uniswap/src/abis/staking-impl.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
+import { t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
 function useGovernanceProxyContract(): Contract | null {
-  return useContract(GOVERNANCE_PROXY_ADDRESSES, GOVERNANCE_RB_ABI, true)
+  const { chainId } = useAccount()
+  return useContract(
+    chainId ? GOVERNANCE_PROXY_ADDRESSES[chainId] : undefined,
+    GOVERNANCE_RB_ABI,
+    true,
+  )
 }
 
 const useLatestGovernanceContract = useGovernanceProxyContract
@@ -55,15 +60,30 @@ function useUniContract() {
 }
 
 function useRegistryContract(): Contract | null {
-  return useContract(RB_REGISTRY_ADDRESSES, RB_REGISTRY_ABI, true)
+  const { chainId } = useAccount()
+  return useContract(
+    chainId ? RB_REGISTRY_ADDRESSES[chainId] : undefined,
+    RB_REGISTRY_ABI,
+    true,
+  )
 }
 
 export function useStakingContract(): Contract | null {
-  return useContract(STAKING_PROXY_ADDRESSES, STAKING_ABI, true)
+  const { chainId } = useAccount()
+  return useContract(
+    chainId ? STAKING_PROXY_ADDRESSES[chainId] : undefined,
+    STAKING_ABI,
+    true,
+  )
 }
 
 export function useStakingProxyContract(): Contract | null {
-  return useContract(STAKING_PROXY_ADDRESSES, STAKING_PROXY_ABI, true)
+  const { chainId } = useAccount()
+  return useContract(
+    chainId ? STAKING_PROXY_ADDRESSES[chainId] : undefined,
+    STAKING_PROXY_ABI,
+    true,
+  )
 }
 
 export function usePoolExtendedContract(poolAddress: string | undefined): Contract | null {
@@ -202,6 +222,9 @@ function useFormattedProposalCreatedLogs(
     }
   }, [contract, fromBlock, toBlock])
 
+  // TODO: logs are not returned, should also find out if same is true for pools created.
+  //   We could create a worker to store these data and forget about querying logs, which
+  //  would automate displaying proposal titles on L2s and new pools on L2s.
   const useLogsResult = useLogs(filter)
 
   return useMemo(() => {

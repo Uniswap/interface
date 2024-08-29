@@ -11,25 +11,26 @@ import { LoadingOpacityContainer } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
 import { RowBetween, RowFixed } from 'components/Row'
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { CurrencySearchFilters } from 'components/SearchModal/DeprecatedCurrencySearch'
 import Tooltip from 'components/Tooltip'
 import { useIsSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { darken } from 'polished'
 import { ReactNode, forwardRef, useCallback, useEffect, useState } from 'react'
 import { Lock } from 'react-feather'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useCurrencyBalance } from 'state/connection/hooks'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
-import styled, { useTheme } from 'styled-components'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
-import { Text } from 'ui/src'
+import { AnimatePresence, Flex, Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 export const InputPanel = styled.div<{ hideInput?: boolean }>`
@@ -222,6 +223,7 @@ interface SwapCurrencyInputPanelProps {
   label: ReactNode
   onCurrencySelect?: (currency: Currency) => void
   currency?: Currency | null
+  currencyField: CurrencyField
   hideBalance?: boolean
   pair?: Pair | null
   hideInput?: boolean
@@ -240,6 +242,7 @@ interface SwapCurrencyInputPanelProps {
     onDisabledClick?: () => void
     disabledTooltipBody?: ReactNode
   }
+  initialCurrencyLoading?: boolean
 }
 
 const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPanelProps>(
@@ -263,7 +266,9 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
       locked = false,
       loading = false,
       disabled = false,
+      initialCurrencyLoading = false,
       currencySearchFilters,
+      currencyField,
       numericalInputSettings,
       label,
       ...rest
@@ -272,7 +277,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
   ) => {
     const [modalOpen, setModalOpen] = useState(false)
     const account = useAccount()
-    const { chainId } = useSwapAndLimitContext()
+    const { chainId, isUserSelectedToken } = useSwapAndLimitContext()
     const chainAllowed = useIsSupportedChainId(chainId)
     const { address: smartPoolAddress } = useActiveSmartPool()
     // TODO: check if should invert definition and modify swap currency input panel
@@ -298,6 +303,9 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
 
     // reset tooltip state when currency changes
     useEffect(() => setTooltipVisible(false), [currency])
+
+    const showCurrencyLoadingSpinner =
+      initialCurrencyLoading && !otherCurrency && !isUserSelectedToken && currencyField === CurrencyField.INPUT
 
     return (
       <InputPanel id={id} hideInput={hideInput} {...rest}>
@@ -339,10 +347,11 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                 text={numericalInputSettings?.disabledTooltipBody}
               >
                 <CurrencySelect
-                  disabled={!chainAllowed || disabled}
+                  disabled={!chainAllowed || disabled || showCurrencyLoadingSpinner}
                   visible={currency !== undefined}
                   selected={!!currency}
                   hideInput={hideInput}
+                  data-testid={`currency-${currency?.chainId}-${currency?.symbol}`}
                   className="open-currency-select-button"
                   onClick={() => {
                     if (onCurrencySelect) {
@@ -353,25 +362,38 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                 >
                   <Aligner>
                     <RowFixed>
-                      {pair ? (
-                        <span style={{ marginRight: '0.5rem' }}>
-                          <DoubleCurrencyLogo currencies={[pair.token0, pair.token1]} size={24} />
-                        </span>
-                      ) : currency ? (
-                        <CurrencyLogo style={{ marginRight: '2px' }} currency={currency} size={24} />
-                      ) : null}
-                      {pair ? (
-                        <StyledTokenName className="pair-name-container">
-                          {pair?.token0.symbol}:{pair?.token1.symbol}
-                        </StyledTokenName>
-                      ) : (
-                        <StyledTokenName
-                          className="token-symbol-container"
-                          active={Boolean(currency && currency.symbol)}
-                        >
-                          {currency ? formatCurrencySymbol(currency) : <Trans i18nKey="common.selectToken" />}
-                        </StyledTokenName>
-                      )}
+                      <AnimatePresence>
+                        <Flex row animation="300ms" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }}>
+                          {pair ? (
+                            <span style={{ marginRight: '0.5rem' }}>
+                              <DoubleCurrencyLogo currencies={[pair.token0, pair.token1]} size={24} />
+                            </span>
+                          ) : currency ? (
+                            <CurrencyLogo
+                              style={{ marginRight: '2px' }}
+                              currency={currency}
+                              size={24}
+                              loading={showCurrencyLoadingSpinner}
+                            />
+                          ) : null}
+                          {pair ? (
+                            <StyledTokenName className="pair-name-container">
+                              {pair?.token0.symbol}:{pair?.token1.symbol}
+                            </StyledTokenName>
+                          ) : (
+                            <StyledTokenName
+                              className="token-symbol-container"
+                              active={Boolean(currency && currency.symbol)}
+                            >
+                              {currency ? (
+                                formatCurrencySymbol(currency)
+                              ) : (
+                                <Trans i18nKey="tokens.selector.button.choose" />
+                              )}
+                            </StyledTokenName>
+                          )}
+                        </Flex>
+                      </AnimatePresence>
                     </RowFixed>
                     {onCurrencySelect && <StyledDropDown selected={!!currency} />}
                   </Aligner>
@@ -387,7 +409,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
                     <FiatValue fiatValue={fiatValue} priceImpact={priceImpact} testId={`fiat-value-${id}`} />
                   )}
                 </LoadingOpacityContainer>
-                {account ? (
+                {account && !initialCurrencyLoading ? (
                   <RowFixed style={{ height: '16px' }}>
                     <ThemedText.DeprecatedBody
                       data-testid="balance-text"
@@ -433,6 +455,7 @@ const SwapCurrencyInputPanel = forwardRef<HTMLInputElement, SwapCurrencyInputPan
         </Container>
         {onCurrencySelect && (
           <CurrencySearchModal
+            currencyField={currencyField}
             isOpen={modalOpen}
             onDismiss={handleDismissSearch}
             onCurrencySelect={onCurrencySelect}

@@ -6,14 +6,17 @@ import { Flex, Text, TouchableArea } from 'ui/src'
 import { Gas } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { NumberType } from 'utilities/src/format/types'
 import { UniswapXFee } from 'wallet/src/components/network/NetworkFee'
+import { useFormattedUniswapXGasFeeInfo } from 'wallet/src/components/network/hooks'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { InsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
+import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { GasAndWarningRowsProps } from 'wallet/src/features/transactions/swap/GasAndWarningRowsProps'
 import { SwapRateRatio } from 'wallet/src/features/transactions/swap/SwapRateRatio'
@@ -21,29 +24,29 @@ import { SwapWarningModal } from 'wallet/src/features/transactions/swap/SwapWarn
 import { useGasFeeHighRelativeToValue } from 'wallet/src/features/transactions/swap/hooks/useGasFeeHighRelativeToValue'
 import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { PriceImpactWarning } from 'wallet/src/features/transactions/swap/modals/PriceImpactWarning'
-import { UniswapXInfo } from 'wallet/src/features/transactions/swap/modals/UniswapXInfo'
 import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
-import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { useIsBlocked } from 'wallet/src/features/trm/hooks'
 
-// eslint-disable-next-line complexity
 export function GasAndWarningRows({
   renderEmptyRows: _renderEmptyRows, // Web does not need to render empty rows for layout calculations
 }: GasAndWarningRowsProps): JSX.Element {
   const { convertFiatAmountFormatted, formatPercent } = useLocalizationContext()
   const { t } = useTranslation()
 
-  const { gasFee } = useSwapTxContext()
+  const { account } = useTransactionModalContext()
+  const swapTxContext = useSwapTxContext()
+  const { gasFee } = swapTxContext
   const { derivedSwapInfo } = useSwapFormContext()
 
   const { chainId, trade, currencyAmountsUSDValue } = derivedSwapInfo
+  const inputUSDValue = currencyAmountsUSDValue[CurrencyField.INPUT]
   const outputUSDValue = currencyAmountsUSDValue[CurrencyField.OUTPUT]
   const priceImpact = trade.trade ? normalizePriceImpact(trade.trade?.priceImpact) : undefined
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 
-  const { isBlocked } = useIsBlockedActiveAddress()
+  const { isBlocked } = useIsBlocked(account.address)
 
   const { formScreenWarning, priceImpactWarning, warnings } = useParsedSwapWarnings()
   const showPriceImpactWarning = Boolean(priceImpact && priceImpactWarning)
@@ -52,13 +55,12 @@ export function GasAndWarningRows({
   const gasFeeUSD = useUSDValue(chainId, gasFee?.value)
   const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
-  const showUniswapXFee = Boolean(gasFeeUSD && trade.trade && isUniswapX(trade.trade))
-  const preSavingsGasFeeFormatted =
-    trade.trade && isUniswapX(trade.trade)
-      ? convertFiatAmountFormatted(trade.trade.quote.quote.classicGasUseEstimateUSD, NumberType.FiatGasPrice)
-      : undefined
+  const uniswapXGasFeeInfo = useFormattedUniswapXGasFeeInfo(
+    isUniswapX(swapTxContext) ? swapTxContext.gasFeeBreakdown : undefined,
+    chainId,
+  )
 
-  const showGasFee = Boolean(gasFeeUSD && !showUniswapXFee)
+  const showGasFee = Boolean(gasFeeUSD)
 
   const onSwapWarningClick = useCallback(() => {
     if (!formScreenWarning?.warning.message) {
@@ -70,7 +72,7 @@ export function GasAndWarningRows({
     setShowWarningModal(true)
   }, [formScreenWarning?.warning.message])
 
-  const gasFeeHighRelativeToSwapValue = useGasFeeHighRelativeToValue(gasFeeUSD, outputUSDValue)
+  const gasFeeHighRelativeToSwapValue = useGasFeeHighRelativeToValue(gasFeeUSD, outputUSDValue ?? inputUSDValue)
 
   return (
     <>
@@ -106,29 +108,28 @@ export function GasAndWarningRows({
               </Flex>
             )}
 
-            {showUniswapXFee && (
-              <UniswapXInfo
-                placement="bottom"
-                tooltipTrigger={
-                  <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
-                    <UniswapXFee gasFee={gasFeeFormatted} preSavingsGasFee={preSavingsGasFeeFormatted} />
-                  </AnimatedFlex>
-                }
-              />
-            )}
-
             {showGasFee && (
               <NetworkFeeWarning
                 gasFeeHighRelativeToValue={gasFeeHighRelativeToSwapValue}
                 placement="bottom"
                 tooltipTrigger={
                   <AnimatedFlex centered row entering={FadeIn} gap="$spacing4">
-                    <Gas color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'} size="$icon.16" />
-                    <Text color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'} variant="body4">
-                      {gasFeeFormatted}
-                    </Text>
+                    {uniswapXGasFeeInfo ? (
+                      <UniswapXFee
+                        gasFee={gasFeeFormatted}
+                        preSavingsGasFee={uniswapXGasFeeInfo.preSavingsGasFeeFormatted}
+                      />
+                    ) : (
+                      <>
+                        <Gas color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'} size="$icon.16" />
+                        <Text color={gasFeeHighRelativeToSwapValue ? '$statusCritical' : '$neutral2'} variant="body4">
+                          {gasFeeFormatted}
+                        </Text>
+                      </>
+                    )}
                   </AnimatedFlex>
                 }
+                uniswapXGasFeeInfo={uniswapXGasFeeInfo}
               />
             )}
           </Flex>

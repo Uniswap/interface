@@ -1,3 +1,4 @@
+import { DdRumReactNavigationTracking } from '@datadog/mobile-react-navigation'
 import {
   createNavigationContainerRef,
   DefaultTheme,
@@ -7,7 +8,7 @@ import {
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { FC, PropsWithChildren, useCallback, useState } from 'react'
 import { Linking } from 'react-native'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { RootParamList } from 'src/app/navigation/types'
 import { openDeepLink } from 'src/features/deepLinking/handleDeepLinkSaga'
 import { DIRECT_LOG_ONLY_SCREENS } from 'src/features/telemetry/directLogScreens'
@@ -52,6 +53,8 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
         // setting initial route name for telemetry
         const initialRoute = navigationRef.getCurrentRoute()?.name as MobileAppScreen
         setRouteName(initialRoute)
+
+        DdRumReactNavigationTracking.startTrackingViews(navigationRef.current)
       }}
       onStateChange={(): void => {
         const previousRouteName = routeName
@@ -82,7 +85,7 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
 }
 
 export const useManageDeepLinks = (): void => {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const manageDeepLinks = useCallback(async () => {
     const url = await Linking.getInitialURL()
     if (url) {

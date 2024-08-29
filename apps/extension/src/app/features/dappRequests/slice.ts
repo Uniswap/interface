@@ -1,6 +1,10 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { DappInfo } from 'src/app/features/dapp/store'
-import { DappRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import {
+  DappRequest,
+  isSendTransactionRequest,
+  SendTransactionRequest,
+} from 'src/app/features/dappRequests/types/DappRequestTypes'
 
 export interface SenderTabInfo {
   id: number
@@ -20,6 +24,17 @@ export interface DappRequestStoreItem {
   senderTabInfo: SenderTabInfo
   dappInfo?: DappInfo
   isSidebarClosed: boolean | undefined
+}
+
+// Enforces that a request object in state is for an eth send txn request
+export interface DappRequestStoreItemForEthSendTxn extends DappRequestStoreItem {
+  dappRequest: SendTransactionRequest
+}
+
+export function isDappRequestStoreItemForEthSendTxn(
+  request: DappRequestStoreItem,
+): request is DappRequestStoreItemForEthSendTxn {
+  return isSendTransactionRequest(request.dappRequest)
 }
 
 const slice = createSlice({

@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { useDappContext } from 'src/app/features/dapp/DappContext'
 import { removeDappConnection, saveDappChain } from 'src/app/features/dapp/actions'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { extractUrlHost } from 'src/app/features/dappRequests/utils'
 import { PopupName, closePopup } from 'src/app/features/popups/slice'
-import { useAppDispatch } from 'src/store/store'
 import { Anchor, Button, Flex, Popover, Separator, Text, getTokenValue } from 'ui/src'
 import { Check, Power } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -19,7 +19,7 @@ import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function SwitchNetworksModal(): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { dappUrl, dappIconUrl } = useDappContext()
   const activeWalletAccount = useActiveAccountWithThrow()
   const activeChain = useDappLastChainId(dappUrl)

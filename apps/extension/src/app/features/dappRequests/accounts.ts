@@ -15,7 +15,7 @@ import {
 } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { extractBaseUrl } from 'src/app/features/dappRequests/utils'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
-import { call, put } from 'typed-redux-saga'
+import { call, put, select } from 'typed-redux-saga'
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -24,7 +24,6 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
-import { appSelect } from 'wallet/src/state'
 
 function getAccountResponse(
   chainId: WalletChainId,
@@ -84,7 +83,7 @@ export function* getAccount(
  * Triggers a notification for new connections
  */
 export function* saveAccount({ url, favIconUrl }: SenderTabInfo) {
-  const activeAccount = yield* appSelect(selectActiveAccount)
+  const activeAccount = yield* select(selectActiveAccount)
   const dappUrl = extractBaseUrl(url)
   const dappInfo = yield* call(dappStore.getDappInfo, dappUrl)
 

@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useCallback, useMemo } from 'react'
+import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 // eslint-disable-next-line no-restricted-imports
 import {
   addFiatSymbolToNumber,
@@ -10,12 +11,6 @@ import {
 import { NumberType } from 'utilities/src/format/types'
 import { useCurrentLocale } from 'wallet/src/features/language/hooks'
 
-type FormatNumberOrStringInput = {
-  value: Maybe<number | string>
-  type?: NumberType
-  currencyCode?: string
-  placeholder?: string
-}
 type FormatCurrencyAmountInput = {
   value: CurrencyAmount<Currency> | null | undefined
   type?: NumberType

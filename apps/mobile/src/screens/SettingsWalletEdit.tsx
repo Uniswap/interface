@@ -3,7 +3,7 @@ import React, { useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, KeyboardAvoidingView, TextInput as NativeTextInput, StyleSheet } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { SettingsStackParamList } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
@@ -12,12 +12,12 @@ import { Button, Flex, Text } from 'ui/src'
 import { PenLine } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
 import { NICKNAME_MAX_LENGTH } from 'wallet/src/constants/accounts'
 import { useCanAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useAccounts, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
@@ -29,7 +29,7 @@ export function SettingsWalletEdit({
   },
 }: Props): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const activeAccount = useAccounts()[address]
   const displayName = useDisplayName(address)
   const [nickname, setNickname] = useState(displayName?.name)

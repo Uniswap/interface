@@ -4,23 +4,28 @@
 /* eslint-disable max-lines */
 
 import dayjs from 'dayjs'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { ExtensionOnboardingState } from 'wallet/src/features/behaviorHistory/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
 import { ChainIdToTxIdToDetails, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import {
   activatePendingAccounts,
+  addExploreAndWelcomeBehaviorHistory,
+  addHapticSetting,
   addRoutingFieldToTransactions,
+  deleteBetaOnboardingState,
+  deleteDefaultFavoritesFromFavoritesState,
+  deleteExtensionOnboardingState,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
-} from 'wallet/src/state/sharedMigrations'
+} from 'wallet/src/state/walletMigrations'
 
 export const OLD_DEMO_ACCOUNT_ADDRESS = '0xdd0E380579dF30E38524F9477808d9eE37E2dEa6'
 
@@ -864,7 +869,8 @@ export const migrations = {
 
     newState.behaviorHistory = {
       ...state.behaviorHistory,
-      extensionOnboardingState: ExtensionOnboardingState.Undefined,
+      // Removed in schema 69
+      extensionOnboardingState: 'Undefined',
     }
 
     return newState
@@ -877,6 +883,29 @@ export const migrations = {
   65: addRoutingFieldToTransactions,
 
   66: activatePendingAccounts,
+
+  67: function resetOnboardingStateForGA(state: any) {
+    const newState = { ...state }
+
+    // Reset state so that everyone gets the new promo banner even if theyve dismissed the beta version.
+    newState.behaviorHistory = {
+      ...state.behaviorHistory,
+      // Removed in schema 69
+      extensionOnboardingState: 'Undefined',
+    }
+
+    return newState
+  },
+
+  68: deleteBetaOnboardingState,
+
+  69: deleteExtensionOnboardingState,
+
+  70: deleteDefaultFavoritesFromFavoritesState,
+
+  71: addHapticSetting,
+
+  72: addExploreAndWelcomeBehaviorHistory,
 }
 
-export const MOBILE_STATE_VERSION = 66
+export const MOBILE_STATE_VERSION = 72

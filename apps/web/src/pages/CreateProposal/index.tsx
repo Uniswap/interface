@@ -12,8 +12,8 @@ import {
   STAKING_PROXY_ADDRESSES,
 } from 'constants/addresses'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
+import styled from 'lib/styled-components'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import AppBody from 'pages/App/AppBody'
 import { ProposalActionDetail } from 'pages/CreateProposal/ProposalActionDetail'
@@ -34,7 +34,6 @@ import {
   useProposalThreshold,
   useUserVotes,
 } from 'state/governance/hooks'
-import styled from 'styled-components'
 import { ExternalLink, StyledInternalLink, ThemedText } from 'theme/components'
 import AUTHORITY_ABI from 'uniswap/src/abis/authority.json'
 import TOKEN_ABI from 'uniswap/src/abis/erc20.json'
@@ -42,6 +41,7 @@ import GOVERNANCE_RB_ABI from 'uniswap/src/abis/governance.json'
 import RB_POOL_FACTORY_ABI from 'uniswap/src/abis/rb-pool-factory.json'
 import STAKING_PROXY_ABI from 'uniswap/src/abis/staking-proxy.json'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 import { GRG } from 'constants/tokens'
 
 const PageWrapper = styled(AutoColumn)`
@@ -349,13 +349,17 @@ ${bodyValue}
             <BlueCard>
               <AutoColumn gap="10px">
                 <ThemedText.DeprecatedLink fontWeight={485} color="accent1">
-                  <Trans i18nKey="vote.create.prompt" />{' '}
-                  <ExternalLink
-                    key="create-proposal-prompt-link"
-                    href="https://docs.rigoblock.com/readme-1/governance/solidity-api#propose"
-                  >
-                    <Trans i18nKey="proposal.readTheDocs" />
-                  </ExternalLink>
+                  <Trans
+                    i18nKey="vote.create.prompt"
+                    components={{
+                      link: (
+                        <ExternalLink
+                          key="create-proposal-prompt-link"
+                          href="https://docs.rigoblock.com/readme-1/governance/solidity-api#propose"
+                        />
+                      ),
+                    }}
+                  />
                 </ThemedText.DeprecatedLink>
               </AutoColumn>
             </BlueCard>

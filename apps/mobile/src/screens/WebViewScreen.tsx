@@ -33,9 +33,7 @@ function ZendeskWebView({ uriLink }: { uriLink: string }): JSX.Element {
 
   const onNavigationStateChange = useCallback(
     ({ url }: { url: string }): void => {
-      // Ok to ignore because `uniswapUrls.helpUrl` is hardcoded into our code.
-      // eslint-disable-next-line security/detect-non-literal-regexp
-      if (zendeskInjectJs && new RegExp(`${uniswapUrls.helpUrl}.+/requests/new`).test(url)) {
+      if (zendeskInjectJs && url.startsWith(`${uniswapUrls.helpUrl}/requests/new`)) {
         webviewRef.current?.injectJavaScript(zendeskInjectJs)
       }
     },

@@ -7,12 +7,12 @@ import {
   TextInputFocusEventData,
   TextInputKeyPressEventData,
 } from 'react-native'
+import { useDispatch } from 'react-redux'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
 import { SyncFromPhoneButton } from 'src/app/features/onboarding/SyncFromPhoneButton'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { useAppDispatch } from 'src/store/store'
 import { Button, Flex, FlexProps, Input, Square, Text, inputStyles } from 'ui/src'
 import { FileListLock, RotatableChevron } from 'ui/src/components/icons'
 import { fonts, iconSizes } from 'ui/src/theme'
@@ -26,7 +26,7 @@ import { isValidMnemonicWord, validateMnemonic } from 'wallet/src/utils/mnemonic
 
 export function ImportMnemonic(): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const [mnemonic, setMnemonic] = useState<string[]>(new Array(24).fill(''))
   const { addOnboardingAccountMnemonic } = useOnboardingContext()
   const [expanded, setExpanded] = useState(false)

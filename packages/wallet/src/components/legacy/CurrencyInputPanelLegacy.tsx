@@ -1,11 +1,12 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { memo, useCallback, useEffect, useMemo, useRef } from 'react'
-import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextInput, TextInputProps, TextInputSelectionChangeEventData } from 'react-native'
 import { Flex, FlexProps, SpaceTokens, Text, TouchableArea } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTokenButton'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
@@ -13,7 +14,8 @@ import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Warning, WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
-import { CurrencyField } from 'wallet/src/features/transactions/transactionState/types'
+import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
+import { TransactionType } from 'wallet/src/features/transactions/types'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type CurrentInputPanelProps = {
@@ -36,6 +38,7 @@ type CurrentInputPanelProps = {
   selection?: TextInputProps['selection']
   onSelectionChange?: (start: number, end: number) => void
   usdValue: Maybe<CurrencyAmount<Currency>>
+  transactionType?: TransactionType
 
   // sometimes CurrencyInputPanel rendered off screen like with Send input -> selector flow
   isOnScreen?: boolean
@@ -62,7 +65,7 @@ const getSwapPanelPaddingValues = (
     ? {
         // when there is a currency value, and the box is on the top, add a bit more
         // padding (spacing24) to account for the swap direction button
-        paddingBottom: isOutputBox ? '$spacing16' : '$spacing24',
+        paddingBottom: isOutputBox ? '$spacing16' : '$spacing16',
         paddingTop: isOutputBox ? '$spacing24' : '$spacing16',
         paddingHorizontal: '$spacing16',
       }
@@ -107,21 +110,16 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
     onSelectionChange: selectionChange,
     usdValue,
     isOnScreen,
+    transactionType,
     ...rest
   } = props
 
-  const { t } = useTranslation()
   const inputRef = useRef<TextInput>(null)
-  const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
+  const { formatCurrencyAmount } = useLocalizationContext()
 
   const insufficientBalanceWarning = warnings.find((warning) => warning.type === WarningLabel.InsufficientFunds)
 
   const showInsufficientBalanceWarning = insufficientBalanceWarning && !isOutput
-
-  const formattedFiatValue = convertFiatAmountFormatted(usdValue?.toExact(), NumberType.FiatTokenQuantity)
-  const formattedCurrencyAmount = currencyAmount
-    ? formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })
-    : ''
 
   // the focus state for native Inputs can sometimes be out of sync with the controlled `focus`
   // prop. When the internal focus state differs from our `focus` prop, sync the internal
@@ -194,6 +192,14 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
   const inputColor = !value ? '$neutral3' : '$neutral1'
   const { symbol: fiatCurrencySymbol } = useAppFiatCurrencyInfo()
 
+  const inputPanelFormattedValue = useTokenAndFiatDisplayAmounts({
+    value,
+    currencyInfo,
+    currencyAmount,
+    usdValue,
+    isFiatMode: isFiatInput,
+  })
+
   return (
     <Flex gap="$spacing8" pb={paddingBottom} pt={paddingTop} px={paddingHorizontal} {...rest}>
       <Flex
@@ -260,18 +266,18 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
         <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" mb="$spacing4">
           <TouchableArea onPress={handleToggleFiatInput}>
             <Flex shrink>
-              <Text color="$neutral2" numberOfLines={1} variant="subheading2">
-                {!isFiatInput ? (usdValue ? formattedFiatValue : '') : formattedCurrencyAmount}
+              <Text color="$neutral2" numberOfLines={1} variant="body3">
+                {inputPanelFormattedValue}
               </Text>
             </Flex>
           </TouchableArea>
           <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
-            <Text color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'} variant="subheading2">
-              {t('swap.form.balance')}:{' '}
+            <Text color={showInsufficientBalanceWarning ? '$DEP_accentWarning' : '$neutral2'} variant="body3">
               {formatCurrencyAmount({
                 value: currencyBalance,
                 type: NumberType.TokenNonTx,
-              })}
+              })}{' '}
+              {getSymbolDisplayText(currencyInfo.currency.symbol)}
             </Text>
 
             {onSetMax && (
@@ -279,6 +285,7 @@ export function _CurrencyInputPanel(props: CurrentInputPanelProps): JSX.Element 
                 currencyAmount={currencyAmount}
                 currencyBalance={currencyBalance}
                 currencyField={isOutput ? CurrencyField.OUTPUT : CurrencyField.INPUT}
+                transactionType={transactionType}
                 onSetMax={handleSetMax}
               />
             )}

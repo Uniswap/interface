@@ -1,15 +1,15 @@
 import { useCallback } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { dismissedWarningTokensSelector } from 'wallet/src/features/tokens/dismissedWarningTokensSelector'
 import { addDismissedWarningToken } from 'wallet/src/features/tokens/tokensSlice'
-import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 
 export function useTokenWarningDismissed(currencyId: Maybe<CurrencyId>): {
   tokenWarningDismissed: boolean // user dismissed warning
   dismissWarningCallback: () => void // callback to dismiss warning
 } {
-  const dispatch = useAppDispatch()
-  const dismissedTokens = useAppSelector(dismissedWarningTokensSelector)
+  const dispatch = useDispatch()
+  const dismissedTokens = useSelector(dismissedWarningTokensSelector)
 
   const tokenWarningDismissed = Boolean(currencyId && dismissedTokens && dismissedTokens[currencyId])
 

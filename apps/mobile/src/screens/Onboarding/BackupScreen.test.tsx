@@ -10,7 +10,7 @@ import { render } from 'src/test/test-utils'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
-import { ACCOUNT, preloadedSharedState } from 'wallet/src/test/fixtures'
+import { ACCOUNT, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 
 jest.mock('wallet/src/features/onboarding/OnboardingContext', () => ({
   useOnboardingContext: jest.fn().mockReturnValue({
@@ -47,7 +47,7 @@ describe(BackupScreen, () => {
       <TamaguiProvider>
         <BackupScreen navigation={navigationProp} route={routeProp} />
       </TamaguiProvider>,
-      { preloadedState: preloadedSharedState({ account: ACCOUNT }) },
+      { preloadedState: preloadedWalletPackageState({ account: ACCOUNT }) },
     )
 
     await act(async () => {

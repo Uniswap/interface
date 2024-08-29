@@ -3,7 +3,7 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Keyboard, TextInput } from 'react-native'
-import { useAppDispatch, useAppSelector } from 'src/app/hooks'
+import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PasswordInput } from 'src/components/input/PasswordInput'
 import { restoreMnemonicFromCloudStorage } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
@@ -69,11 +69,11 @@ function useLockoutTimeMessage(remainingLockoutTime: number): string {
 export function RestoreCloudBackupPasswordScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const inputRef = useRef<TextInput>(null)
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { generateImportedAccounts } = useOnboardingContext()
 
-  const passwordAttemptCount = useAppSelector(selectPasswordAttempts)
-  const lockoutEndTime = useAppSelector(selectLockoutEndTime)
+  const passwordAttemptCount = useSelector(selectPasswordAttempts)
+  const lockoutEndTime = useSelector(selectLockoutEndTime)
 
   const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
 

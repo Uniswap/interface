@@ -1,15 +1,15 @@
 import { ButtonPrimary } from 'components/Button'
 import Column from 'components/Column'
-import { Plural, Trans, t } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'
 import { Listing, WalletAsset } from 'nft/types'
 import React from 'react'
 import { AlertTriangle, X } from 'react-feather'
-import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
 const ModalWrapper = styled(Column)`
@@ -82,6 +82,7 @@ export const BelowFloorWarningModal = ({
   closeModal: () => void
   startListing: () => void
 }) => {
+  const { t } = useTranslation()
   const theme = useTheme()
   const { formatDelta } = useFormatter()
   const clickContinue = (e: React.MouseEvent) => {
@@ -90,6 +91,11 @@ export const BelowFloorWarningModal = ({
     startListing()
     closeModal()
   }
+
+  const delta = formatDelta(
+    (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100,
+  )
+
   return (
     <Portal>
       <ModalWrapper>
@@ -103,22 +109,13 @@ export const BelowFloorWarningModal = ({
           <Trans i18nKey="nft.lowPrice" />
         </ThemedText.HeadlineSmall>
         <ThemedText.BodyPrimary textAlign="center">
-          <Plural
-            value={listingsBelowFloor.length !== 1 ? 2 : 1}
-            one={t('nft.oneListedDelta', {
-              delta: formatDelta(
-                (1 - (listingsBelowFloor[0][1].price ?? 0) / (listingsBelowFloor[0][0].floorPrice ?? 0)) * 100,
-              ),
-            })}
-            other={t('nft.listedSignificantly', {
-              count: listingsBelowFloor.length,
-            })}
-          />
-          &nbsp;
-          <Trans i18nKey="nft.confirmBelowFloor" />
+          {t('nft.listedSignificantly', {
+            count: listingsBelowFloor.length,
+            percentage: delta,
+          })}
         </ThemedText.BodyPrimary>
         <ContinueButton onClick={clickContinue}>
-          <Trans i18nKey="common.continue.button" />
+          <Trans i18nKey="common.button.continue" />
         </ContinueButton>
         <EditListings onClick={closeModal}>
           <Trans i18nKey="nft.editListings" />

@@ -1,12 +1,12 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { SCREEN_ITEM_HORIZONTAL_PAD } from 'src/app/constants'
 import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItemWithDropdown'
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
-import { useAppDispatch } from 'src/store/store'
 import {
   Button,
   ColorTokens,
@@ -21,7 +21,6 @@ import {
 import {
   Chart,
   Coins,
-  Feedback,
   FileListLock,
   HelpCenter,
   Key,
@@ -34,8 +33,6 @@ import {
 } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isDevEnv } from 'utilities/src/environment'
 import noop from 'utilities/src/react/noop'
 import { WebSwitch } from 'wallet/src/components/buttons/Switch'
@@ -53,11 +50,10 @@ const manifestVersion = chrome.runtime.getManifest().version
 
 export function SettingsScreen(): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { navigateTo, navigateBack } = useExtensionNavigation()
   const currentLanguageInfo = useCurrentLanguageInfo()
   const appFiatCurrencyInfo = useAppFiatCurrencyInfo()
-  const isExtensionFeedbackEnabled = useFeatureFlag(FeatureFlags.ExtensionBetaFeedbackPrompt)
 
   const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
 
@@ -156,15 +152,6 @@ export function SettingsScreen(): JSX.Element {
               title={t('settings.setting.helpCenter.title')}
               url={uniswapUrls.helpArticleUrls.extensionHelp}
             />
-            {isExtensionFeedbackEnabled ? (
-              <SettingsItem
-                Icon={Feedback}
-                title={t('settings.setting.giveFeedback.title')}
-                url={uniswapUrls.extensionFeedbackFormUrl}
-              />
-            ) : (
-              <></>
-            )}
             <Text color="$neutral3" px="$spacing12" py="$spacing4" variant="body4">{`Version ${manifestVersion}`}</Text>
           </SettingsSection>
         </ScrollView>

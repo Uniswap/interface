@@ -2,7 +2,7 @@ import { InterfaceElementName, InterfacePageName, SharedEventName } from '@unisw
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { AutoRow } from 'components/Row'
 import { TopTokensTable } from 'components/Tokens/TokenTable'
-import NetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
+import TableNetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
 import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
@@ -10,17 +10,17 @@ import { useChainFromUrlParam } from 'constants/chains'
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { getTokenExploreURL, isBackendSupportedChain } from 'graphql/data/util'
 import { useOnGlobalChainSwitch } from 'hooks/useGlobalChainSwitch'
-import { Trans } from 'i18n'
 import { useResetAtom } from 'jotai/utils'
+import styled from 'lib/styled-components'
 import { ExploreChartsSection } from 'pages/Explore/charts/ExploreChartsSection'
 import { useExploreParams } from 'pages/Explore/redirects'
 import RecentTransactions from 'pages/Explore/tables/RecentTransactions'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import styled from 'styled-components'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const ExploreContainer = styled.div`
@@ -38,7 +38,7 @@ const NavWrapper = styled.div`
   display: flex;
   max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
   margin: 0 auto;
-  margin-bottom: 16px;
+  margin-bottom: 4px;
   color: ${({ theme }) => theme.neutral3};
   flex-direction: row;
   justify-content: space-between;
@@ -182,7 +182,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
             })}
           </TabBar>
           <FiltersContainer>
-            <NetworkFilter />
+            <TableNetworkFilter />
             {currentKey === ExploreTab.Tokens && <TimeSelector />}
             {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}
           </FiltersContainer>

@@ -13,9 +13,10 @@ import { AnimatePresence, Button, Flex, Image, Text, TouchableArea, useSporeColo
 import { ENS_LOGO } from 'ui/src/assets'
 import { InfoCircleFilled, LinkHorizontalAlt } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { DEP_accentColors, fonts, iconSizes, imageSizes, spacing, validColor } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Pill } from 'uniswap/src/components/pill/Pill'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
@@ -27,7 +28,6 @@ import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import {
   useCreateOnboardingAccountIfNone,
   useOnboardingContext,
@@ -331,7 +331,13 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
               {requiresENSMatch && (
                 <Trans
                   components={{
-                    highlight: <Text color="$DEP_blue300" variant="body2" onPress={onPressClaimPeriodLearnMore} />,
+                    highlight: (
+                      <Text
+                        color={validColor(DEP_accentColors.blue300)}
+                        variant="body2"
+                        onPress={onPressClaimPeriodLearnMore}
+                      />
+                    ),
                   }}
                   i18nKey="unitags.onboarding.claimPeriod.link"
                 />
@@ -364,7 +370,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
         >
           {isCheckingUnitag ? (
             <Flex height={fonts.buttonLabel1.lineHeight}>
-              <ActivityIndicator color={colors.sporeWhite.val} />
+              <ActivityIndicator color={colors.white.val} />
             </Flex>
           ) : (
             t('common.button.continue')

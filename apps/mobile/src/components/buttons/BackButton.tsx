@@ -2,6 +2,7 @@ import { useNavigation } from '@react-navigation/native'
 import React from 'react'
 import { BackButtonView } from 'src/components/layout/BackButtonView'
 import { ColorTokens, TouchableArea, TouchableAreaProps } from 'ui/src'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 type Props = {
   size?: number
@@ -19,14 +20,7 @@ export function BackButton({ onPressBack, size, color, showButtonLabel, ...rest 
         navigation.goBack()
       }
   return (
-    <TouchableArea
-      hapticFeedback
-      alignItems="center"
-      hitSlop={24}
-      testID="buttons/back-button"
-      onPress={goBack}
-      {...rest}
-    >
+    <TouchableArea hapticFeedback alignItems="center" hitSlop={24} testID={TestID.Back} onPress={goBack} {...rest}>
       <BackButtonView color={color} showButtonLabel={showButtonLabel} size={size} />
     </TouchableArea>
   )

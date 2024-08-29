@@ -77,6 +77,8 @@ type SwapAndLimitContextType = {
     outputCurrency?: Currency
   }
   setSelectedChainId: Dispatch<SetStateAction<InterfaceChainId | undefined | null>>
+  isUserSelectedToken: boolean
+  setIsUserSelectedToken: Dispatch<SetStateAction<boolean>>
   setCurrencyState: Dispatch<SetStateAction<CurrencyState>>
   currentTab: SwapTab
   setCurrentTab: Dispatch<SetStateAction<SwapTab>>
@@ -99,6 +101,8 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
   },
   setCurrencyState: () => undefined,
   setSelectedChainId: () => undefined,
+  isUserSelectedToken: false,
+  setIsUserSelectedToken: () => undefined,
   prefilledState: {
     inputCurrency: undefined,
     outputCurrency: undefined,

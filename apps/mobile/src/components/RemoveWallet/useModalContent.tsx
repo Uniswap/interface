@@ -6,9 +6,9 @@ import AlertTriangleIcon from 'ui/src/assets/icons/alert-triangle.svg'
 import TrashIcon from 'ui/src/assets/icons/trash.svg'
 import WalletIcon from 'ui/src/assets/icons/wallet-filled.svg'
 import { ThemeNames } from 'ui/src/theme'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
-import { concatStrings } from 'utilities/src/primitives/string'
-import { Account, AccountType } from 'wallet/src/features/wallet/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export enum RemoveWalletStep {
@@ -104,10 +104,9 @@ export const useModalContent = ({
 
     // removing mnemonic account
     if (account?.type === AccountType.SignerMnemonic && currentStep === RemoveWalletStep.Final) {
-      const associatedAccountNames = concatStrings(
-        associatedAccounts.filter((aa): aa is Account => aa.address !== account?.address).map((aa) => aa.name ?? ''),
-        t('common.endAdornment'),
-      )
+      const associatedAccountNames = associatedAccounts
+        .filter((aa): aa is Account => aa.address !== account?.address)
+        .map((aa) => aa.name ?? '')
 
       return {
         title: (
@@ -121,15 +120,7 @@ export const useModalContent = ({
             />
           </Text>
         ),
-        description: (
-          <Trans
-            components={{
-              highlight: <Text color="$neutral1" variant="body3" />,
-            }}
-            i18nKey="account.recoveryPhrase.remove.mnemonic.description"
-            values={{ walletName: associatedAccountNames }}
-          />
-        ),
+        description: t('account.recoveryPhrase.remove.mnemonic.description', { walletNames: associatedAccountNames }),
         Icon: TrashIcon,
         iconColorLabel: 'statusCritical',
         actionButtonLabel: t('common.button.remove'),

@@ -6,12 +6,10 @@ import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } fro
 import { ArrowDownCircle, Buy as BuyIcon, PaperStack } from 'ui/src/components/icons'
 import { borderRadii } from 'ui/src/theme'
 import { ActionCard, ActionCardItem } from 'uniswap/src/components/misc/ActionCard'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { useCexTransferProviders } from 'wallet/src/features/fiatOnRamp/api'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
-import { AccountType } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
 enum ActionOption {
@@ -28,16 +26,22 @@ type WalletEmptyStateProps = {
   // Buying and importing are optionally supported
   onPressImport?: () => void
   onPressBuy?: () => void
+  // If buy is supported but not from a cex like on the extension
+  disableCexTransfers?: boolean
 }
 
-export function PortfolioEmptyState({ onPressReceive, onPressImport, onPressBuy }: WalletEmptyStateProps): JSX.Element {
+export function PortfolioEmptyState({
+  onPressReceive,
+  onPressImport,
+  onPressBuy,
+  disableCexTransfers = false,
+}: WalletEmptyStateProps): JSX.Element {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
 
   const activeAccount = useActiveAccount()
   const isViewOnly = activeAccount?.type === AccountType.Readonly
-  const cexTransferEnabled = useFeatureFlag(FeatureFlags.CexTransfers)
-  const cexTransferProviders = useCexTransferProviders(cexTransferEnabled)
+  const cexTransferProviders = useCexTransferProviders({ isDisabled: disableCexTransfers })
 
   const BackgroundImageWrapperCallback = useCallback(
     ({ children }: { children: React.ReactNode }) => {

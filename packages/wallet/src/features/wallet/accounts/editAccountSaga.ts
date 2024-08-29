@@ -1,11 +1,11 @@
-import { all, call, put } from 'typed-redux-saga'
+import { all, call, put, select } from 'typed-redux-saga'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { logger } from 'utilities/src/logger/logger'
 import { unique } from 'utilities/src/primitives/array'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
-import { Account, AccountType, BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { Account, BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import { editAccount as editInStore, removeAccounts as removeAccountsInStore } from 'wallet/src/features/wallet/slice'
-import { appSelect } from 'wallet/src/state'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export enum EditAccountAction {
@@ -78,7 +78,7 @@ function* editAccount(params: EditAccountParams) {
     throw new Error('Address is required for editAccount actions other than Remove')
   }
 
-  const accounts = yield* appSelect(selectAccounts)
+  const accounts = yield* select(selectAccounts)
   const account = accounts[address]
 
   if (!account) {
@@ -132,7 +132,7 @@ function* addBackupMethod(params: AddBackupMethodParams, account: Account) {
 
   const { backupMethod } = params
 
-  const accounts = yield* appSelect(selectAccounts)
+  const accounts = yield* select(selectAccounts)
   const mnemonicAccounts = Object.values(accounts).filter(
     (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === account.mnemonicId,
   )
@@ -168,7 +168,7 @@ function* removeBackupMethod(params: RemoveBackupMethodParams, account: Account)
 
   const { backupMethod } = params
 
-  const accounts = yield* appSelect(selectAccounts)
+  const accounts = yield* select(selectAccounts)
   const mnemonicAccounts = Object.values(accounts).filter(
     (a) => a.type === AccountType.SignerMnemonic && a.mnemonicId === account.mnemonicId,
   )

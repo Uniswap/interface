@@ -1,2 +1,2 @@
-export { MobileBottomBar, MobileBottomBarLegacy } from './MobileBottomBar'
+export { MobileBottomBar } from './MobileBottomBar'
 export { TDPActionTabs } from './TDPActionTabs'

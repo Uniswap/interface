@@ -1,10 +1,8 @@
-/* eslint-disable no-restricted-imports */
-
 import { render as RNRender, RenderOptions, RenderResult } from '@testing-library/react-native'
 import { PropsWithChildren } from 'react'
 import { TamaguiProvider } from 'ui/src'
 import { config as tamaguiConfig } from 'ui/src/tamagui.config'
-import 'uniswap/src/i18n/i18n'
+import 'uniswap/src/i18n'
 
 /**
  *

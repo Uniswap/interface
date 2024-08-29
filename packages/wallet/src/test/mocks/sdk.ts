@@ -1,6 +1,6 @@
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
+import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { UNI, WBTC } from 'wallet/src/constants/tokens'
 
 export const mockPool = new Pool(
   UNI[UniverseChainId.Mainnet],

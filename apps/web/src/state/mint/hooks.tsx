@@ -3,19 +3,19 @@ import { Pair } from '@uniswap/v2-sdk'
 import { useAccount } from 'hooks/useAccount'
 import { useTotalSupply } from 'hooks/useTotalSupply'
 import { PairState, useV2Pair } from 'hooks/useV2Pairs'
-import { Trans } from 'i18n'
 import JSBI from 'jsbi'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { ReactNode, useCallback, useMemo } from 'react'
 import { useCurrencyBalances } from 'state/connection/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { Field, typeInput } from 'state/mint/actions'
-import { AppState } from 'state/reducer'
+import { InterfaceState } from 'state/webReducer'
+import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 
 const ZERO = JSBI.BigInt(0)
 
-export function useMintState(): AppState['mint'] {
+export function useMintState(): InterfaceState['mint'] {
   return useAppSelector((state) => state.mint)
 }
 

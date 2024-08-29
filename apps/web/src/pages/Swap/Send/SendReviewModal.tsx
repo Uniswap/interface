@@ -1,19 +1,22 @@
+import { InterfaceElementName } from '@uniswap/analytics-events'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { ButtonPrimary } from 'components/Button'
-import GetHelp from 'components/Button/GetHelp'
 import Column, { ColumnCenter } from 'components/Column'
 import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import Modal from 'components/Modal'
+import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import Row from 'components/Row'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { useSendContext } from 'state/send/SendContext'
-import { useSwapAndLimitContext } from 'state/swap/hooks'
-import styled from 'styled-components'
-import { ClickableStyle, CloseIcon, Separator, ThemedText } from 'theme/components'
+import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { Separator, ThemedText } from 'theme/components'
+import { capitalize } from 'tsafe'
 import { Unitag } from 'ui/src/components/icons'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -26,8 +29,8 @@ const ModalWrapper = styled(ColumnCenter)`
   padding: 8px;
 `
 
-const StyledReviewCloseIcon = styled(CloseIcon)`
-  ${ClickableStyle}
+const ModalHeader = styled(GetHelpHeader)`
+  padding: 8px 12px 4px;
 `
 
 const ReviewContentContainer = styled(Column)`
@@ -64,6 +67,7 @@ const SendModalHeader = ({
 }
 
 export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => void; onDismiss: () => void }) {
+  const { t } = useTranslation()
   const { chainId } = useSwapAndLimitContext()
   const {
     sendState: { inputCurrency, inputInFiat, exactAmountFiat },
@@ -95,17 +99,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
   return (
     <Modal $scrollOverlay isOpen onDismiss={onDismiss} maxHeight="90vh">
       <ModalWrapper data-testid="send-review-modal" gap="md">
-        <Row width="100%" padding="8px 12px 4px" align="center">
-          <Row justify="left">
-            <ThemedText.SubHeader>
-              <Trans i18nKey="sendReviewModal.title" />
-            </ThemedText.SubHeader>
-          </Row>
-          <Row justify="right" gap="10px">
-            <GetHelp />
-            <StyledReviewCloseIcon onClick={onDismiss} />
-          </Row>
-        </Row>
+        <ModalHeader title={<Trans i18nKey="sendReviewModal.title" />} closeModal={onDismiss} />
         <ReviewContentContainer>
           <Column gap="lg">
             <SendModalHeader
@@ -117,7 +111,7 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
               }
             />
             <SendModalHeader
-              label={<Trans i18nKey="common.to.caps" />}
+              label={capitalize(t('common.to'))}
               header={
                 recipientData?.unitag || recipientData?.ensName ? (
                   <Row gap="xs">
@@ -143,9 +137,11 @@ export function SendReviewModal({ onConfirm, onDismiss }: { onConfirm: () => voi
             </Row>
           </Row>
         </ReviewContentContainer>
-        <ButtonPrimary onClick={onConfirm}>
-          <Trans i18nKey="common.confirmSend.button" />
-        </ButtonPrimary>
+        <Trace logPress element={InterfaceElementName.SEND_REVIEW_BUTTON}>
+          <ButtonPrimary onClick={onConfirm}>
+            <Trans i18nKey="common.confirmSend.button" />
+          </ButtonPrimary>
+        </Trace>
       </ModalWrapper>
     </Modal>
   )

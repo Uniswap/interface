@@ -1,6 +1,7 @@
 import { TransactionRequest, TransactionResponse } from '@ethersproject/providers'
 import { BigNumber, providers } from 'ethers'
 import { merge } from 'lodash'
+import { faker } from 'uniswap/src/test/shared'
 import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
 import {
   ClassicTransactionDetails,
@@ -18,7 +19,6 @@ import {
   transactionDetails,
   transactionReceipt,
 } from 'wallet/src/test/fixtures/wallet/transactions/fixtures'
-import { faker } from 'wallet/src/test/shared'
 
 type TxFixtures<T extends ClassicTransactionDetails> = {
   txDetailsPending: T

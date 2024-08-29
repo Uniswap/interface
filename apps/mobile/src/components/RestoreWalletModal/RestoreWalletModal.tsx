@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { closeAllModals, closeModal } from 'src/features/modals/modalSlice'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
@@ -15,7 +15,7 @@ import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobi
 export function RestoreWalletModal(): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
 
   const onDismiss = (): void => {
     dispatch(closeModal({ name: ModalName.RestoreWallet }))

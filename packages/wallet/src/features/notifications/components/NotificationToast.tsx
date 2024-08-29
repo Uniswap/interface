@@ -5,6 +5,7 @@
 import { useCallback, useEffect } from 'react'
 import { Directions, FlingGestureHandler, FlingGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
+import { useDispatch, useSelector } from 'react-redux'
 import {
   Flex,
   Text,
@@ -18,10 +19,10 @@ import {
 } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, spacing } from 'ui/src/theme'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTimeout } from 'utilities/src/time/timing'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
 import { popNotification, setNotificationViewed } from 'wallet/src/features/notifications/slice'
-import { useAppDispatch, useAppSelector } from 'wallet/src/state'
 
 const NOTIFICATION_HEIGHT = 64
 
@@ -37,6 +38,7 @@ export interface NotificationContentProps {
   title: string
   subtitle?: string
   icon?: JSX.Element
+  iconPosition?: 'left' | 'right'
   actionButton?: {
     title: string
     onPress: () => void
@@ -52,11 +54,12 @@ export interface NotificationToastProps extends NotificationContentProps {
 }
 
 // TODO(EXT-931): Consolidate mobile and web animation styles
-const ToastEntryAnimation = styled(Flex, {
+const WebToastEntryAnimation = styled(Flex, {
   animation: 'semiBouncy',
   y: 0,
   top: '$spacing12',
-  position: 'absolute',
+  // @ts-expect-error - It's Ok to ignore and use the web-only `fixed` value because this component is only used on web.
+  position: 'fixed',
   width: '100%',
   zIndex: '$overlay',
   opacity: 1,
@@ -74,6 +77,7 @@ export function NotificationToast({
   subtitle,
   title,
   icon,
+  iconPosition = 'left',
   onPress,
   onPressIn,
   hideDelay,
@@ -82,8 +86,8 @@ export function NotificationToast({
   smallToast,
 }: NotificationToastProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
-  const dispatch = useAppDispatch()
-  const notifications = useAppSelector(selectActiveAccountNotifications)
+  const dispatch = useDispatch()
+  const notifications = useSelector(selectActiveAccountNotifications)
   const currentNotification = notifications?.[0]
   const hasQueuedNotification = !!notifications?.[1]
 
@@ -160,11 +164,18 @@ export function NotificationToast({
       pointerEvents="auto"
     >
       {smallToast ? (
-        <NotificationContentSmall icon={icon} title={title} onPress={onNotificationPress} onPressIn={onPressIn} />
+        <NotificationContentSmall
+          icon={icon}
+          iconPosition={iconPosition}
+          title={title}
+          onPress={onNotificationPress}
+          onPressIn={onPressIn}
+        />
       ) : (
         <NotificationContent
           actionButton={actionButton ? { title: actionButton.title, onPress: onActionButtonPress } : undefined}
           icon={icon}
+          iconPosition={iconPosition}
           subtitle={subtitle}
           title={title}
           onPress={onNotificationPress}
@@ -175,7 +186,7 @@ export function NotificationToast({
   )
 
   return isWeb ? (
-    <ToastEntryAnimation>{notificationContent}</ToastEntryAnimation>
+    <WebToastEntryAnimation>{notificationContent}</WebToastEntryAnimation>
   ) : (
     <FlingGestureHandler direction={Directions.UP} onHandlerStateChange={onFling}>
       <AnimatedFlex
@@ -198,6 +209,7 @@ function NotificationContent({
   title,
   subtitle,
   icon,
+  iconPosition,
   actionButton,
   onPress,
   onPressIn,
@@ -223,9 +235,14 @@ function NotificationContent({
           gap="$spacing12"
           justifyContent="flex-start"
         >
-          {icon}
+          {iconPosition === 'left' ? icon : undefined}
           <Flex shrink alignItems="flex-start" flexDirection="column">
-            <Text adjustsFontSizeToFit numberOfLines={subtitle ? 1 : 2} variant="subheading2">
+            <Text
+              adjustsFontSizeToFit
+              numberOfLines={subtitle ? 1 : 2}
+              testID={TestID.NotificationToastTitle}
+              variant="subheading2"
+            >
               {title}
             </Text>
             {subtitle && (
@@ -234,6 +251,7 @@ function NotificationContent({
               </Text>
             )}
           </Flex>
+          {iconPosition === 'right' ? icon : undefined}
         </Flex>
         {actionButton && (
           <Flex shrink alignItems="flex-end" flexBasis="25%" gap="$spacing4">
@@ -249,7 +267,13 @@ function NotificationContent({
   )
 }
 
-function NotificationContentSmall({ title, icon, onPress, onPressIn }: NotificationContentProps): JSX.Element {
+function NotificationContentSmall({
+  title,
+  icon,
+  iconPosition,
+  onPress,
+  onPressIn,
+}: NotificationContentProps): JSX.Element {
   return (
     <Flex centered row shrink pointerEvents="box-none">
       <TouchableArea
@@ -260,10 +284,11 @@ function NotificationContentSmall({ title, icon, onPress, onPressIn }: Notificat
         onPressIn={onPressIn}
       >
         <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" pr="$spacing4">
-          <Flex>{icon}</Flex>
-          <Text adjustsFontSizeToFit numberOfLines={1} variant="body2">
+          {iconPosition === 'left' ? <Flex>{icon}</Flex> : undefined}
+          <Text adjustsFontSizeToFit numberOfLines={1} testID={TestID.NotificationToastTitle} variant="body2">
             {title}
           </Text>
+          {iconPosition === 'right' ? <Flex>{icon}</Flex> : undefined}
         </Flex>
       </TouchableArea>
     </Flex>

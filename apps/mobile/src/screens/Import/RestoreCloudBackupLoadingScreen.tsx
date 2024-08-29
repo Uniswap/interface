@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import {
   startFetchingCloudStorageBackups,
@@ -31,7 +31,7 @@ const MAX_LOADING_TIMEOUT_MS = ONE_SECOND_MS * 10
 
 export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const entryPoint = params.entryPoint
   const importType = params.importType
 

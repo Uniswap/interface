@@ -1,4 +1,4 @@
-import { useAppSelector } from 'src/app/hooks'
+import { useSelector } from 'react-redux'
 import { ModalsState } from 'src/features/modals/ModalsState'
 import { selectModalState } from 'src/features/modals/selectModalState'
 
@@ -14,7 +14,7 @@ export function LazyModalRenderer({
   name: keyof ModalsState
   children: JSX.Element
 }): JSX.Element | null {
-  const modalState = useAppSelector(selectModalState(name))
+  const modalState = useSelector(selectModalState(name))
 
   if (!modalState.isOpen) {
     // avoid doing any work until the modal needs to be open

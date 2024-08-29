@@ -1,5 +1,5 @@
-import { useAccount } from 'hooks/useAccount'
-import useBlockNumber, { useMainnetBlockNumber } from 'lib/hooks/useBlockNumber'
+import { useMainnetBlockNumber } from 'lib/hooks/useBlockNumber'
+import { useCallContext } from 'lib/hooks/useCallContext'
 import multicall from 'lib/state/multicall'
 import { SkipFirst } from 'types/tuple'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -33,10 +33,4 @@ export function useSingleContractMultipleData(
 ) {
   const { chainId, latestBlock } = useCallContext()
   return multicall.hooks.useSingleContractMultipleData(chainId, latestBlock, ...args)
-}
-
-function useCallContext() {
-  const { chainId } = useAccount()
-  const latestBlock = useBlockNumber()
-  return { chainId, latestBlock }
 }

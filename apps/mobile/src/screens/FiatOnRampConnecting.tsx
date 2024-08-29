@@ -2,11 +2,10 @@ import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { skipToken } from '@reduxjs/toolkit/query/react'
 import React, { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { useAppDispatch } from 'src/app/hooks'
+import { useDispatch } from 'react-redux'
 import { FiatOnRampStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
-import { useFiatOnRampTransactionCreator } from 'src/features/fiatOnRamp/hooks'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { spacing } from 'ui/src/theme'
@@ -14,20 +13,22 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
 import { useFiatOnRampAggregatorWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
-import { getOptionalServiceProviderLogo, getServiceProviderForQuote } from 'uniswap/src/features/fiatOnRamp/utils'
+import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
+import { openUri } from 'uniswap/src/utils/linking'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
+import { useFiatOnRampTransactionCreator } from 'wallet/src/features/fiatOnRamp/hooks'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { forceFetchFiatOnRampTransactions } from 'wallet/src/features/transactions/slice'
+import { FiatPurchaseTransactionInfo } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-import { openUri } from 'wallet/src/utils/linking'
 
 // Design decision
 const CONNECTING_TIMEOUT = 2 * ONE_SECOND_MS
@@ -36,28 +37,27 @@ type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.
 
 export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element | null {
   const { t } = useTranslation()
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const { addFiatSymbolToNumber } = useLocalizationContext()
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
-  const {
-    selectedQuote,
-    quotesSections,
-    serviceProviders,
-    countryCode,
-    countryState,
-    baseCurrencyInfo,
-    quoteCurrency,
-    amount,
-  } = useFiatOnRampContext()
-  const serviceProvider = getServiceProviderForQuote(selectedQuote, serviceProviders)
+  const { selectedQuote, quotesSections, countryCode, countryState, baseCurrencyInfo, quoteCurrency, amount } =
+    useFiatOnRampContext()
+  const serviceProvider = selectedQuote?.serviceProviderDetails
 
-  const initialTypeInfo = useMemo(() => ({ serviceProviderLogo: serviceProvider?.logos }), [serviceProvider?.logos])
+  const initialTypeInfo = useMemo<Partial<FiatPurchaseTransactionInfo>>(
+    () => ({
+      serviceProviderLogo: serviceProvider?.logos,
+      serviceProvider: serviceProvider?.serviceProvider,
+    }),
+    [serviceProvider],
+  )
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
     quoteCurrency.currencyInfo?.currency.chainId ?? UniverseChainId.Mainnet,
+    serviceProvider?.serviceProvider,
     initialTypeInfo,
   )
 
@@ -105,7 +105,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
         sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampWidgetOpened, {
           externalTransactionId,
           serviceProvider: serviceProvider.serviceProvider,
-          preselectedServiceProvider: quotesSections?.[0]?.data?.[0]?.serviceProvider,
+          preselectedServiceProvider: quotesSections?.[0]?.data?.[0]?.serviceProviderDetails.serviceProvider,
           countryCode,
           countryState,
           fiatCurrency: baseCurrencyInfo?.code.toLowerCase(),

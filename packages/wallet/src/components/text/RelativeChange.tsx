@@ -1,6 +1,7 @@
 import { ColorTokens, Flex, Text } from 'ui/src'
 import { Caret } from 'ui/src/components/icons'
 import { IconSizeTokens, fonts } from 'ui/src/theme'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
@@ -58,6 +59,7 @@ export function RelativeChange(props: RelativeChangeProps): JSX.Element {
           color={semanticColor ? (isPositiveChange ? '$statusSuccess' : '$statusCritical') : '$neutral2'}
           loading={loading}
           loadingPlaceholderText="▲ 00.00 (0.00)%"
+          testID={TestID.PortfolioRelativeChange}
           variant={variant}
         >
           {absoluteChange ? `${formattedAbsChange} (${formattedChange})` : formattedChange}

@@ -2,20 +2,14 @@ import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { Routing } from 'wallet/src/data/tradingApi/__generated__/index'
-import {
-  sendTransaction,
-  signAndSendTransaction,
-} from 'wallet/src/features/transactions/sendTransactionSaga'
+import { sendTransaction, signAndSendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { addTransaction } from 'wallet/src/features/transactions/slice'
 import { TransactionStatus } from 'wallet/src/features/transactions/types'
-import { AccountType, ReadOnlyAccount } from 'wallet/src/features/wallet/accounts/types'
-import {
-  getProvider,
-  getProviderManager,
-  getSignerManager,
-} from 'wallet/src/features/wallet/context'
+import { ReadOnlyAccount } from 'wallet/src/features/wallet/accounts/types'
+import { getProvider, getProviderManager, getSignerManager } from 'wallet/src/features/wallet/context'
 import { getTxFixtures, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { noOpFunction, provider, providerManager, signerManager } from 'wallet/src/test/mocks'
 
@@ -52,13 +46,7 @@ describe(sendTransaction, () => {
         [call(getProviderManager), providerManager],
         [call(getSignerManager), signerManager],
         [
-          call(
-            signAndSendTransaction,
-            txRequest,
-            account,
-            provider as providers.Provider,
-            signerManager
-          ),
+          call(signAndSendTransaction, txRequest, account, provider as providers.Provider, signerManager),
           { transactionResponse: txResponse, populatedRequest: txRequest },
         ],
       ])
@@ -87,7 +75,7 @@ describe(sendTransaction, () => {
               maxFeePerGas: undefined,
             },
           },
-        })
+        }),
       )
       .silentRun()
   })
@@ -104,8 +92,6 @@ describe(sendTransaction, () => {
       ...sendParams,
       account: readOnlyAccount,
     }
-    return expectSaga(sendTransaction, params)
-      .throws(new Error('Account must support signing'))
-      .silentRun()
+    return expectSaga(sendTransaction, params).throws(new Error('Account must support signing')).silentRun()
   })
 })

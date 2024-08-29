@@ -1,4 +1,3 @@
-import { ethers } from 'ethers'
 import { EthersTransactionRequestSchema } from 'src/app/features/dappRequests/types/EthersTypes'
 import { HexadecimalNumberSchema } from 'src/app/features/dappRequests/types/utilityTypes'
 import { HomeTabs } from 'src/app/navigation/constants'
@@ -84,19 +83,6 @@ export const PersonalSignRequestSchema = EthereumRequestWithIdSchema.extend({
   }
 
   const messageHex = z.string().parse(params[0])
-
-  try {
-    ethers.utils.toUtf8String(messageHex)
-  } catch {
-    throw new z.ZodError([
-      {
-        message: 'Message hex is not a valid hex string',
-        path: ['params', 'hexMessage'],
-        code: ZodIssueCode.custom,
-      },
-    ])
-  }
-
   const address = z.string().parse(params[1])
 
   return {

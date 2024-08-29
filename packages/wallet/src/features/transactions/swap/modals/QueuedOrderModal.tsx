@@ -5,22 +5,28 @@ import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { isMobile } from 'utilities/src/platform'
-import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { AssetType, TradeableAsset } from 'wallet/src/entities/assets'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { SwapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/SwapTransactionDetails'
 import { isSwapTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import { ErroredQueuedOrderStatus, useErroredQueuedOrders } from 'wallet/src/features/transactions/hooks'
+import { useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import { updateTransaction } from 'wallet/src/features/transactions/slice'
-import { CurrencyField, TransactionState } from 'wallet/src/features/transactions/transactionState/types'
-import { QueuedOrderStatus, TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
+import {
+  QueuedOrderStatus,
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'wallet/src/features/transactions/types'
 import { useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
 
 const QUEUE_STATUS_TO_MESSAGE = {
@@ -56,15 +62,23 @@ export function QueuedOrderModal(): JSX.Element | null {
     }
   }, [transactionState, navigateToSwapFlow, onCancel])
 
+  const localTransactions = useSelectAddressTransactions(account?.address ?? null)
+  // If a wrap tx was involved as part of the order flow, show a message indicating that the user now has WETH,
+  // unless the wrap failed, in which case the user still has ETH and the message should not be shown.
+  const showWrapMessage = useMemo(() => {
+    if (!currentFailedOrder || currentFailedOrder?.queueStatus === QueuedOrderStatus.WrapFailed) {
+      return false
+    }
+    return localTransactions?.some(
+      (tx) => tx.typeInfo.type === TransactionType.Wrap && tx.typeInfo.swapTxId === currentFailedOrder?.id,
+    )
+  }, [localTransactions, currentFailedOrder])
+
   // If there are no failed orders tracked in state, return nothing.
   if (!uniswapXEnabled || !currentFailedOrder || !isSwapTransactionInfo(currentFailedOrder.typeInfo)) {
     return null
   }
   const reason = QUEUE_STATUS_TO_MESSAGE[currentFailedOrder.queueStatus]
-  // If a wrap tx was involved as part of the order flow, show a message indicating that the user now has WETH,
-  // unless the wrap failed, in which case the user still has ETH and the message should not be shown.
-  const showWrapMessage =
-    Boolean(currentFailedOrder.wrapTxHash) && currentFailedOrder.queueStatus !== QueuedOrderStatus.WrapFailed
 
   const buttonSize = isShortMobileDevice ? 'small' : 'medium'
 
@@ -84,7 +98,7 @@ export function QueuedOrderModal(): JSX.Element | null {
           <Text color="$neutral2" textAlign="center" variant="body3">
             {reason}
             {showWrapMessage && ' '}
-            {showWrapMessage && <> {t('swap.warning.queuedOrder.wrap.message')}</>}
+            {showWrapMessage && t('swap.warning.queuedOrder.wrap.message')}
           </Text>
           <LearnMoreLink
             textColor="$neutral1"

@@ -5,12 +5,8 @@ import { ApproveRequestContent } from 'src/app/features/dappRequests/requestCont
 import { FallbackEthSendRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/FallbackEthSend/FallbackEthSend'
 import { LPRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/LP/LPRequestContent'
 import { SwapRequestContent } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/SwapRequestContent'
-import {
-  DappRequestStoreItemForEthSendTxn,
-  isApproveRequest,
-  isLPRequest,
-  isSwapRequest,
-} from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { DappRequestStoreItemForEthSendTxn } from 'src/app/features/dappRequests/slice'
+import { isApproveRequest, isLPRequest, isSwapRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { logger } from 'utilities/src/logger/logger'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'

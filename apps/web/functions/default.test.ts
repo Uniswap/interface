@@ -6,7 +6,7 @@ test.each(defaultUrls)('should inject metadata for valid collections', async (de
   expect(body).toContain(`<meta property="og:description" content="Swap or provide liquidity on the Uniswap Protocol"`)
   expect(body).toContain(`<meta name="description" content="Swap or provide liquidity on the Uniswap Protocol"`)
   expect(body).toContain(
-    `<meta property="og:image" content="http://127.0.0.1:3000/images/1200x630_Rich_Link_Preview_Image.png"`
+    `<meta property="og:image" content="http://127.0.0.1:3000/images/1200x630_Rich_Link_Preview_Image.png"`,
   )
   expect(body).toContain(`<meta property="og:image:width" content="1200"`)
   expect(body).toContain(`<meta property="og:image:height" content="630"`)
@@ -15,7 +15,7 @@ test.each(defaultUrls)('should inject metadata for valid collections', async (de
   expect(body).toContain(`<meta property="twitter:card" content="summary_large_image"`)
   expect(body).toContain(`<meta property="twitter:title" content="Uniswap Interface"`)
   expect(body).toContain(
-    `<meta property="twitter:image" content="http://127.0.0.1:3000/images/1200x630_Rich_Link_Preview_Image.png"`
+    `<meta property="twitter:image" content="http://127.0.0.1:3000/images/1200x630_Rich_Link_Preview_Image.png"`,
   )
   expect(body).toContain(`<meta property="twitter:image:alt" content="Uniswap Interface"`)
 })

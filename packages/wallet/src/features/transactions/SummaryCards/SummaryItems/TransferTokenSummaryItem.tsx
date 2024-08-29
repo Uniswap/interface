@@ -1,17 +1,18 @@
-import { createElement, useMemo } from 'react'
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Unitag } from 'ui/src/components/icons'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import { AssetType } from 'wallet/src/entities/assets'
 import { useENS } from 'wallet/src/features/ens/useENS'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { SummaryItemProps, TransactionSummaryLayoutProps } from 'wallet/src/features/transactions/SummaryCards/types'
+import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
+import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 import {
   ReceiveTokenTransactionInfo,
@@ -25,7 +26,7 @@ export function TransferTokenSummaryItem({
   transactionType,
   otherAddress,
   transaction,
-  layoutElement,
+  index,
 }: SummaryItemProps & {
   transactionType: TransactionType.Send | TransactionType.Receive
   otherAddress: string
@@ -103,10 +104,13 @@ export function TransferTokenSummaryItem({
     })
   }
 
-  return createElement(layoutElement as React.FunctionComponent<TransactionSummaryLayoutProps>, {
-    caption,
-    icon,
-    transaction,
-    postCaptionElement: unitag?.username ? <Unitag size="$icon.24" /> : undefined,
-  })
+  return (
+    <TransactionSummaryLayout
+      caption={caption}
+      icon={icon}
+      index={index}
+      postCaptionElement={unitag?.username ? <Unitag size="$icon.24" /> : undefined}
+      transaction={transaction}
+    />
+  )
 }

@@ -1,15 +1,15 @@
 import { useIsTouchDevice } from '@tamagui/core'
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import Column from 'components/Column'
 import { MobileAppLogo } from 'components/Icons/MobileAppLogo'
 import { NAV_BREAKPOINT, useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
 import Row from 'components/Row'
-import { Trans } from 'i18n'
+import styled, { css } from 'lib/styled-components'
 import { Text } from 'rebass'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
+import { Flex } from 'ui/src'
+import { Trans } from 'uniswap/src/i18n/Trans'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { APP_DOWNLOAD_LINKS, openDownloadApp } from 'utils/openDownloadApp'
 
@@ -54,16 +54,17 @@ export function DownloadApp({ onClick }: { onClick?: () => void }) {
           openGetTheAppModal()
         }
       }}
+      data-testid="nav-dropdown-download-app"
     >
       <MobileAppLogo width={41} height={41} />
-      <Column gap="xs">
+      <Flex gap="$spacing4">
         <Text lineHeight="20px">
           <Trans i18nKey="common.downloadUniswap" />
         </Text>
         <ThemedText.LabelMicro lineHeight="18px" color="theme.accent1">
           <Trans i18nKey="common.availableOnIOSAndroid" />
         </ThemedText.LabelMicro>
-      </Column>
+      </Flex>
     </DownloadCTA>
   )
 }

@@ -52,10 +52,10 @@ import usePrevious from 'hooks/usePrevious'
 import { useStablecoinValue } from 'hooks/useStablecoinPrice'
 import { useGetTransactionDeadline } from 'hooks/useTransactionDeadline'
 import { useV3PositionFromTokenId } from 'hooks/useV3Positions'
-import { Trans, t } from 'i18n'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
+import styled, { useTheme } from 'lib/styled-components'
 import { Review } from 'pages/AddLiquidity/Review'
 import { BlastRebasingAlert, BlastRebasingModal } from 'pages/AddLiquidity/blastAlerts'
 import {
@@ -84,12 +84,12 @@ import {
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionInfo, TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
-import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { Trans, t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -591,7 +591,7 @@ function AddLiquidity() {
                   ) : (
                     <Trans
                       i18nKey="account.transactionSummary.approve"
-                      values={{ sym: currencies[Field.CURRENCY_A]?.symbol }}
+                      values={{ tokenSymbol: currencies[Field.CURRENCY_A]?.symbol }}
                     />
                   )}
                 </ButtonPrimary>
@@ -612,7 +612,7 @@ function AddLiquidity() {
                   ) : (
                     <Trans
                       i18nKey="account.transactionSummary.approve"
-                      values={{ sym: currencies[Field.CURRENCY_B]?.symbol }}
+                      values={{ tokenSymbol: currencies[Field.CURRENCY_B]?.symbol }}
                     />
                   )}
                 </ButtonPrimary>
@@ -730,7 +730,7 @@ function AddLiquidity() {
                 <MediumOnly>
                   <ButtonText onClick={clearAll}>
                     <Text color={theme.accent1} fontSize="12px">
-                      <Trans i18nKey="common.clearAll" />
+                      <Trans i18nKey="tokens.selector.button.clear" />
                     </Text>
                   </ButtonText>
                 </MediumOnly>
@@ -888,14 +888,23 @@ function AddLiquidity() {
                             <ThemedText.DeprecatedMain fontWeight={535} fontSize={12} color="text1">
                               <Trans i18nKey="common.currentPrice.label" />
                             </ThemedText.DeprecatedMain>
-                            <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
-                              {price && <HoverInlineText maxCharacters={20} text={formattedPrice} />}
+                            <ThemedText.DeprecatedBody color="text2" fontSize={12}>
+                              <Trans
+                                i18nKey="liquidityPool.positions.price.formatted"
+                                components={{
+                                  amountWithSymbol: (
+                                    <ThemedText.DeprecatedBody fontWeight={535} fontSize={20} color="text1">
+                                      {price && <HoverInlineText maxCharacters={20} text={formattedPrice} />}
+                                    </ThemedText.DeprecatedBody>
+                                  ),
+                                  outputToken: (
+                                    <ThemedText.DeprecatedBody color="text2" fontSize={12}>
+                                      {baseCurrency?.symbol ?? ''}
+                                    </ThemedText.DeprecatedBody>
+                                  ),
+                                }}
+                              />
                             </ThemedText.DeprecatedBody>
-                            {baseCurrency && (
-                              <ThemedText.DeprecatedBody color="text2" fontSize={12}>
-                                {quoteCurrency?.symbol} <Trans i18nKey="common.per" /> {baseCurrency.symbol}
-                              </ThemedText.DeprecatedBody>
-                            )}
                           </AutoColumn>
                         )}
                         <LiquidityChartRangeInput

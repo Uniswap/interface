@@ -18,6 +18,11 @@ type Props = {
 
 const RESIZE_MODE_CONTAIN: ImageResizeMode = 'contain'
 
+/**
+ * @deprecated Please use `UniversalImage` for all added cases
+ *
+ *  If it doesn't fit you use case, modify it to fit or consult with the universe team for help!
+ */
 export function RemoteImage({
   aspectRatio,
   backgroundColor,
@@ -32,7 +37,9 @@ export function RemoteImage({
   const imageHttpUrl = uriToHttpUrls(uri)[0]
 
   if (!imageHttpUrl) {
-    logger.warn('RemoteImage', '', `Could not retrieve and format remote image for uri: ${uri}`)
+    logger.warn('RemoteImage', '', 'Could not retrieve and format remote image for uri', {
+      data: uri,
+    })
     return fallback ?? null
   }
 

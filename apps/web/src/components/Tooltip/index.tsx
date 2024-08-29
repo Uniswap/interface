@@ -1,8 +1,8 @@
 import { Placement } from '@popperjs/core'
 import Popover, { PopoverProps } from 'components/Popover'
+import styled from 'lib/styled-components'
 import { transparentize } from 'polished'
 import { PropsWithChildren, ReactNode, useCallback, useEffect, useState } from 'react'
-import styled from 'styled-components'
 import noop from 'utilities/src/react/noop'
 
 export enum TooltipSize {

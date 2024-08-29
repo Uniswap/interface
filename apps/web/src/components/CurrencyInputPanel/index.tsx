@@ -9,21 +9,22 @@ import { LoadingOpacityContainer, loadingOpacityMixin } from 'components/Loader/
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { Input as NumericalInput } from 'components/NumericalInput'
 import { RowBetween, RowFixed } from 'components/Row'
-import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import { CurrencySearchFilters } from 'components/SearchModal/DeprecatedCurrencySearch'
 import { useIsSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { darken } from 'polished'
 import { ReactNode, useCallback, useState } from 'react'
 import { useActiveSmartPool } from 'state/application/hooks'
 import { useCurrencyBalance } from 'state/connection/hooks'
-import styled, { useTheme } from 'styled-components'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const InputPanel = styled.div<{ hideInput?: boolean }>`
@@ -192,6 +193,7 @@ interface CurrencyInputPanelProps {
   locked?: boolean
   loading?: boolean
   currencySearchFilters?: CurrencySearchFilters
+  currencyField?: CurrencyField
 }
 
 export default function CurrencyInputPanel({
@@ -205,6 +207,7 @@ export default function CurrencyInputPanel({
   id,
   currencySearchFilters,
   showCurrencyAmount,
+  currencyField,
   isAccount,
   renderBalance,
   fiatValue,
@@ -215,6 +218,7 @@ export default function CurrencyInputPanel({
   loading = false,
   ...rest
 }: CurrencyInputPanelProps) {
+  const { t } = useTranslation()
   const [modalOpen, setModalOpen] = useState(false)
   const account = useAccount()
   const chainAllowed = useIsSupportedChainId(account.chainId)
@@ -284,7 +288,7 @@ export default function CurrencyInputPanel({
                             ? currency.symbol.slice(0, 4) +
                               '...' +
                               currency.symbol.slice(currency.symbol.length - 5, currency.symbol.length)
-                            : currency?.symbol) || <Trans i18nKey="common.selectToken" />}
+                            : currency?.symbol) || <Trans i18nKey="tokens.selector.button.choose" />}
                         </StyledTokenName>
                       )}
                     </RowFixed>
@@ -327,9 +331,7 @@ export default function CurrencyInputPanel({
                           eventOnTrigger={SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED}
                           element={InterfaceElementName.MAX_TOKEN_AMOUNT_BUTTON}
                         >
-                          <StyledBalanceMax onClick={onMax}>
-                            <Trans i18nKey="common.max.caps" />
-                          </StyledBalanceMax>
+                          <StyledBalanceMax onClick={onMax}>{t('common.max').toUpperCase()}</StyledBalanceMax>
                         </Trace>
                       )}
                     </RowFixed>
@@ -349,6 +351,7 @@ export default function CurrencyInputPanel({
           otherSelectedCurrency={otherCurrency}
           showCurrencyAmount={showCurrencyAmount}
           currencySearchFilters={currencySearchFilters}
+          currencyField={currencyField}
         />
       )}
     </InputPanel>

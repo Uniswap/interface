@@ -3,15 +3,12 @@ import { BigNumber } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
 import * as matchers from 'redux-saga-test-plan/matchers'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
+import { DAI } from 'uniswap/src/constants/tokens'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { DAI } from 'wallet/src/constants/tokens'
-import { AssetType } from 'wallet/src/entities/assets'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { transferToken } from 'wallet/src/features/transactions/transfer/transferTokenSaga'
-import {
-  TransferCurrencyParams,
-  TransferNFTParams,
-} from 'wallet/src/features/transactions/transfer/types'
+import { TransferCurrencyParams, TransferNFTParams } from 'wallet/src/features/transactions/transfer/types'
 import { SendTokenTransactionInfo, TransactionType } from 'wallet/src/features/transactions/types'
 import { getContractManager, getProvider } from 'wallet/src/features/wallet/context'
 import { getTxFixtures, signerMnemonicAccount } from 'wallet/src/test/fixtures'
@@ -32,6 +29,7 @@ const erc20TranferParams: TransferCurrencyParams = {
   chainId: UniverseChainId.Goerli,
   toAddress: '0xdefaced',
   amountInWei: '100000000000000000',
+  currencyAmountUSD: undefined,
 }
 const nativeTranferParams: TransferCurrencyParams = {
   ...erc20TranferParams,
@@ -45,6 +43,7 @@ const erc721TransferParams: TransferNFTParams = {
   toAddress: '0xdefaced',
   tokenAddress: '0xdeadbeef',
   tokenId: '123567',
+  currencyAmountUSD: undefined,
 }
 const erc1155TransferParams: TransferNFTParams = {
   ...erc721TransferParams,
@@ -57,6 +56,7 @@ const typeInfo: SendTokenTransactionInfo = {
   recipient: erc20TranferParams.toAddress,
   tokenAddress: erc20TranferParams.tokenAddress,
   type: TransactionType.Send,
+  currencyAmountUSD: undefined,
 }
 
 describe('transferTokenSaga', () => {
@@ -129,6 +129,7 @@ describe('transferTokenSaga', () => {
           tokenAddress: erc721TransferParams.tokenAddress,
           tokenId: erc721TransferParams.tokenId,
           type: TransactionType.Send,
+          currencyAmountUSD: undefined,
         },
         txId: '1',
       })
@@ -153,6 +154,7 @@ describe('transferTokenSaga', () => {
           tokenAddress: erc1155TransferParams.tokenAddress,
           tokenId: erc1155TransferParams.tokenId,
           type: TransactionType.Send,
+          currencyAmountUSD: undefined,
         },
         txId: '1',
       })

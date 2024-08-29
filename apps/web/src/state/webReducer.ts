@@ -1,0 +1,52 @@
+import { combineReducers } from '@reduxjs/toolkit'
+import multicall from 'lib/state/multicall'
+import application from 'state/application/reducer'
+import burn from 'state/burn/reducer'
+import burnV3 from 'state/burn/v3/reducer'
+import fiatOnRampTransactions from 'state/fiatOnRampTransactions/reducer'
+import poolsList from 'state/lists/poolsList/reducer'
+import lists from 'state/lists/reducer'
+import logs from 'state/logs/slice'
+import mint from 'state/mint/reducer'
+import mintV3 from 'state/mint/v3/reducer'
+import { quickRouteApi } from 'state/routing/quickRouteSlice'
+import { routingApi } from 'state/routing/slice'
+import signatures from 'state/signatures/reducer'
+import transactions from 'state/transactions/reducer'
+import user from 'state/user/reducer'
+import wallets from 'state/wallets/reducer'
+import { uniswapPersistedStateList, uniswapReducers } from 'uniswap/src/state/uniswapReducer'
+
+const interfaceReducers = {
+  ...uniswapReducers,
+  user,
+  transactions,
+  signatures,
+  lists,
+  poolsList,
+  fiatOnRampTransactions,
+  application,
+  wallets,
+  mint,
+  mintV3,
+  burn,
+  burnV3,
+  multicall: multicall.reducer,
+  logs,
+  [routingApi.reducerPath]: routingApi.reducer,
+  [quickRouteApi.reducerPath]: quickRouteApi.reducer,
+} as const
+
+export const interfaceReducer = combineReducers(interfaceReducers)
+
+export const interfacePersistedStateList: Array<keyof typeof interfaceReducers> = [
+  ...uniswapPersistedStateList,
+  'user',
+  'transactions',
+  'signatures',
+  'lists',
+  'poolsList',
+  'fiatOnRampTransactions',
+]
+
+export type InterfaceState = ReturnType<typeof interfaceReducer>

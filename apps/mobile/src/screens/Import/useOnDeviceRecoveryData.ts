@@ -3,7 +3,6 @@ import { useMultiplePortfolioBalancesQuery } from 'uniswap/src/data/graphql/unis
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-// eslint-disable-next-line no-restricted-imports
 import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { useENSName } from 'wallet/src/features/ens/api'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'

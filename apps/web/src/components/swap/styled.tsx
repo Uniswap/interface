@@ -1,8 +1,8 @@
 import { AutoColumn } from 'components/Column'
+import styled, { css } from 'lib/styled-components'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'
 import { AlertTriangle } from 'react-feather'
-import styled, { css } from 'styled-components'
 import { ButtonText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 

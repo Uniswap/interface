@@ -3,12 +3,13 @@ import Expand from 'components/Expand'
 import QuestionHelper from 'components/QuestionHelper'
 import Row, { RowBetween } from 'components/Row'
 import { Input, InputContainer } from 'components/Settings/Input'
-import { Trans } from 'i18n'
+import styled from 'lib/styled-components'
 import { useState } from 'react'
 import { useUserSlippageTolerance } from 'state/user/hooks'
 import { SlippageTolerance } from 'state/user/types'
-import styled from 'styled-components'
 import { CautionTriangle, ThemedText } from 'theme/components'
+import { Text } from 'ui/src'
+import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
 enum SlippageError {
@@ -86,7 +87,8 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
     // Parse user input and set the slippage if valid, error otherwise
     try {
       const parsed = Math.floor(Number.parseFloat(value) * 100)
-      if (parsed > 5000) {
+      if (parsed > 5_000) {
+        setUserSlippageTolerance(new Percent(5_000, 10_000))
         setSlippageError(SlippageError.InvalidInput)
       } else {
         setUserSlippageTolerance(new Percent(parsed, 10_000))
@@ -163,7 +165,9 @@ export default function MaxSlippageSettings({ autoSlippage }: { autoSlippage: Pe
               setSlippageError(false)
             }}
           />
-          <ThemedText.BodyPrimary>%</ThemedText.BodyPrimary>
+          <Text variant="body1" color={slippageError ? '$statusCritical' : '$neutral1'}>
+            %
+          </Text>
         </InputContainer>
       </RowBetween>
       {tooLow || tooHigh ? (

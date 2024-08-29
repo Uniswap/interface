@@ -21,9 +21,9 @@ import { useParams } from 'react-router-dom'
 import { useActiveSmartPool, useSelectActiveSmartPool } from 'state/application/hooks'
 import { useStakingContract } from 'state/governance/hooks'
 import { useAppSelector } from 'state/hooks'
+import { usePoolsFromUrl } from 'state/lists/poolsList/hooks'
 import { useLogs } from 'state/logs/hooks'
 import { filterToKey } from 'state/logs/utils'
-import { usePoolsFromUrl } from 'state/lists/poolsList/hooks'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import POOL_EXTENDED_ABI from 'uniswap/src/abis/pool-extended.json'
@@ -36,11 +36,21 @@ import { calculateGasMargin } from 'utils/calculateGasMargin'
 const RegistryInterface = new Interface(RB_REGISTRY_ABI)
 
 export function useRegistryContract(): Contract | null {
-  return useContract(RB_REGISTRY_ADDRESSES, RB_REGISTRY_ABI, true)
+  const account = useAccount()
+  return useContract(
+    account.chainId ? RB_REGISTRY_ADDRESSES[account.chainId] : undefined,
+    RB_REGISTRY_ABI,
+    true,
+  )
 }
 
 function usePoolFactoryContract(): Contract | null {
-  return useContract(RB_FACTORY_ADDRESSES, RB_POOL_FACTORY_ABI, true)
+  const account = useAccount()
+  return useContract(
+    account.chainId ? RB_FACTORY_ADDRESSES[account.chainId] : undefined,
+    RB_POOL_FACTORY_ABI,
+    true,
+  )
 }
 
 export function usePoolExtendedContract(poolAddress: string | undefined): Contract | null {

@@ -1,7 +1,5 @@
-export enum AccountType {
-  SignerMnemonic = 'signerMnemonic', // Key lives in native keystore
-  Readonly = 'readonly', // Accounts without keys (e.g. so user can track balances)
-}
+import { ReadOnlyAccountMeta, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+
 export enum BackupType {
   Manual = 'manual',
   Cloud = 'cloud',
@@ -11,9 +9,7 @@ export type AccountCustomizations = {
   localPfp?: string
 }
 
-export interface AccountBase {
-  type: AccountType
-  address: Address
+export interface WalletAccountFields {
   name?: string
   customizations?: AccountCustomizations
   backups?: BackupType[]
@@ -21,14 +17,11 @@ export interface AccountBase {
   pushNotificationsEnabled?: boolean
 }
 
-export interface SignerMnemonicAccount extends AccountBase {
-  type: AccountType.SignerMnemonic
+export interface SignerMnemonicAccount extends WalletAccountFields, SignerMnemonicAccountMeta {
   derivationIndex: number
   mnemonicId: string
 }
 
-export interface ReadOnlyAccount extends AccountBase {
-  type: AccountType.Readonly
-}
+export interface ReadOnlyAccount extends WalletAccountFields, ReadOnlyAccountMeta {}
 
 export type Account = SignerMnemonicAccount | ReadOnlyAccount

@@ -1,3 +1,4 @@
+*.tsbuildinfo
 __generated__
 __mocks__
 .detoxrc.js
@@ -14,7 +15,6 @@ __mocks__
 *.inc
 *.json
 *.md
-*.test.ts
 *.yml
 babel.config.js
 build

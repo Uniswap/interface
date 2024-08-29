@@ -1,13 +1,14 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { TokenSortableField } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Account, AccountType, ReadOnlyAccount, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { AccountType } from 'uniswap/src/features/accounts/types'
+import { Account, ReadOnlyAccount, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { TokensOrderBy } from 'wallet/src/features/wallet/types'
-import type { RootState } from 'wallet/src/state'
+import { WalletState } from 'wallet/src/state/walletReducer'
 
 const DEFAULT_TOKENS_ORDER_BY = TokenSortableField.Volume
 
-export const selectAccounts = (state: RootState): Record<string, Account> => state.wallet.accounts
+export const selectAccounts = (state: WalletState): Record<string, Account> => state.wallet.accounts
 
 export const selectSignerMnemonicAccounts = createSelector(selectAccounts, (accounts) =>
   Object.values(accounts).filter((a): a is SignerMnemonicAccount => a.type === AccountType.SignerMnemonic),
@@ -39,16 +40,16 @@ export const selectAllAccountsSorted = createSelector(
   },
 )
 
-export const selectActiveAccountAddress = (state: RootState): string | null => state.wallet.activeAccountAddress
+export const selectActiveAccountAddress = (state: WalletState): string | null => state.wallet.activeAccountAddress
 export const selectActiveAccount = createSelector(
   selectAccounts,
   selectActiveAccountAddress,
   (accounts, activeAccountAddress) => (activeAccountAddress ? accounts[activeAccountAddress] : null) ?? null,
 )
 
-export const selectFinishedOnboarding = (state: RootState): boolean | undefined => state.wallet.finishedOnboarding
+export const selectFinishedOnboarding = (state: WalletState): boolean | undefined => state.wallet.finishedOnboarding
 
-export const selectTokensOrderBy = (state: RootState): TokensOrderBy =>
+export const selectTokensOrderBy = (state: WalletState): TokensOrderBy =>
   state.wallet.settings.tokensOrderBy ?? DEFAULT_TOKENS_ORDER_BY
 
 export const selectInactiveAccounts = createSelector(
@@ -57,10 +58,10 @@ export const selectInactiveAccounts = createSelector(
   (activeAddress, accounts) => Object.values(accounts).filter((account) => account.address !== activeAddress),
 )
 
-export const makeSelectAccountNotificationSetting = (): Selector<RootState, boolean, [Address]> =>
+export const makeSelectAccountNotificationSetting = (): Selector<WalletState, boolean, [Address]> =>
   createSelector(
     selectAccounts,
-    (_: RootState, address: Address) => address,
+    (_: WalletState, address: Address) => address,
     (accounts, address) => !!accounts[address]?.pushNotificationsEnabled,
   )
 
@@ -68,10 +69,10 @@ export const selectAnyAddressHasNotificationsEnabled = createSelector(selectAcco
   Object.values(accounts).some((account) => account.pushNotificationsEnabled),
 )
 
-export const selectWalletHideSmallBalancesSetting = (state: RootState): boolean =>
+export const selectWalletHideSmallBalancesSetting = (state: WalletState): boolean =>
   state.wallet.settings.hideSmallBalances
 
-export const selectWalletHideSpamTokensSetting = (state: RootState): boolean => state.wallet.settings.hideSpamTokens
+export const selectWalletHideSpamTokensSetting = (state: WalletState): boolean => state.wallet.settings.hideSpamTokens
 
-export const selectWalletSwapProtectionSetting = (state: RootState): SwapProtectionSetting =>
+export const selectWalletSwapProtectionSetting = (state: WalletState): SwapProtectionSetting =>
   state.wallet.settings.swapProtection

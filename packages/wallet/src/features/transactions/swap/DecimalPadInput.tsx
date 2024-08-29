@@ -1,4 +1,6 @@
-import { forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react'
+import { RefObject, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react'
+import { LayoutChangeEvent } from 'react-native'
+import { Flex } from 'ui/src'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { maxDecimalsReached } from 'utilities/src/format/truncateToMaxDecimals'
 import { DecimalPad, KeyAction, KeyLabel } from 'wallet/src/features/transactions/swap/DecimalPad'
@@ -20,6 +22,29 @@ type DecimalPadInputProps = {
 export type DecimalPadInputRef = {
   updateDisabledKeys(): void
   setMaxHeight(height: number): void
+}
+
+/*
+This component is used to calculate the space that the `DecimalPad` can use.
+We position the `DecimalPad` with `position: absolute` at the bottom of the screen instead of
+putting it inside this container in order to avoid any overflows while the `DecimalPad`
+is automatically resizing to find the right size for the screen.
+*/
+export function DecimalPadCalculateSpace({
+  isShortMobileDevice,
+  decimalPadRef,
+}: {
+  isShortMobileDevice: boolean
+  decimalPadRef: RefObject<DecimalPadInputRef>
+}): JSX.Element {
+  const onBottomScreenLayout = useCallback(
+    (event: LayoutChangeEvent): void => {
+      decimalPadRef.current?.setMaxHeight(event.nativeEvent.layout.height)
+    },
+    [decimalPadRef],
+  )
+
+  return <Flex fill mt={isShortMobileDevice ? '$spacing2' : '$spacing8'} onLayout={onBottomScreenLayout} />
 }
 
 export const DecimalPadInput = memo(

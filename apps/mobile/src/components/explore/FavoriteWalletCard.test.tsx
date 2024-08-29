@@ -8,7 +8,7 @@ import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import * as ensHooks from 'wallet/src/features/ens/api'
-import { SAMPLE_SEED_ADDRESS_1, preloadedWalletState, signerMnemonicAccount } from 'wallet/src/test/fixtures'
+import { SAMPLE_SEED_ADDRESS_1, preloadedWalletReducerState, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const mockedNavigation = {
   navigate: jest.fn(),
@@ -71,7 +71,7 @@ describe('FavoriteWalletCard', () => {
     it('renders local name if wallet name is set locally', () => {
       const { queryByText } = render(<FavoriteWalletCard {...defaultProps} />, {
         preloadedState: preloadedMobileState({
-          wallet: preloadedWalletState({
+          wallet: preloadedWalletReducerState({
             account: signerMnemonicAccount({
               address: defaultProps.address,
               name: 'Local account',

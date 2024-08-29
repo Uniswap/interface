@@ -3,12 +3,12 @@ import { useAccountDrawer, useSetShowMoonpayText } from 'components/AccountDrawe
 import { MouseoverTooltip } from 'components/Tooltip'
 import { SwapHeaderTabButton } from 'components/swap/styled'
 import { useAccount } from 'hooks/useAccount'
-import { Trans } from 'i18n'
 import { useCallback, useEffect, useState } from 'react'
 import { useFiatOnrampAvailability, useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { ExternalLink } from 'theme/components'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { Trans } from 'uniswap/src/i18n'
 import { isPathBlocked } from 'utils/blockedPaths'
 
 export const MOONPAY_REGION_AVAILABILITY_ARTICLE =
@@ -111,7 +111,7 @@ export default function SwapBuyFiatButton({
           <Trans i18nKey="fiatOnRamp.notAvailable.error" />
           <Trace logPress element={InterfaceElementName.FIAT_ON_RAMP_LEARN_MORE_LINK}>
             <ExternalLink href={MOONPAY_REGION_AVAILABILITY_ARTICLE} style={{ paddingLeft: '4px' }}>
-              <Trans i18nKey="common.learnMore.link" />
+              <Trans i18nKey="common.button.learn" />
             </ExternalLink>
           </Trace>
         </div>

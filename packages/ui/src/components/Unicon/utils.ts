@@ -1,19 +1,14 @@
-import { isAddress, keccak256, toUtf8Bytes } from 'ethers/lib/utils'
+import { keccak256, toUtf8Bytes } from 'ethers/lib/utils'
 import { UNICON_COLORS } from 'ui/src/components/Unicon/Colors'
+import { isAddress } from 'utilities/src/addresses'
 
 export const getUniconsDeterministicHash = (address: string): bigint => {
-  if (!isValidEthAddress(address)) {
+  if (!isAddress(address)) {
     throw new Error('Invalid Ethereum address')
   }
   const hash = keccak256(toUtf8Bytes(address))
   const hashNumber = BigInt('0x' + hash.slice(2, 12))
   return hashNumber
-}
-
-const ETH_ADDRESS_LENGTH = 42 // Ethereum addresses are 42 characters long including '0x'
-// TODO: move to a shared location in utilities or wallet package
-export const isValidEthAddress = (address: string): boolean => {
-  return Boolean(address.startsWith('0x') && isAddress(address.toLowerCase()) && address.length === ETH_ADDRESS_LENGTH)
 }
 
 export const getUniconColors = (

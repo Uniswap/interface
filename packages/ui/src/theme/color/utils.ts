@@ -1,4 +1,10 @@
-export function opacify(amount: number, hexColor: string): string {
+import { ColorTokens } from 'tamagui'
+
+export function opacify(amount: number, hexColor: string): ColorTokens {
+  return opacifyRaw(amount, hexColor) as ColorTokens
+}
+
+export function opacifyRaw(amount: number, hexColor: string): string {
   'worklet'
   if (!hexColor.startsWith('#')) {
     return hexColor

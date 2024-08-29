@@ -7,13 +7,13 @@ export const SendElement = (): JSX.Element => {
 
   return (
     <Flex
+      backgroundColor={opacify(20, isDarkMode ? colors.greenBase : colors.greenVibrant)}
       borderRadius="$rounded12"
       opacity={0.8}
       p="$spacing8"
-      style={{ backgroundColor: opacify(20, isDarkMode ? colors.green400 : colors.green300) }}
       transform={[{ rotateZ: '-4deg' }]}
     >
-      <SendAction color={isDarkMode ? colors.green400 : colors.green200} size={iconSizes.icon28} />
+      <SendAction color={isDarkMode ? colors.greenBase : colors.greenPastel} size={iconSizes.icon28} />
     </Flex>
   )
 }

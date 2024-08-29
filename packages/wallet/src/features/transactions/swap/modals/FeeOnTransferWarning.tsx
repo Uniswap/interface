@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { isWeb, useSporeColors } from 'ui/src'
 import { MoneyBillSend } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
-import { LearnMoreLink } from 'wallet/src/components/text/LearnMoreLink'
 
 export function FeeOnTransferWarning({ children }: PropsWithChildren): JSX.Element {
   const { t } = useTranslation()

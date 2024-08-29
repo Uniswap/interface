@@ -6,16 +6,16 @@ import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/Toke
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { Trans, t } from 'i18n'
+import styled, { useTheme } from 'lib/styled-components'
 import { useRef } from 'react'
 import { Link } from 'react-feather'
 import { useSearchParams } from 'react-router-dom'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import styled, { useTheme } from 'styled-components'
 import { colors } from 'theme/colors'
 import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
+import { Trans, t } from 'uniswap/src/i18n'
 import { isMobile } from 'utilities/src/platform'
 
 const TWITTER_WIDTH = 560
