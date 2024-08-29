@@ -10,6 +10,8 @@ import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
 import { TextDecoder, TextEncoder } from 'util'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
 import { mockLocalizationContext } from 'wallet/src/test/mocks/utils'
+import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
+import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
 
 global.TextEncoder = TextEncoder
 global.TextDecoder = TextDecoder
@@ -124,3 +126,7 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
 })
 
 jest.mock('openai')
+
+jest.mock('uniswap/src/data/apiClients/SharedPersistQueryClientProvider', () => mockSharedPersistQueryClientProvider)
+
+mockUIAssets()

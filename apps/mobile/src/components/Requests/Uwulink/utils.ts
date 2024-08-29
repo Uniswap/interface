@@ -14,8 +14,8 @@ import {
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { ProviderManager } from 'wallet/src/features/providers/ProviderManager'
-import { getTokenTransferRequest } from 'wallet/src/features/transactions/transfer/hooks/useTransferTransactionRequest'
-import { TransferCurrencyParams } from 'wallet/src/features/transactions/transfer/types'
+import { getTokenSendRequest } from 'wallet/src/features/transactions/send/hooks/useSendTransactionRequest'
+import { SendCurrencyParams } from 'wallet/src/features/transactions/send/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 // This type must match the format in statsig dynamic config for uwulink
@@ -214,7 +214,7 @@ async function toTokenTransferRequest(
   contractManager: ContractManager,
 ): Promise<EthTransaction> {
   const provider = providerManager.getProvider(request.chainId, RPCType.Public)
-  const params: TransferCurrencyParams = {
+  const params: SendCurrencyParams = {
     type: AssetType.Currency,
     account,
     chainId: request.chainId,
@@ -222,6 +222,6 @@ async function toTokenTransferRequest(
     tokenAddress: request.tokenAddress,
     amountInWei: request.amount.toString(),
   }
-  const transaction = await getTokenTransferRequest(params, provider, contractManager)
+  const transaction = await getTokenSendRequest(params, provider, contractManager)
   return transaction as EthTransaction
 }

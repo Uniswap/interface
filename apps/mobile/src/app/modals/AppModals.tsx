@@ -1,12 +1,14 @@
 import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
+import { BackupReminderModal } from 'src/app/modals/BackupReminderModal'
 import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { ExploreModal } from 'src/app/modals/ExploreModal'
+import { KoreaCexTransferInfoModal } from 'src/app/modals/KoreaCexTransferInfoModal'
+import { LazyModalRenderer } from 'src/app/modals/LazyModalRenderer'
+import { SendTokenModal } from 'src/app/modals/SendTokenModal'
 import { SwapModal } from 'src/app/modals/SwapModal'
-import { TransferTokenModal } from 'src/app/modals/TransferTokenModal'
 import { ViewOnlyExplainerModal } from 'src/app/modals/ViewOnlyExplainerModal'
-import { LazyModalRenderer } from 'src/app/modals/utils'
 import { RemoveWalletModal } from 'src/components/RemoveWallet/RemoveWalletModal'
 import { WalletConnectModals } from 'src/components/Requests/WalletConnectModals'
 import { RestoreWalletModal } from 'src/components/RestoreWalletModal/RestoreWalletModal'
@@ -32,6 +34,10 @@ export function AppModals(): JSX.Element {
 
   return (
     <>
+      <LazyModalRenderer name={ModalName.KoreaCexTransferInfoModal}>
+        <KoreaCexTransferInfoModal />
+      </LazyModalRenderer>
+
       <LazyModalRenderer name={ModalName.ExchangeTransferModal}>
         <ExchangeTransferModal />
       </LazyModalRenderer>
@@ -65,7 +71,7 @@ export function AppModals(): JSX.Element {
       </LazyModalRenderer>
 
       <LazyModalRenderer name={ModalName.Send}>
-        <TransferTokenModal />
+        <SendTokenModal />
       </LazyModalRenderer>
 
       <WalletConnectModals />
@@ -98,6 +104,10 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.ViewOnlyExplainer}>
         <ViewOnlyExplainerModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.BackupReminder}>
+        <BackupReminderModal />
       </LazyModalRenderer>
     </>
   )

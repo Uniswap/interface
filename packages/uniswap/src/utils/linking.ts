@@ -49,8 +49,15 @@ export async function openUri(
       await openURL(uri)
     } else {
       await WebBrowser.openBrowserAsync(uri, {
+        // iOS only
         controlsColor,
         presentationStyle: WebBrowser.WebBrowserPresentationStyle.FULL_SCREEN,
+
+        // Android only
+        // This is needed to avoid the browser automatically closing when the user comes back from another app (for example, when using the camera during FOR KYC).
+        showInRecents: true,
+
+        // Web only
         windowFeatures: 'popup=false',
       })
     }

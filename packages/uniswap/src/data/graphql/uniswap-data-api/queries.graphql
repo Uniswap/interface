@@ -526,17 +526,18 @@ query TransactionHistoryUpdater(
 query Token($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
     id
-    symbol
-    decimals
-    chain
     address
+    chain
+    decimals
+    name
     standard
+    symbol
     project {
       id
-      name
-      logoUrl
-      safetyLevel
       isSpam
+      logoUrl
+      name
+      safetyLevel
     }
     feeData {
       buyFeeBps

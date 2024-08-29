@@ -9,7 +9,10 @@ import { t } from 'uniswap/src/i18n'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
+import { NewPosition } from 'pages/LegacyPool/NewPosition'
 import Swap from 'pages/Swap'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
 const Collection = lazy(() => import('nft/pages/collection'))
@@ -22,8 +25,9 @@ const MigrateV2 = lazy(() => import('pages/MigrateV2'))
 const MigrateV2Pair = lazy(() => import('pages/MigrateV2/MigrateV2Pair'))
 const NotFound = lazy(() => import('pages/NotFound'))
 const Pool = lazy(() => import('pages/Pool'))
-const PositionPage = lazy(() => import('pages/Pool/PositionPage'))
-const PoolV2 = lazy(() => import('pages/Pool/v2'))
+const LegacyPool = lazy(() => import('pages/LegacyPool'))
+const LegacyPositionPage = lazy(() => import('pages/LegacyPool/PositionPage'))
+const LegacyPoolV2 = lazy(() => import('pages/LegacyPool/v2'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const PoolFinder = lazy(() => import('pages/PoolFinder'))
 const RemoveLiquidity = lazy(() => import('pages/RemoveLiquidity'))
@@ -49,6 +53,7 @@ interface RouterConfig {
   browserRouterEnabled?: boolean
   hash?: string
   shouldDisableNFTRoutes?: boolean
+  featureFlags: Partial<Record<FeatureFlags, boolean>>
 }
 
 /**
@@ -58,13 +63,18 @@ export function useRouterConfig(): RouterConfig {
   const browserRouterEnabled = isBrowserRouterEnabled()
   const { hash } = useLocation()
   const [shouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Everywhere)
+
   return useMemo(
     () => ({
       browserRouterEnabled,
       hash,
       shouldDisableNFTRoutes: Boolean(shouldDisableNFTRoutes),
+      featureFlags: {
+        [FeatureFlags.V4Everywhere]: v4Enabled,
+      },
     }),
-    [browserRouterEnabled, hash, shouldDisableNFTRoutes],
+    [browserRouterEnabled, hash, shouldDisableNFTRoutes, v4Enabled],
   )
 }
 
@@ -210,19 +220,26 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/pool/v2',
-    getElement: () => <PoolV2 />,
+    getElement: () => <LegacyPoolV2 />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
+    path: '/pool/new',
+    getElement: () => <NewPosition />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+    enabled: (args) => args.featureFlags[FeatureFlags.V4Everywhere] ?? false,
+  }),
+  createRouteDefinition({
     path: '/pool',
-    getElement: () => <Pool />,
+    getElement: (args) => (args.featureFlags[FeatureFlags.V4Everywhere] ? <Pool /> : <LegacyPool />),
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pool/:tokenId',
-    getElement: () => <PositionPage />,
+    getElement: () => <LegacyPositionPage />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
@@ -234,19 +251,26 @@ export const routes: RouteDefinition[] = [
   }),
   createRouteDefinition({
     path: '/pools/v2',
-    getElement: () => <PoolV2 />,
+    getElement: () => <LegacyPoolV2 />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
+    path: '/pools/new',
+    getElement: () => <NewPosition />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+    enabled: (args) => args.featureFlags[FeatureFlags.V4Everywhere] ?? false,
+  }),
+  createRouteDefinition({
     path: '/pools',
-    getElement: () => <Pool />,
+    getElement: () => <LegacyPool />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
     path: '/pools/:tokenId',
-    getElement: () => <PositionPage />,
+    getElement: () => <LegacyPositionPage />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),

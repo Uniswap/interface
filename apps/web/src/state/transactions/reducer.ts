@@ -5,16 +5,16 @@ import { InterfaceChainId } from 'uniswap/src/types/chains'
 
 // TODO(WEB-2053): update this to be a map of account -> chainId -> txHash -> TransactionDetails
 // to simplify usage, once we're able to invalidate localstorage
-export interface TransactionState {
+export interface LocalWebTransactionState {
   [chainId: number]: {
     [txHash: string]: TransactionDetails
   }
 }
 
-export const initialState: TransactionState = {}
+export const initialState: LocalWebTransactionState = {}
 
-const transactionSlice = createSlice({
-  name: 'transactions',
+const localTransactionSlice = createSlice({
+  name: 'localWebTransactions',
   initialState,
   reducers: {
     addTransaction(
@@ -116,5 +116,5 @@ export const {
   finalizeTransaction,
   removeTransaction,
   cancelTransaction,
-} = transactionSlice.actions
-export default transactionSlice.reducer
+} = localTransactionSlice.actions
+export default localTransactionSlice.reducer

@@ -54,7 +54,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
 
   const handleNext = useCallback(
     async (storedMnemonicId: string) => {
-      await generateImportedAccounts(storedMnemonicId, BackupType.Manual)
+      await generateImportedAccounts({ mnemonicId: storedMnemonicId, backupType: BackupType.Manual })
 
       // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
       if (!isRestoringMnemonic) {

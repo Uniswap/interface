@@ -1,4 +1,13 @@
-import { Flex, GeneratedIcon, IconProps, Text, TouchableArea, ViewProps, useIsDarkMode } from 'ui/src'
+import {
+  Flex,
+  GeneratedIcon,
+  IconProps,
+  Text,
+  TouchableArea,
+  ViewProps,
+  useIsDarkMode,
+  useShadowPropsShort,
+} from 'ui/src'
 import { X } from 'ui/src/components/icons'
 import { useTranslation } from 'uniswap/src/i18n'
 
@@ -31,10 +40,12 @@ export function IntroCard({
   onClose,
 }: IntroCardProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
+  const shadowProps = useShadowPropsShort()
   const { t } = useTranslation()
 
   return (
     <Flex
+      {...shadowProps}
       grow
       row
       alignItems="flex-start"
@@ -45,10 +56,6 @@ export function IntroCard({
       gap="$spacing12"
       p="$spacing16"
       paddingStart="$spacing12"
-      // TODO WALL-3699 replace with spore shadow support
-      shadowColor={isDarkMode ? 'rgba(0, 0, 0, 0.24)' : 'rgba(0, 0, 0, 0.02)'}
-      shadowOffset={{ width: 0, height: 1 }}
-      shadowRadius={6}
       onPress={onPress}
     >
       <Flex

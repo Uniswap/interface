@@ -1,4 +1,19 @@
-import { arraysAreEqual, bubbleToTop, differenceWith, next } from 'utilities/src/primitives/array'
+import { arraysAreEqual, bubbleToTop, differenceWith, next, unique } from 'utilities/src/primitives/array'
+
+describe('unique', () => {
+  it('should return unique elements from an array using the default uniqueness check', () => {
+    const array = [1, 2, 2, 3, 4, 4, 5]
+    const result = unique(array)
+    expect(result).toEqual([1, 2, 3, 4, 5])
+  })
+
+  it('should use the custom uniqueness function when provided', () => {
+    const array = [1, 2, 3, 4, 5]
+    const isUnique = (value: number): boolean => value > 3 // keep only numbers greater than 3
+    const result = unique(array, isUnique)
+    expect(result).toEqual([4, 5])
+  })
+})
 
 it('returns undefined for empty arrays', () => {
   expect(next([], '123')).toBe(undefined)

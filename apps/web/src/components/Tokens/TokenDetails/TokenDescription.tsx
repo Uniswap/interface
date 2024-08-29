@@ -1,73 +1,82 @@
-import Column from 'components/Column'
 import { EtherscanLogo } from 'components/Icons/Etherscan'
 import { Globe } from 'components/Icons/Globe'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
-import Row from 'components/Row'
 import { FOTTooltipContent } from 'components/swap/SwapLineItem'
 import { NoInfoAvailable, truncateDescription, TruncateDescriptionButton } from 'components/Tokens/TokenDetails/shared'
 import Tooltip, { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import { useSwapTaxes } from 'hooks/useSwapTaxes'
-import styled, { useTheme } from 'lib/styled-components'
+import { useTheme } from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useCallback, useReducer } from 'react'
 import { Copy } from 'react-feather'
-import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
+import { ClickableTamaguiStyle, EllipsisTamaguiStyle, ExternalLink, ThemedText } from 'theme/components'
+import { Flex, Paragraph, styled, Text } from 'ui/src'
 import { t, Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-const TokenInfoSection = styled(Column)`
-  gap: 16px;
-  width: 100%;
+const TokenInfoSection = styled(Flex, {
+  gap: '$gap16',
+  width: '100%',
+  $xl: {
+    gap: 24,
+  },
+})
 
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    gap: 24px;
-  }
-`
+const InfoSectionHeader = styled(Text, {
+  variant: 'subheading1',
+})
 
-const InfoSectionHeader = styled(ThemedText.HeadlineSmall)`
-  @media screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
-    font-size: 28px !important;
-    line-height: 36px !important;
-  }
-`
+const TokenNameRow = styled(Flex, {
+  row: true,
+  gap: '$gap8',
+  width: '100%',
+})
 
-const TokenNameRow = styled(Row)`
-  gap: 8px;
-  width: 100%;
-`
+const TokenButtonRow = styled(TokenNameRow, {
+  flexWrap: 'wrap',
+})
 
-const TokenButtonRow = styled(TokenNameRow)`
-  flex-wrap: wrap;
-`
+const TokenInfoButton = styled(Text, {
+  variant: 'buttonLabel3',
+  display: 'flex',
+  flexDirection: 'row',
+  gap: '$gap8',
+  py: '$padding8',
+  px: '$padding12',
+  borderRadius: '$rounded20',
+  backgroundColor: '$surface2',
+  width: 'max-content',
+  ...ClickableTamaguiStyle,
+  color: '$neutral1',
+})
 
-const TokenInfoButton = styled(Row)`
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  color: ${({ theme }) => theme.neutral1};
-  background-color: ${({ theme }) => theme.surface2};
-  font-size: 14px;
-  font-weight: 535;
-  line-height: 16px;
-  width: max-content;
-  ${ClickableStyle}
-`
+const TokenDescriptionContainer = styled(Text, {
+  variant: 'body1',
+  color: '$neutral1',
+  maxWidth: '100%',
+  maxHeight: 'fit-content',
+  ...EllipsisTamaguiStyle,
+  whiteSpace: 'pre-wrap',
+  lineHeight: 24,
+})
 
-const TokenDescriptionContainer = styled(ThemedText.BodyPrimary)`
-  ${EllipsisStyle}
-  max-width: 100%;
-  // max-height: fit-content;
-  line-height: 24px;
-  white-space: pre-wrap;
-`
-
-const DescriptionVisibilityWrapper = styled.p<{ $visible: boolean }>`
-  display: ${({ $visible }) => ($visible ? 'inline' : 'none')};
-`
+const DescriptionVisibilityWrapper = styled(Paragraph, {
+  fontWeight: '$book',
+  variants: {
+    visible: {
+      true: {
+        display: 'inline',
+      },
+      false: {
+        display: 'none',
+      },
+    },
+  } as const,
+})
 
 const TRUNCATE_CHARACTER_COUNT = 200
 
@@ -108,7 +117,7 @@ export function TokenDescription() {
       <TokenButtonRow data-testid="token-details-info-links">
         {!currency.isNative && (
           <Tooltip placement="bottom" size={TooltipSize.Max} show={isCopied} text={t('common.copied')}>
-            <TokenInfoButton onClick={copy}>
+            <TokenInfoButton onPress={copy}>
               <Copy width="18px" height="18px" color={neutral2} />
               {shortenAddress(currency.address)}
             </TokenInfoButton>
@@ -149,10 +158,10 @@ export function TokenDescription() {
         )}
         {description && (
           <>
-            <DescriptionVisibilityWrapper data-testid="token-description-full" $visible={!showTruncatedDescription}>
+            <DescriptionVisibilityWrapper data-testid="token-description-full" visible={!showTruncatedDescription}>
               {description}
             </DescriptionVisibilityWrapper>
-            <DescriptionVisibilityWrapper data-testid="token-description-truncated" $visible={showTruncatedDescription}>
+            <DescriptionVisibilityWrapper data-testid="token-description-truncated" visible={showTruncatedDescription}>
               {truncatedDescription}
             </DescriptionVisibilityWrapper>
           </>
@@ -180,7 +189,7 @@ export function TokenDescription() {
             </ThemedText.Caption>
           }
         >
-          <Column gap="sm">
+          <Flex gap="$gap8">
             {sameFee ? (
               <ThemedText.BodyPrimary>
                 {currency.symbol}&nbsp;
@@ -201,7 +210,7 @@ export function TokenDescription() {
                 </ThemedText.BodyPrimary>{' '}
               </>
             )}
-          </Column>
+          </Flex>
         </MouseoverTooltip>
       )}
     </TokenInfoSection>

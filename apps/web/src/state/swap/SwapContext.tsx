@@ -1,4 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
+import { Field } from 'components/swap/constants'
+import { useReportTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import { useUpdateAtom } from 'jotai/utils'
@@ -26,7 +28,6 @@ export function SwapAndLimitContextProvider({
   const [selectedChainId, setSelectedChainId] = useState<InterfaceChainId | undefined | null>(initialChainId)
   const [isUserSelectedToken, setIsUserSelectedToken] = useState<boolean>(false)
   const [currentTab, setCurrentTab] = useState<SwapTab>(SwapTab.Swap)
-
   const [currencyState, setCurrencyState] = useState<CurrencyState>({
     inputCurrency: initialInputCurrency,
     outputCurrency: initialOutputCurrency,
@@ -122,18 +123,25 @@ export function SwapAndLimitContextProvider({
     isUserSelectedToken,
   ])
 
+  useReportTotalBalancesUsdForAnalytics()
+
   return <SwapAndLimitContext.Provider value={value}>{children}</SwapAndLimitContext.Provider>
 }
 
 export function SwapContextProvider({
+  initialTypedValue,
+  initialIndependentField,
   multichainUXEnabled,
   children,
 }: {
+  initialTypedValue?: string
+  initialIndependentField?: Field
   multichainUXEnabled?: boolean
   children: React.ReactNode
 }) {
   const [swapState, setSwapState] = useState<SwapState>({
-    ...initialSwapState,
+    typedValue: initialTypedValue ?? initialSwapState.typedValue,
+    independentField: initialIndependentField ?? initialSwapState.independentField,
   })
   const derivedSwapInfo = useDerivedSwapInfo(swapState)
 

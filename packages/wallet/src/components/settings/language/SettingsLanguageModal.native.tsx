@@ -3,7 +3,7 @@ import { Linking } from 'react-native'
 import { Button, Flex, Text } from 'ui/src'
 import { Language } from 'ui/src/components/icons'
 import { colors, opacify } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isAndroid } from 'utilities/src/platform'
@@ -21,7 +21,7 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
   const { t } = useTranslation()
 
   return (
-    <BottomSheetModal name={ModalName.LanguageSelector} onClose={onClose}>
+    <Modal name={ModalName.LanguageSelector} onClose={onClose}>
       <Flex centered mt="$spacing16">
         <Flex backgroundColor={opacify(10, colors.bluePastel)} borderRadius="$rounded12" p="$spacing12">
           <Language color="$bluePastel" size="$icon.24" strokeWidth={1.5} />
@@ -40,6 +40,6 @@ export function SettingsLanguageModal({ onClose }: SettingsLanguageModalProps): 
           {t('settings.setting.language.button.navigate')}
         </Button>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

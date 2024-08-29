@@ -111,7 +111,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
     async function checkCorrectPassword(): Promise<void> {
       try {
         await restoreMnemonicFromCloudStorage(params.mnemonicId, enteredPassword)
-        await generateImportedAccounts(params.mnemonicId, BackupType.Cloud)
+        await generateImportedAccounts({ mnemonicId: params.mnemonicId, backupType: BackupType.Cloud })
 
         dispatch(resetPasswordAttempts())
         // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched

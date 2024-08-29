@@ -1,4 +1,5 @@
 import { createContext, ReactNode, useContext, useMemo } from 'react'
+import { isWeb } from 'utilities/src/platform'
 
 type BottomSheetContextState = {
   // `isSheetReady` is `true` as soon as the sheet has just begun animating from the bottom.
@@ -29,6 +30,10 @@ export function BottomSheetContextProvider({
 
 export const useBottomSheetContext = (): BottomSheetContextState => {
   const bottomSheetContext = useContext(BottomSheetContext)
+
+  if (isWeb) {
+    return { isSheetReady: true }
+  }
 
   if (bottomSheetContext === undefined) {
     throw new Error('`useBottomSheetContext` must be used inside of `BottomSheetContextProvider`')

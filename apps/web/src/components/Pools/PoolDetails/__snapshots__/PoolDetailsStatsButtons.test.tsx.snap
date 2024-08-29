@@ -1158,13 +1158,13 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                     <div
                       class="c1 c2 c19 c20"
                     >
-                      <button
+                      <h1
                         class="c21 c22 c23"
                         role="button"
                         tabindex="0"
                       >
                         Swap
-                      </button>
+                      </h1>
                       <button
                         class="c21 c22 c24"
                       >
@@ -1517,11 +1517,12 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                         disabled=""
                         id="swap-button"
                       >
-                        <div
-                          class="css-1cmsyys"
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-2084381207 _fontFamily-299667014 _wordWrap-break-word _fontSize-20px _lineHeight-222976542 _fontWeight-233016202"
+                          data-disable-theme="true"
                         >
                           Connecting wallet...
-                        </div>
+                        </span>
                       </button>
                     </div>
                   </div>

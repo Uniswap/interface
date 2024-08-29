@@ -1,13 +1,13 @@
 import { AssetType } from 'uniswap/src/entities/assets'
+import {
+  ReceiveTokenTransactionInfo,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { receiveTokenTransactionInfo } from 'uniswap/src/test/fixtures'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { createFinalizedTxAction } from 'wallet/src/features/notifications/notificationWatcherSaga.test'
-import { ReceiveTokenTransactionInfo, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import {
-  receiveCurrencyTxNotification,
-  receiveNFTNotification,
-  receiveTokenTransactionInfo,
-  signerMnemonicAccount,
-} from 'wallet/src/test/fixtures'
+import { receiveCurrencyTxNotification, receiveNFTNotification, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const account = signerMnemonicAccount()
 

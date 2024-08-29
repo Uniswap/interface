@@ -5,8 +5,8 @@ import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { spacing } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 
 export type StorageWarningModalProps = {
   isOnboarding: boolean
@@ -16,14 +16,12 @@ export function StorageWarningModal({ isOnboarding }: StorageWarningModalProps):
   const { navigateTo } = useExtensionNavigation()
   const { showStorageWarning, onStorageWarningClose } = useCheckLowStorage({ isOnboarding })
 
-  if (!showStorageWarning) {
-    return null
-  }
   return (
     <WarningModal
       caption={t('extension.warning.storage.message')}
       closeText={t('common.button.close')}
       confirmText={isOnboarding ? undefined : t('extension.warning.storage.button')}
+      isOpen={showStorageWarning}
       maxWidth={isOnboarding ? ONBOARDING_CONTENT_WIDTH - spacing.spacing16 * 2 : undefined}
       modalName={ModalName.StorageWarning}
       severity={WarningSeverity.High}

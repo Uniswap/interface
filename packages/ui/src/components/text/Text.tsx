@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import { GetProps, styled, Text as TamaguiText } from 'tamagui'
+import { GetProps, isWeb, styled, Text as TamaguiText } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
 import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreenReaders'
 import { useEnableFontScaling } from 'ui/src/components/text/useEnableFontScaling'
@@ -136,8 +136,8 @@ export const TextPlaceholder = ({ children }: PropsWithChildren<unknown>): JSX.E
       <Flex row alignItems="center" position="relative">
         <HiddenFromScreenReaders>{children}</HiddenFromScreenReaders>
         <Flex
-          backgroundColor="$surface2"
-          borderRadius="$rounded4"
+          backgroundColor={isWeb ? '$surface3' : '$surface2'}
+          borderRadius="$roundedFull"
           bottom="5%"
           left={0}
           position="absolute"

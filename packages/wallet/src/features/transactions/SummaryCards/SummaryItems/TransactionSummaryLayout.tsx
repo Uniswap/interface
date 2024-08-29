@@ -7,6 +7,7 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { TransactionDetailsModal } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
 import { useTransactionActions } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActions'
@@ -19,7 +20,6 @@ import {
   useFormattedTime,
 } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useIsQueuedTransaction } from 'wallet/src/features/transactions/hooks'
-import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { openTransactionLink } from 'wallet/src/utils/linking'
 

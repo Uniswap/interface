@@ -8,17 +8,16 @@ import { CustomVolumeChartModel } from 'components/Charts/VolumeChart/CustomVolu
 import { StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { getCumulativeSum, getCumulativeVolume, getVolumeProtocolInfo } from 'components/Charts/VolumeChart/utils'
 import { ChartType } from 'components/Charts/utils'
-import Column from 'components/Column'
-import { RowBetween } from 'components/Row'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
 import { useDailyProtocolTVL, useHistoricalProtocolVolume } from 'graphql/data/protocolStats'
 import { TimePeriod, getProtocolColor, getSupportedGraphQlChain } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize'
-import styled, { useTheme } from 'lib/styled-components'
+import { useTheme } from 'lib/styled-components'
 import { ReactNode, useMemo, useState } from 'react'
-import { EllipsisStyle, ThemedText } from 'theme/components'
+import { EllipsisTamaguiStyle } from 'theme/components'
+import { Flex, Text, styled } from 'ui/src'
 import { HistoryDuration, PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -32,49 +31,39 @@ const TIME_SELECTOR_OPTIONS = [
   { time: TimePeriod.MONTH, display: 'M' },
 ]
 
-const StyledTimePeriodSelector = styled(TimePeriodSelector)`
-  & > button {
-    padding: 4px 8px;
-    margin: 4px 0px;
-    font-size: 14px;
-  }
-`
-const ChartsContainer = styled(RowBetween)`
-  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-bottom: 56px;
-`
+const ChartsContainer = styled(Flex, {
+  row: true,
+  justifyContent: 'space-between',
+  maxWidth: MAX_WIDTH_MEDIA_BREAKPOINT,
+  width: '100%',
+  ml: 'auto',
+  mr: 'auto',
+  pb: 56,
+})
+
 // a 6% gap is achieved using two 47% width containers, as a parent gap causes an autosizing error with side-by-side lightweight-charts
-const SectionContainer = styled(Column)`
-  position: relative;
-  width: 47%;
-  gap: 4px;
+const SectionContainer = styled(Flex, {
+  position: 'relative',
+  width: '47%',
+  gap: '$gap4',
+  ...EllipsisTamaguiStyle,
+  $md: {
+    backgroundColor: '$surface2',
+    borderRadius: '$rounded20',
+    height: 120,
+    p: '$padding20',
+  },
+  $xs: {
+    height: 112,
+    p: '$padding16',
+  },
+})
 
-  > * {
-    ${EllipsisStyle}
-  }
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    background-color: ${({ theme }) => theme.surface2};
-    border-radius: 20px;
-    height: 120px;
-    padding: 20px;
-  }
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.xs}px`}) {
-    height: 112px;
-    padding: 16px;
-  }
-`
-const SectionTitle = styled(ThemedText.SubHeader)`
-  color: ${({ theme }) => theme.neutral2};
-  white-space: nowrap;
-`
-const StyledChart: typeof Chart = styled(Chart)`
-  height: ${EXPLORE_CHART_HEIGHT_PX}px;
-`
+const SectionTitle = styled(Text, {
+  name: 'SectionTitle',
+  fontWeight: '300',
+  whiteSpace: 'nowrap',
+})
 
 function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
@@ -123,18 +112,16 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
 
   return (
     <SectionContainer>
-      <RowBetween>
+      <Flex row justifyContent="space-between" alignItems="center">
         <SectionTitle>
           <Trans i18nKey="explore.uniVolume" />
         </SectionTitle>
-        <div style={{ position: 'absolute', right: 0 }}>
-          <StyledTimePeriodSelector
-            options={TIME_SELECTOR_OPTIONS}
-            timePeriod={timePeriod}
-            onChangeTimePeriod={setTimePeriod}
-          />
-        </div>
-      </RowBetween>
+        <TimePeriodSelector
+          options={TIME_SELECTOR_OPTIONS}
+          timePeriod={timePeriod}
+          onChangeTimePeriod={setTimePeriod}
+        />
+      </Flex>
       {(() => {
         if (dataQuality === DataQuality.INVALID) {
           const errorText = loading ? undefined : <Trans i18nKey="explore.unableToDisplayHistorical" />
@@ -143,7 +130,7 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
           )
         }
         return (
-          <StyledChart Model={CustomVolumeChartModel<StackedHistogramData>} params={params}>
+          <Chart Model={CustomVolumeChartModel<StackedHistogramData>} params={params} height={EXPLORE_CHART_HEIGHT_PX}>
             {(crosshairData) => (
               <ChartHeader
                 value={crosshairData ? getCumulativeSum(crosshairData) : getCumulativeVolume(entries)}
@@ -152,7 +139,7 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
                 protocolData={getVolumeProtocolInfo(crosshairData, EXPLORE_PRICE_SOURCES)}
               />
             )}
-          </StyledChart>
+          </Chart>
         )
       })()}
     </SectionContainer>
@@ -180,7 +167,7 @@ function TVLChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
 
   return (
     <SectionContainer>
-      <SectionTitle>
+      <SectionTitle color="$neutral2">
         <Trans i18nKey="common.uniswapTVL" />
       </SectionTitle>
       {(() => {
@@ -190,7 +177,7 @@ function TVLChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
         }
 
         return (
-          <StyledChart Model={TVLChartModel} params={params}>
+          <Chart Model={TVLChartModel} params={params} height={EXPLORE_CHART_HEIGHT_PX}>
             {(crosshairData) => (
               <ChartHeader
                 value={(crosshairData ?? lastEntry)?.values.reduce((v, sum) => (sum += v), 0)}
@@ -201,7 +188,7 @@ function TVLChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
                 }))}
               />
             )}
-          </StyledChart>
+          </Chart>
         )
       })()}
     </SectionContainer>
@@ -213,11 +200,13 @@ function MinimalStatDisplay({ title, value, time }: { title: ReactNode; value: n
 
   return (
     <SectionContainer>
-      <SectionTitle color="neutral2">{title}</SectionTitle>
-      <ThemedText.HeadlineSmall fontSize="24px" lineHeight="32px">
-        {formatFiatPrice({ price: value, type: NumberType.ChartFiatValue })}
-      </ThemedText.HeadlineSmall>
-      {time && <ThemedText.Caption color="neutral2">{time}</ThemedText.Caption>}
+      <SectionTitle color="$neutral2">{title}</SectionTitle>
+      <Text variant="heading3">{formatFiatPrice({ price: value, type: NumberType.ChartFiatValue })}</Text>
+      {time && (
+        <Text variant="body4" fontWeight="200" color="$neutral2">
+          {time}
+        </Text>
+      )}
     </SectionContainer>
   )
 }

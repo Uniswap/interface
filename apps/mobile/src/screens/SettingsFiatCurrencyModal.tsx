@@ -1,12 +1,12 @@
+import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Action } from 'redux'
-import { VirtualizedList } from 'src/components/layout/VirtualizedList'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
@@ -15,36 +15,40 @@ import { setCurrentFiatCurrency } from 'wallet/src/features/fiatCurrency/slice'
 export function SettingsFiatCurrencyModal(): JSX.Element {
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const selectedCurrency = useAppFiatCurrency()
+
+  // render
+  const renderItem = useCallback(
+    ({ item: currency }: { item: FiatCurrency }) => (
+      <FiatCurrencyOption
+        active={selectedCurrency === currency}
+        currency={currency}
+        onPress={(): void => {
+          dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))
+        }}
+      />
+    ),
+    [dispatch, selectedCurrency],
+  )
 
   return (
-    <BottomSheetModal
+    <Modal
       fullScreen
       name={ModalName.FiatCurrencySelector}
-      onClose={(): Action => dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))}
+      onClose={() => {
+        dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))
+      }}
     >
       <Text pb="$spacing12" textAlign="center" variant="subheading1">
         {t('settings.setting.currency.title')}
       </Text>
-      <VirtualizedList showsVerticalScrollIndicator={false}>
-        <FiatCurrencySelection
-          onClose={(): void => {
-            dispatch(closeModal({ name: ModalName.FiatCurrencySelector }))
-          }}
-        />
-      </VirtualizedList>
-    </BottomSheetModal>
-  )
-}
-
-function FiatCurrencySelection({ onClose }: { onClose: () => void }): JSX.Element {
-  const selectedCurrency = useAppFiatCurrency()
-
-  return (
-    <Flex pb="$spacing32" px="$spacing16">
-      {ORDERED_CURRENCIES.map((currency) => (
-        <FiatCurrencyOption active={selectedCurrency === currency} currency={currency} onPress={onClose} />
-      ))}
-    </Flex>
+      <BottomSheetFlatList
+        data={ORDERED_CURRENCIES}
+        focusHook={useBottomSheetFocusHook}
+        keyExtractor={(item: FiatCurrency) => item}
+        renderItem={renderItem}
+      />
+    </Modal>
   )
 }
 

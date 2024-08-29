@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Input } from 'src/app/components/Input'
 import { PasswordInput } from 'src/app/components/PasswordInput'
-import { BottomModalProps, InfoModal } from 'src/app/components/modal/InfoModal'
+import { InfoModal, ModalProps } from 'src/app/components/modal/InfoModal'
 import { useSagaStatus } from 'src/app/hooks/useSagaStatus'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
@@ -109,7 +109,7 @@ export function Locked(): JSX.Element {
     }
   }, [isIncorrectPassword])
 
-  const modalProps: Record<ForgotPasswordModalStep, BottomModalProps> = {
+  const modalProps: Record<ForgotPasswordModalStep, ModalProps> = {
     [ForgotPasswordModalStep.Initial]: {
       buttonText: t('extension.lock.button.reset'),
       description: t('extension.lock.password.reset.initial.description'),

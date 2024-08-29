@@ -3,13 +3,14 @@ import { ColorValue } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { opacify } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
+import { WarningColor, WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isWeb } from 'utilities/src/platform'
-import { WarningColor, WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 
 export type WarningModalProps = {
+  isOpen: boolean
   onClose?: () => void
   onCancel?: () => void
   onConfirm?: () => void
@@ -30,6 +31,7 @@ export type WarningModalProps = {
 }
 
 export function WarningModal({
+  isOpen,
   onClose,
   onCancel,
   onConfirm,
@@ -52,10 +54,11 @@ export function WarningModal({
   const alertColorValue = alertColor.text as keyof typeof colors
 
   return (
-    <BottomSheetModal
-      backgroundColor={colors.surface1.get()}
+    <Modal
+      backgroundColor={colors.surface1.val}
       hideHandlebar={hideHandlebar}
       isDismissible={isDismissible}
+      isModalOpen={isOpen}
       maxWidth={maxWidth}
       name={modalName}
       onClose={onClose}
@@ -107,7 +110,7 @@ export function WarningModal({
           )}
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }
 

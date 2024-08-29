@@ -1,93 +1,15 @@
 import { ColumnCenter } from 'components/Column'
 import { useCurrency } from 'hooks/Tokens'
 import { useScroll } from 'hooks/useScroll'
-import styled, { css, keyframes } from 'lib/styled-components'
-import { Box, H1 } from 'pages/Landing/components/Generics'
-import { TokenCloud } from 'pages/Landing/components/TokenCloud/index'
+import { TokenCloud } from 'pages/Landing/components/TokenCloud'
 import { Hover, RiseIn, RiseInText } from 'pages/Landing/components/animations'
 import { Swap } from 'pages/Swap'
+import { Fragment } from 'react'
 import { ChevronDown } from 'react-feather'
-import { BREAKPOINTS } from 'theme'
-import { Text } from 'ui/src'
-import { heightBreakpoints } from 'ui/src/theme'
+import { NAV_HEIGHT } from 'theme'
+import { Flex, Text } from 'ui/src'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-
-const Container = styled(Box)`
-  min-width: 100%;
-  min-height: 100vh;
-  height: min-content;
-  padding-top: ${({ theme }) => theme.navHeight}px;
-`
-const LandingSwapContainer = styled(Box)`
-  width: 480px;
-  padding: 8px;
-  border-radius: 24px;
-  background: ${({ theme }) => theme.surface1};
-`
-const LandingSwap = styled(Swap)`
-  position: relative;
-  width: 100%;
-
-  & > div:first-child {
-    padding: 0px;
-  }
-  & > div:first-child > div:first-child {
-    display: none;
-  }
-`
-const StyledH1 = styled(H1)`
-  @media (max-width: 768px) {
-    font-size: 52px;
-  }
-  @media (max-width: 464px) {
-    font-size: 36px;
-  }
-  @media (max-height: 668px) {
-    font-size: 28px;
-  }
-`
-const shrinkAndFade = keyframes`
-  0% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  100% {
-    transform: scale(0.8);
-    opacity: 0;
-  }
-`
-const Center = styled(Box)<{ transition?: boolean }>`
-  width: unset;
-  pointer-events: none;
-  padding: 48px 0px;
-  @media (max-width: 464px), (max-height: 700px) {
-    padding-top: 24px;
-  }
-  @media (max-width: 464px), (max-height: 668px) {
-    padding-top: 8px;
-  }
-  gap: 24px;
-  @media (max-height: 800px) {
-    gap: 16px;
-  }
-  ${({ transition }) =>
-    transition &&
-    css`
-      animation: ${shrinkAndFade} 1s ease-in-out forwards;
-    `};
-`
-const LearnMoreContainer = styled(Box)`
-  bottom: 48px;
-  @media (max-width: ${BREAKPOINTS.md}px) {
-    bottom: 64px;
-  }
-
-  // Prevent overlap of Hero text and Learn More button on short screens
-  @media (max-height: ${heightBreakpoints.short + 30}px) {
-    display: none;
-  }
-`
 
 interface HeroProps {
   scrollToRef: () => void
@@ -103,21 +25,44 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
   const opacityY = 1 - scrollPosition / 1000
 
   return (
-    <Container
+    <Flex
       position="relative"
-      justify="center"
-      style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
+      justifyContent="center"
+      y={translateY}
+      opacity={opacityY}
+      minWidth="100%"
+      minHeight="100vh"
+      height="min-content"
+      pt={NAV_HEIGHT}
+      pointerEvents="none"
     >
       <TokenCloud transition={transition} />
-      <Center
-        direction="column"
-        align="center"
+
+      <Flex
+        alignSelf="center"
         maxWidth="85vw"
-        transition={transition}
-        style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
+        pointerEvents="none"
+        pt={48}
+        gap="$gap20"
+        transform={`translate(0px, ${translateY}px)`}
+        opacity={opacityY}
+        $lg={{ pt: 24 }}
+        $sm={{ pt: 8 }}
+        $platform-web={{
+          transition: transition ? 'shrinkAndFade 1s ease-in-out forwards' : undefined,
+        }}
       >
-        <Box maxWidth="920px" direction="column" align="center" style={{ pointerEvents: 'none' }}>
-          <StyledH1>
+        <Flex maxWidth={920} alignItems="center" pointerEvents="none">
+          <Text
+            variant="heading1"
+            fontSize={64}
+            lineHeight={76}
+            textAlign="center"
+            fontWeight="$book"
+            $md={{ fontSize: 52 }}
+            $sm={{ variant: 'heading2', fontSize: 36 }}
+            $short={{ variant: 'heading2', fontSize: 36 }}
+          >
             {t('hero.swap.title')
               .split(' ')
               .map((word, index) => {
@@ -125,57 +70,58 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
                   return <br key={word} />
                 } else {
                   return (
-                    <>
-                      <RiseInText key={word} delay={index * 0.1}>
-                        {word}
-                      </RiseInText>{' '}
-                    </>
+                    <Fragment key={word}>
+                      <RiseInText delay={index * 0.1}>{word}</RiseInText>{' '}
+                    </Fragment>
                   )
                 }
               })}
-          </StyledH1>
-        </Box>
+          </Text>
+        </Flex>
 
         <RiseIn delay={0.4}>
-          <LandingSwapContainer>
-            <LandingSwap
+          <Flex
+            pointerEvents="auto"
+            width={480}
+            p="$padding8"
+            borderRadius="$rounded24"
+            backgroundColor="$surface1"
+            maxWidth="100%"
+          >
+            <Swap
               syncTabToUrl={false}
+              hideHeader
               chainId={initialInputCurrency?.chainId ?? UniverseChainId.Mainnet}
               initialInputCurrency={initialInputCurrency}
             />
-          </LandingSwapContainer>
+          </Flex>
         </RiseIn>
 
         <RiseIn delay={0.3}>
-          <Text
-            variant="body1"
-            textAlign="center"
-            maxWidth={430}
-            color="$neutral2"
-            $short={{
-              variant: 'body2',
-            }}
-          >
+          <Text variant="body1" textAlign="center" maxWidth={430} color="$neutral2" $short={{ variant: 'body2' }}>
             <Trans i18nKey="hero.subtitle" />
           </Text>
         </RiseIn>
-      </Center>
-      <LearnMoreContainer
+      </Flex>
+
+      <Flex flex={1} />
+
+      <Flex
         position="absolute"
         width="100%"
-        align="center"
-        justify="center"
+        centered
         pointerEvents="none"
+        bottom={48}
         style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
+        $short={{ display: 'none' }}
       >
         <RiseIn delay={0.3}>
-          <Box
-            direction="column"
-            align="center"
-            justify="flex-start"
-            onClick={() => scrollToRef()}
-            style={{ cursor: 'pointer' }}
-            width="500px"
+          <Flex
+            alignItems="center"
+            justifyContent="flex-start"
+            onPress={() => scrollToRef()}
+            cursor="pointer"
+            width={500}
           >
             <Hover>
               <ColumnCenter>
@@ -185,9 +131,9 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
                 <ChevronDown />
               </ColumnCenter>
             </Hover>
-          </Box>
+          </Flex>
         </RiseIn>
-      </LearnMoreContainer>
-    </Container>
+      </Flex>
+    </Flex>
   )
 }

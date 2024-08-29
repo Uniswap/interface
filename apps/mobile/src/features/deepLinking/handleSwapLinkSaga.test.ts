@@ -5,8 +5,9 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { DAI, UNI } from 'uniswap/src/constants/tokens'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const account = signerMnemonicAccount()

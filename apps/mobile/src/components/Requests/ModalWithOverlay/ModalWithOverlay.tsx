@@ -15,14 +15,14 @@ import { AnimatedStyle, useDerivedValue } from 'react-native-reanimated'
 import { ScrollDownOverlay } from 'src/components/Requests/ModalWithOverlay/ScrollDownOverlay'
 import { Button, Flex, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
-import { BottomSheetModalProps } from 'uniswap/src/components/modals/BottomSheetModalProps'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 const MEASURE_LAYOUT_TIMEOUT = 100
 
 type ModalWithOverlayProps = PropsWithChildren<
-  BottomSheetModalProps & {
+  ModalProps & {
     confirmationButtonText?: string
     scrollDownButtonText?: string
     onReject: () => void
@@ -107,7 +107,7 @@ export function ModalWithOverlay({
   )
 
   return (
-    <BottomSheetModal overrideInnerContainer {...bottomSheetModalProps}>
+    <Modal overrideInnerContainer {...bottomSheetModalProps}>
       <BottomSheetScrollView
         ref={scrollViewRef}
         contentContainerStyle={
@@ -132,7 +132,7 @@ export function ModalWithOverlay({
         onReject={onReject}
         onScrollDownPress={handleScrollDown}
       />
-    </BottomSheetModal>
+    </Modal>
   )
 }
 

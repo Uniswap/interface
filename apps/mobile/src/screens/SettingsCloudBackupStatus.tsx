@@ -131,34 +131,33 @@ export function SettingsCloudBackupStatus({
         </Button>
       </Flex>
 
-      {showBackupDeleteWarning && (
-        <WarningModal
-          caption={t('settings.setting.backup.delete.warning', {
-            cloudProviderName: getCloudProviderName(),
-          })}
-          closeText={t('common.button.close')}
-          confirmText={t('common.button.delete')}
-          modalName={ModalName.ViewSeedPhraseWarning}
-          title={t('settings.setting.backup.delete.confirm.title')}
-          onClose={(): void => {
-            setShowBackupDeleteWarning(false)
-          }}
-          onConfirm={onConfirmDeleteBackup}
-        >
-          {associatedAccounts.length > 1 && (
+      <WarningModal
+        caption={t('settings.setting.backup.delete.warning', {
+          cloudProviderName: getCloudProviderName(),
+        })}
+        closeText={t('common.button.close')}
+        confirmText={t('common.button.delete')}
+        isOpen={showBackupDeleteWarning}
+        modalName={ModalName.ViewSeedPhraseWarning}
+        title={t('settings.setting.backup.delete.confirm.title')}
+        onClose={(): void => {
+          setShowBackupDeleteWarning(false)
+        }}
+        onConfirm={onConfirmDeleteBackup}
+      >
+        {associatedAccounts.length > 1 && (
+          <Flex>
+            <Text textAlign="left" variant="subheading2">
+              {t('settings.setting.backup.delete.confirm.message')}
+            </Text>
             <Flex>
-              <Text textAlign="left" variant="subheading2">
-                {t('settings.setting.backup.delete.confirm.message')}
-              </Text>
-              <Flex>
-                {associatedAccounts.map((account) => (
-                  <AddressDisplay address={account.address} size={36} variant="subheading1" />
-                ))}
-              </Flex>
+              {associatedAccounts.map((account) => (
+                <AddressDisplay address={account.address} size={36} variant="subheading1" />
+              ))}
             </Flex>
-          )}
-        </WarningModal>
-      )}
+          </Flex>
+        )}
+      </WarningModal>
     </Screen>
   )
 }

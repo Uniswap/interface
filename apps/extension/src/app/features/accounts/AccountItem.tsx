@@ -9,6 +9,7 @@ import { CopySheets, Edit, TrashFilled, TripleDots } from 'ui/src/components/ico
 import { iconSizes } from 'ui/src/theme'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -16,7 +17,6 @@ import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningM
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useActiveAccountWithThrow, useDisplayName, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
@@ -127,22 +127,21 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
 
   return (
     <>
-      {showRemoveWalletModal && (
-        <WarningModal
-          caption={t('account.recoveryPhrase.remove.mnemonic.description', {
-            walletNames: [activeAccountDisplayName?.name ?? ''],
-          })}
-          closeText={t('common.button.cancel')}
-          confirmText={t('common.button.continue')}
-          icon={<TrashFilled color="$statusCritical" size="$icon.24" strokeWidth="$spacing1" />}
-          modalName={ModalName.RemoveWallet}
-          severity={WarningSeverity.High}
-          title={t('account.wallet.remove.title', { name: displayName?.name ?? '' })}
-          onClose={() => setShowRemoveWalletModal(false)}
-          onConfirm={onRemoveWallet}
-        />
-      )}
-      {showEditLabelModal && <EditLabelModal address={address} onClose={() => setShowEditLabelModal(false)} />}
+      <WarningModal
+        caption={t('account.recoveryPhrase.remove.mnemonic.description', {
+          walletNames: [activeAccountDisplayName?.name ?? ''],
+        })}
+        closeText={t('common.button.cancel')}
+        confirmText={t('common.button.continue')}
+        icon={<TrashFilled color="$statusCritical" size="$icon.24" strokeWidth="$spacing1" />}
+        isOpen={showRemoveWalletModal}
+        modalName={ModalName.RemoveWallet}
+        severity={WarningSeverity.High}
+        title={t('account.wallet.remove.title', { name: displayName?.name ?? '' })}
+        onClose={() => setShowRemoveWalletModal(false)}
+        onConfirm={onRemoveWallet}
+      />
+      <EditLabelModal address={address} isOpen={showEditLabelModal} onClose={() => setShowEditLabelModal(false)} />
       <TouchableArea
         hoverable
         backgroundColor="$surface1"

@@ -5,7 +5,6 @@ export const WidthAnimator = View.styleable<{ open?: boolean; height: number }>(
   const { open = true, height, children, ...rest } = props
   const [width, setWidth] = useState(0)
   const [hide, setHide] = useState(false)
-  console.log(width)
 
   const close = useCallback(() => {
     setWidth(0)
@@ -30,7 +29,16 @@ export const WidthAnimator = View.styleable<{ open?: boolean; height: number }>(
 
   return (
     // TODO: figure out how to allow dynamic height based on content
-    <View ref={ref} height={height} width={width} {...rest}>
+    <View
+      ref={ref}
+      animation="fast"
+      enterStyle={{ opacity: 0 }}
+      exitStyle={{ opacity: 0 }}
+      height={height}
+      overflow="hidden"
+      width={width}
+      {...rest}
+    >
       <View position="absolute" onLayout={onLayout}>
         {!hide && children}
       </View>

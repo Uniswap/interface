@@ -1,6 +1,5 @@
 import React, { useCallback, useState } from 'react'
-import { Flex, ImpactFeedbackStyle, Text, TouchableArea, isWeb } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
@@ -8,6 +7,7 @@ import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generat
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { isInterface } from 'utilities/src/platform'
 
 interface OptionProps {
   option: TokenOption
@@ -18,6 +18,8 @@ interface OptionProps {
   tokenWarningDismissed: boolean
   dismissWarningCallback: () => void
   quantity: number | null
+  // TODO(WEB-4731): Remove isKeyboardOpen dependency
+  isKeyboardOpen?: boolean
   // TODO(WEB-3643): Share localization context with WEB
   // (balance, quantityFormatted)
   balance: string
@@ -35,11 +37,16 @@ function _TokenOptionItem({
   balance,
   quantity,
   quantityFormatted,
+  isKeyboardOpen,
 }: OptionProps): JSX.Element {
   const { currencyInfo } = option
   const { currency, currencyId, safetyLevel, logoUrl } = currencyInfo
-
   const [showWarningModal, setShowWarningModal] = useState(false)
+
+  const handleShowWarningModal = useCallback((): void => {
+    onDismiss?.()
+    setShowWarningModal(true)
+  }, [onDismiss, setShowWarningModal])
 
   const onPressTokenOption = useCallback(() => {
     if (
@@ -48,13 +55,20 @@ function _TokenOptionItem({
         ((safetyLevel === SafetyLevel.MediumWarning || safetyLevel === SafetyLevel.StrongWarning) &&
           !tokenWarningDismissed))
     ) {
-      onDismiss?.()
-      setShowWarningModal(true)
+      // On mobile web we need to wait for the keyboard to hide
+      // before showing the modal to avoid height issues
+      if (isKeyboardOpen && isInterface) {
+        const activeElement = document.activeElement as HTMLElement | null
+        activeElement?.blur()
+        setTimeout(handleShowWarningModal, 700)
+      } else {
+        handleShowWarningModal()
+      }
       return
     }
 
     onPress()
-  }, [showWarnings, safetyLevel, tokenWarningDismissed, onPress, onDismiss])
+  }, [showWarnings, safetyLevel, isKeyboardOpen, tokenWarningDismissed, handleShowWarningModal, onPress])
 
   const onAcceptTokenWarning = useCallback(() => {
     dismissWarningCallback()
@@ -66,31 +80,32 @@ function _TokenOptionItem({
     <>
       <TouchableArea
         hapticFeedback
+        animation="300ms"
         hapticStyle={ImpactFeedbackStyle.Light}
+        hoverStyle={{ backgroundColor: '$surface1Hovered' }}
         opacity={showWarnings && safetyLevel === SafetyLevel.Blocked ? 0.5 : 1}
-        testID={`token-option-${currency.chainId}-${currency.symbol}`}
         width="100%"
         onPress={onPressTokenOption}
       >
         <Flex
           row
           alignItems="center"
-          data-testid={`token-option-${currency.chainId}-${currency.symbol}`}
           gap="$spacing8"
           justifyContent="space-between"
+          px="$spacing16"
           py="$spacing12"
+          testID={`token-option-${currency.chainId}-${currency.symbol}`}
         >
-          <Flex row shrink alignItems="center" gap={isWeb ? '$spacing8' : '$spacing12'}>
+          <Flex row shrink alignItems="center" gap="$spacing12">
             <TokenLogo
               chainId={currency.chainId}
               name={currency.name}
-              size={isWeb ? iconSizes.icon36 : undefined}
               symbol={currency.symbol}
               url={currencyInfo.logoUrl ?? undefined}
             />
             <Flex shrink>
               <Flex row alignItems="center" gap="$spacing8">
-                <Text color="$neutral1" numberOfLines={1} variant={isWeb ? 'body2' : 'body1'}>
+                <Text color="$neutral1" numberOfLines={1} variant="body1">
                   {currency.name}
                 </Text>
                 {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
@@ -116,8 +131,8 @@ function _TokenOptionItem({
 
           {quantity && quantity !== 0 ? (
             <Flex alignItems="flex-end">
-              <Text variant={isWeb ? 'body2' : 'body1'}>{balance}</Text>
-              <Text color="$neutral2" variant={isWeb ? 'body3' : 'subheading2'}>
+              <Text variant="body1">{balance}</Text>
+              <Text color="$neutral2" variant="body3">
                 {quantityFormatted}
               </Text>
             </Flex>

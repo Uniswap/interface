@@ -24,7 +24,7 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
    * calls and deep object traversals.
    */
   stateTransformer: (state: InterfaceState): DeepPartial<InterfaceState> => {
-    const { application, user, transactions } = state
+    const { application, user, localWebTransactions } = state
 
     return {
       application: {
@@ -44,7 +44,7 @@ export const sentryEnhancer = Sentry.createReduxEnhancer({
         timestamp: user.timestamp,
         showSurveyPopup: user.showSurveyPopup,
       },
-      transactions,
+      localWebTransactions,
     }
   },
 })

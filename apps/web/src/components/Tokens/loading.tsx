@@ -1,9 +1,9 @@
 import { loadingAnimation } from 'components/Loader/styled'
-import styled from 'lib/styled-components'
+import deprecatedStyled from 'lib/styled-components'
 import { lighten } from 'polished'
 
 /* Loading state bubbles (animation style from: src/components/Loader/styled.tsx) */
-export const LoadingBubble = styled.div<{
+export const LoadingBubble = deprecatedStyled.div<{
   height?: string
   width?: string
   round?: boolean

@@ -17,13 +17,14 @@ import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { ImportType } from 'uniswap/src/types/onboarding'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isAndroid } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
+import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 import { openSettings } from 'wallet/src/utils/linking'
 
 type Props = CompositeScreenProps<
@@ -39,15 +40,14 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
 
   const { data: cloudStorageAvailable } = useAsyncData(isCloudStorageAvailable)
 
-  const { getImportedAccountsAddresses, getOnboardingAccountAddress, hasBackup } = useOnboardingContext()
-  const onboardingAccountAddress = getOnboardingAccountAddress()
-  const importedAccountsAddresses = getImportedAccountsAddresses()
+  const { getOnboardingOrImportedAccount, hasBackup } = useOnboardingContext()
+  const onboardingContextAccount = getOnboardingOrImportedAccount()
+  const activeAccount = useActiveAccount()
+  const address = onboardingContextAccount?.address || activeAccount?.address
 
-  const address = onboardingAccountAddress || importedAccountsAddresses?.[0]
-
-  if (!address) {
-    throw Error('No account available to backup')
-  }
+  const isCreatingNew = params?.importType === ImportType.CreateNew
+  const screenTitle = isCreatingNew ? t('onboarding.backup.title.new') : t('onboarding.backup.title.existing')
+  const fromBackupCard = params.entryPoint === OnboardingEntryPoint.BackupCard
 
   const renderHeaderLeft = useCallback(
     () => (
@@ -70,12 +70,20 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     }
   })
 
+  if (!address) {
+    throw Error('No account available to backup')
+  }
+
   const onPressNext = (): void => {
-    navigation.navigate({
-      name: OnboardingScreens.Notifications,
-      params,
-      merge: true,
-    })
+    if (fromBackupCard) {
+      navigation.navigate(MobileScreens.Home)
+    } else {
+      navigation.navigate({
+        name: OnboardingScreens.Notifications,
+        params,
+        merge: true,
+      })
+    }
   }
 
   const onPressEducationButton = (): void => {
@@ -113,7 +121,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   }
 
   const onPressManualBackup = (): void => {
-    navigate({ name: OnboardingScreens.BackupManual, params, merge: true })
+    navigate({ name: OnboardingScreens.BackupManual, params: { ...params, address }, merge: true })
   }
 
   const showSkipOption =
@@ -122,8 +130,6 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const hasCloudBackup = hasBackup(address, BackupType.Cloud)
   const hasManualBackup = hasBackup(address, BackupType.Manual)
 
-  const isCreatingNew = params?.importType === ImportType.CreateNew
-  const screenTitle = isCreatingNew ? t('onboarding.backup.title.new') : t('onboarding.backup.title.existing')
   const options = []
   options.push(
     <OptionCard
@@ -139,7 +145,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
       onPress={onPressCloudBackup}
     />,
   )
-  if (isCreatingNew) {
+  if (isCreatingNew || fromBackupCard) {
     options.push(
       <OptionCard
         key={ElementName.AddManualBackup}

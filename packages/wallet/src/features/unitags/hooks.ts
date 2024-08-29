@@ -3,11 +3,12 @@ import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getUniqueId } from 'react-native-device-info'
 import { useDispatch } from 'react-redux'
+import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
+import { useENS } from 'uniswap/src/features/ens/useENS'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { useUnitagQuery } from 'uniswap/src/features/unitags/api'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import {
   UnitagClaim,
@@ -19,9 +20,8 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck'
-import { useENS } from 'wallet/src/features/ens/useENS'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
@@ -126,7 +126,10 @@ export const useCanClaimUnitagName = (
 
   // Skip the backend calls if we found an error
   const unitagToSearch = error ? undefined : unitag
-  const { loading: unitagLoading, data } = useUnitagQuery(unitagToSearch)
+  const { isLoading: unitagLoading, data } = useUnitagsUsernameQuery({
+    params: unitagToSearch ? { username: unitagToSearch } : undefined,
+    staleTime: 2 * ONE_MINUTE_MS,
+  })
   const { loading: ensLoading, address: ensAddress } = useENS(UniverseChainId.Mainnet, unitagToSearch, true)
   const loading = unitagLoading || ensLoading
 

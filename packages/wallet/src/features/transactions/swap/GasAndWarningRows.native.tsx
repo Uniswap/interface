@@ -5,7 +5,9 @@ import { Flex, Text, TouchableArea, useIsShortMobileDevice, useMedia } from 'ui/
 import { Gas } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { UniswapXFee } from 'wallet/src/components/network/NetworkFee'
 import { useFormattedUniswapXGasFeeInfo } from 'wallet/src/components/network/hooks'
@@ -14,13 +16,11 @@ import { useLocalizationContext } from 'wallet/src/features/language/Localizatio
 import { InsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
-import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { GasAndWarningRowsProps } from 'wallet/src/features/transactions/swap/GasAndWarningRowsProps'
 import { SwapWarningModal } from 'wallet/src/features/transactions/swap/SwapWarningModal'
 import { useGasFeeHighRelativeToValue } from 'wallet/src/features/transactions/swap/hooks/useGasFeeHighRelativeToValue'
 import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlocked } from 'wallet/src/features/trm/hooks'
 
@@ -29,7 +29,7 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
   const isShortMobileDevice = useIsShortMobileDevice()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
-  const { account } = useTransactionModalContext()
+  const account = useAccountMeta()
   const swapTxContext = useSwapTxContext()
   const { gasFee } = swapTxContext
   const { derivedSwapInfo } = useSwapFormContext()
@@ -40,7 +40,7 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 
-  const { isBlocked } = useIsBlocked(account.address)
+  const { isBlocked } = useIsBlocked(account?.address)
 
   const { formScreenWarning, insufficientGasFundsWarning, warnings } = useParsedSwapWarnings()
   const showFormWarning = formScreenWarning && formScreenWarning.displayedInline && !isBlocked
@@ -71,8 +71,12 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
 
   return (
     <>
-      {showWarningModal && formScreenWarning && (
-        <SwapWarningModal parsedWarning={formScreenWarning} onClose={(): void => setShowWarningModal(false)} />
+      {formScreenWarning && (
+        <SwapWarningModal
+          isOpen={showWarningModal}
+          parsedWarning={formScreenWarning}
+          onClose={(): void => setShowWarningModal(false)}
+        />
       )}
 
       {/*
@@ -127,9 +131,8 @@ export function GasAndWarningRows({ renderEmptyRows }: GasAndWarningRowsProps): 
               {formScreenWarning.Icon && (
                 <formScreenWarning.Icon
                   color={formScreenWarning.color.text}
-                  height={iconSizes.icon16}
+                  size={iconSizes.icon16}
                   strokeWidth={1.5}
-                  width={iconSizes.icon16}
                 />
               )}
               <Flex row>

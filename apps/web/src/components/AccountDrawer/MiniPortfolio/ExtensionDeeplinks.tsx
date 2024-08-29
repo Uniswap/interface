@@ -10,7 +10,10 @@ import { useTheme } from 'lib/styled-components'
 import { useEffect, useState } from 'react'
 import { Button, Flex, Image, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
-import { ArrowRightToLine, RotatableChevron, TimePast } from 'ui/src/components/icons'
+import { ArrowRightToLine } from 'ui/src/components/icons/ArrowRightToLine'
+import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
+import { TimePast } from 'ui/src/components/icons/TimePast'
+
 import { iconSizes } from 'ui/src/theme/iconSizes'
 import { t } from 'uniswap/src/i18n'
 

@@ -2,7 +2,7 @@ import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { persistor } from 'state'
 import { initialState as initialListsState } from 'state/lists/reducer'
 import { RouterPreference } from 'state/routing/types'
-import { initialState as initialTransactionsState, TransactionState } from 'state/transactions/reducer'
+import { initialState as initialTransactionsState, LocalWebTransactionState } from 'state/transactions/reducer'
 import { initialState as initialUserState, UserState } from 'state/user/reducer'
 import { SlippageTolerance } from 'state/user/types'
 
@@ -48,7 +48,7 @@ export const legacyLocalStorageMigration = async () => {
   return result
 }
 
-function legacyTransactionMigrations(state: any): TransactionState {
+function legacyTransactionMigrations(state: any): LocalWebTransactionState {
   // Make a copy of the object so we can mutate it.
   const result = JSON.parse(JSON.stringify(state))
   // in case there are any transactions in the store with the old format, remove them

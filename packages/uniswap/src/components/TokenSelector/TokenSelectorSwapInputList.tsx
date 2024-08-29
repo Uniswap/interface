@@ -101,6 +101,7 @@ function _TokenSelectorSwapInputList({
   chainFilter,
   searchHistory,
   valueModifiers,
+  isKeyboardOpen,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
   useFavoriteTokensOptionsHook,
@@ -135,6 +136,7 @@ function _TokenSelectorSwapInputList({
       convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
       formatNumberOrStringCallback={formatNumberOrStringCallback}
       hasError={Boolean(error)}
+      isKeyboardOpen={isKeyboardOpen}
       loading={loading}
       refetch={refetch}
       sections={sections}

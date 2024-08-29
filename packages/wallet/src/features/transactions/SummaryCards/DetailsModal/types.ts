@@ -2,11 +2,12 @@ import {
   ConfirmedSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  LocalOnRampTransactionInfo,
   OnRampPurchaseInfo,
   OnRampTransferInfo,
   UnknownTransactionInfo,
   WrapTransactionInfo,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export type SwapTypeTransactionInfo =
   | ExactInputSwapTransactionInfo
@@ -15,7 +16,6 @@ export type SwapTypeTransactionInfo =
 
 import {
   ApproveTransactionInfo,
-  FiatPurchaseTransactionInfo,
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
   NFTTradeTransactionInfo,
@@ -24,14 +24,10 @@ import {
   TransactionType,
   TransactionTypeInfo,
   WCConfirmInfo,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export function isApproveTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is ApproveTransactionInfo {
   return typeInfo.type === TransactionType.Approve
-}
-
-export function isFiatPurchaseTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is FiatPurchaseTransactionInfo {
-  return typeInfo.type === TransactionType.FiatPurchase
 }
 
 export function isOnRampPurchaseTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is OnRampPurchaseInfo {
@@ -40,6 +36,10 @@ export function isOnRampPurchaseTransactionInfo(typeInfo: TransactionTypeInfo): 
 
 export function isOnRampTransferTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is OnRampTransferInfo {
   return typeInfo.type === TransactionType.OnRampTransfer
+}
+
+export function isLocalOnRampTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is LocalOnRampTransactionInfo {
+  return typeInfo.type === TransactionType.LocalOnRamp
 }
 
 export function isNFTApproveTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is NFTApproveTransactionInfo {

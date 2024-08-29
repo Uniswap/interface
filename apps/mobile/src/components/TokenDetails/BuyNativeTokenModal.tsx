@@ -2,12 +2,12 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { WalletChainId } from 'uniswap/src/types/chains'
-import { useCurrencyInfo, useNativeCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { BuyNativeTokenButton } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/BuyNativeTokenButton'
 
 export function BuyNativeTokenModal({
@@ -27,7 +27,7 @@ export function BuyNativeTokenModal({
   }
 
   return (
-    <BottomSheetModal isDismissible alignment="top" name={ModalName.BuyNativeToken} onClose={onClose}>
+    <Modal isDismissible alignment="top" name={ModalName.BuyNativeToken} onClose={onClose}>
       <Flex centered gap="$spacing24" px="$spacing24" py="$spacing12">
         <Flex centered gap="$spacing16">
           <CurrencyLogo currencyInfo={nativeCurrencyInfo} size={iconSizes.icon48} />
@@ -54,6 +54,6 @@ export function BuyNativeTokenModal({
           </Flex>
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

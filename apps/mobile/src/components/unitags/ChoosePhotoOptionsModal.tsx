@@ -5,7 +5,7 @@ import { ChooseNftModal } from 'src/components/unitags/ChooseNftModal'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { Camera, Photo, Trash } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 
 type ChoosePhotoOptionsProps = {
@@ -75,9 +75,9 @@ export const ChoosePhotoOptionsModal = ({
 
   return (
     <>
-      <BottomSheetModal
+      <Modal
         isDismissible
-        backgroundColor={colors.surface1.get()}
+        backgroundColor={colors.surface1.val}
         hideHandlebar={false}
         name={ModalName.ChooseProfilePhoto}
         onClose={onClose}
@@ -91,7 +91,7 @@ export const ChoosePhotoOptionsModal = ({
             ))}
           </Flex>
         </Flex>
-      </BottomSheetModal>
+      </Modal>
       {showNftsList && address && (
         <ChooseNftModal address={address} setPhotoUri={setPhotoUri} onClose={onCloseNftsList} />
       )}

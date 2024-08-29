@@ -20,6 +20,7 @@ function _TokenSelectorEmptySearchList({
 }: {
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
+  isKeyboardOpen?: boolean
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
   onDismiss: () => void

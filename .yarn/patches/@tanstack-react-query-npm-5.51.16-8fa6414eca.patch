@@ -1,0 +1,30 @@
+diff --git a/package.json b/package.json
+index e4b37644f3a62171deaff6dbf7731979ce751c78..7b2ca64565c0c6318ba01ff26cb4fad1c7419b0d 100644
+--- a/package.json
++++ b/package.json
+@@ -15,22 +15,9 @@
+     "url": "https://github.com/sponsors/tannerlinsley"
+   },
+   "type": "module",
+-  "types": "build/legacy/index.d.ts",
+-  "main": "build/legacy/index.cjs",
+-  "module": "build/legacy/index.js",
+-  "exports": {
+-    ".": {
+-      "import": {
+-        "types": "./build/modern/index.d.ts",
+-        "default": "./build/modern/index.js"
+-      },
+-      "require": {
+-        "types": "./build/modern/index.d.cts",
+-        "default": "./build/modern/index.cjs"
+-      }
+-    },
+-    "./package.json": "./package.json"
+-  },
++  "types": "build/modern/index.d.ts",
++  "main": "build/modern/index.cjs",
++  "module": "build/modern/index.js",
+   "sideEffects": false,
+   "files": [
+     "build",

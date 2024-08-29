@@ -181,7 +181,7 @@ module.exports = {
             name: '@gorhom/bottom-sheet',
             importNames: ['BottomSheetTextInput'],
             message:
-              'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/BottomSheetModal`.',
+              'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/Modal`.',
           },
           {
             name: 'expo-haptics',

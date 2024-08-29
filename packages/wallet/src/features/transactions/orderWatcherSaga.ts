@@ -1,20 +1,29 @@
 import axios from 'axios'
 import { call, delay, fork, select, take } from 'typed-redux-saga'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { GetOrdersResponse } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { logger } from 'utilities/src/logger/logger'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { makeSelectUniswapXOrder } from 'wallet/src/features/transactions/selectors'
-import { updateTransaction } from 'wallet/src/features/transactions/slice'
-import { TRADING_API_HEADERS } from 'wallet/src/features/transactions/swap/trade/api/client'
-import { ORDER_STATUS_TO_TX_STATUS } from 'wallet/src/features/transactions/swap/trade/api/utils'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
+import { GetOrdersResponse, OrderStatus } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TRADING_API_HEADERS } from 'uniswap/src/data/tradingApi/client'
+import { updateTransaction } from 'uniswap/src/features/transactions/slice'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   QueuedOrderStatus,
   TransactionStatus,
   UniswapXOrderDetails,
   isFinalizedTxStatus,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { logger } from 'utilities/src/logger/logger'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { makeSelectUniswapXOrder } from 'wallet/src/features/transactions/selectors'
+
+const ORDER_STATUS_TO_TX_STATUS: { [key in OrderStatus]: TransactionStatus } = {
+  [OrderStatus.CANCELLED]: TransactionStatus.Canceled,
+  [OrderStatus.ERROR]: TransactionStatus.Failed,
+  [OrderStatus.EXPIRED]: TransactionStatus.Expired,
+  [OrderStatus.FILLED]: TransactionStatus.Success,
+  [OrderStatus.INSUFFICIENT_FUNDS]: TransactionStatus.InsufficientFunds,
+  [OrderStatus.OPEN]: TransactionStatus.Pending,
+  [OrderStatus.UNVERIFIED]: TransactionStatus.Unknown,
+}
 
 // If the backend cannot provide a status for an order, we can assume after a certain threshold the submission failed.
 const ORDER_TIMEOUT_BUFFER = 20 * ONE_SECOND_MS

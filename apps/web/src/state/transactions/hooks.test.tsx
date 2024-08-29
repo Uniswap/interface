@@ -83,7 +83,7 @@ describe('Transactions hooks', () => {
 
   it('useTransactionAdder adds a transaction', () => {
     addPendingTransaction(mockApprovalTransactionInfo)
-    expect(store.getState().transactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash]).toEqual({
+    expect(store.getState().localWebTransactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash]).toEqual({
       hash: pendingTransactionResponse.hash,
       info: mockApprovalTransactionInfo,
       from: pendingTransactionResponse.from,
@@ -101,7 +101,9 @@ describe('Transactions hooks', () => {
     act(() => {
       remover.current(pendingTransactionResponse.hash)
     })
-    expect(store.getState().transactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash]).toBeUndefined()
+    expect(
+      store.getState().localWebTransactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash],
+    ).toBeUndefined()
   })
 
   describe('useHasPendingApproval', () => {
@@ -190,13 +192,15 @@ describe('Transactions hooks', () => {
       const { result: canceller } = renderHook(() => useTransactionCanceller())
 
       const originalTransactionDetails =
-        store.getState().transactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash]
+        store.getState().localWebTransactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash]
 
       act(() => canceller.current(pendingTransactionResponse.hash, UniverseChainId.Mainnet, '0x456'))
 
-      expect(store.getState().transactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash]).toBeUndefined()
+      expect(
+        store.getState().localWebTransactions[UniverseChainId.Mainnet][pendingTransactionResponse.hash],
+      ).toBeUndefined()
 
-      expect(store.getState().transactions[UniverseChainId.Mainnet]['0x456']).toEqual({
+      expect(store.getState().localWebTransactions[UniverseChainId.Mainnet]['0x456']).toEqual({
         ...originalTransactionDetails,
         hash: '0x456',
         cancelled: true,

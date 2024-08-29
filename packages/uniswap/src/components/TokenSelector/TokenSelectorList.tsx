@@ -1,8 +1,6 @@
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { Flex, Loader, Skeleton, isWeb } from 'ui/src'
-import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { AnimateTransition, Flex, Loader, Skeleton, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/TokenOptionItem'
@@ -10,6 +8,7 @@ import {
   TokenSectionBaseList,
   TokenSectionBaseListRef,
 } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
+import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList.web'
 import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/TokenSectionHeader'
 import { renderSuggestedTokenItem } from 'uniswap/src/components/TokenSelector/renderSuggestedTokenItem'
 import { suggestedTokensKeyExtractor } from 'uniswap/src/components/TokenSelector/suggestedTokensKeyExtractor'
@@ -27,13 +26,12 @@ import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatt
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { isInterface } from 'utilities/src/platform'
 
 function isSuggestedTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
   return Array.isArray(data)
 }
 
-function isSuggestedTokenSection(section: TokenSection): boolean {
+export function isSuggestedTokenSection(section: TokenSection): boolean {
   return section.sectionKey === TokenOptionSection.SuggestedTokens
 }
 
@@ -45,6 +43,7 @@ function TokenOptionItemWrapper({
   index,
   showWarnings,
   showTokenAddress,
+  isKeyboardOpen,
   useTokenWarningDismissedHook,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
@@ -55,6 +54,7 @@ function TokenOptionItemWrapper({
   index: number
   showWarnings: boolean
   showTokenAddress?: boolean
+  isKeyboardOpen?: boolean
   useTokenWarningDismissedHook: TokenWarningDismissedHook
 
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
@@ -73,6 +73,7 @@ function TokenOptionItemWrapper({
     <TokenOptionItem
       balance={convertFiatAmountFormattedCallback(tokenOption.balanceUSD, NumberType.FiatTokenPrice)}
       dismissWarningCallback={dismissWarningCallback}
+      isKeyboardOpen={isKeyboardOpen}
       option={tokenOption}
       quantity={tokenOption.quantity}
       quantityFormatted={formatNumberOrStringCallback({
@@ -88,6 +89,17 @@ function TokenOptionItemWrapper({
   )
 }
 
+function EmptyResults(): JSX.Element {
+  const { t } = useTranslation()
+  return (
+    <Flex>
+      <Text color="$neutral3" mt="$spacing16" textAlign="center" variant="subheading2">
+        {t('common.noResults')}
+      </Text>
+    </Flex>
+  )
+}
+
 interface TokenSelectorListProps {
   onSelectCurrency: OnSelectCurrency
   sections?: TokenSelectorListSections
@@ -99,6 +111,7 @@ interface TokenSelectorListProps {
   emptyElement?: JSX.Element
   errorText?: string
   showTokenAddress?: boolean
+  isKeyboardOpen?: boolean
   useTokenWarningDismissedHook: TokenWarningDismissedHook
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
@@ -111,6 +124,7 @@ function _TokenSelectorList({
   sections,
   chainFilter,
   showTokenWarnings,
+  isKeyboardOpen,
   refetch,
   loading,
   hasError,
@@ -146,6 +160,7 @@ function _TokenSelectorList({
             convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
             formatNumberOrStringCallback={formatNumberOrStringCallback}
             index={index}
+            isKeyboardOpen={isKeyboardOpen}
             section={section}
             showTokenAddress={showTokenAddress}
             showWarnings={showTokenWarnings}
@@ -163,6 +178,7 @@ function _TokenSelectorList({
       onSelectCurrency,
       showTokenAddress,
       showTokenWarnings,
+      isKeyboardOpen,
       useTokenWarningDismissedHook,
       convertFiatAmountFormattedCallback,
       formatNumberOrStringCallback,
@@ -196,24 +212,18 @@ function _TokenSelectorList({
     )
   }
 
-  if (!sections && loading) {
-    return (
-      <Flex grow>
-        <Flex py="$spacing16" width={80}>
+  return (
+    <AnimateTransition animationType="fade" currentIndex={(!sections || !sections.length) && loading ? 0 : 1}>
+      <Flex grow px="$spacing16">
+        <Flex height={ITEM_SECTION_HEADER_ROW_HEIGHT} justifyContent="center" py="$spacing16" width={80}>
           <Skeleton>
             <Loader.Box height={fonts.subheading2.lineHeight} />
           </Skeleton>
         </Flex>
-        <Loader.Token repeat={5} />
+        <Loader.Token gap="$none" repeat={15} />
       </Flex>
-    )
-  }
-
-  return (
-    // TODO(EXT-526): re-enable `exiting` animation when it's fixed.
-    <AnimatedFlex grow entering={isInterface ? undefined : FadeIn} exiting={isWeb ? undefined : FadeOut}>
       <TokenSectionBaseList
-        ListEmptyComponent={emptyElement}
+        ListEmptyComponent={emptyElement || <EmptyResults />}
         focusHook={useBottomSheetFocusHook}
         keyExtractor={key}
         renderItem={renderItem}
@@ -221,7 +231,7 @@ function _TokenSelectorList({
         sectionListRef={sectionListRef}
         sections={sections ?? []}
       />
-    </AnimatedFlex>
+    </AnimateTransition>
   )
 }
 

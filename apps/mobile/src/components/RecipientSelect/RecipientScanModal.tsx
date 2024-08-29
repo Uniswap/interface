@@ -9,7 +9,7 @@ import { Flex, Text, TouchableArea, useHapticFeedback, useIsDarkMode, useSporeCo
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
@@ -64,12 +64,7 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
   const isDarkMode = useIsDarkMode()
 
   return (
-    <BottomSheetModal
-      fullScreen
-      backgroundColor={colors.surface1.get()}
-      name={ModalName.WalletConnectScan}
-      onClose={onClose}
-    >
+    <Modal fullScreen backgroundColor={colors.surface1.val} name={ModalName.WalletConnectScan} onClose={onClose}>
       {currentScreenState === ScannerModalState.ScanQr && (
         <QRCodeScanner shouldFreezeCamera={shouldFreezeCamera} onScanCode={onScanCode} />
       )}
@@ -100,6 +95,6 @@ export function RecipientScanModal({ onSelectRecipient, onClose }: Props): JSX.E
           </Flex>
         </TouchableArea>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

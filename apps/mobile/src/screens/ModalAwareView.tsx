@@ -8,7 +8,7 @@ import { Flex, flexStyles, useDeviceInsets, useSporeColors } from 'ui/src'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 /**
- * Wrapper view to correctly render screens within BottomSheetModal as needed. This is required
+ * Wrapper view to correctly render screens within Modal as needed. This is required
  * to enable both full screen, and bottom sheet drag gestures on a screen within a modal.
  *
  * Note: full screen gesture must be enable in the root navigator to work.

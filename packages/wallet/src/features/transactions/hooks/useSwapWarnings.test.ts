@@ -1,14 +1,14 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import { WarningLabel } from 'uniswap/src/features/transactions/WarningModal/types'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import i18n from 'uniswap/src/i18n/i18n'
 import { daiCurrencyInfo, ethCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { WarningLabel } from 'wallet/src/features/transactions/WarningModal/types'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSwapWarnings } from 'wallet/src/features/transactions/hooks/useSwapWarnings'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { WrapType } from 'wallet/src/features/transactions/types'
 import { isOffline } from 'wallet/src/features/transactions/utils'
 import { networkDown, networkUnknown, networkUp } from 'wallet/src/test/fixtures'
 import { mockLocalizedFormatter } from 'wallet/src/test/mocks'
@@ -45,7 +45,7 @@ const swapState: DerivedSwapInfo = {
     [CurrencyField.OUTPUT]: undefined,
   },
   exactCurrencyField: CurrencyField.INPUT,
-  trade: { loading: false, error: undefined, trade: null },
+  trade: { isLoading: false, error: null, trade: null },
 }
 
 const insufficientBalanceState: DerivedSwapInfo = {
@@ -67,7 +67,7 @@ const insufficientBalanceState: DerivedSwapInfo = {
     [CurrencyField.OUTPUT]: daiCurrencyInfo(),
   },
   exactCurrencyField: CurrencyField.INPUT,
-  trade: { loading: false, error: undefined, trade: null },
+  trade: { isLoading: false, error: null, trade: null },
 }
 
 const tradeErrorState: DerivedSwapInfo = {
@@ -90,8 +90,8 @@ const tradeErrorState: DerivedSwapInfo = {
   },
   exactCurrencyField: CurrencyField.INPUT,
   trade: {
-    loading: false,
-    error: { status: 404, data: { errorCode: 'GENERIC_ERROR' } },
+    isLoading: false,
+    error: new Error('Generic error'),
     trade: null,
   },
 }

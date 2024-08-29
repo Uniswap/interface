@@ -1,22 +1,24 @@
 import { CHART_TYPE_LABELS, ChartType, PriceChartType } from 'components/Charts/utils'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { css, useTheme } from 'lib/styled-components'
-import { useReducer } from 'react'
+import { useTheme } from 'lib/styled-components'
+import { useState } from 'react'
 import { Check, Info } from 'react-feather'
+import { FlexProps } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
-import { isMobile } from 'utilities/src/platform'
+import { isMobileWeb } from 'utilities/src/platform'
 
-const StyledDropdownButton = css`
-  border-radius: 20px;
-  width: 100%;
-  height: 36px;
-`
-const StyledMenuFlyout = css`
-  min-width: 130px;
-  border-radius: 16px;
-  right: 0px;
-`
+const StyledDropdownButton = {
+  borderRadius: 20,
+  width: '100%',
+  height: 36,
+} satisfies FlexProps
+
+const StyledMenuFlyout = {
+  minWidth: 130,
+  borderRadius: '$rounded16',
+  right: 0,
+} satisfies FlexProps
 
 interface ChartTypeSelectorOption<T extends ChartType | PriceChartType> {
   value: T // Value to be selected/stored, used as default display value
@@ -48,7 +50,7 @@ export function ChartTypeDropdown<T extends ChartType | PriceChartType>({
   tooltipText?: string
 }) {
   const theme = useTheme()
-  const [isMenuOpen, toggleMenu] = useReducer((s) => !s, false)
+  const [isMenuOpen, toggleMenu] = useState(false)
 
   return (
     <DropdownSelector
@@ -64,21 +66,21 @@ export function ChartTypeDropdown<T extends ChartType | PriceChartType>({
               <MouseoverTooltip
                 key={chartType}
                 text={disabled && <Trans i18nKey="chart.settings.unavailable.label" />}
-                placement={!isMobile ? 'right' : undefined}
+                placement={!isMobileWeb ? 'right' : undefined}
               >
                 <InternalMenuItem
-                  onClick={() => {
+                  onPress={() => {
                     if (disabled) {
                       return
                     }
                     onSelectOption(chartType)
-                    toggleMenu()
+                    toggleMenu(false)
                   }}
                   disabled={disabled}
                 >
                   {display ?? CHART_TYPE_LABELS[chartType]}
                   {chartType === currentChartType && <Check size={20} color={theme.accent1} />}
-                  {disabled && <Info size={20} color={theme.neutral2} />}
+                  {disabled && <Info size={20} color="$neutral2" />}
                 </InternalMenuItem>
               </MouseoverTooltip>
             )
@@ -86,8 +88,9 @@ export function ChartTypeDropdown<T extends ChartType | PriceChartType>({
         </>
       }
       tooltipText={tooltipText}
-      buttonCss={StyledDropdownButton}
-      menuFlyoutCss={StyledMenuFlyout}
+      buttonStyle={StyledDropdownButton}
+      dropdownStyle={StyledMenuFlyout}
+      adaptToSheet={false}
     />
   )
 }

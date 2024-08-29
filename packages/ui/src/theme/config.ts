@@ -27,3 +27,5 @@ export const configWithoutAnimations = {
     fastSchemeChange: true,
   },
 } satisfies CreateTamaguiProps
+
+export type TamaguiGroupNames = 'item' | 'card'

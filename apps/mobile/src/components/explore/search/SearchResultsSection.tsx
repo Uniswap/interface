@@ -25,12 +25,15 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { useExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
-import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
+import {
+  NFTCollectionSearchResult,
+  SearchResultType,
+  TokenSearchResult,
+} from 'uniswap/src/features/search/SearchResult'
 import i18n from 'uniswap/src/i18n/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { NFTCollectionSearchResult } from 'wallet/src/features/search/SearchResult'
 
 const ICON_SIZE = '$icon.24'
 const ICON_COLOR = '$neutral2'

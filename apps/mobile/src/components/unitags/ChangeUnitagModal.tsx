@@ -8,7 +8,7 @@ import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -166,7 +166,7 @@ export function ChangeUnitagModal({
   return (
     <>
       {showConfirmModal && <ChangeUnitagConfirmModal onChangeSubmit={onChangeSubmit} onClose={onCloseConfirmModal} />}
-      <BottomSheetModal isDismissible name={ModalName.UnitagsChange} onClose={onClose}>
+      <Modal isDismissible name={ModalName.UnitagsChange} onClose={onClose}>
         <Flex
           centered
           gap="$spacing12"
@@ -253,7 +253,7 @@ export function ChangeUnitagModal({
             </Button>
           </Flex>
         </Flex>
-      </BottomSheetModal>
+      </Modal>
     </>
   )
 }
@@ -267,7 +267,7 @@ function ChangeUnitagConfirmModal({
 }): JSX.Element {
   const { t } = useTranslation()
   return (
-    <BottomSheetModal isDismissible name={ModalName.UnitagsChangeConfirm} onClose={onClose}>
+    <Modal isDismissible name={ModalName.UnitagsChangeConfirm} onClose={onClose}>
       <Flex centered gap="$spacing12" pb="$spacing12" pt="$spacing12" px="$spacing24">
         <Flex
           centered
@@ -294,6 +294,6 @@ function ChangeUnitagConfirmModal({
           </Button>
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

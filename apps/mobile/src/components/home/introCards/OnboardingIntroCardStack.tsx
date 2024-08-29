@@ -1,6 +1,7 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { FundWalletModal } from 'src/components/home/introCards/FundWalletModal'
 import { CardType, IntroCardProps } from 'src/components/home/introCards/IntroCard'
 import { IntroCardStack } from 'src/components/home/introCards/IntroCardStack'
@@ -13,7 +14,8 @@ import { ElementName, MobileEventName } from 'uniswap/src/features/telemetry/con
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
 import { useTranslation } from 'uniswap/src/i18n'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import {
   selectHasSkippedUnitagPrompt,
   selectHasViewedWelcomeWalletCard,
@@ -31,6 +33,7 @@ export function OnboardingIntroCardStack(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const activeAccount = useActiveAccountWithThrow()
+  const hasBackups = activeAccount.backups && activeAccount.backups.length > 0
 
   const welcomeCardTitle = t('onboarding.home.intro.welcome.title')
   const hasViewedWelcomeWalletCard = useSelector(selectHasViewedWelcomeWalletCard)
@@ -88,13 +91,22 @@ export function OnboardingIntroCardStack(): JSX.Element {
       })
     }
 
-    if (redesignRecoveryBackupEnabled) {
+    if (redesignRecoveryBackupEnabled && !hasBackups) {
       output.push({
         loggingName: OnboardingCardLoggingName.RecoveryBackup,
         Icon: ShieldCheck,
         title: t('onboarding.home.intro.backup.title'),
         description: t('onboarding.home.intro.backup.description'),
         cardType: CardType.Required,
+        onPress: (): void => {
+          navigate(MobileScreens.OnboardingStack, {
+            screen: OnboardingScreens.Backup,
+            params: {
+              importType: ImportType.BackupOnly,
+              entryPoint: OnboardingEntryPoint.BackupCard,
+            },
+          })
+        },
       })
     }
 
@@ -116,6 +128,7 @@ export function OnboardingIntroCardStack(): JSX.Element {
   }, [
     handleUnitagClaim,
     handleUnitagDismiss,
+    hasBackups,
     hasViewedWelcomeWalletCard,
     redesignRecoveryBackupEnabled,
     shouldPromptUnitag,

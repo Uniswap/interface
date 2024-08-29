@@ -14,7 +14,7 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import { Button, Flex, SpinningLoader, Text, ThemeKeys, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, opacify } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -169,11 +169,7 @@ export function RemoveWalletModal(): JSX.Element | null {
   const labelColor: ThemeKeys = iconColorLabel
 
   return (
-    <BottomSheetModal
-      backgroundColor={colors.surface1.get()}
-      name={ModalName.RemoveSeedPhraseWarningModal}
-      onClose={onClose}
-    >
+    <Modal backgroundColor={colors.surface1.val} name={ModalName.RemoveSeedPhraseWarningModal} onClose={onClose}>
       <Flex gap="$spacing24" px="$spacing24" py="$spacing24">
         <Flex centered gap="$spacing16">
           <Flex
@@ -224,6 +220,6 @@ export function RemoveWalletModal(): JSX.Element | null {
           )}
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

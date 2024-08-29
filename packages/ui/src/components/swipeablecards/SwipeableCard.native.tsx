@@ -3,9 +3,8 @@ import { Dimensions } from 'react-native'
 import { Gesture, GestureDetector } from 'react-native-gesture-handler'
 import { runOnJS, useAnimatedStyle, useSharedValue, withSpring, withTiming } from 'react-native-reanimated'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { SwipeableCardProps } from 'ui/src/components/swipeablecards/props'
+import { SWIPEABLE_CARD_Y_OFFSET, SwipeableCardProps } from 'ui/src/components/swipeablecards/props'
 
-const CARD_Y_OFFSET = 8
 const screenWidth = Dimensions.get('window').width
 const panXOffsetThreshold = screenWidth / 4
 
@@ -21,7 +20,7 @@ export function SwipeableCard({
   onSwiped,
   onLayout,
 }: SwipeableCardProps): JSX.Element {
-  const initialYOffset = stackIndex * CARD_Y_OFFSET
+  const initialYOffset = stackIndex * SWIPEABLE_CARD_Y_OFFSET
   const initialScale = getScale(stackIndex)
 
   const yOffset = useSharedValue(initialYOffset)
@@ -36,7 +35,7 @@ export function SwipeableCard({
   }, [height, onLayout, targetYOffset])
 
   useEffect(() => {
-    const nextYOffset = stackIndex * CARD_Y_OFFSET
+    const nextYOffset = stackIndex * SWIPEABLE_CARD_Y_OFFSET
 
     setTargetYOffset(nextYOffset)
     yOffset.value = withSpring(nextYOffset)

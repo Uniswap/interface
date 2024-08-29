@@ -47,7 +47,7 @@ export type Theme = typeof themeContractValues
 
 export const themeVars = createGlobalThemeContract(themeContractValues, (_, path) => `genie-${path.join('-')}`)
 
-export const navDimensions = {
+const navDimensions = {
   height: 72,
   verticalPad: 20,
 }

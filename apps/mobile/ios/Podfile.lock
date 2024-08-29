@@ -1983,10 +1983,6 @@ PODS:
   - ReactNativePerformance (4.1.2):
     - React-Core
   - RecaptchaInterop (100.0.0)
-  - rive-react-native (7.0.0):
-    - React-Core
-    - RiveRuntime (= 5.10.0)
-  - RiveRuntime (5.10.0)
   - RNCAsyncStorage (1.17.10):
     - React-Core
   - RNCMaskedView (0.2.9):
@@ -2025,7 +2021,19 @@ PODS:
     - React-Core
   - RNPermissions (3.6.0):
     - React-Core
-  - RNReanimated (3.8.1):
+  - RNReanimated (3.15.0):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+    - ReactCommon/turbomodule/core
+    - RNReanimated/reanimated (= 3.15.0)
+    - RNReanimated/worklets (= 3.15.0)
+  - RNReanimated/reanimated (3.15.0):
+    - glog
+    - RCT-Folly (= 2022.05.16.00)
+    - React-Core
+    - ReactCommon/turbomodule/core
+  - RNReanimated/worklets (3.15.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -2037,7 +2045,7 @@ PODS:
   - RNSentry (5.5.0):
     - React-Core
     - Sentry/HybridSDK (= 8.7.1)
-  - RNSVG (13.8.0):
+  - RNSVG (15.1.0):
     - React-Core
   - SDWebImage (5.15.8):
     - SDWebImage/Core (= 5.15.8)
@@ -2049,6 +2057,8 @@ PODS:
     - SentryPrivate (= 8.7.1)
   - SentryPrivate (8.7.1)
   - SocketRocket (0.6.1)
+  - sparkfabrik-react-native-idfa-aaid (1.2.0):
+    - React
   - UIImageColors (2.1.0)
   - Yoga (1.14.0)
   - ZXingObjC/Core (3.6.9)
@@ -2151,7 +2161,6 @@ DEPENDENCIES:
   - React-utils (from `../../../node_modules/react-native/ReactCommon/react/utils`)
   - ReactCommon/turbomodule/core (from `../../../node_modules/react-native/ReactCommon`)
   - "ReactNativePerformance (from `../../../node_modules/@shopify/react-native-performance`)"
-  - rive-react-native (from `../../../node_modules/rive-react-native`)
   - "RNCAsyncStorage (from `../../../node_modules/@react-native-async-storage/async-storage`)"
   - "RNCMaskedView (from `../../../node_modules/@react-native-masked-view/masked-view`)"
   - RNDeviceInfo (from `../../../node_modules/react-native-device-info`)
@@ -2169,6 +2178,7 @@ DEPENDENCIES:
   - RNScreens (from `../../../node_modules/react-native-screens`)
   - "RNSentry (from `../../../node_modules/@sentry/react-native`)"
   - RNSVG (from `../../../node_modules/react-native-svg`)
+  - "sparkfabrik-react-native-idfa-aaid (from `../../../node_modules/@sparkfabrik/react-native-idfa-aaid`)"
   - UIImageColors (= 2.1.0)
   - Yoga (from `../../../node_modules/react-native/ReactCommon/yoga`)
 
@@ -2209,7 +2219,6 @@ SPEC REPOS:
     - PLCrashReporter
     - PromisesObjC
     - RecaptchaInterop
-    - RiveRuntime
     - SDWebImage
     - SDWebImageWebPCoder
     - Sentry
@@ -2390,8 +2399,6 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/react-native/ReactCommon"
   ReactNativePerformance:
     :path: "../../../node_modules/@shopify/react-native-performance"
-  rive-react-native:
-    :path: "../../../node_modules/rive-react-native"
   RNCAsyncStorage:
     :path: "../../../node_modules/@react-native-async-storage/async-storage"
   RNCMaskedView:
@@ -2426,6 +2433,8 @@ EXTERNAL SOURCES:
     :path: "../../../node_modules/@sentry/react-native"
   RNSVG:
     :path: "../../../node_modules/react-native-svg"
+  sparkfabrik-react-native-idfa-aaid:
+    :path: "../../../node_modules/@sparkfabrik/react-native-idfa-aaid"
   Yoga:
     :path: "../../../node_modules/react-native/ReactCommon/yoga"
 
@@ -2550,8 +2559,6 @@ SPEC CHECKSUMS:
   ReactCommon: 2aa35648354bd4c4665b9a5084a7d37097b89c10
   ReactNativePerformance: ab7dee4c4862623d72c1530a9fc71b55458edf71
   RecaptchaInterop: 7d1a4a01a6b2cb1610a47ef3f85f0c411434cb21
-  rive-react-native: 125db990f050d72c76aa37dc6c5cfaaf89f66086
-  RiveRuntime: a859cd24f1100d924a5229567228063dd8a19a93
   RNCAsyncStorage: 0c357f3156fcb16c8589ede67cc036330b6698ca
   RNCMaskedView: 949696f25ec596bfc697fc88e6f95cf0c79669b6
   RNDeviceInfo: 0a7c1d2532aa7691f9b9925a27e43af006db4dae
@@ -2565,15 +2572,16 @@ SPEC CHECKSUMS:
   RNImageColors: 9ac05083b52d5c350e6972650ae3ba0e556466c1
   RNLocalize: d4b8af4e442d4bcca54e68fc687a2129b4d71a81
   RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea
-  RNReanimated: 8763d306762d558ebc0df4cbf67128dcadfa6299
+  RNReanimated: 7171bba9a3f9ecfe5bdccb04ea0063bcc6c4c12c
   RNScreens: b6b64d956af3715adbfe84808694ae82d3fec74f
   RNSentry: 4fb2cd7d2d6cb94423c24884488206ef881da136
-  RNSVG: c1e76b81c76cdcd34b4e1188852892dc280eb902
+  RNSVG: 50cf2c7018e57cf5d3522d98d0a3a4dd6bf9d093
   SDWebImage: cb032eba469c54e0000e78bcb0a13cdde0a52798
   SDWebImageWebPCoder: 908b83b6adda48effe7667cd2b7f78c897e5111d
   Sentry: 11776f6a25a128808d793d0d41bb7ad873b5ae4f
   SentryPrivate: b3c448eacdabe9eab7679a2e0af609c608f91572
   SocketRocket: f32cd54efbe0f095c4d7594881e52619cfe80b17
+  sparkfabrik-react-native-idfa-aaid: 1b72a6264a2175473e309ffa6434db87c58af264
   UIImageColors: d2ef3b0877d203cbb06489eeb78ea8b7788caabe
   Yoga: 805bf71192903b20fc14babe48080582fee65a80
   ZXingObjC: 8898711ab495761b2dbbdec76d90164a6d7e14c5

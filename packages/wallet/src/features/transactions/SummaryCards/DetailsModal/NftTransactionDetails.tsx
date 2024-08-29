@@ -1,9 +1,6 @@
 import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import {
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
@@ -12,7 +9,10 @@ import {
   ReceiveTokenTransactionInfo,
   SendTokenTransactionInfo,
   TransactionDetails,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 
 const MAX_NFT_IMAGE_HEIGHT = 375
 

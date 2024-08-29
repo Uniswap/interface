@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, StyleSheet, ViewProps, requireNativeComponent } from 'react-native'
 import { useNativeComponentKey } from 'src/app/hooks'
+import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
 import { Flex, HiddenFromScreenReaders, Text, flexStyles } from 'ui/src'
 import { GraduationCap } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
@@ -15,14 +16,25 @@ interface NativeMnemonicDisplayProps {
   copyText: string
   copiedText: string
   mnemonicId: string
+
   onHeightMeasured: (event: NativeSyntheticEvent<HeightMeasuredEvent>) => void
 }
 
 const NativeMnemonicDisplay = requireNativeComponent<NativeMnemonicDisplayProps>('MnemonicDisplay')
 
-type MnemonicDisplayProps = ViewProps & Pick<NativeMnemonicDisplayProps, 'mnemonicId'>
+type MnemonicDisplayProps = {
+  showMnemonic?: boolean
+  enableRevealButton?: boolean
+  onMnemonicShown?: () => void
+} & ViewProps &
+  Pick<NativeMnemonicDisplayProps, 'mnemonicId'>
 
-export function MnemonicDisplay(props: MnemonicDisplayProps): JSX.Element {
+export function MnemonicDisplay({
+  showMnemonic = true,
+  enableRevealButton = false,
+  onMnemonicShown,
+  ...nativeComponentProps
+}: MnemonicDisplayProps): JSX.Element {
   const { t } = useTranslation()
   const [height, setHeight] = useState(0)
   // Android only (ensures that Jetpack Compose mounts the view again
@@ -30,20 +42,34 @@ export function MnemonicDisplay(props: MnemonicDisplayProps): JSX.Element {
   // (see https://github.com/react-native-community/discussions-and-proposals/issues/446#issuecomment-2041254054)
   const { key } = useNativeComponentKey(isAndroid)
 
+  const [revealPressed, setRevealPressed] = useState(false)
+  const showMnemonicWithReveal = enableRevealButton ? revealPressed : showMnemonic
+
   return (
     <HiddenFromScreenReaders style={flexStyles.fill}>
-      <NativeMnemonicDisplay
-        key={key}
-        copiedText={t('common.button.copied')}
-        copyText={t('common.button.copy')}
-        style={[styles.mnemonicDisplay, { maxHeight: height }]}
-        onHeightMeasured={(e) => {
-          // Round to limit state updates (was called with nearly the same value multiple times)
-          setHeight(Math.round(e.nativeEvent.height))
-        }}
-        {...props}
-      />
-
+      {showMnemonicWithReveal ? (
+        <NativeMnemonicDisplay
+          key={key}
+          copiedText={t('common.button.copied')}
+          copyText={t('common.button.copy')}
+          style={[styles.mnemonicDisplay, { maxHeight: height }]}
+          onHeightMeasured={(e) => {
+            // Round to limit state updates (was called with nearly the same value multiple times)
+            setHeight(Math.round(e.nativeEvent.height))
+          }}
+          {...nativeComponentProps}
+        />
+      ) : (
+        <Flex mb="$spacing16" onLayout={(e) => setHeight(Math.round(e.nativeEvent.layout.height))}>
+          <HiddenMnemonicWordView
+            enableRevealButton={enableRevealButton}
+            onRevealPress={() => {
+              onMnemonicShown?.()
+              setRevealPressed(true)
+            }}
+          />
+        </Flex>
+      )}
       <Flex
         row
         alignItems="center"

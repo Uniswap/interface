@@ -8,7 +8,7 @@ import { getEncryptedMnemonic } from 'src/features/scantastic/ScantasticEncrypti
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { AlertTriangle, Faceid, Laptop, LinkBrokenHorizontal, Wifi } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { logger } from 'utilities/src/logger/logger'
@@ -219,7 +219,7 @@ export function ScantasticModal(): JSX.Element | null {
 
   if (showIPWarning) {
     return (
-      <BottomSheetModal backgroundColor={colors.surface1.get()} name={ModalName.OtpInputExpired} onClose={onClose}>
+      <Modal backgroundColor={colors.surface1.val} name={ModalName.OtpInputExpired} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
             <Wifi color="$neutral2" size={iconSizes.icon24} />
@@ -234,13 +234,13 @@ export function ScantasticModal(): JSX.Element | null {
             {t('common.button.close')}
           </Button>
         </Flex>
-      </BottomSheetModal>
+      </Modal>
     )
   }
 
   if (expired) {
     return (
-      <BottomSheetModal backgroundColor={colors.surface1.get()} name={ModalName.OtpInputExpired} onClose={onClose}>
+      <Modal backgroundColor={colors.surface1.val} name={ModalName.OtpInputExpired} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
             <LinkBrokenHorizontal color="$neutral2" size={iconSizes.icon24} />
@@ -253,13 +253,13 @@ export function ScantasticModal(): JSX.Element | null {
             {t('common.button.close')}
           </Button>
         </Flex>
-      </BottomSheetModal>
+      </Modal>
     )
   }
 
   if (OTP) {
     return (
-      <BottomSheetModal backgroundColor={colors.surface1.get()} name={ModalName.OtpScanInput} onClose={onClose}>
+      <Modal backgroundColor={colors.surface1.val} name={ModalName.OtpScanInput} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
             <Laptop color="$accent1" size={iconSizes.icon24} />
@@ -276,13 +276,13 @@ export function ScantasticModal(): JSX.Element | null {
             {expiryText}
           </Text>
         </Flex>
-      </BottomSheetModal>
+      </Modal>
     )
   }
 
   if (error) {
     return (
-      <BottomSheetModal backgroundColor={colors.surface1.get()} name={ModalName.OtpScanInput} onClose={onClose}>
+      <Modal backgroundColor={colors.surface1.val} name={ModalName.OtpScanInput} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
             <AlertTriangle color="$statusCritical" size={iconSizes.icon24} />
@@ -291,20 +291,20 @@ export function ScantasticModal(): JSX.Element | null {
           <Text color="$neutral2" textAlign="center" variant="body3">
             {error}
           </Text>
-          <Flex flexDirection="column" gap="$spacing4" mt="$spacing12" width="100%">
+          <Flex gap="$spacing4" mt="$spacing12" width="100%">
             <Button alignItems="center" theme="secondary" onPress={onClose}>
               <Text variant="buttonLabel2">{t('common.button.close')}</Text>
             </Button>
           </Flex>
         </Flex>
-      </BottomSheetModal>
+      </Modal>
     )
   }
 
   const renderDeviceDetails = Boolean(device || browser)
 
   return (
-    <BottomSheetModal backgroundColor={colors.surface1.get()} name={ModalName.Scantastic} onClose={onClose}>
+    <Modal backgroundColor={colors.surface1.val} name={ModalName.Scantastic} onClose={onClose}>
       <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
         <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
           <Laptop color="$accent1" size={iconSizes.icon24} />
@@ -354,7 +354,7 @@ export function ScantasticModal(): JSX.Element | null {
             {t('scantastic.confirmation.warning')}
           </Text>
         </Flex>
-        <Flex flexDirection="column" gap="$spacing4" width="100%">
+        <Flex gap="$spacing4" width="100%">
           <Button
             icon={requiresBiometricAuth ? <Faceid size={iconSizes.icon16} /> : undefined}
             mb="$spacing4"
@@ -370,6 +370,6 @@ export function ScantasticModal(): JSX.Element | null {
           </TouchableArea>
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

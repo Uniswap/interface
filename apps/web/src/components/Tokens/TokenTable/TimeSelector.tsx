@@ -3,9 +3,10 @@ import { filterTimeAtom } from 'components/Tokens/state'
 import { TimePeriod } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize'
 import { useAtom } from 'jotai'
-import { css, useTheme } from 'lib/styled-components'
-import { useReducer } from 'react'
+import { useTheme } from 'lib/styled-components'
+import { useState } from 'react'
 import { Check } from 'react-feather'
+import { FlexProps } from 'ui/src'
 import { useTranslation } from 'uniswap/src/i18n'
 
 export enum TimePeriodDisplay {
@@ -47,15 +48,20 @@ export const ORDERED_TIMES: TimePeriod[] = [
   TimePeriod.YEAR,
 ]
 
-const StyledMenuFlyout = css`
-  max-height: 300px;
-  left: 0px;
-`
+const StyledDropdown = {
+  maxHeight: 300,
+  right: 0,
+  top: 'calc(100% + 20px)',
+  $xl: {
+    left: 0,
+  },
+} satisfies FlexProps
+
 // TODO: change this to reflect data pipeline
 export default function TimeSelector() {
   const { t } = useTranslation()
   const theme = useTheme()
-  const [isMenuOpen, toggleMenu] = useReducer((s) => !s, false)
+  const [isMenuOpen, toggleMenu] = useState(false)
   const [activeTime, setTime] = useAtom(filterTimeAtom)
 
   const screenSize = useScreenSize()
@@ -77,9 +83,9 @@ export default function TimeSelector() {
               <InternalMenuItem
                 key={DISPLAYS[time]}
                 data-testid={DISPLAYS[time]}
-                onClick={() => {
+                onPress={() => {
                   setTime(time)
-                  toggleMenu()
+                  toggleMenu(false)
                 }}
               >
                 <div>
@@ -91,10 +97,8 @@ export default function TimeSelector() {
           </>
         }
         dataTestId="time-selector"
-        buttonCss={css`
-          height: 40px;
-        `}
-        menuFlyoutCss={StyledMenuFlyout}
+        buttonStyle={{ height: 40 }}
+        dropdownStyle={StyledDropdown}
       />
     </div>
   )

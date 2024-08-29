@@ -2,7 +2,7 @@ import useENSName from 'hooks/useENSName'
 import styled from 'lib/styled-components'
 import { CopyHelper, EllipsisStyle } from 'theme/components'
 import { Flex } from 'ui/src'
-import { Unitag } from 'ui/src/components/icons'
+import { Unitag } from 'ui/src/components/icons/Unitag'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 

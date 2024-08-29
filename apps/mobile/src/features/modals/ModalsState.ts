@@ -5,7 +5,7 @@ import { FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 
@@ -13,9 +13,10 @@ export interface AppModalState<T> {
   isOpen: boolean
   initialState?: T
 }
-
 export interface ModalsState {
   [ModalName.AccountSwitcher]: AppModalState<undefined>
+  [ModalName.BackupReminder]: AppModalState<undefined>
+  [ModalName.KoreaCexTransferInfoModal]: AppModalState<undefined>
   [ModalName.ExchangeTransferModal]: AppModalState<{
     serviceProvider: FORServiceProvider
   }>

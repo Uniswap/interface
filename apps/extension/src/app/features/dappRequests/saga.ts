@@ -28,11 +28,15 @@ import { navigate } from 'src/app/navigation/state'
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { call, put, select, take } from 'typed-redux-saga'
 import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import {
+  TransactionOriginType,
+  TransactionType,
+  TransactionTypeInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { SendTransactionParams, sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
-import { TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectActiveAccount } from 'wallet/src/features/wallet/selectors'
 import { signMessage, signTypedDataMessage } from 'wallet/src/features/wallet/signing/signing'
@@ -245,7 +249,10 @@ export function* handleSendTransaction(
     chainId: lastChainId,
     account,
     options: { request: transactionRequest },
-    typeInfo: transactionTypeInfo ?? { type: TransactionType.Unknown },
+    typeInfo: transactionTypeInfo ?? {
+      type: TransactionType.Unknown,
+    },
+    transactionOriginType: TransactionOriginType.External,
   }
 
   const { transactionResponse } = yield* call(sendTransaction, sendTransactionParams)

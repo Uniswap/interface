@@ -23,6 +23,7 @@ export function NftView({
     tokenId: item.tokenId,
     owner,
     isSpam: item.isSpam,
+    showNotification: true,
   })
 
   return (

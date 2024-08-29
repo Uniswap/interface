@@ -23,13 +23,15 @@ function StatsRow({
 }): JSX.Element {
   return (
     <Flex row justifyContent="space-between" pl="$spacing2">
-      <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start">
-        {statsIcon}
-        <Text color="$neutral1" variant="body2">
-          {label}
-        </Text>
+      <Flex row alignItems="center" flex={1} gap="$spacing8" justifyContent="flex-start">
+        <Flex>{statsIcon}</Flex>
+        <Flex flex={1}>
+          <Text color="$neutral1" variant="body2">
+            {label}
+          </Text>
+        </Flex>
       </Flex>
-      {children}
+      <Flex>{children}</Flex>
     </Flex>
   )
 }
@@ -62,7 +64,7 @@ export function TokenDetailsMarketData({
         label={t('token.stats.marketCap')}
         statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
       >
-        <Text loading={isLoading} variant="body2">
+        <Text loading={isLoading} textAlign="right" variant="body2">
           {convertFiatAmountFormatted(marketCap, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
@@ -70,7 +72,7 @@ export function TokenDetailsMarketData({
         label={t('token.stats.fullyDilutedValuation')}
         statsIcon={<ChartPie color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
       >
-        <Text loading={isLoading} variant="body2">
+        <Text loading={isLoading} textAlign="right" variant="body2">
           {convertFiatAmountFormatted(fullyDilutedValuation, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
@@ -78,7 +80,7 @@ export function TokenDetailsMarketData({
         label={t('token.stats.volume')}
         statsIcon={<ChartBar color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
       >
-        <Text loading={isLoading} variant="body2">
+        <Text loading={isLoading} textAlign="right" variant="body2">
           {convertFiatAmountFormatted(volume, NumberType.FiatTokenStats)}
         </Text>
       </StatsRow>
@@ -86,7 +88,7 @@ export function TokenDetailsMarketData({
         label={t('token.stats.priceHighYear')}
         statsIcon={<TrendUp color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
       >
-        <Text loading={isLoading} variant="body2">
+        <Text loading={isLoading} textAlign="right" variant="body2">
           {convertFiatAmountFormatted(priceHight52W, NumberType.FiatTokenDetails)}
         </Text>
       </StatsRow>
@@ -94,7 +96,7 @@ export function TokenDetailsMarketData({
         label={t('token.stats.priceLowYear')}
         statsIcon={<TrendDown color={tokenColor ?? defaultTokenColor} size={iconSizes.icon16} />}
       >
-        <Text loading={isLoading} variant="body2">
+        <Text loading={isLoading} textAlign="right" variant="body2">
           {convertFiatAmountFormatted(priceLow52W, NumberType.FiatTokenDetails)}
         </Text>
       </StatsRow>

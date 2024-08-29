@@ -9,6 +9,7 @@ import {
   IDR_ICON,
   INR_ICON,
   JPY_ICON,
+  KRW_ICON,
   NGN_ICON,
   PKR_ICON,
   RUB_ICON,
@@ -34,6 +35,7 @@ export const SUPPORTED_LOCAL_CURRENCIES = [
   Currency.Idr,
   Currency.Inr,
   Currency.Jpy,
+  Currency.Krw,
   Currency.Ngn,
   Currency.Pkr,
   Currency.Rub,
@@ -60,6 +62,7 @@ export const LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE: Record<SupportedLocalCurrency, 
   INR: 'narrowSymbol',
   GBP: 'narrowSymbol',
   JPY: 'narrowSymbol',
+  KRW: 'narrowSymbol',
   VND: 'narrowSymbol',
   SGD: 'symbol',
   BRL: 'symbol',
@@ -88,6 +91,8 @@ export function getLocalCurrencyIcon(localCurrency: SupportedLocalCurrency, size
       return <GBP_ICON width={size} height={size} />
     case Currency.Jpy:
       return <JPY_ICON width={size} height={size} />
+    case Currency.Krw:
+      return <KRW_ICON width={size} height={size} />
     case Currency.Vnd:
       return <VND_ICON width={size} height={size} />
     case Currency.Sgd:

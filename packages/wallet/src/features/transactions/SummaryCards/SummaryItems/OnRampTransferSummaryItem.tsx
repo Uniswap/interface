@@ -1,19 +1,20 @@
 import { useTranslation } from 'react-i18next'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { NumberType } from 'utilities/src/format/types'
-import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
-import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
-import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   OnRampPurchaseInfo,
   OnRampTransferInfo,
   TransactionDetails,
   TransactionType,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { NumberType } from 'utilities/src/format/types'
+import { logger } from 'utilities/src/logger/logger'
+import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
+import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
+import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 
 export function OnRampTransferSummaryItem({
   transaction,
@@ -31,11 +32,21 @@ export function OnRampTransferSummaryItem({
   const cryptoPurchaseAmount = formatNumberOrString({ value: destinationTokenAmount }) + ' ' + destinationTokenSymbol
 
   const formatFiatTokenPrice = (purchaseInfo: OnRampPurchaseInfo): string => {
-    return formatNumberOrString({
-      value: purchaseInfo.sourceAmount > 0 ? purchaseInfo.sourceAmount : undefined,
-      type: NumberType.FiatTokenPrice,
-      currencyCode: purchaseInfo.sourceCurrency,
-    })
+    try {
+      return formatNumberOrString({
+        value: purchaseInfo.sourceAmount > 0 ? purchaseInfo.sourceAmount : undefined,
+        type: NumberType.FiatTokenPrice,
+        currencyCode: purchaseInfo.sourceCurrency,
+      })
+    } catch (error) {
+      logger.error(error, {
+        tags: {
+          file: 'OnRampTransferSummaryItem.tsx',
+          function: 'formatFiatTokenPrice',
+        },
+      })
+      return '-'
+    }
   }
 
   const caption =

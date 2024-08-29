@@ -63,7 +63,7 @@ class NativeKeyring implements IKeyring {
   }
 
   // Not used on mobile
-  retrieveMnemonicUnlocked(_address: string): Promise<string | undefined> {
+  retrieveMnemonicUnlocked(_address: string): Promise<string> {
     throw new NotImplementedError('retrieveMnemonic')
   }
 
@@ -79,6 +79,14 @@ class NativeKeyring implements IKeyring {
   // returns the address for a given mnemonic
   generateAddressForMnemonic(mnemonic: string, derivationIndex: number): Promise<string> {
     return RNEthersRS.generateAddressForMnemonic(mnemonic, derivationIndex)
+  }
+
+  generateAddressesForMnemonic(_mnemonicId: string): Promise<string[]> {
+    throw new NotImplementedError('generateAddressesForMnemonic')
+  }
+
+  generateAddressesForMnemonicId(_mnemonicId: string): Promise<string[]> {
+    throw new NotImplementedError('generateAddressesForMnemonicId')
   }
 
   // returns the address of the generated key

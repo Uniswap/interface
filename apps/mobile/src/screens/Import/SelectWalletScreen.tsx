@@ -19,9 +19,16 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 
 export function SelectWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
-  const { selectImportedAccounts } = useOnboardingContext()
+  const { selectImportedAccounts, getImportedAccountsAddresses } = useOnboardingContext()
 
-  const { importableAccounts, isLoading, showError, refetch: refetchAccounts } = useImportableAccounts()
+  const importedAddresses = getImportedAccountsAddresses()
+
+  const {
+    importableAccounts,
+    isLoading,
+    showError,
+    refetch: refetchAccounts,
+  } = useImportableAccounts(importedAddresses)
 
   const isOnlyOneAccount = importableAccounts?.length === 1
 

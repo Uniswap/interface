@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
@@ -83,7 +83,7 @@ export function DeleteUnitagModal({
   }
 
   return (
-    <BottomSheetModal isDismissible name={ModalName.UnitagsDelete} onClose={onClose}>
+    <Modal isDismissible name={ModalName.UnitagsDelete} onClose={onClose}>
       <Flex centered gap="$spacing12" pb="$spacing12" pt="$spacing12" px="$spacing24">
         <Flex
           centered
@@ -113,6 +113,6 @@ export function DeleteUnitagModal({
           </Button>
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

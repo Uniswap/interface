@@ -58,10 +58,11 @@ export default function PopupItem({
     }
     case PopupType.SwitchNetwork: {
       return (
-        <ToastRegularSimple onDismiss={onClose}>
-          <NetworkLogo chainId={content.chainId} />{' '}
-          {getSwitchNetworkTitle(content.action, content.chainId as UniverseChainId)}
-        </ToastRegularSimple>
+        <ToastRegularSimple
+          onDismiss={onClose}
+          icon={<NetworkLogo chainId={content.chainId} />}
+          text={getSwitchNetworkTitle(content.action, content.chainId as UniverseChainId)}
+        />
       )
     }
   }
@@ -76,6 +77,6 @@ function getSwitchNetworkTitle(action: SwapTab, chainId: UniverseChainId) {
     case SwapTab.Send:
       return t('notification.send.network', { network: label })
     default:
-      return null
+      return ''
   }
 }

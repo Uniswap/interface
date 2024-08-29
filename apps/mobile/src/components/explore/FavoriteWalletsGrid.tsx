@@ -13,8 +13,8 @@ import {
 } from 'src/components/sortableGrid'
 import { Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
-import { setFavoriteWallets } from 'wallet/src/features/favorites/slice'
+import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
+import { setFavoriteWallets } from 'uniswap/src/features/favorites/slice'
 
 const NUM_COLUMNS = 2
 const ITEM_FLEX = { flex: 1 / NUM_COLUMNS }

@@ -4,29 +4,31 @@ import { useCallback, useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Separator, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
 import { AlertTriangle } from 'ui/src/components/icons'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
-import { currencyAddress } from 'uniswap/src/utils/currencyId'
-import { isMobile } from 'utilities/src/platform'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { SwapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/SwapTransactionDetails'
-import { isSwapTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
-import { ErroredQueuedOrderStatus, useErroredQueuedOrders } from 'wallet/src/features/transactions/hooks'
-import { useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
-import { updateTransaction } from 'wallet/src/features/transactions/slice'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   QueuedOrderStatus,
   TransactionDetails,
   TransactionStatus,
   TransactionType,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { CurrencyField } from 'uniswap/src/types/currency'
+import { currencyAddress } from 'uniswap/src/utils/currencyId'
+import { isMobileApp } from 'utilities/src/platform'
+import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { SwapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/SwapTransactionDetails'
+import { isSwapTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
+import { ErroredQueuedOrderStatus, useErroredQueuedOrders } from 'wallet/src/features/transactions/hooks'
+import { useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import { useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
 
 const QUEUE_STATUS_TO_MESSAGE = {
@@ -85,47 +87,49 @@ export function QueuedOrderModal(): JSX.Element | null {
   const platformButtonStyling = isWeb ? { flex: 1, flexBasis: 1 } : undefined
 
   return (
-    <BottomSheetModal isDismissible alignment="top" name={ModalName.TransactionDetails} onClose={onCancel}>
-      <Flex gap="$spacing12" pb={isWeb ? '$none' : '$spacing12'} px={isWeb ? '$none' : '$spacing24'}>
-        <Flex centered gap="$spacing8">
-          <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" mb="$spacing8" p="$spacing12">
-            <AlertTriangle color="$black" size="$icon.24" />
-          </Flex>
+    <ErrorBoundary showNotification fallback={null} name={ModalName.QueuedOrderModal} onError={onCancel}>
+      <Modal isDismissible alignment="top" name={ModalName.TransactionDetails} onClose={onCancel}>
+        <Flex gap="$spacing12" pb={isWeb ? '$none' : '$spacing12'} px={isWeb ? '$none' : '$spacing24'}>
+          <Flex centered gap="$spacing8">
+            <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" mb="$spacing8" p="$spacing12">
+              <AlertTriangle color="$black" size="$icon.24" />
+            </Flex>
 
-          <Text textAlign="center" variant="subheading1">
-            {t('swap.warning.queuedOrder.title')}
-          </Text>
-          <Text color="$neutral2" textAlign="center" variant="body3">
-            {reason}
-            {showWrapMessage && ' '}
-            {showWrapMessage && t('swap.warning.queuedOrder.wrap.message')}
-          </Text>
-          <LearnMoreLink
-            textColor="$neutral1"
-            textVariant="buttonLabel3"
-            url={uniswapUrls.helpArticleUrls.uniswapXFailure}
-          />
-        </Flex>
-        <Separator />
-        <SwapTransactionDetails disableClick={isMobile} typeInfo={currentFailedOrder.typeInfo} />
-        <Flex gap="$spacing8" row={isWeb}>
-          <Button
-            disabled={!transactionState}
-            theme="primary"
-            {...platformButtonStyling}
-            size={buttonSize}
-            onPress={onRetry}
-          >
-            <Text color="$white" variant="buttonLabel3">
-              {t('common.button.retry')}
+            <Text textAlign="center" variant="subheading1">
+              {t('swap.warning.queuedOrder.title')}
             </Text>
-          </Button>
-          <Button {...platformButtonStyling} size={buttonSize} theme="secondary" onPress={onCancel}>
-            <Text variant="buttonLabel3">{t('common.button.cancel')}</Text>
-          </Button>
+            <Text color="$neutral2" textAlign="center" variant="body3">
+              {reason}
+              {showWrapMessage && ' '}
+              {showWrapMessage && t('swap.warning.queuedOrder.wrap.message')}
+            </Text>
+            <LearnMoreLink
+              textColor="$neutral1"
+              textVariant="buttonLabel3"
+              url={uniswapUrls.helpArticleUrls.uniswapXFailure}
+            />
+          </Flex>
+          <Separator />
+          <SwapTransactionDetails disableClick={isMobileApp} typeInfo={currentFailedOrder.typeInfo} />
+          <Flex gap="$spacing8" row={isWeb}>
+            <Button
+              disabled={!transactionState}
+              theme="primary"
+              {...platformButtonStyling}
+              size={buttonSize}
+              onPress={onRetry}
+            >
+              <Text color="$white" variant="buttonLabel3">
+                {t('common.button.retry')}
+              </Text>
+            </Button>
+            <Button {...platformButtonStyling} size={buttonSize} theme="secondary" onPress={onCancel}>
+              <Text variant="buttonLabel3">{t('common.button.cancel')}</Text>
+            </Button>
+          </Flex>
         </Flex>
-      </Flex>
-    </BottomSheetModal>
+      </Modal>
+    </ErrorBoundary>
   )
 }
 

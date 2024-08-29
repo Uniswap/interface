@@ -39,19 +39,6 @@ exports[`TokenLogo renders without error 1`] = `
   <View
     style={
       {
-        "borderBottomColor": "#131313",
-        "borderBottomLeftRadius": 8,
-        "borderBottomRightRadius": 8,
-        "borderBottomWidth": 2,
-        "borderLeftColor": "#131313",
-        "borderLeftWidth": 2,
-        "borderRightColor": "#131313",
-        "borderRightWidth": 2,
-        "borderStyle": "solid",
-        "borderTopColor": "#131313",
-        "borderTopLeftRadius": 8,
-        "borderTopRightRadius": 8,
-        "borderTopWidth": 2,
         "bottom": -2,
         "flexDirection": "column",
         "position": "absolute",
@@ -62,8 +49,19 @@ exports[`TokenLogo renders without error 1`] = `
     <View
       style={
         {
-          "borderColor": "#131313",
-          "borderRadius": 6,
+          "borderBottomColor": "#131313",
+          "borderBottomLeftRadius": 6.8999999999999995,
+          "borderBottomRightRadius": 6.8999999999999995,
+          "borderBottomWidth": 1.5,
+          "borderLeftColor": "#131313",
+          "borderLeftWidth": 1.5,
+          "borderRightColor": "#131313",
+          "borderRightWidth": 1.5,
+          "borderStyle": "solid",
+          "borderTopColor": "#131313",
+          "borderTopLeftRadius": 6.8999999999999995,
+          "borderTopRightRadius": 6.8999999999999995,
+          "borderTopWidth": 1.5,
           "flexDirection": "column",
           "overflow": "hidden",
         }
@@ -75,8 +73,8 @@ exports[`TokenLogo renders without error 1`] = `
         dir={null}
         style={
           {
-            "height": "16px",
-            "width": "16px",
+            "height": "20px",
+            "width": "20px",
           }
         }
       >

@@ -3,6 +3,7 @@ import { injectedWithFallback } from 'components/Web3Provider/injectedWithFallba
 import { WC_PARAMS, uniswapWalletConnect } from 'components/Web3Provider/walletConnect'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { UniverseChainId, WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 import { createClient } from 'viem'
 import { createConfig, http } from 'wagmi'
@@ -26,7 +27,9 @@ export const wagmiConfig = createConfig({
     uniswapWalletConnect(),
     coinbaseWallet({
       appName: 'Uniswap',
-      appLogoUrl: UNISWAP_LOGO,
+      // CB SDK doesn't pass the parent origin context to their passkey site
+      // Flagged to CB team and can remove UNISWAP_WEB_URL once fixed
+      appLogoUrl: `${UNISWAP_WEB_URL}${UNISWAP_LOGO}`,
       reloadOnDisconnect: false,
       enableMobileWalletLink: true,
     }),

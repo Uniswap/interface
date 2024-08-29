@@ -33,6 +33,7 @@ export function useCloudBackupPasswordFormContext(): CloudBackupPasswordFormCont
 type CloudBackupPasswordFormContextProviderProps = PropsWithChildren<{
   isConfirmation?: boolean
   passwordToConfirm?: string
+  checkPasswordBeforeSubmit?: boolean
   navigateToNextScreen: ({ password }: { password: string }) => void
 }>
 
@@ -40,6 +41,7 @@ export function CloudBackupPasswordFormContextProvider({
   children,
   isConfirmation = false,
   passwordToConfirm,
+  checkPasswordBeforeSubmit = false,
   navigateToNextScreen,
 }: CloudBackupPasswordFormContextProviderProps): JSX.Element {
   const [password, setPassword] = useState('')
@@ -51,7 +53,12 @@ export function CloudBackupPasswordFormContextProvider({
     currentStrength: passwordStrength,
   })
 
-  const isInputValid = !error && password.length > 0 && (isConfirmation || isStrongPassword)
+  const matchesPassword = password === passwordToConfirm
+  const isInputValid =
+    !error &&
+    password.length > 0 &&
+    (isConfirmation || isStrongPassword) &&
+    (!checkPasswordBeforeSubmit || matchesPassword)
 
   const onPasswordChangeText = useCallback(
     (newPassword: string): void => {
@@ -72,16 +79,16 @@ export function CloudBackupPasswordFormContextProvider({
     if (!isConfirmation && !isStrongPassword) {
       return
     }
-    if (isConfirmation && passwordToConfirm !== password) {
+    if (isConfirmation && !matchesPassword) {
       setError(PasswordErrors.PasswordsDoNotMatch)
       return
     }
     setError(undefined)
     Keyboard.dismiss()
-  }, [isConfirmation, isStrongPassword, password, passwordToConfirm])
+  }, [isConfirmation, isStrongPassword, matchesPassword])
 
   const onPressNext = useCallback((): void => {
-    if (isConfirmation && passwordToConfirm !== password) {
+    if (isConfirmation && !matchesPassword) {
       setError(PasswordErrors.PasswordsDoNotMatch)
       return
     }
@@ -89,7 +96,7 @@ export function CloudBackupPasswordFormContextProvider({
     if (!error) {
       navigateToNextScreen({ password })
     }
-  }, [error, isConfirmation, navigateToNextScreen, password, passwordToConfirm])
+  }, [error, isConfirmation, matchesPassword, navigateToNextScreen, password])
 
   const contextValue = useMemo<CloudBackupPasswordFormContextType>(
     () => ({

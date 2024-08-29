@@ -4,18 +4,18 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { ColorTokens, Flex, Separator, Text, isWeb } from 'ui/src'
 import { ActionSheetModalContent, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { FORMAT_DATE_LONG, useFormattedDate } from 'wallet/src/features/language/localizedDayjs'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
-import { openLegacyFiatOnRampServiceProviderLink, openOnRampSupportLink } from 'wallet/src/utils/linking'
+import { openOnRampSupportLink } from 'wallet/src/utils/linking'
 
 function renderOptionItem(label: string, textColorOverride?: ColorTokens): () => JSX.Element {
   return function OptionItem(): JSX.Element {
@@ -130,7 +130,7 @@ export default function TransactionActionsModal({
   }, [transactionDetails, t, onExplore, showCancelButton, dispatch, handleClose, onCancel])
 
   return (
-    <BottomSheetModal
+    <Modal
       hideHandlebar
       backgroundColor="$transparent"
       name={ModalName.TransactionActions}
@@ -148,15 +148,13 @@ export default function TransactionActionsModal({
           onClose={handleClose}
         />
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }
 
 export async function openSupportLink(transactionDetails: TransactionDetails): Promise<void> {
   const params = new URLSearchParams()
   switch (transactionDetails.typeInfo.type) {
-    case TransactionType.FiatPurchase:
-      return openLegacyFiatOnRampServiceProviderLink(transactionDetails.typeInfo.serviceProvider ?? 'MOONPAY')
     case TransactionType.OnRampPurchase:
     case TransactionType.OnRampTransfer:
       return openOnRampSupportLink(transactionDetails.typeInfo.serviceProvider)
@@ -173,7 +171,6 @@ export async function openSupportLink(transactionDetails: TransactionDetails): P
 
 export function getTransactionId(transactionDetails: TransactionDetails): string | undefined {
   switch (transactionDetails.typeInfo.type) {
-    case TransactionType.FiatPurchase:
     case TransactionType.OnRampPurchase:
     case TransactionType.OnRampTransfer:
       return transactionDetails.typeInfo.id

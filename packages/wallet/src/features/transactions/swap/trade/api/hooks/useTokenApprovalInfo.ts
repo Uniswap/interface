@@ -3,24 +3,24 @@ import { useMemo } from 'react'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useRestQuery } from 'uniswap/src/data/rest'
 import { ApprovalRequest, ApprovalResponse, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TradingApiApolloClient } from 'uniswap/src/data/tradingApi/client'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
-import { logger } from 'utilities/src/logger/logger'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/api/client'
+import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   getTokenAddressForApi,
   toTradingApiSupportedChainId,
-} from 'wallet/src/features/transactions/swap/trade/api/utils'
-import { ApprovalAction, TokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/types'
-import { WrapType } from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
+import { WalletChainId } from 'uniswap/src/types/chains'
+import { logger } from 'utilities/src/logger/logger'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 
 interface TokenApprovalInfoParams {
   chainId: WalletChainId
   wrapType: WrapType
   currencyInAmount: Maybe<CurrencyAmount<Currency>>
   routing: Routing | undefined
-  account: AccountMeta
+  account?: AccountMeta
   skip?: boolean
 }
 
@@ -31,7 +31,7 @@ export function useTokenApprovalInfo(
 
   const isWrap = wrapType !== WrapType.NotApplicable
 
-  const address = account.address
+  const address = account?.address
   // Off-chain orders must have wrapped currencies approved, rather than natives.
   const currencyIn = routing === Routing.DUTCH_V2 ? currencyInAmount?.currency.wrapped : currencyInAmount?.currency
   const amount = currencyInAmount?.quotient.toString()
@@ -41,7 +41,7 @@ export function useTokenApprovalInfo(
   const approvalRequestArgs: ApprovalRequest | undefined = useMemo(() => {
     const supportedChainId = toTradingApiSupportedChainId(chainId)
 
-    if (!amount || !currencyIn || !tokenAddress || !supportedChainId) {
+    if (!address || !amount || !currencyIn || !tokenAddress || !supportedChainId) {
       return undefined
     }
     return {
@@ -59,7 +59,7 @@ export function useTokenApprovalInfo(
     ['approval', 'gasFee'],
     {
       ttlMs: ONE_MINUTE_MS,
-      skip: skip || !approvalRequestArgs || isWrap,
+      skip: skip || !approvalRequestArgs || isWrap || !address,
     },
     'POST',
     TradingApiApolloClient,

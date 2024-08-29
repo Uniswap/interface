@@ -26,6 +26,7 @@ export const uniswapUrls = {
   helpRequestUrl: `${helpUrl}/requests/new`,
   helpArticleUrls: {
     approvalsExplainer: `${helpUrl}/articles/8120520483085-What-is-an-approval-transaction`,
+    cexTransferKorea: `${helpUrl}/articles/29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea`,
     extensionHelp: `${helpUrl}/categories/25219141467405`,
     extensionDappTroubleshooting: `${helpUrl}/articles/25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps`,
     feeOnTransferHelp: `${helpUrl}/articles/18673568523789-What-is-a-token-fee-`,
@@ -62,6 +63,7 @@ export const uniswapUrls = {
   // Core API Urls
   apiOrigin: 'https://api.uniswap.org',
   apiBaseUrl: getCloudflareApiBaseUrl(),
+  apiBaseUrlV2: `${getCloudflareApiBaseUrl()}/v2`,
   graphQLUrl: `${getCloudflareApiBaseUrl(TrafficFlows.GraphQL)}/v1/graphql`,
 
   // Proxies

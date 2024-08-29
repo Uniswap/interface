@@ -14,7 +14,7 @@ import { ExtensionState } from 'src/store/extensionReducer'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { DappRequestAction } from 'uniswap/src/features/telemetry/types'
-import { TransactionTypeInfo } from 'wallet/src/features/transactions/types'
+import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 

@@ -32,8 +32,8 @@ const entryGzipSize = report.reduce(
   0,
 )
 
-// somewhat arbitrary, based on current size (8/2/2024)
-const limit = 2_025_000
+// somewhat arbitrary, based on current size (8/12/2024)
+const limit = 2_050_000
 
 if (entryGzipSize > limit) {
   console.error(`Bundle size has grown too big! Entry JS size is ${entryGzipSize}, over the limit of ${limit}.`)

@@ -4,8 +4,8 @@ import {
   PortfolioValueModifier,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useCurrencyIdToVisibility } from 'wallet/src/features/transactions/selectors'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 
 interface TokenOverrides {
   tokenIncludeOverrides: ContractInput[]

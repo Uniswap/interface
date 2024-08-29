@@ -1,31 +1,20 @@
 import { AssetType } from 'uniswap/src/entities/assets'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { areAddressesEqual } from 'uniswap/src/utils/addresses'
+import {
+  ReceiveTokenTransactionInfo,
+  TransactionDetailsType,
+  TransactionListQueryResponse,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { SpamCode } from 'wallet/src/data/types'
 import {
   deriveCurrencyAmountFromAssetResponse,
   getAddressFromAsset,
   parseUSDValueFromAssetChange,
 } from 'wallet/src/features/transactions/history/utils'
-import {
-  FiatPurchaseTransactionInfo,
-  ReceiveTokenTransactionInfo,
-  TransactionDetailsType,
-  TransactionListQueryResponse,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
-
-// Non-exhaustive list of addresses Moonpay uses when sending purchased tokens
-const MOONPAY_SENDER_ADDRESSES = [
-  '0x8216874887415e2650d12d53ff53516f04a74fd7',
-  '0x151b381058f91cf871e7ea1ee83c45326f61e96d',
-  '0xb287eac48ab21c5fb1d3723830d60b4c797555b0',
-  '0xd108fd0e8c8e71552a167e7a44ff1d345d233ba6',
-]
 
 export default function parseReceiveTransaction(
   transaction: NonNullable<TransactionListQueryResponse>,
-): ReceiveTokenTransactionInfo | FiatPurchaseTransactionInfo | undefined {
+): ReceiveTokenTransactionInfo | undefined {
   if (transaction.details.__typename !== TransactionDetailsType.Transaction) {
     return undefined
   }
@@ -71,7 +60,6 @@ export default function parseReceiveTransaction(
   // Found ERC20 transfer
   if (change.__typename === 'TokenTransfer') {
     const sender = change.sender
-    const isMoonpayPurchase = MOONPAY_SENDER_ADDRESSES.some((address) => areAddressesEqual(address, sender))
 
     const tokenAddress = getAddressFromAsset({
       chain: change.asset.chain,
@@ -94,24 +82,6 @@ export default function parseReceiveTransaction(
 
     if (!(sender && tokenAddress)) {
       return undefined
-    }
-
-    // special case Moonpay transactions as fiat purchases
-    if (isMoonpayPurchase) {
-      return {
-        type: TransactionType.FiatPurchase,
-        inputCurrency: { type: 'fiat', code: change.transactedValue?.currency },
-        inputCurrencyAmount: Number(change.transactedValue?.value),
-        outputCurrency: {
-          type: 'crypto',
-          metadata: {
-            chainId: fromGraphQLChain(change.asset.chain)?.toString(),
-            contractAddress: tokenAddress,
-          },
-        },
-        outputCurrencyAmount: Number(change.quantity),
-        syncedWithBackend: true,
-      } as FiatPurchaseTransactionInfo
     }
 
     return {

@@ -1,7 +1,7 @@
 import { CONNECTION, useRecentConnectorId } from 'components/Web3Provider/constants'
 import { useConnect } from 'hooks/useConnect'
 import { useCallback, useMemo } from 'react'
-import { isMobile, isTouchable, isWebAndroid, isWebIOS } from 'utilities/src/platform'
+import { isMobileWeb, isTouchable, isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { Connector } from 'wagmi'
 
 type ConnectorID = (typeof CONNECTION)[keyof typeof CONNECTION]
@@ -42,7 +42,7 @@ function getInjectedConnectors(connectors: readonly Connector[], excludeUniswapC
   const injectedConnectors = connectors.filter((c) => {
     // Special-case: Ignore coinbase eip6963-injected connector; coinbase connection is handled via the SDK connector.
     if (c.id === CONNECTION.COINBASE_RDNS) {
-      if (isMobile) {
+      if (isMobileWeb) {
         isCoinbaseWalletBrowser = true
       }
       return false
@@ -102,7 +102,7 @@ export function useOrderedConnections(excludeUniswapConnections?: boolean): Inje
     }
 
     // Special-case: Only display the injected connector for in-wallet browsers.
-    if (isMobile && injectedConnectors.length === 1) {
+    if (isMobileWeb && injectedConnectors.length === 1) {
       return injectedConnectors
     }
 

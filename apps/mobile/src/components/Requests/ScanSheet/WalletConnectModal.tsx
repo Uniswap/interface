@@ -21,7 +21,7 @@ import { Flex, Text, TouchableArea, useHapticFeedback, useIsDarkMode, useSporeCo
 import Scan from 'ui/src/assets/icons/receive.svg'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { iconSizes } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -233,12 +233,7 @@ export function WalletConnectModal({
   }
 
   return (
-    <BottomSheetModal
-      fullScreen
-      backgroundColor={colors.surface1.get()}
-      name={ModalName.WalletConnectScan}
-      onClose={onClose}
-    >
+    <Modal fullScreen backgroundColor={colors.surface1.val} name={ModalName.WalletConnectScan} onClose={onClose}>
       <>
         {currentScreenState === ScannerModalState.ConnectedDapps && (
           <ConnectedDappsList
@@ -292,6 +287,6 @@ export function WalletConnectModal({
           </TouchableArea>
         </Flex>
       </>
-    </BottomSheetModal>
+    </Modal>
   )
 }

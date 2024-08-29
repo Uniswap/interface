@@ -3,12 +3,12 @@ import { useTranslation } from 'react-i18next'
 import { SearchWalletItemBase } from 'src/components/explore/search/items/SearchWalletItemBase'
 import { Flex, Text } from 'ui/src'
 import { imageSizes } from 'ui/src/theme'
+import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
+import { getCompletedENSName } from 'uniswap/src/features/ens/useENS'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
+import { ENSAddressSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
-import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
-import { getCompletedENSName } from 'wallet/src/features/ens/useENS'
-import { ENSAddressSearchResult } from 'wallet/src/features/search/SearchResult'
 
 type SearchENSAddressItemProps = {
   searchResult: ENSAddressSearchResult

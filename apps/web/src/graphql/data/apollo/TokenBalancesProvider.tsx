@@ -1,12 +1,9 @@
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import { hideSmallBalancesAtom } from 'components/AccountDrawer/SmallBalanceToggle'
-import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import { createAdaptiveRefetchContext } from 'graphql/data/apollo/AdaptiveRefetch'
 import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
 import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
-import { useAtomValue } from 'jotai/utils'
-import { PropsWithChildren, useCallback, useMemo } from 'react'
+import { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
 import {
   OnAssetActivitySubscription,
   PortfolioBalancesWebQueryResult,
@@ -16,6 +13,9 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
@@ -73,8 +73,8 @@ function usePortfolioValueModifiers(): {
   includeSmallBalances: boolean
   includeSpamTokens: boolean
 } {
-  const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
-  const hideSpamTokens = useAtomValue(hideSpamAtom)
+  const hideSmallBalances = useHideSmallBalancesSetting()
+  const hideSpamTokens = useHideSpamTokensSetting()
   return useMemo(
     () => ({
       includeSmallBalances: !hideSmallBalances,
@@ -85,7 +85,7 @@ function usePortfolioValueModifiers(): {
 }
 
 export function TokenBalancesProvider({ children }: PropsWithChildren) {
-  const [lazyFetch, query] = usePortfolioBalancesWebLazyQuery()
+  const [lazyFetch, query] = usePortfolioBalancesWebLazyQuery({ errorPolicy: 'all' })
   const account = useAccount()
   const hasAccountUpdate = useHasAccountUpdate()
   const valueModifiers = usePortfolioValueModifiers()
@@ -122,6 +122,23 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
  */
 export function useTotalBalancesUsdForAnalytics(): number | undefined {
   return useTokenBalancesQuery({ cacheOnly: true }).data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
+}
+
+export function useReportTotalBalancesUsdForAnalytics() {
+  const account = useAccount()
+  const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
+
+  useEffect(() => {
+    if (!portfolioBalanceUsd || !account.address) {
+      return
+    }
+
+    sendAnalyticsEvent(UniswapEventName.BalancesReport, {
+      total_balances_usd: portfolioBalanceUsd,
+      wallets: [account.address],
+      balances: [portfolioBalanceUsd],
+    })
+  }, [portfolioBalanceUsd, account.address])
 }
 
 export { PrefetchBalancesWrapper, useTokenBalancesQuery }

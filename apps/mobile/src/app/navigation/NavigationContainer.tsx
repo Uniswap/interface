@@ -54,7 +54,9 @@ export const NavigationContainer: FC<PropsWithChildren<Props>> = ({ children, on
         const initialRoute = navigationRef.getCurrentRoute()?.name as MobileAppScreen
         setRouteName(initialRoute)
 
-        DdRumReactNavigationTracking.startTrackingViews(navigationRef.current)
+        if (!__DEV__) {
+          DdRumReactNavigationTracking.startTrackingViews(navigationRef.current)
+        }
       }}
       onStateChange={(): void => {
         const previousRouteName = routeName

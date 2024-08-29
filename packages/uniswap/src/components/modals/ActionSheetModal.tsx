@@ -2,7 +2,7 @@ import { ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, flexStyles, ScrollView, Text, TouchableArea } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { BottomSheetDetachedModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { BottomSheetDetachedModal } from 'uniswap/src/components/modals/Modal'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 
 export interface MenuItemProp {
@@ -18,6 +18,9 @@ interface ActionSheetModalContentProps {
   header?: ReactNode | string
 }
 
+/**
+ * Sheet modal with rows of actionable options.
+ */
 export function ActionSheetModalContent(props: ActionSheetModalContentProps): JSX.Element {
   const { t } = useTranslation()
   const { fullHeight } = useDeviceDimensions()
@@ -71,7 +74,7 @@ export function ActionSheetModal({ isVisible, onClose, name, ...rest }: ActionSh
   }
 
   return (
-    <BottomSheetDetachedModal hideHandlebar backgroundColor="transparent" name={name} onClose={onClose}>
+    <BottomSheetDetachedModal hideHandlebar backgroundColor="$transparent" name={name} onClose={onClose}>
       <ActionSheetModalContent onClose={onClose} {...rest} />
     </BottomSheetDetachedModal>
   )

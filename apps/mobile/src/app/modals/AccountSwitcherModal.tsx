@@ -12,7 +12,7 @@ import { Button, Flex, Text, TouchableArea, useDeviceInsets, useSporeColors } fr
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { ActionSheetModal, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ElementName, ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -35,8 +35,8 @@ export function AccountSwitcherModal(): JSX.Element {
   const colors = useSporeColors()
 
   return (
-    <BottomSheetModal
-      backgroundColor={colors.surface1.get()}
+    <Modal
+      backgroundColor={colors.surface1.val}
       name={ModalName.AccountSwitcher}
       onClose={(): Action => dispatch(closeModal({ name: ModalName.AccountSwitcher }))}
     >
@@ -47,13 +47,13 @@ export function AccountSwitcherModal(): JSX.Element {
           }}
         />
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }
 
 /**
  * Exported for testing only.
- * TODO [MOB-259] Once testing works with the BottomSheetModal stop exporting this component.
+ * TODO [MOB-259] Once testing works with the Modal stop exporting this component.
  */
 export function AccountSwitcher({ onClose }: { onClose: () => void }): JSX.Element | null {
   const insets = useDeviceInsets()

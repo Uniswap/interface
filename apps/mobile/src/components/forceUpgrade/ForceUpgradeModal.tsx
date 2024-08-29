@@ -5,13 +5,13 @@ import { SeedPhraseDisplay } from 'src/components/mnemonic/SeedPhraseDisplay'
 import { APP_STORE_LINK } from 'src/constants/urls'
 import { UpgradeStatus } from 'src/features/forceUpgrade/types'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { DynamicConfigs, ForceUpgradeConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { openUri } from 'uniswap/src/utils/linking'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -60,36 +60,32 @@ export function ForceUpgradeModal(): JSX.Element {
     setShowSeedPhrase(false)
   }
 
+  // We do not add explicit error boundary here as we can not hide or replace
+  // the force upgrade screen on error, hence we fallback to the global error boundary
   return (
     <>
-      {isVisible && (
-        <WarningModal
-          confirmText={t('forceUpgrade.action.confirm')}
-          hideHandlebar={upgradeStatus === UpgradeStatus.Required}
-          isDismissible={upgradeStatus !== UpgradeStatus.Required}
-          modalName={ModalName.ForceUpgradeModal}
-          severity={WarningSeverity.High}
-          title={t('forceUpgrade.title')}
-          onClose={onClose}
-          onConfirm={onPressConfirm}
-        >
-          <Text color="$neutral2" textAlign="center" variant="body2">
-            {t('forceUpgrade.description')}
+      <WarningModal
+        confirmText={t('forceUpgrade.action.confirm')}
+        hideHandlebar={upgradeStatus === UpgradeStatus.Required}
+        isDismissible={upgradeStatus !== UpgradeStatus.Required}
+        isOpen={isVisible}
+        modalName={ModalName.ForceUpgradeModal}
+        severity={WarningSeverity.High}
+        title={t('forceUpgrade.title')}
+        onClose={onClose}
+        onConfirm={onPressConfirm}
+      >
+        <Text color="$neutral2" textAlign="center" variant="body2">
+          {t('forceUpgrade.description')}
+        </Text>
+        {mnemonicId && (
+          <Text color="$accent1" variant="buttonLabel3" onPress={onPressViewRecovery}>
+            {t('forceUpgrade.action.recoveryPhrase')}
           </Text>
-          {mnemonicId && (
-            <Text color="$accent1" variant="buttonLabel3" onPress={onPressViewRecovery}>
-              {t('forceUpgrade.action.recoveryPhrase')}
-            </Text>
-          )}
-        </WarningModal>
-      )}
+        )}
+      </WarningModal>
       {mnemonicId && showSeedPhrase && (
-        <BottomSheetModal
-          fullScreen
-          backgroundColor={colors.surface1.get()}
-          name={ModalName.ForceUpgradeModal}
-          onClose={onDismiss}
-        >
+        <Modal fullScreen backgroundColor={colors.surface1.val} name={ModalName.ForceUpgradeModal} onClose={onDismiss}>
           <Flex fill gap="$spacing16" px="$spacing24" py="$spacing24">
             <Flex row alignItems="center" justifyContent="flex-start">
               <TouchableArea onPress={onDismiss}>
@@ -100,7 +96,7 @@ export function ForceUpgradeModal(): JSX.Element {
             </Flex>
             <SeedPhraseDisplay mnemonicId={mnemonicId} onDismiss={onDismiss} />
           </Flex>
-        </BottomSheetModal>
+        </Modal>
       )}
     </>
   )

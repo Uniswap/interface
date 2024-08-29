@@ -5,13 +5,7 @@ import {
   SelectWalletScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { useTimeout } from 'utilities/src/time/timing'
-import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { NUMBER_OF_WALLETS_TO_IMPORT } from 'wallet/src/features/onboarding/createImportedAccounts'
 import { fetchUnitagByAddresses } from 'wallet/src/features/unitags/api'
-
-const FORCED_LOADING_DURATION = 3 * ONE_SECOND_MS // 3s
 
 export interface ImportableAccount {
   ownerAddress: string
@@ -25,7 +19,7 @@ function isImportableAccount(account: {
   return (account as ImportableAccount).ownerAddress !== undefined
 }
 
-export function useImportableAccounts(): {
+export function useImportableAccounts(importedAddresses?: Address[]): {
   importableAccounts?: ImportableAccount[]
   isLoading: boolean
   showError?: boolean
@@ -34,23 +28,13 @@ export function useImportableAccounts(): {
   const [refetchCount, setRefetchCount] = useState(0)
   const apolloClient = useApolloClient()
 
-  const { getImportedAccountsAddresses } = useOnboardingContext()
-  const importedAddresses = getImportedAccountsAddresses()
-
-  const isLoadingAddresses = importedAddresses?.length !== NUMBER_OF_WALLETS_TO_IMPORT
-
-  // Force a fixed duration loading state for smoother transition (as we show different UI for 1 vs multiple wallets)
-  const [isForcedLoading, setIsForcedLoading] = useState(true)
-  useTimeout(() => setIsForcedLoading(false), FORCED_LOADING_DURATION)
-
   const refetch = useCallback(async () => {
     setRefetchCount((count) => count + 1)
-    setIsForcedLoading(true)
     return refetch()
   }, [])
 
   const fetch = useCallback(async (): Promise<ImportableAccount[] | undefined> => {
-    if (isLoadingAddresses) {
+    if (!importedAddresses) {
       return
     }
 
@@ -106,17 +90,17 @@ export function useImportableAccounts(): {
 
     // We use `refetchCount` as a dependency to manually trigger a refetch when calling the `refetch` function.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLoadingAddresses, importedAddresses, apolloClient, refetchCount])
+  }, [importedAddresses, apolloClient, refetchCount])
 
   const response = useAsyncData(fetch)
 
   return useMemo(
     () => ({
       importableAccounts: response.data,
-      isLoading: response.isLoading || isLoadingAddresses || isForcedLoading,
+      isLoading: response.isLoading || !importedAddresses,
       error: response.error && !response.data?.length,
       refetch,
     }),
-    [isForcedLoading, isLoadingAddresses, refetch, response],
+    [importedAddresses, refetch, response],
   )
 }

@@ -18,13 +18,13 @@ import { wcWeb3Wallet } from 'src/features/walletConnect/saga'
 import { selectDidOpenFromDeepLink } from 'src/features/walletConnect/selectors'
 import { signWcRequestActions } from 'src/features/walletConnect/signWcRequestSaga'
 import { WalletConnectRequest, isTransactionRequest } from 'src/features/walletConnect/walletConnectSlice'
+import { GasSpeed } from 'uniswap/src/features/gas/types'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
-import { GasSpeed } from 'wallet/src/features/gas/types'
 import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -48,9 +48,9 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
   const didOpenFromDeepLink = useSelector(selectDidOpenFromDeepLink)
   const chainId = request.chainId
 
-  const tx: providers.TransactionRequest | null = useMemo(() => {
+  const tx: providers.TransactionRequest | undefined = useMemo(() => {
     if (!isTransactionRequest(request)) {
-      return null
+      return undefined
     }
 
     return { ...request.transaction, chainId }
@@ -87,7 +87,7 @@ export function WalletConnectRequestModal({ onClose, request }: Props): JSX.Elem
     }
 
     if (methodCostsGas(request)) {
-      return !!(tx && hasSufficientFunds && gasFee.value && !gasFee.error && !gasFee.loading)
+      return !!(tx && hasSufficientFunds && gasFee.value && !gasFee.error && !gasFee.isLoading)
     }
 
     if (isTransactionRequest(request)) {

@@ -12,7 +12,7 @@ Anytime a required property is added, or any property is renamed or deleted to/f
 
 ### How to migrate
 
-1. Increment the `version` of `persistConfig` defined within `reducer.ts`
+1. Increment the `version` of `persistConfig` defined within `apps/web/src/state/index.ts`
 2. Write your migration function (and corresponding test) in `migrations/`. The migration key should be the same as the `version` defined in the previous step
 3. Add the new migration function to the `migrations` MigrationManifest defined within `migrations.ts`.
 4. Increment the persisted `version` of the `defaultState` mock test state in `migrations.test.ts`

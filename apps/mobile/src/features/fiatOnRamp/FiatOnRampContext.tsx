@@ -9,9 +9,9 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { FORQuote, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 
 interface FiatOnRampContextType {
   quotesSections?: SectionListData<FORQuote>[] | undefined

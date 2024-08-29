@@ -1,20 +1,11 @@
-import {
-  createContext,
-  Dispatch,
-  ReactNode,
-  SetStateAction,
-  useCallback,
-  useContext,
-  useMemo,
-  useRef,
-  useState,
-} from 'react'
+import { createContext, ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { CurrencyField, TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
+import { TradeProtocolPreference } from 'uniswap/src/features/transactions/types/transactionState'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
 import { useSwapAnalytics } from 'wallet/src/features/transactions/swap/analytics'
 import { useDerivedSwapInfo } from 'wallet/src/features/transactions/swap/trade/hooks/useDerivedSwapInfo'
@@ -25,6 +16,7 @@ export type SwapFormState = {
   exactAmountToken?: string
   exactCurrencyField: CurrencyField
   focusOnCurrencyField?: CurrencyField
+  filteredChainId?: UniverseChainId
   input?: TradeableAsset
   output?: TradeableAsset
   selectingCurrencyField?: CurrencyField
@@ -42,7 +34,6 @@ type SwapFormContextState = {
   amountUpdatedTimeRef: React.MutableRefObject<number>
   exactAmountFiatRef: React.MutableRefObject<string>
   exactAmountTokenRef: React.MutableRefObject<string>
-  setSwapForm: Dispatch<SetStateAction<SwapFormState>>
   updateSwapForm: (newState: Partial<SwapFormState>) => void
 } & SwapFormState &
   DerivedSwapFormState
@@ -58,6 +49,7 @@ const DEFAULT_STATE: Readonly<Omit<SwapFormState, 'account'>> = {
   exactAmountToken: '',
   exactCurrencyField: CurrencyField.INPUT,
   focusOnCurrencyField: CurrencyField.INPUT,
+  filteredChainId: undefined,
   input: ETH_TRADEABLE_ASSET,
   output: undefined,
   isFiatMode: false,
@@ -129,13 +121,13 @@ export function SwapFormContextProvider({
       exactAmountTokenRef,
       exactCurrencyField: swapForm.exactCurrencyField,
       focusOnCurrencyField: swapForm.focusOnCurrencyField,
+      filteredChainId: swapForm.filteredChainId,
       input: swapForm.input,
       isFiatMode: swapForm.isFiatMode,
       isSubmitting: swapForm.isSubmitting,
       output: swapForm.output,
       tradeProtocolPreference: swapForm.tradeProtocolPreference,
       selectingCurrencyField: swapForm.selectingCurrencyField,
-      setSwapForm,
       txId: swapForm.txId,
       updateSwapForm,
     }),
@@ -145,6 +137,7 @@ export function SwapFormContextProvider({
       swapForm.exactAmountToken,
       swapForm.exactCurrencyField,
       swapForm.focusOnCurrencyField,
+      swapForm.filteredChainId,
       swapForm.input,
       swapForm.isFiatMode,
       swapForm.isSubmitting,

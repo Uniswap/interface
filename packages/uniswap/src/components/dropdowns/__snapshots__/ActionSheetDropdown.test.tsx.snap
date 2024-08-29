@@ -30,7 +30,10 @@ exports[`ActionSheetDropdown should render 1`] = `
     collapsable={false}
     style={
       {
-        "flexDirection": "column",
+        "alignItems": "center",
+        "flexDirection": "row",
+        "gap": 8,
+        "justifyContent": "center",
         "paddingBottom": 8,
         "paddingTop": 8,
       }

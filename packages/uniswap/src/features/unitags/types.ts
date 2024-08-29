@@ -15,6 +15,10 @@ export type UnitagClaimContext = {
 
 // API types
 
+export type UnitagUsernameRequest = {
+  username: string
+}
+
 export type UnitagUsernameResponse = {
   available: boolean
   requiresEnsMatch: boolean
@@ -23,6 +27,10 @@ export type UnitagUsernameResponse = {
   address?: {
     address: Address
   }
+}
+
+export type UnitagAddressRequest = {
+  address: string
 }
 
 export type UnitagAddressResponse = {

@@ -1,18 +1,17 @@
 import { NetInfoState } from '@react-native-community/netinfo'
 import { CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
-import { WalletChainId } from 'uniswap/src/types/chains'
-import { v4 as uuid } from 'uuid'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionStatus,
   TransactionDetails,
   TransactionReceipt,
   TransactionStatus,
-} from 'wallet/src/features/transactions/types'
-import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
-
-export const MAX_FIAT_INPUT_DECIMALS = 2
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { WalletChainId } from 'uniswap/src/types/chains'
+import { v4 as uuid } from 'uuid'
 
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
@@ -119,4 +118,12 @@ export function receiptFromEthersReceipt(
     gasUsed: ethersReceipt.gasUsed?.toNumber(),
     effectiveGasPrice: ethersReceipt.effectiveGasPrice?.toNumber(),
   }
+}
+
+export function isOnRampTransaction(tx: TransactionDetails): boolean {
+  return (
+    tx.typeInfo.type === TransactionType.LocalOnRamp ||
+    tx.typeInfo.type === TransactionType.OnRampPurchase ||
+    tx.typeInfo.type === TransactionType.OnRampTransfer
+  )
 }

@@ -2,11 +2,11 @@ import React from 'react'
 import { SearchWalletItemBase } from 'src/components/explore/search/items/SearchWalletItemBase'
 import { Flex, Text } from 'ui/src'
 import { imageSizes } from 'ui/src/theme'
+import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
+import { WalletByAddressSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
-import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
-import { WalletByAddressSearchResult } from 'wallet/src/features/search/SearchResult'
 
 type SearchWalletByAddressItemProps = {
   searchResult: WalletByAddressSearchResult

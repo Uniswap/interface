@@ -1,14 +1,14 @@
+import { useENS } from 'uniswap/src/features/ens/useENS'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { useENS } from 'wallet/src/features/ens/useENS'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { TransferCurrencyTxNotification } from 'wallet/src/features/notifications/types'
 import { formTransferCurrencyNotificationTitle } from 'wallet/src/features/notifications/utils'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { TransactionType } from 'wallet/src/features/transactions/types'
 
 export function TransferCurrencyNotification({
   notification,

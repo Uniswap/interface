@@ -8,11 +8,11 @@ import { SwapRequestContent } from 'src/app/features/dappRequests/requestContent
 import { DappRequestStoreItemForEthSendTxn } from 'src/app/features/dappRequests/slice'
 import { isApproveRequest, isLPRequest, isSwapRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { GasFeeResult, GasSpeed } from 'uniswap/src/features/gas/types'
+import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
-import { GasFeeResult, GasSpeed } from 'wallet/src/features/gas/types'
-import { TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 
 interface EthSendRequestContentProps {
   request: DappRequestStoreItemForEthSendTxn
@@ -113,5 +113,5 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
 }
 
 function isInvalidGasFeeResultForEthSend(gasFeeResult: GasFeeResult): boolean {
-  return !!gasFeeResult.error || (!gasFeeResult.loading && (!gasFeeResult.params || !gasFeeResult.value))
+  return !!gasFeeResult.error || (!gasFeeResult.isLoading && (!gasFeeResult.params || !gasFeeResult.value))
 }

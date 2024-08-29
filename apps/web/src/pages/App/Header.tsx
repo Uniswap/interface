@@ -7,6 +7,7 @@ import { useBag } from 'nft/hooks'
 import { GRID_AREAS } from 'pages/App/utils/shared'
 import { memo } from 'react'
 import { useLocation } from 'react-router-dom'
+import { NAV_HEIGHT } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { useIsTouchDevice } from 'ui/src'
 
@@ -27,7 +28,7 @@ const NavOnScroll = styled.div<{ $hide: boolean; $transparent?: boolean }>`
   transition: transform ${({ theme }) => theme.transition.duration.slow};
   background-color: ${({ theme, $transparent }) => !$transparent && theme.surface1};
   border-bottom: ${({ theme, $transparent }) => !$transparent && `1px solid ${theme.surface3}`};
-  ${({ $hide, theme }) => $hide && `transform: translateY(-${theme.navHeight}px);`}
+  ${({ $hide }) => $hide && `transform: translateY(-${NAV_HEIGHT}px);`}
 `
 
 export const Header = memo(function Header() {

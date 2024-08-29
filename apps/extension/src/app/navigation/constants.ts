@@ -21,7 +21,7 @@ export enum AppRoutes {
   Requests = 'requests',
   Settings = 'settings',
   Swap = 'swap',
-  Transfer = 'transfer',
+  Send = 'send',
 }
 
 export enum HomeQueryParams {

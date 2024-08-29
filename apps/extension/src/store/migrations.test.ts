@@ -5,6 +5,7 @@ import {
   getSchema,
   initialSchema,
   v0Schema,
+  v10Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -13,23 +14,30 @@ import {
   v6Schema,
   v7Schema,
   v8Schema,
+  v9Schema,
 } from 'src/store/schema'
+import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
+import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
+import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
+import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
+import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
-import { initialFavoritesState } from 'wallet/src/features/favorites/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
-import { initialSearchHistoryState } from 'wallet/src/features/search/searchHistorySlice'
-import { initialTokensState } from 'wallet/src/features/tokens/tokensSlice'
-import { initialTransactionsState } from 'wallet/src/features/transactions/slice'
-import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 import { HAYDEN_ETH_ADDRESS } from 'wallet/src/state/walletMigrations'
-import { testActivatePendingAccounts, testAddedHapticSetting } from 'wallet/src/state/walletMigrationsTests'
+import {
+  testActivatePendingAccounts,
+  testAddedHapticSetting,
+  testMovedUserSettings,
+  testRemoveHoldToSwap,
+} from 'wallet/src/state/walletMigrationsTests'
 
 expect.extend({ toIncludeSameMembers })
 
@@ -80,6 +88,7 @@ describe('Redux state migrations', () => {
       tokenLists: {},
       tokens: initialTokensState,
       transactions: initialTransactionsState,
+      userSettings: initialUserSettingsState,
       wallet: initialWalletState,
       _persist: {
         version: EXTENSION_STATE_VERSION,
@@ -220,5 +229,13 @@ describe('Redux state migrations', () => {
 
     expect(v9.behaviorHistory.hasUsedExplore).toBe(false)
     expect(v9.behaviorHistory.hasViewedWelcomeWalletCard).toBe(false)
+  })
+
+  it('migrates from v9 to v10', async () => {
+    testMovedUserSettings(migrations[10], v9Schema)
+  })
+
+  it('migrates v10 to v11', async () => {
+    testRemoveHoldToSwap(migrations[11], v10Schema)
   })
 })

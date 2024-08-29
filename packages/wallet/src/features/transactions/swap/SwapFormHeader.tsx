@@ -4,22 +4,24 @@ import { Keyboard } from 'react-native'
 import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { Eye, Settings, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { TradeProtocolPreference } from 'uniswap/src/features/transactions/transactionState/types'
+import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { ViewOnlyModal } from 'wallet/src/features/transactions/swap/modals/ViewOnlyModal'
 import { SwapSettingsModal } from 'wallet/src/features/transactions/swap/modals/settings/SwapSettingsModal'
+import { SwapSettingConfig } from 'wallet/src/features/transactions/swap/modals/settings/configs/types'
 
-export function SwapFormHeader(): JSX.Element {
+export function SwapFormHeader({ customSettings }: { customSettings: SwapSettingConfig[] }): JSX.Element {
   const { t } = useTranslation()
   const { formatPercent } = useLocalizationContext()
   const colors = useSporeColors()
 
-  const { account, onClose } = useTransactionModalContext()
-  const { updateSwapForm, customSlippageTolerance, derivedSwapInfo, tradeProtocolPreference } = useSwapFormContext()
+  const account = useAccountMeta()
+  const { onClose } = useTransactionModalContext()
+  const { customSlippageTolerance } = useSwapFormContext()
 
   const [showSwapSettingsModal, setShowSettingsModal] = useState(false)
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
@@ -32,22 +34,6 @@ export function SwapFormHeader(): JSX.Element {
   const onPressViewOnlyModal = useCallback((): void => {
     setShowViewOnlyModal(true)
   }, [])
-
-  const setCustomSlippageTolerance = useCallback(
-    (newCustomeSlippageTolerance: number | undefined): void => {
-      updateSwapForm({
-        customSlippageTolerance: newCustomeSlippageTolerance,
-      })
-    },
-    [updateSwapForm],
-  )
-
-  const setTradeProtocolPreference = useCallback(
-    (newProtocolPreference: TradeProtocolPreference) => {
-      updateSwapForm({ tradeProtocolPreference: newProtocolPreference })
-    },
-    [updateSwapForm],
-  )
 
   const onCloseSettingsModal = useCallback(() => setShowSettingsModal(false), [])
 
@@ -127,15 +113,12 @@ export function SwapFormHeader(): JSX.Element {
       </Flex>
 
       <SwapSettingsModal
-        derivedSwapInfo={derivedSwapInfo}
+        customSettings={customSettings}
         isOpen={showSwapSettingsModal}
-        setCustomSlippageTolerance={setCustomSlippageTolerance}
-        setTradeProtocolPreference={setTradeProtocolPreference}
-        tradeProtocolPreference={tradeProtocolPreference}
         onClose={onCloseSettingsModal}
       />
 
-      {showViewOnlyModal && <ViewOnlyModal onDismiss={(): void => setShowViewOnlyModal(false)} />}
+      <ViewOnlyModal isOpen={showViewOnlyModal} onDismiss={(): void => setShowViewOnlyModal(false)} />
     </>
   )
 }

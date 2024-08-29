@@ -8,8 +8,8 @@ import { SendTransactionRequest } from 'src/app/features/dappRequests/types/Dapp
 import { useCopyToClipboard } from 'src/app/hooks/useOnCopyToClipboard'
 import { Anchor, Flex, Text, TouchableArea } from 'ui/src'
 import { AnimatedCopySheets, ExternalLink } from 'ui/src/components/icons'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { ellipseMiddle, shortenAddress } from 'utilities/src/addresses'
-import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import {

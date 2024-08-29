@@ -1,5 +1,5 @@
 import { memo } from 'react'
-import { ImpactFeedbackStyle, isWeb, TouchableArea, useSporeColors } from 'ui/src'
+import { ImpactFeedbackStyle, TouchableArea, useMedia, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { Pill } from 'uniswap/src/components/pill/Pill'
@@ -19,12 +19,17 @@ function _SuggestedToken({
 }): JSX.Element {
   const { currency, logoUrl } = token.currencyInfo
   const colors = useSporeColors()
+  const media = useMedia()
+
   const onPress = (): void => {
     onSelectCurrency?.(token.currencyInfo, section, index)
   }
+
   return (
     <TouchableArea
       hapticFeedback
+      hoverable
+      borderRadius="$roundedFull"
       hapticStyle={ImpactFeedbackStyle.Light}
       testID={`token-option-${currency.chainId}-${currency.symbol}`}
       onPress={onPress}
@@ -36,8 +41,9 @@ function _SuggestedToken({
         foregroundColor={colors.neutral1.val}
         icon={
           <TokenLogo
+            chainId={currency.chainId}
             name={currency.name}
-            size={isWeb ? iconSizes.icon24 : iconSizes.icon28}
+            size={iconSizes.icon24}
             symbol={currency.symbol}
             url={logoUrl}
           />
@@ -46,7 +52,7 @@ function _SuggestedToken({
         pl="$spacing4"
         pr="$spacing12"
         py="$spacing4"
-        textVariant="buttonLabel1"
+        textVariant={media.xxs ? 'buttonLabel3' : 'buttonLabel1'}
       />
     </TouchableArea>
   )

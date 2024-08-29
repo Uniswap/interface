@@ -8,6 +8,7 @@ import { UserPropertyValue, analytics } from 'utilities/src/telemetry/analytics/
 export enum MobileUserPropertyName {
   ActiveWalletAddress = 'active_wallet_address',
   ActiveWalletType = 'active_wallet_type',
+  AdvertisingId = 'advertising_id',
   AndroidPerfClass = 'android_perf_class',
   AppOpenAuthMethod = 'app_open_auth_method',
   AppVersion = 'app_version',

@@ -1,9 +1,10 @@
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import { NftsQuery, useNftsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useNftsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
-import { selectNftsVisibility } from 'wallet/src/features/favorites/selectors'
+import { selectNftsVisibility } from 'uniswap/src/features/favorites/selectors'
+import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
 import {
   EMPTY_NFT_ITEM,
   HIDDEN_NFTS_ROW_LEFT_ITEM,
@@ -11,10 +12,6 @@ import {
 } from 'wallet/src/features/nfts/constants'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getIsNftHidden } from 'wallet/src/features/nfts/utils'
-
-export type GQLNftAsset = NonNullable<
-  NonNullable<NonNullable<NonNullable<NftsQuery['portfolios']>[0]>['nftBalances']>[0]
->['ownedAsset']
 
 export function useNFT(owner: Address = '', address?: Address, tokenId?: string): GqlResult<GQLNftAsset> {
   // TODO: [MOB-227] do a direct cache lookup in Apollo using id instead of re-querying

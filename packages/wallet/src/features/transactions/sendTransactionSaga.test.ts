@@ -4,14 +4,16 @@ import { expectSaga } from 'redux-saga-test-plan'
 import { call } from 'redux-saga/effects'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { addTransaction } from 'uniswap/src/features/transactions/slice'
+import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getTxFixtures } from 'uniswap/src/test/fixtures'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { noOpFunction } from 'utilities/src/test/utils'
 import { sendTransaction, signAndSendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
-import { addTransaction } from 'wallet/src/features/transactions/slice'
-import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { ReadOnlyAccount } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider, getProviderManager, getSignerManager } from 'wallet/src/features/wallet/context'
-import { getTxFixtures, signerMnemonicAccount } from 'wallet/src/test/fixtures'
-import { noOpFunction, provider, providerManager, signerManager } from 'wallet/src/test/mocks'
+import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
+import { provider, providerManager, signerManager } from 'wallet/src/test/mocks'
 
 const account = signerMnemonicAccount()
 
@@ -23,6 +25,7 @@ const sendParams = {
   account,
   options: { request: txRequest },
   typeInfo: txTypeInfo,
+  transactionOriginType: TransactionOriginType.Internal,
 }
 
 describe(sendTransaction, () => {
@@ -60,6 +63,7 @@ describe(sendTransaction, () => {
           from: sendParams.account.address,
           status: TransactionStatus.Pending,
           addedTime: Date.now(),
+          transactionOriginType: TransactionOriginType.Internal,
           options: {
             request: {
               chainId: sendParams.chainId,

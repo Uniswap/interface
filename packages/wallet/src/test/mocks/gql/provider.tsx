@@ -8,7 +8,7 @@ import path from 'path'
 import { PropsWithChildren } from 'react'
 import { setupWalletCache } from 'uniswap/src/data/cache'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { getErrorLink, getRestLink } from 'wallet/src/data/links'
+import { getErrorLink, getRestLink } from 'uniswap/src/data/links'
 import { mocks as defaultMocks } from 'wallet/src/test/mocks/gql/mocks'
 import { defaultResolvers } from 'wallet/src/test/mocks/gql/resolvers'
 

@@ -1,8 +1,7 @@
 import { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { Outlet, useLocation } from 'react-router-dom'
-import { DappRequestQueueProvider } from 'src/app/features/dappRequests/DappRequestQueueContext'
-import { DappRequestWrapper } from 'src/app/features/dappRequests/DappRequestWrapper'
+import { DappRequestQueue } from 'src/app/features/dappRequests/DappRequestQueue'
 import { HomeScreen } from 'src/app/features/home/HomeScreen'
 import { Locked } from 'src/app/features/lockScreen/Locked'
 import { NotificationToastWrapper } from 'src/app/features/notifications/NotificationToastWrapper'
@@ -14,7 +13,6 @@ import { AppRoutes } from 'src/app/navigation/constants'
 import { useRouterState } from 'src/app/navigation/state'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
-import { ExtensionState } from 'src/store/extensionReducer'
 import { AnimatePresence, Flex, SpinningLoader, styled } from 'ui/src'
 import { useIsChromeWindowFocusedWithTimeout } from 'uniswap/src/extension/useIsChromeWindowFocused'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -60,7 +58,7 @@ const routeDirections = {
   [AppRoutes.Requests]: Direction.Right,
   [AppRoutes.Receive]: Direction.Down,
   [AppRoutes.Settings]: Direction.Right,
-  [AppRoutes.Transfer]: Direction.Down,
+  [AppRoutes.Send]: Direction.Down,
 } satisfies Record<AppRoutes, Direction>
 
 const getAppRouteFromPathName = (pathname: string): AppRoutes | null => {
@@ -200,8 +198,6 @@ function LoggedIn(): JSX.Element {
    **/
   const outletContents = Outlet({})
   const contents = useConstant(outletContents)
-  const pendingDappRequests = useSelector((state: ExtensionState) => state.dappRequests.pending)
-  const areRequestsPending = pendingDappRequests.length > 0
 
   // To avoid excessive API calls, we pause the transaction history updater a short time after the window loses focus.
   const isChromeWindowFocused = useIsChromeWindowFocusedWithTimeout(30 * ONE_SECOND_MS)
@@ -214,11 +210,7 @@ function LoggedIn(): JSX.Element {
 
       {isChromeWindowFocused && <TransactionHistoryUpdater />}
 
-      {areRequestsPending && (
-        <DappRequestQueueProvider>
-          <DappRequestWrapper />
-        </DappRequestQueueProvider>
-      )}
+      <DappRequestQueue />
     </>
   )
 }

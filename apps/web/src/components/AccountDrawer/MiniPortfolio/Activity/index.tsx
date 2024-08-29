@@ -5,14 +5,14 @@ import { createGroups } from 'components/AccountDrawer/MiniPortfolio/Activity/ut
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { PortfolioSkeleton, PortfolioTabWrapper } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import Column from 'components/Column'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { useAtomValue, useUpdateAtom } from 'jotai/utils'
+import { useUpdateAtom } from 'jotai/utils'
 import styled from 'lib/styled-components'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { useMemo } from 'react'
 import { ThemedText } from 'theme/components'
+import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 
 const ActivityGroupWrapper = styled(Column)`
   margin-top: 16px;
@@ -30,7 +30,7 @@ export function ActivityTab({ account }: { account: string }) {
 
   const { activities, loading } = useAllActivities(account)
 
-  const hideSpam = useAtomValue(hideSpamAtom)
+  const hideSpam = useHideSpamTokensSetting()
   const activityGroups = useMemo(() => createGroups(activities, hideSpam), [activities, hideSpam])
 
   if (activityGroups.length === 0) {

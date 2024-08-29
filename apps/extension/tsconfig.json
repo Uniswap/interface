@@ -16,6 +16,9 @@
       "path": "../../packages/ui"
     },
     {
+      "path": "../../packages/uniswap"
+    },
+    {
       "path": "../../packages/utilities"
     },
     {

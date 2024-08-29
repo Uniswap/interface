@@ -85,7 +85,7 @@ describe(ActionSheetDropdown, () => {
     fireEvent.press(backdrop, ON_PRESS_EVENT_PAYLOAD)
 
     // Should be closed after pressing the backdrop
-    await waitFor(() => expect(screen.queryByTestId('dropdown-content')).not.toBeVisible())
+    await waitFor(() => expect(screen.queryByTestId('dropdown-content')).toBeNull())
   })
 
   it('closes the dropdown after pressing on an option', async () => {
@@ -98,7 +98,7 @@ describe(ActionSheetDropdown, () => {
     fireEvent.press(option, ON_PRESS_EVENT_PAYLOAD)
 
     // Should be closed after pressing an option
-    await waitFor(() => expect(screen.queryByTestId('dropdown-content')).not.toBeVisible())
+    await waitFor(() => expect(screen.queryByTestId('dropdown-content')).toBeNull())
   })
 
   it('calls the onPress function of the option after pressing on an option', async () => {

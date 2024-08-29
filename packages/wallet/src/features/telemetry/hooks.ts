@@ -1,7 +1,7 @@
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { MobileAppsFlyerEvents, MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { MobileAppsFlyerEvents, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { areSameDays } from 'utilities/src/time/date'
@@ -72,7 +72,7 @@ export function useLastBalancesReporter(): void {
     ) {
       const totalBalance = signerAccountValues.reduce((a, b) => a + b, 0)
 
-      sendAnalyticsEvent(MobileEventName.BalancesReport, {
+      sendAnalyticsEvent(UniswapEventName.BalancesReport, {
         total_balances_usd: totalBalance,
         wallets: signerAccountAddresses,
         balances: signerAccountValues,

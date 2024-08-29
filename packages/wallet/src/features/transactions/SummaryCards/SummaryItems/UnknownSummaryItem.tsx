@@ -2,11 +2,11 @@ import { useMemo } from 'react'
 import { useSporeColors } from 'ui/src'
 import { ContractInteraction } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { TransactionDetails, UnknownTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
 import { DappLogoWithWCBadge } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
-import { TransactionDetails, UnknownTransactionInfo } from 'wallet/src/features/transactions/types'
 
 export function UnknownSummaryItem({
   transaction,
