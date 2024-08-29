@@ -303,7 +303,9 @@ export default function VotePage() {
               <ArrowWrapper to="/vote">
                 <Flex gap="$spacing4">
                   <ArrowLeft size={20} />
-                  {t('vote.votePage.allProposals')}
+                  <ThemedText.DeprecatedMain>
+                    {t('vote.votePage.allProposals')}
+                  </ThemedText.DeprecatedMain>
                 </Flex>
               </ArrowWrapper>
               {proposalData && <ProposalStatus status={proposalData.status} />}

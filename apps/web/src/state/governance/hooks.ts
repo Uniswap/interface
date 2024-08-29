@@ -222,6 +222,9 @@ function useFormattedProposalCreatedLogs(
     }
   }, [contract, fromBlock, toBlock])
 
+  // TODO: logs are not returned, should also find out if same is true for pools created.
+  //   We could create a worker to store these data and forget about querying logs, which
+  //  would automate displaying proposal titles on L2s and new pools on L2s.
   const useLogsResult = useLogs(filter)
 
   return useMemo(() => {

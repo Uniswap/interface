@@ -100,7 +100,8 @@ const StyledThemeButton = styled(ThemeButton)`
 `
 
 // Once a user closes the modal, do not reopen for duration of session
-const showExtensionLaunchAtom = atomWithStorage('showUniswapExtensionLaunchAtom', true)
+// In Rigoblock, we do not want to display the Uniswap extension modal
+const showExtensionLaunchAtom = atomWithStorage('showUniswapExtensionLaunchAtom', false)
 
 export function ExtensionLaunchModal() {
   const [showExtensionLaunch, setShowExtensionLaunch] = useAtom(showExtensionLaunchAtom)
