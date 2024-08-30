@@ -28,6 +28,7 @@ export const useMenuContent = (): MenuSection[] => {
     {
       title: t('common.protocol'),
       items: [
+        { label: t('common.vote'), href: 'https://vote.uniswapfoundation.org' },
         { label: t('common.governance'), href: 'https://uniswap.org/governance' },
         { label: t('common.developers'), href: 'https://uniswap.org/developers' },
       ],
