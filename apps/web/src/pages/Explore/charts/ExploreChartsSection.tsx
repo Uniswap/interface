@@ -63,6 +63,8 @@ const SectionTitle = styled(Text, {
   name: 'SectionTitle',
   fontWeight: '300',
   whiteSpace: 'nowrap',
+  color: '$neutral2',
+  lineHeight: 24,
 })
 
 function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
@@ -112,7 +114,7 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
 
   return (
     <SectionContainer>
-      <Flex row justifyContent="space-between" alignItems="center">
+      <Flex row justifyContent="space-between" alignItems="center" mb="$spacing8">
         <SectionTitle>
           <Trans i18nKey="explore.uniVolume" />
         </SectionTitle>
@@ -167,7 +169,7 @@ function TVLChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
 
   return (
     <SectionContainer>
-      <SectionTitle color="$neutral2">
+      <SectionTitle color="$neutral2" mb="$spacing8">
         <Trans i18nKey="common.uniswapTVL" />
       </SectionTitle>
       {(() => {
@@ -200,7 +202,7 @@ function MinimalStatDisplay({ title, value, time }: { title: ReactNode; value: n
 
   return (
     <SectionContainer>
-      <SectionTitle color="$neutral2">{title}</SectionTitle>
+      <SectionTitle>{title}</SectionTitle>
       <Text variant="heading3">{formatFiatPrice({ price: value, type: NumberType.ChartFiatValue })}</Text>
       {time && (
         <Text variant="body4" fontWeight="200" color="$neutral2">

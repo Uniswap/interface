@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmdbU9rZkWxKta3MZBfefXEr93qjHYPYvB1C5dr8ndr4dR`
-- CIDv1: `bafybeihcvmkix5keffnjvlvhfy2vse7m73mkqxorpupokxoqjh55wd426q`
+- CIDv0: `QmdhNVNTTE8WpUyhrkdiNQz5rLkUF7wyDC8sJ9aA1yDQtu`
+- CIDv1: `bafybeihefyuu3tgh7s3zrkveulspuate3kjfrqoler2mmqvefxldfnmudy`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeihcvmkix5keffnjvlvhfy2vse7m73mkqxorpupokxoqjh55wd426q.ipfs.dweb.link/
-- https://bafybeihcvmkix5keffnjvlvhfy2vse7m73mkqxorpupokxoqjh55wd426q.ipfs.cf-ipfs.com/
-- [ipfs://QmdbU9rZkWxKta3MZBfefXEr93qjHYPYvB1C5dr8ndr4dR/](ipfs://QmdbU9rZkWxKta3MZBfefXEr93qjHYPYvB1C5dr8ndr4dR/)
+- https://bafybeihefyuu3tgh7s3zrkveulspuate3kjfrqoler2mmqvefxldfnmudy.ipfs.dweb.link/
+- https://bafybeihefyuu3tgh7s3zrkveulspuate3kjfrqoler2mmqvefxldfnmudy.ipfs.cf-ipfs.com/
+- [ipfs://QmdhNVNTTE8WpUyhrkdiNQz5rLkUF7wyDC8sJ9aA1yDQtu/](ipfs://QmdhNVNTTE8WpUyhrkdiNQz5rLkUF7wyDC8sJ9aA1yDQtu/)
 
-### 5.44.3 (2024-08-30)
+### 5.44.4 (2024-08-30)
 
 
 ### Bug Fixes
 
-* **web:** add link to vote - prod (#11424) 6c154d5
+* **web:** realign explore charts - prod (#11421) a5cfafa
 
 
