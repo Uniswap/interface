@@ -10,13 +10,13 @@ import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
+import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
-import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 
 type SearchTokenItemProps = {
   token: TokenSearchResult

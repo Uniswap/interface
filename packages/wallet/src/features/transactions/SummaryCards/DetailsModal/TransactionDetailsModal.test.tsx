@@ -1,4 +1,5 @@
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import {
   ARBITRUM_DAI_CURRENCY_INFO,
   BASE_CURRENCY,
@@ -12,7 +13,6 @@ import {
   TransactionDetailsContent,
   TransactionDetailsHeader,
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
-import { TransactionDetails } from 'wallet/src/features/transactions/types'
 import { ACCOUNT, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 import { render } from 'wallet/src/test/test-utils'
 
@@ -60,7 +60,7 @@ const getCurrencyInfoForChain = (chainId: number): CurrencyInfo => {
   }
 }
 
-jest.mock('wallet/src/features/tokens/useCurrencyInfo', () => ({
+jest.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfo: (currencyIdString: string | undefined): Maybe<CurrencyInfo> => {
     if (!currencyIdString) {
       return null
@@ -82,6 +82,10 @@ jest.mock('uniswap/src/features/gating/hooks', () => ({
 jest.mock('wallet/src/features/language/localizedDayjs', () => ({
   useFormattedDateTime: jest.fn(() => 'January 1, 2023 12:00 AM'),
   FORMAT_DATE_TIME_MEDIUM: 'MMMM D, YYYY h:mm A',
+}))
+
+jest.mock('ui/src/loading/Skeleton', () => ({
+  Skeleton: (): JSX.Element => <></>,
 }))
 
 describe('TransactionDetails Components', () => {

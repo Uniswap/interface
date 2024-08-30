@@ -37,12 +37,15 @@ import {
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import { useTokenWarningDismissed } from 'uniswap/src/features/tokens/slice/hooks'
+
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import {
   buildCurrencyId,
@@ -57,9 +60,7 @@ import { useIsSupportedFiatOnRampCurrency } from 'wallet/src/features/fiatOnRamp
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Language } from 'wallet/src/features/language/constants'
 import { useCurrentLanguage } from 'wallet/src/features/language/hooks'
-import { useOnChainNativeCurrencyBalance } from 'wallet/src/features/portfolio/api'
 import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
-import { useTokenWarningDismissed } from 'wallet/src/features/tokens/safetyHooks'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 function HeaderTitleElement({

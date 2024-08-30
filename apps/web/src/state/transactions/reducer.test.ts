@@ -6,14 +6,14 @@ import reducer, {
   clearAllTransactions,
   finalizeTransaction,
   initialState,
-  TransactionState,
+  LocalWebTransactionState,
 } from 'state/transactions/reducer'
 import { ConfirmedTransactionDetails, PendingTransactionDetails, TransactionType } from 'state/transactions/types'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 describe('transaction reducer', () => {
-  let store: Store<TransactionState>
+  let store: Store<LocalWebTransactionState>
 
   beforeEach(() => {
     store = createStore(reducer, initialState)

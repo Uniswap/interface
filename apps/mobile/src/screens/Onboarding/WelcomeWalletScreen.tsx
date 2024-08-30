@@ -9,6 +9,7 @@ import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Loader, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
+import { useENSAvatar } from 'uniswap/src/features/ens/api'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -17,7 +18,6 @@ import { NumberType } from 'utilities/src/format/types'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
-import { useENSAvatar } from 'wallet/src/features/ens/api'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import {
   useCreateOnboardingAccountIfNone,
@@ -82,6 +82,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
           )}
           <DisplayNameText displayName={displayName} justifyContent="flex-start" textProps={{ variant: 'body1' }} />
           <AnimatedNumber
+            balance={0}
             colorIndicationDuration={0}
             loading={false}
             loadingPlaceholderText="0.00"

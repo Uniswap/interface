@@ -1,8 +1,8 @@
 import { providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
+import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { createEthersProvider } from 'wallet/src/features/providers/createEthersProvider'
 
 enum ProviderStatus {
   Disconnected,

@@ -1,5 +1,9 @@
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
+  SendTokenTransactionInfo,
+  TransactionDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
   ARBITRUM_DAI_CURRENCY_INFO,
   BASE_CURRENCY,
   ETH_CURRENCY_INFO,
@@ -8,7 +12,6 @@ import {
   currencyInfo,
 } from 'uniswap/src/test/fixtures'
 import { TransferTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransferTransactionDetails'
-import { SendTokenTransactionInfo, TransactionDetails } from 'wallet/src/features/transactions/types'
 import { ACCOUNT, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 import { render } from 'wallet/src/test/test-utils'
 
@@ -64,7 +67,7 @@ jest.mock('uniswap/src/features/gating/hooks', () => ({
   useFeatureFlag: jest.fn().mockReturnValue(true),
 }))
 
-jest.mock('wallet/src/features/tokens/useCurrencyInfo', () => ({
+jest.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfo: (currencyIdString: string | undefined): Maybe<CurrencyInfo> => {
     if (!currencyIdString) {
       return null
@@ -76,6 +79,10 @@ jest.mock('wallet/src/features/tokens/useCurrencyInfo', () => ({
     const chainId = parseInt(chainIdStr, 10)
     return getCurrencyInfoForChain(chainId)
   },
+}))
+
+jest.mock('ui/src/loading/Skeleton', () => ({
+  Skeleton: (): JSX.Element => <></>,
 }))
 
 describe('TransferTransactionDetails Component', () => {

@@ -1,41 +1,26 @@
 import { Warning } from 'constants/tokenSafety'
-import styled, { css } from 'lib/styled-components'
 import { AlertTriangle, Slash } from 'react-feather'
+import { Flex, styled, useSporeColors } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-const WarningContainer = styled.div`
-  margin-left: 4px;
-  display: flex;
-  justify-content: center;
-`
-
-const WarningIconStyle = css<{ size?: string }>`
-  width: ${({ size }) => size ?? '1em'};
-  height: ${({ size }) => size ?? '1em'};
-`
-
-const WarningIcon = styled(AlertTriangle)`
-  ${WarningIconStyle};
-  color: ${({ theme }) => theme.neutral3};
-`
-
-export const BlockedIcon = styled(Slash)`
-  ${WarningIconStyle}
-  color: ${({ theme }) => theme.neutral2};
-`
+const WarningContainer = styled(Flex, {
+  ml: '$spacing4',
+  justifyContent: 'center',
+})
 
 export default function TokenSafetyIcon({ warning }: { warning?: Warning }) {
+  const colors = useSporeColors()
   switch (warning?.level) {
     case SafetyLevel.Blocked:
       return (
         <WarningContainer>
-          <BlockedIcon data-cy="blocked-icon" strokeWidth={2.5} />
+          <Slash data-cy="blocked-icon" size={16} strokeWidth={2.5} color={colors.neutral2.val} />
         </WarningContainer>
       )
     case SafetyLevel.StrongWarning:
       return (
         <WarningContainer>
-          <WarningIcon />
+          <AlertTriangle size={16} color={colors.neutral3.val} />
         </WarningContainer>
       )
     default:

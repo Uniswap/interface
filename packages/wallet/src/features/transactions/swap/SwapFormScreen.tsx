@@ -5,19 +5,21 @@ import { useTranslation } from 'react-i18next'
 import { StyleSheet, TextInputProps } from 'react-native'
 import { AnimatePresence, Flex, Text, TouchableArea, isWeb, useIsShortMobileDevice, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
-import { iconSizes, spacing } from 'ui/src/theme'
+import { iconSizes, spacing, zIndices } from 'ui/src/theme'
+import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
+import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { SwapScreen, useSwapScreenContext } from 'uniswap/src/features/transactions/swap/contexts/SwapScreenContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { CurrencyField } from 'uniswap/src/types/currency'
 // eslint-disable-next-line no-restricted-imports
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { NumberType } from 'utilities/src/format/types'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import { SwapScreen, useSwapScreenContext } from 'wallet/src/features/transactions/contexts/SwapScreenContext'
-import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useSyncFiatAndTokenAmountUpdater } from 'wallet/src/features/transactions/hooks/useSyncFiatAndTokenAmountUpdater'
 import { CurrencyInputPanel, CurrencyInputPanelRef } from 'wallet/src/features/transactions/swap/CurrencyInputPanel'
 import {
@@ -30,11 +32,10 @@ import { SwapArrowButton } from 'wallet/src/features/transactions/swap/SwapArrow
 import { SwapFormButton } from 'wallet/src/features/transactions/swap/SwapFormButton'
 import { SwapFormHeader } from 'wallet/src/features/transactions/swap/SwapFormHeader'
 import { SwapTokenSelector } from 'wallet/src/features/transactions/swap/SwapTokenSelector'
-import { TransactionModalInnerContainer } from 'wallet/src/features/transactions/swap/TransactionModal'
 import { useExactOutputWillFail } from 'wallet/src/features/transactions/swap/hooks/useExactOutputWillFail'
+import { SwapSettingConfig } from 'wallet/src/features/transactions/swap/modals/settings/configs/types'
 import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/trade/hooks/useShowSwapNetworkNotification'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
-import { MAX_FIAT_INPUT_DECIMALS } from 'wallet/src/features/transactions/utils'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
   size: {
@@ -51,27 +52,30 @@ const SWAP_DIRECTION_BUTTON_SIZE = {
   },
 } as const
 
-const WEB_CURRENCY_PANEL_INACTIVE_OPACITY = 0.6
-
 const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
+
+interface SwapFormScreenProps {
+  hideContent: boolean
+  customSettings: SwapSettingConfig[]
+}
 
 /**
  * IMPORTANT: In the Extension, this component remains mounted when the user moves to the `SwapReview` screen.
  *            Make sure you take this into consideration when adding/modifying any hooks that run on this component.
  */
-export function SwapFormScreen({ hideContent }: { hideContent: boolean }): JSX.Element {
+export function SwapFormScreen({ hideContent, customSettings }: SwapFormScreenProps): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
   const { selectingCurrencyField } = useSwapFormContext()
 
-  const showMobileTokenSelector = !hideContent && !!selectingCurrencyField && !isWeb
+  const showTokenSelector = !hideContent && !!selectingCurrencyField
 
   return (
     <TransactionModalInnerContainer fullscreen bottomSheetViewStyles={bottomSheetViewStyles}>
-      <SwapFormHeader />
+      <SwapFormHeader customSettings={customSettings} />
 
       {!hideContent && <SwapFormContent />}
 
-      {showMobileTokenSelector && <SwapTokenSelector />}
+      <SwapTokenSelector isModalOpen={showTokenSelector} />
     </TransactionModalInnerContainer>
   )
 }
@@ -100,20 +104,8 @@ function SwapFormContent(): JSX.Element {
     updateSwapForm,
   } = useSwapFormContext()
 
-  const {
-    currencyAmounts,
-    currencyBalances,
-    currencies,
-    currencyAmountsUSDValue,
-    chainId,
-    wrapType,
-    trade,
-    selectingCurrencyField,
-  } = derivedSwapInfo
-
-  const showWebInputTokenSelector = selectingCurrencyField === CurrencyField.INPUT && isWeb
-  const showWebOutputTokenSelector = selectingCurrencyField === CurrencyField.OUTPUT && isWeb
-  const showSwitchCurrencies = !showWebInputTokenSelector && !showWebOutputTokenSelector
+  const { currencyAmounts, currencyBalances, currencies, currencyAmountsUSDValue, chainId, wrapType, trade } =
+    derivedSwapInfo
 
   // When using fiat input mode, this hook updates the token amount based on the latest fiat conversion rate (currently polled every 15s).
   // In the Extension, the `SwapForm` is not unmounted when the user moves to the `SwapReview` screen,
@@ -154,7 +146,7 @@ function SwapFormContent(): JSX.Element {
   const decimalPadControlledField = focusOnCurrencyField ?? exactCurrencyField
 
   // Quote is being fetched for first time
-  const isSwapDataLoading = !isWrapAction(wrapType) && trade.loading
+  const isSwapDataLoading = !isWrapAction(wrapType) && trade.isLoading
 
   const inputRef = useRef<CurrencyInputPanelRef>(null)
   const outputRef = useRef<CurrencyInputPanelRef>(null)
@@ -436,22 +428,12 @@ function SwapFormContent(): JSX.Element {
 
   const decimalPadValueRef = decimalPadControlledField === exactCurrencyField ? exactValueRef : formattedDerivedValueRef
 
-  const containerShadowProps = {
-    shadowColor: colors.surface3.val,
-    shadowRadius: 10,
-  }
-  const inputShadowProps = isWeb
+  const panelShadowProps = isWeb
     ? {
-        ...containerShadowProps,
-        shadowOpacity: showWebInputTokenSelector ? 0.08 : 0.04,
-        zIndex: 1,
-      }
-    : undefined
-  const outputShadowProps = isWeb
-    ? {
-        ...containerShadowProps,
-        shadowOpacity: showWebOutputTokenSelector ? 0.08 : 0.04,
-        zIndex: 2,
+        shadowColor: colors.surface3.val,
+        shadowRadius: 10,
+        shadowOpacity: 0.04,
+        zIndex: zIndices.default,
       }
     : undefined
 
@@ -473,139 +455,111 @@ function SwapFormContent(): JSX.Element {
       <Flex animation="quick" enterStyle={{ opacity: 0 }} exitStyle={{ opacity: 0 }} gap="$spacing2" grow={isWeb}>
         <Trace section={SectionName.CurrencyInputPanel}>
           <Flex
-            {...inputShadowProps}
-            shrink
-            animateOnly={['backgroundColor', 'opacity', 'shadowOpacity']}
+            {...panelShadowProps}
+            animateOnly={['shadowOpacity']}
             animation="quick"
-            backgroundColor={isWeb || focusOnCurrencyField === CurrencyField.INPUT ? '$surface1' : '$surface2'}
             borderColor="$surface3"
             borderRadius="$rounded20"
             borderWidth={1}
-            grow={showWebInputTokenSelector}
-            opacity={showWebOutputTokenSelector ? WEB_CURRENCY_PANEL_INACTIVE_OPACITY : 1}
             overflow="hidden"
             pb={currencies[CurrencyField.INPUT] ? '$spacing4' : '$none'}
           >
-            {showWebInputTokenSelector ? (
-              <SwapTokenSelector />
-            ) : (
-              <CurrencyInputPanel
-                ref={inputRef}
-                currencyAmount={currencyAmounts[CurrencyField.INPUT]}
-                currencyBalance={currencyBalances[CurrencyField.INPUT]}
-                currencyField={CurrencyField.INPUT}
-                currencyInfo={currencies[CurrencyField.INPUT]}
-                focus={focusOnCurrencyField === CurrencyField.INPUT}
-                isFiatMode={isFiatMode && exactFieldIsInput}
-                isLoading={!exactFieldIsInput && isSwapDataLoading}
-                resetSelection={resetSelection}
-                showSoftInputOnFocus={false}
-                usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
-                value={exactFieldIsInput ? exactValue : formattedDerivedValue}
-                onPressIn={onFocusInput}
-                onSelectionChange={onInputSelectionChange}
-                onSetExactAmount={onSetExactAmountInput}
-                onSetMax={onSetMax}
-                onShowTokenSelector={onShowTokenSelectorInput}
-                onToggleIsFiatMode={onToggleIsFiatMode}
-              />
+            <CurrencyInputPanel
+              ref={inputRef}
+              currencyAmount={currencyAmounts[CurrencyField.INPUT]}
+              currencyBalance={currencyBalances[CurrencyField.INPUT]}
+              currencyField={CurrencyField.INPUT}
+              currencyInfo={currencies[CurrencyField.INPUT]}
+              focus={focusOnCurrencyField === CurrencyField.INPUT}
+              isFiatMode={isFiatMode && exactFieldIsInput}
+              isLoading={!exactFieldIsInput && isSwapDataLoading}
+              resetSelection={resetSelection}
+              showSoftInputOnFocus={false}
+              usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
+              value={exactFieldIsInput ? exactValue : formattedDerivedValue}
+              onPressIn={onFocusInput}
+              onSelectionChange={onInputSelectionChange}
+              onSetExactAmount={onSetExactAmountInput}
+              onSetMax={onSetMax}
+              onShowTokenSelector={onShowTokenSelectorInput}
+              onToggleIsFiatMode={onToggleIsFiatMode}
+            />
+          </Flex>
+        </Trace>
+
+        <SwitchCurrenciesButton onSwitchCurrencies={onSwitchCurrencies} />
+
+        <Trace section={SectionName.CurrencyOutputPanel}>
+          <Flex
+            {...panelShadowProps}
+            animateOnly={['shadowOpacity']}
+            animation="quick"
+            borderColor="$surface3"
+            borderRadius="$rounded20"
+            borderWidth={1}
+            pt={currencies[CurrencyField.OUTPUT] ? '$spacing4' : '$none'}
+          >
+            <CurrencyInputPanel
+              ref={outputRef}
+              currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
+              currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
+              currencyField={CurrencyField.OUTPUT}
+              currencyInfo={currencies[CurrencyField.OUTPUT]}
+              disabled={exactOutputWillFail} // If exact output will fail due to FoT tokens, the input field should be disabled and un-focusable
+              focus={focusOnCurrencyField === CurrencyField.OUTPUT}
+              isFiatMode={isFiatMode && exactFieldIsOutput}
+              isLoading={!exactFieldIsOutput && isSwapDataLoading}
+              resetSelection={resetSelection}
+              showSoftInputOnFocus={false}
+              usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
+              value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
+              onPressDisabled={showTemporaryFoTWarning}
+              onPressIn={onFocusOutput}
+              onSelectionChange={onOutputSelectionChange}
+              onSetExactAmount={onSetExactAmountOutput}
+              onSetMax={onSetMax}
+              onShowTokenSelector={onShowTokenSelectorOutput}
+              onToggleIsFiatMode={onToggleIsFiatMode}
+            />
+            {walletNeedsRestore && (
+              <TouchableArea onPress={onRestorePress}>
+                <Flex
+                  grow
+                  row
+                  alignItems="center"
+                  alignSelf="stretch"
+                  backgroundColor="$surface2"
+                  borderBottomLeftRadius="$rounded16"
+                  borderBottomRightRadius="$rounded16"
+                  borderTopColor="$surface1"
+                  borderTopWidth={1}
+                  gap="$spacing8"
+                  px="$spacing12"
+                  py="$spacing12"
+                >
+                  <InfoCircleFilled color={colors.DEP_accentWarning.val} size="$icon.20" />
+                  <Text color="$DEP_accentWarning" variant="subheading2">
+                    {t('swap.form.warning.restore')}
+                  </Text>
+                </Flex>
+              </TouchableArea>
             )}
           </Flex>
         </Trace>
 
-        {showSwitchCurrencies ? <SwitchCurrenciesButton onSwitchCurrencies={onSwitchCurrencies} /> : <Flex />}
-
-        {!showWebInputTokenSelector && (
-          <>
-            <Trace section={SectionName.CurrencyOutputPanel}>
-              <Flex
-                {...outputShadowProps}
-                shrink
-                animateOnly={['backgroundColor', 'opacity', 'shadowOpacity']}
-                animation="quick"
-                backgroundColor={isWeb || focusOnCurrencyField === CurrencyField.OUTPUT ? '$surface1' : '$surface2'}
-                borderColor="$surface3"
-                borderRadius="$rounded20"
-                borderWidth={1}
-                grow={showWebOutputTokenSelector}
-                opacity={showWebInputTokenSelector ? WEB_CURRENCY_PANEL_INACTIVE_OPACITY : 1}
-                overflow="hidden"
-                position="relative"
-                pt={currencies[CurrencyField.OUTPUT] ? '$spacing4' : '$none'}
-              >
-                {showWebOutputTokenSelector ? (
-                  <Flex grow>
-                    <SwapTokenSelector />
-                  </Flex>
-                ) : (
-                  <CurrencyInputPanel
-                    ref={outputRef}
-                    currencyAmount={currencyAmounts[CurrencyField.OUTPUT]}
-                    currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
-                    currencyField={CurrencyField.OUTPUT}
-                    currencyInfo={currencies[CurrencyField.OUTPUT]}
-                    disabled={exactOutputWillFail} // If exact output will fail due to FoT tokens, the input field should be disabled and un-focusable
-                    focus={focusOnCurrencyField === CurrencyField.OUTPUT}
-                    isFiatMode={isFiatMode && exactFieldIsOutput}
-                    isLoading={!exactFieldIsOutput && isSwapDataLoading}
-                    resetSelection={resetSelection}
-                    showSoftInputOnFocus={false}
-                    usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
-                    value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
-                    onPressDisabled={showTemporaryFoTWarning}
-                    onPressIn={onFocusOutput}
-                    onSelectionChange={onOutputSelectionChange}
-                    onSetExactAmount={onSetExactAmountOutput}
-                    onSetMax={onSetMax}
-                    onShowTokenSelector={onShowTokenSelectorOutput}
-                    onToggleIsFiatMode={onToggleIsFiatMode}
-                  />
-                )}
-                {walletNeedsRestore && !showWebOutputTokenSelector && (
-                  <TouchableArea onPress={onRestorePress}>
-                    <Flex
-                      grow
-                      row
-                      alignItems="center"
-                      alignSelf="stretch"
-                      backgroundColor="$surface2"
-                      borderBottomLeftRadius="$rounded16"
-                      borderBottomRightRadius="$rounded16"
-                      borderTopColor="$surface1"
-                      borderTopWidth={1}
-                      gap="$spacing8"
-                      px="$spacing12"
-                      py="$spacing12"
-                    >
-                      <InfoCircleFilled color={colors.DEP_accentWarning.val} size="$icon.20" />
-                      <Text color="$DEP_accentWarning" variant="subheading2">
-                        {t('swap.form.warning.restore')}
-                      </Text>
-                    </Flex>
-                  </TouchableArea>
-                )}
-              </Flex>
-            </Trace>
-
-            {!showWebOutputTokenSelector && (
-              <Flex>
-                {isWeb && (
-                  <Flex pt="$spacing12">
-                    <SwapFormButton />
-                  </Flex>
-                )}
-                <Flex pt={isShortMobileDevice ? '$spacing8' : '$spacing12'}>
-                  <AnimatePresence>
-                    {showWarning && (
-                      <FoTWarningRow currencies={currencies} outputTokenHasBuyTax={outputTokenHasBuyTax} />
-                    )}
-                  </AnimatePresence>
-                  {!showWarning && <GasAndWarningRows renderEmptyRows={!isWeb} />}
-                </Flex>
-              </Flex>
-            )}
-          </>
-        )}
+        <Flex>
+          {isWeb && (
+            <Flex pt="$spacing12">
+              <SwapFormButton />
+            </Flex>
+          )}
+          <Flex pt={isShortMobileDevice ? '$spacing8' : '$spacing12'}>
+            <AnimatePresence>
+              {showWarning && <FoTWarningRow currencies={currencies} outputTokenHasBuyTax={outputTokenHasBuyTax} />}
+            </AnimatePresence>
+            {!showWarning && <GasAndWarningRows renderEmptyRows={!isWeb} />}
+          </Flex>
+        </Flex>
       </Flex>
       {!isWeb && (
         <>

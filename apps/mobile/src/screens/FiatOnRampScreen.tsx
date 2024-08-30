@@ -16,6 +16,7 @@ import { Flex, Text, isWeb, useIsDarkMode, useIsShortMobileDevice } from 'ui/src
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
+import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import {
@@ -49,7 +50,6 @@ import {
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.AmountInput>
 
-const MAX_FIAT_INPUT_DECIMALS = 2
 const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
 
 function selectInitialQuote(quotes: FORQuote[] | undefined): {

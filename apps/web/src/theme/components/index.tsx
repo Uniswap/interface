@@ -1,3 +1,4 @@
+import { TextStyle } from '@tamagui/core'
 import { ReactComponent as TooltipTriangle } from 'assets/svg/tooltip_triangle.svg'
 import { outboundLink } from 'components/analytics'
 import useCopyClipboard from 'hooks/useCopyClipboard'
@@ -15,6 +16,7 @@ import React, {
 import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, X } from 'react-feather'
 import { Link } from 'react-router-dom'
 import { Z_INDEX } from 'theme/zIndex'
+import { FlexProps, TextProps } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 import { anonymizeLink } from 'utils/anonymizeLink'
 
@@ -45,12 +47,20 @@ export const ButtonText = styled.button`
   }
 `
 
+/** @deprecated use tamagui and EllipsisTamaguiStyle instead */
 export const EllipsisStyle = css`
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 `
 
+export const EllipsisTamaguiStyle = {
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+} satisfies TextStyle
+
+/** @deprecated use tamagui and ClickableTamaguiStyle instead */
 export const ClickableStyle = css`
   text-decoration: none;
   cursor: pointer;
@@ -63,6 +73,28 @@ export const ClickableStyle = css`
     opacity: ${({ theme }) => theme.opacity.click};
   }
 `
+export const ClickableTamaguiStyle = {
+  cursor: 'pointer',
+  '$platform-web': {
+    textDecoration: 'none',
+    transitionDuration: '0.2s',
+  },
+  hoverStyle: {
+    opacity: 0.8,
+  },
+  pressStyle: {
+    opacity: 0.6,
+  },
+} satisfies FlexProps
+
+export const TamaguiClickableStyle = {
+  textDecorationLine: 'none',
+  cursor: 'pointer',
+  animation: '100ms',
+  hoverStyle: {
+    opacity: 0.6,
+  },
+} satisfies TextProps
 
 export const CloseIcon = styled(X)<{ onClick: () => void; $color?: string }>`
   color: ${({ theme, $color }) => $color ?? theme.neutral1};

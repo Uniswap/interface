@@ -1,9 +1,7 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { NFTViewType, TokensOrderBy } from 'wallet/src/features/wallet/types'
-
-export const HIDE_SMALL_USD_BALANCES_THRESHOLD = 1
+import { TokensOrderBy } from 'wallet/src/features/wallet/types'
 
 export enum SwapProtectionSetting {
   On = 'on',
@@ -16,14 +14,8 @@ export interface WalletSliceState {
   finishedOnboarding?: boolean
   // Persisted UI configs set by the user through interaction with filters and settings
   settings: {
-    nftViewType?: NFTViewType
-
-    // Settings used in the top tokens list
-    hideSmallBalances: boolean
-    hideSpamTokens: boolean
-    tokensOrderBy?: TokensOrderBy
-
     swapProtection: SwapProtectionSetting
+    tokensOrderBy?: TokensOrderBy
   }
 
   // Tracks app rating
@@ -37,8 +29,6 @@ export const initialWalletState: WalletSliceState = {
   activeAccountAddress: null,
   settings: {
     swapProtection: SwapProtectionSetting.On,
-    hideSmallBalances: true,
-    hideSpamTokens: true,
   },
 }
 
@@ -114,9 +104,6 @@ const slice = createSlice({
     ) => {
       state.finishedOnboarding = finishedOnboarding
     },
-    setNFTViewType: (state, action: PayloadAction<NFTViewType>) => {
-      state.settings.nftViewType = action.payload
-    },
     setTokensOrderBy: (
       state,
       { payload: { newTokensOrderBy } }: PayloadAction<{ newTokensOrderBy: TokensOrderBy }>,
@@ -128,12 +115,6 @@ const slice = createSlice({
       { payload: { newSwapProtectionSetting } }: PayloadAction<{ newSwapProtectionSetting: SwapProtectionSetting }>,
     ) => {
       state.settings.swapProtection = newSwapProtectionSetting
-    },
-    setHideSmallBalances: (state, { payload }: PayloadAction<boolean>) => {
-      state.settings.hideSmallBalances = payload
-    },
-    setHideSpamTokens: (state, { payload }: PayloadAction<boolean>) => {
-      state.settings.hideSpamTokens = payload
     },
     setAppRating: (
       state,
@@ -163,12 +144,9 @@ export const {
   setAccountAsActive,
   resetWallet,
   setFinishedOnboarding,
-  setNFTViewType,
   setTokensOrderBy,
   restoreMnemonicComplete,
   setSwapProtectionSetting,
-  setHideSmallBalances,
-  setHideSpamTokens,
   setAppRating,
 } = slice.actions
 

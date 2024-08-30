@@ -70,21 +70,6 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
           -
            
         </Text>
-        <Text
-          allowFontScaling={false}
-          maxFontSizeMultiplier={1.4}
-          style={
-            {
-              "color": "#7D7D7D",
-              "fontFamily": "Basel-Book",
-              "fontSize": 14,
-              "lineHeight": 20,
-            }
-          }
-          suppressHighlighting={true}
-        >
-          -
-        </Text>
       </View>
     </View>
   </View>
@@ -97,8 +82,8 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
   >
     <RNSVGSvgView
       align="xMidYMid"
-      bbHeight="20"
-      bbWidth="20"
+      bbHeight={20}
+      bbWidth={20}
       fill="none"
       focusable={false}
       meetOrSlice={0}
@@ -140,7 +125,7 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
             "strokeWidth",
           ]
         }
-        strokeWidth="2"
+        strokeWidth={2}
       >
         <RNSVGPath
           d="M12 5V19"
@@ -251,21 +236,6 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
         >
           -
            
-        </Text>
-        <Text
-          allowFontScaling={false}
-          maxFontSizeMultiplier={1.4}
-          style={
-            {
-              "color": "#7D7D7D",
-              "fontFamily": "Basel-Book",
-              "fontSize": 14,
-              "lineHeight": 20,
-            }
-          }
-          suppressHighlighting={true}
-        >
-          -
         </Text>
       </View>
     </View>

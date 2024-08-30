@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { FiatOnRampStackNavigator } from 'src/app/navigation/navigation'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { useSporeColors } from 'ui/src'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function FiatOnRampAggregatorModal(): JSX.Element {
@@ -15,16 +15,16 @@ export function FiatOnRampAggregatorModal(): JSX.Element {
   }, [dispatch])
 
   return (
-    <BottomSheetModal
+    <Modal
       fullScreen
       hideHandlebar
       hideKeyboardOnDismiss
       renderBehindTopInset
-      backgroundColor={colors.surface1.get()}
+      backgroundColor={colors.surface1.val}
       name={ModalName.FiatOnRampAggregator}
       onClose={onClose}
     >
       <FiatOnRampStackNavigator />
-    </BottomSheetModal>
+    </Modal>
   )
 }

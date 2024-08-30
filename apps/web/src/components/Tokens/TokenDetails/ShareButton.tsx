@@ -1,22 +1,18 @@
 import { DropdownSelector } from 'components/DropdownSelector'
-import { CheckMark } from 'components/Icons/CheckMark'
 import { Share as ShareIcon } from 'components/Icons/Share'
 import { TwitterXLogo } from 'components/Icons/TwitterX'
 import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
 import useCopyClipboard from 'hooks/useCopyClipboard'
-import useDisableScrolling from 'hooks/useDisableScrolling'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import styled, { useTheme } from 'lib/styled-components'
-import { useRef } from 'react'
+import styled from 'lib/styled-components'
+import { useState } from 'react'
 import { Link } from 'react-feather'
 import { useSearchParams } from 'react-router-dom'
-import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
-import { ApplicationModal } from 'state/application/reducer'
 import { colors } from 'theme/colors'
-import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
-import { Trans, t } from 'uniswap/src/i18n'
-import { isMobile } from 'utilities/src/platform'
+import { Text, useSporeColors } from 'ui/src'
+import { Check } from 'ui/src/components/icons'
+import { useTranslation } from 'uniswap/src/i18n/useTranslation'
+import { isMobileWeb } from 'utilities/src/platform'
 
 const TWITTER_WIDTH = 560
 const TWITTER_HEIGHT = 480
@@ -49,56 +45,47 @@ export function openShareTweetWindow(name: string) {
 }
 
 export default function ShareButton({ name, utmSource }: { name: string; utmSource: string }) {
-  const theme = useTheme()
-  const node = useRef<HTMLDivElement | null>(null)
-  const open = useModalIsOpen(ApplicationModal.SHARE)
-  const toggleShare = useToggleModal(ApplicationModal.SHARE)
-  useOnClickOutside(node, open ? toggleShare : undefined)
-
-  useDisableScrolling(open)
+  const colors = useSporeColors()
+  const { t } = useTranslation()
+  const [isOpen, setIsOpen] = useState(false)
 
   const [searchParams] = useSearchParams()
-  const utmTag = `${searchParams.size > 0 ? '&' : '?'}utm_source=${utmSource}&utm_medium=${isMobile ? 'mobile' : 'web'}`
+  const utmTag = `${searchParams.size > 0 ? '&' : '?'}utm_source=${utmSource}&utm_medium=${isMobileWeb ? 'mobile' : 'web'}`
   const currentLocation = window.location.href + utmTag
 
   const [isCopied, setCopied] = useCopyClipboard()
 
   return (
-    <div ref={node}>
-      <DropdownSelector
-        isOpen={open}
-        toggleOpen={toggleShare}
-        menuLabel={<ShareIcon fill={theme.neutral1} width={18} height={18} />}
-        tooltipText={t('common.share')}
-        internalMenuItems={
-          <>
-            <ShareAction onClick={() => setCopied(currentLocation)}>
-              {isCopied ? (
-                <CheckMark height={18} width={18} />
-              ) : (
-                <Link width="18px" height="18px" color={theme.neutral1} />
-              )}
-              <ThemedText.BodyPrimary>
-                {isCopied ? <Trans i18nKey="common.copied" /> : <Trans i18nKey="common.copyLink.button" />}
-              </ThemedText.BodyPrimary>
-            </ShareAction>
-            <ShareAction
-              onClick={() => {
-                toggleShare()
-                openShareTweetWindow(name)
-              }}
-            >
-              <TwitterXLogo width="18px" height="18px" fill={theme.neutral1} />
-              <ThemedText.BodyPrimary>
-                <Trans i18nKey="common.share.shareToTwitter" />
-              </ThemedText.BodyPrimary>
-            </ShareAction>
-          </>
-        }
-        hideChevron
-        buttonCss={ActionButtonStyle}
-        menuFlyoutCss={ActionMenuFlyoutStyle}
-      />
-    </div>
+    <DropdownSelector
+      isOpen={isOpen}
+      toggleOpen={setIsOpen}
+      menuLabel={<ShareIcon fill={colors.neutral1.val} width={18} height={18} />}
+      tooltipText={t('common.share')}
+      internalMenuItems={
+        <>
+          <ShareAction onClick={() => setCopied(currentLocation)}>
+            {isCopied ? (
+              <Check size={16} p={1} color={colors.statusSuccess.val} />
+            ) : (
+              <Link width="18px" height="18px" color={colors.neutral1.val} />
+            )}
+            <Text variant="body2">{isCopied ? t('common.copied') : t('common.copyLink.button')}</Text>
+          </ShareAction>
+          <ShareAction
+            onClick={() => {
+              setIsOpen(false)
+              openShareTweetWindow(name)
+            }}
+          >
+            <TwitterXLogo width="18px" height="18px" fill={colors.neutral1.val} />
+            <Text variant="body2">{t('common.share.shareToTwitter')}</Text>
+          </ShareAction>
+        </>
+      }
+      hideChevron
+      buttonStyle={ActionButtonStyle}
+      dropdownStyle={ActionMenuFlyoutStyle}
+      adaptToSheet={false}
+    />
   )
 }

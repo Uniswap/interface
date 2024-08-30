@@ -9,6 +9,7 @@ type DisplayNameProps = {
   unitagIconSize?: IconSizeTokens | number
   textProps?: TextProps
   includeUnitagSuffix?: boolean
+  forcedWidth?: number
 } & FlexProps
 
 export function DisplayNameText({
@@ -16,6 +17,7 @@ export function DisplayNameText({
   unitagIconSize = '$icon.24',
   textProps,
   includeUnitagSuffix,
+  forcedWidth,
   ...rest
 }: DisplayNameProps): JSX.Element {
   const isUnitag = displayName?.type === DisplayNameType.Unitag
@@ -23,7 +25,15 @@ export function DisplayNameText({
 
   return (
     <Flex centered row {...rest}>
-      <Text {...textProps} color={textProps?.color ?? '$neutral1'} flexShrink={1} numberOfLines={1}>
+      <Text
+        ellipsizeMode="tail"
+        {...textProps}
+        color={textProps?.color ?? '$neutral1'}
+        flexShrink={1}
+        numberOfLines={1}
+        overflow="hidden"
+        width={isUnitag ? undefined : forcedWidth}
+      >
         {name}
         {isUnitag && includeUnitagSuffix && (
           <Text {...textProps} color="$neutral2" flexShrink={1} numberOfLines={1}>

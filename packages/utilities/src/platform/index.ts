@@ -12,12 +12,12 @@
  */
 
 // Platform
-export const isWeb: boolean = true
 export const isAndroid: boolean = false
 export const isIOS: boolean = false
 // see: https://stackoverflow.com/a/14301832
 
-export const isMobile: boolean =
+export const isWeb: boolean = true
+export const isMobileWeb: boolean =
   // https://stackoverflow.com/a/29509267
   typeof navigator !== 'undefined' && /iPhone|iPad|iPod|Android|Mobi/i.test(navigator.userAgent)
 

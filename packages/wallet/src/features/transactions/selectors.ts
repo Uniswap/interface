@@ -1,27 +1,27 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { WalletChainId } from 'uniswap/src/types/chains'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { unique } from 'utilities/src/primitives/array'
-import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
-import { SearchableRecipient } from 'wallet/src/features/address/types'
-import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
-import { selectTokensVisibility } from 'wallet/src/features/favorites/selectors'
-import { CurrencyIdToVisibility } from 'wallet/src/features/favorites/slice'
-import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
-import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
+import { selectTokensVisibility } from 'uniswap/src/features/favorites/selectors'
+import { CurrencyIdToVisibility } from 'uniswap/src/features/favorites/slice'
+import { TransactionsState } from 'uniswap/src/features/transactions/slice'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   isFinalizedTx,
   SendTokenTransactionInfo,
   TransactionDetails,
   TransactionType,
   UniswapXOrderDetails,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { WalletChainId } from 'uniswap/src/types/chains'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { unique } from 'utilities/src/primitives/array'
+import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
+import { SearchableRecipient } from 'wallet/src/features/address/types'
+import { uniqueAddressesOnly } from 'wallet/src/features/address/utils'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 import { WalletState } from 'wallet/src/state/walletReducer'
 
-export const selectTransactions = (state: WalletState): TransactionStateMap => state.transactions
+export const selectTransactions = (state: WalletState): TransactionsState => state.transactions
 
 export const selectSwapTransactionsCount = createSelector(selectTransactions, (transactions) => {
   let swapTransactionCount = 0
@@ -55,8 +55,8 @@ export const makeSelectAddressTransactions = (): Selector<
       }
 
       return unique(flattenObjectOfObjects(addressTransactions), (tx, _, self) => {
-        // Remove dummy fiat onramp transactions from TransactionList, notification badge, etc.
-        if (tx.typeInfo.type === TransactionType.FiatPurchase && !tx.typeInfo.syncedWithBackend) {
+        // Remove dummy local onramp transactions from TransactionList, notification badge, etc.
+        if (tx.typeInfo.type === TransactionType.LocalOnRamp) {
           return false
         }
         /*

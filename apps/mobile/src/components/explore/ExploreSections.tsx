@@ -28,11 +28,11 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'uniswap/src/features/favorites/selectors'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
-import { selectHasFavoriteTokens, selectHasWatchedWallets } from 'wallet/src/features/favorites/selectors'
 import { selectTokensOrderBy } from 'wallet/src/features/wallet/selectors'
 
 type ExploreSectionsProps = {

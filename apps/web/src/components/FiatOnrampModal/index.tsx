@@ -12,7 +12,7 @@ import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { CustomLightSpinner, ThemedText } from 'theme/components'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { AdaptiveWebModalSheet } from 'ui/src'
+import { AdaptiveWebModal } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 
 import { logger } from 'utilities/src/logger/logger'
@@ -147,7 +147,7 @@ export default function FiatOnrampModal() {
   }, [fetchSignedIframeUrl])
 
   return (
-    <AdaptiveWebModalSheet isOpen={fiatOnrampModalOpen} onClose={() => closeModal()}>
+    <AdaptiveWebModal isOpen={fiatOnrampModalOpen} onClose={() => closeModal()}>
       <Wrapper data-testid="fiat-onramp-modal" isDarkMode={isDarkMode}>
         {error ? (
           <>
@@ -176,6 +176,6 @@ export default function FiatOnrampModal() {
           <Trans i18nKey="moonpay.poweredBy" />
         </ThemedText.BodySmall>
       </MoonpayTextWrapper>
-    </AdaptiveWebModalSheet>
+    </AdaptiveWebModal>
   )
 }

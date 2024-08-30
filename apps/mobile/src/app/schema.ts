@@ -548,6 +548,36 @@ export const v72Schema = {
   },
 }
 
+export const v73Schema = {
+  ...v72Schema,
+  wallet: {
+    ...v72Schema.wallet,
+    settings: {
+      swapProtection: v72Schema.wallet.settings.swapProtection,
+    },
+  },
+  userSettings: {
+    hideSmallBalances: v72Schema.wallet.settings.hideSmallBalances,
+    hideSpamTokens: v72Schema.wallet.settings.hideSpamTokens,
+  },
+}
+
+export const v74Schema = { ...v73Schema }
+
+const v75SchemaIntermediate = {
+  ...v74Schema,
+  behaviorHistory: {
+    ...v74Schema.behaviorHistory,
+    hasViewedReviewScreen: undefined,
+    hasSubmittedHoldToSwap: undefined,
+  },
+}
+
+delete v75SchemaIntermediate.behaviorHistory.hasViewedReviewScreen
+delete v75SchemaIntermediate.behaviorHistory.hasSubmittedHoldToSwap
+
+export const v75Schema = v75SchemaIntermediate
+
 // TODO: [MOB-201] use function with typed output when API reducers are removed from rootReducer
 // export const getSchema = (): RootState => v0Schema
-export const getSchema = (): typeof v72Schema => v72Schema
+export const getSchema = (): typeof v75Schema => v75Schema

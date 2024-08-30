@@ -2,9 +2,11 @@ import 'utilities/src/logger/mocks'
 
 import { chrome } from 'jest-chrome'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
-import { TextEncoder, TextDecoder } from 'util';
+import { TextEncoder, TextDecoder } from 'util'
+import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
+import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
 
-process.env.IS_UNISWAP_EXTENSION = true 
+process.env.IS_UNISWAP_EXTENSION = true
 
 global.TextEncoder = TextEncoder;
 global.TextDecoder = TextDecoder;
@@ -69,3 +71,7 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
     useSelectedColorScheme: () => 'light',
   }
 })
+
+jest.mock('uniswap/src/data/apiClients/SharedPersistQueryClientProvider', () => mockSharedPersistQueryClientProvider)
+
+mockUIAssets()

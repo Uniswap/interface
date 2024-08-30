@@ -2,15 +2,14 @@ import { addScreenshotListener } from 'expo-screen-capture'
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { usePrevious } from 'react-native-wagmi-charts'
-import { HiddenMnemonicWordView } from 'src/components/mnemonic/HiddenMnemonicWordView'
 import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { Button, Flex } from 'ui/src'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 
 type Props = {
   mnemonicId: string
@@ -60,15 +59,9 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
   return (
     <>
       <Flex grow mt="$spacing16">
-        {showSeedPhrase ? (
-          <Flex grow pt="$spacing16" px="$spacing16">
-            <MnemonicDisplay mnemonicId={mnemonicId} />
-          </Flex>
-        ) : (
-          <Flex grow px="$spacing16">
-            <HiddenMnemonicWordView />
-          </Flex>
-        )}
+        <Flex grow pt="$spacing16" px="$spacing16">
+          <MnemonicDisplay mnemonicId={mnemonicId} showMnemonic={showSeedPhrase} />
+        </Flex>
       </Flex>
       <Flex borderTopColor="$surface3" borderTopWidth={1} pt="$spacing12" px="$spacing16">
         <Button testID={TestID.Next} theme="secondary" onPress={(): void => setShowSeedPhrase(!showSeedPhrase)}>
@@ -83,6 +76,7 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
           closeText={t('common.button.close')}
           confirmText={t('common.button.view')}
           isDismissible={false}
+          isOpen={showSeedPhraseViewWarningModal}
           modalName={ModalName.ViewSeedPhraseWarning}
           severity={WarningSeverity.High}
           title={t('setting.recoveryPhrase.warning.view.title')}
@@ -95,15 +89,14 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
           onConfirm={onConfirmWarning}
         />
       )}
-      {showScreenShotWarningModal && (
-        <WarningModal
-          caption={t('setting.recoveryPhrase.warning.screenshot.message')}
-          confirmText={t('common.button.close')}
-          modalName={ModalName.ScreenshotWarning}
-          title={t('setting.recoveryPhrase.warning.screenshot.title')}
-          onConfirm={(): void => setShowScreenShotWarningModal(false)}
-        />
-      )}
+      <WarningModal
+        caption={t('setting.recoveryPhrase.warning.screenshot.message')}
+        confirmText={t('common.button.close')}
+        isOpen={showScreenShotWarningModal}
+        modalName={ModalName.ScreenshotWarning}
+        title={t('setting.recoveryPhrase.warning.screenshot.title')}
+        onConfirm={(): void => setShowScreenShotWarningModal(false)}
+      />
     </>
   )
 }

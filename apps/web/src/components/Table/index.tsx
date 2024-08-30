@@ -28,9 +28,9 @@ import {
   TableRowLink,
 } from 'components/Table/styled'
 import useDebounce from 'hooks/useDebounce'
-import { useTheme } from 'lib/styled-components'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
+import { NAV_HEIGHT } from 'theme'
 import { ThemedText } from 'theme/components'
 import { FadePresence } from 'theme/components/FadePresence'
 import { Z_INDEX } from 'theme/zIndex'
@@ -147,7 +147,6 @@ export function Table<Data extends RowData>({
     distanceToBottom: LOAD_MORE_BOTTOM_OFFSET,
   })
   const { distanceFromTop, distanceToBottom } = useDebounce(scrollPosition, 125)
-  const theme = useTheme()
   const tableBodyRef = useRef<HTMLDivElement>(null)
   const lastLoadedLengthRef = useRef(data?.length ?? 0)
   const canLoadMore = useRef(true)
@@ -204,16 +203,16 @@ export function Table<Data extends RowData>({
   })
   const headerHeight = useMemo(() => {
     const header = document.getElementById('AppHeader')
-    return header?.clientHeight || theme.navHeight
-  }, [theme.navHeight])
+    return header?.clientHeight || NAV_HEIGHT
+  }, [])
 
   return (
     <div>
       <ScrollSync>
-        <TableContainer $maxWidth={maxWidth} $maxHeight={maxHeight}>
+        <TableContainer maxWidth={maxWidth} maxHeight={maxHeight}>
           <TableHead $isSticky={!maxHeight} $top={headerHeight}>
             <ScrollSyncPane>
-              <HeaderRow $dimmed={!!error}>
+              <HeaderRow dimmed={!!error}>
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer key={header.id}>
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -223,7 +222,7 @@ export function Table<Data extends RowData>({
             </ScrollSyncPane>
             {showReturn && (
               <FadePresence $zIndex={Z_INDEX.hover}>
-                <ReturnButtonContainer $top={maxHeight ? 55 : 75}>
+                <ReturnButtonContainer top={maxHeight ? 55 : 75}>
                   <ReturnButton
                     height="24px"
                     onClick={() => {
@@ -243,16 +242,18 @@ export function Table<Data extends RowData>({
             )}
           </TableHead>
           <ScrollSyncPane innerRef={tableBodyRef}>
-            <TableBodyContainer>
+            <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'}>
               <TableBody loading={loading} error={error} table={table} />
             </TableBodyContainer>
           </ScrollSyncPane>
-          <LoadingIndicatorContainer show={loadingMore}>
-            <LoadingIndicator>
-              <Loader />
-              <Trans i18nKey="common.loading" />
-            </LoadingIndicator>
-          </LoadingIndicatorContainer>
+          {loadingMore && (
+            <LoadingIndicatorContainer>
+              <LoadingIndicator>
+                <Loader />
+                <Trans i18nKey="common.loading" />
+              </LoadingIndicator>
+            </LoadingIndicatorContainer>
+          )}
         </TableContainer>
       </ScrollSync>
     </div>

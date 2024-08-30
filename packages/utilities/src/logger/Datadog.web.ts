@@ -86,3 +86,7 @@ export function logErrorToDatadog(error: Error, context?: LoggerErrorContext): v
     })
   }
 }
+
+export function attachUnhandledRejectionHandler(): void {
+  throw new NotImplementedError('Stub attachUnhandledRejectionHandler to match native')
+}

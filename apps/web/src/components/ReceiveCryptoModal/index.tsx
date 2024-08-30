@@ -7,7 +7,7 @@ import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { useCallback, useState } from 'react'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { AdaptiveWebModalSheet } from 'ui/src'
+import { AdaptiveWebModal } from 'ui/src'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -34,7 +34,7 @@ export function ReceiveCryptoModal() {
     return null
   }
   return (
-    <AdaptiveWebModalSheet isOpen={isOpen} onClose={onClose} width={420}>
+    <AdaptiveWebModal isOpen={isOpen} onClose={onClose} width={420}>
       <ContentWrapper>
         {errorProvider ? (
           <ProviderConnectionError
@@ -48,6 +48,6 @@ export function ReceiveCryptoModal() {
           <ChooseProvider setErrorProvider={setErrorProvider} setConnectedProvider={setConnectedProvider} />
         )}
       </ContentWrapper>
-    </AdaptiveWebModalSheet>
+    </AdaptiveWebModal>
   )
 }

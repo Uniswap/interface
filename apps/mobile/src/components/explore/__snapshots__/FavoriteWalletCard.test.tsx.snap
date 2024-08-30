@@ -214,6 +214,7 @@ exports[`FavoriteWalletCard renders without error 1`] = `
               <Text
                 adjustsFontSizeToFit={true}
                 allowFontScaling={true}
+                ellipsizeMode="tail"
                 maxFontSizeMultiplier={1.4}
                 numberOfLines={1}
                 style={
@@ -223,6 +224,7 @@ exports[`FavoriteWalletCard renders without error 1`] = `
                     "fontFamily": "Basel-Book",
                     "fontSize": 19,
                     "lineHeight": 24,
+                    "overflow": "hidden",
                   }
                 }
                 suppressHighlighting={true}

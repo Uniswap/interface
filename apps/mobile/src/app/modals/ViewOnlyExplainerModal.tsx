@@ -5,7 +5,7 @@ import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { Button, Flex, Text, useIsDarkMode } from 'ui/src'
 import ViewOnlyWalletDark from 'ui/src/assets/graphics/view-only-wallet-dark.svg'
 import ViewOnlyWalletLight from 'ui/src/assets/graphics/view-only-wallet-light.svg'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -39,7 +39,7 @@ export function ViewOnlyExplainerModal(): JSX.Element {
   const WalletImage = isDarkMode ? ViewOnlyWalletDark : ViewOnlyWalletLight
 
   return (
-    <BottomSheetModal name={ModalName.ViewOnlyExplainer} onClose={onClose}>
+    <Modal name={ModalName.ViewOnlyExplainer} onClose={onClose}>
       <Flex gap="$spacing12" pb="$spacing24" pt="$spacing12" px="$spacing24">
         <Flex gap="$spacing16" pb="$spacing16">
           <Flex style={{ aspectRatio: WALLET_IMAGE_ASPECT_RATIO }}>
@@ -69,6 +69,6 @@ export function ViewOnlyExplainerModal(): JSX.Element {
           </Button>
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

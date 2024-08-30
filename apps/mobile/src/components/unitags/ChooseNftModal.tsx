@@ -1,7 +1,7 @@
 import { NftView } from 'src/components/NFT/NftView'
 import { useDeviceInsets, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { NFTItem } from 'wallet/src/features/nfts/types'
@@ -25,9 +25,9 @@ export const ChooseNftModal = ({ address, setPhotoUri, onClose }: ChooseNftProps
   }
 
   return (
-    <BottomSheetModal
+    <Modal
       overrideInnerContainer
-      backgroundColor={colors.surface1.get()}
+      backgroundColor={colors.surface1.val}
       hideHandlebar={false}
       isDismissible={true}
       name={ModalName.NftCollection}
@@ -43,6 +43,6 @@ export const ChooseNftModal = ({ address, setPhotoUri, onClose }: ChooseNftProps
         owner={address}
         renderNFTItem={renderNFT}
       />
-    </BottomSheetModal>
+    </Modal>
   )
 }

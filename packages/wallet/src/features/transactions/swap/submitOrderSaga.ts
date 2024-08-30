@@ -2,20 +2,21 @@ import axios from 'axios'
 import { call, put, take } from 'typed-redux-saga'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TRADING_API_HEADERS } from 'uniswap/src/data/tradingApi/client'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WalletChainId } from 'uniswap/src/types/chains'
-import { logger } from 'utilities/src/logger/logger'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { finalizeTransaction, transactionActions } from 'wallet/src/features/transactions/slice'
-import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
-import { TRADING_API_HEADERS } from 'wallet/src/features/transactions/swap/trade/api/client'
+import { finalizeTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
 import {
   QueuedOrderStatus,
+  TransactionOriginType,
   TransactionStatus,
   TransactionTypeInfo,
   UniswapXOrderDetails,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { WalletChainId } from 'uniswap/src/types/chains'
+import { logger } from 'utilities/src/logger/logger'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
@@ -58,6 +59,7 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
     addedTime: Date.now(),
     status: TransactionStatus.Pending,
     queueStatus: QueuedOrderStatus.Waiting,
+    transactionOriginType: TransactionOriginType.Internal,
   } satisfies UniswapXOrderDetails
 
   yield* put(transactionActions.addTransaction(order))

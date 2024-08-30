@@ -98,6 +98,10 @@ describe('SwapAndLimitContext', () => {
   })
 
   describe('SwapForm', () => {
+    beforeEach(() => {
+      window.history.pushState({}, '', '/swap')
+    })
+
     test('multichain ux disabled', () => {
       render(
         <SwapAndLimitContextProvider initialChainId={UniverseChainId.Optimism}>

@@ -1,3 +1,4 @@
+import type { ImageRequireSource } from 'react-native'
 import { FlexProps } from 'ui/src/components/layout/Flex'
 
 export interface UniversalImageStyle {
@@ -31,12 +32,13 @@ export type UniversalImageSize = SharedImageSizeProps & {
 // Top level props
 
 export interface UniversalImageProps {
-  uri?: string
+  uri?: string | ImageRequireSource
   size: UniversalImageSize
   fallback?: JSX.Element
   style?: UniversalImageStyleProps
   fastImage?: boolean
   testID?: string
+  allowLocalUri?: boolean
 }
 
 export interface PlainImageProps {

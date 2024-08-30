@@ -4,7 +4,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { TokenFiatOnRampList } from 'src/components/TokenSelector/TokenFiatOnRampList'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -31,13 +31,13 @@ export function FiatOnRampTokenSelectorModal({
   const colors = useSporeColors()
 
   return (
-    <BottomSheetModal
+    <Modal
       extendOnKeyboardVisible
       fullScreen
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
       renderBehindBottomInset
-      backgroundColor={colors.surface1.get()}
+      backgroundColor={colors.surface1.val}
       name={ModalName.FiatOnRampCountryList}
       snapPoints={FOR_MODAL_SNAP_POINTS}
       onClose={onClose}
@@ -58,6 +58,6 @@ export function FiatOnRampTokenSelectorModal({
           </AnimatedFlex>
         </Flex>
       </Trace>
-    </BottomSheetModal>
+    </Modal>
   )
 }

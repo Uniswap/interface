@@ -1,7 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { formSwapNotificationTitle } from 'wallet/src/features/notifications/utils'
-import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { mockLocalizedFormatter } from 'wallet/src/test/mocks'
 
 describe(formSwapNotificationTitle, () => {

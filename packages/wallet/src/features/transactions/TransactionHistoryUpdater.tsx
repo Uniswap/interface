@@ -11,6 +11,8 @@ import {
   useTransactionListLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { shouldSuppressNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
@@ -23,8 +25,7 @@ import {
 import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'wallet/src/features/notifications/types'
 import { parseDataResponseToTransactionDetails } from 'wallet/src/features/transactions/history/utils'
 import { useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
-import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
-import { useAccounts, useActiveAccountAddress, useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
+import { useAccounts, useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export const GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE = [
@@ -105,7 +106,7 @@ function AddressTransactionHistoryUpdater({
 
   const fetchAndDispatchReceiveNotification = useFetchAndDispatchReceiveNotification()
 
-  // dont show notifications on spam tokens if setting enabled
+  // don't show notifications on spam tokens if setting enabled
   const hideSpamTokens = useHideSpamTokensSetting()
 
   const localTransactions = useSelectAddressTransactions(address)

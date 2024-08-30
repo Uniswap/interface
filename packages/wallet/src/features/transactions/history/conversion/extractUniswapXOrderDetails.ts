@@ -5,17 +5,18 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { deriveCurrencyAmountFromAssetResponse } from 'wallet/src/features/transactions/history/utils'
 import {
   ConfirmedSwapTransactionInfo,
   TransactionDetails,
   TransactionDetailsType,
   TransactionListQueryResponse,
+  TransactionOriginType,
   TransactionStatus,
   TransactionType,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { deriveCurrencyAmountFromAssetResponse } from 'wallet/src/features/transactions/history/utils'
 
 export function extractUniswapXOrderDetails(transaction: TransactionListQueryResponse): TransactionDetails | null {
   if (transaction?.details.__typename !== TransactionDetailsType.UniswapXOrder) {
@@ -39,6 +40,7 @@ export function extractUniswapXOrderDetails(transaction: TransactionListQueryRes
     from: transaction.details.offerer, // This transaction is not on-chain, so use the offerer address as the from address
     orderHash: transaction.details.hash,
     typeInfo,
+    transactionOriginType: TransactionOriginType.Internal,
   }
 }
 

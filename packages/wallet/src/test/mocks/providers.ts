@@ -5,10 +5,10 @@ import { Erc20 } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { DAI } from 'uniswap/src/constants/tokens'
+import { ethersTransactionReceipt } from 'uniswap/src/test/fixtures'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { ContractManager } from 'wallet/src/features/contracts/ContractManager'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
-import { ethersTransactionReceipt } from 'wallet/src/test/fixtures'
 
 export const signerManager = new SignerManager()
 

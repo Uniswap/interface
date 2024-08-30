@@ -11,12 +11,14 @@ import { UnitagName } from 'src/features/unitags/UnitagName'
 import { Button, Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
 import { Pen } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
+import { useENSName } from 'uniswap/src/features/ens/api'
+import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
+import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
-import { useENSName } from 'wallet/src/features/ens/api'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useClaimUnitag } from 'wallet/src/features/unitags/hooks'
 
@@ -68,10 +70,16 @@ export function ChooseProfilePictureScreen({
 
   const onPressContinue = async (): Promise<void> => {
     if (entryPoint === OnboardingScreens.Landing) {
+      const onboardingExperimentEnabled = getExperimentValue(
+        Experiments.OnboardingRedesignRecoveryBackup,
+        OnboardingRedesignRecoveryBackupProperties.Enabled,
+        false,
+      )
+
       addUnitagClaim({ address, username: unitag, avatarUri: imageUri })
       // Handle case navigating from onboarding
       navigate(MobileScreens.OnboardingStack, {
-        screen: OnboardingScreens.WelcomeWallet,
+        screen: onboardingExperimentEnabled ? OnboardingScreens.Notifications : OnboardingScreens.WelcomeWallet,
         params: {
           importType: ImportType.CreateNew,
           entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,

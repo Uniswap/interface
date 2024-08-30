@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { SlippageWarningContent } from 'wallet/src/features/transactions/swap/SlippageWarningContent'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 
 interface MaxSlippageRowProps {
   acceptedDerivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>

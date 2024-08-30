@@ -20,7 +20,7 @@ function clientToSigner(client?: Client<Transport, UniverseChainInfo, Account>) 
 }
 
 /** Hook to convert a Viem Client to an ethers.js Signer. */
-export function useEthersSigner({ chainId }: { chainId?: number } = {}) {
-  const { data: client } = useConnectorClient({ chainId })
+export function useEthersSigner() {
+  const { data: client } = useConnectorClient()
   return useMemo(() => clientToSigner(client), [client])
 }

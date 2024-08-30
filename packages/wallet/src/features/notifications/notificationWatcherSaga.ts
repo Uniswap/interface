@@ -1,13 +1,13 @@
 import { put, takeLatest } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
+import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
-import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
-import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 
 export function* notificationWatcher() {
   yield* takeLatest(finalizeTransaction.type, pushTransactionNotification)

@@ -1,9 +1,7 @@
 import { UNI_ADDRESSES } from '@uniswap/sdk-core'
-import { Field } from 'components/swap/constants'
 import { MATIC_POLYGON, UNI } from 'constants/tokens'
 import { parse } from 'qs'
 import { queryParametersToCurrencyState, useInitialCurrencyState } from 'state/swap/hooks'
-import { queryParametersToSwapState } from 'state/swap/types'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { renderHook, waitFor } from 'test-utils/render'
@@ -62,35 +60,28 @@ describe('hooks', () => {
     test('output ETH only', () => {
       expect(
         queryParametersToCurrencyState(
-          parse('?outputCurrency=eth&exactAmount=20.5', { parseArrays: false, ignoreQueryPrefix: true }),
+          parse('?outputCurrency=eth&value=20.5', { parseArrays: false, ignoreQueryPrefix: true }),
         ),
       ).toEqual({
         outputCurrencyId: 'ETH',
         inputCurrencyId: undefined,
+        value: '20.5',
+        field: undefined,
+        chainId: undefined,
       })
     })
 
     test('output ETH only, lowercase', () => {
       expect(
         queryParametersToCurrencyState(
-          parse('?outputcurrency=eth&exactAmount=20.5', { parseArrays: false, ignoreQueryPrefix: true }),
+          parse('?outputcurrency=eth&value=20.5', { parseArrays: false, ignoreQueryPrefix: true }),
         ),
       ).toEqual({
         outputCurrencyId: 'ETH',
         inputCurrencyId: undefined,
-      })
-    })
-  })
-
-  describe('#queryParametersToSwapState', () => {
-    test('currency amounts', () => {
-      expect(
-        queryParametersToSwapState(
-          parse('?exactAmount=20.5&exactField=output', { parseArrays: false, ignoreQueryPrefix: true }),
-        ),
-      ).toEqual({
-        typedValue: '20.5',
-        independentField: Field.OUTPUT,
+        value: '20.5',
+        field: undefined,
+        chainId: undefined,
       })
     })
   })
@@ -139,6 +130,32 @@ describe('hooks', () => {
         waitFor(() => {
           expect(initialInputCurrency?.isNative).toEqual(true)
           expect(initialOutputCurrency?.symbol).toEqual('UNI')
+          expect(initialChainId).toEqual(10)
+        })
+      })
+
+      test('optimism input ETH, output UNI, input value, field output', () => {
+        jest.mock('hooks/useParsedQueryString', () => ({
+          useParsedQueryString: () => ({
+            inputCurrency: 'ETH',
+            outputCurrency: UNI_ADDRESSES[UniverseChainId.Optimism],
+            chainId: 10,
+            value: '200',
+            field: 'OUTPUT',
+          }),
+        }))
+
+        const {
+          result: {
+            current: { initialInputCurrency, initialOutputCurrency, initialTypedValue, initialField, initialChainId },
+          },
+        } = renderHook(() => useInitialCurrencyState())
+
+        waitFor(() => {
+          expect(initialInputCurrency?.isNative).toEqual(true)
+          expect(initialOutputCurrency?.symbol).toEqual('UNI')
+          expect(initialTypedValue).toEqual('200')
+          expect(initialField).toEqual('OUTPUT')
           expect(initialChainId).toEqual(10)
         })
       })

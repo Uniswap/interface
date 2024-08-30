@@ -4,14 +4,14 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, FlexLoader, Separator, Skeleton, Text, isWeb, useHapticFeedback } from 'ui/src'
 import { SlashCircle } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
+import { AuthTrigger } from 'uniswap/src/features/auth/types'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { AuthTrigger } from 'wallet/src/features/auth/types'
 import { useCancelationGasFeeInfo, useUSDValue } from 'wallet/src/features/gas/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSelectTransaction } from 'wallet/src/features/transactions/hooks'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
-import { TransactionDetails, TransactionStatus } from 'wallet/src/features/transactions/types'
 
 export function CancelConfirmationView({
   authTrigger,

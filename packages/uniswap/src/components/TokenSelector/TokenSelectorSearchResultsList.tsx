@@ -34,10 +34,13 @@ function _TokenSelectorSearchResultsList({
   onSelectCurrency: parentOnSelectCurrency,
   activeAccountAddress,
   chainFilter,
+  parsedChainFilter,
   searchFilter,
   debouncedSearchFilter,
+  debouncedParsedSearchFilter,
   isBalancesOnlySearch,
   valueModifiers,
+  isKeyboardOpen,
   onDismiss,
   addToSearchHistoryCallback,
   formatNumberOrStringCallback,
@@ -46,18 +49,21 @@ function _TokenSelectorSearchResultsList({
   useTokenWarningDismissedHook,
 }: {
   onSelectCurrency: OnSelectCurrency
-  activeAccountAddress: string
+  activeAccountAddress?: string
   chainFilter: UniverseChainId | null
+  parsedChainFilter: UniverseChainId | null
   searchFilter: string
   debouncedSearchFilter: string | null
+  debouncedParsedSearchFilter: string | null
   isBalancesOnlySearch: boolean
   valueModifiers?: PortfolioValueModifier[]
+  isKeyboardOpen?: boolean
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
   addToSearchHistoryCallback: (currencyInfo: CurrencyInfo) => void
   onDismiss: () => void
   useTokenSectionsForSearchResultsHook: (
-    address: string,
+    address: string | undefined,
     chainFilter: UniverseChainId | null,
     searchFilter: string | null,
     isBalancesOnlySearch: boolean,
@@ -76,8 +82,8 @@ function _TokenSelectorSearchResultsList({
     refetch,
   } = useTokenSectionsForSearchResultsHook(
     activeAccountAddress,
-    chainFilter,
-    debouncedSearchFilter,
+    chainFilter ?? parsedChainFilter,
+    debouncedParsedSearchFilter ?? debouncedSearchFilter,
     isBalancesOnlySearch,
     valueModifiers,
   )
@@ -102,6 +108,7 @@ function _TokenSelectorSearchResultsList({
       errorText={t('token.selector.search.error')}
       formatNumberOrStringCallback={formatNumberOrStringCallback}
       hasError={Boolean(error)}
+      isKeyboardOpen={isKeyboardOpen}
       loading={userIsTyping || loading}
       refetch={refetch}
       sections={sections}

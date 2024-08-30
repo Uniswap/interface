@@ -6,17 +6,7 @@ import { useCallback, useEffect } from 'react'
 import { Directions, FlingGestureHandler, FlingGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
-import {
-  Flex,
-  Text,
-  TouchableArea,
-  isWeb,
-  mediumShadowPropsDark,
-  mediumShadowPropsLight,
-  styled,
-  useDeviceInsets,
-  useIsDarkMode,
-} from 'ui/src'
+import { Flex, Text, TouchableArea, isWeb, styled, useDeviceInsets, useShadowPropsMedium } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -85,7 +75,7 @@ export function NotificationToast({
   address,
   smallToast,
 }: NotificationToastProps): JSX.Element {
-  const isDarkMode = useIsDarkMode()
+  const shadowProps = useShadowPropsMedium()
   const dispatch = useDispatch()
   const notifications = useSelector(selectActiveAccountNotifications)
   const currentNotification = notifications?.[0]
@@ -156,7 +146,7 @@ export function NotificationToast({
 
   const notificationContent = (
     <Flex
-      {...(isDarkMode ? mediumShadowPropsDark : mediumShadowPropsLight)}
+      {...shadowProps}
       borderColor="$surface3"
       borderRadius={smallToast ? SMALL_TOAST_RADIUS : LARGE_TOAST_RADIUS}
       borderWidth={TOAST_BORDER_WIDTH}

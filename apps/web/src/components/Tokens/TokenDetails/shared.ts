@@ -1,48 +1,47 @@
-import styled, { css } from 'lib/styled-components'
+import deprecatedStyled from 'lib/styled-components'
 import { darken } from 'polished'
-import { ClickableStyle } from 'theme/components'
-import { opacify } from 'theme/utils'
+import { TamaguiClickableStyle } from 'theme/components'
+import { FlexProps, TextProps } from 'ui/src'
 
-export const ActionButtonStyle = css`
-  display: flex;
-  align-items: center;
-  justify-content: flex-start;
-  padding: 8px 12px;
-  border-radius: 20px;
-  border: none;
-  background-color: ${({ theme }) => theme.surface2};
-  width: max-content;
-  ${ClickableStyle}
+export const ActionButtonStyle = {
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'flex-start',
+  py: '$spacing8',
+  px: '$spacing12',
+  borderRadius: 20,
+  borderWidth: 0,
+  backgroundColor: '$surface2',
+  width: 'maxContent',
+  ...TamaguiClickableStyle,
 
-  // Override FilterButton background-color
-  :hover {
-    background-color: ${({ theme }) => opacify(12, theme.neutral1)};
-  }
-  :focus {
-    background-color: ${({ theme }) => opacify(12, theme.neutral1)};
-  }
-`
+  hoverStyle: {
+    backgroundColor: '$surface2Hovered',
+  },
+  focusStyle: {
+    backgroundColor: '$surface1Hovered',
+  },
+} satisfies TextProps
 
-export const ActionMenuFlyoutStyle = css`
-  width: 200px;
-  top: 40px;
-  right: 0px;
-  overflow: auto;
-`
+export const ActionMenuFlyoutStyle = {
+  width: 200,
+  top: 'calc(100% + 8px)',
+  right: 0,
+} satisfies FlexProps
 
-export const Hr = styled.hr`
+export const Hr = deprecatedStyled.hr`
   background-color: ${({ theme }) => theme.surface3};
   border: none;
   height: 0.5px;
 `
 
-export const NoInfoAvailable = styled.p`
+export const NoInfoAvailable = deprecatedStyled.p`
   color: ${({ theme }) => theme.neutral3};
   font-weight: 485;
   font-size: 16px;
 `
 
-export const TruncateDescriptionButton = styled.div`
+export const TruncateDescriptionButton = deprecatedStyled.div`
   color: ${({ theme }) => theme.neutral2};
   font-weight: 485;
   font-size: 0.85em;

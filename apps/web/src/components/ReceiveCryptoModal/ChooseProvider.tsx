@@ -17,7 +17,8 @@ import {
   Text,
   TouchableArea,
 } from 'ui/src'
-import { CopySheets, QrCode } from 'ui/src/components/icons'
+import { CopySheets } from 'ui/src/components/icons/CopySheets'
+import { QrCode } from 'ui/src/components/icons/QrCode'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FORServiceProvider } from 'uniswap/src/features/fiatOnRamp/types'

@@ -40,6 +40,8 @@ import {
 } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -51,12 +53,7 @@ import { selectHapticsEnabled, setHapticsUserSettingEnabled } from 'wallet/src/f
 import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
-import {
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
-  useSignerAccounts,
-} from 'wallet/src/features/wallet/hooks'
-import { setHideSmallBalances, setHideSpamTokens } from 'wallet/src/features/wallet/slice'
+import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()

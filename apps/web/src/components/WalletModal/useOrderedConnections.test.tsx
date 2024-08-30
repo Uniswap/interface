@@ -39,7 +39,7 @@ const DEFAULT_CONNECTORS = [
 
 describe('useOrderedConnections', () => {
   beforeEach(() => {
-    UserAgentMock.isMobile = false
+    UserAgentMock.isMobileWeb = false
     mocked(useConnect).mockReturnValue({
       connectors: DEFAULT_CONNECTORS,
     } as unknown as ReturnType<typeof useConnect>)
@@ -88,14 +88,14 @@ describe('useOrderedConnections', () => {
   })
 
   it('should return only injected connectors for in-wallet browsers', () => {
-    UserAgentMock.isMobile = true
+    UserAgentMock.isMobileWeb = true
     const { result } = renderHook(() => useOrderedConnections())
     expect(result.current.length).toEqual(1)
     expect(result.current[0].id).toEqual(CONNECTION.METAMASK_RDNS)
   })
 
   it('should return only the Coinbase injected connector in the Coinbase Wallet', async () => {
-    UserAgentMock.isMobile = true
+    UserAgentMock.isMobileWeb = true
     mocked(useConnect).mockReturnValue({
       connectors: [
         UNISWAP_MOBILE_CONNECTOR,
@@ -147,7 +147,7 @@ describe('useOrderedConnections', () => {
   })
 
   it('should include only the fallback injected provider when no eip6963 injectors are present on mobile', async () => {
-    UserAgentMock.isMobile = true
+    UserAgentMock.isMobileWeb = true
     window.ethereum = true as any
     mocked(useConnect).mockReturnValue({
       connectors: [UNISWAP_MOBILE_CONNECTOR, INJECTED_CONNECTOR, WALLET_CONNECT_CONNECTOR, COINBASE_SDK_CONNECTOR],

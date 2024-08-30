@@ -1,9 +1,11 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React from 'react'
+import { navigate } from 'src/app/navigation/rootNavigation'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { CloudBackupProcessingAnimation } from 'src/features/CloudBackup/CloudBackupProcessingAnimation'
-import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 
 type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupCloudProcessing>
 
@@ -15,11 +17,15 @@ export function CloudBackupProcessingScreen({
   },
 }: Props): JSX.Element | null {
   const onBackupComplete = (): void => {
-    navigation.navigate({
-      name: OnboardingScreens.Notifications,
-      params: { importType, entryPoint },
-      merge: true,
-    })
+    if (entryPoint === OnboardingEntryPoint.BackupCard) {
+      navigate(MobileScreens.Home)
+    } else {
+      navigation.navigate({
+        name: OnboardingScreens.Notifications,
+        params: { importType, entryPoint },
+        merge: true,
+      })
+    }
   }
 
   const onErrorPress = (): void => {

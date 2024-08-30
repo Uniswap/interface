@@ -29,6 +29,14 @@ import {
   isInvalidRequestAmountTooHigh,
   isInvalidRequestAmountTooLow,
 } from 'uniswap/src/features/fiatOnRamp/utils'
+import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { addTransaction } from 'uniswap/src/features/transactions/slice'
+import {
+  TransactionDetails,
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -36,16 +44,8 @@ import { useDebounce } from 'utilities/src/time/timing'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { useAppFiatCurrencyInfo, useFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { addTransaction } from 'wallet/src/features/transactions/slice'
-import {
-  FiatPurchaseTransactionInfo,
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
-import { ValueType } from 'wallet/src/utils/getCurrencyAmount'
 
 const SHORT_DELAY = 500
 
@@ -67,7 +67,6 @@ export function useFiatOnRampTransactionCreator(
   ownerAddress: string,
   chainId: WalletChainId,
   serviceProvider?: string,
-  initialTypeInfo?: Partial<FiatPurchaseTransactionInfo>,
 ): {
   externalTransactionId: string
   dispatchAddTransaction: () => void
@@ -77,26 +76,25 @@ export function useFiatOnRampTransactionCreator(
   const externalTransactionId = useRef(createOnRampTransactionId(serviceProvider))
 
   const dispatchAddTransaction = useCallback(() => {
-    // adds a dummy transaction detail for now
-    // later, we will attempt to look up information for that id
+    // Adds a LocalOnRampTransaction to track the transaction
+    // Later we will query the transaction details for that id
     const transactionDetail: TransactionDetails = {
       routing: Routing.CLASSIC,
       chainId,
       id: externalTransactionId.current,
       from: ownerAddress,
       typeInfo: {
-        ...initialTypeInfo,
-        type: TransactionType.FiatPurchase,
-        syncedWithBackend: false,
+        type: TransactionType.LocalOnRamp,
       },
       status: TransactionStatus.Pending,
       addedTime: Date.now(),
       hash: '',
       options: { request: {} },
+      transactionOriginType: TransactionOriginType.Internal,
     }
     // use addTransaction action so transactionWatcher picks it up
     dispatch(addTransaction(transactionDetail))
-  }, [initialTypeInfo, chainId, ownerAddress, dispatch])
+  }, [chainId, ownerAddress, dispatch])
 
   return { externalTransactionId: externalTransactionId.current, dispatchAddTransaction }
 }

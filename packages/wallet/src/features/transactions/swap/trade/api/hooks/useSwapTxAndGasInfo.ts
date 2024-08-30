@@ -2,13 +2,13 @@ import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
-import { GasFeeResult } from 'wallet/src/features/gas/types'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { ApprovalAction, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { useTokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/api/hooks/useTokenApprovalInfo'
 import { useTransactionRequestInfo } from 'wallet/src/features/transactions/swap/trade/api/hooks/useTransactionRequestInfo'
-import { ApprovalAction, ClassicTrade, UniswapXTrade } from 'wallet/src/features/transactions/swap/trade/types'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { sumGasFees } from 'wallet/src/features/transactions/swap/utils'
 
 export type SwapTxAndGasInfo = ClassicSwapTxAndGasInfo | UniswapXSwapTxAndGasInfo
@@ -55,7 +55,7 @@ export function useSwapTxAndGasInfo({
   account,
 }: {
   derivedSwapInfo: DerivedSwapInfo
-  account: AccountMeta
+  account?: AccountMeta
 }): SwapTxAndGasInfo {
   const {
     chainId,
@@ -81,14 +81,14 @@ export function useSwapTxAndGasInfo({
     tokenApprovalInfo,
   })
 
-  const approvalError = tokenApprovalInfo?.action === ApprovalAction.Unknown
-  const gasFeeError = swapTxInfo.gasFeeResult.error || approvalError
-
   // For UniswapX, do not expect a swap gas fee unless a wrap is involved
   const isWraplessUniswapXTrade = trade && isUniswapX(trade) && !trade.needsWrap
   const areValuesReady = tokenApprovalInfo && (isWraplessUniswapXTrade || swapTxInfo.gasFeeResult.value !== undefined)
 
   return useMemo(() => {
+    const approvalError = tokenApprovalInfo?.action === ApprovalAction.Unknown
+    const gasFeeError = swapTxInfo.gasFeeResult.error ?? approvalError ? new Error('Approval action unknown') : null
+
     // Do not populate gas fee:
     //   - If errors exist on swap or approval requests.
     //   - If we don't have both the approval and transaction gas fees.
@@ -99,7 +99,7 @@ export function useSwapTxAndGasInfo({
 
     const gasFee = {
       value: isGasless ? '0' : totalGasFee,
-      loading: !tokenApprovalInfo || swapTxInfo.gasFeeResult.loading,
+      isLoading: !tokenApprovalInfo || swapTxInfo.gasFeeResult.isLoading,
       error: gasFeeError,
     }
 
@@ -136,15 +136,14 @@ export function useSwapTxAndGasInfo({
       }
     }
   }, [
-    isWraplessUniswapXTrade,
-    gasFeeError,
-    areValuesReady,
     tokenApprovalInfo,
+    swapTxInfo.gasFeeResult.error,
     swapTxInfo.gasFeeResult.value,
-    swapTxInfo.gasFeeResult.loading,
+    swapTxInfo.gasFeeResult.isLoading,
     swapTxInfo.permitSignature,
     swapTxInfo.transactionRequest,
+    areValuesReady,
+    isWraplessUniswapXTrade,
     trade,
-    approvalError,
   ])
 }

@@ -1,3 +1,5 @@
+import 'test-utils/tokens/mocks'
+
 import userEvent from '@testing-library/user-event'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { PoolsDetailsChartType } from 'components/Pools/PoolDetails/ChartSection'

@@ -1,4 +1,4 @@
-import { TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps } from '@tamagui/core'
+import { TamaguiProvider as OGTamaguiProvider, TamaguiProviderProps } from 'tamagui'
 import config from 'tamagui.config'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 

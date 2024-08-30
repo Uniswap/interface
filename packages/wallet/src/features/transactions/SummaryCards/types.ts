@@ -1,7 +1,7 @@
-import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
+import { AuthTrigger } from 'uniswap/src/features/auth/types'
+import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { WalletChainId } from 'uniswap/src/types/chains'
-import { AuthTrigger } from 'wallet/src/features/auth/types'
-import { TransactionDetails } from 'wallet/src/features/transactions/types'
 
 export interface TransactionSummaryLayoutProps {
   authTrigger?: AuthTrigger

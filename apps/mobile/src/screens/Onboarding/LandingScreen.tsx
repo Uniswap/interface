@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
@@ -66,62 +67,68 @@ export function LandingScreen({ navigation }: Props): JSX.Element {
   useTimeout(hideSplashScreen, 1)
 
   return (
-    <Screen backgroundColor="$surface1" edges={['bottom']}>
-      <Flex fill gap="$spacing8">
-        <Flex shrink height="100%" width="100%">
-          <LandingBackground navigationEventConsumer={navigation} />
-        </Flex>
-        <AnimatedFlex grow height="auto" style={actionButtonsStyle}>
-          <Flex grow $short={{ gap: '$spacing16' }} gap="$spacing24" mx="$spacing16">
-            <Trace logPress element={ElementName.CreateAccount}>
-              <Flex centered row>
+    <ReactNavigationPerformanceView screenName={OnboardingScreens.Landing}>
+      <Screen backgroundColor="$surface1" edges={['bottom']}>
+        <Flex fill gap="$spacing8">
+          <Flex shrink height="100%" width="100%">
+            <LandingBackground navigationEventConsumer={navigation} />
+          </Flex>
+          <AnimatedFlex grow height="auto" style={actionButtonsStyle}>
+            <Flex grow $short={{ gap: '$spacing16' }} gap="$spacing24" mx="$spacing16">
+              <Trace logPress element={ElementName.CreateAccount}>
+                <Flex centered row>
+                  <TouchableArea
+                    hapticFeedback
+                    alignItems="center"
+                    backgroundColor="$accent1"
+                    borderRadius="$rounded20"
+                    flexShrink={1}
+                    hitSlop={16}
+                    px="$spacing36"
+                    py="$spacing16"
+                    scaleTo={0.97}
+                    shadowColor="$accent1"
+                    shadowOpacity={0.4}
+                    shadowRadius="$spacing8"
+                    testID={TestID.CreateAccount}
+                    onPress={onPressCreateWallet}
+                  >
+                    <Text color="$white" variant="buttonLabel2">
+                      {t('onboarding.landing.button.create')}
+                    </Text>
+                  </TouchableArea>
+                </Flex>
+              </Trace>
+              <Trace logPress element={ElementName.ImportAccount}>
                 <TouchableArea
                   hapticFeedback
                   alignItems="center"
-                  backgroundColor="$accent1"
-                  borderRadius="$rounded20"
-                  flexShrink={1}
                   hitSlop={16}
-                  px="$spacing36"
-                  py="$spacing16"
-                  scaleTo={0.97}
-                  shadowColor="$accent1"
-                  shadowOpacity={0.4}
-                  shadowRadius="$spacing8"
-                  testID={TestID.CreateAccount}
-                  onPress={onPressCreateWallet}
+                  testID={TestID.ImportAccount}
+                  onLongPress={async (): Promise<void> => {
+                    if (isDevEnv()) {
+                      await hapticFeedback.selection()
+                      dispatch(openModal({ name: ModalName.Experiments }))
+                    }
+                  }}
+                  onPress={onPressImportWallet}
                 >
-                  <Text color="$white" variant="buttonLabel2">
-                    {t('onboarding.landing.button.create')}
+                  <Text
+                    $short={{ variant: 'buttonLabel2', fontSize: '$medium' }}
+                    color="$accent1"
+                    variant="buttonLabel2"
+                  >
+                    {t('onboarding.landing.button.add')}
                   </Text>
                 </TouchableArea>
+              </Trace>
+              <Flex $short={{ py: '$none', mx: '$spacing12' }} mx="$spacing24" py="$spacing12">
+                <TermsOfService />
               </Flex>
-            </Trace>
-            <Trace logPress element={ElementName.ImportAccount}>
-              <TouchableArea
-                hapticFeedback
-                alignItems="center"
-                hitSlop={16}
-                testID={TestID.ImportAccount}
-                onLongPress={async (): Promise<void> => {
-                  if (isDevEnv()) {
-                    await hapticFeedback.selection()
-                    dispatch(openModal({ name: ModalName.Experiments }))
-                  }
-                }}
-                onPress={onPressImportWallet}
-              >
-                <Text $short={{ variant: 'buttonLabel2', fontSize: '$medium' }} color="$accent1" variant="buttonLabel2">
-                  {t('onboarding.landing.button.add')}
-                </Text>
-              </TouchableArea>
-            </Trace>
-            <Flex $short={{ py: '$none', mx: '$spacing12' }} mx="$spacing24" py="$spacing12">
-              <TermsOfService />
             </Flex>
-          </Flex>
-        </AnimatedFlex>
-      </Flex>
-    </Screen>
+          </AnimatedFlex>
+        </Flex>
+      </Screen>
+    </ReactNavigationPerformanceView>
   )
 }

@@ -1,18 +1,18 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { useCallback } from 'react'
+import { useProvider } from 'uniswap/src/contexts/UniswapContext'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { getWethContract } from 'wallet/src/features/transactions/swap/wrapSaga'
-import { WrapType } from 'wallet/src/features/transactions/types'
-import { useProvider } from 'wallet/src/features/wallet/context'
 
 export function useWrapTransactionRequest(
   derivedSwapInfo: DerivedSwapInfo,
-  account: AccountMeta,
+  account?: AccountMeta,
 ): providers.TransactionRequest | undefined {
   const { chainId, wrapType, currencyAmounts, trade } = derivedSwapInfo
   const provider = useProvider(chainId)
@@ -20,7 +20,7 @@ export function useWrapTransactionRequest(
 
   const transactionFetcher = useCallback(
     () =>
-      getWrapTransactionRequest(provider, isUniswapXWrap, chainId, account.address, wrapType, currencyAmounts.input),
+      getWrapTransactionRequest(provider, isUniswapXWrap, chainId, account?.address, wrapType, currencyAmounts.input),
     [provider, isUniswapXWrap, chainId, account, wrapType, currencyAmounts.input],
   )
 
@@ -28,14 +28,14 @@ export function useWrapTransactionRequest(
 }
 
 const getWrapTransactionRequest = async (
-  provider: providers.Provider | null,
+  provider: providers.Provider | undefined,
   isUniswapXWrap: boolean,
   chainId: WalletChainId,
-  address: Address,
+  address: Address | undefined,
   wrapType: WrapType,
   currencyAmountIn: Maybe<CurrencyAmount<Currency>>,
 ): Promise<providers.TransactionRequest | undefined> => {
-  if (!currencyAmountIn || !provider || (wrapType === WrapType.NotApplicable && !isUniswapXWrap)) {
+  if (!address || !currencyAmountIn || !provider || (wrapType === WrapType.NotApplicable && !isUniswapXWrap)) {
     return
   }
 

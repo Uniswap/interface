@@ -49,6 +49,7 @@ import { useWalletRestore } from 'src/features/wallet/hooks'
 import { removePendingSession } from 'src/features/walletConnect/walletConnectSlice'
 import { HomeScreenTabIndex } from 'src/screens/HomeScreenTabIndex'
 import { hideSplashScreen } from 'src/utils/splashScreen'
+import { useOpenBackupReminderModal } from 'src/utils/useOpenBackupReminderModal'
 import { Flex, Text, TouchableArea, useDeviceInsets, useHapticFeedback, useMedia, useSporeColors } from 'ui/src'
 import ReceiveIcon from 'ui/src/assets/icons/arrow-down-circle.svg'
 import BuyIcon from 'ui/src/assets/icons/buy.svg'
@@ -112,7 +113,6 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const { hapticFeedback } = useHapticFeedback()
 
   const hasSkippedUnitagPrompt = useSelector(selectHasSkippedUnitagPrompt)
-
   const showFeedTab = useFeatureFlag(FeatureFlags.FeedTab)
 
   const portfolioValueModifiers = usePortfolioValueModifiers(activeAccount.address) ?? []
@@ -144,7 +144,10 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   // Report balances at most every 24 hours, checking every 15 seconds when app is open
   useLastBalancesReporter()
 
-  const [tabIndex, setTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
+  const [routeTabIndex, setRouteTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
+  // Ensures that tabIndex has the proper value between the empty state and non-empty state
+  const tabIndex = showOnboardingRedesign ? 0 : routeTabIndex
+
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
   const tokensTitle = t('home.tokens.title')
   const nftsTitle = t('home.nfts.title')
@@ -181,7 +184,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       if (newTabIndex === undefined) {
         return
       }
-      setTabIndex(newTabIndex)
+      setRouteTabIndex(newTabIndex)
     },
     [props?.route.params?.tab],
   )
@@ -297,11 +300,11 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         if (showOnboardingRedesign) {
           exploreTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
         } else if (currentTabIndex.value === HomeScreenTabIndex.NFTs && isNftTabsAtTop.value) {
-          setTabIndex(HomeScreenTabIndex.Tokens)
+          setRouteTabIndex(HomeScreenTabIndex.Tokens)
         } else if (currentTabIndex.value === HomeScreenTabIndex.NFTs) {
           nftsTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
         } else if (currentTabIndex.value === HomeScreenTabIndex.Activity && isActivityTabAtTop.value) {
-          setTabIndex(HomeScreenTabIndex.NFTs)
+          setRouteTabIndex(HomeScreenTabIndex.NFTs)
         } else if (currentTabIndex.value === HomeScreenTabIndex.Activity) {
           activityTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
         } else {
@@ -341,9 +344,21 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const { sync } = useScrollSync(currentTabIndex, scrollPairs, headerConfig)
 
+  // Shows an info modal instead of FOR flow if country is listed behind this flag
+  const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
+
   const cexTransferProviders = useCexTransferProviders()
 
-  const onPressBuy = useCallback(() => dispatch(openModal({ name: ModalName.FiatOnRampAggregator })), [dispatch])
+  const onPressBuy = useCallback(
+    () =>
+      dispatch(
+        openModal({
+          name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator,
+        }),
+      ),
+    [dispatch, disableForKorea],
+  )
+
   const onPressScan = useCallback(() => {
     // in case we received a pending session from a previous scan after closing modal
     dispatch(removePendingSession())
@@ -408,8 +423,10 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const { canClaimUnitag } = useCanActiveAddressClaimUnitag()
 
-  const shouldPromptUnitag =
-    activeAccount.type === AccountType.SignerMnemonic && !hasSkippedUnitagPrompt && canClaimUnitag
+  // This hooks handles the logic for when to open the BackupReminderModal
+  useOpenBackupReminderModal(activeAccount)
+
+  const shouldPromptUnitag = isSignerAccount && !hasSkippedUnitagPrompt && canClaimUnitag
   const viewOnlyLabel = t('home.warning.viewOnly')
 
   const promoBanner = useMemo(() => {
@@ -727,7 +744,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
           renderScene={renderTab}
           renderTabBar={renderTabBar}
           screenName={MobileScreens.Home}
-          onIndexChange={setTabIndex}
+          onIndexChange={setRouteTabIndex}
         />
       </View>
       <NavBar />

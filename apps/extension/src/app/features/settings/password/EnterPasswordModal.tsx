@@ -3,11 +3,19 @@ import { useTranslation } from 'react-i18next'
 import { PasswordInput } from 'src/app/components/PasswordInput'
 import { Button, Flex, Square, Text, inputStyles, useSporeColors } from 'ui/src'
 import { Lock } from 'ui/src/components/icons'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
-export function EnterPasswordModal({ onNext, onClose }: { onNext: () => void; onClose: () => void }): JSX.Element {
+export function EnterPasswordModal({
+  isOpen,
+  onNext,
+  onClose,
+}: {
+  isOpen: boolean
+  onNext: () => void
+  onClose: () => void
+}): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
@@ -30,11 +38,12 @@ export function EnterPasswordModal({ onNext, onClose }: { onNext: () => void; on
   }
 
   return (
-    <BottomSheetModal
+    <Modal
       alignment="center"
-      backgroundColor={colors.surface1.get()}
+      backgroundColor={colors.surface1.val}
       hideHandlebar={true}
       isDismissible={true}
+      isModalOpen={isOpen}
       name={ModalName.EnterPassword}
       onClose={onClose}
     >
@@ -64,6 +73,6 @@ export function EnterPasswordModal({ onNext, onClose }: { onNext: () => void; on
           {t('common.button.continue')}
         </Button>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

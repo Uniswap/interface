@@ -5,6 +5,7 @@ import { useBiometricAppSettings, useDeviceSupportsBiometricAuth } from 'src/fea
 import { getAuthMethod } from 'src/features/telemetry/utils'
 import { getFullAppVersion } from 'src/utils/version'
 import { useIsDarkMode } from 'ui/src'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { isAndroid } from 'utilities/src/platform'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
@@ -17,8 +18,6 @@ import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {
   useActiveAccount,
-  useHideSmallBalancesSetting,
-  useHideSpamTokensSetting,
   useSignerAccounts,
   useSwapProtectionSetting,
   useViewOnlyAccounts,

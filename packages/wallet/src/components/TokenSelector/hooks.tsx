@@ -16,11 +16,11 @@ import { GqlResult } from 'uniswap/src/data/types'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
+import { addToSearchHistory, clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
+import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { selectFavoriteTokens } from 'wallet/src/features/favorites/selectors'
-import { addToSearchHistory, clearSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
-import { selectSearchHistory } from 'wallet/src/features/search/selectSearchHistory'
 import { usePopularTokens as usePopularWalletTokens } from 'wallet/src/features/tokens/hooks'
 
 export function useFavoriteCurrencies(): GqlResult<CurrencyInfo[]> {
@@ -72,7 +72,7 @@ export function useAddToSearchHistory(): { registerSearch: (currencyInfo: Curren
 }
 
 export function useFavoriteTokensOptions(
-  address: Address,
+  address: Address | undefined,
   chainFilter: UniverseChainId | null,
   valueModifiers?: PortfolioValueModifier[],
 ): GqlResult<TokenOption[] | undefined> {

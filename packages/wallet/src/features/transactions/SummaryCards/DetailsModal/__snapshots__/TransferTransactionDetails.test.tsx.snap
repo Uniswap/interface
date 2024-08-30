@@ -40,21 +40,6 @@ exports[`TransferTransactionDetails Component renders TransferTransactionDetails
       }
     }
   >
-    <Text
-      allowFontScaling={false}
-      maxFontSizeMultiplier={1.2}
-      style={
-        {
-          "color": "#222222",
-          "fontFamily": "Basel-Book",
-          "fontSize": 36,
-          "lineHeight": 44,
-        }
-      }
-      suppressHighlighting={true}
-    >
-      -
-    </Text>
     <View
       style={
         {
@@ -64,23 +49,7 @@ exports[`TransferTransactionDetails Component renders TransferTransactionDetails
           "justifyContent": "center",
         }
       }
-    >
-      <Text
-        allowFontScaling={false}
-        maxFontSizeMultiplier={1.4}
-        style={
-          {
-            "color": "#7D7D7D",
-            "fontFamily": "Basel-Book",
-            "fontSize": 16,
-            "lineHeight": 24,
-          }
-        }
-        suppressHighlighting={true}
-      >
-        -
-      </Text>
-    </View>
+    />
   </View>
 </View>
 `;

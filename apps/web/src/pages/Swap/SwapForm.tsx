@@ -25,6 +25,7 @@ import { ArrowContainer, ArrowWrapper, OutputSwapSection, SwapSection } from 'co
 import { useIsSupportedChainId, useSupportedChainId } from 'constants/chains'
 import { useCurrency, useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
+import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsSwapUnsupported } from 'hooks/useIsSwapUnsupported'
 //import { useMaxAmountIn } from 'hooks/useMaxAmountIn'
 import { /*usePermit2Allowance,*/ AllowanceState } from 'hooks/usePermit2Allowance'
@@ -47,19 +48,21 @@ import { useAppSelector } from 'state/hooks'
 import { useOperatedPools } from 'state/pool/hooks'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { isClassicTrade } from 'state/routing/utils'
-import { useSwapActionHandlers } from 'state/swap/hooks'
+import { serializeSwapStateToURLParameters, useSwapActionHandlers } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
+import { Text } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { Trans } from 'uniswap/src/i18n'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { WrapType } from 'uniswap/src/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { computeFiatValuePriceImpact } from 'utils/computeFiatValuePriceImpact'
@@ -222,7 +225,7 @@ export function SwapForm({
     execute: onWrap,
     inputError: wrapInputError,
   } = useWrapCallback(currencies[Field.INPUT], currencies[Field.OUTPUT], typedValue)
-  const showWrap: boolean = wrapType !== WrapType.NOT_APPLICABLE
+  const showWrap: boolean = wrapType !== WrapType.NotApplicable
 
   const parsedAmounts = useMemo(
     () =>
@@ -300,11 +303,30 @@ export function SwapForm({
 
   const navigate = useNavigate()
   const swapIsUnsupported = useIsSwapUnsupported(currencies[Field.INPUT], currencies[Field.OUTPUT])
+  const isLandingPage = useIsLandingPage()
+
+  const navigateToSwapWithParams = useCallback(() => {
+    const serializedSwapState = serializeSwapStateToURLParameters({
+      inputCurrency: currencyState.inputCurrency,
+      outputCurrency: currencyState.outputCurrency,
+      typedValue: swapState.typedValue,
+      independentField: swapState.independentField,
+      chainId: supportedChainId ?? UniverseChainId.Mainnet,
+    })
+    navigate('/swap' + serializedSwapState)
+  }, [
+    currencyState.inputCurrency,
+    currencyState.outputCurrency,
+    navigate,
+    supportedChainId,
+    swapState.independentField,
+    swapState.typedValue,
+  ])
 
   // reset if they close warning without tokens in params
   const handleDismissTokenWarning = useCallback(() => {
     setDismissTokenWarning(true)
-    navigate('/swap/')
+    navigate('/swap')
   }, [navigate])
 
   // modal and loading
@@ -555,7 +577,7 @@ export function SwapForm({
   }, [prevTrade, trade, trace, allowedSlippage, swapQuoteLatency, outputFeeFiatValue])
 
   const showDetailsDropdown = Boolean(
-    !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing),
+    !isLandingPage && !showWrap && userHasSpecifiedInputOutput && (trade || routeIsLoading || routeIsSyncing),
   )
 
   const inputCurrency = currencies[Field.INPUT] ?? undefined
@@ -735,7 +757,18 @@ export function SwapForm({
         </div>
 
         <div>
-          {swapIsUnsupported ? (
+          {isLandingPage ? (
+            <ButtonPrimary
+              $borderRadius="16px"
+              onClick={() => navigateToSwapWithParams()}
+              fontWeight={535}
+              data-testid="wrap-button"
+            >
+              <Text variant="buttonLabel1" color="neutralContrast">
+                <Trans i18nKey="common.getStarted" />
+              </Text>
+            </ButtonPrimary>
+          ) : swapIsUnsupported ? (
             <ButtonPrimary $borderRadius="16px" disabled={true}>
               <ThemedText.DeprecatedMain mb="4px">
                 <Trans i18nKey="common.unsupportedAsset_one" />
@@ -778,9 +811,9 @@ export function SwapForm({
             >
               {wrapInputError ? (
                 <WrapErrorText wrapInputError={wrapInputError} />
-              ) : wrapType === WrapType.WRAP ? (
+              ) : wrapType === WrapType.Wrap ? (
                 <Trans i18nKey="common.wrap.button" />
-              ) : wrapType === WrapType.UNWRAP ? (
+              ) : wrapType === WrapType.Unwrap ? (
                 <Trans i18nKey="common.unwrap.button" />
               ) : null}
             </ButtonPrimary>
@@ -800,7 +833,9 @@ export function SwapForm({
                 data-testid="swap-button"
                 disabled={isUsingBlockedExtension || !getIsReviewableQuote(trade, tradeState, swapInputError)}
               >
-                <Text fontSize={20}>{swapInputError ?? <Trans i18nKey="common.swap" />}</Text>
+                <Text fontSize={20} color="neutralContrast">
+                  {swapInputError ?? <Trans i18nKey="common.swap" />}
+                </Text>
               </ButtonError>
             </Trace>
           )}

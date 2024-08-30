@@ -122,4 +122,32 @@ export const v9Schema = {
   behaviorHistory: { ...v8Schema.behaviorHistory, hasViewedWelcomeWalletCard: false, hasUsedExplore: false },
 }
 
-export const getSchema = (): typeof v9Schema => v9Schema
+export const v10Schema = {
+  ...v9Schema,
+  wallet: {
+    ...v9Schema.wallet,
+    settings: {
+      swapProtection: v9Schema.wallet.settings.swapProtection,
+    },
+  },
+  userSettings: {
+    hideSmallBalances: v9Schema.wallet.settings.hideSmallBalances,
+    hideSpamTokens: v9Schema.wallet.settings.hideSpamTokens,
+  },
+}
+
+const v11SchemaIntermediate = {
+  ...v10Schema,
+  behaviorHistory: {
+    ...v10Schema.behaviorHistory,
+    hasViewedReviewScreen: undefined,
+    hasSubmittedHoldToSwap: undefined,
+  },
+}
+
+delete v11SchemaIntermediate.behaviorHistory.hasViewedReviewScreen
+delete v11SchemaIntermediate.behaviorHistory.hasSubmittedHoldToSwap
+
+export const v11Schema = v11SchemaIntermediate
+
+export const getSchema = (): typeof v11Schema => v11Schema

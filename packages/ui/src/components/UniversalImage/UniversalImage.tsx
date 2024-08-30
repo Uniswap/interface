@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { useEffect, useState } from 'react'
 import { ColorTokens, Image } from 'tamagui'
 import { FastImageWrapper } from 'ui/src/components/UniversalImage/internal/FastImageWrapper'
@@ -18,6 +19,7 @@ export function UniversalImage({
   fallback,
   fastImage = false,
   testID,
+  allowLocalUri = false,
 }: UniversalImageProps): JSX.Element | null {
   // Allow calculation of fields as needed
   const [width, setWidth] = useState(size.width)
@@ -30,6 +32,8 @@ export function UniversalImage({
   const hasHeightAndRatio = computedSize.height !== undefined && computedSize.aspectRatio !== undefined
   const sizeKnown = hasWidthAndHeight || hasHeightAndRatio
 
+  const isRequireSource = typeof uri === 'number'
+
   // Propagate prop updates to state
   useEffect(() => {
     setWidth(size.width)
@@ -39,7 +43,7 @@ export function UniversalImage({
   // Calculate width/height and check for an error in the image retrieval for fast images
   useEffect(() => {
     // If we know dimension or this isn't a fast image, skip calculating width/height
-    if (!uri || sizeKnown || !fastImage) {
+    if (!uri || sizeKnown || !fastImage || isRequireSource) {
       return
     }
 
@@ -52,7 +56,12 @@ export function UniversalImage({
       },
       () => setErrored(true),
     )
-  }, [width, height, sizeKnown, uri, fastImage])
+  }, [width, height, sizeKnown, uri, fastImage, isRequireSource])
+
+  // Handle local URI
+  if (isRequireSource) {
+    return <Image height={size.height} source={uri} width={size.width} />
+  }
 
   // Use the fallback if no URI at all
   if (!uri && fallback) {
@@ -68,7 +77,7 @@ export function UniversalImage({
   }
 
   // Get the sanitized url
-  const imageHttpUrl = uriToHttpUrls(uri)[0]
+  const imageHttpUrl = uriToHttpUrls(uri, { allowLocalUri })[0]
 
   // Log an error and show a fallback (or null) when the URI is bad or an error loading occurs
   if (!imageHttpUrl || errored) {

@@ -2,7 +2,7 @@ import { Placement } from '@popperjs/core'
 import { MouseoverTooltip } from 'components/Tooltip'
 import styled from 'lib/styled-components'
 import { ReactNode, useCallback, useState } from 'react'
-import { InfoCircleFilled } from 'ui/src/components/icons'
+import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 
 const QuestionWrapper = styled.div`
   display: flex;

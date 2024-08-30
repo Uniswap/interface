@@ -8,7 +8,6 @@ export enum WalletEventName {
   SendRecipientSelected = 'Send Recipient Selected',
   ShareButtonClicked = 'Share Button Clicked',
   SwapSubmitted = 'Swap Submitted to Provider',
-  TokenSelected = 'Token Selected',
   TokenVisibilityChanged = 'Token Visibility Changed',
   TransferCompleted = 'Transfer Completed',
   TransferSubmitted = 'Transfer Submitted',

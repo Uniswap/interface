@@ -5,14 +5,13 @@ import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
 import { Verified } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
-import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { NFTCollectionSearchResult, SearchResultType } from 'uniswap/src/features/search/SearchResult'
+import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
-import { NFTCollectionSearchResult } from 'wallet/src/features/search/SearchResult'
-import { addToSearchHistory } from 'wallet/src/features/search/searchHistorySlice'
 
 type NFTCollectionItemProps = {
   collection: NFTCollectionSearchResult

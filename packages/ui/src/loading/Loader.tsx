@@ -1,5 +1,5 @@
 import React, { memo, useMemo } from 'react'
-import { getToken } from 'tamagui'
+import { SpaceTokens, getToken } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { FlexLoader, FlexLoaderProps } from 'ui/src/loading/FlexLoader'
@@ -60,14 +60,16 @@ function Token({
   repeat = 1,
   contrast,
   withPrice,
+  gap = '$spacing4',
 }: {
   repeat?: number
   contrast?: boolean
   withPrice?: boolean
+  gap?: SpaceTokens
 }): JSX.Element {
   return (
     <Skeleton contrast={contrast}>
-      <Flex grow gap="$spacing4">
+      <Flex grow gap={gap}>
         {new Array(repeat).fill(null).map((_, i, { length }) => (
           <React.Fragment key={i}>
             <TokenLoader opacity={(length - i) / length} withPrice={withPrice} />

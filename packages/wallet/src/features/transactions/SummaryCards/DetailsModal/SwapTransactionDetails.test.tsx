@@ -30,7 +30,7 @@ const getCurrencyInfoForChain = (chainId: number): CurrencyInfo => {
   }
 }
 
-jest.mock('wallet/src/features/tokens/useCurrencyInfo', () => ({
+jest.mock('uniswap/src/features/tokens/useCurrencyInfo', () => ({
   useCurrencyInfo: (currencyIdString: string | undefined): Maybe<CurrencyInfo> => {
     if (!currencyIdString) {
       return null
@@ -47,6 +47,10 @@ jest.mock('wallet/src/features/tokens/useCurrencyInfo', () => ({
 jest.mock('uniswap/src/features/gating/hooks', () => ({
   useDynamicConfigValue: jest.fn().mockReturnValue(1000),
   useFeatureFlag: jest.fn().mockReturnValue(true),
+}))
+
+jest.mock('ui/src/loading/Skeleton', () => ({
+  Skeleton: (): JSX.Element => <></>,
 }))
 
 const preloadedState = preloadedWalletPackageState({ account: ACCOUNT })

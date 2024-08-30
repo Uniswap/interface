@@ -7,6 +7,7 @@ import {
   maybeLogFirstSwapAction,
 } from 'tracing/swapFlowLoggers'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 jest.mock('uniswap/src/features/telemetry/send', () => ({
   sendAnalyticsEvent: jest.fn(),
@@ -40,6 +41,7 @@ describe('swapFlowLoggers', () => {
     logSwapSuccess(mockHash, mockChainId, mockAnalyticsContext)
 
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
+      transactionOriginType: TransactionOriginType.Internal,
       routing: 'CLASSIC',
       time_to_swap: 100,
       time_to_swap_since_first_input: 100,
@@ -58,6 +60,7 @@ describe('swapFlowLoggers', () => {
     logUniswapXSwapSuccess(mockHash, mockOrderHash, mockChainId, mockAnalyticsContext)
 
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
+      transactionOriginType: TransactionOriginType.Internal,
       routing: 'DUTCH_V2',
       time_to_swap: 100,
       time_to_swap_since_first_input: 100,

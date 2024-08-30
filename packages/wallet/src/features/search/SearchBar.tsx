@@ -8,16 +8,17 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 interface SearchBarProps extends SearchTextInputProps {
   onBack?: () => void
+  hideBackButton?: boolean
 }
 
-// Use instead of SearchTextInput when you need back button functionality outside of nav stack (i.e., inside BottomSheetModals)
+// Use instead of SearchTextInput when you need back button functionality outside of nav stack (i.e., inside Modals)
 export const SearchBar = forwardRef<TextInput, SearchBarProps>(function _SearchBar(
-  { onBack, ...rest },
+  { onBack, hideBackButton, ...rest },
   ref,
 ): JSX.Element {
   return (
     <Flex centered row gap="$spacing12">
-      {onBack && (
+      {onBack && !hideBackButton && (
         <TouchableArea testID={TestID.Back} onPress={onBack}>
           <RotatableChevron color="$neutral2" height={iconSizes.icon24} width={iconSizes.icon24} />
         </TouchableArea>

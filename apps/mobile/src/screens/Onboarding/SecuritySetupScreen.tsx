@@ -95,9 +95,12 @@ export function SecuritySetupScreen({ route: { params } }: Props): JSX.Element {
 
   return (
     <>
-      {showWarningModal && (
-        <BiometricAuthWarningModal isTouchIdDevice={isTouchIdDevice} onClose={onCloseModal} onConfirm={onPressNext} />
-      )}
+      <BiometricAuthWarningModal
+        isOpen={showWarningModal}
+        isTouchIdDevice={isTouchIdDevice}
+        onClose={onCloseModal}
+        onConfirm={onPressNext}
+      />
       {isLoadingAccount && (
         <Flex centered mt="$spacing60" position="absolute" pt="$spacing36" width="100%" zIndex={100}>
           <ActivityIndicator color={colors.white.val} />

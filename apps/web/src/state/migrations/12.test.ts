@@ -11,7 +11,7 @@ import { migration6 } from 'state/migrations/6'
 import { migration7 } from 'state/migrations/7'
 import { migration8 } from 'state/migrations/8'
 import { migration9 } from 'state/migrations/9'
-import { TransactionState } from 'state/transactions/reducer'
+import { LocalWebTransactionState } from 'state/transactions/reducer'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 const oldTransactionState: OldTransactionState = {
@@ -69,7 +69,7 @@ const oldTransactionState: OldTransactionState = {
   },
 }
 
-const newTransactionState: TransactionState = {
+const newTransactionState: LocalWebTransactionState = {
   [1]: {
     ['0x0']: {
       status: TransactionStatus.Confirmed,

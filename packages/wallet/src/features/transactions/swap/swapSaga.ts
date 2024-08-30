@@ -3,6 +3,13 @@ import { call, select } from 'typed-redux-saga'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
+import {
+  ApproveTransactionInfo,
+  TransactionOriginType,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { RPCType } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
@@ -11,10 +18,8 @@ import { makeSelectAddressTransactions } from 'wallet/src/features/transactions/
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
-import { isClassic } from 'wallet/src/features/transactions/swap/trade/utils'
 import { tradeToTransactionInfo } from 'wallet/src/features/transactions/swap/utils'
 import { wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
-import { ApproveTransactionInfo, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
@@ -60,7 +65,16 @@ export function* approveAndSwap(params: SwapParams) {
       }
 
       const options = { request: approveTxRequest, submitViaPrivateRpc }
-      const sendTransactionParams = { chainId, account, options, typeInfo, analytics }
+
+      const sendTransactionParams = {
+        chainId,
+        account,
+        options,
+        typeInfo,
+        analytics,
+        transactionOriginType: TransactionOriginType.Internal,
+      }
+
       // TODO(WEB-4406) - Refactor the approval submission's rpc call latency to not delay wrap submission
       approveTxHash = (yield* call(sendTransaction, sendTransactionParams)).transactionResponse.hash
       nonce++
@@ -106,7 +120,15 @@ export function* approveAndSwap(params: SwapParams) {
       const { txRequest: swapTxRequest } = swapTxContext
       const request = { ...swapTxRequest, nonce }
       const options = { request, submitViaPrivateRpc }
-      const sendTransactionParams = { txId, chainId, account, options, typeInfo, analytics }
+      const sendTransactionParams = {
+        txId,
+        chainId,
+        account,
+        options,
+        typeInfo,
+        analytics,
+        transactionOriginType: TransactionOriginType.Internal,
+      }
       yield* call(sendTransaction, sendTransactionParams)
     }
   } catch (error) {
@@ -142,9 +164,9 @@ export function* getNonceForApproveAndSwap(address: Address, chainId: number, su
 export function* shouldSubmitViaPrivateRpc(chainId: number) {
   const swapProtectionSetting = yield* select(selectWalletSwapProtectionSetting)
   const swapProtectionOn = swapProtectionSetting === SwapProtectionSetting.On
-  const mevBlockerFeatureEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.MevBlocker))
+  const privateRpcFeatureEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
   const privateRpcSupportedOnChain = chainId ? isPrivateRpcSupportedOnChain(chainId) : false
-  return Boolean(swapProtectionOn && privateRpcSupportedOnChain && mevBlockerFeatureEnabled)
+  return Boolean(swapProtectionOn && privateRpcSupportedOnChain && privateRpcFeatureEnabled)
 }
 
 const selectAddressTransactions = makeSelectAddressTransactions()

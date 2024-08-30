@@ -31,7 +31,7 @@ import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal 
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import { ThemedText } from 'theme/components'
-import { ArrowDownCircleFilled } from 'ui/src/components/icons'
+import { ArrowDownCircleFilled } from 'ui/src/components/icons/ArrowDownCircleFilled'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'

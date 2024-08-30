@@ -270,13 +270,13 @@ export const colorsLight = {
   DEP_accentWarning: DEP_accentColors.goldVibrant,
 
   DEP_accentBranded: DEP_accentColors.magentaVibrant,
-  DEP_shadowBranded: colors.purpleVibrant,
+  DEP_shadowBranded: DEP_accentColors.magentaVibrant,
 
   DEP_accentSuccessSoft: opacifyRaw(24, DEP_accentColors.green400),
   DEP_accentWarningSoft: opacifyRaw(24, DEP_accentColors.goldVibrant),
   DEP_accentCriticalSoft: opacifyRaw(12, DEP_accentColors.red400),
 
-  DEP_brandedAccentSoft: colors.purpleVibrant,
+  DEP_brandedAccentSoft: DEP_accentColors.magenta100,
   DEP_magentaDark: opacifyRaw(12, DEP_accentColors.magentaVibrant),
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
@@ -341,7 +341,7 @@ export const colorsDark = {
 
   DEP_accentWarning: colors.yellowVibrant,
 
-  DEP_accentBranded: colors.purpleVibrant,
+  DEP_accentBranded: DEP_accentColors.magentaVibrant,
   // TODO(MOB-160): accommodate one-off color in cleaner way
   DEP_shadowBranded: '#B60ACF',
 
@@ -350,7 +350,7 @@ export const colorsDark = {
   DEP_accentCriticalSoft: opacifyRaw(12, colors.redVibrant),
 
   DEP_brandedAccentSoft: '#46244F', // git blame Chelsy
-  DEP_magentaDark: opacifyRaw(12, colors.purpleVibrant),
+  DEP_magentaDark: opacifyRaw(12, DEP_accentColors.magentaVibrant),
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 

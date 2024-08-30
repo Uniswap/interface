@@ -90,6 +90,8 @@ if (isCI && datadogPropertiesAvailable && !isDetox) {
   apply from: "../../../../node_modules/@datadog/mobile-react-native/datadog-sourcemaps.gradle"
 }
 
+def currentVersionName = "1.34"
+
 android {
     ndkVersion rootProject.ext.ndkVersion
 
@@ -137,17 +139,17 @@ android {
       dev {
         isDefault(true)
         applicationIdSuffix ".dev"
-        versionName "1.33"
+        versionName currentVersionName
         dimension "variant"
       }
       beta {
         applicationIdSuffix ".beta"
-        versionName "1.33"
+        versionName currentVersionName
         dimension "variant"
       }
       prod {
         dimension "variant"
-        versionName "1.33"
+        versionName currentVersionName
       }
     }
 

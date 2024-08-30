@@ -4,25 +4,9 @@ import { TradeType } from '@uniswap/sdk-core'
 import { BigNumberish, providers } from 'ethers'
 import { call, delay, fork, put, race, select, take, takeEvery } from 'typed-redux-saga'
 import { PollingInterval } from 'uniswap/src/constants/misc'
-import {
-  FiatOnRampEventName,
-  InstitutionTransferEventName,
-  MobileAppsFlyerEvents,
-  WalletEventName,
-} from 'uniswap/src/features/telemetry/constants'
+import { FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
+import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
-import i18n from 'uniswap/src/i18n/i18n'
-import { WalletChainId } from 'uniswap/src/types/chains'
-import { logger } from 'utilities/src/logger/logger'
-import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
-import { FiatOnRampTransactionDetails } from 'wallet/src/features/fiatOnRamp/types'
-import { pushNotification, setNotificationStatus } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
-import { OrderWatcher } from 'wallet/src/features/transactions/orderWatcherSaga'
-import { refetchGQLQueries } from 'wallet/src/features/transactions/refetchGQLQueriesSaga'
-import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
-import { selectIncompleteTransactions, selectSwapTransactionsCount } from 'wallet/src/features/transactions/selectors'
 import {
   addTransaction,
   cancelTransaction,
@@ -31,8 +15,8 @@ import {
   transactionActions,
   updateTransaction,
   upsertFiatOnRampTransaction,
-} from 'wallet/src/features/transactions/slice'
-import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
+} from 'uniswap/src/features/transactions/slice'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   BaseSwapTransactionInfo,
   FinalizedTransactionDetails,
@@ -42,8 +26,23 @@ import {
   TransactionStatus,
   TransactionType,
   isFinalizedTx,
-} from 'wallet/src/features/transactions/types'
-import { getFinalizedTransactionStatus, receiptFromEthersReceipt } from 'wallet/src/features/transactions/utils'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import i18n from 'uniswap/src/i18n/i18n'
+import { WalletChainId } from 'uniswap/src/types/chains'
+import { logger } from 'utilities/src/logger/logger'
+import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
+import { pushNotification, setNotificationStatus } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { attemptCancelTransaction } from 'wallet/src/features/transactions/cancelTransactionSaga'
+import { OrderWatcher } from 'wallet/src/features/transactions/orderWatcherSaga'
+import { refetchGQLQueries } from 'wallet/src/features/transactions/refetchGQLQueriesSaga'
+import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
+import { selectIncompleteTransactions, selectSwapTransactionsCount } from 'wallet/src/features/transactions/selectors'
+import {
+  getFinalizedTransactionStatus,
+  isOnRampTransaction,
+  receiptFromEthersReceipt,
+} from 'wallet/src/features/transactions/utils'
 import { getProvider } from 'wallet/src/features/wallet/context'
 
 export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClient<NormalizedCacheObject> }) {
@@ -56,7 +55,7 @@ export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClie
   // This allows us to detect completions if a user closed the app before a tx finished
   const incompleteTransactions = yield* select(selectIncompleteTransactions)
   for (const transaction of incompleteTransactions) {
-    if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
+    if (isOnRampTransaction(transaction)) {
       yield* fork(watchFiatOnRampTransaction, transaction as FiatOnRampTransactionDetails)
     } else {
       // If the transaction was a queued UniswapX order that never became submitted, update UI to show failure
@@ -77,7 +76,7 @@ export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClie
       updateTransaction.type,
     ])
     try {
-      if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
+      if (isOnRampTransaction(transaction)) {
         yield* fork(watchFiatOnRampTransaction, transaction as FiatOnRampTransactionDetails)
       } else {
         yield* fork(watchTransaction, { transaction, apolloClient })
@@ -108,12 +107,9 @@ export function* fetchUpdatedFiatOnRampTransaction(transaction: FiatOnRampTransa
 
 export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDetails) {
   const { id } = transaction
+  let forceFetch = false
 
   logger.debug('transactionWatcherSaga', 'watchFiatOnRampTransaction', 'Watching for updates for fiat onramp tx:', id)
-
-  let latestStatus = transaction.status
-  let syncedWithBackend = transaction.typeInfo.syncedWithBackend
-  let forceFetch = false
 
   try {
     while (true) {
@@ -124,40 +120,20 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
       if (!updatedTransaction) {
         return
       }
-      // Transaction has been updated
-      if (
-        latestStatus !== updatedTransaction.status ||
-        (!syncedWithBackend && updatedTransaction.typeInfo.syncedWithBackend)
-      ) {
+
+      // Stale transaction, never found on backend
+      if (updatedTransaction.status === TransactionStatus.Unknown) {
+        yield* call(deleteTransaction, transaction)
+        return // stop polling
+      }
+
+      // Transaction has been found
+      if (updatedTransaction.typeInfo.type !== TransactionType.LocalOnRamp) {
         logger.debug(
           'transactionWatcherSaga',
           'watchFiatOnRampTransaction',
           `Updating transaction with id ${id} from status ${transaction.status} to ${updatedTransaction.status}`,
         )
-
-        const isTransfer = updatedTransaction.typeInfo.inputSymbol === updatedTransaction.typeInfo.outputSymbol
-        if (updatedTransaction.typeInfo.serviceProvider) {
-          yield* call(
-            sendAnalyticsEvent,
-            isTransfer
-              ? InstitutionTransferEventName.InstitutionTransferTransactionUpdated
-              : FiatOnRampEventName.FiatOnRampTransactionUpdated,
-            {
-              externalTransactionId: updatedTransaction.id,
-              status: updatedTransaction.status,
-              serviceProvider: updatedTransaction.typeInfo.serviceProvider,
-            },
-          )
-        }
-      }
-
-      latestStatus = updatedTransaction.status
-      syncedWithBackend = updatedTransaction.typeInfo.syncedWithBackend
-
-      // Stale transaction
-      if (updatedTransaction.status === TransactionStatus.Unknown) {
-        yield* call(deleteTransaction, updatedTransaction)
-        break // stop polling
       }
 
       // Update transaction
@@ -170,7 +146,7 @@ export function* watchFiatOnRampTransaction(transaction: FiatOnRampTransactionDe
       ) {
         // Show notification badge
         yield* put(setNotificationStatus({ address: transaction.from, hasNotifications: true }))
-        break // stop polling
+        return // stop polling
       }
 
       // at this point, we received a response from backend
@@ -353,7 +329,7 @@ export function* waitForTxnInvalidated(chainId: WalletChainId, id: string, nonce
  */
 export function logTransactionEvent(actionData: ReturnType<typeof transactionActions.finalizeTransaction>): void {
   const { payload } = actionData
-  const { hash, chainId, addedTime, from, typeInfo, receipt, status } = payload
+  const { hash, chainId, addedTime, from, typeInfo, receipt, status, transactionOriginType } = payload
   const { gasUsed, effectiveGasPrice, confirmedTime } = receipt ?? {}
   const { type } = typeInfo
 
@@ -373,6 +349,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
 
     const baseProperties = {
       hash,
+      transactionOriginType,
       address: from,
       chain_id: chainId,
       added_time: addedTime,

@@ -11,7 +11,7 @@ import { Button, Flex, GeneratedIcon, Image, Text, useIsDarkMode } from 'ui/src'
 import { UNITAGS_INTRO_BANNER_DARK, UNITAGS_INTRO_BANNER_LIGHT } from 'ui/src/assets'
 import { Lightning, Ticket, UserSquare } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
@@ -49,7 +49,7 @@ export function UnitagsIntroModal(): JSX.Element {
   }
 
   return (
-    <BottomSheetModal name={ModalName.UnitagsIntro} onClose={onClose}>
+    <Modal name={ModalName.UnitagsIntro} onClose={onClose}>
       <Flex gap="$spacing24" px="$spacing24" py="$spacing16">
         <Flex alignItems="center" gap="$spacing12">
           <Text variant="subheading1">{t('unitags.intro.title')}</Text>
@@ -78,7 +78,7 @@ export function UnitagsIntroModal(): JSX.Element {
           <TermsOfService />
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }
 

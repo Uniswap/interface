@@ -1,6 +1,6 @@
 import React from 'react'
 import { Flex, Text, UniversalImage, useIsDarkMode } from 'ui/src'
-import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
+import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 interface TransactionSummaryTitleProps {
   transaction: TransactionDetails
@@ -31,7 +31,7 @@ export const TransactionSummaryTitle: React.FC<TransactionSummaryTitleProps> = (
 
   return (
     <Flex row alignItems="center">
-      <Text color="$neutral2" marginEnd={onRampLogo ? 4 : 0} variant="body2">
+      <Text color="$neutral2" mr={onRampLogo ? 4 : 0} variant="body2">
         {title}
       </Text>
       {onRampLogo}

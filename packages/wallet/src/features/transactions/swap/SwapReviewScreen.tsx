@@ -1,39 +1,36 @@
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FadeIn } from 'react-native-reanimated'
-import { useDispatch, useSelector } from 'react-redux'
-import { Button, Flex, Separator, SpinningLoader, Text, isWeb, useHapticFeedback, useIsShortMobileDevice } from 'ui/src'
+import { useDispatch } from 'react-redux'
+import { Button, Flex, SpinningLoader, Text, isWeb, useHapticFeedback, useIsShortMobileDevice } from 'ui/src'
 import { BackArrow } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import {
+  TransactionModalFooterContainer,
+  TransactionModalInnerContainer,
+} from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
+import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { SwapScreen, useSwapScreenContext } from 'uniswap/src/features/transactions/swap/contexts/SwapScreenContext'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
-import { selectHasViewedReviewScreen } from 'wallet/src/features/behaviorHistory/selectors'
-import { setHasViewedReviewScreen } from 'wallet/src/features/behaviorHistory/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import { SwapScreen, useSwapScreenContext } from 'wallet/src/features/transactions/contexts/SwapScreenContext'
 import { isValidSwapTxContext, useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
-import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
 import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
-import { GasAndWarningRows } from 'wallet/src/features/transactions/swap/GasAndWarningRows'
-import { HOLD_TO_SWAP_TIMEOUT } from 'wallet/src/features/transactions/swap/HoldToSwapProgressCircle'
 import { SwapDetails } from 'wallet/src/features/transactions/swap/SwapDetails'
 import { SWAP_BUTTON_TEXT_VARIANT, SubmittingText } from 'wallet/src/features/transactions/swap/SwapFormButton'
 import { TransactionAmountsReview } from 'wallet/src/features/transactions/swap/TransactionAmountsReview'
-import {
-  TransactionModalFooterContainer,
-  TransactionModalInnerContainer,
-} from 'wallet/src/features/transactions/swap/TransactionModal'
 import { useAcceptedTrade } from 'wallet/src/features/transactions/swap/trade/hooks/useAcceptedTrade'
 import { useSwapCallback } from 'wallet/src/features/transactions/swap/trade/hooks/useSwapCallback'
 import { useWrapCallback } from 'wallet/src/features/transactions/swap/trade/hooks/useWrapCallback'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { getActionName, isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 
@@ -47,9 +44,10 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const [warningAcknowledged, setWarningAcknowledged] = useState(false)
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
 
-  const { account, bottomSheetViewStyles, onClose, BiometricsIcon, authTrigger } = useTransactionModalContext()
+  const account = useAccountMeta()
+  const { bottomSheetViewStyles, onClose, BiometricsIcon, authTrigger } = useTransactionModalContext()
 
-  const { screen, screenRef, setScreen } = useSwapScreenContext()
+  const { setScreen } = useSwapScreenContext()
 
   const swapTxContext = useSwapTxContext()
   const { gasFee, trade } = swapTxContext
@@ -143,7 +141,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const { onSwap, validSwap } = useMemo(() => {
     const isValidSwap = isValidSwapTxContext(swapTxContext)
 
-    if (isValidSwap && account.type === AccountType.SignerMnemonic) {
+    if (isValidSwap && account?.type === AccountType.SignerMnemonic) {
       return {
         onSwap: (): void => {
           swapCallback({
@@ -155,7 +153,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
             onSubmit: navigateToNextScreen,
             onFailure: onSubmitTransactionFailed,
             txId,
-            isHoldToSwap: screen === SwapScreen.SwapReviewHoldingToSwap,
             isFiatInputMode: isFiatMode,
           })
         },
@@ -174,7 +171,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     isFiatMode,
     navigateToNextScreen,
     onSubmitTransactionFailed,
-    screen,
     swapCallback,
     swapTxContext,
     txId,
@@ -215,56 +211,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     BiometricsIcon
   )
 
-  const holdToSwapTimeoutStartTime = useRef<number>()
-
-  // This is the timeout that counts how long the user has been pressing the button for "hold to swap" and then auto-submits the transaction.
-  useEffect(() => {
-    if (isSubmitting || screen !== SwapScreen.SwapReviewHoldingToSwap) {
-      return
-    }
-
-    if (newTradeRequiresAcceptance) {
-      // If while the user is pressing the button, we get a worse quote,
-      // we show them the regular Review screen and they must "accept" the new quote.
-      setScreen(SwapScreen.SwapReview)
-      return
-    }
-
-    const now = Date.now()
-
-    if (holdToSwapTimeoutStartTime.current === undefined) {
-      holdToSwapTimeoutStartTime.current = now
-    }
-
-    const millisecondsLeft = HOLD_TO_SWAP_TIMEOUT - (now - holdToSwapTimeoutStartTime.current)
-
-    const timeout = setTimeout(async () => {
-      if (screenRef.current !== SwapScreen.SwapReviewHoldingToSwap) {
-        return
-      }
-
-      if (submitButtonDisabled) {
-        // If the submit button became disabled while the user was "holding to swap",
-        // we do not submit the transaction and we simply show them the regular Review screen.
-        setScreen(SwapScreen.SwapReview)
-        return
-      }
-
-      await onSubmitTransaction()
-    }, millisecondsLeft)
-
-    return () => clearTimeout(timeout)
-  }, [
-    isSubmitting,
-    newTradeRequiresAcceptance,
-    onSubmitTransaction,
-    screen,
-    screenRef,
-    setScreen,
-    submitButtonDisabled,
-    updateSwapForm,
-  ])
-
   const onConfirmWarning = useCallback(() => {
     setWarningAcknowledged(true)
     setShowWarningModal(false)
@@ -291,14 +237,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const onCloseWarning = useCallback(() => {
     setShowWarningModal(false)
   }, [])
-
-  // Flag review screen user behavior, used to show hold to swap tip
-  const hasViewedReviewScreen = useSelector(selectHasViewedReviewScreen)
-  useEffect(() => {
-    if (!hasViewedReviewScreen) {
-      dispatch(setHasViewedReviewScreen(true))
-    }
-  }, [dispatch, hasViewedReviewScreen])
 
   if (hideContent || !acceptedDerivedSwapInfo || (!isWrap && (!acceptedTrade || !trade))) {
     // We forcefully hide the content via `hideContent` to allow the bottom sheet to animate faster while still allowing all API requests to trigger ASAP.
@@ -332,11 +270,12 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   return (
     <>
       <TransactionModalInnerContainer bottomSheetViewStyles={bottomSheetViewStyles} fullscreen={false}>
-        {showWarningModal && reviewScreenWarning?.warning.title && (
+        {reviewScreenWarning?.warning.title && (
           <WarningModal
             caption={reviewScreenWarning.warning.message}
             closeText={blockingWarning ? undefined : t('common.button.cancel')}
             confirmText={blockingWarning ? t('common.button.ok') : t('common.button.confirm')}
+            isOpen={showWarningModal}
             modalName={ModalName.SwapWarning}
             severity={reviewScreenWarning.warning.severity}
             title={reviewScreenWarning.warning.title}
@@ -346,92 +285,71 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
           />
         )}
 
-        {screen === SwapScreen.SwapReviewHoldingToSwap ? (
-          <Flex>
-            <AnimatedFlex entering={FadeIn} gap="$spacing2">
-              <TransactionAmountsReview
-                acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-                newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-                onClose={onPrev}
+        <>
+          <AnimatedFlex entering={FadeIn} gap="$spacing16" pt={isWeb ? '$spacing8' : undefined}>
+            <TransactionAmountsReview
+              acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+              newTradeRequiresAcceptance={newTradeRequiresAcceptance}
+              onClose={onPrev}
+            />
+
+            {isWrap ? (
+              <TransactionDetails
+                chainId={chainId}
+                gasFee={gasFee}
+                warning={reviewScreenWarning?.warning}
+                onShowWarning={onShowWarning}
               />
-
-              <Separator mb="$spacing24" mt="$spacing16" />
-
-              <Flex mb="$spacing8">
-                <GasAndWarningRows renderEmptyRows={false} />
-              </Flex>
-            </AnimatedFlex>
-          </Flex>
-        ) : (
-          <>
-            <AnimatedFlex entering={FadeIn} gap="$spacing16" pt={isWeb ? '$spacing8' : undefined}>
-              <TransactionAmountsReview
+            ) : (
+              <SwapDetails
                 acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+                autoSlippageTolerance={autoSlippageTolerance}
+                customSlippageTolerance={customSlippageTolerance}
+                derivedSwapInfo={derivedSwapInfo}
+                gasFee={gasFee}
                 newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-                onClose={onPrev}
-              />
-
-              {isWrap ? (
-                <TransactionDetails
-                  chainId={chainId}
-                  gasFee={gasFee}
-                  warning={reviewScreenWarning?.warning}
-                  onShowWarning={onShowWarning}
-                />
-              ) : (
-                <SwapDetails
-                  acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-                  autoSlippageTolerance={autoSlippageTolerance}
-                  customSlippageTolerance={customSlippageTolerance}
-                  derivedSwapInfo={derivedSwapInfo}
-                  gasFee={gasFee}
-                  newTradeRequiresAcceptance={newTradeRequiresAcceptance}
-                  outputCurrencyPricePerUnitExact={outputCurrencyPricePerUnitExact}
-                  uniswapXGasBreakdown={uniswapXGasBreakdown}
-                  warning={reviewScreenWarning?.warning}
-                  onAcceptTrade={onAcceptTrade}
-                  onShowWarning={onShowWarning}
-                />
-              )}
-            </AnimatedFlex>
-          </>
-        )}
-      </TransactionModalInnerContainer>
-
-      {screen !== SwapScreen.SwapReviewHoldingToSwap && (
-        <TransactionModalFooterContainer>
-          <Flex row gap="$spacing8">
-            {!isWeb && !showUniswapXSubmittingUI && (
-              <Button
-                icon={<BackArrow />}
-                size={isShortMobileDevice ? 'medium' : 'large'}
-                theme="tertiary"
-                onPress={onPrev}
+                outputCurrencyPricePerUnitExact={outputCurrencyPricePerUnitExact}
+                uniswapXGasBreakdown={uniswapXGasBreakdown}
+                warning={reviewScreenWarning?.warning}
+                onAcceptTrade={onAcceptTrade}
+                onShowWarning={onShowWarning}
               />
             )}
-
+          </AnimatedFlex>
+        </>
+      </TransactionModalInnerContainer>
+      <TransactionModalFooterContainer>
+        <Flex row gap="$spacing8">
+          {!isWeb && !showUniswapXSubmittingUI && (
             <Button
-              fill
-              backgroundColor={showUniswapXSubmittingUI ? '$accent2' : '$accent1'}
-              color={showUniswapXSubmittingUI ? '$accent1' : undefined}
-              disabled={submitButtonDisabled}
-              icon={submitButtonIcon}
-              opacity={showUniswapXSubmittingUI ? 1 : undefined}
-              size={isWeb ? 'medium' : isShortMobileDevice ? 'small' : 'large'}
-              testID={TestID.Swap}
-              onPress={onSubmitTransaction}
-            >
-              {showUniswapXSubmittingUI ? (
-                <SubmittingText />
-              ) : (
-                <Text color="$white" variant={SWAP_BUTTON_TEXT_VARIANT}>
-                  {actionText}
-                </Text>
-              )}
-            </Button>
-          </Flex>
-        </TransactionModalFooterContainer>
-      )}
+              icon={<BackArrow />}
+              size={isShortMobileDevice ? 'medium' : 'large'}
+              theme="tertiary"
+              onPress={onPrev}
+            />
+          )}
+
+          <Button
+            fill
+            backgroundColor={showUniswapXSubmittingUI ? '$accent2' : '$accent1'}
+            color={showUniswapXSubmittingUI ? '$accent1' : undefined}
+            disabled={submitButtonDisabled}
+            icon={submitButtonIcon}
+            opacity={showUniswapXSubmittingUI ? 1 : undefined}
+            size={isWeb ? 'medium' : isShortMobileDevice ? 'small' : 'large'}
+            testID={TestID.Swap}
+            onPress={onSubmitTransaction}
+          >
+            {showUniswapXSubmittingUI ? (
+              <SubmittingText />
+            ) : (
+              <Text color="$white" variant={SWAP_BUTTON_TEXT_VARIANT}>
+                {actionText}
+              </Text>
+            )}
+          </Button>
+        </Flex>
+      </TransactionModalFooterContainer>
     </>
   )
 }

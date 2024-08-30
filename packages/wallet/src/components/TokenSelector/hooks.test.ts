@@ -11,17 +11,17 @@ import {
   usePortfolioBalancesForAddressById,
   usePortfolioTokenOptions,
 } from 'uniswap/src/components/TokenSelector/hooks'
+import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { createEmptyBalanceOption } from 'uniswap/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { tokenProjectToCurrencyInfos } from 'uniswap/src/features/dataApi/utils'
-import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
+import { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import { arbitrumDaiCurrencyInfo, ethCurrencyInfo, usdcCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { useFavoriteCurrencies, useFavoriteTokensOptions } from 'wallet/src/components/TokenSelector/hooks'
-import { WalletState } from 'wallet/src/state/walletReducer'
 import {
   SAMPLE_SEED_ADDRESS_1,
   daiToken,
@@ -56,7 +56,7 @@ const favoriteCurrencyIds = favoriteTokens.map((t) =>
   buildCurrencyId(fromGraphQLChain(t.chain) ?? UniverseChainId.Mainnet, t.address),
 )
 
-const preloadedState: PreloadedState<WalletState> = {
+const preloadedState: PreloadedState<UniswapState> = {
   favorites: {
     tokens: favoriteCurrencyIds,
     watchedAddresses: [],
@@ -191,7 +191,9 @@ describe(useFilterCallbacks, () => {
 
     expect(result.current).toEqual({
       chainFilter: null,
+      parsedChainFilter: null,
       searchFilter: null,
+      parsedSearchFilter: null,
       onChangeText: expect.any(Function),
       onChangeChainFilter: expect.any(Function),
       onClearSearchFilter: expect.any(Function),
@@ -227,6 +229,68 @@ describe(useFilterCallbacks, () => {
       })
 
       expect(result.current.searchFilter).toEqual(null)
+    })
+
+    it('parses chain from search filter', async () => {
+      const { result } = renderHook(() => useFilterCallbacks(null, TokenSelectorFlow.Swap))
+
+      expect(result.current.parsedSearchFilter).toEqual(null)
+
+      await act(() => {
+        result.current.onChangeText('BaSE uni')
+      })
+
+      expect(result.current.chainFilter).toEqual(null)
+      expect(result.current.searchFilter).toEqual('BaSE uni')
+      expect(result.current.parsedChainFilter).toEqual(UniverseChainId.Base)
+      expect(result.current.parsedSearchFilter).toEqual('uni')
+    })
+
+    it('does not parse chain when chainFilter is set', async () => {
+      const { result } = renderHook(useFilterCallbacks, {
+        initialProps: [UniverseChainId.ArbitrumOne, TokenSelectorFlow.Swap],
+      })
+
+      expect(result.current.parsedSearchFilter).toEqual(null)
+
+      await act(() => {
+        result.current.onChangeText('base uni')
+      })
+
+      expect(result.current.chainFilter).toEqual(UniverseChainId.ArbitrumOne)
+      expect(result.current.searchFilter).toEqual('base uni')
+      expect(result.current.parsedSearchFilter).toEqual(null)
+      expect(result.current.parsedSearchFilter).toEqual(null)
+    })
+
+    it('does not parse unsupported chains', async () => {
+      const { result } = renderHook(() => useFilterCallbacks(null, TokenSelectorFlow.Swap))
+
+      expect(result.current.parsedSearchFilter).toEqual(null)
+
+      await act(() => {
+        result.current.onChangeText('UNSUPPORTED uni')
+      })
+
+      expect(result.current.chainFilter).toEqual(null)
+      expect(result.current.searchFilter).toEqual('UNSUPPORTED uni')
+      expect(result.current.parsedChainFilter).toEqual(null)
+      expect(result.current.parsedSearchFilter).toEqual(null)
+    })
+
+    it('only parses after the first space', async () => {
+      const { result } = renderHook(() => useFilterCallbacks(null, TokenSelectorFlow.Swap))
+
+      expect(result.current.parsedSearchFilter).toEqual(null)
+
+      await act(() => {
+        result.current.onChangeText('base uni corn')
+      })
+
+      expect(result.current.chainFilter).toEqual(null)
+      expect(result.current.searchFilter).toEqual('base uni corn')
+      expect(result.current.parsedChainFilter).toEqual(UniverseChainId.Base)
+      expect(result.current.parsedSearchFilter).toEqual('uni corn')
     })
   })
 

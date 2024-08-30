@@ -1,5 +1,5 @@
+import { NFTMintTransactionInfo, TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { NftTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/NftTransactionDetails'
-import { NFTMintTransactionInfo, TransactionDetails } from 'wallet/src/features/transactions/types'
 import { ACCOUNT, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 import { render } from 'wallet/src/test/test-utils'
 

@@ -13,11 +13,11 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { trace } from 'tracing/trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { Trans } from 'uniswap/src/i18n'
-import { WrapType } from 'uniswap/src/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
 
-const NOT_APPLICABLE = { wrapType: WrapType.NOT_APPLICABLE }
+const NOT_APPLICABLE = { wrapType: WrapType.NotApplicable }
 
 enum WrapInputError {
   NO_ERROR, // must be equal to 0 so all other errors are truthy
@@ -105,7 +105,7 @@ export default function useWrapCallback(
 
     if (inputCurrency.isNative && weth.equals(outputCurrency)) {
       return {
-        wrapType: WrapType.WRAP,
+        wrapType: WrapType.Wrap,
         execute:
           sufficientBalance && inputAmount
             ? () =>
@@ -123,7 +123,7 @@ export default function useWrapCallback(
                       ...eventProperties,
                       contract_address: wethContract.address,
                       contract_chain_id: network.chainId,
-                      type: WrapType.WRAP,
+                      type: WrapType.Wrap,
                     })
                     const error = new Error(`Invalid WETH contract
 Please file a bug detailing how this happened - https://github.com/Uniswap/interface/issues/new?labels=bug&template=bug-report.md&title=Invalid%20WETH%20contract`)
@@ -142,7 +142,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                   })
                   sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                     ...eventProperties,
-                    type: WrapType.WRAP,
+                    type: WrapType.Wrap,
                   })
                   return txReceipt.hash
                 })
@@ -155,7 +155,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
       }
     } else if (weth.equals(inputCurrency) && outputCurrency.isNative) {
       return {
-        wrapType: WrapType.UNWRAP,
+        wrapType: WrapType.Unwrap,
         execute:
           sufficientBalance && inputAmount
             ? () =>
@@ -176,7 +176,7 @@ Please file a bug detailing how this happened - https://github.com/Uniswap/inter
                     })
                     sendAnalyticsEvent(InterfaceEventName.WRAP_TOKEN_TXN_SUBMITTED, {
                       ...eventProperties,
-                      type: WrapType.UNWRAP,
+                      type: WrapType.Unwrap,
                     })
                     return txReceipt.hash
                   } catch (error) {

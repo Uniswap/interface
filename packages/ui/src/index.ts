@@ -3,10 +3,12 @@ export {
   Accordion,
   Anchor,
   AnimatePresence,
+  Avatar,
   Circle,
   Image,
   Input,
   ListItem,
+  Paragraph,
   Popover,
   Portal,
   ScrollView,
@@ -17,6 +19,7 @@ export {
   Tabs,
   TamaguiProvider,
   Theme,
+  View,
   YGroup,
   getToken,
   getTokenValue,
@@ -37,6 +40,7 @@ export type {
   PopperProps,
   SpaceTokens,
   SwitchProps,
+  TamaguiElement,
   TamaguiProviderProps,
   ThemeKeys,
   Tokens,
@@ -59,7 +63,7 @@ export { Flex, Inset, Separator, flexStyles, type FlexProps } from './components
 export { ContextMenu } from './components/menu/ContextMenu'
 export { MenuContent } from './components/menu/MenuContent'
 export type { MenuContentItem } from './components/menu/types'
-export { AdaptiveWebModalSheet } from './components/modal/AdaptiveWebModalSheet'
+export { AdaptiveWebModal, WebBottomSheet } from './components/modal/AdaptiveWebModal'
 export * from './components/text'
 export { Tooltip } from './components/tooltip/Tooltip'
 export * from './components/touchable'
@@ -72,8 +76,10 @@ export { ImpactFeedbackStyle } from 'expo-haptics'
 export * from './utils/haptics/useHapticFeedback'
 
 // Theme
+export * from './styles/ScrollbarStyles'
 export * from './theme/shadows'
 export * from './utils/colors'
+export * from './utils/tamagui'
 
 // Loaders
 export * from './loading/FlexLoader'

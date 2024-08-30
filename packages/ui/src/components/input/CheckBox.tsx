@@ -1,3 +1,4 @@
+import { ColorTokens } from 'tamagui'
 import { Check } from 'ui/src/components/icons'
 import { Flex } from 'ui/src/components/layout'
 import { Text } from 'ui/src/components/text'
@@ -8,10 +9,11 @@ import { iconSizes } from 'ui/src/theme'
 export type CheckBoxProps = {
   checked: boolean
   text?: string | JSX.Element
+  checkedColor?: ColorTokens
   onCheckPressed?: (currentState: boolean) => void
 }
 
-export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.Element {
+export function CheckBox({ text, checked, checkedColor = '$neutral1', onCheckPressed }: CheckBoxProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
 
   const onPress = (): void => {
@@ -23,8 +25,8 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
       <Flex row gap="$spacing12" px="$spacing4">
         <Flex
           alignItems="center"
-          backgroundColor={checked ? '$neutral1' : '$surface1'}
-          borderColor={checked ? '$neutral1' : '$neutral3'}
+          backgroundColor={checked ? checkedColor : '$surface1'}
+          borderColor={checked ? checkedColor : '$neutral3'}
           borderRadius="$rounded4"
           borderWidth={1.5}
           height={iconSizes.icon20}
@@ -35,15 +37,17 @@ export function CheckBox({ text, checked, onCheckPressed }: CheckBoxProps): JSX.
         >
           {checked ? <Check color={isDarkMode ? '$black' : '$white'} size="$icon.16" /> : null}
         </Flex>
-        <Flex shrink>
-          {typeof text === 'string' ? (
-            <Text $short={{ variant: 'buttonLabel4' }} variant="subheading2">
-              {text}
-            </Text>
-          ) : (
-            text
-          )}
-        </Flex>
+        {text && (
+          <Flex shrink>
+            {typeof text === 'string' ? (
+              <Text $short={{ variant: 'buttonLabel4' }} variant="subheading2">
+                {text}
+              </Text>
+            ) : (
+              text
+            )}
+          </Flex>
+        )}
       </Flex>
     </TouchableArea>
   )

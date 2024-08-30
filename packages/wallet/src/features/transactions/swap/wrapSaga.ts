@@ -5,10 +5,15 @@ import { Weth } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import {
+  TransactionOptions,
+  TransactionOriginType,
+  TransactionType,
+  TransactionTypeInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
-import { TransactionOptions, TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export type WrapParams = {
@@ -55,6 +60,7 @@ export function* wrap(params: WrapParams) {
       account,
       options,
       typeInfo,
+      transactionOriginType: TransactionOriginType.Internal,
     })
   } catch (error) {
     logger.error(error, { tags: { file: 'wrapSaga', function: 'wrap' } })

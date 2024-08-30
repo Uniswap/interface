@@ -1,8 +1,7 @@
 import React from 'react'
 import { TextProps as RNTextProps, StyleSheet, TextInput, TextInputProps, useWindowDimensions } from 'react-native'
 import Animated, { useAnimatedProps } from 'react-native-reanimated'
-import { Flex, TextProps as TamaTextProps, TextFrame, usePropsAndStyle } from 'ui/src'
-import { TextLoaderWrapper } from 'ui/src/components/text/Text'
+import { Flex, TextProps as TamaTextProps, TextFrame, TextLoaderWrapper, usePropsAndStyle } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 
 // base animated text component using a TextInput

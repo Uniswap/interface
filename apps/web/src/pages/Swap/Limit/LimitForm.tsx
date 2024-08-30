@@ -38,7 +38,8 @@ import { useSwapActionHandlers } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Anchor, Text, styled as tamaguiStyled } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons'
+import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { colors, validColor } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
@@ -508,7 +509,7 @@ function SubmitOrderButton({
         data-testid="submit-order-button"
         disabled={!trade || !!limitPriceError}
       >
-        <Text color="neutralContrast" fontSize={20}>
+        <Text color={validColor(colors.white)} fontSize={20}>
           <Trans i18nKey="common.confirm" />
         </Text>
       </ButtonError>

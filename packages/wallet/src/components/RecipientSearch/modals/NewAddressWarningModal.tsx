@@ -2,13 +2,13 @@ import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text } from 'ui/src'
 import { UserSquare } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
+import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { shortenAddress } from 'utilities/src/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { useENSAvatar, useENSName } from 'wallet/src/features/ens/api'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
@@ -27,7 +27,7 @@ export function NewAddressWarningModal({ address, onConfirm, onClose }: NewAddre
   const { data: ensAvatar } = useENSAvatar(validated)
 
   return (
-    <BottomSheetModal name={ModalName.NewAddressWarning} onClose={onClose}>
+    <Modal name={ModalName.NewAddressWarning} onClose={onClose}>
       <Flex px="$spacing24" py="$spacing12">
         <Flex centered gap="$spacing16" pb="$spacing16">
           <Flex centered backgroundColor="$surface2" borderRadius="$rounded12" p="$spacing12">
@@ -91,6 +91,6 @@ export function NewAddressWarningModal({ address, onConfirm, onClose }: NewAddre
           </Button>
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

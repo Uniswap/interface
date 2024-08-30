@@ -6,9 +6,7 @@ import {
 } from 'components/Charts/PriceChart/RoundedCandlestickSeries/rounded-candles-series'
 import { getCandlestickPriceBounds } from 'components/Charts/PriceChart/utils'
 import { PriceChartType } from 'components/Charts/utils'
-import { RowBetween } from 'components/Row'
 import { DeltaArrow, DeltaText, calculateDelta } from 'components/Tokens/TokenDetails/Delta'
-import styled from 'lib/styled-components'
 import {
   AreaData,
   AreaSeriesPartialOptions,
@@ -22,8 +20,8 @@ import {
   UTCTimestamp,
 } from 'lightweight-charts'
 import { useMemo } from 'react'
-import { ThemedText } from 'theme/components'
 import { opacify } from 'theme/utils'
+import { Flex, Text, styled } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -194,14 +192,6 @@ export class PriceChartModel extends ChartModel<PriceChartData> {
   }
 }
 
-const DeltaContainer = styled.div`
-  font-size: 16px;
-  line-height: 24px;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-`
-
 interface PriceChartDeltaProps {
   startingPrice: PriceChartData
   endingPrice: PriceChartData
@@ -213,10 +203,10 @@ export function PriceChartDelta({ startingPrice, endingPrice, noColor }: PriceCh
   const { formatDelta } = useFormatter()
 
   return (
-    <DeltaContainer>
+    <Text variant="body2" alignItems="center" gap="$gap4">
       <DeltaArrow delta={delta} noColor={noColor} />
       <DeltaText delta={delta}>{formatDelta(delta)}</DeltaText>
-    </DeltaContainer>
+    </Text>
   )
 }
 
@@ -227,33 +217,34 @@ interface PriceChartProps {
   stale: boolean
 }
 
-const TooltipText = styled(ThemedText.LabelSmall)`
-  color: ${({ theme }) => theme.neutral1};
-  line-height: 20px;
-`
+const CandlestickTooltipRow = styled(Flex, {
+  row: true,
+  justifyContent: 'space-between',
+  gap: '$sm',
+})
 
 function CandlestickTooltip({ data }: { data: PriceChartData }) {
   const { formatFiatPrice } = useFormatter()
   return (
     <>
-      <TooltipText>
-        <RowBetween gap="sm">
+      <Text variant="body3" color="$neutral1">
+        <CandlestickTooltipRow>
           <Trans i18nKey="chart.price.label.open" />
           <div>{formatFiatPrice({ price: data.open })}</div>
-        </RowBetween>
-        <RowBetween gap="sm">
+        </CandlestickTooltipRow>
+        <CandlestickTooltipRow>
           <Trans i18nKey="chart.price.label.high" />
           <div>{formatFiatPrice({ price: data.high })}</div>
-        </RowBetween>
-        <RowBetween gap="sm">
+        </CandlestickTooltipRow>
+        <CandlestickTooltipRow>
           <Trans i18nKey="chart.price.label.low" />
           <div>{formatFiatPrice({ price: data.low })}</div>
-        </RowBetween>
-        <RowBetween gap="sm">
+        </CandlestickTooltipRow>
+        <CandlestickTooltipRow>
           <Trans i18nKey="chart.price.label.close" />
           <div>{formatFiatPrice({ price: data.close })}</div>
-        </RowBetween>
-      </TooltipText>
+        </CandlestickTooltipRow>
+      </Text>
     </>
   )
 }

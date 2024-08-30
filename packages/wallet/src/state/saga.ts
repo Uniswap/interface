@@ -3,11 +3,11 @@ import { spawn } from 'typed-redux-saga'
 import { notificationWatcher } from 'wallet/src/features/notifications/notificationWatcherSaga'
 import { initProviders } from 'wallet/src/features/providers'
 import {
-  transferTokenActions,
-  transferTokenReducer,
-  transferTokenSaga,
-  transferTokenSagaName,
-} from 'wallet/src/features/transactions/transfer/transferTokenSaga'
+  sendTokenActions,
+  sendTokenReducer,
+  sendTokenSaga,
+  sendTokenSagaName,
+} from 'wallet/src/features/transactions/send/sendTokenSaga'
 import { SagaState } from 'wallet/src/utils/saga'
 
 // Sagas that are spawned at startup
@@ -33,11 +33,11 @@ export function getMonitoredSagaReducers(monitoredSagas: Record<string, Monitore
 }
 
 export const walletMonitoredSagas: Record<string, MonitoredSaga> = {
-  [transferTokenSagaName]: {
-    name: transferTokenSagaName,
-    wrappedSaga: transferTokenSaga,
-    reducer: transferTokenReducer,
-    actions: transferTokenActions,
+  [sendTokenSagaName]: {
+    name: sendTokenSagaName,
+    wrappedSaga: sendTokenSaga,
+    reducer: sendTokenReducer,
+    actions: sendTokenActions,
   },
 }
 

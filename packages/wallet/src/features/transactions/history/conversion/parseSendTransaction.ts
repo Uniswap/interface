@@ -1,16 +1,16 @@
 import { AssetType } from 'uniswap/src/entities/assets'
+import {
+  SendTokenTransactionInfo,
+  TransactionDetailsType,
+  TransactionListQueryResponse,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { SpamCode } from 'wallet/src/data/types'
 import {
   deriveCurrencyAmountFromAssetResponse,
   getAddressFromAsset,
   parseUSDValueFromAssetChange,
 } from 'wallet/src/features/transactions/history/utils'
-import {
-  SendTokenTransactionInfo,
-  TransactionDetailsType,
-  TransactionListQueryResponse,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
 
 export default function parseSendTransaction(
   transaction: NonNullable<TransactionListQueryResponse>,

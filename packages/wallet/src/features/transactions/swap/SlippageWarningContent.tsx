@@ -8,11 +8,11 @@ import { iconSizes } from 'ui/src/theme'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
+import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { NumberType } from 'utilities/src/format/types'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
-import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
 import { slippageToleranceToPercent } from 'wallet/src/features/transactions/swap/utils'
 
 type SlippageWarningContentProps = PropsWithChildren<{
@@ -62,7 +62,7 @@ export function SlippageWarningContent({
       >
         <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
           <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant={isWeb ? 'buttonLabel3' : 'body2'}>
-            {t('swap.settings.slippage.control.title')}
+            {t('swap.slippage.settings.title')}
           </Text>
           <Flex row gap="$spacing8">
             {!isCustomSlippage ? (
@@ -120,7 +120,7 @@ export function SlippageWarningContent({
         icon: <Settings color="$neutral2" size="$icon.28" />,
         modalName: ModalName.SlippageInfo,
         severity: WarningSeverity.None,
-        title: t('swap.settings.slippage.control.title'),
+        title: t('swap.slippage.settings.title'),
       }}
       tooltipProps={{
         text: captionContent,

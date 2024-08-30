@@ -3,6 +3,12 @@ import { createElement, useMemo, useState } from 'react'
 import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
+import {
+  NFTTradeType,
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from 'wallet/src/features/activity/utils'
@@ -12,7 +18,6 @@ import {
   useLocalizedDayjs,
 } from 'wallet/src/features/language/localizedDayjs'
 import { ApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
-import { FiatPurchaseSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/FiatPurchaseSummaryItem'
 import { NFTApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
 import { NFTMintSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
 import { NFTTradeSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
@@ -24,12 +29,6 @@ import { UnknownSummaryItem } from 'wallet/src/features/transactions/SummaryCard
 import { WCSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/WCSummaryItem'
 import { WrapSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/WrapSummaryItem'
 import { SummaryItemProps, SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
-import {
-  NFTTradeType,
-  TransactionDetails,
-  TransactionStatus,
-  TransactionType,
-} from 'wallet/src/features/transactions/types'
 
 export const TXN_HISTORY_ICON_SIZE = TXN_HISTORY_LOADER_ICON_SIZE
 export const TXN_STATUS_ICON_SIZE = iconSizes.icon16
@@ -57,9 +56,6 @@ export function generateActivityItemRenderer(
     switch (item.typeInfo.type) {
       case TransactionType.Approve:
         SummaryItem = ApproveSummaryItem
-        break
-      case TransactionType.FiatPurchase:
-        SummaryItem = FiatPurchaseSummaryItem
         break
       case TransactionType.OnRampPurchase:
       case TransactionType.OnRampTransfer:
@@ -237,28 +233,6 @@ function getTransactionTypeVerbs(
           failed: t('transaction.status.sell.failed'),
           canceling: t('transaction.status.sell.canceling'),
           canceled: t('transaction.status.sell.canceled'),
-        }
-      }
-    case TransactionType.FiatPurchase:
-      if (typeInfo.inputSymbol && typeInfo.inputSymbol === typeInfo.outputSymbol) {
-        return {
-          success: externalDappName
-            ? t('transaction.status.receive.successDapp', { externalDappName })
-            : t('transaction.status.receive.success'),
-          pending: t('transaction.status.receive.pending'),
-          failed: t('transaction.status.receive.failed'),
-          canceling: t('transaction.status.receive.canceling'),
-          canceled: t('transaction.status.receive.canceled'),
-        }
-      } else {
-        return {
-          success: externalDappName
-            ? t('transaction.status.purchase.successDapp', { externalDappName })
-            : t('transaction.status.purchase.success'),
-          pending: t('transaction.status.purchase.pending'),
-          failed: t('transaction.status.purchase.failed'),
-          canceling: t('transaction.status.purchase.canceling'),
-          canceled: t('transaction.status.purchase.canceled'),
         }
       }
     case TransactionType.OnRampPurchase: {

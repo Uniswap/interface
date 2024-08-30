@@ -84,12 +84,11 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
           title={t('setting.recoveryPhrase.view.warning.title')}
           onNextPressed={showPasswordModal}
         >
-          {viewStep === ViewStep.Password && (
-            <EnterPasswordModal
-              onClose={() => setViewStep(ViewStep.Warning)}
-              onNext={() => setViewStep(ViewStep.Reveal)}
-            />
-          )}
+          <EnterPasswordModal
+            isOpen={viewStep === ViewStep.Password}
+            onClose={() => setViewStep(ViewStep.Warning)}
+            onNext={() => setViewStep(ViewStep.Reveal)}
+          />
           <Flex
             alignItems="flex-start"
             borderColor="$surface3"
@@ -168,7 +167,7 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
 function SeedPhraseColumnGroup({ recoveryPhraseArray }: { recoveryPhraseArray: string[] }): JSX.Element {
   const [largestIndexWidth, setLargestIndexWidth] = useState(0)
 
-  const halfLength = recoveryPhraseArray.length / 2
+  const halfLength = Math.ceil(recoveryPhraseArray.length / 2)
   const firstHalfWords = recoveryPhraseArray.slice(0, halfLength)
   const secondHalfWords = recoveryPhraseArray.slice(halfLength)
 

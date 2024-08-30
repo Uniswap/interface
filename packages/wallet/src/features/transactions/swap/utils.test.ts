@@ -2,11 +2,11 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Route } from '@uniswap/v3-sdk'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
-import { ClassicTrade } from 'wallet/src/features/transactions/swap/trade/types'
 import { getWrapType, requireAcceptNewTrade, serializeQueryParams } from 'wallet/src/features/transactions/swap/utils'
-import { WrapType } from 'wallet/src/features/transactions/types'
 import { mockPool } from 'wallet/src/test/mocks'
 
 describe(serializeQueryParams, () => {

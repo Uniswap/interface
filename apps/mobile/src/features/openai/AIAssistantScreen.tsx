@@ -4,7 +4,7 @@ import { Message, OpenAIContext } from 'src/features/openai/OpenAIContext'
 import { Button, Flex, Input, ScrollView, SpinningLoader, Text } from 'ui/src'
 import { ArrowUpCircle, UniswapLogo } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { useActiveAccountAddress, useAvatar } from 'wallet/src/features/wallet/hooks'
@@ -35,7 +35,7 @@ export function AIAssistantScreen(): JSX.Element {
   return (
     <>
       {isOpen && (
-        <BottomSheetModal fullScreen name="account-edit-modal" onClose={close}>
+        <Modal fullScreen name="account-edit-modal" onClose={close}>
           <Flex grow animation="quicker" pb={keyboardHeight > 0 ? keyboardHeight - spacing.spacing20 : '$spacing12'}>
             <ScrollView
               ref={scrollRef}
@@ -106,7 +106,7 @@ export function AIAssistantScreen(): JSX.Element {
               </Flex>
             </Flex>
           </Flex>
-        </BottomSheetModal>
+        </Modal>
       )}
     </>
   )

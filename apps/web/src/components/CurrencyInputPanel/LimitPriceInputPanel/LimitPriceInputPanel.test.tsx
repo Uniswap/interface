@@ -1,3 +1,5 @@
+import 'test-utils/tokens/mocks'
+
 import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
 import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { LimitContext } from 'state/limit/LimitContext'

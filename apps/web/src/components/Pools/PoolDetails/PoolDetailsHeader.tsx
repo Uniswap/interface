@@ -10,7 +10,6 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DetailBubble } from 'components/Pools/PoolDetails/shared'
 import Row from 'components/Row'
 import ShareButton from 'components/Tokens/TokenDetails/ShareButton'
-import { StyledExternalLink } from 'components/Tokens/TokenDetails/TokenDetailsHeader'
 import { ActionButtonStyle, ActionMenuFlyoutStyle } from 'components/Tokens/TokenDetails/shared'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
@@ -18,12 +17,11 @@ import { BIPS_BASE } from 'constants/misc'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize'
-import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import styled, { css, useTheme } from 'lib/styled-components'
-import React, { useMemo, useReducer, useRef } from 'react'
+import styled, { useTheme } from 'lib/styled-components'
+import React, { useMemo, useState } from 'react'
 import { ChevronRight, ExternalLink as ExternalLinkIcon } from 'react-feather'
 import { Link } from 'react-router-dom'
-import { ClickableStyle, EllipsisStyle, ThemedText } from 'theme/components'
+import { ClickableStyle, EllipsisStyle, ExternalLink, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans, t } from 'uniswap/src/i18n'
@@ -31,6 +29,13 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+
+const StyledExternalLink = styled(ExternalLink)`
+  &:hover {
+    // Override hover behavior from ExternalLink
+    opacity: 1;
+  }
+`
 
 const HeaderContainer = styled.div`
   display: flex;
@@ -159,6 +164,7 @@ const ContractsDropdownRowContainer = styled(Row)`
   gap: 12px;
   padding: 10px 8px;
   border-radius: 8px;
+  ${EllipsisStyle}
   &:hover {
     background: ${({ theme }) => theme.surface3};
   }
@@ -215,12 +221,11 @@ const ContractsDropdownRow = ({
   )
 }
 
-const ContractsModalContainer = css`
-  ${ActionMenuFlyoutStyle}
-  min-width: 235px;
-  border-radius: 16px;
-  ${EllipsisStyle}
-`
+const ContractsModalContainer = {
+  ...ActionMenuFlyoutStyle,
+  minWidth: 235,
+  borderRadius: '$rounded16',
+}
 
 const PoolDetailsHeaderActions = ({
   chainId,
@@ -236,37 +241,33 @@ const PoolDetailsHeaderActions = ({
   token1?: Token
 }) => {
   const theme = useTheme()
-
-  const [contractsModalIsOpen, toggleContractsModal] = useReducer((s) => !s, false)
-  const contractsRef = useRef<HTMLDivElement>(null)
-  useOnClickOutside(contractsRef, contractsModalIsOpen ? toggleContractsModal : undefined)
+  const [contractsModalIsOpen, toggleContractsModal] = useState(false)
 
   return (
     <Row width="max-content" justify="flex-end" gap="sm">
-      <div style={{ position: 'relative' }} ref={contractsRef}>
-        <DropdownSelector
-          isOpen={contractsModalIsOpen}
-          toggleOpen={toggleContractsModal}
-          menuLabel={
-            chainId === UniverseChainId.Mainnet ? (
-              <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
-            ) : (
-              <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />
-            )
-          }
-          internalMenuItems={
-            <>
-              <ContractsDropdownRow address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
-              <ContractsDropdownRow address={token0?.address} chainId={chainId} tokens={[token0]} />
-              <ContractsDropdownRow address={token1?.address} chainId={chainId} tokens={[token1]} />
-            </>
-          }
-          tooltipText={t('pool.explorers')}
-          hideChevron
-          buttonCss={ActionButtonStyle}
-          menuFlyoutCss={ContractsModalContainer}
-        />
-      </div>
+      <DropdownSelector
+        isOpen={contractsModalIsOpen}
+        toggleOpen={toggleContractsModal}
+        menuLabel={
+          chainId === UniverseChainId.Mainnet ? (
+            <EtherscanLogo width="18px" height="18px" fill={theme.neutral1} />
+          ) : (
+            <ExplorerIcon width="18px" height="18px" fill={theme.neutral1} />
+          )
+        }
+        internalMenuItems={
+          <>
+            <ContractsDropdownRow address={poolAddress} chainId={chainId} tokens={[token0, token1]} />
+            <ContractsDropdownRow address={token0?.address} chainId={chainId} tokens={[token0]} />
+            <ContractsDropdownRow address={token1?.address} chainId={chainId} tokens={[token1]} />
+          </>
+        }
+        tooltipText={t('pool.explorers')}
+        hideChevron
+        buttonStyle={ActionButtonStyle}
+        dropdownStyle={ContractsModalContainer}
+        adaptToSheet={false}
+      />
       <ShareButton name={poolName} utmSource="share-pool" />
     </Row>
   )

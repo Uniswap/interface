@@ -1,12 +1,8 @@
 import { useCallback } from 'react'
 import { Flex, useHapticFeedback } from 'ui/src'
 import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
-import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { colors, iconSizes } from 'ui/src/theme'
-import {
-  SQUARE_BORDER_RADIUS as NETWORK_LOGO_SQUARE_BORDER_RADIUS,
-  NetworkLogo,
-} from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { NetworkLogo, SQUIRCLE_BORDER_RADIUS_RATIO } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import {
   ActionSheetDropdown,
   ActionSheetDropdownStyleProps,
@@ -54,7 +50,7 @@ export function NetworksInSeries({
           <Flex
             centered
             backgroundColor="$neutral3"
-            borderRadius={NETWORK_LOGO_SQUARE_BORDER_RADIUS}
+            borderRadius={networkIconSize * SQUIRCLE_BORDER_RADIUS_RATIO}
             height={networkIconSize}
             width={networkIconSize}
           >
@@ -104,6 +100,7 @@ export function NetworkFilter({
   return (
     <ActionSheetDropdown
       options={networkOptions}
+      showArrow={!hideArrow}
       styles={{
         alignment: 'right',
         ...styles,
@@ -111,19 +108,10 @@ export function NetworkFilter({
       testID="chain-selector"
       onDismiss={onDismiss}
     >
-      <Flex centered row gap="$spacing8">
-        <NetworkLogo
-          chainId={selectedChain ?? (includeAllNetworks ? null : UniverseChainId.Mainnet)}
-          size={NETWORK_ICON_SIZE}
-        />
-        <RotatableChevron
-          color="$neutral2"
-          direction="down"
-          display={hideArrow ? 'none' : 'block'}
-          height={iconSizes.icon20}
-          width={iconSizes.icon20}
-        />
-      </Flex>
+      <NetworkLogo
+        chainId={selectedChain ?? (includeAllNetworks ? null : UniverseChainId.Mainnet)}
+        size={NETWORK_ICON_SIZE}
+      />
     </ActionSheetDropdown>
   )
 }

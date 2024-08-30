@@ -10,9 +10,18 @@ import { BigNumber } from 'ethers'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
-import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
+import { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import {
+  ExactInputSwapTransactionInfo,
+  ExactOutputSwapTransactionInfo,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { CurrencyId } from 'uniswap/src/types/currency'
+import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import {
   areCurrencyIdsEqual,
@@ -23,16 +32,7 @@ import {
 } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
-import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/api/utils'
-import { ClassicTrade, Trade } from 'wallet/src/features/transactions/swap/trade/types'
-import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
-import {
-  ExactInputSwapTransactionInfo,
-  ExactOutputSwapTransactionInfo,
-  TransactionType,
-  WrapType,
-} from 'wallet/src/features/transactions/types'
 
 export function serializeQueryParams(params: Record<string, Parameters<typeof encodeURIComponent>[0]>): string {
   const queryString = []

@@ -11,6 +11,7 @@ import {
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { SwapPriceUpdateActionProperties } from 'uniswap/src/features/telemetry/types'
+import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
@@ -101,6 +102,7 @@ export const formatSwapButtonClickEventProperties = ({
   allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
   is_auto_router_api: isAutoRouterApi,
   is_auto_slippage: isAutoSlippage,
+  transactionOriginType: TransactionOriginType.Internal,
   chain_id:
     trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
       ? trade.inputAmount.currency.chainId

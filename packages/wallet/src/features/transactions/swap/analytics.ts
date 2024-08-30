@@ -3,14 +3,15 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useEffect } from 'react'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { LocalizationContextState, useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/api/utils'
-import { Trade } from 'wallet/src/features/transactions/swap/trade/types'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
-import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 // hook-based analytics because this one is data-lifecycle dependent
 export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
@@ -77,6 +78,7 @@ export function getBaseTradeAnalyticsProperties({
     fee_amount: portionAmount,
     requestId: trade.quote?.requestId,
     quoteId,
+    transactionOriginType: TransactionOriginType.Internal,
   }
 }
 
@@ -128,5 +130,6 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     token_out_amount_usd: currencyOutAmountUSD,
     allowed_slippage_basis_points: slippageTolerance ? slippageTolerance * 100 : undefined,
     fee_amount: portionAmount,
+    transactionOriginType: TransactionOriginType.Internal,
   }
 }

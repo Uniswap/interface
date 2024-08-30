@@ -1,12 +1,12 @@
 import React from 'react'
-import { LinkButton } from 'src/components/buttons/LinkButton'
 import { DappHeaderIcon } from 'src/components/Requests/DappHeaderIcon'
 import { HeaderText } from 'src/components/Requests/RequestModal/HeaderText'
+import { LinkButton } from 'src/components/buttons/LinkButton'
 import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, useSporeColors } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { formatDappURL } from 'utilities/src/format/urls'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 
 export interface PermitInfo {
   currencyId: string

@@ -44,3 +44,7 @@ export function logWarningToDatadog(
 export function logErrorToDatadog(_error: Error, _context?: LoggerErrorContext): void {
   throw new NotImplementedError('Please use the web / native implementation from Datadog.web.ts or Datadog.native.ts')
 }
+
+export function attachUnhandledRejectionHandler(): void {
+  throw new NotImplementedError('attachUnhandledRejectionHandler')
+}

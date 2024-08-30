@@ -4,9 +4,8 @@ import {
   SwapOrderType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { faker } from 'uniswap/src/test/shared'
-import { createFixture } from 'uniswap/src/test/utils'
+import { createFixture, randomEnumValue } from 'uniswap/src/test/utils'
 import { daiToken, ethToken } from 'wallet/src/test/fixtures/gql/assets'
-import { randomEnumValue } from 'wallet/src/test/utils'
 
 export const swapOrderDetails = createFixture<SwapOrderDetails>()(() => ({
   __typename: 'SwapOrderDetails',

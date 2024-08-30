@@ -10,7 +10,7 @@ import { useCallback } from 'react'
 import { Text } from 'rebass'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { currencyId } from 'utils/currencyId'
 
 const BaseWrapper = styled.div<{ disable?: boolean }>`
@@ -91,7 +91,7 @@ export default function CommonBases({
           <Trace
             logPress
             logKeyPress
-            eventOnTrigger={WalletEventName.TokenSelected}
+            eventOnTrigger={UniswapEventName.TokenSelected}
             properties={formatAnalyticsEventProperties(currency, searchQuery, isAddressSearch, portfolioBalanceUsd)}
             element={InterfaceElementName.COMMON_BASES_CURRENCY_BUTTON}
             key={currencyId(currency)}

@@ -70,6 +70,7 @@ exports[`AccountCardItem renders correctly 1`] = `
         }
       >
         <View
+          onLayout={[Function]}
           style={
             {
               "alignItems": "center",
@@ -217,6 +218,7 @@ exports[`AccountCardItem renders correctly 1`] = `
                       "fontFamily": "Basel-Book",
                       "fontSize": 19,
                       "lineHeight": 24,
+                      "overflow": "hidden",
                     }
                   }
                   suppressHighlighting={true}

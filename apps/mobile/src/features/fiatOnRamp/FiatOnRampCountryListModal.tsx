@@ -10,7 +10,7 @@ import Check from 'ui/src/assets/icons/check.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { useFiatOnRampAggregatorCountryListQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
@@ -141,18 +141,18 @@ export function FiatOnRampCountryListModal({
   const colors = useSporeColors()
 
   return (
-    <BottomSheetModal
+    <Modal
       extendOnKeyboardVisible
       fullScreen
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
       renderBehindBottomInset
-      backgroundColor={colors.surface1.get()}
+      backgroundColor={colors.surface1.val}
       name={ModalName.FiatOnRampCountryList}
       snapPoints={FOR_MODAL_SNAP_POINTS}
       onClose={onClose}
     >
       <CountrySelectorContent countryCode={countryCode} onSelectCountry={onSelectCountry} />
-    </BottomSheetModal>
+    </Modal>
   )
 }

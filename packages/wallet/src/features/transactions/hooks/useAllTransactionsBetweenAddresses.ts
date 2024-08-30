@@ -1,6 +1,6 @@
 import { useMemo } from 'react'
+import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
-import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 
 /**
  * Gets all transactions from a given sender and to a given recipient

@@ -1,9 +1,9 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { PropsWithChildren, useMemo } from 'react'
+import { PropsWithChildren, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlexAlignType } from 'react-native'
+import { FlexAlignType, LayoutChangeEvent, Platform } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { ColorTokens, Flex, SpaceTokens, Text, TextProps, TouchableArea, useHapticFeedback } from 'ui/src'
+import { ColorTokens, Flex, SpaceTokens, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -62,16 +62,6 @@ function CopyButtonWrapper({ children, onPress }: PropsWithChildren<CopyButtonWr
   return <>{children}</>
 }
 
-// This seems to work for most font sizes and screens, but could probably be improved and abstracted
-// if we find more uses for it in other areas.
-function getLineHeightForAdjustedFontSize(nameLength: number, maxLineHeight?: number): number {
-  // as name gets longer, number gets smaller down to 1, past 50 just 1
-  const lineHeightBase = 50 - Math.min(49, nameLength)
-  const scale = 1.2
-  const calculatedLineHeight = lineHeightBase * scale
-  return maxLineHeight ? Math.min(calculatedLineHeight, maxLineHeight) : calculatedLineHeight
-}
-
 /** Helper component to display identicon and formatted address */
 
 export function AddressDisplay({
@@ -105,6 +95,7 @@ export function AddressDisplay({
   const displayName = useDisplayName(address, { includeUnitagSuffix, overrideDisplayName })
   const { avatar } = useAvatar(address)
   const { hapticFeedback } = useHapticFeedback()
+  const [wrapperWidth, setWrapperWidth] = useState<number | undefined>()
 
   const showAddressAsSubtitle = !hideAddressInSubtitle && displayName?.type !== DisplayNameType.Address
 
@@ -143,22 +134,16 @@ export function AddressDisplay({
     )
   }, [address, avatar, showIconBackground, showIconBorder, showViewOnlyBadge, size])
 
-  const name = displayName?.name ?? ''
-
-  // since adjustsFontSizeToFit doesn't really work adjusting line height properly
-  // manually adjust lineHeight things to keep vertical center
-  const dynamicSizedTextVerticalStyles: TextProps =
-    name.length > 20
-      ? {
-          adjustsFontSizeToFit: true,
-          lineHeight: getLineHeightForAdjustedFontSize(name.length, lineHeight),
-        }
-      : {
-          lineHeight: lineHeight ?? fonts[variant].lineHeight,
-        }
-
   return (
-    <Flex shrink alignItems={contentAlign} flexDirection={direction} gap={horizontalGap}>
+    <Flex
+      shrink
+      alignItems={contentAlign}
+      flexDirection={direction}
+      gap={horizontalGap}
+      onLayout={(e: LayoutChangeEvent) => {
+        Platform.OS === 'web' && setWrapperWidth(e.nativeEvent.layout.width)
+      }}
+    >
       {showAccountIcon &&
         (notificationsBadgeContainer ? notificationsBadgeContainer({ children: icon, address }) : icon)}
       <Flex shrink alignItems={itemAlignment} gap={gapBetweenLines}>
@@ -166,6 +151,7 @@ export function AddressDisplay({
           <Flex centered row gap="$spacing12">
             <DisplayNameText
               displayName={displayName}
+              forcedWidth={wrapperWidth}
               gap="$spacing4"
               includeUnitagSuffix={includeUnitagSuffix}
               textProps={{
@@ -177,7 +163,7 @@ export function AddressDisplay({
                 fontSize: mainSize,
                 numberOfLines: 1,
                 testID: `address-display/name/${displayName?.name}`,
-                ...dynamicSizedTextVerticalStyles,
+                lineHeight: lineHeight ?? fonts[variant].lineHeight,
               }}
               unitagIconSize={mainSize}
             />

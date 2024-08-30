@@ -10,6 +10,11 @@ import {
   TransactionDirection,
   TransactionStatus,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  NFTTradeType,
+  TransactionListQueryResponse,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
@@ -19,7 +24,6 @@ import parseOnRampTransaction from 'wallet/src/features/transactions/history/con
 import parseReceiveTransaction from 'wallet/src/features/transactions/history/conversion/parseReceiveTransaction'
 import parseSendTransaction from 'wallet/src/features/transactions/history/conversion/parseSendTransaction'
 import parseTradeTransaction from 'wallet/src/features/transactions/history/conversion/parseTradeTransaction'
-import { NFTTradeType, TransactionListQueryResponse, TransactionType } from 'wallet/src/features/transactions/types'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
 
 /**

@@ -6,7 +6,7 @@ import { closeAllModals, closeModal } from 'src/features/modals/modalSlice'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { iconSizes, opacify } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -33,7 +33,7 @@ export function RestoreWalletModal(): JSX.Element | null {
   }
 
   return (
-    <BottomSheetModal backgroundColor={colors.surface2.get()} isDismissible={false} name={ModalName.RestoreWallet}>
+    <Modal backgroundColor={colors.surface2.val} isDismissible={false} name={ModalName.RestoreWallet}>
       <Flex centered gap="$spacing16" px="$spacing24" py="$spacing12">
         <Flex
           centered
@@ -60,6 +60,6 @@ export function RestoreWalletModal(): JSX.Element | null {
           </Button>
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

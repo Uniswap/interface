@@ -2,7 +2,6 @@
 
 import { ethers, TypedDataDomain, TypedDataField, Wallet } from 'ethers'
 import { arrayify, isHexString } from 'ethers/lib/utils'
-import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { ensureLeading0x } from 'uniswap/src/utils/addresses'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { NativeSigner } from 'wallet/src/features/wallet/signing/NativeSigner'
@@ -31,15 +30,8 @@ export async function signTypedData(
   domain: TypedDataDomain,
   types: Record<string, TypedDataField[]>,
   value: Record<string, unknown>,
-  account: AccountMeta,
-  signerManager: SignerManager,
-  provider?: ethers.providers.JsonRpcProvider,
+  signer: ethers.Signer,
 ): Promise<string> {
-  // Mobile code does not explicitly connect to provider,
-  // Web needs to connect to provider to ensure correct chain
-  const unconnectedSigner = await signerManager.getSignerForAccount(account)
-  const signer = provider ? unconnectedSigner?.connect(provider) : unconnectedSigner
-
   // https://github.com/LedgerHQ/ledgerjs/issues/86
   // Ledger does not support signTypedData yet
   if (!(signer instanceof NativeSigner) && !(signer instanceof Wallet)) {
@@ -62,5 +54,10 @@ export async function signTypedDataMessage(
   // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
   delete parsedData.types.EIP712Domain
 
-  return signTypedData(parsedData.domain, parsedData.types, parsedData.message, account, signerManager, provider)
+  // Mobile code does not explicitly connect to provider,
+  // Web needs to connect to provider to ensure correct chain
+  const unconnectedSigner = await signerManager.getSignerForAccount(account)
+  const signer = provider ? unconnectedSigner?.connect(provider) : unconnectedSigner
+
+  return signTypedData(parsedData.domain, parsedData.types, parsedData.message, signer)
 }

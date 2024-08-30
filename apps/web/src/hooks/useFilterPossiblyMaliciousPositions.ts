@@ -9,9 +9,9 @@ import { useMemo } from 'react'
 import { PositionDetails } from 'types/position'
 import {
   SafetyLevel,
-  SimpleTokenDocument,
-  SimpleTokenQuery,
   Token,
+  TokenDocument,
+  TokenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { hasURL } from 'utils/urlChecks'
 
@@ -26,16 +26,16 @@ function getPositionCurrencyInfosQueryOptions(position: PositionDetails, chainId
     queryKey: ['positionCurrencyInfo', position],
     queryFn: async () => {
       const queries = [
-        apolloClient.query<SimpleTokenQuery>({
-          query: SimpleTokenDocument,
+        apolloClient.query<TokenQuery>({
+          query: TokenDocument,
           variables: {
             address: position.token0,
             chain: chainIdToBackendChain({ chainId }),
           },
           fetchPolicy: 'cache-first',
         }),
-        apolloClient.query<SimpleTokenQuery>({
-          query: SimpleTokenDocument,
+        apolloClient.query<TokenQuery>({
+          query: TokenDocument,
           variables: {
             address: position.token1,
             chain: chainIdToBackendChain({ chainId }),

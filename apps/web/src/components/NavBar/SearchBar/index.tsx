@@ -1,6 +1,6 @@
-// eslint-disable-next-line no-restricted-imports
 import { InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
 import { Token } from '@uniswap/sdk-core'
+import { ScrollBarStyles } from 'components/Common'
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import { SearchBarDropdown } from 'components/NavBar/SearchBar/SearchBarDropdown'
@@ -145,12 +145,13 @@ const SearchBarDropdownContainer = styled.div<{ $isOpen: boolean; $fullScreen: b
   border: 1px solid ${({ theme }) => theme.surface3};
   border-radius: 20px;
   max-height: 100%;
-  overflow-y: hidden;
+  overflow-y: auto;
   ${({ $isOpen }) => $isOpen && OpenSearchDropdown}
   ${({ $fullScreen }) => $fullScreen && FullScreenSearchDropdown}
   @media screen and (max-width: ${NAV_BREAKPOINT.isMobileDrawer}px) {
     border: none;
   }
+  ${ScrollBarStyles}
 `
 const CloseIcon = styled(X)`
   width: 25px;

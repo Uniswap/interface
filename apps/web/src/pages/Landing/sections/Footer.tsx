@@ -11,6 +11,7 @@ import { iconSizes } from 'ui/src/theme'
 import { useTranslation } from 'uniswap/src/i18n'
 
 const SOCIAL_ICONS_SIZE = `${iconSizes.icon32}px`
+
 const SocialIcon = deprecatedStyled(Wiggle)`
   flex: 0;
   fill: ${(props) => props.theme.neutral1};
@@ -54,7 +55,7 @@ export function Socials({ iconSize }: { iconSize?: string }) {
 function FooterSection({ title, items }: { title: string; items: MenuItem[] }) {
   const theme = useTheme()
   return (
-    <Flex width="auto" $md={{ width: '100%' }} flexGrow={0} flexShrink={1} flexBasis="auto" gap="10px">
+    <Flex width={130} $md={{ width: '100%' }} flexGrow={0} flexShrink={1} flexBasis="auto" gap={10}>
       <Text variant="body1">{title}</Text>
       {items.map((item, index) => (
         <MenuLink
@@ -89,7 +90,7 @@ export function Footer() {
   }
 
   return (
-    <Flex width="100%" gap="$spacing24" pt="$none" px="$spacing48" pb="40px" $lg={{ px: '$spacing40' }}>
+    <Flex maxWidth="100vw" width="100%" gap="$spacing24" pt="$none" px="$spacing48" pb={40} $lg={{ px: '$spacing40' }}>
       <Flex row $md={{ flexDirection: 'column' }} justifyContent="space-between" gap="$spacing32">
         <Flex height="100%" gap="$spacing60">
           <Flex $md={{ display: 'none' }}>

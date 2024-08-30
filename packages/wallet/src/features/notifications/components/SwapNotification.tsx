@@ -1,14 +1,14 @@
 import { useTranslation } from 'react-i18next'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { SwapTxNotification } from 'wallet/src/features/notifications/types'
 import { formSwapNotificationTitle } from 'wallet/src/features/notifications/utils'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
 import { useCreateSwapFormState } from 'wallet/src/features/transactions/hooks'
-import { TransactionStatus } from 'wallet/src/features/transactions/types'
 
 export function SwapNotification({
   notification: {

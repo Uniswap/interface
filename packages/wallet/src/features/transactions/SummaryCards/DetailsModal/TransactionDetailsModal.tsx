@@ -3,12 +3,17 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, ContextMenu, Flex, Separator, Text, TouchableArea, isWeb } from 'ui/src'
 import { AnglesDownUp, SortVertical, TripleDots, UniswapX } from 'ui/src/components/icons'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { AuthTrigger } from 'wallet/src/features/auth/types'
+import {
+  TransactionDetails,
+  TransactionType,
+  TransactionTypeInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { FORMAT_DATE_TIME_MEDIUM, useFormattedDateTime } from 'wallet/src/features/language/localizedDayjs'
 import { ApproveTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/ApproveTransactionDetails'
 import { HeaderLogo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/HeaderLogo'
@@ -20,7 +25,6 @@ import { TransferTransactionDetails } from 'wallet/src/features/transactions/Sum
 import { WrapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/WrapTransactionDetails'
 import {
   isApproveTransactionInfo,
-  isFiatPurchaseTransactionInfo,
   isNFTApproveTransactionInfo,
   isNFTMintTransactionInfo,
   isNFTTradeTransactionInfo,
@@ -35,7 +39,6 @@ import {
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import { useTransactionActions } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActions'
 import { getTransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/utils'
-import { TransactionDetails, TransactionType, TransactionTypeInfo } from 'wallet/src/features/transactions/types'
 import { getIsCancelable } from 'wallet/src/features/transactions/utils'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -101,8 +104,6 @@ export function TransactionDetailsContent({
   const getContentComponent = (): JSX.Element | null => {
     if (isApproveTransactionInfo(typeInfo)) {
       return <ApproveTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
-    } else if (isFiatPurchaseTransactionInfo(typeInfo)) {
-      return <></>
     } else if (isNFTApproveTransactionInfo(typeInfo)) {
       return <NftTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
     } else if (isNFTMintTransactionInfo(typeInfo)) {
@@ -195,7 +196,7 @@ export function TransactionDetailsModal({
 
   return (
     <>
-      <BottomSheetModal isDismissible alignment="top" name={ModalName.TransactionDetails} onClose={onClose}>
+      <Modal isDismissible alignment="top" name={ModalName.TransactionDetails} onClose={onClose}>
         <Flex gap="$spacing12" pb={isWeb ? '$none' : '$spacing12'} px={isWeb ? '$none' : '$spacing24'}>
           <TransactionDetailsHeader transactionActions={transactionActions} transactionDetails={transactionDetails} />
           {!hideTopSeparator && <Separator />}
@@ -211,7 +212,7 @@ export function TransactionDetailsModal({
             </Flex>
           )}
         </Flex>
-      </BottomSheetModal>
+      </Modal>
       {renderModals()}
     </>
   )

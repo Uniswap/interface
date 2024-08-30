@@ -1,174 +1,164 @@
-import { motion } from 'framer-motion'
-import styled, { useTheme } from 'lib/styled-components'
-import { PillButton } from 'pages/Landing/components/cards/PillButton'
-import { Box, H2, H3 } from 'pages/Landing/components/Generics'
+import { H2, H3 } from 'pages/Landing/components/Generics'
 import { BookOpen, ChatBubbles, HelpCircle } from 'pages/Landing/components/Icons'
-import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { t, Trans } from 'uniswap/src/i18n'
+import { PillButton } from 'pages/Landing/components/cards/PillButton'
+import { Flex, Text, styled, useSporeColors } from 'ui/src'
+import { Trans, t } from 'uniswap/src/i18n'
 
-const SectionLayout = styled.div`
-  width: 100%;
-  max-width: 1360px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  padding: 0 40px;
-  @media (max-width: 768px) {
-    padding: 0 48px;
-  }
-  @media (max-width: 468px) {
-    padding: 0 24px;
-  }
-`
-const Layout = styled.div`
-  width: 100%;
-  max-width: 1280px;
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  grid-template-rows: repeat(4, 1fr);
-  grid-column-gap: 16px;
-  grid-row-gap: 16px;
-  @media (max-width: 768px) {
-    grid-template-rows: repeat(2, 1fr);
-    grid-template-columns: repeat(2, 1fr);
-  }
-`
-const SectionCol = styled(Box)`
-  flex-direction: column;
-  max-width: 1328px;
-  gap: 24px;
-  @media (max-width: 768px) {
-    gap: 24px;
-  }
-`
-const Card = styled.a<{
-  backgroundColor?: string
-}>`
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  position: relative;
-  height: 250px;
-  border-radius: 20px;
-  padding: 32px 28px;
-  overflow: hidden;
-  text-decoration: none;
-  background-color: ${(props) => props.backgroundColor || props.theme.surface2};
-  @media (max-width: 1024px) {
-    gap: 16px;
-    padding: 24px;
-  }
-  @media (max-width: 768px) {
-    gap: 16px;
-    padding: 24px;
-  }
-`
-const SquareCard = motion(styled(Card)`
-  grid-column: span 1 / span 1;
-  grid-row: span 4 / span 4;
+const SectionLayout = styled(Flex, {
+  width: '100%',
+  maxWidth: 1360,
+  alignItems: 'center',
+  p: 40,
 
-  @media (max-width: 768px) {
-    grid-column: span 4 / span 4;
-    grid-row: span 1 / span 1;
-  }
-`)
-const HelpCenterCard = styled(SquareCard)`
-  @media (max-width: 1024px) {
-    grid-column: span 2 / span 2;
+  $lg: {
+    p: 48,
+  },
 
-    grid-row-start: 1;
-    grid-row-end: 3;
-  }
-  @media (max-width: 768px) {
-    grid-column: span 4 / span 4;
-    grid-row: span 1 / span 1;
-  }
-`
-const BlogCard = styled(SquareCard)`
-  @media (max-width: 1024px) {
-    grid-column: span 2 / span 2;
+  $sm: {
+    p: 24,
+  },
+})
 
-    grid-row-start: 3;
-    grid-row-end: 5;
-  }
-  @media (max-width: 768px) {
-    grid-column: span 4 / span 4;
-    grid-row: span 1 / span 1;
-  }
-`
-const RectCard = motion(styled(Card)`
-  grid-column: span 2 / span 2;
-  grid-row: span 4 / span 4;
+const Layout = styled(Flex, {
+  width: '100%',
+  maxWidth: 1280,
+  // TODO: tamagui needs a fix for changing display in media query in platform
+  className: 'connect-with-us-layout',
 
-  gap: 32px;
+  '$platform-web': {
+    display: 'grid',
+    gridTemplateColumns: 'repeat(4, 1fr)',
+    gridColumnGap: '16px',
+    gridRowGap: '16px',
+  },
+})
 
-  @media (max-width: 768px) {
-    grid-column: span 4 / span 4;
-    grid-row: span 1 / span 1;
-  }
-`)
+const SectionCol = styled(Flex, {
+  flex: 1,
+  maxWidth: 1328,
+  gap: 24,
+
+  $lg: {
+    gap: 24,
+  },
+})
+
+const Card = styled(Flex, {
+  containerType: 'normal',
+  alignItems: 'flex-start',
+  justifyContent: 'space-between',
+  backgroundColor: '$surface2',
+  position: 'relative',
+  height: 250,
+  borderRadius: 20,
+  p: 32,
+  overflow: 'hidden',
+
+  $xl: {
+    gap: 16,
+    p: 24,
+  },
+
+  $lg: {
+    gap: 16,
+    p: 24,
+    width: '100%',
+  },
+})
+
+const SquareCard = styled(Card, {
+  cursor: 'pointer',
+  tag: 'a',
+  className: 'text-decoration-none',
+
+  '$platform-web': {
+    gridColumn: 'span 1',
+    gridRow: 'span 4',
+  },
+
+  $xl: {
+    '$platform-web': {
+      // @ts-expect-error TODO tamagui needs to add gridArea type
+      gridArea: `3 / span 2 / 5 / span 2`,
+    },
+  },
+})
+
+const RectCard = styled(Card, {
+  cursor: 'pointer',
+  tag: 'a',
+
+  '$platform-web': {
+    textDecoration: 'none',
+    gridColumn: 'span 2',
+    gridRow: 'span 4',
+    gap: 32,
+  },
+})
 
 const helpPrimary = '#FF4D00'
 const blogPrimary = '#8E8767'
 
 export function NewsletterEtc() {
-  const theme = useTheme()
-  const isDarkMode = useIsDarkMode()
+  const theme = useSporeColors()
+
   return (
     <SectionLayout>
-      <Box direction="row" maxWidth="1328px" gap="24px" width="100%">
-        <SectionCol justify-content="space-between" height="100%">
+      <Flex row maxWidth={1328} gap="$spacing24" width="100%">
+        <SectionCol justifyContent="space-between" height="100%">
           <H2>
             <Trans i18nKey="landing.connectWithUs" />
           </H2>
           <Layout>
-            <HelpCenterCard
-              initial="initial"
-              whileHover="hover"
+            <SquareCard
+              group="card"
               href="https://help.uniswap.org/"
               target="_blank"
               rel="noopener noreferrer"
-              backgroundColor={isDarkMode ? 'rgba(255, 77, 0, 0.08)' : 'rgba(255, 77, 0, 0.04)'}
+              backgroundColor="rgba(255, 77, 0, 0.04)"
+              $theme-dark={{
+                backgroundColor: 'rgba(255, 77, 0, 0.08)',
+              }}
             >
               <PillButton icon={<HelpCircle fill={helpPrimary} />} color={helpPrimary} label={t('common.helpCenter')} />
               <H3 color={helpPrimary}>
                 <Trans i18nKey="common.getSupport.button" />
               </H3>
-            </HelpCenterCard>
-            <BlogCard
-              initial="initial"
-              whileHover="hover"
+            </SquareCard>
+            <SquareCard
+              group="card"
               href="https://blog.uniswap.org/"
               target="_blank"
               rel="noopener noreferrer"
-              backgroundColor={isDarkMode ? 'rgba(98, 84, 50, 0.16)' : 'rgba(98, 84, 50, 0.04)'}
+              backgroundColor="rgba(98, 84, 50, 0.04)"
+              $theme-dark={{
+                backgroundColor: 'rgba(98, 84, 50, 0.16)',
+              }}
             >
               <PillButton icon={<BookOpen fill={blogPrimary} />} color={blogPrimary} label={t('common.blog')} />
               <H3 color={blogPrimary}>
                 <Trans i18nKey="landing.teamInsights" />
               </H3>
-            </BlogCard>
+            </SquareCard>
             <RectCard
-              backgroundColor={theme.accent2}
-              initial="initial"
-              whileHover="hover"
+              group="card"
               href="https://twitter.com/Uniswap/"
               target="_blank"
               rel="noopener noreferrer"
+              backgroundColor="$accent2"
             >
               <PillButton
-                icon={<ChatBubbles fill={theme.accent1} />}
-                color={theme.accent1}
+                icon={<ChatBubbles fill={theme.accent1.val} />}
+                color={theme.accent1.val}
                 label={t('common.stayConnected')}
               />
-              <H3 color={theme.accent1}>
+              <Text color="$accent1" fontSize={24}>
                 <Trans i18nKey="landing.followOnX" />
-              </H3>
+              </Text>
             </RectCard>
           </Layout>
         </SectionCol>
-      </Box>
+      </Flex>
     </SectionLayout>
   )
 }

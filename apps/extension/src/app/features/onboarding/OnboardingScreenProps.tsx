@@ -4,6 +4,7 @@ export type OnboardingScreenProps = {
   Icon?: JSX.Element
   children?: JSX.Element
   nextButtonEnabled?: boolean
+  nextButtonIcon?: JSX.Element
   nextButtonText?: string
   nextButtonTheme?: ThemeNames
   onBack?: () => void
