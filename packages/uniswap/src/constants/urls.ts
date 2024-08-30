@@ -73,7 +73,7 @@ export const uniswapUrls = {
   // Feature service URL's
   unitagsApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Unitags)}/v2/unitags`,
   scantasticApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.Scantastic)}/v2/scantastic`,
-  fiatOnRampApiUrl: `${getCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/fiat-on-ramp`,
+  fiatOnRampApiUrl: `${getRbCloudflareApiBaseUrl(TrafficFlows.FOR)}/v2/fiat-on-ramp`,
   tradingApiUrl: getCloudflareApiBaseUrl(TrafficFlows.TradingApi),
 
   // API Paths
@@ -135,4 +135,9 @@ function getServicePrefix(flow?: TrafficFlows): string {
 
 function getCloudflareApiBaseUrl(flow?: TrafficFlows): string {
   return `https://${getServicePrefix(flow)}${getCloudflarePrefix(flow)}.gateway.uniswap.org`
+}
+
+// For now, this method should only route to beta.gateway.*
+function getRbCloudflareApiBaseUrl(flow?: TrafficFlows): string {
+  return `https://${getServicePrefix(flow)}${getCloudflarePrefix(flow)}.gateway.rigoblock.com`
 }

@@ -41,13 +41,6 @@ export default function Landing() {
     return () => clearTimeout(timeoutId)
   }, [account.address, prevAccount, accountDrawer, navigate, queryParams.intro, connector, disconnect])
 
-  // Redirect to mint page if user is connected or has been recently
-  // The intro query parameter can be used to override this
-
-  if (((account.isConnected || hasRecentConnection) && !queryParams.intro) || !account.isConnected){
-    return <Navigate to={{ ...location, pathname: '/mint' }} replace />
-  }
-
   return (
     <Trace logImpression page={InterfacePageName.LANDING_PAGE}>
       <LandingV2 transition={transition} />
