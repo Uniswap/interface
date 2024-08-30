@@ -44,7 +44,7 @@ export function PoolVersionMenu({ protocolVersion }: { protocolVersion: Protocol
       internalMenuItems={
         <>
           {Object.values(menuItems)
-            .filter((pool) => pool.title !== menuItems[protocolVersion].title)
+            .filter((pool) => pool.title === menuItems[ProtocolVersion.V3].title)
             .map((protocol) => (
               <PoolVersionItem href={protocol.link} key={protocol.title}>
                 <Pool width="20px" height="20px" />

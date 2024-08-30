@@ -15,8 +15,9 @@ import CTACards from 'pages/LegacyPool/CTACards'
 import { PoolVersionMenu } from 'pages/LegacyPool/shared'
 import { LoadingRows } from 'pages/LegacyPool/styled'
 import { useMemo, useState } from 'react'
-import { AlertTriangle, BookOpen, ChevronsRight, Inbox, Layers } from 'react-feather'
+import { AlertTriangle, BookOpen /*, ChevronsRight*/, Inbox /*, Layers*/ } from 'react-feather'
 import { Link } from 'react-router-dom'
+import { useActiveSmartPool } from 'state/application/hooks'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import { HideSmall, ThemedText } from 'theme/components'
 import { PositionDetails } from 'types/position'
@@ -157,7 +158,9 @@ export default function Pool() {
   const theme = useTheme()
   const [userHideClosedPositions, setUserHideClosedPositions] = useUserHideClosedPositions()
 
-  const { positions, loading: positionsLoading } = useV3Positions(account.address)
+  // we query pool address from application state
+  const { address: smartPoolAddress } = useActiveSmartPool()
+  const { positions, loading: positionsLoading } = useV3Positions(smartPoolAddress)
 
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
     (acc, p) => {
@@ -180,16 +183,19 @@ export default function Pool() {
 
   const showConnectAWallet = Boolean(!account)
 
+  // we use this flag to prevent display of learn about liquidity and redirect to top pools
+  const shoudDisplayCTACards: boolean = false
+
   const menuItems = [
-    <PoolMenuItem href="/migrate/v2" key="migrate">
-      {t('common.migrate')}
-      <ChevronsRight size={16} />
-    </PoolMenuItem>,
-    <PoolMenuItem href="/pools/v2" key="v2-liquidity">
-      {t('pool.v2liquidity')}
-      <Layers size={16} />
-    </PoolMenuItem>,
-    <PoolMenuItem href="https://support.uniswap.org/hc/en-us/categories/8122334631437-Providing-Liquidity-" key="learn">
+    //<PoolMenuItem href="/migrate/v2" key="migrate">
+    //  {t('common.migrate')}
+    //  <ChevronsRight size={16} />
+    //</PoolMenuItem>,
+    //<PoolMenuItem href="/pools/v2" key="v2-liquidity">
+    //  {t('pool.v2liquidity')}
+    //  <Layers size={16} />
+    //</PoolMenuItem>,
+    <PoolMenuItem href="https://docs.rigoblock.com/" key="learn">
       {t('pool.learn')}
       <BookOpen size={16} />
     </PoolMenuItem>,
@@ -275,9 +281,11 @@ export default function Pool() {
                 </ErrorContainer>
               )}
             </MainContentWrapper>
-            <HideSmall>
-              <CTACards />
-            </HideSmall>
+            {shoudDisplayCTACards && (
+              <HideSmall>
+                <CTACards />
+              </HideSmall>
+            )}
           </AutoColumn>
         </AutoColumn>
       </PageWrapper>

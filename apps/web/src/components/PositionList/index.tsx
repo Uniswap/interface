@@ -75,7 +75,7 @@ export default function PositionList({
     <>
       <DesktopHeader>
         <div>
-          {t('pool.smartPoolPositions')}
+          {t('pool.smartPoolPosition')}
           {positions && ' (' + positions.length + ')'}
         </div>
 
