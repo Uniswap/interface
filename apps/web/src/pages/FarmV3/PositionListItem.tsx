@@ -1,7 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Percent, Price, Token } from '@ubeswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
-import RangeBadge from 'components/Badge/RangeBadge'
+//import RangeBadge from 'components/Badge/RangeBadge'
+import { SmallButtonPrimary } from 'components/Button'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import Loader from 'components/Icons/LoadingSpinner'
@@ -10,8 +11,8 @@ import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePool } from 'hooks/usePools'
 import { Trans } from 'i18n'
+import { darken } from 'polished'
 import { useMemo } from 'react'
-import { Link } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
@@ -21,10 +22,30 @@ import { unwrappedToken } from 'utils/unwrappedToken'
 
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
 
-const LinkRow = styled(Link)`
+const DepositButton = styled(SmallButtonPrimary)`
+  padding: 6px 12px;
+`
+const WithdrawButton = styled(SmallButtonPrimary)`
+  padding: 6px 12px;
+
+  background-color: ${({ theme }) => theme.primary2};
+  color: ${({ theme }) => theme.neutralContrast};
+  &:focus {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary2)};
+    background-color: ${({ theme }) => darken(0.05, theme.primary2)};
+  }
+  &:hover {
+    background-color: ${({ theme }) => darken(0.05, theme.primary2)};
+  }
+  &:active {
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.primary2)};
+    background-color: ${({ theme }) => darken(0.1, theme.primary2)};
+  }
+`
+
+const LinkRow = styled.div`
   align-items: center;
   display: flex;
-  cursor: pointer;
   user-select: none;
   display: flex;
   flex-direction: column;
@@ -108,6 +129,7 @@ interface PositionListItemProps {
   liquidity: BigNumber
   tickLower: number
   tickUpper: number
+  isStaked: boolean
   onWithdraw: any
   onDeposit: any
 }
@@ -174,6 +196,7 @@ export default function PositionListItem({
   liquidity,
   tickLower,
   tickUpper,
+  isStaked,
   onWithdraw, // eslint-disable-line
   onDeposit, // eslint-disable-line
 }: PositionListItemProps) {
@@ -204,14 +227,14 @@ export default function PositionListItem({
   const currencyBase = base && unwrappedToken(base)
 
   // check if price is within range
-  const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
+  //const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
 
-  const positionSummaryLink = '/pools/' + tokenId
+  // const positionSummaryLink = '/pools/' + tokenId
 
-  const removed = liquidity?.eq(0)
+  //const removed = liquidity?.eq(0)
 
   return (
-    <LinkRow to={positionSummaryLink}>
+    <LinkRow>
       <RowBetween>
         <PrimaryPositionIdData>
           <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={18} margin />
@@ -221,7 +244,18 @@ export default function PositionListItem({
 
           <FeeTierText>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</FeeTierText>
         </PrimaryPositionIdData>
-        <RangeBadge removed={removed} inRange={!outOfRange} />
+
+        {isStaked ? (
+          <WithdrawButton onClick={() => onWithdraw(tokenId)}>
+            <Trans>Withdraw</Trans>
+          </WithdrawButton>
+        ) : (
+          <DepositButton onClick={() => onDeposit(tokenId)}>
+            <Trans>Deposit</Trans>
+          </DepositButton>
+        )}
+
+        {/*<RangeBadge removed={removed} inRange={!outOfRange} />*/}
       </RowBetween>
 
       {priceLower && priceUpper ? (

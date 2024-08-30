@@ -14,10 +14,10 @@ export interface IncentiveKey {
 }
 
 const incentiveKeys: Record<string, IncentiveKey> = {
-  '0xe9fb3b6fbeca26b4a8fb14b74843cc27a99593102dc531376a85cb4e15b7d2ff': {
+  '0xa3f6bdb776ca3306a13103f22f7ac388dd02abd1e069229d4bc18c1e5cd17fea': {
     rewardToken: '0x71e26d0e519d14591b9de9a0fe9513a398101490',
     pool: '0x3efc8d831b754d3ed58a2b4c37818f2e69dadd19',
-    startTime: 1724841568,
+    startTime: 1725033815,
     lockTime: 0,
     minimumTickRange: 0,
     maxTickLower: MAX_TICK,
@@ -26,12 +26,18 @@ const incentiveKeys: Record<string, IncentiveKey> = {
     minTickUpper: MIN_TICK,
   },
 }
-const incentiveIds: string[] = ['0xe9fb3b6fbeca26b4a8fb14b74843cc27a99593102dc531376a85cb4e15b7d2ff']
+const incentiveIds: string[] = ['0xa3f6bdb776ca3306a13103f22f7ac388dd02abd1e069229d4bc18c1e5cd17fea']
 
 export function getAllIncentiveIds() {
   return incentiveIds
 }
 
-export function getIncentiveKey(inceniveId: string) {
-  return incentiveKeys[inceniveId]
+export function getIncentiveIdsByPool(poolAddress: string) {
+  return incentiveIds.filter((incentiveId) => {
+    return incentiveKeys[incentiveId].pool == poolAddress
+  })
+}
+
+export function getIncentiveKey(incentiveId: string) {
+  return incentiveKeys[incentiveId]
 }

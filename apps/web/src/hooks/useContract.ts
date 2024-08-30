@@ -51,12 +51,14 @@ import {
   StakingRewards,
   UbeConvert,
   UbeToken,
+  UbeswapV3Farming,
   Weth,
 } from 'uniswap/src/abis/types'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall, UniswapV3Pool } from 'uniswap/src/abis/types/v3'
 import { V3Migrator } from 'uniswap/src/abis/types/v3/V3Migrator'
 import UBE_CONVERT_ABI from 'uniswap/src/abis/ube-convert.json'
 import UBE_TOKEN_ABI from 'uniswap/src/abis/ube-token.json'
+import UBESWAP_V3_FARMING_ABI from 'uniswap/src/abis/ubeswap-v3-farming.json'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { getContract } from 'utilities/src/contracts/getContract'
 
@@ -232,4 +234,8 @@ export function usePoolManagerContract(address?: string, withSignerIfPossible?: 
 
 export function usePoolContract(address?: string) {
   return useContract<UniswapV3Pool>(address, V3_POOL_ABI.abi, true)
+}
+
+export function useUbeswapV3FarmingContract(address?: string) {
+  return useContract<UbeswapV3Farming>(address, UBESWAP_V3_FARMING_ABI, true)
 }

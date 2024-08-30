@@ -13,9 +13,10 @@ import { isSupportedChain } from 'constants/chains'
 import { BIPS_BASE } from 'constants/misc'
 import { useToken } from 'hooks/Tokens'
 import { usePoolContract } from 'hooks/useContract'
-import { useV3Positions } from 'hooks/useV3Positions'
+import { useV3Positions, useV3StakedPositions } from 'hooks/useV3Positions'
 import { Trans } from 'i18n'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
+import { getIncentiveIdsByPool, getIncentiveKey } from 'pages/Earn/data/v3-incentive-list'
 import DoubleTokenLogo from 'pages/Earn/tables/FarmTable/DoubleTokenLogo'
 import { useMemo } from 'react'
 import { AlertTriangle, Inbox } from 'react-feather'
@@ -25,12 +26,8 @@ import { ThemedText } from 'theme/components'
 import { PositionDetails } from 'types/position'
 import { useMedia } from 'ui'
 import PositionList from './PositionList'
+import { useDepositCallback, useWithdrawCallback } from './farm-actions'
 import { LoadingRows } from './styled'
-
-interface UseV3PositionsResults {
-  loading: boolean
-  positions?: PositionDetails[]
-}
 
 const PageWrapper = styled(AutoColumn)`
   padding: 68px 8px 0px;
@@ -179,39 +176,18 @@ function WrongNetworkCard() {
   )
 }
 
-function useStakedPositions(account: string | null | undefined): UseV3PositionsResults {
-  const positions: PositionDetails[] = [
-    {
-      tokenId: BigNumber.from(10000),
-      fee: 100,
-      feeGrowthInside0LastX128: BigNumber.from(0),
-      feeGrowthInside1LastX128: BigNumber.from(0),
-      liquidity: BigNumber.from(0),
-      nonce: BigNumber.from(0),
-      operator: '0x471EcE3750Da237f93B8E339c536989b8978a438',
-      tickLower: -100,
-      tickUpper: 100,
-      token0: '0x471EcE3750Da237f93B8E339c536989b8978a438',
-      token1: '0x71e26d0E519D14591b9dE9a0fE9513A398101490',
-      tokensOwed0: BigNumber.from(0),
-      tokensOwed1: BigNumber.from(0),
-    },
-  ]
-  const loading = account == 'aa'
-  return { positions, loading }
-}
-
 export default function FarmV3() {
   const { account } = useWeb3React()
   const chainId = ChainId.CELO
   const { poolAddress } = useParams<{ poolAddress: string }>()
   console.log('poolAddress', poolAddress)
   const toggleWalletDrawer = useToggleAccountDrawer()
+  const incentiveIds = poolAddress ? getIncentiveIdsByPool(poolAddress) : []
 
   const theme = useTheme()
 
   const { positions, loading: positionsLoading } = useV3Positions(account)
-  const { positions: stakedPositions, loading: stakedPositionsLoading } = useStakedPositions(account)
+  const { positions: stakedPositions, loading: stakedPositionsLoading } = useV3StakedPositions(account, incentiveIds)
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
@@ -243,6 +219,9 @@ export default function FarmV3() {
   const token0 = useToken(poolToken0, ChainId.CELO)
   const token1 = useToken(poolToken1, ChainId.CELO)
 
+  const [isDepositing, callDeposit] = useDepositCallback()
+  const [isWithdrawing, callWithdraw] = useWithdrawCallback()
+
   console.log('poolFee', poolFee)
   console.log('poolToken0', poolToken0)
   console.log('poolToken1', poolToken1)
@@ -253,8 +232,23 @@ export default function FarmV3() {
 
   const showConnectAWallet = Boolean(!account)
 
-  const onWithdraw = () => {}
-  const onDeposit = () => {}
+  const onWithdraw = (tokenId: BigNumber) => {
+    if (isWithdrawing == false) {
+      callWithdraw(
+        tokenId,
+        incentiveIds.map((incentiveId) => getIncentiveKey(incentiveId))
+      )
+    }
+  }
+
+  const onDeposit = (tokenId: BigNumber) => {
+    if (isDepositing == false) {
+      callDeposit(
+        tokenId,
+        incentiveIds.map((incentiveId) => getIncentiveKey(incentiveId))
+      )
+    }
+  }
 
   return (
     <Trace page={InterfacePageName.FARM_V3} shouldLogImpression>
@@ -272,7 +266,7 @@ export default function FarmV3() {
             <MainContentWrapper>
               {positionsLoading || stakedPositionsLoading ? (
                 <PositionsLoadingPlaceholder />
-              ) : positionsInThisPool && stakedPositions && positionsInThisPool.length > 0 ? (
+              ) : positionsInThisPool && stakedPositions ? (
                 <PositionList
                   positions={positionsInThisPool}
                   stakedPositons={stakedPositions}

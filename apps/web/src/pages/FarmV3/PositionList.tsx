@@ -57,17 +57,29 @@ export default function PositionList({ positions, stakedPositons, onWithdraw, on
       <DesktopHeader>
         <div>
           <Trans>Your positions</Trans>
-          {positions && ' (' + positions.length + ')'}
+          {positions && ' (' + (positions.length + stakedPositons.length) + ')'}
         </div>
       </DesktopHeader>
       <MobileHeader>
         <Trans>Your positions</Trans>
       </MobileHeader>
       {positions.map((p) => (
-        <PositionListItem key={p.tokenId.toString()} {...p} onWithdraw={onWithdraw} onDeposit={onDeposit} />
+        <PositionListItem
+          key={p.tokenId.toString()}
+          {...p}
+          isStaked={false}
+          onWithdraw={onWithdraw}
+          onDeposit={onDeposit}
+        />
       ))}
       {stakedPositons.map((p) => (
-        <PositionListItem key={p.tokenId.toString()} {...p} onWithdraw={onWithdraw} onDeposit={onDeposit} />
+        <PositionListItem
+          key={p.tokenId.toString()}
+          {...p}
+          isStaked={true}
+          onWithdraw={onWithdraw}
+          onDeposit={onDeposit}
+        />
       ))}
     </>
   )

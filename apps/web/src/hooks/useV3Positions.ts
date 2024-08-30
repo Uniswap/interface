@@ -1,6 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import { usePendingTransactions } from 'state/transactions/hooks'
 import { PositionDetails } from 'types/position'
 
 import { useV3NFTPositionManagerContract } from './useContract'
@@ -10,7 +11,7 @@ interface UseV3PositionsResults {
   positions?: PositionDetails[]
 }
 
-function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
+export function useV3PositionsFromTokenIds(tokenIds: BigNumber[] | undefined): UseV3PositionsResults {
   const positionManager = useV3NFTPositionManagerContract()
   const inputs = useMemo(() => (tokenIds ? tokenIds.map((tokenId) => [BigNumber.from(tokenId)]) : []), [tokenIds])
   const results = useSingleContractMultipleData(positionManager, 'positions', inputs)
@@ -100,6 +101,56 @@ export function useV3Positions(account: string | null | undefined): UseV3Positio
 
   return {
     loading: someTokenIdsLoading || balanceLoading || positionsLoading,
+    positions,
+  }
+}
+
+export function useV3StakedPositions(
+  account: string | null | undefined,
+  incentiveIds: string[]
+): UseV3PositionsResults {
+  const [tokenIds, setTokenIds] = useState<BigNumber[]>([])
+  const [tokenIdsLoading, setTokenIdsLoading] = useState(true)
+  const incentiveIdsJson = JSON.stringify(incentiveIds)
+  const pendingTxs = usePendingTransactions()
+
+  useEffect(() => {
+    let active = true
+    const _incentiveIds = JSON.parse(incentiveIdsJson)
+    if (account && account.length > 0 && _incentiveIds.length > 0) {
+      setTokenIdsLoading(true)
+      ;(async () => {
+        const res = await fetch('http://interface-gateway.ubeswap.org/v1/graphql', {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            operationName: 'FarmV3AccountStakes',
+            variables: {
+              address: account,
+              incentiveIds: _incentiveIds,
+            },
+            query: '',
+          }),
+        })
+        const data = await res.json()
+        console.log(data)
+        if (!active) return
+        setTokenIdsLoading(false)
+        setTokenIds(data.data.stakes.map((s: any) => BigNumber.from(s.tokenId)))
+      })()
+    }
+    return () => {
+      active = false
+    }
+  }, [account, incentiveIdsJson, pendingTxs])
+
+  const { positions, loading: positionsLoading } = useV3PositionsFromTokenIds(tokenIds)
+
+  return {
+    loading: tokenIdsLoading || positionsLoading,
     positions,
   }
 }
