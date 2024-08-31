@@ -11,7 +11,8 @@ import usePrevious from 'hooks/usePrevious'
 import useSelectChain from 'hooks/useSelectChain'
 import { useAtomValue } from 'jotai/utils'
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useAddPopup, useRemovePopup } from 'state/application/hooks'
+import { useLocation } from 'react-router-dom'
+import { useActiveSmartPool, useAddPopup, useRemovePopup } from 'state/application/hooks'
 import { PopupType } from 'state/application/reducer'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useAddUserToken } from 'state/user/hooks'
@@ -42,12 +43,13 @@ export interface CurrencySearchFilters {
 
 interface CurrencySearchProps {
   currencyField: CurrencyField
+  hideChainSwitch: boolean
   onCurrencySelect: (currency: Currency) => void
   onDismiss: () => void
 }
 
 // TODO: we moved filtering by operate pool to currency search modal, check if needed
-export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: CurrencySearchProps) {
+export function CurrencySearch({ currencyField, hideChainSwitch, onCurrencySelect, onDismiss }: CurrencySearchProps) {
   const account = useAccount()
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, currentTab, multichainUXEnabled } =
     useSwapAndLimitContext()
@@ -67,6 +69,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
   const removePopup = useRemovePopup()
 
   const selectChain = useSelectChain()
+  const { address: smartPoolAddress } = useActiveSmartPool()
 
   const searchHistory = useMemo(
     () =>
@@ -114,6 +117,7 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
       )
     }
   }, [currentTab, chainId, prevChainId, multichainUXEnabled, addPopup, removePopup])
+  const location = useLocation()
 
   return (
     <Trace
@@ -123,8 +127,13 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
     >
       <Flex width="100%" flexGrow={1} flexShrink={1} flexBasis="auto">
         <TokenSelectorContent
-          activeAccountAddress={account.address!}
+          activeAccountAddress={
+            currentTab === SwapTab.Swap && location.pathname !== '/mint'
+              ? smartPoolAddress ?? undefined
+              : account.address!
+          }
           isLimits={currentTab === SwapTab.Limit}
+          hideChainSwitch={hideChainSwitch}
           searchHistory={searchHistory as TokenSearchResult[]}
           valueModifiers={[
             {

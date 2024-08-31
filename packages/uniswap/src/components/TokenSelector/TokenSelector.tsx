@@ -68,6 +68,7 @@ export interface TokenSelectorProps {
   searchHistory?: TokenSearchResult[]
   isSurfaceReady?: boolean
   isLimits?: boolean
+  hideChainSwitch?: boolean
   onClose: () => void
   onDismiss: () => void
   onPressAnimation: () => void
@@ -99,6 +100,7 @@ export function TokenSelectorContent({
   variation,
   isSurfaceReady = true,
   isLimits,
+  hideChainSwitch,
   activeAccountAddress,
   onDismiss,
   onSelectChain,
@@ -352,17 +354,19 @@ export function TokenSelectorContent({
               endAdornment={
                 <Flex row alignItems="center">
                   {hasClipboardString && <PasteButton inline onPress={handlePaste} />}
-                  <NetworkFilter
-                    includeAllNetworks
-                    selectedChain={chainFilter}
-                    styles={isExtension ? { dropdownZIndex: zIndices.overlay } : undefined}
-                    onDismiss={onDismiss}
-                    onPressAnimation={onPressAnimation}
-                    onPressChain={(newChainId) => {
-                      onChangeChainFilter(newChainId)
-                      onSelectChain?.(newChainId)
-                    }}
-                  />
+                  {!hideChainSwitch && (
+                    <NetworkFilter
+                      includeAllNetworks
+                      selectedChain={chainFilter}
+                      styles={isExtension ? { dropdownZIndex: zIndices.overlay } : undefined}
+                      onDismiss={onDismiss}
+                      onPressAnimation={onPressAnimation}
+                      onPressChain={(newChainId) => {
+                        onChangeChainFilter(newChainId)
+                        onSelectChain?.(newChainId)
+                      }}
+                    />
+                  )}
                 </Flex>
               }
               placeholder={t('tokens.selector.search.placeholder')}

@@ -1,5 +1,6 @@
 import React, { useCallback, useState } from 'react'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { GRG } from 'uniswap/src/constants/tokens'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
@@ -40,7 +41,8 @@ function _TokenOptionItem({
   isKeyboardOpen,
 }: OptionProps): JSX.Element {
   const { currencyInfo } = option
-  const { currency, currencyId, safetyLevel, logoUrl } = currencyInfo
+  const { currency, currencyId, logoUrl } = currencyInfo
+  let { safetyLevel } = currencyInfo
   const [showWarningModal, setShowWarningModal] = useState(false)
 
   const handleShowWarningModal = useCallback((): void => {
@@ -48,6 +50,11 @@ function _TokenOptionItem({
     setShowWarningModal(true)
   }, [onDismiss, setShowWarningModal])
 
+  if (currency.isToken && currency.address.toLowerCase() === GRG[currency.chainId]?.address.toLowerCase()) {
+    safetyLevel = SafetyLevel.Verified
+  }
+
+  // TODO: do not display warning for GRG[chainId]
   const onPressTokenOption = useCallback(() => {
     if (
       showWarnings &&

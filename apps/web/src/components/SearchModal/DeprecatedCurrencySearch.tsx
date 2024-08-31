@@ -61,6 +61,7 @@ interface CurrencySearchProps {
   onCurrencySelect: (currency: Currency, hasWarning?: boolean) => void
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
+  hideChainSwitch?: boolean
   filters?: CurrencySearchFilters
   operatedPools?: Token[]
 }
@@ -70,6 +71,7 @@ export function DeprecatedCurrencySearch({
   onCurrencySelect,
   otherSelectedCurrency,
   showCurrencyAmount,
+  hideChainSwitch,
   onDismiss,
   isOpen,
   filters,
@@ -167,10 +169,6 @@ export function DeprecatedCurrencySearch({
   const node = useRef<HTMLDivElement>()
   useOnClickOutside(node, open ? toggle : undefined)
 
-  // flag used to hide chain selector since not working in create pool and problematic in swap with new
-  //  CurrencySearch component
-  const shouldDisplayChainSelector = false
-
   return (
     <ContentWrapper>
       <Trace
@@ -203,7 +201,7 @@ export function DeprecatedCurrencySearch({
               onChange={handleInput}
               onKeyDown={handleEnter}
             />
-            {shouldDisplayChainSelector && (
+            {!hideChainSwitch && (
               <ChainSelectorWrapper>
                 <ChainSelector />
               </ChainSelectorWrapper>

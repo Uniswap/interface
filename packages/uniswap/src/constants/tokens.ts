@@ -1,4 +1,5 @@
 import { Token, UNI_ADDRESSES } from '@uniswap/sdk-core'
+import { GRG_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const USDC_GOERLI = new Token(
@@ -206,5 +207,57 @@ export const UNI = {
     18,
     'UNI',
     'Uniswap',
+  ),
+}
+
+export const GRG: { [chainId: number]: Token } = {
+  [UniverseChainId.Mainnet]: new Token(
+    UniverseChainId.Mainnet,
+    GRG_ADDRESSES[UniverseChainId.Mainnet] as string,
+    18,
+    'GRG',
+    'Rigo'
+  ),
+  [UniverseChainId.Goerli]: new Token(
+    UniverseChainId.Goerli,
+    GRG_ADDRESSES[UniverseChainId.Goerli] as string,
+    18,
+    'GRG',
+    'Rigo'
+  ),
+  [UniverseChainId.Optimism]: new Token(
+    UniverseChainId.Optimism,
+    GRG_ADDRESSES[UniverseChainId.Optimism] as string,
+    18,
+    'GRG',
+    'Rigo'
+  ),
+  [UniverseChainId.Bnb]: new Token(
+    UniverseChainId.Bnb,
+    GRG_ADDRESSES[UniverseChainId.Bnb] as string,
+    18,
+    'GRG',
+    'Rigo'
+  ),
+  [UniverseChainId.Polygon]: new Token(
+    UniverseChainId.Polygon,
+    GRG_ADDRESSES[UniverseChainId.Polygon] as string,
+    18,
+    'GRG',
+    'Rigo'
+  ),
+  [UniverseChainId.Base]: new Token(
+    UniverseChainId.Base,
+    GRG_ADDRESSES[UniverseChainId.Base] as string,
+    18,
+    'GRG',
+    'Rigo'
+  ),
+  [UniverseChainId.ArbitrumOne]: new Token(
+    UniverseChainId.ArbitrumOne,
+    GRG_ADDRESSES[UniverseChainId.ArbitrumOne] as string,
+    18,
+    'GRG',
+    'Rigo'
   ),
 }

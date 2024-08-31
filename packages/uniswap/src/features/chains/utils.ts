@@ -30,18 +30,18 @@ export function toGraphQLChain(chainId: ChainId | number): Chain | undefined {
       return Chain.Base
     case ChainId.BNB:
       return Chain.Bnb
-    case ChainId.AVALANCHE:
-      return Chain.Avalanche
-    case ChainId.CELO:
-      return Chain.Celo
-    case ChainId.CELO_ALFAJORES:
-      return Chain.Celo
-    case ChainId.BLAST:
-      return Chain.Blast
-    case ChainId.ZORA:
-      return Chain.Zora
-    case ChainId.ZKSYNC:
-      return Chain.Zksync
+    //case ChainId.AVALANCHE:
+    //  return Chain.Avalanche
+    //case ChainId.CELO:
+    //  return Chain.Celo
+    //case ChainId.CELO_ALFAJORES:
+    //  return Chain.Celo
+    //case ChainId.BLAST:
+    //  return Chain.Blast
+    //case ChainId.ZORA:
+    //  return Chain.Zora
+    //case ChainId.ZKSYNC:
+    //  return Chain.Zksync
   }
   return undefined
 }
@@ -90,16 +90,16 @@ export function fromGraphQLChain(chain: Chain | undefined): WalletChainId | null
       return UniverseChainId.Base
     case Chain.Bnb:
       return UniverseChainId.Bnb
-    case Chain.Blast:
-      return UniverseChainId.Blast
-    case Chain.Avalanche:
-      return UniverseChainId.Avalanche
-    case Chain.Celo:
-      return UniverseChainId.Celo
-    case Chain.Zora:
-      return UniverseChainId.Zora
-    case Chain.Zksync:
-      return UniverseChainId.Zksync
+    //case Chain.Blast:
+    //  return UniverseChainId.Blast
+    //case Chain.Avalanche:
+    //  return UniverseChainId.Avalanche
+    //case Chain.Celo:
+    //  return UniverseChainId.Celo
+    //case Chain.Zora:
+    //  return UniverseChainId.Zora
+    //case Chain.Zksync:
+    //  return UniverseChainId.Zksync
   }
 
   return null
@@ -124,10 +124,10 @@ export function fromMoonpayNetwork(moonpayNetwork: string | undefined): WalletCh
       return UniverseChainId.Bnb
     case Chain.Base.toLowerCase():
       return UniverseChainId.Base
-    case Chain.Avalanche.toLowerCase():
-      return UniverseChainId.Avalanche
-    case Chain.Celo.toLowerCase():
-      return UniverseChainId.Celo
+    //case Chain.Avalanche.toLowerCase():
+    //  return UniverseChainId.Avalanche
+    //case Chain.Celo.toLowerCase():
+    //  return UniverseChainId.Celo
     case undefined:
       return UniverseChainId.Mainnet
     default:
@@ -149,16 +149,16 @@ export function fromUniswapWebAppLink(network: string | null): WalletChainId | n
       return UniverseChainId.Base
     case Chain.Bnb.toLowerCase():
       return UniverseChainId.Bnb
-    case Chain.Blast.toLowerCase():
-      return UniverseChainId.Blast
-    case Chain.Avalanche.toLowerCase():
-      return UniverseChainId.Avalanche
-    case Chain.Celo.toLowerCase():
-      return UniverseChainId.Celo
-    case Chain.Zora.toLowerCase():
-      return UniverseChainId.Zora
-    case Chain.Zksync.toLowerCase():
-      return UniverseChainId.Zksync
+    //case Chain.Blast.toLowerCase():
+    //  return UniverseChainId.Blast
+    //case Chain.Avalanche.toLowerCase():
+    //  return UniverseChainId.Avalanche
+    //case Chain.Celo.toLowerCase():
+    //  return UniverseChainId.Celo
+    //case Chain.Zora.toLowerCase():
+    //  return UniverseChainId.Zora
+    //case Chain.Zksync.toLowerCase():
+    //  return UniverseChainId.Zksync
     default:
       throw new Error(`Network "${network}" can not be mapped`)
   }
@@ -178,16 +178,16 @@ export function toUniswapWebAppLink(chainId: WalletChainId): string | null {
       return Chain.Base.toLowerCase()
     case UniverseChainId.Bnb:
       return Chain.Bnb.toLowerCase()
-    case UniverseChainId.Blast:
-      return Chain.Blast.toLowerCase()
-    case UniverseChainId.Avalanche:
-      return Chain.Avalanche.toLowerCase()
-    case UniverseChainId.Celo:
-      return Chain.Celo.toLowerCase()
-    case UniverseChainId.Zora:
-      return Chain.Zora.toLowerCase()
-    case UniverseChainId.Zksync:
-      return Chain.Zksync.toLowerCase()
+    //case UniverseChainId.Blast:
+    //  return Chain.Blast.toLowerCase()
+    //case UniverseChainId.Avalanche:
+    //  return Chain.Avalanche.toLowerCase()
+    //case UniverseChainId.Celo:
+    //  return Chain.Celo.toLowerCase()
+    //case UniverseChainId.Zora:
+    //  return Chain.Zora.toLowerCase()
+    //case UniverseChainId.Zksync:
+    //  return Chain.Zksync.toLowerCase()
     default:
       throw new Error(`ChainID "${chainId}" can not be mapped`)
   }
