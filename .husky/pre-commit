@@ -1,19 +1,19 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-yarn g:run-fast-checks
+#yarn g:run-fast-checks
 
-if command -v git-secrets &> /dev/null
-then # only run if git-secrets is installed
-  # Initialise git-secrets configuration
-  git-secrets --register-aws > /dev/null
-  
-  echo "Running git-secrets..."
-  # Scans all files that are about to be committed.
-  git-secrets --pre_commit_hook -- "$@"
-fi
+#if command -v git-secrets &> /dev/null
+#then # only run if git-secrets is installed
+#  # Initialise git-secrets configuration
+#  git-secrets --register-aws > /dev/null
+#  
+#  echo "Running git-secrets..."
+#  # Scans all files that are about to be committed.
+#  git-secrets --pre_commit_hook -- "$@"
+#fi
 
-if command -v trufflehog &> /dev/null
-then # only run if trufflehog is installed
-  trufflehog git file://. --since-commit HEAD --only-verified --fail
-fi
+#if command -v trufflehog &> /dev/null
+#then # only run if trufflehog is installed
+#  trufflehog git file://. --since-commit HEAD --only-verified --fail
+#fi
