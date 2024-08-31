@@ -1,39 +1,21 @@
-import { FunctionComponent, useMemo } from 'react'
-import { SvgProps } from 'react-native-svg'
+import { useMemo } from 'react'
 import { isWeb } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons'
-import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
-import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
-import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
-import { isPriceImpactWarning, useSwapWarnings } from 'wallet/src/features/transactions/hooks/useSwapWarnings'
-import { useTransactionGasWarning } from 'wallet/src/features/transactions/hooks/useTransactionGasWarning'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import {
   Warning,
   WarningAction,
   WarningColor,
   WarningLabel,
   WarningSeverity,
-} from 'wallet/src/features/transactions/WarningModal/types'
-
-export type WarningWithStyle = {
-  warning: Warning
-  color: WarningColor
-  Icon: FunctionComponent<SvgProps> | typeof AlertTriangle | null
-  displayedInline: boolean
-}
-
-export type ParsedWarnings = {
-  blockingWarning?: Warning
-  formScreenWarning?: WarningWithStyle
-  insufficientBalanceWarning?: Warning
-  insufficientGasFundsWarning?: Warning
-  priceImpactWarning?: Warning
-  reviewScreenWarning?: WarningWithStyle
-  warnings: Warning[]
-}
+} from 'uniswap/src/features/transactions/WarningModal/types'
+import { ParsedWarnings, WarningWithStyle } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
+import { useSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
+import { isPriceImpactWarning, useSwapWarnings } from 'wallet/src/features/transactions/hooks/useSwapWarnings'
+import { useTransactionGasWarning } from 'wallet/src/features/transactions/hooks/useTransactionGasWarning'
 
 export function useParsedSwapWarnings(): ParsedWarnings {
-  const { account } = useTransactionModalContext()
+  const account = useAccountMeta()
   const { derivedSwapInfo } = useSwapFormContext()
   const { gasFee } = useSwapTxContext()
 

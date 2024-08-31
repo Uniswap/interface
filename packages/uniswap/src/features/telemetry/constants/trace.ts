@@ -10,6 +10,8 @@ export const ModalName = {
   AccountEditLabel: 'account-edit--label-modal',
   AccountSwitcher: 'account-switcher-modal',
   AddWallet: 'add-wallet-modal',
+  BackupReminder: 'backup-reminder-modal',
+  BackupReminderWarning: 'backup-reminder-warning-modal',
   BlockedAddress: 'blocked-address',
   BuyNativeToken: 'buy-native-token-modal',
   ChooseProfilePhoto: 'choose-profile-photo-modal',
@@ -29,6 +31,7 @@ export const ModalName = {
   ForceUpgradeModal: 'force-upgrade-modal',
   ForgotPassword: 'forgot-password',
   FundWallet: 'fund-wallet',
+  KoreaCexTransferInfoModal: 'korea-cex-transfer-info-modal',
   Legal: 'legal',
   LanguageSelector: 'language-selector-modal',
   NewAddressWarning: 'new-address-warning-modal',
@@ -46,6 +49,7 @@ export const ModalName = {
   RecipientSelectSmartContractWarning: 'recipient-select-smart-contract-warning',
   RecipientSelectViewOnlyWarning: 'recipient-select-view-only-warning',
   ReceiveCryptoModal: 'receive-crypto-modal',
+  RecoverySpeedBump: 'recovery-speed-bump',
   RemoveWallet: 'remove-wallet-modal',
   RestoreWallet: 'restore-wallet-modal',
   RemoveSeedPhraseWarningModal: 'remove-seed-phrase-warning-modal',
@@ -213,10 +217,14 @@ export const SectionName = {
   SwapReview: 'swap-review',
   TokenSelector: 'token-selector',
   TokenDetails: 'token-details',
-  TransferForm: 'transfer-form',
-  TransferPending: 'transfer-pending',
-  TransferReview: 'transfer-review',
+
+  // These name / values don't match because we refactored code to use "send", but wanted to preserve old names for dashboards
+  SendForm: 'transfer-form',
+  SendReview: 'transfer-review',
+  SendRecipientSelectFullScreen: 'send-recipient-select',
+
   ChainSelector: 'chain-selector',
+
   // alphabetize additional values.
 } as const
 

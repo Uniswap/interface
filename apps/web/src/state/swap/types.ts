@@ -1,7 +1,5 @@
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
-import { parsedQueryString } from 'hooks/useParsedQueryString'
-import { ParsedQs } from 'qs'
 import { Dispatch, ReactNode, SetStateAction, createContext } from 'react'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
@@ -32,24 +30,6 @@ type SwapContextType = {
   setSwapState: Dispatch<SetStateAction<SwapState>>
 }
 
-function parseTokenAmountURLParameter(urlParam: any): string {
-  return typeof urlParam === 'string' && !isNaN(parseFloat(urlParam)) ? urlParam : ''
-}
-
-function parseIndependentFieldURLParameter(urlParam: any): Field {
-  return typeof urlParam === 'string' && urlParam.toLowerCase() === 'output' ? Field.OUTPUT : Field.INPUT
-}
-
-export function queryParametersToSwapState(parsedQs: ParsedQs): SwapState {
-  const typedValue = parseTokenAmountURLParameter(parsedQs.exactAmount)
-  const independentField = parseIndependentFieldURLParameter(parsedQs.exactField)
-
-  return {
-    typedValue,
-    independentField,
-  }
-}
-
 export const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
   currencies: {},
   currencyBalances: {},
@@ -62,7 +42,10 @@ export const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
   },
 })
 
-export const initialSwapState: SwapState = queryParametersToSwapState(parsedQueryString())
+export const initialSwapState: SwapState = {
+  typedValue: '',
+  independentField: Field.INPUT,
+}
 
 export const SwapContext = createContext<SwapContextType>({
   swapState: initialSwapState,
@@ -118,6 +101,8 @@ export const SwapAndLimitContext = createContext<SwapAndLimitContextType>({
 export interface SerializedCurrencyState {
   inputCurrencyId?: string
   outputCurrencyId?: string
+  value?: string
+  field?: string
   chainId?: number
 }
 

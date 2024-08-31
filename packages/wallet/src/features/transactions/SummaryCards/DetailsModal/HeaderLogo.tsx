@@ -1,35 +1,16 @@
-import { Flex, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { ContractInteraction } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { DappLogoWithWCBadge, LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import {
   useCurrencyInfo,
   useNativeCurrencyInfo,
   useWrappedNativeCurrencyInfo,
-} from 'wallet/src/features/tokens/useCurrencyInfo'
-import {
-  SwapTypeTransactionInfo,
-  isApproveTransactionInfo,
-  isFiatPurchaseTransactionInfo,
-  isNFTApproveTransactionInfo,
-  isNFTMintTransactionInfo,
-  isNFTTradeTransactionInfo,
-  isOnRampPurchaseTransactionInfo,
-  isOnRampTransferTransactionInfo,
-  isReceiveTokenTransactionInfo,
-  isSendTokenTransactionInfo,
-  isSwapTransactionInfo,
-  isWCConfirmTransactionInfo,
-  isWrapTransactionInfo,
-} from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
+} from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   ApproveTransactionInfo,
-  FiatPurchaseTransactionInfo,
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
   NFTTradeTransactionInfo,
@@ -41,7 +22,24 @@ import {
   UnknownTransactionInfo,
   WCConfirmInfo,
   WrapTransactionInfo,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { DappLogoWithWCBadge, LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
+import {
+  SwapTypeTransactionInfo,
+  isApproveTransactionInfo,
+  isLocalOnRampTransactionInfo,
+  isNFTApproveTransactionInfo,
+  isNFTMintTransactionInfo,
+  isNFTTradeTransactionInfo,
+  isOnRampPurchaseTransactionInfo,
+  isOnRampTransferTransactionInfo,
+  isReceiveTokenTransactionInfo,
+  isSendTokenTransactionInfo,
+  isSwapTransactionInfo,
+  isWCConfirmTransactionInfo,
+  isWrapTransactionInfo,
+} from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 
 const TXN_DETAILS_ICON_SIZE = iconSizes.icon40
 
@@ -77,14 +75,12 @@ const getLogoWithTxStatus = ({
   />
 )
 
-export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element {
+export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element | null {
   const { typeInfo } = transactionDetails
 
-  const getHeaderLogoComponent = (): JSX.Element => {
+  const getHeaderLogoComponent = (): JSX.Element | null => {
     if (isApproveTransactionInfo(typeInfo)) {
       return <ApproveHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
-    } else if (isFiatPurchaseTransactionInfo(typeInfo)) {
-      return <FiatPurchaseHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else if (isNFTApproveTransactionInfo(typeInfo)) {
       return <NFTHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else if (isNFTMintTransactionInfo(typeInfo)) {
@@ -103,6 +99,8 @@ export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element
       return <WrapHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else if (isOnRampPurchaseTransactionInfo(typeInfo) || isOnRampTransferTransactionInfo(typeInfo)) {
       return <OnRampHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+    } else if (isLocalOnRampTransactionInfo(typeInfo)) {
+      return null // LocalOnRamp transactions are never visible
     } else {
       return <UnknownHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     }
@@ -141,25 +139,6 @@ function ApproveHeaderLogo({
     assetType: AssetType.Currency,
     currencyInfo,
     transactionDetails,
-  })
-}
-
-function FiatPurchaseHeaderLogo({
-  transactionDetails,
-  typeInfo,
-}: SpecificHeaderLogoProps<FiatPurchaseTransactionInfo>): JSX.Element {
-  const outputCurrencyInfo = useCurrencyInfo(
-    typeInfo.outputCurrency?.metadata.contractAddress
-      ? buildCurrencyId(transactionDetails.chainId, typeInfo.outputCurrency?.metadata.contractAddress)
-      : undefined,
-  )
-  const serviceProviderLogoUrl = getOptionalServiceProviderLogo(typeInfo.serviceProviderLogo, useIsDarkMode())
-  return getLogoWithTxStatus({
-    assetType: AssetType.Currency,
-    transactionDetails,
-    currencyInfo: outputCurrencyInfo,
-    institutionLogoUrl: typeInfo.institutionLogoUrl,
-    serviceProviderLogoUrl,
   })
 }
 

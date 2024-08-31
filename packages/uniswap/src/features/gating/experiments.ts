@@ -4,7 +4,7 @@
  * These must match parameter names on Statsig within an experiment
  */
 export enum Experiments {
-  ArbitrumXV2OpenOrders = 'arbitrum_uniswapx_openorders',
+  ArbitrumXV2OpenOrders = 'arbitrum_uniswapx_openorders_v2',
   OnboardingRedesignHomeScreen = 'onboarding-redesign-home-screen',
   OnboardingRedesignRecoveryBackup = 'onboarding-redesign-recovery-backup',
 }
@@ -24,6 +24,7 @@ export enum OnboardingRedesignHomeScreenProperties {
 
 export enum OnboardingRedesignRecoveryBackupProperties {
   Enabled = 'enabled',
+  BackupReminderDelaySecs = 'backupReminderDelaySecs',
 }
 
 export type ExperimentProperties = {

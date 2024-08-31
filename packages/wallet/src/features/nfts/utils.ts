@@ -1,5 +1,5 @@
 import { NftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { NFTKeyToVisibility } from 'wallet/src/features/favorites/slice'
+import { NFTKeyToVisibility } from 'uniswap/src/features/favorites/slice'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
 export function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] | undefined {

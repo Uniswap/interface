@@ -1,19 +1,20 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { CurrencyField, TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
+import { useOnChainCurrencyBalance } from 'uniswap/src/features/portfolio/api'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { useTrade } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { useOnChainCurrencyBalance } from 'wallet/src/features/portfolio/api'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { useTransactionModalContext } from 'wallet/src/features/transactions/contexts/TransactionModalContext'
-import { useTrade } from 'wallet/src/features/transactions/swap/trade/api/hooks/useTrade'
 import { useSetTradeSlippage } from 'wallet/src/features/transactions/swap/trade/hooks/useSetTradeSlippage'
-import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { getWrapType, isWrapAction } from 'wallet/src/features/transactions/swap/utils'
-import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 /** Returns information derived from the current swap state */
 export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
@@ -30,14 +31,16 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     tradeProtocolPreference,
   } = state
 
-  const { account } = useTransactionModalContext()
+  const account = useAccountMeta()
 
   const currencyInInfo = useCurrencyInfo(
     currencyAssetIn ? buildCurrencyId(currencyAssetIn.chainId, currencyAssetIn.address) : undefined,
+    { refetch: true },
   )
 
   const currencyOutInfo = useCurrencyInfo(
     currencyAssetOut ? buildCurrencyId(currencyAssetOut.chainId, currencyAssetOut.address) : undefined,
+    { refetch: true },
   )
 
   const currencies = useMemo(() => {

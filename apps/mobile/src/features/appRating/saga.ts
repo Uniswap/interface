@@ -1,4 +1,3 @@
-import * as StoreReview from 'expo-store-review'
 import { Alert } from 'react-native'
 import { MobileState } from 'src/app/mobileReducer'
 import { APP_FEEDBACK_LINK } from 'src/constants/urls'
@@ -6,12 +5,12 @@ import { hasConsecutiveRecentSwapsSelector } from 'src/features/appRating/select
 import { call, delay, put, select, takeLatest } from 'typed-redux-saga'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n/i18n'
 import { openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
-import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
-import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAppRating } from 'wallet/src/features/wallet/slice'
 
@@ -21,6 +20,17 @@ const MIN_PROMPT_REMINDER_MS = 120 * ONE_DAY_MS
 const MIN_FEEDBACK_REMINDER_MS = 180 * ONE_DAY_MS
 // small delay to help ux
 const SWAP_FINALIZED_PROMPT_DELAY_MS = 3 * ONE_SECOND_MS
+
+// Wrap the StoreReview import in a function that catches the specific error
+const getStoreReview = async () => {
+  try {
+    return await import('expo-store-review')
+  } catch (error) {
+    const message = error instanceof Error ? error.message : 'Store Review import error'
+    logger.warn('appRating/saga.ts', 'getStoreReview', message)
+    return
+  }
+}
 
 export function* appRatingWatcherSaga() {
   function* processFinalizedTx(action: ReturnType<typeof finalizeTransaction>) {
@@ -36,6 +46,12 @@ export function* appRatingWatcherSaga() {
 
 function* maybeRequestAppRating() {
   try {
+    const StoreReview = yield* call(getStoreReview)
+    if (!StoreReview) {
+      logger.warn('appRating/saga.ts', 'maybeRequestAppRating', 'StoreReview not available')
+      return
+    }
+
     const canRequestReview = yield* call(StoreReview.hasAction)
     if (!canRequestReview) {
       return
@@ -174,10 +190,11 @@ async function openFeedbackRequestAlert() {
 /** Opens the native store review modal that will send the rating to the store. */
 async function openNativeReviewModal() {
   try {
-    if (await StoreReview.hasAction()) {
+    const StoreReview = await getStoreReview()
+    if (StoreReview && (await StoreReview.hasAction())) {
       await StoreReview.requestReview()
     }
   } catch (e) {
-    logger.error(e, { tags: { file: 'appRating/saga', function: 'useAppRating' } })
+    logger.error(e, { tags: { file: 'appRating/saga', function: 'openNativeReviewModal' } })
   }
 }

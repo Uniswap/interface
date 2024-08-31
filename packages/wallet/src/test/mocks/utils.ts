@@ -11,10 +11,6 @@ import { NumberType } from 'utilities/src/format/types'
 import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 
-export const noOpFunction = (): void => {
-  return
-}
-
 export const mockLocalizedFormatter: LocalizationContextState = {
   formatCurrencyAmount(input): string {
     return formatCurrencyAmount({ ...input, amount: input.value, locale: 'en-US' })

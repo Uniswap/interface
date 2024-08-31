@@ -72,7 +72,7 @@ export function useTransactionCanceller() {
 }
 
 export function useMultichainTransactions(): [TransactionDetails, SupportedInterfaceChainId][] {
-  const state = useAppSelector((state) => state.transactions)
+  const state = useAppSelector((state) => state.localWebTransactions)
   return WEB_SUPPORTED_CHAIN_IDS.flatMap((chainId) =>
     state[chainId]
       ? Object.values(state[chainId]).map((tx): [TransactionDetails, SupportedInterfaceChainId] => [tx, chainId])
@@ -84,7 +84,7 @@ export function useMultichainTransactions(): [TransactionDetails, SupportedInter
 function useAllTransactions(): { [txHash: string]: TransactionDetails } {
   const account = useAccount()
 
-  const state = useAppSelector((state) => state.transactions)
+  const state = useAppSelector((state) => state.localWebTransactions)
 
   return account.status === 'connected' && account.chainId ? state[account.chainId] ?? {} : {}
 }

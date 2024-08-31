@@ -1,19 +1,25 @@
-import Modal from 'components/Modal'
-import { RowBetween } from 'components/Row'
 import { scrollbarStyle } from 'components/SearchModal/CurrencyList/index.css'
-import { PaddedColumn, SearchInput } from 'components/SearchModal/styled'
+import { SearchInput } from 'components/SearchModal/styled'
 import { CountryListRow } from 'pages/Swap/Buy/CountryListRow'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
+import { NAV_HEIGHT } from 'theme'
 import { CloseIcon } from 'theme/components'
+import { AdaptiveWebModal, Flex, styled } from 'ui/src'
 import { Text } from 'ui/src/components/text/Text'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
-import { Trans, t } from 'uniswap/src/i18n'
+import { useTranslation } from 'uniswap/src/i18n'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 
 const ROW_ITEM_SIZE = 56
+export const HeaderContent = styled(Flex, {
+  flexShrink: 1,
+  $sm: { pt: '$none' },
+  p: '$spacing20',
+  gap: '$spacing12',
+})
 
 interface CountryListModalProps {
   isOpen: boolean
@@ -31,6 +37,7 @@ export function CountryListModal({
   onSelectCountry,
 }: CountryListModalProps) {
   const [searchQuery, setSearchQuery] = useState<string>('')
+  const { t } = useTranslation()
 
   const filteredData: FORCountry[] = useMemo(() => {
     const sorted = bubbleToTop(countryList, (c) => c.countryCode === selectedCountry?.countryCode)
@@ -54,15 +61,20 @@ export function CountryListModal({
   }, [onDismiss])
 
   return (
-    <Modal isOpen={isOpen} onDismiss={closeModal} height="90vh" maxHeight={700}>
+    <AdaptiveWebModal
+      p={0}
+      isOpen={isOpen}
+      flex={1}
+      onClose={closeModal}
+      maxHeight={700}
+      $sm={{ height: `calc(100dvh - ${NAV_HEIGHT}px)` }}
+    >
       <ContentWrapper>
-        <PaddedColumn gap="md">
-          <RowBetween>
-            <Text variant="body3">
-              <Trans i18nKey="common.selectRegion.label" />
-            </Text>
+        <HeaderContent>
+          <Flex width="100%" row justifyContent="space-between">
+            <Text variant="body2">{t('common.selectRegion.label')}</Text>
             <CloseIcon data-testid="CountryListModal-close" onClick={closeModal} />
-          </RowBetween>
+          </Flex>
           <SearchInput
             type="text"
             id="for-country-search-input"
@@ -72,8 +84,8 @@ export function CountryListModal({
             value={searchQuery}
             onChange={handleInput}
           />
-        </PaddedColumn>
-        <div style={{ flex: '1' }}>
+        </HeaderContent>
+        <Flex grow>
           <AutoSizer disableWidth>
             {({ height }: { height: number }) => (
               <div data-testid="country-list-wrapper">
@@ -102,8 +114,8 @@ export function CountryListModal({
               </div>
             )}
           </AutoSizer>
-        </div>
+        </Flex>
       </ContentWrapper>
-    </Modal>
+    </AdaptiveWebModal>
   )
 }

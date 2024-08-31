@@ -46,6 +46,7 @@ import i18n from 'uniswap/src/i18n/i18n'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
+import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { SharedProvider } from 'wallet/src/provider'
 
 const supportsSidePanel = checksIfSupportsSidePanel()
@@ -178,8 +179,10 @@ export default function OnboardingApp(): JSX.Element {
                 <GraphqlProvider>
                   <LocalizationContextProvider>
                     <UnitagUpdaterContextProvider>
-                      <PrimaryAppInstanceDebuggerLazy />
-                      <RouterProvider router={router} />
+                      <WalletUniswapProvider>
+                        <PrimaryAppInstanceDebuggerLazy />
+                        <RouterProvider router={router} />
+                      </WalletUniswapProvider>
                     </UnitagUpdaterContextProvider>
                   </LocalizationContextProvider>
                 </GraphqlProvider>

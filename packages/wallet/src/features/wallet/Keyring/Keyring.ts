@@ -79,6 +79,40 @@ export interface IKeyring {
   generateAddressForMnemonic(mnemonic: string, derivationIndex: number): Promise<string>
 
   /**
+   * Derives public addresses from a mnemonic for a range of derivation indexes.
+   *
+   * @param mnemonic mnemonic to generate private key for (current convention is to
+   * use the public address associated with mnemonic at derivation index 0)
+   * @param startDerivationIndex number used to specify the derivation index at which to start deriving private keys
+   * from the mnemonic
+   * @param endDerivationIndex number used to specify the derivation index at which to stop deriving private keys
+   * from the mnemonic
+   * @returns public addresses associated with the private keys generated from the mnemonic at the given derivation index range
+   */
+  generateAddressesForMnemonic(
+    mnemonic: string,
+    startDerivationIndex: number,
+    endDerivationIndex: number,
+  ): Promise<Array<string>>
+
+  /**
+   * Derives public addresses from `mnemonicId` for a range of derivation indexes.
+   *
+   * @param mnemonicId key string associated with mnemonic to generate private key for (current convention is to
+   * use the public address associated with mnemonic at derivation index 0)
+   * @param startDerivationIndex number used to specify the derivation index at which to start deriving private keys
+   * from the mnemonic
+   * @param endDerivationIndex number used to specify the derivation index at which to stop deriving private keys
+   * from the mnemonic
+   * @returns public addresses associated with the private keys generated from the mnemonic at the given derivation index range
+   */
+  generateAddressesForMnemonicId(
+    mnemonicId: string,
+    startDerivationIndex: number,
+    endDerivationIndex: number,
+  ): Promise<Array<string>>
+
+  /**
    * Derives private key and public address from mnemonic associated with `mnemonicId` for given `derivationIndex`.
    * Stores the private key in platform storage with key.
    *
@@ -104,7 +138,23 @@ export interface IKeyring {
 /** Dummy Keyring implementation.  */
 class NullKeyring implements IKeyring {
   removeAllMnemonicsAndPrivateKeys(): Promise<boolean> {
-    throw new Error('Method not implemented.')
+    throw new NotImplementedError('removeAllMnemonicsAndPrivateKeys')
+  }
+
+  generateAddressesForMnemonic(
+    _mnemonic: string,
+    _startDerivationIndex: number,
+    _endDerivationIndex: number,
+  ): Promise<string[]> {
+    throw new NotImplementedError('generateAddressesForMnemonic')
+  }
+
+  generateAddressesForMnemonicId(
+    _mnemonicId: string,
+    _startDerivationIndex: number,
+    _endDerivationIndex: number,
+  ): Promise<string[]> {
+    throw new NotImplementedError('generateAddressesForMnemonicId')
   }
 
   isUnlocked(): Promise<boolean> {
@@ -144,7 +194,7 @@ class NullKeyring implements IKeyring {
     throw new NotImplementedError('removeMnemonic')
   }
 
-  retrieveMnemonicUnlocked(_address: string): Promise<string | undefined> {
+  retrieveMnemonicUnlocked(_address: string): Promise<string> {
     throw new NotImplementedError('retrieveMnemonicUnlocked')
   }
 

@@ -7,11 +7,11 @@ import { SignRequest, WalletConnectRequest, isTransactionRequest } from 'src/fea
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { TextVariantTokens, iconSizes } from 'ui/src/theme'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { useENS } from 'uniswap/src/features/ens/useENS'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { EthMethod, EthTransaction } from 'uniswap/src/types/walletConnect'
 import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { useENS } from 'wallet/src/features/ens/useENS'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import {
   SpendingDetails,

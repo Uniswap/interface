@@ -7,7 +7,7 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import { Flex, ImpactFeedbackStyle, Separator, Text, TouchableArea, useHapticFeedback, useSporeColors } from 'ui/src'
 import { CopySheets, QrCode } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
@@ -107,11 +107,11 @@ export function ReceiveCryptoModal(): JSX.Element {
   }
 
   return (
-    <BottomSheetModal
+    <Modal
       extendOnKeyboardVisible
       hideKeyboardOnDismiss
       hideKeyboardOnSwipeDown
-      backgroundColor={colors.surface1.get()}
+      backgroundColor={colors.surface1.val}
       name={ModalName.ReceiveCryptoModal}
       onClose={onClose}
     >
@@ -134,6 +134,6 @@ export function ReceiveCryptoModal(): JSX.Element {
         </Flex>
         <ServiceProviderSelector serviceProviders={initialState || []} onClose={onClose} />
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

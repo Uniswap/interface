@@ -9,6 +9,8 @@ import {
   deleteBetaOnboardingState,
   deleteDefaultFavoritesFromFavoritesState,
   deleteExtensionOnboardingState,
+  deleteHoldToSwapBehaviorHistory,
+  moveUserSettings,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
 } from 'wallet/src/state/walletMigrations'
@@ -26,6 +28,8 @@ export const migrations = {
   7: deleteDefaultFavoritesFromFavoritesState,
   8: addHapticSetting,
   9: addExploreAndWelcomeBehaviorHistory,
+  10: moveUserSettings,
+  11: deleteHoldToSwapBehaviorHistory,
 }
 
-export const EXTENSION_STATE_VERSION = 9
+export const EXTENSION_STATE_VERSION = 11

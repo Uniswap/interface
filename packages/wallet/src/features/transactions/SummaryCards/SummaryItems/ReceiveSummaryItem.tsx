@@ -1,10 +1,10 @@
-import { TransferTokenSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransferTokenSummaryItem'
-import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import {
   ReceiveTokenTransactionInfo,
   TransactionDetails,
   TransactionType,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransferTokenSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransferTokenSummaryItem'
+import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 
 export function ReceiveSummaryItem({
   transaction,

@@ -3,7 +3,7 @@ import { useDispatch } from 'react-redux'
 import { ExploreStackNavigator } from 'src/app/navigation/navigation'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { useSporeColors } from 'ui/src'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function ExploreModal(): JSX.Element {
@@ -15,7 +15,7 @@ export function ExploreModal(): JSX.Element {
   }
 
   return (
-    <BottomSheetModal
+    <Modal
       blurredBackground
       fullScreen
       hideKeyboardOnDismiss
@@ -27,6 +27,6 @@ export function ExploreModal(): JSX.Element {
       onClose={onClose}
     >
       <ExploreStackNavigator />
-    </BottomSheetModal>
+    </Modal>
   )
 }

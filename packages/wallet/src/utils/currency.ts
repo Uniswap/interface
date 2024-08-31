@@ -1,8 +1,8 @@
 import { Currency } from '@uniswap/sdk-core'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
-import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
 
 export function getFormattedCurrencyAmount(
   currency: Maybe<Currency>,

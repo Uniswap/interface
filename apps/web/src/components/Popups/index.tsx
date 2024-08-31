@@ -4,7 +4,7 @@ import PopupItem from 'components/Popups/PopupItem'
 import styled from 'lib/styled-components'
 import { useActivePopups } from 'state/application/hooks'
 import { Z_INDEX } from 'theme/zIndex'
-import { Flex } from 'ui/src'
+import { AnimatePresence, Flex } from 'ui/src'
 
 const FixedPopupColumn = styled(AutoColumn)`
   position: fixed;
@@ -32,9 +32,11 @@ export default function Popups() {
     >
       <FixedPopupColumn gap="20px" data-testid="popups">
         <ClaimPopup />
-        {activePopups.map((item) => (
-          <PopupItem key={item.key} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
-        ))}
+        <AnimatePresence>
+          {activePopups.map((item, i) => (
+            <PopupItem key={i} content={item.content} popKey={item.key} removeAfterMs={item.removeAfterMs} />
+          ))}
+        </AnimatePresence>
       </FixedPopupColumn>
     </Flex>
   )

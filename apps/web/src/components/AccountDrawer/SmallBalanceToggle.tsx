@@ -1,18 +1,16 @@
 import { SettingsToggle } from 'components/AccountDrawer/SettingsToggle'
-import { useAtom } from 'jotai'
-import { atomWithStorage } from 'jotai/utils'
+import { useDispatch } from 'react-redux'
+import { useHideSmallBalancesSetting } from 'uniswap/src/features/settings/hooks'
+import { setHideSmallBalances } from 'uniswap/src/features/settings/slice'
 import { t } from 'uniswap/src/i18n'
 
-export const hideSmallBalancesAtom = atomWithStorage<boolean>('hideSmallBalances', true)
-
 export function SmallBalanceToggle() {
-  const [hideSmallBalances, updateHideSmallBalances] = useAtom(hideSmallBalancesAtom)
+  const hideSmallBalances = useHideSmallBalancesSetting()
+  const dispatch = useDispatch()
 
-  return (
-    <SettingsToggle
-      title={t('settings.hideSmallBalances')}
-      isActive={hideSmallBalances}
-      toggle={() => void updateHideSmallBalances((value) => !value)}
-    />
-  )
+  const onToggle = () => {
+    dispatch(setHideSmallBalances(!hideSmallBalances))
+  }
+
+  return <SettingsToggle title={t('settings.hideSmallBalances')} isActive={hideSmallBalances} toggle={onToggle} />
 }

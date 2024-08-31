@@ -1,50 +1,56 @@
 import { TransactionType as RemoteTransactionType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { fromGraphQLChain, toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { FORTransaction } from 'uniswap/src/features/fiatOnRamp/types'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { logger } from 'utilities/src/logger/logger'
-import { FiatOnRampTransactionDetails } from 'wallet/src/features/fiatOnRamp/types'
-import parseOnRampTransaction from 'wallet/src/features/transactions/history/conversion/parseOnRampTransaction'
-import { remoteTxStatusToLocalTxStatus } from 'wallet/src/features/transactions/history/utils'
+import { FORTransaction, FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import {
-  FiatPurchaseTransactionInfo,
+  OnRampPurchaseInfo,
+  OnRampTransactionInfo,
+  OnRampTransferInfo,
   TransactionDetails,
   TransactionDetailsType,
   TransactionListQueryResponse,
+  TransactionOriginType,
   TransactionStatus,
   TransactionType,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { logger } from 'utilities/src/logger/logger'
+import parseGraphQLOnRampTransaction from 'wallet/src/features/transactions/history/conversion/parseOnRampTransaction'
+import { remoteTxStatusToLocalTxStatus } from 'wallet/src/features/transactions/history/utils'
 
-function parseFiatPurchaseTransaction(
-  transaction: FORTransaction,
-): FiatPurchaseTransactionInfo & { chainId: WalletChainId } {
-  const {
-    sourceAmount: inputCurrencyAmount,
-    sourceCurrencyCode: inputCurrency,
-    destinationCurrencyCode: outputCurrency,
-    destinationAmount: outputCurrencyAmount,
-    cryptoDetails,
-    serviceProvider,
-  } = transaction
+function parseOnRampTransaction(transaction: FORTransaction): OnRampPurchaseInfo | OnRampTransferInfo {
+  const transactionInfo: OnRampTransactionInfo = {
+    type: TransactionType.OnRampPurchase,
+    id: transaction.externalSessionId,
+    destinationTokenSymbol: transaction.destinationCurrencyCode,
+    destinationTokenAddress: transaction.destinationContractAddress,
+    destinationTokenAmount: transaction.destinationAmount,
+    serviceProvider: {
+      id: transaction.serviceProviderDetails.serviceProvider,
+      name: transaction.serviceProviderDetails.name,
+      url: transaction.serviceProviderDetails.url,
+      logoLightUrl: transaction.serviceProviderDetails.logos.lightLogo,
+      logoDarkUrl: transaction.serviceProviderDetails.logos.darkLogo,
+      supportUrl: transaction.serviceProviderDetails.supportUrl,
+    },
+    networkFee: transaction.cryptoDetails.networkFee,
+    transactionFee: transaction.cryptoDetails.transactionFee,
+    totalFee: transaction.cryptoDetails.totalFee,
+  }
 
-  const chainId = toSupportedChainId(cryptoDetails?.chainId)
-  if (!chainId) {
-    throw new Error('Unable to parse chain id ' + cryptoDetails?.chainId)
-  }
-  return {
-    type: TransactionType.FiatPurchase,
-    id: transaction.id,
-    inputSymbol: inputCurrency,
-    inputCurrencyAmount,
-    outputSymbol: outputCurrency,
-    outputCurrencyAmount,
-    // mark this local tx as synced given we updated it with server information
-    // this marks the tx as 'valid' / ready to display in the ui
-    syncedWithBackend: true,
-    chainId,
-    serviceProvider,
-  }
+  const typeInfo: OnRampPurchaseInfo | OnRampTransferInfo =
+    transaction.sourceCurrencyCode === transaction.destinationCurrencyCode
+      ? {
+          ...transactionInfo,
+          type: TransactionType.OnRampTransfer,
+        }
+      : {
+          ...transactionInfo,
+          type: TransactionType.OnRampPurchase,
+          sourceCurrency: transaction.sourceCurrencyCode,
+          sourceAmount: transaction.sourceAmount,
+        }
+  return typeInfo
 }
 
 function statusToTransactionInfoStatus(status: FORTransaction['status']): TransactionStatus {
@@ -64,9 +70,12 @@ export function extractFiatOnRampTransactionDetails(
   transaction: FORTransaction,
 ): FiatOnRampTransactionDetails | undefined {
   try {
-    const { chainId, ...typeInfo } = parseFiatPurchaseTransaction(transaction) ?? {
-      type: TransactionType.Unknown,
+    const chainId = toSupportedChainId(transaction.cryptoDetails.chainId)
+    if (!chainId) {
+      throw new Error('Unable to parse chain id ' + transaction.cryptoDetails.chainId)
     }
+
+    const typeInfo = parseOnRampTransaction(transaction)
 
     return {
       routing: Routing.CLASSIC,
@@ -78,6 +87,7 @@ export function extractFiatOnRampTransactionDetails(
       from: transaction.cryptoDetails.walletAddress,
       typeInfo,
       options: { request: {} },
+      transactionOriginType: TransactionOriginType.Internal,
     }
   } catch (error) {
     logger.error(error, {
@@ -95,7 +105,7 @@ export function extractOnRampTransactionDetails(transaction: TransactionListQuer
     return null
   }
 
-  const typeInfo = parseOnRampTransaction(transaction)
+  const typeInfo = parseGraphQLOnRampTransaction(transaction)
 
   if (!typeInfo) {
     return null
@@ -110,5 +120,6 @@ export function extractOnRampTransactionDetails(transaction: TransactionListQuer
     from: transaction.details.receiverAddress, // This transaction is not on-chain, so use the receiver address as the from address
     typeInfo,
     options: { request: {} },
+    transactionOriginType: TransactionOriginType.Internal,
   }
 }

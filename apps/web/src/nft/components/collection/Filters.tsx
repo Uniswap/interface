@@ -13,7 +13,7 @@ import { Trait } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { DropDownOption } from 'nft/types'
 import { useMemo, useReducer } from 'react'
-import { isMobile } from 'utilities/src/platform'
+import { isMobileWeb } from 'utilities/src/platform'
 
 export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait[]> }) => {
   const { buyNow, setBuyNow } = useCollectionFilters((state) => ({
@@ -59,7 +59,7 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
             <span />
           </Checkbox>
         </Row>
-        {isMobile && <FilterSortDropdown sortDropDownOptions={sortDropDownOptions} />}
+        {isMobileWeb && <FilterSortDropdown sortDropDownOptions={sortDropDownOptions} />}
         <MarketplaceSelect />
         <PriceRange />
         {Object.entries(traitsByGroup).length > 0 && (

@@ -186,25 +186,24 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
 
   return (
     <>
-      {showUnsafeWarningModal && (
-        <BiometricAuthWarningModal
-          isTouchIdDevice={touchId}
-          onClose={onCloseModal}
-          onConfirm={async (): Promise<void> => {
-            await trigger({
-              params: {
-                biometricAppSettingType: unsafeWarningModalType,
-                // flip the bit
-                newValue: !(unsafeWarningModalType === BiometricSettingType.RequiredForAppAccess
-                  ? requiredForAppAccess
-                  : requiredForTransactions),
-              },
-            })
-            setShowUnsafeWarningModal(false)
-            setUnsafeWarningModalType(null)
-          }}
-        />
-      )}
+      <BiometricAuthWarningModal
+        isOpen={showUnsafeWarningModal}
+        isTouchIdDevice={touchId}
+        onClose={onCloseModal}
+        onConfirm={async (): Promise<void> => {
+          await trigger({
+            params: {
+              biometricAppSettingType: unsafeWarningModalType,
+              // flip the bit
+              newValue: !(unsafeWarningModalType === BiometricSettingType.RequiredForAppAccess
+                ? requiredForAppAccess
+                : requiredForTransactions),
+            },
+          })
+          setShowUnsafeWarningModal(false)
+          setUnsafeWarningModalType(null)
+        }}
+      />
       <Screen>
         <BackHeader alignment="center" mx="$spacing16" pt="$spacing16">
           <Text variant="body1">{isAndroid ? t('settings.setting.biometrics.title') : biometricsMethod}</Text>

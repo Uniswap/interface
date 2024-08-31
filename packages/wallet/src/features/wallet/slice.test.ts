@@ -33,8 +33,6 @@ describe(walletReducer, () => {
       activeAccountAddress: null,
       settings: {
         swapProtection: SwapProtectionSetting.On,
-        hideSmallBalances: true,
-        hideSpamTokens: true,
       },
     })
   })

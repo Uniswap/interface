@@ -73,6 +73,9 @@ import {
   v6Schema,
   v70Schema,
   v71Schema,
+  v72Schema,
+  v73Schema,
+  v74Schema,
   v7Schema,
   v8Schema,
   v9Schema,
@@ -85,27 +88,34 @@ import { initialModalsState } from 'src/features/modals/modalSlice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
+import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
+import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
+import { initialTransactionsState } from 'uniswap/src/features/transactions/slice'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { transactionDetails } from 'uniswap/src/test/fixtures'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
-import { initialFavoritesState } from 'wallet/src/features/favorites/slice'
 import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
 import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
-import { initialSearchHistoryState } from 'wallet/src/features/search/searchHistorySlice'
 import { initialTelemetryState } from 'wallet/src/features/telemetry/slice'
-import { initialTokensState } from 'wallet/src/features/tokens/tokensSlice'
-import { initialTransactionsState } from 'wallet/src/features/transactions/slice'
-import { TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { initialWalletState, SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 import { HAYDEN_ETH_ADDRESS } from 'wallet/src/state/walletMigrations'
-import { testActivatePendingAccounts, testAddedHapticSetting } from 'wallet/src/state/walletMigrationsTests'
-import { fiatPurchaseTransactionInfo, signerMnemonicAccount, transactionDetails } from 'wallet/src/test/fixtures'
+import {
+  testActivatePendingAccounts,
+  testAddedHapticSetting,
+  testMovedUserSettings,
+  testRemoveHoldToSwap,
+} from 'wallet/src/state/walletMigrationsTests'
+import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 expect.extend({ toIncludeSameMembers })
 
@@ -114,14 +124,17 @@ const account = signerMnemonicAccount()
 const txDetailsConfirmed = transactionDetails({
   status: TransactionStatus.Success,
 })
-const fiatOnRampTxDetailsFailed = transactionDetails({
-  status: TransactionStatus.Failed,
-  typeInfo: fiatPurchaseTransactionInfo({
+const fiatOnRampTxDetailsFailed = {
+  ...transactionDetails({
+    status: TransactionStatus.Failed,
+  }),
+  typeInfo: {
+    type: TransactionType.FiatPurchaseDeprecated,
     explorerUrl:
       'https://buy-sandbox.moonpay.com/transaction_receipt?transactionId=d6c32bb5-7cd9-4c22-8f46-6bbe786c599f',
     id: 'd6c32bb5-7cd9-4c22-8f46-6bbe786c599f',
-  }),
-})
+  },
+}
 
 describe('Redux state migrations', () => {
   it('is able to perform all migrations starting from the initial schema', async () => {
@@ -175,6 +188,7 @@ describe('Redux state migrations', () => {
       tokens: initialTokensState,
       transactions: initialTransactionsState,
       tweaks: initialTweaksState,
+      userSettings: initialUserSettingsState,
       wallet: initialWalletState,
       walletConnect: initialWalletConnectState,
       _persist: {
@@ -923,7 +937,7 @@ describe('Redux state migrations', () => {
       },
       // expect this payload to change
       typeInfo: {
-        type: TransactionType.FiatPurchase,
+        type: TransactionType.FiatPurchaseDeprecated,
         explorerUrl: 'explorer',
         outputTokenAddress: '0xtokenAddress',
         outputCurrencyAmountFormatted: 50,
@@ -935,7 +949,7 @@ describe('Redux state migrations', () => {
       hash: '0x123',
     }
     const expectedTypeInfo = {
-      type: TransactionType.FiatPurchase,
+      type: TransactionType.FiatPurchaseDeprecated,
       explorerUrl: 'explorer',
       inputCurrency: undefined,
       inputCurrencyAmount: 25,
@@ -1456,5 +1470,76 @@ describe('Redux state migrations', () => {
 
     expect(v72.behaviorHistory.hasViewedWelcomeWalletCard).toBe(false)
     expect(v72.behaviorHistory.hasUsedExplore).toBe(false)
+  })
+
+  it('migrates from v72 to v73', async () => {
+    testMovedUserSettings(migrations[73], v72Schema)
+  })
+
+  it('migrates from v73 to v74', () => {
+    const oldFiatOnRampTxDetails = {
+      chainId: UniverseChainId.Mainnet,
+      id: '0',
+      from: account.address,
+      options: {
+        request: {},
+      },
+      typeInfo: {
+        type: TransactionType.FiatPurchaseDeprecated,
+        explorerUrl: 'explorer',
+        inputCurrencyAmount: 25,
+        outputSymbol: 'USDC',
+      },
+      status: TransactionStatus.Pending,
+      addedTime: 1487076708000,
+      hash: '0x123',
+    }
+    const transactions = {
+      [account.address]: {
+        [UniverseChainId.Mainnet]: {
+          '0': oldFiatOnRampTxDetails,
+          '1': txDetailsConfirmed,
+        },
+        [UniverseChainId.Goerli]: {
+          '0': oldFiatOnRampTxDetails,
+          '1': {
+            ...oldFiatOnRampTxDetails,
+            typeInfo: {
+              ...oldFiatOnRampTxDetails.typeInfo,
+              type: TransactionType.Send,
+            },
+          },
+          '2': {
+            ...oldFiatOnRampTxDetails,
+            typeInfo: {
+              ...oldFiatOnRampTxDetails.typeInfo,
+              type: TransactionType.Receive,
+            },
+          },
+          '3': txDetailsConfirmed,
+        },
+      },
+    }
+    const v73Stub = { ...v73Schema, transactions }
+
+    const v74 = migrations[74](v73Stub)
+
+    expect(v74.transactions[account.address][UniverseChainId.Mainnet]['0']).toBe(undefined)
+    expect(v74.transactions[account.address][UniverseChainId.Mainnet]['1']).toEqual(txDetailsConfirmed)
+
+    expect(v74.transactions[account.address][UniverseChainId.Goerli]['0']).toBe(undefined)
+    expect(v74.transactions[account.address][UniverseChainId.Goerli]['1'].typeInfo).toEqual({
+      ...oldFiatOnRampTxDetails.typeInfo,
+      type: TransactionType.Send,
+    })
+    expect(v74.transactions[account.address][UniverseChainId.Goerli]['2'].typeInfo).toEqual({
+      ...oldFiatOnRampTxDetails.typeInfo,
+      type: TransactionType.Receive,
+    })
+    expect(v74.transactions[account.address][UniverseChainId.Goerli]['3']).toEqual(txDetailsConfirmed)
+  })
+
+  it('migrates from v74 to v75', () => {
+    testRemoveHoldToSwap(migrations[75], v74Schema)
   })
 })

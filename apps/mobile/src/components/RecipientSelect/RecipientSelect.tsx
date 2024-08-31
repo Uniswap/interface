@@ -7,7 +7,6 @@ import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
-import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
@@ -21,6 +20,8 @@ interface RecipientSelectProps {
   recipient?: string
   focusInput?: boolean
   chainId?: WalletChainId
+  renderedInModal?: boolean
+  hideBackButton?: boolean
 }
 
 function QRScannerIconButton({ onPress }: { onPress: () => void }): JSX.Element {
@@ -39,9 +40,10 @@ export function _RecipientSelect({
   recipient,
   focusInput,
   chainId,
+  renderedInModal,
+  hideBackButton,
 }: RecipientSelectProps): JSX.Element {
   const { t } = useTranslation()
-  const { isSheetReady } = useBottomSheetContext()
   const inputRef = useRef<TextInput>(null)
 
   const [pattern, setPattern] = useState('')
@@ -83,16 +85,19 @@ export function _RecipientSelect({
 
   return (
     <>
-      <AnimatedFlex entering={FadeIn} exiting={FadeOut} flex={1} gap="$spacing12" mt="$spacing16" px="$spacing24">
-        <Flex row>
-          <Text testID={TestID.SendModalHeaderLabel} variant="subheading1">
-            {t('send.recipient.header')}
-          </Text>
-        </Flex>
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut} flex={1} gap="$spacing16" mt="$spacing12">
+        {!renderedInModal && (
+          <Flex row>
+            <Text testID={TestID.SendModalHeaderLabel} variant="subheading1">
+              {t('send.recipient.header')}
+            </Text>
+          </Flex>
+        )}
         <SearchBar
           ref={inputRef}
           backgroundColor="$surface2"
           endAdornment={<QRScannerIconButton onPress={onPressQRScanner} />}
+          hideBackButton={hideBackButton}
           placeholder={t('send.recipient.input.placeholder')}
           value={pattern ?? ''}
           onBack={recipient ? onHideRecipientSelector : undefined}
@@ -108,7 +113,7 @@ export function _RecipientSelect({
           </Flex>
         ) : (
           // Show either suggested recipients or filtered sections based on query
-          isSheetReady && <RecipientList renderedInModal sections={sections} onPress={onSelect} />
+          <RecipientList renderedInModal={renderedInModal} sections={sections} onPress={onSelect} />
         )}
       </AnimatedFlex>
       {showQRScanner && <RecipientScanModal onClose={onCloseQRScanner} onSelectRecipient={onSelect} />}

@@ -1,42 +1,15 @@
-import { useEffect } from 'react'
-import { useUnitagByAddressQuery, useUnitagQuery } from 'uniswap/src/features/unitags/api'
-import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
+import { useUnitagsAddressQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsAddressQuery'
+import { useUnitagsUsernameQuery } from 'uniswap/src/data/apiClients/unitagsApi/useUnitagsUsernameQuery'
 import { UnitagAddressResponse, UnitagUsernameResponse } from 'uniswap/src/features/unitags/types'
 
-export type UseUnitagAddressResponse = { unitag?: UnitagAddressResponse; loading: boolean }
+// TODO(WALL-4256): delete these helpers and just use `useUnitagsAddressQuery` and `useUnitagsUsernameQuery` where needed.
 
-export const useUnitagByAddress = (address?: Address): UseUnitagAddressResponse => {
-  const { data, loading, refetch } = useUnitagByAddressQuery(address)
-
-  // Force refetch if counter changes
-  const { refetchUnitagsCounter } = useUnitagUpdater()
-  useEffect(() => {
-    if (loading || !address) {
-      return
-    }
-
-    refetch?.()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refetchUnitagsCounter])
-
-  return { unitag: data, loading }
+export const useUnitagByAddress = (address?: Address): { unitag?: UnitagAddressResponse; loading: boolean } => {
+  const { data, isLoading } = useUnitagsAddressQuery({ params: address ? { address } : undefined })
+  return { unitag: data, loading: isLoading }
 }
 
-export type UseUnitagNameResponse = { unitag?: UnitagUsernameResponse; loading: boolean }
-
-export const useUnitagByName = (name?: string): UseUnitagNameResponse => {
-  const { data, loading, refetch } = useUnitagQuery(name)
-
-  // Force refetch if counter changes
-  const { refetchUnitagsCounter } = useUnitagUpdater()
-  useEffect(() => {
-    if (loading || !name) {
-      return
-    }
-
-    refetch?.()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [refetchUnitagsCounter])
-
-  return { unitag: data, loading }
+export const useUnitagByName = (username?: string): { unitag?: UnitagUsernameResponse; loading: boolean } => {
+  const { data, isLoading } = useUnitagsUsernameQuery({ params: username ? { username } : undefined })
+  return { unitag: data, loading: isLoading }
 }

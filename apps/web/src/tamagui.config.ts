@@ -1,6 +1,6 @@
 import { createTamagui } from '@tamagui/core'
 import { animations } from 'ui/src/theme/animations'
-import { configWithoutAnimations } from 'ui/src/theme/config'
+import { TamaguiGroupNames, configWithoutAnimations } from 'ui/src/theme/config'
 
 const {
   // lets have our own settings
@@ -24,6 +24,10 @@ type Conf = typeof config
 declare module '@tamagui/core' {
   // eslint-disable-next-line @typescript-eslint/no-empty-interface
   interface TamaguiCustomConfig extends Conf {}
+
+  interface TypeOverride {
+    groupNames(): TamaguiGroupNames
+  }
 }
 
 export default config

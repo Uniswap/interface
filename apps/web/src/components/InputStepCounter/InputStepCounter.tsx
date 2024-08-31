@@ -1,4 +1,3 @@
-import { styled as tamaguiStyled } from '@tamagui/core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ButtonGray } from 'components/Button'
 import { OutlineCard } from 'components/Card'
@@ -8,7 +7,7 @@ import styled, { keyframes } from 'lib/styled-components'
 import { ReactNode, useCallback, useEffect, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
 import { ThemedText } from 'theme/components'
-import { Text } from 'ui/src'
+import { Text, styled as tamaguiStyled } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 
 const pulse = (color: string) => keyframes`

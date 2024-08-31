@@ -4,23 +4,20 @@ import { TFunction } from 'i18next'
 import _ from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { isWeb } from 'ui/src'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
-import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
-import { useMemoCompare } from 'utilities/src/react/hooks'
-import { LocalizationContextState, useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { getNetworkWarning } from 'wallet/src/features/transactions/WarningModal/getNetworkWarning'
+import { FetchError, isRateLimitFetchError } from 'uniswap/src/data/apiClients/FetchError'
+import { getNetworkWarning } from 'uniswap/src/features/transactions/WarningModal/getNetworkWarning'
 import {
   Warning,
   WarningAction,
   WarningLabel,
   WarningSeverity,
-} from 'wallet/src/features/transactions/WarningModal/types'
-import {
-  API_RATE_LIMIT_ERROR,
-  NO_QUOTE_DATA,
-  SWAP_QUOTE_ERROR,
-} from 'wallet/src/features/transactions/swap/trade/api/hooks/useTrade'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
+} from 'uniswap/src/features/transactions/WarningModal/types'
+import { NoRoutesError, SWAP_QUOTE_ERROR } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { CurrencyField } from 'uniswap/src/types/currency'
+import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
+import { useMemoCompare } from 'utilities/src/react/hooks'
+import { LocalizationContextState, useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { isOffline } from 'wallet/src/features/transactions/utils'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%
@@ -62,14 +59,14 @@ export function getSwapWarnings(
     })
   }
 
-  // low liquidity and other swap errors
-  if (trade.error) {
-    // cast as any here because rtk-query recommends not typing error objects
-    // https://github.com/reduxjs/redux-toolkit/issues/1591
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const errorData = trade.error as any
+  const { error } = trade
 
-    if (errorData?.data?.errorCode === SWAP_QUOTE_ERROR || errorData?.message === NO_QUOTE_DATA) {
+  // low liquidity and other swap errors
+  if (error) {
+    if (
+      error instanceof NoRoutesError ||
+      (error instanceof FetchError && error?.data?.errorCode === SWAP_QUOTE_ERROR)
+    ) {
       warnings.push({
         type: WarningLabel.LowLiquidity,
         severity: WarningSeverity.Medium,
@@ -77,7 +74,7 @@ export function getSwapWarnings(
         title: t('swap.warning.lowLiquidity.title'),
         message: t('swap.warning.lowLiquidity.message'),
       })
-    } else if (errorData?.data?.errorCode === API_RATE_LIMIT_ERROR) {
+    } else if (isRateLimitFetchError(error)) {
       warnings.push({
         type: WarningLabel.RateLimit,
         severity: WarningSeverity.Medium,
@@ -118,8 +115,8 @@ export function getSwapWarnings(
         priceImpactValue: formatPercent(normalizePriceImpact(priceImpact)),
       }),
       message: t('swap.warning.priceImpact.message', {
-        outputCurrencySymbol: currencies[CurrencyField.INPUT]?.currency.symbol,
-        inputCurrencySymbol: currencies[CurrencyField.OUTPUT]?.currency.symbol,
+        outputCurrencySymbol: currencies[CurrencyField.OUTPUT]?.currency.symbol,
+        inputCurrencySymbol: currencies[CurrencyField.INPUT]?.currency.symbol,
       }),
     })
   }

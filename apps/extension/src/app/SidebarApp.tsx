@@ -14,6 +14,7 @@ import { AccountSwitcherScreen } from 'src/app/features/accounts/AccountSwitcher
 import { DappContextProvider } from 'src/app/features/dapp/DappContext'
 import { addRequest } from 'src/app/features/dappRequests/saga'
 import { ReceiveScreen } from 'src/app/features/receive/ReceiveScreen'
+import { SendFlow } from 'src/app/features/send/SendFlow'
 import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
 import { SettingsPrivacyScreen } from 'src/app/features/settings/SettingsPrivacyScreen'
 import { RemoveRecoveryPhraseVerify } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseVerify'
@@ -23,7 +24,6 @@ import { SettingsScreen } from 'src/app/features/settings/SettingsScreen'
 import { SettingsScreenWrapper } from 'src/app/features/settings/SettingsScreenWrapper'
 import { SettingsChangePasswordScreen } from 'src/app/features/settings/password/SettingsChangePasswordScreen'
 import { SwapFlowScreen } from 'src/app/features/swap/SwapFlowScreen'
-import { TransferFlowScreen } from 'src/app/features/transfer/TransferFlowScreen'
 import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
 import { MainContent, WebNavigation } from 'src/app/navigation'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
@@ -50,6 +50,7 @@ import { useInterval } from 'utilities/src/time/timing'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
 import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
 import { syncAppWithDeviceLanguage } from 'wallet/src/features/language/slice'
+import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { SharedProvider } from 'wallet/src/provider'
 
 getLocalUserId()
@@ -118,8 +119,8 @@ const router = sentryCreateHashRouter([
         ],
       },
       {
-        path: AppRoutes.Transfer,
-        element: <TransferFlowScreen />,
+        path: AppRoutes.Send,
+        element: <SendFlow />,
       },
       {
         path: AppRoutes.Swap,
@@ -246,11 +247,13 @@ export default function SidebarApp(): JSX.Element {
                 <GraphqlProvider>
                   <LocalizationContextProvider>
                     <UnitagUpdaterContextProvider>
-                      <TraceUserProperties />
-                      <DappContextProvider>
-                        <PrimaryAppInstanceDebuggerLazy />
-                        <RouterProvider router={router} />
-                      </DappContextProvider>
+                      <WalletUniswapProvider>
+                        <TraceUserProperties />
+                        <DappContextProvider>
+                          <PrimaryAppInstanceDebuggerLazy />
+                          <RouterProvider router={router} />
+                        </DappContextProvider>
+                      </WalletUniswapProvider>
                     </UnitagUpdaterContextProvider>
                   </LocalizationContextProvider>
                 </GraphqlProvider>

@@ -3,6 +3,7 @@
 import { setupi18n } from 'uniswap/src/i18n/i18n-setup-interface'
 // prettier-ignore
 import '@reach/dialog/styles.css'
+import 'global.css'
 // prettier-ignore
 import 'polyfills'
 // prettier-ignore

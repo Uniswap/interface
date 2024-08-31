@@ -47,7 +47,7 @@ describe('fetchTokenList', () => {
     )
     const url = 'example.eth'
     const contenthash = '0xe3010170122013e051d1cfff20606de36845d4fe28deb9861a319a5bc8596fa4e610e8803918'
-    const translatedUri = 'https://cloudflare-ipfs.com/ipfs/QmPgEqyV3m8SB52BS2j2mJpu9zGprhj2BGCHtRiiw2fdM1/'
+    const translatedUri = 'https://ipfs.io/ipfs/QmPgEqyV3m8SB52BS2j2mJpu9zGprhj2BGCHtRiiw2fdM1/'
     resolver.mockResolvedValue(contenthash)
     fetch.mockOnceIf(translatedUri, () => Promise.resolve(JSON.stringify(defaultTokenList)))
     await expect(fetchTokenList(url, resolver)).resolves.toStrictEqual(defaultTokenList)

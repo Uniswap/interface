@@ -1,30 +1,12 @@
-import styled from 'lib/styled-components'
 import { approvedERC20, approvedERC721, InteractiveToken } from 'pages/Landing/assets/approvedTokens'
 import { Token } from 'pages/Landing/components/TokenCloud/Token'
 import { mixArrays, randomFloat, randomInt } from 'pages/Landing/components/TokenCloud/utils'
 import PoissonDiskSampling from 'poisson-disk-sampling'
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef } from 'react'
+import { Flex } from 'ui/src'
 
-const Container = styled.div`
-  width: 100vw;
-  position: absolute;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  overflow: hidden;
-  top: 0;
-`
-const Inner = styled.div`
-  width: 100vw;
-  height: 100vh;
-  flex-shrink: 0;
-  position: relative;
-  overflow: visible;
-`
-export enum TickerPosition {
-  RIGHT,
-  LEFT,
-}
+export type TickerPosition = 'left' | 'right'
+
 export type TokenPoint = InteractiveToken & {
   x: number
   y: number
@@ -74,8 +56,7 @@ export function TokenCloud({ transition }: { transition?: boolean }) {
           delay: Math.abs(x - w / 2) / 800,
           floatDuration: randomFloat(3, 6),
           ticker: token.symbol,
-          tickerPosition:
-            (x < leftThreshold && x + 100 > leftThreshold) || x + 200 > w ? TickerPosition.LEFT : TickerPosition.RIGHT,
+          tickerPosition: (x < leftThreshold && x + 100 > leftThreshold) || x + 200 > w ? 'left' : 'right',
           standard: token.standard,
           address: token.address,
           chain: token.chain,
@@ -93,24 +74,21 @@ export function TokenCloud({ transition }: { transition?: boolean }) {
   }, [])
 
   const constraintsRef = useRef(null)
-  const [cursor, setCursor] = useState(-1)
 
   return (
-    <Container ref={constraintsRef}>
-      <Inner>
-        {pts.map((point: TokenPoint, idx) => {
-          return (
-            <Token
-              key={`token-${idx}`}
-              point={point}
-              idx={idx}
-              cursor={cursor}
-              setCursor={setCursor}
-              transition={transition}
-            />
-          )
-        })}
-      </Inner>
-    </Container>
+    <Flex
+      ref={constraintsRef}
+      width="100vw"
+      position="absolute"
+      centered
+      overflow="hidden"
+      inset={0}
+      pointerEvents="none"
+      contain="strict"
+    >
+      {pts.map((point: TokenPoint, idx) => {
+        return <Token key={`token-${idx}`} point={point} idx={idx} transition={transition} />
+      })}
+    </Flex>
   )
 }

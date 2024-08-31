@@ -1,3 +1,4 @@
+import { useApolloClient } from '@apollo/client'
 import { SharedEventName } from '@uniswap/analytics-events'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -16,8 +17,9 @@ import { navigate } from 'src/app/navigation/state'
 import { Flex, Loader, Text, TouchableArea, styled } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
+import { NFTS_TAB_DATA_DEPENDENCIES } from 'wallet/src/components/nfts/NftsList'
 import { PendingNotificationBadge } from 'wallet/src/features/notifications/components/PendingNotificationBadge'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
@@ -28,6 +30,8 @@ import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hoo
 export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
   const { t } = useTranslation()
   const [showTabs, setShowTabs] = useState(false)
+
+  const apolloClient = useApolloClient()
 
   // The tabs are too slow to render on the first load, so we delay them to speed up the perceived loading time.
   useTimeout(() => setShowTabs(true), 0)
@@ -85,6 +89,27 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
     }
   }, [dispatch, address, hasNotifications, selectedTab])
 
+  const [lastNftFetchTime, setLastNftFetchTime] = useState(0)
+
+  useEffect(() => {
+    // NFTs tab is first fetched on mount, so we need to set the last fetch time here
+    setLastNftFetchTime(Date.now())
+  }, [])
+
+  const shouldRefetchNfts = useCallback(() => {
+    const now = Date.now()
+    return now - lastNftFetchTime >= ONE_MINUTE_MS
+  }, [lastNftFetchTime])
+
+  const maybeRefetchNfts = useCallback(() => {
+    if (shouldRefetchNfts()) {
+      setLastNftFetchTime(Date.now())
+      apolloClient.refetchQueries({ include: NFTS_TAB_DATA_DEPENDENCIES }).catch((e) => {
+        logger.error('Error refetching NFTs tab data', e)
+      })
+    }
+  }, [apolloClient, shouldRefetchNfts])
+
   return (
     <Flex fill alignItems="center" backgroundColor="$surface1" p="$spacing12">
       {address ? (
@@ -110,7 +135,13 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
                   {t('home.tokens.title')}
                 </TabButton>
 
-                <TabButton isActive={selectedTab === HomeTabs.NFTs} onPress={() => setSelectedTab(HomeTabs.NFTs)}>
+                <TabButton
+                  isActive={selectedTab === HomeTabs.NFTs}
+                  onPress={() => {
+                    setSelectedTab(HomeTabs.NFTs)
+                    maybeRefetchNfts()
+                  }}
+                >
                   {t('home.nfts.title')}
                 </TabButton>
 

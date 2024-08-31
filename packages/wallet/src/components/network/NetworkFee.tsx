@@ -4,11 +4,11 @@ import { Flex, Text, UniswapXText } from 'ui/src'
 import { UniswapX } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 import { useFormattedUniswapXGasFeeInfo } from 'wallet/src/components/network/hooks'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
-import { GasFeeResult } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useGasFeeHighRelativeToValue } from 'wallet/src/features/transactions/swap/hooks/useGasFeeHighRelativeToValue'
 import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
@@ -34,7 +34,7 @@ export function NetworkFee({
   const uniswapXGasFeeInfo = useFormattedUniswapXGasFeeInfo(uniswapXGasBreakdown, chainId)
 
   const gasFeeHighRelativeToValue = useGasFeeHighRelativeToValue(gasFeeUSD, transactionUSDValue)
-  const isLoading = gasFee.loading
+  const isLoading = gasFee.isLoading
 
   return (
     <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">

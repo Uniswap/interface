@@ -9,9 +9,10 @@ import {
   SectionRowInfo,
   TokenSectionBaseListProps,
 } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
+import { isSuggestedTokenSection } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 
-const ITEM_ROW_HEIGHT = 72
-const ITEM_SECTION_HEADER_ROW_HEIGHT = 40
+export const ITEM_SECTION_HEADER_ROW_HEIGHT = 40
+const ITEM_ROW_HEIGHT = 68
 
 type BaseListRowInfo = {
   key: Key | undefined
@@ -21,8 +22,13 @@ type BaseListItemRowInfo = ItemRowInfo & BaseListRowInfo & Pick<TokenSectionBase
 
 type BaseListData = BaseListItemRowInfo | BaseListSectionRowInfo
 
-function isSectionHeader(rowInfo: BaseListSectionRowInfo | BaseListItemRowInfo): rowInfo is BaseListSectionRowInfo {
+function isSectionHeader(rowInfo: BaseListData): rowInfo is BaseListSectionRowInfo {
   return !('renderItem' in rowInfo)
+}
+
+function isSuggestedTokenRowInfo(rowInfo: BaseListData): boolean {
+  const isHeader = isSectionHeader(rowInfo)
+  return !isHeader && isSuggestedTokenSection(rowInfo.section)
 }
 
 export function TokenSectionBaseList({
@@ -62,7 +68,9 @@ export function TokenSectionBaseList({
         key: section.sectionKey,
         renderSectionHeader,
       }
-      acc.push(sectionInfo)
+      if (!isSuggestedTokenSection(section)) {
+        acc.push(sectionInfo)
+      }
 
       return acc.concat(
         section.data.map((item, index) => {
@@ -80,7 +88,9 @@ export function TokenSectionBaseList({
   }, [sections, renderSectionHeader, keyExtractor, renderItem])
 
   const activeSessionIndex = useMemo(() => {
-    return items.slice(0, firstVisibleIndex + 1).findLastIndex((item) => isSectionHeader(item))
+    return items.slice(0, firstVisibleIndex + 1).reduceRight((acc, item, index) => {
+      return acc === -1 && isSectionHeader(item) ? index : acc
+    }, -1)
   }, [firstVisibleIndex, items])
 
   useEffect(() => {
@@ -97,12 +107,16 @@ export function TokenSectionBaseList({
   const getRowHeight = useCallback(
     (index: number): number => {
       const item = items[index]
-      const measuredHeight = rowHeightMap.current[index]
 
       if (!item) {
         return 0
-      } else if (measuredHeight) {
-        return measuredHeight
+      }
+
+      if (isSuggestedTokenRowInfo(item)) {
+        const measuredHeight = rowHeightMap.current[index]
+        if (measuredHeight) {
+          return measuredHeight
+        }
       }
 
       return isSectionHeader(item) ? ITEM_SECTION_HEADER_ROW_HEIGHT : ITEM_ROW_HEIGHT
@@ -112,6 +126,10 @@ export function TokenSectionBaseList({
 
   const ListContent = useCallback(
     ({ data, index, style }: { data: BaseListData[]; index: number; style: CSSProperties }) => {
+      if (activeSessionIndex === index) {
+        return null
+      }
+
       return (
         <TokenSectionBaseListRow
           data={data}
@@ -122,20 +140,17 @@ export function TokenSectionBaseList({
         />
       )
     },
-    [updateRowHeight, windowWidth],
+    [updateRowHeight, windowWidth, activeSessionIndex],
   )
 
   return (
-    <Flex grow>
+    <Flex grow maxHeight="100dvh">
       {!sections.length && ListEmptyComponent}
       <AutoSizer disableWidth>
         {({ height }: { height: number }): JSX.Element => {
           return (
-            <Flex style={{ position: 'relative' }}>
-              <Flex
-                backgroundColor="$surface1"
-                style={{ position: 'absolute', top: 0, zIndex: zIndices.sticky, width: '100%' }}
-              >
+            <Flex position="relative">
+              <Flex position="absolute" top={-1} width="100%" zIndex={zIndices.sticky}>
                 {activeSessionIndex >= 0 && (
                   <TokenSectionBaseListRow data={items} index={activeSessionIndex} windowWidth={windowWidth} />
                 )}
@@ -213,8 +228,8 @@ function _Row({ index, itemData, style, windowWidth, updateRowHeight }: RowProps
   }, [updateRowHeight, index, windowWidth, itemData.key])
 
   return (
-    <Flex key={itemData?.key ?? index} style={style}>
-      <Flex ref={rowRef}>
+    <Flex key={itemData?.key ?? index} grow alignItems="center" justifyContent="center" style={style}>
+      <Flex ref={rowRef} grow width="100%">
         {itemData &&
           (isSectionHeader(itemData) ? itemData.renderSectionHeader?.(itemData) : itemData.renderItem(itemData))}
       </Flex>

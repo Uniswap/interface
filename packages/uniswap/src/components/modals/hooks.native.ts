@@ -5,7 +5,7 @@ import { Keyboard } from 'react-native'
 const SET_FOCUS_TIMEOUT_MS = 10
 
 /**
- * Hook to manage active scroll handler when BottomSheet Views or Lists are used inside a BottomSheetModal.
+ * Hook to manage active scroll handler when BottomSheet Views or Lists are used inside a Modal.
  * Also addresses cases when the keyboard is shown or hidden.
  *
  * It should be passed to `focusHook` prop.

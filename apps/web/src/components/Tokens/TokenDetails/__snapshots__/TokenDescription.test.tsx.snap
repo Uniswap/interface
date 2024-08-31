@@ -2,52 +2,7 @@
 
 exports[`TokenDescription no description or social buttons shown when not available 1`] = `
 <DocumentFragment>
-  .c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c4 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c10 {
+  .c1 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -58,88 +13,23 @@ exports[`TokenDescription no description or social buttons shown when not availa
   font-weight: 500;
 }
 
-.c10:hover {
+.c1:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c1:active {
   opacity: 0.4;
 }
 
-.c8 {
+.c0 {
   display: inline-block;
   height: inherit;
 }
 
-.c12 {
+.c2 {
   color: #CECECE;
   font-weight: 485;
   font-size: 16px;
-}
-
-.c1 {
-  gap: 16px;
-  width: 100%;
-}
-
-.c6 {
-  gap: 8px;
-  width: 100%;
-}
-
-.c7 {
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-}
-
-.c9 {
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  color: #222222;
-  background-color: #F9F9F9;
-  font-size: 14px;
-  font-weight: 535;
-  line-height: 16px;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c9:hover {
-  opacity: 0.6;
-}
-
-.c9:active {
-  opacity: 0.4;
-}
-
-.c11 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  line-height: 24px;
-  white-space: pre-wrap;
-}
-
-@media screen and (max-width:1024px) {
-  .c1 {
-    gap: 24px;
-  }
-}
-
-@media screen and (max-width:1024px) {
-  .c3 {
-    font-size: 28px !important;
-    line-height: 36px !important;
-  }
 }
 
 <span
@@ -153,23 +43,25 @@ exports[`TokenDescription no description or social buttons shown when not availa
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c0 c1"
+          class="_gap-_xl_24px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1316331261 _width-10037"
           data-testid="token-details-info-section"
         >
-          <div
-            class="c2 c3 css-1jyz67g"
+          <span
+            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016140"
+            data-disable-theme="true"
           >
             Info
-          </div>
+          </span>
           <div
-            class="c4 c5 c6 c7"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _width-10037 _flexWrap-wrap"
             data-testid="token-details-info-links"
           >
             <div
-              class="c8"
+              class="c0"
             >
-              <div
-                class="c4 c5 c9"
+              <span
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                data-disable-theme="true"
               >
                 <svg
                   fill="none"
@@ -195,16 +87,17 @@ exports[`TokenDescription no description or social buttons shown when not availa
                   />
                 </svg>
                 0xA0b8...eB48
-              </div>
+              </span>
             </div>
             <a
-              class="c10"
+              class="c1"
               href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
               rel="noopener noreferrer"
               target="_blank"
             >
-              <div
-                class="c4 c5 c9"
+              <span
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                data-disable-theme="true"
               >
                 <svg
                   fill="#7D7D7D"
@@ -224,18 +117,19 @@ exports[`TokenDescription no description or social buttons shown when not availa
                   />
                 </svg>
                 Etherscan
-              </div>
+              </span>
             </a>
           </div>
-          <div
-            class="c2 c11 css-1urox24"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441251 _lineHeight-24px _fontWeight-233016202 _maxWidth-10037 _maxHeight-797770429 _whiteSpace-pre-wrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+            data-disable-theme="true"
           >
             <p
-              class="c12"
+              class="c2"
             >
               No token information available
             </p>
-          </div>
+          </span>
         </div>
       </span>
     </span>
@@ -245,52 +139,7 @@ exports[`TokenDescription no description or social buttons shown when not availa
 
 exports[`TokenDescription renders token information correctly with defaults 1`] = `
 <DocumentFragment>
-  .c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c4 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c10 {
+  .c1 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -301,103 +150,30 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
   font-weight: 500;
 }
 
-.c10:hover {
+.c1:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c1:active {
   opacity: 0.4;
 }
 
-.c8 {
+.c0 {
   display: inline-block;
   height: inherit;
 }
 
-.c14 {
+.c2 {
   color: #7D7D7D;
   font-weight: 485;
   font-size: 0.85em;
   padding-top: 0.5em;
 }
 
-.c14:hover,
-.c14:focus {
+.c2:hover,
+.c2:focus {
   color: #636363;
   cursor: pointer;
-}
-
-.c1 {
-  gap: 16px;
-  width: 100%;
-}
-
-.c6 {
-  gap: 8px;
-  width: 100%;
-}
-
-.c7 {
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-}
-
-.c9 {
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  color: #222222;
-  background-color: #F9F9F9;
-  font-size: 14px;
-  font-weight: 535;
-  line-height: 16px;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c9:hover {
-  opacity: 0.6;
-}
-
-.c9:active {
-  opacity: 0.4;
-}
-
-.c11 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  line-height: 24px;
-  white-space: pre-wrap;
-}
-
-.c12 {
-  display: none;
-}
-
-.c13 {
-  display: inline;
-}
-
-@media screen and (max-width:1024px) {
-  .c1 {
-    gap: 24px;
-  }
-}
-
-@media screen and (max-width:1024px) {
-  .c3 {
-    font-size: 28px !important;
-    line-height: 36px !important;
-  }
 }
 
 <span
@@ -411,23 +187,25 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c0 c1"
+          class="_gap-_xl_24px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1316331261 _width-10037"
           data-testid="token-details-info-section"
         >
-          <div
-            class="c2 c3 css-1jyz67g"
+          <span
+            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016140"
+            data-disable-theme="true"
           >
             Info
-          </div>
+          </span>
           <div
-            class="c4 c5 c6 c7"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _width-10037 _flexWrap-wrap"
             data-testid="token-details-info-links"
           >
             <div
-              class="c8"
+              class="c0"
             >
-              <div
-                class="c4 c5 c9"
+              <span
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                data-disable-theme="true"
               >
                 <svg
                   fill="none"
@@ -453,16 +231,17 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
                   />
                 </svg>
                 0xA0b8...eB48
-              </div>
+              </span>
             </div>
             <a
-              class="c10"
+              class="c1"
               href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
               rel="noopener noreferrer"
               target="_blank"
             >
-              <div
-                class="c4 c5 c9"
+              <span
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                data-disable-theme="true"
               >
                 <svg
                   fill="#7D7D7D"
@@ -482,16 +261,17 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
                   />
                 </svg>
                 Etherscan
-              </div>
+              </span>
             </a>
             <a
-              class="c10"
+              class="c1"
               href="https://www.circle.com/en/usdc"
               rel="noopener noreferrer"
               target="_blank"
             >
-              <div
-                class="c4 c5 c9"
+              <span
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                data-disable-theme="true"
               >
                 <svg
                   fill="#7D7D7D"
@@ -507,16 +287,17 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
                   />
                 </svg>
                 Website
-              </div>
+              </span>
             </a>
             <a
-              class="c10"
+              class="c1"
               href="https://x.com/circle"
               rel="noopener noreferrer"
               target="_blank"
             >
-              <div
-                class="c4 c5 c9"
+              <span
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                data-disable-theme="true"
               >
                 <svg
                   fill="#7D7D7D"
@@ -532,31 +313,32 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
                   />
                 </svg>
                 Twitter
-              </div>
+              </span>
             </a>
           </div>
-          <div
-            class="c2 c11 css-1urox24"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441251 _lineHeight-24px _fontWeight-233016202 _maxWidth-10037 _maxHeight-797770429 _whiteSpace-pre-wrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+            data-disable-theme="true"
           >
             <p
-              class="c12"
+              class="is_Paragraph font_body _display-none _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-675002279 _fontFamily-299667014 _fontWeight-233016202 _fontSize-229441189 _lineHeight-222976542 _userSelect-auto _whiteSpace-normal"
               data-testid="token-description-full"
             >
               USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts between SMS providers. We believe by removing artificial economic borders, we can create a more inclusive global economy.
             </p>
             <p
-              class="c13"
+              class="is_Paragraph font_body _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-675002279 _fontFamily-299667014 _fontWeight-233016202 _fontSize-229441189 _lineHeight-222976542 _userSelect-auto _whiteSpace-normal"
               data-testid="token-description-truncated"
             >
               USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value...
             </p>
             <div
-              class="c14"
+              class="c2"
               data-testid="token-description-show-more-button"
             >
               Show more
             </div>
-          </div>
+          </span>
         </div>
       </span>
     </span>
@@ -566,52 +348,7 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
 
 exports[`TokenDescription truncates description and shows more 1`] = `
 <DocumentFragment>
-  .c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c4 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
-  color: #222222;
-  -webkit-letter-spacing: -0.01em;
-  -moz-letter-spacing: -0.01em;
-  -ms-letter-spacing: -0.01em;
-  letter-spacing: -0.01em;
-}
-
-.c10 {
+  .c1 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -622,103 +359,30 @@ exports[`TokenDescription truncates description and shows more 1`] = `
   font-weight: 500;
 }
 
-.c10:hover {
+.c1:hover {
   opacity: 0.6;
 }
 
-.c10:active {
+.c1:active {
   opacity: 0.4;
 }
 
-.c8 {
+.c0 {
   display: inline-block;
   height: inherit;
 }
 
-.c14 {
+.c2 {
   color: #7D7D7D;
   font-weight: 485;
   font-size: 0.85em;
   padding-top: 0.5em;
 }
 
-.c14:hover,
-.c14:focus {
+.c2:hover,
+.c2:focus {
   color: #636363;
   cursor: pointer;
-}
-
-.c1 {
-  gap: 16px;
-  width: 100%;
-}
-
-.c6 {
-  gap: 8px;
-  width: 100%;
-}
-
-.c7 {
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-}
-
-.c9 {
-  gap: 8px;
-  padding: 8px 12px;
-  border-radius: 20px;
-  color: #222222;
-  background-color: #F9F9F9;
-  font-size: 14px;
-  font-weight: 535;
-  line-height: 16px;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c9:hover {
-  opacity: 0.6;
-}
-
-.c9:active {
-  opacity: 0.4;
-}
-
-.c11 {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  max-width: 100%;
-  line-height: 24px;
-  white-space: pre-wrap;
-}
-
-.c12 {
-  display: none;
-}
-
-.c13 {
-  display: inline;
-}
-
-@media screen and (max-width:1024px) {
-  .c1 {
-    gap: 24px;
-  }
-}
-
-@media screen and (max-width:1024px) {
-  .c3 {
-    font-size: 28px !important;
-    line-height: 36px !important;
-  }
 }
 
 <span
@@ -732,23 +396,25 @@ exports[`TokenDescription truncates description and shows more 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c0 c1"
+          class="_gap-_xl_24px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1316331261 _width-10037"
           data-testid="token-details-info-section"
         >
-          <div
-            class="c2 c3 css-1jyz67g"
+          <span
+            class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016140"
+            data-disable-theme="true"
           >
             Info
-          </div>
+          </span>
           <div
-            class="c4 c5 c6 c7"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _width-10037 _flexWrap-wrap"
             data-testid="token-details-info-links"
           >
             <div
-              class="c8"
+              class="c0"
             >
-              <div
-                class="c4 c5 c9"
+              <span
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                data-disable-theme="true"
               >
                 <svg
                   fill="none"
@@ -774,16 +440,17 @@ exports[`TokenDescription truncates description and shows more 1`] = `
                   />
                 </svg>
                 0xA0b8...eB48
-              </div>
+              </span>
             </div>
             <a
-              class="c10"
+              class="c1"
               href="https://etherscan.io/token/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48"
               rel="noopener noreferrer"
               target="_blank"
             >
-              <div
-                class="c4 c5 c9"
+              <span
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                data-disable-theme="true"
               >
                 <svg
                   fill="#7D7D7D"
@@ -803,16 +470,17 @@ exports[`TokenDescription truncates description and shows more 1`] = `
                   />
                 </svg>
                 Etherscan
-              </div>
+              </span>
             </a>
             <a
-              class="c10"
+              class="c1"
               href="https://www.circle.com/en/usdc"
               rel="noopener noreferrer"
               target="_blank"
             >
-              <div
-                class="c4 c5 c9"
+              <span
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                data-disable-theme="true"
               >
                 <svg
                   fill="#7D7D7D"
@@ -828,16 +496,17 @@ exports[`TokenDescription truncates description and shows more 1`] = `
                   />
                 </svg>
                 Website
-              </div>
+              </span>
             </a>
             <a
-              class="c10"
+              class="c1"
               href="https://x.com/circle"
               rel="noopener noreferrer"
               target="_blank"
             >
-              <div
-                class="c4 c5 c9"
+              <span
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                data-disable-theme="true"
               >
                 <svg
                   fill="#7D7D7D"
@@ -853,31 +522,32 @@ exports[`TokenDescription truncates description and shows more 1`] = `
                   />
                 </svg>
                 Twitter
-              </div>
+              </span>
             </a>
           </div>
-          <div
-            class="c2 c11 css-1urox24"
+          <span
+            class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441251 _lineHeight-24px _fontWeight-233016202 _maxWidth-10037 _maxHeight-797770429 _whiteSpace-pre-wrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
+            data-disable-theme="true"
           >
             <p
-              class="c12"
+              class="is_Paragraph font_body _display-none _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-675002279 _fontFamily-299667014 _fontWeight-233016202 _fontSize-229441189 _lineHeight-222976542 _userSelect-auto _whiteSpace-normal"
               data-testid="token-description-full"
             >
               USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value between people, businesses and financial institutions just like email between mail services and texts between SMS providers. We believe by removing artificial economic borders, we can create a more inclusive global economy.
             </p>
             <p
-              class="c13"
+              class="is_Paragraph font_body _display-inline _boxSizing-border-box _wordWrap-break-word _mt-0px _mr-0px _mb-0px _ml-0px _color-675002279 _fontFamily-299667014 _fontWeight-233016202 _fontSize-229441189 _lineHeight-222976542 _userSelect-auto _whiteSpace-normal"
               data-testid="token-description-truncated"
             >
               USDC is a fully collateralized US dollar stablecoin. USDC is the bridge between dollars and trading on cryptocurrency exchanges. The technology behind CENTRE makes it possible to exchange value...
             </p>
             <div
-              class="c14"
+              class="c2"
               data-testid="token-description-show-more-button"
             >
               Show more
             </div>
-          </div>
+          </span>
         </div>
       </span>
     </span>

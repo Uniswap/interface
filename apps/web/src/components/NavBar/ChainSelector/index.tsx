@@ -97,6 +97,8 @@ export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) 
       }
       searchParams.delete('inputCurrency')
       searchParams.delete('outputCurrency')
+      searchParams.delete('value')
+      searchParams.delete('field')
       targetChainId && searchParams.set('chain', CHAIN_IDS_TO_NAMES[targetChainId])
       setSearchParams(searchParams)
 
@@ -112,6 +114,7 @@ export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) 
     <ChainLogo chainId={chainId} size={20} testId="chain-selector-logo" />
   )
 
+  // NetworkFilter modified to use WEB_SUPPORTED_CHAIN_IDS instead of WALLET_SUPPORTED_CHAIN_IDS
   if (multichainFlagEnabled) {
     return (
       <Flex px={8}>
@@ -127,6 +130,10 @@ export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) 
     )
   }
 
+  const hideUnsupportedChains = true
+
+  // TODO: the following prompts switching chain, while the former allows selecting another chain
+  //  and switching only when when sending the transaction.
   return (
     <Popover ref={popoverRef} placement="bottom" stayInFrame allowFlip onOpenChange={setIsOpen}>
       <Popover.Trigger padding={8} cursor="pointer" data-testid="chain-selector">
@@ -143,15 +150,17 @@ export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) 
               isPending={selectorChain === pendingChainId}
             />
           ))}
-          {unsupportedChains.map((selectorChain) => (
-            <ChainSelectorRow
-              disabled
-              onSelectChain={() => undefined}
-              targetChain={selectorChain}
-              key={selectorChain}
-              isPending={false}
-            />
-          ))}
+          {!hideUnsupportedChains && (
+            unsupportedChains.map((selectorChain) => (
+              <ChainSelectorRow
+                disabled
+                onSelectChain={() => undefined}
+                targetChain={selectorChain}
+                key={selectorChain}
+                isPending={false}
+              />
+            ))
+          )}
         </Flex>
       </NavDropdown>
     </Popover>

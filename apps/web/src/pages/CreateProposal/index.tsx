@@ -24,7 +24,7 @@ import {
 } from 'pages/CreateProposal/ProposalActionSelector'
 import { ProposalEditor } from 'pages/CreateProposal/ProposalEditor'
 import { ProposalSubmissionModal } from 'pages/CreateProposal/ProposalSubmissionModal'
-import { Wrapper } from 'pages/Pool/styled'
+import { Wrapper } from 'pages/LegacyPool/styled'
 import { useCallback, useMemo, useState } from 'react'
 import { ArrowLeft } from 'react-feather'
 import { Link } from 'react-router-dom'

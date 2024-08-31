@@ -12,6 +12,8 @@ import { NoTokens } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexTransferProviders'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -44,6 +46,8 @@ export const TokensTab = memo(
     const startProfilerTimer = useStartProfiler()
     const cexTransferProviders = useCexTransferProviders()
 
+    const disableForKorea = useFeatureFlag(FeatureFlags.DisableFiatOnRampKorea)
+
     const onPressToken = useCallback(
       (currencyId: CurrencyId): void => {
         startProfilerTimer({ source: MobileScreens.Home })
@@ -57,8 +61,10 @@ export const TokensTab = memo(
     }, [dispatch])
 
     const onPressBuy = useCallback(() => {
-      dispatch(openModal({ name: ModalName.FiatOnRampAggregator }))
-    }, [dispatch])
+      dispatch(
+        openModal({ name: disableForKorea ? ModalName.KoreaCexTransferInfoModal : ModalName.FiatOnRampAggregator }),
+      )
+    }, [disableForKorea, dispatch])
 
     const onPressReceive = useCallback(() => {
       dispatch(

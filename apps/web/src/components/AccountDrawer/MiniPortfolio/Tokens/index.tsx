@@ -6,20 +6,18 @@ import PortfolioRow, {
   PortfolioTabWrapper,
 } from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { hideSmallBalancesAtom } from 'components/AccountDrawer/SmallBalanceToggle'
-import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import Row from 'components/Row'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { PortfolioToken } from 'graphql/data/portfolios'
 import { /*getTokenDetailsURL,*/ gqlToCurrency } from 'graphql/data/util'
-import { useAtomValue } from 'jotai/utils'
 import styled from 'lib/styled-components'
 import { EmptyWalletModule } from 'nft/components/profile/view/EmptyWalletContent'
 import { /*useCallback,*/ useMemo, useState } from 'react'
 //import { useNavigate } from 'react-router-dom'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -27,8 +25,8 @@ import { splitHiddenTokens } from 'utils/splitHiddenTokens'
 
 export default function Tokens() {
   const accountDrawer = useAccountDrawer()
-  const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
-  const hideSpam = useAtomValue(hideSpamAtom)
+  const hideSmallBalances = useHideSmallBalancesSetting()
+  const hideSpam = useHideSpamTokensSetting()
   const [showHiddenTokens, setShowHiddenTokens] = useState(false)
 
   const { data } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })

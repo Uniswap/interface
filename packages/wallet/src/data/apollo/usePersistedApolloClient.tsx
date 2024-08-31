@@ -1,23 +1,24 @@
-import { ApolloClient, from, NormalizedCacheObject } from '@apollo/client'
+import { ApolloClient, ApolloLink, from, NormalizedCacheObject } from '@apollo/client'
 import { PersistentStorage } from 'apollo3-cache-persist/lib/types'
 import { useCallback, useEffect, useState } from 'react'
 import { MMKV } from 'react-native-mmkv'
-import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { isNonJestDev } from 'utilities/src/environment/constants'
-import { logger } from 'utilities/src/logger/logger'
-import { isMobileApp } from 'utilities/src/platform'
-import { useAsyncData } from 'utilities/src/react/hooks'
-import { initAndPersistCache } from 'wallet/src/data/apollo/cache'
 import {
   CustomEndpoint,
   getCustomGraphqlHttpLink,
   getErrorLink,
   getGraphqlHttpLink,
-  getOnRampAuthLink,
   getPerformanceLink,
   getRestLink,
-} from 'wallet/src/data/links'
+} from 'uniswap/src/data/links'
+import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { isNonJestDev } from 'utilities/src/environment/constants'
+import { getDatadogApolloLink } from 'utilities/src/logger/datadogLink'
+import { logger } from 'utilities/src/logger/logger'
+import { isMobileApp } from 'utilities/src/platform'
+import { useAsyncData } from 'utilities/src/react/hooks'
+import { initAndPersistCache } from 'wallet/src/data/apollo/cache'
+import { getOnRampAuthLink } from 'wallet/src/data/onRampAuthLink'
 import { useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -95,17 +96,22 @@ export const usePersistedApolloClient = ({
 
     const restLink = getRestLink()
 
+    const linkList: ApolloLink[] = [
+      getErrorLink(),
+      // requires typing outside of wallet package
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      getPerformanceLink((args: any) => sendAnalyticsEvent(WalletEventName.PerformanceGraphql, args)),
+      getOnRampAuthLink(accounts, signerManager),
+      restLink,
+      apolloLink,
+    ]
+    if (isMobileApp) {
+      linkList.push(getDatadogApolloLink())
+    }
+
     const newClient = new ApolloClient({
       assumeImmutableResults: true,
-      link: from([
-        getErrorLink(),
-        // requires typing outside of wallet package
-        // eslint-disable-next-line @typescript-eslint/no-explicit-any
-        getPerformanceLink((args: any) => sendAnalyticsEvent(WalletEventName.PerformanceGraphql, args)),
-        getOnRampAuthLink(accounts, signerManager),
-        restLink,
-        apolloLink,
-      ]),
+      link: from(linkList),
       cache,
       defaultOptions: {
         watchQuery: {

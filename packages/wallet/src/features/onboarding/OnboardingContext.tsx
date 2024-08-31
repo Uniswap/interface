@@ -1,7 +1,9 @@
 /* eslint-disable max-lines */
+import dayjs from 'dayjs'
 import { PropsWithChildren, createContext, useContext, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagClaim } from 'uniswap/src/features/unitags/types'
@@ -10,7 +12,8 @@ import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension } from 'utilities/src/platform'
-import { setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
+import { normalizeTextInput } from 'utilities/src/primitives/string'
+import { setBackupReminderLastSeenTs, setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { createImportedAccounts } from 'wallet/src/features/onboarding/createImportedAccounts'
@@ -22,14 +25,26 @@ import { Account, BackupType, SignerMnemonicAccount } from 'wallet/src/features/
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/selectors'
 
+export const NUMBER_OF_WALLETS_TO_GENERATE = 10
+
+interface ImportMnemonicArgs {
+  mnemonic: string
+  password?: string
+  allowOverwrite?: boolean
+}
+
+interface GenerateImportedAccountsArgs {
+  mnemonicId: string
+  backupType: BackupType.Cloud | BackupType.Manual
+}
+
 export interface OnboardingContext {
+  importMnemonicToKeychain: ({ mnemonic, password, allowOverwrite }: ImportMnemonicArgs) => Promise<void>
   generateOnboardingAccount: (password?: string) => Promise<void>
-  generateImportedAccounts: (mnemonicId: string, backupType: BackupType.Cloud | BackupType.Manual) => Promise<void>
-  generateImportedAccountsByMnemonic: (
-    validMnemonic: string,
-    password?: string,
-    backupType?: BackupType.Cloud | BackupType.Manual,
-  ) => Promise<void>
+  generateInitialAddresses: () => Promise<void>
+  generateAdditionalAddresses: () => Promise<void>
+  generateImportedAccounts: ({ mnemonicId, backupType }: GenerateImportedAccountsArgs) => Promise<void>
+  generateAccountsAndImportAddresses: (selectedAddresses: string[]) => Promise<SignerMnemonicAccount[] | undefined>
   addBackupMethod: (backupMethod: BackupType) => void
   hasBackup: (address: string, backupType?: BackupType) => boolean | undefined
   enableNotifications: () => void
@@ -46,7 +61,9 @@ export interface OnboardingContext {
   getAllOnboardingAccounts: () => SignerMnemonicAccount[]
   getOnboardingAccount: () => SignerMnemonicAccount | undefined
   getOnboardingAccountAddress: () => string | undefined
+  getGeneratedAddresses: () => Promise<string[] | undefined>
   getImportedAccounts: () => SignerMnemonicAccount[] | undefined
+  getOnboardingOrImportedAccount: () => SignerMnemonicAccount | undefined
   setRecoveredImportedAccounts: (accounts: SignerMnemonicAccount[]) => void
   getImportedAccountsAddresses: () => string[] | undefined
   getUnitagClaim: () => UnitagClaim | undefined
@@ -60,9 +77,12 @@ export interface OnboardingContext {
 }
 
 const initialOnboardingContext: OnboardingContext = {
+  importMnemonicToKeychain: async () => undefined,
   generateOnboardingAccount: async () => undefined,
+  generateInitialAddresses: async () => undefined,
+  generateAdditionalAddresses: async () => undefined,
   generateImportedAccounts: async () => undefined,
-  generateImportedAccountsByMnemonic: async () => undefined,
+  generateAccountsAndImportAddresses: async () => [],
   addBackupMethod: () => undefined,
   hasBackup: () => undefined,
   enableNotifications: () => undefined,
@@ -73,9 +93,11 @@ const initialOnboardingContext: OnboardingContext = {
     extensionOnboardingFlow?: ExtensionOnboardingFlow
   }) => undefined,
   getAllOnboardingAccounts: () => [],
+  getGeneratedAddresses: async () => undefined,
   getOnboardingAccount: () => undefined,
   getOnboardingAccountAddress: () => undefined,
   getImportedAccounts: () => undefined,
+  getOnboardingOrImportedAccount: () => undefined,
   setRecoveredImportedAccounts: (_accounts: SignerMnemonicAccount[]) => undefined,
   getImportedAccountsAddresses: () => undefined,
   getUnitagClaim: () => undefined,
@@ -104,6 +126,8 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
 
   const [onboardingAccount, setOnboardingAccount] = useState<SignerMnemonicAccount | undefined>()
   const [unitagClaim, setUnitagClaim] = useState<UnitagClaim | undefined>()
+  const [lastDerivedIndex, setLastDerivedIndex] = useState<number>(0)
+  const [generatedAddresses, setGeneratedAddresses] = useState<string[] | undefined>()
   const [importedAccounts, setImportedAccounts] = useState<SignerMnemonicAccount[] | undefined>()
   const [onboardingAccountMnemonic, setOnboardingAccountMnemonic] = useState<string[] | undefined>()
 
@@ -122,9 +146,8 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
    */
   const generateOnboardingAccount = async (password?: string): Promise<void> => {
     if (isExtension) {
-      // Clear any stale data from Keyring
-      // Only used on web during onboarding
-      // Mobile has different legacy conditions
+      // Clear any stale data from the extension Keyring only
+      // Mobile enforces the single mnemonic rule via the onboarding recovery process
       await Keyring.removeAllMnemonicsAndPrivateKeys()
     }
     resetOnboardingContextData()
@@ -137,6 +160,10 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
 
   const getOnboardingAccountAddress = (): string | undefined => {
     return onboardingAccount?.address
+  }
+
+  const getOnboardingOrImportedAccount = (): SignerMnemonicAccount | undefined => {
+    return onboardingAccount || importedAccounts?.[0]
   }
 
   const setPendingWalletName = (walletName: string): void => {
@@ -156,34 +183,123 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     setUnitagClaim(unitag)
   }
 
+  const importMnemonicToKeychain = async ({
+    mnemonic,
+    password,
+    allowOverwrite,
+  }: ImportMnemonicArgs): Promise<void> => {
+    if (isExtension) {
+      // Clear any stale data from the extension Keyring only
+      // Mobile enforces the single mnemonic rule via the onboarding recovery process
+      await Keyring.removeAllMnemonicsAndPrivateKeys()
+    }
+
+    await Keyring.importMnemonic(mnemonic, password, allowOverwrite)
+    setImportedAccounts(undefined)
+    setOnboardingAccount(undefined)
+  }
+
+  const generateInitialAddresses = async (): Promise<void> => {
+    // Mobile requires an implementation in Keyring.native.ts for this function to be used
+    throwIfNotExtension()
+    const mnemonic = getOnboardingAccountMnemonicString()
+    if (!mnemonic) {
+      throw new Error('No mnemonic available to generate addresses')
+    }
+
+    if (generatedAddresses?.length) {
+      logger.error(new Error('Attempting to generate initial addresses when already generated'), {
+        tags: { file: 'OnboardingContextProvider', function: 'generateInitialAddresses' },
+      })
+
+      return
+    }
+
+    const newAddresses = await Keyring.generateAddressesForMnemonic(mnemonic, 0, NUMBER_OF_WALLETS_TO_GENERATE)
+    setGeneratedAddresses(newAddresses)
+    setLastDerivedIndex(NUMBER_OF_WALLETS_TO_GENERATE)
+  }
+
+  const generateAdditionalAddresses = async (): Promise<void> => {
+    // Mobile requires an implementation in Keyring.native.ts for this function to be used
+    throwIfNotExtension()
+    const mnemonic = getOnboardingAccountMnemonicString()
+    if (!mnemonic) {
+      throw new Error('No mnemonic available to generate addresses')
+    }
+
+    const existingAddresses = generatedAddresses ?? []
+    const newlyDerivedAddresses = await Keyring.generateAddressesForMnemonic(
+      mnemonic,
+      lastDerivedIndex,
+      lastDerivedIndex + NUMBER_OF_WALLETS_TO_GENERATE,
+    )
+    setGeneratedAddresses([...existingAddresses, ...newlyDerivedAddresses])
+    setLastDerivedIndex(lastDerivedIndex + NUMBER_OF_WALLETS_TO_GENERATE)
+  }
+
+  const getGeneratedAddresses = async (): Promise<string[] | undefined> => {
+    if (!generatedAddresses?.length) {
+      logger.error(new Error('No addresses available to retrieve'), {
+        tags: { file: 'OnboardingContextProvider', function: 'getGeneratedAddresses' },
+      })
+
+      await generateInitialAddresses()
+    }
+
+    return generatedAddresses
+  }
+
+  const generateAccountsAndImportAddresses = async (
+    selectedAddresses: string[],
+  ): Promise<SignerMnemonicAccount[] | undefined> => {
+    const mnemonicId = generatedAddresses?.[0]
+    if (!generatedAddresses || !mnemonicId) {
+      throw new Error('No addresses to generate accounts for')
+    }
+
+    const indexesToImport = selectedAddresses.map((address) => generatedAddresses.indexOf(address))
+
+    if (indexesToImport.includes(-1)) {
+      const invalidAddress = selectedAddresses[indexesToImport.indexOf(-1)]
+      logger.error(new Error('Invalid address selected for import'), {
+        tags: { file: 'OnboardingContextProvider', function: 'generateAccountsAndImportAddresses' },
+        extra: { invalidAddress },
+      })
+    }
+
+    const addresses = await Promise.all(
+      indexesToImport.map(async (index) => Keyring.generateAndStorePrivateKey(mnemonicId, index)),
+    ).catch((error) => {
+      logger.error(error, {
+        tags: { file: 'OnboardingContextProvider', function: 'generateAccountsAndImportAddresses' },
+      })
+    })
+
+    const accountsToImport: SignerMnemonicAccount[] | undefined = addresses?.map((address, index) => ({
+      type: AccountType.SignerMnemonic,
+      address,
+      name: t('onboarding.wallet.defaultName', { number: index + 1 }),
+      timeImportedMs: dayjs().valueOf(),
+      derivationIndex: index,
+      mnemonicId,
+      backups: [BackupType.Manual],
+    }))
+
+    setImportedAccounts(accountsToImport)
+
+    return accountsToImport
+  }
   /**
    * Generates a set (10) of wallets based on given mnemonicId. Used for importing
    * existing wallets from cloud or using mnemonics.
    * @param mnemonicId Required to generate a wallet address
-   * @param backupType Predefines backup type for generated accounts
+   * @param backupType Backup type for generated accounts
    */
-  const generateImportedAccounts = async (
-    mnemonicId: string,
-    backupType?: BackupType.Cloud | BackupType.Manual,
-  ): Promise<void> => {
+  const generateImportedAccounts = async ({ mnemonicId, backupType }: GenerateImportedAccountsArgs): Promise<void> => {
     setImportedAccounts(undefined)
     setOnboardingAccount(undefined)
     setImportedAccounts(await createImportedAccounts(mnemonicId, backupType))
-  }
-
-  const generateImportedAccountsByMnemonic = async (
-    validMnemonic: string,
-    password?: string,
-    backupType?: BackupType.Cloud | BackupType.Manual,
-  ): Promise<void> => {
-    if (isExtension) {
-      // Clear any stale data from Keyring
-      // Only used on web during onboarding
-      // Mobile has different legacy conditions
-      await Keyring.removeAllMnemonicsAndPrivateKeys()
-    }
-    const mnemonicId = await Keyring.importMnemonic(validMnemonic, password, true)
-    await generateImportedAccounts(mnemonicId, backupType)
   }
 
   const getImportedAccounts = (): SignerMnemonicAccount[] | undefined => {
@@ -199,7 +315,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
   }
 
   /**
-   * Selects imported accounts from within the context and sets them as the.
+   * Selects imported accounts from within the context and sets them as the
    * selected imported accounts, overriding any previous selection.
    */
   const selectImportedAccounts = async (accountAddresses: string[]): Promise<SignerMnemonicAccount[]> => {
@@ -249,7 +365,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
 
   /**
    * Checks if account of given address has a certain type of backup or any backup if a second
-   * paramter is not provided
+   * parameter is not provided
    */
   const hasBackup = (address: string, backupType?: BackupType): boolean | undefined => {
     return getAllOnboardingAccounts()
@@ -352,9 +468,12 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
       }
     })
 
-    // Dismiss unitags prompt if the onboarding method prompts for unitags (create new)
     if (importType === ImportType.CreateNew) {
+      // Dismiss unitags prompt if the onboarding method prompts for unitags (create new)
       dispatch(setHasSkippedUnitagPrompt(true))
+
+      // Reset the last timestamp for having shown the backup reminder modal
+      dispatch(setBackupReminderLastSeenTs(undefined))
     }
 
     const isExtensionNoAccounts = onboardingAddresses.length === 0 && isExtension
@@ -404,7 +523,7 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
    */
   const getOnboardingAccountMnemonicString = (): string | undefined => {
     throwIfNotExtension()
-    return onboardingAccountMnemonic?.map((word: string) => word.trim().toLowerCase()).join(' ')
+    return normalizeTextInput(onboardingAccountMnemonic?.join(' ') ?? '')
   }
 
   /**
@@ -414,9 +533,11 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
   const addOnboardingAccountMnemonic = (mnemonic: string[]): void => {
     throwIfNotExtension()
     if (!mnemonic || (mnemonic.length !== 12 && mnemonic.length !== 24)) {
-      throw new Error('Incorrect value of mnemonic parameted passed to addOnboardingAccountMnemonic function')
+      throw new Error('Incorrect mnemonic value passed to addOnboardingAccountMnemonic function')
     }
     setOnboardingAccountMnemonic(mnemonic)
+    setLastDerivedIndex(0)
+    setGeneratedAddresses(undefined)
   }
 
   const resetOnboardingContextData = (): void => {
@@ -429,14 +550,19 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
   return (
     <OnboardingContext.Provider
       value={{
+        importMnemonicToKeychain,
         getOnboardingAccount,
         getImportedAccounts,
+        getOnboardingOrImportedAccount,
         setRecoveredImportedAccounts: setImportedAccounts,
         addBackupMethod,
         hasBackup,
         generateOnboardingAccount,
+        generateInitialAddresses,
+        generateAdditionalAddresses,
+        getGeneratedAddresses,
         generateImportedAccounts,
-        generateImportedAccountsByMnemonic,
+        generateAccountsAndImportAddresses,
         enableNotifications,
         selectImportedAccounts,
         finishOnboarding,

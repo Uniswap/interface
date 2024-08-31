@@ -1,6 +1,6 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { FiatOnRampStackParamList } from 'src/app/navigation/types'
@@ -16,6 +16,7 @@ import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/const
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
@@ -26,8 +27,6 @@ import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { forceFetchFiatOnRampTransactions } from 'wallet/src/features/transactions/slice'
-import { FiatPurchaseTransactionInfo } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 // Design decision
@@ -46,19 +45,10 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     useFiatOnRampContext()
   const serviceProvider = selectedQuote?.serviceProviderDetails
 
-  const initialTypeInfo = useMemo<Partial<FiatPurchaseTransactionInfo>>(
-    () => ({
-      serviceProviderLogo: serviceProvider?.logos,
-      serviceProvider: serviceProvider?.serviceProvider,
-    }),
-    [serviceProvider],
-  )
-
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
     quoteCurrency.currencyInfo?.currency.chainId ?? UniverseChainId.Mainnet,
     serviceProvider?.serviceProvider,
-    initialTypeInfo,
   )
 
   const onError = useCallback((): void => {

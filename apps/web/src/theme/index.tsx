@@ -3,12 +3,13 @@ import { CONNECTION } from 'components/Web3Provider/constants'
 import { WalletConnectConnector } from 'components/Web3Provider/walletConnect'
 import { ThemeProvider as StyledComponentsThemeProvider, createGlobalStyle, css } from 'lib/styled-components'
 import { rootCssString } from 'nft/css/cssStringFromTheme'
-import { navDimensions } from 'nft/css/sprinkles.css'
 import { PropsWithChildren, useEffect, useMemo } from 'react'
 import { ThemeColors, darkTheme, lightTheme } from 'theme/colors'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from 'theme/deprecatedColors'
 import { getAccent2, getNeutralContrast } from 'theme/utils'
+
+export const NAV_HEIGHT = 72
 
 export const MEDIA_WIDTHS = {
   deprecated_upToExtraSmall: 500,
@@ -91,8 +92,6 @@ function getSettings(darkMode: boolean) {
     // media queries
     deprecated_mediaWidth: deprecated_mediaWidthTemplates,
 
-    navHeight: navDimensions.height,
-    navVerticalPad: navDimensions.verticalPad,
     mobileBottomBarHeight: 48,
     maxWidth: MAX_CONTENT_WIDTH_PX,
 

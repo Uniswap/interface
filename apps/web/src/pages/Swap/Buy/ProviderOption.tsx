@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { useAddFiatOnRampTransaction } from 'state/fiatOnRampTransactions/hooks'
 import { FiatOnRampTransactionStatus, FiatOnRampTransactionType } from 'state/fiatOnRampTransactions/types'
-import { ExternalLink } from 'ui/src/components/icons'
+import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { FORQuoteItem } from 'uniswap/src/features/fiatOnRamp/FORQuoteItem'
 import { useFiatOnRampAggregatorWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'

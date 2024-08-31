@@ -6,6 +6,9 @@ import TokenSafety from 'components/TokenSafety'
 import useLast from 'hooks/useLast'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
+import { NAV_HEIGHT } from 'theme'
+import { AdaptiveWebModal } from 'ui/src'
+import { TOKEN_SELECTOR_WEB_MAX_WIDTH } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
@@ -42,7 +45,11 @@ export default memo(function CurrencySearchModal({
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
   const userAddedTokens = useUserAddedTokens()
-  const multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
+
+  // TODO: add pool select to CurrencySearch component and use actual feature flag.
+  // we hide the new multichain currency search until we understand whether it is used for cross-chain swaps,
+  //  which are not supported in Rigoblock atm. Changing this will result in not displaying the pool selector.
+  let multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
   useEffect(() => {
     if (isOpen && !lastOpen) {
@@ -73,6 +80,8 @@ export default memo(function CurrencySearchModal({
   )
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()
+
+  multichainFlagEnabled = false
 
   let content = null
   switch (modalView) {
@@ -105,7 +114,21 @@ export default memo(function CurrencySearchModal({
       }
       break
   }
-  return (
+  multichainFlagEnabled = true
+  return multichainFlagEnabled ? (
+    <AdaptiveWebModal
+      isOpen={isOpen}
+      onClose={onDismiss}
+      maxHeight={modalView === CurrencyModalView.tokenSafety ? 400 : 700}
+      maxWidth={TOKEN_SELECTOR_WEB_MAX_WIDTH}
+      px={0}
+      py={0}
+      flex={1}
+      $sm={{ height: `calc(100dvh - ${NAV_HEIGHT}px)` }}
+    >
+      {content}
+    </AdaptiveWebModal>
+  ) : (
     <Modal
       isOpen={isOpen}
       onDismiss={onDismiss}

@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { CustomEndpoint } from 'wallet/src/data/links'
+import { CustomEndpoint } from 'uniswap/src/data/links'
 
 export interface TweaksState {
   customEndpoint?: CustomEndpoint

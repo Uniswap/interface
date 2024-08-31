@@ -1,8 +1,8 @@
 // eslint-disable-next-line @typescript-eslint/triple-slash-reference
 /// <reference path="../../../../index.d.ts" />
 
+import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
-import { OptionalStrictMode } from 'src/app/components/OptionalStrictMode'
 import PopupApp from 'src/app/PopupApp'
 import { initializeSentry, SentryAppNameTag } from 'src/app/sentry'
 import { getLocalUserId } from 'src/app/utils/storage'
@@ -29,9 +29,9 @@ async function initPopup(): Promise<void> {
   const root = createRoot(container)
 
   root.render(
-    <OptionalStrictMode>
+    <StrictMode>
       <PopupApp />
-    </OptionalStrictMode>,
+    </StrictMode>,
   )
 }
 

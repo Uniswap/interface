@@ -1,31 +1,27 @@
-import styled from 'lib/styled-components'
 import { DirectToDefi } from 'pages/Landing/sections/DirectToDefi'
 import { Footer } from 'pages/Landing/sections/Footer'
 import { NewsletterEtc } from 'pages/Landing/sections/NewsletterEtc'
 import { Stats } from 'pages/Landing/sections/Stats'
 import { forwardRef } from 'react'
-
-const Container = styled.div`
-  gap: 120px;
-  @media (max-width: 1024px) {
-    gap: 80px;
-  }
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 100%;
-  z-index: 1;
-`
+import { Flex } from 'ui/src'
 
 const Fold = forwardRef<HTMLDivElement>(function Fold(props, scrollAnchor) {
   return (
-    <Container ref={scrollAnchor}>
+    <Flex
+      gap={120}
+      $sm={{ gap: 80 }}
+      position="relative"
+      alignItems="center"
+      width="100%"
+      zIndex={1}
+      maxWidth="100vw"
+      ref={scrollAnchor}
+    >
       <DirectToDefi />
       <Stats />
       <NewsletterEtc />
       <Footer />
-    </Container>
+    </Flex>
   )
 })
 

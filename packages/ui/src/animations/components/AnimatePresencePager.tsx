@@ -33,6 +33,7 @@ const AnimatedItem = styled(Flex, {
   x: 0,
   opacity: 1,
   width: '100%',
+  grow: true,
 
   variants: {
     going: (going: AnimationType) => ({

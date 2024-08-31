@@ -1,4 +1,5 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
+import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
 import { SharedEventName } from '@uniswap/analytics-events'
 import dayjs from 'dayjs'
 import React, { useCallback, useEffect, useState } from 'react'
@@ -22,6 +23,7 @@ import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -29,7 +31,6 @@ import { logger } from 'utilities/src/logger/logger'
 import { useTimeout } from 'utilities/src/time/timing'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
@@ -175,84 +176,89 @@ export function OnDeviceRecoveryScreen({
   const showAllWallets = !screenLoading && !hasAnySignificantWallets
 
   return (
-    <Trace logImpression properties={{ mnemonicCount: mnemonicIds.length }} screen={OnboardingScreens.OnDeviceRecovery}>
-      <Screen>
-        <Flex grow p="$spacing24">
-          <Flex alignItems="flex-start" gap="$spacing16">
-            <Image height={iconSizes.icon36} source={UNISWAP_LOGO} width={iconSizes.icon36} />
-            <Text variant="subheading1">{t('onboarding.import.onDeviceRecovery.title')}</Text>
-            <Text color="$neutral2" variant="subheading2">
-              {t('onboarding.import.onDeviceRecovery.subtitle')}
-            </Text>
-          </Flex>
-          <ScrollView style={{ flex: 1, flexGrow: 1, flexShrink: 1, display: 'flex' }}>
-            <Flex gap="$spacing12" justifyContent="flex-start" pt="$spacing28">
-              {mnemonicIds.map((mnemonicId) => (
-                <OnDeviceRecoveryWalletCard
-                  key={mnemonicId}
-                  mnemonicId={mnemonicId}
-                  screenLoading={screenLoading}
-                  showAllWallets={showAllWallets}
-                  onLoadComplete={onWalletLoad}
-                  onPressCard={(recoveryAddressesInfos) => {
-                    setSelectedMnemonicId(mnemonicId)
-                    setSelectedRecoveryWalletInfos(recoveryAddressesInfos)
-                    setShowConfirmationModal(true)
-
-                    sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-                      element: ElementName.OnDeviceRecoveryWallet,
-                    })
-                  }}
-                  onPressViewRecoveryPhrase={() => {
-                    navigation.navigate(OnboardingScreens.OnDeviceRecoveryViewSeedPhrase, {
-                      mnemonicId,
-                      importType: ImportType.OnDeviceRecovery,
-                      entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
-                    })
-                  }}
-                />
-              ))}
-              {screenLoading
-                ? Array(LOADING_COUNT)
-                    .fill(0)
-                    .map((_, index) => (
-                      <Flex key={`loading-${index}`}>
-                        <OnDeviceRecoveryWalletCardLoader index={index} totalCount={LOADING_COUNT} />
-                      </Flex>
-                    ))
-                : null}
-            </Flex>
-          </ScrollView>
-
-          <Flex justifyContent="flex-end">
-            <Flex alignItems="center" gap="$spacing8" justifyContent="center">
-              <Text color="$neutral3" variant="body3" onPress={onPressOtherWallet}>
-                {t('onboarding.import.onDeviceRecovery.other_options.label')}
+    <ReactNavigationPerformanceView screenName={OnboardingScreens.OnDeviceRecovery}>
+      <Trace
+        logImpression
+        properties={{ mnemonicCount: mnemonicIds.length }}
+        screen={OnboardingScreens.OnDeviceRecovery}
+      >
+        <Screen>
+          <Flex grow p="$spacing24">
+            <Flex alignItems="flex-start" gap="$spacing16">
+              <Image height={iconSizes.icon36} source={UNISWAP_LOGO} width={iconSizes.icon36} />
+              <Text variant="subheading1">{t('onboarding.import.onDeviceRecovery.title')}</Text>
+              <Text color="$neutral2" variant="subheading2">
+                {t('onboarding.import.onDeviceRecovery.subtitle')}
               </Text>
-              <Trace logPress element={ElementName.OnDeviceRecoveryImportOther}>
-                <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={TestID.WatchWallet}>
-                  <Text color="$accent1" variant="buttonLabel3" onPress={onPressOtherWallet}>
-                    {t('onboarding.import.onDeviceRecovery.other_options')}
-                  </Text>
-                </TouchableArea>
-              </Trace>
+            </Flex>
+            <ScrollView style={{ flex: 1, flexGrow: 1, flexShrink: 1, display: 'flex' }}>
+              <Flex gap="$spacing12" justifyContent="flex-start" pt="$spacing28">
+                {mnemonicIds.map((mnemonicId) => (
+                  <OnDeviceRecoveryWalletCard
+                    key={mnemonicId}
+                    mnemonicId={mnemonicId}
+                    screenLoading={screenLoading}
+                    showAllWallets={showAllWallets}
+                    onLoadComplete={onWalletLoad}
+                    onPressCard={(recoveryAddressesInfos) => {
+                      setSelectedMnemonicId(mnemonicId)
+                      setSelectedRecoveryWalletInfos(recoveryAddressesInfos)
+                      setShowConfirmationModal(true)
+
+                      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+                        element: ElementName.OnDeviceRecoveryWallet,
+                      })
+                    }}
+                    onPressViewRecoveryPhrase={() => {
+                      navigation.navigate(OnboardingScreens.OnDeviceRecoveryViewSeedPhrase, {
+                        mnemonicId,
+                        importType: ImportType.OnDeviceRecovery,
+                        entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
+                      })
+                    }}
+                  />
+                ))}
+                {screenLoading
+                  ? Array(LOADING_COUNT)
+                      .fill(0)
+                      .map((_, index) => (
+                        <Flex key={`loading-${index}`}>
+                          <OnDeviceRecoveryWalletCardLoader index={index} totalCount={LOADING_COUNT} />
+                        </Flex>
+                      ))
+                  : null}
+              </Flex>
+            </ScrollView>
+
+            <Flex justifyContent="flex-end">
+              <Flex alignItems="center" gap="$spacing8" justifyContent="center">
+                <Text color="$neutral3" variant="body3" onPress={onPressOtherWallet}>
+                  {t('onboarding.import.onDeviceRecovery.other_options.label')}
+                </Text>
+                <Trace logPress element={ElementName.OnDeviceRecoveryImportOther}>
+                  <TouchableArea alignItems="center" hitSlop={16} mb="$spacing12" testID={TestID.WatchWallet}>
+                    <Text color="$accent1" variant="buttonLabel3" onPress={onPressOtherWallet}>
+                      {t('onboarding.import.onDeviceRecovery.other_options')}
+                    </Text>
+                  </TouchableArea>
+                </Trace>
+              </Flex>
             </Flex>
           </Flex>
-        </Flex>
-        {showConfirmationModal && (
           <WarningModal
             caption={t('onboarding.import.onDeviceRecovery.warning.caption')}
             closeText={t('common.button.back')}
             confirmText={t('common.button.continue')}
             icon={<PapersText color={colors.neutral1.get()} size="$icon.20" strokeWidth={1.5} />}
+            isOpen={showConfirmationModal}
             modalName={ModalName.OnDeviceRecoveryConfirmation}
             severity={WarningSeverity.None}
             title={t('onboarding.import.onDeviceRecovery.warning.title')}
             onClose={onPressClose}
             onConfirm={onPressConfirm}
           />
-        )}
-      </Screen>
-    </Trace>
+        </Screen>
+      </Trace>
+    </ReactNavigationPerformanceView>
   )
 }

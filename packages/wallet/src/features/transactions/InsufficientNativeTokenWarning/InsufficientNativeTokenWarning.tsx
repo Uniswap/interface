@@ -1,6 +1,6 @@
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { Warning } from 'uniswap/src/features/transactions/WarningModal/types'
 import { NotImplementedError } from 'utilities/src/errors'
-import { GasFeeResult } from 'wallet/src/features/gas/types'
-import { Warning } from 'wallet/src/features/transactions/WarningModal/types'
 
 export type InsufficientNativeTokenWarningProps = {
   warnings: Warning[]

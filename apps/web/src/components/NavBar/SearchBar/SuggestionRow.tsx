@@ -16,7 +16,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
-import { Verified } from 'ui/src/components/icons'
+import { Verified } from 'ui/src/components/icons/Verified'
 import { TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
@@ -125,7 +125,7 @@ export function SuggestionRow({
             ...suggestion,
             address,
             chainId: supportedChainIdFromGQLChain(suggestion.chain) as UniverseChainId,
-            isNative: suggestion.address === NATIVE_CHAIN_ID,
+            isNative: address === NATIVE_CHAIN_ID,
             isToken: suggestion.standard === TokenStandard.Erc20,
           })
         : searchGenieCollectionToTokenSearchResult(suggestion as GenieCollection)

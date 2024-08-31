@@ -9,10 +9,10 @@ import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { GQL_QUERIES_TO_REFETCH_ON_TXN_UPDATE } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
-import { TransactionDetails, TransactionType } from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { buildCurrencyId, buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'wallet/src/utils/currencyId'
 
@@ -91,10 +91,6 @@ export function* refetchGQLQueries({
 function getCurrenciesWithExpectedUpdates(transaction: TransactionDetails): Set<CurrencyId> | undefined {
   const currenciesWithBalToUpdate: Set<CurrencyId> = new Set()
   const txChainId = transaction.chainId
-
-  if (transaction.typeInfo.type === TransactionType.FiatPurchase) {
-    return undefined
-  }
 
   // All txs besides FOR at least use gas so check for update of gas token
   currenciesWithBalToUpdate.add(buildNativeCurrencyId(txChainId))

@@ -2,9 +2,14 @@
  * Given a URI that may be ipfs, ipns, http, https, ar, or data protocol, return the fetch-able http(s) URLs for the same content
  * @param uri to convert to fetch-able http url
  */
-export function uriToHttpUrls(uri: string): string[] {
+export function uriToHttpUrls(uri: string, options?: { allowLocalUri?: boolean }): string[] {
   const protocol = uri.split(':')[0]?.toLowerCase()
+
   switch (protocol) {
+    case uri: {
+      // If the result of protocol equals the uri, it means the uri has no protocol and is a local file (ie. a relative or absolute path).
+      return options?.allowLocalUri ? [uri] : []
+    }
     case 'data':
       return [uri]
     case 'https':
@@ -13,11 +18,11 @@ export function uriToHttpUrls(uri: string): string[] {
       return ['https' + uri.slice(4), uri]
     case 'ipfs': {
       const hash = uri.match(/^ipfs:(\/\/)?(ipfs\/)?(.*)$/i)?.[3]
-      return [`https://cloudflare-ipfs.com/ipfs/${hash}/`, `https://ipfs.io/ipfs/${hash}/`]
+      return [`https://ipfs.io/ipfs/${hash}/`, `https://hardbin.com/ipfs/${hash}/`]
     }
     case 'ipns': {
       const name = uri.match(/^ipns:(\/\/)?(.*)$/i)?.[2]
-      return [`https://cloudflare-ipfs.com/ipns/${name}/`, `https://ipfs.io/ipns/${name}/`]
+      return [`https://ipfs.io/ipns/${name}/`, `https://hardbin.com/ipns/${name}/`]
     }
     case 'ar': {
       const tx = uri.match(/^ar:(\/\/)?(.*)$/i)?.[2]

@@ -3,19 +3,14 @@ import { waitFor } from '@testing-library/react-native'
 import { toIncludeSameMembers } from 'jest-extended'
 import { MobileState } from 'src/app/mobileReducer'
 import { renderHookWithProviders } from 'src/test/render'
+import { TransactionsState } from 'uniswap/src/features/transactions/slice'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { sendTokenTransactionInfo, transactionDetails } from 'uniswap/src/test/fixtures'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { useRecipients } from 'wallet/src/components/RecipientSearch/hooks'
 import { SearchableRecipient } from 'wallet/src/features/address/types'
-import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
-import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import {
-  SAMPLE_SEED_ADDRESS_1,
-  SAMPLE_SEED_ADDRESS_2,
-  sendTokenTransactionInfo,
-  signerMnemonicAccount,
-  transactionDetails,
-} from 'wallet/src/test/fixtures'
+import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 expect.extend({ toIncludeSameMembers })
 
@@ -42,7 +37,7 @@ const sendTxDetailsFailed = transactionDetails({
 type PreloadedStateProps = {
   watchedAddresses?: Address[]
   hasInactiveAccounts?: boolean
-  transactions?: TransactionStateMap
+  transactions?: TransactionsState
 }
 
 const getPreloadedState = (props?: PreloadedStateProps): PreloadedState<MobileState> => {
@@ -62,8 +57,6 @@ const getPreloadedState = (props?: PreloadedStateProps): PreloadedState<MobileSt
       activeAccountAddress: activeAccount.address,
       settings: {
         swapProtection: SwapProtectionSetting.On,
-        hideSmallBalances: false,
-        hideSpamTokens: false,
       },
     },
     transactions,

@@ -1,32 +1,21 @@
-import { ScrollBarStyles } from 'components/Common'
-import { NAV_BREAKPOINT, useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
-import styled from 'lib/styled-components'
 import { ReactNode, RefObject } from 'react'
-import { Flex, Popover, RemoveScroll } from 'ui/src'
+import { NAV_HEIGHT } from 'theme'
+import { Flex, Popover, WebBottomSheet, styled, useScrollbarStyles, useShadowPropsMedium } from 'ui/src'
 
-const NavDropdownContent = styled.div<{ $width?: number }>`
-  border-radius: 16px;
-  border: 1px solid ${({ theme }) => theme.surface3};
-  background: ${({ theme }) => theme.surface1};
-  ${({ theme }) => !theme.darkMode && `box-shadow: 3px 3px 10px ${theme.surface3}`};
-  ${({ $width }) => $width && `width: ${$width}px;`}
-  max-height: calc(100dvh - ${({ theme }) => theme.navHeight}px);
-  overflow: auto;
-  ${ScrollBarStyles}
-
-  @media screen and (max-width: ${NAV_BREAKPOINT.isMobileDrawer}px) {
-    width: 100%;
-    border-radius: 0;
-    border: none;
-    box-shadow: none;
-    overflowx: auto;
-    max-height: calc(100dvh - ${({ theme }) => theme.navHeight + 12}px);
-    ${ScrollBarStyles}
-    ::-webkit-scrollbar-track {
-      margin-top: 40px;
-    }
-  }
-`
+const NavDropdownContent = styled(Flex, {
+  borderRadius: '$rounded16',
+  borderWidth: 1,
+  borderStyle: 'solid',
+  borderColor: '$surface2',
+  backgroundColor: '$surface1',
+  maxHeight: `calc(100dvh - ${NAV_HEIGHT}px)`,
+  $sm: {
+    width: '100%',
+    borderRadius: '$none',
+    borderWidth: 0,
+    shadowColor: '$transparent',
+  },
+})
 
 interface NavDropdownProps {
   children: ReactNode
@@ -37,7 +26,8 @@ interface NavDropdownProps {
 }
 
 export function NavDropdown({ children, width, dropdownRef, isOpen, dataTestId }: NavDropdownProps) {
-  const isMobileDrawer = useIsMobileDrawer()
+  const shadowProps = useShadowPropsMedium()
+  const scrollbarStyles = useScrollbarStyles()
 
   return (
     <>
@@ -48,7 +38,7 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, dataTestId }
         width={width}
         elevate
         animation={[
-          'quicker',
+          'fast',
           {
             opacity: {
               overshootClamping: true,
@@ -58,31 +48,22 @@ export function NavDropdown({ children, width, dropdownRef, isOpen, dataTestId }
         data-testid={dataTestId}
       >
         <Popover.Arrow />
-        <NavDropdownContent data-testid={dataTestId} ref={dropdownRef} $width={width}>
+        <NavDropdownContent
+          data-testid={dataTestId}
+          ref={dropdownRef}
+          width={width}
+          {...shadowProps}
+          style={scrollbarStyles}
+        >
           {children}
         </NavDropdownContent>
       </Popover.Content>
       <Popover.Adapt when="sm">
-        <RemoveScroll enabled={isOpen && isMobileDrawer}>
-          <Popover.Sheet animation="200ms" snapPointsMode="fit" modal dismissOnSnapToBottom dismissOnOverlayPress>
-            <Popover.Sheet.Overlay
-              opacity={0.2}
-              animation="quick"
-              enterStyle={{ opacity: 0 }}
-              exitStyle={{ opacity: 0 }}
-              backgroundColor="$scrim"
-              style={{ backdropFilter: 'blur(4px)' }}
-            />
-            <Popover.Sheet.Frame borderTopLeftRadius="$rounded16" borderTopRightRadius="$rounded16">
-              <Popover.Sheet.ScrollView>
-                <Flex row justifyContent="center" mt="$spacing8">
-                  <Popover.Sheet.Handle width={32} height={4} backgroundColor="$surface3" />
-                </Flex>
-                <Popover.Adapt.Contents dismissOnSnapToBottom />
-              </Popover.Sheet.ScrollView>
-            </Popover.Sheet.Frame>
-          </Popover.Sheet>
-        </RemoveScroll>
+        <WebBottomSheet isOpen={isOpen} p={0}>
+          <Popover.Sheet.ScrollView>
+            <Popover.Adapt.Contents />
+          </Popover.Sheet.ScrollView>
+        </WebBottomSheet>
       </Popover.Adapt>
     </>
   )

@@ -33,6 +33,8 @@ import {
 } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
 import { isDevEnv } from 'utilities/src/environment'
 import noop from 'utilities/src/react/noop'
 import { WebSwitch } from 'wallet/src/components/buttons/Switch'
@@ -43,8 +45,6 @@ import { FiatCurrency, ORDERED_CURRENCIES } from 'wallet/src/features/fiatCurren
 import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 import { setCurrentFiatCurrency } from 'wallet/src/features/fiatCurrency/slice'
 import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
-import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
-import { setHideSmallBalances, setHideSpamTokens } from 'wallet/src/features/wallet/slice'
 
 const manifestVersion = chrome.runtime.getManifest().version
 
@@ -253,7 +253,7 @@ function SettingsToggleRow({
 
 function SettingsSection({ title, children }: { title: string; children: JSX.Element | JSX.Element[] }): JSX.Element {
   return (
-    <Flex flexDirection="column" gap="$spacing4">
+    <Flex gap="$spacing4">
       <Text color="$neutral2" px={SCREEN_ITEM_HORIZONTAL_PAD} variant="subheading2">
         {title}
       </Text>

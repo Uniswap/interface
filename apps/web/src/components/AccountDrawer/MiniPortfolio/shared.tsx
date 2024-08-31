@@ -33,7 +33,7 @@ export function TabButton({ text, icon, extraWarning, onClick, disabled, classNa
         <Row gap="md">
           {icon}
           <Column>
-            <Text variant="buttonLabel4" color="$neutral2" lineHeight="20px" fontWeight="535">
+            <Text variant="buttonLabel4" color="$neutral2" lineHeight={20} fontWeight="$medium">
               {text}
             </Text>
             {extraWarning && <ThemedText.LabelMicro>{extraWarning}</ThemedText.LabelMicro>}

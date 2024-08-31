@@ -1,34 +1,20 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import {
-  SupportedInterfaceChainId,
-  chainIdToBackendChain,
-  getChain,
-  isSupportedChainId,
-  useSupportedChainId,
-} from 'constants/chains'
-import { COMMON_BASES, buildCurrencyInfo } from 'constants/routing'
-import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL } from 'constants/tokens'
-import { arrayify, parseBytes32String } from 'ethers/lib/utils'
-import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
+import { SupportedInterfaceChainId, useSupportedChainId } from 'constants/chains'
+import { COMMON_BASES } from 'constants/routing'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
-import { useBytes32TokenContract, useTokenContract } from 'hooks/useContract'
-import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
 import { TokenAddressMap } from 'lib/hooks/useTokenList/utils'
 import { useMemo } from 'react'
 import { useCombinedInactiveLists } from 'state/lists/hooks'
 import { TokenFromList } from 'state/lists/tokenFromList'
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
-import {
-  Token as GqlToken,
-  SafetyLevel,
-  useSimpleTokenQuery,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress, isSameAddress } from 'utilities/src/addresses'
-import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
-import { currencyId } from 'utils/currencyId'
-import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
 type Maybe<T> = T | undefined
 
@@ -99,76 +85,78 @@ export function useCurrencyInfo(
   skip?: boolean,
 ): Maybe<CurrencyInfo> {
   const { chainId: connectedChainId } = useAccount()
-  const fallbackListTokens = useFallbackListTokens(chainId ?? connectedChainId)
-
-  const address =
-    typeof addressOrCurrency === 'string'
-      ? addressOrCurrency
-      : addressOrCurrency?.isNative
-        ? NATIVE_CHAIN_ID
-        : addressOrCurrency?.address
   const chainIdWithFallback =
     (typeof addressOrCurrency === 'string' ? chainId : addressOrCurrency?.chainId) ?? connectedChainId
+  const nativeAddressWithFallback =
+    UNIVERSE_CHAIN_INFO[chainIdWithFallback as UniverseChainId]?.nativeCurrency.address ??
+    UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet]?.nativeCurrency.address
+
+  const isNative = useMemo(() => checkIsNative(addressOrCurrency), [addressOrCurrency])
+  const address = useMemo(
+    () => getAddress(isNative, nativeAddressWithFallback, addressOrCurrency),
+    [isNative, nativeAddressWithFallback, addressOrCurrency],
+  )
 
   const supportedChainId = useSupportedChainId(chainIdWithFallback)
 
-  const backendChainName = chainIdToBackendChain({
-    chainId: supportedChainId,
-    withFallback: true,
-  })
-  const isNative =
-    address === NATIVE_CHAIN_ID || address?.toLowerCase() === 'native' || address?.toLowerCase() === 'eth'
+  const addressWithFallback = isNative || !address ? nativeAddressWithFallback : address
 
-  const commonBase = chainIdWithFallback
-    ? COMMON_BASES[chainIdWithFallback]?.find(
-        (base) =>
-          (base.currency.isNative && isNative) ||
-          (base.currency.isToken && isSameAddress(base.currency.address, address)),
-      )
-    : undefined
-
-  const { data } = useSimpleTokenQuery({
-    variables: {
-      chain: backendChainName,
-      address: isNative ? getNativeTokenDBAddress(backendChainName) : address ?? '',
-    },
-    skip:
-      (!address && !isNative) ||
-      skip ||
-      !!commonBase ||
-      !getChain({ chainId: supportedChainId })?.backendChain.backendSupported,
-    fetchPolicy: 'cache-first',
-  })
-
-  // Some chains are not supported by the backend, so we need to fetch token
-  // details directly from the blockchain.
-  const networkToken = useTokenFromActiveNetwork(
-    address,
-    getChain({ chainId: chainId ?? connectedChainId })?.backendChain.backendSupported,
-  )
+  const currencyId = buildCurrencyId(supportedChainId ?? UniverseChainId.Mainnet, addressWithFallback)
+  const currencyInfo = useUniswapCurrencyInfo(currencyId)
 
   return useMemo(() => {
+    const commonBase = getCommonBase(chainIdWithFallback, isNative, address)
+
     if (commonBase) {
       return commonBase
     }
 
-    const fallbackListToken = fallbackListTokens[address ?? '']
-    if (fallbackListToken instanceof TokenFromList && !skip) {
-      return {
-        currency: fallbackListToken,
-        currencyId: currencyId(fallbackListToken),
-        logoUrl: fallbackListToken.tokenInfo.logoURI,
-        safetyLevel: SafetyLevel.Verified,
-        isSpam: false,
-      }
+    if (!currencyInfo || !addressOrCurrency || skip) {
+      return undefined
     }
 
-    if (!data?.token || !address || skip) {
-      return networkToken ? buildCurrencyInfo(networkToken) : undefined
-    }
+    return currencyInfo
+  }, [addressOrCurrency, currencyInfo, chainIdWithFallback, isNative, address, skip])
+}
 
-    return gqlTokenToCurrencyInfo(data.token as GqlToken)
-  }, [commonBase, fallbackListTokens, address, skip, data?.token, networkToken])
+const checkIsNative = (addressOrCurrency?: string | Currency): boolean => {
+  return typeof addressOrCurrency === 'string'
+    ? [NATIVE_CHAIN_ID, 'native', 'eth'].includes(addressOrCurrency.toLowerCase())
+    : addressOrCurrency?.isNative ?? false
+}
+
+const getCommonBase = (chainId?: number, isNative?: boolean, address?: string): CurrencyInfo | undefined => {
+  if (!address || !chainId) {
+    return undefined
+  }
+  return COMMON_BASES[chainId]?.find(
+    (base) =>
+      (base.currency.isNative && isNative) || (base.currency.isToken && isSameAddress(base.currency.address, address)),
+  )
+}
+
+const getAddress = (
+  isNative: boolean,
+  nativeAddressWithFallback: string,
+  addressOrCurrency?: string | Currency,
+): string | undefined => {
+  if (typeof addressOrCurrency === 'string') {
+    if (isNative) {
+      return nativeAddressWithFallback
+    } else {
+      return addressOrCurrency
+    }
+  }
+
+  if (addressOrCurrency) {
+    if (addressOrCurrency.isNative) {
+      return nativeAddressWithFallback
+    } else if (addressOrCurrency) {
+      return addressOrCurrency.address
+    }
+  }
+
+  return undefined
 }
 
 export function useToken(tokenAddress?: string, chainId?: SupportedInterfaceChainId): Maybe<Token> {
@@ -182,69 +170,4 @@ export function useToken(tokenAddress?: string, chainId?: SupportedInterfaceChai
     }
     return undefined
   }, [currency])
-}
-
-// parse a name or symbol from a token response
-const BYTES32_REGEX = /^0x[a-fA-F0-9]{64}$/
-
-function parseStringOrBytes32(str: string | undefined, bytes32: string | undefined, defaultValue: string): string {
-  return str && str.length > 0
-    ? str
-    : // need to check for proper bytes string and valid terminator
-      bytes32 && BYTES32_REGEX.test(bytes32) && arrayify(bytes32)[31] === 0
-      ? parseBytes32String(bytes32)
-      : defaultValue
-}
-
-const UNKNOWN_TOKEN_NAME = 'Unknown Token'
-
-/**
- * Returns a Token from the tokenAddress.
- * Returns null if token is loading or null was passed.
- * Returns undefined if tokenAddress is invalid or token does not exist.
- */
-function useTokenFromActiveNetwork(tokenAddress: string | undefined, skip?: boolean): Token | undefined {
-  const { chainId } = useAccount()
-
-  const formattedAddress = isAddress(tokenAddress)
-  const tokenContract = useTokenContract(formattedAddress ? formattedAddress : undefined, false)
-  const tokenContractBytes32 = useBytes32TokenContract(formattedAddress ? formattedAddress : undefined, false)
-
-  // TODO (WEB-1709): reduce this to one RPC call instead of 5
-  // TODO: Fix redux-multicall so that these values do not reload.
-  const tokenName = useSingleCallResult(skip ? undefined : tokenContract, 'name', undefined, NEVER_RELOAD)
-  const tokenNameBytes32 = useSingleCallResult(skip ? undefined : tokenContractBytes32, 'name', undefined, NEVER_RELOAD)
-  const symbol = useSingleCallResult(skip ? undefined : tokenContract, 'symbol', undefined, NEVER_RELOAD)
-  const symbolBytes32 = useSingleCallResult(skip ? undefined : tokenContractBytes32, 'symbol', undefined, NEVER_RELOAD)
-  const decimals = useSingleCallResult(skip ? undefined : tokenContract, 'decimals', undefined, NEVER_RELOAD)
-
-  const isLoading = useMemo(
-    () => decimals.loading || symbol.loading || tokenName.loading,
-    [decimals.loading, symbol.loading, tokenName.loading],
-  )
-  const parsedDecimals = useMemo(() => decimals?.result?.[0] ?? DEFAULT_ERC20_DECIMALS, [decimals.result])
-
-  const parsedSymbol = useMemo(
-    () => parseStringOrBytes32(symbol.result?.[0], symbolBytes32.result?.[0], UNKNOWN_TOKEN_SYMBOL),
-    [symbol.result, symbolBytes32.result],
-  )
-  const parsedName = useMemo(
-    () => parseStringOrBytes32(tokenName.result?.[0], tokenNameBytes32.result?.[0], UNKNOWN_TOKEN_NAME),
-    [tokenName.result, tokenNameBytes32.result],
-  )
-
-  return useMemo(() => {
-    // If the token is on another chain, we cannot fetch it on-chain, and it is invalid.
-    if (!tokenAddress || !isSupportedChainId(chainId) || !formattedAddress) {
-      return undefined
-    }
-    if (isLoading || !chainId) {
-      return undefined
-    }
-    if (!decimals?.result?.[0] && parsedSymbol === UNKNOWN_TOKEN_SYMBOL && parsedName === UNKNOWN_TOKEN_NAME) {
-      return undefined
-    }
-
-    return new Token(chainId, formattedAddress, parsedDecimals, parsedSymbol, parsedName)
-  }, [tokenAddress, chainId, formattedAddress, isLoading, decimals?.result, parsedDecimals, parsedSymbol, parsedName])
 }

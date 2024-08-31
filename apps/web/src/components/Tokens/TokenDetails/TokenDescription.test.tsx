@@ -50,12 +50,12 @@ describe('TokenDescription', () => {
     const truncatedDescription = screen.getByTestId('token-description-truncated')
     const fullDescription = screen.getByTestId('token-description-full')
 
-    expect(truncatedDescription).toHaveStyleRule('display', 'inline')
-    expect(fullDescription).toHaveStyleRule('display', 'none')
+    expect(truncatedDescription).toHaveClass('_display-inline')
+    expect(fullDescription).toHaveClass('_display-none')
 
     await act(() => userEvent.click(screen.getByText('Show more')))
-    expect(truncatedDescription).toHaveStyleRule('display', 'none')
-    expect(fullDescription).toHaveStyleRule('display', 'inline')
+    expect(truncatedDescription).toHaveClass('_display-none')
+    expect(fullDescription).toHaveClass('_display-inline')
     expect(screen.getByText('Hide')).toBeVisible()
   })
 

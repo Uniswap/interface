@@ -32,7 +32,7 @@ export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSecti
 
   return [
     {
-      title: t('common.explore'),
+      title: areTabsVisible ? t('common.explore') : t('common.mint'),
       href: '/mint',
       isActive: pathname.startsWith('/mint') || pathname.startsWith('/stake') || pathname.startsWith('/vote'),
       items: [
@@ -101,9 +101,16 @@ export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSecti
     },
     ...(!areTabsVisible || props?.includeNftsLink
       ? [
+          //{
+          //  title: t('common.nfts'),
+          //  href: '/nfts',
+          //},
           {
-            title: t('common.nfts'),
-            href: '/nfts',
+            title: t('common.stake'),
+            href: '/stake',
+          },{
+            title: t('common.vote'),
+            href: '/vote',
           },
         ]
       : []),

@@ -4,7 +4,7 @@ import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ExternalLink } from 'theme/components'
 import { Text } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons'
+import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
 import { iconSizes } from 'ui/src/theme'
 import { Trans } from 'uniswap/src/i18n'
 

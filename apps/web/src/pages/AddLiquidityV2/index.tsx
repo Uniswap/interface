@@ -36,7 +36,7 @@ import styled, { useTheme } from 'lib/styled-components'
 import { ConfirmAddModalBottom } from 'pages/AddLiquidityV2/ConfirmAddModalBottom'
 import { PoolPriceBar } from 'pages/AddLiquidityV2/PoolPriceBar'
 import AppBody from 'pages/App/AppBody'
-import { Dots, Wrapper } from 'pages/Pool/styled'
+import { Dots, Wrapper } from 'pages/LegacyPool/styled'
 import { useCallback, useState } from 'react'
 import { Plus } from 'react-feather'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -517,7 +517,7 @@ export default function AddLiquidity() {
                           ) : (
                             <Trans
                               i18nKey="account.transactionSummary.approve"
-                              values={{ tokenSymbols: currencies[Field.CURRENCY_B]?.symbol }}
+                              values={{ tokenSymbol: currencies[Field.CURRENCY_B]?.symbol }}
                             />
                           )}
                         </ButtonPrimary>

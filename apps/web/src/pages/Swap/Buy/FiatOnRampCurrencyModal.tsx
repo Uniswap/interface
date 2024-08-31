@@ -1,16 +1,15 @@
-import Modal from 'components/Modal'
-import { RowBetween } from 'components/Row'
 import { CurrencyRow } from 'components/SearchModal/CurrencyList'
 import { scrollbarStyle } from 'components/SearchModal/CurrencyList/index.css'
-import { PaddedColumn } from 'components/SearchModal/styled'
+import { HeaderContent } from 'pages/Swap/Buy/CountryListModal'
 import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { CSSProperties } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
 import { CloseIcon } from 'theme/components'
+import { AdaptiveWebModal, Flex } from 'ui/src'
 import { Text } from 'ui/src/components/text/Text'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { Trans } from 'uniswap/src/i18n'
+import { useTranslation } from 'uniswap/src/i18n'
 
 const ROW_ITEM_SIZE = 56
 
@@ -29,18 +28,25 @@ export function FiatOnRampCurrencyModal({
   selectedCurrency,
   onSelectCurrency,
 }: FiatOnRampCurrencyModalProps) {
+  const { t } = useTranslation()
   return (
-    <Modal isOpen={isOpen} onDismiss={onDismiss} height="90vh" maxHeight={700}>
+    <AdaptiveWebModal
+      width={420}
+      maxWidth="90vw"
+      height="90vh"
+      maxHeight={700}
+      isOpen={isOpen}
+      onClose={onDismiss}
+      p={0}
+    >
       <ContentWrapper>
-        <PaddedColumn>
-          <RowBetween>
-            <Text variant="subheading1">
-              <Trans i18nKey="common.selectToken.label" />
-            </Text>
+        <HeaderContent>
+          <Flex row justifyContent="space-between">
+            <Text variant="subheading1">{t('common.selectToken.label')}</Text>
             <CloseIcon data-testid="FiatOnRampCurrencyModal-close" onClick={onDismiss} />
-          </RowBetween>
-        </PaddedColumn>
-        <div style={{ flex: '1' }}>
+          </Flex>
+        </HeaderContent>
+        <Flex grow>
           <AutoSizer disableWidth>
             {({ height }: { height: number }) => (
               <div data-testid="for-currency-list-wrapper">
@@ -76,8 +82,8 @@ export function FiatOnRampCurrencyModal({
               </div>
             )}
           </AutoSizer>
-        </div>
+        </Flex>
       </ContentWrapper>
-    </Modal>
+    </AdaptiveWebModal>
   )
 }

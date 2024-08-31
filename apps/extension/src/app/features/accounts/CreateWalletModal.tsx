@@ -4,20 +4,26 @@ import { OpaqueColorValue } from 'react-native'
 import { Button, Flex, Text, getUniconColors, useIsDarkMode } from 'ui/src'
 import { iconSizes, opacify } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 
 type CreateWalletModalProps = {
+  isOpen: boolean
   pendingWallet?: SignerMnemonicAccount
   onCancel: () => void
   onConfirm: (walletLabel: string) => void
 }
 
 // Expects a pending account to be created before opening this modal
-export function CreateWalletModal({ pendingWallet, onCancel, onConfirm }: CreateWalletModalProps): JSX.Element | null {
+export function CreateWalletModal({
+  isOpen,
+  pendingWallet,
+  onCancel,
+  onConfirm,
+}: CreateWalletModalProps): JSX.Element | null {
   const { t } = useTranslation()
   const isDark = useIsDarkMode()
 
@@ -46,7 +52,7 @@ export function CreateWalletModal({ pendingWallet, onCancel, onConfirm }: Create
   }, [uniconColor])
 
   return (
-    <BottomSheetModal name={ModalName.AccountEditLabel} onClose={onCancel}>
+    <Modal isModalOpen={isOpen} name={ModalName.AccountEditLabel} onClose={onCancel}>
       <Flex centered fill borderRadius="$rounded16" gap="$spacing24" mt="$spacing16">
         <Flex centered gap="$spacing12" width="100%">
           {onboardingAccountAddress && <AccountIcon address={onboardingAccountAddress} size={iconSizes.icon48} />}
@@ -86,6 +92,6 @@ export function CreateWalletModal({ pendingWallet, onCancel, onConfirm }: Create
           </Button>
         </Flex>
       </Flex>
-    </BottomSheetModal>
+    </Modal>
   )
 }

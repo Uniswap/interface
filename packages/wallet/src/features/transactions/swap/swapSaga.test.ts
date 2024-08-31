@@ -10,6 +10,13 @@ import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import {
+  ExactInputSwapTransactionInfo,
+  TransactionOriginType,
+  TransactionType,
+  TransactionTypeInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { SendTransactionParams, sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
@@ -21,12 +28,6 @@ import {
   getNonceForApproveAndSwap,
   shouldSubmitViaPrivateRpc,
 } from 'wallet/src/features/transactions/swap/swapSaga'
-import { ClassicTrade, UniswapXTrade } from 'wallet/src/features/transactions/swap/trade/types'
-import {
-  ExactInputSwapTransactionInfo,
-  TransactionType,
-  TransactionTypeInfo,
-} from 'wallet/src/features/transactions/types'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -95,13 +96,15 @@ const mockSwapTxRequest = {
 const classicSwapParams = {
   txId: '1',
   account,
-  analytics: {} as ReturnType<typeof getBaseTradeAnalyticsProperties>,
+  analytics: {
+    transactionOriginType: TransactionOriginType.Internal,
+  } as ReturnType<typeof getBaseTradeAnalyticsProperties>,
   swapTxContext: {
     routing: Routing.CLASSIC,
     approveTxRequest: mockApproveTxRequest,
     txRequest: mockSwapTxRequest,
     trade: mockTrade,
-    gasFee: { value: '5', loading: false, error: undefined },
+    gasFee: { value: '5', isLoading: false, error: null },
     approvalError: false,
   },
   onSubmit: jest.fn(),
@@ -111,14 +114,16 @@ const classicSwapParams = {
 const uniswapXSwapParams = {
   txId: '1',
   account,
-  analytics: {} as ReturnType<typeof getBaseTradeAnalyticsProperties>,
+  analytics: {
+    transactionOriginType: TransactionOriginType.Internal,
+  } as ReturnType<typeof getBaseTradeAnalyticsProperties>,
   swapTxContext: {
     routing: Routing.DUTCH_V2,
     approveTxRequest: mockApproveTxRequest,
     trade: mockUniswapXTrade,
     orderParams: { quote: { orderId: '0xMockOrderHash' } } as unknown as OrderRequest,
     wrapTxRequest: undefined,
-    gasFee: { value: '5', loading: false, error: undefined },
+    gasFee: { value: '5', isLoading: false, error: null },
     gasFeeBreakdown: { classicGasUseEstimateUSD: '5', approvalCost: '5', wrapCost: '0' },
     approvalError: false,
   },
@@ -138,7 +143,10 @@ const expectedSendApprovalParams: SendTransactionParams = {
     spender: permit2Address(mockApproveTxRequest.chainId),
     swapTxId: '1',
   },
-  analytics: {},
+  transactionOriginType: TransactionOriginType.Internal,
+  analytics: {
+    transactionOriginType: TransactionOriginType.Internal,
+  },
 }
 
 describe(approveAndSwap, () => {
@@ -164,6 +172,7 @@ describe(approveAndSwap, () => {
       typeInfo: mockTransactionTypeInfo,
       analytics: classicSwapParamsWithoutApprove.analytics,
       txId: classicSwapParamsWithoutApprove.txId,
+      transactionOriginType: TransactionOriginType.Internal,
     }
 
     // `expectSaga` tests the entire saga at once w/out manually specifying all effect return values.
@@ -202,6 +211,7 @@ describe(approveAndSwap, () => {
       typeInfo: mockTransactionTypeInfo,
       analytics: classicSwapParams.analytics,
       txId: classicSwapParams.txId,
+      transactionOriginType: TransactionOriginType.Internal,
     }
 
     await expectSaga(approveAndSwap, classicSwapParams)
@@ -291,6 +301,7 @@ describe(approveAndSwap, () => {
         swapTxId: '1',
       },
       txId: undefined,
+      transactionOriginType: TransactionOriginType.Internal,
     }
 
     const expectedSubmitOrderParams: SubmitUniswapXOrderParams = {

@@ -20,11 +20,8 @@ export async function signTypedData(
   domain: TypedDataDomain,
   types: Record<string, TypedDataField[]>,
   value: Record<string, unknown>,
-  account: Account,
-  signerManager: SignerManager,
+  signer: ethers.Signer,
 ): Promise<string> {
-  const signer = await signerManager.getSignerForAccount(account)
-
   // https://github.com/LedgerHQ/ledgerjs/issues/86
   // Ledger does not support signTypedData yet
   if (!(signer instanceof NativeSigner) && !(signer instanceof Wallet)) {
@@ -47,5 +44,7 @@ export async function signTypedDataMessage(
   // https://github.com/ethers-io/ethers.js/issues/687#issuecomment-714069471
   delete parsedData.types.EIP712Domain
 
-  return signTypedData(parsedData.domain, parsedData.types, parsedData.message, account, signerManager)
+  const signer = await signerManager.getSignerForAccount(account)
+
+  return signTypedData(parsedData.domain, parsedData.types, parsedData.message, signer)
 }

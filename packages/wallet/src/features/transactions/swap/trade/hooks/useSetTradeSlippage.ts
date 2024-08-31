@@ -1,14 +1,14 @@
 import { useMemo } from 'react'
+import { MAX_AUTO_SLIPPAGE_TOLERANCE, MIN_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { isMainnetChainId, toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
-import { MAX_AUTO_SLIPPAGE_TOLERANCE, MIN_AUTO_SLIPPAGE_TOLERANCE } from 'wallet/src/constants/transactions'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { Trade, TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   getClassicQuoteFromResponse,
   transformTradingApiResponseToTrade,
-} from 'wallet/src/features/transactions/swap/trade/api/utils'
-import { useUSDCValue } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDCPrice'
-import { Trade, TradeWithStatus } from 'wallet/src/features/transactions/swap/trade/types'
+} from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 
 export function useSetTradeSlippage(
   trade: TradeWithStatus,
@@ -23,7 +23,7 @@ export function useSetTradeSlippage(
       return { trade, autoSlippageTolerance }
     }
 
-    const { loading, error, isFetching } = trade
+    const { isLoading, error, isFetching } = trade
     const { tradeType, deadline, quote, inputAmount, outputAmount } = trade.trade
 
     if (!quote) {
@@ -41,10 +41,10 @@ export function useSetTradeSlippage(
 
     return {
       trade: {
-        trade: newTrade,
-        loading,
-        error,
+        isLoading,
         isFetching,
+        trade: newTrade,
+        error,
       },
       autoSlippageTolerance,
     }

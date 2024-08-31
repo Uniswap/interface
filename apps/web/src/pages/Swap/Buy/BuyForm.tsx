@@ -1,9 +1,6 @@
-import Column from 'components/Column'
-import Row from 'components/Row'
 import { useAccount } from 'hooks/useAccount'
 import { useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import useParsedQueryString from 'hooks/useParsedQueryString'
-import styled from 'lib/styled-components'
 import { BuyFormButton } from 'pages/Swap/Buy/BuyFormButton'
 import { BuyFormContextProvider, ethCurrencyInfo, useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { ChooseProviderModal } from 'pages/Swap/Buy/ChooseProviderModal'
@@ -18,38 +15,36 @@ import {
   useWidthAdjustedDisplayValue,
 } from 'pages/Swap/common/shared'
 import { useEffect } from 'react'
-import { Text } from 'ui/src/components/text/Text'
+import { Flex, Text, styled } from 'ui/src'
 import { FiatOnRampCountryPicker } from 'uniswap/src/features/fiatOnRamp/FiatOnRampCountryPicker'
 import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { FiatOnRampEventName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans } from 'uniswap/src/i18n'
+import { useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import useResizeObserver from 'use-resize-observer'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useFormatter } from 'utils/formatNumbers'
 
-const InputWrapper = styled(Column)`
-  position: relative;
-  background-color: ${({ theme }) => theme.surface2};
-  padding: 0 16px 52px 16px;
-  height: 342px;
-  align-items: center;
-  border-radius: 20px;
-  justify-content: flex-end;
-  overflow: hidden;
-  gap: 8px;
-`
+const InputWrapper = styled(Flex, {
+  backgroundColor: '$surface2',
+  p: '$spacing16',
+  pb: 52,
+  height: 342,
+  alignItems: 'center',
+  borderRadius: '$rounded20',
+  justifyContent: 'space-between',
+  overflow: 'hidden',
+  gap: '$spacing8',
+})
 
-const HeaderRow = styled(Row)`
-  align-items: center;
-  justify-content: space-between;
-  position: absolute;
-  top: 16px;
-  left: 16px;
-  width: calc(100% - 32px);
-`
+const HeaderRow = styled(Flex, {
+  flexDirection: 'row',
+  alignItems: 'center',
+  justifyContent: 'space-between',
+  width: '100%',
+})
 
 const PREDEFINED_AMOUNTS = [100, 300, 1000]
 
@@ -58,8 +53,9 @@ type BuyFormProps = {
 }
 
 function BuyFormInner({ disabled }: BuyFormProps) {
-  const { chainId } = useAccount()
-  const { formatNumberOrString, convertToFiatAmount } = useFormatter()
+  const account = useAccount()
+  const { t } = useTranslation()
+  const { convertToFiatAmount } = useFormatter()
   const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
 
   const { buyFormState, setBuyFormState, derivedBuyFormInfo } = useBuyFormContext()
@@ -100,23 +96,23 @@ function BuyFormInner({ disabled }: BuyFormProps) {
     }
     // If connected to a non-mainnet chain, default to the native chain of that token if supported.
     const supportedNativeToken = supportedTokens?.find((meldToken) => {
-      return meldToken.currencyInfo?.currency.chainId === chainId && meldToken.currencyInfo?.currency.isNative
+      return meldToken.currencyInfo?.currency.chainId === account.chainId && meldToken.currencyInfo?.currency.isNative
     })
-    if (chainId !== UniverseChainId.Mainnet && supportedNativeToken) {
+    if (account.chainId !== UniverseChainId.Mainnet && supportedNativeToken) {
       setBuyFormState((state) => ({
         ...state,
         quoteCurrency: supportedNativeToken,
       }))
     }
-  }, [chainId, parsedQs, setBuyFormState, supportedTokens])
+  }, [account.chainId, parsedQs, setBuyFormState, supportedTokens])
 
   return (
     <Trace page={InterfacePageNameLocal.Buy} logImpression>
-      <Column gap="xs">
+      <Flex gap="$spacing4">
         <InputWrapper>
           <HeaderRow>
             <Text variant="body3" userSelect="none" color="$neutral2">
-              <Trans i18nKey="common.youreBuying" />
+              {t('common.youreBuying')}
             </Text>
             <FiatOnRampCountryPicker
               onPress={() => {
@@ -125,76 +121,71 @@ function BuyFormInner({ disabled }: BuyFormProps) {
               countryCode={selectedCountry?.countryCode}
             />
           </HeaderRow>
-          {error && (
-            <Text variant="body3" userSelect="none" color="$statusCritical">
-              {error.message}
-            </Text>
-          )}
-          <NumericalInputWrapper>
-            <NumericalInputSymbolContainer showPlaceholder={!inputAmount}>{fiatSymbol}</NumericalInputSymbolContainer>
-            <StyledNumericalInput
-              value={postWidthAdjustedDisplayValue}
-              disabled={disabled}
-              onUserInput={handleUserInput}
-              placeholder="0"
-              $width={inputAmount && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
-              maxDecimals={6}
-              testId="buy-form-amount-input"
-            />
-            <NumericalInputMimic ref={hiddenObserver.ref}>{inputAmount}</NumericalInputMimic>
-          </NumericalInputWrapper>
-          <SelectTokenButton
-            onPress={() => {
-              setBuyFormState((state) => ({ ...state, currencyModalOpen: true }))
-            }}
-            selectedCurrencyInfo={quoteCurrency.currencyInfo ?? ethCurrencyInfo}
-            formattedAmount={
-              amountOutLoading
-                ? ''
-                : formatNumberOrString({
-                    input: amountOut || '0',
-                    type: NumberType.TokenNonTx,
-                  })
-            }
-            disabled={disabled}
-            iconSize={18}
-            chevronDirection="down"
-            backgroundColor="$surface1"
-            amountReady={Boolean(amountOut)}
-            loading={amountOutLoading && inputAmount !== ''}
-          />
-          <Row gap="md" justify="center" marginTop="8px">
-            {PREDEFINED_AMOUNTS.map((amount: number) => (
-              <PredefinedAmount
-                onClick={() => {
-                  setBuyFormState((state) => ({ ...state, inputAmount: amount.toString() }))
-                  sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
-                    amountUSD: convertToFiatAmount(amount).amount,
-                    source: 'chip',
-                  })
-                }}
-                key={amount}
-                amount={amount}
-                currentAmount={inputAmount}
+          <Flex alignItems="center" gap="$spacing8">
+            {error && (
+              <Text variant="body3" userSelect="none" color="$statusCritical">
+                {error.message}
+              </Text>
+            )}
+            <NumericalInputWrapper>
+              <NumericalInputSymbolContainer showPlaceholder={!inputAmount}>{fiatSymbol}</NumericalInputSymbolContainer>
+              <StyledNumericalInput
+                value={postWidthAdjustedDisplayValue}
                 disabled={disabled}
+                onUserInput={handleUserInput}
+                placeholder="0"
+                $width={inputAmount && hiddenObserver.width ? hiddenObserver.width + 1 : undefined}
+                maxDecimals={6}
+                testId="buy-form-amount-input"
               />
-            ))}
-          </Row>
-          {notAvailableInThisRegion && (
-            <Text
-              variant="body3"
-              userSelect="none"
-              color="$neutral2"
-              textAlign="center"
-              position="absolute"
-              bottom="20px"
-            >
-              <Trans i18nKey="fiatOnRamp.notAvailable.error" />
-            </Text>
-          )}
+              <NumericalInputMimic ref={hiddenObserver.ref}>{inputAmount}</NumericalInputMimic>
+            </NumericalInputWrapper>
+            <SelectTokenButton
+              onPress={() => {
+                setBuyFormState((state) => ({ ...state, currencyModalOpen: true }))
+              }}
+              selectedCurrencyInfo={quoteCurrency.currencyInfo ?? ethCurrencyInfo}
+              formattedAmount={amountOutLoading ? '' : amountOut ?? '-'}
+              disabled={disabled}
+              iconSize={18}
+              chevronDirection="down"
+              backgroundColor="$surface1"
+              amountReady={Boolean(amountOut)}
+              loading={amountOutLoading && inputAmount !== ''}
+            />
+            <Flex row alignItems="center" gap="$spacing8" justifyContent="center" mt="$spacing8">
+              {PREDEFINED_AMOUNTS.map((amount: number) => (
+                <PredefinedAmount
+                  onClick={() => {
+                    setBuyFormState((state) => ({ ...state, inputAmount: amount.toString() }))
+                    sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampAmountEntered, {
+                      amountUSD: convertToFiatAmount(amount).amount,
+                      source: 'chip',
+                    })
+                  }}
+                  key={amount}
+                  amount={amount}
+                  currentAmount={inputAmount}
+                  disabled={disabled}
+                />
+              ))}
+            </Flex>
+            {notAvailableInThisRegion && (
+              <Text
+                variant="body3"
+                userSelect="none"
+                color="$neutral2"
+                textAlign="center"
+                position="absolute"
+                bottom="20px"
+              >
+                {t('fiatOnRamp.notAvailable.error')}
+              </Text>
+            )}
+          </Flex>
         </InputWrapper>
         <BuyFormButton />
-      </Column>
+      </Flex>
       {supportedTokens && Boolean(supportedTokens?.length) && (
         <FiatOnRampCurrencyModal
           isOpen={currencyModalOpen}

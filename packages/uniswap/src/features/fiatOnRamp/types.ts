@@ -1,5 +1,17 @@
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import {
+  LocalOnRampTransactionInfo,
+  OnRampPurchaseInfo,
+  OnRampTransferInfo,
+  TransactionDetails,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { FiatCurrencyComponents } from 'utilities/src/format/localeBased'
+
+// Moonpay Legacy Info
+
+export type FiatOnRampTransactionDetails = TransactionDetails & {
+  typeInfo: LocalOnRampTransactionInfo | OnRampPurchaseInfo | OnRampTransferInfo
+}
 
 export type FORCountry = {
   countryCode: string
@@ -147,7 +159,7 @@ export type FORTransaction = {
   destinationAmount: number
   destinationCurrencyCode: string
   destinationContractAddress: string
-  serviceProvider: string
+  serviceProviderDetails: FORServiceProvider
   cryptoDetails: FORCryptoDetails
   createdAt: string
   updatedAt: string

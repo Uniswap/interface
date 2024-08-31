@@ -12,23 +12,23 @@ import {
   TransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { CurrencyIdToVisibility } from 'uniswap/src/features/favorites/slice'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { CurrencyId } from 'uniswap/src/types/currency'
-import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { CurrencyIdToVisibility } from 'wallet/src/features/favorites/slice'
-import { FORMAT_DATE_MONTH, FORMAT_DATE_MONTH_YEAR, LocalizedDayjs } from 'wallet/src/features/language/localizedDayjs'
-import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
-import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
-import { extractUniswapXOrderDetails } from 'wallet/src/features/transactions/history/conversion/extractUniswapXOrderDetails'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
+import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   TransactionDetails,
   TransactionDetailsType,
   TransactionListQueryResponse,
   TransactionStatus,
   TransactionType,
-} from 'wallet/src/features/transactions/types'
-import { ValueType, getCurrencyAmount } from 'wallet/src/utils/getCurrencyAmount'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { CurrencyId } from 'uniswap/src/types/currency'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { FORMAT_DATE_MONTH, FORMAT_DATE_MONTH_YEAR, LocalizedDayjs } from 'wallet/src/features/language/localizedDayjs'
+import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
+import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
+import { extractUniswapXOrderDetails } from 'wallet/src/features/transactions/history/conversion/extractUniswapXOrderDetails'
 
 export interface AllFormattedTransactions {
   last24hTransactionList: TransactionDetails[]

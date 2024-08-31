@@ -17,7 +17,7 @@ export function BlockedAddressWarning({
 
   return (
     <>
-      {showBlockedAddressModal && <BlockedAddressModal onClose={(): void => setShowBlockedAddressModal(false)} />}
+      <BlockedAddressModal isOpen={showBlockedAddressModal} onClose={(): void => setShowBlockedAddressModal(false)} />
       <TouchableArea
         onPress={(): void => {
           Keyboard.dismiss()

@@ -74,6 +74,36 @@ class MockKeyring implements IKeyring {
     return Promise.resolve(wallet.address)
   }
 
+  generateAddressesForMnemonic(
+    mnemonic: string,
+    startDerivationIndex: number,
+    endDerivationIndex: number,
+  ): Promise<Array<string>> {
+    const addresses = []
+    for (let i = startDerivationIndex; i <= endDerivationIndex; i++) {
+      const wallet = Wallet.fromMnemonic(mnemonic, pathFromIndex(i))
+      addresses.push(wallet.address)
+    }
+    return Promise.resolve(addresses)
+  }
+
+  generateAddressesForMnemonicId(
+    mnemonicId: string,
+    startDerivationIndex: number,
+    endDerivationIndex: number,
+  ): Promise<Array<string>> {
+    const mnemonic = mnemonics[mnemonicId]
+    if (!mnemonic) {
+      return Promise.reject(new Error(`No mnemonic found for ${mnemonicId}`))
+    }
+    const addresses = []
+    for (let i = startDerivationIndex; i <= endDerivationIndex; i++) {
+      const wallet = Wallet.fromMnemonic(mnemonic, pathFromIndex(i))
+      addresses.push(wallet.address)
+    }
+    return Promise.resolve(addresses)
+  }
+
   // returns the address of the generated key
   generateAndStorePrivateKey(mnemonicId: string, derivationIndex: number): Promise<string> {
     const mnemonic = mnemonics[mnemonicId]

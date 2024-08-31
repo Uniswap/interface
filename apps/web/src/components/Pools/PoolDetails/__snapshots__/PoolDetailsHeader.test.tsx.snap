@@ -331,7 +331,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   gap: 8px;
 }
 
-.c16 {
+.c15 {
   display: inline-block;
   height: inherit;
 }
@@ -389,115 +389,6 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c17 {
-  height: 100%;
-  color: #222222;
-  background-color: #FFFFFF;
-  margin: 0;
-  padding: 2px 6px 2px 14px;
-  border-radius: 12px;
-  font-size: 16px;
-  line-height: 24px;
-  font-weight: 535;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  border: 1px solid #22222212;
-  outline: none;
-}
-
-.c17:hover {
-  cursor: pointer;
-  background-color: #F9F9F9;
-  opacity: 1;
-}
-
-.c17:focus {
-  background-color: none;
-}
-
-.c15 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  border: none;
-  text-align: left;
-  width: 100%;
-}
-
-.c19 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: justify;
-  -webkit-justify-content: space-between;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  gap: 8px;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  border: none;
-  font-weight: 535;
-  width: 100%;
-  vertical-align: middle;
-  white-space: nowrap;
-}
-
-.c18 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  padding: 8px 12px;
-  border-radius: 20px;
-  border: none;
-  background-color: #F9F9F9;
-  width: -webkit-max-content;
-  width: -moz-max-content;
-  width: max-content;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-}
-
-.c18:hover {
-  opacity: 0.6;
-}
-
-.c18:active {
-  opacity: 0.4;
-}
-
-.c18:hover {
-  background-color: #2222221f;
-}
-
-.c18:focus {
-  background-color: #2222221f;
 }
 
 .c0 {
@@ -673,21 +564,25 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
             width="max-content"
           >
             <div
-              style="position: relative;"
+              style="width: 100%;"
             >
-              <div
-                class="c15"
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202 _justifyContent-center _alignItems-center _position-relative _borderTopWidth-1481558400 _borderRightWidth-1481558400 _borderBottomWidth-1481558400 _borderLeftWidth-1481558400 _textAlign-left _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                data-disable-theme="true"
+                id="Dropdown"
               >
                 <div
-                  class="c16"
+                  class="c15"
                   style="width: 100%;"
                 >
                   <div>
-                    <button
-                      class="c17 c18"
+                    <div
+                      class="css-text-146c3p1"
+                      dir="auto"
+                      style="box-sizing: border-box; font-family: Basel,-apple-system,system-ui,BlinkMacSystemFont,\\"Segoe UI\\",Roboto,Helvetica,Arial,sans-serif; word-wrap: break-word; flex-direction: row; margin: 0px 0px 0px 0px; padding: 8px 12px 8px 12px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; white-space: nowrap; display: flex; align-items: center; justify-content: flex-start; text-decoration: none; cursor: pointer; color: rgb(34, 34, 34); font-size: 16px; line-height: 24px; font-weight: 485; height: 100%; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); background-color: rgb(249, 249, 249); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;"
                     >
                       <div
-                        class="c19"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761 _alignItems-center _gap-1316331199 _width-10037"
                       >
                         <svg
                           fill="#222222"
@@ -707,25 +602,32 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                           />
                         </svg>
                       </div>
-                    </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </span>
             </div>
-            <div>
-              <div
-                class="c15"
+            <div />
+            <div
+              style="width: 100%;"
+            >
+              <span
+                class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202 _justifyContent-center _alignItems-center _position-relative _borderTopWidth-1481558400 _borderRightWidth-1481558400 _borderBottomWidth-1481558400 _borderLeftWidth-1481558400 _textAlign-left _width-10037 _borderBottomStyle-solid _borderTopStyle-solid _borderLeftStyle-solid _borderRightStyle-solid"
+                data-disable-theme="true"
+                id="Dropdown"
               >
                 <div
-                  class="c16"
+                  class="c15"
                   style="width: 100%;"
                 >
                   <div>
-                    <button
-                      class="c17 c18"
+                    <div
+                      class="css-text-146c3p1"
+                      dir="auto"
+                      style="box-sizing: border-box; font-family: Basel,-apple-system,system-ui,BlinkMacSystemFont,\\"Segoe UI\\",Roboto,Helvetica,Arial,sans-serif; word-wrap: break-word; flex-direction: row; margin: 0px 0px 0px 0px; padding: 8px 12px 8px 12px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; white-space: nowrap; display: flex; align-items: center; justify-content: flex-start; text-decoration: none; cursor: pointer; color: rgb(34, 34, 34); font-size: 16px; line-height: 24px; font-weight: 485; height: 100%; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); background-color: rgb(249, 249, 249); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;"
                     >
                       <div
-                        class="c19"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761 _alignItems-center _gap-1316331199 _width-10037"
                       >
                         <svg
                           fill="#222222"
@@ -740,11 +642,12 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                           />
                         </svg>
                       </div>
-                    </button>
+                    </div>
                   </div>
                 </div>
-              </div>
+              </span>
             </div>
+            <div />
           </div>
         </div>
       </span>

@@ -1,5 +1,6 @@
 /* eslint-disable max-lines */
-import { Signature, Wallet } from 'ethers'
+import { HDKey } from '@scure/bip32'
+import { Signature, Wallet, utils } from 'ethers'
 import { SigningKey, defaultPath, joinSignature } from 'ethers/lib/utils'
 import { logger } from 'utilities/src/logger/logger'
 import { IKeyring } from 'wallet/src/features/wallet/Keyring/Keyring'
@@ -43,6 +44,8 @@ export class WebKeyring implements IKeyring {
   ) {
     this.generateAndStoreMnemonic = this.generateAndStoreMnemonic.bind(this)
     this.generateAddressForMnemonic = this.generateAddressForMnemonic.bind(this)
+    this.generateAddressesForMnemonic = this.generateAddressesForMnemonic.bind(this)
+    this.generateAddressesForMnemonicId = this.generateAddressesForMnemonicId.bind(this)
     this.generateAndStorePrivateKey = this.generateAndStorePrivateKey.bind(this)
     this.getMnemonicIds = this.getMnemonicIds.bind(this)
     this.importMnemonic = this.importMnemonic.bind(this)
@@ -100,32 +103,33 @@ export class WebKeyring implements IKeyring {
 
   /** Tries to unlock the wallet with the provided password.  */
   async unlock(password: string): Promise<boolean> {
-    // assumes every mnemonic is encrypted withe same password
-    const firstMnemonicId = (await this.getMnemonicIds())[0]
+    try {
+      // assumes every mnemonic is encrypted withe same password
+      const firstMnemonicId = (await this.getMnemonicIds())[0]
 
-    if (!firstMnemonicId) {
-      throw new Error(`${ErrorType.RetrieveMnemonicError}: Attempted to unlock wallet, but storage is empty.`)
-    }
+      if (!firstMnemonicId) {
+        throw new Error(`${ErrorType.RetrieveMnemonicError}: Attempted to unlock wallet, but storage is empty.`)
+      }
 
-    const mnemonicKey = this.keyForMnemonicId(firstMnemonicId)
-    const storedSecretPayload = await this.storage.getItem(mnemonicKey)
-    if (!storedSecretPayload) {
+      const mnemonicKey = this.keyForMnemonicId(firstMnemonicId)
+      const storedSecretPayload = await this.storage.getItem(mnemonicKey)
+      if (!storedSecretPayload) {
+        throw new Error('No stored secret payload found')
+      }
+
+      const secretPayload = JSON.parse(storedSecretPayload) as Maybe<SecretPayload>
+      if (!secretPayload) {
+        throw new Error('Could not parse secret payload')
+      }
+
+      const encryptionKey = await getEncryptionKeyFromPassword(password, secretPayload)
+      await this.retrieveMnemonic(secretPayload, encryptionKey, firstMnemonicId)
+      const keyBase64 = await exportKey(encryptionKey)
+      await this.session.setItem(ENCRYPTION_KEY_STORAGE_KEY, keyBase64)
+      return true
+    } catch {
       return false
     }
-    const secretPayload = JSON.parse(storedSecretPayload) as Maybe<SecretPayload>
-    if (!secretPayload) {
-      return false
-    }
-    const encryptionKey = await getEncryptionKeyFromPassword(password, secretPayload)
-    const mnemonic = await this.retrieveMnemonic(secretPayload, encryptionKey, firstMnemonicId)
-    if (!mnemonic) {
-      return false
-    }
-
-    const keyBase64 = await exportKey(encryptionKey)
-
-    await this.session.setItem(ENCRYPTION_KEY_STORAGE_KEY, keyBase64)
-    return true
   }
 
   async lock(): Promise<boolean> {
@@ -176,10 +180,6 @@ export class WebKeyring implements IKeyring {
       }
 
       const mnemonic = await this.retrieveMnemonicUnlocked(firstMnemonicId)
-      if (!mnemonic) {
-        return false
-      }
-
       await this.importMnemonic(mnemonic, newPassword, true)
       return true
     } catch (err) {
@@ -287,10 +287,10 @@ export class WebKeyring implements IKeyring {
     secretPayload: SecretPayload,
     encryptionKey: CryptoKey,
     expectedAddress: string,
-  ): Promise<string | undefined> {
+  ): Promise<string> {
     try {
       if (!secretPayload.ciphertext) {
-        return undefined
+        throw new Error('No ciphertext found in secret payload')
       }
 
       const mnemonic = await decrypt({
@@ -301,7 +301,7 @@ export class WebKeyring implements IKeyring {
       })
 
       if (!mnemonic) {
-        return undefined
+        throw new Error('No mnemonic found in encrypted storage')
       }
 
       // validate mnemonic (will throw if invalid)
@@ -313,39 +313,25 @@ export class WebKeyring implements IKeyring {
     }
   }
 
-  async retrieveMnemonicUnlocked(mnemonicId: string): Promise<string | undefined> {
+  async retrieveMnemonicUnlocked(mnemonicId: string): Promise<string> {
     const encryptionKeyString = await this.session.getItem(ENCRYPTION_KEY_STORAGE_KEY)
-    const mnemonicStorageKey = this.keyForMnemonicId(mnemonicId)
-    const storedSecret = await this.storage.getItem(mnemonicStorageKey)
-
-    if (!storedSecret || !encryptionKeyString) {
-      return undefined
+    if (!encryptionKeyString) {
+      throw new Error(ErrorType.RetrievePasswordError)
     }
+
     const encryptionKey = await convertBase64SeedToCryptoKey(encryptionKeyString)
-
-    try {
-      const secretPayload = JSON.parse(storedSecret) as Maybe<SecretPayload>
-      if (!secretPayload || !secretPayload.ciphertext) {
-        return undefined
-      }
-      const mnemonic = await decrypt({
-        encryptionKey,
-        ciphertext: decodeFromStorage(secretPayload.ciphertext),
-        iv: decodeFromStorage(secretPayload.iv),
-        additionalData: mnemonicId,
-      })
-
-      if (!mnemonic) {
-        return undefined
-      }
-
-      // validate mnemonic (will throw if invalid)
-      Wallet.fromMnemonic(mnemonic)
-
-      return mnemonic
-    } catch (e) {
-      throw new Error(`${ErrorType.RetrieveMnemonicError}: ${e}`)
+    const mnemonicKey = this.keyForMnemonicId(mnemonicId)
+    const storedSecretPayload = await this.storage.getItem(mnemonicKey)
+    if (!storedSecretPayload) {
+      throw new Error(ErrorType.RetrieveMnemonicError)
     }
+
+    const secretPayload = JSON.parse(storedSecretPayload) as Maybe<SecretPayload>
+    if (!secretPayload) {
+      throw new Error(ErrorType.RetrieveMnemonicError)
+    }
+
+    return await this.retrieveMnemonic(secretPayload, encryptionKey, mnemonicId)
   }
 
   /**
@@ -374,32 +360,74 @@ export class WebKeyring implements IKeyring {
   }
 
   /**
+   * Derives public addresses from a mnemonic for a range of derivation indexes.
+   *
+   * @param mnemonic mnemonic to generate private key for (current convention is to
+   * use the public address associated with mnemonic at derivation index 0)
+   * @param startDerivationIndex number used to specify the derivation index at which to start deriving private keys
+   * from the mnemonic
+   * @param endDerivationIndex number used to specify the derivation index at which to stop deriving private keys
+   * from the mnemonic
+   * @returns public addresses associated with the private keys generated from the mnemonic at the given derivation index range
+   */
+  async generateAddressesForMnemonic(
+    mnemonic: string,
+    startDerivationIndex: number,
+    endDerivationIndex: number,
+  ): Promise<string[]> {
+    if (startDerivationIndex >= endDerivationIndex) {
+      throw new Error('End derivation index must be greater than start derivation index')
+    }
+
+    const node = utils.HDNode.fromMnemonic(mnemonic)
+    // the `defaultPath` from ethers appends the specific derivation index to the path
+    // and we need to remove the last two elements "/0" to get the account node
+    const accountNode = node.derivePath(defaultPath.slice(0, -2))
+    const xpub = accountNode.neuter().extendedKey
+    const hdKey = HDKey.fromExtendedKey(xpub)
+
+    const addresses = []
+    for (let i = startDerivationIndex; i <= endDerivationIndex; i++) {
+      const pubKey = hdKey.deriveChild(i).publicKey
+      if (!pubKey) {
+        continue
+      }
+
+      const address = utils.computeAddress(pubKey)
+      addresses.push(address)
+    }
+
+    return addresses
+  }
+
+  /**
+   * Derives public addresses from `mnemonicId` for a range of derivation indexes.
+   *
+   * @param mnemonicId key string associated with mnemonic to generate private key for (current convention is to
+   * use the public address associated with mnemonic at derivation index 0)
+   * @param startDerivationIndex number used to specify the derivation index at which to start deriving private keys
+   * from the mnemonic
+   * @param endDerivationIndex number used to specify the derivation index at which to stop deriving private keys
+   * from the mnemonic
+   * @returns public addresses associated with the private keys generated from the mnemonic at the given derivation index range
+   */
+  async generateAddressesForMnemonicId(
+    mnemonicId: string,
+    startDerivationIndex: number,
+    endDerivationIndex: number,
+  ): Promise<string[]> {
+    const mnemonic = await this.retrieveMnemonicUnlocked(mnemonicId)
+    return await this.generateAddressesForMnemonic(mnemonic, startDerivationIndex, endDerivationIndex)
+  }
+
+  /**
    * Derives private key and public address from mnemonic associated with `mnemonicId` for given `derivationIndex`. Stores the private key in store with key.
    * @param mnemonicId key string associated with mnemonic to generate private key for (currently convention is to use public address associated with mnemonic)
    * @param derivationIndex number used to specify a which derivation index to use for deriving a private key from the mnemonic
    * @returns public address associated with private key generated from the mnemonic at given derivation index
    */
   async generateAndStorePrivateKey(mnemonicId: string, derivationIndex: number): Promise<string> {
-    const encryptionKeyString = await this.session.getItem(ENCRYPTION_KEY_STORAGE_KEY)
-    if (!encryptionKeyString) {
-      throw new Error(ErrorType.RetrievePasswordError)
-    }
-    const encryptionKey = await convertBase64SeedToCryptoKey(encryptionKeyString)
-    const mnemonicKey = this.keyForMnemonicId(mnemonicId)
-    const storedSecretPayload = await this.storage.getItem(mnemonicKey)
-    if (!storedSecretPayload) {
-      throw new Error(ErrorType.RetrieveMnemonicError)
-    }
-    const secretPayload = JSON.parse(storedSecretPayload) as Maybe<SecretPayload>
-    if (!secretPayload || !secretPayload.ciphertext) {
-      throw new Error(ErrorType.RetrieveMnemonicError)
-    }
-    const mnemonic = await this.retrieveMnemonic(secretPayload, encryptionKey, mnemonicId)
-
-    if (!mnemonic) {
-      throw new Error(ErrorType.RetrieveMnemonicError)
-    }
-
+    const mnemonic = await this.retrieveMnemonicUnlocked(mnemonicId)
     const derivationPath = defaultPath + derivationIndex
     const walletAtIndex = Wallet.fromMnemonic(mnemonic, derivationPath)
 
@@ -424,7 +452,7 @@ export class WebKeyring implements IKeyring {
     }
   }
 
-  /** @returns address is store call was successfull. */
+  /** @returns address if the store call was successful. */
   private async storeNewPrivateKey(address: string, privateKey: string): Promise<string> {
     const checkStored = await this.retrievePrivateKey(address)
 

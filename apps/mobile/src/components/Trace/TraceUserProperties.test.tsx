@@ -7,6 +7,7 @@ import { AuthMethod } from 'src/features/telemetry/utils'
 import * as versionUtils from 'src/utils/version'
 import * as useIsDarkModeFile from 'ui/src/hooks/useIsDarkMode'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import * as userSettingsHooks from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName } from 'uniswap/src/features/telemetry/user'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
@@ -83,8 +84,8 @@ describe('TraceUserProperties', () => {
     mockFn(walletHooks, 'useViewOnlyAccounts', ['address1', 'address2'])
     mockFn(walletHooks, 'useSwapProtectionSetting', SwapProtectionSetting.On)
     mockFn(walletHooks, 'useSignerAccounts', [signerAccount1, signerAccount2, signerAccount3])
-    mockFn(walletHooks, 'useHideSpamTokensSetting', true)
-    mockFn(walletHooks, 'useHideSmallBalancesSetting', false)
+    mockFn(userSettingsHooks, 'useHideSpamTokensSetting', true)
+    mockFn(userSettingsHooks, 'useHideSmallBalancesSetting', false)
     mockFn(biometricHooks, 'useBiometricAppSettings', {
       requiredForAppAccess: true,
       requiredForTransactions: true,

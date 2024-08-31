@@ -77,6 +77,7 @@ function _TokenSelectorSendList({
   chainFilter,
   searchHistory,
   valueModifiers,
+  isKeyboardOpen,
   onDismiss,
   onSelectCurrency,
   onEmptyActionPress,
@@ -116,6 +117,7 @@ function _TokenSelectorSendList({
       emptyElement={emptyElement}
       formatNumberOrStringCallback={formatNumberOrStringCallback}
       hasError={Boolean(error)}
+      isKeyboardOpen={isKeyboardOpen}
       loading={loading}
       refetch={refetch}
       sections={sections}

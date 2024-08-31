@@ -8,7 +8,7 @@ export enum ExtensionEventName {
   DappConnectRequest = 'Dapp Connect Request',
   DappRequest = 'Dapp Request',
   DappTroubleConnecting = 'Dapp Trouble Connecting',
-  DeprecatedMethodRequest = 'DeprecatedMethodRequest',
+  DeprecatedMethodRequest = 'Deprecated Method Request',
   ExtensionEthMethodRequest = 'Extension Eth Method Request',
   OnboardingLoad = 'Onboarding Load',
   PasswordChanged = 'Password Changed',
@@ -18,4 +18,6 @@ export enum ExtensionEventName {
   SidebarLoad = 'Sidebard Load',
   SidebarSwitchChain = 'Sidebar Switch Chain',
   UnknownMethodRequest = 'Unknown Method Request',
+  UnsupportedMethodRequest = 'Unsupported Method Request',
+  UnrecognizedMethodRequest = 'Unrecognized Method Request',
 }

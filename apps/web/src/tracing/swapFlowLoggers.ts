@@ -2,6 +2,7 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { SwapEventType, timestampTracker } from 'tracing/SwapEventTimestampTracker'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function logSwapSuccess(hash: string, chainId: number, analyticsContext: ITraceContext) {
@@ -18,6 +19,7 @@ export function logSwapSuccess(hash: string, chainId: number, analyticsContext: 
       : timestampTracker.getElapsedTime(SwapEventType.FIRST_SWAP_SUCCESS, SwapEventType.FIRST_SWAP_ACTION),
     hash,
     chain_id: chainId,
+    transactionOriginType: TransactionOriginType.Internal,
     ...analyticsContext,
   })
 }
@@ -33,6 +35,7 @@ export function logUniswapXSwapSuccess(
   sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
     routing: 'DUTCH_V2',
     order_hash: orderHash,
+    transactionOriginType: TransactionOriginType.Internal,
     // We only log the time-to-swap metric for the first swap of a session,
     // so if it was previously set we log undefined here.
     time_to_swap: hasSetSwapSuccess ? undefined : elapsedTime,

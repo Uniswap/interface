@@ -7,7 +7,7 @@ import { SafeKeyboardScreen } from 'src/components/layout/SafeKeyboardScreen'
 import { CloudBackupPassword } from 'src/features/CloudBackup/CloudBackupForm'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { OSDynamicCloudIcon } from 'ui/src/components/icons'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -65,7 +65,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
         </Flex>
         <CloudBackupPassword.PasswordInput />
         {showCloudBackupInfoModal && (
-          <BottomSheetModal backgroundColor={colors.surface2.get()} name={ModalName.CloudBackupInfo}>
+          <Modal backgroundColor={colors.surface2.val} name={ModalName.CloudBackupInfo}>
             <Flex px="$spacing16" py="$spacing12">
               <Flex centered gap="$spacing16">
                 <Flex backgroundColor="$DEP_accentSoft" borderRadius="$rounded12" p="$spacing12">
@@ -91,7 +91,7 @@ export function SettingsCloudBackupPasswordCreateScreen({
                 </Button>
               </Flex>
             </Flex>
-          </BottomSheetModal>
+          </Modal>
         )}
       </SafeKeyboardScreen>
     </CloudBackupPassword.FormProvider>

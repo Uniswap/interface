@@ -46,19 +46,18 @@ export function TooltipInfoButton({
           width={size ?? DEFAULT_ICON_SIZE}
         />
       </TouchableArea>
-      {showModal && (
-        <WarningModal
-          backgroundIconColor={backgroundIconColor}
-          caption={modalText}
-          closeText={closeText ?? t('common.button.close')}
-          icon={modalIcon}
-          modalName={ModalName.TooltipContent}
-          title={modalTitle}
-          onClose={(): void => setShowModal(false)}
-        >
-          {modalContent ?? null}
-        </WarningModal>
-      )}
+      <WarningModal
+        backgroundIconColor={backgroundIconColor}
+        caption={modalText}
+        closeText={closeText ?? t('common.button.close')}
+        icon={modalIcon}
+        isOpen={showModal}
+        modalName={ModalName.TooltipContent}
+        title={modalTitle}
+        onClose={(): void => setShowModal(false)}
+      >
+        {modalContent ?? null}
+      </WarningModal>
     </>
   )
 }

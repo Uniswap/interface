@@ -5,12 +5,12 @@ import {
   TransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import {
   TransactionHistoryUpdater,
   getReceiveNotificationFromData,
 } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
-import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import {

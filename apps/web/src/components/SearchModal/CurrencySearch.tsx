@@ -1,6 +1,5 @@
+import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency, Token } from '@uniswap/sdk-core'
-import { hideSmallBalancesAtom } from 'components/AccountDrawer/SmallBalanceToggle'
-import { hideSpamAtom } from 'components/AccountDrawer/SpamToggle'
 import {
   recentlySearchedAssetsAtom,
   useAddRecentlySearchedCurrency,
@@ -18,7 +17,7 @@ import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { useAddUserToken } from 'state/user/hooks'
 import { useAllUserAddedTokens } from 'state/user/userAddedTokens'
 import { Flex } from 'ui/src'
-import { TokenSelector, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
+import { TokenSelectorContent, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import {
   useCommonTokensOptions,
   useFilterCallbacks,
@@ -26,8 +25,10 @@ import {
   usePortfolioTokenOptions,
   useTokenSectionsForSearchResults,
 } from 'uniswap/src/components/TokenSelector/hooks'
+import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
-import { TokenSelectorFlow } from 'uniswap/src/features/transactions/transfer/types'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
@@ -59,8 +60,8 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
   const activeCurrencyCode = useActiveLocalCurrency()
   const activeLocale = useActiveLocale()
   const recentlySearchedAssets = useAtomValue(recentlySearchedAssetsAtom)
-  const hideSmallBalances = useAtomValue(hideSmallBalancesAtom)
-  const hideSpamBalances = useAtomValue(hideSpamAtom)
+  const hideSmallBalances = useHideSmallBalancesSetting()
+  const hideSpamBalances = useHideSpamTokensSetting()
 
   const addPopup = useAddPopup()
   const removePopup = useRemovePopup()
@@ -115,88 +116,95 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
   }, [currentTab, chainId, prevChainId, multichainUXEnabled, addPopup, removePopup])
 
   return (
-    <Flex width="100%">
-      <TokenSelector
-        activeAccountAddress={account.address!}
-        searchHistory={searchHistory as TokenSearchResult[]}
-        valueModifiers={[
-          {
-            ownerAddress: account.address!,
-            includeSmallBalances: !hideSmallBalances,
-            includeSpamTokens: !hideSpamBalances,
-          },
-        ]}
-        chainId={!multichainUXEnabled || isUserSelectedToken ? chainId : undefined}
-        addToSearchHistoryCallback={addRecentlySearchedCurrency}
-        convertFiatAmountFormattedCallback={(fromAmount) =>
-          formatNumber({
-            input: fromAmount as number,
-            type: NumberType.FiatTokenPrice,
-          })
-        }
-        currencyField={currencyField}
-        flow={TokenSelectorFlow.Swap}
-        formatNumberOrStringCallback={(input) =>
-          formatNumberOrString({
-            price: input.value,
-            currencyCode: activeCurrencyCode,
-            locale: activeLocale,
-            type: UtilitiesNumberType.TokenNonTx,
-          })
-        }
-        isSurfaceReady={true}
-        navigateToBuyOrReceiveWithEmptyWalletCallback={() => null}
-        useCommonTokensOptionsHook={useCommonTokensOptions}
-        useFavoriteTokensOptionsHook={() => {
-          return {
-            data: [],
-            loading: false,
+    <Trace
+      logImpression
+      eventOnTrigger={InterfaceEventName.TOKEN_SELECTOR_OPENED}
+      modal={InterfaceModalName.TOKEN_SELECTOR}
+    >
+      <Flex width="100%" flexGrow={1} flexShrink={1} flexBasis="auto">
+        <TokenSelectorContent
+          activeAccountAddress={account.address!}
+          isLimits={currentTab === SwapTab.Limit}
+          searchHistory={searchHistory as TokenSearchResult[]}
+          valueModifiers={[
+            {
+              ownerAddress: account.address!,
+              includeSmallBalances: !hideSmallBalances,
+              includeSpamTokens: !hideSpamBalances,
+            },
+          ]}
+          chainId={!multichainUXEnabled || isUserSelectedToken ? chainId : undefined}
+          addToSearchHistoryCallback={addRecentlySearchedCurrency}
+          convertFiatAmountFormattedCallback={(fromAmount) =>
+            formatNumber({
+              input: fromAmount as number,
+              type: NumberType.FiatTokenPrice,
+            })
           }
-        }}
-        useFilterCallbacksHook={useFilterCallbacks}
-        usePopularTokensOptionsHook={usePopularTokensOptions}
-        usePortfolioTokenOptionsHook={usePortfolioTokenOptions}
-        useTokenSectionsForEmptySearchHook={() => {
-          return {
-            data: [],
-            loading: false,
+          currencyField={currencyField}
+          flow={TokenSelectorFlow.Swap}
+          formatNumberOrStringCallback={(input) =>
+            formatNumberOrString({
+              price: input.value,
+              currencyCode: activeCurrencyCode,
+              locale: activeLocale,
+              type: UtilitiesNumberType.TokenNonTx,
+            })
           }
-        }}
-        useTokenSectionsForSearchResultsHook={useTokenSectionsForSearchResults}
-        useTokenWarningDismissedHook={(currencyId) => {
-          if (!currencyId) {
+          isSurfaceReady={true}
+          navigateToBuyOrReceiveWithEmptyWalletCallback={() => null}
+          useCommonTokensOptionsHook={useCommonTokensOptions}
+          useFavoriteTokensOptionsHook={() => {
             return {
-              tokenWarningDismissed: false,
-              dismissWarningCallback: () => null,
+              data: [],
+              loading: false,
             }
-          }
-          const [chainId, address] = currencyId.split('-')
-          // Hardcode 18 decimals because we only check chainId and address
-          const token = new Token(parseInt(chainId), address, 18)
+          }}
+          useFilterCallbacksHook={useFilterCallbacks}
+          usePopularTokensOptionsHook={usePopularTokensOptions}
+          usePortfolioTokenOptionsHook={usePortfolioTokenOptions}
+          useTokenSectionsForEmptySearchHook={() => {
+            return {
+              data: [],
+              loading: false,
+            }
+          }}
+          useTokenSectionsForSearchResultsHook={useTokenSectionsForSearchResults}
+          useTokenWarningDismissedHook={(currencyId) => {
+            if (!currencyId) {
+              return {
+                tokenWarningDismissed: false,
+                dismissWarningCallback: () => null,
+              }
+            }
+            const [chainId, address] = currencyId.split('-')
+            // Hardcode 18 decimals because we only check chainId and address
+            const token = new Token(parseInt(chainId), address, 18)
 
-          return {
-            tokenWarningDismissed: !!userAddedTokens.find(
-              (userToken) => userToken.chainId === token.chainId && userToken.address === token.address,
-            ),
-            dismissWarningCallback: () => addToken(token),
+            return {
+              tokenWarningDismissed: !!userAddedTokens.find(
+                (userToken) => userToken.chainId === token.chainId && userToken.address === token.address,
+              ),
+              dismissWarningCallback: () => addToken(token),
+            }
+          }}
+          variation={
+            currencyField === CurrencyField.INPUT
+              ? TokenSelectorVariation.BalancesAndPopular
+              : TokenSelectorVariation.SuggestedAndFavoritesAndPopular
           }
-        }}
-        variation={
-          currencyField === CurrencyField.INPUT
-            ? TokenSelectorVariation.BalancesAndPopular
-            : TokenSelectorVariation.SuggestedAndFavoritesAndPopular
-        }
-        onClose={() => {
-          setFilteredChainId(null)
-          onDismiss()
-        }}
-        onDismiss={() => null}
-        onPressAnimation={() => null}
-        onSelectChain={(chainId) => {
-          setFilteredChainId(chainId)
-        }}
-        onSelectCurrency={handleCurrencySelectTokenSelectorCallback}
-      />
-    </Flex>
+          onClose={() => {
+            setFilteredChainId(null)
+            onDismiss()
+          }}
+          onDismiss={() => null}
+          onPressAnimation={() => null}
+          onSelectChain={(chainId) => {
+            setFilteredChainId(chainId)
+          }}
+          onSelectCurrency={handleCurrencySelectTokenSelectorCallback}
+        />
+      </Flex>
+    </Trace>
   )
 }

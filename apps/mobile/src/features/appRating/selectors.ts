@@ -1,16 +1,20 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { MobileState } from 'src/app/mobileReducer'
+import { TransactionsState } from 'uniswap/src/features/transactions/slice'
+import {
+  TransactionDetails,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { selectTransactions } from 'wallet/src/features/transactions/selectors'
-import { TransactionStateMap } from 'wallet/src/features/transactions/slice'
-import { TransactionDetails, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 
 const NUM_CONSECUTIVE_SWAPS = 2
 
 export const hasConsecutiveRecentSwapsSelector: Selector<MobileState, boolean> = createSelector(
   [selectTransactions, (state: MobileState): number => state.wallet.appRatingPromptedMs ?? 0],
-  (transactions: TransactionStateMap, appRatingPromptedMs): boolean => {
+  (transactions: TransactionsState, appRatingPromptedMs): boolean => {
     const swapTxs: Array<TransactionDetails> = []
 
     const txs = flattenObjectOfObjects(transactions)

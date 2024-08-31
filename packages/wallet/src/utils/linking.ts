@@ -3,10 +3,10 @@ import { Linking } from 'react-native'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
+import { ServiceProviderInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { currencyIdToChain, currencyIdToGraphQLAddress } from 'uniswap/src/utils/currencyId'
 import { openUri } from 'uniswap/src/utils/linking'
-import { ServiceProviderInfo } from 'wallet/src/features/transactions/types'
 
 export const UNISWAP_APP_NATIVE_TOKEN = 'NATIVE'
 
@@ -24,20 +24,6 @@ export async function openTransactionLink(hash: string | undefined, chainId: Wal
 
 export async function openUniswapHelpLink(): Promise<void> {
   return openUri(uniswapUrls.helpRequestUrl)
-}
-
-const SERVICE_PROVIDER_SUPPORT_URLS: Record<string, string> = {
-  MOONPAY: 'https://www.moonpay.com/contact-us',
-  ROBINHOOD: 'https://robinhood.com/support/articles/how-to-contact-support/',
-  COINBASEPAY: 'https://help.coinbase.com/',
-  TRANSAK: 'https://support.transak.com/collections/3985810-customer-help-center',
-  BANXA: 'https://support.banxa.com/support/home',
-  STRIPE: 'https://support.stripe.com/',
-}
-
-export async function openLegacyFiatOnRampServiceProviderLink(serviceProvider: string): Promise<void> {
-  const helpUrl = SERVICE_PROVIDER_SUPPORT_URLS[serviceProvider] ?? 'https://www.moonpay.com/contact-us'
-  return openUri(helpUrl)
 }
 
 export async function openOnRampSupportLink(serviceProvider: ServiceProviderInfo): Promise<void> {

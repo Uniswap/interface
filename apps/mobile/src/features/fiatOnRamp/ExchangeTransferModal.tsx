@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { ExchangeTransferConnecting } from 'src/screens/ExchangeTransferConnecting'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 
 export function ExchangeTransferModal(): JSX.Element | null {
@@ -15,7 +15,7 @@ export function ExchangeTransferModal(): JSX.Element | null {
   const serviceProvider = initialState?.serviceProvider
 
   return serviceProvider ? (
-    <BottomSheetModal
+    <Modal
       fullScreen
       hideHandlebar
       hideKeyboardOnDismiss
@@ -24,6 +24,6 @@ export function ExchangeTransferModal(): JSX.Element | null {
       onClose={onClose}
     >
       <ExchangeTransferConnecting serviceProvider={serviceProvider} onClose={onClose} />
-    </BottomSheetModal>
+    </Modal>
   ) : null
 }

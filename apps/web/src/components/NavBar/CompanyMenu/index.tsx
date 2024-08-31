@@ -8,7 +8,7 @@ import styled, { useTheme } from 'lib/styled-components'
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { Popover, Text, useIsTouchDevice } from 'ui/src'
-import { Hamburger } from 'ui/src/components/icons'
+import { Hamburger } from 'ui/src/components/icons/Hamburger'
 
 const ArrowDown = styled(ArrowChangeDown)<{ $isActive: boolean }>`
   height: 100%;

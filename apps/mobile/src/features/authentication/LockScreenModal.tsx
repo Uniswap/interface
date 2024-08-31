@@ -15,6 +15,8 @@ export function LockScreenModal(): JSX.Element | null {
     return null
   }
 
+  // We do not add explicit error boundary here as we can not hide or replace
+  // the lock screen on error, hence we fallback to the global error boundary
   return (
     <Modal
       visible

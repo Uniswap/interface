@@ -20,6 +20,7 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { logger } from 'utilities/src/logger/logger'
@@ -29,7 +30,6 @@ import { PlusCircle } from 'wallet/src/components/icons/PlusCircle'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
-import { WarningSeverity } from 'wallet/src/features/transactions/WarningModal/types'
 import { BackupType, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { createAccountsActions } from 'wallet/src/features/wallet/create/createAccountsSaga'
 import { useActiveAccountWithThrow, useDisplayName, useSignerAccounts } from 'wallet/src/features/wallet/hooks'
@@ -159,27 +159,29 @@ export function AccountSwitcherScreen(): JSX.Element {
 
   return (
     <Trace logImpression modal={ModalName.AccountSwitcher}>
-      {showEditLabelModal && <EditLabelModal address={activeAddress} onClose={() => setShowEditLabelModal(false)} />}
-      {showRemoveWalletModal && (
-        <WarningModal
-          caption={t('account.recoveryPhrase.remove.import.description')}
-          closeText={t('common.button.cancel')}
-          confirmText={t('common.button.continue')}
-          icon={<WalletFilled color="$statusCritical" size="$icon.24" />}
-          modalName={ModalName.RemoveWallet}
-          severity={WarningSeverity.High}
-          title={t('account.wallet.button.import')}
-          onClose={() => setShowRemoveWalletModal(false)}
-          onConfirm={onNavigateToRemoveWallet}
-        />
-      )}
-      {showCreateWalletModal && (
-        <CreateWalletModal
-          pendingWallet={pendingWallet}
-          onCancel={onCancelCreateWallet}
-          onConfirm={onConfirmCreateWallet}
-        />
-      )}
+      <EditLabelModal
+        address={activeAddress}
+        isOpen={showEditLabelModal}
+        onClose={() => setShowEditLabelModal(false)}
+      />
+      <WarningModal
+        caption={t('account.recoveryPhrase.remove.import.description')}
+        closeText={t('common.button.cancel')}
+        confirmText={t('common.button.continue')}
+        icon={<WalletFilled color="$statusCritical" size="$icon.24" />}
+        isOpen={showRemoveWalletModal}
+        modalName={ModalName.RemoveWallet}
+        severity={WarningSeverity.High}
+        title={t('account.wallet.button.import')}
+        onClose={() => setShowRemoveWalletModal(false)}
+        onConfirm={onNavigateToRemoveWallet}
+      />
+      <CreateWalletModal
+        isOpen={showCreateWalletModal}
+        pendingWallet={pendingWallet}
+        onCancel={onCancelCreateWallet}
+        onConfirm={onConfirmCreateWallet}
+      />
       <Flex backgroundColor="$surface1" px="$spacing12" py="$spacing8">
         <ScreenHeader Icon={X} />
         <Flex gap="$spacing16" pb="$spacing4" pt="$spacing8" px="$spacing12">

@@ -2,7 +2,7 @@ import { Extras } from '@sentry/types'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/Datadog'
 import { Sentry } from 'utilities/src/logger/Sentry'
 import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
-import { isInterface, isMobile, isWeb } from 'utilities/src/platform'
+import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
 // i tried declaring it in a variety of places:
@@ -60,7 +60,7 @@ function logMessage(
 
   if (level === 'warn') {
     Sentry.captureMessage('warning', `${fileName}#${functionName}`, message, ...args)
-    if (isMobile) {
+    if (isMobileApp) {
       logWarningToDatadog(message, {
         level,
         args,
@@ -70,7 +70,7 @@ function logMessage(
     }
   } else if (level === 'info') {
     Sentry.captureMessage('info', `${fileName}#${functionName}`, message, ...args)
-    if (isMobile) {
+    if (isMobileApp) {
       logToDatadog(message, {
         level,
         args,
@@ -114,7 +114,7 @@ function logException(error: unknown, captureContext: LoggerErrorContext): void 
   }
 
   Sentry.captureException(error, updatedContext)
-  if (isInterface || isMobile) {
+  if (isInterface || isMobileApp) {
     logErrorToDatadog(error instanceof Error ? error : new Error(`${error}`), updatedContext)
   }
 }
@@ -125,7 +125,7 @@ interface RNError {
 }
 
 // Adds extra fields from errors provided by React Native
-function addErrorExtras(error: unknown, captureContext: LoggerErrorContext): LoggerErrorContext {
+export function addErrorExtras(error: unknown, captureContext: LoggerErrorContext): LoggerErrorContext {
   if (error instanceof Error) {
     const extras: Extras = {}
     const { nativeStackAndroid, userInfo } = error as RNError

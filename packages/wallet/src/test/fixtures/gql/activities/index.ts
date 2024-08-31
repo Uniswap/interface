@@ -7,7 +7,7 @@ import {
   TransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { MAX_FIXTURE_TIMESTAMP, faker } from 'uniswap/src/test/shared'
-import { createFixture } from 'uniswap/src/test/utils'
+import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { STALE_TRANSACTION_TIME_MS } from 'wallet/src/features/notifications/notificationWatcherSaga'
 import {
@@ -17,7 +17,6 @@ import {
 } from 'wallet/src/test/fixtures/gql/activities/tokens'
 import { GQL_CHAINS } from 'wallet/src/test/fixtures/gql/misc'
 import { gqlTransaction, gqlTransactionDetails } from 'wallet/src/test/fixtures/gql/transactions'
-import { randomChoice, randomEnumValue } from 'wallet/src/test/utils'
 export * from './nfts'
 export * from './swap'
 export * from './tokens'

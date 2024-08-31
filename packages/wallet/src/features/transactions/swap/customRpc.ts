@@ -6,17 +6,17 @@ import { useSwapProtectionSetting } from 'wallet/src/features/wallet/hooks'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 
 /**
- * Send txn through MEV blocker if following conditions are met:
+ * Send txn through private RPC if following conditions are met:
  *
- * 1. MEV blocker feature flag is enabled, aka they are in test group
+ * 1. Private RPC feature flag is enabled, aka they are in test group
  * 2. Swap protection setting is enabled (users sets this in swap settings)
- * 3. MEV blocker is supported on chain
+ * 3. Private RPC is supported on chain
  *
  */
-export function useShouldUseMEVBlocker(chainId: Maybe<WalletChainId>): boolean {
-  const isMevBlockerFeatureEnabled = useFeatureFlag(FeatureFlags.MevBlocker)
-  const isSwapProtectionSettingEnabled = useSwapProtectionSetting() === SwapProtectionSetting.On
-  const isMevBlockerSupportedOnChain = chainId ? isPrivateRpcSupportedOnChain(chainId) : false
+export function useShouldUsePrivateRpc(chainId: Maybe<WalletChainId>): boolean {
+  const privateRpcFeatureEnabled = useFeatureFlag(FeatureFlags.PrivateRpc)
+  const swapProtectionSettingEnabled = useSwapProtectionSetting() === SwapProtectionSetting.On
+  const privateRpcSupportedOnChain = chainId ? isPrivateRpcSupportedOnChain(chainId) : false
 
-  return Boolean(isMevBlockerFeatureEnabled && isSwapProtectionSettingEnabled && isMevBlockerSupportedOnChain)
+  return Boolean(privateRpcFeatureEnabled && swapProtectionSettingEnabled && privateRpcSupportedOnChain)
 }

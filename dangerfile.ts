@@ -15,9 +15,13 @@ function getIndicesOf(searchStr: string, str: string): number[] {
   return indices
 }
 
-async function getLinesAddedByFile(files: string[]) {
+async function getLinesAddedByFile(files: string[], { exclude = [] }: { exclude?: string[] } = {}) {
   return await Promise.all(
     files.flatMap(async (file) => {
+      if (exclude.some((name) => file.endsWith(name))) {
+        return []
+      }
+
       const structuredDiff = await danger.git.structuredDiffForFile(file)
 
       return (structuredDiff?.chunks || []).flatMap((chunk) => {
@@ -38,7 +42,9 @@ async function processAddChanges() {
   const allLinesAdded = linesAddedByFile.flatMap((x) => x)
 
   // Check for non-UI package lines for tamagui imports
-  const allNonUILinesAddedByFile = await getLinesAddedByFile(updatedNonUITsFiles)
+  const allNonUILinesAddedByFile = await getLinesAddedByFile(updatedNonUITsFiles, {
+    exclude: ['env.d.ts', 'tamaguiProvider.tsx'],
+  })
   const allNonUILinesAdded = allNonUILinesAddedByFile.flatMap((x) => x)
   allNonUILinesAdded.forEach((change) => {
     if (change.content.includes(`from 'tamagui`)) {
@@ -50,6 +56,34 @@ async function processAddChanges() {
   if (allLinesAdded.some((change) => change.content.includes('logMessage') || change.content.includes('logger.'))) {
     warn('You are logging data. Please confirm that nothing sensitive is being logged!')
   }
+
+  // Check for usage of FlatList, FlashList, VirtualizedList, or ScrollView in modals
+  allLinesAdded.forEach((change) => {
+    if (
+      change.content.includes('FlatList') ||
+      change.content.includes('FlashList') ||
+      change.content.includes('VirtualizedList') ||
+      change.content.includes('ScrollView')
+    ) {
+      warn(
+        `Detected usage of ${change.content.match(/FlatList|FlashList|VirtualizedList|ScrollView/g)?.join(', ')}. If it's used in a modal, please use the appropriate import from '@gorhom/bottom-sheet' instead.`,
+      )
+    }
+  })
+
+  // Check for imports from @gorhom/bottom-sheet
+  allLinesAdded.forEach((change) => {
+    if (
+      change.content.includes('@gorhom/bottom-sheet') &&
+      (change.content.includes('BottomSheetScrollView') ||
+        change.content.includes('BottomSheetFlatList') ||
+        change.content.includes('BottomSheetFlashList'))
+    ) {
+      warn(
+        `Detected import from '@gorhom/bottom-sheet' for ${change.content.match(/BottomSheetScrollView|BottomSheetFlatList|BottomSheetFlashList/g)?.join(', ')}. Consider adding the focus hook from 'useBottomSheetFocusHook' to ensure scrollables work correctly, especially on Android.`,
+      )
+    }
+  })
 
   // Check for UI package imports that are longer than needed
   const validLongerImports = [

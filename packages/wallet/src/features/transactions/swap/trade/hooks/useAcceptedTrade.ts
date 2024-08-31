@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { requireAcceptNewTrade } from 'wallet/src/features/transactions/swap/utils'
 
 export function useAcceptedTrade({

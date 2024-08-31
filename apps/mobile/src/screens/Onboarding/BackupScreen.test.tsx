@@ -14,10 +14,10 @@ import { ACCOUNT, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 
 jest.mock('wallet/src/features/onboarding/OnboardingContext', () => ({
   useOnboardingContext: jest.fn().mockReturnValue({
-    getOnboardingAccountAddress: jest.fn().mockReturnValue('mockedAccountAddress'),
-    getImportedAccountsAddresses: jest.fn(),
+    getOnboardingOrImportedAccount: jest.fn().mockReturnValue({ address: 'mockedAccountAddress' }),
     hasBackup: jest.fn(),
   }),
+  useCreateImportedAccountsFromMnemonicIfNone: jest.fn(),
 }))
 
 const navigationProp = {} as CompositeNavigationProp<

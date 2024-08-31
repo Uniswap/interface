@@ -1,6 +1,7 @@
 import { Store } from '@reduxjs/toolkit'
 import { ReactNode } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
+import { SharedPersistQueryClientProvider } from 'uniswap/src/data/apiClients/SharedPersistQueryClientProvider'
 import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 
 interface SharedProviderProps {
@@ -13,7 +14,9 @@ interface SharedProviderProps {
 export function SharedProvider({ reduxStore, children }: SharedProviderProps): JSX.Element {
   return (
     <ReduxProvider store={reduxStore}>
-      <TamaguiProvider>{children}</TamaguiProvider>
+      <SharedPersistQueryClientProvider>
+        <TamaguiProvider>{children}</TamaguiProvider>
+      </SharedPersistQueryClientProvider>
     </ReduxProvider>
   )
 }

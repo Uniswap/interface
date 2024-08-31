@@ -13,13 +13,13 @@ import { Flex, Text, useDeviceInsets, useSporeColors } from 'ui/src'
 import { NoTransactions } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
+import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { isAndroid } from 'utilities/src/platform'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { useFormattedTransactionDataForFeed } from 'wallet/src/features/activity/hooks'
-import { selectWatchedAddressSet } from 'wallet/src/features/favorites/selectors'
 import { generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
-import { useHideSpamTokensSetting } from 'wallet/src/features/wallet/hooks'
 
 export const FEED_TAB_DATA_DEPENDENCIES = [GQLQueries.FeedTransactionList]
 

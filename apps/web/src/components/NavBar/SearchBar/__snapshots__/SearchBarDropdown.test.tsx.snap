@@ -159,10 +159,30 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   width: 100%;
   -webkit-backdrop-filter: blur(60px);
   backdrop-filter: blur(60px);
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-transition: 125;
   transition: 125;
   opacity: 1;
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
+  height: 100%;
+}
+
+.c1::-webkit-scrollbar {
+  background: transparent;
+  width: 4px;
+  overflow-y: scroll;
+}
+
+.c1::-webkit-scrollbar-thumb {
+  background: #22222212;
+  border-radius: 8px;
 }
 
 .c4 {
@@ -518,10 +538,30 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   width: 100%;
   -webkit-backdrop-filter: blur(60px);
   backdrop-filter: blur(60px);
-  overflow-y: scroll;
+  overflow-y: auto;
   -webkit-transition: 125;
   transition: 125;
   opacity: 1;
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
+  height: 100%;
+}
+
+.c1::-webkit-scrollbar {
+  background: transparent;
+  width: 4px;
+  overflow-y: scroll;
+}
+
+.c1::-webkit-scrollbar-thumb {
+  background: #22222212;
+  border-radius: 8px;
 }
 
 .c4 {

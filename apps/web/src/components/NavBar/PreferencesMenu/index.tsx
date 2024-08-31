@@ -6,7 +6,7 @@ import { PreferenceSettings } from 'components/NavBar/PreferencesMenu/Preference
 import { PreferencesView } from 'components/NavBar/PreferencesMenu/shared'
 import { useCallback, useState } from 'react'
 import { AnimateTransition, Popover } from 'ui/src'
-import { Global } from 'ui/src/components/icons'
+import { Global } from 'ui/src/components/icons/Global'
 
 export function getSettingsViewIndex(view: PreferencesView) {
   if (view === PreferencesView.SETTINGS) {

@@ -5,7 +5,7 @@ import React, { KeyboardEvent, useCallback, useRef } from 'react'
 import { animated, easings, useSpring, useTransition } from 'react-spring'
 import { useGesture } from 'react-use-gesture'
 import { Z_INDEX } from 'theme/zIndex'
-import { isMobile } from 'utilities/src/platform'
+import { isMobileWeb } from 'utilities/src/platform'
 
 export const MODAL_TRANSITION_DURATION = 200
 
@@ -165,7 +165,7 @@ export default function Modal({
                   item && (
                     <StyledDialogContent
                       ref={ref}
-                      {...(isMobile
+                      {...(isMobileWeb
                         ? {
                             ...bind(),
                             style: { transform: y.interpolate((y) => `translateY(${(y as number) > 0 ? y : 0}px)`) },
@@ -182,7 +182,7 @@ export default function Modal({
                       $maxWidth={maxWidth}
                     >
                       {/* prevents the automatic focusing of inputs on mobile by the reach dialog */}
-                      {!initialFocusRef && isMobile ? <div tabIndex={1} /> : null}
+                      {!initialFocusRef && isMobileWeb ? <div tabIndex={1} /> : null}
                       {children}
                     </StyledDialogContent>
                   ),

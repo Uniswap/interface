@@ -9,7 +9,7 @@ import { setCustomEndpoint } from 'src/features/tweaks/slice'
 import { Accordion, Button, Flex, Text, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
-import { BottomSheetModal } from 'uniswap/src/components/modals/BottomSheetModal'
+import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { AccordionHeader, GatingOverrides } from 'wallet/src/components/gating/GatingOverrides'
 
@@ -42,7 +42,7 @@ export function ExperimentsModal(): JSX.Element {
   }
 
   return (
-    <BottomSheetModal
+    <Modal
       fullScreen
       renderBehindBottomInset
       name={ModalName.Experiments}
@@ -101,6 +101,6 @@ export function ExperimentsModal(): JSX.Element {
           <GatingOverrides />
         </Accordion>
       </ScrollView>
-    </BottomSheetModal>
+    </Modal>
   )
 }

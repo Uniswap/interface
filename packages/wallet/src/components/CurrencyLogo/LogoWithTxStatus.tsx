@@ -4,13 +4,17 @@ import { StyleSheet } from 'react-native'
 import type { IconProps } from 'ui/src'
 import { Flex, useSporeColors } from 'ui/src'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
-import MoonpayLogo from 'ui/src/assets/logos/svg/moonpay.svg'
 import { AlertTriangle, Approve, ArrowDownInCircle, ArrowUpInCircle, QuestionInCircle } from 'ui/src/components/icons'
 import { borderRadii } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import {
+  NFTTradeType,
+  TransactionStatus,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
@@ -18,7 +22,6 @@ import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIco
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { RemoteImage } from 'wallet/src/features/images/RemoteImage'
-import { NFTTradeType, TransactionStatus, TransactionType } from 'wallet/src/features/transactions/types'
 
 interface LogoWithTxStatusBaseProps {
   assetType: AssetType
@@ -53,25 +56,7 @@ export type LogoWithTxStatusProps = (CurrencyStatusProps | NFTStatusProps) & {
 }
 
 function getLogo(props: LogoWithTxStatusProps): JSX.Element {
-  const { assetType, txType, size, serviceProviderLogoUrl, institutionLogoUrl } = props
-
-  if (txType === TransactionType.FiatPurchase) {
-    if (institutionLogoUrl) {
-      return <ImageUri imageStyle={{ height: size, width: size }} uri={institutionLogoUrl} />
-    }
-    if (serviceProviderLogoUrl) {
-      return (
-        <ImageUri
-          imageStyle={{
-            height: size,
-            width: size,
-          }}
-          uri={serviceProviderLogoUrl}
-        />
-      )
-    }
-    return <MoonpayLogo height={size} testID="moonpay-logo" width={size} />
-  }
+  const { assetType, size } = props
 
   return assetType === AssetType.Currency ? (
     <CurrencyLogo hideNetworkLogo currencyInfo={props.currencyInfo} size={size} />
@@ -124,7 +109,6 @@ export function LogoWithTxStatus(props: LogoWithTxStatusProps): JSX.Element {
         }
         break
       // Fiat purchases use the same icon as receive
-      case TransactionType.FiatPurchase:
       case TransactionType.OnRampPurchase:
       case TransactionType.OnRampTransfer:
       case TransactionType.Receive:

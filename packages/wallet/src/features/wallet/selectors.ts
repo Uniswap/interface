@@ -69,10 +69,5 @@ export const selectAnyAddressHasNotificationsEnabled = createSelector(selectAcco
   Object.values(accounts).some((account) => account.pushNotificationsEnabled),
 )
 
-export const selectWalletHideSmallBalancesSetting = (state: WalletState): boolean =>
-  state.wallet.settings.hideSmallBalances
-
-export const selectWalletHideSpamTokensSetting = (state: WalletState): boolean => state.wallet.settings.hideSpamTokens
-
 export const selectWalletSwapProtectionSetting = (state: WalletState): SwapProtectionSetting =>
   state.wallet.settings.swapProtection

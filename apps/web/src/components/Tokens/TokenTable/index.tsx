@@ -4,7 +4,6 @@ import { InterfaceElementName } from '@uniswap/analytics-events'
 import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
-import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
@@ -24,28 +23,33 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
 import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import styled from 'lib/styled-components'
 import { ReactElement, ReactNode, useMemo } from 'react'
-import { EllipsisStyle, ThemedText } from 'theme/components'
+import { Flex, Text, styled } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-const TableWrapper = styled.div`
-  margin: 0 auto;
-  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-`
+const TableWrapper = styled(Flex, {
+  m: '0 auto',
+  maxWidth: MAX_WIDTH_MEDIA_BREAKPOINT,
+})
 
-export const NameText = styled(ThemedText.BodyPrimary)`
-  ${EllipsisStyle}
-`
-const ValueText = styled(ThemedText.BodyPrimary)`
-  ${EllipsisStyle}
-`
+export const EllipsisText = styled(Text, {
+  variant: 'body2',
+  color: '$neutral1',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+})
 
-const SparklineContainer = styled.div`
-  width: 124px;
-  height: 40px;
-`
+const SparklineContainer = styled(Flex, {
+  width: '124px',
+  height: '$spacing40',
+})
+
+const TokenTableText = styled(Text, {
+  variant: 'body2',
+  color: '$neutral2',
+})
 
 interface TokenTableValue {
   index: number
@@ -63,11 +67,17 @@ interface TokenTableValue {
 
 function TokenDescription({ token }: { token: TopToken }) {
   return (
-    <Row gap="sm">
+    <Flex row gap="$gap8">
       <QueryTokenLogo token={token} size={28} />
-      <NameText data-testid="token-name">{token?.project?.name ?? token?.name}</NameText>
-      <ThemedText.BodySecondary style={{ minWidth: 'fit-content' }}>{token?.symbol}</ThemedText.BodySecondary>
-    </Row>
+      <EllipsisText data-testid="token-name">{token?.project?.name ?? token?.name}</EllipsisText>
+      <TokenTableText
+        $platform-web={{
+          minWidth: 'fit-content',
+        }}
+      >
+        {token?.symbol}
+      </TokenTableText>
+    </Flex>
   )
 }
 
@@ -118,9 +128,9 @@ function TokenTableHeader({
 
   return (
     <MouseoverTooltip disabled={!HEADER_DESCRIPTIONS[category]} text={HEADER_DESCRIPTIONS[category]} placement="top">
-      <ClickableHeaderRow $justify="flex-end" onClick={handleSortCategory}>
+      <ClickableHeaderRow justifyContent="flex-end" onPress={handleSortCategory}>
         {isCurrentSortMethod && <HeaderArrow direction={direction} />}
-        <HeaderSortText $active={isCurrentSortMethod}>{HEADER_TEXT[category]}</HeaderSortText>
+        <HeaderSortText active={isCurrentSortMethod}>{HEADER_TEXT[category]}</HeaderSortText>
       </ClickableHeaderRow>
     </MouseoverTooltip>
   )
@@ -224,12 +234,12 @@ function TokenTable({
         id: 'index',
         header: () => (
           <Cell justifyContent="center" minWidth={44}>
-            <ThemedText.BodySecondary>#</ThemedText.BodySecondary>
+            <TokenTableText>#</TokenTableText>
           </Cell>
         ),
         cell: (index) => (
           <Cell justifyContent="center" loading={showLoadingSkeleton} minWidth={44}>
-            <ThemedText.BodySecondary>{index.getValue?.()}</ThemedText.BodySecondary>
+            <TokenTableText>{index.getValue?.()}</TokenTableText>
           </Cell>
         ),
       }),
@@ -237,9 +247,9 @@ function TokenTable({
         id: 'tokenDescription',
         header: () => (
           <Cell justifyContent="flex-start" width={240} grow>
-            <ThemedText.BodySecondary>
+            <TokenTableText>
               <Trans i18nKey="common.tokenName" />
-            </ThemedText.BodySecondary>
+            </TokenTableText>
           </Cell>
         ),
         cell: (tokenDescription) => (
@@ -261,12 +271,12 @@ function TokenTable({
         ),
         cell: (price) => (
           <Cell loading={showLoadingSkeleton} minWidth={133} grow testId="price-cell">
-            <ThemedText.BodyPrimary>
+            <Text variant="body2" color="$neutral1">
               {/* A simple 0 price indicates the price is not currently available from the api */}
               {price.getValue?.() === 0
                 ? '-'
                 : formatFiatPrice({ price: price.getValue?.(), type: NumberType.FiatTokenPrice })}
-            </ThemedText.BodyPrimary>
+            </Text>
           </Cell>
         ),
       }),
@@ -317,7 +327,7 @@ function TokenTable({
         ),
         cell: (fdv) => (
           <Cell loading={showLoadingSkeleton} width={133} grow testId="fdv-cell">
-            <ValueText>{formatNumber({ input: fdv.getValue?.(), type: NumberType.FiatTokenStats })}</ValueText>
+            <EllipsisText>{formatNumber({ input: fdv.getValue?.(), type: NumberType.FiatTokenStats })}</EllipsisText>
           </Cell>
         ),
       }),
@@ -334,7 +344,7 @@ function TokenTable({
         ),
         cell: (volume) => (
           <Cell width={133} loading={showLoadingSkeleton} grow testId="volume-cell">
-            <ValueText>{formatNumber({ input: volume.getValue?.(), type: NumberType.FiatTokenStats })}</ValueText>
+            <EllipsisText>{formatNumber({ input: volume.getValue?.(), type: NumberType.FiatTokenStats })}</EllipsisText>
           </Cell>
         ),
       }),

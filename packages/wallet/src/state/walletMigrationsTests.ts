@@ -516,3 +516,19 @@ export function testAddedHapticSetting(migration: (state: any) => any, prevSchem
   const result = migration(prevSchema)
   expect(result.appearanceSettings.hapticsEnabled).toEqual(true)
 }
+
+export function testMovedUserSettings(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+  expect(result.wallet.settings.hideSpamTokens).toEqual(undefined)
+  expect(result.wallet.settings.hideSmallBalances).toEqual(undefined)
+  expect(result.wallet.settings.nftViewType).toEqual(undefined)
+  expect(result.userSettings.hideSpamTokens).toEqual(true)
+  expect(result.userSettings.hideSmallBalances).toEqual(true)
+}
+
+export function testRemoveHoldToSwap(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+
+  expect(result.behaviorHistory.hasViewedReviewScreen).toBe(undefined)
+  expect(result.behaviorHistory.hasSubmittedHoldToSwap).toBe(undefined)
+}

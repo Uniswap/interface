@@ -4,8 +4,7 @@ import { SearchNFTCollectionItem } from 'src/components/explore/search/items/Sea
 import { getSearchResultId, gqlNFTToNFTCollectionSearchResult } from 'src/components/explore/search/utils'
 import { Flex, Loader } from 'ui/src'
 import { useSearchPopularNftCollectionsQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
-import { NFTCollectionSearchResult } from 'wallet/src/features/search/SearchResult'
+import { NFTCollectionSearchResult, SearchResultType } from 'uniswap/src/features/search/SearchResult'
 
 function isNFTCollectionSearchResult(result: NFTCollectionSearchResult | null): result is NFTCollectionSearchResult {
   return (result as NFTCollectionSearchResult).type === SearchResultType.NFTCollection

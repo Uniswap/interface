@@ -40,7 +40,7 @@ export function useFiatCurrencyComponents(currency: FiatCurrency): FiatCurrencyC
  * @returns currency name
  */
 export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { name: string; shortName: string } {
-  const currencyToCurrencyName = {
+  const currencyToCurrencyName: Record<FiatCurrency, string> = {
     [FiatCurrency.AustrialianDollor]: t('currency.aud'),
     [FiatCurrency.BrazilianReal]: t('currency.brl'),
     [FiatCurrency.CanadianDollar]: t('currency.cad'),
@@ -51,6 +51,7 @@ export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { 
     [FiatCurrency.IndonesianRupiah]: t('currency.idr'),
     [FiatCurrency.IndianRupee]: t('currency.inr'),
     [FiatCurrency.JapaneseYen]: t('currency.jpy'),
+    [FiatCurrency.SouthKoreanWon]: t('currency.krw'),
     [FiatCurrency.NigerianNaira]: t('currency.ngn'),
     [FiatCurrency.PakistaniRupee]: t('currency.pkr'),
     [FiatCurrency.RussianRuble]: t('currency.rub'),
@@ -72,6 +73,7 @@ export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { 
     [FiatCurrency.IndonesianRupiah]: 'Rp',
     [FiatCurrency.IndianRupee]: '₹',
     [FiatCurrency.JapaneseYen]: '¥',
+    [FiatCurrency.SouthKoreanWon]: '₩',
     [FiatCurrency.NigerianNaira]: '₦',
     [FiatCurrency.PakistaniRupee]: 'Rs',
     [FiatCurrency.RussianRuble]: '₽',

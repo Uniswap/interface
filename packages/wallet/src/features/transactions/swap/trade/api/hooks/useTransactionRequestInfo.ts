@@ -1,33 +1,27 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { providers } from 'ethers'
 import { useEffect, useMemo, useRef } from 'react'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useRestQuery } from 'uniswap/src/data/rest'
-import {
-  CreateSwapRequest,
-  CreateSwapResponse,
-  TransactionFailureReason,
-} from 'uniswap/src/data/tradingApi/__generated__/index'
+import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
+import { CreateSwapRequest, TransactionFailureReason } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { GasFeeResult, GasSpeed } from 'uniswap/src/features/gas/types'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { CurrencyField } from 'uniswap/src/features/transactions/transactionState/types'
+import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
+import { isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
-import { GasFeeResult, GasSpeed } from 'wallet/src/features/gas/types'
 import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'wallet/src/features/transactions/swap/analytics'
-import { TradingApiApolloClient } from 'wallet/src/features/transactions/swap/trade/api/client'
-import { getClassicQuoteFromResponse } from 'wallet/src/features/transactions/swap/trade/api/utils'
 import { useWrapTransactionRequest } from 'wallet/src/features/transactions/swap/trade/hooks/useWrapTransactionRequest'
-import { ApprovalAction, TokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/types'
-import { isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
-import { DerivedSwapInfo } from 'wallet/src/features/transactions/swap/types'
 import { usePermit2SignatureWithData } from 'wallet/src/features/transactions/swap/usePermit2Signature'
-import { WrapType } from 'wallet/src/features/transactions/types'
 
 export const UNKNOWN_SIM_ERROR = 'Unknown gas simulation error'
 
@@ -46,12 +40,12 @@ export function useTransactionRequestInfo({
 }: {
   derivedSwapInfo: DerivedSwapInfo
   tokenApprovalInfo: TokenApprovalInfo | undefined
-  account: AccountMeta
+  account?: AccountMeta
   skip: boolean
 }): TransactionRequestInfo {
   const formatter = useLocalizationContext()
 
-  const { trade: tradeWithStatus, currencyAmounts } = derivedSwapInfo
+  const { trade: tradeWithStatus } = derivedSwapInfo
   const { trade } = tradeWithStatus || { trade: undefined }
 
   const permitData = trade?.quote?.permitData
@@ -60,12 +54,7 @@ export function useTransactionRequestInfo({
   // Quote indicates we need to include a signed permit message
   const requiresPermit2Sig = !!permitData
 
-  const signatureInfo = usePermit2SignatureWithData({
-    currencyInAmount: currencyAmounts[CurrencyField.INPUT],
-    permitData,
-    account,
-    skip: !requiresPermit2Sig || skip,
-  })
+  const signatureInfo = usePermit2SignatureWithData({ permitData, skip })
 
   /**
    * Simulate transactions to ensure they will not fail on-chain. Do not simulate for txs that need an approval as those require Tenderly to simulate and it is not currently integrated into the gas servic
@@ -118,27 +107,24 @@ export function useTransactionRequestInfo({
 
   const skipTransactionRequest = !swapRequestArgs || isWrapApplicable || skip
 
-  // We will remove this cast in follow up change to dynamic config typing
   const tradingApiSwapRequestMs = useDynamicConfigValue(
     DynamicConfigs.Swap,
     SwapConfigKey.TradingApiSwapRequestMs,
     FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS,
   )
 
-  const { data, error, loading } = useRestQuery<CreateSwapResponse, CreateSwapRequest | Record<string, never>>(
-    uniswapUrls.tradingApiPaths.swap,
-    swapRequestArgs ?? {},
-    ['swap', 'gasFee', 'requestId', 'txFailureReasons'],
-    {
-      // disables react query polling during e2e testing which was preventing js thread from idle
-      pollInterval: isDetoxBuild ? undefined : tradingApiSwapRequestMs,
-      clearIfStale: true,
-      ttlMs: tradingApiSwapRequestMs + ONE_SECOND_MS * 5, // Small buffer if connection is lost
-      skip: skipTransactionRequest,
-    },
-    'POST',
-    TradingApiApolloClient,
-  )
+  const {
+    data,
+    error,
+    isLoading: isSwapLoading,
+  } = useTradingApiSwapQuery({
+    params: skipTransactionRequest ? undefined : swapRequestArgs,
+    // Disable polling during e2e testing because it was preventing js thread from going idle
+    refetchInterval: isDetoxBuild ? undefined : tradingApiSwapRequestMs,
+    staleTime: tradingApiSwapRequestMs,
+    // We add a small buffer in case connection is too slow
+    immediateGcTime: tradingApiSwapRequestMs + ONE_SECOND_MS * 5,
+  })
 
   // We use the gasFee estimate from quote, as its more accurate
 
@@ -153,7 +139,7 @@ export function useTransactionRequestInfo({
 
   const gasFeeResult = {
     value: isWrapApplicable ? wrapGasFee.value : swapGasFee,
-    loading: isWrapApplicable ? wrapGasFee.loading : loading,
+    isLoading: isWrapApplicable ? wrapGasFee.isLoading : isSwapLoading,
     error: isWrapApplicable ? wrapGasFee.error : gasEstimateError,
   }
 
@@ -179,13 +165,17 @@ export function useTransactionRequestInfo({
     if (gasEstimateError) {
       logger.warn('useTransactionRequestInfo', 'useTransactionRequestInfo', UNKNOWN_SIM_ERROR, {
         ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
-      })
-
-      sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
-        ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
         error: gasEstimateError,
         txRequest: data?.swap,
       })
+
+      if (!isMobileApp) {
+        sendAnalyticsEvent(SwapEventName.SWAP_ESTIMATE_GAS_CALL_FAILED, {
+          ...getBaseTradeAnalyticsPropertiesFromSwapInfo({ derivedSwapInfo, formatter }),
+          error: gasEstimateError,
+          txRequest: data?.swap,
+        })
+      }
     }
   }, [data?.swap, derivedSwapInfo, formatter, gasEstimateError, swapRequestArgs, trade])
 

@@ -12,7 +12,7 @@ import { ExternalLink, ThemedText } from 'theme/components'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
-import { isMobile } from 'utilities/src/platform'
+import { isMobileWeb } from 'utilities/src/platform'
 
 const Wrapper = styled.div`
   max-height: 70vh;
@@ -111,7 +111,7 @@ function PrivacyPolicy() {
       draggable="true"
       onTouchMove={(e) => {
         // prevent modal gesture handler from dismissing modal when content is scrolling
-        if (isMobile) {
+        if (isMobileWeb) {
           e.stopPropagation()
         }
       }}

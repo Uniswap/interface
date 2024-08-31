@@ -1,6 +1,7 @@
-import styled from 'lib/styled-components'
 import { Hero } from 'pages/Landing/sections/Hero'
 import { Suspense, lazy, memo, useRef } from 'react'
+import { NAV_HEIGHT } from 'theme'
+import { Flex, styled } from 'ui/src'
 
 // The Fold is always loaded, but is lazy-loaded because it is not seen without user interaction.
 // Annotating it with webpackPreload allows it to be ready when requested.
@@ -8,28 +9,13 @@ const Fold = lazy(() => import(/* webpackPreload: true */ './Fold'))
 
 const Rive = lazy(() => import(/* webpackPreload: true */ 'setupRive'))
 
-const Container = styled.div`
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-top: ${({ theme }) => `-${theme.navHeight}px`};
-  min-width: 100vw;
-  z-index: 1;
-`
-
-const Grain = styled.div`
-  display: flex;
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  width: 100vw;
-  background: url(/images/noise-color.png);
-  opacity: 0.018;
-  z-index: 0;
-`
+const Grain = styled(Flex, {
+  position: 'absolute',
+  inset: 0,
+  background: 'url(/images/noise-color.png)',
+  opacity: 0.018,
+  zIndex: 0,
+})
 
 function LandingV2({ transition }: { transition?: boolean }) {
   const scrollAnchor = useRef<HTMLDivElement | null>(null)
@@ -43,14 +29,14 @@ function LandingV2({ transition }: { transition?: boolean }) {
   }
 
   return (
-    <Container data-testid="landing-page">
+    <Flex position="relative" alignItems="center" mt={-NAV_HEIGHT} minWidth="100vw" data-testid="landing-page">
       <Grain />
       <Hero scrollToRef={scrollToRef} transition={transition} />
       <Suspense>
         <Rive />
         <Fold ref={scrollAnchor} />
       </Suspense>
-    </Container>
+    </Flex>
   )
 }
 

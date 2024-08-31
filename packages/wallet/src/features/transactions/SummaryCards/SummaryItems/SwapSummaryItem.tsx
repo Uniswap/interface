@@ -1,20 +1,20 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
-import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
-import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
-import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
-import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionDetails,
   isConfirmedSwapTypeInfo,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
+import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
+import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
+import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
 const MAX_SHOW_RETRY_TIME = 15 * ONE_MINUTE_MS

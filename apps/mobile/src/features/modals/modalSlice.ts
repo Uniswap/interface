@@ -7,13 +7,18 @@ import { ScantasticModalState } from 'src/features/scantastic/ScantasticModalSta
 import { FiatOnRampModalState } from 'src/screens/FiatOnRampModalState'
 import { ReceiveCryptoModalState } from 'src/screens/ReceiveCryptoModalState'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { getKeys } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 
 type AccountSwitcherModalParams = {
   name: typeof ModalName.AccountSwitcher
+  initialState?: undefined
+}
+
+type KoreaCexTransferInfoModalParams = {
+  name: typeof ModalName.KoreaCexTransferInfoModal
   initialState?: undefined
 }
 
@@ -80,8 +85,15 @@ type ViewOnlyExplainerParams = {
   initialState?: undefined
 }
 
+type BackupReminderParams = {
+  name: typeof ModalName.BackupReminder
+  initialState?: undefined
+}
+
 export type OpenModalParams =
   | AccountSwitcherModalParams
+  | BackupReminderParams
+  | KoreaCexTransferInfoModalParams
   | ExchangeTransferModalParams
   | ExperimentsModalParams
   | ExploreModalParams
@@ -100,15 +112,24 @@ export type OpenModalParams =
 
 export type CloseModalParams = { name: keyof ModalsState }
 
-export const initialModalsState: ModalsState = {
-  [ModalName.ExchangeTransferModal]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.FiatOnRampAggregator]: {
-    isOpen: false,
-    initialState: undefined,
-  },
+const createInitialModalState = (overrides?: Partial<ModalsState>): ModalsState => {
+  const defaultState = Object.values(ModalName).reduce((state, key) => {
+    return {
+      ...state,
+      [key]: {
+        isOpen: false,
+        initialState: undefined,
+      },
+    }
+  }, {} as ModalsState)
+
+  return {
+    ...defaultState,
+    ...overrides,
+  }
+}
+
+export const initialModalsState: ModalsState = createInitialModalState({
   [ModalName.ReceiveCryptoModal]: {
     isOpen: false,
     initialState: [],
@@ -117,59 +138,7 @@ export const initialModalsState: ModalsState = {
     isOpen: false,
     initialState: ScannerModalState.ScanQr,
   },
-  [ModalName.Scantastic]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.Swap]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.Send]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.Experiments]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.Explore]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.AccountSwitcher]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.RemoveWallet]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.RestoreWallet]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.LanguageSelector]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.FiatCurrencySelector]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.UnitagsIntro]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.ViewOnlyExplainer]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-  [ModalName.QueuedOrderModal]: {
-    isOpen: false,
-    initialState: undefined,
-  },
-}
+})
 
 const slice = createSlice({
   name: 'modals',

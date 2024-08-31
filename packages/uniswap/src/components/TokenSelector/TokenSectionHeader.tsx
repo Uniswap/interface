@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, isWeb } from 'ui/src'
+import { Flex, Text } from 'ui/src'
 import { Clock } from 'ui/src/components/icons/Clock'
 import { Coins } from 'ui/src/components/icons/Coins'
 import { Pin } from 'ui/src/components/icons/Pin'
@@ -12,12 +12,15 @@ export type TokenSectionHeaderProps = {
   rightElement?: JSX.Element
 }
 
-export function SectionHeader({ sectionKey, rightElement }: TokenSectionHeaderProps): JSX.Element {
+export function SectionHeader({ sectionKey, rightElement }: TokenSectionHeaderProps): JSX.Element | null {
   const title = useTokenOptionsSectionTitle(sectionKey)
   const icon = getTokenOptionsSectionIcon(sectionKey)
+  if (sectionKey === TokenOptionSection.SuggestedTokens) {
+    return null
+  }
   return (
-    <Flex row backgroundColor="$surface1" justifyContent="space-between" pb="$spacing4" pt="$spacing12">
-      <Text color="$neutral2" variant={isWeb ? 'body2' : 'subheading2'}>
+    <Flex row backgroundColor="$surface1" justifyContent="space-between" pb="$spacing4" pt="$spacing12" px="$spacing16">
+      <Text color="$neutral2" variant="subheading2">
         <Flex row alignItems="center" gap="$spacing8">
           {icon}
           <Text color="$neutral2">{title}</Text>
@@ -42,7 +45,7 @@ export function useTokenOptionsSectionTitle(section: TokenOptionSection): string
     case TokenOptionSection.SearchResults:
       return t('tokens.selector.section.search')
     case TokenOptionSection.SuggestedTokens:
-      return t('tokens.selector.section.suggested')
+      return '' // no suggested tokens header
     default:
       return ''
   }

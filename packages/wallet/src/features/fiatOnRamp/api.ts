@@ -2,15 +2,14 @@ import dayjs from 'dayjs'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { objectToQueryString } from 'uniswap/src/data/utils'
 import { FOR_API_HEADERS } from 'uniswap/src/features/fiatOnRamp/constants'
-import { FORTransactionResponse } from 'uniswap/src/features/fiatOnRamp/types'
+import { FORTransactionResponse, FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
-import { FiatOnRampTransactionDetails } from 'wallet/src/features/fiatOnRamp/types'
 import { extractFiatOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
-import { TransactionStatus } from 'wallet/src/features/transactions/types'
 
 const FIAT_ONRAMP_STALE_TX_TIMEOUT = ONE_MINUTE_MS * 20
-const FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT = ONE_MINUTE_MS * 3
+const FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT = ONE_MINUTE_MS * 5
 
 /**
  * Utility to fetch fiat onramp transactions
@@ -19,10 +18,13 @@ export async function fetchFiatOnRampTransaction(
   previousTransactionDetails: FiatOnRampTransactionDetails,
   forceFetch: boolean,
 ): Promise<FiatOnRampTransactionDetails | undefined> {
+  const isRecent = dayjs(previousTransactionDetails.addedTime).isAfter(
+    dayjs().subtract(FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT, 'ms'),
+  )
   const requestParams = {
     sessionId: previousTransactionDetails.id,
     // Force fetch if requested or for the first 3 minutes after the transaction was added
-    forceFetch: shouldForceFetchTransaction(previousTransactionDetails, forceFetch),
+    forceFetch: forceFetch || isRecent,
   }
   const res = await fetch(`${uniswapUrls.fiatOnRampApiUrl}/transaction?${objectToQueryString(requestParams)}`, {
     headers: FOR_API_HEADERS,
@@ -60,15 +62,4 @@ export async function fetchFiatOnRampTransaction(
   }
 
   return extractFiatOnRampTransactionDetails(transaction)
-}
-
-function shouldForceFetchTransaction(
-  previousTransactionDetails: FiatOnRampTransactionDetails,
-  forceFetch: boolean,
-): boolean {
-  const isRecent = dayjs(previousTransactionDetails.addedTime).isAfter(
-    dayjs().subtract(FIAT_ONRAMP_FORCE_FETCH_TX_TIMEOUT, 'ms'),
-  )
-  const isSyncedWithBackend = previousTransactionDetails.typeInfo?.syncedWithBackend
-  return forceFetch || (isRecent && !isSyncedWithBackend)
 }

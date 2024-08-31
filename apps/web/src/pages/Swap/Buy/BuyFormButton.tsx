@@ -1,9 +1,9 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonLight, LoadingButtonSpinner } from 'components/Button'
-import { useTheme } from 'lib/styled-components'
+import { ButtonLight } from 'components/Button'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
-import { AnimatePresence, Button, Flex, Text } from 'ui/src'
-import { Trans } from 'uniswap/src/i18n'
+import { Button, Flex, SpinningLoader, Text, WidthAnimator } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
+import { useTranslation } from 'uniswap/src/i18n'
 import { useAccount } from 'wagmi'
 
 interface BuyFormButtonProps {
@@ -13,18 +13,14 @@ interface BuyFormButtonProps {
 export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
   const account = useAccount()
   const accountDrawer = useAccountDrawer()
-  const theme = useTheme()
+  const { t } = useTranslation()
 
   const { buyFormState, derivedBuyFormInfo, setBuyFormState } = useBuyFormContext()
   const { inputAmount } = buyFormState
   const { notAvailableInThisRegion, quotes, fetchingQuotes, error } = derivedBuyFormInfo
 
   if (!account.isConnected) {
-    return (
-      <ButtonLight onClick={accountDrawer.open}>
-        <Trans i18nKey="common.connectWallet.button" />
-      </ButtonLight>
-    )
+    return <ButtonLight onClick={accountDrawer.open}>{t('common.connectWallet.button')}</ButtonLight>
   }
 
   if (!inputAmount || forceDisabled || notAvailableInThisRegion) {
@@ -38,11 +34,7 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
         }}
       >
         <Text variant="buttonLabel1">
-          {notAvailableInThisRegion ? (
-            <Trans i18nKey="common.notAvailableInRegion.error" />
-          ) : (
-            <Trans i18nKey="common.noAmount.error" />
-          )}
+          {notAvailableInThisRegion ? t('common.notAvailableInRegion.error') : t('common.noAmount.error')}
         </Text>
       </Button>
     )
@@ -58,21 +50,15 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
         setBuyFormState((prev) => ({ ...prev, providerModalOpen: true }))
       }}
     >
-      <Flex row alignItems="center" gap="$spacing12">
-        <LoadingButtonSpinner opacity={fetchingQuotes ? 1 : 0} fill={theme.neutral1} />
-        <AnimatePresence>
-          <Flex
-            animation="fastHeavy"
-            enterStyle={{
-              opacity: 0,
-              x: -20,
-            }}
-          >
-            <Text variant="buttonLabel1" color="$white" animation="fastHeavy" x={fetchingQuotes ? 0 : -20}>
-              <Trans i18nKey="common.button.continue" />
-            </Text>
+      <Flex row alignItems="center" gap="$spacing8">
+        <WidthAnimator open={fetchingQuotes} height={iconSizes.icon24}>
+          <Flex justifyContent="center" alignItems="center" width={iconSizes.icon24}>
+            <SpinningLoader color="$white" />
           </Flex>
-        </AnimatePresence>
+        </WidthAnimator>
+        <Text variant="buttonLabel1" color="$white" animation="fastHeavy" x={fetchingQuotes ? 0 : -20}>
+          {t('common.button.continue')}
+        </Text>
       </Flex>
     </Button>
   )

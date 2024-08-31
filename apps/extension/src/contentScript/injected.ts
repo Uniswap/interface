@@ -9,10 +9,10 @@ import {
 } from 'src/background/messagePassing/messageChannels'
 import { addWindowMessageListener } from 'src/background/messagePassing/messageUtils'
 import {
+  AnalyticsLog,
   ContentScriptUtilityMessageType,
   ErrorLog,
   ExtensionToDappRequestType,
-  InfoLog,
 } from 'src/background/messagePassing/types/requests'
 import { ExtensionEthMethodHandler } from 'src/contentScript/methodHandlers/ExtensionEthMethodHandler'
 import { ProviderDirectMethodHandler } from 'src/contentScript/methodHandlers/ProviderDirectMethodHandler'
@@ -36,6 +36,7 @@ import { logger } from 'utilities/src/logger/logger'
 import { arraysAreEqual } from 'utilities/src/primitives/array'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
 
+import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { ZodError } from 'zod'
 
@@ -161,7 +162,7 @@ addWindowMessageListener<WindowEthereumRequest>(isValidWindowEthereumRequest, as
 
   if (isDeprecatedMethod(request.method)) {
     postDeprecatedMethodError(source, request.requestId, request.method)
-    await logInfo('injected.ts', 'WindowEthereumRequest', 'Deprecated method', {
+    await passAnalytics(ExtensionEventName.DeprecatedMethodRequest, {
       method: request.method,
       dappUrl,
     })
@@ -170,7 +171,7 @@ addWindowMessageListener<WindowEthereumRequest>(isValidWindowEthereumRequest, as
 
   if (isUnsupportedMethod(request.method)) {
     postUnknownMethodError(source, request.requestId, request.method)
-    await logInfo('injected.ts', 'WindowEthereumRequest', 'Unsupported method', {
+    await passAnalytics(ExtensionEventName.UnsupportedMethodRequest, {
       method: request.method,
       dappUrl,
     })
@@ -178,7 +179,7 @@ addWindowMessageListener<WindowEthereumRequest>(isValidWindowEthereumRequest, as
   }
 
   // Handle any methods we don't know how to handle and are not in the metamask API
-  await logInfo('injected.ts', 'WindowEthereumRequest', 'Unrecognized method', {
+  await passAnalytics(ExtensionEventName.UnrecognizedMethodRequest, {
     method: request.method,
     dappUrl,
   })
@@ -250,16 +251,10 @@ async function logError(
   await contentScriptUtilityMessageChannel.sendMessage(message)
 }
 
-async function logInfo(
-  fileName: string,
-  functionName: string,
-  message: string,
-  tags: Record<string, string>,
-): Promise<void> {
-  const logMessage: InfoLog = {
-    type: ContentScriptUtilityMessageType.InfoLog,
-    fileName,
-    functionName,
+// These go to Amplitude instead of Sentry since they are informational
+async function passAnalytics(message: string, tags: Record<string, string>): Promise<void> {
+  const logMessage: AnalyticsLog = {
+    type: ContentScriptUtilityMessageType.AnalyticsLog,
     message,
     tags,
   }

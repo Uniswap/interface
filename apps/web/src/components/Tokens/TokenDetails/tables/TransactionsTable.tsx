@@ -1,7 +1,6 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
 import { Token } from '@uniswap/sdk-core'
-import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
@@ -18,24 +17,28 @@ import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { TokenTransactionType, useTokenTransactions } from 'graphql/data/useTokenTransactions'
 import { OrderDirection, unwrapToken } from 'graphql/data/util'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import styled from 'lib/styled-components'
-import { useMemo, useReducer, useState } from 'react'
-import { EllipsisStyle, ThemedText } from 'theme/components'
+import { useMemo, useReducer, useRef, useState } from 'react'
+import { EllipsisTamaguiStyle } from 'theme/components'
+import { Flex, Text, styled } from 'ui/src'
 import { Token as GQLToken } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-const StyledSwapAmount = styled(ThemedText.BodyPrimary)`
-  display: inline-block;
-  ${EllipsisStyle}
-  max-width: 75px;
-`
+const StyledSwapAmount = styled(Text, {
+  display: 'inline-block' as any,
+  maxWidth: 75,
+  variant: 'body2',
+  color: '$neutral1',
+  ...EllipsisTamaguiStyle,
+})
 
-const TableWrapper = styled.div`
-  min-height: 158px;
-`
+const TableWrapper = styled(Flex, {
+  position: 'relative',
+  minHeight: 158,
+})
+
 interface SwapTransaction {
   hash: string
   timestamp: number
@@ -62,6 +65,7 @@ export function TransactionsTable({
   const activeLocalCurrency = useActiveLocalCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
+  const filterAnchorRef = useRef<HTMLDivElement>(null)
   const [filter, setFilters] = useState<TokenTransactionType[]>([TokenTransactionType.BUY, TokenTransactionType.SELL])
   const { transactions, loading, loadMore, errorV2, errorV3 } = useTokenTransactions(
     referenceToken.address,
@@ -115,12 +119,12 @@ export function TransactionsTable({
         id: 'timestamp',
         header: () => (
           <Cell minWidth={120} justifyContent="flex-start" grow>
-            <Row gap="xs">
+            <Flex row gap="$gap4" alignItems="center">
               <HeaderArrow direction={OrderDirection.Desc} />
-              <HeaderSortText $active>
+              <HeaderSortText active>
                 <Trans i18nKey="common.time" />
               </HeaderSortText>
-            </Row>
+            </Flex>
           </Cell>
         ),
         cell: (row) => (
@@ -136,17 +140,23 @@ export function TransactionsTable({
         id: 'swap-type',
         header: () => (
           <Cell minWidth={75} justifyContent="flex-start" grow>
-            <FilterHeaderRow modalOpen={filterModalIsOpen} onClick={toggleFilterModal}>
+            <FilterHeaderRow
+              clickable={filterModalIsOpen}
+              onPress={toggleFilterModal}
+              alignItems="center"
+              ref={filterAnchorRef}
+            >
               <Filter
                 allFilters={Object.values(TokenTransactionType)}
                 activeFilter={filter}
                 setFilters={setFilters}
                 isOpen={filterModalIsOpen}
                 toggleFilterModal={toggleFilterModal}
+                anchorRef={filterAnchorRef}
               />
-              <ThemedText.BodySecondary>
+              <Text variant="body2" color="$neutral2">
                 <Trans i18nKey="common.type.label" />
-              </ThemedText.BodySecondary>
+              </Text>
             </FilterHeaderRow>
           </Cell>
         ),
@@ -154,9 +164,9 @@ export function TransactionsTable({
           const isBuy = String(outputTokenAddress.getValue?.()).toLowerCase() === referenceToken.address.toLowerCase()
           return (
             <Cell loading={showLoadingSkeleton} minWidth={75} justifyContent="flex-start" grow>
-              <ThemedText.BodyPrimary color={isBuy ? 'success' : 'critical'}>
+              <Text variant="body2" color={isBuy ? '$statusSuccess' : '$statusCritical'}>
                 {isBuy ? <Trans i18nKey="common.buy.label" /> : <Trans i18nKey="common.sell.label" />}
-              </ThemedText.BodyPrimary>
+              </Text>
             </Cell>
           )
         },
@@ -170,16 +180,18 @@ export function TransactionsTable({
           id: 'reference-amount',
           header: () => (
             <Cell minWidth={100} justifyContent="flex-end">
-              <ThemedText.BodySecondary>${unwrappedReferenceToken.symbol}</ThemedText.BodySecondary>
+              <Text variant="body2" color="$neutral2">
+                ${unwrappedReferenceToken.symbol}
+              </Text>
             </Cell>
           ),
           cell: (inputTokenAmount) => (
             <Cell loading={showLoadingSkeleton} minWidth={100} justifyContent="flex-end">
-              <ThemedText.BodyPrimary>
+              <Text variant="body2" color="$neutral1">
                 {formatNumber({
                   input: Math.abs(inputTokenAmount.getValue?.()) || 0,
                 })}
-              </ThemedText.BodyPrimary>
+              </Text>
             </Cell>
           ),
         },
@@ -189,23 +201,23 @@ export function TransactionsTable({
           const nonReferenceSwapLeg =
             row.input.address?.toLowerCase() === referenceToken.address.toLowerCase() ? row.output : row.input
           return (
-            <Row gap="8px" justify="flex-end">
+            <Flex row gap="$gap8" justifyContent="flex-end">
               <StyledSwapAmount>
                 {formatNumber({
                   input: Math.abs(nonReferenceSwapLeg.amount) || 0,
                 })}
               </StyledSwapAmount>
               <TokenLinkCell token={nonReferenceSwapLeg.token} />
-            </Row>
+            </Flex>
           )
         },
         {
           id: 'non-reference-amount',
           header: () => (
             <Cell minWidth={160} justifyContent="flex-end">
-              <ThemedText.BodySecondary>
+              <Text variant="body2" color="$neutral2">
                 <Trans i18nKey="common.for" />
-              </ThemedText.BodySecondary>
+              </Text>
             </Cell>
           ),
           cell: (swapOutput) => (
@@ -219,14 +231,16 @@ export function TransactionsTable({
         id: 'fiat-value',
         header: () => (
           <Cell minWidth={125} justifyContent="flex-end">
-            <Row gap="xs" justify="flex-end">
+            <Flex row gap="$gap4" justifyContent="flex-end">
               <HeaderSortText>{activeLocalCurrency}</HeaderSortText>
-            </Row>
+            </Flex>
           </Cell>
         ),
         cell: (fiat) => (
           <Cell loading={showLoadingSkeleton} minWidth={125} justifyContent="flex-end">
-            <ThemedText.BodyPrimary>{formatFiatPrice({ price: fiat.getValue?.() })}</ThemedText.BodyPrimary>
+            <Text variant="body2" color="$neutral1">
+              {formatFiatPrice({ price: fiat.getValue?.() })}
+            </Text>
           </Cell>
         ),
       }),
@@ -234,9 +248,9 @@ export function TransactionsTable({
         id: 'maker-address',
         header: () => (
           <Cell minWidth={150} justifyContent="flex-end">
-            <ThemedText.BodySecondary>
+            <Text variant="body2" color="$neutral2">
               <Trans i18nKey="common.wallet.label" />
-            </ThemedText.BodySecondary>
+            </Text>
           </Cell>
         ),
         cell: (makerAddress) => (

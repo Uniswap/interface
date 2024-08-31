@@ -2,20 +2,9 @@ import { Currency } from '@uniswap/sdk-core'
 import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { TransactionState } from 'uniswap/src/features/transactions/transactionState/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
-import { ensureLeading0x } from 'uniswap/src/utils/addresses'
-import { areCurrencyIdsEqual, buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { useCurrencyInfo } from 'wallet/src/features/tokens/useCurrencyInfo'
-import { makeSelectTransaction, useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
-import { finalizeTransaction } from 'wallet/src/features/transactions/slice'
-import {
-  createSwapFormFromTxDetails,
-  createWrapFormFromTxDetails,
-} from 'wallet/src/features/transactions/swap/createSwapFormFromTxDetails'
-import { isClassic, isUniswapX } from 'wallet/src/features/transactions/swap/trade/utils'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
+import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   QueuedOrderStatus,
   TransactionDetails,
@@ -23,7 +12,16 @@ import {
   TransactionType,
   UniswapXOrderDetails,
   isFinalizedTx,
-} from 'wallet/src/features/transactions/types'
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { WalletChainId } from 'uniswap/src/types/chains'
+import { ensureLeading0x } from 'uniswap/src/utils/addresses'
+import { areCurrencyIdsEqual, buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { makeSelectTransaction, useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
+import {
+  createSwapFormFromTxDetails,
+  createWrapFormFromTxDetails,
+} from 'wallet/src/features/transactions/swap/createSwapFormFromTxDetails'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 import { WalletState } from 'wallet/src/state/walletReducer'
 
@@ -164,8 +162,6 @@ export function useMergeLocalAndRemoteTransactions(
   const dispatch = useDispatch()
   const localTransactions = useSelectAddressTransactions(address)
 
-  const onRampTransactionsFromGraphQL = useFeatureFlag(FeatureFlags.ForTransactionsFromGraphQL)
-
   // Merge local and remote txs into one array and reconcile data discrepancies
   return useMemo((): TransactionDetails[] | undefined => {
     if (!remoteTransactions?.length) {
@@ -206,7 +202,6 @@ export function useMergeLocalAndRemoteTransactions(
         map.set(hash, tx)
         hashes.add(hash)
       } else if (
-        tx.typeInfo.type === TransactionType.FiatPurchase ||
         tx.typeInfo.type === TransactionType.OnRampPurchase ||
         tx.typeInfo.type === TransactionType.OnRampTransfer
       ) {
@@ -261,12 +256,6 @@ export function useMergeLocalAndRemoteTransactions(
         continue
       }
 
-      // If the tx is FiatPurchase and it's already on-chain, then use locally stored data, which comes from FOR provider API
-      if (!onRampTransactionsFromGraphQL && localTx.typeInfo.type === TransactionType.FiatPurchase) {
-        deDupedTxs.push(localTx)
-        continue
-      }
-
       // Remote data should be better parsed in all other instances
       deDupedTxs.push(remoteTx)
     }
@@ -293,7 +282,7 @@ export function useMergeLocalAndRemoteTransactions(
 
       return a.addedTime > b.addedTime ? -1 : 1
     })
-  }, [dispatch, localTransactions, onRampTransactionsFromGraphQL, remoteTransactions])
+  }, [dispatch, localTransactions, remoteTransactions])
 }
 
 function useLowestPendingNonce(): BigNumberish | undefined {

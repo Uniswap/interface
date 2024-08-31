@@ -1,3 +1,5 @@
+import 'test-utils/tokens/mocks'
+
 import { ApolloError } from '@apollo/client'
 import { Percent } from '@uniswap/sdk-core'
 import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'

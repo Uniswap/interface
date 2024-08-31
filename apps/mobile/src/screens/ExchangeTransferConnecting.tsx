@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Screen } from 'src/components/layout/Screen'
@@ -19,7 +19,6 @@ import { useFiatOnRampTransactionCreator } from 'wallet/src/features/fiatOnRamp/
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { FiatPurchaseTransactionInfo } from 'wallet/src/features/transactions/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 // Design decision
@@ -37,16 +36,10 @@ export function ExchangeTransferConnecting({
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
 
-  const initialTypeInfo = useMemo<Partial<FiatPurchaseTransactionInfo>>(
-    () => ({ serviceProviderLogo: serviceProvider.logos, serviceProvider: serviceProvider.serviceProvider }),
-    [serviceProvider],
-  )
-
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
     UniverseChainId.Mainnet,
     serviceProvider.serviceProvider,
-    initialTypeInfo,
   )
 
   const onError = useCallback((): void => {

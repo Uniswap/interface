@@ -1,7 +1,7 @@
 import Column from 'components/Column'
 import Modal from 'components/Modal'
-import { BlockedIcon } from 'components/TokenSafety/TokenSafetyIcon'
 import styled, { useTheme } from 'lib/styled-components'
+import { Slash } from 'react-feather'
 import { CopyHelper, ExternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
@@ -22,7 +22,7 @@ export default function ConnectedAccountBlocked(props: ConnectedAccountBlockedPr
   return (
     <Modal isOpen={props.isOpen} onDismiss={Function.prototype()}>
       <ContentWrapper>
-        <BlockedIcon size="22px" />
+        <Slash size="22px" color={theme.neutral2} />
         <ThemedText.DeprecatedLargeHeader lineHeight={2} marginBottom={1} marginTop={1}>
           <Trans i18nKey="common.blockedAddress" />
         </ThemedText.DeprecatedLargeHeader>

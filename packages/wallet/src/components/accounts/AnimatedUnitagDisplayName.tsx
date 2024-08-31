@@ -12,7 +12,7 @@ import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { isExtension, isMobile } from 'utilities/src/platform'
+import { isExtension, isMobileApp } from 'utilities/src/platform'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
@@ -59,7 +59,7 @@ export function AnimatedUnitagDisplayName({
     )
     sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
       element: ElementName.CopyAddress,
-      screen: isExtension ? ExtensionScreens.Home : isMobile ? MobileScreens.Home : undefined,
+      screen: isExtension ? ExtensionScreens.Home : isMobileApp ? MobileScreens.Home : undefined,
     })
   }
 

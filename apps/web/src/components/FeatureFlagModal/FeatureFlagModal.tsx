@@ -219,9 +219,10 @@ export default function FeatureFlagModal() {
             label="Enable EIP-6963: Multi Injected Provider Discovery"
           />
           <FeatureFlagOption flag={FeatureFlags.LimitsFees} label="Enable Limits fees" />
-          <FeatureFlagOption flag={FeatureFlags.ExitAnimation} label="Landing page exit animation" />
           <FeatureFlagOption flag={FeatureFlags.V2Everywhere} label="Enable V2 Everywhere" />
+          <FeatureFlagOption flag={FeatureFlags.V4Everywhere} label="Enable V4 Everywhere" />
           <FeatureFlagOption flag={FeatureFlags.Realtime} label="Realtime activity updates" />
+          <FeatureFlagOption flag={FeatureFlags.RestExplore} label="Explore Data from new REST backend" />
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
           <FeatureFlagOption flag={FeatureFlags.ForAggregator} label="Enable FOR aggregator web" />
@@ -258,6 +259,7 @@ export default function FeatureFlagModal() {
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Debug">
             <FeatureFlagOption flag={FeatureFlags.TraceJsonRpc} label="Enables JSON-RPC tracing" />
+            <FeatureFlagOption flag={FeatureFlags.AATestWeb} label="A/A Test for Web" />
           </FeatureFlagGroup>
         </FlagsColumn>
         <SaveButton onClick={() => window.location.reload()}>Reload</SaveButton>

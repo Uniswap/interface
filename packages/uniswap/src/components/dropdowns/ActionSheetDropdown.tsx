@@ -14,8 +14,9 @@ import {
   useDeviceInsets,
   useIsDarkMode,
 } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { spacing, zIndices } from 'ui/src/theme'
+import { iconSizes, spacing, zIndices } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { Scrollbar } from 'uniswap/src/components/misc/Scrollbar'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
@@ -49,6 +50,7 @@ type ActionSheetDropdownProps = PropsWithChildren<{
   styles?: ActionSheetDropdownStyleProps & { backdropOpacity?: number }
   testID?: string
   onDismiss?: () => void
+  showArrow?: boolean
 }>
 
 export function ActionSheetDropdown({
@@ -56,6 +58,7 @@ export function ActionSheetDropdown({
   styles,
   testID,
   onDismiss,
+  showArrow,
   ...contentProps
 }: ActionSheetDropdownProps): JSX.Element {
   const insets = useDeviceInsets()
@@ -124,12 +127,24 @@ export function ActionSheetDropdown({
         getting undefined in measureInWindow callback. (https://reactnative.dev/docs/view.html#collapsable-android) */}
         <Flex
           ref={containerRef}
+          centered
+          row
           collapsable={false}
+          gap="$spacing8"
           px={styles?.buttonPaddingX}
           py={styles?.buttonPaddingY || '$spacing8'}
           testID={testID || 'dropdown-toggle'}
         >
           {children}
+          {showArrow && (
+            <RotatableChevron
+              animation="100ms"
+              color="$neutral2"
+              direction={isOpen ? 'up' : 'down'}
+              height={iconSizes.icon20}
+              width={iconSizes.icon20}
+            />
+          )}
         </Flex>
       </TouchableArea>
 
@@ -247,23 +262,7 @@ function DropdownContent({
 
   return (
     <TouchableWhenOpen
-      animateOnly={toggleMeasurements?.sticky ? ['opacity', 'y'] : ['opacity']}
-      animation={[
-        'quicker',
-        {
-          opacity: {
-            overshootClamping: true,
-          },
-        },
-      ]}
-      enterStyle={{
-        opacity: 0,
-        y: -5,
-      }}
-      exitStyle={{
-        opacity: 0,
-        y: 5,
-      }}
+      animation="quicker"
       maxHeight={maxHeight}
       minWidth={DEFAULT_MIN_WIDTH}
       position="absolute"
@@ -272,9 +271,12 @@ function DropdownContent({
       {...containerProps}
     >
       <BaseCard.Shadow
+        animation="fast"
         backgroundColor="$surface1"
         borderColor="$surface3"
         borderWidth={1}
+        enterStyle={{ y: -20, opacity: 0 }}
+        exitStyle={{ y: -10, opacity: 0 }}
         overflow="hidden"
         p="$none"
         {...rest}

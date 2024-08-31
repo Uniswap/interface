@@ -1,11 +1,16 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import {
+  TransactionOriginType,
+  TransactionType,
+  WrapTransactionInfo,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { ethersTransactionRequest } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { WrapParams, wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
-import { TransactionType, WrapTransactionInfo } from 'wallet/src/features/transactions/types'
-import { ethersTransactionRequest, signerMnemonicAccount } from 'wallet/src/test/fixtures'
+import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const account = signerMnemonicAccount()
 
@@ -36,6 +41,7 @@ describe(wrap, () => {
       .next()
       .call(sendTransaction, {
         txId: '1',
+        transactionOriginType: TransactionOriginType.Internal,
         chainId: UniverseChainId.Mainnet,
         account: params.account,
         typeInfo: wrapTxInfo,
@@ -57,6 +63,7 @@ describe(wrap, () => {
       .next()
       .call(sendTransaction, {
         txId: '1',
+        transactionOriginType: TransactionOriginType.Internal,
         chainId: UniverseChainId.Mainnet,
         account: params.account,
         typeInfo: unwrapTxInfo,

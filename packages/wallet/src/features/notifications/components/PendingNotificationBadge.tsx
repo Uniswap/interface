@@ -3,11 +3,11 @@ import { Flex, SpinningLoader, useSporeColors } from 'ui/src'
 import AlertCircle from 'ui/src/assets/icons/alert-circle.svg'
 import { CheckmarkCircle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useSortedPendingTransactions } from 'wallet/src/features/transactions/hooks'
-import { TransactionStatus } from 'wallet/src/features/transactions/types'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
