@@ -658,6 +658,7 @@ export function SwapForm({
           selectedCurrency={smartPool}
           operatedPools={operatedPools}
           showCurrencyAmount={false}
+          hideChainSwitch={true}
           currencySearchFilters={DISPLAY_POOLS_SEARCH_FILTERS}
         />
       )}

@@ -20,6 +20,7 @@ interface CurrencySearchModalProps {
   onCurrencySelect: (currency: Currency) => void
   otherSelectedCurrency?: Currency | null
   showCurrencyAmount?: boolean
+  hideChainSwitch?: boolean
   currencySearchFilters?: CurrencySearchFilters
   currencyField?: CurrencyField
   operatedPools?: Token[]
@@ -38,6 +39,7 @@ export default memo(function CurrencySearchModal({
   selectedCurrency,
   otherSelectedCurrency,
   showCurrencyAmount = true,
+  hideChainSwitch = false,
   currencySearchFilters,
   currencyField = CurrencyField.INPUT,
   operatedPools,
@@ -45,11 +47,7 @@ export default memo(function CurrencySearchModal({
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
   const userAddedTokens = useUserAddedTokens()
-
-  // TODO: add pool select to CurrencySearch component and use actual feature flag.
-  // we hide the new multichain currency search until we understand whether it is used for cross-chain swaps,
-  //  which are not supported in Rigoblock atm. Changing this will result in not displaying the pool selector.
-  let multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
+  const multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
   useEffect(() => {
     if (isOpen && !lastOpen) {
@@ -81,13 +79,17 @@ export default memo(function CurrencySearchModal({
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()
 
-  multichainFlagEnabled = false
-
   let content = null
   switch (modalView) {
+    // we use DeprecatedCurrencySearch without multichain flag and for pool select
     case CurrencyModalView.search:
-      content = multichainFlagEnabled ? (
-        <CurrencySearch currencyField={currencyField} onCurrencySelect={onCurrencySelect} onDismiss={onDismiss} />
+      content = multichainFlagEnabled && !currencySearchFilters?.onlyDisplaySmartPools ? (
+        <CurrencySearch
+          currencyField={currencyField}
+          hideChainSwitch={hideChainSwitch}
+          onCurrencySelect={onCurrencySelect}
+          onDismiss={onDismiss}
+        />
       ) : (
         <DeprecatedCurrencySearch
           isOpen={isOpen}
@@ -96,6 +98,7 @@ export default memo(function CurrencySearchModal({
           selectedCurrency={selectedCurrency}
           otherSelectedCurrency={otherSelectedCurrency}
           showCurrencyAmount={showCurrencyAmount}
+          hideChainSwitch={hideChainSwitch}
           filters={currencySearchFilters}
           operatedPools={operatedPools}
         />
@@ -114,7 +117,6 @@ export default memo(function CurrencySearchModal({
       }
       break
   }
-  multichainFlagEnabled = true
   return multichainFlagEnabled ? (
     <AdaptiveWebModal
       isOpen={isOpen}

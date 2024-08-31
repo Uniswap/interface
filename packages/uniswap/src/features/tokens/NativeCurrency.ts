@@ -8,9 +8,7 @@ import { wrappedNativeCurrency } from 'uniswap/src/utils/currency'
 
 export class NativeCurrency implements NativeCurrencyClass {
   constructor(chainId: number) {
-    // TODO: we default to mainnet if chain is not supported, because uniswap calls endpoint for all chains, and
-    //  will revert here if a chain is not in WALLET_SUPPORTED_CHAIN_IDS
-    const supportedChainId = toSupportedChainId(chainId) ?? 1
+    const supportedChainId = toSupportedChainId(chainId)
     if (!supportedChainId) {
       throw new Error(`Unsupported chain ID: ${chainId}`)
     }
