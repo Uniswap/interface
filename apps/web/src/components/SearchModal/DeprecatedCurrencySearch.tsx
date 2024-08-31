@@ -167,6 +167,10 @@ export function DeprecatedCurrencySearch({
   const node = useRef<HTMLDivElement>()
   useOnClickOutside(node, open ? toggle : undefined)
 
+  // flag used to hide chain selector since not working in create pool and problematic in swap with new
+  //  CurrencySearch component
+  const shouldDisplayChainSelector = false
+
   return (
     <ContentWrapper>
       <Trace
@@ -199,9 +203,11 @@ export function DeprecatedCurrencySearch({
               onChange={handleInput}
               onKeyDown={handleEnter}
             />
-            <ChainSelectorWrapper>
-              <ChainSelector />
-            </ChainSelectorWrapper>
+            {shouldDisplayChainSelector && (
+              <ChainSelectorWrapper>
+                <ChainSelector />
+              </ChainSelectorWrapper>
+            )}
           </Row>
           {showCommonBases && !filters?.onlyDisplaySmartPools && (
             <CommonBases

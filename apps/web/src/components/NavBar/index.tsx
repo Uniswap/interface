@@ -70,7 +70,7 @@ export default function Navbar() {
   const isNftPage = useIsNftPage()
   const isLandingPage = useIsLandingPage()
   const isSendPage = useIsSendPage()
-  const isSwapPage = useIsSwapPage()
+  let isSwapPage = useIsSwapPage()
   const isLimitPage = useIsLimitPage()
 
   const sellPageState = useProfilePageState((state) => state.state)
@@ -83,6 +83,8 @@ export default function Navbar() {
   const { value: multichainFlagEnabled, isLoading: isMultichainFlagLoading } = useFeatureFlagWithLoading(
     FeatureFlags.MultichainUX,
   )
+  // TODO: we want to display chain selector in swap page until reintroduce chain selector in token search
+  isSwapPage = false
   const hideChainSelector =
     multichainFlagEnabled || isMultichainFlagLoading
       ? isLandingPage || isSendPage || isSwapPage || isLimitPage || isNftPage

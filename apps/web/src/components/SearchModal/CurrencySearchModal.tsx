@@ -45,7 +45,11 @@ export default memo(function CurrencySearchModal({
   const [modalView, setModalView] = useState<CurrencyModalView>(CurrencyModalView.search)
   const lastOpen = useLast(isOpen)
   const userAddedTokens = useUserAddedTokens()
-  const multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
+
+  // TODO: add pool select to CurrencySearch component and use actual feature flag.
+  // we hide the new multichain currency search until we understand whether it is used for cross-chain swaps,
+  //  which are not supported in Rigoblock atm. Changing this will result in not displaying the pool selector.
+  let multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
   useEffect(() => {
     if (isOpen && !lastOpen) {
@@ -76,6 +80,8 @@ export default memo(function CurrencySearchModal({
   )
   // used for token safety
   const [warningToken, setWarningToken] = useState<Token | undefined>()
+
+  multichainFlagEnabled = false
 
   let content = null
   switch (modalView) {
@@ -108,6 +114,7 @@ export default memo(function CurrencySearchModal({
       }
       break
   }
+  multichainFlagEnabled = true
   return multichainFlagEnabled ? (
     <AdaptiveWebModal
       isOpen={isOpen}

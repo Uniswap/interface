@@ -50,11 +50,11 @@ export const WALLET_SUPPORTED_CHAIN_IDS: WalletChainId[] = [
   UniverseChainId.Optimism,
   UniverseChainId.Base,
   UniverseChainId.Bnb,
-  UniverseChainId.Blast,
-  UniverseChainId.Avalanche,
-  UniverseChainId.Celo,
-  UniverseChainId.Zora,
-  UniverseChainId.Zksync,
+  //UniverseChainId.Blast,
+  //UniverseChainId.Avalanche,
+  //UniverseChainId.Celo,
+  //UniverseChainId.Zora,
+  //UniverseChainId.Zksync,
 ]
 
 export type InterfaceChainId = UniverseChainId
@@ -69,14 +69,14 @@ export const WEB_SUPPORTED_CHAIN_IDS: InterfaceChainId[] = [
   UniverseChainId.ArbitrumGoerli,
   UniverseChainId.Polygon,
   UniverseChainId.PolygonMumbai,
-  UniverseChainId.Avalanche,
-  UniverseChainId.Celo,
-  UniverseChainId.CeloAlfajores,
+  //UniverseChainId.Avalanche,
+  //UniverseChainId.Celo,
+  //UniverseChainId.CeloAlfajores,
   UniverseChainId.Bnb,
   UniverseChainId.Base,
-  UniverseChainId.Blast,
-  UniverseChainId.Zora,
-  UniverseChainId.Zksync,
+  //UniverseChainId.Blast,
+  //UniverseChainId.Zora,
+  //UniverseChainId.Zksync,
 ]
 
 export enum RPCType {
