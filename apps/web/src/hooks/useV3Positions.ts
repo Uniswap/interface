@@ -120,27 +120,39 @@ export function useV3StakedPositions(
     if (account && account.length > 0 && _incentiveIds.length > 0) {
       setTokenIdsLoading(true)
       ;(async () => {
-        const res = await fetch('http://interface-gateway.ubeswap.org/v1/graphql', {
-          method: 'POST',
-          headers: {
-            Accept: 'application/json',
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            operationName: 'FarmV3AccountStakes',
-            variables: {
-              address: account,
-              incentiveIds: _incentiveIds,
+        try {
+          const res = await fetch('https://interface-gateway.ubeswap.org/v1/graphql', {
+            method: 'POST',
+            headers: {
+              Accept: 'application/json',
+              'Content-Type': 'application/json',
             },
-            query: '',
-          }),
-        })
-        const data = await res.json()
-        console.log(data)
-        if (!active) return
-        setTokenIdsLoading(false)
-        setTokenIds(data.data.stakes.map((s: any) => BigNumber.from(s.tokenId)))
+            body: JSON.stringify({
+              operationName: 'FarmV3AccountStakes',
+              variables: {
+                address: account,
+                incentiveIds: _incentiveIds,
+              },
+              query: '',
+            }),
+          })
+          const data = await res.json()
+          if (active) {
+            setTokenIds(
+              [...new Set(data.data.stakes.map((s: { tokenId: string }) => s.tokenId))].map((t) => BigNumber.from(t))
+            )
+          }
+        } catch (e) {
+          console.log(e)
+        } finally {
+          if (active) {
+            setTokenIdsLoading(false)
+          }
+        }
       })()
+    } else {
+      setTokenIdsLoading(false)
+      setTokenIds([])
     }
     return () => {
       active = false

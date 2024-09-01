@@ -3,15 +3,15 @@ import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { useWeb3React } from '@web3-react/core'
 import { useUbeswapV3FarmingContract, useV3NFTPositionManagerContract } from 'hooks/useContract'
+import { NEVER_RELOAD, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
+import { useV3IncentiveFullData, type IncentiveDataItem } from 'pages/Earn/data/useFarms'
 import { type IncentiveKey } from 'pages/Earn/data/v3-incentive-list'
-import { useCallback, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { usePendingTransactions, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
 
-// deposit, withdraw, collectReward
-
-const FARM_ADDRESS = '0x90415B89D1EF945B8846fFA6118C3fd60eab9e96'
+const FARM_ADDRESS = '0xA6E9069CB055a425Eb41D185b740B22Ec8f51853'
 
 function encodeKeys(keys: IncentiveKey[]) {
   const keyArrayType =
@@ -166,4 +166,155 @@ export function useWithdrawCallback(): [boolean, (tokenId: BigNumber, incentives
   )
 
   return [isPending, cb]
+}
+
+interface CollectRewardParams {
+  key: IncentiveKey
+  tokenId: BigNumber
+  accumulatedRewards: BigNumber
+  proof: string[]
+}
+export function useCollectRewardCallback(): [boolean, (collectParams: CollectRewardParams[]) => Promise<void>] {
+  const { account } = useWeb3React()
+  const addTransaction = useTransactionAdder()
+
+  const pendingTxs = usePendingTransactions()
+  const [isPending, setIsPending] = useState(false)
+
+  const farmContract = useUbeswapV3FarmingContract(FARM_ADDRESS)
+
+  const cb = useCallback(
+    async (collectParams: CollectRewardParams[]): Promise<void> => {
+      if (!account) {
+        console.error('no account')
+        return
+      }
+      if (pendingTxs.length > 0) {
+        console.error('already pending transaction')
+        return
+      }
+      if (isPending) {
+        console.error('already pending')
+        return
+      }
+
+      if (!farmContract || !farmContract.signer) {
+        console.error('contract or signer is null')
+        return
+      }
+
+      if (collectParams.length === 0) {
+        console.error('collectParams is empty')
+        return
+      }
+
+      try {
+        setIsPending(true)
+
+        const calldatas: string[] = [
+          ...collectParams.map((collectParam) =>
+            farmContract.interface.encodeFunctionData('collectReward', [
+              collectParam.key,
+              collectParam.tokenId,
+              collectParam.accumulatedRewards,
+              collectParam.proof,
+            ])
+          ),
+        ]
+        await farmContract.estimateGas
+          .multicall(calldatas)
+          .then((estimatedGasLimit) => {
+            return farmContract
+              .multicall(calldatas, {
+                gasLimit: calculateGasMargin(estimatedGasLimit),
+              })
+              .then((response: TransactionResponse) => {
+                addTransaction(response, {
+                  type: TransactionType.CUSTOM,
+                  summary: 'Collecting Rewards',
+                })
+                return response.wait(2)
+              })
+          })
+          .catch((error) => {
+            console.error('Failed to send transaction', error)
+            setIsPending(false)
+            if (error?.code !== 4001) {
+              console.error(error)
+            }
+          })
+      } catch (e) {
+        console.error(e)
+      } finally {
+        setIsPending(false)
+      }
+    },
+    [isPending, farmContract, account, pendingTxs, addTransaction]
+  )
+
+  return [isPending, cb]
+}
+
+interface IncentiveContractInfo {
+  currentPeriodId: number
+  lastUpdateTime: number
+  endTime: number
+  numberOfStakes: number
+  distributedRewards: BigNumber
+  merkleRoot: string
+  ipfsHash: string
+  excessRewards: BigNumber
+  externalRewards: BigNumber
+}
+
+export function useIncentiveContractInfo(incentiveId: string): IncentiveContractInfo | undefined {
+  const farmContract = useUbeswapV3FarmingContract(FARM_ADDRESS)
+  const result = useSingleCallResult(farmContract, 'incentives', [incentiveId], NEVER_RELOAD)
+  return (result?.result as unknown as IncentiveContractInfo) || undefined
+}
+
+interface TokenData {
+  tokenId: BigNumber
+  incentiveData: IncentiveDataItem | undefined
+  stakeInfo:
+    | {
+        claimedReward: BigNumber
+        stakeTime: number
+        initialSecondsInside: number
+      }
+    | undefined
+}
+export function useIncentiveTokenData(incentiveId: string, tokenIds: BigNumber[]) {
+  const farmContract = useUbeswapV3FarmingContract(FARM_ADDRESS)
+  const inputs = useMemo(
+    () => (tokenIds && incentiveId ? tokenIds.map((tokenId) => [incentiveId, BigNumber.from(tokenId)]) : []),
+    [tokenIds, incentiveId]
+  )
+  const stakeInfos = useSingleContractMultipleData(farmContract, 'stakes', inputs)
+  const fullData = useV3IncentiveFullData(incentiveId)
+
+  return useMemo(() => {
+    const result: TokenData[] = []
+    for (let i = 0; i < tokenIds.length; i++) {
+      const tokenId = tokenIds[i]
+      console.log(fullData, tokenId)
+      const incentiveData = fullData ? fullData.find((d) => tokenId.eq(d.tokenId)) : undefined
+      let stakeInfo
+      if (stakeInfos.length === tokenIds.length && stakeInfos[i].result && stakeInfos[i].error === false) {
+        stakeInfo = {
+          claimedReward: stakeInfos[i]!.result!.claimedReward,
+          stakeTime: stakeInfos[i]!.result!.stakeTime,
+          initialSecondsInside: stakeInfos[i]!.result!.initialSecondsInside,
+        }
+      }
+      result.push({
+        tokenId,
+        incentiveData,
+        stakeInfo,
+      })
+    }
+
+    return result
+  }, [tokenIds, fullData, stakeInfos])
+  // return (result?.result as unknown as IncentiveContractInfo) || undefined
 }
