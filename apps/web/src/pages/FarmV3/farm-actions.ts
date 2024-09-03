@@ -19,12 +19,17 @@ function encodeKeys(keys: IncentiveKey[]) {
   return defaultAbiCoder.encode([keyArrayType], [keys])
 }
 
-export function useDepositCallback(): [boolean, (tokenId: BigNumber, incentives: IncentiveKey[]) => Promise<void>] {
+export function useDepositCallback(): [
+  (tokenId: BigNumber, incentives: IncentiveKey[]) => Promise<void>,
+  string,
+  boolean
+] {
   const { account } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
   const pendingTxs = usePendingTransactions()
   const [isPending, setIsPending] = useState(false)
+  const [txHash, setTxHash] = useState<string>('')
 
   const nftContract = useV3NFTPositionManagerContract(true)
 
@@ -54,6 +59,7 @@ export function useDepositCallback(): [boolean, (tokenId: BigNumber, incentives:
       }
 
       try {
+        console.log('##SET## ispending')
         setIsPending(true)
 
         const data = encodeKeys(incentives)
@@ -65,6 +71,7 @@ export function useDepositCallback(): [boolean, (tokenId: BigNumber, incentives:
             return nftContract[functionName](...convertArgs, {
               gasLimit: calculateGasMargin(estimatedGasLimit),
             }).then((response: TransactionResponse) => {
+              setTxHash(response.hash)
               addTransaction(response, {
                 type: TransactionType.CUSTOM,
                 summary: 'Depositing to V3 Farm',
@@ -74,7 +81,9 @@ export function useDepositCallback(): [boolean, (tokenId: BigNumber, incentives:
           })
           .catch((error) => {
             console.error('Failed to send transaction', error)
+            console.log('##SET## ispending false')
             setIsPending(false)
+            setTxHash('')
             if (error?.code !== 4001) {
               console.error(error)
             }
@@ -82,26 +91,33 @@ export function useDepositCallback(): [boolean, (tokenId: BigNumber, incentives:
       } catch (e) {
         console.error(e)
       } finally {
+        console.log('##SET## ispending false 2')
         setIsPending(false)
+        setTxHash('')
       }
     },
     [isPending, nftContract, account, pendingTxs, addTransaction]
   )
 
-  return [isPending, cb]
+  return [cb, txHash, isPending]
 }
 
-export function useWithdrawCallback(): [boolean, (tokenId: BigNumber, incentives: IncentiveKey[]) => Promise<void>] {
+export function useWithdrawCallback(): [
+  (tokenId: BigNumber, incentives: IncentiveKey[], collectParams: CollectRewardParams[]) => Promise<void>,
+  string,
+  boolean
+] {
   const { account } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
   const pendingTxs = usePendingTransactions()
   const [isPending, setIsPending] = useState(false)
+  const [txHash, setTxHash] = useState<string>('')
 
   const farmContract = useUbeswapV3FarmingContract(FARM_ADDRESS)
 
   const cb = useCallback(
-    async (tokenId: BigNumber, incentives: IncentiveKey[]): Promise<void> => {
+    async (tokenId: BigNumber, incentives: IncentiveKey[], collectParams: CollectRewardParams[]): Promise<void> => {
       if (!account) {
         console.error('no account')
         return
@@ -126,9 +142,18 @@ export function useWithdrawCallback(): [boolean, (tokenId: BigNumber, incentives
       }
 
       try {
+        console.log('##SET## ispending 3')
         setIsPending(true)
 
         const calldatas: string[] = [
+          ...collectParams.map((collectParam) =>
+            farmContract.interface.encodeFunctionData('collectReward', [
+              collectParam.key,
+              collectParam.tokenId,
+              collectParam.accumulatedRewards,
+              collectParam.proof,
+            ])
+          ),
           ...incentives.map((incentive) =>
             farmContract.interface.encodeFunctionData('unstakeToken', [incentive, tokenId])
           ),
@@ -142,6 +167,7 @@ export function useWithdrawCallback(): [boolean, (tokenId: BigNumber, incentives
                 gasLimit: calculateGasMargin(estimatedGasLimit),
               })
               .then((response: TransactionResponse) => {
+                setTxHash(response.hash)
                 addTransaction(response, {
                   type: TransactionType.CUSTOM,
                   summary: 'Withdraw from V3 Farm',
@@ -151,7 +177,9 @@ export function useWithdrawCallback(): [boolean, (tokenId: BigNumber, incentives
           })
           .catch((error) => {
             console.error('Failed to send transaction', error)
+            console.log('##SET## ispending 4')
             setIsPending(false)
+            setTxHash('')
             if (error?.code !== 4001) {
               console.error(error)
             }
@@ -159,13 +187,15 @@ export function useWithdrawCallback(): [boolean, (tokenId: BigNumber, incentives
       } catch (e) {
         console.error(e)
       } finally {
+        console.log('##SET## ispending 5')
         setIsPending(false)
+        setTxHash('')
       }
     },
     [isPending, farmContract, account, pendingTxs, addTransaction]
   )
 
-  return [isPending, cb]
+  return [cb, txHash, isPending]
 }
 
 interface CollectRewardParams {
@@ -174,12 +204,13 @@ interface CollectRewardParams {
   accumulatedRewards: BigNumber
   proof: string[]
 }
-export function useCollectRewardCallback(): [boolean, (collectParams: CollectRewardParams[]) => Promise<void>] {
+export function useCollectRewardCallback(): [(collectParams: CollectRewardParams[]) => Promise<void>, string, boolean] {
   const { account } = useWeb3React()
   const addTransaction = useTransactionAdder()
 
   const pendingTxs = usePendingTransactions()
   const [isPending, setIsPending] = useState(false)
+  const [txHash, setTxHash] = useState<string>('')
 
   const farmContract = useUbeswapV3FarmingContract(FARM_ADDRESS)
 
@@ -209,6 +240,7 @@ export function useCollectRewardCallback(): [boolean, (collectParams: CollectRew
       }
 
       try {
+        console.log('##SET## ispending 5')
         setIsPending(true)
 
         const calldatas: string[] = [
@@ -229,6 +261,7 @@ export function useCollectRewardCallback(): [boolean, (collectParams: CollectRew
                 gasLimit: calculateGasMargin(estimatedGasLimit),
               })
               .then((response: TransactionResponse) => {
+                setTxHash(response.hash)
                 addTransaction(response, {
                   type: TransactionType.CUSTOM,
                   summary: 'Collecting Rewards',
@@ -238,7 +271,9 @@ export function useCollectRewardCallback(): [boolean, (collectParams: CollectRew
           })
           .catch((error) => {
             console.error('Failed to send transaction', error)
+            console.log('##SET## ispending 6')
             setIsPending(false)
+            setTxHash('')
             if (error?.code !== 4001) {
               console.error(error)
             }
@@ -246,13 +281,15 @@ export function useCollectRewardCallback(): [boolean, (collectParams: CollectRew
       } catch (e) {
         console.error(e)
       } finally {
+        console.log('##SET## ispending 7')
         setIsPending(false)
+        setTxHash('')
       }
     },
     [isPending, farmContract, account, pendingTxs, addTransaction]
   )
 
-  return [isPending, cb]
+  return [cb, txHash, isPending]
 }
 
 interface IncentiveContractInfo {
@@ -297,7 +334,6 @@ export function useIncentiveTokenData(incentiveId: string, tokenIds: BigNumber[]
     const result: TokenData[] = []
     for (let i = 0; i < tokenIds.length; i++) {
       const tokenId = tokenIds[i]
-      console.log(fullData, tokenId)
       const incentiveData = fullData ? fullData.find((d) => tokenId.eq(d.tokenId)) : undefined
       let stakeInfo
       if (stakeInfos.length === tokenIds.length && stakeInfos[i].result && stakeInfos[i].error === false) {
@@ -316,5 +352,4 @@ export function useIncentiveTokenData(incentiveId: string, tokenIds: BigNumber[]
 
     return result
   }, [tokenIds, fullData, stakeInfos])
-  // return (result?.result as unknown as IncentiveContractInfo) || undefined
 }

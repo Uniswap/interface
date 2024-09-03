@@ -216,7 +216,7 @@ const EarnPage = ({ initialTab }: { initialTab?: EarnTab }) => {
           {/* <FiltersContainer>{currentKey === EarnTab.Farms && <TimeSelector />}</FiltersContainer> */}
         </NavWrapper>
         <Page />
-        {currentKey === EarnTab.Farms && <InfoBox message={t('V3 Farms will be announced soon')} />}
+        {/*currentKey === EarnTab.Farms && <InfoBox message={t('V3 Farms will be announced soon')} />*/}
         {currentKey === EarnTab.Stakes && <InfoBox message={t('New Stake programs be announced soon')} />}
       </EarnContainer>
     </Trace>

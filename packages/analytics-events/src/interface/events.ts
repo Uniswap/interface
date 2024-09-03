@@ -27,4 +27,5 @@ export enum InterfaceEventName {
   WALLET_SELECTED = 'Wallet Selected',
   WRAP_TOKEN_TXN_INVALIDATED = 'Wrap Token Transaction Invalidated',
   WRAP_TOKEN_TXN_SUBMITTED = 'Wrap Token Transaction Submitted',
+  NEW_POSITION_BUTTON_CLICKED = 'New Position button clicked',
 }

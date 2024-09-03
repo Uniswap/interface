@@ -112,7 +112,7 @@ export function useV3StakedPositions(
   const [tokenIds, setTokenIds] = useState<BigNumber[]>([])
   const [tokenIdsLoading, setTokenIdsLoading] = useState(true)
   const incentiveIdsJson = JSON.stringify(incentiveIds)
-  const pendingTxs = usePendingTransactions()
+  const pendingTxs = JSON.stringify(usePendingTransactions())
 
   useEffect(() => {
     let active = true
@@ -143,7 +143,7 @@ export function useV3StakedPositions(
             )
           }
         } catch (e) {
-          console.log(e)
+          console.error(e)
         } finally {
           if (active) {
             setTokenIdsLoading(false)

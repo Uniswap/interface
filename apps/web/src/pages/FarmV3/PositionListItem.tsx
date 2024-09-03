@@ -1,7 +1,7 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Percent, Price, Token } from '@ubeswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
-//import RangeBadge from 'components/Badge/RangeBadge'
+import RangeBadge from 'components/Badge/RangeBadge'
 import { SmallButtonPrimary } from 'components/Button'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
@@ -17,6 +17,7 @@ import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { HideSmall, SmallOnly, ThemedText } from 'theme/components'
+import { useMedia } from 'ui'
 import { useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -28,18 +29,18 @@ const DepositButton = styled(SmallButtonPrimary)`
 const WithdrawButton = styled(SmallButtonPrimary)`
   padding: 6px 12px;
 
-  background-color: ${({ theme }) => theme.primary2};
+  background-color: ${({ theme }) => theme.red4};
   color: ${({ theme }) => theme.neutralContrast};
   &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.primary2)};
-    background-color: ${({ theme }) => darken(0.05, theme.primary2)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.red4)};
+    background-color: ${({ theme }) => darken(0.05, theme.red4)};
   }
   &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.primary2)};
+    background-color: ${({ theme }) => darken(0.05, theme.red4)};
   }
   &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.primary2)};
-    background-color: ${({ theme }) => darken(0.1, theme.primary2)};
+    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.red4)};
+    background-color: ${({ theme }) => darken(0.1, theme.red4)};
   }
 `
 
@@ -110,6 +111,13 @@ const ExtentsText = styled(ThemedText.BodySmall)`
   ${({ theme }) => theme.deprecated_mediaWidth.deprecated_upToSmall`
     display: none;
   `};
+`
+
+const RangeDot = styled.span<{ inRange: boolean }>`
+  background-color: ${({ theme, inRange }) => (inRange ? theme.success : theme.warning2)};
+  border-radius: 50%;
+  height: 8px;
+  width: 8px;
 `
 
 const PrimaryPositionIdData = styled.div`
@@ -201,6 +209,7 @@ export default function PositionListItem({
   onDeposit, // eslint-disable-line
 }: PositionListItemProps) {
   const { formatDelta, formatTickPrice } = useFormatter()
+  const media = useMedia()
 
   const token0 = useToken(token0Address)
   const token1 = useToken(token1Address)
@@ -227,11 +236,11 @@ export default function PositionListItem({
   const currencyBase = base && unwrappedToken(base)
 
   // check if price is within range
-  //const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
+  const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
 
   // const positionSummaryLink = '/pools/' + tokenId
 
-  //const removed = liquidity?.eq(0)
+  const removed = liquidity?.eq(0)
 
   return (
     <LinkRow>
@@ -243,6 +252,8 @@ export default function PositionListItem({
           </ThemedText.SubHeader>
 
           <FeeTierText>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</FeeTierText>
+          <div style={{ width: '8px' }}></div>
+          {media.md ? <RangeDot inRange={!outOfRange} /> : <RangeBadge removed={removed} inRange={!outOfRange} />}
         </PrimaryPositionIdData>
 
         {isStaked ? (
@@ -254,8 +265,6 @@ export default function PositionListItem({
             <Trans>Deposit</Trans>
           </DepositButton>
         )}
-
-        {/*<RangeBadge removed={removed} inRange={!outOfRange} />*/}
       </RowBetween>
 
       {priceLower && priceUpper ? (

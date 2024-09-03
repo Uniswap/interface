@@ -100,4 +100,5 @@ export enum InterfaceElementName {
   TOKEN_SELECTOR_ROW = 'token-selector-row',
   TWITTER_LINK = 'twitter-link',
   WALLET_TYPE_OPTION = 'wallet-type-option',
+  NEW_POSITION_BUTTON = 'new-position-button',
 }

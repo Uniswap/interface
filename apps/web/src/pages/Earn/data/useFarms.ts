@@ -119,7 +119,6 @@ export function useInactiveFarms(sortState: FarmTableSortState, chainId?: ChainI
               incentiveIds: [],
             } as TableFarm
           }
-          console.log(farm, token0Address, token1Address)
           console.error('this should not happen')
           return []
         })
@@ -191,16 +190,19 @@ export function useV3IncentiveMetadata(incentiveId: string): Metadata | undefine
             data = (await res.json()) as Metadata
           }
           if (active) {
+            console.log('##SET## metadata')
             setMetadata(data)
           }
         } catch (e) {
-          console.log(e)
+          console.error(e)
         }
       })()
     } else {
+      console.log('##SET## metadata undefined')
       setMetadata(undefined)
     }
     return () => {
+      console.log('metadata cancel')
       active = false
     }
   }, [incentiveInfo, incentiveId])
@@ -248,13 +250,15 @@ export function useV3IncentiveFullData(incentiveId: string): IncentiveDataItem[]
             result = data as IncentiveDataItem[]
           }
           if (active) {
+            console.log('##SET## data')
             setData(result)
           }
         } catch (e) {
-          console.log(e)
+          console.error(e)
         }
       })()
     } else {
+      console.log('##SET## data undefined')
       setData(undefined)
     }
     return () => {
@@ -273,8 +277,9 @@ export function useV3Farms(): TableFarm[] {
   const metadata = useV3IncentiveMetadata('0xeec6459eb0d7379623c6b1d8b323cc64dea67f43e6ca85e8909a27424d21e812')
 
   useEffect(() => {
+    console.log('---', metadata, nativePrice, ubePrice)
     if (metadata && nativePrice && ubePrice) {
-      ;(async () => {
+      try {
         const activeTvlNative = parseFloat(formatEther(BigNumber.from(metadata.activeTvlNative)))
         const inactiveTvlNative = parseFloat(formatEther(BigNumber.from(metadata.inactiveTvlNative)))
         const ubeYearlyReward = parseFloat(
@@ -294,6 +299,7 @@ export function useV3Farms(): TableFarm[] {
           )
         }
 
+        console.log('##SET## farms')
         setFarms([
           {
             hash: '0x3efc8d831b754d3ed58a2b4c37818f2e69dadd19-v3',
@@ -310,7 +316,9 @@ export function useV3Farms(): TableFarm[] {
             incentiveIds: ['0xeec6459eb0d7379623c6b1d8b323cc64dea67f43e6ca85e8909a27424d21e812'],
           },
         ])
-      })()
+      } catch (e) {
+        console.error(e)
+      }
     }
   }, [tokens, metadata, nativePrice, ubePrice])
 
@@ -341,20 +349,18 @@ export function useActiveFarms(sortState: FarmTableSortState, chainId?: ChainId)
               token0Amount: new Fraction(0),
               token1Amount: new Fraction(0),
               tvl: farm.tvlUSD ? Number(formatEther(farm.tvlUSD)) : 0,
-              apr: farm.apr,
+              apr: new Percent(0),
               feeTier: V2_BIPS,
               protocolVersion: 'V2',
               incentiveIds: [],
             } as TableFarm
           }
-          console.log(farm, token0Address, token1Address)
           console.error('this should not happen')
           return []
         })
         .flat() ?? []
 
     const rt = sortFarms([...fff.concat(v3Farms)], sortState)
-    console.log('active farms', rt)
     return rt
   }, [farms, tokens, sortState, v3Farms])
 

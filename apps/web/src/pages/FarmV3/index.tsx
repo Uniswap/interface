@@ -8,8 +8,10 @@ import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/h
 import { ButtonConfirmed, ButtonPrimary } from 'components/Button'
 import { DarkCard, LightCard } from 'components/Card'
 import { AutoColumn } from 'components/Column'
+import Modal from 'components/Modal'
 import Row, { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import TransactionConfirmationModal from 'components/TransactionConfirmationModal'
 import { isSupportedChain } from 'constants/chains'
 import { BIPS_BASE } from 'constants/misc'
 import { CELO_CELO, UBE } from 'constants/tokens'
@@ -20,13 +22,15 @@ import { useUSDPrice } from 'hooks/useUSDPrice'
 import { useV3Positions, useV3StakedPositions } from 'hooks/useV3Positions'
 import { Trans } from 'i18n'
 import { NEVER_RELOAD, useSingleCallResult } from 'lib/hooks/multicall'
+import { Checkbox } from 'nft/components/layout/Checkbox'
 import { useV3IncentiveMetadata } from 'pages/Earn/data/useFarms'
 import { getIncentiveIdsByPool, getIncentiveKey } from 'pages/Earn/data/v3-incentive-list'
 import DoubleTokenLogo from 'pages/Earn/tables/FarmTable/DoubleTokenLogo'
-import { useMemo } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { AlertTriangle, Inbox, Info } from 'react-feather'
-import { useParams } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import styled, { css, useTheme } from 'styled-components'
+import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { PositionDetails } from 'types/position'
 import { useMedia } from 'ui'
@@ -147,17 +151,31 @@ const InfoBoxContainer = styled.div`
   backdrop-filter: blur(5px);
 `
 
-function InfoBox({ message }: { message?: string }) {
+const ResponsiveRow = styled(Row)`
+  @media screen and (max-width: ${BREAKPOINTS.md}px) {
+    flex-direction: column;
+  }
+`
+
+function InfoBox({ message, desc }: { message?: string; desc?: string }) {
   const theme = useTheme()
+  const [showDesc, setShowDesc] = useState(false)
   return (
-    <InfoBoxWrapper>
+    <InfoBoxWrapper onClick={() => setShowDesc(!showDesc)}>
       <InfoBoxContainer>
         <Info size={28} stroke={theme.primary1} />
-        {message && (
-          <ThemedText.BodySmall padding={10} textAlign="center">
-            {message}
-          </ThemedText.BodySmall>
-        )}
+        <AutoColumn justify="flex-start">
+          {message && (
+            <ThemedText.BodySmall padding={10} textAlign="center">
+              {message}
+            </ThemedText.BodySmall>
+          )}
+          {desc && showDesc && (
+            <ThemedText.BodySmall padding={10} textAlign="center">
+              {desc}
+            </ThemedText.BodySmall>
+          )}
+        </AutoColumn>
       </InfoBoxContainer>
     </InfoBoxWrapper>
   )
@@ -252,13 +270,34 @@ function WrongNetworkCard() {
   )
 }
 
+export function getAbbreviatedTimeString(timestamp: number) {
+  const now = Date.now()
+  const timeSince = now - timestamp
+  const secondsPassed = Math.floor(timeSince / 1000)
+  const minutesPassed = Math.floor(secondsPassed / 60)
+  const hoursPassed = Math.floor(minutesPassed / 60)
+  const daysPassed = Math.floor(hoursPassed / 24)
+  const monthsPassed = Math.floor(daysPassed / 30)
+
+  if (monthsPassed > 0) {
+    return `${monthsPassed} months ago`
+  } else if (daysPassed > 0) {
+    return `${daysPassed} days ago`
+  } else if (hoursPassed > 0) {
+    return `${hoursPassed} hours ago`
+  } else if (minutesPassed > 0) {
+    return `${minutesPassed} minutes ago`
+  } else {
+    return `${secondsPassed} seconds ago`
+  }
+}
+
 export default function FarmV3() {
   const { account } = useWeb3React()
   const chainId = ChainId.CELO
   const { poolAddress } = useParams<{ poolAddress: string }>()
-  console.log('poolAddress', poolAddress)
   const toggleWalletDrawer = useToggleAccountDrawer()
-  const incentiveIds = poolAddress ? getIncentiveIdsByPool(poolAddress) : []
+  const incentiveIds = useMemo(() => (poolAddress ? getIncentiveIdsByPool(poolAddress) : []), [poolAddress])
 
   const theme = useTheme()
   const { formatPercent, formatNumber } = useFormatter()
@@ -266,16 +305,16 @@ export default function FarmV3() {
   const { positions, loading: positionsLoading } = useV3Positions(account)
   const { positions: stakedPositions, loading: stakedPositionsLoading } = useV3StakedPositions(account, incentiveIds)
 
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
-    (acc, p) => {
-      acc[p.liquidity?.isZero() ? 1 : 0].push(p)
-      return acc
-    },
-    [[], []]
-  ) ?? [[], []]
-
   const positionsInThisPool = useMemo(() => {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    const [openPositions, closedPositions] = positions?.reduce<[PositionDetails[], PositionDetails[]]>(
+      (acc, p) => {
+        acc[p.liquidity?.isZero() ? 1 : 0].push(p)
+        return acc
+      },
+      [[], []]
+    ) ?? [[], []]
+
     if (poolAddress && openPositions) {
       return openPositions.filter(
         (position) =>
@@ -287,7 +326,7 @@ export default function FarmV3() {
       )
     }
     return []
-  }, [poolAddress, openPositions])
+  }, [poolAddress, positions])
 
   const userTokenIds = useMemo(() => {
     return positionsInThisPool.map((p) => p.tokenId).concat((stakedPositions || []).map((p) => p.tokenId))
@@ -300,9 +339,9 @@ export default function FarmV3() {
   const token0 = useToken(poolToken0, ChainId.CELO)
   const token1 = useToken(poolToken1, ChainId.CELO)
 
-  const [isDepositing, callDeposit] = useDepositCallback()
-  const [isWithdrawing, callWithdraw] = useWithdrawCallback()
-  const [isCollectingReward, callCollectReward] = useCollectRewardCallback()
+  const [callDeposit, depositTxHash, isDepositing] = useDepositCallback()
+  const [callWithdraw, withdrawTxHash, isWithdrawing] = useWithdrawCallback()
+  const [callCollectReward, collectRewardTxHash, isCollectingReward] = useCollectRewardCallback()
 
   const nativePrice = useUSDPrice(CurrencyAmount.fromRawAmount(CELO_CELO, 1e18)).data || 0
   const ubePrice = useUSDPrice(CurrencyAmount.fromRawAmount(UBE[ChainId.CELO], 1e18)).data || 0
@@ -357,38 +396,61 @@ export default function FarmV3() {
     )
   }, [userTokenDatas])
 
+  console.log('userTokenDatas', userTokenDatas)
+
   let userShare = new Percent(0)
   if (activeTvlNative > 0) {
     userShare = new Percent(Math.round(activeUserTvlNative * 1_000_000), Math.round(activeTvlNative * 1_000_000))
   }
 
-  if (!isSupportedChain(chainId)) {
-    return <WrongNetworkCard />
-  }
-
   const showConnectAWallet = Boolean(!account)
 
-  const onWithdraw = (tokenId: BigNumber) => {
-    if (isWithdrawing == false) {
-      callWithdraw(
-        tokenId,
-        incentiveIds.map((incentiveId) => getIncentiveKey(incentiveId))
-      )
-    }
-  }
+  const onWithdraw = useCallback(
+    (tokenId: BigNumber) => {
+      if (userTokenDatas.find((d) => d.tokenId.eq(tokenId) && (!d.incentiveData || !d.stakeInfo))) {
+        console.error('missing token data')
+        return
+      }
+      const collectParams = userTokenDatas
+        .filter(
+          (d) =>
+            d.tokenId.eq(tokenId) &&
+            d.incentiveData &&
+            d.stakeInfo &&
+            d.incentiveData.accumulatedRewards.gt(d.stakeInfo.claimedReward) &&
+            (d.incentiveData.merkleProof?.length || 0) > 0
+        )
+        .map((d) => ({
+          key: getIncentiveKey(incentiveIds[0]),
+          tokenId: d.tokenId,
+          accumulatedRewards: d.incentiveData!.accumulatedRewards,
+          proof: d.incentiveData!.merkleProof!,
+        }))
 
-  const onDeposit = (tokenId: BigNumber) => {
-    if (isDepositing == false) {
-      callDeposit(
-        tokenId,
-        incentiveIds.map((incentiveId) => getIncentiveKey(incentiveId))
-      )
-    }
-  }
+      if (isWithdrawing == false) {
+        callWithdraw(
+          tokenId,
+          incentiveIds.map((incentiveId) => getIncentiveKey(incentiveId)),
+          collectParams
+        )
+      }
+    },
+    [userTokenDatas, isWithdrawing, callWithdraw, incentiveIds]
+  )
 
-  console.log('userTokenDatas', userTokenDatas)
+  const onDeposit = useCallback(
+    (tokenId: BigNumber) => {
+      if (isDepositing == false) {
+        callDeposit(
+          tokenId,
+          incentiveIds.map((incentiveId) => getIncentiveKey(incentiveId))
+        )
+      }
+    },
+    [isDepositing, callDeposit, incentiveIds]
+  )
 
-  const onCollectReward = () => {
+  const onCollectReward = useCallback(() => {
     if (isCollectingReward == false && unclaimedRewards > 0) {
       const collectParams = userTokenDatas
         .filter(
@@ -407,10 +469,100 @@ export default function FarmV3() {
 
       callCollectReward(collectParams)
     }
+  }, [isCollectingReward, callCollectReward, userTokenDatas, incentiveIds, unclaimedRewards])
+
+  const onDissmissConfirmationModal = useCallback(() => {}, [])
+  const [isDisclaimerAccepted, setIsDisclaimerAccepted] = useState(false)
+
+  const handleCheckbox = () => {
+    setIsDisclaimerAccepted(!isDisclaimerAccepted)
   }
+
+  const [showDisclaimer, setShowDisclaimer] = useState(false)
+  useEffect(() => {
+    const v3FarmDisclaimerShown = localStorage.getItem('v3FarmDisclaimerShown')
+    if (!v3FarmDisclaimerShown) {
+      setShowDisclaimer(true)
+    }
+  }, [])
+  const onDisclaimerAccepted = () => {
+    localStorage.setItem('v3FarmDisclaimerShown', 'true')
+    setShowDisclaimer(false)
+  }
+
+  if (!isSupportedChain(chainId)) {
+    return <WrongNetworkCard />
+  }
+
+  const rewardText = formatNumber({
+    input: unclaimedRewards,
+    type: NumberType.SwapDetailsAmount,
+  })
 
   return (
     <Trace page={InterfacePageName.FARM_V3} shouldLogImpression>
+      <TransactionConfirmationModal
+        isOpen={isDepositing}
+        attemptingTxn={isDepositing}
+        hash={depositTxHash}
+        reviewContent={() => <div></div>}
+        onDismiss={onDissmissConfirmationModal}
+        pendingText="Depositing your position"
+      />
+      <TransactionConfirmationModal
+        isOpen={isWithdrawing}
+        attemptingTxn={isWithdrawing}
+        hash={withdrawTxHash}
+        reviewContent={() => <div></div>}
+        onDismiss={onDissmissConfirmationModal}
+        pendingText="Withdrawing your position"
+      />
+      <TransactionConfirmationModal
+        isOpen={isCollectingReward}
+        attemptingTxn={isCollectingReward}
+        hash={collectRewardTxHash}
+        reviewContent={() => <div></div>}
+        onDismiss={onDissmissConfirmationModal}
+        pendingText="Collecting Rewards"
+      />
+      <Modal isOpen={showDisclaimer} $scrollOverlay={true} onDismiss={() => setShowDisclaimer(false)} maxHeight={90}>
+        <div style={{ padding: '16px' }}>
+          <div>
+            <p>
+              This website-hosted user interface (this &quot;Interface&quot;) is an open source frontend software portal
+              to the Ubeswap protocol, a decentralized and community-driven collection of blockchain-enabled smart
+              contracts and tools (the &quot;Ubeswap Protocol&quot;). This Interface and the Ubeswap Protocol are made
+              available by QW3 Labs, however all transactions conducted on the protocol are run by related
+              permissionless smart contracts. As the Interface is open-sourced and the Ubeswap Protocol and its related
+              smart contracts are accessible by any user, entity or third party, there are a number of third party web
+              and mobile user-interfaces that allow for interaction with the Ubeswap Protocol.
+            </p>
+            <p>
+              THIS INTERFACE AND THE UBESWAP PROTOCOL ARE PROVIDED &quot;AS IS&quot;, AT YOUR OWN RISK, AND WITHOUT
+              WARRANTIES OF ANY KIND. QW3 Labs, does not provide, own, or control the Ubeswap Protocol or any
+              transactions conducted on the protocol or via related smart contracts. By using or accessing this
+              Interface or the Ubeswap Protocol and related smart contracts, you agree that no developer or entity
+              involved in creating, deploying or maintaining this Interface or the Ubeswap Protocol will be liable for
+              any claims or damages whatsoever associated with your use, inability to use, or your interaction with
+              other users of, this Interface or the Ubeswap Protocol, including any direct, indirect, incidental,
+              special, exemplary, punitive or consequential damages, or loss of profits, digital assets, tokens, or
+              anything else of value.
+            </p>
+          </div>
+          <Checkbox checked={isDisclaimerAccepted} hovered={true} onChange={handleCheckbox}>
+            <div style={{ marginRight: '10px' }}>I understand</div>
+          </Checkbox>
+          <AutoColumn justify="center">
+            <ButtonPrimary
+              disabled={!isDisclaimerAccepted}
+              style={{ marginTop: '16px', width: 'fit-content', padding: '8px 20px' }}
+              onClick={onDisclaimerAccepted}
+            >
+              OK
+            </ButtonPrimary>
+          </AutoColumn>
+        </div>
+      </Modal>
       <PageWrapper>
         <AutoColumn gap="lg" justify="center">
           <AutoColumn gap="lg" style={{ width: '100%' }}>
@@ -422,8 +574,8 @@ export default function FarmV3() {
               )}
             </TitleRow>
 
-            <Row align="flex-start" gap="md">
-              <DarkCard width="50%">
+            <ResponsiveRow align="flex-start" gap="md">
+              <DarkCard>
                 <AutoColumn gap="md" style={{ width: '100%' }}>
                   <AutoColumn gap="md">
                     <Label>
@@ -445,14 +597,14 @@ export default function FarmV3() {
                       <AutoColumn>
                         <ThemedText.LabelMicro textAlign="right">
                           {formatNumber({
-                            input: activeTvlNative,
+                            input: activeTvlNative * nativePrice,
                             type: NumberType.FiatTokenPrice,
                           })}{' '}
                           - In-Range
                         </ThemedText.LabelMicro>
                         <ThemedText.LabelMicro textAlign="right">
                           {formatNumber({
-                            input: inactiveTvlNative,
+                            input: inactiveTvlNative * nativePrice,
                             type: NumberType.FiatTokenPrice,
                           })}{' '}
                           - Out-of-Range
@@ -476,31 +628,36 @@ export default function FarmV3() {
                   </LightCard>
                 </AutoColumn>
               </DarkCard>
-              <DarkCard width="50%">
+              <DarkCard>
                 <AutoColumn gap="md" style={{ width: '100%' }}>
                   <AutoColumn gap="md">
                     <RowBetweenRelative>
                       <Label>
                         <Trans>Unclaimed Rewards</Trans>
                       </Label>
-                      <ResponsiveButtonConfirmed
-                        data-testid="collect-fees-button"
-                        disabled={false}
-                        confirmed={false}
-                        width="fit-content"
-                        style={{ borderRadius: '12px' }}
-                        padding="4px 8px"
-                        onClick={onCollectReward}
-                      >
-                        <ThemedText.DeprecatedMain color={theme.white}>
-                          <Trans>Collect</Trans>
-                        </ThemedText.DeprecatedMain>
-                      </ResponsiveButtonConfirmed>
+                      {unclaimedRewards > 0 && (
+                        <ResponsiveButtonConfirmed
+                          data-testid="collect-fees-button"
+                          disabled={false}
+                          confirmed={false}
+                          width="fit-content"
+                          style={{ borderRadius: '12px' }}
+                          padding="4px 8px"
+                          onClick={onCollectReward}
+                        >
+                          <ThemedText.DeprecatedMain color={theme.white}>
+                            <Trans>Collect</Trans>
+                          </ThemedText.DeprecatedMain>
+                        </ResponsiveButtonConfirmed>
+                      )}
                     </RowBetweenRelative>
 
                     <Row justify="space-between">
                       {unclaimedRewards > 0 ? (
-                        <ThemedText.DeprecatedLargeHeader fontSize="36px" fontWeight={535}>
+                        <ThemedText.DeprecatedLargeHeader
+                          fontSize={rewardText.length > 9 ? '30px' : '36px'}
+                          fontWeight={535}
+                        >
                           {formatNumber({
                             input: unclaimedRewards,
                             type: NumberType.SwapDetailsAmount,
@@ -542,21 +699,25 @@ export default function FarmV3() {
                   </LightCard>
                 </AutoColumn>
               </DarkCard>
-            </Row>
+            </ResponsiveRow>
 
             {metadata && (
               <InfoBox
                 message={
                   'Last calculation time: ' +
-                  new Date(metadata.timestamp * 1000).toISOString().slice(0, 16).replace('T', ' ')
+                  new Date(metadata.timestamp * 1000).toISOString() +
+                  ' (' +
+                  getAbbreviatedTimeString(metadata.timestamp * 1000) +
+                  ')'
                 }
+                desc="All the TVL calculations and reward distributions are done periodically, every half an hour."
               />
             )}
 
             <PositionstWrapper>
               {positionsLoading || stakedPositionsLoading ? (
                 <PositionsLoadingPlaceholder />
-              ) : positionsInThisPool && stakedPositions ? (
+              ) : positionsInThisPool && stakedPositions && positionsInThisPool.length + stakedPositions.length > 0 ? (
                 <PositionList
                   positions={positionsInThisPool}
                   stakedPositons={stakedPositions}
@@ -571,7 +732,7 @@ export default function FarmV3() {
                       <Trans>Your active V3 liquidity positions will appear here.</Trans>
                     </div>
                   </ThemedText.BodyPrimary>
-                  {showConnectAWallet && (
+                  {showConnectAWallet ? (
                     <TraceEvent
                       events={[BrowserEvent.onClick]}
                       name={InterfaceEventName.CONNECT_WALLET_BUTTON_CLICKED}
@@ -583,6 +744,21 @@ export default function FarmV3() {
                         onClick={toggleWalletDrawer}
                       >
                         <Trans>Connect a wallet</Trans>
+                      </ButtonPrimary>
+                    </TraceEvent>
+                  ) : (
+                    <TraceEvent
+                      events={[BrowserEvent.onClick]}
+                      name={InterfaceEventName.NEW_POSITION_BUTTON_CLICKED}
+                      properties={{ received_swap_quote: false }}
+                      element={InterfaceElementName.NEW_POSITION_BUTTON}
+                    >
+                      <ButtonPrimary
+                        style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
+                        as={Link}
+                        to="/add/0x471EcE3750Da237f93B8E339c536989b8978a438/0x71e26d0E519D14591b9dE9a0fE9513A398101490/100?minPrice=49.914100&maxPrice=165.92642"
+                      >
+                        + <Trans>Create New Position</Trans>
                       </ButtonPrimary>
                     </TraceEvent>
                   )}
