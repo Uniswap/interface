@@ -89,7 +89,7 @@ export default function V2PositionCard({ pair, border, stakedBalance }: Position
                   <Trans>Loading</Trans>
                 </Dots>
               ) : (
-                `${{ sym0: currency0.symbol }}/${{ sym1: currency1.symbol }}`
+                `${currency0.symbol}/${currency1.symbol}`
               )}
             </Text>
           </AutoRow>
