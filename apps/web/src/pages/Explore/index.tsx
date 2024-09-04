@@ -149,8 +149,8 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               data-testid="explore-navbar"
             >
               {Pages.map(({ title, loggingElementName, key }, index) => {
-                // hide Transactions tab if no chain is selected
-                return isMultichainExploreEnabled && (key !== ExploreTab.Transactions || !!chain) ? (
+                // hide Transactions tab if no chain is selected and multichain explore is enabled
+                return key === ExploreTab.Transactions && isMultichainExploreEnabled && !chain ? null : (
                   <Trace
                     logPress
                     eventOnTrigger={SharedEventName.NAVBAR_CLICKED}
@@ -180,7 +180,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
                       </Text>
                     </StyledInternalLink>
                   </Trace>
-                ) : null
+                )
               })}
             </Flex>
             <Flex row gap="$spacing8" height="$spacing40" justifyContent="flex-start">
