@@ -7,7 +7,7 @@ import { useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import styled, { css } from 'styled-components'
 import { ThemedText } from 'theme/components'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 export enum NetworkType {
   Type1 = 'Evmos/Forge',
@@ -26,7 +26,7 @@ const PoolOptionsButton = styled(ButtonGray) <{ $isOpen: boolean }>`
   flex: 1 1 auto;
   padding: 10px;
   width: 100%;
-  background-color: ${({ theme }) => theme.surface1};
+  background-color: ${({ theme }) => theme.surface2};
   border: none;
   border-radius: 20px;
   gap: 6px;
