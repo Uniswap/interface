@@ -5,12 +5,12 @@ import { SettingsRecoveryPhrase } from 'src/app/features/settings/SettingsRecove
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { Flex, ScrollView, Text } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons'
+import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
@@ -24,7 +24,7 @@ export function RemoveRecoveryPhraseWallets(): JSX.Element {
     <Flex grow backgroundColor="$surface1">
       <ScreenHeader title={t('setting.recoveryPhrase.remove')} />
       <SettingsRecoveryPhrase
-        icon={<AlertTriangle color="$statusCritical" size="$icon.24" />}
+        icon={<AlertTriangleFilled color="$statusCritical" size="$icon.24" />}
         nextButtonEnabled={true}
         nextButtonText={t('common.button.continue')}
         nextButtonTheme="secondary_Button"
@@ -101,7 +101,13 @@ function AssociatedAccountRow({
       py="$spacing12"
     >
       <Flex shrink>
-        <AddressDisplay address={address} captionVariant="body3" size={iconSizes.icon36} variant="body2" />
+        <AddressDisplay
+          disableForcedWidth
+          address={address}
+          captionVariant="body3"
+          size={iconSizes.icon36}
+          variant="body2"
+        />
       </Flex>
       <Text color="$neutral2" loading={loading} numberOfLines={1} variant="body3">
         {balanceFormatted}

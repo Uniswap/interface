@@ -6,6 +6,10 @@ import {
   initialSchema,
   v0Schema,
   v10Schema,
+  v11Schema,
+  v12Schema,
+  v13Schema,
+  v14Schema,
   v1Schema,
   v2Schema,
   v3Schema,
@@ -17,6 +21,7 @@ import {
   v9Schema,
 } from 'src/store/schema'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
 import { initialTokensState } from 'uniswap/src/features/tokens/slice/slice'
@@ -26,15 +31,17 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
-import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
-import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
 import { initialWalletState } from 'wallet/src/features/wallet/slice'
 import { createMigrate } from 'wallet/src/state/createMigrate'
 import { HAYDEN_ETH_ADDRESS } from 'wallet/src/state/walletMigrations'
 import {
   testActivatePendingAccounts,
+  testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
+  testMovedCurrencySetting,
+  testMovedLanguageSetting,
+  testMovedTokenWarnings,
   testMovedUserSettings,
   testRemoveHoldToSwap,
 } from 'wallet/src/state/walletMigrationsTests'
@@ -78,8 +85,7 @@ describe('Redux state migrations', () => {
       dapp: {},
       ens: { ensForAddress: {} },
       favorites: initialFavoritesState,
-      fiatCurrencySettings: initialFiatCurrencyState,
-      languageSettings: initialLanguageState,
+      fiatCurrencySettings: { currentCurrency: FiatCurrency.UnitedStatesDollar },
       notifications: initialNotificationsState,
       behaviorHistory: initialBehaviorHistoryState,
       providers: { isInitialized: false },
@@ -235,7 +241,23 @@ describe('Redux state migrations', () => {
     testMovedUserSettings(migrations[10], v9Schema)
   })
 
-  it('migrates v10 to v11', async () => {
+  it('migrates from v10 to v11', async () => {
     testRemoveHoldToSwap(migrations[11], v10Schema)
+  })
+
+  it('migrates from v11 to v12', async () => {
+    testAddCreatedOnboardingRedesignAccount(migrations[12], v11Schema)
+  })
+
+  it('migrates from v12 to v13', async () => {
+    testMovedTokenWarnings(migrations[13], v12Schema)
+  })
+
+  it('migrates from v13 to v14', async () => {
+    testMovedLanguageSetting(migrations[14], v13Schema)
+  })
+
+  it('migrates from v14 to v15', async () => {
+    testMovedCurrencySetting(migrations[15], v14Schema)
   })
 })

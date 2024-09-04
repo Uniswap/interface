@@ -26,7 +26,7 @@ import {
   useNotificationOSPermissionsEnabled,
 } from 'src/features/notifications/hooks/useNotificationOSPermissionsEnabled'
 import { showNotificationSettingsAlert } from 'src/screens/Onboarding/NotificationsSetupScreen'
-import { Button, Flex, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, Switch, Text, useSporeColors } from 'ui/src'
 import NotificationIcon from 'ui/src/assets/icons/bell.svg'
 import GlobalIcon from 'ui/src/assets/icons/global.svg'
 import TextEditIcon from 'ui/src/assets/icons/textEdit.svg'
@@ -40,7 +40,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { Switch } from 'wallet/src/components/buttons/Switch'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
 import { useAccounts, useSelectAccountNotificationSetting } from 'wallet/src/features/wallet/hooks'
 
@@ -138,9 +137,10 @@ export function SettingsWallet({
         {
           action: (
             <Switch
+              checked={notificationSwitchEnabled}
               disabled={notificationOSPermission === NotificationPermission.Loading}
-              value={notificationSwitchEnabled}
-              onValueChange={onChangeNotificationSettings}
+              variant="branded"
+              onCheckedChange={onChangeNotificationSettings}
             />
           ),
           text: t('settings.setting.wallet.notifications.title'),
@@ -251,7 +251,7 @@ function AddressDisplayHeader({ address }: { address: Address }): JSX.Element {
         />
       </Flex>
       {(!ensName || !!unitag) && (
-        <Button color="$neutral1" fontSize="$small" size="medium" theme="secondary_Button" onPress={onPressEditProfile}>
+        <Button color="$neutral1" size="medium" theme="secondary_Button" onPress={onPressEditProfile}>
           {unitag?.username
             ? t('settings.setting.wallet.action.editProfile')
             : t('settings.setting.wallet.action.editLabel')}

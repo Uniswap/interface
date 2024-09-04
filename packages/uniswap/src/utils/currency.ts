@@ -1,5 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { SerializedToken } from 'uniswap/src/features/tokens/slice/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const DEFAULT_MAX_SYMBOL_CHARACTERS = 6
@@ -22,5 +23,25 @@ export function wrappedNativeCurrency(chainId: UniverseChainId): Token {
     wrappedCurrencyInfo.decimals,
     wrappedCurrencyInfo.symbol,
     wrappedCurrencyInfo.name,
+  )
+}
+
+export function serializeToken(token: Token): SerializedToken {
+  return {
+    chainId: token.chainId,
+    address: token.address,
+    decimals: token.decimals,
+    name: token.name,
+    symbol: token.symbol,
+  }
+}
+
+export function deserializeToken(serializedToken: SerializedToken): Token {
+  return new Token(
+    serializedToken.chainId,
+    serializedToken.address,
+    serializedToken.decimals,
+    serializedToken.symbol,
+    serializedToken.name,
   )
 }

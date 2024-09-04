@@ -3,11 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { Flex, ImpactFeedbackStyle, Shine, Text, TouchableArea, isWeb } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { disableOnPress } from 'wallet/src/utils/disableOnPress'
 
 /**

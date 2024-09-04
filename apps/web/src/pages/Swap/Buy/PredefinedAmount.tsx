@@ -43,7 +43,7 @@ export function PredefinedAmount({ currentAmount, amount, disabled = false, onCl
       foregroundColor={colors[disabled ? 'neutral3' : active ? 'neutral1' : 'neutral2'].val}
       label={formatFiatOnRampFiatAmount(amount, meldSupportedFiatCurrency ?? fallbackCurrencyInfo)}
       px="$spacing16"
-      textVariant="buttonLabel3"
+      textVariant="buttonLabel2"
     />
   )
 }

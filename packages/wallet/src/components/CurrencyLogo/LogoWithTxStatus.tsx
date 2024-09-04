@@ -4,7 +4,13 @@ import { StyleSheet } from 'react-native'
 import type { IconProps } from 'ui/src'
 import { Flex, useSporeColors } from 'ui/src'
 import WalletConnectLogo from 'ui/src/assets/icons/walletconnect.svg'
-import { AlertTriangle, Approve, ArrowDownInCircle, ArrowUpInCircle, QuestionInCircle } from 'ui/src/components/icons'
+import {
+  AlertTriangleFilled,
+  Approve,
+  ArrowDownInCircle,
+  ArrowUpInCircle,
+  QuestionInCircle,
+} from 'ui/src/components/icons'
 import { borderRadii } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -169,7 +175,7 @@ export function DappLogoWithTxStatus({
       case WalletConnectEvent.TransactionConfirmed:
         return <Approve color={green} fill={fill} size={statusSize} testID="icon-approve" />
       case WalletConnectEvent.TransactionFailed:
-        return <AlertTriangle color={yellow} fill={fill} size={statusSize} testID="icon-alert" />
+        return <AlertTriangleFilled color={yellow} fill={fill} size={statusSize} testID="icon-alert" />
     }
   }
 

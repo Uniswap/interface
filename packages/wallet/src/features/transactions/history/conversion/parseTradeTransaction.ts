@@ -89,7 +89,6 @@ export default function parseTradeTransaction(
   const onlyERC20Tokens = sent.__typename === 'TokenTransfer' && received.__typename === 'TokenTransfer'
   const containsNFT = sent.__typename === 'NftTransfer' || received.__typename === 'NftTransfer'
 
-  // TODO: [MOB-235] Currently no spec for advanced transfer types.
   if (!(onlyERC20Tokens || containsNFT)) {
     return
   }

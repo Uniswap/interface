@@ -1,18 +1,18 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons'
+import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts, iconSizes, spacing } from 'ui/src/theme'
 import { BottomSheetTextInput } from 'uniswap/src/components/modals/Modal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE, MAX_CUSTOM_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import PlusMinusButton, { PlusMinusButtonType } from 'wallet/src/components/buttons/PlusMinusButton'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { SwapSettingConfig } from 'wallet/src/features/transactions/swap/modals/settings/configs/types'
 import { useSlippageSettings } from 'wallet/src/features/transactions/swap/modals/settings/useSlippageSettings'
@@ -36,7 +36,7 @@ export const Slippage: SwapSettingConfig = {
       <Flex row gap="$spacing8">
         {!isCustomSlippage ? (
           <Flex centered backgroundColor="$accent2" borderRadius="$roundedFull" px="$spacing8">
-            <Text color="$accent1" variant="buttonLabel4">
+            <Text color="$accent1" variant="buttonLabel3">
               {t('swap.settings.slippage.control.auto')}
             </Text>
           </Flex>
@@ -97,7 +97,7 @@ export const Slippage: SwapSettingConfig = {
               style={inputAnimatedStyle}
             >
               <TouchableArea hapticFeedback onPress={onPressAutoSlippage}>
-                <Text color="$accent1" variant="buttonLabel3">
+                <Text color="$accent1" variant="buttonLabel2">
                   {t('swap.settings.slippage.control.auto')}
                 </Text>
               </TouchableArea>
@@ -142,7 +142,7 @@ export const Slippage: SwapSettingConfig = {
   },
 }
 
-export function SlippageMessage({
+function SlippageMessage({
   inputWarning,
   trade,
   slippageTolerance,
@@ -163,7 +163,7 @@ export function SlippageMessage({
   if (inputWarning) {
     return (
       <Flex centered row gap="$spacing8" height={fonts.body2.lineHeight * 2 + spacing.spacing8}>
-        <AlertTriangle color="$DEP_accentWarning" size="$icon.16" />
+        <AlertTriangleFilled color="$DEP_accentWarning" size="$icon.16" />
         <Text color="$DEP_accentWarning" textAlign="center" variant="body2">
           {inputWarning}
         </Text>
@@ -189,7 +189,7 @@ export function SlippageMessage({
       </Text>
       {showSlippageWarning ? (
         <Flex centered row gap="$spacing8">
-          <AlertTriangle color={colors.DEP_accentWarning.val} size="$icon.16" />
+          <AlertTriangleFilled color={colors.DEP_accentWarning.val} size="$icon.16" />
           <Text color="$DEP_accentWarning" variant="body2">
             {t('swap.settings.slippage.warning.message')}
           </Text>

@@ -13,7 +13,12 @@ import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { isExtension } from 'utilities/src/platform'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
-import { setBackupReminderLastSeenTs, setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
+import {
+  setBackupReminderLastSeenTs,
+  setCreatedOnboardingRedesignAccount,
+  setHasSkippedUnitagPrompt,
+  setHasViewedWelcomeWalletCard,
+} from 'wallet/src/features/behaviorHistory/slice'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { createImportedAccounts } from 'wallet/src/features/onboarding/createImportedAccounts'
@@ -53,10 +58,12 @@ export interface OnboardingContext {
     importType,
     accounts,
     extensionOnboardingFlow,
+    createdFromOnboardingRedesign,
   }: {
     importType: ImportType
     accounts?: SignerMnemonicAccount[]
     extensionOnboardingFlow?: ExtensionOnboardingFlow
+    createdFromOnboardingRedesign?: boolean
   }) => Promise<void>
   getAllOnboardingAccounts: () => SignerMnemonicAccount[]
   getOnboardingAccount: () => SignerMnemonicAccount | undefined
@@ -91,6 +98,7 @@ const initialOnboardingContext: OnboardingContext = {
     importType: ImportType
     accounts?: SignerMnemonicAccount[]
     extensionOnboardingFlow?: ExtensionOnboardingFlow
+    createdFromOnboardingRedesign?: boolean
   }) => undefined,
   getAllOnboardingAccounts: () => [],
   getGeneratedAddresses: async () => undefined,
@@ -413,10 +421,12 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
     importType,
     accounts,
     extensionOnboardingFlow,
+    createdFromOnboardingRedesign = false,
   }: {
     importType: ImportType
     accounts?: SignerMnemonicAccount[]
     extensionOnboardingFlow?: ExtensionOnboardingFlow
+    createdFromOnboardingRedesign?: boolean
   }): Promise<void> => {
     const isWatchFlow = importType === ImportType.Watch
     const onboardingAccounts = isWatchFlow ? [] : accounts ?? getAllOnboardingAccounts()
@@ -474,6 +484,13 @@ export function OnboardingContextProvider({ children }: PropsWithChildren<unknow
 
       // Reset the last timestamp for having shown the backup reminder modal
       dispatch(setBackupReminderLastSeenTs(undefined))
+
+      // Reset the flag for having seen the welcome wallet card
+      dispatch(setHasViewedWelcomeWalletCard(false))
+
+      if (createdFromOnboardingRedesign) {
+        dispatch(setCreatedOnboardingRedesignAccount(true))
+      }
     }
 
     const isExtensionNoAccounts = onboardingAddresses.length === 0 && isExtension
@@ -608,7 +625,7 @@ export function useCreateOnboardingAccountIfNone(): void {
 }
 
 /**
- * Triggers onboarding finish on screen mount
+ * Triggers onboarding finish on screen mount for extension only
  * Extracted into hook for reusability.
  */
 export function useFinishOnboarding(callback?: () => void, extensionOnboardingFlow?: ExtensionOnboardingFlow): void {

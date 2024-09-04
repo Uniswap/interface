@@ -81,11 +81,11 @@ class NativeKeyring implements IKeyring {
     return RNEthersRS.generateAddressForMnemonic(mnemonic, derivationIndex)
   }
 
-  generateAddressesForMnemonic(_mnemonicId: string): Promise<string[]> {
+  generateAddressesForMnemonic(_mnemonicId: string, _startIndex: number, _stopIndex: number): Promise<string[]> {
     throw new NotImplementedError('generateAddressesForMnemonic')
   }
 
-  generateAddressesForMnemonicId(_mnemonicId: string): Promise<string[]> {
+  generateAddressesForMnemonicId(_mnemonicId: string, _startIndex: number, _stopIndex: number): Promise<string[]> {
     throw new NotImplementedError('generateAddressesForMnemonicId')
   }
 

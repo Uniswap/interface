@@ -8,13 +8,13 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
+import { FORMAT_DATE_TIME_MEDIUM, useFormattedDateTime } from 'uniswap/src/features/language/localizedDayjs'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
   TransactionDetails,
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { FORMAT_DATE_TIME_MEDIUM, useFormattedDateTime } from 'wallet/src/features/language/localizedDayjs'
 import { ApproveTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/ApproveTransactionDetails'
 import { HeaderLogo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/HeaderLogo'
 import { NftTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/NftTransactionDetails'

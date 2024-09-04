@@ -7,6 +7,7 @@ import { PollingInterval } from 'uniswap/src/constants/misc'
 import { FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
+import { selectIncompleteTransactions, selectSwapTransactionsCount } from 'uniswap/src/features/transactions/selectors'
 import {
   addTransaction,
   cancelTransaction,
@@ -37,9 +38,10 @@ import { attemptCancelTransaction } from 'wallet/src/features/transactions/cance
 import { OrderWatcher } from 'wallet/src/features/transactions/orderWatcherSaga'
 import { refetchGQLQueries } from 'wallet/src/features/transactions/refetchGQLQueriesSaga'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
-import { selectIncompleteTransactions, selectSwapTransactionsCount } from 'wallet/src/features/transactions/selectors'
 import {
+  getDiff,
   getFinalizedTransactionStatus,
+  getPercentageError,
   isOnRampTransaction,
   receiptFromEthersReceipt,
 } from 'wallet/src/features/transactions/utils'
@@ -421,6 +423,33 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
       tokenAddress,
       toAddress,
       amountUSD,
+    })
+  }
+
+  maybeLogGasEstimateAccuracy(payload)
+}
+
+function maybeLogGasEstimateAccuracy(transaction: FinalizedTransactionDetails) {
+  const { estimatedGasFeeDetails } = transaction.typeInfo
+  if (estimatedGasFeeDetails) {
+    const gasUseDiff = getDiff(estimatedGasFeeDetails.gasUseEstimate, transaction.receipt?.gasUsed)
+    const gasPriceDiff = getDiff(estimatedGasFeeDetails.maxFeePerGas, transaction.receipt?.effectiveGasPrice)
+
+    sendAnalyticsEvent(WalletEventName.GasEstimateAccuracy, {
+      tx_hash: transaction.hash,
+      transaction_type: transaction.typeInfo.type,
+      chain_id: transaction.chainId,
+      final_status: transaction.status,
+      time_to_confirmed_ms: getDiff(transaction.receipt?.confirmedTime, transaction.addedTime),
+      blocks_to_confirmed: getDiff(transaction.receipt?.blockNumber, estimatedGasFeeDetails.blockSubmitted),
+      gas_use_diff: gasUseDiff,
+      gas_use_diff_percentage: getPercentageError(gasUseDiff, estimatedGasFeeDetails.gasUseEstimate),
+      gas_used: transaction.receipt?.gasUsed,
+      gas_price_diff: gasPriceDiff,
+      gas_price_diff_percentage: getPercentageError(gasPriceDiff, estimatedGasFeeDetails.gasUseEstimate),
+      gas_price: transaction.receipt?.effectiveGasPrice,
+      max_priority_fee_per_gas: estimatedGasFeeDetails.maxPriorityFeePerGas,
+      private_rpc: isClassic(transaction) ? transaction.options.submitViaPrivateRpc : false,
     })
   }
 }

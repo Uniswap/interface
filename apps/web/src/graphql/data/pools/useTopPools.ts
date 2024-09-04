@@ -12,6 +12,8 @@ import {
   useTopV2PairsQuery,
   useTopV3PoolsQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 export function sortPools(pools: TablePool[], sortState: PoolTableSortState) {
   return pools.sort((a, b) => {
@@ -110,13 +112,14 @@ function useFilteredPools(pools: TablePool[]) {
 
 export function useTopPools(sortState: PoolTableSortState, chainId?: SupportedInterfaceChainId) {
   const isWindowVisible = useIsWindowVisible()
+  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
   const {
     loading: loadingV3,
     error: errorV3,
     data: dataV3,
   } = useTopV3PoolsQuery({
     variables: { first: 100, chain: chainIdToBackendChain({ chainId, withFallback: true }) },
-    skip: !isWindowVisible,
+    skip: !isWindowVisible || isRestExploreEnabled,
   })
   const {
     loading: loadingV2,
@@ -124,7 +127,7 @@ export function useTopPools(sortState: PoolTableSortState, chainId?: SupportedIn
     data: dataV2,
   } = useTopV2PairsQuery({
     variables: { first: 100, chain: chainIdToBackendChain({ chainId, withFallback: true }) },
-    skip: !isWindowVisible || !chainId,
+    skip: !isWindowVisible || !chainId || isRestExploreEnabled,
   })
   const loading = loadingV3 || loadingV2
 

@@ -41,7 +41,11 @@ export function RecipientSelectSpeedBumps({
   const viewOnlyAccounts = useViewOnlyAccounts()
   const currentSignerAccounts = useSignerAccounts()
   const previousTransactions = useAllTransactionsBetweenAddresses(activeAddress, recipientAddress)
-  const { isSmartContractAddress, loading: addressLoading } = useIsSmartContractAddress(
+  const { isSmartContractAddress, loading: smartContractLoading } = useIsSmartContractAddress(
+    recipientAddress,
+    chainId ?? UniverseChainId.Mainnet,
+  )
+  const { isERC20ContractAddress, loading: erc20ContractLoading } = useIsErc20Contract(
     recipientAddress,
     chainId ?? UniverseChainId.Mainnet,
   )
@@ -130,17 +134,17 @@ export function RecipientSelectSpeedBumps({
   )
 
   const shouldWarnViewOnly = isViewOnlyRecipient
+  const shouldWarnERC20 = isERC20ContractAddress
+  const shouldWarnSmartContract = isNewRecipient && !isSignerRecipient && isSmartContractAddress && !shouldWarnERC20
+  const shouldWarnNewAddress = isNewRecipient && !isSignerRecipient && !shouldWarnSmartContract && !shouldWarnERC20
   const shouldWarnSelfSend = isSameAddress(activeAddress, recipientAddress)
-  const shouldWarnErc20 = useIsErc20Contract(recipientAddress, chainId ?? UniverseChainId.Mainnet)
-  const shouldWarnSmartContract = isNewRecipient && !isSignerRecipient && isSmartContractAddress
-  const shouldWarnNewAddress = isNewRecipient && !isSignerRecipient && !shouldWarnSmartContract
 
   const modalRenderers = useMemo<ConditionalModalRenderer[]>(
     () => [
       { renderModal: renderViewOnlyWarning, condition: shouldWarnViewOnly },
       { renderModal: renderNewAddressWarning, condition: shouldWarnNewAddress },
       { renderModal: renderSelfSendWarning, condition: shouldWarnSelfSend },
-      { renderModal: renderErc20Warning, condition: shouldWarnErc20 },
+      { renderModal: renderErc20Warning, condition: shouldWarnERC20 },
       { renderModal: renderSmartContractWarning, condition: shouldWarnSmartContract },
     ],
     [
@@ -152,7 +156,7 @@ export function RecipientSelectSpeedBumps({
       shouldWarnViewOnly,
       shouldWarnNewAddress,
       shouldWarnSelfSend,
-      shouldWarnErc20,
+      shouldWarnERC20,
       shouldWarnSmartContract,
     ],
   )
@@ -160,9 +164,9 @@ export function RecipientSelectSpeedBumps({
   return (
     <SpeedBumps
       // Wait until the address is loaded before checking speed bumps
-      checkSpeedBumps={checkSpeedBumps && !addressLoading}
+      checkSpeedBumps={checkSpeedBumps && !smartContractLoading && !erc20ContractLoading}
       // Don't check speed bumps if the current account is view-only
-      // (the user won't be able to complete the transfer anyway)
+      // (the user won't be able to complete the send anyway)
       modalRenderers={isActiveViewOnly ? [] : modalRenderers}
       {...rest}
     />

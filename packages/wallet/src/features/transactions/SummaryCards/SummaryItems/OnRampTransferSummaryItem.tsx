@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   OnRampPurchaseInfo,
@@ -11,7 +12,6 @@ import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
@@ -34,7 +34,7 @@ export function OnRampTransferSummaryItem({
   const formatFiatTokenPrice = (purchaseInfo: OnRampPurchaseInfo): string => {
     try {
       return formatNumberOrString({
-        value: purchaseInfo.sourceAmount > 0 ? purchaseInfo.sourceAmount : undefined,
+        value: purchaseInfo.sourceAmount,
         type: NumberType.FiatTokenPrice,
         currencyCode: purchaseInfo.sourceCurrency,
       })

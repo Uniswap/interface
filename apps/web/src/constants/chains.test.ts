@@ -199,6 +199,7 @@ const backendSupportedChains = [
   Chain.Celo,
   Chain.Blast,
   Chain.Avalanche,
+  Chain.Zksync,
 ] as const
 
 test.each(backendSupportedChains)(
@@ -209,7 +210,7 @@ test.each(backendSupportedChains)(
   },
 )
 
-const backendNotyetSupportedChainIds = [UniverseChainId.Zora, UniverseChainId.Zksync] as const
+const backendNotyetSupportedChainIds = [UniverseChainId.Zora] as const
 
 test.each(backendNotyetSupportedChainIds)(
   'BACKEND_SUPPORTED_CHAINS generates the correct chains',

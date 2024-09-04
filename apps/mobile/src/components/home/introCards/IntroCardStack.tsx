@@ -1,8 +1,10 @@
 import { IntroCard, IntroCardProps } from 'src/components/home/introCards/IntroCard'
 import { SwipeableCardStack } from 'ui/src/components/swipeablecards/SwipeableCardStack'
 
+export type IntroCardWrapper = IntroCardProps & { onPress?: () => void }
+
 type IntroCardStackProps = {
-  cards: IntroCardProps[]
+  cards: IntroCardWrapper[]
 
   keyExtractor: (card: IntroCardProps) => string
   onSwiped?: (card: IntroCardProps, index: number) => void

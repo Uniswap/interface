@@ -54,7 +54,7 @@ function Footer(): JSX.Element {
 
 export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Element {
   const { t } = useTranslation()
-  const { setSelectedQuote, quotesSections, baseCurrencyInfo } = useFiatOnRampContext()
+  const { isOffRamp, setSelectedQuote, quotesSections, baseCurrencyInfo } = useFiatOnRampContext()
 
   const renderItem = ({ item }: ListRenderItemInfo<FORQuote>): JSX.Element => {
     const onPress = (): void => {
@@ -98,7 +98,7 @@ export function FiatOnRampServiceProvidersScreen({ navigation }: Props): JSX.Ele
         <Flex row alignItems="center" justifyContent="space-between" pb="$spacing16" pt="$spacing12" px="$spacing16">
           <BackButton />
           <Text color="$neutral1" mt="$spacing2" textAlign="center" variant="subheading1">
-            {t('fiatOnRamp.checkout.title')}
+            {isOffRamp ? t('fiatOffRamp.checkout.title') : t('fiatOnRamp.checkout.title')}
           </Text>
           <Flex width="$spacing24" />
         </Flex>

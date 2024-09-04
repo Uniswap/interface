@@ -2,12 +2,12 @@
   "migIndex": 1,
   "data": [
     {
-      "path": "src/assets/fonts/Basel-Book.ttf",
-      "sha1": "7ff6b3f7e5c2857ca3b39fad3ba09c35bb75e302"
+      "path": "src/assets/fonts/Basel-Grotesk-Book.otf",
+      "sha1": "3d74b09feab9de003c5ef7861bcda7fe9c8f744f"
     },
     {
-      "path": "src/assets/fonts/Basel-Medium.ttf",
-      "sha1": "182bf31d0794296a034a2d13b50fffd804709aaa"
+      "path": "src/assets/fonts/Basel-Grotesk-Medium.otf",
+      "sha1": "b860c729d64ac027624cc52a059132211a1665a6"
     },
     {
       "path": "src/assets/fonts/InputMono-Regular.ttf",

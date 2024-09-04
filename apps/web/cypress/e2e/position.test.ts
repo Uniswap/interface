@@ -5,7 +5,7 @@ describe('Position', () => {
   })
 
   it('shows an invalid state on a supported network', () => {
-    cy.visit('/pools/788893')
+    cy.visit('/pools/9999999')
     cy.contains('To view a position, you must be connected to the network it belongs to.')
   })
 })

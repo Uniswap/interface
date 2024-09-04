@@ -13,6 +13,7 @@ import {
   CustomData,
   CustomSeriesOptions,
   ICustomSeriesPaneRenderer,
+  Logical,
   PaneRendererCustomData,
   PriceToCoordinateConverter,
   Time,
@@ -41,6 +42,7 @@ interface BarItem {
 
 export interface CustomHistogramSeriesOptions extends CustomSeriesOptions {
   colors: string[]
+  hoveredLogicalIndex?: Logical
 }
 
 function cumulativeBuildUp(data: StackedHistogramData): number[] {
@@ -54,19 +56,27 @@ function cumulativeBuildUp(data: StackedHistogramData): number[] {
 
 export interface CustomHistogramProps {
   colors: string[]
+  isMultichainExploreEnabled?: boolean
+  background?: string
 }
 
 export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> implements ICustomSeriesPaneRenderer {
   _data: PaneRendererCustomData<Time, TData> | null = null
   _options: CustomHistogramSeriesOptions | null = null
   _colors: string[]
+  _isMultichainExploreEnabled?: boolean
+  _background?: string
 
   constructor(props: CustomHistogramProps) {
     this._colors = props.colors
+    this._isMultichainExploreEnabled = props.isMultichainExploreEnabled
+    this._background = props.background
   }
 
   draw(target: CanvasRenderingTarget2D, priceConverter: PriceToCoordinateConverter): void {
-    target.useBitmapCoordinateSpace((scope) => this._drawImpl(scope, priceConverter))
+    target.useBitmapCoordinateSpace((scope) =>
+      this._drawImpl(scope, priceConverter, this._options?.hoveredLogicalIndex),
+    )
   }
 
   update(data: PaneRendererCustomData<Time, TData>, options: CustomHistogramSeriesOptions): void {
@@ -74,7 +84,11 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
     this._options = options
   }
 
-  _drawImpl(renderingScope: BitmapCoordinatesRenderingScope, priceToCoordinate: PriceToCoordinateConverter): void {
+  _drawImpl(
+    renderingScope: BitmapCoordinatesRenderingScope,
+    priceToCoordinate: PriceToCoordinateConverter,
+    hoveredIndex?: number | null,
+  ): void {
     if (
       this._data === null ||
       this._data.bars.length === 0 ||
@@ -120,16 +134,36 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
       // Modification: draw rounded rect corresponding to total volume
       const totalBox = positionsBox(zeroY, stack.ys[stack.ys.length - 1], renderingScope.verticalPixelRatio)
       ctx.beginPath()
-      ctx.roundRect(column.left + margin, totalBox.position, width - margin, totalBox.length, 8)
+
+      const isMultichainExploreEnabled = this._isMultichainExploreEnabled
+      if (this._background) {
+        ctx.fillStyle = this._background
+      }
+
+      ctx.roundRect(
+        column.left + margin,
+        totalBox.position,
+        width - margin,
+        totalBox.length,
+        isMultichainExploreEnabled ? 4 : 8,
+      )
       ctx.fill()
 
       // Modification: draw the stack's boxes atop the total volume bar, resulting in the top and bottom boxes being rounded
       ctx.globalCompositeOperation = 'source-atop'
+      const isStackedHistogram = stack.ys.length > 1
       stack.ys.forEach((y, index) => {
         const color = this._colors[this._colors.length - 1 - index] // color v2, then v3
         const stackBoxPositions = positionsBox(previousY, y, renderingScope.verticalPixelRatio)
         ctx.fillStyle = color
+        const isHovered = i === hoveredIndex
+        ctx.globalAlpha = isStackedHistogram && !isHovered && isMultichainExploreEnabled ? 0.24 : 1
         ctx.fillRect(column.left + margin, stackBoxPositions.position, width - margin, stackBoxPositions.length)
+        if (isStackedHistogram && isMultichainExploreEnabled && !isHovered) {
+          ctx.globalAlpha = 1
+          ctx.fillStyle = color
+          ctx.fillRect(column.left + margin, stackBoxPositions.position, width - margin, 2)
+        }
         previousY = y
       })
 

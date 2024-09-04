@@ -7,7 +7,7 @@ import { useSubmitOnEnter } from 'src/app/features/onboarding/utils'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { CheckBox, Circle, Flex, IconProps, Square, Text } from 'ui/src'
-import { AlertTriangle, EyeOff, FileListLock, Key, PencilDetailed } from 'ui/src/components/icons'
+import { AlertTriangleFilled, EyeOff, FileListLock, Key, PencilDetailed } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
@@ -82,7 +82,7 @@ export function ViewMnemonic(): JSX.Element {
             {viewStep === ViewStep.View ? (
               <FileListLock color="$neutral1" size={iconSizes.icon24} />
             ) : (
-              <AlertTriangle color="$statusCritical" size={iconSizes.icon24} />
+              <AlertTriangleFilled color="$statusCritical" size={iconSizes.icon24} />
             )}
           </Square>
         }

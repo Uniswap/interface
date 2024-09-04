@@ -44,7 +44,7 @@ export function ScrollDownOverlay({ onScrollDownPress, scrollDownButonText }: Sc
       </Flex>
 
       <TouchableArea alignItems="center" onPress={onScrollDownPress}>
-        <Text color="$accent1" variant="buttonLabel3">
+        <Text color="$accent1" variant="buttonLabel2">
           {scrollDownButonText ?? t('common.button.scrollDown')}
         </Text>
         <ArrowDown color="$accent1" size={iconSizes.icon16} />

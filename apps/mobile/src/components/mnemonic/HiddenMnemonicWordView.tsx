@@ -1,6 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, useShadowPropsMedium } from 'ui/src'
+import { Flex, Text, TouchableArea, useShadowPropsShort } from 'ui/src'
 import { EyeSlash } from 'ui/src/components/icons'
 
 const ROW_COUNT = 6
@@ -14,7 +14,7 @@ export function HiddenMnemonicWordView({
   onRevealPress,
 }: HiddenMnemonicWordViewProps): JSX.Element {
   const { t } = useTranslation()
-  const shadowProps = useShadowPropsMedium()
+  const shadowProps = useShadowPropsShort()
 
   return (
     <Flex mt="$spacing16">
@@ -22,7 +22,9 @@ export function HiddenMnemonicWordView({
         row
         alignItems="stretch"
         backgroundColor="$surface2"
+        borderColor="$surface3"
         borderRadius="$rounded20"
+        borderWidth={1}
         gap="$spacing36"
         px="$spacing32"
         py="$spacing24"
@@ -37,14 +39,16 @@ export function HiddenMnemonicWordView({
               {...shadowProps}
               row
               backgroundColor="$surface1"
+              borderColor="$surface3"
               borderRadius="$rounded16"
+              borderWidth={1}
               gap="$spacing4"
               paddingEnd="$spacing16"
               paddingStart="$spacing12"
               py="$spacing8"
             >
               <EyeSlash color="$accent1" size="$icon.20" />
-              <Text color="$accent1" variant="buttonLabel3">
+              <Text color="$accent1" variant="buttonLabel2">
                 {t('common.button.reveal')}
               </Text>
             </Flex>

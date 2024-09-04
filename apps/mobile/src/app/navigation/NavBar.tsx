@@ -35,7 +35,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { setHasUsedExplore } from 'wallet/src/features/behaviorHistory/slice'
-import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { prepareSwapFormState } from 'wallet/src/features/transactions/swap/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -112,8 +111,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
 
   const isDarkMode = useIsDarkMode()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
-  const valueModifiers = usePortfolioValueModifiers(activeAccountAddress) ?? []
-  const inputCurrencyId = useHighestBalanceNativeCurrencyId(activeAccountAddress, valueModifiers)
+  const inputCurrencyId = useHighestBalanceNativeCurrencyId(activeAccountAddress)
 
   const onPress = useCallback(async () => {
     dispatch(
@@ -166,7 +164,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
           >
             <LinearGradient colors={['#F160F9', '#E14EE9']} end={[0, 1]} height="100%" start={[0, 0]} width="100%" />
           </Flex>
-          <Text allowFontScaling={false} color="$white" numberOfLines={1} variant="buttonLabel2">
+          <Text allowFontScaling={false} color="$white" numberOfLines={1} variant="buttonLabel1">
             {t('common.button.swap')}
           </Text>
         </AnimatedFlex>

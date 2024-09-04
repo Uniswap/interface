@@ -98,6 +98,7 @@ export function SettingsWalletEdit({
                   disabled={!accountNameIsEditable}
                   fontFamily="$subHeading"
                   fontSize={fonts.subheading1.fontSize}
+                  fontWeight="$book"
                   m="$none"
                   maxLength={NICKNAME_MAX_LENGTH}
                   numberOfLines={1}

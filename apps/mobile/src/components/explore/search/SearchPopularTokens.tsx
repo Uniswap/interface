@@ -5,7 +5,7 @@ import { getSearchResultId } from 'src/components/explore/search/utils'
 import { Flex, Loader } from 'ui/src'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
-import { TopToken, usePopularTokens } from 'wallet/src/features/tokens/hooks'
+import { TopToken, usePopularTokens } from 'uniswap/src/features/tokens/hooks'
 
 function gqlTokenToTokenSearchResult(token: Maybe<TopToken>): TokenSearchResult | null {
   if (!token || !token.project) {

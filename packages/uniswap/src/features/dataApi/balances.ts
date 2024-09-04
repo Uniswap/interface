@@ -2,6 +2,7 @@ import { NetworkStatus, Reference, useApolloClient, WatchQueryFetchPolicy } from
 import { useCallback, useMemo } from 'react'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
+  ContractInput,
   IAmount,
   PortfolioBalanceDocument,
   PortfolioBalancesQuery,
@@ -11,7 +12,9 @@ import {
 import { GqlResult } from 'uniswap/src/data/types'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency, usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import { buildCurrency, currencyIdToContractInput, usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { usePlatformBasedFetchPolicy } from 'uniswap/src/utils/usePlatformBasedFetchPolicy'
@@ -44,7 +47,6 @@ export type PortfolioCacheUpdater = (hidden: boolean, portfolioBalance?: Portfol
  *  polling interval when token selector is open
  * @param onCompleted
  * @param fetchPolicy
- * @param valueModifiers
  * @returns
  */
 export function usePortfolioBalances({
@@ -52,18 +54,18 @@ export function usePortfolioBalances({
   pollInterval,
   onCompleted,
   fetchPolicy,
-  valueModifiers,
 }: {
   address?: Address
   pollInterval?: PollingInterval
   onCompleted?: () => void
   fetchPolicy?: WatchQueryFetchPolicy
-  valueModifiers?: PortfolioValueModifier[]
 }): GqlResult<Record<CurrencyId, PortfolioBalance>> & { networkStatus: NetworkStatus } {
   const { fetchPolicy: internalFetchPolicy, pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
     fetchPolicy,
     pollInterval,
   })
+
+  const valueModifiers = usePortfolioValueModifiers(address)
 
   const {
     data: balancesData,
@@ -164,18 +166,18 @@ export function usePortfolioTotalValue({
   pollInterval,
   onCompleted,
   fetchPolicy,
-  valueModifiers,
 }: {
   address?: Address
   pollInterval?: PollingInterval
   onCompleted?: () => void
   fetchPolicy?: WatchQueryFetchPolicy
-  valueModifiers?: PortfolioValueModifier[]
 }): GqlResult<PortfolioTotalValue> & { networkStatus: NetworkStatus } {
   const { fetchPolicy: internalFetchPolicy, pollInterval: internalPollInterval } = usePlatformBasedFetchPolicy({
     fetchPolicy,
     pollInterval,
   })
+
+  const valueModifiers = usePortfolioValueModifiers(address)
 
   const {
     data: balancesData,
@@ -221,6 +223,51 @@ export function usePortfolioTotalValue({
   }
 }
 
+interface TokenOverrides {
+  tokenIncludeOverrides: ContractInput[]
+  tokenExcludeOverrides: ContractInput[]
+}
+
+export function usePortfolioValueModifiers(addresses?: Address | Address[]): PortfolioValueModifier[] | undefined {
+  // Memoize array creation if passed a string to avoid recomputing at every render
+  const addressArray = useMemo(
+    () => (!addresses ? [] : Array.isArray(addresses) ? addresses : [addresses]),
+    [addresses],
+  )
+  const currencyIdToTokenVisibility = useCurrencyIdToVisibility(addressArray)
+
+  const hideSpamTokens = useHideSpamTokensSetting()
+  const hideSmallBalances = useHideSmallBalancesSetting()
+
+  const { tokenIncludeOverrides, tokenExcludeOverrides } = Object.entries(currencyIdToTokenVisibility).reduce(
+    (acc: TokenOverrides, [key, tokenVisibility]) => {
+      const contractInput = currencyIdToContractInput(key)
+      if (tokenVisibility.isVisible) {
+        acc.tokenIncludeOverrides.push(contractInput)
+      } else {
+        acc.tokenExcludeOverrides.push(contractInput)
+      }
+      return acc
+    },
+    {
+      tokenIncludeOverrides: [],
+      tokenExcludeOverrides: [],
+    },
+  )
+
+  const modifiers = useMemo<PortfolioValueModifier[]>(() => {
+    return addressArray.map((addr) => ({
+      ownerAddress: addr,
+      tokenIncludeOverrides,
+      tokenExcludeOverrides,
+      includeSmallBalances: !hideSmallBalances,
+      includeSpamTokens: !hideSpamTokens,
+    }))
+  }, [addressArray, tokenIncludeOverrides, tokenExcludeOverrides, hideSmallBalances, hideSpamTokens])
+
+  return modifiers.length > 0 ? modifiers : undefined
+}
+
 /**
  * Returns NativeCurrency with highest balance.
  *
@@ -228,11 +275,8 @@ export function usePortfolioTotalValue({
  * @returns CurrencyId of the NativeCurrency with highest balance
  *
  */
-export function useHighestBalanceNativeCurrencyId(
-  address: Address,
-  valueModifiers?: PortfolioValueModifier[],
-): CurrencyId | undefined {
-  const { data } = useSortedPortfolioBalances({ address, valueModifiers })
+export function useHighestBalanceNativeCurrencyId(address: Address): CurrencyId | undefined {
+  const { data } = useSortedPortfolioBalances({ address })
   return data?.balances.find((balance) => balance.currencyInfo.currency.isNative)?.currencyInfo.currencyId
 }
 
@@ -289,18 +333,15 @@ export function useTokenBalancesGroupedByVisibility({
  * @param pollInterval optional polling interval for auto refresh.
  *    If undefined, query will run only once.
  * @param onCompleted callback
- * @param valueModifiers optional array of PortfolioValueModifier objects
  * @returns SortedPortfolioBalances object with `balances` and `hiddenBalances`
  */
 export function useSortedPortfolioBalances({
-  valueModifiers,
   address,
   pollInterval,
   onCompleted,
 }: {
   address: Address
   pollInterval?: PollingInterval
-  valueModifiers?: PortfolioValueModifier[]
   onCompleted?: () => void
 }): GqlResult<SortedPortfolioBalances> & { networkStatus: NetworkStatus } {
   // Fetch all balances including small balances and spam tokens because we want to return those in separate arrays
@@ -314,7 +355,6 @@ export function useSortedPortfolioBalances({
     pollInterval,
     onCompleted,
     fetchPolicy: 'cache-and-network',
-    valueModifiers,
   })
 
   const { shownTokens, hiddenTokens } = useTokenBalancesGroupedByVisibility({ balancesById })

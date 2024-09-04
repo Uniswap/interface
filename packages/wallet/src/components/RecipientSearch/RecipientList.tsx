@@ -6,11 +6,11 @@ import { Text, TouchableArea, isWeb, useDeviceInsets } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { spacing } from 'ui/src/theme'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { SearchResultType, extractDomain } from 'uniswap/src/features/search/SearchResult'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { SearchableRecipient } from 'wallet/src/features/address/types'
 
 interface RecipientListProps {
   renderedInModal?: boolean

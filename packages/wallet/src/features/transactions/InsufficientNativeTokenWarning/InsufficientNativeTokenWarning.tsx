@@ -1,6 +1,6 @@
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { Warning } from 'uniswap/src/features/transactions/WarningModal/types'
-import { NotImplementedError } from 'utilities/src/errors'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 
 export type InsufficientNativeTokenWarningProps = {
   warnings: Warning[]
@@ -9,5 +9,5 @@ export type InsufficientNativeTokenWarningProps = {
 }
 
 export function InsufficientNativeTokenWarning(_: InsufficientNativeTokenWarningProps): JSX.Element | null {
-  throw new NotImplementedError('InsufficientNativeTokenWarning')
+  throw new PlatformSplitStubError('InsufficientNativeTokenWarning')
 }

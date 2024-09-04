@@ -1,8 +1,8 @@
 import { useMemo } from 'react'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 import { useUSDValue } from 'wallet/src/features/gas/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { UniswapXGasBreakdown } from 'wallet/src/features/transactions/swap/trade/api/hooks/useSwapTxAndGasInfo'
 
 export type FormattedUniswapXGasFeeInfo = {

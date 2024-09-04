@@ -32,10 +32,10 @@ exports[`LearnMoreLink renders without error 1`] = `
     style={
       {
         "color": "#FC72FF",
-        "fontFamily": "Basel-Medium",
-        "fontSize": 14,
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 16,
         "fontWeight": "500",
-        "lineHeight": 20,
+        "lineHeight": 18.4,
       }
     }
     suppressHighlighting={true}

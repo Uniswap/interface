@@ -21,11 +21,12 @@ import { WalletConnectRequest, isTransactionRequest } from 'src/features/walletC
 import { GasSpeed } from 'uniswap/src/features/gas/types'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap/src/types/walletConnect'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
-import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
 
 interface Props {

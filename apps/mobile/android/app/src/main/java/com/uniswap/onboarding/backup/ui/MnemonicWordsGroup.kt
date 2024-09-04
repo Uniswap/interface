@@ -38,9 +38,7 @@ fun MnemonicWordsGroup(
         vertical = UniswapTheme.spacing.spacing24,
         horizontal = UniswapTheme.spacing.spacing32
       ),
-    horizontalArrangement = Arrangement.spacedBy(
-      if (shouldShowSmallText) UniswapTheme.spacing.spacing16 else UniswapTheme.spacing.spacing24
-    )
+    horizontalArrangement = Arrangement.spacedBy(UniswapTheme.spacing.spacing8)
   ) {
     val size = words.size / columnCount
     for (i in 0 until columnCount) {

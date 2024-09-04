@@ -8,6 +8,7 @@ import {
 } from 'uniswap/src/features/fiatOnRamp/api'
 import { FORCountry, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { useTranslation } from 'uniswap/src/i18n'
+// eslint-disable-next-line no-restricted-imports
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 import { getFiatCurrencyName } from 'utils/fiatCurrency'
 

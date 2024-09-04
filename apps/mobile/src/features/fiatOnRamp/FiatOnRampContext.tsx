@@ -28,6 +28,8 @@ interface FiatOnRampContextType {
   setQuoteCurrency: (quoteCurrency: FiatOnRampCurrency) => void
   amount?: number
   setAmount: (amount: number | undefined) => void
+  isOffRamp: boolean
+  setIsOffRamp: (isOffRamp: boolean) => void
 }
 
 const initialState: FiatOnRampContextType = {
@@ -41,6 +43,8 @@ const initialState: FiatOnRampContextType = {
   countryCode: '',
   countryState: undefined,
   quoteCurrency: { currencyInfo: undefined },
+  isOffRamp: false,
+  setIsOffRamp: () => undefined,
 }
 
 const FiatOnRampContext = createContext<FiatOnRampContextType>(initialState)
@@ -56,6 +60,7 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const [countryState, setCountryState] = useState<string | undefined>()
   const [baseCurrencyInfo, setBaseCurrencyInfo] = useState<FiatCurrencyInfo>()
   const [amount, setAmount] = useState<number>()
+  const [isOffRamp, setIsOffRamp] = useState<boolean>(false)
 
   const { initialState: initialModalState } = useSelector(selectModalState(ModalName.FiatOnRampAggregator))
   const prefilledCurrency = initialModalState?.prefilledCurrency
@@ -88,6 +93,8 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
         setQuoteCurrency,
         amount,
         setAmount,
+        isOffRamp,
+        setIsOffRamp,
       }}
     >
       {children}

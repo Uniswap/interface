@@ -69,7 +69,7 @@ export function DappConnectedNetworkModal({ session, onClose }: DappConnectedNet
               values={{ dappNameOrUrl: dapp.name || dapp.url }}
             />
           </Text>
-          <Text color="$accent1" numberOfLines={1} textAlign="center" variant="buttonLabel4">
+          <Text color="$accent1" numberOfLines={1} textAlign="center" variant="buttonLabel2">
             {dapp.url}
           </Text>
         </Flex>

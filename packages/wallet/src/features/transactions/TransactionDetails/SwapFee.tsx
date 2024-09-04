@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SwapFeeInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { NumberType } from 'utilities/src/format/types'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { SwapFeeWarning } from 'wallet/src/features/transactions/swap/modals/SwapFeeWarning'
 
 export function SwapFee({ swapFeeInfo }: { swapFeeInfo: SwapFeeInfo }): JSX.Element {

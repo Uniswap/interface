@@ -1,10 +1,24 @@
 import { PropsWithChildren } from 'react'
-import { GetProps, isWeb, styled, Text as TamaguiText } from 'tamagui'
+import { GetProps, Text as TamaguiText, TextStyle, isWeb, styled } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
 import { HiddenFromScreenReaders } from 'ui/src/components/text/HiddenFromScreenReaders'
 import { useEnableFontScaling } from 'ui/src/components/text/useEnableFontScaling'
 import { Skeleton } from 'ui/src/loading/Skeleton'
 import { fonts } from 'ui/src/theme/fonts'
+import { isAndroid } from 'utilities/src/platform'
+
+// android fonts appear too far down, tried includeFontPadding: false, but it seems to do nothing
+// see: https://stackoverflow.com/questions/41525842/react-native-android-text-component-extra-padding
+// instead setting a small negative y, which isn't beautiful but works
+function getAndroidTextAdjustmentStyles(variant: keyof typeof fonts): TextStyle | null {
+  if (isAndroid) {
+    const fontSize = fonts[variant].fontSize
+    return {
+      y: -Math.round(fontSize * 0.036),
+    }
+  }
+  return null
+}
 
 export const TextFrame = styled(TamaguiText, {
   fontFamily: '$body',
@@ -18,6 +32,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$large',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.heading1.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('heading1'),
       },
       heading2: {
         fontFamily: '$heading',
@@ -25,6 +40,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$medium',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.heading2.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('heading2'),
       },
       heading3: {
         fontFamily: '$heading',
@@ -32,6 +48,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$small',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.heading3.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('heading3'),
       },
       subheading1: {
         fontFamily: '$subHeading',
@@ -39,6 +56,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$large',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.subheading1.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('subheading1'),
       },
       subheading2: {
         fontFamily: '$subHeading',
@@ -46,6 +64,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$small',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.subheading2.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('subheading2'),
       },
       body1: {
         fontFamily: '$body',
@@ -53,6 +72,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$large',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body1.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('body1'),
       },
       body2: {
         fontFamily: '$body',
@@ -60,6 +80,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$medium',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body2.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('body2'),
       },
       body3: {
         fontFamily: '$body',
@@ -67,6 +88,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$small',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body3.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('body3'),
       },
       body4: {
         fontFamily: '$body',
@@ -74,6 +96,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$micro',
         fontWeight: '$book',
         maxFontSizeMultiplier: fonts.body4.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('body4'),
       },
       buttonLabel1: {
         fontFamily: '$button',
@@ -81,6 +104,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$large',
         fontWeight: '$medium',
         maxFontSizeMultiplier: fonts.buttonLabel1.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('buttonLabel1'),
       },
       buttonLabel2: {
         fontFamily: '$button',
@@ -88,6 +112,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$medium',
         fontWeight: '$medium',
         maxFontSizeMultiplier: fonts.buttonLabel2.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('buttonLabel1'),
       },
       buttonLabel3: {
         fontFamily: '$button',
@@ -95,6 +120,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$small',
         fontWeight: '$medium',
         maxFontSizeMultiplier: fonts.buttonLabel3.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('buttonLabel1'),
       },
       buttonLabel4: {
         fontFamily: '$button',
@@ -102,6 +128,7 @@ export const TextFrame = styled(TamaguiText, {
         lineHeight: '$micro',
         fontWeight: '$medium',
         maxFontSizeMultiplier: fonts.buttonLabel4.maxFontSizeMultiplier,
+        ...getAndroidTextAdjustmentStyles('buttonLabel2'),
       },
       monospace: {
         fontFamily: '$body',

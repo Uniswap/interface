@@ -2,6 +2,7 @@ import React, { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { AccountSwitcherModal } from 'src/app/modals/AccountSwitcherModal'
 import { BackupReminderModal } from 'src/app/modals/BackupReminderModal'
+import { BackupWarningModal } from 'src/app/modals/BackupWarningModal'
 import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { ExploreModal } from 'src/app/modals/ExploreModal'
 import { KoreaCexTransferInfoModal } from 'src/app/modals/KoreaCexTransferInfoModal'
@@ -108,6 +109,10 @@ export function AppModals(): JSX.Element {
 
       <LazyModalRenderer name={ModalName.BackupReminder}>
         <BackupReminderModal />
+      </LazyModalRenderer>
+
+      <LazyModalRenderer name={ModalName.BackupReminderWarning}>
+        <BackupWarningModal />
       </LazyModalRenderer>
     </>
   )

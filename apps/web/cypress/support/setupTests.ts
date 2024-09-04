@@ -16,7 +16,6 @@ export function registerSetupTests() {
 
     // Log requests to hardhat.
     cy.intercept(/:8545/, logJsonRpc)
-
     Cypress.env('amplitudeEventCache', [])
 
     // Mock analytics responses to avoid analytics in tests.

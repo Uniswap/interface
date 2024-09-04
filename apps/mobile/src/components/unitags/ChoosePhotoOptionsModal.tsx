@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next'
 import { selectPhotoFromLibrary } from 'src/components/unitags/AvatarSelection'
 import { ChooseNftModal } from 'src/components/unitags/ChooseNftModal'
 import { Flex, Text, useSporeColors } from 'ui/src'
-import { Camera, Photo, Trash } from 'ui/src/components/icons'
+import { Camera, PhotoStacked, Trash } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -118,13 +118,13 @@ const ChoosePhotoOption = ({ type }: { type: PhotoAction }): JSX.Element => {
       p="$spacing24"
     >
       {type === PhotoAction.BrowseCameraRoll && <Camera color="$neutral1" size={iconSizes.icon24} />}
-      {type === PhotoAction.BrowseNftsList && <Photo color="$neutral1" size={iconSizes.icon24} />}
+      {type === PhotoAction.BrowseNftsList && <PhotoStacked color="$neutral1" size={iconSizes.icon24} />}
       {type === PhotoAction.RemovePhoto && <Trash color="$statusCritical" size={iconSizes.icon24} />}
       <Flex shrink alignItems="flex-start">
         <Text
           color={type === PhotoAction.RemovePhoto ? '$statusCritical' : '$neutral1'}
           numberOfLines={1}
-          variant="buttonLabel2"
+          variant="buttonLabel1"
         >
           {type === PhotoAction.BrowseCameraRoll && t('unitags.choosePhoto.option.cameraRoll')}
           {type === PhotoAction.BrowseNftsList && t('unitags.choosePhoto.option.nft')}

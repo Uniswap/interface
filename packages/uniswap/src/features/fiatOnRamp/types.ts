@@ -1,10 +1,11 @@
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import {
   LocalOnRampTransactionInfo,
   OnRampPurchaseInfo,
   OnRampTransferInfo,
   TransactionDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+// eslint-disable-next-line no-restricted-imports
 import { FiatCurrencyComponents } from 'utilities/src/format/localeBased'
 
 // Moonpay Legacy Info
@@ -154,9 +155,9 @@ export type FORCryptoDetails = {
 export type FORTransaction = {
   id: string
   status: string
-  sourceAmount: number
+  sourceAmount?: number
   sourceCurrencyCode: string
-  destinationAmount: number
+  destinationAmount?: number
   destinationCurrencyCode: string
   destinationContractAddress: string
   serviceProviderDetails: FORServiceProvider
@@ -191,3 +192,5 @@ export type FiatCurrencyInfo = {
   shortName: string
   code: string
 } & FiatCurrencyComponents
+
+export type FORCurrencyOrBalance = FiatOnRampCurrency | PortfolioBalance

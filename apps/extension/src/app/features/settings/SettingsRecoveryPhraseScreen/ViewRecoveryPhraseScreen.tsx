@@ -8,7 +8,7 @@ import { EnterPasswordModal } from 'src/app/features/settings/password/EnterPass
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Button, Flex, Separator, Text } from 'ui/src'
-import { AlertTriangle, Eye, Key, Laptop } from 'ui/src/components/icons'
+import { AlertTriangleFilled, Eye, Key, Laptop } from 'ui/src/components/icons'
 import { spacing } from 'ui/src/theme'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -76,7 +76,7 @@ export function SettingsViewRecoveryPhraseScreen(): JSX.Element {
       <ScreenHeader title={t('settings.setting.recoveryPhrase.title')} />
       {viewStep !== ViewStep.Reveal ? (
         <SettingsRecoveryPhrase
-          icon={<AlertTriangle color="$statusCritical" size="$icon.24" />}
+          icon={<AlertTriangleFilled color="$statusCritical" size="$icon.24" />}
           nextButtonEnabled={true}
           nextButtonText={t('common.button.continue')}
           nextButtonTheme="secondary_Button"

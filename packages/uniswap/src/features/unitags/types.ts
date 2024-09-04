@@ -67,7 +67,7 @@ export type UnitagClaimUsernameRequestBody = {
   metadata?: ProfileMetadata
 }
 
-export type UnitagClaimEligibilityParams = {
+export type UnitagClaimEligibilityRequest = {
   address?: Address
   deviceId: string
   isUsernameChange?: boolean

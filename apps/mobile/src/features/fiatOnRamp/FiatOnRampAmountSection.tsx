@@ -4,19 +4,17 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { ColorTokens, Flex, Text, useHapticFeedback, useSporeColors } from 'ui/src'
+import { ColorTokens, Flex, Text, TouchableArea, useHapticFeedback, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, spacing } from 'ui/src/theme'
 import { Pill } from 'uniswap/src/components/pill/Pill'
-import { SelectTokenButton } from 'uniswap/src/features/fiatOnRamp/SelectTokenButton'
 import { FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
 import { useFormatExactCurrencyAmount } from 'wallet/src/features/fiatOnRamp/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { errorShakeAnimation } from 'wallet/src/utils/animations'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
@@ -74,17 +72,15 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       onSelectionChange: selectionChange,
       errorColor,
       errorText,
-      currency,
       onEnterAmount,
       onChoosePredifendAmount,
-      quoteAmount,
-      quoteCurrencyAmountReady,
-      selectTokenLoading,
-      onTokenSelectorPress,
       predefinedAmountsSupported,
       appFiatCurrencySupported,
       notAvailableInThisRegion,
       fiatCurrencyInfo,
+      quoteAmount,
+      currency,
+      selectTokenLoading,
     },
     forwardedRef,
   ): JSX.Element {
@@ -146,8 +142,6 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
     // Design has asked to make it around 100ms and DEFAULT_DELAY is 200ms
     const debouncedErrorText = useDebounce(errorText, DEFAULT_DELAY / 2)
 
-    const formattedAmount = useFormatExactCurrencyAmount(quoteAmount.toString(), currency.currencyInfo?.currency)
-
     // we want to always focus amount input
     const isTextInputRefActuallyFocused = inputRef.current?.isFocused()
     useFocusEffect(
@@ -158,16 +152,24 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       }, [inputRef, isTextInputRefActuallyFocused]),
     )
 
+    // TODO: handle this fiat mode switcher
+    function onToggleIsFiatMode(): void {}
+
+    const formattedCurrencyAmount = useFormatExactCurrencyAmount(
+      quoteAmount.toString(),
+      currency.currencyInfo?.currency,
+    )
+
     return (
       <Flex
         alignItems="center"
         gap="$spacing8"
         justifyContent="center"
-        style={{ marginTop: (fullHeight - MIN_SCREEN_HEIGHT) / 4 }} // 4 was chosen empirically
+        style={{ marginTop: (fullHeight - MIN_SCREEN_HEIGHT) / 6 }} // 6 was chosen empirically
         onLayout={onInputLayout}
       >
         <Flex minHeight={spacing.spacing20}>
-          <Text color={errorColor} lineHeight={spacing.spacing20} textAlign="center" variant="buttonLabel4">
+          <Text color={errorColor} lineHeight={spacing.spacing20} textAlign="center" variant="buttonLabel2">
             {debouncedErrorText}
           </Text>
         </Flex>
@@ -193,6 +195,9 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               fiatCurrencyInfo={fiatCurrencyInfo}
               fontFamily="$heading"
               fontSize={fontSize}
+              fontWeight="$book"
+              height={fontSize}
+              lineHeight={fontSize + (value ? 5 : 0)}
               maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
               minHeight={MAX_INPUT_FONT_SIZE}
               placeholder="0"
@@ -208,19 +213,8 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
             />
           </Flex>
         </AnimatedFlex>
-        {currency.currencyInfo && formattedAmount && (
-          <SelectTokenButton
-            amountReady={quoteCurrencyAmountReady}
-            disabled={notAvailableInThisRegion}
-            formattedAmount={formattedAmount}
-            loading={selectTokenLoading}
-            selectedCurrencyInfo={currency.currencyInfo}
-            testID={TestID.TokenSelectorToggle}
-            onPress={onTokenSelectorPress}
-          />
-        )}
-        {predefinedAmountsSupported ? (
-          <Flex centered row gap="$spacing12" pb="$spacing4">
+        {!value && predefinedAmountsSupported ? (
+          <Flex centered row gap="$spacing12" mt="$spacing8" pb="$spacing4">
             {PREDEFINED_AMOUNTS.map((amount) => (
               <PredefinedAmount
                 key={amount}
@@ -232,7 +226,26 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
               />
             ))}
           </Flex>
-        ) : null}
+        ) : (
+          <TouchableArea onPress={onToggleIsFiatMode}>
+            <Flex
+              centered
+              row
+              alignItems="center"
+              gap="$spacing4"
+              justifyContent="center"
+              pb="$spacing4"
+              pt="$spacing4"
+            >
+              <Text color="$neutral2" loading={selectTokenLoading} variant="subheading1">
+                {formattedCurrencyAmount}
+                {currency.currencyInfo?.currency.symbol}
+              </Text>
+              {/* TODO: support switching from fiat to token amounts */}
+              {/* <ArrowUpDown color="$neutral2" maxWidth={16} size="$icon.16" /> */}
+            </Flex>
+          </TouchableArea>
+        )}
         {notAvailableInThisRegion ? (
           <OnRampError color="$neutral2" errorText={t('fiatOnRamp.error.unavailable')} />
         ) : !appFiatCurrencySupported ? (
@@ -282,7 +295,7 @@ function PredefinedAmount({
         foregroundColor={colors[disabled ? 'neutral3' : highlighted ? 'neutral1' : 'neutral2'].val}
         label={formattedAmount}
         px="$spacing16"
-        textVariant="buttonLabel3"
+        textVariant="buttonLabel2"
       />
     </TouchableOpacity>
   )

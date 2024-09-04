@@ -1,13 +1,16 @@
 import { ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { CrosshairHighlightPrimitive } from 'components/Charts/VolumeChart/CrosshairHighlightPrimitive'
 import { CustomHistogramSeries } from 'components/Charts/VolumeChart/custom-histogram-series'
-import { CustomHistogramData } from 'components/Charts/VolumeChart/renderer'
-import { BarPrice, ISeriesApi } from 'lightweight-charts'
+import { CustomHistogramData, CustomHistogramSeriesOptions } from 'components/Charts/VolumeChart/renderer'
+import { BarPrice, DeepPartial, ISeriesApi, Logical } from 'lightweight-charts'
 import { NumberType } from 'utils/formatNumbers'
 
 export type CustomVolumeChartModelParams = {
   colors: string[]
   headerHeight: number
+  useThinCrosshair?: boolean
+  isMultichainExploreEnabled?: boolean
+  background?: string
 }
 
 // Custom volume chart model, uses stacked volume chart as base model
@@ -15,11 +18,18 @@ export type CustomVolumeChartModelParams = {
 export class CustomVolumeChartModel<TDataType extends CustomHistogramData> extends ChartModel<TDataType> {
   protected series: ISeriesApi<'Custom'>
   private highlightBarPrimitive: CrosshairHighlightPrimitive
+  private hoveredLogicalIndex: Logical | null | undefined
 
   constructor(chartDiv: HTMLDivElement, params: ChartModelParams<TDataType> & CustomVolumeChartModelParams) {
     super(chartDiv, params)
 
-    this.series = this.api.addCustomSeries(new CustomHistogramSeries({ colors: params.colors }))
+    this.series = this.api.addCustomSeries(
+      new CustomHistogramSeries({
+        colors: params.colors,
+        isMultichainExploreEnabled: params.isMultichainExploreEnabled,
+        background: params.background,
+      }),
+    )
 
     this.series.setData(this.data)
 
@@ -27,11 +37,21 @@ export class CustomVolumeChartModel<TDataType extends CustomHistogramData> exten
     this.highlightBarPrimitive = new CrosshairHighlightPrimitive({
       color: params.theme.surface3,
       crosshairYPosition: params.headerHeight,
+      useThinCrosshair: params.useThinCrosshair,
     })
     this.series.attachPrimitive(this.highlightBarPrimitive)
 
     this.updateOptions(params)
     this.fitContent()
+
+    this.api.subscribeCrosshairMove((param) => {
+      if (param?.logical !== this.hoveredLogicalIndex) {
+        this.hoveredLogicalIndex = param?.logical
+        this.series.applyOptions({
+          hoveredLogicalIndex: this.hoveredLogicalIndex ?? (-1 as Logical), // -1 is used because series will use prev value if undefined is passed
+        } as DeepPartial<CustomHistogramSeriesOptions>)
+      }
+    })
   }
 
   updateOptions(params: ChartModelParams<TDataType> & CustomVolumeChartModelParams, options?: any) {

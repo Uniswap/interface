@@ -24,7 +24,7 @@ export function UniswapXInfo({
     <WarningInfo
       infoButton={
         <LearnMoreLink
-          textVariant={isWeb ? 'buttonLabel4' : undefined}
+          textVariant={isWeb ? 'buttonLabel3' : undefined}
           url={uniswapUrls.helpArticleUrls.uniswapXInfo}
         />
       }
@@ -35,7 +35,7 @@ export function UniswapXInfo({
         icon: <UniswapX size="$icon.24" />,
         modalName: ModalName.UniswapXInfo,
         severity: WarningSeverity.None,
-        title: <UniswapXText variant={isWeb ? 'subheading2' : 'body1'}>{t('uniswapx.label')}</UniswapXText>,
+        titleComponent: <UniswapXText variant={isWeb ? 'subheading2' : 'body1'}>{t('uniswapx.label')}</UniswapXText>,
       }}
       tooltipProps={{
         text: t('uniswapx.description'),

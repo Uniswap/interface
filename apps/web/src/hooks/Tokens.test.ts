@@ -29,14 +29,18 @@ describe('useCurrencyInfo', () => {
     it('calls useUniswapCurrencyInfo with the correct arguments', () => {
       renderHook(() => useCurrencyInfo(DAI.address, UniverseChainId.Mainnet))
 
-      expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(`${UniverseChainId.Mainnet}-${DAI.address}`)
+      expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(`${UniverseChainId.Mainnet}-${DAI.address}`, {
+        skip: undefined,
+      })
     })
 
     it('calls useUniswapCurrencyInfo with the correct arguments when Currency is provided', () => {
       const currency = new Token(UniverseChainId.Mainnet, DAI.address, 18, DAI.symbol, DAI.name)
       renderHook(() => useCurrencyInfo(currency))
 
-      expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(`${UniverseChainId.Mainnet}-${DAI.address}`)
+      expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(`${UniverseChainId.Mainnet}-${DAI.address}`, {
+        skip: undefined,
+      })
     })
   })
 
@@ -46,6 +50,7 @@ describe('useCurrencyInfo', () => {
 
       expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(
         `${UniverseChainId.Mainnet}-${UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].nativeCurrency.address}`,
+        { skip: undefined },
       )
     })
 
@@ -54,6 +59,7 @@ describe('useCurrencyInfo', () => {
 
       expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(
         `${UniverseChainId.Mainnet}-${UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].nativeCurrency.address}`,
+        { skip: undefined },
       )
     })
 
@@ -63,6 +69,7 @@ describe('useCurrencyInfo', () => {
 
       expect(useUniswapCurrencyInfo).toHaveBeenCalledWith(
         `${UniverseChainId.Mainnet}-${UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].nativeCurrency.address}`,
+        { skip: undefined },
       )
     })
   })

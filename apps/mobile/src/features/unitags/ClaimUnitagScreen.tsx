@@ -8,10 +8,10 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackParamList } from 'src/app/navigation/types'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { UnitagName } from 'src/features/unitags/UnitagName'
-import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { AnimatePresence, Button, Flex, Image, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ENS_LOGO } from 'ui/src/assets'
-import { InfoCircleFilled, LinkHorizontalAlt } from 'ui/src/components/icons'
+import { InfoCircleFilled, LinkHorizontalAlt, Person } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { DEP_accentColors, fonts, iconSizes, imageSizes, spacing, validColor } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
@@ -20,8 +20,7 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
 import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ElementName, ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
+import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
@@ -57,7 +56,6 @@ type Props = NativeStackScreenProps<UnitagStackParamList, UnitagScreens.ClaimUni
 export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
   const { entryPoint, address } = route.params
 
-  useAddBackButton(navigation)
   const { t } = useTranslation()
   const colors = useSporeColors()
   useCreateOnboardingAccountIfNone()
@@ -146,7 +144,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
     setShowInfoModal(true)
   }
 
-  const onPressMaybeLater = (): void => {
+  const onPressSkip = (): void => {
     const onboardingExperimentEnabled = getExperimentValue(
       Experiments.OnboardingRedesignRecoveryBackup,
       OnboardingRedesignRecoveryBackupProperties.Enabled,
@@ -163,6 +161,9 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
       },
     })
   }
+
+  const showSkipButton = entryPoint === OnboardingScreens.Landing
+  useNavigationHeader(navigation, showSkipButton ? onPressSkip : undefined)
 
   const navigateWithAnimation = useCallback(
     (unitag: string) => {
@@ -246,7 +247,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
       : t('unitags.onboarding.claim.title.choose')
 
   return (
-    <SafeKeyboardOnboardingScreen subtitle={t('unitags.onboarding.claim.subtitle')} title={title}>
+    <SafeKeyboardOnboardingScreen Icon={Person} subtitle={t('unitags.onboarding.claim.subtitle')} title={title}>
       <Flex
         centered
         gap="$spacing16"
@@ -285,7 +286,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
                   borderWidth={0}
                   fontFamily="$heading"
                   fontSize={fontSize}
-                  fontWeight="$medium"
+                  fontWeight="$book"
                   numberOfLines={1}
                   p="$none"
                   placeholder={inputPlaceholder}
@@ -304,7 +305,7 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
                   exitStyle={{ opacity: 0, x: 40 }}
                   fontFamily="$heading"
                   fontSize={fontSize}
-                  fontWeight={fonts.heading2.fontWeight}
+                  fontWeight="$book"
                   lineHeight={fonts.heading2.lineHeight}
                 >
                   {UNITAG_SUFFIX}
@@ -355,15 +356,6 @@ export function ClaimUnitagScreen({ navigation, route }: Props): JSX.Element {
         )}
       </Flex>
       <Flex gap="$spacing24" justifyContent="flex-end">
-        {entryPoint === OnboardingScreens.Landing && (
-          <Trace logPress element={ElementName.Skip}>
-            <TouchableArea testID={TestID.Skip} onPress={onPressMaybeLater}>
-              <Text color="$accent1" textAlign="center" variant="buttonLabel2">
-                {t('common.button.later')}
-              </Text>
-            </TouchableArea>
-          </Trace>
-        )}
         <Button
           disabled={
             (entryPoint === OnboardingScreens.Landing && !onboardingAccountAddress) ||
@@ -426,7 +418,7 @@ const InfoModal = ({
             shadowColor="$neutral3"
             shadowOpacity={0.4}
             shadowRadius="$spacing4"
-            textVariant="buttonLabel4"
+            textVariant="buttonLabel3"
             width={FIXED_INFO_PILL_WIDTH}
           />
           <Flex p="$spacing2" shadowColor="$accent1" shadowOpacity={1} shadowRadius="$spacing16">
@@ -440,9 +432,9 @@ const InfoModal = ({
             shadowOpacity={0.4}
             shadowRadius="$spacing4"
           >
-            <Text color="$accent1" variant="buttonLabel4">
+            <Text color="$accent1" variant="buttonLabel3">
               {usernamePlaceholder}
-              <Text color="$neutral2" variant="buttonLabel4">
+              <Text color="$neutral2" variant="buttonLabel3">
                 {UNITAG_SUFFIX}
               </Text>
             </Text>

@@ -6,6 +6,7 @@ import { Modal } from 'uniswap/src/components/modals/Modal'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { InsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { SendScreen, useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
@@ -17,7 +18,7 @@ import { useShowSendNetworkNotification } from 'wallet/src/features/transactions
 import { useUSDTokenUpdater } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDTokenUpdater'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
-import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 export function SendFormScreen(): JSX.Element {
   const colors = useSporeColors()

@@ -16,7 +16,6 @@ import { getPriceOrderingFromPositionForUI } from 'components/PositionListItem'
 import RateToggle from 'components/RateToggle'
 import { RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
-import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { Dots } from 'components/swap/styled'
 import {
@@ -47,7 +46,7 @@ import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { ClickableStyle, ExternalLink, HideExtraSmall, HideSmall, StyledRouterLink, ThemedText } from 'theme/components'
-import { Text } from 'ui/src'
+import { Switch, Text } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans, t } from 'uniswap/src/i18n'
@@ -969,10 +968,11 @@ function PositionPageContent() {
                           <ThemedText.DeprecatedMain>
                             <Trans i18nKey="pool.collectAs" values={{ nativeWrappedSymbol }} />
                           </ThemedText.DeprecatedMain>
-                          <Toggle
+                          <Switch
                             id="receive-as-weth"
-                            isActive={receiveWETH}
-                            toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
+                            checked={receiveWETH}
+                            onCheckedChange={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
+                            variant="branded"
                           />
                         </RowBetween>
                       </AutoColumn>

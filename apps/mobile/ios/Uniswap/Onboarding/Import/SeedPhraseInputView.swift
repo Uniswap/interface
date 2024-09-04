@@ -109,10 +109,10 @@ struct SeedPhraseInput: View {
   @ObservedObject var viewModel = SeedPhraseInputViewModel()
   @FocusState private var focused: Bool
   
-  private var font = Font(UIFont(name: "Basel-Book", size: 17)!)
-  private var subtitleFont = Font(UIFont(name: "Basel-Book", size: 17)!)
-  private var labelFont = Font(UIFont(name: "Basel-Book", size: 15)!)
-  private var buttonFont = Font(UIFont(name: "Basel-Medium", size: 15)!)
+  private var font = Font(UIFont(name: "Basel Grotesk Book", size: 17)!)
+  private var subtitleFont = Font(UIFont(name: "Basel Grotesk Book", size: 17)!)
+  private var labelFont = Font(UIFont(name: "Basel Grotesk Book", size: 15)!)
+  private var buttonFont = Font(UIFont(name: "Basel Grotesk Medium", size: 15)!)
   
   var body: some View {
     VStack(spacing: 12) {

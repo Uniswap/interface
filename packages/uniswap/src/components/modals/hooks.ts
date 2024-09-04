@@ -1,5 +1,5 @@
-import { NotImplementedError } from 'utilities/src/errors'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 
 export function useBottomSheetFocusHook(): () => void {
-  throw new NotImplementedError('See `.native.tsx` and `web.tsx` files.')
+  throw new PlatformSplitStubError('useBottomSheetFocusHook')
 }

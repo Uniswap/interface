@@ -16,8 +16,9 @@ import {
 import { selectLockoutEndTime, selectPasswordAttempts } from 'src/features/CloudBackup/selectors'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
-import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
+import { Cloud } from 'ui/src/components/icons'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
@@ -100,7 +101,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
     }, [isLockedOut, lockoutMessage, remainingLockoutTime, dispatch]),
   )
 
-  useAddBackButton(navigation)
+  useNavigationHeader(navigation)
 
   const onPasswordSubmit = async (): Promise<void> => {
     if (isLockedOut || enteredPassword.length === 0) {
@@ -141,6 +142,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
 
   return (
     <OnboardingScreen
+      Icon={Cloud}
       subtitle={t('account.cloud.password.subtitle', { cloudProviderName: getCloudProviderName() })}
       title={t('account.cloud.password.title')}
     >
@@ -164,7 +166,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
       <Flex>
         {isRestoringMnemonic && (
           <TouchableArea onPress={navigateToEnterRecoveryPhrase}>
-            <Text color="$accent1" mb="$spacing12" textAlign="center" variant="buttonLabel3">
+            <Text color="$accent1" mb="$spacing12" textAlign="center" variant="buttonLabel2">
               {t('account.cloud.password.recoveryPhrase')}
             </Text>
           </TouchableArea>

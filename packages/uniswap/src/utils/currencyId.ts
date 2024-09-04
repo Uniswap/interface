@@ -2,7 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
@@ -14,11 +14,11 @@ export function buildCurrencyId(chainId: UniverseChainId, address: string): stri
   return `${chainId}-${address}`
 }
 
-export function buildNativeCurrencyId(chainId: WalletChainId): string {
+export function buildNativeCurrencyId(chainId: UniverseChainId): string {
   return buildCurrencyId(chainId, getNativeAddress(chainId))
 }
 
-export function buildWrappedNativeCurrencyId(chainId: WalletChainId): string {
+export function buildWrappedNativeCurrencyId(chainId: UniverseChainId): string {
   return buildCurrencyId(chainId, getWrappedNativeAddress(chainId))
 }
 
@@ -51,7 +51,7 @@ export function getCurrencyAddressForAnalytics(currency: Currency): string {
   return currency.address
 }
 
-export const isNativeCurrencyAddress = (chainId: WalletChainId, address: Maybe<Address>): boolean => {
+export const isNativeCurrencyAddress = (chainId: UniverseChainId, address: Maybe<Address>): boolean => {
   if (!address) {
     return true
   }
@@ -97,7 +97,7 @@ export function currencyIdToGraphQLAddress(_currencyId?: string): Address | null
   return address.toLowerCase()
 }
 
-export function currencyIdToChain(_currencyId: string): WalletChainId | null {
+export function currencyIdToChain(_currencyId: string): UniverseChainId | null {
   return toSupportedChainId(_currencyId.split('-')[0])
 }
 

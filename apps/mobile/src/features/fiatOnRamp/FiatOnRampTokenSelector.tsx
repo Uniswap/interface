@@ -5,6 +5,7 @@ import { TokenFiatOnRampList } from 'src/components/TokenSelector/TokenFiatOnRam
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { FOR_MODAL_SNAP_POINTS } from 'uniswap/src/features/fiatOnRamp/constants'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -17,6 +18,9 @@ interface Props {
   error: boolean
   loading: boolean
   list: FiatOnRampCurrency[] | undefined
+  balancesById: Record<string, PortfolioBalance> | undefined
+  selectedCurrency?: FiatOnRampCurrency
+  isOffRamp: boolean
 }
 
 export function FiatOnRampTokenSelectorModal({
@@ -26,6 +30,9 @@ export function FiatOnRampTokenSelectorModal({
   onClose,
   onRetry,
   onSelectCurrency,
+  balancesById,
+  selectedCurrency,
+  isOffRamp,
 }: { onClose: () => void } & Props): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -49,9 +56,12 @@ export function FiatOnRampTokenSelectorModal({
           </Text>
           <AnimatedFlex grow entering={FadeIn} exiting={FadeOut}>
             <TokenFiatOnRampList
+              balancesById={balancesById}
               error={error}
+              isOffRamp={isOffRamp}
               list={list}
               loading={loading}
+              selectedCurrency={selectedCurrency}
               onRetry={onRetry}
               onSelectCurrency={onSelectCurrency}
             />

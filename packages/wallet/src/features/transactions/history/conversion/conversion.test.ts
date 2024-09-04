@@ -15,6 +15,7 @@ import {
   TransactionListQueryResponse,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
@@ -24,7 +25,6 @@ import parseOnRampTransaction from 'wallet/src/features/transactions/history/con
 import parseReceiveTransaction from 'wallet/src/features/transactions/history/conversion/parseReceiveTransaction'
 import parseSendTransaction from 'wallet/src/features/transactions/history/conversion/parseSendTransaction'
 import parseTradeTransaction from 'wallet/src/features/transactions/history/conversion/parseTradeTransaction'
-import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2 } from 'wallet/src/test/fixtures'
 
 /**
  * Testing for API transaction parsing utils.

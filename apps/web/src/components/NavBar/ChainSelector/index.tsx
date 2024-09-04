@@ -51,6 +51,7 @@ type ChainSelectorProps = {
   hideArrow?: boolean
 }
 export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) => {
+  const account = useAccount()
   const { chainId, setSelectedChainId, multichainUXEnabled } = useSwapAndLimitContext()
   // multichainFlagEnabled is different from multichainUXEnabled, multichainUXEnabled applies to swap
   // flag can be true but multichainUXEnabled can be false (TDP page)
@@ -108,11 +109,7 @@ export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) 
     [multichainUXEnabled, setSelectedChainId, selectChain, searchParams, setSearchParams],
   )
 
-  const menuLabel = !chainId ? (
-    <AlertTriangle size={20} color={theme.neutral2} />
-  ) : (
-    <ChainLogo chainId={chainId} size={20} testId="chain-selector-logo" />
-  )
+  const isUnsupportedConnectedChain = account.isConnected && !isSupportedChain(account.chainId)
 
   if (multichainFlagEnabled) {
     return (
@@ -120,6 +117,7 @@ export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) 
         <NetworkFilter
           selectedChain={chainId ?? null}
           onPressChain={onSelectChain}
+          showUnsupportedConnectedChainWarning={isUnsupportedConnectedChain}
           hideArrow={hideArrow}
           styles={{
             sticky: true,
@@ -128,6 +126,13 @@ export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) 
       </Flex>
     )
   }
+
+  const menuLabel =
+    isUnsupportedConnectedChain || !chainId ? (
+      <AlertTriangle size={20} color={theme.neutral2} />
+    ) : (
+      <ChainLogo chainId={chainId} size={20} testId="chain-selector-logo" />
+    )
 
   return (
     <Popover ref={popoverRef} placement="bottom" stayInFrame allowFlip onOpenChange={setIsOpen}>
@@ -146,13 +151,7 @@ export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) 
             />
           ))}
           {unsupportedChains.map((selectorChain) => (
-            <ChainSelectorRow
-              disabled
-              onSelectChain={() => undefined}
-              targetChain={selectorChain}
-              key={selectorChain}
-              isPending={false}
-            />
+            <ChainSelectorRow disabled targetChain={selectorChain} key={selectorChain} isPending={false} />
           ))}
         </Flex>
       </NavDropdown>

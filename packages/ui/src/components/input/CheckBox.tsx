@@ -40,7 +40,7 @@ export function CheckBox({ text, checked, checkedColor = '$neutral1', onCheckPre
         {text && (
           <Flex shrink>
             {typeof text === 'string' ? (
-              <Text $short={{ variant: 'buttonLabel4' }} variant="subheading2">
+              <Text $short={{ variant: 'buttonLabel3' }} variant="subheading2">
                 {text}
               </Text>
             ) : (

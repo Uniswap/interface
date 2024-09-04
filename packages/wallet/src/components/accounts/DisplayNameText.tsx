@@ -10,6 +10,7 @@ type DisplayNameProps = {
   textProps?: TextProps
   includeUnitagSuffix?: boolean
   forcedWidth?: number
+  disableForcedWidth?: boolean
 } & FlexProps
 
 export function DisplayNameText({
@@ -18,6 +19,7 @@ export function DisplayNameText({
   textProps,
   includeUnitagSuffix,
   forcedWidth,
+  disableForcedWidth,
   ...rest
 }: DisplayNameProps): JSX.Element {
   const isUnitag = displayName?.type === DisplayNameType.Unitag
@@ -32,7 +34,7 @@ export function DisplayNameText({
         flexShrink={1}
         numberOfLines={1}
         overflow="hidden"
-        width={isUnitag ? undefined : forcedWidth}
+        width={isUnitag || disableForcedWidth ? undefined : forcedWidth}
       >
         {name}
         {isUnitag && includeUnitagSuffix && (

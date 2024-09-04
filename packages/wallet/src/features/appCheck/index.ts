@@ -1,9 +1,9 @@
-import { NotImplementedError } from 'utilities/src/errors'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 
 export function initFirebaseAppCheck(): void {
-  throw new NotImplementedError('See `.native.tsx` and `.web.tsx` files.')
+  throw new PlatformSplitStubError('initFirebaseAppCheck')
 }
 
 export async function getFirebaseAppCheckToken(): Promise<string | null> {
-  throw new NotImplementedError('See `.native.tsx` and `.web.tsx` files.')
+  throw new PlatformSplitStubError('getFirebaseAppCheckToken')
 }

@@ -39,7 +39,7 @@ export function InsufficientNativeTokenWarning({
 
           <Flex centered gap="$spacing8">
             <BuyNativeTokenButton nativeCurrencyInfo={nativeCurrencyInfo} />
-            <LearnMoreLink textVariant="buttonLabel4" url={uniswapUrls.helpArticleUrls.networkFeeInfo} />
+            <LearnMoreLink textVariant="buttonLabel3" url={uniswapUrls.helpArticleUrls.networkFeeInfo} />
           </Flex>
         </Flex>
 

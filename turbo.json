@@ -6,14 +6,6 @@
         "package.json"
       ]
     },
-    "uniswap#tradingapi:generate": {
-      "inputs": [
-        "src/data/tradingApi/api.json"
-      ],
-      "outputs": [
-        "src/**/__generated__/**"
-      ]
-    },
     "@uniswap/interface#prepare": {
       "inputs": [
         "package.json"
@@ -36,12 +28,12 @@
         "^prepare"
       ]
     },
-    "wallet#prepare": {
+    "uniswap#tradingapi:generate": {
       "inputs": [
-        "package.json"
+        "src/data/tradingApi/api.json"
       ],
-      "dependsOn": [
-        "^prepare"
+      "outputs": [
+        "src/**/__generated__/**"
       ]
     },
     "uniswap#contracts": {
@@ -96,7 +88,8 @@
         "data/__generated__/**",
         "graphql/__generated__/**"
       ],
-      "dependsOn": []
+      "dependsOn": [],
+      "cache": false
     },
     "typecheck": {
       "inputs": [
@@ -106,7 +99,8 @@
       "outputs": [],
       "dependsOn": [
         "prepare",
-        "^typecheck"
+        "^typecheck",
+        "^build"
       ]
     },
     "check:circular": {},
@@ -172,7 +166,8 @@
       ],
       "outputs": [
         "**/dist/**",
-        "./apps/next/.next/**"
+        "./apps/next/.next/**",
+        "**/types/**"
       ],
       "dependsOn": [
         "^build"

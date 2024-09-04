@@ -12,10 +12,10 @@ import Svg, { Defs, LinearGradient, Rect, Stop } from 'react-native-svg'
 import { Flex, Shine, Text, TextLoaderWrapper, isWeb, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
+import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 export const NUMBER_ARRAY = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9']
 export const NUMBER_WIDTH_ARRAY = [29, 20, 29, 29, 29, 29, 29, 29, 29, 29] // width of digits in a font
@@ -58,14 +58,13 @@ const RollNumber = ({
   const lastChars = useRef([''])
   const decimalSeparatorIndex = chars.indexOf(currency.decimalSeparator) - 1
   const fontColor = useSharedValue(
-    nextColor ||
-      (shouldFadeDecimals && currency && index > decimalSeparatorIndex ? colors.neutral3.val : colors.neutral1.val),
+    nextColor || (shouldFadeDecimals && index > decimalSeparatorIndex ? colors.neutral3.val : colors.neutral1.val),
   )
+  const currentColor = shouldFadeDecimals && index > decimalSeparatorIndex ? colors.neutral3.val : colors.neutral1.val
   const yOffset = useSharedValue(digit && Number(digit) >= 0 ? DIGIT_HEIGHT * -digit : 0)
 
   useEffect(() => {
-    const finishColor =
-      shouldFadeDecimals && currency && index > decimalSeparatorIndex ? colors.neutral3.val : colors.neutral1.val
+    const finishColor = shouldFadeDecimals && index > decimalSeparatorIndex ? colors.neutral3.val : colors.neutral1.val
     if (nextColor && index > commonPrefixLength - 1 && chars !== lastChars.current) {
       fontColor.value = withSequence(
         withTiming(nextColor, { duration: 250 }),
@@ -102,7 +101,7 @@ const RollNumber = ({
         key={idx}
         allowFontScaling={false}
         fontFamily="$heading"
-        style={[animatedFontStyle, AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT }]}
+        style={[AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT, color: currentColor }]}
       >
         {char}
       </Text>
@@ -149,7 +148,15 @@ const RollNumber = ({
       </Animated.View>
     )
   } else {
-    return (
+    return isWeb ? (
+      <Text
+        allowFontScaling={false}
+        fontFamily="$heading"
+        style={[AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT, color: currentColor }]}
+      >
+        {digit}
+      </Text>
+    ) : (
       <Animated.Text
         allowFontScaling={false}
         style={[animatedFontStyle, AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT }]}
@@ -358,7 +365,7 @@ const ReanimatedNumber = ({
         char >= '0' && char <= '9'
           ? (lastSizes[index - 1] || 0) + (NUMBER_WIDTH_ARRAY_SCALED[Number(char)] || 0)
           : Number(char) === 0
-            ? SPACE_SIZE
+            ? (lastSizes[index - 1] || 0) + SPACE_SIZE
             : 0,
       )
 

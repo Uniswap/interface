@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmdhNVNTTE8WpUyhrkdiNQz5rLkUF7wyDC8sJ9aA1yDQtu`
-- CIDv1: `bafybeihefyuu3tgh7s3zrkveulspuate3kjfrqoler2mmqvefxldfnmudy`
+- CIDv0: `QmWGmmxMXRoU7TLNMzuoS2q2NdvqXPNRAohP4T3SnUrif1`
+- CIDv1: `bafybeidv34uycjmpmnvpdu2oouq7r3saf2o34davruawyxtavesx3kpeda`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,63 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeihefyuu3tgh7s3zrkveulspuate3kjfrqoler2mmqvefxldfnmudy.ipfs.dweb.link/
-- https://bafybeihefyuu3tgh7s3zrkveulspuate3kjfrqoler2mmqvefxldfnmudy.ipfs.cf-ipfs.com/
-- [ipfs://QmdhNVNTTE8WpUyhrkdiNQz5rLkUF7wyDC8sJ9aA1yDQtu/](ipfs://QmdhNVNTTE8WpUyhrkdiNQz5rLkUF7wyDC8sJ9aA1yDQtu/)
+- https://bafybeidv34uycjmpmnvpdu2oouq7r3saf2o34davruawyxtavesx3kpeda.ipfs.dweb.link/
+- https://bafybeidv34uycjmpmnvpdu2oouq7r3saf2o34davruawyxtavesx3kpeda.ipfs.cf-ipfs.com/
+- [ipfs://QmWGmmxMXRoU7TLNMzuoS2q2NdvqXPNRAohP4T3SnUrif1/](ipfs://QmWGmmxMXRoU7TLNMzuoS2q2NdvqXPNRAohP4T3SnUrif1/)
 
-### 5.44.4 (2024-08-30)
+## 5.45.0 (2024-09-04)
+
+
+### Features
+
+* **web:** [multi-explore] add analytics event for explore page chain switch (#11380) d53777d
+* **web:** [multi-explore] hide txs tab in aggregated view (#11363) a700d9f
+* **web:** [multi-explore] multichain top tokens table (#10659) dcc8035
+* **web:** [multi-explore] Rounded volume bars (#11416) 1d998ba
+* **web:** [multi-explore] Support multichain REST data query (#10658) e09c6a6
+* **web:** [multichain_explore] hide network selector on explore pages (#11345) 6cabe23
+* **web:** [multichain_explore] update protocol legend styles (#11185) b419ff3
+* **web:** [multichain_explore] update tvl chart styles (#11088) 5dda845
+* **web:** [multichain_explore] update volume chart styles (#11225) e30658f
+* **web:** [rest] Add context layer to Explore page (#10477) edf40fb
+* **web:** [rest] use rest data for Explore TVL Chart (#10645) 86e1725
+* **web:** [rest] use rest data for Explore Volume Chart (#10646) 2c56637
+* **web:** [rest] use rest data for Top Pools Table (#10621) fd3c7b4
+* **web:** [rest] use rest data for Top Tokens Sparkline graphs (#11120) fa6bc46
+* **web:** [rest] use rest data for Top Tokens Table (#10587) 9beb701
+* **web:** add account CTA experiments (#11358) 0f6e6b0
+* **web:** BE zkSync Support (#11406) fcfaed9
+* **web:** hide spam nfts if toggled (#9772) 56f0482
+* **web:** tamaguify TDP (incl. snapshots) (#11119) f1f2552
+* **web:** update account CTA buttons (#11359) 69ddd39
+* **web:** update ctas on mobile for downloading the app (#11319) ed9d949
+* **web:** update GetStarted modal (#11360) 1ec11c6
+* **web:** upgrade exploreClient and split exploreStats query (#11386) 750ec18
+* **web:** utilize universe's isBlocked (#11400) 058e49b
+* **web:** web using standardized search results (#10907) 9515b7e
 
 
 ### Bug Fixes
 
-* **web:** realign explore charts - prod (#11421) a5cfafa
+* **web:** add back unfilled alerttriangle when user is connected to unsupported chain (#11451) c9e6509
+* **web:** add link to vote (#11423) cabd3f2
+* **web:** fix e2e tests (#11244) f4a487a
+* **web:** fix missing charts on PDP (#11508) bfa97eb
+* **web:** fix switchChain for single-chain wallets (#11339) 3a3148e
+* **web:** fix text not ellipsing on explore token table cell (#11448) 91394ef
+* **web:** hide scroll for more -staging (#11510) 5bead57
+* **web:** realign explore charts (#11420) a6a7995
+* **web:** show share menu over chart (#11514) db47942
+* **web:** use account.address and update Mobile app promo banner font weight (#11450) eb94c66
+* **web:** use input and output currency info for derived swap info (#11398) f251b6b
+* **web:** use input and output currency info for parsed amounts (trade) (#11391) 6d9efb6
+* **web:** Use neutralContrast for Add Liq and Preview buttons (#11314) a35ff6f
+* **web:** use row variant for Flex (#11145) db98ecc
+* **web:** Volume Explore chart TimeSelector colors (#11320) 436beb2
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 911076c
 
 

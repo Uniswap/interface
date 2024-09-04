@@ -6,7 +6,7 @@ import { ONBOARDING_BACKGROUND_DARK, ONBOARDING_BACKGROUND_LIGHT } from 'src/ass
 import { onboardingMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { OnboardingMessageType } from 'src/background/messagePassing/types/ExtensionMessages'
 import { Flex, Image, useIsDarkMode } from 'ui/src'
-import { syncAppWithDeviceLanguage } from 'wallet/src/features/language/slice'
+import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 
 export function OnboardingWrapper(): JSX.Element {
