@@ -13,10 +13,10 @@ export const NATIVE_CHAIN_ID = "NATIVE";
 
 export const USDT_TARAXA = new Token(
   ChainId.TARAXA,
-  "0x46258327541455119869d7344dd2673facf5f104",
-  18,
-  "T0",
-  "TestToken0"
+  "0x5a51fadEF313f503239D1FE0b25DE2486B022c02",
+  6,
+  "TUSDT",
+  "Test Tether"
 );
 export const USDT_TARAXA_TESTNET = new Token(
   ChainId.TARAXA_TESTNET,

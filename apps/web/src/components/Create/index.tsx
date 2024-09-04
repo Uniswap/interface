@@ -11,15 +11,20 @@ import dayjs from "dayjs";
 import utc from "dayjs/plugin/utc";
 import TimePickerValue from "./TimePickerValue";
 import { useEffect, useState } from "react";
-import { ethers } from "ethers";
-import { useV3StakerContract } from "./Hook";
 import { Flex } from "ui/src";
+import { BigNumber, ethers } from "ethers";
+
+import { Token } from "@taraswap/sdk-core";
+import { useChainId } from "wagmi";
+import { useTokenAllowance } from "hooks/useTokenAllowance";
+import { STAKER_ADDRESS, useV3StakerContract } from "hooks/useV3StakerContract";
+import { useTokenContract } from "hooks/useContract";
 
 dayjs.extend(utc);
 
 export enum NetworkType {
-  Type1 = "Evmos/Forge",
-  Type2 = "Polygon/Uniswap",
+  Type1 = "Taraxa/Taraswap",
+  Type2 = "Coming soon",
 }
 
 const HeaderText = styled(ThemedText.DeprecatedLabel)`
@@ -138,6 +143,8 @@ export default function Create() {
 
   const v3StakerContract = useV3StakerContract(true);
 
+  const chainId = useChainId();
+
   const [startDate, setStartDate] = useState(today);
   const [endDate, setEndDate] = useState(tomorrow);
   const [startTime, setStartTime] = useState("12:00");
@@ -151,10 +158,14 @@ export default function Create() {
   );
 
   const [rewardTokenAddress, setRewardTokenAddress] = useState("");
+  const [tokenSymbol, setTokenSymbol] = useState("");
+  const [tokenDecimals, setTokenDecimals] = useState(18);
   const [rewardsAmount, setRewardsAmount] = useState("");
   const [vestingPeriod, setVestingPeriod] = useState("");
   const [poolAddress, setPoolAddress] = useState("");
   const [refundeeAddress, setRefundeeAddress] = useState("");
+  const [tokenAllowance, setTokenAllowance] = useState(BigNumber.from(0));
+  const [approvalComplete, setApprovalComplete] = useState(false);
 
   const [errorMessages, setErrorMessages] = useState({
     rewardToken: "",
@@ -164,6 +175,57 @@ export default function Create() {
     refundeeAddress: "",
     date: "",
   });
+
+  const tokenContract = useTokenContract(rewardTokenAddress);
+
+  const approveToken = async (amount: BigNumber) => {
+    if (tokenContract) {
+      try {
+        const tx = await tokenContract.approve(STAKER_ADDRESS, amount);
+        await tx.wait();
+        setApprovalComplete(true);
+      } catch (error) {
+        console.error(error);
+        alert("Failed to approve token: " + error.message);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (tokenContract) {
+      tokenContract.symbol().then(setTokenSymbol);
+    }
+  }, [tokenContract]);
+
+  useEffect(() => {
+    if (tokenContract) {
+      tokenContract.decimals().then(setTokenDecimals);
+    }
+  }, [tokenContract]);
+
+  useEffect(() => {
+    if (
+      tokenAllowance.gte(
+        ethers.utils.parseUnits(rewardsAmount || "0", tokenDecimals)
+      )
+    ) {
+      setApprovalComplete(true);
+    }
+  }, [tokenAllowance, rewardsAmount, tokenDecimals]);
+
+  useEffect(() => {
+    const fetchAllowance = async () => {
+      if (tokenContract && account.address) {
+        const allowance = await tokenContract.allowance(
+          account.address,
+          STAKER_ADDRESS
+        );
+        setTokenAllowance(allowance);
+        console.log("tokenAllowance", tokenAllowance);
+      }
+    };
+    fetchAllowance();
+  }, [tokenContract, account.address, chainId, approvalComplete]);
 
   useEffect(() => {
     setFormattedStartDate(dayjs(startDate).format("MMMM D, YYYY"));
@@ -295,12 +357,13 @@ export default function Create() {
         const endedTime = Math.floor(
           new Date(`${endDate} ${endTime}`).getTime() / 1000
         );
-        const reward = ethers.utils.parseUnits(rewardsAmount, 18);
+        const reward = ethers.utils.parseUnits(rewardsAmount, tokenDecimals);
         const incentiveKey = {
           rewardToken: rewardTokenAddress,
           pool: poolAddress,
           startTime: startedTime,
           endTime: endedTime,
+          vestingPeriod: vestingPeriod,
           refundee: refundeeAddress,
         };
 
@@ -346,7 +409,7 @@ export default function Create() {
         >
           <Trans i18nKey="common.create.incentives.select.network.description" />
         </ThemedText.DeprecatedBody>
-        <NetworkTypeMenu networkType={NetworkType.Type2} />
+        <NetworkTypeMenu networkType={NetworkType.Type1} />
       </ResponsiveColumn>
 
       <ResponsiveColumn>
@@ -537,15 +600,36 @@ export default function Create() {
         >
           <Trans i18nKey="common.connectWallet.button" />
         </ButtonLight>
-      ) : (
+      ) : tokenAllowance &&
+        tokenAllowance.gte(
+          ethers.utils.parseUnits(rewardsAmount || "0", tokenDecimals)
+        ) ? (
         <ButtonLight
           fontWeight={535}
           $borderRadius="16px"
           marginTop={2}
           marginBottom={3}
           onClick={createIncentive}
+          disabled={!approvalComplete || !rewardTokenAddress}
         >
           <Trans i18nKey="common.incentives.create.button" />
+        </ButtonLight>
+      ) : (
+        <ButtonLight
+          fontWeight={535}
+          $borderRadius="16px"
+          marginTop={2}
+          marginBottom={3}
+          onClick={() =>
+            approveToken(
+              ethers.utils.parseUnits(rewardsAmount || "0", tokenDecimals)
+            )
+          }
+        >
+          <Trans
+            i18nKey="common.incentives.approve.button"
+            values={{ tokenSymbol }}
+          />
         </ButtonLight>
       )}
     </Flex>
