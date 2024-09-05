@@ -17,7 +17,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
 import { Verified } from 'ui/src/components/icons/Verified'
-import { TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
@@ -131,7 +131,9 @@ export function SuggestionRow({
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
   }, [suggestion, isToken, toggleOpen, eventProperties, dispatch])
 
-  const path = isToken ? getTokenDetailsURL({ ...suggestion }) : `/nfts/collection/${suggestion.address}`
+  const path = isToken
+    ? getTokenDetailsURL({ ...suggestion, chain: suggestion.chain ?? Chain.Ethereum })
+    : `/nfts/collection/${suggestion.address}`
   // Close the modal on escape
   useEffect(() => {
     const keyDownHandler = (event: KeyboardEvent) => {
