@@ -12,6 +12,7 @@ export interface SerializableTransactionReceipt {
   transactionHash: string
   blockNumber: number
   status?: number
+  logs?: any
 }
 
 /**

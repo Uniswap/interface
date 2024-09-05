@@ -239,6 +239,7 @@ const LimitOrderModal = () => {
   const handleTypeInput = useCallback(
     (value: string) => {
       onUserInput(Field.INPUT, value)
+      setApprovalSubmitted(false)
     },
     [onUserInput]
   )
@@ -420,6 +421,7 @@ const LimitOrderModal = () => {
   const handleCommonQuantityInput = useCallback(
     (commonQuantity: CommonQuantity) => {
       if (maxInputAmount) {
+        setApprovalSubmitted(false)
         if (commonQuantity === '25%') {
           onUserInput(Field.INPUT, maxInputAmount.divide(new Fraction(4, 1)).toExact())
         }
@@ -663,8 +665,7 @@ const LimitOrderModal = () => {
                   <ButtonConfirmed
                     onClick={handleApprove}
                     disabled={
-                      approvalState !== ApprovalState.NOT_APPROVED ||
-                      approvalSubmitted ||
+                      (approvalState !== ApprovalState.NOT_APPROVED && approvalSubmitted) ||
                       signatureState === UseERC20PermitState.SIGNED
                     }
                     width="100%"

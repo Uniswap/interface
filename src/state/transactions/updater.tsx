@@ -99,6 +99,7 @@ export default function Updater(): null {
                     to: receipt.to,
                     transactionHash: receipt.transactionHash,
                     transactionIndex: receipt.transactionIndex,
+                    logs: receipt.logs,
                   },
                 })
               )

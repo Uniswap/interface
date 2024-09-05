@@ -53,12 +53,17 @@ export function useIsTransactionPending(transactionHash?: string): boolean {
   return !transactions[transactionHash].receipt
 }
 
-export function useIsTransactionConfirmed(transactionHash?: string): boolean {
+interface ExtendedIsConfirmedTransaction {
+  confirmed: boolean
+  logs?: any[] | undefined
+}
+export function useIsTransactionConfirmed(transactionHash?: string): ExtendedIsConfirmedTransaction {
   const transactions = useAllTransactions()
-
-  if (!transactionHash || !transactions[transactionHash]) return false
-
-  return Boolean(transactions[transactionHash].receipt)
+  if (!transactionHash || !transactions[transactionHash]) return { confirmed: false, logs: undefined }
+  return {
+    confirmed: Boolean(transactions[transactionHash].receipt),
+    logs: transactions[transactionHash].receipt?.logs,
+  }
 }
 
 /**

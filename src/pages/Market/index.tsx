@@ -1028,8 +1028,7 @@ export default function Market({ history }: RouteComponentProps) {
                             <ButtonConfirmed
                               onClick={handleApprove}
                               disabled={
-                                approvalState !== ApprovalState.NOT_APPROVED ||
-                                approvalSubmitted ||
+                                (approvalState !== ApprovalState.NOT_APPROVED && approvalSubmitted) ||
                                 signatureState === UseERC20PermitState.SIGNED
                               }
                               width="100%"
@@ -1572,8 +1571,7 @@ export default function Market({ history }: RouteComponentProps) {
                       <ButtonConfirmed
                         onClick={handleApprove}
                         disabled={
-                          approvalState !== ApprovalState.NOT_APPROVED ||
-                          approvalSubmitted ||
+                          (approvalState !== ApprovalState.NOT_APPROVED && approvalSubmitted) ||
                           signatureState === UseERC20PermitState.SIGNED
                         }
                         width="100%"
