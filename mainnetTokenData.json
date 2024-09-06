@@ -105,9 +105,9 @@
       "logoURI": "https://iili.io/gFyZjs.png"
     }
   ],
-  "name": "Taraxa Mainnet Token List",
+  "name": "Taraxa Tokens",
   "logoURI": "https://drive.google.com/file/d/1dnhJ9rdzFT9PRYp0r7wXkg3nIJNpIl0M/view?usp=sharing",
-  "keywords": ["BlockDAG", "layer1", "T-Graph", "AI", "infrastructure"],
+  "keywords": ["BlockDAG", "layer1", "TGraph", "AI", "infrastructure"],
   "timestamp": "2024-06-13T00:00:00.000Z",
   "version": {
     "major": 1,
