@@ -1,4 +1,3 @@
-import { MaxUint256 } from '@ethersproject/constants'
 import { TransactionResponse } from '@ethersproject/providers'
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { Trade as V2Trade } from '@uniswap/v2-sdk'
@@ -40,21 +39,25 @@ export function useApproveCallback(
 
   // check the current approval status
   const approvalState: ApprovalState = useMemo(() => {
-    if (!amountToApprove || !spender) return ApprovalState.UNKNOWN
-    if (amountToApprove.currency.isNative) return ApprovalState.APPROVED
-    if (isApprovalConfirmed === true) return ApprovalState.APPROVED
-
     // we might not have enough data to know whether or not we need to approve
-    if (!currentAllowance) return ApprovalState.UNKNOWN
+    if (amountToApprove && amountToApprove.currency.isNative) return ApprovalState.APPROVED
+    if (!amountToApprove || !spender || !token || !currentAllowance) return ApprovalState.UNKNOWN
 
+    // The currentAllowance can lag behind sometimes when it changes,
+    // so when we need a faster response, we use the receipt logs to check for the amount that has been validated by the user
+    if (
+      !currentAllowance.lessThan(amountToApprove) ||
+      (isApprovalConfirmed.confirmed === true &&
+        isApprovalConfirmed.logs &&
+        !CurrencyAmount.fromRawAmount(token, Number(isApprovalConfirmed.logs[0].data as string)).lessThan(
+          amountToApprove
+        ))
+    ) {
+      return ApprovalState.APPROVED
+    }
     // amountToApprove will be defined if currentAllowance is
-    return currentAllowance.lessThan(amountToApprove)
-      ? hasPendingApproval
-        ? ApprovalState.PENDING
-        : ApprovalState.NOT_APPROVED
-      : ApprovalState.APPROVED
+    return hasPendingApproval ? ApprovalState.PENDING : ApprovalState.NOT_APPROVED
   }, [amountToApprove, currentAllowance, isApprovalConfirmed, hasPendingApproval, spender])
-
   const tokenContract = useTokenContract(token?.address)
   const addTransaction = useTransactionAdder()
 
