@@ -105,16 +105,13 @@
       "logoURI": "https://iili.io/gFyZjs.png"
     }
   ],
-  "taraxaMainnetTokenList": {
-    "name": "Taraxa Mainnet Token List",
-    "logoURI": "https://drive.google.com/file/d/1dnhJ9rdzFT9PRYp0r7wXkg3nIJNpIl0M/view?usp=sharing",
-    "keywords": ["BlockDAG", "layer1", "T-Graph", "AI", "infrastructure"],
-    "timestamp": "new Date().toISOString()",
-    "tokens": "chainData",
-    "version": {
-      "major": 1,
-      "minor": 0,
-      "patch": 0
-    }
+  "name": "Taraxa Mainnet Token List",
+  "logoURI": "https://drive.google.com/file/d/1dnhJ9rdzFT9PRYp0r7wXkg3nIJNpIl0M/view?usp=sharing",
+  "keywords": ["BlockDAG", "layer1", "T-Graph", "AI", "infrastructure"],
+  "timestamp": "2024-06-13T00:00:00.000Z",
+  "version": {
+    "major": 1,
+    "minor": 0,
+    "patch": 0
   }
 }
