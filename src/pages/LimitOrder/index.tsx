@@ -660,10 +660,26 @@ const LimitOrderModal = () => {
                 </TYPE.main>
               </GreyCard>
             ) : showApproveFlow ? (
-              <AutoRow style={{ display: 'flex', width: '100%', textAlign: 'center', justifyContent: 'center' }}>
-                <AutoColumn style={{ width: '100%', textAlign: 'center', justifyContent: 'center' }} gap="md">
+              <AutoRow
+                style={{
+                  display: 'flex',
+                  width: '100%',
+                  textAlign: 'center',
+                  justifyContent: 'center',
+                }}
+              >
+                <AutoColumn
+                  style={{
+                    width: '100%',
+                    textAlign: 'center',
+                    justifyContent: 'center',
+                    gridTemplateColumns: 'repeat(1, minmax(0, 1fr))',
+                  }}
+                  gap="md"
+                >
                   <ButtonConfirmed
                     onClick={handleApprove}
+                    doWrap={true}
                     disabled={
                       (approvalState !== ApprovalState.NOT_APPROVED && approvalSubmitted) ||
                       signatureState === UseERC20PermitState.SIGNED
@@ -674,45 +690,60 @@ const LimitOrderModal = () => {
                       approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED
                     }
                   >
-                    <AutoRow justify="space-between" style={{ flexWrap: 'nowrap' }}>
-                      <span
+                    <AutoRow noWrap={true} style={{ textAlign: 'center', alignItems: 'center', display: 'flex' }}>
+                      <div
                         style={{
                           display: 'flex',
+                          flexShrink: 0,
                           alignItems: 'center',
+                          verticalAlign: 'middle',
                           justifyContent: 'center',
                           textAlign: 'center',
                           whiteSpace: 'break-spaces',
                         }}
                       >
-                        <CurrencyLogo
-                          currency={currencies[Field.INPUT]}
-                          size={'20px'}
-                          style={{ marginRight: '8px', flexShrink: 0 }}
-                        />
+                        <CurrencyLogo currency={currencies[Field.INPUT]} size={'20px'} style={{ marginRight: '8px' }} />
+                      </div>
+                      <div
+                        style={{
+                          flexGrow: 1,
+                          textAlign: 'center',
+                          overflow: 'hidden',
+                        }}
+                      >
                         {/* we need to shorten this string on mobile */}
                         {approvalState === ApprovalState.APPROVED || signatureState === UseERC20PermitState.SIGNED ? (
                           <Trans>You can now trade {currencies[Field.INPUT]?.symbol}</Trans>
                         ) : (
                           <Trans>Allow Kromatika to use your {currencies[Field.INPUT]?.symbol}</Trans>
                         )}
-                      </span>
-                      {approvalState === ApprovalState.PENDING ? (
-                        <Loader stroke="white" />
-                      ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
-                        signatureState === UseERC20PermitState.SIGNED ? (
-                        <CheckCircle size="20" color={theme.green1} />
-                      ) : (
-                        <MouseoverTooltip
-                          text={
-                            <Trans>
-                              You must give the Kromatika smart contracts permission to use your{' '}
-                              {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
-                            </Trans>
-                          }
-                        >
-                          <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
-                        </MouseoverTooltip>
-                      )}
+                      </div>
+                      <div
+                        style={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          verticalAlign: 'middle',
+                          flexShrink: 0,
+                        }}
+                      >
+                        {approvalState === ApprovalState.PENDING ? (
+                          <Loader stroke="white" />
+                        ) : (approvalSubmitted && approvalState === ApprovalState.APPROVED) ||
+                          signatureState === UseERC20PermitState.SIGNED ? (
+                          <CheckCircle size="20" color={theme.green1} />
+                        ) : (
+                          <MouseoverTooltip
+                            text={
+                              <Trans>
+                                You must give the Kromatika smart contracts permission to use your{' '}
+                                {currencies[Field.INPUT]?.symbol}. You only have to do this once per token.
+                              </Trans>
+                            }
+                          >
+                            <HelpCircle size="20" color={'white'} style={{ marginLeft: '8px' }} />
+                          </MouseoverTooltip>
+                        )}
+                      </div>
                     </AutoRow>
                   </ButtonConfirmed>
                   <ButtonError

@@ -14,10 +14,11 @@ export const BaseButton = styled(RebassButton)<
     width?: string
     $borderRadius?: string
     altDisabledStyle?: boolean
+    doWrap?: boolean
   } & ButtonProps
 >`
   display: flex;
-  flex-wrap: nowrap;
+  flex-wrap: ${({ doWrap }) => (doWrap == true ? '' : 'nowrap')};
   justify-content: center;
   align-items: center;
   position: relative;
@@ -28,7 +29,7 @@ export const BaseButton = styled(RebassButton)<
   cursor: pointer;
   outline: none;
   width: ${({ width }) => width ?? '100%'};
-  white-space: nowrap;
+  white-space: ${({ doWrap }) => (doWrap ? '' : 'nowrap')};
   text-decoration: none;
   z-index: 1;
 
@@ -356,12 +357,13 @@ export const ButtonErrorStyle = styled(BaseButton)`
 export function ButtonConfirmed({
   confirmed,
   altDisabledStyle,
+  doWrap,
   ...rest
-}: { confirmed?: boolean; altDisabledStyle?: boolean } & ButtonProps) {
+}: { confirmed?: boolean; altDisabledStyle?: boolean; doWrap?: boolean } & ButtonProps) {
   if (confirmed) {
     return <ButtonConfirmedStyle {...rest} />
   } else {
-    return <ButtonPrimary {...rest} altDisabledStyle={altDisabledStyle} />
+    return <ButtonPrimary doWrap={doWrap} {...rest} altDisabledStyle={altDisabledStyle} />
   }
 }
 
