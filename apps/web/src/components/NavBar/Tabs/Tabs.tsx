@@ -25,6 +25,7 @@ const TabText = styled(Text)`
   display: flex;
   justify-content: center;
   align-items: center;
+  white-space: nowrap !important;
   &:hover {
     color: ${({ theme }) => theme.neutral1} !important;
   }
@@ -155,6 +156,7 @@ const Tab = ({
 
 export function Tabs() {
   const tabsContent: TabsSection[] = useTabsContent()
+
   return (
     <>
       {tabsContent.map(({ title, isActive, href, items }, index) => (

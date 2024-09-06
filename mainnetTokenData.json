@@ -6,7 +6,7 @@
       "name": "Wrapped TARA",
       "symbol": "WTARA",
       "decimals": 18,
-      "logoURI": "https://www.gitbook.com/cdn-cgi/image/width=36,dpr=2,height=36,fit=contain,format=auto/https%3A%2F%2F12145332-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-MJepYMaCjWn_0Y0r41o%252Ficon%252F7rN5klGlDZqon94iJduY%252F300x300%2520icon.png%3Falt%3Dmedia%26token%3De9c65cb1-cc4d-4a5e-b6e2-7ab2b2e59b43"
+      "logoURI": "https://drive.google.com/file/d/1dnhJ9rdzFT9PRYp0r7wXkg3nIJNpIl0M/view?usp=sharing"
     },
     {
       "chainId": 841,
@@ -30,7 +30,7 @@
       "name": "TestToken0",
       "symbol": "T0",
       "decimals": 18,
-      "logoURI": "https://iili.io/gFyZjs.png"
+      "logoURI": "https://drive.google.com/file/d/1ieRK-M3oPw-5ASE8QRPAmuvIcfWsPm8S/view?usp=sharing"
     },
     {
       "chainId": 841,
@@ -38,7 +38,7 @@
       "name": "TestToken1",
       "symbol": "T1",
       "decimals": 18,
-      "logoURI": "https://iili.io/gFyZjs.png"
+      "logoURI": "https://drive.google.com/file/d/1ieRK-M3oPw-5ASE8QRPAmuvIcfWsPm8S/view?usp=sharing"
     },
     {
       "chainId": 841,
@@ -107,7 +107,7 @@
   ],
   "taraxaMainnetTokenList": {
     "name": "Taraxa Mainnet Token List",
-    "logoURI": "https://www.gitbook.com/cdn-cgi/image/width=36,dpr=2,height=36,fit=contain,format=auto/https%3A%2F%2F12145332-files.gitbook.io%2F~%2Ffiles%2Fv0%2Fb%2Fgitbook-x-prod.appspot.com%2Fo%2Fspaces%252F-MJepYMaCjWn_0Y0r41o%252Ficon%252F7rN5klGlDZqon94iJduY%252F300x300%2520icon.png%3Falt%3Dmedia%26token%3De9c65cb1-cc4d-4a5e-b6e2-7ab2b2e59b43",
+    "logoURI": "https://drive.google.com/file/d/1dnhJ9rdzFT9PRYp0r7wXkg3nIJNpIl0M/view?usp=sharing",
     "keywords": ["BlockDAG", "layer1", "T-Graph", "AI", "infrastructure"],
     "timestamp": "new Date().toISOString()",
     "tokens": "chainData",

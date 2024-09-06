@@ -1,18 +1,18 @@
-import { MaxUint256, permit2Address } from '@uniswap/permit2-sdk'
-import { ChainId, Currency } from '@taraswap/sdk-core'
-import { SupportedInterfaceChainId } from 'constants/chains'
-import { RPC_PROVIDERS } from 'constants/providers'
-import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
-import ERC20_ABI from 'uniswap/src/abis/erc20.json'
-import { Erc20, Weth } from 'uniswap/src/abis/types'
-import WETH_ABI from 'uniswap/src/abis/weth.json'
-import { getContract } from 'utilities/src/contracts/getContract'
+import { MaxUint256, permit2Address } from "@taraswap/permit2-sdk";
+import { ChainId, Currency } from "@taraswap/sdk-core";
+import { SupportedInterfaceChainId } from "constants/chains";
+import { RPC_PROVIDERS } from "constants/providers";
+import { WRAPPED_NATIVE_CURRENCY } from "constants/tokens";
+import ERC20_ABI from "uniswap/src/abis/erc20.json";
+import { Erc20, Weth } from "uniswap/src/abis/types";
+import WETH_ABI from "uniswap/src/abis/weth.json";
+import { getContract } from "utilities/src/contracts/getContract";
 
-import { ApproveInfo, WrapInfo } from './types'
+import { ApproveInfo, WrapInfo } from "./types";
 
 // TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
-const WRAP_FALLBACK_GAS_LIMIT = 45_000
-const APPROVE_FALLBACK_GAS_LIMIT = 65_000
+const WRAP_FALLBACK_GAS_LIMIT = 45_000;
+const APPROVE_FALLBACK_GAS_LIMIT = 65_000;
 
 export async function getApproveInfo(
   account: string | undefined,
@@ -22,43 +22,61 @@ export async function getApproveInfo(
 ): Promise<ApproveInfo> {
   // native currencies do not need token approvals
   if (currency.isNative) {
-    return { needsApprove: false }
+    return { needsApprove: false };
   }
 
   // If any of these arguments aren't provided, then we cannot generate approval cost info
   if (!account || !usdCostPerGas) {
-    return { needsApprove: false }
+    return { needsApprove: false };
   }
 
   // routing-api under estimates gas for Arbitrum swaps so it inflates cost per gas by a lot
   // so disable showing approves for Arbitrum until routing-api gives more accurate gas estimates
-  if (currency.chainId === ChainId.ARBITRUM_ONE || currency.chainId === ChainId.ARBITRUM_GOERLI) {
-    return { needsApprove: false }
+  if (
+    currency.chainId === ChainId.ARBITRUM_ONE ||
+    currency.chainId === ChainId.ARBITRUM_GOERLI
+  ) {
+    return { needsApprove: false };
   }
 
-  const provider = RPC_PROVIDERS[currency.chainId as SupportedInterfaceChainId]
-  const tokenContract = getContract(currency.address, ERC20_ABI, provider) as Erc20
+  const provider = RPC_PROVIDERS[currency.chainId as SupportedInterfaceChainId];
+  const tokenContract = getContract(
+    currency.address,
+    ERC20_ABI,
+    provider
+  ) as Erc20;
 
-  let approveGasUseEstimate
+  let approveGasUseEstimate;
   try {
-    const allowance = await tokenContract.callStatic.allowance(account, permit2Address(currency.chainId))
+    const allowance = await tokenContract.callStatic.allowance(
+      account,
+      permit2Address(currency.chainId)
+    );
     if (allowance.gte(amount)) {
-      return { needsApprove: false }
+      return { needsApprove: false };
     }
   } catch (_) {
     // If contract lookup fails (eg if Infura goes down), then don't show gas info for approving the token
-    return { needsApprove: false }
+    return { needsApprove: false };
   }
 
   try {
-    const approveTx = await tokenContract.populateTransaction.approve(permit2Address(currency.chainId), MaxUint256)
-    approveGasUseEstimate = (await provider.estimateGas({ from: account, ...approveTx })).toNumber()
+    const approveTx = await tokenContract.populateTransaction.approve(
+      permit2Address(currency.chainId),
+      MaxUint256
+    );
+    approveGasUseEstimate = (
+      await provider.estimateGas({ from: account, ...approveTx })
+    ).toNumber();
   } catch (_) {
     // estimateGas will error if the account doesn't have sufficient token balance, but we should show an estimated cost anyway
-    approveGasUseEstimate = APPROVE_FALLBACK_GAS_LIMIT
+    approveGasUseEstimate = APPROVE_FALLBACK_GAS_LIMIT;
   }
 
-  return { needsApprove: true, approveGasEstimateUSD: approveGasUseEstimate * usdCostPerGas }
+  return {
+    needsApprove: true,
+    approveGasEstimateUSD: approveGasUseEstimate * usdCostPerGas,
+  };
 }
 
 export async function getWrapInfo(
@@ -69,26 +87,38 @@ export async function getWrapInfo(
   usdCostPerGas?: number
 ): Promise<WrapInfo> {
   if (!needsWrap) {
-    return { needsWrap: false }
+    return { needsWrap: false };
   }
 
-  const provider = RPC_PROVIDERS[chainId]
-  const wethAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address
+  const provider = RPC_PROVIDERS[chainId];
+  const wethAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address;
 
   // If any of these arguments aren't provided, then we cannot generate wrap cost info
   if (!wethAddress || !usdCostPerGas) {
-    return { needsWrap: false }
+    return { needsWrap: false };
   }
-  let wrapGasUseEstimate
+  let wrapGasUseEstimate;
   try {
-    const wethContract = getContract(wethAddress, WETH_ABI, provider, account) as Weth
-    const wethTx = await wethContract.populateTransaction.deposit({ value: amount })
+    const wethContract = getContract(
+      wethAddress,
+      WETH_ABI,
+      provider,
+      account
+    ) as Weth;
+    const wethTx = await wethContract.populateTransaction.deposit({
+      value: amount,
+    });
 
     // estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway
-    wrapGasUseEstimate = (await provider.estimateGas({ from: account, ...wethTx })).toNumber()
+    wrapGasUseEstimate = (
+      await provider.estimateGas({ from: account, ...wethTx })
+    ).toNumber();
   } catch (_) {
-    wrapGasUseEstimate = WRAP_FALLBACK_GAS_LIMIT
+    wrapGasUseEstimate = WRAP_FALLBACK_GAS_LIMIT;
   }
 
-  return { needsWrap: true, wrapGasEstimateUSD: wrapGasUseEstimate * usdCostPerGas }
+  return {
+    needsWrap: true,
+    wrapGasEstimateUSD: wrapGasUseEstimate * usdCostPerGas,
+  };
 }

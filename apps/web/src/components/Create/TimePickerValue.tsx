@@ -42,6 +42,9 @@ export default function TimePickerValue({
               "&:hover fieldset": {
                 borderColor: "gray",
               },
+              "&:focus fieldset": {
+                backgroundColor: "#131313",
+              },
               "&.Mui-focused fieldset": {
                 borderColor: "#15AC5B",
                 borderWidth: "1px",

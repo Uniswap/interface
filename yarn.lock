@@ -11730,6 +11730,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@taraswap/permit2-sdk@npm:1.1.4, @taraswap/permit2-sdk@npm:^1.1.2":
+  version: 1.1.4
+  resolution: "@taraswap/permit2-sdk@npm:1.1.4"
+  dependencies:
+    ethers: ^5.7.0
+    tiny-invariant: ^1.1.0
+  checksum: de91505f812b68a8a01ae9bfde2de8d5380fd145305065de6e28254c6e9591eaea7b9e95d0a90ce67542dccf5e0553040de573f5e8541d8fb974e93885e93806
+  languageName: node
+  linkType: hard
+
+"@taraswap/redux-multicall@npm:1.0.0":
+  version: 1.0.0
+  resolution: "@taraswap/redux-multicall@npm:1.0.0"
+  peerDependencies:
+    "@ethersproject/abi": 5
+    "@ethersproject/bignumber": 5
+    "@ethersproject/contracts": 5
+    "@reduxjs/toolkit": 1
+    react: ">=17"
+    react-redux: ">=7"
+  checksum: 6be81370baa6b0d212e2f00e9d3097d506712c1467464e92982c96d24d956363b07938b6c2e63f0a7ba73795dfc25d02db17db7806a61f82be9a5c419f3e267b
+  languageName: node
+  linkType: hard
+
 "@taraswap/router-sdk@npm:1.1.6":
   version: 1.1.6
   resolution: "@taraswap/router-sdk@npm:1.1.6"
@@ -11808,19 +11832,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@taraswap/universal-router-sdk@npm:1.1.4, @taraswap/universal-router-sdk@npm:^1.1.4":
-  version: 1.1.4
-  resolution: "@taraswap/universal-router-sdk@npm:1.1.4"
+"@taraswap/universal-router-sdk@npm:1.1.14":
+  version: 1.1.14
+  resolution: "@taraswap/universal-router-sdk@npm:1.1.14"
   dependencies:
-    "@taraswap/permit2-sdk": ^1.1.0
-    "@taraswap/router-sdk": ^1.1.2
-    "@taraswap/sdk-core": ^1.4.0
-    "@taraswap/v2-sdk": ^1.1.1
-    "@taraswap/v3-sdk": ^1.1.1
+    "@taraswap/permit2-sdk": ^1.1.2
+    "@taraswap/router-sdk": ^1.1.5
+    "@taraswap/sdk-core": ^1.4.2
+    "@taraswap/v2-sdk": ^1.1.3
+    "@taraswap/v3-sdk": ^1.1.3
     "@uniswap/universal-router": 1.6.0
     bignumber.js: ^9.0.2
     ethers: ^5.7.0
-  checksum: d173fe37f451e2de14d574b7b541f3d462af25d9e3be7e4c8e2c26e5b2c6daf7121692ee3ead94f10903442d335048aa91ba194b071736883a0d48304675493a
+  checksum: af432e0fbbe4a013f3be5f682e9efee0fbb1e27240b8bad9b8294f2d92f43f0d973788aa35568c87493e7ebdf154b2edee12093503cc7d58bd823a9aa7d2dd33
   languageName: node
   linkType: hard
 
@@ -13955,12 +13979,13 @@ __metadata:
     "@tamagui/react-native-svg": 1.95.1
     "@tanstack/react-query": 5.28.14
     "@tanstack/react-table": 8.10.7
-    "@taraswap/permit2-sdk": 1.1.0
+    "@taraswap/permit2-sdk": 1.1.4
+    "@taraswap/redux-multicall": 1.0.0
     "@taraswap/router-sdk": 1.1.6
     "@taraswap/sdk-core": 1.4.2
     "@taraswap/smart-order-router": 4.0.3
     "@taraswap/uniswapx-sdk": 1.1.7
-    "@taraswap/universal-router-sdk": 1.1.4
+    "@taraswap/universal-router-sdk": 1.1.14
     "@taraswap/v2-sdk": 1.1.3
     "@taraswap/v3-sdk": 1.1.3
     "@testing-library/jest-dom": 5.17.0
@@ -13999,7 +14024,6 @@ __metadata:
     "@uniswap/governance": 1.0.2
     "@uniswap/liquidity-staker": 1.0.2
     "@uniswap/merkle-distributor": 1.0.1
-    "@uniswap/redux-multicall": 1.1.8
     "@uniswap/token-lists": 1.0.0-beta.33
     "@uniswap/v2-core": 1.0.1
     "@uniswap/v2-periphery": 1.1.0-beta.0
@@ -14324,20 +14348,6 @@ __metadata:
     ethers: ^5.7.0
     tiny-invariant: ^1.1.0
   checksum: 828a63c52673a5b4eefa769c0ecc2da667fe5573a3c447d0fea3809b46e7a71376a48917d959f253abba01e9faa442a503dd65649687a6bf7b385ee9f6d41afd
-  languageName: node
-  linkType: hard
-
-"@uniswap/redux-multicall@npm:1.1.8":
-  version: 1.1.8
-  resolution: "@uniswap/redux-multicall@npm:1.1.8"
-  peerDependencies:
-    "@ethersproject/abi": 5
-    "@ethersproject/bignumber": 5
-    "@ethersproject/contracts": 5
-    "@reduxjs/toolkit": 1
-    react: ">=17"
-    react-redux: ">=7"
-  checksum: 11b783c2ab5c4bd8ba48dfa3a0cc0fc8af1f36af50b6343ea158564eb793031fbb7d77f84b2a52b78a1849aedc07a9e785882a412395863518489722752bc026
   languageName: node
   linkType: hard
 
