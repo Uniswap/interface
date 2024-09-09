@@ -155,8 +155,10 @@ const TableNetworkItem = memo(function TableNetworkItem({
     >
       <InternalMenuItem
         data-testid={`tokens-network-filter-option-${display.toLowerCase()}`}
+        disabled={unsupported}
         onPress={() => {
-          navigate(`/explore/${tab ?? ExploreTab.Tokens}${!isAllNetworks ? `/${display.toLowerCase()}` : ''}`)
+          !unsupported &&
+            navigate(`/explore/${tab ?? ExploreTab.Tokens}${!isAllNetworks ? `/${display.toLowerCase()}` : ''}`)
           toggleMenu(false)
         }}
       >
