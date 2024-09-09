@@ -5,10 +5,11 @@ import { buildCurrencyId, currencyIdToGraphQLAddress } from 'uniswap/src/utils/c
 export const BACKEND_NATIVE_CHAIN_ADDRESS_STRING = 'NATIVE'
 
 export function tokenAddressOrNativeAddress(address: string, chainId: UniverseChainId): string | null {
-  if (address !== BACKEND_NATIVE_CHAIN_ADDRESS_STRING) {
+  const nativeAddress = getNativeAddress(chainId)
+
+  if (address !== BACKEND_NATIVE_CHAIN_ADDRESS_STRING && address !== nativeAddress) {
     return address
   }
 
-  const nativeAddress = getNativeAddress(chainId)
   return currencyIdToGraphQLAddress(buildCurrencyId(chainId, nativeAddress))
 }
