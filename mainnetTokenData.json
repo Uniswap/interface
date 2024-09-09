@@ -6,7 +6,7 @@
       "name": "Wrapped TARA",
       "symbol": "WTARA",
       "decimals": 18,
-      "logoURI": "https://drive.google.com/file/d/1dnhJ9rdzFT9PRYp0r7wXkg3nIJNpIl0M/view?usp=sharing"
+      "logoURI": "https://github.com/taraswap/taraswap-interface/blob/main/packages/ui/src/assets/logos/png/taraxa-logo.png"
     },
     {
       "chainId": 841,
@@ -105,9 +105,9 @@
       "logoURI": "https://iili.io/gFyZjs.png"
     }
   ],
-  "name": "Taraxa Mainnet Token List",
-  "logoURI": "https://drive.google.com/file/d/1dnhJ9rdzFT9PRYp0r7wXkg3nIJNpIl0M/view?usp=sharing",
-  "keywords": ["BlockDAG", "layer1", "T-Graph", "AI", "infrastructure"],
+  "name": "Taraxa Tokens",
+  "logoURI": "https://github.com/taraswap/taraswap-interface/blob/main/packages/ui/src/assets/logos/png/taraxa-logo.png",
+  "keywords": ["BlockDAG", "layer1", "TGraph", "AI", "infrastructure"],
   "timestamp": "2024-06-13T00:00:00.000Z",
   "version": {
     "major": 1,
