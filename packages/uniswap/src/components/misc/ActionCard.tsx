@@ -35,7 +35,7 @@ export const ActionCard = ({
         <Flex centered shrink alignContent="center" gap="$spacing4" px="$spacing20" py="$spacing12" {...containerProps}>
           {icon}
           <Flex centered shrink alignContent="center">
-            <Text textAlign="center" variant="buttonLabel2">
+            <Text textAlign="center" variant="buttonLabel3">
               {title}
             </Text>
             <Text color="$neutral2" textAlign="center" variant="body3">

@@ -9,8 +9,8 @@ import { restoreMnemonicCompleteWatcher } from 'src/features/wallet/saga'
 import { walletConnectSaga } from 'src/features/walletConnect/saga'
 import { signWcRequestSaga } from 'src/features/walletConnect/signWcRequestSaga'
 import { call, delay, select, spawn } from 'typed-redux-saga'
-import { appLanguageWatcherSaga } from 'uniswap/src/features/language/saga'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
+import { appLanguageWatcherSaga } from 'wallet/src/features/language/saga'
 import { swapActions, swapReducer, swapSaga, swapSagaName } from 'wallet/src/features/transactions/swap/swapSaga'
 import {
   tokenWrapActions,

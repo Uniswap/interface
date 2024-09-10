@@ -1,9 +1,9 @@
 import Column from 'components/Column'
 import Row from 'components/Row'
+import Toggle from 'components/Toggle'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ThemedText } from 'theme/components'
-import { Switch } from 'ui/src'
 
 const StyledColumn = styled(Column)`
   width: 100%;
@@ -33,7 +33,7 @@ export function SettingsToggle({ title, description, dataid, isActive, toggle }:
           </Row>
         )}
       </StyledColumn>
-      <Switch data-testid={dataid} variant="branded" checked={isActive} onCheckedChange={toggle} />
+      <Toggle id={dataid} isActive={isActive} toggle={toggle} />
     </Row>
   )
 }

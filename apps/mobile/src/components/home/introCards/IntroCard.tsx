@@ -25,6 +25,7 @@ export type IntroCardProps = {
   description: string
   cardType: CardType
 
+  onPress?: () => void
   onClose?: () => void
 }
 
@@ -35,6 +36,7 @@ export function IntroCard({
   title,
   description,
   cardType,
+  onPress,
   onClose,
 }: IntroCardProps): JSX.Element {
   const isDarkMode = useIsDarkMode()
@@ -54,6 +56,7 @@ export function IntroCard({
       gap="$spacing12"
       p="$spacing16"
       paddingStart="$spacing12"
+      onPress={onPress}
     >
       <Flex
         backgroundColor={isDarkMode ? '$surface3' : '$surface2'}
@@ -70,13 +73,8 @@ export function IntroCard({
             {title}
           </Text>
           {cardType === CardType.Required ? (
-            <Flex
-              backgroundColor={isDarkMode ? '$surface3' : '$surface2'}
-              borderRadius="$rounded8"
-              px="$spacing8"
-              py="$spacing4"
-            >
-              <Text color="$neutral2" variant="buttonLabel3">
+            <Flex backgroundColor="$surface2" borderRadius="$rounded8" px="$spacing8" py="$spacing4">
+              <Text color="$neutral2" variant="buttonLabel4">
                 {t('onboarding.home.intro.label.required')}
               </Text>
             </Flex>

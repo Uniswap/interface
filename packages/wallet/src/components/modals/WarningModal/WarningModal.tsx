@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactNode } from 'react'
 import { ColorValue } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
-import { AlertTriangleFilled } from 'ui/src/components/icons'
+import { AlertTriangle } from 'ui/src/components/icons'
 import { opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
@@ -89,7 +89,7 @@ export function WarningModal({
                   }
             }
           >
-            {icon ?? <AlertTriangleFilled color={alertColor.text} size="$icon.24" />}
+            {icon ?? <AlertTriangle color={alertColor.text} size="$icon.24" />}
           </Flex>
         )}
         {title && (

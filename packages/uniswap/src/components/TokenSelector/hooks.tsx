@@ -1,11 +1,8 @@
-/* eslint-disable max-lines */
 import { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import { useDispatch, useSelector } from 'react-redux'
-import { Text, TouchableArea } from 'ui/src'
 import { filter } from 'uniswap/src/components/TokenSelector/filter'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/flowToModalName'
 import {
+  FilterCallbacksHookType,
   TokenOption,
   TokenOptionSection,
   TokenSection,
@@ -16,10 +13,13 @@ import {
   formatSearchResults,
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
-import { BRIDGED_BASE_ADDRESSES, getNativeAddress } from 'uniswap/src/constants/addresses'
+import { BRIDGED_BASE_ADDRESSES } from 'uniswap/src/constants/addresses'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { DAI, USDC, USDT, WBTC } from 'uniswap/src/constants/tokens'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  PortfolioValueModifier,
+  SafetyLevel,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import {
   sortPortfolioBalances,
@@ -28,17 +28,12 @@ import {
 } from 'uniswap/src/features/dataApi/balances'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
-import { usePopularTokens as usePopularTokensGql } from 'uniswap/src/features/dataApi/topTokens'
+import { usePopularTokens } from 'uniswap/src/features/dataApi/topTokens'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { buildCurrency, gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
-import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
+import { buildCurrency, usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
-import { addToSearchHistory, clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
-import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
-import { tokenAddressOrNativeAddress } from 'uniswap/src/features/search/utils'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { usePopularTokens } from 'uniswap/src/features/tokens/hooks'
 import {
   UniverseChainId,
   WALLET_SUPPORTED_CHAIN_IDS,
@@ -150,6 +145,7 @@ export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> 
 
 export function usePortfolioBalancesForAddressById(
   address: Address | undefined,
+  valueModifiers?: PortfolioValueModifier[],
 ): GqlResult<Record<Address, PortfolioBalance> | undefined> {
   const {
     data: portfolioBalancesById,
@@ -159,6 +155,7 @@ export function usePortfolioBalancesForAddressById(
   } = usePortfolioBalances({
     address,
     fetchPolicy: 'cache-first', // we want to avoid re-renders when token selector is opening
+    valueModifiers,
   })
 
   return {
@@ -167,148 +164,6 @@ export function usePortfolioBalancesForAddressById(
     refetch,
     loading,
   }
-}
-
-export function useFavoriteCurrencies(): GqlResult<CurrencyInfo[]> {
-  const favoriteCurrencyIds = useSelector(selectFavoriteTokens)
-  const { data: favoriteTokensOnAllChains, loading, error, refetch } = useTokenProjects(favoriteCurrencyIds)
-
-  const persistedError = usePersistedError(loading, error)
-
-  // useTokenProjects returns each token on Arbitrum, Optimism, Polygon,
-  // so we need to filter out the tokens which user has actually favorited
-  const favoriteTokens = useMemo(
-    () =>
-      favoriteTokensOnAllChains &&
-      favoriteCurrencyIds
-        .map((_currencyId) => {
-          return favoriteTokensOnAllChains.find((token) => token.currencyId === _currencyId)
-        })
-        .filter((token: CurrencyInfo | undefined): token is CurrencyInfo => {
-          return !!token
-        }),
-    [favoriteCurrencyIds, favoriteTokensOnAllChains],
-  )
-
-  return { data: favoriteTokens, loading, error: persistedError, refetch }
-}
-
-export function useAddToSearchHistory(): { registerSearch: (currencyInfo: CurrencyInfo) => void } {
-  const dispatch = useDispatch()
-
-  const registerSearch = (currencyInfo: CurrencyInfo): void => {
-    dispatch(
-      addToSearchHistory({
-        searchResult: currencyInfoToTokenSearchResult(currencyInfo),
-      }),
-    )
-  }
-
-  return { registerSearch }
-}
-
-function currencyInfoToTokenSearchResult(currencyInfo: CurrencyInfo): TokenSearchResult {
-  const address = currencyInfo.currency.isToken
-    ? currencyInfo.currency.address
-    : getNativeAddress(currencyInfo.currency.chainId)
-
-  return {
-    type: SearchResultType.Token,
-    chainId: currencyInfo.currency.chainId,
-    address: tokenAddressOrNativeAddress(address, currencyInfo.currency.chainId),
-    name: currencyInfo.currency.name ?? null,
-    symbol: currencyInfo.currency.symbol ?? '',
-    logoUrl: currencyInfo.logoUrl ?? null,
-    safetyLevel: currencyInfo.safetyLevel ?? null,
-  }
-}
-
-export function useFavoriteTokensOptions(
-  address: Address | undefined,
-  chainFilter: UniverseChainId | null,
-): GqlResult<TokenOption[] | undefined> {
-  const {
-    data: portfolioBalancesById,
-    error: portfolioBalancesByIdError,
-    refetch: portfolioBalancesByIdRefetch,
-    loading: loadingPorfolioBalancesById,
-  } = usePortfolioBalancesForAddressById(address)
-
-  const {
-    data: favoriteCurrencies,
-    error: favoriteCurrenciesError,
-    refetch: refetchFavoriteCurrencies,
-    loading: loadingFavoriteCurrencies,
-  } = useFavoriteCurrencies()
-
-  const favoriteTokenOptions = useCurrencyInfosToTokenOptions({
-    currencyInfos: favoriteCurrencies,
-    portfolioBalancesById,
-    sortAlphabetically: true,
-  })
-
-  const refetch = useCallback(() => {
-    portfolioBalancesByIdRefetch?.()
-    refetchFavoriteCurrencies?.()
-  }, [portfolioBalancesByIdRefetch, refetchFavoriteCurrencies])
-
-  const error =
-    (!portfolioBalancesById && portfolioBalancesByIdError) || (!favoriteCurrencies && favoriteCurrenciesError)
-
-  const filteredFavoriteTokenOptions = useMemo(
-    () => favoriteTokenOptions && filter(favoriteTokenOptions, chainFilter),
-    [chainFilter, favoriteTokenOptions],
-  )
-
-  return {
-    data: filteredFavoriteTokenOptions,
-    refetch,
-    error: error || undefined,
-    loading: loadingPorfolioBalancesById || loadingFavoriteCurrencies,
-  }
-}
-
-function ClearAll({ onPress }: { onPress: () => void }): JSX.Element {
-  const { t } = useTranslation()
-  return (
-    <TouchableArea onPress={onPress}>
-      <Text color="$accent1" variant="buttonLabel3">
-        {t('tokens.selector.button.clear')}
-      </Text>
-    </TouchableArea>
-  )
-}
-
-export function useTokenSectionsForEmptySearch(chainFilter: UniverseChainId | null): GqlResult<TokenSection[]> {
-  const dispatch = useDispatch()
-
-  const { popularTokens, loading } = usePopularTokens()
-
-  const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
-
-  // it's a dependency of useMemo => useCallback
-  const onPressClearSearchHistory = useCallback((): void => {
-    dispatch(clearSearchHistory())
-  }, [dispatch])
-
-  const recentSection = useTokenOptionsSection(
-    TokenOptionSection.RecentTokens,
-    recentlySearchedTokenOptions,
-    <ClearAll onPress={onPressClearSearchHistory} />,
-  )
-  const popularSection = useTokenOptionsSection(
-    TokenOptionSection.PopularTokens,
-    currencyInfosToTokenOptions(popularTokens?.map(gqlTokenToCurrencyInfo)),
-  )
-  const sections = useMemo(() => [...(recentSection ?? []), ...(popularSection ?? [])], [popularSection, recentSection])
-
-  return useMemo(
-    () => ({
-      data: sections,
-      loading,
-    }),
-    [loading, sections],
-  )
 }
 
 export function useCurrencyInfosToTokenOptions({
@@ -344,13 +199,14 @@ export function useCurrencyInfosToTokenOptions({
 export function useCommonTokensOptions(
   address: Address | undefined,
   chainFilter: UniverseChainId | null,
+  valueModifiers?: PortfolioValueModifier[],
 ): GqlResult<TokenOption[] | undefined> {
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
     loading: loadingPorfolioBalancesById,
-  } = usePortfolioBalancesForAddressById(address)
+  } = usePortfolioBalancesForAddressById(address, valueModifiers)
 
   const {
     data: commonBaseCurrencies,
@@ -388,20 +244,21 @@ export function useCommonTokensOptions(
 export function usePopularTokensOptions(
   address: Address | undefined,
   chainFilter: UniverseChainId,
+  valueModifiers?: PortfolioValueModifier[],
 ): GqlResult<TokenOption[] | undefined> {
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: portfolioBalancesByIdRefetch,
     loading: loadingPorfolioBalancesById,
-  } = usePortfolioBalancesForAddressById(address)
+  } = usePortfolioBalancesForAddressById(address, valueModifiers)
 
   const {
     data: popularTokens,
     error: popularTokensError,
     refetch: refetchPopularTokens,
     loading: loadingPopularTokens,
-  } = usePopularTokensGql(chainFilter)
+  } = usePopularTokens(chainFilter)
 
   const popularTokenOptions = useCurrencyInfosToTokenOptions({
     currencyInfos: popularTokens,
@@ -427,9 +284,15 @@ export function usePopularTokensOptions(
 export function usePortfolioTokenOptions(
   address: Address | undefined,
   chainFilter: UniverseChainId | null,
+  valueModifiers?: PortfolioValueModifier[],
   searchFilter?: string,
 ): GqlResult<TokenOption[] | undefined> {
-  const { data: portfolioBalancesById, error, refetch, loading } = usePortfolioBalancesForAddressById(address)
+  const {
+    data: portfolioBalancesById,
+    error,
+    refetch,
+    loading,
+  } = usePortfolioBalancesForAddressById(address, valueModifiers)
 
   const { shownTokens } = useTokenBalancesGroupedByVisibility({
     balancesById: portfolioBalancesById,
@@ -453,15 +316,7 @@ export function usePortfolioTokenOptions(
 export function useFilterCallbacks(
   chainId: UniverseChainId | null,
   flow: TokenSelectorFlow,
-): {
-  chainFilter: UniverseChainId | null
-  parsedChainFilter: UniverseChainId | null
-  searchFilter: string | null
-  parsedSearchFilter: string | null
-  onChangeChainFilter: (newChainFilter: UniverseChainId | null) => void
-  onClearSearchFilter: () => void
-  onChangeText: (newSearchFilter: string) => void
-} {
+): ReturnType<FilterCallbacksHookType> {
   const [chainFilter, setChainFilter] = useState<UniverseChainId | null>(chainId)
   const [parsedChainFilter, setParsedChainFilter] = useState<UniverseChainId | null>(null)
   const [searchFilter, setSearchFilter] = useState<string | null>(null)
@@ -519,16 +374,14 @@ export function useFilterCallbacks(
   }
 }
 
-export const MAX_RECENT_SEARCH_RESULTS = 4
-
-export function useRecentlySearchedTokens(chainFilter: UniverseChainId | null): TokenOption[] | undefined {
-  const searchHistory = useSelector(selectSearchHistory)
-
+export function filterRecentlySearchedTokenOptions(
+  chainFilter: UniverseChainId | null,
+  searchHistory?: TokenSearchResult[],
+): TokenOption[] | undefined {
   return currencyInfosToTokenOptions(
     searchHistory
-      .filter((searchResult): searchResult is TokenSearchResult => searchResult.type === SearchResultType.Token)
-      .filter((searchResult) => (chainFilter ? searchResult.chainId === chainFilter : true))
-      .slice(0, MAX_RECENT_SEARCH_RESULTS)
+      ?.filter((searchResult): searchResult is TokenSearchResult => searchResult.type === SearchResultType.Token)
+      ?.filter((searchResult) => (chainFilter ? searchResult.chainId === chainFilter : true))
       .map(searchResultToCurrencyInfo),
   )
 }
@@ -538,20 +391,21 @@ export function useTokenSectionsForSearchResults(
   chainFilter: UniverseChainId | null,
   searchFilter: string | null,
   isBalancesOnlySearch: boolean,
+  valueModifiers?: PortfolioValueModifier[],
 ): GqlResult<TokenSection[]> {
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
     refetch: refetchPortfolioBalances,
     loading: portfolioBalancesByIdLoading,
-  } = usePortfolioBalancesForAddressById(address)
+  } = usePortfolioBalancesForAddressById(address, valueModifiers)
 
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
     loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptions(address, chainFilter, searchFilter ?? undefined)
+  } = usePortfolioTokenOptions(address, chainFilter, valueModifiers, searchFilter ?? undefined)
 
   // Only call search endpoint if isBalancesOnlySearch is false
   const {

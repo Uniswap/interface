@@ -6,9 +6,8 @@ import { ArrowUpCircle, UniswapLogo } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { useBottomSheetSafeKeyboard } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
-import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
+import { useActiveAccountAddress, useAvatar } from 'wallet/src/features/wallet/hooks'
 
 export function AIAssistantScreen(): JSX.Element {
   const scrollRef = useRef<NativeScrollView>(null)

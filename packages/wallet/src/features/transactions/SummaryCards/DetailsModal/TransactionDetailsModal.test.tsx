@@ -79,7 +79,7 @@ jest.mock('uniswap/src/features/gating/hooks', () => ({
   useFeatureFlag: jest.fn().mockReturnValue(true),
 }))
 
-jest.mock('uniswap/src/features/language/localizedDayjs', () => ({
+jest.mock('wallet/src/features/language/localizedDayjs', () => ({
   useFormattedDateTime: jest.fn(() => 'January 1, 2023 12:00 AM'),
   FORMAT_DATE_TIME_MEDIUM: 'MMMM D, YYYY h:mm A',
 }))

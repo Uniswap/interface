@@ -7,7 +7,6 @@ import { AnimatePresence, Flex, Text, TouchableArea, isWeb, useIsShortMobileDevi
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing, zIndices } from 'ui/src/theme'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
-import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -20,7 +19,6 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { NumberType } from 'utilities/src/format/types'
-import { usePrevious } from 'utilities/src/react/hooks'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSyncFiatAndTokenAmountUpdater } from 'wallet/src/features/transactions/hooks/useSyncFiatAndTokenAmountUpdater'
 import { CurrencyInputPanel, CurrencyInputPanelRef } from 'wallet/src/features/transactions/swap/CurrencyInputPanel'
@@ -36,6 +34,7 @@ import { SwapFormHeader } from 'wallet/src/features/transactions/swap/SwapFormHe
 import { SwapTokenSelector } from 'wallet/src/features/transactions/swap/SwapTokenSelector'
 import { useExactOutputWillFail } from 'wallet/src/features/transactions/swap/hooks/useExactOutputWillFail'
 import { SwapSettingConfig } from 'wallet/src/features/transactions/swap/modals/settings/configs/types'
+import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/trade/hooks/useShowSwapNetworkNotification'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
@@ -85,7 +84,7 @@ function SwapFormContent(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isShortMobileDevice = useIsShortMobileDevice()
-  const { onShowSwapNetworkNotification } = useUniswapContext()
+
   const { walletNeedsRestore, openWalletRestoreModal } = useTransactionModalContext()
 
   const { screen } = useSwapScreenContext()
@@ -115,10 +114,7 @@ function SwapFormContent(): JSX.Element {
   useSyncFiatAndTokenAmountUpdater({ skip: screen !== SwapScreen.SwapForm })
 
   // Display a toast notification when the user switches networks.
-  const prevChainId = usePrevious(chainId)
-  useEffect(() => {
-    onShowSwapNetworkNotification(chainId, prevChainId)
-  }, [chainId, prevChainId, onShowSwapNetworkNotification])
+  useShowSwapNetworkNotification(chainId)
 
   const onRestorePress = (): void => {
     if (!openWalletRestoreModal) {

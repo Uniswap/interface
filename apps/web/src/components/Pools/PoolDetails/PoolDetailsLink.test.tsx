@@ -3,16 +3,16 @@ import 'test-utils/tokens/mocks'
 import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
 import { USDC_MAINNET } from 'constants/tokens'
 import store from 'state'
+import { addSerializedToken } from 'state/user/reducer'
 import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
-import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 describe('PoolDetailsHeader', () => {
   beforeEach(() => {
     store.dispatch(
-      dismissTokenWarning({
-        token: {
+      addSerializedToken({
+        serializedToken: {
           chainId: 1,
           address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
           symbol: 'USDC',
@@ -22,8 +22,8 @@ describe('PoolDetailsHeader', () => {
       }),
     )
     store.dispatch(
-      dismissTokenWarning({
-        token: {
+      addSerializedToken({
+        serializedToken: {
           chainId: 1,
           address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
           symbol: 'WETH',

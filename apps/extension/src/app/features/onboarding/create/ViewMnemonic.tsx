@@ -3,11 +3,10 @@ import { Trans, useTranslation } from 'react-i18next'
 import { MnemonicViewer } from 'src/app/components/MnemonicViewer'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
-import { useSubmitOnEnter } from 'src/app/features/onboarding/utils'
 import { TopLevelRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { CheckBox, Circle, Flex, IconProps, Square, Text } from 'ui/src'
-import { AlertTriangleFilled, EyeOff, FileListLock, Key, PencilDetailed } from 'ui/src/components/icons'
+import { AlertTriangle, EyeOff, FileListLock, Key, PencilDetailed } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingFlow, ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
@@ -43,16 +42,7 @@ export function ViewMnemonic(): JSX.Element {
     }
   }, [onboardingAccountMnemonic, retrieveOnboardingAccountMnemonic])
 
-  // On Info step, next button should be enabled if mnemonic has been created.
-  // On View step, next button should be enabled if disclaimer is checked and mnemonic has been created.
-  const shouldEnableNextButton =
-    viewStep === ViewStep.View ? !!onboardingAccountAddress && disclaimerChecked : !!onboardingAccountAddress
-
   const onSubmit = (): void => {
-    if (!shouldEnableNextButton) {
-      return
-    }
-
     if (viewStep === ViewStep.Info) {
       setViewStep(ViewStep.View)
       return
@@ -63,7 +53,10 @@ export function ViewMnemonic(): JSX.Element {
     }
   }
 
-  useSubmitOnEnter(onSubmit)
+  // On view step, next button should be enabled if mnemonic has been created.
+  // On disclaimer step, next button should be enabled if disclaimer is checked and mnemonic has been created.
+  const shouldEnableNextButton =
+    viewStep === ViewStep.View ? !!onboardingAccountAddress && disclaimerChecked : !!onboardingAccountAddress
 
   return (
     <Trace
@@ -82,7 +75,7 @@ export function ViewMnemonic(): JSX.Element {
             {viewStep === ViewStep.View ? (
               <FileListLock color="$neutral1" size={iconSizes.icon24} />
             ) : (
-              <AlertTriangleFilled color="$statusCritical" size={iconSizes.icon24} />
+              <AlertTriangle color="$statusCritical" size={iconSizes.icon24} />
             )}
           </Square>
         }

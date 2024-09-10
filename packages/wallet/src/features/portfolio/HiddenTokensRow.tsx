@@ -46,7 +46,7 @@ export function HiddenTokensRow({
               color="$neutral2"
               textAlign="center"
               userSelect="none"
-              variant="buttonLabel2"
+              variant="buttonLabel3"
             >
               {isExpanded ? t('common.button.hide') : t('common.button.show')}
             </Text>

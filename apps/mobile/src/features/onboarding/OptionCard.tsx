@@ -47,25 +47,24 @@ export function OptionCard({
         <Flex row alignContent="center" alignItems="flex-start" gap="$spacing16">
           <Flex
             alignItems="center"
-            backgroundColor="$accent2"
+            backgroundColor="$DEP_magentaDark"
             borderRadius="$roundedFull"
-            height={iconSizes.icon28}
+            height={iconSizes.icon24}
             justifyContent="center"
-            width={iconSizes.icon28}
+            p="$spacing16"
+            width={iconSizes.icon24}
           >
             {icon}
           </Flex>
           <Flex row alignItems="center" gap="$spacing4" pr="$spacing60">
             <Flex fill alignItems="flex-start" gap="$spacing4" justifyContent="space-around">
               <Flex row gap="$spacing8">
-                <Flex fill>
-                  <Text $short={{ variant: 'subheading2' }} allowFontScaling={false} variant="body2">
-                    {title}
-                  </Text>
-                </Flex>
+                <Text $short={{ variant: 'subheading2' }} allowFontScaling={false} variant="body2">
+                  {title}
+                </Text>
                 {badgeText && (
                   <Flex centered backgroundColor="$DEP_magentaDark" borderRadius="$rounded8" px="$spacing8">
-                    <Text color="$accent1" variant="buttonLabel3">
+                    <Text color="$accent1" variant="buttonLabel4">
                       {badgeText}
                     </Text>
                   </Flex>

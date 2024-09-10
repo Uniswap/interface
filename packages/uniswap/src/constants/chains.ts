@@ -42,7 +42,6 @@ import {
   USDT,
 } from 'uniswap/src/constants/tokens'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FLASHBOTS_RPC_URL } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import {
   InterfaceGqlChain,
@@ -120,7 +119,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
       [RPCType.Private]: {
-        http: [FLASHBOTS_RPC_URL],
+        http: ['https://rpc.mevblocker.io/?referrer=uniswapwallet'],
       },
       [RPCType.Public]: {
         http: [config.quicknodeMainnetRpcUrl],
@@ -994,7 +993,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     assetRepoNetworkName: 'zksync',
     backendChain: {
       chain: BackendChainId.Zksync as InterfaceGqlChain,
-      backendSupported: true,
+      backendSupported: false,
       isSecondaryChain: false,
       nativeTokenBackendAddress: undefined,
     },

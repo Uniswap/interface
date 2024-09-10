@@ -52,7 +52,7 @@ export const EmptyWallet = ({
   return (
     <Flex py={20} gap="$spacing20">
       <Flex gap="$spacing8">
-        <Text variant="buttonLabel2" color="$neutral1">
+        <Text variant="buttonLabel3" color="$neutral1">
           <Trans i18nKey="home.tokens.empty.welcome" />
         </Text>
         <Text variant="body3" color="$neutral2">

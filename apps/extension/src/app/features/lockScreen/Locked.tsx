@@ -8,7 +8,7 @@ import { useSagaStatus } from 'src/app/hooks/useSagaStatus'
 import { OnboardingRoutes, TopLevelRoutes } from 'src/app/navigation/constants'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { Button, Flex, InputProps, Text, TouchableArea } from 'ui/src'
-import { AlertTriangleFilled, Lock } from 'ui/src/components/icons'
+import { AlertTriangle, Lock } from 'ui/src/components/icons'
 import { spacing, zIndices } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -132,7 +132,7 @@ export function Locked(): JSX.Element {
       linkUrl: uniswapUrls.helpArticleUrls.recoveryPhraseForgotten,
       icon: (
         <Flex backgroundColor="$DEP_accentCriticalSoft" borderRadius="$rounded12" p="$spacing12">
-          <AlertTriangleFilled color="$statusCritical" size="$icon.24" />
+          <AlertTriangle color="$statusCritical" size="$icon.24" />
         </Flex>
       ),
       isOpen: forgotPasswordModalOpen,

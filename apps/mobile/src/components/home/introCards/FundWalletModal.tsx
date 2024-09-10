@@ -2,7 +2,7 @@ import React, { PropsWithChildren, useCallback, useMemo } from 'react'
 import { FlatList, ImageBackground } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { openModal } from 'src/features/modals/modalSlice'
-import { Flex, useIsDarkMode, useShadowPropsShort } from 'ui/src'
+import { Flex, useIsDarkMode } from 'ui/src'
 import { CRYPTO_PURCHASE_BACKGROUND_DARK, CRYPTO_PURCHASE_BACKGROUND_LIGHT } from 'ui/src/assets'
 import { ArrowDownCircle, Buy } from 'ui/src/components/icons'
 import { borderRadii, iconSizes, spacing } from 'ui/src/theme'
@@ -18,7 +18,6 @@ import { ImageUri } from 'wallet/src/features/images/ImageUri'
 
 export function FundWalletModal({ onClose }: { onClose: () => void }): JSX.Element {
   const isDarkMode = useIsDarkMode()
-  const shadowProps = useShadowPropsShort()
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const cexTransferProviders = useCexTransferProviders()
@@ -106,9 +105,11 @@ export function FundWalletModal({ onClose }: { onClose: () => void }): JSX.Eleme
             key={card.title}
             {...card}
             containerProps={{
-              ...shadowProps,
               py: '$spacing20',
-              px: '$spacing20',
+              // TODO WALL-3699 replace with spore shadow support
+              shadowColor: isDarkMode ? 'rgba(0, 0, 0, 0.24)' : 'rgba(0, 0, 0, 0.02)',
+              shadowOffset: { width: 0, height: 1 },
+              shadowRadius: 6,
             }}
           />
         ))}

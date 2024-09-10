@@ -1,8 +1,8 @@
 import { PropsWithChildren } from 'react'
-import { PlatformSplitStubError } from 'utilities/src/errors'
+import { NotImplementedError } from 'utilities/src/errors'
 
 function ViewGestureHandler(_props: PropsWithChildren<unknown>): JSX.Element {
-  throw new PlatformSplitStubError('ViewGestureHandler')
+  throw new NotImplementedError('See `.native.tsx` and `.web.tsx` files.')
 }
 
 export default ViewGestureHandler

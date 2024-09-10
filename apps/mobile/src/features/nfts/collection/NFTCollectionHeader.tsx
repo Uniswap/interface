@@ -10,10 +10,10 @@ import { Flex, FlexProps, Text, useDeviceInsets, useExtractedColors, useSporeCol
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'
 import { Ethereum } from 'ui/src/components/logos'
 import { iconSizes, spacing } from 'ui/src/theme'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 const PROFILE_IMAGE_SIZE = 72
 const PROFILE_IMAGE_WRAPPER_SIZE = PROFILE_IMAGE_SIZE + spacing.spacing4

@@ -1,8 +1,8 @@
-import { skipToken, useQuery } from '@tanstack/react-query'
 import { Currency, CurrencyAmount, NativeCurrency as NativeCurrencyClass } from '@uniswap/sdk-core'
 import { Contract } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import ERC20_ABI from 'uniswap/src/abis/erc20.json'
+import { useRestQuery } from 'uniswap/src/data/rest'
 import { getPollingIntervalByBlocktime } from 'uniswap/src/features/chains/utils'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
@@ -10,7 +10,9 @@ import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCur
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
 
-const ONCHAIN_BALANCES_CACHE_KEY = 'OnchainBalances'
+// stub endpoint to conform to REST endpoint styles
+// Rest link should intercept and use custom fetcher instead
+export const STUB_ONCHAIN_BALANCES_ENDPOINT = '/onchain-balances'
 
 export type BalanceLookupParams = {
   currencyAddress?: Address
@@ -20,7 +22,7 @@ export type BalanceLookupParams = {
 }
 
 /** Custom fetcher that uses an ethers provider to fetch. */
-export async function getOnChainBalancesFetch(params: BalanceLookupParams): Promise<{ balance?: string }> {
+export const getOnChainBalancesFetch = async (params: BalanceLookupParams): Promise<Response> => {
   const { currencyAddress, chainId, currencyIsNative, accountAddress } = params
   if (!currencyAddress || !chainId || !accountAddress) {
     throw new Error(`currencyAddress, chainId, or accountAddress is not defined`)
@@ -28,43 +30,40 @@ export async function getOnChainBalancesFetch(params: BalanceLookupParams): Prom
 
   const provider = createEthersProvider(chainId)
   if (!provider) {
-    return { balance: undefined }
+    return new Response(JSON.stringify({ balance: undefined }))
   }
 
   // native amount lookup
   if (currencyIsNative) {
     const nativeBalance = await provider.getBalance(accountAddress)
-    return { balance: nativeBalance?.toString() }
+    return new Response(JSON.stringify({ balance: nativeBalance?.toString() }))
   }
 
   // erc20 lookup
   const erc20Contract = new Contract(currencyAddress, ERC20_ABI, provider)
   const balance = await erc20Contract.callStatic.balanceOf?.(accountAddress)
-  return { balance: balance.toString() }
+  return new Response(JSON.stringify({ balance: balance.toString() }))
 }
 
 export function useOnChainCurrencyBalance(
   currency?: Currency | null,
   accountAddress?: Address,
 ): { balance: CurrencyAmount<Currency> | undefined; isLoading: boolean; error: unknown } {
-  const refetchInterval = getPollingIntervalByBlocktime(currency?.chainId)
-
-  const { data, error } = useQuery<{ balance?: string }>({
-    queryKey: [ONCHAIN_BALANCES_CACHE_KEY, accountAddress, currency],
-    queryFn:
-      currency && accountAddress
-        ? async (): ReturnType<typeof getOnChainBalancesFetch> =>
-            await getOnChainBalancesFetch({
-              currencyAddress: getCurrencyAddress(currency),
-              chainId: currency.chainId,
-              currencyIsNative: currency.isNative,
-              accountAddress,
-            })
-        : skipToken,
-    staleTime: refetchInterval,
-    refetchInterval,
-    gcTime: refetchInterval * 2,
-  })
+  const { data, error } = useRestQuery<{ balance?: string }, BalanceLookupParams>(
+    STUB_ONCHAIN_BALANCES_ENDPOINT,
+    {
+      currencyAddress: currency ? getCurrencyAddress(currency) : undefined,
+      chainId: currency?.chainId,
+      currencyIsNative: currency?.isNative,
+      accountAddress,
+    },
+    ['balance'],
+    {
+      pollInterval: getPollingIntervalByBlocktime(currency?.chainId),
+      ttlMs: getPollingIntervalByBlocktime(currency?.chainId),
+      skip: !currency,
+    },
+  )
 
   return useMemo(
     () => ({
@@ -72,7 +71,7 @@ export function useOnChainCurrencyBalance(
       isLoading: !data?.balance,
       error,
     }),
-    [data?.balance, currency, error],
+    [data, currency, error],
   )
 }
 

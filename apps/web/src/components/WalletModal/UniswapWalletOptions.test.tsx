@@ -20,7 +20,7 @@ describe('UniswapWalletOptions Test', () => {
       id === CONNECTION.WALLET_CONNECT_CONNECTOR_ID ? WALLET_CONNECT_CONNECTOR : undefined,
     )
   })
-  it('Download wallet option should be visible if extension is not detected', () => {
+  it('Download wallet option should be visible if extension is not detected and launch flag is true', () => {
     mocked(useConnectorWithId).mockImplementation((id) =>
       id === CONNECTION.UNISWAP_EXTENSION_RDNS ? undefined : WALLET_CONNECT_CONNECTOR,
     )
@@ -29,6 +29,16 @@ describe('UniswapWalletOptions Test', () => {
     expect(asFragment()).toMatchSnapshot()
     const downloadOption = screen.getByTestId('download-uniswap-wallet')
     expect(downloadOption).toBeInTheDocument()
+  })
+  it('Download wallet option should not be visible if extension is not detected and launch flag is false', () => {
+    mocked(useConnectorWithId).mockImplementation((id) =>
+      id === CONNECTION.UNISWAP_EXTENSION_RDNS ? undefined : WALLET_CONNECT_CONNECTOR,
+    )
+    mocked(useFeatureFlag).mockReturnValue(false)
+    const { asFragment } = render(<UniswapWalletOptions />)
+    expect(asFragment()).toMatchSnapshot()
+    const downloadOption = screen.queryByTestId('download-uniswap-wallet')
+    expect(downloadOption).not.toBeInTheDocument()
   })
   it('Extension connecter should be shown if detected', () => {
     mocked(useConnectorWithId).mockImplementation((id) =>

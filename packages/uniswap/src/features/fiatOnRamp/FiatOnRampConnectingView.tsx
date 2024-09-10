@@ -5,13 +5,11 @@ import { iconSizes } from 'ui/src/theme'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 
 export function FiatOnRampConnectingView({
-  isOffRamp,
   amount,
   quoteCurrencyCode,
   serviceProviderName,
   serviceProviderLogo,
 }: {
-  isOffRamp?: boolean
   amount?: string
   quoteCurrencyCode?: string
   serviceProviderName: string
@@ -36,15 +34,10 @@ export function FiatOnRampConnectingView({
             </Text>
             {quoteCurrencyCode && amount && (
               <Text color="$neutral2" variant="body2">
-                {isOffRamp
-                  ? t('fiatOffRamp.connection.quote', {
-                      amount,
-                      currencySymbol: quoteCurrencyCode,
-                    })
-                  : t('fiatOnRamp.connection.quote', {
-                      amount,
-                      currencySymbol: quoteCurrencyCode,
-                    })}
+                {t('fiatOnRamp.connection.quote', {
+                  amount,
+                  currencySymbol: quoteCurrencyCode,
+                })}
               </Text>
             )}
           </Flex>

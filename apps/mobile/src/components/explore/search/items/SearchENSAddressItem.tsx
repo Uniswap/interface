@@ -32,7 +32,7 @@ export function SearchENSAddressItem({ searchResult, searchContext }: SearchENSA
    * ex. if searching `uni.eth` resolves to 0x123, and the primary ENS for 0x123
    * is `uniswap.eth`, then we should show "uni.eth | owned by uniswap.eth"
    */
-  const { data: fetchedPrimaryENSName, isLoading: isFetchingPrimaryENSName } = useENSName(
+  const { data: fetchedPrimaryENSName, loading: isFetchingPrimaryENSName } = useENSName(
     savedPrimaryENSName ? undefined : address,
   )
 

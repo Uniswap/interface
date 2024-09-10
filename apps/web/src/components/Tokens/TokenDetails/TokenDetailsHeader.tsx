@@ -13,7 +13,7 @@ import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo, useState } from 'react'
 import { Link, MoreHorizontal } from 'react-feather'
 import { useSearchParams } from 'react-router-dom'
-import { EllipsisTamaguiStyle } from 'theme/components'
+import { TamaguiEllipsisStyle } from 'theme/components'
 import { Flex, Text, WebBottomSheet, useMedia, useSporeColors } from 'ui/src'
 import { Check } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -115,7 +115,7 @@ export const TokenDetailsHeader = () => {
       <TokenNameCell>
         <PortfolioLogo currencies={[currency]} chainId={currency.chainId} size={32} />
         <Flex row gap="$gap8" alignItems="center" overflow="hidden">
-          <Text variant="heading3" minWidth={40} {...EllipsisTamaguiStyle}>
+          <Text variant="heading3" minWidth={40} {...TamaguiEllipsisStyle}>
             {currency.name ?? t('tdp.nameNotFound')}
           </Text>
           <Text variant="heading3" textTransform="uppercase" color="$neutral2" $sm={{ display: 'none' }}>

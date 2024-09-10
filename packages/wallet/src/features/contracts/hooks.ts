@@ -6,13 +6,7 @@ import { useAsyncData } from 'utilities/src/react/hooks'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/send/hooks/useIsSmartContractAddress'
 import { useProvider } from 'wallet/src/features/wallet/context'
 
-export function useIsErc20Contract(
-  address: string | undefined,
-  chainId: WalletChainId,
-): {
-  loading: boolean
-  isERC20ContractAddress: boolean
-} {
+export function useIsErc20Contract(address: string | undefined, chainId: WalletChainId): boolean {
   const provider = useProvider(chainId)
   const { isSmartContractAddress } = useIsSmartContractAddress(address, chainId)
 
@@ -29,6 +23,5 @@ export function useIsErc20Contract(
     }
   }, [address, isSmartContractAddress, provider])
 
-  const { data, isLoading } = useAsyncData(fetchIsErc20)
-  return { isERC20ContractAddress: !!data, loading: isLoading }
+  return Boolean(useAsyncData(fetchIsErc20).data)
 }

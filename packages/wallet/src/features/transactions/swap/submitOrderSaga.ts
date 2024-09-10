@@ -1,6 +1,8 @@
+import axios from 'axios'
 import { call, put, take } from 'typed-redux-saga'
-import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TRADING_API_HEADERS } from 'uniswap/src/data/tradingApi/client'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { finalizeTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
@@ -35,6 +37,8 @@ export interface SubmitUniswapXOrderParams {
   onSubmit: () => void
   onFailure: () => void
 }
+
+export const ORDER_ENDPOINT = uniswapUrls.tradingApiUrl + uniswapUrls.tradingApiPaths.order
 
 export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
   const { orderParams, approveTxHash, wrapTxHash, txId, chainId, typeInfo, account, analytics, onSubmit, onFailure } =
@@ -94,7 +98,7 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
   try {
     const addedTime = Date.now() // refresh the addedTime to match the actual submission time
     yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.Submitted, addedTime }))
-    yield* call(submitOrder, orderParams)
+    yield* call(axios.post, ORDER_ENDPOINT, orderParams, { headers: TRADING_API_HEADERS })
   } catch {
     // In the rare event that submission fails, we update the order status to prompt the user.
     // If the app is closed before this catch block is reached, orderWatcherSaga will handle the failure upon reopening.

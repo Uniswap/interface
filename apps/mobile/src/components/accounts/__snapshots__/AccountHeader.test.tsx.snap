@@ -298,9 +298,8 @@ exports[`AccountHeader renders correctly 1`] = `
             style={
               {
                 "color": "#222222",
-                "fontFamily": "Basel Grotesk",
+                "fontFamily": "Basel-Book",
                 "fontSize": 19,
-                "fontWeight": "400",
                 "lineHeight": 24,
               }
             }
@@ -352,7 +351,6 @@ exports[`AccountHeader renders correctly 1`] = `
                     "value": {
                       "color": "#CECECE",
                       "fontSize": 19,
-                      "fontWeight": "400",
                       "lineHeight": 24,
                       "opacity": 0,
                     },
@@ -362,9 +360,8 @@ exports[`AccountHeader renders correctly 1`] = `
                 style={
                   {
                     "color": "#CECECE",
-                    "fontFamily": "Basel Grotesk",
+                    "fontFamily": "Basel-Book",
                     "fontSize": 19,
-                    "fontWeight": "400",
                     "lineHeight": 24,
                     "opacity": 0,
                   }
@@ -417,9 +414,8 @@ exports[`AccountHeader renders correctly 1`] = `
                   style={
                     {
                       "color": "#CECECE",
-                      "fontFamily": "Basel Grotesk",
+                      "fontFamily": "Basel-Book",
                       "fontSize": 17,
-                      "fontWeight": "400",
                       "lineHeight": 24,
                     }
                   }

@@ -1,7 +1,6 @@
 import dayjs from 'dayjs'
 import React from 'react'
-import { ListRenderItemInfo, StyleSheet } from 'react-native'
-import { FlatList } from 'react-native-gesture-handler'
+import { FlatList, ListRenderItemInfo, StyleSheet } from 'react-native'
 import { Flex, Text, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { NftAssetTrait } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -30,7 +29,7 @@ export function NFTTraitCard({
 
   return (
     <Flex backgroundColor="$surface3" borderRadius="$rounded16" gap="$spacing4" px="$spacing16" py="$spacing12">
-      <Text fontSize={14} style={{ color: titleTextColor ?? colors.neutral2.get() }} variant="buttonLabel2">
+      <Text fontSize={14} style={{ color: titleTextColor ?? colors.neutral2.get() }} variant="buttonLabel4">
         {trait.name}
       </Text>
       <Text color="$neutral1" variant="subheading2">

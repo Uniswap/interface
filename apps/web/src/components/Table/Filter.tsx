@@ -1,48 +1,49 @@
+import Column from 'components/Column'
+import Row from 'components/Row'
 import { DropdownIcon } from 'components/Table/icons'
 import { useScreenSize } from 'hooks/screenSize'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import deprecatedStyled from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { Checkbox } from 'nft/components/layout/Checkbox'
-import { RefObject, useCallback, useRef, useState } from 'react'
+import { Fragment, useCallback, useRef, useState } from 'react'
 import { ThemedText } from 'theme/components'
-import { Flex, styled } from 'ui/src'
+import { Z_INDEX } from 'theme/zIndex'
 
-const StyledDropdownIcon = deprecatedStyled(DropdownIcon)`
+const StyledDropdownIcon = styled(DropdownIcon)`
   position: relative;
 `
-const FilterDropdown = styled(Flex, {
-  position: 'absolute',
-  p: '$padding8',
-  borderRadius: '$rounded12',
-  backgroundColor: '$surface2',
-  gap: '$gap8',
-  width: 240,
-  borderWidth: 1,
-  borderColor: '$surface3',
-  borderStyle: 'solid',
-  shadowColor: '$shadow',
-  opacity: 1,
-  zIndex: '$modal',
-  $md: {
-    position: 'fixed' as any,
-    bottom: 0,
-    left: 0,
-    top: 'unset',
-    width: '100vw',
-  },
-})
+const FilterDropdown = styled(Column)<{ isSticky?: boolean }>`
+  position: absolute;
+  top: ${({ isSticky }) => (isSticky ? 64 : 42)}px;
+  padding: 8px;
+  border-radius: 12px;
+  background: ${({ theme }) => theme.surface2};
+  gap: 8px;
+  width: 240px;
+  border-radius: 12px;
+  border: ${({ theme }) => `1px solid ${theme.surface3}`};
+  box-shadow: ${({ theme }) => theme.deprecated_deepShadow};
+  opacity: 1 !important;
+  z-index: ${Z_INDEX.modal};
 
-const FilterRow = styled(Flex, {
-  row: true,
-  py: 10,
-  px: '$padding8',
-  justifyContent: 'space-between',
-  borderRadius: '$rounded8',
-  hoverStyle: {
-    backgroundColor: '$surface3',
-  },
-})
+  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    top: unset;
+    width: 100vw;
+  }
+`
+
+const FilterRow = styled(Row)`
+  padding: 10px 8px;
+  justify-content: space-between;
+  border-radius: 8px;
+  &:hover {
+    background: ${({ theme }) => theme.surface3};
+  }
+`
 
 interface FilterProps<T extends string> {
   allFilters: T[]
@@ -50,7 +51,7 @@ interface FilterProps<T extends string> {
   setFilters: (filter: T[]) => void
   isOpen: boolean
   toggleFilterModal: () => void
-  anchorRef: RefObject<HTMLElement>
+  isSticky?: boolean
 }
 
 export function Filter<T extends string>({
@@ -59,7 +60,7 @@ export function Filter<T extends string>({
   setFilters,
   isOpen,
   toggleFilterModal,
-  anchorRef,
+  isSticky,
 }: FilterProps<T>) {
   const [hoveredRow, setHoveredRow] = useState(-1)
   const isScreenSize = useScreenSize()
@@ -77,21 +78,19 @@ export function Filter<T extends string>({
     },
     [activeFilter, setFilters],
   )
+  // Need to put the modal in a Portal when on mobile to show over promo banner
+  const Wrapper = isMobile ? Portal : Fragment
 
   return (
     <>
       <StyledDropdownIcon />
-      {isOpen && anchorRef.current && (
-        <Portal>
-          <FilterDropdown
-            ref={filterModalRef}
-            top={isMobile ? 'unset' : anchorRef.current.getBoundingClientRect().y + 42 + window.scrollY}
-            left={anchorRef.current.getBoundingClientRect().x}
-          >
+      {isOpen && (
+        <Wrapper>
+          <FilterDropdown isSticky={isSticky} ref={filterModalRef}>
             {allFilters.map((filter, index) => (
               <FilterRow
                 key={filter}
-                onPress={(e) => {
+                onClick={(e) => {
                   e.stopPropagation()
                   e.preventDefault()
                   handleFilterOptionClick(filter)
@@ -104,7 +103,7 @@ export function Filter<T extends string>({
               </FilterRow>
             ))}
           </FilterDropdown>
-        </Portal>
+        </Wrapper>
       )}
     </>
   )

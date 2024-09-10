@@ -3,7 +3,6 @@ import { BigNumberish } from 'ethers'
 import { useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { makeSelectTransaction, useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -18,6 +17,7 @@ import { TransactionState } from 'uniswap/src/features/transactions/types/transa
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { ensureLeading0x } from 'uniswap/src/utils/addresses'
 import { areCurrencyIdsEqual, buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { makeSelectTransaction, useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import {
   createSwapFormFromTxDetails,
   createWrapFormFromTxDetails,

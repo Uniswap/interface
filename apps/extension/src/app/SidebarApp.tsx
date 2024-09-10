@@ -4,7 +4,7 @@ import 'src/app/Global.css'
 import { useEffect, useRef, useState } from 'react'
 import { I18nextProvider } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { RouterProvider } from 'react-router-dom'
+import { RouterProvider, ScrollRestoration } from 'react-router-dom'
 import { PersistGate } from 'redux-persist/integration/react'
 import { ExtensionStatsigProvider } from 'src/app/StatsigProvider'
 import { GraphqlProvider } from 'src/app/apollo'
@@ -38,8 +38,6 @@ import {
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
 import { getReduxPersistor, getReduxStore } from 'src/store/store'
-import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
-import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -50,7 +48,10 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-import { SharedWalletProvider } from 'wallet/src/provider'
+import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
+import { syncAppWithDeviceLanguage } from 'wallet/src/features/language/slice'
+import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
+import { SharedProvider } from 'wallet/src/provider'
 
 getLocalUserId()
   .then((userId) => {
@@ -204,6 +205,7 @@ function SidebarWrapper(): JSX.Element {
 
   return (
     <>
+      <ScrollRestoration />
       <WebNavigation />
     </>
   )
@@ -240,21 +242,23 @@ export default function SidebarApp(): JSX.Element {
       <PersistGate persistor={getReduxPersistor()}>
         <ExtensionStatsigProvider>
           <I18nextProvider i18n={i18n}>
-            <SharedWalletProvider reduxStore={getReduxStore()}>
+            <SharedProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>
                 <GraphqlProvider>
                   <LocalizationContextProvider>
                     <UnitagUpdaterContextProvider>
-                      <TraceUserProperties />
-                      <DappContextProvider>
-                        <PrimaryAppInstanceDebuggerLazy />
-                        <RouterProvider router={router} />
-                      </DappContextProvider>
+                      <WalletUniswapProvider>
+                        <TraceUserProperties />
+                        <DappContextProvider>
+                          <PrimaryAppInstanceDebuggerLazy />
+                          <RouterProvider router={router} />
+                        </DappContextProvider>
+                      </WalletUniswapProvider>
                     </UnitagUpdaterContextProvider>
                   </LocalizationContextProvider>
                 </GraphqlProvider>
               </ErrorBoundary>
-            </SharedWalletProvider>
+            </SharedProvider>
           </I18nextProvider>
         </ExtensionStatsigProvider>
       </PersistGate>

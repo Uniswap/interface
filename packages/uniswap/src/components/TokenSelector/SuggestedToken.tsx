@@ -52,7 +52,7 @@ function _SuggestedToken({
         pl="$spacing4"
         pr="$spacing12"
         py="$spacing4"
-        textVariant={media.xxs ? 'buttonLabel2' : 'buttonLabel1'}
+        textVariant={media.xxs ? 'buttonLabel3' : 'buttonLabel1'}
       />
     </TouchableArea>
   )

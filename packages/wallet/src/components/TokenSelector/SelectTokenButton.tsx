@@ -35,19 +35,7 @@ export function SelectTokenButton({ selectedCurrencyInfo, onPress, testID }: Sel
           )}
         </Flex>
       ) : (
-        <Flex
-          centered
-          row
-          gap="$spacing4"
-          pl="$spacing12"
-          pr="$spacing12"
-          py="$spacing8"
-          {...(isWeb && {
-            pl: '$spacing8',
-            pr: '$spacing4',
-            py: '$spacing4',
-          })}
-        >
+        <Flex centered row gap="$spacing4" pl="$spacing8" pr={isWeb ? '$spacing4' : '$spacing8'} py="$spacing4">
           <Text color="$white" testID={`${testID}-label`} variant="buttonLabel2">
             {t('tokens.selector.button.choose')}
           </Text>

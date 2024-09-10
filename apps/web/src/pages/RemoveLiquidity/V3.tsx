@@ -13,6 +13,7 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
+import Toggle from 'components/Toggle'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { Break } from 'components/earn/styled'
 import { useIsSupportedChainId } from 'constants/chains'
@@ -35,7 +36,7 @@ import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { ThemedText } from 'theme/components'
-import { Switch, Text } from 'ui/src'
+import { Text } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
@@ -463,11 +464,10 @@ function Remove({ tokenId }: { tokenId: BigNumber }) {
                       }}
                     />
                   </ThemedText.DeprecatedMain>
-                  <Switch
+                  <Toggle
                     id="receive-as-weth"
-                    checked={receiveWETH}
-                    onCheckedChange={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
-                    variant="branded"
+                    isActive={receiveWETH}
+                    toggle={() => setReceiveWETH((receiveWETH) => !receiveWETH)}
                   />
                 </RowBetween>
               )}

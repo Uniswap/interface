@@ -41,14 +41,10 @@ export function Password({
   } = usePasswordForm()
 
   const onSubmit = useCallback(async () => {
-    if (!enableNext) {
-      return
-    }
-
     if (checkSubmit()) {
       await onComplete(password)
     }
-  }, [onComplete, password, checkSubmit, enableNext])
+  }, [onComplete, password, checkSubmit])
 
   const handleBack = useCallback(() => {
     // reset the pending mnemonic when going back from password screen
@@ -92,7 +88,6 @@ export function Password({
             value={password}
             onBlur={onPasswordBlur}
             onChangeText={onChangePassword}
-            onSubmitEditing={onSubmit}
           />
           <PasswordInput
             large

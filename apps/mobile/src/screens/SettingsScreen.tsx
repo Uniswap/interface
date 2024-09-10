@@ -7,7 +7,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackNavigationProp, SettingsStackNavigationProp } from 'src/app/navigation/types'
 import { FooterSettings } from 'src/components/Settings/FooterSettings'
 import { OnboardingRow } from 'src/components/Settings/OnboardingRow'
-import { ResetBehaviorHistoryRow } from 'src/components/Settings/ResetBehaviorHistoryRow'
 import {
   SettingsRow,
   SettingsSection,
@@ -41,8 +40,6 @@ import {
 } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -53,12 +50,10 @@ import { isDevEnv } from 'utilities/src/environment'
 import { isAndroid } from 'utilities/src/platform'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectHapticsEnabled, setHapticsUserSettingEnabled } from 'wallet/src/features/appearance/slice'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import { useSignerAccounts } from 'wallet/src/features/wallet/hooks'
-
-// avoids rendering during animation which makes it laggy
-// set to a bit above the Switch animation "simple" which is 80ms
-const AVOID_RENDER_DURING_ANIMATION_MS = 100
 
 export function SettingsScreen(): JSX.Element {
   const navigation = useNavigation<SettingsStackNavigationProp & OnboardingStackNavigationProp>()
@@ -78,23 +73,17 @@ export function SettingsScreen(): JSX.Element {
 
   const hideSmallBalances = useHideSmallBalancesSetting()
   const onToggleHideSmallBalances = useCallback(() => {
-    setTimeout(() => {
-      dispatch(setHideSmallBalances(!hideSmallBalances))
-    }, AVOID_RENDER_DURING_ANIMATION_MS)
+    dispatch(setHideSmallBalances(!hideSmallBalances))
   }, [dispatch, hideSmallBalances])
 
   const hideSpamTokens = useHideSpamTokensSetting()
   const onToggleHideSpamTokens = useCallback(() => {
-    setTimeout(() => {
-      dispatch(setHideSpamTokens(!hideSpamTokens))
-    }, AVOID_RENDER_DURING_ANIMATION_MS)
+    dispatch(setHideSpamTokens(!hideSpamTokens))
   }, [dispatch, hideSpamTokens])
 
   const hapticsUserEnabled = useSelector(selectHapticsEnabled)
   const onToggleEnableHaptics = useCallback(() => {
-    setTimeout(() => {
-      dispatch(setHapticsUserSettingEnabled(!hapticsUserEnabled))
-    }, AVOID_RENDER_DURING_ANIMATION_MS)
+    dispatch(setHapticsUserSettingEnabled(!hapticsUserEnabled))
   }, [dispatch, hapticsUserEnabled])
 
   // Signer account info
@@ -233,7 +222,7 @@ export function SettingsScreen(): JSX.Element {
           {
             screen: MobileScreens.WebView,
             screenProps: {
-              uriLink: uniswapUrls.helpArticleUrls.walletHelp,
+              uriLink: uniswapUrls.helpUrl,
               headerTitle: t('settings.action.help'),
             },
             text: t('settings.action.help'),
@@ -274,7 +263,6 @@ export function SettingsScreen(): JSX.Element {
             icon: <UniswapIcon {...svgProps} />,
           },
           { component: <OnboardingRow iconProps={svgProps} /> },
-          { component: <ResetBehaviorHistoryRow iconProps={svgProps} /> },
         ],
       },
     ]

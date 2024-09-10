@@ -4,10 +4,10 @@ import { Flex, Text } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { spacing } from 'ui/src/theme'
 import { AccountListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 const ADDRESS_ROW_HEIGHT = 40

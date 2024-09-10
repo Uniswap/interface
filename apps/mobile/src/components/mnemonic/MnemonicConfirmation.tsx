@@ -3,7 +3,6 @@ import { StyleProp, ViewProps, requireNativeComponent } from 'react-native'
 import { useNativeComponentKey } from 'src/app/hooks'
 import { FlexProps, HiddenFromScreenReaders, flexStyles } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { spacing } from 'ui/src/theme'
 import { isAndroid } from 'utilities/src/platform'
 
 interface NativeMnemonicConfirmationProps {
@@ -35,7 +34,7 @@ export function MnemonicConfirmation(props: MnemonicConfirmationProps): JSX.Elem
   const { key } = useNativeComponentKey(isAndroid)
 
   return (
-    <HiddenFromScreenReaders style={{ ...flexStyles.fill, marginHorizontal: spacing.spacing8 }}>
+    <HiddenFromScreenReaders style={flexStyles.fill}>
       <NativeMnemonicConfirmation
         key={key}
         selectedWordPlaceholder={t('onboarding.backup.manual.selectedWordPlaceholder')}

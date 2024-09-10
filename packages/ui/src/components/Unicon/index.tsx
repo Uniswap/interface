@@ -1,7 +1,7 @@
 import React from 'react'
 import { UniconProps } from 'ui/src/components/Unicon/types'
-import { PlatformSplitStubError } from 'utilities/src/errors'
+import { NotImplementedError } from 'utilities/src/errors'
 
 export const Unicon: React.FC<UniconProps> = () => {
-  throw new PlatformSplitStubError('Unicon')
+  throw new NotImplementedError('See `.native.tsx` and `.web.tsx` files.')
 }

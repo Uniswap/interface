@@ -6,17 +6,16 @@ import {
   useTransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
-import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
-import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from 'wallet/src/features/activity/utils'
+import { useLocalizedDayjs } from 'wallet/src/features/language/localizedDayjs'
 import {
   formatTransactionsByDate,
   parseDataResponseToFeedTransactionDetails,
   parseDataResponseToTransactionDetails,
 } from 'wallet/src/features/transactions/history/utils'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { useCurrencyIdToVisibility } from 'wallet/src/features/transactions/selectors'
 
 const LOADING_ITEM = (index: number): LoadingItem => ({ itemType: 'LOADING', id: index })
 const LOADING_DATA = [LOADING_ITEM(1), LOADING_ITEM(2), LOADING_ITEM(3), LOADING_ITEM(4)]
@@ -145,8 +144,7 @@ export function useFormattedTransactionDataForActivity(
     pollInterval: undefined,
   })
 
-  const addresses = Object.keys(useAccounts())
-  const tokenVisibilityOverrides = useCurrencyIdToVisibility(addresses)
+  const tokenVisibilityOverrides = useCurrencyIdToVisibility()
 
   const keyExtractor = useCallback(
     (info: TransactionDetails | SectionHeader | LoadingItem) => {

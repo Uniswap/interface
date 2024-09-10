@@ -12,11 +12,10 @@ import { Flex, ImpactFeedbackStyle, TouchableArea } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { removeWatchedAddress } from 'uniswap/src/features/favorites/slice'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
-import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 export type FavoriteWalletCardProps = {

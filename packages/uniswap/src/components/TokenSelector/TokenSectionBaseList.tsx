@@ -1,7 +1,7 @@
 import { EffectCallback, MutableRefObject } from 'react'
 import { TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/TokenSectionHeader'
-import { TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
-import { PlatformSplitStubError } from 'utilities/src/errors'
+import { TokenOption, TokenSection, TokenSelectorListSections } from 'uniswap/src/components/TokenSelector/types'
+import { NotImplementedError } from 'utilities/src/errors'
 
 export interface TokenSectionBaseListRef {
   scrollToLocation: (params: { itemIndex: number; sectionIndex: number; animated: boolean }) => void
@@ -22,9 +22,9 @@ export interface TokenSectionBaseListProps {
   keyExtractor?: (item: TokenOption | TokenOption[], index: number) => string
   renderItem: (info: ItemRowInfo) => JSX.Element | null
   renderSectionHeader?: (info: SectionRowInfo) => JSX.Element
-  sections: TokenSection[]
+  sections: TokenSelectorListSections
 }
 
 export function TokenSectionBaseList(_props: TokenSectionBaseListProps): JSX.Element {
-  throw new PlatformSplitStubError('TokenSectionBaseList')
+  throw new NotImplementedError('TokenSectionBaseList')
 }

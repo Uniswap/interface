@@ -105,7 +105,7 @@ export function SettingsCloudBackupStatus({
             </Text>
             <Flex alignItems="flex-end" flexGrow={1} gap="$spacing4">
               <Flex row alignItems="center" gap="$spacing12" justifyContent="space-around">
-                <Text color="$neutral2" variant="buttonLabel3">
+                <Text color="$neutral2" variant="buttonLabel4">
                   {t('settings.setting.backup.status.recoveryPhrase.backed')}
                 </Text>
 
@@ -113,7 +113,7 @@ export function SettingsCloudBackupStatus({
                 <Checkmark color={colors.statusSuccess.val} height={iconSizes.icon24} width={iconSizes.icon24} />
               </Flex>
               {googleDriveEmail && (
-                <Text color="$neutral3" variant="buttonLabel3">
+                <Text color="$neutral3" variant="buttonLabel4">
                   {googleDriveEmail}
                 </Text>
               )}

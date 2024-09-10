@@ -1,14 +1,13 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard } from 'react-native'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { CloudBackupPassword } from 'src/features/CloudBackup/CloudBackupForm'
 import { BackupSpeedBumpModal } from 'src/features/onboarding/BackupSpeedBumpModal'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { Flex } from 'ui/src'
-import { Cloud } from 'ui/src/components/icons'
-import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
+import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
+import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
@@ -17,14 +16,17 @@ export type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingS
 export function CloudBackupPasswordConfirmScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
 
-  const { password, entryPoint } = params
+  const { password } = params
 
   const [showSpeedBumpModal, setShowSpeedBumpModal] = useState(false)
 
-  const onboardingExperimentEnabled = entryPoint === OnboardingEntryPoint.BackupCard
+  const onboardingExperimentEnabled = useExperimentValue(
+    Experiments.OnboardingRedesignRecoveryBackup,
+    OnboardingRedesignRecoveryBackupProperties.Enabled,
+    false,
+  )
 
   const navigateToNextScreen = useCallback((): void => {
-    setShowSpeedBumpModal(false)
     navigation.navigate({
       name: OnboardingScreens.BackupCloudProcessing,
       params,
@@ -40,18 +42,10 @@ export function CloudBackupPasswordConfirmScreen({ navigation, route: { params }
       passwordToConfirm={password}
     >
       <SafeKeyboardOnboardingScreen
-        Icon={Cloud}
         footer={
           <Flex mx="$spacing16" my="$spacing12">
             <CloudBackupPassword.ContinueButton
-              onPressContinue={
-                onboardingExperimentEnabled
-                  ? (): void => {
-                      Keyboard.dismiss()
-                      setShowSpeedBumpModal(true)
-                    }
-                  : undefined
-              }
+              onPressContinue={onboardingExperimentEnabled ? (): void => setShowSpeedBumpModal(true) : undefined}
             />
           </Flex>
         }

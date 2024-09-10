@@ -19,9 +19,8 @@ exports[`AccountDetails renders address display name without error 1`] = `
       {
         "color": "#222222",
         "flexShrink": 1,
-        "fontFamily": "Basel Grotesk",
+        "fontFamily": "Basel-Book",
         "fontSize": 16,
-        "fontWeight": "400",
         "lineHeight": 24,
         "overflow": "hidden",
       }
@@ -52,9 +51,8 @@ exports[`AccountDetails renders ens display name without error 1`] = `
       {
         "color": "#222222",
         "flexShrink": 1,
-        "fontFamily": "Basel Grotesk",
+        "fontFamily": "Basel-Book",
         "fontSize": 16,
-        "fontWeight": "400",
         "lineHeight": 24,
         "overflow": "hidden",
       }
@@ -85,9 +83,8 @@ exports[`AccountDetails renders local display name without error 1`] = `
       {
         "color": "#222222",
         "flexShrink": 1,
-        "fontFamily": "Basel Grotesk",
+        "fontFamily": "Basel-Book",
         "fontSize": 16,
-        "fontWeight": "400",
         "lineHeight": 24,
         "overflow": "hidden",
       }
@@ -118,9 +115,8 @@ exports[`AccountDetails renders unitag without error 1`] = `
       {
         "color": "#222222",
         "flexShrink": 1,
-        "fontFamily": "Basel Grotesk",
+        "fontFamily": "Basel-Book",
         "fontSize": 16,
-        "fontWeight": "400",
         "lineHeight": 24,
         "overflow": "hidden",
       }

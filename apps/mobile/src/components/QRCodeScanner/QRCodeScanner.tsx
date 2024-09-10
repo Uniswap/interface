@@ -9,7 +9,7 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { Defs, LinearGradient, Path, Rect, Stop, Svg } from 'react-native-svg'
 import { Button, Flex, SpinningLoader, Text, useSporeColors } from 'ui/src'
 import CameraScan from 'ui/src/assets/icons/camera-scan.svg'
-import { Global, PhotoStacked } from 'ui/src/components/icons'
+import { Global, Photo } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -235,7 +235,7 @@ export function QRCodeScanner(props: QRCodeScannerProps | WCScannerProps): JSX.E
               {isReadingImageFile ? (
                 <SpinningLoader size={iconSizes.icon28} />
               ) : (
-                <PhotoStacked color="$neutral1" size={iconSizes.icon28} />
+                <Photo color="$neutral1" size={iconSizes.icon28} />
               )}
             </Flex>
 

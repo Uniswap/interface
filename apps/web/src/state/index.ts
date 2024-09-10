@@ -13,7 +13,7 @@ import { isDevEnv, isTestEnv } from 'utilities/src/environment'
 
 const persistConfig: PersistConfig<InterfaceState> = {
   key: 'interface',
-  version: 17, // see migrations.ts for more details about this version
+  version: 14, // see migrations.ts for more details about this version
   storage: localForage.createInstance({
     name: INDEXED_DB_REDUX_TABLE_NAME,
     driver: localForage.LOCALSTORAGE,

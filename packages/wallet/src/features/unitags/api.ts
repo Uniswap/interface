@@ -1,11 +1,15 @@
 import axios from 'axios'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { REQUEST_SOURCE, getVersionHeader } from 'uniswap/src/data/constants'
+import { useRestQuery } from 'uniswap/src/data/rest'
+import { addQueryParamsToEndpoint, unitagsApolloClient } from 'uniswap/src/features/unitags/api'
 import {
   ProfileMetadata,
   UnitagAddressResponse,
   UnitagAddressesResponse,
   UnitagChangeUsernameRequestBody,
+  UnitagClaimEligibilityParams,
+  UnitagClaimEligibilityResponse,
   UnitagClaimUsernameRequestBody,
   UnitagDeleteUsernameRequestBody,
   UnitagGetAvatarUploadUrlResponse,
@@ -14,6 +18,7 @@ import {
   UnitagUpdateMetadataResponse,
 } from 'uniswap/src/features/unitags/types'
 import { isMobileApp } from 'utilities/src/platform'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { createSignedRequestBody, createSignedRequestParams } from 'wallet/src/data/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
@@ -35,6 +40,26 @@ const generateAxiosHeaders = async (
       'x-firebase-app-check': firebaseAppCheckToken,
     }),
   }
+}
+
+export function useUnitagClaimEligibilityQuery({
+  address,
+  deviceId,
+  isUsernameChange,
+  skip,
+}: UnitagClaimEligibilityParams & { skip?: boolean }): ReturnType<typeof useRestQuery<UnitagClaimEligibilityResponse>> {
+  return useRestQuery<UnitagClaimEligibilityResponse, Record<string, unknown>>(
+    addQueryParamsToEndpoint('/claim/eligibility', {
+      address,
+      deviceId,
+      isUsernameChange,
+    }),
+    { address, deviceId, isUsernameChange }, // dummy body so that cache key is unique per query params
+    ['canClaim', 'errorCode', 'message'], // return all fields
+    { skip, ttlMs: ONE_MINUTE_MS * 2 },
+    'GET',
+    unitagsApolloClient,
+  )
 }
 
 // Axios requests with signature authentication

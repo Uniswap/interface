@@ -8,15 +8,12 @@ import { ChoosePhotoOptionsModal } from 'src/components/unitags/ChoosePhotoOptio
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { UnitagName } from 'src/features/unitags/UnitagName'
-import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text, useIsDarkMode, useSporeColors } from 'ui/src'
-import { Pen, Photo } from 'ui/src/components/icons'
+import { Pen } from 'ui/src/components/icons'
 import { fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useENSName } from 'uniswap/src/features/ens/api'
 import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
 import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
-import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagClaimSource } from 'uniswap/src/features/unitags/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -39,7 +36,6 @@ function convertEntryPointToAnalyticsSource(entryPoint: UnitagEntryPoint): Unita
 }
 
 export function ChooseProfilePictureScreen({
-  navigation,
   route,
 }: UnitagStackScreenProp<UnitagScreens.ChooseProfilePicture>): JSX.Element {
   const { entryPoint, unitag, unitagFontSize, address } = route.params
@@ -124,30 +120,8 @@ export function ChooseProfilePictureScreen({
     }
   }
 
-  const onPressSkip = (): void => {
-    const onboardingExperimentEnabled = getExperimentValue(
-      Experiments.OnboardingRedesignRecoveryBackup,
-      OnboardingRedesignRecoveryBackupProperties.Enabled,
-      false,
-    )
-
-    sendAnalyticsEvent(UnitagEventName.UnitagOnboardingActionTaken, { action: 'later' })
-    // Navigate to next screen if in onboarding
-    navigate(MobileScreens.OnboardingStack, {
-      screen: onboardingExperimentEnabled ? OnboardingScreens.Notifications : OnboardingScreens.WelcomeWallet,
-      params: {
-        importType: ImportType.CreateNew,
-        entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
-      },
-    })
-  }
-
-  const showSkipButton = entryPoint === OnboardingScreens.Landing
-  useNavigationHeader(navigation, showSkipButton ? onPressSkip : undefined)
-
   return (
     <SafeKeyboardOnboardingScreen
-      Icon={Photo}
       subtitle={t('unitags.onboarding.profile.subtitle')}
       title={t('unitags.onboarding.profile.title')}
     >

@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
+exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable is false 1`] = `
 <DocumentFragment>
   .c7 {
   box-sizing: border-box;
@@ -9,28 +9,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   width: 100%;
 }
 
-.c14 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c20 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  padding: 8px 0px;
-}
-
-.c24 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  margin-left: 18px;
-  margin-right: 18px;
-}
-
-.c27 {
+.c12 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -56,78 +35,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   justify-content: space-between;
 }
 
-.c15 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c18 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 4px;
-}
-
-.c19 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c21 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  padding: 8px 0px;
-}
-
-.c28 {
+.c13 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -158,7 +66,15 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   margin: !important;
 }
 
-.c36 {
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c22 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -166,7 +82,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c37 {
+.c23 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -177,11 +93,11 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   font-weight: 500;
 }
 
-.c37:hover {
+.c23:hover {
   opacity: 0.6;
 }
 
-.c37:active {
+.c23:active {
   opacity: 0.4;
 }
 
@@ -199,37 +115,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   justify-content: flex-start;
 }
 
-.c10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 16px;
-}
-
 .c11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 12px;
-}
-
-.c26 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -247,7 +133,22 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   flex: 1;
 }
 
-.c32 {
+.c20 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c17 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -264,7 +165,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   align-items: center;
 }
 
-.c31 {
+.c16 {
   -webkit-align-items: center;
   -webkit-box-align: center;
   -ms-flex-align: center;
@@ -292,7 +193,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   transition: 125ms;
 }
 
-.c34 {
+.c19 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -314,7 +215,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   padding: 0 8px;
 }
 
-.c33 {
+.c18 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -332,18 +233,18 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   justify-content: center;
 }
 
-.c33 img {
+.c18 img {
   border: 1px solid #22222212;
   border-radius: 12px;
 }
 
-.c33 > img,
-.c33 span {
+.c18 > img,
+.c18 span {
   height: 40px;
   width: 40px;
 }
 
-.c30 {
+.c15 {
   -webkit-align-items: stretch;
   -webkit-box-align: stretch;
   -ms-flex-align: stretch;
@@ -364,46 +265,754 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   background-color: #F9F9F9;
 }
 
-.c30:hover {
+.c15:hover {
   cursor: pointer;
   background-color: #22222212;
 }
 
-.c30:focus {
+.c15:focus {
   background-color: #22222212;
 }
 
-.c38 {
+.c24 {
   font-weight: 535;
   color: #7D7D7D;
 }
 
-.c12 {
-  max-height: 72px;
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  background-color: #FFFFFF;
   width: 100%;
-  background: #FFFFFF;
-  border-radius: 16px;
-  position: relative;
+  padding: 14px 16px 20px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  gap: 16px;
+}
+
+.c14 {
+  display: grid;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  grid-gap: 2px;
+  border-radius: 12px;
+  overflow: hidden;
+  opacity: 1;
+  max-height: 100vh;
+  -webkit-transition: max-height 125ms ease-in-out,opacity 125ms ease-in-out;
+  transition: max-height 125ms ease-in-out,opacity 125ms ease-in-out;
+}
+
+.c21 {
+  padding: 0 4px;
+}
+
+.c5 {
+  width: 100%;
+  height: 100%;
+}
+
+.c1 {
+  z-index: 1040;
+  overflow: hidden;
+  top: 0;
+  left: 0;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.60);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.c3 {
+  overflow-y: auto;
+  overflow-x: hidden;
+  -webkit-scrollbar-width: thin;
+  -moz-scrollbar-width: thin;
+  -ms-scrollbar-width: thin;
+  scrollbar-width: thin;
+  -webkit-scrollbar-color: #22222212 transparent;
+  -moz-scrollbar-color: #22222212 transparent;
+  -ms-scrollbar-color: #22222212 transparent;
+  scrollbar-color: #22222212 transparent;
+  height: 100%;
+  overscroll-behavior: contain;
+  border-radius: 12px;
+}
+
+.c3::-webkit-scrollbar {
+  background: transparent;
+  width: 4px;
+  overflow-y: scroll;
+}
+
+.c3::-webkit-scrollbar-thumb {
+  background: #22222212;
+  border-radius: 8px;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  height: calc(100% - 2 * 8px);
+  position: fixed;
+  right: 0;
+  top: 8px;
+  z-index: 1030;
+}
+
+.c2 {
+  margin-right: -320px;
+  height: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  width: 320px;
+  max-width: 320px;
+  font-size: 16px;
+  background-color: #FFFFFF;
+  border: 1px solid #22222212;
+  box-shadow: 8px 12px 20px rgba(51,53,72,0.04),4px 6px 12px rgba(51,53,72,0.02),4px 4px 8px rgba(51,53,72,0.04);
+  -webkit-transition: margin-right 250ms;
+  transition: margin-right 250ms;
+}
+
+@media (max-width:960px) {
+  .c18 {
+    -webkit-align-items: flex-end;
+    -webkit-box-align: flex-end;
+    -ms-flex-align: flex-end;
+    align-items: flex-end;
+  }
+}
+
+@media (max-width:960px) {
+  .c14 {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media only screen and (max-width:640px) {
+  .c1 {
+    opacity: 0;
+    pointer-events: none;
+    -webkit-transition: opacity 250ms ease-in-out;
+    transition: opacity 250ms ease-in-out;
+  }
+}
+
+@media only screen and (max-width:640px) {
+  .c0 {
+    height: 100%;
+    top: 100%;
+    left: 0;
+    right: 0;
+    width: 100%;
+    overflow: visible;
+  }
+}
+
+@media only screen and (max-width:640px) {
+  .c2 {
+    z-index: 1060;
+    position: absolute;
+    margin-right: 0;
+    top: 0;
+    height: calc(100% - 72px);
+    width: 100%;
+    max-width: 100%;
+    border-bottom-right-radius: 0px;
+    border-bottom-left-radius: 0px;
+    box-shadow: unset;
+    -webkit-transition: top 250ms;
+    transition: top 250ms;
+  }
+}
+
+@media screen and (min-width:1440px) {
+  .c2 {
+    margin-right: -390px;
+    width: 390px;
+    max-width: 390px;
+  }
+}
+
+<span
+    class=""
+    style="display: contents;"
+  >
+    <span
+      class=" _dsp_contents"
+    >
+      <span
+        class=" t_light _dsp_contents is_Theme"
+      >
+        <div
+          class="c0"
+        >
+          <div
+            class="c1"
+          />
+          <div
+            class="c2"
+            data-testid="account-drawer"
+          >
+            <div
+              class="c3"
+              id="wallet-dropdown-scroll-wrapper"
+            >
+              <div
+                class="c4 c5"
+              >
+                <div
+                  class="c6"
+                  data-testid="wallet-modal"
+                >
+                  <div
+                    tabindex="0"
+                  />
+                  <div
+                    class="c7 c8 c9"
+                    width="100%"
+                  >
+                    <div
+                      class="c10 css-n8z49y"
+                    >
+                      Connect a wallet
+                    </div>
+                  </div>
+                  <div
+                    class="c11"
+                  >
+                    <div
+                      class="c12 c13"
+                    >
+                      <div
+                        class="c14"
+                        data-testid="option-grid"
+                      >
+                        <div
+                          class="c15"
+                        >
+                          <button
+                            class="c16"
+                            data-testid="wallet-option-uniswapWalletConnect"
+                          >
+                            <div
+                              class="c17"
+                            >
+                              <div
+                                class="c18"
+                              >
+                                <img
+                                  alt="Uniswap Wallet"
+                                  src="uniswap-wallet-icon.png"
+                                />
+                              </div>
+                              <div
+                                class="c19"
+                              >
+                                Uniswap Wallet
+                              </div>
+                            </div>
+                          </button>
+                        </div>
+                        <div
+                          class="c15"
+                        >
+                          <button
+                            class="c16"
+                            data-testid="wallet-option-walletConnect"
+                          >
+                            <div
+                              class="c17"
+                            >
+                              <div
+                                class="c18"
+                              >
+                                <img
+                                  alt="WalletConnect"
+                                  src="walletconnect-icon.svg"
+                                />
+                              </div>
+                              <div
+                                class="c19"
+                              >
+                                WalletConnect
+                              </div>
+                            </div>
+                          </button>
+                        </div>
+                        <div
+                          class="c15"
+                        >
+                          <button
+                            class="c16"
+                            data-testid="wallet-option-coinbaseWallet"
+                          >
+                            <div
+                              class="c17"
+                            >
+                              <div
+                                class="c18"
+                              >
+                                <img
+                                  alt="Coinbase Wallet"
+                                  src="coinbase-icon.svg"
+                                />
+                              </div>
+                              <div
+                                class="c19"
+                              >
+                                Coinbase Wallet
+                              </div>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    <div
+                      class="c20"
+                    >
+                      <div
+                        class="c21"
+                      >
+                        <div
+                          class="c22 css-142zc9n"
+                        >
+                          By connecting a wallet, you agree to Uniswap Labs’ 
+                          <a
+                            class="c23 c24"
+                            href="https://uniswap.org/terms-of-service/"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            Terms of Service
+                          </a>
+                           and consent to its 
+                          <a
+                            class="c23 c24"
+                            href="https://uniswap.org/privacy-policy"
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            Privacy Policy
+                          </a>
+                          .
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </span>
+    </span>
+  </span>
+</DocumentFragment>
+`;
+
+exports[`AccountDrawer tests AccountDrawer styles when isUniExtensionAvailable is true 1`] = `
+<DocumentFragment>
+  .c7 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  width: 100%;
 }
 
 .c13 {
-  background: url(/images/extension_promo/background_connector.png);
-  background-repeat: no-repeat;
-  background-size: cover;
-  opacity: 1;
-  max-height: 72px;
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+}
+
+.c17 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  padding: 8px 0px;
+}
+
+.c21 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  margin-left: 18px;
+  margin-right: 18px;
+}
+
+.c25 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.c8 {
   width: 100%;
-  height: 100%;
-  border-radius: 16px;
-  position: absolute;
-  top: 0;
-  left: 0;
-  z-index: 0;
-  -webkit-transition: opacity 125ms ease-in-out;
-  transition: opacity 125ms ease-in-out;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c14 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
 }
 
 .c16 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c18 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  padding: 8px 0px;
+}
+
+.c22 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c26 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: flex-start;
+  -webkit-box-align: flex-start;
+  -ms-flex-align: flex-start;
+  align-items: flex-start;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c9 {
+  -webkit-flex-wrap: wrap;
+  -ms-flex-wrap: wrap;
+  flex-wrap: wrap;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.c9 > * {
+  margin: !important;
+}
+
+.c10 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c34 {
+  color: #7D7D7D;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c35 {
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+  color: #FC72FF;
+  stroke: #FC72FF;
+  font-weight: 500;
+}
+
+.c35:hover {
+  opacity: 0.6;
+}
+
+.c35:active {
+  opacity: 0.4;
+}
+
+.c4 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+}
+
+.c24 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 12px;
+  -webkit-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+}
+
+.c30 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+
+.c29 {
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  background-color: unset;
+  border: none;
+  cursor: pointer;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex: 1 1 auto;
+  -ms-flex: 1 1 auto;
+  flex: 1 1 auto;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  opacity: 1;
+  padding: 18px;
+  -webkit-transition: 125ms;
+  transition: 125ms;
+}
+
+.c32 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: row nowrap;
+  -ms-flex-flow: row nowrap;
+  flex-flow: row nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  color: #222222;
+  font-size: 16px;
+  font-weight: 535;
+  padding: 0 8px;
+}
+
+.c31 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-flow: column nowrap;
+  -ms-flex-flow: column nowrap;
+  flex-flow: column nowrap;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+}
+
+.c31 img {
+  border: 1px solid #22222212;
+  border-radius: 12px;
+}
+
+.c31 > img,
+.c31 span {
+  height: 40px;
+  width: 40px;
+}
+
+.c28 {
+  -webkit-align-items: stretch;
+  -webkit-box-align: stretch;
+  -ms-flex-align: stretch;
+  align-items: stretch;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-box-pack: justify;
+  -webkit-justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  position: relative;
+  width: 100%;
+  background-color: #F9F9F9;
+}
+
+.c28:hover {
+  cursor: pointer;
+  background-color: #22222212;
+}
+
+.c28:focus {
+  background-color: #22222212;
+}
+
+.c36 {
+  font-weight: 535;
+  color: #7D7D7D;
+}
+
+.c15 {
   padding: 16px;
   gap: 12px;
   border-radius: 16px;
@@ -419,17 +1028,8 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   z-index: 1;
 }
 
-.c16:hover {
+.c15:hover {
   background: #22222212;
-}
-
-.c17 {
-  height: 40px;
-  width: 40px;
-  border-radius: 10px;
-  fill: linear-gradient(0deg,#fff1ff 0%,rgba(255,255,255,0) 100%),#fffbff;
-  -webkit-filter: drop-shadow(0px 1.179px 3.537px rgba(255,117,249,0.24));
-  filter: drop-shadow(0px 1.179px 3.537px rgba(255,117,249,0.24));
 }
 
 .c6 {
@@ -449,7 +1049,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   gap: 16px;
 }
 
-.c29 {
+.c27 {
   display: grid;
   -webkit-flex: 1;
   -ms-flex: 1;
@@ -463,11 +1063,11 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   transition: max-height 125ms ease-in-out,opacity 125ms ease-in-out;
 }
 
-.c35 {
+.c33 {
   padding: 0 4px;
 }
 
-.c22 {
+.c19 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -479,21 +1079,21 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
   user-select: none;
 }
 
-.c22:hover {
+.c19:hover {
   opacity: 0.6;
 }
 
-.c22:active {
+.c19:active {
   opacity: 0.4;
 }
 
-.c23 {
+.c20 {
   height: 1px;
   width: 100%;
   background: #22222212;
 }
 
-.c25 {
+.c23 {
   height: 20px;
   width: 20px;
   fill: #7D7D7D;
@@ -640,7 +1240,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
 }
 
 @media (max-width:960px) {
-  .c33 {
+  .c31 {
     -webkit-align-items: flex-end;
     -webkit-box-align: flex-end;
     -ms-flex-align: flex-end;
@@ -649,7 +1249,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
 }
 
 @media (max-width:960px) {
-  .c29 {
+  .c27 {
     grid-template-columns: 1fr;
   }
 }
@@ -737,58 +1337,20 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                     class="c7 c8 c9"
                     width="100%"
                   >
-                    <span
-                      class="font_subHeading _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016140"
-                      data-disable-theme="true"
+                    <div
+                      class="c10 css-n8z49y"
                     >
                       Connect a wallet
-                    </span>
+                    </div>
                   </div>
                   <div
-                    class="c10"
+                    class="c11"
                   >
                     <div
-                      class="c11"
+                      class="c12"
                     >
                       <div
-                        class="c12"
-                        data-testid="download-uniswap-wallet"
-                      >
-                        <div
-                          class="c13"
-                        />
-                        <div
-                          class="c14 c15 c16"
-                        >
-                          <img
-                            alt="uniswap-app-icon"
-                            class="c17"
-                            src="uniswap-wallet-icon.png"
-                          />
-                          <div
-                            class="c14 c18"
-                          >
-                            <div
-                              class="c4"
-                            >
-                              <span
-                                class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-1241035681 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016109 _whiteSpace-nowrap"
-                                data-disable-theme="true"
-                              >
-                                Get Uniswap Wallet
-                              </span>
-                              <span
-                                class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-1241035681 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202 _whiteSpace-nowrap"
-                                data-disable-theme="true"
-                              >
-                                Available on iOS, Android, and Chrome
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                      <div
-                        class="c14 c19 c16"
+                        class="c13 c14 c15"
                       >
                         <svg
                           fill="none"
@@ -805,13 +1367,13 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                           />
                         </svg>
                         <div
-                          class="c14 c18"
+                          class="c13 c16"
                         >
                           <div
                             class="c4"
                           >
                             <span
-                              class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016109 _whiteSpace-nowrap"
+                              class="font_button _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _whiteSpace-nowrap"
                               data-disable-theme="true"
                             >
                               Uniswap Mobile
@@ -828,13 +1390,13 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c20 c21 c22"
+                    class="c17 c18 c19"
                   >
                     <div
-                      class="c23"
+                      class="c20"
                     />
                     <div
-                      class="c24 c15"
+                      class="c21 c22"
                     >
                       <span
                         class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _whiteSpace-nowrap"
@@ -843,7 +1405,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                         Other wallets
                       </span>
                       <svg
-                        class="c25"
+                        class="c23"
                         fill="none"
                         height="28"
                         viewBox="0 0 28 28"
@@ -861,31 +1423,31 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                       </svg>
                     </div>
                     <div
-                      class="c23"
+                      class="c20"
                     />
                   </div>
                   <div
-                    class="c26"
+                    class="c24"
                   >
                     <div
-                      class="c27 c28"
+                      class="c25 c26"
                     >
                       <div
-                        class="c29"
+                        class="c27"
                         data-testid="option-grid"
                       >
                         <div
-                          class="c30"
+                          class="c28"
                         >
                           <button
-                            class="c31"
+                            class="c29"
                             data-testid="wallet-option-walletConnect"
                           >
                             <div
-                              class="c32"
+                              class="c30"
                             >
                               <div
-                                class="c33"
+                                class="c31"
                               >
                                 <img
                                   alt="WalletConnect"
@@ -893,7 +1455,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                                 />
                               </div>
                               <div
-                                class="c34"
+                                class="c32"
                               >
                                 WalletConnect
                               </div>
@@ -901,17 +1463,17 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                           </button>
                         </div>
                         <div
-                          class="c30"
+                          class="c28"
                         >
                           <button
-                            class="c31"
+                            class="c29"
                             data-testid="wallet-option-coinbaseWallet"
                           >
                             <div
-                              class="c32"
+                              class="c30"
                             >
                               <div
-                                class="c33"
+                                class="c31"
                               >
                                 <img
                                   alt="Coinbase Wallet"
@@ -919,7 +1481,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                                 />
                               </div>
                               <div
-                                class="c34"
+                                class="c32"
                               >
                                 Coinbase Wallet
                               </div>
@@ -929,17 +1491,17 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                       </div>
                     </div>
                     <div
-                      class="c11"
+                      class="c12"
                     >
                       <div
-                        class="c35"
+                        class="c33"
                       >
                         <div
-                          class="c36 css-142zc9n"
+                          class="c34 css-142zc9n"
                         >
                           By connecting a wallet, you agree to Uniswap Labs’ 
                           <a
-                            class="c37 c38"
+                            class="c35 c36"
                             href="https://uniswap.org/terms-of-service/"
                             rel="noopener noreferrer"
                             target="_blank"
@@ -948,7 +1510,7 @@ exports[`AccountDrawer tests AccountDrawer default styles 1`] = `
                           </a>
                            and consent to its 
                           <a
-                            class="c37 c38"
+                            class="c35 c36"
                             href="https://uniswap.org/privacy-policy"
                             rel="noopener noreferrer"
                             target="_blank"

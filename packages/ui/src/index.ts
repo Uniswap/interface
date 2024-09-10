@@ -8,17 +8,16 @@ export {
   Image,
   Input,
   ListItem,
-  Paragraph,
   Popover,
   Portal,
   ScrollView,
   Select,
   Sheet,
   Square,
+  Switch,
   Tabs,
   TamaguiProvider,
   Theme,
-  View,
   YGroup,
   getToken,
   getTokenValue,
@@ -38,9 +37,7 @@ export type {
   InputProps,
   PopperProps,
   SpaceTokens,
-  TabLayout,
-  TabsTabProps,
-  TamaguiElement,
+  SwitchProps,
   TamaguiProviderProps,
   ThemeKeys,
   Tokens,
@@ -48,7 +45,8 @@ export type {
 } from 'tamagui'
 export { LinearGradient } from 'tamagui/linear-gradient'
 export * from 'ui/src/animations'
-export { QRCodeDisplay } from './components/QRCode/QRCodeDisplay'
+export { AddressQRCode, QRCodeDisplay } from './components/QRCode'
+export type { GradientProps } from './components/QRCode'
 export { Unicon } from './components/Unicon'
 export * from './components/Unicon/utils'
 export * from './components/UniversalImage/UniversalImage'
@@ -63,7 +61,6 @@ export { ContextMenu } from './components/menu/ContextMenu'
 export { MenuContent } from './components/menu/MenuContent'
 export type { MenuContentItem } from './components/menu/types'
 export { AdaptiveWebModal, WebBottomSheet } from './components/modal/AdaptiveWebModal'
-export { Switch, type SwitchProps } from './components/switch/Switch'
 export * from './components/text'
 export { Tooltip } from './components/tooltip/Tooltip'
 export * from './components/touchable'
@@ -79,7 +76,6 @@ export * from './utils/haptics/useHapticFeedback'
 export * from './styles/ScrollbarStyles'
 export * from './theme/shadows'
 export * from './utils/colors'
-export * from './utils/tamagui'
 
 // Loaders
 export * from './loading/FlexLoader'

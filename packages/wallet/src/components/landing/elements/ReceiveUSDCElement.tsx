@@ -17,7 +17,7 @@ export const ReceiveUSDCElement = (): JSX.Element => {
       py="$spacing8"
       transform={[{ rotateZ: '-1deg' }]}
     >
-      <Text color="$blueVibrant" textAlign="center" variant="buttonLabel2">
+      <Text color="$blueVibrant" textAlign="center" variant="buttonLabel3">
         +100
       </Text>
       <Image height={imageSizes.image24} resizeMode="contain" source={USDC_LOGO} width={imageSizes.image24} />

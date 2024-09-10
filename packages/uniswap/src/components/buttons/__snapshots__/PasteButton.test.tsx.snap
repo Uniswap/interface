@@ -103,10 +103,10 @@ exports[`SplitLogo inline renders inline button 1`] = `
       style={
         {
           "color": "#9B9B9B",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 16,
+          "fontFamily": "Basel-Medium",
+          "fontSize": 12,
           "fontWeight": "500",
-          "lineHeight": 18.4,
+          "lineHeight": 16,
         }
       }
       suppressHighlighting={true}
@@ -168,10 +168,10 @@ exports[`SplitLogo renders without error 1`] = `
       style={
         {
           "color": "#FC72FF",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 14,
+          "fontFamily": "Basel-Medium",
+          "fontSize": 12,
           "fontWeight": "500",
-          "lineHeight": 16.099999999999998,
+          "lineHeight": 16,
         }
       }
       suppressHighlighting={true}

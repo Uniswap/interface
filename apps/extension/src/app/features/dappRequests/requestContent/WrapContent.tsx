@@ -3,10 +3,10 @@ import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Flex, Text } from 'ui/src'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 import { useTransactionGasFee, useUSDValue } from 'wallet/src/features/gas/hooks'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export const WrapTransactionDetails = ({

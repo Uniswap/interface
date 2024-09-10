@@ -2,12 +2,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { Language } from 'uniswap/src/features/language/constants'
-import { BasicTokenInfo, SerializedTokenMap } from 'uniswap/src/features/tokens/slice/types'
-import { CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 // Mobile: 63
@@ -231,81 +226,5 @@ export function deleteHoldToSwapBehaviorHistory(state: any): any {
   const newState = { ...state }
   delete newState.behaviorHistory?.hasViewedReviewScreen
   delete newState.behaviorHistory?.hasSubmittedHoldToSwap
-  return newState
-}
-
-// Mobile: 76
-// Extension: 12
-export function addCreatedOnboardingRedesignAccountBehaviorHistory(state: any): any {
-  const newState = {
-    ...state,
-    behaviorHistory: {
-      ...state.behaviorHistory,
-      createdOnboardingRedesignAccount: false,
-    },
-  }
-  return newState
-}
-
-export function moveDismissedTokenWarnings(state: any): any {
-  // Don't migrate if the state doesn't exist
-  if (typeof state.tokens?.dismissedWarningTokens !== 'object') {
-    return state
-  }
-
-  // Translate old warning
-  const newWarnings: SerializedTokenMap = {}
-  Object.keys(state.tokens.dismissedWarningTokens).forEach((currencyId: CurrencyId) => {
-    const chainId = currencyIdToChain(currencyId)
-    const address = currencyIdToAddress(currencyId)
-    if (chainId) {
-      const serializedToken: BasicTokenInfo = {
-        chainId,
-        address,
-      }
-      newWarnings[chainId] = newWarnings[chainId] || {}
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      newWarnings[chainId]![address] = serializedToken
-    }
-  })
-
-  // Replace old warnings with new warnings
-  const newState = {
-    ...state,
-    tokens: {
-      dismissedTokenWarnings: newWarnings,
-    },
-  }
-
-  return newState
-}
-
-export function moveLanguageSetting(state: any): any {
-  const newState = {
-    ...state,
-    languageSettings: undefined,
-    userSettings: {
-      ...state.userSettings,
-      currentLanguage: state.languageSettings?.currentLanguage ?? Language.English,
-    },
-  }
-
-  delete newState.languageSettings
-
-  return newState
-}
-
-export function moveCurrencySetting(state: any): any {
-  const newState = {
-    ...state,
-    fiatCurrencySettings: undefined,
-    userSettings: {
-      ...state.userSettings,
-      currentCurrency: state.fiatCurrencySettings?.currentCurrency ?? FiatCurrency.UnitedStatesDollar,
-    },
-  }
-
-  delete newState.fiatCurrencySettings
-
   return newState
 }

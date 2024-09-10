@@ -1,5 +1,6 @@
 import { AddressDisplay } from 'components/AccountDetails/AddressDisplay'
 import { SecondaryIdentifiers } from 'components/AccountDrawer/Status'
+import { useAvatarColorProps } from 'components/AddressQRModal/useAvatarColorProps'
 import Identicon from 'components/Identicon'
 import { GetHelpHeader } from 'components/Modal/GetHelpHeader'
 import { PRODUCTION_CHAIN_IDS } from 'constants/chains'
@@ -11,7 +12,6 @@ import { ApplicationModal } from 'state/application/reducer'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { AdaptiveWebModal, Flex, QRCodeDisplay, Text, useSporeColors } from 'ui/src'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
-import { useAddressColorProps } from 'uniswap/src/features/address/color'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { Trans } from 'uniswap/src/i18n'
 
@@ -31,7 +31,7 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
   const { ENSName } = useENSName(accountAddress)
   const { unitag } = useUnitagByAddress(accountAddress)
   const hasSecondaryIdentifier = ENSName || unitag?.username
-  const addressColor = useAddressColorProps(accountAddress)
+  const { smartColor } = useAvatarColorProps(accountAddress)
 
   const goBack = useCallback(() => {
     toggleModal()
@@ -58,8 +58,12 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
             </ThemedText.SubHeader>
           </Flex>
           <QRCodeDisplay
-            color={addressColor}
+            hideOutline
+            color={smartColor}
             containerBackgroundColor={colors.surface1.val}
+            displayShadow={false}
+            logoSize={UNICON_SIZE + 8}
+            safeAreaColor="$surface1"
             size={QR_CODE_SIZE}
             encodedValue={accountAddress!}
           >

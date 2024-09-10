@@ -1,12 +1,12 @@
 import { Token } from '@uniswap/sdk-core'
 import { PersistState } from 'redux-persist'
-import { PreV16UserState } from 'state/migrations/oldTypes'
+import { UserState } from 'state/user/reducer'
+import { serializeToken } from 'state/user/utils'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
-import { serializeToken } from 'uniswap/src/utils/currency'
 
 export type PersistAppStateV3 = {
   _persist: PersistState
-} & { user?: PreV16UserState }
+} & { user?: UserState }
 
 /**
  * Migration to clear users' imported token lists, after

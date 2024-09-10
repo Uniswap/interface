@@ -622,9 +622,7 @@ function AddLiquidity() {
           }
           error={!isValid && !!parsedAmounts[Field.CURRENCY_A] && !!parsedAmounts[Field.CURRENCY_B]}
         >
-          <Text fontWeight="$medium" color="neutralContrast">
-            {errorMessage ? errorMessage : <Trans i18nKey="common.preview" />}
-          </Text>
+          <Text fontWeight="$medium">{errorMessage ? errorMessage : <Trans i18nKey="common.preview" />}</Text>
         </ButtonError>
       </AutoColumn>
     )
@@ -702,7 +700,7 @@ function AddLiquidity() {
               )}
               bottomContent={() => (
                 <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
-                  <Text fontWeight="$medium" fontSize={20} color="neutralContrast">
+                  <Text fontWeight="$medium" fontSize={20}>
                     <Trans i18nKey="common.add.label" />
                   </Text>
                 </ButtonPrimary>

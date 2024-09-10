@@ -2,6 +2,7 @@ import { createStore, Store } from 'redux'
 import { RouterPreference } from 'state/routing/types'
 import reducer, {
   addSerializedPair,
+  addSerializedToken,
   initialState,
   updateHideClosedPositions,
   updateUserDeadline,
@@ -63,6 +64,40 @@ describe('swap reducer', () => {
     it('updates the userHideClosedPositions', () => {
       store.dispatch(updateHideClosedPositions({ userHideClosedPositions: true }))
       expect(store.getState().userHideClosedPositions).toEqual(true)
+    })
+  })
+
+  describe('addSerializedToken', () => {
+    it('adds a token to the uninitialized list', () => {
+      store = createStore(reducer, {
+        ...initialState,
+        tokens: undefined as any,
+      })
+      store.dispatch(
+        addSerializedToken({
+          serializedToken: {
+            chainId: 1,
+            address: '0x123',
+          },
+        }),
+      )
+      expect(store.getState().tokens).toEqual({ 1: { '0x123': { address: '0x123', chainId: 1 } } })
+    })
+    it('adds a token to the initialized list, no duplicates', () => {
+      store.dispatch(addSerializedToken({ serializedToken: { chainId: 1, address: '0x123' } }))
+      store.dispatch(addSerializedToken({ serializedToken: { chainId: 1, address: '0x123' } }))
+      expect(store.getState().tokens).toEqual({ 1: { '0x123': { address: '0x123', chainId: 1 } } })
+    })
+
+    it('adds a new token to the initialized list', () => {
+      store.dispatch(addSerializedToken({ serializedToken: { chainId: 1, address: '0x123' } }))
+      store.dispatch(addSerializedToken({ serializedToken: { chainId: 1, address: '0x456' } }))
+      expect(store.getState().tokens).toEqual({
+        1: {
+          '0x123': { address: '0x123', chainId: 1 },
+          '0x456': { address: '0x456', chainId: 1 },
+        },
+      })
     })
   })
 

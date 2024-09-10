@@ -1,11 +1,11 @@
 import { faker } from '@faker-js/faker'
-import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import {
   AutocompleteOption,
   filterRecipientByNameAndAddress,
   filterRecipientsByAddress,
   filterRecipientsByName,
 } from 'wallet/src/components/RecipientSearch/filter'
+import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { searchableRecipient } from 'wallet/src/test/fixtures'
 
 const recipient1 = searchableRecipient({ name: 'Recipient 1 name', address: '0x123456' })

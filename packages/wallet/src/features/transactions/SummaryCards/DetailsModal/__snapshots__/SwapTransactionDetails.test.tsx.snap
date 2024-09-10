@@ -60,9 +60,8 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
           style={
             {
               "color": "#222222",
-              "fontFamily": "Basel Grotesk",
+              "fontFamily": "Basel-Book",
               "fontSize": 24,
-              "fontWeight": "400",
               "lineHeight": 32,
             }
           }
@@ -228,9 +227,8 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
           style={
             {
               "color": "#222222",
-              "fontFamily": "Basel Grotesk",
+              "fontFamily": "Basel-Book",
               "fontSize": 24,
-              "fontWeight": "400",
               "lineHeight": 32,
             }
           }

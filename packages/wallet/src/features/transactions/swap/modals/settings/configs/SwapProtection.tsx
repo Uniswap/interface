@@ -1,9 +1,10 @@
 import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { Switch, Text } from 'ui/src'
+import { isWeb, Text } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { Switch as NativeSwitch, WebSwitch } from 'wallet/src/components/buttons/Switch'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { SwapSettingConfig } from 'wallet/src/features/transactions/swap/modals/settings/configs/types'
@@ -41,12 +42,13 @@ export const SwapProtection: SwapSettingConfig = {
       }
     }, [dispatch, swapProtectionSetting])
 
+    const Switch = isWeb ? WebSwitch : NativeSwitch
+
     return (
       <Switch
-        checked={privateRpcSupportedOnChain && swapProtectionSetting === SwapProtectionSetting.On}
         disabled={!privateRpcSupportedOnChain}
-        variant="branded"
-        onCheckedChange={toggleSwapProtectionSetting}
+        value={privateRpcSupportedOnChain && swapProtectionSetting === SwapProtectionSetting.On}
+        onValueChange={toggleSwapProtectionSetting}
       />
     )
   },

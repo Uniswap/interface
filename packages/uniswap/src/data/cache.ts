@@ -1,9 +1,45 @@
-import { InMemoryCache } from '@apollo/client'
+import { InMemoryCache, InMemoryCacheConfig } from '@apollo/client'
 import { Reference, relayStylePagination } from '@apollo/client/utilities'
 import { isTestEnv } from 'utilities/src/environment'
 
+const injectTimestampForRestQueries = (config: InMemoryCacheConfig = {}): InMemoryCacheConfig => {
+  if (config.typePolicies?.Query?.fields?.data && 'merge' in (config.typePolicies?.Query?.fields?.data ?? {})) {
+    throw new Error(
+      'Invalid cache config: `data` field already has a `merge` function that conflicts with the injected `merge` function',
+    )
+  }
+
+  return {
+    ...config,
+    typePolicies: {
+      ...config.typePolicies,
+      Query: {
+        ...config.typePolicies?.Query,
+        fields: {
+          ...config.typePolicies?.Query?.fields,
+          data: {
+            ...config.typePolicies?.Query?.fields?.data,
+            merge(_, incoming): unknown {
+              return {
+                ...incoming,
+                // add a timestamp because there is no cache-ttl in Apollo and in some cases (i.e. trading API quotes) we cannot show stale quotes
+                timestamp: Date.now(),
+              }
+            },
+          },
+        },
+      },
+    },
+  }
+}
+
+export function createNewInMemoryCache(config: InMemoryCacheConfig = {}): InMemoryCache {
+  // eslint-disable-next-line no-restricted-syntax
+  return new InMemoryCache(injectTimestampForRestQueries(config))
+}
+
 export function setupWalletCache(): InMemoryCache {
-  return new InMemoryCache({
+  return createNewInMemoryCache({
     typePolicies: {
       Query: {
         fields: {

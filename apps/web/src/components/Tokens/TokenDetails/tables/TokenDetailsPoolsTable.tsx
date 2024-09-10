@@ -50,6 +50,7 @@ export function TokenDetailsPoolsTable({
         pools={pools}
         loading={allDataStillLoading}
         error={combinedError}
+        chainId={chainId}
         maxHeight={600}
         hiddenColumns={HIDDEN_COLUMNS}
         loadMore={loadMore}

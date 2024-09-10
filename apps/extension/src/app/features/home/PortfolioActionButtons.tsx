@@ -51,16 +51,13 @@ function ActionButton({ label, Icon, onClick, url }: ActionButtonProps): JSX.Ele
       gap="$spacing12"
       hoverStyle={{ cursor: 'pointer', opacity: 0.8 }}
       justifyContent="space-between"
-      // Reduced button label line height to 11 as suggested by design to eliminate extra bottom space.
-      pb={11}
+      p="$spacing12"
       pressStyle={{ opacity: 0.5 }}
-      pt="$spacing12"
-      px="$spacing12"
       userSelect="none"
       onPress={actionHandler}
     >
       {cloneElement(Icon, { color: ICON_COLOR, size: getTokenValue('$icon.24') })}
-      <Text color="$accent1" fontWeight="600" variant="buttonLabel2">
+      <Text color="$accent1" fontWeight="600" variant="buttonLabel3">
         {label}
       </Text>
     </Flex>

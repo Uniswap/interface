@@ -9,12 +9,13 @@ import {
   SettingsStackParamList,
 } from 'src/app/navigation/types'
 import { openModal } from 'src/features/modals/modalSlice'
-import { Flex, Switch, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
+import { Switch } from 'wallet/src/components/buttons/Switch'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
 
 export interface SettingsSection {
@@ -96,14 +97,14 @@ export function SettingsRow({
               {text}
             </Text>
             {subText && (
-              <Text color="$neutral2" numberOfLines={1} variant="buttonLabel2">
+              <Text color="$neutral2" numberOfLines={1} variant="buttonLabel4">
                 {subText}
               </Text>
             )}
           </Flex>
         </Flex>
         {onToggle && typeof isToggleEnabled === 'boolean' ? (
-          <Switch checked={isToggleEnabled} variant="branded" onCheckedChange={onToggle} />
+          <Switch value={isToggleEnabled} onValueChange={onToggle} />
         ) : screen || modal ? (
           <Flex centered row>
             {currentSetting ? (

@@ -35,7 +35,7 @@ export function BuyNativeTokenButton({ nativeCurrencyInfo }: { nativeCurrencyInf
           py="$spacing8"
           onPress={onPressBuyFiatOnRamp}
         >
-          <Text color={primaryColor} variant="buttonLabel3">
+          <Text color={primaryColor} variant="buttonLabel4">
             {t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol })}
           </Text>
         </Flex>

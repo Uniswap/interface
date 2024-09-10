@@ -43,7 +43,7 @@ const DeepLinkButton = ({ Icon, Label, onPress }: { Icon: JSX.Element; Label: st
       hoverStyle={{ opacity: 0.9 }}
     >
       {Icon}
-      <Text display="flex" flex={1} variant="buttonLabel2">
+      <Text display="flex" flex={1} variant="buttonLabel3">
         {Label}
       </Text>
       <RotatableChevron width={iconSizes.icon20} height={iconSizes.icon20} color="$neutral3" direction="right" />

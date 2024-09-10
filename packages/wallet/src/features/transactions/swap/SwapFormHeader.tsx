@@ -6,9 +6,9 @@ import { Eye, Settings, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { ViewOnlyModal } from 'wallet/src/features/transactions/swap/modals/ViewOnlyModal'
 import { SwapSettingsModal } from 'wallet/src/features/transactions/swap/modals/settings/SwapSettingsModal'
@@ -80,7 +80,7 @@ export function SwapFormHeader({ customSettings }: { customSettings: SwapSetting
             >
               <Flex row alignItems="center" gap="$spacing4">
                 <Eye color={colors.neutral2.get()} size={iconSizes.icon16} />
-                <Text color="$neutral2" variant="buttonLabel2">
+                <Text color="$neutral2" variant="buttonLabel3">
                   {t('swap.header.viewOnly')}
                 </Text>
               </Flex>
@@ -99,7 +99,7 @@ export function SwapFormHeader({ customSettings }: { customSettings: SwapSetting
                 py="$spacing4"
               >
                 {customSlippageTolerance ? (
-                  <Text color="$neutral2" variant="buttonLabel3">
+                  <Text color="$neutral2" variant="buttonLabel4">
                     {t('swap.form.slippage', {
                       slippageTolerancePercent: formatPercent(customSlippageTolerance),
                     })}

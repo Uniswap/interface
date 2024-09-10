@@ -34,7 +34,6 @@
     "@tamagui/animations-moti": "1.108.4",
     "@tamagui/build": "1.108.4",
     "@tamagui/core": "1.108.4",
-    "@types/qrcode": "1.5.5",
     "@uniswap/eslint-config": "workspace:^",
     "camelcase": "^6.0.0",
     "cheerio": "^1.0.0-rc.5",

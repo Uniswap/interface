@@ -54,7 +54,7 @@ export const DownloadWalletOption = () => {
           <AppIcon src={UNIWALLET_ICON} alt="uniswap-app-icon" />
           <Row gap="xs">
             <Column>
-              <Text variant="buttonLabel2" color="$white" whiteSpace="nowrap">
+              <Text variant="buttonLabel3" color="$white" whiteSpace="nowrap">
                 <Trans i18nKey="common.getUniswapWallet" />
               </Text>
               <Text variant="body4" color="$white" whiteSpace="nowrap">

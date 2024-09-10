@@ -116,7 +116,7 @@ export function DappConnectionItem({
           <Text numberOfLines={2} textAlign="center" variant="buttonLabel2">
             {dapp.name || dapp.url}
           </Text>
-          <Text color="$accent1" numberOfLines={1} textAlign="center" variant="buttonLabel2">
+          <Text color="$accent1" numberOfLines={1} textAlign="center" variant="buttonLabel4">
             {dapp.url}
           </Text>
         </Flex>

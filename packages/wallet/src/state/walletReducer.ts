@@ -4,6 +4,8 @@ import { timingReducer } from 'uniswap/src/features/timing/slice'
 import { uniswapPersistedStateList, uniswapReducers } from 'uniswap/src/state/uniswapReducer'
 import { appearanceSettingsReducer } from 'wallet/src/features/appearance/slice'
 import { behaviorHistoryReducer } from 'wallet/src/features/behaviorHistory/slice'
+import { fiatCurrencySettingsReducer } from 'wallet/src/features/fiatCurrency/slice'
+import { languageSettingsReducer } from 'wallet/src/features/language/slice'
 import { notificationReducer } from 'wallet/src/features/notifications/slice'
 import { telemetryReducer } from 'wallet/src/features/telemetry/slice'
 import { walletReducer } from 'wallet/src/features/wallet/slice'
@@ -13,6 +15,8 @@ export const walletReducers = {
   ...uniswapReducers,
   appearanceSettings: appearanceSettingsReducer,
   behaviorHistory: behaviorHistoryReducer,
+  fiatCurrencySettings: fiatCurrencySettingsReducer,
+  languageSettings: languageSettingsReducer,
   notifications: notificationReducer,
   telemetry: telemetryReducer,
   timing: timingReducer,
@@ -29,6 +33,8 @@ export const walletPersistedStateList: Array<keyof typeof walletReducers> = [
   'notifications',
   'telemetry',
   'wallet',
+  'languageSettings',
+  'fiatCurrencySettings',
 ]
 
 export type WalletStateReducersOnly = ReturnType<typeof walletRootReducer>

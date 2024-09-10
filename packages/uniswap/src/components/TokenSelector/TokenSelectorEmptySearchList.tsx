@@ -1,9 +1,11 @@
 import { memo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
-import { useTokenSectionsForEmptySearch } from 'uniswap/src/components/TokenSelector/hooks'
-import { ConvertFiatAmountFormattedCallback, OnSelectCurrency } from 'uniswap/src/components/TokenSelector/types'
-// eslint-disable-next-line no-restricted-imports
+import {
+  ConvertFiatAmountFormattedCallback,
+  OnSelectCurrency,
+  TokenSectionsForEmptySearchHookType,
+} from 'uniswap/src/components/TokenSelector/types'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
@@ -13,6 +15,8 @@ function _TokenSelectorEmptySearchList({
   onSelectCurrency,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
+  useTokenSectionsForEmptySearchHook,
+  useTokenWarningDismissedHook,
 }: {
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
@@ -20,10 +24,15 @@ function _TokenSelectorEmptySearchList({
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
   onDismiss: () => void
+  useTokenWarningDismissedHook: (currencyId: Maybe<string>) => {
+    tokenWarningDismissed: boolean
+    dismissWarningCallback: () => void
+  }
+  useTokenSectionsForEmptySearchHook: TokenSectionsForEmptySearchHookType
 }): JSX.Element {
   const { t } = useTranslation()
 
-  const { data: sections, loading, error, refetch } = useTokenSectionsForEmptySearch(chainFilter)
+  const { data: sections, loading, error, refetch } = useTokenSectionsForEmptySearchHook(chainFilter)
 
   return (
     <TokenSelectorList
@@ -36,6 +45,7 @@ function _TokenSelectorEmptySearchList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
+      useTokenWarningDismissedHook={useTokenWarningDismissedHook}
       onDismiss={onDismiss}
       onSelectCurrency={onSelectCurrency}
     />

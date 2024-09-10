@@ -39,7 +39,7 @@ struct ActionButton<Icon: Shape>: View {
         }
         Text(text)
           .foregroundColor(textColor)
-          .font(Font(UIFont(name: "Basel Grotesk Book", size: 16)!))
+          .font(Font(UIFont(name: "Basel-Book", size: 16)!))
       }
     }
     .padding(EdgeInsets(top: 8, leading: icon != nil ? 12 : 16, bottom: 8, trailing: 16))

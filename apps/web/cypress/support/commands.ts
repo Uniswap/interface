@@ -2,9 +2,11 @@ import 'cypress-hardhat/lib/browser'
 
 import { Eip1193 } from 'cypress-hardhat/lib/browser/eip1193'
 import { FeatureFlagClient, FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
-import { ALLOW_ANALYTICS_ATOM_KEY } from 'utilities/src/telemetry/analytics/constants'
 import { UserState, initialState } from '../../src/state/user/reducer'
 import { setInitialUserState } from '../utils/user-state'
+import {
+  ALLOW_ANALYTICS_ATOM_KEY,
+} from 'utilities/src/telemetry/analytics/constants'
 
 declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
@@ -108,7 +110,6 @@ export function registerCommands() {
             win.ethereum = provider
             win.Cypress.eagerlyConnect = options?.eagerlyConnect ?? true
             win.localStorage.setItem(ALLOW_ANALYTICS_ATOM_KEY, 'true')
-            win.localStorage.setItem('showUniswapExtensionLaunchAtom', 'false')
           },
         }),
       )
@@ -140,23 +141,15 @@ export function registerCommands() {
     return findAndDiscardEventsUpToTarget()
   })
 
-  Cypress.env('graphqlInterceptions', new Map())
-
   Cypress.Commands.add('interceptGraphqlOperation', (operationName, fixturePath) => {
-    const graphqlInterceptions = Cypress.env('graphqlInterceptions')
-    cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v1\/graphql/, (req) => {
+    return cy.intercept(/(?:interface|beta).gateway.uniswap.org\/v1\/graphql/, (req) => {
       req.headers['origin'] = 'https://app.uniswap.org'
-      const currentOperationName = req.body.operationName
-
-      if (graphqlInterceptions.has(currentOperationName)) {
-        const fixturePath = graphqlInterceptions.get(currentOperationName)
+      if (req.body.operationName === operationName) {
         req.reply({ fixture: fixturePath })
       } else {
         req.continue()
       }
-    }).as(operationName)
-
-    graphqlInterceptions.set(operationName, fixturePath)
+    })
   })
 
   Cypress.Commands.add('interceptQuoteRequest', (fixturePath) => {

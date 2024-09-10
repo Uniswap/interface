@@ -1,6 +1,6 @@
 import { FastImageProps, ImageStyle, ResizeMode } from 'react-native-fast-image'
 import { FlexProps } from 'ui/src'
-import { PlatformSplitStubError } from 'utilities/src/errors'
+import { NotImplementedError } from 'utilities/src/errors'
 
 export type ImageUriProps = {
   maxHeight?: number
@@ -24,5 +24,5 @@ export type ImageUriProps = {
  *  If it doesn't fit you use case, modify it to fit or consult with the universe team for help!
  */
 export function ImageUri(_: ImageUriProps): JSX.Element | null {
-  throw new PlatformSplitStubError('ImageURI')
+  throw new NotImplementedError('ImageURI')
 }

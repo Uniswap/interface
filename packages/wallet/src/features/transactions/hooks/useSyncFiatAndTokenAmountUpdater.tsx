@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { STABLECOIN_AMOUNT_OUT, useUSDCPrice } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { currencyIdToChain } from 'uniswap/src/utils/currencyId'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 
 // Used for rounding in conversion math

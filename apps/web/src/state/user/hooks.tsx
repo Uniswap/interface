@@ -12,6 +12,7 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { RouterPreference } from 'state/routing/types'
 import {
   addSerializedPair,
+  addSerializedToken,
   updateHideClosedPositions,
   updateUserDeadline,
   updateUserLocale,
@@ -19,13 +20,13 @@ import {
   updateUserSlippageTolerance,
 } from 'state/user/reducer'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
+import { deserializeToken, serializeToken } from 'state/user/utils'
 import {
   Chain,
   TokenSortableField,
   useTopTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
-import { deserializeToken, serializeToken } from 'uniswap/src/utils/currency'
 
 export function useUserLocale(): SupportedLocale | null {
   return useAppSelector((state) => state.user.userLocale)
@@ -143,6 +144,16 @@ export function useUserTransactionTTL(): [number, (slippage: number) => void] {
   )
 
   return [deadline, setUserDeadline]
+}
+
+export function useAddUserToken(): (token: Token) => void {
+  const dispatch = useAppDispatch()
+  return useCallback(
+    (token: Token) => {
+      dispatch(addSerializedToken({ serializedToken: serializeToken(token) }))
+    },
+    [dispatch],
+  )
 }
 
 function serializePair(pair: Pair): SerializedPair {

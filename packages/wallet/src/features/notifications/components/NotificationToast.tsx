@@ -13,7 +13,6 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTimeout } from 'utilities/src/time/timing'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
 import { popNotification, setNotificationViewed } from 'wallet/src/features/notifications/slice'
-import { usePostTextElementPositionProps } from 'wallet/src/utils/layout'
 
 const NOTIFICATION_HEIGHT = 64
 
@@ -29,7 +28,7 @@ export interface NotificationContentProps {
   title: string
   subtitle?: string
   icon?: JSX.Element
-  postCaptionElement?: JSX.Element
+  iconPosition?: 'left' | 'right'
   actionButton?: {
     title: string
     onPress: () => void
@@ -68,7 +67,7 @@ export function NotificationToast({
   subtitle,
   title,
   icon,
-  postCaptionElement,
+  iconPosition = 'left',
   onPress,
   onPressIn,
   hideDelay,
@@ -157,7 +156,7 @@ export function NotificationToast({
       {smallToast ? (
         <NotificationContentSmall
           icon={icon}
-          postCaptionElement={postCaptionElement}
+          iconPosition={iconPosition}
           title={title}
           onPress={onNotificationPress}
           onPressIn={onPressIn}
@@ -166,7 +165,7 @@ export function NotificationToast({
         <NotificationContent
           actionButton={actionButton ? { title: actionButton.title, onPress: onActionButtonPress } : undefined}
           icon={icon}
-          postCaptionElement={postCaptionElement}
+          iconPosition={iconPosition}
           subtitle={subtitle}
           title={title}
           onPress={onNotificationPress}
@@ -200,12 +199,11 @@ function NotificationContent({
   title,
   subtitle,
   icon,
-  postCaptionElement,
+  iconPosition,
   actionButton,
   onPress,
   onPressIn,
 }: NotificationContentProps): JSX.Element {
-  const { postTextElementPositionProps, onTextLayout } = usePostTextElementPositionProps()
   return (
     <TouchableArea
       alignItems="center"
@@ -227,26 +225,23 @@ function NotificationContent({
           gap="$spacing12"
           justifyContent="flex-start"
         >
-          {icon}
+          {iconPosition === 'left' ? icon : undefined}
           <Flex shrink alignItems="flex-start" flexDirection="column">
-            <Flex row pr={postTextElementPositionProps ? '$spacing24' : undefined}>
-              <Text
-                adjustsFontSizeToFit
-                numberOfLines={subtitle ? 1 : 2}
-                testID={TestID.NotificationToastTitle}
-                variant="subheading2"
-                onTextLayout={onTextLayout}
-              >
-                {title}
-              </Text>
-              <Flex {...postTextElementPositionProps}>{postCaptionElement}</Flex>
-            </Flex>
+            <Text
+              adjustsFontSizeToFit
+              numberOfLines={subtitle ? 1 : 2}
+              testID={TestID.NotificationToastTitle}
+              variant="subheading2"
+            >
+              {title}
+            </Text>
             {subtitle && (
               <Text adjustsFontSizeToFit color="$neutral2" numberOfLines={1} variant="body3">
                 {subtitle}
               </Text>
             )}
           </Flex>
+          {iconPosition === 'right' ? icon : undefined}
         </Flex>
         {actionButton && (
           <Flex shrink alignItems="flex-end" flexBasis="25%" gap="$spacing4">
@@ -265,7 +260,7 @@ function NotificationContent({
 function NotificationContentSmall({
   title,
   icon,
-  postCaptionElement,
+  iconPosition,
   onPress,
   onPressIn,
 }: NotificationContentProps): JSX.Element {
@@ -279,11 +274,11 @@ function NotificationContentSmall({
         onPressIn={onPressIn}
       >
         <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" pr="$spacing4">
-          {icon && <Flex>{icon}</Flex>}
+          {iconPosition === 'left' ? <Flex>{icon}</Flex> : undefined}
           <Text adjustsFontSizeToFit numberOfLines={1} testID={TestID.NotificationToastTitle} variant="body2">
             {title}
           </Text>
-          {postCaptionElement && <Flex>{postCaptionElement}</Flex>}
+          {iconPosition === 'right' ? <Flex>{icon}</Flex> : undefined}
         </Flex>
       </TouchableArea>
     </Flex>

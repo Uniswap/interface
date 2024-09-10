@@ -30,6 +30,7 @@ import { hexadecimalStringToInt, toSupportedChainId } from 'uniswap/src/features
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants/extension'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WindowEthereumRequestProperties } from 'uniswap/src/features/telemetry/types'
+import { RPCType } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { walletContextValue } from 'wallet/src/features/wallet/context'
@@ -204,7 +205,7 @@ async function handleChainChange(request: ChangeChainRequest, dappUrl: string, t
   await dappStore.init()
   const { activeConnectedAddress } = dappStore.getDappInfo(dappUrl) ?? {}
   const updatedChainId = toSupportedChainId(hexadecimalStringToInt(request.chainId))
-  const provider = updatedChainId ? walletContextValue.providers.getProvider(updatedChainId) : undefined
+  const provider = updatedChainId ? walletContextValue.providers.getProvider(updatedChainId, RPCType.Public) : undefined
   const response = changeChain({
     provider,
     dappUrl,

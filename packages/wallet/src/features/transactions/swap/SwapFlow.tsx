@@ -1,6 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { isWeb } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { TradingApiApolloClient } from 'uniswap/src/data/tradingApi/client'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import {
@@ -13,6 +14,7 @@ import {
   SwapScreenContextProvider,
   useSwapScreenContext,
 } from 'uniswap/src/features/transactions/swap/contexts/SwapScreenContext'
+import { logger } from 'utilities/src/logger/logger'
 import { SwapFormContextProvider, SwapFormState } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { SwapTxContextProviderTradingApi } from 'wallet/src/features/transactions/contexts/SwapTxContext'
 import { SwapFormButton } from 'wallet/src/features/transactions/swap/SwapFormButton'
@@ -29,6 +31,9 @@ export function SwapFlow({
   customSettings = [],
   ...transactionModalProps
 }: SwapFlowProps): JSX.Element {
+  // We reset the cache every time the swap flow reopens to avoid old quotes persisting between retries after a failed transaction.
+  useResetTradingApiCacheOnMount()
+
   // We need this additional `screen` state outside of the `SwapScreenContext` because the `SwapScreenContextProvider` needs to be inside the `Modal`'s `Container`.
   const [screen, setScreen] = useState<SwapScreen>(SwapScreen.SwapForm)
 
@@ -55,6 +60,16 @@ export function SwapFlow({
       </SwapScreenContextProvider>
     </TransactionModal>
   )
+}
+
+function useResetTradingApiCacheOnMount(): void {
+  useEffect(() => {
+    TradingApiApolloClient.resetStore().catch((error) => {
+      logger.error(error, {
+        tags: { file: 'SwapFlow.tsx', function: 'TradingApiApolloClient.resetStore' },
+      })
+    })
+  }, [])
 }
 
 function CurrentScreen({

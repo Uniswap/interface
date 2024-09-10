@@ -11,5 +11,4 @@ export const breakpoints = {
 
 export const heightBreakpoints = {
   short: 736,
-  midHeight: 800,
 }

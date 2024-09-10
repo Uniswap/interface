@@ -13,7 +13,7 @@ const defaultState = {
   user: {},
   _persist: {
     rehydrated: true,
-    version: 17,
+    version: 14,
   },
   application: {
     chainId: null,
@@ -49,9 +49,6 @@ const defaultState = {
   },
   multicall: {
     callResults: {},
-  },
-  searchHistory: {
-    results: [],
   },
   wallets: {
     connectedWallets: [],

@@ -7,7 +7,6 @@ export enum Experiments {
   ArbitrumXV2OpenOrders = 'arbitrum_uniswapx_openorders_v2',
   OnboardingRedesignHomeScreen = 'onboarding-redesign-home-screen',
   OnboardingRedesignRecoveryBackup = 'onboarding-redesign-recovery-backup',
-  AccountCTAs = 'signin_login_connect_ctas',
 }
 
 export enum ArbitrumXV2OpenOrderProperties {

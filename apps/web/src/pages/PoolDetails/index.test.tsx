@@ -2,10 +2,10 @@ import { usePoolData } from 'graphql/data/pools/usePoolData'
 import PoolDetails from 'pages/PoolDetails'
 import Router from 'react-router-dom'
 import store from 'state'
+import { addSerializedToken } from 'state/user/reducer'
 import { mocked } from 'test-utils/mocked'
 import { validParams, validPoolDataResponse } from 'test-utils/pools/fixtures'
 import { render, screen, waitFor } from 'test-utils/render'
-import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -33,8 +33,8 @@ describe('PoolDetailsPage', () => {
     jest.spyOn(Router, 'useParams').mockReturnValue(validParams)
     mocked(usePoolData).mockReturnValue(validPoolDataResponse)
     store.dispatch(
-      dismissTokenWarning({
-        token: {
+      addSerializedToken({
+        serializedToken: {
           chainId: 1,
           address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
           symbol: 'USDC',
@@ -44,8 +44,8 @@ describe('PoolDetailsPage', () => {
       }),
     )
     store.dispatch(
-      dismissTokenWarning({
-        token: {
+      addSerializedToken({
+        serializedToken: {
           chainId: 1,
           address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
           symbol: 'WETH',

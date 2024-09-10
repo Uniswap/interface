@@ -3,7 +3,7 @@ import { I18nManager, LayoutChangeEvent } from 'react-native'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useMedia } from 'ui/src'
 import { LeftArrow, RightArrow } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
-import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 export enum KeyAction {
   Insert = 'insert',

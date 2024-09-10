@@ -1,5 +1,4 @@
 import { createAnimations } from '@tamagui/animations-moti'
-import { Easing } from 'react-native-reanimated'
 
 export const animations = createAnimations({
   '100ms': {
@@ -13,11 +12,6 @@ export const animations = createAnimations({
   '300ms': {
     type: 'timing',
     duration: 300,
-  },
-  '80ms-ease-in-out': {
-    type: 'timing',
-    duration: 80,
-    easing: Easing.inOut(Easing.quad),
   },
   stiff: {
     type: 'spring',

@@ -1,6 +1,6 @@
 import { InputWithSuffixProps } from 'src/features/import/InputWIthSuffixProps'
-import { PlatformSplitStubError } from 'utilities/src/errors'
+import { NotImplementedError } from 'utilities/src/errors'
 
 export default function InputWithSuffix(_props: InputWithSuffixProps): JSX.Element {
-  throw new PlatformSplitStubError('InputWithSuffix')
+  throw new NotImplementedError('InputWithSuffix component is not implemented')
 }

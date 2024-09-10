@@ -3,19 +3,14 @@ import { waitFor } from '@testing-library/react-native'
 import { toIncludeSameMembers } from 'jest-extended'
 import { MobileState } from 'src/app/mobileReducer'
 import { renderHookWithProviders } from 'src/test/render'
-import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import {
-  SAMPLE_SEED_ADDRESS_1,
-  SAMPLE_SEED_ADDRESS_2,
-  sendTokenTransactionInfo,
-  transactionDetails,
-} from 'uniswap/src/test/fixtures'
+import { sendTokenTransactionInfo, transactionDetails } from 'uniswap/src/test/fixtures'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { useRecipients } from 'wallet/src/components/RecipientSearch/hooks'
+import { SearchableRecipient } from 'wallet/src/features/address/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
+import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 expect.extend({ toIncludeSameMembers })
 

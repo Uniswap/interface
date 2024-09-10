@@ -43,7 +43,7 @@ export function SendHeader({ flowName, setShowViewOnlyModal }: HeaderContentProp
           >
             <Flex row alignItems="center" gap="$spacing4">
               <EyeIcon color={colors.neutral2.get()} height={iconSizes.icon16} width={iconSizes.icon16} />
-              <Text color="$neutral2" variant="buttonLabel2">
+              <Text color="$neutral2" variant="buttonLabel3">
                 {t('swap.header.viewOnly')}
               </Text>
             </Flex>

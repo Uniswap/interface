@@ -1,6 +1,5 @@
-import { Signer, providers as ethersProviders } from 'ethers/lib/ethers'
+import { providers as ethersProviders } from 'ethers/lib/ethers'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { FLASHBOTS_RPC_URL, FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
 import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -8,16 +7,12 @@ import { logger } from 'utilities/src/logger/logger'
 export function createEthersProvider(
   chainId: WalletChainId,
   rpcType: RPCType = RPCType.Public,
-  signer?: Signer,
 ): ethersProviders.JsonRpcProvider | null {
   try {
     if (rpcType === RPCType.Private) {
       const privateRPCUrl = UNIVERSE_CHAIN_INFO[chainId].rpcUrls?.[RPCType.Private]?.http[0]
       if (!privateRPCUrl) {
         throw new Error(`No private RPC available for chain ${chainId}`)
-      }
-      if (privateRPCUrl === FLASHBOTS_RPC_URL) {
-        return new FlashbotsRpcProvider(signer)
       }
       return new ethersProviders.JsonRpcProvider(privateRPCUrl)
     }

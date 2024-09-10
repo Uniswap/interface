@@ -1,26 +1,47 @@
 import { Currency } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
 import { Keyboard, LayoutAnimation } from 'react-native'
+import { useSelector } from 'react-redux'
 import {
   TokenSelectorModal,
   TokenSelectorProps,
   TokenSelectorVariation,
 } from 'uniswap/src/components/TokenSelector/TokenSelector'
+import {
+  useCommonTokensOptions,
+  useFilterCallbacks,
+  usePopularTokensOptions,
+  usePortfolioTokenOptions,
+  useTokenSectionsForSearchResults,
+} from 'uniswap/src/components/TokenSelector/hooks'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
-import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
+import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
+import { useTokenWarningDismissed } from 'uniswap/src/features/tokens/slice/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { areCurrencyIdsEqual, buildCurrencyId, currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
+import { currencyAddress } from 'uniswap/src/utils/currencyId'
+import {
+  useAddToSearchHistory,
+  useFavoriteTokensOptions,
+  useTokenSectionsForEmptySearch,
+} from 'wallet/src/components/TokenSelector/hooks'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { SwapFormState, useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 
 export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JSX.Element {
   const account = useAccountMeta()
   const swapContext = useSwapFormContext()
   const { updateSwapForm, exactCurrencyField, selectingCurrencyField, output, input, filteredChainId } = swapContext
+  const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
   const activeAccountAddress = account?.address
   const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
+  const valueModifiers = usePortfolioValueModifiers(activeAccountAddress)
+  const { registerSearch } = useAddToSearchHistory()
+  const searchHistory = useSelector(selectSearchHistory)
 
   if (isModalOpen && !selectingCurrencyField) {
     throw new Error('TokenSelector rendered without `selectingCurrencyField`')
@@ -29,9 +50,6 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
   const onHideTokenSelector = useCallback(() => {
     updateSwapForm({ selectingCurrencyField: undefined })
   }, [updateSwapForm])
-
-  const inputTokenProjects = useTokenProjects(input ? [buildCurrencyId(input.chainId, input.address)] : [])
-  const outputTokenProjects = useTokenProjects(output ? [buildCurrencyId(output.chainId, output.address)] : [])
 
   const onSelectCurrency = useCallback(
     (currency: Currency, field: CurrencyField) => {
@@ -58,22 +76,12 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
           exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
         newState.focusOnCurrencyField = newState.exactCurrencyField
         newState[otherField] = previouslySelectedTradableAsset
-      } else if (!chainsAreEqual) {
-        // if new token chain changes, try to find the other token's match on the new chain
-        const otherFieldTokenProjects = otherField === CurrencyField.INPUT ? inputTokenProjects : outputTokenProjects
-        const otherCurrency = otherFieldTokenProjects?.data?.find(
-          (project) => project?.currency.chainId === currency.chainId,
-        )
-        const otherTradeableAsset: TradeableAsset | undefined = otherCurrency && {
-          address: currencyAddress(otherCurrency?.currency),
-          chainId: otherCurrency.currency.chainId,
-          type: AssetType.Currency,
-        }
+      }
 
-        newState[otherField] =
-          otherTradeableAsset && otherCurrency && !areCurrencyIdsEqual(currencyId(currency), otherCurrency.currencyId)
-            ? otherTradeableAsset
-            : undefined
+      // reset the other field if network changed
+      if (currency.chainId !== otherFieldTradeableAsset?.chainId) {
+        newState.exactCurrencyField = field
+        newState[otherField] = undefined
       }
 
       newState.filteredChainId = currency.chainId
@@ -84,7 +92,7 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
       // Hide screen when done selecting.
       onHideTokenSelector()
     },
-    [exactCurrencyField, input, inputTokenProjects, onHideTokenSelector, output, outputTokenProjects, updateSwapForm],
+    [exactCurrencyField, input, onHideTokenSelector, output, updateSwapForm],
   )
 
   const props: TokenSelectorProps = {
@@ -98,12 +106,24 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
       selectingCurrencyField === CurrencyField.INPUT
         ? TokenSelectorVariation.BalancesAndPopular
         : TokenSelectorVariation.SuggestedAndFavoritesAndPopular,
+    valueModifiers,
+    searchHistory: searchHistory as TokenSearchResult[],
     onClose: onHideTokenSelector,
     onDismiss: () => Keyboard.dismiss(),
     onPressAnimation: () => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut),
     onSelectCurrency,
+    useCommonTokensOptionsHook: useCommonTokensOptions,
+    useFavoriteTokensOptionsHook: useFavoriteTokensOptions,
+    usePopularTokensOptionsHook: usePopularTokensOptions,
+    usePortfolioTokenOptionsHook: usePortfolioTokenOptions,
+    useTokenSectionsForEmptySearchHook: useTokenSectionsForEmptySearch,
+    useTokenSectionsForSearchResultsHook: useTokenSectionsForSearchResults,
+    useTokenWarningDismissedHook: useTokenWarningDismissed,
+    useFilterCallbacksHook: useFilterCallbacks,
+    navigateToBuyOrReceiveWithEmptyWalletCallback: navigateToBuyOrReceiveWithEmptyWallet,
     convertFiatAmountFormattedCallback: convertFiatAmountFormatted,
     formatNumberOrStringCallback: formatNumberOrString,
+    addToSearchHistoryCallback: registerSearch,
   }
   return <TokenSelectorModal {...props} />
 }

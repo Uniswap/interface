@@ -58,7 +58,7 @@ export function MaxAmountButton({
         testID={currencyField === CurrencyField.INPUT ? TestID.SetMaxInput : TestID.SetMaxOutput}
         onPress={onPress}
       >
-        <Text color={disableMaxButton ? '$neutral2' : '$accent1'} variant="buttonLabel3">
+        <Text color={disableMaxButton ? '$neutral2' : '$accent1'} variant="buttonLabel4">
           {t('swap.button.max')}
         </Text>
       </TouchableArea>

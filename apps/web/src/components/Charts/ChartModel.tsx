@@ -1,12 +1,13 @@
 import { refitChartContentAtom } from 'components/Charts/TimeSelector'
-import { PROTOCOL_LEGEND_ELEMENT_ID, SeriesDataItemType } from 'components/Charts/types'
+import { SeriesDataItemType } from 'components/Charts/types'
 import { formatTickMarks } from 'components/Charts/utils'
+import Row from 'components/Row'
 import { MissingDataBars } from 'components/Table/icons'
 import { useScreenSize } from 'hooks/screenSize'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useUpdateAtom } from 'jotai/utils'
-import { DefaultTheme, useTheme } from 'lib/styled-components'
+import styled, { DefaultTheme, useTheme } from 'lib/styled-components'
 import {
   BarPrice,
   CrosshairMode,
@@ -20,7 +21,8 @@ import {
 } from 'lightweight-charts'
 import { ReactElement, useEffect, useMemo, useRef, useState } from 'react'
 import { ThemedText } from 'theme/components'
-import { Flex, TamaguiElement, assertWebElement, styled } from 'ui/src'
+import { textFadeIn } from 'theme/styles'
+import { Z_INDEX } from 'theme/zIndex'
 import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 import { v4 as uuidv4 } from 'uuid'
@@ -132,35 +134,12 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
     const transformY = `calc(${yPx}px${yPct})`
 
     const tooltip = document.getElementById(this.tooltipId)
-    const legend = document.getElementById(PROTOCOL_LEGEND_ELEMENT_ID)
 
     if (tooltip) {
       tooltip.style.transform = `translate(${transformX}, ${transformY})`
 
       const tooltipMeasurement = tooltip.getBoundingClientRect()
       this._lastTooltipWidth = tooltipMeasurement?.width || null
-    }
-    if (legend) {
-      // keep legend centered on mouse cursor if hovered
-      legend.style.left = `${x}px`
-      const heroWidth = 230
-      // adjust height of tooltip if hovering below the hero text
-      if (x < heroWidth) {
-        legend.style.top = '80px'
-      } else {
-        legend.style.top = 'unset'
-      }
-      const transformOffset = 60
-      const maxXOffset = this.api.paneSize().width - 40
-      // keeps the legend centered on mouse x axis without getting cut off by chart edges
-      if (x < transformOffset) {
-        // Additional 4px of padding is added to prevent box-shadow from being cutoff
-        legend.style.transform = `translateX(-${x - 4}%)`
-      } else if (x > maxXOffset) {
-        legend.style.transform = `translateX(-${transformOffset + (x - maxXOffset)}%)`
-      } else {
-        legend.style.transform = `translateX(-${transformOffset}%)`
-      }
     }
   }
 
@@ -240,6 +219,13 @@ export abstract class ChartModel<TDataType extends SeriesDataItemType> {
 
 const isBetween = (num: number, lower: number, upper: number) => num > lower && num < upper
 
+const ChartDiv = styled.div<{ height?: number }>`
+  ${({ height }) => height && `height: ${height}px`};
+  width: 100%;
+  position: relative;
+  ${textFadeIn};
+`
+
 /** Returns a div injected with a lightweight-chart, corresponding to the given Model and params */
 export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType extends SeriesDataItemType>({
   Model,
@@ -259,7 +245,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   const setRefitChartContent = useUpdateAtom(refitChartContentAtom)
   // Lightweight-charts injects a canvas into the page through the div referenced below
   // It is stored in state to cause a re-render upon div mount, avoiding delay in chart creation
-  const [chartDivElement, setChartDivElement] = useState<TamaguiElement | null>(null)
+  const [chartDivElement, setChartDivElement] = useState<HTMLDivElement | null>(null)
   const [crosshairData, setCrosshairData] = useState<TDataType | undefined>(undefined)
   const format = useFormatter()
   const theme = useTheme()
@@ -276,7 +262,6 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   // Creates the chart as soon as the chart div ref is defined
   useEffect(() => {
     if (chartDivElement && chartModelRef.current === undefined) {
-      assertWebElement(chartDivElement)
       chartModelRef.current = new Model(chartDivElement, modelParams)
       // Providers the time period selector with a handle to refit the chart
       setRefitChartContent(() => () => chartModelRef.current?.fitContent())
@@ -302,10 +287,7 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
   useOnClickOutside({ current: chartDivElement } as React.RefObject<HTMLDivElement>, () => setCrosshairData(undefined))
 
   return (
-    <Flex
-      width="100%"
-      position="relative"
-      animation="fast"
+    <ChartDiv
       ref={setChartDivElement}
       height={height}
       className={className}
@@ -319,46 +301,46 @@ export function Chart<TParamType extends ChartDataParams<TDataType>, TDataType e
         </ChartTooltip>
       )}
       {params.stale && <StaleBanner />}
-    </Flex>
+    </ChartDiv>
   )
 }
 
-const ChartTooltip = styled(Flex, {
-  alignItems: 'center',
-  position: 'absolute',
-  left: 0,
-  top: 0,
-  zIndex: '$tooltip',
-  backgroundColor: '$surface5',
-  backdropFilter: 'blur(8px)',
-  borderRadius: '$rounded8',
-  borderColor: '$surface3',
-  borderStyle: 'solid',
-  borderWidth: 1,
-  p: '$spacing8',
-})
+const ChartTooltip = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  left: 0%;
+  top: 0;
+  z-index: ${Z_INDEX.tooltip};
+  background: ${({ theme }) => theme.surface5};
+  backdrop-filter: ${({ theme }) => theme.blur.light};
+  border-radius: 8px;
+  border: 1px solid ${({ theme }) => theme.surface3};
+  padding: 8px;
+`
 
-const StaleBannerWrapper = styled(ChartTooltip, {
-  borderRadius: '$rounded16',
-  left: 'unset',
-  top: 'unset',
-  right: '$spacing12',
-  bottom: '$spacing40',
-  p: '$spacing12',
-  backgroundColor: '$surface4',
-})
+const StaleBannerWrapper = styled(ChartTooltip)`
+  border-radius: 16px;
+  left: unset;
+  top: unset;
+  right: 12px;
+  bottom: 40px;
+  padding: 12px;
+  background: ${({ theme }) => theme.surface4};
+`
 
 function StaleBanner() {
   const theme = useTheme()
   // TODO(WEB-3739): Update Chart UI to grayscale when data is stale
   return (
     <StaleBannerWrapper data-testid="chart-stale-banner">
-      <Flex row gap="$gap8">
+      <Row gap="sm">
         <MissingDataBars color={theme.neutral1} />
         <ThemedText.BodySmall>
           <Trans i18nKey="common.dataOutdated" />
         </ThemedText.BodySmall>
-      </Flex>
+      </Row>
     </StaleBannerWrapper>
   )
 }

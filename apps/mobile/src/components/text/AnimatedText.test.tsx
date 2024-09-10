@@ -9,7 +9,30 @@ describe(AnimatedText, () => {
   it('renders without error', () => {
     const tree = render(<AnimatedText text={makeMutable('Rendered')} />)
 
-    expect(tree).toMatchSnapshot()
+    expect(tree).toMatchInlineSnapshot(`
+      <TextInput
+        allowFontScaling={true}
+        collapsable={false}
+        editable={false}
+        jestAnimatedStyle={
+          {
+            "value": {},
+          }
+        }
+        maxFontSizeMultiplier={1.4}
+        style={
+          {
+            "fontFamily": "Basel-Book",
+            "fontSize": 17,
+            "lineHeight": 24,
+            "padding": 0,
+          }
+        }
+        text="Rendered"
+        underlineColorAndroid="transparent"
+        value="Rendered"
+      />
+    `)
   })
 
   describe('when text is in the loading state', () => {

@@ -1,34 +1,32 @@
+// Shares similarities with https://github.com/Uniswap/interface/blob/main/src/state/user/reducer.ts
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
-import { BasicTokenInfo, SerializedToken, SerializedTokenMap } from 'uniswap/src/features/tokens/slice/types'
+import { CurrencyId } from 'uniswap/src/types/currency'
 
 export interface TokensState {
-  dismissedTokenWarnings: SerializedTokenMap
+  dismissedWarningTokens: {
+    [currencyId: CurrencyId]: boolean
+  }
 }
 
 export const initialTokensState: TokensState = {
-  dismissedTokenWarnings: {},
+  dismissedWarningTokens: {},
 }
 
 const slice = createSlice({
   name: 'tokens',
   initialState: initialTokensState,
   reducers: {
-    dismissTokenWarning: (state, action: PayloadAction<{ token: SerializedToken | BasicTokenInfo }>) => {
-      const {
-        token: { chainId, address },
-      } = action.payload
-      const { token } = action.payload
-      state.dismissedTokenWarnings[chainId] = state.dismissedTokenWarnings[chainId] || {}
-      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      state.dismissedTokenWarnings[chainId]![address] = token
+    addDismissedWarningToken: (state, action: PayloadAction<{ currencyId: CurrencyId }>) => {
+      const { currencyId } = action.payload
+      state.dismissedWarningTokens[currencyId] = true
     },
     resetDismissedWarnings: (state) => {
-      state.dismissedTokenWarnings = {}
+      state.dismissedWarningTokens = {}
     },
     resetTokens: () => initialTokensState,
   },
 })
 
-export const { resetTokens, dismissTokenWarning, resetDismissedWarnings } = slice.actions
+export const { resetTokens, addDismissedWarningToken, resetDismissedWarnings } = slice.actions
 
 export const tokensReducer = slice.reducer

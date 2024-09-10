@@ -6,8 +6,8 @@ import { renderHookWithProviders } from 'src/test/render'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FavoritesState } from 'uniswap/src/features/favorites/slice'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
-import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 import { cleanup } from 'wallet/src/test/test-utils'
 
 const tokenId = SAMPLE_SEED_ADDRESS_1

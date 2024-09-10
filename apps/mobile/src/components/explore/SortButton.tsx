@@ -83,7 +83,7 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
       >
         <Flex row gap="$spacing4">
           {orderBy === TokenSortableField.Volume || orderBy === TokenSortableField.TotalValueLocked}
-          <Text ellipse color="$neutral2" flexShrink={1} numberOfLines={1} variant="buttonLabel2">
+          <Text ellipse color="$neutral2" flexShrink={1} numberOfLines={1} variant="buttonLabel3">
             {getTokensOrderBySelectedLabel(orderBy, t)}
           </Text>
           <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />

@@ -5,7 +5,6 @@ import { ScrollView } from 'react-native-gesture-handler'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { Button, Flex, Loader } from 'ui/src'
-import { WalletFilled } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -21,6 +20,7 @@ type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.
 export function SelectWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
   const { selectImportedAccounts, getImportedAccountsAddresses } = useOnboardingContext()
+
   const importedAddresses = getImportedAccountsAddresses()
 
   const {
@@ -52,11 +52,7 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
 
   return (
     <>
-      <OnboardingScreen
-        Icon={WalletFilled}
-        subtitle={!showError ? subtitle : undefined}
-        title={!showError ? title : ''}
-      >
+      <OnboardingScreen subtitle={!showError ? subtitle : undefined} title={!showError ? title : ''}>
         {showError ? (
           <BaseCard.ErrorState
             retryButtonLabel={t('common.button.retry')}
@@ -71,15 +67,15 @@ export function SelectWalletScreen({ navigation, route: { params } }: Props): JS
           <ScrollView>
             <Flex gap="$spacing12">
               {importableAccounts?.map((account, i) => {
-                const { address, balance } = account
+                const { ownerAddress, balance } = account
                 return (
                   <WalletPreviewCard
-                    key={address}
-                    address={address}
+                    key={ownerAddress}
+                    address={ownerAddress}
                     balance={balance}
                     hideSelectionCircle={isOnlyOneAccount}
                     name={ElementName.WalletCard}
-                    selected={selectedAddresses.includes(address)}
+                    selected={selectedAddresses.includes(ownerAddress)}
                     testID={`${TestID.WalletCard}-${i + 1}`}
                     onSelect={toggleAddressSelection}
                   />

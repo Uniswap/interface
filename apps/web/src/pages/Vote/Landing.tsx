@@ -6,6 +6,7 @@ import FormattedCurrencyAmount from 'components/FormattedCurrencyAmount'
 import Loader from 'components/Icons/LoadingSpinner'
 import { AutoRow, RowBetween, RowFixed } from 'components/Row'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
+import Toggle from 'components/Toggle'
 import { CardBGImage, CardNoise, CardSection, DataCard } from 'components/earn/styled'
 import DelegateModal from 'components/vote/DelegateModal'
 import ProposalEmptyState from 'components/vote/ProposalEmptyState'
@@ -24,7 +25,6 @@ import { ApplicationModal } from 'state/application/reducer'
 import { useTokenBalance } from 'state/connection/hooks'
 import { ProposalData, ProposalState, useAllProposalData, useUserDelegatee, useUserVotes } from 'state/governance/hooks'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { Switch } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
 import { shortenAddress } from 'utilities/src/addresses'
@@ -286,10 +286,9 @@ export default function Landing() {
                   <ThemedText.DeprecatedMain>
                     <Trans i18nKey="vote.landing.showCancelled" />
                   </ThemedText.DeprecatedMain>
-                  <Switch
-                    checked={!hideCancelled}
-                    onCheckedChange={() => setHideCancelled((hideCancelled) => !hideCancelled)}
-                    variant="branded"
+                  <Toggle
+                    isActive={!hideCancelled}
+                    toggle={() => setHideCancelled((hideCancelled) => !hideCancelled)}
                   />
                 </RowBetween>
               </AutoColumn>

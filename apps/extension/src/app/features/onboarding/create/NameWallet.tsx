@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Input } from 'src/app/components/Input'
 import { saveDappConnection } from 'src/app/features/dapp/actions'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
@@ -13,7 +12,6 @@ import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 
 export function NameWallet(): JSX.Element {
-  const { t } = useTranslation()
   const { getOnboardingAccount, setPendingWalletName } = useOnboardingContext()
   const onboardingAccount = getOnboardingAccount()
 
@@ -45,9 +43,9 @@ export function NameWallet(): JSX.Element {
           onboardingAccountAddress ? <Unicon address={onboardingAccountAddress} size={iconSizes.icon64} /> : undefined
         }
         nextButtonEnabled={true}
-        nextButtonText={t('onboarding.name.wallet.button.text')}
-        subtitle={t('onboarding.name.wallet.subtitle')}
-        title={t('onboarding.name.wallet.title')}
+        nextButtonText="Finish"
+        subtitle="This nickname is only visible to you"
+        title="Give your wallet a name"
         onBack={goToPreviousStep}
         onSubmit={onSubmit}
       >

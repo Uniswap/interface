@@ -7,11 +7,11 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 export function SwapDisplay({
   inputAmount,

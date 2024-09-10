@@ -4,11 +4,6 @@ import { TXN_HISTORY_LOADER_ICON_SIZE } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
 import {
-  FORMAT_DATE_MONTH_DAY,
-  FORMAT_TIME_SHORT,
-  useLocalizedDayjs,
-} from 'uniswap/src/features/language/localizedDayjs'
-import {
   NFTTradeType,
   TransactionDetails,
   TransactionStatus,
@@ -17,6 +12,11 @@ import {
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from 'wallet/src/features/activity/utils'
+import {
+  FORMAT_DATE_MONTH_DAY,
+  FORMAT_TIME_SHORT,
+  useLocalizedDayjs,
+} from 'wallet/src/features/language/localizedDayjs'
 import { ApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
 import { NFTApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
 import { NFTMintSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'

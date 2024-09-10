@@ -53,9 +53,8 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
         style={
           {
             "color": "#222222",
-            "fontFamily": "Basel Grotesk",
+            "fontFamily": "Basel-Book",
             "fontSize": 24,
-            "fontWeight": "400",
             "lineHeight": 32,
           }
         }
@@ -77,9 +76,8 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
           style={
             {
               "color": "#7D7D7D",
-              "fontFamily": "Basel Grotesk",
+              "fontFamily": "Basel-Book",
               "fontSize": 16,
-              "fontWeight": "400",
               "lineHeight": 24,
             }
           }
@@ -215,9 +213,8 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
           style={
             {
               "color": "#222222",
-              "fontFamily": "Basel Grotesk",
+              "fontFamily": "Basel-Book",
               "fontSize": 16,
-              "fontWeight": "400",
               "lineHeight": 24,
             }
           }
@@ -232,9 +229,8 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
         style={
           {
             "color": "#7D7D7D",
-            "fontFamily": "Basel Grotesk",
+            "fontFamily": "Basel-Book",
             "fontSize": 12,
-            "fontWeight": "400",
             "lineHeight": 16,
           }
         }
@@ -430,9 +426,8 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel Grotesk",
+          "fontFamily": "Basel-Book",
           "fontSize": 14,
-          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
@@ -518,9 +513,8 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel Grotesk",
+          "fontFamily": "Basel-Book",
           "fontSize": 14,
-          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
@@ -544,9 +538,8 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
         style={
           {
             "color": "#222222",
-            "fontFamily": "Basel Grotesk",
+            "fontFamily": "Basel-Book",
             "fontSize": 14,
-            "fontWeight": "400",
             "lineHeight": 20,
           }
         }
@@ -677,9 +670,8 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel Grotesk",
+          "fontFamily": "Basel-Book",
           "fontSize": 14,
-          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
@@ -765,9 +757,8 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel Grotesk",
+          "fontFamily": "Basel-Book",
           "fontSize": 14,
-          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
@@ -791,9 +782,8 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
         style={
           {
             "color": "#222222",
-            "fontFamily": "Basel Grotesk",
+            "fontFamily": "Basel-Book",
             "fontSize": 14,
-            "fontWeight": "400",
             "lineHeight": 20,
           }
         }

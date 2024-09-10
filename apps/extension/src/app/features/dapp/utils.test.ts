@@ -3,9 +3,15 @@ import {
   getOrderedConnectedAddresses,
   isConnectedAccount,
 } from 'src/app/features/dapp/utils'
-import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2, SAMPLE_SEED_ADDRESS_3 } from 'uniswap/src/test/fixtures'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
-import { ACCOUNT, ACCOUNT2, ACCOUNT3 } from 'wallet/src/test/fixtures'
+import {
+  ACCOUNT,
+  ACCOUNT2,
+  ACCOUNT3,
+  SAMPLE_SEED_ADDRESS_1,
+  SAMPLE_SEED_ADDRESS_2,
+  SAMPLE_SEED_ADDRESS_3,
+} from 'wallet/src/test/fixtures'
 
 describe('isConnectedAccount', () => {
   it('returns true if the account is connected', () => {

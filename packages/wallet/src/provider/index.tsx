@@ -11,7 +11,7 @@ interface SharedProviderProps {
 
 // A provider meant for sharing across all surfaces.
 // Props should be defined as needed and clarified in name to improve readability
-export function SharedWalletProvider({ reduxStore, children }: SharedProviderProps): JSX.Element {
+export function SharedProvider({ reduxStore, children }: SharedProviderProps): JSX.Element {
   return (
     <ReduxProvider store={reduxStore}>
       <SharedPersistQueryClientProvider>

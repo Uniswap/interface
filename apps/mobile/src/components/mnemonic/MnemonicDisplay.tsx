@@ -46,7 +46,7 @@ export function MnemonicDisplay({
   const showMnemonicWithReveal = enableRevealButton ? revealPressed : showMnemonic
 
   return (
-    <HiddenFromScreenReaders style={{ ...flexStyles.fill, paddingHorizontal: spacing.spacing8 }}>
+    <HiddenFromScreenReaders style={flexStyles.fill}>
       {showMnemonicWithReveal ? (
         <NativeMnemonicDisplay
           key={key}
@@ -60,7 +60,7 @@ export function MnemonicDisplay({
           {...nativeComponentProps}
         />
       ) : (
-        <Flex mb="$spacing12" onLayout={(e) => setHeight(Math.round(e.nativeEvent.layout.height))}>
+        <Flex mb="$spacing16" onLayout={(e) => setHeight(Math.round(e.nativeEvent.layout.height))}>
           <HiddenMnemonicWordView
             enableRevealButton={enableRevealButton}
             onRevealPress={() => {
@@ -96,6 +96,6 @@ const styles = StyleSheet.create({
   mnemonicDisplay: {
     // Set flex: 1 to prevent component from collapsing before it is measured
     flex: 1,
-    marginBottom: spacing.spacing12,
+    marginBottom: spacing.spacing16,
   },
 })

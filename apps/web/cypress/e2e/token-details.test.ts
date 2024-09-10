@@ -27,7 +27,7 @@ describe('Token details', () => {
     cy.get('h1').should('have.length', 1)
 
     // Price chart should be filled in
-    cy.get('#chart-header').should('include.text', '$')
+    cy.get('[data-cy="chart-header"]').should('include.text', '$')
     cy.get('[data-cy="tdp-Price-chart-container"]').should('exist')
 
     // Stats should have: TVL, FDV, market cap, 24H volume
@@ -142,7 +142,7 @@ describe('Token details', () => {
     it('should show a L2 token even if the user is connected to a different network', () => {
       cy.visit('/explore/tokens')
       cy.get(getTestSelector('tokens-network-filter-selected')).click()
-      cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).first().click()
+      cy.get(getTestSelector('tokens-network-filter-option-arbitrum')).click()
       cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Arbitrum logo`)
       cy.get(getTestSelector(`token-table-row-${ARB.address.toLowerCase()}`)).click()
       cy.get(`#swap-currency-output .token-symbol-container`).should('contain.text', 'ARB')

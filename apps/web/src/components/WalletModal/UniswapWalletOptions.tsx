@@ -1,6 +1,4 @@
-import { InterfaceElementName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
-import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
 import Row from 'components/Row'
 import { DownloadWalletOption } from 'components/WalletModal/DownloadWalletOption'
 import { DetectedBadge } from 'components/WalletModal/shared'
@@ -9,13 +7,13 @@ import { CONNECTION } from 'components/Web3Provider/constants'
 import { useConnect } from 'hooks/useConnect'
 import styled from 'lib/styled-components'
 import { Z_INDEX } from 'theme/zIndex'
-import { Flex, Image, Text } from 'ui/src'
+import { Image, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
-import { AppStoreLogo, PhoneDownload, ScanQr } from 'ui/src/components/icons'
+import { ScanQr } from 'ui/src/components/icons/ScanQr'
 import { iconSizes } from 'ui/src/theme'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { isMobileWeb, isWebIOS } from 'utilities/src/platform'
-import { openDownloadApp } from 'utils/openDownloadApp'
 
 export const OptionContainer = styled(Row)`
   padding: 16px;
@@ -46,6 +44,7 @@ export function UniswapWalletOptions() {
   const uniswapWalletConnectConnector = useConnectorWithId(CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID, {
     shouldThrow: true,
   })
+  const extensionIsLaunched = useFeatureFlag(FeatureFlags.ExtensionLaunch)
 
   const { connect } = useConnect()
 
@@ -60,21 +59,21 @@ export function UniswapWalletOptions() {
           >
             <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
             <Row gap="xs">
-              <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
+              <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
                 <Trans i18nKey="common.extension" />
               </Text>
             </Row>
             <DetectedBadge />
           </OptionContainer>
-        ) : // If not on a mobile web browser show the download wallet modal (includes link to download extension)
-        !isMobileWeb ? (
+        ) : // If the extension is not detected, show the option to download the app
+        extensionIsLaunched ? (
           <DownloadWalletOption />
         ) : null}
         <OptionContainer gap="md" onClick={() => connect({ connector: uniswapWalletConnectConnector })}>
           <ScanQr size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} p={7} />
           <Row gap="xs">
             <Column>
-              <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
+              <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
                 <Trans i18nKey="common.uniswapMobile" />
               </Text>
               <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
@@ -83,35 +82,6 @@ export function UniswapWalletOptions() {
             </Column>
           </Row>
         </OptionContainer>
-        {isMobileWeb && (
-          // If on a mobile web browser show the relevant app store download link
-          <OptionContainer
-            onClick={() => openDownloadApp({ element: InterfaceElementName.UNISWAP_WALLET_MODAL_DOWNLOAD_BUTTON })}
-          >
-            <PhoneDownload size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} />
-            <Row gap="xs">
-              <Flex grow>
-                <Text variant="buttonLabel3" color="$neutral1" whiteSpace="nowrap">
-                  <Trans i18nKey="common.getUniswapWallet" />
-                </Text>
-                <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
-                  {isWebIOS ? (
-                    <Trans i18nKey="common.downloadAppStore" />
-                  ) : (
-                    <Trans i18nKey="common.downloadPlayStore" />
-                  )}
-                </Text>
-              </Flex>
-              {isWebIOS ? (
-                <AppStoreLogo size="$icon.24" />
-              ) : (
-                <Flex p="$padding6" borderRadius="$rounded8" backgroundColor="$neutral1">
-                  <GooglePlayStoreLogo />
-                </Flex>
-              )}
-            </Row>
-          </OptionContainer>
-        )}
       </Column>
     </Column>
   )

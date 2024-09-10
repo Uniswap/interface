@@ -26,16 +26,16 @@ import { ENS_LOGO } from 'ui/src/assets'
 import { SendAction, XTwitter } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { DEP_accentColors, iconSizes, imageSizes, validColor } from 'ui/src/theme'
-import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { useENSDescription, useENSName, useENSTwitterUsername } from 'uniswap/src/features/ens/api'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { openUri } from 'uniswap/src/utils/linking'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 const HEADER_GRADIENT_HEIGHT = 144
@@ -189,7 +189,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
                   <TouchableArea onPress={onPressTwitter}>
                     <Flex centered row gap="$spacing4">
                       <XTwitter color={colors.neutral1.val} size={iconSizes.icon16} />
-                      <Text color="$neutral1" variant="buttonLabel2">
+                      <Text color="$neutral1" variant="buttonLabel3">
                         {twitter}
                       </Text>
                     </Flex>
@@ -203,7 +203,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
                       source={ENS_LOGO}
                       width={imageSizes.image16}
                     />
-                    <Text color={validColor(DEP_accentColors.blue400)} variant="buttonLabel2">
+                    <Text color={validColor(DEP_accentColors.blue400)} variant="buttonLabel3">
                       {primaryENSName}
                     </Text>
                   </Flex>
@@ -247,7 +247,7 @@ export const ProfileHeader = memo(function ProfileHeader({ address }: ProfileHea
             >
               <Flex row alignItems="center" gap="$spacing8">
                 <SendAction color="$neutral2" size="$icon.20" />
-                <Text allowFontScaling={true} color="$neutral2" maxFontSizeMultiplier={1.2} variant="buttonLabel1">
+                <Text allowFontScaling={true} color="$neutral2" maxFontSizeMultiplier={1.2} variant="buttonLabel2">
                   {t('common.button.send')}
                 </Text>
               </Flex>

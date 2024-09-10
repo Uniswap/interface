@@ -87,9 +87,8 @@ exports[`renders a relative change 1`] = `
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel Grotesk",
+          "fontFamily": "Basel-Book",
           "fontSize": 16,
-          "fontWeight": "400",
           "lineHeight": 24,
         }
       }
@@ -189,9 +188,8 @@ exports[`renders placeholders with absolute change 1`] = `
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel Grotesk",
+          "fontFamily": "Basel-Book",
           "fontSize": 16,
-          "fontWeight": "400",
           "lineHeight": 24,
         }
       }
@@ -229,9 +227,8 @@ exports[`renders placeholders without a change 1`] = `
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel Grotesk",
+          "fontFamily": "Basel-Book",
           "fontSize": 16,
-          "fontWeight": "400",
           "lineHeight": 24,
         }
       }

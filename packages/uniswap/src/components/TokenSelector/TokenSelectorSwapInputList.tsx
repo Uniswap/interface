@@ -1,21 +1,17 @@
 import { memo, useCallback, useMemo } from 'react'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
-import {
-  useFavoriteTokensOptions,
-  usePopularTokensOptions,
-  usePortfolioTokenOptions,
-  useRecentlySearchedTokens,
-} from 'uniswap/src/components/TokenSelector/hooks'
+import { filterRecentlySearchedTokenOptions } from 'uniswap/src/components/TokenSelector/hooks'
 import {
   ConvertFiatAmountFormattedCallback,
   OnSelectCurrency,
   TokenOptionSection,
   TokenSection,
-  TokenSectionsHookProps,
+  TokenSectionsForSwapInput,
+  TokenSelectorListSections,
+  TokenWarningDismissedHook,
 } from 'uniswap/src/components/TokenSelector/types'
 import { tokenOptionDifference, useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
-// eslint-disable-next-line no-restricted-imports
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isExtension } from 'utilities/src/platform'
@@ -23,13 +19,18 @@ import { isExtension } from 'utilities/src/platform'
 function useTokenSectionsForSwapInput({
   activeAccountAddress,
   chainFilter,
-}: TokenSectionsHookProps): GqlResult<TokenSection[]> {
+  searchHistory,
+  valueModifiers,
+  useFavoriteTokensOptionsHook,
+  usePopularTokensOptionsHook,
+  usePortfolioTokenOptionsHook,
+}: TokenSectionsForSwapInput): GqlResult<TokenSelectorListSections> {
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
     loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptions(activeAccountAddress, chainFilter)
+  } = usePortfolioTokenOptionsHook(activeAccountAddress, chainFilter, valueModifiers)
 
   const {
     data: popularTokenOptions,
@@ -37,16 +38,16 @@ function useTokenSectionsForSwapInput({
     refetch: refetchPopularTokenOptions,
     loading: popularTokenOptionsLoading,
     // if there is no chain filter then we show mainnet tokens
-  } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
+  } = usePopularTokensOptionsHook(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet, valueModifiers)
 
   const {
     data: favoriteTokenOptions,
     error: favoriteTokenOptionsError,
     refetch: refetchFavoriteTokenOptions,
     loading: favoriteTokenOptionsLoading,
-  } = useFavoriteTokensOptions(activeAccountAddress, chainFilter)
+  } = useFavoriteTokensOptionsHook(activeAccountAddress, chainFilter, valueModifiers)
 
-  const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
+  const recentlySearchedTokenOptions = filterRecentlySearchedTokenOptions(chainFilter, searchHistory)
 
   const error =
     (!portfolioTokenOptions && portfolioTokenOptionsError) ||
@@ -98,14 +99,21 @@ function _TokenSelectorSwapInputList({
   onSelectCurrency,
   activeAccountAddress,
   chainFilter,
+  searchHistory,
+  valueModifiers,
   isKeyboardOpen,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
-}: TokenSectionsHookProps & {
+  useFavoriteTokensOptionsHook,
+  usePortfolioTokenOptionsHook,
+  usePopularTokensOptionsHook,
+  useTokenWarningDismissedHook,
+}: TokenSectionsForSwapInput & {
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
   onDismiss: () => void
   onSelectCurrency: OnSelectCurrency
+  useTokenWarningDismissedHook: TokenWarningDismissedHook
 }): JSX.Element {
   const {
     data: sections,
@@ -115,6 +123,11 @@ function _TokenSelectorSwapInputList({
   } = useTokenSectionsForSwapInput({
     activeAccountAddress,
     chainFilter,
+    valueModifiers,
+    searchHistory,
+    useFavoriteTokensOptionsHook,
+    usePortfolioTokenOptionsHook,
+    usePopularTokensOptionsHook,
   })
 
   return (
@@ -128,6 +141,7 @@ function _TokenSelectorSwapInputList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
+      useTokenWarningDismissedHook={useTokenWarningDismissedHook}
       onDismiss={onDismiss}
       onSelectCurrency={onSelectCurrency}
     />

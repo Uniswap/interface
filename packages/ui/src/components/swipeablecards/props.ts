@@ -6,7 +6,6 @@ export type SwipeableCardProps = PropsWithChildren<{
   stackIndex: number
   cardHeight: number
   disableSwipe: boolean
-  onPress?: () => void
   onSwiped: () => void
   onLayout: ({ height, yOffset }: { height: number; yOffset: number }) => void
 }>

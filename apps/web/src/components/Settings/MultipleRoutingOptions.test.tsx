@@ -72,7 +72,7 @@ describe('Multiple routing options', () => {
     expect(screen.getByTestId('route-preference-toggle-v3')).toHaveAttribute('aria-selected', 'false')
     expect(screen.getByTestId('route-preference-toggle-v2')).toHaveAttribute('aria-selected', 'true')
     expect(screen.getByTestId('route-preference-toggle-UniswapX')).toHaveAttribute('aria-selected', 'true')
-    expect(screen.getByTestId('route-preference-toggle-v2')).toHaveAttribute('aria-disabled', 'true')
+    expect(screen.getByTestId('route-preference-toggle-v2')).toHaveStyleRule('pointer-events', 'none')
 
     const uniswapXToggle = screen.getByTestId('route-preference-toggle-UniswapX')
     fireEvent.click(uniswapXToggle)
@@ -81,7 +81,7 @@ describe('Multiple routing options', () => {
     expect(screen.getByTestId('route-preference-toggle-v3')).toHaveAttribute('aria-selected', 'false')
     expect(screen.getByTestId('route-preference-toggle-v2')).toHaveAttribute('aria-selected', 'true')
     expect(screen.getByTestId('route-preference-toggle-UniswapX')).toHaveAttribute('aria-selected', 'false')
-    expect(screen.getByTestId('route-preference-toggle-v2')).toHaveAttribute('aria-disabled', 'true')
+    expect(screen.getByTestId('route-preference-toggle-v2')).toHaveStyleRule('pointer-events', 'none')
   })
 
   it('does not render uniswapx toggle when uniswapx is not enabled', async () => {

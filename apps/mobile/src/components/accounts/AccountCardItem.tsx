@@ -9,7 +9,6 @@ import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -17,6 +16,7 @@ import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 import { useAccountList } from 'wallet/src/features/accounts/hooks'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 
@@ -46,7 +46,7 @@ function PortfolioValue({
 
   const { data } = useAccountList({
     fetchPolicy: 'cache-first',
-    addresses: [address],
+    addresses: address,
   })
 
   const cachedPortfolioValue = data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value

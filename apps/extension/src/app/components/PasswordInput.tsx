@@ -58,7 +58,7 @@ function StrengthIndicator({ strength }: { strength: PasswordStrength }): JSX.El
 
   return (
     <Flex position="absolute" right="$spacing24">
-      <Text color={color} variant="buttonLabel2">
+      <Text color={color} variant="buttonLabel4">
         {text}
       </Text>
     </Flex>

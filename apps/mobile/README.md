@@ -121,37 +121,6 @@ Android Studio should have an emulator already, but if not:
 Open the project at `universe/apps/mobile/android`
 Tools -> Device Manager to create a new emulator
 
-## Deploying to Physical Android Device
-
-1. Enable developer mode on Android
-
-  1. Open Settings 
-  2. Tap About phone or About device 
-  3. Tap Software information 
-  4. Tap Build number seven times in a row 
-  5. A message will appear when you're close to enabling Developer mode
-
-2. Enable USB Debugging
-
-  Go to Developer Options in settings and enable USB Debugging
-
-3. Connect device and Allow communication
-
-  Pop up message must appear and enable transfer.
-  Run the following command to verify your device has been detected:
-
-`adb devices`
-
-4. In your terminal run
-
-```
-adb reverse tcp:8081 tcp:8081
-yarn mobile android
-```
-
-if it fails, quit the terminal and run it directly from Android Studio. Once you get the first build retry the previous step.
-
-
 ## Development
 
 Once all the setup steps above are completed, you're ready to try running the app locally!
@@ -214,13 +183,6 @@ We use `redux-persist` to persist the Redux state between user sessions. Most of
 
 - `zsh: command not found: [package name]`
 This means whichever package you're trying to run (`[package name]`) wasn’t correctly installed, or your Terminal can’t figure out how to run it. If you just installed it, try quitting terminal and re-opening it. Otherwise try reinstalling the package.
-
-- `Failed to load 'glog' podspec:`
-Resolve this issue by checking the path of Xcode, make sure is inside Applications and with the name `Xcode`
-Once confirm run the following commands:
-
-`sudo xcode-select --switch /Applications/Xcode.app`
-`pod install`
 
 - `unable to open file (in target "OneSignalNotificationServiceExtension" in project "Uniswap")`.
 Resolve this issue by navigating to the `ios/` directory and running `pod update`.

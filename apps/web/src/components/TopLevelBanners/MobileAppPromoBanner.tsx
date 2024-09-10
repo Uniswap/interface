@@ -11,8 +11,7 @@ import { hideMobileAppPromoBannerAtom } from 'state/application/atoms'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
-import { Text } from 'ui/src'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { Trans } from 'uniswap/src/i18n'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
 import { getWalletMeta } from 'utils/walletMeta'
 
@@ -85,7 +84,6 @@ function getDownloadLink(userAgent: string, peerWalletAgent?: string): string {
 }
 
 export function MobileAppPromoBanner() {
-  const { t } = useTranslation()
   const [isVisible, setIsVisible] = useState(true)
   const theme = useTheme()
   const mobileAppPromoBannerEligible = useMobileAppPromoBannerEligible()
@@ -122,9 +120,9 @@ export function MobileAppPromoBanner() {
         </Column>
       </Row>
       <StyledButton href={getDownloadLink(navigator.userAgent, peerWalletAgent)}>
-        <Text variant="buttonLabel3" color="white" whiteSpace="nowrap" lineHeight="20px">
-          {t('common.getApp')}
-        </Text>
+        <ThemedText.LabelSmall color="white" lineHeight="20px">
+          <Trans i18nKey="common.getApp" />
+        </ThemedText.LabelSmall>
       </StyledButton>
     </Wrapper>
   )

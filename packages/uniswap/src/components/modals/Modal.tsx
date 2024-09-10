@@ -2,21 +2,21 @@ import { BottomSheetTextInput as GorhomBottomSheetTextInput } from '@gorhom/bott
 import { ComponentProps } from 'react'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
-import { PlatformSplitStubError } from 'utilities/src/errors'
+import { NotImplementedError } from 'utilities/src/errors'
 
 /**
  * Renders as a bottom sheet modal on mobile app/mweb & a dialog modal on desktop web/extension.
  */
 export function Modal(_: ModalProps): JSX.Element {
-  throw new PlatformSplitStubError('Modal')
+  throw new NotImplementedError('See `.native.tsx` and `.web.tsx` files.')
 }
 
 export function BottomSheetDetachedModal(_: ModalProps): JSX.Element {
-  throw new PlatformSplitStubError('BottomSheetDetachedModal')
+  throw new NotImplementedError('See `.native.tsx` and `.web.tsx` files.')
 }
 
 export function BottomSheetTextInput(
   _: ComponentProps<typeof GorhomBottomSheetTextInput | typeof TextInput>,
 ): JSX.Element {
-  throw new PlatformSplitStubError('BottomSheetTextInput')
+  throw new NotImplementedError('See `.native.tsx` and `.web.tsx` files.')
 }

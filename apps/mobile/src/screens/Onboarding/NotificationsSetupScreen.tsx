@@ -8,12 +8,12 @@ import { useBiometricAppSettings } from 'src/features/biometrics/hooks'
 import { promptPushPermission } from 'src/features/notifications/Onesignal'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { useCompleteOnboardingCallback } from 'src/features/onboarding/hooks'
-import { Button, Flex, useIsDarkMode } from 'ui/src'
+import { Button, Flex, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { ONBOARDING_NOTIFICATIONS_DARK, ONBOARDING_NOTIFICATIONS_LIGHT } from 'ui/src/assets'
-import { BellOn } from 'ui/src/components/icons'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import i18n from 'uniswap/src/i18n/i18n'
+import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { isIOS } from 'utilities/src/platform'
@@ -69,19 +69,26 @@ export function NotificationsSetupScreen({ navigation, route: { params } }: Prop
   return (
     <OnboardingScreen
       disableGoBack
-      Icon={BellOn}
       subtitle={t('onboarding.notification.subtitle')}
       title={t('onboarding.notification.title')}
-      onSkip={navigateToNextScreen}
     >
       <Flex centered shrink py={isIOS ? '$spacing60' : '$spacing16'}>
         <NotificationsBackgroundImage />
       </Flex>
-      <Trace logPress element={ElementName.Enable}>
-        <Button testID="turn-on-notifications" onPress={onPressEnableNotifications}>
-          {t('common.button.enable')}
-        </Button>
-      </Trace>
+      <Flex gap="$spacing24">
+        <Trace logPress element={ElementName.Skip}>
+          <TouchableArea testID={TestID.Skip} onPress={navigateToNextScreen}>
+            <Text color="$accent1" textAlign="center" variant="buttonLabel2">
+              {t('common.button.later')}
+            </Text>
+          </TouchableArea>
+        </Trace>
+        <Trace logPress element={ElementName.Enable}>
+          <Button testID="turn-on-notifications" onPress={onPressEnableNotifications}>
+            {t('common.button.enable')}
+          </Button>
+        </Trace>
+      </Flex>
     </OnboardingScreen>
   )
 }

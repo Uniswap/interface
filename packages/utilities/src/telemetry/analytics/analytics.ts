@@ -1,11 +1,11 @@
-import { PlatformSplitStubError } from 'utilities/src/errors'
+import { NotImplementedError } from 'utilities/src/errors'
 import { ApplicationTransport } from 'utilities/src/telemetry/analytics/ApplicationTransport'
 
 // matches amplitude supported values, not using amplitude's type to decouple from underlying library
 export type UserPropertyValue = number | string | boolean | Array<string | number>
 
 export async function getAnalyticsAtomDirect(_forceRead?: boolean): Promise<boolean> {
-  throw new PlatformSplitStubError('getAnalyticsAtomDirect')
+  throw new NotImplementedError('getAnalyticsAtomDirect')
 }
 
 export interface Analytics {
@@ -28,18 +28,18 @@ export const analytics: Analytics = {
     _initHash?: string,
     _userIdGetter?: () => Promise<string>,
   ): Promise<void> {
-    throw new PlatformSplitStubError('initAnalytics')
+    throw new NotImplementedError('initAnalytics')
   },
   setAllowAnalytics(_allowed: boolean): Promise<void> {
-    throw new PlatformSplitStubError('flushAnalyticsEvents')
+    throw new NotImplementedError('flushAnalyticsEvents')
   },
   sendEvent(_eventName: string, ..._eventProperties: unknown[]): void {
-    throw new PlatformSplitStubError('sendAnalyticsEvent')
+    throw new NotImplementedError('sendAnalyticsEvent')
   },
   flushEvents(): void {
-    throw new PlatformSplitStubError('flushAnalyticsEvents')
+    throw new NotImplementedError('flushAnalyticsEvents')
   },
   setUserProperty(_property: string, _value: UserPropertyValue): void {
-    throw new PlatformSplitStubError('setUserProperty')
+    throw new NotImplementedError('setUserProperty')
   },
 }

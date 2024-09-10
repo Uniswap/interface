@@ -20,7 +20,6 @@ const iconSize = {
   8: iconSizes.icon8,
   12: iconSizes.icon12,
   16: iconSizes.icon16,
-  18: iconSizes.icon18,
   20: iconSizes.icon20,
   24: iconSizes.icon24,
   28: iconSizes.icon28,

@@ -13,10 +13,10 @@ import {
 import React, { PropsWithChildren } from 'react'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
 import { WalletNavigationContextState, WalletNavigationProvider } from 'wallet/src/contexts/WalletNavigationContext'
-import { SharedWalletProvider } from 'wallet/src/provider'
+import { SharedProvider } from 'wallet/src/provider'
 import { WalletStateReducersOnly, walletRootReducer } from 'wallet/src/state/walletReducer'
+import { AutoMockedApolloProvider } from 'wallet/src/test/mocks'
 
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.
@@ -69,11 +69,11 @@ export function renderWithProviders(
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
       <AutoMockedApolloProvider cache={cache} resolvers={resolvers}>
-        <SharedWalletProvider reduxStore={store}>
+        <SharedProvider reduxStore={store}>
           <WalletNavigationProvider {...mockNavigationFunctions}>
             <UnitagUpdaterContextProvider>{children}</UnitagUpdaterContextProvider>
           </WalletNavigationProvider>
-        </SharedWalletProvider>
+        </SharedProvider>
       </AutoMockedApolloProvider>
     )
   }
@@ -138,7 +138,7 @@ export function renderHookWithProviders<P extends any[], R>(
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
       <AutoMockedApolloProvider cache={cache} resolvers={resolvers}>
-        <SharedWalletProvider reduxStore={store}>{children}</SharedWalletProvider>
+        <SharedProvider reduxStore={store}>{children}</SharedProvider>
       </AutoMockedApolloProvider>
     )
   }

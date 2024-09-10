@@ -79,7 +79,7 @@ export function ForceUpgradeModal(): JSX.Element {
           {t('forceUpgrade.description')}
         </Text>
         {mnemonicId && (
-          <Text color="$accent1" variant="buttonLabel2" onPress={onPressViewRecovery}>
+          <Text color="$accent1" variant="buttonLabel3" onPress={onPressViewRecovery}>
             {t('forceUpgrade.action.recoveryPhrase')}
           </Text>
         )}

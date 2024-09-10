@@ -1,9 +1,9 @@
 import { PersistState } from 'redux-persist'
-import { PreV16UserState } from 'state/migrations/oldTypes'
+import { UserState } from 'state/user/reducer'
 
 export type PersistAppStateV8 = {
   _persist: PersistState
-} & { user?: PreV16UserState & { hideAppPromoBanner?: boolean } }
+} & { user?: UserState & { hideAppPromoBanner?: boolean } }
 
 /**
  * Migration to delete unused hideAppPromoBanner redux state variable.

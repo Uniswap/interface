@@ -75,7 +75,7 @@ export function UnitagBanner({
         <Flex fill row $short={{ mr: '$spacing32' }} justifyContent="space-between" onPress={onPressClaimNow}>
           <Text color="$neutral2" variant="subheading2">
             <Trans
-              components={{ highlight: <Text color="$accent1" variant="buttonLabel2" /> }}
+              components={{ highlight: <Text color="$accent1" variant="buttonLabel3" /> }}
               i18nKey="unitags.banner.title.compact"
               values={{ unitagDomain: UNITAG_SUFFIX_NO_LEADING_DOT }}
             />
@@ -98,7 +98,7 @@ export function UnitagBanner({
           <Flex row gap="$spacing2">
             {/* TODO: replace with Button when it's extensible enough to accommodate designs */}
             <TouchableArea {...baseButtonStyle} testID={TestID.Confirm} onPress={onPressClaimNow}>
-              <Text color="white" variant="buttonLabel3">
+              <Text color="white" variant="buttonLabel4">
                 {t('unitags.banner.button.claim')}
               </Text>
             </TouchableArea>
@@ -108,7 +108,7 @@ export function UnitagBanner({
               testID={TestID.Cancel}
               onPress={() => handleDismiss()}
             >
-              <Text color="$neutral2" variant="buttonLabel3">
+              <Text color="$neutral2" variant="buttonLabel4">
                 {t('common.button.later')}
               </Text>
             </TouchableArea>

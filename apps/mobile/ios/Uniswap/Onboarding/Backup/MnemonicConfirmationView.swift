@@ -122,7 +122,7 @@ struct MnemonicConfirmation: View {
     
     VStack(alignment: .leading, spacing: 0) {
       HStack(alignment: .center, spacing: 24) {
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
           ForEach((0...middle), id: \.self) {index in
             MnemonicTextField(index: index + 1,
                               word: getFieldText(index: index),
@@ -132,7 +132,7 @@ struct MnemonicConfirmation: View {
             .frame(maxWidth: .infinity, alignment: .leading)
           }
         }.frame(maxWidth: .infinity)
-        VStack(alignment: .leading, spacing: 8) {
+        VStack(alignment: .leading, spacing: 12) {
           ForEach((middle + 1...end), id: \.self) {index in
             MnemonicTextField(index: index + 1,
                               word: getFieldText(index: index),
@@ -151,16 +151,12 @@ struct MnemonicConfirmation: View {
             .stroke(Colors.surface3, lineWidth: 1)
         )
       
-      MnemonicConfirmationWordBankView(
-        words: props.scrambledWords,
-        usedWordIndexes: props.typedWordIndexes,
-        labelCallback: onSuggestionTapped,
-        shouldShowSmallText: props.shouldShowSmallText
-      )
+      MnemonicConfirmationWordBankView(words: props.scrambledWords,
+                                       usedWordIndexes: props.typedWordIndexes,
+                                       labelCallback: onSuggestionTapped,
+                                       shouldShowSmallText: props.shouldShowSmallText)
       .frame(maxWidth: .infinity)
-      .padding(.top, 24)
-
-    }
-    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
+      .padding([.top, .leading, .trailing], 24)
+    }.frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
   }
 }

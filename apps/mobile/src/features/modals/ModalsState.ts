@@ -16,7 +16,6 @@ export interface AppModalState<T> {
 export interface ModalsState {
   [ModalName.AccountSwitcher]: AppModalState<undefined>
   [ModalName.BackupReminder]: AppModalState<undefined>
-  [ModalName.BackupReminderWarning]: AppModalState<undefined>
   [ModalName.KoreaCexTransferInfoModal]: AppModalState<undefined>
   [ModalName.ExchangeTransferModal]: AppModalState<{
     serviceProvider: FORServiceProvider

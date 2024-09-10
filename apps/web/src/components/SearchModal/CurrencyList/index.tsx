@@ -9,6 +9,7 @@ import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useTokenWarning } from 'constants/tokenSafety'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useIsUserAddedToken } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
@@ -19,7 +20,6 @@ import { ThemedText } from 'theme/components'
 import { Flex, Text, styled } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
-import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { shortenAddress } from 'utilities/src/addresses'
 import { currencyKey } from 'utils/currencyKey'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -117,7 +117,7 @@ const getDisplayName = (name: string | undefined) => {
 }
 
 const RowWrapper = styled(Flex, {
-  row: true,
+  flexDirection: 'row',
   height: '$spacing60',
 })
 
@@ -148,7 +148,7 @@ export function CurrencyRow({
 }) {
   const account = useAccount()
   const key = currencyListRowKey(currency)
-  const { tokenWarningDismissed: customAdded } = useDismissedTokenWarnings(currency)
+  const customAdded = useIsUserAddedToken(currency)
   const warning = useTokenWarning(currency?.isNative ? undefined : currency?.address, currency.chainId)
   const isBlockedToken = !!warning && !warning.canProceed
   const blockedTokenOpacity = '0.6'

@@ -91,7 +91,7 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
       sendAnalyticsEvent(ExtensionEventName.DappRequest, {
         action: DappRequestAction.Accept,
         requestType: requestToConfirm.dappRequest.type,
-        dappUrl: extractBaseUrl(requestToConfirm.senderTabInfo.url),
+        dappUrl: requestToConfirm.senderTabInfo.url,
         chainId: lastChainId,
         activeConnectedAddress,
         connectedAddresses,
@@ -114,7 +114,7 @@ export function DappRequestQueueProvider({ children }: PropsWithChildren): JSX.E
       sendAnalyticsEvent(ExtensionEventName.DappRequest, {
         action: DappRequestAction.Reject,
         requestType: requestToCancel.dappRequest.type,
-        dappUrl: extractBaseUrl(requestToCancel.senderTabInfo.url),
+        dappUrl: requestToCancel.senderTabInfo.url,
         chainId: lastChainId,
         activeConnectedAddress,
         connectedAddresses,

@@ -55,9 +55,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
           {
             "color": "#7D7D7D",
             "flexShrink": 1,
-            "fontFamily": "Basel Grotesk",
+            "fontFamily": "Basel-Book",
             "fontSize": 14,
-            "fontWeight": "400",
             "lineHeight": 20,
           }
         }
@@ -189,9 +188,8 @@ exports[`NetworkFee renders a NetworkFee in a loading state 1`] = `
       style={
         {
           "color": "#CECECE",
-          "fontFamily": "Basel Grotesk",
+          "fontFamily": "Basel-Book",
           "fontSize": 14,
-          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
@@ -258,9 +256,8 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
           {
             "color": "#7D7D7D",
             "flexShrink": 1,
-            "fontFamily": "Basel Grotesk",
+            "fontFamily": "Basel-Book",
             "fontSize": 14,
-            "fontWeight": "400",
             "lineHeight": 20,
           }
         }
@@ -392,9 +389,8 @@ exports[`NetworkFee renders a NetworkFee in an error state 1`] = `
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel Grotesk",
+          "fontFamily": "Basel-Book",
           "fontSize": 14,
-          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
@@ -461,9 +457,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
           {
             "color": "#7D7D7D",
             "flexShrink": 1,
-            "fontFamily": "Basel Grotesk",
+            "fontFamily": "Basel-Book",
             "fontSize": 14,
-            "fontWeight": "400",
             "lineHeight": 20,
           }
         }
@@ -595,9 +590,8 @@ exports[`NetworkFee renders a NetworkFee normally 1`] = `
       style={
         {
           "color": "#222222",
-          "fontFamily": "Basel Grotesk",
+          "fontFamily": "Basel-Book",
           "fontSize": 14,
-          "fontWeight": "400",
           "lineHeight": 20,
         }
       }

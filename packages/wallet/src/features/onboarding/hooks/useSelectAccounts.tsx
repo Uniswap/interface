@@ -1,12 +1,19 @@
 import { isEqual } from 'lodash'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { AddressWithBalanceAndName } from 'wallet/src/features/onboarding/hooks/useImportableAccounts'
 
-export function useSelectAccounts(initialAccounts: AddressWithBalanceAndName[] = []): {
+interface ImportableAccount {
+  ownerAddress: string
+  balance: number | undefined
+}
+
+export function useSelectAccounts(initialAccounts: ImportableAccount[] = []): {
   selectedAddresses: string[]
   toggleAddressSelection: (address: string) => void
 } {
-  const initialSelectedAddresses = useMemo(() => initialAccounts.map((account) => account.address), [initialAccounts])
+  const initialSelectedAddresses = useMemo(
+    () => initialAccounts.map((account) => account.ownerAddress),
+    [initialAccounts],
+  )
   const [selectedAddresses, setSelectedAddresses] = useState(initialSelectedAddresses)
 
   const toggleAddressSelection = (address: string): void => {

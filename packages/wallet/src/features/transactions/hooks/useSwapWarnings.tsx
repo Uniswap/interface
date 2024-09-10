@@ -5,7 +5,6 @@ import _ from 'lodash'
 import { useTranslation } from 'react-i18next'
 import { isWeb } from 'ui/src'
 import { FetchError, isRateLimitFetchError } from 'uniswap/src/data/apiClients/FetchError'
-import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { getNetworkWarning } from 'uniswap/src/features/transactions/WarningModal/getNetworkWarning'
 import {
   Warning,
@@ -18,6 +17,7 @@ import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/de
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { normalizePriceImpact } from 'utilities/src/format/normalizePriceImpact'
 import { useMemoCompare } from 'utilities/src/react/hooks'
+import { LocalizationContextState, useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { isOffline } from 'wallet/src/features/transactions/utils'
 
 const PRICE_IMPACT_THRESHOLD_MEDIUM = new Percent(3, 100) // 3%

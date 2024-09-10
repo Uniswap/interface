@@ -6,7 +6,7 @@ import { closeAllModals } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { getEncryptedMnemonic } from 'src/features/scantastic/ScantasticEncryption'
 import { Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { AlertTriangleFilled, Faceid, Laptop, LinkBrokenHorizontal, Wifi } from 'ui/src/components/icons'
+import { AlertTriangle, Faceid, Laptop, LinkBrokenHorizontal, Wifi } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -285,7 +285,7 @@ export function ScantasticModal(): JSX.Element | null {
       <Modal backgroundColor={colors.surface1.val} name={ModalName.OtpScanInput} onClose={onClose}>
         <Flex centered gap="$spacing16" px="$spacing16" py="$spacing12">
           <Flex centered backgroundColor="$accent2" borderRadius="$rounded12" p="$spacing12">
-            <AlertTriangleFilled color="$statusCritical" size={iconSizes.icon24} />
+            <AlertTriangle color="$statusCritical" size={iconSizes.icon24} />
           </Flex>
           <Text variant="subheading1">{t('common.text.error')}</Text>
           <Text color="$neutral2" textAlign="center" variant="body3">
@@ -293,7 +293,7 @@ export function ScantasticModal(): JSX.Element | null {
           </Text>
           <Flex gap="$spacing4" mt="$spacing12" width="100%">
             <Button alignItems="center" theme="secondary" onPress={onClose}>
-              <Text variant="buttonLabel1">{t('common.button.close')}</Text>
+              <Text variant="buttonLabel2">{t('common.button.close')}</Text>
             </Button>
           </Flex>
         </Flex>
@@ -349,7 +349,7 @@ export function ScantasticModal(): JSX.Element | null {
           p="$spacing16"
           width="100%"
         >
-          <AlertTriangleFilled color="$neutral2" size="$icon.20" />
+          <AlertTriangle color="$neutral2" size="$icon.20" />
           <Text color="$neutral2" variant="body4">
             {t('scantastic.confirmation.warning')}
           </Text>
@@ -364,7 +364,7 @@ export function ScantasticModal(): JSX.Element | null {
             {t('scantastic.confirmation.button.continue')}
           </Button>
           <TouchableArea alignItems="center" onPress={onClose}>
-            <Text color="$accent1" py="$spacing16" variant="buttonLabel1">
+            <Text color="$accent1" py="$spacing16" variant="buttonLabel2">
               {t('common.button.cancel')}
             </Text>
           </TouchableArea>

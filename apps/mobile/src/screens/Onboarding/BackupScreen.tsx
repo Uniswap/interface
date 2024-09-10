@@ -10,12 +10,16 @@ import { EducationContentType } from 'src/components/education'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
-import { Flex, Text, TouchableArea, useShadowPropsShort } from 'ui/src'
-import { Cloud, PenLine, QuestionInCircleFilled, ShieldCheck } from 'ui/src/components/icons'
+import { Button, Flex, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
+import PaperIcon from 'ui/src/assets/icons/paper-stack.svg'
+import { OSDynamicCloudIcon, QuestionInCircleFilled } from 'ui/src/components/icons'
+import { iconSizes } from 'ui/src/theme'
+import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isAndroid } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
@@ -30,8 +34,9 @@ type Props = CompositeScreenProps<
 
 export function BackupScreen({ navigation, route: { params } }: Props): JSX.Element {
   const { t } = useTranslation()
+  const colors = useSporeColors()
+  const isDarkMode = useIsDarkMode()
   const { navigate } = useOnboardingStackNavigation()
-  const shadowProps = useShadowPropsShort()
 
   const { data: cloudStorageAvailable } = useAsyncData(isCloudStorageAvailable)
 
@@ -40,8 +45,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   const activeAccount = useActiveAccount()
   const address = onboardingContextAccount?.address || activeAccount?.address
 
-  const isCreatingNew =
-    params?.importType === ImportType.CreateNew || params?.entryPoint === OnboardingEntryPoint.BackupCard
+  const isCreatingNew = params?.importType === ImportType.CreateNew
   const screenTitle = isCreatingNew ? t('onboarding.backup.title.new') : t('onboarding.backup.title.existing')
   const fromBackupCard = params.entryPoint === OnboardingEntryPoint.BackupCard
 
@@ -130,13 +134,14 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   options.push(
     <OptionCard
       key={ElementName.AddCloudBackup}
-      badgeText={t('onboarding.backup.option.badge.quick')}
       blurb={t('onboarding.backup.option.cloud.description')}
       disabled={hasCloudBackup}
       elementName={ElementName.AddCloudBackup}
-      icon={<Cloud color="$accent1" size="$icon.16" />}
+      icon={<OSDynamicCloudIcon color="$accent1" size="$icon.16" />}
       testID={TestID.AddCloudBackup}
-      title={t('onboarding.backup.option.cloud.title')}
+      title={t('onboarding.backup.option.cloud.title', {
+        cloudProviderName: getCloudProviderName(),
+      })}
       onPress={onPressCloudBackup}
     />,
   )
@@ -147,7 +152,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
         blurb={t('onboarding.backup.option.manual.description')}
         disabled={hasManualBackup}
         elementName={ElementName.AddManualBackup}
-        icon={<PenLine color="$accent1" size="$icon.12" />}
+        icon={<PaperIcon color={colors.accent1.get()} height={iconSizes.icon16} />}
         testID={TestID.AddManualBackup}
         title={t('onboarding.backup.option.manual.title')}
         onPress={onPressManualBackup}
@@ -156,15 +161,10 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
   }
 
   return (
-    <OnboardingScreen
-      Icon={ShieldCheck}
-      subtitle={t('onboarding.backup.subtitle')}
-      title={screenTitle}
-      onSkip={showSkipOption ? onPressNext : undefined}
-    >
+    <OnboardingScreen subtitle={t('onboarding.backup.subtitle')} title={screenTitle}>
       <Flex grow justifyContent="space-between">
         <Flex gap="$spacing24">
-          <Flex {...shadowProps} gap="$spacing12">
+          <Flex gap="$spacing12" shadowColor="$surface3" shadowRadius={!isDarkMode ? '$spacing8' : undefined}>
             {options}
           </Flex>
           {!isCreatingNew && <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />}
@@ -172,6 +172,13 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
 
         <Flex gap="$spacing12" justifyContent="flex-end">
           {isCreatingNew && <RecoveryPhraseTooltip onPressEducationButton={onPressEducationButton} />}
+          {showSkipOption && (
+            <Trace logPress element={ElementName.Next}>
+              <Button testID={TestID.Next} theme="tertiary" onPress={onPressNext}>
+                {t('common.button.later')}
+              </Button>
+            </Trace>
+          )}
         </Flex>
       </Flex>
     </OnboardingScreen>

@@ -80,47 +80,35 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
       options.hoveredLogicalIndex,
     )
 
-    const fullLinesMeshed = linesMeshed.slice(0, 3)
-    const highlightLinesMeshed = options.hoveredLogicalIndex ? linesMeshed.slice(3) : []
-
-    const areaPaths = this._createAreas(fullLinesMeshed)
+    const areaPaths = this._createAreas(linesMeshed)
 
     const colorsCount = options.colors.length
-    const isHovered = options.hoveredLogicalIndex && options.hoveredLogicalIndex !== -1
-    const isMultichainExploreEnabled = !!options.gradients
     areaPaths.forEach((areaPath, index) => {
       // Modification: determine area fill opacity based on number of lines and hover state
-
       if (areaPaths.length === 1) {
         ctx.globalAlpha = 0.12 // single-line charts have low opacity fill
-      } else if (!isMultichainExploreEnabled) {
-        ctx.globalAlpha = isHovered ? 0.24 : 1
+      } else {
+        const hasHoveredIndex = options.hoveredLogicalIndex !== undefined && options.hoveredLogicalIndex !== -1
+        ctx.globalAlpha = hasHoveredIndex ? 0.24 : 1 // multi-line charts have lower opacity on hover, otherwise full opacity
       }
 
-      const gradient = options.gradients
-        ? ctx.createLinearGradient(0, 0, renderingScope.mediaSize.width * 2.25, 0)
-        : undefined
-      gradient?.addColorStop(0, options.gradients?.[index % colorsCount].start ?? 'transparent')
-      // End the gradient at the x-coordinate of the crosshair relative to chart width or the end of the chart
-      const gradientStop = Math.max(hoverInfo.x ? hoverInfo.x / renderingScope.bitmapSize.width : 1, 0)
-      gradient?.addColorStop(gradientStop, options.gradients?.[index % colorsCount].end ?? 'transparent')
-
-      ctx.fillStyle = gradient ?? options.colors[index % colorsCount]
+      ctx.fillStyle = options.colors[index % colorsCount]
       ctx.fill(areaPath)
     })
 
-    ctx.lineWidth = options.lineWidth * (isMultichainExploreEnabled ? 1 : renderingScope.verticalPixelRatio)
+    ctx.globalAlpha = 1
+
+    ctx.lineWidth = options.lineWidth * renderingScope.verticalPixelRatio
     ctx.lineJoin = 'round'
 
-    fullLinesMeshed.toReversed().forEach((linePath, index) => {
-      const unreversedIndex = fullLinesMeshed.length - index
+    linesMeshed.toReversed().forEach((linePath, index) => {
+      const unreversedIndex = linesMeshed.length - index
       const color = options.colors[unreversedIndex % colorsCount]
       ctx.strokeStyle = color
       ctx.fillStyle = color
-      ctx.globalAlpha = isHovered && isMultichainExploreEnabled ? 0.24 : 1
 
       // Bottom line is just the x-axis, which should not be drawn
-      if (index !== fullLinesMeshed.length - 1) {
+      if (index !== linesMeshed.length - 1) {
         // Line rendering:
         ctx.beginPath()
         ctx.strokeStyle = color
@@ -129,8 +117,6 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
 
       // Modification: Draws a glyph where lines intersect with the crosshair
       const hoverY = hoverInfo.points[index - 1]
-      // Reset the global alpha to 1 after filling in the area under the graph and before drawing the glyph
-      ctx.globalAlpha = 1
 
       // Glyph rendering:
       ctx.globalCompositeOperation = 'destination-out' // This mode allows removing a portion of the drawn line from the canvas
@@ -157,26 +143,6 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
 
       ctx.globalAlpha = 1
     })
-
-    highlightLinesMeshed.toReversed().forEach((linePath, index) => {
-      if (!linePath) {
-        ctx.globalAlpha = 1
-        return
-      }
-      const unreversedIndex = fullLinesMeshed.length - index
-      const color = options.colors[unreversedIndex % colorsCount]
-      ctx.strokeStyle = color
-      ctx.fillStyle = color
-      ctx.globalAlpha = 1
-
-      // Bottom line is just the x-axis, which should not be drawn
-      if (index !== fullLinesMeshed.length - 1) {
-        // Line rendering:
-        ctx.beginPath()
-        ctx.strokeStyle = color
-        ctx.stroke(linePath.path)
-      }
-    })
   }
 
   /** Builds canvas line paths based on input data  */
@@ -190,8 +156,6 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
     const { horizontalPixelRatio, verticalPixelRatio } = renderingScope
     const oddLines: LinePathData[] = []
     const evenLines: LinePathData[] = []
-    const oddHighlightLines: LinePathData[] = []
-    const evenHighlightLines: LinePathData[] = []
     let firstBar = true
 
     // Modification: tracks and returns coordinates of where a glyph should be rendered for each line when a crosshair is drawn
@@ -230,18 +194,6 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
           oddLines[lineIndex].last.x = x
           oddLines[lineIndex].last.y = y
         }
-        if (firstBar && hoveredIndex && i <= hoveredIndex) {
-          oddHighlightLines[lineIndex] = {
-            path: new Path2D(),
-            first: { x, y },
-            last: { x, y },
-          }
-          oddHighlightLines[lineIndex].path.moveTo(x, y)
-        } else if (hoveredIndex && i <= hoveredIndex) {
-          oddHighlightLines[lineIndex].path.lineTo(x, y)
-          oddHighlightLines[lineIndex].last.x = x
-          oddHighlightLines[lineIndex].last.y = y
-        }
         lineIndex += 1
       })
       firstBar = false
@@ -279,20 +231,6 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
           evenLines[lineIndex].last.x = x
           evenLines[lineIndex].last.y = y
         }
-
-        if (evenHighlightLines.length <= lineIndex && hoveredIndex && i <= hoveredIndex) {
-          evenHighlightLines[lineIndex] = {
-            path: new Path2D(),
-            first: { x, y },
-            last: { x, y },
-          }
-          evenHighlightLines[lineIndex].path.moveTo(x, y)
-        } else if (hoveredIndex && i <= hoveredIndex) {
-          evenHighlightLines[lineIndex].path.lineTo(x, y)
-          evenHighlightLines[lineIndex].last.x = x
-          evenHighlightLines[lineIndex].last.y = y
-        }
-
         lineIndex += 1
       })
       firstBar = false
@@ -310,10 +248,6 @@ export class StackedAreaSeriesRenderer<TData extends StackedAreaData> implements
       linesMeshed.push(oddLines[i])
       if (i < evenLines.length) {
         linesMeshed.push(evenLines[i])
-      }
-      if (hoveredIndex) {
-        linesMeshed.push(oddHighlightLines[i])
-        linesMeshed.push(evenHighlightLines[i])
       }
     }
 

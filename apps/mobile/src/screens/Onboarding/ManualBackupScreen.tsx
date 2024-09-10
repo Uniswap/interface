@@ -13,9 +13,11 @@ import { BackupSpeedBumpModal } from 'src/features/onboarding/BackupSpeedBumpMod
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { Button, Flex, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
-import { EyeSlash, FileListLock, GraduationCap, Key, PapersText, Pen } from 'ui/src/components/icons'
+import { EyeSlash, FileListLock, Key, Pen } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
+import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -43,8 +45,11 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   const onboardingContextAccount = getOnboardingOrImportedAccount()
   const activeAccount = useSignerAccountIfExists(params.address)
 
-  const { entryPoint, fromCloudBackup } = params
-  const onboardingExperimentEnabled = entryPoint === OnboardingEntryPoint.BackupCard
+  const onboardingExperimentEnabled = useExperimentValue(
+    Experiments.OnboardingRedesignRecoveryBackup,
+    OnboardingRedesignRecoveryBackupProperties.Enabled,
+    false,
+  )
 
   const account = activeAccount || onboardingContextAccount
 
@@ -66,7 +71,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
   const [displayContinueButtonEnabled, setDisplayContinueButtonEnabled] = useState(!onboardingExperimentEnabled)
 
   // warning modal on seed phrase view
-  const [seedWarningAcknowledged, setSeedWarningAcknowledged] = useState(fromCloudBackup ?? false)
+  const [seedWarningAcknowledged, setSeedWarningAcknowledged] = useState(false)
 
   const onValidationSuccessful = (): void => {
     setConfirmContinueButtonPressed(true)
@@ -81,10 +86,6 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     } else {
       addBackupMethod(BackupType.Manual)
     }
-  }
-
-  const finishCloudBackup = (): void => {
-    navigate(MobileScreens.Home)
   }
 
   useEffect(() => {
@@ -125,13 +126,8 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     case View.SeedPhrase:
       return (
         <OnboardingScreen
-          Icon={PapersText}
           subtitle={t('onboarding.recoveryPhrase.view.subtitle')}
-          title={
-            fromCloudBackup
-              ? t('onboarding.recoveryPhrase.view.title.hasPassword')
-              : t('onboarding.recoveryPhrase.view.title')
-          }
+          title={t('onboarding.recoveryPhrase.view.title')}
         >
           <WarningModal
             caption={t('onboarding.recoveryPhrase.warning.screenshot.message')}
@@ -153,12 +149,8 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
               />
             </Flex>
             <Flex justifyContent="flex-end">
-              <Button
-                disabled={!displayContinueButtonEnabled}
-                testID={TestID.Next}
-                onPress={fromCloudBackup ? finishCloudBackup : nextView}
-              >
-                {fromCloudBackup ? t('common.button.finish') : t('common.button.continue')}
+              <Button disabled={!displayContinueButtonEnabled} testID={TestID.Next} onPress={nextView}>
+                {t('common.button.continue')}
               </Button>
             </Flex>
           </Flex>
@@ -173,7 +165,6 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
     case View.SeedPhraseConfirm:
       return (
         <OnboardingScreen
-          Icon={GraduationCap}
           subtitle={
             media.short
               ? t('onboarding.recoveryPhrase.confirm.subtitle.combined')
@@ -181,13 +172,13 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
           }
           title={media.short ? undefined : t('onboarding.recoveryPhrase.confirm.title')}
         >
-          <Flex grow justifyContent="space-between">
-            <Flex grow pointerEvents={confirmContinueButtonEnabled ? 'none' : 'auto'} pt="$spacing12">
-              <MnemonicConfirmation
-                mnemonicId={mnemonicId}
-                onConfirmComplete={(): void => setConfirmContinueButtonEnabled(true)}
-              />
-            </Flex>
+          <Flex grow pointerEvents={confirmContinueButtonEnabled ? 'none' : 'auto'} pt="$spacing12">
+            <MnemonicConfirmation
+              mnemonicId={mnemonicId}
+              onConfirmComplete={(): void => setConfirmContinueButtonEnabled(true)}
+            />
+          </Flex>
+          <Flex justifyContent="flex-end">
             <Button
               disabled={!confirmContinueButtonEnabled}
               testID={TestID.Continue}
@@ -280,13 +271,7 @@ function ManualBackWarningModal({ onBack, onContinue }: ManualBackWarningModalPr
         >
           {rows.map((row, index) => (
             <Flex key={index} row alignItems="center" gap="$spacing12">
-              <Flex
-                centered
-                backgroundColor="$statusCritical2"
-                borderRadius="$roundedFull"
-                height={iconSizes.icon32}
-                width={iconSizes.icon32}
-              >
+              <Flex backgroundColor="$statusCritical2" borderRadius="$roundedFull" p="$spacing8">
                 <row.Icon color="$statusCritical" size="$icon.16" />
               </Flex>
               <Text color="$neutral1" flexGrow={1} flexShrink={1} variant="body3">

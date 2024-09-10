@@ -49,7 +49,7 @@ export function HiddenNftsRowRight({ isExpanded, onPress }: { isExpanded: boolea
           pr="$spacing8"
           py="$spacing4"
         >
-          <Text color="$neutral2" variant="buttonLabel2">
+          <Text color="$neutral2" variant="buttonLabel3">
             {isExpanded ? t('common.button.hide') : t('common.button.show')}
           </Text>
           <AnimatedFlex style={chevronAnimatedStyle}>

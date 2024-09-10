@@ -1,27 +1,28 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useMultiplePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-// eslint-disable-next-line no-restricted-imports
-import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
-import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
-import {
-  AddressWithBalanceAndName,
-  hasBalanceOrName,
-  useAddressesEnsNames,
-} from 'wallet/src/features/onboarding/hooks/useImportableAccounts'
+import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 
-export interface RecoveryWalletInfo extends AddressWithBalanceAndName {
+export type RecoveryWalletInfo = AddressWithIndex & {
+  balance?: number
+  ensName?: Maybe<string>
+  unitag?: string
+}
+
+type AddressWithIndex = {
+  address: string
   derivationIndex: number
 }
 
 function useStoredAddressesForMnemonic(mnemonicId: string | undefined): {
-  addressesWithIndex: RecoveryWalletInfo[]
+  addressesWithIndex: AddressWithIndex[]
   loading: boolean
 } {
-  const [addressesWithIndex, setAddressesWithIndex] = useState<RecoveryWalletInfo[]>([])
+  const [addressesWithIndex, setAddressesWithIndex] = useState<AddressWithIndex[]>([])
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -32,7 +33,7 @@ function useStoredAddressesForMnemonic(mnemonicId: string | undefined): {
 
       const storedAddresses = await Keyring.getAddressesForStoredPrivateKeys()
 
-      const derivationIndices = Array.from(Array(NUMBER_OF_WALLETS_TO_GENERATE).keys())
+      const derivationIndices = Array.from(Array(10).keys())
       const possibleAddresses = await Promise.all(
         derivationIndices.map((index) => {
           try {
@@ -47,12 +48,12 @@ function useStoredAddressesForMnemonic(mnemonicId: string | undefined): {
       )
 
       const filteredAddresses = possibleAddresses
-        .map((address, index): RecoveryWalletInfo | undefined =>
+        .map((address, index): AddressWithIndex | undefined =>
           address && storedAddresses.find((storedAddress) => areAddressesEqual(storedAddress, address))
             ? { address, derivationIndex: index }
             : undefined,
         )
-        .filter((address): address is RecoveryWalletInfo => !!address)
+        .filter((address): address is AddressWithIndex => !!address)
 
       setAddressesWithIndex(filteredAddresses)
       setLoading(false)
@@ -70,9 +71,6 @@ function useStoredAddressesForMnemonic(mnemonicId: string | undefined): {
   return { addressesWithIndex, loading }
 }
 
-// This needs to be separate from useImportableAccounts / useAddressesBalanceAndNames because
-// useStoredAddressesForMnemonic loads in addresses in a way that causes react to go into
-// a render loop if this is not performed in this way
 export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
   recoveryWalletInfos: RecoveryWalletInfo[]
   significantRecoveryWalletInfos: RecoveryWalletInfo[]
@@ -80,10 +78,7 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
   loading: boolean
 } {
   const { addressesWithIndex, loading: addressesLoading } = useStoredAddressesForMnemonic(mnemonicId)
-  const addresses = useMemo(
-    () => addressesWithIndex.map((info): string => info.address).filter((a): a is string => typeof a === 'string'),
-    [addressesWithIndex],
-  )
+  const addresses = addressesWithIndex.map((address) => address.address)
 
   const valueModifiers = usePortfolioValueModifiers(addresses)
   const { data: balancesData, loading: balancesLoading } = useMultiplePortfolioBalancesQuery({
@@ -96,10 +91,20 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
   const balances = balancesData?.portfolios?.map((portfolio) => portfolio?.tokensTotalDenominatedValue?.value ?? 0)
   const totalBalance = balances?.reduce((acc, balance) => acc + balance, 0)
 
-  const { loading: ensLoading, ensMap } = useAddressesEnsNames(addresses)
+  // Need to fetch ENS names and unitags for each deriviation index
+  const ensNameStates: Array<ReturnType<typeof useENSName>> = Array(10)
+  const unitagStates: Array<ReturnType<typeof useUnitagByAddress>> = Array(10)
 
-  // Need to fetch unitags for each deriviation index and cannot use a fetch due (see comment at top of func)
-  const unitagStates: Array<ReturnType<typeof useUnitagByAddress>> = Array(NUMBER_OF_WALLETS_TO_GENERATE)
+  ensNameStates[0] = useENSName(addresses[0])
+  ensNameStates[1] = useENSName(addresses[1])
+  ensNameStates[2] = useENSName(addresses[2])
+  ensNameStates[3] = useENSName(addresses[3])
+  ensNameStates[4] = useENSName(addresses[4])
+  ensNameStates[5] = useENSName(addresses[5])
+  ensNameStates[6] = useENSName(addresses[6])
+  ensNameStates[7] = useENSName(addresses[7])
+  ensNameStates[8] = useENSName(addresses[8])
+  ensNameStates[9] = useENSName(addresses[9])
 
   unitagStates[0] = useUnitagByAddress(addresses[0])
   unitagStates[1] = useUnitagByAddress(addresses[1])
@@ -113,6 +118,8 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
   unitagStates[9] = useUnitagByAddress(addresses[9])
 
   // Using these values to recalculate dependency array
+  const ensNamesCombined = ensNameStates.map((ensState) => ensState?.data).join('')
+  const ensLoading = ensNameStates.some((ensState) => ensState?.loading)
   const unitagsCombined = unitagStates.map((unitagState) => unitagState?.unitag?.username).join('')
   const unitagLoading = unitagStates.some((unitagState) => unitagState?.loading)
 
@@ -123,15 +130,19 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
         address,
         derivationIndex,
         balance: balances?.[index],
-        ensName: ensMap ? ensMap[address] : undefined,
+        ensName: ensNameStates[derivationIndex]?.data,
         unitag: unitagStates[derivationIndex]?.unitag?.username,
       }
     })
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addressesWithIndex, balances, balancesLoading, ensMap, unitagsCombined])
+  }, [addressesWithIndex, balances, balancesLoading, ensNamesCombined, unitagsCombined])
 
   const significantRecoveryWalletInfos = useMemo(
-    (): RecoveryWalletInfo[] => (recoveryWalletInfos ?? []).filter(hasBalanceOrName),
+    () =>
+      recoveryWalletInfos?.filter(
+        (recoveryAddressInfo) =>
+          recoveryAddressInfo.balance || recoveryAddressInfo.ensName || recoveryAddressInfo.unitag,
+      ) ?? [],
     [recoveryWalletInfos],
   )
 

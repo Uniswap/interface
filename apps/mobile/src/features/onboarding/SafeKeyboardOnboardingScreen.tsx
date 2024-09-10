@@ -4,14 +4,13 @@ import React, { PropsWithChildren } from 'react'
 import { StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SafeKeyboardScreen } from 'src/components/layout/SafeKeyboardScreen'
-import { Flex, GeneratedIcon, SpaceTokens, Text, useMedia, useSporeColors } from 'ui/src'
+import { Flex, SpaceTokens, Text, useMedia, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { opacify } from 'ui/src/theme'
 
 type OnboardingScreenProps = {
   subtitle?: string
   title?: string
-  Icon?: GeneratedIcon
   paddingTop?: SpaceTokens
   footer?: JSX.Element
   minHeightWhenKeyboardExpanded?: boolean
@@ -20,7 +19,6 @@ type OnboardingScreenProps = {
 export function SafeKeyboardOnboardingScreen({
   title,
   subtitle,
-  Icon,
   children,
   footer,
   paddingTop = '$none',
@@ -44,21 +42,14 @@ export function SafeKeyboardOnboardingScreen({
   const page = (
     <>
       {title || subtitle ? (
-        <Flex gap="$spacing8" m="$spacing12">
-          {Icon && (
-            <Flex centered mb="$spacing4">
-              <Flex centered backgroundColor="$surface3" borderRadius="$rounded8" p="$spacing12">
-                <Icon color="$neutral1" size="$icon.18" />
-              </Flex>
-            </Flex>
-          )}
+        <Flex gap="$spacing12" m="$spacing12">
           {title && (
-            <Text pt={paddingTop} textAlign="center" variant="subheading1">
+            <Text $short={{ variant: 'body1' }} pt={paddingTop} textAlign="center" variant="heading3">
               {title}
             </Text>
           )}
           {subtitle && (
-            <Text $short={{ variant: 'body3' }} color="$neutral2" textAlign="center" variant="subheading2">
+            <Text $short={{ variant: 'body3' }} color="$neutral2" textAlign="center" variant="body2">
               {subtitle}
             </Text>
           )}

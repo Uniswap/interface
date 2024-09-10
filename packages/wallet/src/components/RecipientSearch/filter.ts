@@ -1,6 +1,6 @@
 import Fuse from 'fuse.js'
-import { SearchableRecipient } from 'uniswap/src/features/address/types'
 import { unique } from 'utilities/src/primitives/array'
+import { SearchableRecipient } from 'wallet/src/features/address/types'
 
 export type AutocompleteOption<T> = { data: T; key: string }
 

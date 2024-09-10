@@ -3,8 +3,6 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export type SearchResult = TokenSearchResult | WalletSearchResult | EtherscanSearchResult | NFTCollectionSearchResult
 
-export type InterfaceSearchResult = TokenSearchResult | NFTCollectionSearchResult
-
 // Retain original ordering as these are saved to storage and loaded back out
 export enum SearchResultType {
   ENSAddress,
@@ -30,10 +28,6 @@ export interface TokenSearchResult extends SearchResultBase {
   safetyLevel: SafetyLevel | null
 }
 
-export function isTokenSearchResult(x: SearchResult): x is TokenSearchResult {
-  return x.type === SearchResultType.Token
-}
-
 export interface NFTCollectionSearchResult extends SearchResultBase {
   type: SearchResultType.NFTCollection
   chainId: UniverseChainId
@@ -41,10 +35,6 @@ export interface NFTCollectionSearchResult extends SearchResultBase {
   name: string
   imageUrl: string | null
   isVerified: boolean
-}
-
-export function isNFTCollectionSearchResult(x: SearchResult): x is NFTCollectionSearchResult {
-  return x.type === SearchResultType.NFTCollection
 }
 
 export interface EtherscanSearchResult extends SearchResultBase {

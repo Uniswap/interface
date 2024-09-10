@@ -1,6 +1,6 @@
 import { Trans } from 'react-i18next'
 import { Flex, Text, isWeb } from 'ui/src'
-import { AlertTriangleFilled, InfoCircle } from 'ui/src/components/icons'
+import { AlertTriangle, InfoCircle } from 'ui/src/components/icons'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { INSUFFICIENT_NATIVE_TOKEN_TEXT_VARIANT } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/constants'
 import { useInsufficientNativeTokenWarning } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
@@ -31,7 +31,7 @@ export function InsufficientNativeTokenBaseComponent({
     >
       {isWeb && (
         <Flex>
-          <AlertTriangleFilled color="$neutral2" size="$icon.16" />
+          <AlertTriangle color="$neutral2" size="$icon.16" />
         </Flex>
       )}
 

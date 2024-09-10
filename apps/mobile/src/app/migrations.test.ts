@@ -76,10 +76,6 @@ import {
   v72Schema,
   v73Schema,
   v74Schema,
-  v75Schema,
-  v76Schema,
-  v77Schema,
-  v78Schema,
   v7Schema,
   v8Schema,
   v9Schema,
@@ -93,7 +89,6 @@ import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
-import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
 import { initialUserSettingsState } from 'uniswap/src/features/settings/slice'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -106,6 +101,8 @@ import { getAllKeysOfNestedObject } from 'utilities/src/primitives/objects'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { initialAppearanceSettingsState } from 'wallet/src/features/appearance/slice'
 import { initialBehaviorHistoryState } from 'wallet/src/features/behaviorHistory/slice'
+import { initialFiatCurrencyState } from 'wallet/src/features/fiatCurrency/slice'
+import { initialLanguageState } from 'wallet/src/features/language/slice'
 import { initialNotificationsState } from 'wallet/src/features/notifications/slice'
 import { initialTelemetryState } from 'wallet/src/features/telemetry/slice'
 import { Account, SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
@@ -114,11 +111,7 @@ import { createMigrate } from 'wallet/src/state/createMigrate'
 import { HAYDEN_ETH_ADDRESS } from 'wallet/src/state/walletMigrations'
 import {
   testActivatePendingAccounts,
-  testAddCreatedOnboardingRedesignAccount,
   testAddedHapticSetting,
-  testMovedCurrencySetting,
-  testMovedLanguageSetting,
-  testMovedTokenWarnings,
   testMovedUserSettings,
   testRemoveHoldToSwap,
 } from 'wallet/src/state/walletMigrationsTests'
@@ -181,7 +174,8 @@ describe('Redux state migrations', () => {
       cloudBackup: initialCloudBackupState,
       ens: { ensForAddress: {} },
       favorites: initialFavoritesState,
-      fiatCurrencySettings: { currentCurrency: FiatCurrency.UnitedStatesDollar },
+      fiatCurrencySettings: initialFiatCurrencyState,
+      languageSettings: initialLanguageState,
       modals: initialModalsState,
       notifications: initialNotificationsState,
       passwordLockout: initialPasswordLockoutState,
@@ -1547,21 +1541,5 @@ describe('Redux state migrations', () => {
 
   it('migrates from v74 to v75', () => {
     testRemoveHoldToSwap(migrations[75], v74Schema)
-  })
-
-  it('migrates from v75 to v76', () => {
-    testAddCreatedOnboardingRedesignAccount(migrations[76], v75Schema)
-  })
-
-  it('migrates from v76 to v77', async () => {
-    testMovedTokenWarnings(migrations[77], v76Schema)
-  })
-
-  it('migrates from v77 to v78', async () => {
-    testMovedLanguageSetting(migrations[78], v77Schema)
-  })
-
-  it('migrates from v78 to v79', async () => {
-    testMovedCurrencySetting(migrations[79], v78Schema)
   })
 })

@@ -100,7 +100,6 @@ export const ElementName = {
   AddManualBackup: 'add-manual-backup',
   AddViewOnlyWallet: 'add-view-only-wallet',
   AddCloudBackup: 'add-cloud-backup',
-  AlreadyHaveWalletSignIn: 'already-have-wallet-sign-in',
   Buy: 'buy',
   BuyNativeTokenButton: 'buy-native-token-button',
   Cancel: 'cancel',

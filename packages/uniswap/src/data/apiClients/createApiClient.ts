@@ -21,8 +21,8 @@ export function createApiClient({
   readonly fetch: (path: string, options: Parameters<typeof fetch>[1]) => Promise<Response>
   readonly get: <T>(
     path: string,
-    options?: Parameters<typeof fetch>[1] & {
-      params?: Record<string, string | number | boolean>
+    options: Parameters<typeof fetch>[1] & {
+      params?: Record<string, string | number>
     },
   ) => Promise<T>
   readonly post: <T>(path: string, options: Parameters<typeof fetch>[1]) => Promise<T>
@@ -45,9 +45,9 @@ export function createApiClient({
     get get() {
       return async <T>(
         path: string,
-        options?: Parameters<typeof fetch>[1] & { params?: Record<string, string | number | boolean> },
+        options: Parameters<typeof fetch>[1] & { params?: Record<string, string | number> },
       ): Promise<T> => {
-        if (options?.params) {
+        if (options.params) {
           const searchParams = new URLSearchParams()
           for (const [key, value] of Object.entries(options.params)) {
             searchParams.append(key, value.toString())
@@ -72,7 +72,7 @@ export function createApiClient({
     },
 
     get post() {
-      return async <T>(path: string, options?: Parameters<typeof fetch>[1]): Promise<T> => {
+      return async <T>(path: string, options: Parameters<typeof fetch>[1]): Promise<T> => {
         const _options = options ?? {}
 
         _options.headers = {

@@ -291,7 +291,7 @@ function PendingConnectionModalContent({
           px="$spacing8"
           py="$spacing4"
           showIcon={false}
-          textVariant="buttonLabel2"
+          textVariant="buttonLabel4"
           url={pendingSession.dapp.url}
         />
       </Flex>

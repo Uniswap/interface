@@ -50,7 +50,6 @@ import { flexStyles, useHapticFeedback, useIsDarkMode } from 'ui/src'
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
-import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { DUMMY_STATSIG_SDK_KEY, StatsigCustomAppValue } from 'uniswap/src/features/gating/constants'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
@@ -61,9 +60,6 @@ import {
 } from 'uniswap/src/features/gating/hooks'
 import { loadStatsigOverrides } from 'uniswap/src/features/gating/overrides/customPersistedOverrides'
 import { Statsig, StatsigOptions, StatsigProvider, StatsigUser } from 'uniswap/src/features/gating/sdk/statsig'
-import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
-import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
-import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -83,13 +79,17 @@ import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApo
 import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectHapticsEnabled } from 'wallet/src/features/appearance/slice'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
+import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
+import { syncAppWithDeviceLanguage } from 'wallet/src/features/language/slice'
 import { clearNotificationQueue } from 'wallet/src/features/notifications/slice'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { SharedWalletProvider } from 'wallet/src/provider'
+import { SharedProvider } from 'wallet/src/provider'
 import { beforeSend } from 'wallet/src/utils/sentry'
 
 enableFreeze(true)
@@ -224,14 +224,14 @@ function App(): JSX.Element | null {
             <I18nextProvider i18n={i18n}>
               <SentryTags>
                 <SafeAreaProvider>
-                  <SharedWalletProvider reduxStore={store}>
+                  <SharedProvider reduxStore={store}>
                     <AnalyticsNavigationContextProvider
                       shouldLogScreen={shouldLogScreen}
                       useIsPartOfNavigationTree={useIsPartOfNavigationTree}
                     >
                       <AppOuter />
                     </AnalyticsNavigationContextProvider>
-                  </SharedWalletProvider>
+                  </SharedProvider>
                 </SafeAreaProvider>
               </SentryTags>
             </I18nextProvider>

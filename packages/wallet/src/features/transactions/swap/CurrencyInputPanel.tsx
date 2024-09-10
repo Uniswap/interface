@@ -8,8 +8,7 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -19,6 +18,8 @@ import { usePrevious } from 'utilities/src/react/hooks'
 import { SelectTokenButton } from 'wallet/src/components/TokenSelector/SelectTokenButton'
 import { AmountInput } from 'wallet/src/components/input/AmountInput'
 import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
 import { errorShakeAnimation } from 'wallet/src/utils/animations'
 import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
@@ -282,7 +283,6 @@ export const CurrencyInputPanel = memo(
                     // (the text input height is greater than the font size and the input is
                     // centered vertically, so the caret is cut off but the text is not)
                     fontSize={fontSize}
-                    fontWeight="$book"
                     maxDecimals={isFiatMode ? MAX_FIAT_INPUT_DECIMALS : currencyInfo.currency.decimals}
                     maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
                     minHeight={2 * MAX_INPUT_FONT_SIZE}

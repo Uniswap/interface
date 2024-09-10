@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { StoreEnhancerStoreCreator } from 'redux'
-import { PlatformSplitStubError } from 'utilities/src/errors'
+import { NotImplementedError } from 'utilities/src/errors'
 import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
 
 export function setupDatadog(): void {
-  throw new PlatformSplitStubError('setupDatadog')
+  throw new NotImplementedError('Please use the web implementation from Datadog.web.ts')
 }
 
 interface Config {
@@ -14,7 +14,7 @@ interface Config {
 export function createDatadogReduxEnhancer(
   _config: Config,
 ): (next: StoreEnhancerStoreCreator) => StoreEnhancerStoreCreator {
-  throw new PlatformSplitStubError('createDatadogReduxEnhancer')
+  throw new NotImplementedError('createDatadogReduxEnhancer')
 }
 
 export function logToDatadog(
@@ -26,7 +26,7 @@ export function logToDatadog(
     functionName: string
   },
 ): void {
-  throw new PlatformSplitStubError('logToDatadog')
+  throw new NotImplementedError('Please use the web / native implementation from Datadog.web.ts or Datadog.native.ts')
 }
 
 export function logWarningToDatadog(
@@ -38,13 +38,13 @@ export function logWarningToDatadog(
     functionName: string
   },
 ): void {
-  throw new PlatformSplitStubError('logWarningToDatadog')
+  throw new NotImplementedError('Please use the web / native implementation from Datadog.web.ts or Datadog.native.ts')
 }
 
 export function logErrorToDatadog(_error: Error, _context?: LoggerErrorContext): void {
-  throw new PlatformSplitStubError('logErrorToDatadog')
+  throw new NotImplementedError('Please use the web / native implementation from Datadog.web.ts or Datadog.native.ts')
 }
 
 export function attachUnhandledRejectionHandler(): void {
-  throw new PlatformSplitStubError('attachUnhandledRejectionHandler')
+  throw new NotImplementedError('attachUnhandledRejectionHandler')
 }

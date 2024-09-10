@@ -1,10 +1,11 @@
 import React from 'react'
-import { Accordion, Button, Flex, Input, Separator, Switch, Text } from 'ui/src'
+import { Accordion, Button, Flex, Input, Separator, Text, isWeb } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags, WALLET_FEATURE_FLAG_NAMES, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig, useExperiment } from 'uniswap/src/features/gating/sdk/statsig'
+import { Switch, WebSwitch } from 'wallet/src/components/buttons/Switch'
 
 export function GatingOverrides(): JSX.Element {
   const featureFlagRows: JSX.Element[] = []
@@ -81,6 +82,8 @@ export function AccordionHeader({ title }: { title: React.ReactNode }): JSX.Elem
   )
 }
 
+const SwitchElement = isWeb ? WebSwitch : Switch
+
 function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
   const status = useFeatureFlagWithExposureLoggingDisabled(flag)
   const name = getFeatureFlagName(flag)
@@ -88,10 +91,9 @@ function FeatureFlagRow({ flag }: { flag: FeatureFlags }): JSX.Element {
   return (
     <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between">
       <Text variant="body1">{name}</Text>
-      <Switch
-        checked={status}
-        variant="branded"
-        onCheckedChange={(newValue: boolean): void => {
+      <SwitchElement
+        value={status}
+        onValueChange={(newValue: boolean): void => {
           Statsig.overrideGate(name, newValue)
         }}
       />
@@ -106,10 +108,9 @@ function ExperimentRow({ experiment }: { experiment: Experiments }): JSX.Element
     let valueElement: JSX.Element | undefined
     if (typeof value === 'boolean') {
       valueElement = (
-        <Switch
-          checked={value}
-          variant="branded"
-          onCheckedChange={(newValue: boolean): void => {
+        <SwitchElement
+          value={value}
+          onValueChange={(newValue: boolean): void => {
             Statsig.overrideConfig(experiment, {
               ...config.value,
               [key]: newValue,

@@ -3,9 +3,9 @@ import { AppState, Keyboard, KeyboardTypeOptions, TextInput as NativeTextInput }
 import { getNumberFormatSettings } from 'react-native-localize'
 import { Text } from 'ui/src'
 import { TextInput, TextInputProps } from 'uniswap/src/components/input/TextInput'
-import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
 
 const numericInputRegex = RegExp('^\\d*(\\.\\d*)?$') // Matches only numeric values without commas
 

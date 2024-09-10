@@ -62,7 +62,7 @@ export function logWarningToDatadog(
     functionName: string
   },
 ): void {
-  throw new NotImplementedError('logWarningToDatadog')
+  throw new NotImplementedError('Stub logWarningToDatadog to match native')
 }
 
 export function logErrorToDatadog(error: Error, context?: LoggerErrorContext): void {
@@ -88,5 +88,5 @@ export function logErrorToDatadog(error: Error, context?: LoggerErrorContext): v
 }
 
 export function attachUnhandledRejectionHandler(): void {
-  throw new NotImplementedError('attachUnhandledRejectionHandler')
+  throw new NotImplementedError('Stub attachUnhandledRejectionHandler to match native')
 }

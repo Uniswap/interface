@@ -1,10 +1,10 @@
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { PersistState } from 'redux-persist'
-import { PreV16UserState } from 'state/migrations/oldTypes'
+import { UserState } from 'state/user/reducer'
 
 export type PersistAppStateV1 = {
   _persist: PersistState
-} & { user?: PreV16UserState }
+} & { user?: UserState }
 
 /**
  * Migration to change the default user deadline from 30 minutes to 10 minutes.

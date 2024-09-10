@@ -7,9 +7,9 @@ import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { getCountryFlagSvgUrl } from 'uniswap/src/features/fiatOnRamp/utils'
 
 const RowWrapper = styled(Flex, {
-  row: true,
   height: '$spacing60',
   px: '$spacing20',
+  flexDirection: 'row',
   justifyContent: 'space-between',
   alignItems: 'center',
   cursor: 'pointer',

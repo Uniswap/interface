@@ -4,7 +4,6 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
@@ -15,6 +14,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { logger } from 'utilities/src/logger/logger'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { FeeOnTransferFeeGroupProps } from 'wallet/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { TransactionDetails } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 import { MaxSlippageRow } from 'wallet/src/features/transactions/swap/MaxSlippageRow'
@@ -227,7 +227,7 @@ function AcceptNewQuoteRow({
             py="$spacing4"
             onPress={onAcceptTrade}
           >
-            <Text color="$accent1" variant="buttonLabel2">
+            <Text color="$accent1" variant="buttonLabel3">
               {t('common.button.accept')}
             </Text>
           </TouchableArea>

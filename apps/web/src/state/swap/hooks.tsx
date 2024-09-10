@@ -2,7 +2,7 @@ import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
 import { CHAIN_IDS_TO_NAMES, useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useCurrency, useCurrencyInfo } from 'hooks/Tokens'
+import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import useAutoSlippageTolerance from 'hooks/useAutoSlippageTolerance'
 import { useDebouncedTrade } from 'hooks/useDebouncedTrade'
@@ -134,17 +134,12 @@ export function useSwapActionHandlers(): {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const account = useAccount()
-  const { chainId, currencyState } = useSwapAndLimitContext()
+  const {
+    chainId,
+    currencyState: { inputCurrency, outputCurrency },
+  } = useSwapAndLimitContext()
   const nativeCurrency = useNativeCurrency(chainId)
   const balance = useCurrencyBalance(account.address, nativeCurrency)
-
-  // Note: if the currency was selected from recent searches
-  // we don't have decimals (decimals are 0) need to fetch
-  // full currency info with useCurrencyInfo otherwise quotes will break
-  const inputCurrencyInfo = useCurrencyInfo(currencyState.inputCurrency)
-  const outputCurrencyInfo = useCurrencyInfo(currencyState.outputCurrency)
-  const inputCurrency = inputCurrencyInfo?.currency
-  const outputCurrency = outputCurrencyInfo?.currency
 
   const { independentField, typedValue } = state
 

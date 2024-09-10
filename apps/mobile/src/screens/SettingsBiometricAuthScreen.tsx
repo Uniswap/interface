@@ -19,8 +19,9 @@ import {
   setRequiredForAppAccess,
   setRequiredForTransactions,
 } from 'src/features/biometrics/slice'
-import { Flex, Switch, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { isAndroid, isIOS } from 'utilities/src/platform'
+import { Switch } from 'wallet/src/components/buttons/Switch'
 import { openSettings } from 'wallet/src/utils/linking'
 
 interface BiometricAuthSetting {
@@ -176,7 +177,7 @@ export function SettingsBiometricAuthScreen(): JSX.Element {
               onValueChange(!value)
             }}
           >
-            <Switch checked={value} pointerEvents="none" variant="branded" onCheckedChange={onValueChange} />
+            <Switch pointerEvents="none" value={value} onValueChange={onValueChange} />
           </TouchableArea>
         </Flex>
       </Flex>

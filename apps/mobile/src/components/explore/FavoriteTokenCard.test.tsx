@@ -2,18 +2,12 @@ import { makeMutable } from 'react-native-reanimated'
 import configureMockStore from 'redux-mock-store'
 import FavoriteTokenCard, { FavoriteTokenCardProps } from 'src/components/explore/FavoriteTokenCard'
 import { act, cleanup, fireEvent, render, waitFor } from 'src/test/test-utils'
-import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
-import { Language } from 'uniswap/src/features/language/constants'
-import {
-  ON_PRESS_EVENT_PAYLOAD,
-  SAMPLE_CURRENCY_ID_1,
-  amount,
-  ethToken,
-  tokenProject,
-  tokenProjectMarket,
-} from 'uniswap/src/test/fixtures'
-import { queryResolvers } from 'uniswap/src/test/utils'
+import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
+import { Language } from 'wallet/src/features/language/constants'
+import { SAMPLE_CURRENCY_ID_1, amount, ethToken, tokenProject, tokenProjectMarket } from 'wallet/src/test/fixtures'
+import { queryResolvers } from 'wallet/src/test/utils'
 
 const mockedNavigation = {
   navigate: jest.fn(),
@@ -135,7 +129,8 @@ describe('FavoriteTokenCard', () => {
     it('dispatches removeFavoriteToken action when remove button is pressed', async () => {
       const store = mockStore({
         favorites: { tokens: [] },
-        userSettings: { currentCurrency: FiatCurrency.UnitedStatesDollar, currentLanguage: Language.English },
+        fiatCurrencySettings: { currentCurrency: FiatCurrency.UnitedStatesDollar },
+        languageSettings: { currentLanguage: Language.English },
       })
       const { findByTestId } = render(<FavoriteTokenCard {...defaultProps} isEditing />, {
         resolvers,

@@ -2,6 +2,7 @@ import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { ChartType } from 'components/Charts/utils'
+import Row from 'components/Row'
 import { AboutContainer, AboutHeader } from 'components/Tokens/TokenDetails/About'
 import { TDP_CHART_HEIGHT_PX } from 'components/Tokens/TokenDetails/ChartSection'
 import { StatPair, StatWrapper, StatsWrapper } from 'components/Tokens/TokenDetails/StatsSection'
@@ -12,186 +13,168 @@ import { useChainFromUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getSupportedGraphQlChain } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import deprecatedStyled from 'lib/styled-components'
+import styled, { css } from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useParams } from 'react-router-dom'
-import { ClickableTamaguiStyle } from 'theme/components'
+import { BREAKPOINTS } from 'theme'
+import { ClickableStyle } from 'theme/components'
+import { textFadeIn } from 'theme/styles'
 import { capitalize } from 'tsafe'
-import { Anchor, Flex, Text, TextProps, styled } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const SWAP_COMPONENT_WIDTH = 360
 
-export const TokenDetailsLayout = styled(Flex, {
-  row: true,
-  justifyContent: 'center',
-  width: '100%',
-  gap: 40,
-  py: '$spacing48',
-  px: '$padding20',
+export const TokenDetailsLayout = styled.div`
+  display: flex;
+  padding: 0 16px 52px;
+  justify-content: center;
+  width: 100%;
+  gap: 40px;
 
-  $lg: {
-    pt: 0,
-    px: '$padding16',
-    pb: 52,
-  },
-  $xl: {
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  $xxl: {
-    gap: 60,
-  },
-})
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.md}px) {
+    padding: 48px 20px;
+  }
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    flex-direction: column;
+    align-items: center;
+  }
+  @media screen and (min-width: ${({ theme }) => theme.breakpoint.xl}px) {
+    gap: 60px;
+  }
+`
 
-export const LeftPanel = styled(Flex, {
-  maxWidth: 780,
-  overflow: 'hidden',
-  width: '100%',
-  flexGrow: 1,
-  flexShrink: 1,
-})
+export const LeftPanel = styled.div`
+  flex: 1;
+  max-width: 780px;
+  overflow: hidden;
+  width: 100%;
+`
+export const RightPanel = styled.div`
+  display: flex;
+  padding-top: 53px;
+  flex-direction: column;
+  gap: 40px;
+  width: ${SWAP_COMPONENT_WIDTH}px;
 
-export const RightPanel = styled(Flex, {
-  pt: 53,
-  gap: 40,
-  width: SWAP_COMPONENT_WIDTH,
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.lg}px) {
+    width: 100%;
+    max-width: 780px;
+  }
+`
 
-  $xl: {
-    width: '100%',
-    maxWidth: 780,
-  },
-})
-
-export const TokenInfoContainer = styled(Flex, {
-  row: true,
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  gap: '$gap20',
-  pt: '$padding8',
-  mb: '$spacing20',
-  animation: 'quick',
-  zIndex: '$default',
-})
-
-export const TokenNameCell = styled(Flex, {
-  row: true,
-  gap: '$gap12',
-  alignItems: 'center',
-  pt: '$spacing4',
-  minWidth: 32,
-  $md: {
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-  },
-})
-
+export const TokenInfoContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 8px;
+  margin-bottom: 20px;
+  gap: 20px;
+  ${textFadeIn};
+  animation-duration: ${({ theme }) => theme.transition.duration.medium};
+`
+export const TokenNameCell = styled.div`
+  display: flex;
+  gap: 12px;
+  font-size: 20px;
+  line-height: 28px;
+  align-items: center;
+  padding-top: 4px;
+  min-width: 32px;
+  @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+`
 /* Loading state bubbles */
-const DetailBubble = deprecatedStyled(LoadingBubble)`
+const DetailBubble = styled(LoadingBubble)`
   height: 16px;
   width: 180px;
 `
-
-const SquaredBubble = deprecatedStyled(DetailBubble)`
+const SquaredBubble = styled(DetailBubble)`
   height: 32px;
   border-radius: 8px;
 `
-
-const NavBubble = deprecatedStyled(DetailBubble)`
+const NavBubble = styled(DetailBubble)`
   width: 169px;
 `
-
-const TokenLogoBubble = deprecatedStyled(DetailBubble)`
+const TokenLogoBubble = styled(DetailBubble)`
   width: 32px;
   height: 32px;
   border-radius: 50%;
 `
-const TitleBubble = deprecatedStyled(DetailBubble)`
+const TitleBubble = styled(DetailBubble)`
   height: 36px;
   width: 136px;
 `
 
-const SectionBubble = deprecatedStyled(SquaredBubble)`
+const SectionBubble = styled(SquaredBubble)`
   width: 120px;
 `
-const StatTitleBubble = deprecatedStyled(DetailBubble)`
+const StatTitleBubble = styled(DetailBubble)`
   width: 80px;
   margin-bottom: 4px;
 `
-
-const StatBubble = deprecatedStyled(SquaredBubble)`
+const StatBubble = styled(SquaredBubble)`
   width: 116px;
 `
-const WideBubble = deprecatedStyled(DetailBubble)`
+const WideBubble = styled(DetailBubble)`
   margin-bottom: 6px;
   width: 100%;
 `
 
-const ThinTitleBubble = deprecatedStyled(WideBubble)`
+const ThinTitleBubble = styled(WideBubble)`
   width: 120px;
 `
 
-const HalfWideBubble = deprecatedStyled(WideBubble)`
+const HalfWideBubble = styled(WideBubble)`
   width: 50%;
 `
 
-const StatsLoadingContainer = styled(Flex, {
-  row: true,
-  flexWrap: 'wrap',
-  width: '100%',
-})
+const StatsLoadingContainer = styled.div`
+  width: 100%;
+  display: flex;
+  flex-wrap: wrap;
+`
 
-const ExtraDetailsContainer = styled(Flex, {
-  row: true,
-  pt: '$spacing24',
-})
+const ExtraDetailsContainer = styled.div`
+  padding-top: 24px;
+`
 
-const loadingFooterTextStyle = {
-  color: '$neutral3',
-  fontSize: 12,
-  fontWeight: '500',
-  lineHeight: 16,
-  '$platform-web': {
-    textDecoration: 'none',
-  },
-} satisfies TextProps
+const Space = styled.div<{ heightSize: number }>`
+  height: ${({ heightSize }) => `${heightSize}px`};
+`
 
-const LoadingFooterHeaderContainer = styled(Flex, {
-  row: true,
-  alignItems: 'center',
-  pt: '$padding16',
-  pr: 90,
-  pb: '$padding8',
-  pl: 0,
-  bottom: 0,
-  right: 0,
-  justifyContent: 'flex-end',
-  ...loadingFooterTextStyle,
+const loadingFooterTextCss = css`
+  color: ${({ theme }) => theme.neutral3};
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 16px;
+  text-decoration: none;
+`
 
-  '$platform-web': {
-    position: 'fixed',
-  },
-  $lg: {
-    p: 'unset',
-    position: 'unset',
-    bottom: 'unset',
-    right: 'unset',
-    justifyContent: 'unset',
-  },
-})
+const LoadingFooterHeaderContainer = styled(Row)`
+  align-items: center;
+  ${loadingFooterTextCss}
 
-const LoadingFooterHeader = styled(Text, {
-  variant: 'heading1',
-  ...loadingFooterTextStyle,
-})
+  @media screen and (min-width: ${BREAKPOINTS.md}px) {
+    padding: 16px 90px 8px 0;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    justify-content: flex-end;
+  }
+`
 
-const LoadingFooterLink = styled(Anchor, {
-  fontFamily: '$body',
-  ...loadingFooterTextStyle,
-  ...ClickableTamaguiStyle,
-})
+const LoadingFooterHeader = styled.h1`
+  ${loadingFooterTextCss}
+`
+
+const LoadingFooterLink = styled.a`
+  ${loadingFooterTextCss}
+  ${ClickableStyle}
+`
 
 // exported for testing
 export function getLoadingTitle(
@@ -291,7 +274,7 @@ function TokenDetailsSkeleton() {
       </TokenInfoContainer>
       <LoadingChart />
 
-      <Flex row height={4} />
+      <Space heightSize={4} />
       <LoadingStats />
       <Hr />
       <AboutContainer>

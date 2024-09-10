@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { Flex, useHapticFeedback } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
 import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
 import { colors, iconSizes } from 'ui/src/theme'
 import { NetworkLogo, SQUIRCLE_BORDER_RADIUS_RATIO } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
@@ -21,7 +20,6 @@ interface NetworkFilterProps {
   onPressAnimation?: () => void
   onDismiss?: () => void
   includeAllNetworks?: boolean
-  showUnsupportedConnectedChainWarning?: boolean
   styles?: ActionSheetDropdownStyleProps
   hideArrow?: boolean
 }
@@ -79,7 +77,6 @@ export function NetworkFilter({
   onPressAnimation,
   onDismiss,
   includeAllNetworks,
-  showUnsupportedConnectedChainWarning,
   styles,
   hideArrow = false,
 }: NetworkFilterProps): JSX.Element {
@@ -111,14 +108,10 @@ export function NetworkFilter({
       testID="chain-selector"
       onDismiss={onDismiss}
     >
-      {showUnsupportedConnectedChainWarning ? (
-        <AlertTriangle color="$neutral2" size={20} />
-      ) : (
-        <NetworkLogo
-          chainId={selectedChain ?? (includeAllNetworks ? null : UniverseChainId.Mainnet)}
-          size={NETWORK_ICON_SIZE}
-        />
-      )}
+      <NetworkLogo
+        chainId={selectedChain ?? (includeAllNetworks ? null : UniverseChainId.Mainnet)}
+        size={NETWORK_ICON_SIZE}
+      />
     </ActionSheetDropdown>
   )
 }

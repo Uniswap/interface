@@ -14,7 +14,6 @@ import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOn
 import { useFiatOnRampAggregatorWidgetQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
@@ -25,6 +24,7 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { useFiatOnRampTransactionCreator } from 'wallet/src/features/fiatOnRamp/hooks'
 import { ImageUri } from 'wallet/src/features/images/ImageUri'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -41,16 +41,8 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
   const activeAccountAddress = useActiveAccountAddressWithThrow()
 
-  const {
-    isOffRamp,
-    selectedQuote,
-    quotesSections,
-    countryCode,
-    countryState,
-    baseCurrencyInfo,
-    quoteCurrency,
-    amount,
-  } = useFiatOnRampContext()
+  const { selectedQuote, quotesSections, countryCode, countryState, baseCurrencyInfo, quoteCurrency, amount } =
+    useFiatOnRampContext()
   const serviceProvider = selectedQuote?.serviceProviderDetails
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
@@ -149,7 +141,6 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
               currencyCode: baseCurrencyInfo?.code,
               currencySymbol: baseCurrencyInfo?.symbol,
             })}
-            isOffRamp={isOffRamp}
             quoteCurrencyCode={quoteCurrency.currencyInfo?.currency.symbol}
             serviceProviderLogo={
               <Flex

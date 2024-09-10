@@ -48,6 +48,10 @@ const ChartTypeSelectorContainer = styled.div`
   }
 `
 
+const StyledChart: typeof Chart = styled(Chart)`
+  height: ${PDP_CHART_HEIGHT_PX}px;
+`
+
 const PDPChartTypeSelector = ({
   chartType,
   onChartTypeChange,
@@ -271,7 +275,7 @@ function PriceChart({
 
   const lastPrice = data[data.length - 1]
   return (
-    <Chart height={PDP_CHART_HEIGHT_PX} Model={PriceChartModel} params={params}>
+    <StyledChart Model={PriceChartModel} params={params}>
       {(crosshairData) => {
         const displayValue = crosshairData ?? lastPrice
         const currencyBAmountRaw = Math.floor(
@@ -299,7 +303,7 @@ function PriceChart({
           />
         )
       }}
-    </Chart>
+    </StyledChart>
   )
 }
 
@@ -395,8 +399,7 @@ function LiquidityChart({
   }
 
   return (
-    <Chart
-      height={PDP_CHART_HEIGHT_PX}
+    <StyledChart
       Model={LiquidityBarChartModel}
       params={params}
       TooltipBody={
@@ -428,6 +431,6 @@ function LiquidityChart({
         )
         return <ChartHeader value={display} />
       }}
-    </Chart>
+    </StyledChart>
   )
 }

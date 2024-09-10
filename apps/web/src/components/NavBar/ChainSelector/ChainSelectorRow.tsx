@@ -57,7 +57,7 @@ const CaptionText = styled.div`
 interface ChainSelectorRowProps {
   disabled?: boolean
   targetChain: InterfaceChainId
-  onSelectChain?: (targetChain: number) => void
+  onSelectChain: (targetChain: number) => void
   isPending: boolean
 }
 export default function ChainSelectorRow({ disabled, targetChain, onSelectChain, isPending }: ChainSelectorRowProps) {
@@ -75,7 +75,7 @@ export default function ChainSelectorRow({ disabled, targetChain, onSelectChain,
         data-testid={`${label}-selector`}
         $disabled={!!disabled}
         onClick={() => {
-          if (!disabled && onSelectChain) {
+          if (!disabled) {
             onSelectChain(targetChain)
           }
         }}

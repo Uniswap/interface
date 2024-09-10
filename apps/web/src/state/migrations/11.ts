@@ -1,9 +1,9 @@
 import { PersistState } from 'redux-persist'
-import { PreV16UserState } from 'state/migrations/oldTypes'
+import { UserState } from 'state/user/reducer'
 
 type PersistAppStateV11 = {
   _persist: PersistState
-} & { user?: PreV16UserState & { recentConnectionMeta?: undefined } }
+} & { user?: UserState & { recentConnectionMeta?: undefined } }
 
 /**
  * Migration fixing an edgecase missed in migration10: delete recentConnectionMeta key even when undefined recentConnectionMeta = undefined.

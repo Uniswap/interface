@@ -1,8 +1,5 @@
 import { WalletState } from 'wallet/src/state/walletReducer'
 
-export const selectCreatedOnboardingRedesignAccount = (state: WalletState): boolean =>
-  state.behaviorHistory.createdOnboardingRedesignAccount
-
 export const selectHasSkippedUnitagPrompt = (state: WalletState): boolean =>
   state.behaviorHistory.hasSkippedUnitagPrompt
 

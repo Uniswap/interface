@@ -1,4 +1,4 @@
-import { PlatformSplitStubError } from 'utilities/src/errors'
+import { NotImplementedError } from 'utilities/src/errors'
 
 export type SvgUriProps = {
   autoplay: boolean
@@ -12,5 +12,5 @@ export type SvgUriProps = {
  *  If it doesn't fit you use case, modify it to fit or consult with the universe team for help!
  */
 export function WebSvgUri(_props: SvgUriProps): JSX.Element {
-  throw new PlatformSplitStubError('WebSvgUri')
+  throw new NotImplementedError('WebSvgUri')
 }

@@ -87,10 +87,10 @@ exports[`SortButton renders without error 1`] = `
           {
             "color": "#7D7D7D",
             "flexShrink": 1,
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 17,
+            "fontFamily": "Basel-Medium",
+            "fontSize": 15,
             "fontWeight": "500",
-            "lineHeight": 19.549999999999997,
+            "lineHeight": 20,
           }
         }
         suppressHighlighting={true}

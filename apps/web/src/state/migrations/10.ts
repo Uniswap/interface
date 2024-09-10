@@ -1,9 +1,9 @@
 import { PersistState } from 'redux-persist'
-import { PreV16UserState } from 'state/migrations/oldTypes'
+import { UserState } from 'state/user/reducer'
 
 export type PersistAppStateV10 = {
   _persist: PersistState
-} & { user?: PreV16UserState & { recentConnectionMeta?: any } }
+} & { user?: UserState & { recentConnectionMeta?: any } }
 
 /**
  * Migration to remove recentConnectionMeta from state after wagmi migration made it redundant.

@@ -38,7 +38,6 @@ import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
 import { PrimaryAppInstanceDebuggerLazy } from 'src/store/PrimaryAppInstanceDebuggerLazy'
 import { getReduxPersistor, getReduxStore } from 'src/store/store'
-import { LocalizationContextProvider } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -46,7 +45,9 @@ import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/conte
 import i18n from 'uniswap/src/i18n/i18n'
 import { ExtensionOnboardingFlow } from 'uniswap/src/types/screens/extension'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-import { SharedWalletProvider } from 'wallet/src/provider'
+import { LocalizationContextProvider } from 'wallet/src/features/language/LocalizationContext'
+import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
+import { SharedProvider } from 'wallet/src/provider'
 
 const supportsSidePanel = checksIfSupportsSidePanel()
 
@@ -173,18 +174,20 @@ export default function OnboardingApp(): JSX.Element {
       <PersistGate persistor={getReduxPersistor()}>
         <ExtensionStatsigProvider>
           <I18nextProvider i18n={i18n}>
-            <SharedWalletProvider reduxStore={getReduxStore()}>
+            <SharedProvider reduxStore={getReduxStore()}>
               <ErrorBoundary>
                 <GraphqlProvider>
                   <LocalizationContextProvider>
                     <UnitagUpdaterContextProvider>
-                      <PrimaryAppInstanceDebuggerLazy />
-                      <RouterProvider router={router} />
+                      <WalletUniswapProvider>
+                        <PrimaryAppInstanceDebuggerLazy />
+                        <RouterProvider router={router} />
+                      </WalletUniswapProvider>
                     </UnitagUpdaterContextProvider>
                   </LocalizationContextProvider>
                 </GraphqlProvider>
               </ErrorBoundary>
-            </SharedWalletProvider>
+            </SharedProvider>
           </I18nextProvider>
         </ExtensionStatsigProvider>
       </PersistGate>

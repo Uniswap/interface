@@ -18,7 +18,7 @@ export function useSwitchChain() {
   const isSupportedChainCallback = useIsSupportedChainIdCallback()
   const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
   const { switchChain } = useSwitchChainWagmi()
-  const account = useAccount()
+  const { connector } = useAccount()
   const [searchParams, setSearchParams] = useSearchParams()
 
   const { pathname } = useLocation()
@@ -28,11 +28,7 @@ export function useSwitchChain() {
     (chainId: InterfaceChainId) => {
       const isSupportedChain = isSupportedChainCallback(chainId)
       if (!isSupportedChain) {
-        throw new Error(`Chain ${chainId} not supported for connector (${account.connector?.name})`)
-      }
-      if (account.chainId === chainId) {
-        // some wallets (e.g. SafeWallet) only support single-chain & will throw error on `switchChain` even if already on the correct chain
-        return
+        throw new Error(`Chain ${chainId} not supported for connector (${connector?.name})`)
       }
       return trace(
         { name: 'Switch chain', op: 'wallet.switch_chain' },
@@ -71,8 +67,7 @@ export function useSwitchChain() {
     },
     [
       isSupportedChainCallback,
-      account.chainId,
-      account.connector?.name,
+      connector?.name,
       dispatch,
       switchChain,
       multichainUXEnabled,

@@ -360,18 +360,22 @@ export class WebKeyring implements IKeyring {
   }
 
   /**
-   * Derives public addresses from a mnemonic for a range of derivation indexes, non inclusive
+   * Derives public addresses from a mnemonic for a range of derivation indexes.
    *
    * @param mnemonic mnemonic to generate private key for (current convention is to
    * use the public address associated with mnemonic at derivation index 0)
-   * @param startIndex number used to specify the derivation index at which to start deriving private keys
+   * @param startDerivationIndex number used to specify the derivation index at which to start deriving private keys
    * from the mnemonic
-   * @param stopIndex number used to specify the derivation index at which to stop deriving private keys
-   * from the mnemonic, non-inclusive
+   * @param endDerivationIndex number used to specify the derivation index at which to stop deriving private keys
+   * from the mnemonic
    * @returns public addresses associated with the private keys generated from the mnemonic at the given derivation index range
    */
-  async generateAddressesForMnemonic(mnemonic: string, startIndex: number, stopIndex: number): Promise<string[]> {
-    if (startIndex >= stopIndex) {
+  async generateAddressesForMnemonic(
+    mnemonic: string,
+    startDerivationIndex: number,
+    endDerivationIndex: number,
+  ): Promise<string[]> {
+    if (startDerivationIndex >= endDerivationIndex) {
       throw new Error('End derivation index must be greater than start derivation index')
     }
 
@@ -383,7 +387,7 @@ export class WebKeyring implements IKeyring {
     const hdKey = HDKey.fromExtendedKey(xpub)
 
     const addresses = []
-    for (let i = startIndex; i < stopIndex; i++) {
+    for (let i = startDerivationIndex; i <= endDerivationIndex; i++) {
       const pubKey = hdKey.deriveChild(i).publicKey
       if (!pubKey) {
         continue
@@ -397,19 +401,23 @@ export class WebKeyring implements IKeyring {
   }
 
   /**
-   * Derives public addresses from `mnemonicId` for a range of derivation indexes, non inclusive
+   * Derives public addresses from `mnemonicId` for a range of derivation indexes.
    *
    * @param mnemonicId key string associated with mnemonic to generate private key for (current convention is to
    * use the public address associated with mnemonic at derivation index 0)
-   * @param startIndex number used to specify the derivation index at which to start deriving private keys
+   * @param startDerivationIndex number used to specify the derivation index at which to start deriving private keys
    * from the mnemonic
-   * @param stopIndex number used to specify the derivation index at which to stop deriving private keys
+   * @param endDerivationIndex number used to specify the derivation index at which to stop deriving private keys
    * from the mnemonic
    * @returns public addresses associated with the private keys generated from the mnemonic at the given derivation index range
    */
-  async generateAddressesForMnemonicId(mnemonicId: string, startIndex: number, stopIndex: number): Promise<string[]> {
+  async generateAddressesForMnemonicId(
+    mnemonicId: string,
+    startDerivationIndex: number,
+    endDerivationIndex: number,
+  ): Promise<string[]> {
     const mnemonic = await this.retrieveMnemonicUnlocked(mnemonicId)
-    return await this.generateAddressesForMnemonic(mnemonic, startIndex, stopIndex)
+    return await this.generateAddressesForMnemonic(mnemonic, startDerivationIndex, endDerivationIndex)
   }
 
   /**

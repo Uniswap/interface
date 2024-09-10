@@ -53,7 +53,7 @@ export function SwitchNetworksModal(): JSX.Element {
         {dappUrl ? (
           <Anchor color="$accent1" href={dappUrl} textDecorationLine="none">
             <Flex>
-              <Text color="$accent1" numberOfLines={1} variant="buttonLabel2">
+              <Text color="$accent1" numberOfLines={1} variant="buttonLabel4">
                 {extractUrlHost(dappUrl)}
               </Text>
             </Flex>
@@ -98,7 +98,7 @@ export function SwitchNetworksModal(): JSX.Element {
           <Flex centered row gap="$spacing8">
             <Power color="$neutral1" size={getTokenValue('$icon.16')} />
             {/* TODO(EXT-207 / EXT-208): fix button component styling and derive text color from theme */}{' '}
-            <Text color="$neutral1" variant="buttonLabel2">
+            <Text color="$neutral1" variant="buttonLabel3">
               {t('common.button.disconnect')}
             </Text>
           </Flex>

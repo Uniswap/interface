@@ -20,7 +20,7 @@ export const BuyElement = (): JSX.Element => {
       transform={[{ rotateZ: '-1deg' }]}
     >
       <Buy color={mainColor} size="$icon.20" />
-      <Text color={mainColor} textAlign="center" variant="buttonLabel2">
+      <Text color={mainColor} textAlign="center" variant="buttonLabel3">
         {t('common.button.buy')}
       </Text>
     </Flex>

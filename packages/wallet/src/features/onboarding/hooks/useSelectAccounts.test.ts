@@ -7,26 +7,26 @@ expect.extend({ toContainAllValues, toContainValue })
 
 const IMPORTABLE_ACCOUNTS_1 = [
   {
-    address: '0xTest',
+    ownerAddress: '0xTest',
     balance: 573.04,
   },
   {
-    address: '0xTest1',
+    ownerAddress: '0xTest1',
     balance: 71.13,
   },
   {
-    address: '0xTest2',
+    ownerAddress: '0xTest2',
     balance: 32.88,
   },
 ]
 
 const IMPORTABLE_ACCOUNTS_2 = [
   {
-    address: '0xTest3',
+    ownerAddress: '0xTest3',
     balance: 1513.34,
   },
   {
-    address: '0xTest4',
+    ownerAddress: '0xTest4',
     balance: 711.76,
   },
 ]

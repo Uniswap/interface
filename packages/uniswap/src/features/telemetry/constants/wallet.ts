@@ -1,5 +1,4 @@
 export enum WalletEventName {
-  GasEstimateAccuracy = 'Gas Estimate Accuracy',
   ExploreSearchCancel = 'Explore Search Cancel',
   NFTVisibilityChanged = 'NFT Visibility Changed',
   NFTsLoaded = 'NFTs Loaded',

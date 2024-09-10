@@ -3,13 +3,15 @@ import { Trans, useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { SectionHeader } from 'uniswap/src/components/TokenSelector/TokenSectionHeader'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
-import { useAddToSearchHistory, useTokenSectionsForSearchResults } from 'uniswap/src/components/TokenSelector/hooks'
 import {
   ConvertFiatAmountFormattedCallback,
   OnSelectCurrency,
   TokenOptionSection,
+  TokenSection,
 } from 'uniswap/src/components/TokenSelector/types'
-// eslint-disable-next-line no-restricted-imports
+import { PortfolioValueModifier } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GqlResult } from 'uniswap/src/data/types'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
@@ -37,10 +39,14 @@ function _TokenSelectorSearchResultsList({
   debouncedSearchFilter,
   debouncedParsedSearchFilter,
   isBalancesOnlySearch,
+  valueModifiers,
   isKeyboardOpen,
   onDismiss,
+  addToSearchHistoryCallback,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
+  useTokenSectionsForSearchResultsHook,
+  useTokenWarningDismissedHook,
 }: {
   onSelectCurrency: OnSelectCurrency
   activeAccountAddress?: string
@@ -50,28 +56,41 @@ function _TokenSelectorSearchResultsList({
   debouncedSearchFilter: string | null
   debouncedParsedSearchFilter: string | null
   isBalancesOnlySearch: boolean
+  valueModifiers?: PortfolioValueModifier[]
   isKeyboardOpen?: boolean
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
+  addToSearchHistoryCallback: (currencyInfo: CurrencyInfo) => void
   onDismiss: () => void
+  useTokenSectionsForSearchResultsHook: (
+    address: string | undefined,
+    chainFilter: UniverseChainId | null,
+    searchFilter: string | null,
+    isBalancesOnlySearch: boolean,
+    valueModifiers?: PortfolioValueModifier[],
+  ) => GqlResult<TokenSection[]>
+  useTokenWarningDismissedHook: (currencyId: Maybe<string>) => {
+    tokenWarningDismissed: boolean
+    dismissWarningCallback: () => void
+  }
 }): JSX.Element {
   const { t } = useTranslation()
-  const { registerSearch } = useAddToSearchHistory()
   const {
     data: sections,
     loading,
     error,
     refetch,
-  } = useTokenSectionsForSearchResults(
+  } = useTokenSectionsForSearchResultsHook(
     activeAccountAddress,
     chainFilter ?? parsedChainFilter,
     debouncedParsedSearchFilter ?? debouncedSearchFilter,
     isBalancesOnlySearch,
+    valueModifiers,
   )
 
   const onSelectCurrency: OnSelectCurrency = (currencyInfo, section, index) => {
     parentOnSelectCurrency(currencyInfo, section, index)
-    registerSearch(currencyInfo)
+    addToSearchHistoryCallback(currencyInfo)
   }
 
   const userIsTyping = Boolean(searchFilter && debouncedSearchFilter !== searchFilter)
@@ -94,6 +113,7 @@ function _TokenSelectorSearchResultsList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
+      useTokenWarningDismissedHook={useTokenWarningDismissedHook}
       onDismiss={onDismiss}
       onSelectCurrency={onSelectCurrency}
     />

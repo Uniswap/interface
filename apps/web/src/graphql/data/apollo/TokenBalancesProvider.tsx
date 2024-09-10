@@ -85,7 +85,7 @@ function usePortfolioValueModifiers(): {
 }
 
 export function TokenBalancesProvider({ children }: PropsWithChildren) {
-  const [lazyFetch, query] = usePortfolioBalancesWebLazyQuery({ errorPolicy: 'all' })
+  const [lazyFetch, query] = usePortfolioBalancesWebLazyQuery()
   const account = useAccount()
   const hasAccountUpdate = useHasAccountUpdate()
   const valueModifiers = usePortfolioValueModifiers()

@@ -87,7 +87,7 @@ export type SharedUnitagScreenParams = {
 
 export type OnboardingStackParamList = {
   [OnboardingScreens.AppLoading]: undefined
-  [OnboardingScreens.BackupManual]: BackupFormParams & OnboardingStackBaseParams & { fromCloudBackup?: boolean }
+  [OnboardingScreens.BackupManual]: BackupFormParams & OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudPasswordCreate]: BackupFormParams & OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudPasswordConfirm]: CloudBackupFormParams & OnboardingStackBaseParams
   [OnboardingScreens.BackupCloudProcessing]: CloudBackupFormParams & OnboardingStackBaseParams

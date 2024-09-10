@@ -13,9 +13,9 @@ import {
   StringKey,
   handleSubmit,
 } from 'src/screens/Import/SeedPhraseInput'
-import { useNavigationHeader } from 'src/utils/useNavigationHeader'
+import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
-import { PapersText, QuestionInCircleFilled } from 'ui/src/components/icons'
+import { QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -47,7 +47,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
   const seedPhraseInputRef = useRef<NativeSeedPhraseInputRef>(null)
   const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
 
-  useNavigationHeader(navigation)
+  useAddBackButton(navigation)
 
   const signerAccounts = useSignerAccounts()
   const targetMnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined
@@ -72,7 +72,6 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
 
   return (
     <SafeKeyboardOnboardingScreen
-      Icon={PapersText}
       footer={
         <Trace logPress element={ElementName.Next}>
           <Button

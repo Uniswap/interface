@@ -5,7 +5,6 @@ import { GeneratedIcon } from 'ui/src'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { EstimatedGasFeeDetails } from 'uniswap/src/features/telemetry/types'
 import { Warning, WarningColor } from 'uniswap/src/features/transactions/WarningModal/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { DappInfo } from 'uniswap/src/types/walletConnect'
@@ -214,7 +213,6 @@ export interface BaseTransactionInfo {
   transactedUSDValue?: number
   isSpam?: boolean
   externalDappInfo?: DappInfo
-  estimatedGasFeeDetails?: EstimatedGasFeeDetails
 }
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
@@ -225,7 +223,6 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   dappInfo?: DappInfoTransactionDetails
   // The id of the swap TransactionDetails object submitted after this approval on the current client, if applicable.
   swapTxId?: string
-  estimatedGasFeeDetails?: EstimatedGasFeeDetails
 }
 
 export interface BaseSwapTransactionInfo extends BaseTransactionInfo {

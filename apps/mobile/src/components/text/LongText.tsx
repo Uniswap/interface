@@ -66,7 +66,7 @@ export function LongText(props: LongTextProps): JSX.Element {
           py="$none"
           style={{ color: readMoreOrLessColor }}
           testID={TestID.ReadMoreButton}
-          variant="buttonLabel2"
+          variant="buttonLabel3"
           onPress={(): void => setExpanded(!expanded)}
         >
           {expanded ? t('common.longText.button.less') : t('common.longText.button.more')}

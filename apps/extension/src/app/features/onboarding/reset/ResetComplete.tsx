@@ -24,7 +24,7 @@ export function ResetComplete(): JSX.Element {
         </Flex>
         <Flex row alignItems="center" gap="$spacing8">
           <GraduationCap color="$neutral3" size="$icon.20" />
-          <Text color="$neutral3" variant="buttonLabel2">
+          <Text color="$neutral3" variant="buttonLabel3">
             {t('onboarding.resetPassword.complete.safety')}
           </Text>
         </Flex>

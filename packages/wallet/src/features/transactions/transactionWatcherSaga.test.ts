@@ -19,7 +19,6 @@ import {
   getTxFixtures,
   transactionDetails,
 } from 'uniswap/src/test/fixtures'
-import { mockApolloClient } from 'uniswap/src/test/mocks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { sleep } from 'utilities/src/time/timing'
 import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
@@ -32,7 +31,7 @@ import {
   watchTransaction,
 } from 'wallet/src/features/transactions/transactionWatcherSaga'
 import { getProvider, getProviderManager } from 'wallet/src/features/wallet/context'
-import { getTxProvidersMocks } from 'wallet/src/test/mocks'
+import { getTxProvidersMocks, mockApolloClient } from 'wallet/src/test/mocks'
 
 const {
   ethersTxReceipt,

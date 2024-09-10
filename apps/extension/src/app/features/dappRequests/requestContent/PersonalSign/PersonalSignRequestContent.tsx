@@ -4,7 +4,7 @@ import { useTranslation } from 'react-i18next'
 import { DappRequestContent } from 'src/app/features/dappRequests/DappRequestContent'
 import { SignMessageRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Button, Flex, Text, Tooltip } from 'ui/src'
-import { AlertTriangleFilled, Code, StickyNoteTextSquare } from 'ui/src/components/icons'
+import { AlertTriangle, Code, StickyNoteTextSquare } from 'ui/src/components/icons'
 import { containsNonPrintableChars } from 'utilities/src/primitives/string'
 
 enum ViewEncoding {
@@ -124,7 +124,7 @@ export function PersonalSignRequestContent({ dappRequest }: PersonalSignRequestP
           mt="$spacing12"
           p="$spacing12"
         >
-          <AlertTriangleFilled color="$neutral2" minWidth="$spacing20" size="$icon.20" />
+          <AlertTriangle color="$neutral2" minWidth="$spacing20" size="$icon.20" />
           <Text color="$neutral2" variant="body4">
             {t('dapp.request.signature.containsUnrenderableCharacters')}
           </Text>

@@ -22,7 +22,6 @@ export interface StackedLineData extends WhitespaceData<UTCTimestamp> {
 
 interface TVLChartParams extends ChartModelParams<StackedLineData> {
   colors: string[]
-  gradients?: { start: string; end: string }[]
 }
 
 export class TVLChartModel extends ChartModel<StackedLineData> {
@@ -75,7 +74,7 @@ export class TVLChartModel extends ChartModel<StackedLineData> {
       },
       ...gridSettings,
     })
-    const { data, colors, gradients } = params
+    const { data, colors } = params
 
     // Handles changes in data, e.g. time period selection
     if (this.data !== data) {
@@ -88,7 +87,6 @@ export class TVLChartModel extends ChartModel<StackedLineData> {
       priceLineVisible: false,
       lastValueVisible: false,
       colors,
-      gradients,
       lineWidth: 2.5,
     } as DeepPartial<StackedAreaSeriesOptions>)
   }

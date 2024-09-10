@@ -1,7 +1,6 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
 import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   ExactInputSwapTransactionInfo,
@@ -11,6 +10,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'

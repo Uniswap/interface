@@ -1,51 +1,37 @@
 import { InterfaceModalName } from '@uniswap/analytics-events'
-import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Modal from 'components/Modal'
-import { useIsAccountCTAExperimentControl } from 'components/NavBar'
 import { GetStarted } from 'components/NavBar/DownloadApp/Modal/GetStarted'
 import { GetTheApp } from 'components/NavBar/DownloadApp/Modal/GetTheApp'
-import styled from 'lib/styled-components'
+import styled, { css } from 'lib/styled-components'
 import { useCallback, useState } from 'react'
 import { ArrowLeft, X } from 'react-feather'
 import { useCloseModal, useModalIsOpen } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { ClickableTamaguiStyle } from 'theme/components'
-import { AnimateTransition, Flex, styled as tamaguiStyled } from 'ui/src'
-import { iconSizes, zIndices } from 'ui/src/theme'
+import { ClickableStyle } from 'theme/components'
+import { AnimateTransition, Flex } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 
 const StyledModal = styled(Modal)`
   display: block;
 `
-
-const HeaderActionIcon = {
-  margin: 4,
-  color: '$neutral1',
-  ...ClickableTamaguiStyle,
-}
-
-const CloseButton = tamaguiStyled(X, {
-  ...HeaderActionIcon,
-  size: iconSizes.icon24,
-
-  variants: {
-    filled: {
-      true: {
-        color: 'white',
-        borderRadius: '100%',
-        backgroundColor: '$scrim',
-        padding: '$spacing4',
-        margin: '$none',
-        size: iconSizes.icon32,
-      },
-      false: {},
-    },
-  },
-})
-
-const BackButton = tamaguiStyled(ArrowLeft, {
-  ...HeaderActionIcon,
-})
+const Wrapper = styled.div`
+  position: relative;
+  padding: 24px;
+  width: 100%;
+  user-select: none;
+`
+const HeaderActionIcon = css`
+  margin: 4px;
+  color: ${({ theme }) => theme.neutral1};
+  ${ClickableStyle};
+`
+const CloseButton = styled(X)`
+  ${HeaderActionIcon}
+`
+const BackButton = styled(ArrowLeft)`
+  ${HeaderActionIcon}
+`
 
 enum Page {
   GetStarted = 'GetStarted',
@@ -61,57 +47,23 @@ export function GetTheAppModal() {
     setTimeout(() => setPage(Page.GetStarted), 500)
   }, [closeModal, setPage])
   const showBackButton = page !== Page.GetStarted
-  const accountDrawer = useAccountDrawer()
-
-  const isAccountCTAExperimentControl = useIsAccountCTAExperimentControl()
 
   return (
     <Trace modal={InterfaceModalName.GETTING_STARTED_MODAL}>
-      <StyledModal
-        isOpen={isOpen}
-        maxWidth={isAccountCTAExperimentControl ? 620 : 700}
-        slideIn
-        onDismiss={closeModal}
-        hideBorder
-      >
-        <Flex
-          row
-          position="absolute"
-          top="$spacing24"
-          width="100%"
-          justifyContent={showBackButton ? 'space-between' : 'flex-end'}
-          zIndex={zIndices.modal}
-          pl="$spacing24"
-          pr="$spacing24"
-        >
-          {showBackButton && <BackButton onClick={() => setPage(Page.GetStarted)} size={iconSizes.icon24} />}
-          <CloseButton
-            filled={!isAccountCTAExperimentControl && !showBackButton}
-            onClick={close}
-            data-testid="get-the-app-close-button"
-          />
-        </Flex>
-        <Flex
-          data-testid="download-uniswap-modal"
-          position="relative"
-          width="100%"
-          userSelect="none"
-          height={isAccountCTAExperimentControl ? 'unset' : '520px'}
-        >
+      <StyledModal isOpen={isOpen} maxWidth={620} slideIn onDismiss={closeModal}>
+        <Wrapper data-testid="download-uniswap-modal">
+          <Flex row justifyContent={showBackButton ? 'space-between' : 'flex-end'}>
+            {showBackButton && <BackButton onClick={() => setPage(Page.GetStarted)} size={iconSizes.icon24} />}
+            <CloseButton onClick={close} size={iconSizes.icon24} data-testid="get-the-app-close-button" />
+          </Flex>
           <AnimateTransition
             currentIndex={page === Page.GetStarted ? 0 : 1}
             animationType={page === Page.GetStarted ? 'forward' : 'backward'}
           >
-            <GetStarted
-              toAppDownload={() => setPage(Page.GetApp)}
-              toConnectWalletDrawer={() => {
-                close()
-                accountDrawer.open()
-              }}
-            />
+            <GetStarted toAppDownload={() => setPage(Page.GetApp)} />
             <GetTheApp />
           </AnimateTransition>
-        </Flex>
+        </Wrapper>
       </StyledModal>
     </Trace>
   )

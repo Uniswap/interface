@@ -5,7 +5,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { useLockScreenOnBlur } from 'src/features/authentication/lockScreenContext'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
-import { useNavigationHeader } from 'src/utils/useNavigationHeader'
+import { useAddBackButton } from 'src/utils/useAddBackButton'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { QuestionInCircleFilled } from 'ui/src/components/icons'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -48,7 +48,7 @@ export function SeedPhraseInputScreen({ navigation, route: { params } }: Props):
 
   const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
 
-  useNavigationHeader(navigation)
+  useAddBackButton(navigation)
 
   const signerAccounts = useSignerAccounts()
   const mnemonicId = (isRestoringMnemonic && signerAccounts[0]?.mnemonicId) || undefined

@@ -5,32 +5,24 @@ import { AccountMeta } from 'uniswap/src/features/accounts/types'
 
 /** Stores objects/utils that exist on all platforms, abstracting away app-level specifics for each, in order to allow usage in cross-platform code. */
 interface UniswapContext {
-  account?: AccountMeta
-  navigateToBuyOrReceiveWithEmptyWallet?: () => void
-  onShowSwapNetworkNotification: (chainId?: number, prevChainId?: number) => void
-  signer: Signer | undefined
   useProviderHook: (chainId: number) => JsonRpcProvider | undefined
+  signer: Signer | undefined
+  account?: AccountMeta
+  throwOnUse?: boolean
 }
 
 const UniswapContext = createContext<UniswapContext | null>(null)
 
 export function UniswapProvider({
   children,
-  account,
-  navigateToBuyOrReceiveWithEmptyWallet,
-  onShowSwapNetworkNotification,
-  signer,
   useProviderHook,
+  signer,
+  account,
+  throwOnUse = false,
 }: PropsWithChildren<UniswapContext>): JSX.Element {
   const value: UniswapContext = useMemo(
-    () => ({
-      account,
-      navigateToBuyOrReceiveWithEmptyWallet,
-      onShowSwapNetworkNotification,
-      signer,
-      useProviderHook,
-    }),
-    [account, navigateToBuyOrReceiveWithEmptyWallet, onShowSwapNetworkNotification, signer, useProviderHook],
+    () => ({ account, signer, useProviderHook, throwOnUse }),
+    [account, signer, useProviderHook, throwOnUse],
   )
 
   return <UniswapContext.Provider value={value}>{children}</UniswapContext.Provider>
@@ -41,6 +33,8 @@ export function useUniswapContext(): UniswapContext {
   const context = useContext(UniswapContext)
   if (!context) {
     throw new Error('useUniswapContext must be used within a UniswapProvider')
+  } else if (context.throwOnUse) {
+    throw new Error('a component is accessing useUniswapContext while throwOnUse is true')
   }
 
   return context

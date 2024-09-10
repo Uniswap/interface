@@ -20,26 +20,29 @@ import { useScreenSize } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
-import deprecatedStyled from 'lib/styled-components'
+import styled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/types'
-import { Flex, useIsTouchDevice } from 'ui/src'
+import { useIsTouchDevice } from 'ui/src'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
 import { addressesAreEquivalent } from 'utils/addressesAreEquivalent'
 import { getInitialLogoUrl } from 'utils/getInitialLogoURL'
 
-const DividerLine = deprecatedStyled(Hr)`
+const DividerLine = styled(Hr)`
   margin-top: 40px;
   margin-bottom: 40px;
   @media screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
     opacity: 0;
     margin-bottom: 0;
   }
+`
+const BalanceSummaryContainer = styled.div`
+  margin-top: 40px;
 `
 
 function TDPBreadcrumb() {
@@ -206,9 +209,9 @@ export default function TokenDetails() {
           </TokenInfoContainer>
           <ChartSection />
           {!showRightPanel && !!pageChainBalance && (
-            <Flex mt="$spacing40">
+            <BalanceSummaryContainer>
               <PageChainBalanceSummary pageChainBalance={pageChainBalance} alignLeft />
-            </Flex>
+            </BalanceSummaryContainer>
           )}
           <StatsSection chainId={currency.chainId} address={address} tokenQueryData={tokenQueryData} />
           <DividerLine />
@@ -223,12 +226,11 @@ export default function TokenDetails() {
           )}
           <TokenDescription />
         </RightPanel>
-        <MobileBottomBar hide={isTouchDevice && scrollDirection === ScrollDirection.DOWN}>
-          {/* TODO(WEB-4800): data-testid is not passed to ui/src elements when animation is set */}
-          {/* Remove this extra div when WEB-4800 is fixed */}
-          <div data-testid="tdp-mobile-bottom-bar">
-            <TDPActionTabs />
-          </div>
+        <MobileBottomBar
+          $hide={isTouchDevice && scrollDirection === ScrollDirection.DOWN}
+          data-testid="tdp-mobile-bottom-bar"
+        >
+          <TDPActionTabs />
         </MobileBottomBar>
       </TokenDetailsLayout>
     </TDPAnalytics>

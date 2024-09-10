@@ -5,7 +5,7 @@ import { ActivityIndicator, Keyboard } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
-import { AlertTriangleFilled } from 'ui/src/components/icons'
+import { AlertTriangle } from 'ui/src/components/icons'
 import { fonts, spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
@@ -192,7 +192,6 @@ export function ChangeUnitagModal({
               color="$neutral1"
               fontFamily="$subHeading"
               fontSize={fonts.subheading1.fontSize}
-              fontWeight="$book"
               m="$none"
               maxLength={20}
               numberOfLines={1}
@@ -278,7 +277,7 @@ function ChangeUnitagConfirmModal({
           mb="$spacing8"
           minWidth="$spacing48"
         >
-          <AlertTriangleFilled color="$statusCritical" size="$icon.24" />
+          <AlertTriangle color="$statusCritical" size="$icon.24" />
         </Flex>
         <Text textAlign="center" variant="subheading1">
           {t('unitags.editUsername.confirm.title')}

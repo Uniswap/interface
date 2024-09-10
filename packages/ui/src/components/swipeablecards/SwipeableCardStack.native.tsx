@@ -2,16 +2,10 @@ import { useCallback, useState } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import { Flex } from 'ui/src/components/layout'
 import { SwipeableCard } from 'ui/src/components/swipeablecards/SwipeableCard'
-import {
-  SWIPEABLE_CARD_Y_OFFSET,
-  SwipeableCardProps,
-  SwipeableCardStackProps,
-} from 'ui/src/components/swipeablecards/props'
+import { SWIPEABLE_CARD_Y_OFFSET, SwipeableCardStackProps } from 'ui/src/components/swipeablecards/props'
 import { usePrevious } from 'utilities/src/react/hooks'
 
-type PickedCardProps = Pick<SwipeableCardProps, 'onPress'>
-
-export function SwipeableCardStack<T extends PickedCardProps>({
+export function SwipeableCardStack<T>({
   cards,
   minCardHeight = 0,
   renderCard,
@@ -64,7 +58,6 @@ export function SwipeableCardStack<T extends PickedCardProps>({
                 disableSwipe={cards.length <= 1 || activeIndex !== index}
                 stackIndex={stackIndex}
                 onLayout={handleLayout}
-                onPress={card.onPress}
                 onSwiped={() => handleSwiped(card, index)}
               >
                 {renderCard(card, stackIndex)}

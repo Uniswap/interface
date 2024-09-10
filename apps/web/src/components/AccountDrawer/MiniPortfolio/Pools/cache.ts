@@ -6,10 +6,10 @@ import { atom, useAtom } from 'jotai'
 import { atomWithStorage } from 'jotai/utils'
 import ms from 'ms'
 import { useCallback } from 'react'
+import { SerializedToken } from 'state/user/types'
+import { deserializeToken, serializeToken } from 'state/user/utils'
 import { PositionDetails } from 'types/position'
-import { SerializedToken } from 'uniswap/src/features/tokens/slice/types'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
-import { deserializeToken, serializeToken } from 'uniswap/src/utils/currency'
 import { buildCurrencyKey, currencyKey } from 'utils/currencyKey'
 
 export type PositionInfo = {

@@ -2,7 +2,40 @@
 
 exports[`TokenLinkCell renders known token on a different chain 1`] = `
 <DocumentFragment>
-  .c2 {
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  max-width: 68px;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c7 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c4 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -13,19 +46,19 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
   left: 0;
 }
 
-.c2 img {
+.c4 img {
   width: 16px;
   height: 16px;
   border-radius: 50%;
 }
 
-.c3 {
+.c5 {
   width: 8px;
   height: 16px;
   border-radius: 50%;
 }
 
-.c4 {
+.c6 {
   background-color: #F9F9F9;
   border-radius: 2px;
   width: 6px;
@@ -48,7 +81,7 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
   justify-content: center;
 }
 
-.c1 {
+.c3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -79,6 +112,12 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
 
 .c0:active {
   opacity: 0.4;
+}
+
+.c8 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 <span
@@ -96,27 +135,27 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
           href="/explore/tokens/polygon/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331168 _maxWidth-68px"
+            class="c1 c2"
           >
             <div
-              class="c1"
+              class="c3"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
               >
                 <div
-                  class="c2"
+                  class="c4"
                   size="16"
                 >
                   <img
-                    class="c3"
+                    class="c5"
                     size="16"
                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                   />
                 </div>
               </div>
               <div
-                class="c4"
+                class="c6"
               >
                 <img
                   alt="Polygon logo"
@@ -128,12 +167,11 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
                 />
               </div>
             </div>
-            <span
-              class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202 _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
-              data-disable-theme="true"
+            <div
+              class="c7 c8 css-1urox24"
             >
               USDC
-            </span>
+            </div>
           </div>
         </a>
       </span>
@@ -144,7 +182,40 @@ exports[`TokenLinkCell renders known token on a different chain 1`] = `
 
 exports[`TokenLinkCell renders known token on mainnet 1`] = `
 <DocumentFragment>
-  .c2 {
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  max-width: 68px;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c6 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c4 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -155,19 +226,19 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
   left: 0;
 }
 
-.c2 img {
+.c4 img {
   width: 16px;
   height: 16px;
   border-radius: 50%;
 }
 
-.c3 {
+.c5 {
   width: 8px;
   height: 16px;
   border-radius: 50%;
 }
 
-.c1 {
+.c3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -200,6 +271,12 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
   opacity: 0.4;
 }
 
+.c7 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 <span
     class=""
     style="display: contents;"
@@ -215,32 +292,31 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
           href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331168 _maxWidth-68px"
+            class="c1 c2"
           >
             <div
-              class="c1"
+              class="c3"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
               >
                 <div
-                  class="c2"
+                  class="c4"
                   size="16"
                 >
                   <img
-                    class="c3"
+                    class="c5"
                     size="16"
                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                   />
                 </div>
               </div>
             </div>
-            <span
-              class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202 _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
-              data-disable-theme="true"
+            <div
+              class="c6 c7 css-1urox24"
             >
               USDC
-            </span>
+            </div>
           </div>
         </a>
       </span>
@@ -251,7 +327,40 @@ exports[`TokenLinkCell renders known token on mainnet 1`] = `
 
 exports[`TokenLinkCell renders unknown token 1`] = `
 <DocumentFragment>
-  .c2 {
+  .c1 {
+  box-sizing: border-box;
+  margin: 0;
+  min-width: 0;
+  max-width: 68px;
+}
+
+.c2 {
+  width: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 0;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.c6 {
+  color: #222222;
+  -webkit-letter-spacing: -0.01em;
+  -moz-letter-spacing: -0.01em;
+  -ms-letter-spacing: -0.01em;
+  letter-spacing: -0.01em;
+}
+
+.c4 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -262,19 +371,19 @@ exports[`TokenLinkCell renders unknown token 1`] = `
   left: 0;
 }
 
-.c2 img {
+.c4 img {
   width: 16px;
   height: 16px;
   border-radius: 50%;
 }
 
-.c3 {
+.c5 {
   width: 8px;
   height: 16px;
   border-radius: 50%;
 }
 
-.c1 {
+.c3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -307,6 +416,12 @@ exports[`TokenLinkCell renders unknown token 1`] = `
   opacity: 0.4;
 }
 
+.c7 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 <span
     class=""
     style="display: contents;"
@@ -322,32 +437,31 @@ exports[`TokenLinkCell renders unknown token 1`] = `
           href="/explore/tokens/ethereum/0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331168 _maxWidth-68px"
+            class="c1 c2"
           >
             <div
-              class="c1"
+              class="c3"
             >
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
               >
                 <div
-                  class="c2"
+                  class="c4"
                   size="16"
                 >
                   <img
-                    class="c3"
+                    class="c5"
                     size="16"
                     src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
                   />
                 </div>
               </div>
             </div>
-            <span
-              class="font_body _display-inline _boxSizing-border-box _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202 _whiteSpace-nowrap _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis"
-              data-disable-theme="true"
+            <div
+              class="c6 c7 css-1urox24"
             >
               UNKNOWN
-            </span>
+            </div>
           </div>
         </a>
       </span>

@@ -6,8 +6,6 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { erc20RecentReceiveAssetActivity, erc20StaleReceiveAssetActivity, portfolio } from 'uniswap/src/test/fixtures'
-import { queryResolvers } from 'uniswap/src/test/utils'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import {
   TransactionHistoryUpdater,
@@ -15,8 +13,16 @@ import {
 } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { readOnlyAccount, receiveCurrencyTxNotification, signerMnemonicAccount } from 'wallet/src/test/fixtures'
+import {
+  erc20RecentReceiveAssetActivity,
+  erc20StaleReceiveAssetActivity,
+  portfolio,
+  readOnlyAccount,
+  receiveCurrencyTxNotification,
+  signerMnemonicAccount,
+} from 'wallet/src/test/fixtures'
 import { faker, render } from 'wallet/src/test/test-utils'
+import { queryResolvers } from 'wallet/src/test/utils'
 
 const mockedRefetchQueries = jest.fn()
 

@@ -1,6 +1,5 @@
 import { Currency, Token } from '@uniswap/sdk-core'
 import { SupportedInterfaceChainId, useSupportedChainId } from 'constants/chains'
-import { COMMON_BASES } from 'constants/routing'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { TokenAddressMap } from 'lib/hooks/useTokenList/utils'
@@ -14,7 +13,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useCurrencyInfo as useUniswapCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
-import { isAddress, isSameAddress } from 'utilities/src/addresses'
+import { isAddress } from 'utilities/src/addresses'
 
 type Maybe<T> = T | undefined
 
@@ -58,6 +57,17 @@ export function useFallbackListTokens(chainId: Maybe<InterfaceChainId>): { [addr
   }, [tokensFromMap, userAddedTokens])
 }
 
+// Check if currency is included in custom list from user storage
+export function useIsUserAddedToken(currency: Currency | undefined | null): boolean {
+  const userAddedTokens = useUserAddedTokens()
+
+  if (!currency) {
+    return false
+  }
+
+  return !!userAddedTokens.find((token) => currency.equals(token))
+}
+
 export function useCurrency(address?: string, chainId?: InterfaceChainId, skip?: boolean): Maybe<Currency> {
   const currencyInfo = useCurrencyInfo(address, chainId, skip)
   return currencyInfo?.currency
@@ -66,7 +76,7 @@ export function useCurrency(address?: string, chainId?: InterfaceChainId, skip?:
 /**
  * Returns a CurrencyInfo from the tokenAddress+chainId pair.
  */
-export function useCurrencyInfo(currency?: Currency, chainId?: InterfaceChainId, skip?: boolean): Maybe<CurrencyInfo>
+export function useCurrencyInfo(currency?: Currency): Maybe<CurrencyInfo>
 export function useCurrencyInfo(address?: string, chainId?: InterfaceChainId, skip?: boolean): Maybe<CurrencyInfo>
 export function useCurrencyInfo(
   addressOrCurrency?: string | Currency,
@@ -80,72 +90,30 @@ export function useCurrencyInfo(
     UNIVERSE_CHAIN_INFO[chainIdWithFallback as UniverseChainId]?.nativeCurrency.address ??
     UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet]?.nativeCurrency.address
 
-  const isNative = useMemo(() => checkIsNative(addressOrCurrency), [addressOrCurrency])
-  const address = useMemo(
-    () => getAddress(isNative, nativeAddressWithFallback, addressOrCurrency),
-    [isNative, nativeAddressWithFallback, addressOrCurrency],
-  )
+  const address =
+    typeof addressOrCurrency === 'string'
+      ? addressOrCurrency === 'ETH'
+        ? nativeAddressWithFallback
+        : addressOrCurrency
+      : addressOrCurrency?.isNative
+        ? nativeAddressWithFallback
+        : addressOrCurrency?.address
 
   const supportedChainId = useSupportedChainId(chainIdWithFallback)
 
-  const addressWithFallback = isNative || !address ? nativeAddressWithFallback : address
+  const addressWithFallback =
+    address === NATIVE_CHAIN_ID || address === 'ETH' || !address ? nativeAddressWithFallback : address
 
   const currencyId = buildCurrencyId(supportedChainId ?? UniverseChainId.Mainnet, addressWithFallback)
-  const currencyInfo = useUniswapCurrencyInfo(currencyId, { skip })
+  const currencyInfo = useUniswapCurrencyInfo(currencyId)
 
   return useMemo(() => {
-    const commonBase = getCommonBase(chainIdWithFallback, isNative, address)
-
-    if (commonBase) {
-      return commonBase
-    }
-
     if (!currencyInfo || !addressOrCurrency || skip) {
       return undefined
     }
 
     return currencyInfo
-  }, [addressOrCurrency, currencyInfo, chainIdWithFallback, isNative, address, skip])
-}
-
-const checkIsNative = (addressOrCurrency?: string | Currency): boolean => {
-  return typeof addressOrCurrency === 'string'
-    ? [NATIVE_CHAIN_ID, 'native', 'eth'].includes(addressOrCurrency.toLowerCase())
-    : addressOrCurrency?.isNative ?? false
-}
-
-const getCommonBase = (chainId?: number, isNative?: boolean, address?: string): CurrencyInfo | undefined => {
-  if (!address || !chainId) {
-    return undefined
-  }
-  return COMMON_BASES[chainId]?.find(
-    (base) =>
-      (base.currency.isNative && isNative) || (base.currency.isToken && isSameAddress(base.currency.address, address)),
-  )
-}
-
-const getAddress = (
-  isNative: boolean,
-  nativeAddressWithFallback: string,
-  addressOrCurrency?: string | Currency,
-): string | undefined => {
-  if (typeof addressOrCurrency === 'string') {
-    if (isNative) {
-      return nativeAddressWithFallback
-    } else {
-      return addressOrCurrency
-    }
-  }
-
-  if (addressOrCurrency) {
-    if (addressOrCurrency.isNative) {
-      return nativeAddressWithFallback
-    } else if (addressOrCurrency) {
-      return addressOrCurrency.address
-    }
-  }
-
-  return undefined
+  }, [addressOrCurrency, currencyInfo, skip])
 }
 
 export function useToken(tokenAddress?: string, chainId?: SupportedInterfaceChainId): Maybe<Token> {

@@ -14,8 +14,6 @@ import {
   useDailyProtocolTvlQuery,
   useHistoricalProtocolVolumeQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 function mapDataByTimestamp(
   v2Data?: readonly TimestampedAmount[],
@@ -42,10 +40,9 @@ export function useHistoricalProtocolVolume(
   duration: HistoryDuration,
 ): ChartQueryResult<StackedHistogramData, ChartType.VOLUME> {
   const isWindowVisible = useIsWindowVisible()
-  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
   const { data: queryData, loading } = useHistoricalProtocolVolumeQuery({
     variables: { chain, duration },
-    skip: !isWindowVisible || isRestExploreEnabled,
+    skip: !isWindowVisible,
   })
 
   return useMemo(() => {
@@ -69,10 +66,9 @@ export function useHistoricalProtocolVolume(
 
 export function useDailyProtocolTVL(chain: Chain): ChartQueryResult<StackedLineData, ChartType.TVL> {
   const isWindowVisible = useIsWindowVisible()
-  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
   const { data: queryData, loading } = useDailyProtocolTvlQuery({
     variables: { chain },
-    skip: !isWindowVisible || isRestExploreEnabled,
+    skip: !isWindowVisible,
   })
 
   return useMemo(() => {

@@ -6,11 +6,11 @@ import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { ChartBar, ChartPie, Language as LanguageIcon, TrendDown, TrendUp } from 'ui/src/components/icons'
 import { DEP_accentColors, iconSizes, validColor } from 'ui/src/theme'
 import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { Language } from 'uniswap/src/features/language/constants'
-import { useCurrentLanguage, useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { Language } from 'wallet/src/features/language/constants'
+import { useCurrentLanguage, useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 
 function StatsRow({
   label,
@@ -166,7 +166,7 @@ export function TokenDetailsStats({
                         {currentLanguageInfo.displayName}
                       </Text>
                     </Flex>
-                    <Text color={validColor(DEP_accentColors.blue400)} variant="buttonLabel2">
+                    <Text color={validColor(DEP_accentColors.blue400)} variant="buttonLabel4">
                       {t('token.stats.translation.original')}
                     </Text>
                   </Flex>

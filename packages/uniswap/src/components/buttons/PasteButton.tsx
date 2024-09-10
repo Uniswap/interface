@@ -33,7 +33,7 @@ export default function PasteButton({
       <TouchableArea p="$spacing8" onPress={onPressButton} onPressIn={beforePress}>
         <Flex centered row gap="$spacing4">
           <ClipboardPaste color="$neutral2" size="$icon.16" />
-          <Text color="$neutral2" variant="buttonLabel2">
+          <Text color="$neutral2" variant="buttonLabel4">
             {label}
           </Text>
         </Flex>
@@ -50,7 +50,7 @@ export default function PasteButton({
       onPressIn={beforePress}
     >
       <Flex centered row gap="$spacing4">
-        <Text color="$accent1" variant="buttonLabel3">
+        <Text color="$accent1" variant="buttonLabel4">
           {label}
         </Text>
         <StickyNoteSquare color="$accent1" size="$icon.16" />

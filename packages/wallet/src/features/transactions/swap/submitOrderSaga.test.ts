@@ -1,8 +1,9 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
+import axios from 'axios'
 import { testSaga } from 'redux-saga-test-plan'
-import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { TRADING_API_HEADERS } from 'uniswap/src/data/tradingApi/client'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
@@ -17,6 +18,7 @@ import {
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import {
+  ORDER_ENDPOINT,
   ORDER_STALENESS_THRESHOLD,
   SubmitUniswapXOrderParams,
   submitUniswapXOrder,
@@ -77,7 +79,7 @@ describe(submitUniswapXOrder, () => {
       .next()
       .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
       .next()
-      .call(submitOrder, baseSubmitOrderParams.orderParams)
+      .call(axios.post, ORDER_ENDPOINT, baseSubmitOrderParams.orderParams, { headers: TRADING_API_HEADERS })
       .next()
       .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
         routing: Routing.DUTCH_V2,
@@ -103,7 +105,7 @@ describe(submitUniswapXOrder, () => {
       .next()
       .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
       .next()
-      .call(submitOrder, baseSubmitOrderParams.orderParams)
+      .call(axios.post, ORDER_ENDPOINT, baseSubmitOrderParams.orderParams, { headers: TRADING_API_HEADERS })
       .throw(new Error('pretend the order endpoint failed'))
       .put({
         type: updateTransaction.type,
@@ -139,7 +141,7 @@ describe(submitUniswapXOrder, () => {
         .next({ payload: { hash: approveTxHash, status: TransactionStatus.Success } })
         .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
         .next()
-        .call(submitOrder, baseSubmitOrderParams.orderParams)
+        .call(axios.post, ORDER_ENDPOINT, baseSubmitOrderParams.orderParams, { headers: TRADING_API_HEADERS })
         .next()
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
           routing: Routing.DUTCH_V2,
@@ -169,7 +171,7 @@ describe(submitUniswapXOrder, () => {
         .next({ payload: { hash: wrapTxHash, status: TransactionStatus.Success } })
         .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
         .next()
-        .call(submitOrder, baseSubmitOrderParams.orderParams)
+        .call(axios.post, ORDER_ENDPOINT, baseSubmitOrderParams.orderParams, { headers: TRADING_API_HEADERS })
         .next()
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
           routing: Routing.DUTCH_V2,
@@ -199,7 +201,7 @@ describe(submitUniswapXOrder, () => {
         .next({ payload: { hash: approveTxHash, status: TransactionStatus.Success } })
         .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
         .next()
-        .call(submitOrder, baseSubmitOrderParams.orderParams)
+        .call(axios.post, ORDER_ENDPOINT, baseSubmitOrderParams.orderParams, { headers: TRADING_API_HEADERS })
         .next()
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
           routing: Routing.DUTCH_V2,

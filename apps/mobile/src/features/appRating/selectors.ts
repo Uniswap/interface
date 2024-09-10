@@ -1,6 +1,5 @@
 import { createSelector, Selector } from '@reduxjs/toolkit'
 import { MobileState } from 'src/app/mobileReducer'
-import { selectTransactions } from 'uniswap/src/features/transactions/selectors'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
 import {
   TransactionDetails,
@@ -9,6 +8,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { selectTransactions } from 'wallet/src/features/transactions/selectors'
 
 const NUM_CONSECUTIVE_SWAPS = 2
 

@@ -1,7 +1,8 @@
+import axios from 'axios'
 import { call, delay, fork, select, take } from 'typed-redux-saga'
-import { fetchOrders } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { GetOrdersResponse, OrderStatus } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { makeSelectUniswapXOrder } from 'uniswap/src/features/transactions/selectors'
+import { TRADING_API_HEADERS } from 'uniswap/src/data/tradingApi/client'
 import { updateTransaction } from 'uniswap/src/features/transactions/slice'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -12,6 +13,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { makeSelectUniswapXOrder } from 'wallet/src/features/transactions/selectors'
 
 const ORDER_STATUS_TO_TX_STATUS: { [key in OrderStatus]: TransactionStatus } = {
   [OrderStatus.CANCELLED]: TransactionStatus.Canceled,
@@ -27,7 +29,11 @@ const ORDER_STATUS_TO_TX_STATUS: { [key in OrderStatus]: TransactionStatus } = {
 const ORDER_TIMEOUT_BUFFER = 20 * ONE_SECOND_MS
 
 export async function getOrders(orderIds: string[]): Promise<GetOrdersResponse> {
-  return await fetchOrders({ orderIds })
+  const orderIdsString = orderIds.join(',')
+  const ordersEndpoint = uniswapUrls.tradingApiUrl + uniswapUrls.tradingApiPaths.orders
+  const urlParams = `?orderIds=${encodeURIComponent(orderIdsString)}`
+
+  return (await axios.get(ordersEndpoint + urlParams, { headers: TRADING_API_HEADERS })).data as GetOrdersResponse
 }
 
 const selectUniswapXOrder = makeSelectUniswapXOrder()

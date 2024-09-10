@@ -1,5 +1,4 @@
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { FORCurrencyOrBalance, FORLogo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import { FORLogo } from 'uniswap/src/features/fiatOnRamp/types'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { v4 as uuid } from 'uuid'
 
@@ -97,18 +96,4 @@ export function getServiceProviderLogo(logos: FORLogo, isDarkMode: boolean): str
 export function createOnRampTransactionId(serviceProvider?: string): string {
   // The backend expects MoonPay transactions to have the MOONPAY prefix.
   return `${serviceProvider?.toUpperCase() === 'MOONPAY' ? 'MOONPAY' : ''}${uuid()}`
-}
-
-export function isSupportedFORCurrency(currency: FORCurrencyOrBalance): currency is FiatOnRampCurrency {
-  return (currency as FiatOnRampCurrency).meldCurrencyCode !== undefined
-}
-
-export function getUnsupportedFORTokensWithBalance(
-  supportedCurrencies: FiatOnRampCurrency[],
-  balancesById: Record<string, PortfolioBalance> | undefined,
-): PortfolioBalance[] {
-  const offRampCurrencyIds = supportedCurrencies.map((currency) => currency.currencyInfo?.currencyId)
-  return Object.values(balancesById || {}).filter(
-    (balance) => !offRampCurrencyIds.includes(balance.currencyInfo.currencyId),
-  )
 }

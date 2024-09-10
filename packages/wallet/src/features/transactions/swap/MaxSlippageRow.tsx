@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { SlippageWarningContent } from 'wallet/src/features/transactions/swap/SlippageWarningContent'
 
 interface MaxSlippageRowProps {
@@ -50,7 +50,7 @@ export function MaxSlippageRow({
         <Flex centered row gap="$spacing8">
           {!customSlippageTolerance ? (
             <Flex centered backgroundColor="$surface3" borderRadius="$roundedFull" px="$spacing4" py="$spacing2">
-              <Text color="$neutral2" variant="buttonLabel3">
+              <Text color="$neutral2" variant="buttonLabel4">
                 {t('swap.settings.slippage.control.auto')}
               </Text>
             </Flex>

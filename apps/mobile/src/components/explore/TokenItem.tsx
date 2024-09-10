@@ -11,7 +11,6 @@ import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, ViewProps } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
@@ -22,6 +21,7 @@ import {
 } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
 interface TokenItemProps {
@@ -116,7 +116,7 @@ export const TokenItem = memo(function _TokenItem({
           <Flex centered row gap="$spacing4" overflow="hidden">
             {!hideNumberedList && (
               <Flex minWidth={16}>
-                <Text color="$neutral2" variant="buttonLabel2">
+                <Text color="$neutral2" variant="buttonLabel4">
                   {index + 1}
                 </Text>
               </Flex>

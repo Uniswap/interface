@@ -1,9 +1,9 @@
 import { PersistState } from 'redux-persist'
-import { PreV16UserState } from 'state/migrations/oldTypes'
+import { UserState } from 'state/user/reducer'
 
 export type PersistAppStateV6 = {
   _persist: PersistState
-} & { user?: PreV16UserState & { selectedWallet?: unknown } & { recentConnectionMeta?: unknown } }
+} & { user?: UserState & { selectedWallet?: unknown } & { recentConnectionMeta?: unknown } }
 
 /**
  * Migration to replace selected wallet with recentConnectionMeta in user state

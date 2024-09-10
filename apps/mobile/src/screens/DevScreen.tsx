@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Screen } from 'src/components/layout/Screen'
-import { Flex, Switch, Text, TouchableArea, useDeviceInsets } from 'ui/src'
+import { Flex, Text, TouchableArea, useDeviceInsets } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { resetDismissedWarnings } from 'uniswap/src/features/tokens/slice/slice'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { logger } from 'utilities/src/logger/logger'
 import { UniconSampleSheet } from 'wallet/src/components/DevelopmentOnly/UniconSampleSheet'
+import { Switch } from 'wallet/src/components/buttons/Switch'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { createOnboardingAccount } from 'wallet/src/features/onboarding/createOnboardingAccount'
@@ -109,9 +110,8 @@ export function DevScreen(): JSX.Element {
           <Flex row alignItems="center" gap="$spacing16" justifyContent="space-between">
             <Text>Force RTL (requires restart to apply)</Text>
             <Switch
-              checked={rtlEnabled}
-              variant="branded"
-              onCheckedChange={(value: boolean): void => {
+              value={rtlEnabled}
+              onValueChange={(value: boolean): void => {
                 I18nManager.forceRTL(value)
                 setRTLEnabled(value)
               }}

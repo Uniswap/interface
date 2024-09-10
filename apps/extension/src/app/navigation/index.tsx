@@ -1,6 +1,6 @@
 import { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
-import { Outlet, ScrollRestoration, useLocation } from 'react-router-dom'
+import { Outlet, useLocation } from 'react-router-dom'
 import { DappRequestQueue } from 'src/app/features/dappRequests/DappRequestQueue'
 import { HomeScreen } from 'src/app/features/home/HomeScreen'
 import { Locked } from 'src/app/features/lockScreen/Locked'
@@ -15,10 +15,9 @@ import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import { AnimatePresence, Flex, SpinningLoader, styled } from 'ui/src'
 import { useIsChromeWindowFocusedWithTimeout } from 'uniswap/src/extension/useIsChromeWindowFocused'
-import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
+import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { TransactionHistoryUpdater } from 'wallet/src/features/transactions/TransactionHistoryUpdater'
-import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts/WalletUniswapContext'
 import { QueuedOrderModal } from 'wallet/src/features/transactions/swap/modals/QueuedOrderModal'
 
 export function MainContent(): JSX.Element {
@@ -91,10 +90,6 @@ export function WebNavigation(): JSX.Element {
     }
   }
 
-  // Only restore scroll if path on latest re-render is different from the previous path.
-  const prevPathname = usePrevious(pathname)
-  const shouldRestoreScroll = pathname !== prevPathname
-
   const childrenMemo = useMemo(() => {
     return (
       <AnimatePresence custom={{ towards }} initial={false}>
@@ -127,11 +122,8 @@ export function WebNavigation(): JSX.Element {
 
   return (
     <SideBarNavigationProvider>
-      <WalletUniswapProvider>
-        <NotificationToastWrapper />
-        {shouldRestoreScroll && <ScrollRestoration />}
-        {childrenMemo}
-      </WalletUniswapProvider>
+      <NotificationToastWrapper />
+      {childrenMemo}
     </SideBarNavigationProvider>
   )
 }

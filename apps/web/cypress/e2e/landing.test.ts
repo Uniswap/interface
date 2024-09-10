@@ -9,6 +9,13 @@ describe('Landing Page', () => {
     cy.screenshot()
   })
 
+  it('redirects to swap page when a user has already connected a wallet', () => {
+    cy.visit('/')
+    cy.get('#swap-page')
+    cy.url().should('include', '/swap')
+    cy.screenshot()
+  })
+
   it('shows landing page when a user has already connected a wallet but ?intro=true is in query', () => {
     cy.visit('/?intro=true')
     cy.get(getTestSelector('landing-page'))

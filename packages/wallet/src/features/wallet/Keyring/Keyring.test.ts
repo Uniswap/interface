@@ -1,3 +1,4 @@
+import { WebKeyring } from 'wallet/src/features/wallet/Keyring/Keyring.web'
 import {
   SAMPLE_PASSWORD,
   SAMPLE_SEED,
@@ -11,8 +12,7 @@ import {
   SAMPLE_SEED_ADDRESS_7,
   SAMPLE_SEED_ADDRESS_8,
   SAMPLE_SEED_ADDRESS_9,
-} from 'uniswap/src/test/fixtures'
-import { WebKeyring } from 'wallet/src/features/wallet/Keyring/Keyring.web'
+} from 'wallet/src/test/fixtures'
 
 type ChromeSessionStore = { [prop: string]: unknown }
 
@@ -259,7 +259,7 @@ describe(WebKeyring, () => {
       await keyring.importMnemonic(SAMPLE_SEED, SAMPLE_PASSWORD)
       await keyring.unlock(SAMPLE_PASSWORD)
 
-      const addresses = await keyring.generateAddressesForMnemonicId(SAMPLE_SEED_ADDRESS_1, 0, 10)
+      const addresses = await keyring.generateAddressesForMnemonicId(SAMPLE_SEED_ADDRESS_1, 0, 9)
       expect(addresses).toEqual([
         SAMPLE_SEED_ADDRESS_1,
         SAMPLE_SEED_ADDRESS_2,

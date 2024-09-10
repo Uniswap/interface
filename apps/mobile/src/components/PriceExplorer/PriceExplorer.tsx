@@ -14,11 +14,11 @@ import { Loader } from 'src/components/loading'
 import { Flex, useHapticFeedback } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
+import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
+import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 type PriceTextProps = {
   loading: boolean

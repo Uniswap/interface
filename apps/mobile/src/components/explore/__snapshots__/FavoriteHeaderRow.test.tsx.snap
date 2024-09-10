@@ -20,9 +20,8 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
     style={
       {
         "color": "#7D7D7D",
-        "fontFamily": "Basel Grotesk",
+        "fontFamily": "Basel-Book",
         "fontSize": 17,
-        "fontWeight": "400",
         "lineHeight": 24,
       }
     }
@@ -61,10 +60,10 @@ exports[`FavoriteHeaderRow when editing renders without error 1`] = `
       style={
         {
           "color": "#FC72FF",
-          "fontFamily": "Basel Grotesk",
-          "fontSize": 17,
+          "fontFamily": "Basel-Medium",
+          "fontSize": 15,
           "fontWeight": "500",
-          "lineHeight": 19.549999999999997,
+          "lineHeight": 20,
         }
       }
       suppressHighlighting={true}
@@ -96,9 +95,8 @@ exports[`FavoriteHeaderRow when not editing renders without error 1`] = `
     style={
       {
         "color": "#7D7D7D",
-        "fontFamily": "Basel Grotesk",
+        "fontFamily": "Basel-Book",
         "fontSize": 17,
-        "fontWeight": "400",
         "lineHeight": 24,
       }
     }

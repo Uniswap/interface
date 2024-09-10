@@ -25,7 +25,7 @@ export enum WarningAction {
   // acknowledge a popup warning before submitting
   WarnBeforeSubmit = 'warn_before_submit',
 
-  // same as WarnBeforeSubmit but pops up after recipient is selected (send only)
+  // same as WarnBeforeSubmit but pops up after recipient is selected (transfer only)
   WarnAfterRecipientSelect = 'warn_after_recipient_select',
 
   // prevents submission altogether

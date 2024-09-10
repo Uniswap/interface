@@ -15,8 +15,8 @@ import {
   token,
   tokenMarket,
   tokenProject,
-} from 'uniswap/src/test/fixtures'
-import { createArray } from 'uniswap/src/test/utils'
+} from 'wallet/src/test/fixtures'
+import { createArray } from 'wallet/src/test/utils'
 
 type ExploreSearchResult = NonNullable<ExploreSearchQuery>
 

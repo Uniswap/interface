@@ -54,10 +54,10 @@ exports[`CopyTextButton renders without error 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 19,
+        "fontFamily": "Basel-Medium",
+        "fontSize": 17,
         "fontWeight": "500",
-        "lineHeight": 21.849999999999998,
+        "lineHeight": 24,
       }
     }
     suppressHighlighting={true}

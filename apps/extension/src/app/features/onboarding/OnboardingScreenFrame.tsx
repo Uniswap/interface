@@ -48,7 +48,7 @@ export function OnboardingScreenFrame({
             top="$none"
             onPress={onSkip}
           >
-            <Text color="$neutral2" variant="buttonLabel2">
+            <Text color="$neutral2" variant="buttonLabel3">
               Skip
             </Text>
           </TouchableArea>

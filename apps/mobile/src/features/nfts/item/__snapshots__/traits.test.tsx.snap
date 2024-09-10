@@ -24,10 +24,10 @@ exports[`renders trait card 1`] = `
     style={
       {
         "color": "#7D7D7D",
-        "fontFamily": "Basel Grotesk",
-        "fontSize": 17,
+        "fontFamily": "Basel-Medium",
+        "fontSize": 13,
         "fontWeight": "500",
-        "lineHeight": 19.549999999999997,
+        "lineHeight": 16,
       }
     }
     suppressHighlighting={true}
@@ -40,9 +40,8 @@ exports[`renders trait card 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel Grotesk",
+        "fontFamily": "Basel-Book",
         "fontSize": 17,
-        "fontWeight": "400",
         "lineHeight": 24,
       }
     }

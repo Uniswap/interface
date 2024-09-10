@@ -1,5 +1,4 @@
 import { ethCurrencyInfo } from 'pages/Swap/Buy/BuyFormContext'
-// eslint-disable-next-line no-restricted-imports
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
 
 export const mockServiceProvider = {

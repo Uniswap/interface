@@ -3,7 +3,6 @@
 
 import {
   activatePendingAccounts,
-  addCreatedOnboardingRedesignAccountBehaviorHistory,
   addExploreAndWelcomeBehaviorHistory,
   addHapticSetting,
   addRoutingFieldToTransactions,
@@ -11,9 +10,6 @@ import {
   deleteDefaultFavoritesFromFavoritesState,
   deleteExtensionOnboardingState,
   deleteHoldToSwapBehaviorHistory,
-  moveCurrencySetting,
-  moveDismissedTokenWarnings,
-  moveLanguageSetting,
   moveUserSettings,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
@@ -34,10 +30,6 @@ export const migrations = {
   9: addExploreAndWelcomeBehaviorHistory,
   10: moveUserSettings,
   11: deleteHoldToSwapBehaviorHistory,
-  12: addCreatedOnboardingRedesignAccountBehaviorHistory,
-  13: moveDismissedTokenWarnings,
-  14: moveLanguageSetting,
-  15: moveCurrencySetting,
 }
 
-export const EXTENSION_STATE_VERSION = 15
+export const EXTENSION_STATE_VERSION = 11
