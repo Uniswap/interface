@@ -62,7 +62,7 @@
 	<key>ITSAppUsesNonExemptEncryption</key>
 	<false/>
 	<key>LSApplicationCategoryType</key>
-	<string></string>
+	<string/>
 	<key>LSApplicationQueriesSchemes</key>
 	<array>
 		<string>itms-apps</string>
@@ -86,8 +86,8 @@
 	<key>NSCameraUsageDescription</key>
 	<string>$(PRODUCT_NAME) Wallet needs access to your Camera to scan QR codes</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-  <string>$(PRODUCT_NAME) Wallet needs access to your Camera Roll to choose an avatar for your username</string>
-  <key>NSFaceIDUsageDescription</key>
+	<string>$(PRODUCT_NAME) Wallet needs access to your Camera Roll to choose an avatar for your username</string>
+	<key>NSFaceIDUsageDescription</key>
 	<string>Enabling Face ID helps $(PRODUCT_NAME) Wallet keep your assets secure.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>$(PRODUCT_NAME) Wallet does not require access to your location.</string>
@@ -116,10 +116,8 @@
 	<key>UIAppFonts</key>
 	<array>
 		<string>InputMono-Regular.ttf</string>
-		<string>Basel-Book.otf</string>
-		<string>Basel-Medium.otf</string>
-		<string>Basel-Semibold.otf</string>
-		<string>Basel-Bold.otf</string>
+		<string>Basel-Grotesk-Book.otf</string>
+		<string>Basel-Grotesk-Medium.otf</string>
 	</array>
 	<key>UIBackgroundModes</key>
 	<array>

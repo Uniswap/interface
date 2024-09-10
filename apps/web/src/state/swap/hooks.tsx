@@ -134,18 +134,17 @@ export function useSwapActionHandlers(): {
 // from the current swap inputs, compute the best trade and return it.
 export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   const account = useAccount()
-  const {
-    chainId,
-    currencyState: { inputCurrency, outputCurrency },
-  } = useSwapAndLimitContext()
+  const { chainId, currencyState } = useSwapAndLimitContext()
   const nativeCurrency = useNativeCurrency(chainId)
   const balance = useCurrencyBalance(account.address, nativeCurrency)
 
   // Note: if the currency was selected from recent searches
   // we don't have decimals (decimals are 0) need to fetch
   // full currency info with useCurrencyInfo otherwise quotes will break
-  const inputCurrencyInfo = useCurrencyInfo(inputCurrency)
-  const outputCurrencyInfo = useCurrencyInfo(outputCurrency)
+  const inputCurrencyInfo = useCurrencyInfo(currencyState.inputCurrency)
+  const outputCurrencyInfo = useCurrencyInfo(currencyState.outputCurrency)
+  const inputCurrency = inputCurrencyInfo?.currency
+  const outputCurrency = outputCurrencyInfo?.currency
 
   const { independentField, typedValue } = state
 
@@ -162,12 +161,8 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
 
   const isExactIn: boolean = independentField === Field.INPUT
   const parsedAmount = useMemo(
-    () =>
-      tryParseCurrencyAmount(
-        typedValue,
-        (isExactIn ? inputCurrencyInfo?.currency : outputCurrencyInfo?.currency) ?? undefined,
-      ),
-    [inputCurrencyInfo, isExactIn, outputCurrencyInfo, typedValue],
+    () => tryParseCurrencyAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
+    [inputCurrency, isExactIn, outputCurrency, typedValue],
   )
 
   const trade: {
@@ -177,7 +172,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
   } = useDebouncedTrade(
     isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     parsedAmount,
-    (isExactIn ? outputCurrencyInfo?.currency : inputCurrencyInfo?.currency) ?? undefined,
+    (isExactIn ? outputCurrency : inputCurrency) ?? undefined,
     state.routerPreferenceOverride as RouterPreference.API | undefined,
     account.address,
   )

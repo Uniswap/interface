@@ -1,5 +1,5 @@
-import { NotImplementedError } from 'utilities/src/errors'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 
 export const restartApp = (): void => {
-  throw new NotImplementedError('restartApp not implemented')
+  throw new PlatformSplitStubError('restartApp')
 }

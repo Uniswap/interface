@@ -121,7 +121,7 @@ exports[`OpenLimitOrdersButton should render if there are open limit orders 1`] 
                 class="c4"
               >
                 <span
-                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-20px _fontWeight-233016109"
+                  class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-20px _fontWeight-233016109"
                   data-disable-theme="true"
                 >
                   1 open limit

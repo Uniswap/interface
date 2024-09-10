@@ -5,11 +5,14 @@ import { useTranslation } from 'react-i18next'
 import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
-import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Loader, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
 import { useENSAvatar } from 'uniswap/src/features/ens/api'
+import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
+import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -18,7 +21,6 @@ import { NumberType } from 'utilities/src/format/types'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { Arrow } from 'wallet/src/components/icons/Arrow'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import {
   useCreateOnboardingAccountIfNone,
   useOnboardingContext,
@@ -33,7 +35,7 @@ type Props = CompositeScreenProps<
 >
 
 export function WelcomeWalletScreen({ navigation, route: { params } }: Props): JSX.Element {
-  useAddBackButton(navigation)
+  useNavigationHeader(navigation)
   useCreateOnboardingAccountIfNone()
 
   const { getOnboardingAccountAddress, getUnitagClaim } = useOnboardingContext()
@@ -49,8 +51,14 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
   const { data: avatar } = useENSAvatar(onboardingAccountAddress)
 
   const onPressNext = (): void => {
+    const onboardingExperimentEnabled = getExperimentValue(
+      Experiments.OnboardingRedesignRecoveryBackup,
+      OnboardingRedesignRecoveryBackupProperties.Enabled,
+      false,
+    )
+
     navigation.navigate({
-      name: OnboardingScreens.Backup,
+      name: onboardingExperimentEnabled ? OnboardingScreens.Notifications : OnboardingScreens.Backup,
       merge: true,
       params,
     })
@@ -121,7 +129,7 @@ export function WelcomeWalletScreen({ navigation, route: { params } }: Props): J
                 <Flex backgroundColor={opacify(10, colors.white.val)} borderRadius="$roundedFull" p="$spacing8">
                   <LockIcon color={colors.white.val} height={iconSizes.icon16} width={iconSizes.icon16} />
                 </Flex>
-                <Text color="$white" variant="buttonLabel2">
+                <Text color="$white" variant="buttonLabel1">
                   {t('onboarding.wallet.continue')}
                 </Text>
               </Flex>

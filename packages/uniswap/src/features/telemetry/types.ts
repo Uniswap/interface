@@ -58,6 +58,31 @@ export type MoonpayTransactionEventProperties = ITraceContext &
   // allow any object of strings for now
   Record<string, string>
 
+export type EstimatedGasFeeDetails = {
+  gasUseEstimate?: string
+  maxFeePerGas?: string
+  maxPriorityFeePerGas?: string
+  gasFee?: string
+  blockSubmitted?: number
+}
+
+export type GasEstimateAccuracyProperties = {
+  tx_hash?: string
+  transaction_type: string
+  chain_id: number
+  final_status?: string
+  time_to_confirmed_ms?: number
+  blocks_to_confirmed?: number
+  gas_use_diff?: number
+  gas_use_diff_percentage?: number
+  gas_used?: number
+  gas_price_diff?: number
+  gas_price_diff_percentage?: number
+  gas_price?: number
+  max_priority_fee_per_gas?: string
+  private_rpc?: boolean
+}
+
 export type AssetDetailsBaseProperties = {
   name?: string
   domain?: string
@@ -149,7 +174,7 @@ export type WindowEthereumRequestProperties = {
 }
 
 export type DappContextProperties = {
-  dappUrl: string
+  dappUrl?: string
   chainId: WalletChainId
   activeConnectedAddress: Address
   connectedAddresses: Address[]
@@ -349,14 +374,19 @@ export type UniverseEventProperties = {
     navbar_search_input_text: string
     hasInput: boolean
   } & ITraceContext
-  [InterfaceEventName.CHAIN_CHANGED]: {
-    result: WalletConnectionResult.SUCCEEDED
-    wallet_address?: string
-    wallet_type: string
-    chain_id?: number
-    previousConnectedChainId: number
-    page?: InterfacePageName
-  }
+  [InterfaceEventName.CHAIN_CHANGED]:
+    | {
+        result: WalletConnectionResult.SUCCEEDED
+        wallet_address?: string
+        wallet_type: string
+        chain_id?: number
+        previousConnectedChainId: number
+        page?: InterfacePageName
+      }
+    | {
+        chain: string
+        page: InterfacePageName.EXPLORE_PAGE
+      }
   [InterfaceEventName.EXPLORE_SEARCH_SELECTED]: undefined
   [InterfaceEventName.LANGUAGE_SELECTED]: {
     previous_language: string
@@ -650,6 +680,7 @@ export type UniverseEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
+  [WalletEventName.GasEstimateAccuracy]: GasEstimateAccuracyProperties
   [WalletEventName.TokenVisibilityChanged]: { currencyId: string; visible: boolean }
   [WalletEventName.TransferSubmitted]: TransferProperties
   [WalletEventName.WalletAdded]: OnboardingCompletedProps & ITraceContext

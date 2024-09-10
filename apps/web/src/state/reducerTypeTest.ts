@@ -21,7 +21,7 @@ import { SignatureState } from 'state/signatures/reducer'
 import { LocalWebTransactionState } from 'state/transactions/reducer'
 import { TransactionDetails } from 'state/transactions/types'
 import { UserState } from 'state/user/reducer'
-import { SerializedPair, SerializedToken, SlippageTolerance } from 'state/user/types'
+import { SerializedPair, SlippageTolerance } from 'state/user/types'
 import { ConnectedWalletsState } from 'state/wallets/reducer'
 import { Wallet } from 'state/wallets/types'
 import { InterfaceState } from 'state/webReducer'
@@ -92,11 +92,6 @@ interface ExpectedUserState {
   userSlippageTolerance: number | SlippageTolerance.Auto
   userSlippageToleranceHasBeenMigratedToAuto: boolean
   userDeadline: number
-  tokens: {
-    [chainId: number]: {
-      [address: string]: SerializedToken
-    }
-  }
   pairs: {
     [chainId: number]: {
       [key: string]: SerializedPair

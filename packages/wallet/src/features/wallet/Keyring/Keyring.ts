@@ -1,4 +1,4 @@
-import { NotImplementedError } from 'utilities/src/errors'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 
 /**
  * Provides the generation, storage, and signing logic for mnemonics and private keys.
@@ -83,34 +83,26 @@ export interface IKeyring {
    *
    * @param mnemonic mnemonic to generate private key for (current convention is to
    * use the public address associated with mnemonic at derivation index 0)
-   * @param startDerivationIndex number used to specify the derivation index at which to start deriving private keys
+   * @param startIndex number used to specify the derivation index at which to start deriving private keys
    * from the mnemonic
-   * @param endDerivationIndex number used to specify the derivation index at which to stop deriving private keys
+   * @param stopIndex number used to specify the derivation index at which to stop deriving private keys
    * from the mnemonic
    * @returns public addresses associated with the private keys generated from the mnemonic at the given derivation index range
    */
-  generateAddressesForMnemonic(
-    mnemonic: string,
-    startDerivationIndex: number,
-    endDerivationIndex: number,
-  ): Promise<Array<string>>
+  generateAddressesForMnemonic(mnemonic: string, startIndex: number, stopIndex: number): Promise<Array<string>>
 
   /**
    * Derives public addresses from `mnemonicId` for a range of derivation indexes.
    *
    * @param mnemonicId key string associated with mnemonic to generate private key for (current convention is to
    * use the public address associated with mnemonic at derivation index 0)
-   * @param startDerivationIndex number used to specify the derivation index at which to start deriving private keys
+   * @param startIndex number used to specify the derivation index at which to start deriving private keys
    * from the mnemonic
-   * @param endDerivationIndex number used to specify the derivation index at which to stop deriving private keys
+   * @param stopIndex number used to specify the derivation index at which to stop deriving private keys
    * from the mnemonic
    * @returns public addresses associated with the private keys generated from the mnemonic at the given derivation index range
    */
-  generateAddressesForMnemonicId(
-    mnemonicId: string,
-    startDerivationIndex: number,
-    endDerivationIndex: number,
-  ): Promise<Array<string>>
+  generateAddressesForMnemonicId(mnemonicId: string, startIndex: number, stopIndex: number): Promise<Array<string>>
 
   /**
    * Derives private key and public address from mnemonic associated with `mnemonicId` for given `derivationIndex`.
@@ -138,7 +130,7 @@ export interface IKeyring {
 /** Dummy Keyring implementation.  */
 class NullKeyring implements IKeyring {
   removeAllMnemonicsAndPrivateKeys(): Promise<boolean> {
-    throw new NotImplementedError('removeAllMnemonicsAndPrivateKeys')
+    throw new PlatformSplitStubError('removeAllMnemonicsAndPrivateKeys')
   }
 
   generateAddressesForMnemonic(
@@ -146,7 +138,7 @@ class NullKeyring implements IKeyring {
     _startDerivationIndex: number,
     _endDerivationIndex: number,
   ): Promise<string[]> {
-    throw new NotImplementedError('generateAddressesForMnemonic')
+    throw new PlatformSplitStubError('generateAddressesForMnemonic')
   }
 
   generateAddressesForMnemonicId(
@@ -154,11 +146,11 @@ class NullKeyring implements IKeyring {
     _startDerivationIndex: number,
     _endDerivationIndex: number,
   ): Promise<string[]> {
-    throw new NotImplementedError('generateAddressesForMnemonicId')
+    throw new PlatformSplitStubError('generateAddressesForMnemonicId')
   }
 
   isUnlocked(): Promise<boolean> {
-    throw new NotImplementedError('isUnlocked')
+    throw new PlatformSplitStubError('isUnlocked')
   }
 
   unlock(): Promise<boolean> {
@@ -170,67 +162,67 @@ class NullKeyring implements IKeyring {
   }
 
   checkPassword(_password: string): Promise<boolean> {
-    throw new NotImplementedError('checkPassword')
+    throw new PlatformSplitStubError('checkPassword')
   }
 
   changePassword(_newPassword: string): Promise<boolean> {
-    throw new NotImplementedError('changePassword')
+    throw new PlatformSplitStubError('changePassword')
   }
 
   removePassword(): Promise<boolean> {
-    throw new NotImplementedError('removePassword')
+    throw new PlatformSplitStubError('removePassword')
   }
 
   getMnemonicIds(): Promise<string[]> {
-    throw new NotImplementedError('getMnemonicIds')
+    throw new PlatformSplitStubError('getMnemonicIds')
   }
 
   // returns the mnemonicId (derived address at index 0) of the imported mnemonic
   importMnemonic(_mnemonic: string, _password?: string, _allowOverwrite?: boolean): Promise<string> {
-    throw new NotImplementedError('importMnemonic')
+    throw new PlatformSplitStubError('importMnemonic')
   }
 
   removeMnemonic(_menemonicId: string): Promise<boolean> {
-    throw new NotImplementedError('removeMnemonic')
+    throw new PlatformSplitStubError('removeMnemonic')
   }
 
   retrieveMnemonicUnlocked(_address: string): Promise<string> {
-    throw new NotImplementedError('retrieveMnemonicUnlocked')
+    throw new PlatformSplitStubError('retrieveMnemonicUnlocked')
   }
 
   // returns the mnemonicId (derived address at index 0) of the stored mnemonic
   generateAndStoreMnemonic(_password?: string): Promise<string> {
-    throw new NotImplementedError('generateAndStoreMnemonic')
+    throw new PlatformSplitStubError('generateAndStoreMnemonic')
   }
 
   getAddressesForStoredPrivateKeys(): Promise<string[]> {
-    throw new NotImplementedError('getAddressesForStoredPrivateKeys')
+    throw new PlatformSplitStubError('getAddressesForStoredPrivateKeys')
   }
 
   // returns the address for a given mnemonic
   generateAddressForMnemonic(_menemonic: string, _derivationIndex: number): Promise<string> {
-    throw new NotImplementedError('generateAddressForMnemonic')
+    throw new PlatformSplitStubError('generateAddressForMnemonic')
   }
 
   // returns the address of the generated key
   generateAndStorePrivateKey(_menemonicId: string, _derivationIndex: number): Promise<string> {
-    throw new NotImplementedError('generateAndStorePrivateKey')
+    throw new PlatformSplitStubError('generateAndStorePrivateKey')
   }
 
   removePrivateKey(_address: string): Promise<boolean> {
-    throw new NotImplementedError('removePrivateKey')
+    throw new PlatformSplitStubError('removePrivateKey')
   }
 
   signTransactionHashForAddress(_address: string, _hash: string, _chainId: number): Promise<string> {
-    throw new NotImplementedError('signTransactionHashForAddress')
+    throw new PlatformSplitStubError('signTransactionHashForAddress')
   }
 
   signMessageForAddress(_address: string, _message: string): Promise<string> {
-    throw new NotImplementedError('signMessageForAddress')
+    throw new PlatformSplitStubError('signMessageForAddress')
   }
 
   signHashForAddress(_address: string, _hash: string, _chainId: number): Promise<string> {
-    throw new NotImplementedError('signHashForAddress')
+    throw new PlatformSplitStubError('signHashForAddress')
   }
 }
 

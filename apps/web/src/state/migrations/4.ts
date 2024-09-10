@@ -1,10 +1,10 @@
 import { DEFAULT_LOCALE } from 'constants/locales'
 import { PersistState } from 'redux-persist'
-import { UserState } from 'state/user/reducer'
+import { PreV16UserState } from 'state/migrations/oldTypes'
 
 export type PersistAppStateV4 = {
   _persist: PersistState
-} & { user?: UserState }
+} & { user?: PreV16UserState }
 
 /**
  * Migration to set german locale to default locale, after

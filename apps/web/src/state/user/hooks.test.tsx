@@ -6,8 +6,8 @@ import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference, useUserSlippageTolerance } from 'state/user/hooks'
 import { updateUserSlippageTolerance } from 'state/user/reducer'
 import { SlippageTolerance } from 'state/user/types'
-import { deserializeToken, serializeToken } from 'state/user/utils'
 import { renderHook } from 'test-utils/render'
+import { deserializeToken, serializeToken } from 'uniswap/src/utils/currency'
 
 describe('serializeToken', () => {
   it('serializes the token', () => {

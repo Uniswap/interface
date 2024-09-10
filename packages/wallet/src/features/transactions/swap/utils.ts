@@ -9,11 +9,14 @@ import { FeeOptions } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
+import { EstimatedGasFeeDetails } from 'uniswap/src/features/telemetry/types'
 import { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
+  BaseSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionType,
@@ -31,7 +34,6 @@ import {
   currencyIdToChain,
 } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
 import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 
 export function serializeQueryParams(params: Record<string, Parameters<typeof encodeURIComponent>[0]>): string {
@@ -69,6 +71,7 @@ export function isWrapAction(wrapType: WrapType): wrapType is WrapType.Unwrap | 
 export function tradeToTransactionInfo(
   trade: Trade,
   transactedUSDValue?: number,
+  estimatedGasFeeDetails?: EstimatedGasFeeDetails,
 ): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
 
@@ -79,7 +82,8 @@ export function tradeToTransactionInfo(
   const inputCurrency = isUniswapX(trade) ? trade.inputAmount.currency.wrapped : trade.inputAmount.currency
   const outputCurrency = trade.outputAmount.currency
 
-  const baseTransactionInfo = {
+  const baseTransactionInfo: BaseSwapTransactionInfo = {
+    type: TransactionType.Swap,
     inputCurrencyId: currencyId(inputCurrency),
     outputCurrencyId: currencyId(outputCurrency),
     slippageTolerance,
@@ -88,12 +92,12 @@ export function tradeToTransactionInfo(
     routeString,
     protocol: getProtocolVersionFromTrade(trade),
     transactedUSDValue,
+    estimatedGasFeeDetails,
   }
 
   return trade.tradeType === TradeType.EXACT_INPUT
     ? {
         ...baseTransactionInfo,
-        type: TransactionType.Swap,
         tradeType: TradeType.EXACT_INPUT,
         inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
         expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
@@ -101,7 +105,6 @@ export function tradeToTransactionInfo(
       }
     : {
         ...baseTransactionInfo,
-        type: TransactionType.Swap,
         tradeType: TradeType.EXACT_OUTPUT,
         outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
         expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
@@ -190,7 +193,7 @@ export const prepareSwapFormState = ({
         exactAmountToken: '',
         [CurrencyField.INPUT]: {
           address: currencyIdToAddress(inputCurrencyId),
-          chainId: currencyIdToChain(inputCurrencyId) ?? UniverseChainId.Mainnet,
+          chainId: (currencyIdToChain(inputCurrencyId) as WalletChainId) ?? UniverseChainId.Mainnet,
           type: AssetType.Currency,
         },
         [CurrencyField.OUTPUT]: null,

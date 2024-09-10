@@ -312,7 +312,7 @@ function NFTItemScreenContents({
                           iconColor="$neutral1"
                           price={listingPrice}
                           textColor="$neutral1"
-                          textVariant="buttonLabel3"
+                          textVariant="buttonLabel2"
                         />
                       }
                     />
@@ -323,7 +323,7 @@ function NFTItemScreenContents({
                       title={t('tokens.nfts.details.network')}
                       valueComponent={
                         <Flex row alignItems="center" gap="$spacing8">
-                          <Text color="$neutral1" variant="buttonLabel3">
+                          <Text color="$neutral1" variant="buttonLabel2">
                             {UNIVERSE_CHAIN_INFO[chainId].label}
                           </Text>
                           <NetworkLogo chainId={chainId} shape="square" size={iconSizes.icon20} />
@@ -340,7 +340,7 @@ function NFTItemScreenContents({
                           iconColor="$neutral1"
                           price={lastSaleData.price}
                           textColor="$neutral1"
-                          textVariant="buttonLabel3"
+                          textVariant="buttonLabel2"
                         />
                       }
                     />
@@ -358,7 +358,7 @@ function NFTItemScreenContents({
                             horizontalGap="$spacing4"
                             size={iconSizes.icon20}
                             textColor="$neutral1"
-                            variant="buttonLabel3"
+                            variant="buttonLabel2"
                           />
                         </TouchableArea>
                       }

@@ -38,7 +38,7 @@ import { useSwapActionHandlers } from 'state/swap/hooks'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Anchor, Text, styled as tamaguiStyled } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { colors, validColor } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -61,7 +61,7 @@ const ShortArrowWrapper = styled(ArrowWrapper)`
   margin-bottom: -22px;
 `
 
-const StyledAlertIcon = styled(AlertTriangle)`
+const StyledAlertIcon = styled(AlertTriangleFilled)`
   align-self: flex-start;
   flex-shrink: 0;
   margin-right: 12px;
@@ -75,7 +75,7 @@ const LimitDisclaimerContainer = styled(Row)`
 `
 
 const LearnMore = tamaguiStyled(Text, {
-  variant: 'buttonLabel4',
+  variant: 'buttonLabel2',
   color: '$accent1',
   animation: '100ms',
   hoverStyle: {

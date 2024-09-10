@@ -1,7 +1,7 @@
 import { Bag } from 'components/NavBar/Bag'
 import { ChainSelector } from 'components/NavBar/ChainSelector'
 import { CompanyMenu } from 'components/NavBar/CompanyMenu'
-import { GetTheAppButton } from 'components/NavBar/DownloadApp/GetTheAppButton'
+import { NewUserCTAButton } from 'components/NavBar/DownloadApp/NewUserCTAButton'
 import { PreferenceMenu } from 'components/NavBar/PreferencesMenu'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { SearchBar } from 'components/NavBar/SearchBar'
@@ -10,6 +10,7 @@ import Row from 'components/Row'
 import Web3Status from 'components/Web3Status'
 import { useScreenSize } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
+import { useIsExplorePage } from 'hooks/useIsExplorePage'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
 import { useIsLimitPage } from 'hooks/useIsLimitPage'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -20,8 +21,20 @@ import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { BREAKPOINTS, NAV_HEIGHT } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
+import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useExperimentGroupName, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+
+export enum AccountCTAsExperimentGroup {
+  Control = 'Control', // Get the app / Connect
+  SignInSignUp = 'SignIn-SignUp',
+  LogInCreateAccount = 'LogIn-CreateAccount',
+}
+
+export function useIsAccountCTAExperimentControl() {
+  const experimentGroupName = useExperimentGroupName(Experiments.AccountCTAs)
+  return experimentGroupName === AccountCTAsExperimentGroup.Control || experimentGroupName === null
+}
 
 const Nav = styled.nav`
   padding: 0px 12px;
@@ -66,27 +79,49 @@ const SearchContainer = styled.div`
   height: 42px;
 `
 
-export default function Navbar() {
+function useShouldHideChainSelector() {
   const isNftPage = useIsNftPage()
   const isLandingPage = useIsLandingPage()
   const isSendPage = useIsSendPage()
   const isSwapPage = useIsSwapPage()
   const isLimitPage = useIsLimitPage()
+  const isExplorePage = useIsExplorePage()
+  const { value: multichainFlagEnabled, isLoading: isMultichainFlagLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.MultichainUX,
+  )
+  const { value: multichainExploreFlagEnabled, isLoading: isMultichainExploreFlagLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.MultichainExplore,
+  )
+
+  const baseHiddenPages = isNftPage
+  const multichainHiddenPages = isLandingPage || isSendPage || isSwapPage || isLimitPage || baseHiddenPages
+  const multichainExploreHiddenPages = multichainHiddenPages || isExplorePage
+
+  const hideChainSelector =
+    multichainExploreFlagEnabled || isMultichainExploreFlagLoading
+      ? multichainExploreHiddenPages
+      : multichainFlagEnabled || isMultichainFlagLoading
+        ? multichainHiddenPages
+        : baseHiddenPages
+
+  return hideChainSelector
+}
+
+export default function Navbar() {
+  const isNftPage = useIsNftPage()
+  const isLandingPage = useIsLandingPage()
 
   const sellPageState = useProfilePageState((state) => state.state)
   const isSmallScreen = !useScreenSize()['sm']
+  const isMediumScreen = !useScreenSize()['md']
   const areTabsVisible = useTabsVisible()
   const collapseSearchBar = !useScreenSize()['lg']
   const account = useAccount()
   const NAV_SEARCH_MAX_HEIGHT = 'calc(100vh - 30px)'
 
-  const { value: multichainFlagEnabled, isLoading: isMultichainFlagLoading } = useFeatureFlagWithLoading(
-    FeatureFlags.MultichainUX,
-  )
-  const hideChainSelector =
-    multichainFlagEnabled || isMultichainFlagLoading
-      ? isLandingPage || isSendPage || isSwapPage || isLimitPage || isNftPage
-      : isNftPage
+  const hideChainSelector = useShouldHideChainSelector()
+
+  const isSignInExperimentControl = useIsAccountCTAExperimentControl()
 
   return (
     <Nav>
@@ -103,10 +138,11 @@ export default function Navbar() {
         <Right>
           {collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
           {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
-          {isLandingPage && !isSmallScreen && <GetTheAppButton />}
+          {isSignInExperimentControl && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
           {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
           {!hideChainSelector && <ChainSelector isNavSelector />}
           <Web3Status />
+          {!isSignInExperimentControl && !account.address && !isMediumScreen && <NewUserCTAButton />}
         </Right>
       </NavContents>
     </Nav>

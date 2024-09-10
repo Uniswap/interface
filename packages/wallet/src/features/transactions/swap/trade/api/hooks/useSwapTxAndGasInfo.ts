@@ -3,6 +3,7 @@ import { useMemo } from 'react'
 import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { EstimatedGasFeeDetails } from 'uniswap/src/features/telemetry/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { ApprovalAction, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -20,12 +21,18 @@ export type UniswapXGasBreakdown = {
   inputTokenSymbol?: string
 }
 
+export type GasFeeEstimation = {
+  swapFee?: EstimatedGasFeeDetails
+  approvalFee?: EstimatedGasFeeDetails
+}
+
 export type ClassicSwapTxAndGasInfo = {
   routing: Routing.CLASSIC
   trade?: ClassicTrade
   txRequest?: ValidatedTransactionRequest
   approveTxRequest: ValidatedTransactionRequest | undefined
   gasFee: GasFeeResult
+  gasFeeEstimation: GasFeeEstimation
   approvalError: boolean
 }
 
@@ -89,6 +96,18 @@ export function useSwapTxAndGasInfo({
     const approvalError = tokenApprovalInfo?.action === ApprovalAction.Unknown
     const gasFeeError = swapTxInfo.gasFeeResult.error ?? approvalError ? new Error('Approval action unknown') : null
 
+    const gasFeeEstimation: GasFeeEstimation = {
+      swapFee: swapTxInfo.gasFeeEstimation,
+      approvalFee: tokenApprovalInfo
+        ? {
+            gasUseEstimate: tokenApprovalInfo.txRequest?.gasLimit?.toString(),
+            maxFeePerGas: tokenApprovalInfo.txRequest?.maxFeePerGas?.toString(),
+            maxPriorityFeePerGas: tokenApprovalInfo.txRequest?.maxPriorityFeePerGas?.toString(),
+            gasFee: tokenApprovalInfo.gasFee,
+          }
+        : undefined,
+    }
+
     // Do not populate gas fee:
     //   - If errors exist on swap or approval requests.
     //   - If we don't have both the approval and transaction gas fees.
@@ -132,11 +151,13 @@ export function useSwapTxAndGasInfo({
         txRequest: validateTransactionRequest(swapTxInfo.transactionRequest),
         approveTxRequest,
         gasFee,
+        gasFeeEstimation,
         approvalError,
       }
     }
   }, [
     tokenApprovalInfo,
+    swapTxInfo.gasFeeEstimation,
     swapTxInfo.gasFeeResult.error,
     swapTxInfo.gasFeeResult.value,
     swapTxInfo.gasFeeResult.isLoading,

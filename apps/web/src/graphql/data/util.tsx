@@ -11,6 +11,7 @@ import {
   SupportedInterfaceChainId,
   UX_SUPPORTED_GQL_CHAINS,
   chainIdToBackendChain,
+  getChainFromChainUrlParam,
   isSupportedChainId,
 } from 'constants/chains'
 import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
@@ -18,6 +19,7 @@ import { DefaultTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { ExploreTab } from 'pages/Explore'
 import { useEffect } from 'react'
+import { TokenStat } from 'state/explore/types'
 import { ThemeColors } from 'theme/colors'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
@@ -95,11 +97,11 @@ export function toContractInput(currency: Currency): ContractInput {
   return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
 }
 
-export function gqlToCurrency(token: DeepPartial<GqlToken>): Currency | undefined {
+export function gqlToCurrency(token: DeepPartial<GqlToken | TokenStat>): Currency | undefined {
   if (!token.chain) {
     return undefined
   }
-  const chainId = supportedChainIdFromGQLChain(token.chain)
+  const chainId = getChainFromChainUrlParam(token.chain.toLowerCase())?.id
   if (!chainId) {
     return undefined
   }
@@ -132,12 +134,12 @@ export function fiatOnRampToCurrency(forCurrency: FORSupportedToken): Currency |
 
 export function getSupportedGraphQlChain(
   chain: UniverseChainInfo | undefined,
-  options?: undefined,
-): UniverseChainInfo | undefined
-export function getSupportedGraphQlChain(
-  chain: UniverseChainInfo | undefined,
   options: { fallbackToEthereum: true },
 ): UniverseChainInfo
+export function getSupportedGraphQlChain(
+  chain: UniverseChainInfo | undefined,
+  options?: { fallbackToEthereum?: boolean },
+): UniverseChainInfo | undefined
 export function getSupportedGraphQlChain(
   chain: UniverseChainInfo | undefined,
   options?: { fallbackToEthereum?: boolean },
@@ -218,10 +220,18 @@ export function unwrapToken<
   }
 }
 
-type ProtocolMeta = { name: string; color: keyof ThemeColors }
+type ProtocolMeta = { name: string; color: keyof ThemeColors; gradient: { start: string; end: string } }
 const PROTOCOL_META: { [source in PriceSource]: ProtocolMeta } = {
-  [PriceSource.SubgraphV2]: { name: 'v2', color: 'accent3' },
-  [PriceSource.SubgraphV3]: { name: 'v3', color: 'accent1' },
+  [PriceSource.SubgraphV2]: {
+    name: 'v2',
+    color: 'accent3',
+    gradient: { start: 'rgba(96, 123, 238, 0.20)', end: 'rgba(55, 70, 136, 0.00)' },
+  },
+  [PriceSource.SubgraphV3]: {
+    name: 'v3',
+    color: 'accent1',
+    gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
+  },
   /* [PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */
 }
 
@@ -231,6 +241,9 @@ export function getProtocolColor(priceSource: PriceSource, theme: DefaultTheme):
 
 export function getProtocolName(priceSource: PriceSource): string {
   return PROTOCOL_META[priceSource].name
+}
+export function getProtocolGradient(priceSource: PriceSource): { start: string; end: string } {
+  return PROTOCOL_META[priceSource].gradient
 }
 
 export enum OrderDirection {

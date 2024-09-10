@@ -45,7 +45,7 @@ function TableBody<Data extends RowData>({
 }: {
   table: TanstackTable<Data>
   loading?: boolean
-  error?: ApolloError
+  error?: ApolloError | boolean
 }) {
   const analyticsContext = useTrace()
 
@@ -131,7 +131,7 @@ export function Table<Data extends RowData>({
   columns: ColumnDef<Data, any>[]
   data: Data[]
   loading?: boolean
-  error?: ApolloError
+  error?: ApolloError | boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   maxWidth?: number
   maxHeight?: number

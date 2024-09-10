@@ -64,15 +64,12 @@ export default function UniwalletModal() {
         <Flex row my="$spacing24" centered>
           {uri && (
             <QRCodeDisplay
-              hideOutline
-              errorCorrectionLevel="M"
+              ecl="M"
               color={colors.accent1.val}
-              containerBackgroundColor={colors.surface2.val}
-              displayShadow={false}
+              containerBackgroundColor={colors.surface1.val}
               encodedValue={uri}
-              logoSize={81}
-              safeAreaColor={colors.surface1.val}
               size={370}
+              eyeSize={140}
             >
               <Flex borderRadius="$rounded32" borderWidth="$spacing8" borderColor="$surface2">
                 <Image src={MobileAppLogo} width={81} height={81} />

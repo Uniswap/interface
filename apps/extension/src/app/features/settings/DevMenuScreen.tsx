@@ -4,11 +4,11 @@ import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { SettingsItemWithDropdown } from 'src/app/features/settings/SettingsItemWithDropdown'
 import { Accordion, Flex, ScrollView } from 'ui/src'
 import { Settings } from 'ui/src/components/icons'
+import { Language, SUPPORTED_LANGUAGES } from 'uniswap/src/features/language/constants'
+import { getLanguageInfo, useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
 import i18n from 'uniswap/src/i18n/i18n'
 import { GatingOverrides } from 'wallet/src/components/gating/GatingOverrides'
-import { Language, SUPPORTED_LANGUAGES } from 'wallet/src/features/language/constants'
-import { getLanguageInfo, useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
-import { setCurrentLanguage } from 'wallet/src/features/language/slice'
 
 export function DevMenuScreen(): JSX.Element {
   const { t } = useTranslation()

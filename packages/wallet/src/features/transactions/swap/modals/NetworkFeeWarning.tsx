@@ -36,14 +36,16 @@ export function NetworkFeeWarning({
           <UniswapXFeeContent uniswapXGasFeeInfo={uniswapXGasFeeInfo} />
         ) : (
           <LearnMoreLink
-            textVariant={isWeb ? 'buttonLabel4' : undefined}
+            textVariant={isWeb ? 'buttonLabel3' : undefined}
             url={uniswapUrls.helpArticleUrls.networkFeeInfo}
           />
         )
       }
       modalProps={{
         backgroundIconColor: colors.surface2.get(),
-        caption: <NetworkFeeText showHighGasFeeUI={showHighGasFeeUI} uniswapXGasFeeInfo={uniswapXGasFeeInfo} />,
+        captionComponent: (
+          <NetworkFeeText showHighGasFeeUI={showHighGasFeeUI} uniswapXGasFeeInfo={uniswapXGasFeeInfo} />
+        ),
         closeText: t('common.button.close'),
         icon: <Gas color={showHighGasFeeUI ? '$statusCritical' : '$neutral2'} size="$icon.24" />,
         modalName: ModalName.NetworkFeeInfo,
@@ -94,7 +96,7 @@ function UniswapXFeeContent({ uniswapXGasFeeInfo }: { uniswapXGasFeeInfo: Format
     <Flex gap="$spacing12">
       <Flex row centered={isMobileApp} width="100%">
         <LearnMoreLink
-          textVariant={isWeb ? 'buttonLabel4' : undefined}
+          textVariant={isWeb ? 'buttonLabel3' : undefined}
           url={uniswapUrls.helpArticleUrls.uniswapXInfo}
         />
       </Flex>

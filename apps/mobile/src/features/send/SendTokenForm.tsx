@@ -13,6 +13,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
@@ -30,7 +31,7 @@ import {
 import { SwapArrowButton } from 'wallet/src/features/transactions/swap/SwapArrowButton'
 import { useUSDTokenUpdater } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDTokenUpdater'
 import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
-import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 const TRANSFER_DIRECTION_BUTTON_SIZE = iconSizes.icon20
 const TRANSFER_DIRECTION_BUTTON_INNER_PADDING = spacing.spacing12

@@ -1,7 +1,7 @@
 import { ComponentProps, ReactNode } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ColorTokens, Flex, FlexProps, Text, TouchableArea, useIsDarkMode, useSporeColors } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { opacify } from 'ui/src/theme'
 
@@ -152,7 +152,7 @@ function ErrorState(props: ErrorStateProps): JSX.Element {
       <Flex row>
         {retryButtonLabel ? (
           <TouchableArea hapticFeedback onPress={onRetry}>
-            <Text color="$accent1" variant="buttonLabel3">
+            <Text color="$accent1" variant="buttonLabel2">
               {retryButtonLabel}
             </Text>
           </TouchableArea>
@@ -175,7 +175,7 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
     title = t('common.card.error.title'),
     onRetry: retry,
     retryButtonLabel = t('common.button.retry'),
-    icon = <AlertTriangle color="$neutral3" size="$icon.16" testID="error-icon" />,
+    icon = <AlertTriangleFilled color="$neutral3" size="$icon.16" testID="error-icon" />,
   } = props
 
   return (
@@ -198,7 +198,7 @@ function InlineErrorState(props: InlineErrorStateProps): JSX.Element {
       </Flex>
       {retry ? (
         <TouchableArea hapticFeedback onPress={retry}>
-          <Text color="$accent1" variant="buttonLabel3">
+          <Text color="$accent1" variant="buttonLabel2">
             {retryButtonLabel}
           </Text>
         </TouchableArea>

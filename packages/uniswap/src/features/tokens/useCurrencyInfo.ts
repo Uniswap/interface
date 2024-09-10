@@ -5,10 +5,13 @@ import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'uniswap/src/f
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { buildNativeCurrencyId, buildWrappedNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
-export function useCurrencyInfo(_currencyId?: string, options?: { refetch: boolean }): Maybe<CurrencyInfo> {
+export function useCurrencyInfo(
+  _currencyId?: string,
+  options?: { refetch?: boolean; skip?: boolean },
+): Maybe<CurrencyInfo> {
   const { data } = useTokenQuery({
     variables: currencyIdToContractInput(_currencyId ?? ''),
-    skip: !_currencyId,
+    skip: !_currencyId || options?.skip,
     fetchPolicy: options?.refetch ? 'cache-and-network' : 'cache-first',
   })
 

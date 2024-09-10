@@ -37,14 +37,16 @@ import {
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { Language } from 'uniswap/src/features/language/constants'
+import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
-import { useTokenWarningDismissed } from 'uniswap/src/features/tokens/slice/hooks'
-
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import {
@@ -57,9 +59,6 @@ import { NumberType } from 'utilities/src/format/types'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { useIsSupportedFiatOnRampCurrency } from 'wallet/src/features/fiatOnRamp/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
-import { Language } from 'wallet/src/features/language/constants'
-import { useCurrentLanguage } from 'wallet/src/features/language/hooks'
 import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -95,7 +94,7 @@ function HeaderTitleElement({
           symbol={symbol ?? undefined}
           url={logo}
         />
-        <Text color="$neutral2" numberOfLines={1} variant="buttonLabel4">
+        <Text color="$neutral2" numberOfLines={1} variant="buttonLabel3">
           {symbol ?? t('token.error.unknown')}
         </Text>
       </Flex>
@@ -181,7 +180,7 @@ function TokenDetails({
   const insets = useDeviceInsets()
   const isDarkMode = useIsDarkMode()
 
-  const currencyChainId = currencyIdToChain(_currencyId) ?? UniverseChainId.Mainnet
+  const currencyChainId = (currencyIdToChain(_currencyId) as WalletChainId) ?? UniverseChainId.Mainnet
   const currencyAddress = currencyIdToAddress(_currencyId)
 
   const token = data?.token
@@ -228,7 +227,9 @@ function TokenDetails({
 
   const [showWarningModal, setShowWarningModal] = useState(false)
   const [showBuyNativeTokenModal, setShowBuyNativeTokenModal] = useState(false)
-  const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissed(_currencyId)
+  const { tokenWarningDismissed, onDismissTokenWarning } = useDismissedTokenWarnings(
+    isNativeCurrency ? undefined : { chainId: currencyChainId, address: currencyAddress },
+  )
 
   const safetyLevel = token?.project?.safetyLevel
 
@@ -278,12 +279,12 @@ function TokenDetails({
   ])
 
   const onAcceptWarning = useCallback(() => {
-    dismissWarningCallback()
+    onDismissTokenWarning()
     setShowWarningModal(false)
     if (activeTransactionType !== undefined) {
       navigateToSwapFlow({ currencyField: activeTransactionType, currencyAddress, currencyChainId })
     }
-  }, [activeTransactionType, currencyAddress, currencyChainId, dismissWarningCallback, navigateToSwapFlow])
+  }, [activeTransactionType, currencyAddress, currencyChainId, onDismissTokenWarning, navigateToSwapFlow])
 
   const inModal = useSelector(selectModalState(ModalName.Explore)).isOpen
 

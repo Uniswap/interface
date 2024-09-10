@@ -77,10 +77,10 @@ exports[`TokenItem renders without error 1`] = `
             style={
               {
                 "color": "#7D7D7D",
-                "fontFamily": "Basel-Medium",
-                "fontSize": 13,
+                "fontFamily": "Basel Grotesk",
+                "fontSize": 17,
                 "fontWeight": "500",
-                "lineHeight": 16,
+                "lineHeight": 19.549999999999997,
               }
             }
             suppressHighlighting={true}
@@ -138,8 +138,9 @@ exports[`TokenItem renders without error 1`] = `
           style={
             {
               "color": "#222222",
-              "fontFamily": "Basel-Book",
+              "fontFamily": "Basel Grotesk",
               "fontSize": 19,
+              "fontWeight": "400",
               "lineHeight": 24,
             }
           }
@@ -154,8 +155,9 @@ exports[`TokenItem renders without error 1`] = `
           style={
             {
               "color": "#7D7D7D",
-              "fontFamily": "Basel-Book",
+              "fontFamily": "Basel Grotesk",
               "fontSize": 17,
+              "fontWeight": "400",
               "lineHeight": 24,
             }
           }
@@ -196,8 +198,9 @@ exports[`TokenItem renders without error 1`] = `
               style={
                 {
                   "color": "#222222",
-                  "fontFamily": "Basel-Book",
+                  "fontFamily": "Basel Grotesk",
                   "fontSize": 19,
+                  "fontWeight": "400",
                   "lineHeight": 24,
                 }
               }
@@ -230,8 +233,9 @@ exports[`TokenItem renders without error 1`] = `
                   style={
                     {
                       "color": "#7D7D7D",
-                      "fontFamily": "Basel-Book",
+                      "fontFamily": "Basel Grotesk",
                       "fontSize": 17,
+                      "fontWeight": "400",
                       "lineHeight": 24,
                     }
                   }

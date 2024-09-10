@@ -1,7 +1,4 @@
-import { PortfolioValueModifier } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GqlResult } from 'uniswap/src/data/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { FiatNumberType } from 'utilities/src/format/types'
 
@@ -9,31 +6,8 @@ export type TokenOption = {
   currencyInfo: CurrencyInfo
   quantity: number | null // float representation of balance, returned by data-api
   balanceUSD: Maybe<number>
+  isUnsupported?: boolean
 }
-
-export type TokenOptionsHookType = (
-  address: string | undefined,
-  chainFilter: UniverseChainId | null,
-  valueModifiers?: PortfolioValueModifier[],
-  searchFilter?: string,
-) => GqlResult<TokenOption[] | undefined>
-
-export type TokenOptionsWithChainFilterHookType = (
-  address: string | undefined,
-  chainFilter: UniverseChainId,
-  valueModifiers?: PortfolioValueModifier[],
-  searchFilter?: string,
-) => GqlResult<TokenOption[] | undefined>
-
-export type TokenOptionsWithBalanceOnlySearchHookType = (
-  address: string | undefined,
-  chainFilter: UniverseChainId | null,
-  searchFilter: string | null,
-  isBalancesOnlySearch: boolean,
-  valueModifiers?: PortfolioValueModifier[],
-) => GqlResult<TokenSection[]>
-
-export type TokenSectionsForEmptySearchHookType = (chainFilter: UniverseChainId | null) => GqlResult<TokenSection[]>
 
 export type OnSelectCurrency = (currency: CurrencyInfo, section: TokenSection, index: number) => void
 
@@ -52,53 +26,17 @@ export type TokenSection = {
   rightElement?: JSX.Element
 }
 
-export type TokenSelectorListSections = TokenSection[]
-
-export type TokenWarningDismissedHook = (currencyId: Maybe<string>) => {
-  tokenWarningDismissed: boolean
-  dismissWarningCallback: () => void
-}
-
-export type TokenSectionsForSwap = {
+export type TokenSectionsHookProps = {
   activeAccountAddress?: string
   chainFilter: UniverseChainId | null
   isKeyboardOpen?: boolean
-  searchHistory?: TokenSearchResult[]
-  valueModifiers?: PortfolioValueModifier[]
-  useFavoriteTokensOptionsHook: TokenOptionsHookType
-  usePopularTokensOptionsHook: TokenOptionsWithChainFilterHookType
-  usePortfolioTokenOptionsHook: TokenOptionsHookType
 }
-
-export type TokenSectionsForSwapInput = TokenSectionsForSwap
-
-export type TokenSectionsForSwapOutput = TokenSectionsForSwap & {
-  useCommonTokensOptionsHook: TokenOptionsWithChainFilterHookType
-}
-
-export type TokenSectionsForSend = Omit<
-  TokenSectionsForSwap,
-  'usePopularTokensOptionsHook' | 'useFavoriteTokensOptionsHook'
->
 
 export type ConvertFiatAmountFormattedCallback = (
   fromAmount: Maybe<string | number>,
   numberType: FiatNumberType,
   placeholder?: string | undefined,
 ) => string
-
-export type FilterCallbacksHookType = (
-  chainId: UniverseChainId | null,
-  flow: TokenSelectorFlow,
-) => {
-  chainFilter: UniverseChainId | null
-  parsedChainFilter: UniverseChainId | null
-  searchFilter: string | null
-  parsedSearchFilter: string | null
-  onChangeChainFilter: (newChainFilter: UniverseChainId | null) => void
-  onClearSearchFilter: () => void
-  onChangeText: (newSearchFilter: string) => void
-}
 
 export enum TokenSelectorFlow {
   Swap,

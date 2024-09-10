@@ -3,10 +3,10 @@ import { useHeaderHeight } from '@react-navigation/elements'
 import React, { PropsWithChildren, useCallback } from 'react'
 import { BackHandler, KeyboardAvoidingView, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { renderHeaderBackButton } from 'src/app/navigation/components'
+import { HeaderSkipButton, renderHeaderBackButton } from 'src/app/navigation/components'
 import { useOnboardingStackNavigation } from 'src/app/navigation/types'
 import { SHORT_SCREEN_HEADER_HEIGHT_RATIO, Screen } from 'src/components/layout/Screen'
-import { Flex, SpaceTokens, Text, useDeviceInsets, useMedia } from 'ui/src'
+import { Flex, GeneratedIcon, SpaceTokens, Text, useDeviceInsets, useMedia } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
 import { isIOS } from 'utilities/src/platform'
@@ -14,19 +14,23 @@ import { isIOS } from 'utilities/src/platform'
 type OnboardingScreenProps = {
   subtitle?: string
   title?: string
+  Icon?: GeneratedIcon
   paddingTop?: SpaceTokens
   childrenGap?: SpaceTokens
   keyboardAvoidingViewEnabled?: boolean
   disableGoBack?: boolean
+  onSkip?: () => void
 }
 
 export function OnboardingScreen({
   title,
   subtitle,
+  Icon,
   children,
   paddingTop = '$none',
   keyboardAvoidingViewEnabled = true,
   disableGoBack = false,
+  onSkip,
 }: PropsWithChildren<OnboardingScreenProps>): JSX.Element {
   const navigation = useOnboardingStackNavigation()
   const headerHeight = useHeaderHeight()
@@ -40,13 +44,16 @@ export function OnboardingScreen({
       navigation.setOptions({
         headerLeft: disableGoBack ? (): null => null : renderHeaderBackButton,
         gestureEnabled: !disableGoBack,
+        headerRight: !onSkip
+          ? (): null => null
+          : (_props): JSX.Element => <HeaderSkipButton onPress={() => onSkip()} />,
       })
       const subscription = BackHandler.addEventListener('hardwareBackPress', () => {
         return disableGoBack
       })
 
       return subscription.remove
-    }, [navigation, disableGoBack]),
+    }, [navigation, disableGoBack, onSkip]),
   )
 
   return (
@@ -62,15 +69,16 @@ export function OnboardingScreen({
       >
         <AnimatedFlex grow entering={FadeIn} exiting={FadeOut} gap={gapSize} pb="$spacing16" px="$spacing16">
           {/* Text content */}
-          <Flex centered gap="$spacing12" m="$spacing12">
+          <Flex centered gap="$spacing8" m="$spacing12">
+            {Icon && (
+              <Flex centered mb="$spacing4">
+                <Flex centered backgroundColor="$surface3" borderRadius="$rounded8" p="$spacing12">
+                  <Icon color="$neutral1" size="$icon.18" />
+                </Flex>
+              </Flex>
+            )}
             {title && (
-              <Text
-                $short={{ variant: 'subheading1' }}
-                allowFontScaling={false}
-                pt={paddingTop}
-                textAlign="center"
-                variant="heading3"
-              >
+              <Text allowFontScaling={false} pt={paddingTop} textAlign="center" variant="subheading1">
                 {title}
               </Text>
             )}
@@ -80,7 +88,7 @@ export function OnboardingScreen({
                 color="$neutral2"
                 maxFontSizeMultiplier={media.short ? 1.1 : fonts.body2.maxFontSizeMultiplier}
                 textAlign="center"
-                variant="body2"
+                variant="subheading2"
               >
                 {subtitle}
               </Text>

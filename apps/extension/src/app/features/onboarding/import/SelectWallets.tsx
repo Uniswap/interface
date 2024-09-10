@@ -25,7 +25,7 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
   const [buttonClicked, setButtonClicked] = useState(false)
 
   const { goToNextStep, goToPreviousStep } = useOnboardingSteps()
-  const { getGeneratedAddresses, generateAccountsAndImportAddresses } = useOnboardingContext()
+  const { generateAccountsAndImportAddresses, getGeneratedAddresses } = useOnboardingContext()
 
   const { data: generatedAddresses } = useAsyncData(getGeneratedAddresses)
 
@@ -91,13 +91,13 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
               </Flex>
             ) : (
               importableAccounts?.map((account) => {
-                const { ownerAddress, balance } = account
+                const { address, balance } = account
                 return (
                   <WalletPreviewCard
-                    key={ownerAddress}
-                    address={ownerAddress}
+                    key={address}
+                    address={address}
                     balance={balance}
-                    selected={selectedAddresses.includes(ownerAddress)}
+                    selected={selectedAddresses.includes(address)}
                     onSelect={toggleAddressSelection}
                   />
                 )

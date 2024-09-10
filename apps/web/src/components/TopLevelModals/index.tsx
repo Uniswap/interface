@@ -18,8 +18,6 @@ import Bag from 'nft/components/bag/Bag'
 import TransactionCompleteModal from 'nft/components/collection/TransactionCompleteModal'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { isBetaEnv, isDevEnv } from 'utilities/src/environment'
 
 export default function TopLevelModals() {
@@ -30,7 +28,6 @@ export default function TopLevelModals() {
   useAccountRiskCheck(account.address)
   const accountBlocked = Boolean(blockedAccountModalOpen && account.isConnected)
   const shouldShowDevFlags = isDevEnv() || isBetaEnv()
-  const extensionIsLaunched = useFeatureFlag(FeatureFlags.ExtensionLaunch)
 
   return (
     <>
@@ -51,7 +48,7 @@ export default function TopLevelModals() {
       <PrivacyPolicyModal />
       <FeatureFlagModal />
       {shouldShowDevFlags && <DevFlagsBox />}
-      {extensionIsLaunched && <ExtensionLaunchModal />}
+      <ExtensionLaunchModal />
     </>
   )
 }

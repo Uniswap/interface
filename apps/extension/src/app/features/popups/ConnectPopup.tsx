@@ -36,7 +36,7 @@ export function ConnectPopupContent({
           <Text variant="subheading2">{t('extension.connection.titleNotConnected')}</Text>
           <Anchor href={dappUrl} textDecorationLine="none">
             <Flex>
-              <Text color="$neutral2" numberOfLines={1} variant="buttonLabel4">
+              <Text color="$neutral2" numberOfLines={1} variant="buttonLabel2">
                 {extractUrlHost(dappUrl)}
               </Text>
             </Flex>
@@ -76,7 +76,7 @@ export function ConnectPopupContent({
               })
             }
           >
-            <Text color="$accent1" variant="buttonLabel4">
+            <Text color="$accent1" variant="buttonLabel2">
               {t('extension.connection.popup.trouble')}
             </Text>
           </Link>

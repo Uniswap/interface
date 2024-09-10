@@ -58,17 +58,6 @@ export function useFallbackListTokens(chainId: Maybe<InterfaceChainId>): { [addr
   }, [tokensFromMap, userAddedTokens])
 }
 
-// Check if currency is included in custom list from user storage
-export function useIsUserAddedToken(currency: Currency | undefined | null): boolean {
-  const userAddedTokens = useUserAddedTokens()
-
-  if (!currency) {
-    return false
-  }
-
-  return !!userAddedTokens.find((token) => currency.equals(token))
-}
-
 export function useCurrency(address?: string, chainId?: InterfaceChainId, skip?: boolean): Maybe<Currency> {
   const currencyInfo = useCurrencyInfo(address, chainId, skip)
   return currencyInfo?.currency
@@ -77,7 +66,7 @@ export function useCurrency(address?: string, chainId?: InterfaceChainId, skip?:
 /**
  * Returns a CurrencyInfo from the tokenAddress+chainId pair.
  */
-export function useCurrencyInfo(currency?: Currency): Maybe<CurrencyInfo>
+export function useCurrencyInfo(currency?: Currency, chainId?: InterfaceChainId, skip?: boolean): Maybe<CurrencyInfo>
 export function useCurrencyInfo(address?: string, chainId?: InterfaceChainId, skip?: boolean): Maybe<CurrencyInfo>
 export function useCurrencyInfo(
   addressOrCurrency?: string | Currency,
@@ -102,7 +91,7 @@ export function useCurrencyInfo(
   const addressWithFallback = isNative || !address ? nativeAddressWithFallback : address
 
   const currencyId = buildCurrencyId(supportedChainId ?? UniverseChainId.Mainnet, addressWithFallback)
-  const currencyInfo = useUniswapCurrencyInfo(currencyId)
+  const currencyInfo = useUniswapCurrencyInfo(currencyId, { skip })
 
   return useMemo(() => {
     const commonBase = getCommonBase(chainIdWithFallback, isNative, address)

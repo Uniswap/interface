@@ -5,9 +5,9 @@ import { ColorTokens, Flex, FlexProps, SpaceTokens, Text, useSporeColors } from 
 import { Ethereum } from 'ui/src/components/logos'
 import { TextVariantTokens, borderRadii, iconSizes, spacing } from 'ui/src/theme'
 import { IAmount } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
 import { isIOS } from 'utilities/src/platform'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 type ListPriceProps = FlexProps & {
   price: IAmount
@@ -48,7 +48,7 @@ export function PriceAmount({
   price,
   gap = '$spacing4',
   iconSize = iconSizes.icon16,
-  textVariant = 'buttonLabel4',
+  textVariant = 'buttonLabel2',
   iconColor = '$neutral1',
   textColor = '$neutral1',
 }: ListPriceProps): JSX.Element {

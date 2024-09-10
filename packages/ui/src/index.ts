@@ -15,7 +15,6 @@ export {
   Select,
   Sheet,
   Square,
-  Switch,
   Tabs,
   TamaguiProvider,
   Theme,
@@ -39,7 +38,8 @@ export type {
   InputProps,
   PopperProps,
   SpaceTokens,
-  SwitchProps,
+  TabLayout,
+  TabsTabProps,
   TamaguiElement,
   TamaguiProviderProps,
   ThemeKeys,
@@ -48,8 +48,7 @@ export type {
 } from 'tamagui'
 export { LinearGradient } from 'tamagui/linear-gradient'
 export * from 'ui/src/animations'
-export { AddressQRCode, QRCodeDisplay } from './components/QRCode'
-export type { GradientProps } from './components/QRCode'
+export { QRCodeDisplay } from './components/QRCode/QRCodeDisplay'
 export { Unicon } from './components/Unicon'
 export * from './components/Unicon/utils'
 export * from './components/UniversalImage/UniversalImage'
@@ -64,6 +63,7 @@ export { ContextMenu } from './components/menu/ContextMenu'
 export { MenuContent } from './components/menu/MenuContent'
 export type { MenuContentItem } from './components/menu/types'
 export { AdaptiveWebModal, WebBottomSheet } from './components/modal/AdaptiveWebModal'
+export { Switch, type SwitchProps } from './components/switch/Switch'
 export * from './components/text'
 export { Tooltip } from './components/tooltip/Tooltip'
 export * from './components/touchable'

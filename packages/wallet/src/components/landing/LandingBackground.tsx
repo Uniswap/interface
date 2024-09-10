@@ -19,6 +19,8 @@ import { ONBOARDING_LANDING_DARK, ONBOARDING_LANDING_LIGHT, UNISWAP_LOGO } from 
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { imageSizes } from 'ui/src/theme'
+import { Language } from 'uniswap/src/features/language/constants'
+import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { isAndroid, isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
@@ -34,8 +36,6 @@ import {
   UniconElement,
 } from 'wallet/src/components/landing/elements'
 import { InnerCircleGradient, OuterCircleGradient } from 'wallet/src/components/landing/landingBackgroundGradients'
-import { Language } from 'wallet/src/features/language/constants'
-import { useCurrentLanguage } from 'wallet/src/features/language/hooks'
 
 const DEFAULT_INNER_CIRCLE_SIZE = 120
 const DEFAULT_OUTER_CIRCLE_SIZE = 215

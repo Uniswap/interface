@@ -1,7 +1,7 @@
 import { PropsWithChildren, ReactNode } from 'react'
 import { ColorValue } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons'
+import { AlertTriangleFilled } from 'ui/src/components/icons'
 import { opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
@@ -15,8 +15,10 @@ export type WarningModalProps = {
   onCancel?: () => void
   onConfirm?: () => void
   modalName: ModalNameType
-  title: ReactNode
-  caption?: ReactNode
+  title?: string
+  titleComponent?: ReactNode
+  caption?: string
+  captionComponent?: ReactNode
   closeText?: string
   confirmText?: string
   severity?: WarningSeverity
@@ -37,7 +39,9 @@ export function WarningModal({
   onConfirm,
   modalName,
   title,
+  titleComponent,
   caption,
+  captionComponent,
   closeText,
   confirmText,
   severity = WarningSeverity.Medium,
@@ -85,17 +89,21 @@ export function WarningModal({
                   }
             }
           >
-            {icon ?? <AlertTriangle color={alertColor.text} size="$icon.24" />}
+            {icon ?? <AlertTriangleFilled color={alertColor.text} size="$icon.24" />}
           </Flex>
         )}
-        <Text textAlign="center" variant={isWeb ? 'subheading2' : 'body1'}>
-          {title}
-        </Text>
+        {title && (
+          <Text textAlign="center" variant={isWeb ? 'subheading2' : 'body1'}>
+            {title}
+          </Text>
+        )}
+        {titleComponent}
         {caption && (
           <Text color="$neutral2" textAlign="center" variant="body3">
             {caption}
           </Text>
         )}
+        {captionComponent}
         {children}
         <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'} width="100%">
           {closeText && (

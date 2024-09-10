@@ -48,7 +48,7 @@ export function BuyNativeTokenModal({
           <Flex px="$spacing8" py="$spacing4">
             <LearnMoreLink
               textColor="$neutral2"
-              textVariant="buttonLabel3"
+              textVariant="buttonLabel2"
               url={uniswapUrls.helpArticleUrls.networkFeeInfo}
             />
           </Flex>

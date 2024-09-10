@@ -1,11 +1,11 @@
 import { AccountList } from 'src/components/accounts/AccountList'
 import { cleanup, fireEvent, render, screen } from 'src/test/test-utils'
-import { ON_PRESS_EVENT_PAYLOAD } from 'uniswap/src/test/fixtures'
+import { ON_PRESS_EVENT_PAYLOAD, amounts, portfolio } from 'uniswap/src/test/fixtures'
+import { createArray, queryResolvers } from 'uniswap/src/test/utils'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import { ACCOUNT, amounts, portfolio, readOnlyAccount, signerMnemonicAccount } from 'wallet/src/test/fixtures'
+import { ACCOUNT, readOnlyAccount, signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { mockLocalizedFormatter } from 'wallet/src/test/mocks'
-import { createArray, queryResolvers } from 'wallet/src/test/utils'
 
 const tokensTotalDenominatedValue = amounts.md()
 const { resolvers } = queryResolvers({

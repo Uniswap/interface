@@ -3,13 +3,16 @@ import Badge from 'components/Badge'
 import Column from 'components/Column'
 import { ScrollBarStyles } from 'components/Common'
 import { ChainLogo } from 'components/Logo/ChainLogo'
-import { useRecentlySearchedAssets } from 'components/NavBar/SearchBar/RecentlySearchedAssets'
+import {
+  InterfaceRemoteSearchHistoryItem,
+  useRecentlySearchedAssets,
+} from 'components/NavBar/SearchBar/RecentlySearchedAssets'
 import { SkeletonRow, SuggestionRow } from 'components/NavBar/SearchBar/SuggestionRow'
 import Row from 'components/Row'
 import { SuspendConditionally } from 'components/Suspense/SuspendConditionally'
 import { SuspenseWithPreviousRenderAsFallback } from 'components/Suspense/SuspenseWithPreviousRenderAsFallback'
 import { BACKEND_NOT_YET_SUPPORTED_CHAIN_IDS } from 'constants/chains'
-import { SearchToken } from 'graphql/data/SearchTokens'
+import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import useTrendingTokens from 'graphql/data/TrendingTokens'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import { useAccount } from 'hooks/useAccount'
@@ -23,7 +26,11 @@ import { useLocation } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  HistoryDuration,
+  SafetyLevel,
+  Token,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
@@ -54,7 +61,7 @@ const NotFoundContainer = styled.div`
 
 interface SearchBarDropdownSectionProps {
   toggleOpen: () => void
-  suggestions: (GenieCollection | SearchToken | undefined)[]
+  suggestions: (InterfaceRemoteSearchHistoryItem | undefined)[]
   header: JSX.Element
   headerIcon?: JSX.Element
   hoveredIndex?: number
@@ -107,7 +114,7 @@ function SearchBarDropdownSection({
   )
 }
 
-function isKnownToken(token: SearchToken) {
+function isKnownToken(token: GqlSearchToken) {
   return token.project?.safetyLevel == SafetyLevel.Verified || token.project?.safetyLevel == SafetyLevel.MediumWarning
 }
 
@@ -127,7 +134,7 @@ const ChainComingSoonBadge = styled(Badge)`
 
 interface SearchBarDropdownProps {
   toggleOpen: () => void
-  tokens: SearchToken[]
+  tokens: GqlSearchToken[]
   collections: GenieCollection[]
   queryText: string
   hasInput: boolean
@@ -168,7 +175,13 @@ function SearchBarDropdownContents({
 }: SearchBarDropdownProps): JSX.Element {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
   const { data: searchHistory } = useRecentlySearchedAssets()
-  const shortenedHistory = useMemo(() => searchHistory ?? [...Array<SearchToken>(2)], [searchHistory])
+  const shortenedHistory = useMemo(
+    () =>
+      searchHistory?.filter((item) => 'isVerified' in (item as GenieCollection) || (item as Token).chain) ?? [
+        ...Array<GqlSearchToken>(2),
+      ],
+    [searchHistory],
+  )
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/explore')
@@ -201,7 +214,7 @@ function SearchBarDropdownContents({
 
   const trendingTokensLength = !isNFTPage ? 3 : 2
   const trendingTokens = useMemo(
-    () => trendingTokenData?.slice(0, trendingTokensLength) ?? [...Array<SearchToken>(trendingTokensLength)],
+    () => trendingTokenData?.slice(0, trendingTokensLength) ?? [...Array<GqlSearchToken>(trendingTokensLength)],
     [trendingTokenData, trendingTokensLength],
   )
 

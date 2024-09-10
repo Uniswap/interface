@@ -1,26 +1,35 @@
+import { Currency } from '@uniswap/sdk-core'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { dismissedWarningTokensSelector } from 'uniswap/src/features/tokens/slice/selectors'
-import { addDismissedWarningToken } from 'uniswap/src/features/tokens/slice/slice'
-import { CurrencyId } from 'uniswap/src/types/currency'
+import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
+import { BasicTokenInfo, isBasicTokenInfo } from 'uniswap/src/features/tokens/slice/types'
+import { serializeToken } from 'uniswap/src/utils/currency'
 
-export function useTokenWarningDismissed(currencyId: Maybe<CurrencyId>): {
+export function useDismissedTokenWarnings(info: Maybe<Currency | BasicTokenInfo>): {
   tokenWarningDismissed: boolean // user dismissed warning
-  dismissWarningCallback: () => void // callback to dismiss warning
+  onDismissTokenWarning: () => void // callback to dismiss warning
 } {
   const dispatch = useDispatch()
   const dismissedTokens = useSelector(dismissedWarningTokensSelector)
 
-  const tokenWarningDismissed = Boolean(currencyId && dismissedTokens && dismissedTokens[currencyId])
+  const isBasicInfo = isBasicTokenInfo(info)
 
-  const dismissWarningCallback = useCallback(() => {
-    if (currencyId) {
-      dispatch(addDismissedWarningToken({ currencyId }))
+  const tokenWarningDismissed = Boolean(
+    (isBasicInfo || info?.isToken) && dismissedTokens && dismissedTokens[info.chainId]?.[info.address],
+  )
+
+  const onDismissTokenWarning = useCallback(() => {
+    if (isBasicInfo) {
+      // handle basic info
+      dispatch(dismissTokenWarning({ token: info }))
+    } else {
+      // handle tokens
+      if (info?.isToken) {
+        return dispatch(dismissTokenWarning({ token: serializeToken(info) }))
+      }
     }
-  }, [currencyId, dispatch])
+  }, [isBasicInfo, info, dispatch])
 
-  return {
-    tokenWarningDismissed,
-    dismissWarningCallback,
-  }
+  return { tokenWarningDismissed, onDismissTokenWarning }
 }

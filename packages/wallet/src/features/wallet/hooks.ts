@@ -1,7 +1,7 @@
 import { useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { useENSAvatar, useENSName } from 'uniswap/src/features/ens/api'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { getValidAddress, sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { trimToLength } from 'utilities/src/primitives/string'
@@ -177,32 +177,4 @@ export function useDisplayName(address: Maybe<string>, options?: DisplayNameOpti
     name: `${sanitizeAddressText(shortenAddress(address))}`,
     type: DisplayNameType.Address,
   }
-}
-
-/*
- * Fetches avatar for address, in priority uses: unitag avatar, ens avatar, undefined
- *  Note that this hook is used instead of just useENSAvatar because our implementation
- *  of useENSAvatar checks for reverse name resolution which Unitags does not support.
- *  Chose to do this because even if we used useENSAvatar without reverse name resolution,
- *  there is more latency because it has to go to the contract via CCIP-read first.
- */
-export function useAvatar(address: Maybe<string>): {
-  avatar: Maybe<string>
-  loading: boolean
-} {
-  const validated = getValidAddress(address)
-  const { data: ensAvatar, loading: ensLoading } = useENSAvatar(validated)
-  const { unitag, loading: unitagLoading } = useUnitagByAddress(validated || undefined)
-
-  const unitagAvatar = unitag?.metadata?.avatar
-
-  if (unitagAvatar) {
-    return { avatar: unitagAvatar, loading: false }
-  }
-
-  if (ensAvatar) {
-    return { avatar: ensAvatar, loading: false }
-  }
-
-  return { avatar: undefined, loading: ensLoading || unitagLoading }
 }

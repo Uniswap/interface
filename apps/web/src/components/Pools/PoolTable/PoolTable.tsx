@@ -1,8 +1,10 @@
 import { ApolloError } from '@apollo/client'
 import { ColumnDef, createColumnHelper } from '@tanstack/react-table'
 import { InterfaceElementName } from '@uniswap/analytics-events'
+// eslint-disable-next-line no-restricted-imports
+import { TokenStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { Percent } from '@uniswap/sdk-core'
-import { DoubleCurrencyAndChainLogo } from 'components/DoubleLogo'
+import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
@@ -10,18 +12,30 @@ import { EllipsisText } from 'components/Tokens/TokenTable'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
+import { chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
 import { BIPS_BASE } from 'constants/misc'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { PoolSortFields, TablePool, useTopPools } from 'graphql/data/pools/useTopPools'
-import { OrderDirection, getSupportedGraphQlChain, gqlToCurrency, unwrapToken } from 'graphql/data/util'
+import {
+  OrderDirection,
+  getSupportedGraphQlChain,
+  gqlToCurrency,
+  supportedChainIdFromGQLChain,
+  unwrapToken,
+} from 'graphql/data/util'
+import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ReactElement, ReactNode, useCallback, useEffect, useMemo } from 'react'
+import { giveExploreStatDefaultValue } from 'state/explore'
+import { useTopPools as useRestTopPools } from 'state/explore/topPools'
+import { PoolStat } from 'state/explore/types'
 import { Flex, Text, styled } from 'ui/src'
-import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Chain, ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
@@ -67,6 +81,14 @@ export enum PoolTableColumns {
   OneDayApr,
 }
 
+function getRestTokenLogo(token?: Token | TokenStats, currencyLogo?: string | null): string | undefined {
+  // We can retrieve currencies for native chain assets and should use that logo over the rest returned logo
+  if (currencyLogo) {
+    return currencyLogo
+  }
+  return token && !('id' in token) ? token?.logo : undefined
+}
+
 function PoolDescription({
   token0,
   token1,
@@ -74,21 +96,30 @@ function PoolDescription({
   chainId,
   protocolVersion = ProtocolVersion.V3,
 }: {
-  token0: Token
-  token1: Token
-  feeTier: number
+  token0?: Token | TokenStats
+  token1?: Token | TokenStats
+  feeTier?: number
   chainId: InterfaceChainId
-  protocolVersion: ProtocolVersion
+  protocolVersion?: ProtocolVersion | string
 }) {
-  const currencies = [gqlToCurrency(token0), gqlToCurrency(token1)]
+  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
+  const currencies = [token0 ? gqlToCurrency(token0) : undefined, token1 ? gqlToCurrency(token1) : undefined]
+  // skip is isRestExploreEnabled
+  const currencyLogos = [
+    useCurrencyInfo(currencies?.[0], chainId, isRestExploreEnabled)?.logoUrl,
+    useCurrencyInfo(currencies?.[1], chainId, isRestExploreEnabled)?.logoUrl,
+  ]
+  const images = isRestExploreEnabled
+    ? [getRestTokenLogo(token0, currencyLogos[0]), getRestTokenLogo(token1, currencyLogos[1])]
+    : undefined
   return (
     <Flex row gap="$gap8" alignItems="center">
-      <DoubleCurrencyAndChainLogo chainId={chainId} currencies={currencies} size={28} />
+      <PortfolioLogo currencies={currencies} chainId={chainId} images={images} size={28} />
       <EllipsisText>
-        {token0.symbol}/{token1.symbol}
+        {token0?.symbol}/{token1?.symbol}
       </EllipsisText>
       {protocolVersion === ProtocolVersion.V2 && <Badge>{protocolVersion.toLowerCase()}</Badge>}
-      <Badge>{feeTier / BIPS_BASE}%</Badge>
+      {feeTier && <Badge>{feeTier / BIPS_BASE}%</Badge>}
     </Flex>
   )
 }
@@ -152,7 +183,12 @@ export function TopPoolTable() {
     resetSortAscending()
   }, [resetSortAscending, resetSortMethod])
 
-  const { topPools, loading, errorV3, errorV2 } = useTopPools(
+  const {
+    topPools: gqlTopPools,
+    loading: gqlLoading,
+    errorV3,
+    errorV2,
+  } = useTopPools(
     { sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc },
     chain.id,
   )
@@ -160,18 +196,23 @@ export function TopPoolTable() {
     errorV2 && errorV3
       ? new ApolloError({ errorMessage: `Could not retrieve V2 and V3 Top Pools on chain: ${chain.id}` })
       : undefined
-  const allDataStillLoading = loading && !topPools.length
+  const allDataStillLoading = gqlLoading && !gqlTopPools.length
   useUpdateManualOutage({ chainId: chain.id, errorV3, errorV2 })
+
+  const {
+    topPools: restTopPools,
+    isLoading: restIsLoading,
+    isError: restIsError,
+  } = useRestTopPools({ sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc })
+
+  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
+  const { topPools, loading, error } = isRestExploreEnabled
+    ? { topPools: restTopPools, loading: restIsLoading, error: restIsError }
+    : { topPools: gqlTopPools, loading: allDataStillLoading, error: combinedError }
 
   return (
     <TableWrapper data-testid="top-pools-explore-table">
-      <PoolsTable
-        pools={topPools}
-        loading={allDataStillLoading}
-        error={combinedError}
-        chainId={chain.id}
-        maxWidth={1200}
-      />
+      <PoolsTable pools={topPools} loading={loading} error={error} maxWidth={1200} />
     </TableWrapper>
   )
 }
@@ -181,16 +222,14 @@ export function PoolsTable({
   loading,
   error,
   loadMore,
-  chainId,
   maxWidth,
   maxHeight,
   hiddenColumns,
 }: {
-  pools?: TablePool[]
+  pools?: TablePool[] | PoolStat[]
   loading: boolean
-  error?: ApolloError
+  error?: ApolloError | boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
-  chainId: SupportedInterfaceChainId
   maxWidth?: number
   maxHeight?: number
   hiddenColumns?: PoolTableColumns[]
@@ -205,7 +244,8 @@ export function PoolsTable({
     () =>
       pools?.map((pool, index) => {
         const poolSortRank = index + 1
-
+        const isGqlPool = 'hash' in pool
+        const chainId = supportedChainIdFromGQLChain(pool.token0?.chain as Chain) ?? UniverseChainId.Mainnet
         return {
           index: poolSortRank,
           poolDescription: (
@@ -217,21 +257,21 @@ export function PoolsTable({
               protocolVersion={pool.protocolVersion}
             />
           ),
-          txCount: pool.txCount,
-          tvl: pool.tvl,
-          volume24h: pool.volume24h,
-          volumeWeek: pool.volumeWeek,
+          txCount: pool.txCount ?? 0,
+          tvl: isGqlPool ? pool.tvl : giveExploreStatDefaultValue(pool.totalLiquidity?.value),
+          volume24h: isGqlPool ? pool.volume24h : giveExploreStatDefaultValue(pool.volume1Day?.value),
+          volumeWeek: isGqlPool ? pool.volumeWeek : giveExploreStatDefaultValue(pool.volume1Week?.value),
           oneDayApr: pool.oneDayApr,
-          link: `/explore/pools/${chainIdToBackendChain({ chainId, withFallback: true }).toLowerCase()}/${pool.hash}`,
+          link: `/explore/pools/${chainIdToBackendChain({ chainId, withFallback: true }).toLowerCase()}/${isGqlPool ? pool.hash : pool.id}`,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
             properties: {
               chain_id: chainId,
-              pool_address: pool.hash,
-              token0_address: pool.token0.address,
-              token0_symbol: pool.token0.symbol,
-              token1_address: pool.token1.address,
-              token1_symbol: pool.token1.symbol,
+              pool_address: isGqlPool ? pool.hash : pool?.id,
+              token0_address: pool?.token0?.address,
+              token0_symbol: pool?.token0?.symbol,
+              token1_address: pool?.token1?.address,
+              token1_symbol: pool?.token1?.symbol,
               pool_list_index: index,
               pool_list_rank: poolSortRank,
               pool_list_length: pools.length,
@@ -240,7 +280,7 @@ export function PoolsTable({
           },
         }
       }) ?? [],
-    [chainId, filterString, pools],
+    [filterString, pools],
   )
 
   const showLoadingSkeleton = loading || !!error
@@ -395,7 +435,7 @@ export function PoolsTable({
   return (
     <Table
       columns={columns}
-      data={poolTableValues}
+      data={poolTableValues ?? []}
       loading={loading}
       error={error}
       loadMore={loadMore}

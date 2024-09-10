@@ -8,12 +8,11 @@ import {
   Token,
   useSearchTokensWebQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 
 const ARB_ADDRESS = ARB.address.toLowerCase()
 
 /* Returns the more relevant cross-chain token based on native status and search chain */
-function dedupeCrosschainTokens(current: SearchToken, existing: SearchToken | undefined, searchChain: Chain) {
+function dedupeCrosschainTokens(current: GqlSearchToken, existing: GqlSearchToken | undefined, searchChain: Chain) {
   if (!existing) {
     return current
   }
@@ -47,8 +46,8 @@ function dedupeCrosschainTokens(current: SearchToken, existing: SearchToken | un
 function searchTokenSortFunction(
   searchChain: Chain,
   wrappedNativeAddress: string | undefined,
-  a: SearchToken,
-  b: SearchToken,
+  a: GqlSearchToken,
+  b: GqlSearchToken,
 ) {
   if (a.standard === NATIVE_CHAIN_ID) {
     if (b.standard === NATIVE_CHAIN_ID) {
@@ -84,7 +83,7 @@ export function useSearchTokens(searchQuery: string | undefined, chainId: Suppor
   const sortedTokens = useMemo(() => {
     const searchChain = chainIdToBackendChain({ chainId, withFallback: true })
     // Stores results, allowing overwriting cross-chain tokens w/ more 'relevant token'
-    const selectionMap: { [projectId: string]: SearchToken } = {}
+    const selectionMap: { [projectId: string]: GqlSearchToken } = {}
     const filteredTokens = data?.searchTokens?.filter(
       (token): token is Token =>
         token !== undefined && (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(token.chain),
@@ -107,13 +106,4 @@ export function useSearchTokens(searchQuery: string | undefined, chainId: Suppor
   }
 }
 
-export type TokenSearchResultWeb = Omit<TokenSearchResult, 'type'> & {
-  type: SearchResultType.Token | SearchResultType.NFTCollection
-  address: string
-  chain: Chain
-  isNft?: boolean
-  isToken?: boolean
-  isNative?: boolean
-}
-
-export type SearchToken = NonNullable<NonNullable<SearchTokensWebQuery['searchTokens']>[number]>
+export type GqlSearchToken = NonNullable<NonNullable<SearchTokensWebQuery['searchTokens']>[number]>

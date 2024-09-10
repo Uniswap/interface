@@ -14,6 +14,7 @@ import {
   GeneratedIcon,
   ScrollView,
   Separator,
+  Switch,
   Text,
   TouchableArea,
   useSporeColors,
@@ -33,18 +34,16 @@ import {
 } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
+import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
-import { setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
+import { setCurrentFiatCurrency, setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
 import { isDevEnv } from 'utilities/src/environment'
 import noop from 'utilities/src/react/noop'
-import { WebSwitch } from 'wallet/src/components/buttons/Switch'
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { AuthActionType } from 'wallet/src/features/auth/types'
-import { FiatCurrency, ORDERED_CURRENCIES } from 'wallet/src/features/fiatCurrency/constants'
-import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { setCurrentFiatCurrency } from 'wallet/src/features/fiatCurrency/slice'
-import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 
 const manifestVersion = chrome.runtime.getManifest().version
 
@@ -116,15 +115,15 @@ export function SettingsScreen(): JSX.Element {
             />
             <SettingsToggleRow
               Icon={Chart}
+              checked={hideSmallBalances}
               title={t('settings.setting.smallBalances.title')}
-              value={hideSmallBalances}
-              onValueChange={handleSmallBalancesToggle}
+              onCheckedChange={handleSmallBalancesToggle}
             />
             <SettingsToggleRow
               Icon={ShieldQuestion}
+              checked={hideSpamTokens}
               title={t('settings.setting.unknownTokens.title')}
-              value={hideSpamTokens}
-              onValueChange={handleSpamTokensToggle}
+              onCheckedChange={handleSpamTokensToggle}
             />
             <SettingsItem
               Icon={LineChartDots}
@@ -225,13 +224,13 @@ function SettingsItem({
 function SettingsToggleRow({
   Icon,
   title,
-  value,
-  onValueChange,
+  checked,
+  onCheckedChange,
 }: {
   title: string
   Icon: GeneratedIcon
-  value: boolean
-  onValueChange: (value: boolean) => void
+  checked: boolean
+  onCheckedChange: (checked: boolean) => void
 }): JSX.Element {
   return (
     <Flex
@@ -246,7 +245,7 @@ function SettingsToggleRow({
         <Icon color="$neutral2" size={iconSizes.icon24} />
         <Text>{title}</Text>
       </Flex>
-      <WebSwitch value={value} onValueChange={onValueChange} />
+      <Switch checked={checked} variant="branded" onCheckedChange={onCheckedChange} />
     </Flex>
   )
 }

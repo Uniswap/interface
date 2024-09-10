@@ -97,7 +97,7 @@ export function WalletConnectModals(): JSX.Element {
             dispatch(removeRequest({ requestInternalId: currRequest.internalId, account: currRequest.account }))
           }
         >
-          <RequestModal currRequest={currRequest} />{' '}
+          <RequestModal currRequest={currRequest} />
         </ErrorBoundary>
       ) : null}
     </>

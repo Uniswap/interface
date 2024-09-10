@@ -6,10 +6,10 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
-import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
-import { OSDynamicCloudIcon, PaperStack } from 'ui/src/components/icons'
+import { OSDynamicCloudIcon, PaperStack, WalletFilled } from 'ui/src/components/icons'
 import { useIsDarkMode } from 'ui/src/hooks/useIsDarkMode'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { iconSizes } from 'ui/src/theme'
@@ -63,7 +63,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
   const isDarkMode = useIsDarkMode()
   const entryPoint = params?.entryPoint
 
-  useAddBackButton(navigation)
+  useNavigationHeader(navigation)
 
   const handleOnPressRestoreBackup = async (): Promise<void> => {
     const cloudStorageAvailable = await isCloudStorageAvailable()
@@ -112,7 +112,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
       : options
 
   return (
-    <OnboardingScreen title={t('onboarding.import.title')}>
+    <OnboardingScreen Icon={WalletFilled} title={t('onboarding.import.title')}>
       <Flex
         grow
         gap="$spacing12"
@@ -144,7 +144,7 @@ export function ImportMethodScreen({ navigation, route: { params } }: Props): JS
             />
             <Text
               color="$accent1"
-              variant="buttonLabel2"
+              variant="buttonLabel1"
               onPress={(): Promise<void> => handleOnPress(OnboardingScreens.WatchWallet, ImportType.Watch)}
             >
               {t('account.wallet.button.watch')}

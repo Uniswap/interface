@@ -4,31 +4,31 @@ import { Flex } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { SectionHeader } from 'uniswap/src/components/TokenSelector/TokenSectionHeader'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
+import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks'
 import {
   ConvertFiatAmountFormattedCallback,
   OnSelectCurrency,
   TokenOptionSection,
   TokenSection,
-  TokenSectionsForSend,
+  TokenSectionsHookProps,
 } from 'uniswap/src/components/TokenSelector/types'
 import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+// eslint-disable-next-line no-restricted-imports
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 
 function useTokenSectionsForSend({
   activeAccountAddress,
   chainFilter,
-  valueModifiers,
-  usePortfolioTokenOptionsHook,
-}: TokenSectionsForSend): GqlResult<TokenSection[]> {
+}: TokenSectionsHookProps): GqlResult<TokenSection[]> {
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
     loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptionsHook(activeAccountAddress, chainFilter, valueModifiers)
+  } = usePortfolioTokenOptions(activeAccountAddress, chainFilter)
 
   const loading = portfolioTokenOptionsLoading
   const error = !portfolioTokenOptions && portfolioTokenOptionsError
@@ -75,26 +75,18 @@ function EmptyList({ onEmptyActionPress }: { onEmptyActionPress?: () => void }):
 function _TokenSelectorSendList({
   activeAccountAddress,
   chainFilter,
-  searchHistory,
-  valueModifiers,
   isKeyboardOpen,
   onDismiss,
   onSelectCurrency,
   onEmptyActionPress,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
-  usePortfolioTokenOptionsHook,
-  useTokenWarningDismissedHook,
-}: TokenSectionsForSend & {
+}: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   onEmptyActionPress: () => void
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
   onDismiss: () => void
-  useTokenWarningDismissedHook: (currencyId: Maybe<string>) => {
-    tokenWarningDismissed: boolean
-    dismissWarningCallback: () => void
-  }
 }): JSX.Element {
   const {
     data: sections,
@@ -104,9 +96,6 @@ function _TokenSelectorSendList({
   } = useTokenSectionsForSend({
     activeAccountAddress,
     chainFilter,
-    searchHistory,
-    valueModifiers,
-    usePortfolioTokenOptionsHook,
   })
   const emptyElement = useMemo(() => <EmptyList onEmptyActionPress={onEmptyActionPress} />, [onEmptyActionPress])
 
@@ -122,7 +111,6 @@ function _TokenSelectorSendList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={false}
-      useTokenWarningDismissedHook={useTokenWarningDismissedHook}
       onDismiss={onDismiss}
       onSelectCurrency={onSelectCurrency}
     />

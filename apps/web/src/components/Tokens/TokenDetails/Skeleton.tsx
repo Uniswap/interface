@@ -73,10 +73,11 @@ export const TokenInfoContainer = styled(Flex, {
   pt: '$padding8',
   mb: '$spacing20',
   animation: 'quick',
+  zIndex: '$default',
 })
 
 export const TokenNameCell = styled(Flex, {
-  flexDirection: 'row',
+  row: true,
   gap: '$gap12',
   alignItems: 'center',
   pt: '$spacing4',

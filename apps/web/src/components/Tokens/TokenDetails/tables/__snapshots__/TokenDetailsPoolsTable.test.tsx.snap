@@ -36,6 +36,14 @@ exports[`TDPPoolTable renders data filled state 1`] = `
 }
 
 .c3 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
   position: relative;
   top: 0;
   left: 0;
@@ -271,19 +279,23 @@ exports[`TDPPoolTable renders data filled state 1`] = `
                             class="c3"
                           >
                             <div
-                              class="c4"
-                              size="28"
+                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
                             >
-                              <img
-                                class="c5"
+                              <div
+                                class="c4"
                                 size="28"
-                                src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
-                              />
-                              <img
-                                class="c5"
-                                size="28"
-                                src="ethereum-logo.png"
-                              />
+                              >
+                                <img
+                                  class="c5"
+                                  size="28"
+                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48/logo.png"
+                                />
+                                <img
+                                  class="c5"
+                                  size="28"
+                                  src="ethereum-logo.png"
+                                />
+                              </div>
                             </div>
                           </div>
                           <span

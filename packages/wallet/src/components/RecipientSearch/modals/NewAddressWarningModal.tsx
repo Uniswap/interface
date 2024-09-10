@@ -65,7 +65,7 @@ export function NewAddressWarningModal({ address, onConfirm, onClose }: NewAddre
               </Text>
               <Flex row alignItems="center" gap="$spacing4">
                 <AccountIcon address={address} avatarUri={ensAvatar} size={imageSizes.image16} />
-                <Text flexShrink={1} loading={ensDisplayName.loading} numberOfLines={1} variant="body3">
+                <Text flexShrink={1} loading={ensDisplayName.isLoading} numberOfLines={1} variant="body3">
                   {ensDisplayName.data}
                 </Text>
               </Flex>

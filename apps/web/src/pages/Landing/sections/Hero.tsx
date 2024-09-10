@@ -113,7 +113,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
         pointerEvents="none"
         bottom={48}
         style={{ transform: `translate(0px, ${translateY}px)`, opacity: opacityY }}
-        $short={{ display: 'none' }}
+        $midHeight={{ display: 'none' }}
       >
         <RiseIn delay={0.3}>
           <Flex

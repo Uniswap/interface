@@ -38,7 +38,7 @@ function SelectButton({ label, onClick }: { label: string; onClick?: () => void 
   const theme = useTheme()
   return (
     <SelectButtonContainer onClick={onClick}>
-      <Text variant="buttonLabel3" color="$neutral1">
+      <Text variant="buttonLabel2" color="$neutral1">
         {label}
       </Text>
       <StyledChevron size={24} color={theme.neutral1} />

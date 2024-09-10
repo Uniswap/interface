@@ -12,6 +12,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
@@ -24,7 +25,6 @@ import {
 } from 'wallet/src/features/notifications/slice'
 import { ReceiveCurrencyTxNotification, ReceiveNFTNotification } from 'wallet/src/features/notifications/types'
 import { parseDataResponseToTransactionDetails } from 'wallet/src/features/transactions/history/utils'
-import { useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
 import { useAccounts, useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 

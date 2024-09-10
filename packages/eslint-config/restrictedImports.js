@@ -18,6 +18,24 @@ exports.shared = {
       message:
         'Avoid using due to issue with unsupported locales. Use utilities/src/device/locales.ts getDeviceLocales instead',
     },
+    {
+      name: 'uniswap/src/features/dataApi/balances',
+      importNames: ['usePortfolioValueModifiers'],
+      message:
+        'Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly.',
+    },
+    {
+      name: 'utilities/src/format/localeBased',
+      message: 'Use via `useLocalizationContext` instead.',
+    },
+    {
+      name: 'uniswap/src/features/fiatCurrency/conversion',
+      message: 'Use via `useLocalizationContext` instead.',
+    },
+    {
+      name: 'uniswap/src/features/language/formatter',
+      message: 'Use via `useLocalizationContext` instead.',
+    },
   ],
   patterns: [
     {

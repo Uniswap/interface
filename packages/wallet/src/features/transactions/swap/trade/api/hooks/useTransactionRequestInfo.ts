@@ -7,7 +7,9 @@ import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { GasFeeResult, GasSpeed } from 'uniswap/src/features/gas/types'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { EstimatedGasFeeDetails } from 'uniswap/src/features/telemetry/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -18,7 +20,6 @@ import { logger } from 'utilities/src/logger/logger'
 import { isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTransactionGasFee } from 'wallet/src/features/gas/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'wallet/src/features/transactions/swap/analytics'
 import { useWrapTransactionRequest } from 'wallet/src/features/transactions/swap/trade/hooks/useWrapTransactionRequest'
 import { usePermit2SignatureWithData } from 'wallet/src/features/transactions/swap/usePermit2Signature'
@@ -30,6 +31,7 @@ export interface TransactionRequestInfo {
   transactionRequest: providers.TransactionRequest | undefined
   permitSignature: string | undefined
   gasFeeResult: GasFeeResult
+  gasFeeEstimation: EstimatedGasFeeDetails
 }
 
 export function useTransactionRequestInfo({
@@ -130,6 +132,13 @@ export function useTransactionRequestInfo({
 
   const swapGasFee = swapQuote?.gasFee
 
+  const gasFeeEstimation: EstimatedGasFeeDetails = {
+    gasUseEstimate: swapQuote?.gasUseEstimate,
+    maxFeePerGas: swapQuote?.maxFeePerGas,
+    maxPriorityFeePerGas: swapQuote?.maxPriorityFeePerGas,
+    gasFee: swapQuote?.gasFee,
+  }
+
   // This is a case where simulation fails on backend, meaning txn is expected to fail
   const simulationError = swapQuote?.txFailureReasons?.includes(TransactionFailureReason.SIMULATION_ERROR)
   const gasEstimateError = useMemo(
@@ -183,5 +192,6 @@ export function useTransactionRequestInfo({
     transactionRequest: isWrapApplicable ? wrapTxRequest : data?.swap,
     permitSignature: signatureInfo.signature,
     gasFeeResult,
+    gasFeeEstimation,
   }
 }

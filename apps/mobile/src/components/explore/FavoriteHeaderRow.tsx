@@ -28,7 +28,7 @@ export function FavoriteHeaderRow({
         </TouchableArea>
       ) : (
         <TouchableArea hitSlop={16} onPress={onPress}>
-          <Text color="$accent1" testID={TestID.Done} variant="buttonLabel3">
+          <Text color="$accent1" testID={TestID.Done} variant="buttonLabel2">
             {t('common.button.done')}
           </Text>
         </TouchableArea>

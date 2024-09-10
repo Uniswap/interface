@@ -386,7 +386,7 @@ exports[`TDP Skeleton should render correctly 1`] = `
             </nav>
             <div
               class="css-view-175oi2r"
-              style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; padding-top: 8px; margin-bottom: 20px;"
+              style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; justify-content: space-between; align-items: center; gap: 20px; padding-top: 8px; margin-bottom: 20px; z-index: 1;"
             >
               <div
                 class="_flexDirection-_md_column _alignItems-_md_flex-start _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _gap-1316331230 _alignItems-center _pt-1481558307 _minWidth-32px"

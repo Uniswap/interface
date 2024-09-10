@@ -18,6 +18,7 @@ import {
   useHomeScreenTokensQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
 import { Experiments, OnboardingRedesignHomeScreenProperties } from 'uniswap/src/features/gating/experiments'
 import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
@@ -25,7 +26,6 @@ import { useTranslation } from 'uniswap/src/i18n'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
 import { selectHasUsedExplore } from 'wallet/src/features/behaviorHistory/selectors'
-import { useAppFiatCurrency } from 'wallet/src/features/fiatCurrency/hooks'
 import { TokenMetadataDisplayType } from 'wallet/src/features/wallet/types'
 
 const ESTIMATED_ITEM_SIZE = 68

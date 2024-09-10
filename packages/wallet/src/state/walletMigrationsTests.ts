@@ -1,6 +1,11 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 /* eslint-disable max-lines */
+import { USDC } from 'uniswap/src/constants/tokens'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { Language } from 'uniswap/src/features/language/constants'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 export function testActivatePendingAccounts(migration: (state: any) => any, prevSchema: any): void {
@@ -531,4 +536,43 @@ export function testRemoveHoldToSwap(migration: (state: any) => any, prevSchema:
 
   expect(result.behaviorHistory.hasViewedReviewScreen).toBe(undefined)
   expect(result.behaviorHistory.hasSubmittedHoldToSwap).toBe(undefined)
+}
+
+export function testAddCreatedOnboardingRedesignAccount(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+
+  expect(result.behaviorHistory.createdOnboardingRedesignAccount).toBe(false)
+}
+
+export function testMovedTokenWarnings(migration: (state: any) => any, prevSchema: any): void {
+  const prevSchemaWithWarnings = {
+    ...prevSchema,
+    tokens: {
+      dismissedWarningTokens: {
+        [buildCurrencyId(UniverseChainId.Mainnet, USDC.address)]: true,
+      },
+    },
+  }
+  const result = migration(prevSchemaWithWarnings)
+  expect(result.tokens.dismissedWarningTokens).toEqual(undefined)
+  expect(result.tokens.dismissedTokenWarnings).toMatchObject({
+    [UniverseChainId.Mainnet]: {
+      [USDC.address]: {
+        chainId: UniverseChainId.Mainnet,
+        address: USDC.address,
+      },
+    },
+  })
+}
+
+export function testMovedLanguageSetting(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+  expect(result.languageSettings).toEqual(undefined)
+  expect(result.userSettings.currentLanguage).toEqual(Language.English)
+}
+
+export function testMovedCurrencySetting(migration: (state: any) => any, prevSchema: any): void {
+  const result = migration(prevSchema)
+  expect(result.fiatCurrencySettings).toEqual(undefined)
+  expect(result.userSettings.currentCurrency).toEqual(FiatCurrency.UnitedStatesDollar)
 }

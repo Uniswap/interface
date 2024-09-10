@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LockPreviewImage } from 'src/features/onboarding/LockPreviewImage'
 import { Button, CheckBox, Flex, Text, useIsDarkMode, useShadowPropsShort } from 'ui/src'
@@ -19,30 +19,29 @@ export function BackupSpeedBumpModal({ backupType, onContinue, onClose }: Backup
   const { t } = useTranslation()
   const [checked, setChecked] = useState(false)
 
-  let preview
-  let title
-  let description
-
-  switch (backupType) {
-    case BackupType.Cloud:
-      preview = <CloudBackupPreview />
-      title = t('onboarding.backup.speedBump.cloud.title')
-      description = t('onboarding.backup.speedBump.cloud.description')
-      break
-    case BackupType.Manual:
-      preview = <LockPreviewImage height={PREVIEW_BOX_HEIGHT} />
-      title = t('onboarding.backup.speedBump.manual.title')
-      description = t('onboarding.backup.speedBump.manual.description')
-      break
-    default:
-      break
-  }
+  const { preview, title, description, disclaimer } = useMemo(() => {
+    switch (backupType) {
+      case BackupType.Cloud:
+        return {
+          preview: <CloudBackupPreview />,
+          title: t('onboarding.backup.speedBump.cloud.title'),
+          description: t('onboarding.backup.speedBump.cloud.description'),
+          disclaimer: t('onboarding.backup.speedBump.cloud.disclaimer'),
+        }
+      case BackupType.Manual:
+        return {
+          preview: <LockPreviewImage height={PREVIEW_BOX_HEIGHT} />,
+          title: t('onboarding.backup.speedBump.manual.title'),
+          description: t('onboarding.backup.speedBump.manual.description'),
+          disclaimer: t('onboarding.backup.speedBump.manual.disclaimer'),
+        }
+    }
+  }, [backupType, t])
 
   return (
     <Modal name={ModalName.AccountEdit} onClose={onClose}>
       <Flex gap="$spacing12" px="$spacing24" py="$spacing12">
         {preview}
-
         <Flex gap="$spacing4">
           <Text color="$neutral1" pt="$spacing4" textAlign="center" variant="subheading1">
             {title}
@@ -69,7 +68,7 @@ export function BackupSpeedBumpModal({ backupType, onContinue, onClose }: Backup
             }}
           />
           <Text color="$neutral2" flexShrink={1} variant="body3">
-            {t('onboarding.backup.speedBump.disclaimer')}
+            {disclaimer}
           </Text>
         </Flex>
 

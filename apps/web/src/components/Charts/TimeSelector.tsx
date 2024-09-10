@@ -9,11 +9,10 @@ const DEFAULT_TIME_SELECTOR_OPTIONS = ORDERED_TIMES.map((time: TimePeriod) => ({
 
 const TimeOptionsContainer = styled(Flex, {
   justifyContent: 'flex-end',
-  mt: '$spacing4',
   gap: '$gap4',
   borderRadius: '$rounded16',
-  height: 40,
-  p: '$spacing4',
+  height: 24,
+  px: '$spacing4',
   width: 'fit-content',
   overflow: 'visible',
   $md: {

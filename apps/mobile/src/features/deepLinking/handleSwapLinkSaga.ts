@@ -4,7 +4,7 @@ import { put } from 'typed-redux-saga'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
@@ -55,10 +55,10 @@ const parseAndValidateSwapParams = (url: URL) => {
     throw new Error('No outputCurrencyId')
   }
 
-  const inputChain = currencyIdToChain(inputCurrencyId)
+  const inputChain = currencyIdToChain(inputCurrencyId) as WalletChainId
   const inputAddress = currencyIdToAddress(inputCurrencyId)
 
-  const outputChain = currencyIdToChain(outputCurrencyId)
+  const outputChain = currencyIdToChain(outputCurrencyId) as WalletChainId
   const outputAddress = currencyIdToAddress(outputCurrencyId)
 
   if (!inputChain || !inputAddress) {

@@ -13,7 +13,7 @@ import {
   isTransactionRequest,
 } from 'src/features/walletConnect/walletConnectSlice'
 import { Flex, Text, useSporeColors } from 'ui/src'
-import AlertTriangle from 'ui/src/assets/icons/alert-triangle.svg'
+import AlertTriangleFilled from 'ui/src/assets/icons/alert-triangle-filled.svg'
 import { iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
@@ -119,7 +119,11 @@ export function WalletConnectRequestModalContent({
           <BaseCard.InlineErrorState
             backgroundColor="$DEP_accentWarningSoft"
             icon={
-              <AlertTriangle color={colors.DEP_accentWarning.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+              <AlertTriangleFilled
+                color={colors.DEP_accentWarning.val}
+                height={iconSizes.icon16}
+                width={iconSizes.icon16}
+              />
             }
             textColor="$DEP_accentWarning"
             title={t('walletConnect.request.error.network')}
@@ -171,7 +175,7 @@ function WarningSection({
   if (!isTransactionRequest(request)) {
     return (
       <Flex centered row alignSelf="center" gap="$spacing8">
-        <AlertTriangle color={colors.DEP_accentWarning.val} height={iconSizes.icon16} width={iconSizes.icon16} />
+        <AlertTriangleFilled color={colors.DEP_accentWarning.val} height={iconSizes.icon16} width={iconSizes.icon16} />
         <Text color="$neutral2" fontStyle="italic" variant="body3">
           {t('walletConnect.request.warning.general.message')}
         </Text>

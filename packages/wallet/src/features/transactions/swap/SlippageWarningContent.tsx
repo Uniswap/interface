@@ -7,12 +7,12 @@ import { Settings } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { NumberType } from 'utilities/src/format/types'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { slippageToleranceToPercent } from 'wallet/src/features/transactions/swap/utils'
 
 type SlippageWarningContentProps = PropsWithChildren<{
@@ -46,8 +46,8 @@ export function SlippageWarningContent({
     trade.tradeType === TradeType.EXACT_INPUT ? trade.outputAmount.currency.symbol : trade.inputAmount.currency.symbol
 
   const captionContent = (
-    <Flex gap="$spacing12">
-      <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={isWeb ? 'buttonLabel3' : 'body2'}>
+    <Flex gap="$spacing12" width="100%">
+      <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={isWeb ? 'buttonLabel1' : 'body2'}>
         {tradeType === TradeType.EXACT_INPUT
           ? t('swap.settings.slippage.input.message')
           : t('swap.settings.slippage.output.message')}
@@ -61,13 +61,13 @@ export function SlippageWarningContent({
         width="100%"
       >
         <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-          <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant={isWeb ? 'buttonLabel3' : 'body2'}>
+          <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant={isWeb ? 'buttonLabel1' : 'body2'}>
             {t('swap.slippage.settings.title')}
           </Text>
           <Flex row gap="$spacing8">
             {!isCustomSlippage ? (
               <Flex centered backgroundColor="$accent2" borderRadius="$roundedFull" px="$spacing8">
-                <Text color="$accent1" variant="buttonLabel4">
+                <Text color="$accent1" variant="buttonLabel3">
                   {t('swap.settings.slippage.control.auto')}
                 </Text>
               </Flex>
@@ -78,7 +78,7 @@ export function SlippageWarningContent({
           </Flex>
         </Flex>
         <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-          <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant={isWeb ? 'buttonLabel3' : 'body2'}>
+          <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant={isWeb ? 'buttonLabel2' : 'body2'}>
             {tradeType === TradeType.EXACT_INPUT
               ? t('swap.settings.slippage.input.receive.title')
               : t('swap.settings.slippage.output.spend.title')}
@@ -97,7 +97,7 @@ export function SlippageWarningContent({
               width={iconSizes.icon16}
             />
           )}
-          <Text color="$DEP_accentWarning" variant={isWeb ? 'buttonLabel3' : 'body2'}>
+          <Text color="$DEP_accentWarning" variant={isWeb ? 'buttonLabel2' : 'body2'}>
             {t('swap.settings.slippage.warning.message')}
           </Text>
         </Flex>
@@ -109,13 +109,13 @@ export function SlippageWarningContent({
     <WarningInfo
       infoButton={
         <LearnMoreLink
-          textVariant={isWeb ? 'buttonLabel4' : undefined}
+          textVariant={isWeb ? 'buttonLabel3' : undefined}
           url={uniswapUrls.helpArticleUrls.swapSlippage}
         />
       }
       modalProps={{
         backgroundIconColor: colors.surface2.get(),
-        caption: captionContent,
+        captionComponent: captionContent,
         closeText: t('common.button.close'),
         icon: <Settings color="$neutral2" size="$icon.28" />,
         modalName: ModalName.SlippageInfo,

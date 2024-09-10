@@ -10,7 +10,7 @@ import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { toggleTokenVisibility } from 'uniswap/src/features/favorites/slice'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -48,7 +48,7 @@ export function useTokenContextMenu({
   const isHidden = !!portfolioBalance?.isHidden
 
   const currencyAddress = currencyIdToAddress(currencyId)
-  const currencyChainId = currencyIdToChain(currencyId) ?? UniverseChainId.Mainnet
+  const currencyChainId = (currencyIdToChain(currencyId) as WalletChainId) ?? UniverseChainId.Mainnet
 
   const onPressSend = useCallback(() => {
     // Do not show warning modal speed-bump if user is trying to send tokens they own

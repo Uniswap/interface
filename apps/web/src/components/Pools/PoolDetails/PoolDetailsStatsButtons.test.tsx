@@ -5,11 +5,11 @@ import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools
 import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
 import { useAccount } from 'hooks/useAccount'
 import store from 'state'
-import { addSerializedToken } from 'state/user/reducer'
 import { USE_DISCONNECTED_ACCOUNT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
+import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
@@ -34,8 +34,8 @@ describe('PoolDetailsStatsButton', () => {
     mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
     mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
     store.dispatch(
-      addSerializedToken({
-        serializedToken: {
+      dismissTokenWarning({
+        token: {
           chainId: 1,
           address: '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
           symbol: 'USDC',
@@ -45,8 +45,8 @@ describe('PoolDetailsStatsButton', () => {
       }),
     )
     store.dispatch(
-      addSerializedToken({
-        serializedToken: {
+      dismissTokenWarning({
+        token: {
           chainId: 1,
           address: '0xc02aaa39b223fe8d0a0e5c4f27ead9083c756cc2',
           symbol: 'WETH',

@@ -6,6 +6,7 @@ import { useDispatch } from 'react-redux'
 import { ColorTokens, Flex, SpaceTokens, Text, TouchableArea, useHapticFeedback } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
+import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -15,7 +16,7 @@ import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type AddressDisplayProps = {
@@ -43,6 +44,9 @@ type AddressDisplayProps = {
   gapBetweenLines?: SpaceTokens
   showViewOnlyLabel?: boolean
   showViewOnlyBadge?: boolean
+
+  // TODO WALL-4545 Added flag to disable forced width causing trouble in other screens
+  disableForcedWidth?: boolean
 }
 
 type CopyButtonWrapperProps = {
@@ -89,6 +93,7 @@ export function AddressDisplay({
   notificationsBadgeContainer,
   includeUnitagSuffix = false,
   gapBetweenLines = '$none',
+  disableForcedWidth = false,
 }: AddressDisplayProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -150,6 +155,7 @@ export function AddressDisplay({
         <CopyButtonWrapper onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
           <Flex centered row gap="$spacing12">
             <DisplayNameText
+              disableForcedWidth={disableForcedWidth}
               displayName={displayName}
               forcedWidth={wrapperWidth}
               gap="$spacing4"

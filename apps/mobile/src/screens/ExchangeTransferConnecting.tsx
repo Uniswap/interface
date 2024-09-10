@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { Screen } from 'src/components/layout/Screen'
+import { useFiatOnRampContext } from 'src/features/fiatOnRamp/FiatOnRampContext'
 import { Flex, useIsDarkMode } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FiatOnRampConnectingView } from 'uniswap/src/features/fiatOnRamp/FiatOnRampConnectingView'
@@ -35,6 +36,7 @@ export function ExchangeTransferConnecting({
   const dispatch = useDispatch()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
   const [timeoutElapsed, setTimeoutElapsed] = useState(false)
+  const { isOffRamp } = useFiatOnRampContext()
 
   const { externalTransactionId, dispatchAddTransaction } = useFiatOnRampTransactionCreator(
     activeAccountAddress,
@@ -103,6 +105,7 @@ export function ExchangeTransferConnecting({
   return (
     <Screen>
       <FiatOnRampConnectingView
+        isOffRamp={isOffRamp}
         serviceProviderLogo={
           <Flex
             alignItems="center"

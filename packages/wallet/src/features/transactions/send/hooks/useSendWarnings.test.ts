@@ -5,12 +5,11 @@ import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { WarningLabel } from 'uniswap/src/features/transactions/WarningModal/types'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import i18n from 'uniswap/src/i18n/i18n'
-import { uniCurrencyInfo } from 'uniswap/src/test/fixtures'
+import { networkDown, networkUnknown, networkUp, uniCurrencyInfo } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSendWarnings } from 'wallet/src/features/transactions/send/hooks/useSendWarnings'
 import { isOffline } from 'wallet/src/features/transactions/utils'
-import { networkDown, networkUnknown, networkUp } from 'wallet/src/test/fixtures'
 
 const ETH = NativeCurrency.onChain(UniverseChainId.Mainnet)
 

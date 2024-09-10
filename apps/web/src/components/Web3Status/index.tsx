@@ -5,6 +5,7 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonSecondary } from 'components/Button'
 import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import StatusIcon, { IconWrapper } from 'components/Identicon/StatusIcon'
+import { AccountCTAsExperimentGroup } from 'components/NavBar'
 import { RowBetween } from 'components/Row'
 import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
@@ -17,10 +18,13 @@ import { darken } from 'polished'
 import { RefObject, useCallback, useEffect, useRef } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { flexRowNoWrap } from 'theme/styles'
+import { Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
+import { Experiments } from 'uniswap/src/features/gating/experiments'
+import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { Trans } from 'uniswap/src/i18n'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { isIFramed } from 'utils/isIFramed'
 
 // https://stackoverflow.com/a/31617326
@@ -106,7 +110,7 @@ const AddressAndChevronContainer = styled.div<{ $loading?: boolean }>`
   }
 `
 
-const Text = styled.span`
+const StyledText = styled.span`
   flex: 1 1 auto;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -128,6 +132,20 @@ const StyledConnectButton = styled.button`
   padding: 10px 12px;
   color: inherit;
 `
+
+function ExistingUserCTAButton() {
+  const { t } = useTranslation()
+  const isSignIn = useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp
+  const isLogIn = useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.LogInCreateAccount
+
+  return (
+    <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
+      <Text variant="buttonLabel3" color="$accent1" whiteSpace="nowrap">
+        {isSignIn ? t('nav.signIn.button') : isLogIn ? t('nav.logIn.button') : t('common.connect.button')}
+      </Text>
+    </StyledConnectButton>
+  )
+}
 
 export const Web3StatusRef = atom<RefObject<HTMLElement> | undefined>(undefined)
 
@@ -159,7 +177,7 @@ function Web3StatusInner() {
           <LoaderV3 size="24px" />
         </IconWrapper>
         <AddressAndChevronContainer $loading={true}>
-          <Text>{accountIdentifier}</Text>
+          <StyledText>{accountIdentifier}</StyledText>
           {hasUnitag && <Unitag size={18} />}
         </AddressAndChevronContainer>
       </Web3StatusConnecting>
@@ -179,14 +197,14 @@ function Web3StatusInner() {
           {!hasPendingActivity && <StatusIcon size={24} showMiniIcons={false} />}
           {hasPendingActivity ? (
             <RowBetween>
-              <Text>
+              <StyledText>
                 <Trans i18nKey="activity.pending" values={{ pendingActivityCount }} />
-              </Text>{' '}
+              </StyledText>{' '}
               <Loader stroke="white" />
             </RowBetween>
           ) : (
             <AddressAndChevronContainer>
-              <Text>{accountIdentifier}</Text>
+              <StyledText>{accountIdentifier}</StyledText>
               {hasUnitag && <Unitag size={18} />}
             </AddressAndChevronContainer>
           )}
@@ -206,9 +224,7 @@ function Web3StatusInner() {
           onClick={handleWalletDropdownClick}
           ref={ref}
         >
-          <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
-            <Trans i18nKey="common.connect.button" />
-          </StyledConnectButton>
+          <ExistingUserCTAButton />
         </Web3StatusConnectWrapper>
       </Trace>
     )

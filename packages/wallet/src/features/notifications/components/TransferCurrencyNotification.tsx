@@ -1,14 +1,16 @@
-import { useENS } from 'uniswap/src/features/ens/useENS'
+import { Unitag } from 'ui/src/components/icons'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { LogoWithTxStatus } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { NOTIFICATION_ICON_SIZE } from 'wallet/src/features/notifications/constants'
 import { TransferCurrencyTxNotification } from 'wallet/src/features/notifications/types'
 import { formTransferCurrencyNotificationTitle } from 'wallet/src/features/notifications/utils'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 export function TransferCurrencyNotification({
   notification,
@@ -18,8 +20,11 @@ export function TransferCurrencyNotification({
   const formatter = useLocalizationContext()
   const { address, assetType, chainId, tokenAddress, currencyAmountRaw, txType, txStatus, hideDelay } = notification
   const senderOrRecipient = txType === TransactionType.Send ? notification.recipient : notification.sender
-  const { name: ensName } = useENS(chainId, senderOrRecipient)
+  const { name: displayName, type: displayNameType } =
+    useDisplayName(senderOrRecipient, { includeUnitagSuffix: false }) ?? {}
   const currencyInfo = useCurrencyInfo(buildCurrencyId(chainId, tokenAddress))
+  // Transfer canceled title doesn't end with the display name
+  const showUnicon = txStatus !== TransactionStatus.Canceled && displayNameType === DisplayNameType.Unitag
 
   const title = formTransferCurrencyNotificationTitle(
     formatter,
@@ -28,7 +33,7 @@ export function TransferCurrencyNotification({
     currencyInfo?.currency,
     tokenAddress,
     currencyAmountRaw,
-    ensName ?? senderOrRecipient,
+    displayNameType !== DisplayNameType.Address && displayName ? displayName : senderOrRecipient,
   )
 
   const { navigateToAccountActivityList } = useWalletNavigation()
@@ -49,6 +54,7 @@ export function TransferCurrencyNotification({
       address={address}
       hideDelay={hideDelay}
       icon={icon}
+      postCaptionElement={showUnicon ? <Unitag size="$icon.24" /> : undefined}
       title={title}
       onPress={navigateToAccountActivityList}
     />

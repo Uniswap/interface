@@ -1,4 +1,6 @@
 import { danger, fail, markdown, message, warn } from 'danger'
+import * as fs from 'fs'
+import { dirname } from 'path'
 
 function getIndicesOf(searchStr: string, str: string): number[] {
   var searchStrLen = searchStr.length
@@ -29,6 +31,37 @@ async function getLinesAddedByFile(files: string[], { exclude = [] }: { exclude?
       })
     }),
   )
+}
+
+// Put any files here that we explicitly want to ignore!
+const IGNORED_SPLIT_RULE_FILES: string[] = []
+
+function checkSplitFiles() {
+  const touchedFiles = danger.git.modified_files.concat(danger.git.created_files)
+
+  touchedFiles.forEach((file) => {
+    const isWebFile = file.endsWith('.web.ts') || file.endsWith('.web.tsx')
+    const isNativeFile = file.endsWith('.native.ts') || file.endsWith('.native.tsx')
+
+    if ((!isWebFile && !isNativeFile) || IGNORED_SPLIT_RULE_FILES.includes(file)) {
+      return
+    }
+
+    const baseFile = file.substring(0, file.indexOf(isWebFile ? '.web.ts' : '.native.ts'))
+    const extension = file.indexOf('.tsx') !== -1 ? 'tsx' : 'ts'
+
+    if (isWebFile && !fs.existsSync(`${dirname(__filename)}/${baseFile}.native.${extension}`)) {
+      fail(`\`${baseFile}.web.${extension}\` must also have a \`${baseFile}.native.${extension}\` file.`)
+    }
+
+    if (isNativeFile && !fs.existsSync(`${dirname(__filename)}/${baseFile}.web.${extension}`)) {
+      fail(`\`${baseFile}.native.${extension}\` must also have a \`${baseFile}.web.${extension}\` file.`)
+    }
+
+    if (!fs.existsSync(`${dirname(__filename)}/${baseFile}.${extension}`)) {
+      fail(`\`${file}\` must have base stub file \`${baseFile}.${extension}\``)
+    }
+  })
 }
 
 async function processAddChanges() {
@@ -144,13 +177,6 @@ async function processAddChanges() {
         `It appears you may be creating a new selector on every render. See PR #5172 for details on how to fix this.`,
       )
     }
-
-    // Check for discouraged usage of usePortfolioValueModifiers
-    if (concatenatedAddedLines.includes('usePortfolioValueModifiers')) {
-      warn(
-        "Use the wrapper hooks `usePortfolioTotalValue`, `useAccountList` or `usePortfolioBalances` instead of `usePortfolioValueModifiers` directly. If you're using usePortfolioValueModifiers inside these hooks you can ignore this warning.",
-      )
-    }
   })
 }
 
@@ -210,6 +236,9 @@ if (envChanged) {
     'Changes were made to .env.defaults. Confirm that no sensitive data is in the .env.defaults file. Sensitive data must go in .env (web) or .env.defaults.local (mobile) and then run `yarn upload-env-local` to store it in 1Password.',
   )
 }
+
+// Check native and web file splits
+checkSplitFiles()
 
 // Run checks on added changes
 processAddChanges()

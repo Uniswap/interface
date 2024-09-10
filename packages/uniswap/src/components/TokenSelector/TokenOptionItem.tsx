@@ -1,5 +1,7 @@
 import React, { useCallback, useState } from 'react'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { Check } from 'ui/src/components/icons/Check'
+import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
 import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
@@ -24,6 +26,7 @@ interface OptionProps {
   // (balance, quantityFormatted)
   balance: string
   quantityFormatted: string
+  isSelected?: boolean
 }
 
 function _TokenOptionItem({
@@ -38,8 +41,9 @@ function _TokenOptionItem({
   quantity,
   quantityFormatted,
   isKeyboardOpen,
+  isSelected,
 }: OptionProps): JSX.Element {
-  const { currencyInfo } = option
+  const { currencyInfo, isUnsupported } = option
   const { currency, currencyId, safetyLevel, logoUrl } = currencyInfo
   const [showWarningModal, setShowWarningModal] = useState(false)
 
@@ -83,7 +87,7 @@ function _TokenOptionItem({
         animation="300ms"
         hapticStyle={ImpactFeedbackStyle.Light}
         hoverStyle={{ backgroundColor: '$surface1Hovered' }}
-        opacity={showWarnings && safetyLevel === SafetyLevel.Blocked ? 0.5 : 1}
+        opacity={(showWarnings && safetyLevel === SafetyLevel.Blocked) || isUnsupported ? 0.5 : 1}
         width="100%"
         onPress={onPressTokenOption}
       >
@@ -129,7 +133,13 @@ function _TokenOptionItem({
             </Flex>
           </Flex>
 
-          {quantity && quantity !== 0 ? (
+          {isSelected && (
+            <Flex grow alignItems="flex-end" justifyContent="center">
+              <Check color="$accent1" size={iconSizes.icon20} />
+            </Flex>
+          )}
+
+          {!isSelected && quantity && quantity !== 0 ? (
             <Flex alignItems="flex-end">
               <Text variant="body1">{balance}</Text>
               <Text color="$neutral2" variant="body3">
