@@ -14,8 +14,8 @@ import {
 import styled from 'lib/styled-components'
 import { ExternalLink as LinkIconFeather } from 'react-feather'
 import { Text } from 'rebass'
-import { useAddUserToken } from 'state/user/hooks'
 import { ButtonText, CopyLinkIcon, ExternalLink } from 'theme/components'
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
@@ -234,15 +234,12 @@ export default function TokenSafety({ token0, token1, onContinue, onCancel, onBl
     displayWarning = token1Warning
   }
 
-  // If a warning is acknowledged, import these tokens
-  const addToken = useAddUserToken()
+  // dismiss token warnings on acknowledgement
+  const { onDismissTokenWarning: onDismissToken0 } = useDismissedTokenWarnings(token0)
+  const { onDismissTokenWarning: onDismissToken1 } = useDismissedTokenWarnings(token1)
   const acknowledge = () => {
-    if (token0) {
-      addToken(token0)
-    }
-    if (token1) {
-      addToken(token1)
-    }
+    onDismissToken0()
+    onDismissToken1()
     onContinue()
   }
 

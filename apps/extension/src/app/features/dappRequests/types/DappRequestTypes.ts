@@ -1,3 +1,4 @@
+import { REACTOR_ADDRESS_MAPPING } from '@uniswap/uniswapx-sdk'
 import { EthereumRpcErrorSchema } from 'src/app/features/dappRequests/types/ErrorTypes'
 import {
   EthersTransactionRequestSchema,
@@ -11,6 +12,7 @@ import {
   PermissionRequestSchema,
   PermissionSchema,
 } from 'src/contentScript/WindowEthereumRequestTypes'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { z } from 'zod'
 
 // ENUMS
@@ -372,11 +374,9 @@ export function isSwapRequest(
   return SwapSendTransactionRequestSchema.safeParse(request).success
 }
 
-// TODO: EXT-1416 - find a more reliable way to detect UniswapX swap requests
-export function isUniswapXSwapRequest(request: SignTypedDataRequest): boolean {
+export function isUniswapXSwapRequest(request: SignTypedDataRequest, chainId: UniverseChainId = UniverseChainId.Mainnet): boolean {
   const parsedTypedData = JSON.parse(request.typedData)
-
-  return parsedTypedData?.message?.spender === '0x00000011f84b9aa48e5f8aa8b9897600006289be'
+  return parsedTypedData?.message?.spender.toLowerCase() === REACTOR_ADDRESS_MAPPING[chainId]?.Dutch_V2?.toLowerCase()
 }
 
 export function isSignTypedDataRequest(request: DappRequest): request is SignTypedDataRequest {

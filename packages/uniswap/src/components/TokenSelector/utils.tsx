@@ -79,3 +79,11 @@ export function useTokenOptionsSection(
       ]
     : undefined
 }
+
+export function isSwapListLoading(
+  loading: boolean,
+  portfolioSection: TokenSection[] | undefined,
+  popularSection: TokenSection[] | undefined,
+): boolean {
+  return loading && (!portfolioSection || !popularSection)
+}

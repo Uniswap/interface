@@ -3,8 +3,15 @@ import { useMemo } from 'react'
 import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { EstimatedGasFeeDetails } from 'uniswap/src/features/telemetry/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { ApprovalAction, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import {
+  ApprovalAction,
+  ClassicTrade,
+  IndicativeTrade,
+  Trade,
+  UniswapXTrade,
+} from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useTokenApprovalInfo } from 'wallet/src/features/transactions/swap/trade/api/hooks/useTokenApprovalInfo'
@@ -20,18 +27,26 @@ export type UniswapXGasBreakdown = {
   inputTokenSymbol?: string
 }
 
+export type GasFeeEstimation = {
+  swapFee?: EstimatedGasFeeDetails
+  approvalFee?: EstimatedGasFeeDetails
+}
+
 export type ClassicSwapTxAndGasInfo = {
   routing: Routing.CLASSIC
   trade?: ClassicTrade
+  indicativeTrade: IndicativeTrade | undefined
   txRequest?: ValidatedTransactionRequest
   approveTxRequest: ValidatedTransactionRequest | undefined
   gasFee: GasFeeResult
+  gasFeeEstimation: GasFeeEstimation
   approvalError: boolean
 }
 
 export type UniswapXSwapTxAndGasInfo = {
   routing: Routing.DUTCH_V2
   trade: UniswapXTrade
+  indicativeTrade: IndicativeTrade | undefined
   wrapTxRequest: ValidatedTransactionRequest | undefined
   approveTxRequest: ValidatedTransactionRequest | undefined
   orderParams?: OrderRequest
@@ -61,7 +76,7 @@ export function useSwapTxAndGasInfo({
     chainId,
     wrapType,
     currencyAmounts,
-    trade: { trade },
+    trade: { trade, indicativeTrade },
   } = derivedSwapInfo
 
   const tokenApprovalInfo = useTokenApprovalInfo({
@@ -81,27 +96,22 @@ export function useSwapTxAndGasInfo({
     tokenApprovalInfo,
   })
 
-  // For UniswapX, do not expect a swap gas fee unless a wrap is involved
-  const isWraplessUniswapXTrade = trade && isUniswapX(trade) && !trade.needsWrap
-  const areValuesReady = tokenApprovalInfo && (isWraplessUniswapXTrade || swapTxInfo.gasFeeResult.value !== undefined)
-
   return useMemo(() => {
     const approvalError = tokenApprovalInfo?.action === ApprovalAction.Unknown
-    const gasFeeError = swapTxInfo.gasFeeResult.error ?? approvalError ? new Error('Approval action unknown') : null
 
-    // Do not populate gas fee:
-    //   - If errors exist on swap or approval requests.
-    //   - If we don't have both the approval and transaction gas fees.
-    const totalGasFee =
-      gasFeeError || !areValuesReady ? undefined : sumGasFees(tokenApprovalInfo?.gasFee, swapTxInfo?.gasFeeResult.value)
-
-    const isGasless = isWraplessUniswapXTrade && tokenApprovalInfo?.action === ApprovalAction.None
-
-    const gasFee = {
-      value: isGasless ? '0' : totalGasFee,
-      isLoading: !tokenApprovalInfo || swapTxInfo.gasFeeResult.isLoading,
-      error: gasFeeError,
+    const gasFeeEstimation: GasFeeEstimation = {
+      swapFee: swapTxInfo.gasFeeEstimation,
+      approvalFee: tokenApprovalInfo
+        ? {
+            gasUseEstimate: tokenApprovalInfo.txRequest?.gasLimit?.toString(),
+            maxFeePerGas: tokenApprovalInfo.txRequest?.maxFeePerGas?.toString(),
+            maxPriorityFeePerGas: tokenApprovalInfo.txRequest?.maxPriorityFeePerGas?.toString(),
+            gasFee: tokenApprovalInfo.gasFee,
+          }
+        : undefined,
     }
+
+    const gasFee = getTotalGasFee(trade, swapTxInfo.gasFeeResult, tokenApprovalInfo, approvalError)
 
     const approveTxRequest = validateTransactionRequest(tokenApprovalInfo?.txRequest)
 
@@ -118,6 +128,7 @@ export function useSwapTxAndGasInfo({
       return {
         routing: Routing.DUTCH_V2,
         trade,
+        indicativeTrade,
         wrapTxRequest: validateTransactionRequest(swapTxInfo.transactionRequest),
         approveTxRequest,
         orderParams,
@@ -129,21 +140,51 @@ export function useSwapTxAndGasInfo({
       return {
         routing: Routing.CLASSIC,
         trade: trade ?? undefined,
+        indicativeTrade,
         txRequest: validateTransactionRequest(swapTxInfo.transactionRequest),
         approveTxRequest,
         gasFee,
+        gasFeeEstimation,
         approvalError,
       }
     }
   }, [
-    tokenApprovalInfo,
-    swapTxInfo.gasFeeResult.error,
-    swapTxInfo.gasFeeResult.value,
-    swapTxInfo.gasFeeResult.isLoading,
+    indicativeTrade,
+    swapTxInfo.gasFeeEstimation,
+    swapTxInfo.gasFeeResult,
     swapTxInfo.permitSignature,
     swapTxInfo.transactionRequest,
-    areValuesReady,
-    isWraplessUniswapXTrade,
+    tokenApprovalInfo,
     trade,
   ])
+}
+
+type TokenApprovalInfoWithGas = ReturnType<typeof useTokenApprovalInfo>
+function getTotalGasFee(
+  trade: Trade | null,
+  swapGasResult: GasFeeResult,
+  tokenApprovalInfo: TokenApprovalInfoWithGas,
+  approvalError: boolean,
+): GasFeeResult {
+  const isLoading = !tokenApprovalInfo || swapGasResult.isLoading
+  const error = swapGasResult.error ?? approvalError ? new Error('Approval action unknown') : null
+
+  const isGaslessSwap = trade && isUniswapX(trade) && !trade.needsWrap
+  const approvalGasFeeMissing = !tokenApprovalInfo
+  const swapGasFeeMissing = !swapGasResult.value && !isGaslessSwap
+
+  // For UniswapX orders with no wrap and no approval, total gas fee is 0.
+  if (isGaslessSwap && tokenApprovalInfo?.action === ApprovalAction.None) {
+    return { value: '0', error, isLoading }
+  }
+
+  // Do not populate gas fee:
+  // - If errors exist on swap or approval requests.
+  // - If we don't have both the approval and transaction gas fees.
+  if (approvalGasFeeMissing || swapGasFeeMissing || approvalError || error) {
+    return { value: undefined, error, isLoading }
+  }
+
+  const value = sumGasFees(swapGasResult.value, tokenApprovalInfo.gasFee)
+  return { value, error, isLoading }
 }

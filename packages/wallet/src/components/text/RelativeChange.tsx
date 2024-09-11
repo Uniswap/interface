@@ -1,10 +1,10 @@
 import { ColorTokens, Flex, Text } from 'ui/src'
 import { Caret } from 'ui/src/components/icons'
 import { IconSizeTokens, fonts } from 'ui/src/theme'
+import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { useAppFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 interface RelativeChangeProps {
   change?: number

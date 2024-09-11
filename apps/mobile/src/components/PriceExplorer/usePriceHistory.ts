@@ -10,8 +10,8 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 export type TokenSpotData = {
   value: SharedValue<number>

@@ -1,8 +1,8 @@
+import { SwapEventName } from '@uniswap/analytics-events'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
-import { SwapEventName } from '@uniswap/analytics-events'
 
 const UNI_MAINNET = UNI[UniverseChainId.Mainnet]
 
@@ -10,19 +10,22 @@ describe('Swap - Multichain UX Enabled', () => {
   // Turn off automine so that intermediate screens are available to assert on.
   before(() => cy.hardhat({ automine: false }))
   describe('Swap on main page', () => {
-    it('starts with highest balance native token selected by default', () => {
-      cy.interceptGraphqlOperation('QuickTokenBalancesWeb', 'quick_token_balances.json').as('QuickTokenBalancesWeb')
-      cy.visit('/swap', {
-        featureFlags: [{ flag: FeatureFlags.MultichainUX, value: true }],
-      })
-      cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
-      cy.get('#swap-currency-input .token-symbol-container').should('contain.text', 'ETH')
-      cy.get('#swap-currency-output .token-amount-input').should('not.have.value')
-      cy.get('#swap-currency-output .token-symbol-container').should('contain.text', 'Select token')
-      cy.get(getTestSelector('currency-81457-ETH')).should('exist')
-    })
+    // TODO(WEB-4799): Add back default to highest native chain balance
+    // Re-enable this test once we add back defaulting to highest native chain balance
+    // it('starts with highest balance native token selected by default', () => {
+    //   cy.interceptGraphqlOperation('QuickTokenBalancesWeb', 'quick_token_balances.json').as('QuickTokenBalancesWeb')
+    //   cy.visit('/swap', {
+    //     featureFlags: [{ flag: FeatureFlags.MultichainUX, value: true }],
+    //   })
+    //   cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
+    //   cy.get('#swap-currency-input .token-symbol-container').should('contain.text', 'ETH')
+    //   cy.get('#swap-currency-output .token-amount-input').should('not.have.value')
+    //   cy.get('#swap-currency-output .token-symbol-container').should('contain.text', 'Select token')
+    //   cy.get(getTestSelector('currency-81457-ETH')).should('exist')
+    // })
 
     it('should default inputs from URL params ', () => {
+      cy.interceptGraphqlOperation('Token', 'uni_token.json').as('Token')
       cy.visit(`/swap?inputCurrency=${UNI_MAINNET.address}`, {
         featureFlags: [{ flag: FeatureFlags.MultichainUX, value: true }],
       })
@@ -44,6 +47,7 @@ describe('Swap - Multichain UX Enabled', () => {
     })
 
     it('resets the dependent input when the independent input is cleared', () => {
+      cy.interceptGraphqlOperation('Token', 'uni_token.json').as('Token')
       cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UNI_MAINNET.address}`, {
         featureFlags: [{ flag: FeatureFlags.MultichainUX, value: true }],
       })
@@ -60,20 +64,24 @@ describe('Swap - Multichain UX Enabled', () => {
     })
 
     it('clears input amounts when chain is changed', () => {
+      cy.interceptGraphqlOperation('Token', 'uni_token.json').as('Token')
+      cy.interceptGraphqlOperation('PortfolioBalancesWeb', 'mini-portfolio/tokens.json').as('PortfolioBalancesWeb')
+      cy.interceptGraphqlOperation('QuickTokenBalancesWeb', 'quick_token_balances.json').as('QuickTokenBalancesWeb')
+      cy.interceptGraphqlOperation('TopTokens', 'top_tokens.json').as('TopTokens')
+      cy.interceptGraphqlOperation('TokenProjects', 'token_projects.json').as('TokenProjects')
       cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${UNI_MAINNET.address}`, {
         featureFlags: [{ flag: FeatureFlags.MultichainUX, value: true }],
       })
 
       cy.get('#swap-currency-input .token-amount-input').type('0.01').should('have.value', '0.01')
       cy.get('#swap-currency-input .open-currency-select-button').click()
-      cy.get(getTestSelector('token-option-42161-ETH')).click()
+      cy.get(getTestSelector('token-option-42161-ETH')).click({ force: true })
       cy.get('#swap-currency-input .token-amount-input').should('have.value', '')
       cy.get('#swap-currency-output .token-amount-input').should('have.value', '')
       cy.contains('Swapping on Arbitrum')
     })
 
-    // TODO(WEB-4682): fix flaky multichain swap test
-    it.skip('swaps ETH for USDC', () => {
+    it('swaps ETH for USDC', () => {
       cy.interceptGraphqlOperation('Activity', 'mini-portfolio/empty_activity.json')
       cy.visit('/swap', {
         featureFlags: [{ flag: FeatureFlags.MultichainUX, value: true }],
@@ -84,12 +92,12 @@ describe('Swap - Multichain UX Enabled', () => {
         // Select ETH
         cy.get('#swap-currency-input .open-currency-select-button').click()
         cy.get(getTestSelector('explore-search-input')).type('ETH')
-        cy.get(getTestSelector('token-option-1-ETH')).click()
+        cy.get(getTestSelector('token-option-1-ETH')).click({ force: true })
 
         // Select USDC
         cy.get('#swap-currency-output .open-currency-select-button').click()
-        cy.get(getTestSelector('explore-search-input')).type(USDC_MAINNET.address)
-        cy.get(getTestSelector('token-option-1-USDC')).click()
+        cy.get(getTestSelector('explore-search-input')).first().type(USDC_MAINNET.address)
+        cy.get(getTestSelector('token-option-1-USDC')).click({ force: true })
 
         // Enter amount to swap
         cy.get('#swap-currency-output .token-amount-input').type('1').should('have.value', '1')
@@ -131,6 +139,7 @@ describe('Swap - Multichain UX Enabled', () => {
     cy.interceptGraphqlOperation('PortfolioBalancesWeb', 'mini-portfolio/tokens.json').as('PortfolioBalancesWeb')
     cy.interceptGraphqlOperation('QuickTokenBalancesWeb', 'quick_token_balances.json').as('QuickTokenBalancesWeb')
     cy.interceptGraphqlOperation('TopTokens', 'top_tokens.json').as('TopTokens')
+    cy.interceptGraphqlOperation('TokenProjects', 'token_projects.json').as('TokenProjects')
     cy.hardhat().then((hardhat) => {
       cy.visit('/swap', {
         featureFlags: [{ flag: FeatureFlags.MultichainUX, value: true }],

@@ -5,15 +5,15 @@ import { useBiometricAppSettings, useDeviceSupportsBiometricAuth } from 'src/fea
 import { getAuthMethod } from 'src/features/telemetry/utils'
 import { getFullAppVersion } from 'src/utils/version'
 import { useIsDarkMode } from 'ui/src'
+import { useAppFiatCurrency } from 'uniswap/src/features/fiatCurrency/hooks'
+import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { MobileUserPropertyName, setUserProperty } from 'uniswap/src/features/telemetry/user'
 import { isAndroid } from 'utilities/src/platform'
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 // eslint-disable-next-line no-restricted-imports
 import { analytics } from 'utilities/src/telemetry/analytics/analytics'
-import { useAppFiatCurrency } from 'wallet/src/features/fiatCurrency/hooks'
 import { useGatingUserPropertyUsernames } from 'wallet/src/features/gating/userPropertyHooks'
-import { useCurrentLanguageInfo } from 'wallet/src/features/language/hooks'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 import {

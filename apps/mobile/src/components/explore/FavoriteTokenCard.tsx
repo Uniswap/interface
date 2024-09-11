@@ -19,13 +19,13 @@ import { useFavoriteTokenCardQuery } from 'uniswap/src/data/graphql/uniswap-data
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { removeFavoriteToken } from 'uniswap/src/features/favorites/slice'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 export const FAVORITE_TOKEN_CARD_LOADER_HEIGHT = 114
 

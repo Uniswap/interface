@@ -4,6 +4,7 @@ import { SelectWalletsSkeleton } from 'src/app/components/loading/SelectWalletSk
 import { saveDappConnection } from 'src/app/features/dapp/actions'
 import { OnboardingScreen } from 'src/app/features/onboarding/OnboardingScreen'
 import { useOnboardingSteps } from 'src/app/features/onboarding/OnboardingSteps'
+import { useSubmitOnEnter } from 'src/app/features/onboarding/utils'
 import { Flex, ScrollView, SpinningLoader, Square, Text } from 'ui/src'
 import { WalletFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -24,7 +25,7 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
   const [buttonClicked, setButtonClicked] = useState(false)
 
   const { goToNextStep, goToPreviousStep } = useOnboardingSteps()
-  const { getGeneratedAddresses, generateAccountsAndImportAddresses } = useOnboardingContext()
+  const { generateAccountsAndImportAddresses, getGeneratedAddresses } = useOnboardingContext()
 
   const { data: generatedAddresses } = useAsyncData(getGeneratedAddresses)
 
@@ -32,7 +33,13 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
 
   const { selectedAddresses, toggleAddressSelection } = useSelectAccounts(importableAccounts)
 
+  const enableSubmit = showError || (selectedAddresses.length > 0 && !isLoading)
+
   const onSubmit = useCallback(async () => {
+    if (!enableSubmit) {
+      return
+    }
+
     setButtonClicked(true)
     const importedAccounts = await generateAccountsAndImportAddresses(selectedAddresses)
 
@@ -44,9 +51,11 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
 
     goToNextStep()
     setButtonClicked(false)
-  }, [generateAccountsAndImportAddresses, selectedAddresses, goToNextStep, shouldAutoConnect])
+  }, [generateAccountsAndImportAddresses, selectedAddresses, goToNextStep, shouldAutoConnect, enableSubmit])
 
   const title = showError ? t('onboarding.selectWallets.title.error') : t('onboarding.selectWallets.title.default')
+
+  useSubmitOnEnter(showError ? refetch : onSubmit)
 
   return (
     <Trace logImpression properties={{ flow }} screen={ExtensionOnboardingScreens.SelectWallet}>
@@ -56,7 +65,7 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
             <WalletFilled color="$neutral1" size={iconSizes.icon24} />
           </Square>
         }
-        nextButtonEnabled={showError || (selectedAddresses.length > 0 && !isLoading)}
+        nextButtonEnabled={enableSubmit}
         nextButtonIcon={buttonClicked ? <SpinningLoader color="$accent1" size={iconSizes.icon20} /> : undefined}
         nextButtonText={
           showError
@@ -82,13 +91,13 @@ export function SelectWallets({ flow }: { flow: ExtensionOnboardingFlow }): JSX.
               </Flex>
             ) : (
               importableAccounts?.map((account) => {
-                const { ownerAddress, balance } = account
+                const { address, balance } = account
                 return (
                   <WalletPreviewCard
-                    key={ownerAddress}
-                    address={ownerAddress}
+                    key={address}
+                    address={address}
                     balance={balance}
-                    selected={selectedAddresses.includes(ownerAddress)}
+                    selected={selectedAddresses.includes(address)}
                     onSelect={toggleAddressSelection}
                   />
                 )

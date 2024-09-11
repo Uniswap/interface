@@ -1,15 +1,17 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useMemo, useState } from 'react'
+import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { FundWalletModal } from 'src/components/home/introCards/FundWalletModal'
 import { CardType, IntroCardProps } from 'src/components/home/introCards/IntroCard'
-import { IntroCardStack } from 'src/components/home/introCards/IntroCardStack'
+import { INTRO_CARD_MIN_HEIGHT, IntroCardStack, IntroCardWrapper } from 'src/components/home/introCards/IntroCardStack'
+import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { useUnitagClaimHandler } from 'src/features/unitags/useUnitagClaimHandler'
+import { Flex } from 'ui/src'
 import { Buy, Person, ShieldCheck, UniswapLogo } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
-import { useExperimentValue } from 'uniswap/src/features/gating/hooks'
 import { ElementName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
@@ -25,11 +27,20 @@ import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/consta
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
-type IntroCardWithName = IntroCardProps & {
+type IntroCardWithName = IntroCardWrapper & {
   loggingName: OnboardingCardLoggingName
 }
 
-export function OnboardingIntroCardStack(): JSX.Element {
+type OnboardingIntroCardStackProps = {
+  onboardingRedesignHomeEnabled: boolean
+  onboardingRedesignBackupEnabled: boolean
+  isLoading?: boolean
+}
+export function OnboardingIntroCardStack({
+  onboardingRedesignHomeEnabled,
+  onboardingRedesignBackupEnabled,
+  isLoading = false,
+}: OnboardingIntroCardStackProps): JSX.Element | null {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const activeAccount = useActiveAccountWithThrow()
@@ -51,31 +62,15 @@ export function OnboardingIntroCardStack(): JSX.Element {
   const shouldPromptUnitag =
     activeAccount.type === AccountType.SignerMnemonic && !hasSkippedUnitagPrompt && canClaimUnitag
 
-  const redesignRecoveryBackupEnabled = useExperimentValue(
-    Experiments.OnboardingRedesignRecoveryBackup,
-    OnboardingRedesignRecoveryBackupProperties.Enabled,
-    false,
-  )
-
   const cards = useMemo(() => {
-    const output: IntroCardWithName[] = [
-      {
-        loggingName: OnboardingCardLoggingName.FundWallet,
-        Icon: Buy,
-        title: t('onboarding.home.intro.fund.title'),
-        description: t('onboarding.home.intro.fund.description'),
-        cardType: CardType.Required,
-        onPress: (): void => {
-          setShowFundModal(true)
-          sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-            element: ElementName.OnboardingIntroCardFundWallet,
-          })
-        },
-      },
-    ]
+    if (!onboardingRedesignHomeEnabled && !onboardingRedesignBackupEnabled) {
+      return []
+    }
+
+    const output: IntroCardWithName[] = []
 
     if (!hasViewedWelcomeWalletCard) {
-      output.unshift({
+      output.push({
         loggingName: OnboardingCardLoggingName.WelcomeWallet,
         Icon: UniswapLogo,
         iconProps: {
@@ -91,7 +86,23 @@ export function OnboardingIntroCardStack(): JSX.Element {
       })
     }
 
-    if (redesignRecoveryBackupEnabled && !hasBackups) {
+    if (onboardingRedesignHomeEnabled) {
+      output.push({
+        loggingName: OnboardingCardLoggingName.FundWallet,
+        Icon: Buy,
+        title: t('onboarding.home.intro.fund.title'),
+        description: t('onboarding.home.intro.fund.description'),
+        cardType: CardType.Required,
+        onPress: (): void => {
+          setShowFundModal(true)
+          sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
+            element: ElementName.OnboardingIntroCardFundWallet,
+          })
+        },
+      })
+    }
+
+    if (onboardingRedesignBackupEnabled && !hasBackups) {
       output.push({
         loggingName: OnboardingCardLoggingName.RecoveryBackup,
         Icon: ShieldCheck,
@@ -130,7 +141,8 @@ export function OnboardingIntroCardStack(): JSX.Element {
     handleUnitagDismiss,
     hasBackups,
     hasViewedWelcomeWalletCard,
-    redesignRecoveryBackupEnabled,
+    onboardingRedesignBackupEnabled,
+    onboardingRedesignHomeEnabled,
     shouldPromptUnitag,
     t,
     welcomeCardTitle,
@@ -152,10 +164,25 @@ export function OnboardingIntroCardStack(): JSX.Element {
     [cards, dispatch, hasViewedWelcomeWalletCard, welcomeCardTitle],
   )
 
-  return (
-    <>
-      <IntroCardStack cards={cards} keyExtractor={(card) => card.title} onSwiped={handleSwiped} />
-      {showFundModal && <FundWalletModal onClose={() => setShowFundModal(false)} />}
-    </>
-  )
+  if (cards.length) {
+    return (
+      <Flex pt="$spacing12">
+        {isLoading ? (
+          <Flex height={INTRO_CARD_MIN_HEIGHT} />
+        ) : (
+          <IntroCardStack cards={cards} keyExtractor={(card) => card.title} onSwiped={handleSwiped} />
+        )}
+
+        {showFundModal && <FundWalletModal onClose={() => setShowFundModal(false)} />}
+      </Flex>
+    )
+  } else if (shouldPromptUnitag) {
+    return (
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+        <UnitagBanner address={activeAccount.address} entryPoint={MobileScreens.Home} />
+      </AnimatedFlex>
+    )
+  }
+
+  return null
 }

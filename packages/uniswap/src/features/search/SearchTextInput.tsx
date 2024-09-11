@@ -143,7 +143,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
           px={px}
           py={py}
           {...(showShadow && {
-            shadowColor: '$DEP_brandedAccentSoft',
+            shadowColor: '$shadowColor',
             shadowOffset: SHADOW_OFFSET_SMALL,
             shadowOpacity: 0.25,
             shadowRadius: 6,
@@ -169,6 +169,7 @@ export const SearchTextInput = forwardRef<NativeTextInput, SearchTextInputProps>
                 backgroundColor="$transparent"
                 borderWidth={0}
                 fontFamily="$body"
+                fontWeight="$book"
                 height="100%"
                 maxFontSizeMultiplier={fonts.body1.maxFontSizeMultiplier}
                 outlineColor="transparent"

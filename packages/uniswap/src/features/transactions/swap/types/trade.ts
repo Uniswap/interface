@@ -1,5 +1,5 @@
 import { MixedRouteSDK, Trade as RouterSDKTrade, ZERO_PERCENT } from '@uniswap/router-sdk'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price, TradeType } from '@uniswap/sdk-core'
 import { UnsignedV2DutchOrderInfo, V2DutchOrderTrade } from '@uniswap/uniswapx-sdk'
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
@@ -9,16 +9,19 @@ import { BigNumber, providers } from 'ethers/lib/ethers'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   DutchOrderInfoV2,
+  IndicativeQuoteResponse,
   Routing,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { TradeProtocolPreference } from 'uniswap/src/features/transactions/types/transactionState'
+import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 
 export class UniswapXTrade extends V2DutchOrderTrade<Currency, Currency, TradeType> {
   readonly routing = Routing.DUTCH_V2
   readonly quote: DutchQuoteResponse
   readonly slippageTolerance: number
   readonly swapFee?: SwapFee
+  readonly indicative = false
 
   constructor({
     quote,
@@ -70,6 +73,7 @@ export class ClassicTrade<
   readonly deadline: number
   readonly slippageTolerance: number
   readonly swapFee?: SwapFee
+  readonly indicative = false
 
   constructor({
     quote,
@@ -111,11 +115,14 @@ export type Trade<
   TTradeType extends TradeType = TradeType,
 > = ClassicTrade<TInput, TOutput, TTradeType> | UniswapXTrade
 
+// TODO(WALL-4573) - Cleanup usage of optionality/null/undefined 
 export interface TradeWithStatus<T extends Trade = Trade> {
   isLoading: boolean
   isFetching?: boolean
   error: Error | AxiosError | null
-  trade: null | T
+  trade: T | null
+  indicativeTrade: IndicativeTrade | undefined
+  isIndicativeLoading: boolean
 }
 
 export interface UseTradeArgs {
@@ -196,5 +203,47 @@ function getSwapFee(quoteResponse?: DiscriminatedQuoteResponse): SwapFee | undef
     recipient: quoteResponse.quote.portionRecipient,
     percent: new Percent(quoteResponse.quote.portionBips, '10000'),
     amount: quoteResponse?.quote.portionAmount,
+  }
+}
+
+type ValidatedIndicativeQuoteToken = Required<IndicativeQuoteResponse["input"]>
+
+export type ValidatedIndicativeQuoteResponse = IndicativeQuoteResponse & {
+  input: ValidatedIndicativeQuoteToken
+  output: ValidatedIndicativeQuoteToken
+}
+
+export function validateIndicativeQuoteResponse(response: IndicativeQuoteResponse): ValidatedIndicativeQuoteResponse | undefined {
+  const { input, output } = response
+  if (response.input && response.output && response.requestId && response.type && input.amount && input.chainId && input.token && output.amount && output.chainId && output.token) {
+    return { ...response, input:  { amount: input.amount, chainId: input.chainId, token: output.token }, output:  { amount: output.amount, chainId: output.chainId, token: output.token } }
+  }
+  return undefined
+}
+
+export class IndicativeTrade {
+  quote: ValidatedIndicativeQuoteResponse
+  inputAmount: CurrencyAmount<Currency>
+  outputAmount: CurrencyAmount<Currency>
+  executionPrice: Price<Currency, Currency>
+  swapFee: undefined
+  inputTax: undefined
+  outputTax: undefined
+  slippageTolerance?: number
+  readonly indicative = true
+
+  constructor({ quote, currencyIn, currencyOut, slippageTolerance }: { quote: ValidatedIndicativeQuoteResponse, currencyIn: Currency, currencyOut: Currency, slippageTolerance?: number }) {
+    this.quote = quote
+    
+    const inputAmount = getCurrencyAmount({ value: this.quote.input.amount, valueType: ValueType.Raw, currency: currencyIn })
+    const outputAmount = getCurrencyAmount({ value: this.quote.output.amount, valueType: ValueType.Raw, currency: currencyOut })
+
+    if (!inputAmount || !outputAmount) {
+      throw new Error('Error parsing indicative quote currency amounts')
+    }
+    this.inputAmount = inputAmount
+    this.outputAmount = outputAmount
+    this.executionPrice = new Price(currencyIn, currencyOut, this.quote.input.amount, this.quote.output.amount)
+    this.slippageTolerance = slippageTolerance
   }
 }

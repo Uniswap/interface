@@ -2,10 +2,17 @@ import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { createApiClient } from 'uniswap/src/data/apiClients/createApiClient'
 import {
+  ApprovalRequest,
+  ApprovalResponse,
   ClassicQuote,
   CreateSwapRequest,
   CreateSwapResponse,
   DutchQuoteV2,
+  GetOrdersResponse,
+  IndicativeQuoteRequest,
+  IndicativeQuoteResponse,
+  OrderRequest,
+  OrderResponse,
   QuoteRequest,
   QuoteResponse,
   Routing,
@@ -40,8 +47,34 @@ export async function fetchQuote(params: QuoteRequest): Promise<DiscriminatedQuo
   })
 }
 
+export async function fetchIndicativeQuote(params: IndicativeQuoteRequest): Promise<IndicativeQuoteResponse> {
+  return await TradingApiClient.post<IndicativeQuoteResponse>(uniswapUrls.tradingApiPaths.indicativeQuote, {
+    body: JSON.stringify(params),
+  })
+}
+
 export async function fetchSwap(params: CreateSwapRequest): Promise<CreateSwapResponse> {
   return await TradingApiClient.post<CreateSwapResponse>(uniswapUrls.tradingApiPaths.swap, {
     body: JSON.stringify(params),
+  })
+}
+
+export async function fetchCheckApproval(params: ApprovalRequest): Promise<ApprovalResponse> {
+  return await TradingApiClient.post<ApprovalResponse>(uniswapUrls.tradingApiPaths.approval, {
+    body: JSON.stringify(params),
+  })
+}
+
+export async function submitOrder(params: OrderRequest): Promise<OrderResponse> {
+  return await TradingApiClient.post<OrderResponse>(uniswapUrls.tradingApiPaths.order, {
+    body: JSON.stringify(params),
+  })
+}
+
+export async function fetchOrders({ orderIds }: { orderIds: string[] }): Promise<GetOrdersResponse> {
+  return await TradingApiClient.get<GetOrdersResponse>(uniswapUrls.tradingApiPaths.orders, {
+    params: {
+      orderIds: orderIds.join(','),
+    },
   })
 }

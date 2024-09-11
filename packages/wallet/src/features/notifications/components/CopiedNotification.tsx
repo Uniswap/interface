@@ -32,6 +32,9 @@ export function CopiedNotification({
     case CopyNotificationType.NftUrl:
       title = t('notification.copied.nftUrl')
       break
+    case CopyNotificationType.Unitag:
+      title = t('notification.copied.unitag')
+      break
   }
 
   return <SuccessNotification notification={{ title, hideDelay }} />

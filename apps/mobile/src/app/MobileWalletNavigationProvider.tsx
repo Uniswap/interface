@@ -14,6 +14,7 @@ import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { logger } from 'utilities/src/logger/logger'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import {
+  NavigateToExternalProfileArgs,
   NavigateToFiatOnRampArgs,
   NavigateToNftCollectionArgs,
   NavigateToNftItemArgs,
@@ -40,6 +41,7 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
   const navigateToSwapFlow = useNavigateToSwapFlow()
   const navigateToTokenDetails = useNavigateToTokenDetails()
   const navigateToFiatOnRamp = useNavigateToFiatOnRamp()
+  const navigateToExternalProfile = useNavigateToExternalProfile()
 
   return (
     <WalletNavigationProvider
@@ -48,6 +50,7 @@ export function MobileWalletNavigationProvider({ children }: PropsWithChildren):
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
+      navigateToExternalProfile={navigateToExternalProfile}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToNftCollection={navigateToNftCollection}
       navigateToNftDetails={navigateToNftDetails}
@@ -222,5 +225,18 @@ function useNavigateToFiatOnRamp(): (args: NavigateToFiatOnRampArgs) => void {
       dispatch(openModal({ name: ModalName.FiatOnRampAggregator, initialState: { prefilledCurrency } }))
     },
     [dispatch],
+  )
+}
+
+function useNavigateToExternalProfile(): (args: NavigateToExternalProfileArgs) => void {
+  const navigation = useAppStackNavigation()
+
+  return useCallback(
+    ({ address }: NavigateToExternalProfileArgs): void => {
+      navigation.navigate(MobileScreens.ExternalProfile, {
+        address,
+      })
+    },
+    [navigation],
   )
 }

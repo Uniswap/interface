@@ -28,7 +28,7 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
       style={
         {
           "aspectRatio": undefined,
-          "backgroundColor": "rgba(34,34,34,0.05)",
+          "backgroundColor": "#FFFFFF",
           "borderRadius": 20,
           "objectFit": "contain",
         }
@@ -49,21 +49,7 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
     <View
       style={
         {
-          "borderBottomColor": "#FFFFFF",
-          "borderBottomLeftRadius": 6.8999999999999995,
-          "borderBottomRightRadius": 6.8999999999999995,
-          "borderBottomWidth": 1.5,
-          "borderLeftColor": "#FFFFFF",
-          "borderLeftWidth": 1.5,
-          "borderRightColor": "#FFFFFF",
-          "borderRightWidth": 1.5,
-          "borderStyle": "solid",
-          "borderTopColor": "#FFFFFF",
-          "borderTopLeftRadius": 6.8999999999999995,
-          "borderTopRightRadius": 6.8999999999999995,
-          "borderTopWidth": 1.5,
           "flexDirection": "column",
-          "overflow": "hidden",
         }
       }
       testID="network-logo"
@@ -73,8 +59,20 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
         dir={null}
         style={
           {
-            "height": "20px",
-            "width": "20px",
+            "borderBottomColor": "rgba(255,255,255,1.00)",
+            "borderBottomLeftRadius": "6.8999999999999995px",
+            "borderBottomRightRadius": "6.8999999999999995px",
+            "borderBottomWidth": "1.5px",
+            "borderLeftColor": "rgba(255,255,255,1.00)",
+            "borderLeftWidth": "1.5px",
+            "borderRightColor": "rgba(255,255,255,1.00)",
+            "borderRightWidth": "1.5px",
+            "borderTopColor": "rgba(255,255,255,1.00)",
+            "borderTopLeftRadius": "6.8999999999999995px",
+            "borderTopRightRadius": "6.8999999999999995px",
+            "borderTopWidth": "1.5px",
+            "height": "23px",
+            "width": "23px",
           }
         }
       >
@@ -128,7 +126,7 @@ exports[`CurrencyLogo renders without error 1`] = `
       style={
         {
           "aspectRatio": undefined,
-          "backgroundColor": "rgba(34,34,34,0.05)",
+          "backgroundColor": "#FFFFFF",
           "borderRadius": 20,
           "objectFit": "contain",
         }

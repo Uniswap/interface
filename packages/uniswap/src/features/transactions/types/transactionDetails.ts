@@ -5,6 +5,7 @@ import { GeneratedIcon } from 'ui/src'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { EstimatedGasFeeDetails } from 'uniswap/src/features/telemetry/types'
 import { Warning, WarningColor } from 'uniswap/src/features/transactions/WarningModal/types'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { DappInfo } from 'uniswap/src/types/walletConnect'
@@ -40,8 +41,8 @@ export type TransactionListQueryResponse = NonNullable<
 >[0]
 
 /**
- * Marks if a transaction was initiated natively within app, or from external source. 
- * External transactions are initiated from dapps, WC, uwulink, etc. 
+ * Marks if a transaction was initiated natively within app, or from external source.
+ * External transactions are initiated from dapps, WC, uwulink, etc.
  */
 export enum TransactionOriginType  {
   Internal = 'internal',
@@ -52,7 +53,7 @@ interface BaseTransactionDetails extends TransactionId {
   from: Address
 
   transactionOriginType: TransactionOriginType
-  
+
   // Specific info for the tx type
   typeInfo: TransactionTypeInfo
 
@@ -213,6 +214,7 @@ export interface BaseTransactionInfo {
   transactedUSDValue?: number
   isSpam?: boolean
   externalDappInfo?: DappInfo
+  estimatedGasFeeDetails?: EstimatedGasFeeDetails
 }
 
 export interface ApproveTransactionInfo extends BaseTransactionInfo {
@@ -223,6 +225,7 @@ export interface ApproveTransactionInfo extends BaseTransactionInfo {
   dappInfo?: DappInfoTransactionDetails
   // The id of the swap TransactionDetails object submitted after this approval on the current client, if applicable.
   swapTxId?: string
+  estimatedGasFeeDetails?: EstimatedGasFeeDetails
 }
 
 export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
@@ -296,7 +299,7 @@ export interface OnRampTransactionInfo extends BaseTransactionInfo {
   id: string
   destinationTokenSymbol: string
   destinationTokenAddress: string
-  destinationTokenAmount: number
+  destinationTokenAmount?: number
   serviceProvider: ServiceProviderInfo
   // Fees are in units of the sourceCurrency for purchases,
   // and in units of the destinationToken for transfers
@@ -308,7 +311,7 @@ export interface OnRampTransactionInfo extends BaseTransactionInfo {
 export interface OnRampPurchaseInfo extends OnRampTransactionInfo {
   type: TransactionType.OnRampPurchase
   sourceCurrency: string
-  sourceAmount: number
+  sourceAmount?: number
 }
 
 export interface OnRampTransferInfo extends OnRampTransactionInfo {

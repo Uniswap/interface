@@ -14,6 +14,29 @@ fragment PoolTransactionToken on Token {
   }
 }
 
+query V4PoolTransactions($chain: Chain!, $poolId: String!, $first: Int!, $cursor: Int) {
+  v4Pool(chain: $chain, poolId: $poolId) {
+    id
+    transactions(first: $first, timestampCursor: $cursor) {
+      timestamp
+      hash
+      account
+      token0 {
+        ...PoolTransactionToken
+      }
+      token0Quantity
+      token1 {
+        ...PoolTransactionToken
+      }
+      token1Quantity
+      usdValue {
+        value
+      }
+      type
+    }
+  }
+}
+
 query V3PoolTransactions($chain: Chain!, $address: String!, $first: Int!, $cursor: Int) {
   v3Pool(chain: $chain, address: $address) {
     id

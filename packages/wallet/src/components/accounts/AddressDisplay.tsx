@@ -3,9 +3,10 @@ import { PropsWithChildren, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlexAlignType, LayoutChangeEvent, Platform } from 'react-native'
 import { useDispatch } from 'react-redux'
-import { ColorTokens, Flex, SpaceTokens, Text, TouchableArea, useHapticFeedback } from 'ui/src'
+import { ColorTokens, Flex, SpaceTokens, Text, TextProps, TouchableArea, useHapticFeedback } from 'ui/src'
 import { CopySheets } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
+import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -15,7 +16,7 @@ import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { useAvatar, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type AddressDisplayProps = {
@@ -46,6 +47,8 @@ type AddressDisplayProps = {
 
   // TODO WALL-4545 Added flag to disable forced width causing trouble in other screens
   disableForcedWidth?: boolean
+  // TODO WALL-4545 Consider if this is still needed after removing forced width implementation
+  displayNameTextAlign?: TextProps['textAlign']
 }
 
 type CopyButtonWrapperProps = {
@@ -93,6 +96,7 @@ export function AddressDisplay({
   includeUnitagSuffix = false,
   gapBetweenLines = '$none',
   disableForcedWidth = false,
+  displayNameTextAlign,
 }: AddressDisplayProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -166,9 +170,10 @@ export function AddressDisplay({
                 ellipsizeMode: 'tail',
                 fontFamily: '$heading',
                 fontSize: mainSize,
+                lineHeight: lineHeight ?? fonts[variant].lineHeight,
                 numberOfLines: 1,
                 testID: `address-display/name/${displayName?.name}`,
-                lineHeight: lineHeight ?? fonts[variant].lineHeight,
+                textAlign: displayNameTextAlign,
               }}
               unitagIconSize={mainSize}
             />

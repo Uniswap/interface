@@ -11,9 +11,9 @@ import {
 import { clearCloudBackups } from 'src/features/CloudBackup/cloudBackupSlice'
 import { useCloudBackups } from 'src/features/CloudBackup/hooks'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
-import { useAddBackButton } from 'src/utils/useAddBackButton'
+import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Flex, Loader } from 'ui/src'
-import { OSDynamicCloudIcon } from 'ui/src/components/icons'
+import { DownloadAlt, OSDynamicCloudIcon } from 'ui/src/components/icons'
 import { imageSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { ImportType } from 'uniswap/src/types/onboarding'
@@ -46,7 +46,7 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
 
   const backups = useCloudBackups(mnemonicId)
 
-  useAddBackButton(navigation)
+  useNavigationHeader(navigation)
 
   // Starts query for cloud backup files, backup files found are streamed into Redux
   const fetchCloudStorageBackups = useCallback(() => {
@@ -171,7 +171,7 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
   }
 
   return (
-    <OnboardingScreen title={t('account.cloud.loading.title')}>
+    <OnboardingScreen Icon={DownloadAlt} title={t('account.cloud.loading.title')}>
       <Loader.Wallets repeat={5} />
     </OnboardingScreen>
   )

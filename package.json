@@ -88,7 +88,8 @@
     "react-native-wagmi-charts@2.5.1": "patch:react-native-wagmi-charts@npm%3A2.5.1#./.yarn/patches/react-native-wagmi-charts-npm-2.5.1-c9e2637be7.patch",
     "react-native-context-menu-view@1.15.0": "patch:react-native-context-menu-view@npm%3A1.15.0#./.yarn/patches/react-native-context-menu-view-npm-1.15.0-c8a9d10d8c.patch",
     "detox@20.23.0": "patch:detox@npm%3A20.23.0#./.yarn/patches/detox-npm-20.23.0-6d61110e63.patch",
-    "@tanstack/react-query@5.51.16": "patch:@tanstack/react-query@npm%3A5.51.16#./.yarn/patches/@tanstack-react-query-npm-5.51.16-8fa6414eca.patch"
+    "@tanstack/react-query@5.51.16": "patch:@tanstack/react-query@npm%3A5.51.16#./.yarn/patches/@tanstack-react-query-npm-5.51.16-8fa6414eca.patch",
+    "expo-screen-capture@5.8.1": "patch:expo-screen-capture@npm%3A5.8.1#./.yarn/patches/expo-screen-capture-npm-5.8.1-78e5827fdf.patch"
   },
   "scripts": {
     "extension": "yarn workspace @uniswap/extension",

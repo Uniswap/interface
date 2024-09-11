@@ -2,12 +2,12 @@ import React from 'react'
 import { SearchWalletItemBase } from 'src/components/explore/search/items/SearchWalletItemBase'
 import { Flex, Text } from 'ui/src'
 import { imageSizes } from 'ui/src/theme'
+import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { UnitagSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
-import { useAvatar } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type SearchUnitagItemProps = {

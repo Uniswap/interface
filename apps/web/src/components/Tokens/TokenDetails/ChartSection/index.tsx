@@ -22,9 +22,9 @@ import {
 } from 'components/Tokens/TokenTable/TimeSelector'
 import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import styled from 'lib/styled-components'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { useMemo, useState } from 'react'
+import { Flex, styled } from 'ui/src'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
 
@@ -36,34 +36,17 @@ export const DEFAULT_PILL_TIME_SELECTOR_OPTIONS = ORDERED_TIMES.map((time: TimeP
   value: DISPLAYS[time],
 })) as PillMultiToggleOption[]
 
-export const ChartActionsContainer = styled.div`
-  display: flex;
-  flex-direction: row-reverse;
-  width: 100%;
-  justify-content: space-between;
-  align-items: center;
-  margin-top: 12px;
-
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    flex-direction: column;
-    gap: 16px;
-  }
-`
-const TimePeriodSelectorContainer = styled.div`
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    width: 100%;
-  }
-`
-
-const ChartTypeSelectorContainer = styled.div`
-  display: flex;
-  gap: 8px;
-  @media only screen and (max-width: ${({ theme }) => theme.breakpoint.sm}px) {
-    width: 100%;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-  }
-`
+export const ChartActionsContainer = styled(Flex, {
+  flexDirection: 'row-reverse',
+  width: '100%',
+  justifyContent: 'space-between',
+  alignItems: 'center',
+  mt: 12,
+  $md: {
+    flexDirection: 'column',
+    gap: 16,
+  },
+})
 
 /** Represents a variety of query result shapes, discriminated via additional `chartType` field. */
 type ActiveQuery =
@@ -178,7 +161,15 @@ function ChartControls() {
 
   return (
     <ChartActionsContainer>
-      <ChartTypeSelectorContainer>
+      <Flex
+        row
+        gap="$gap8"
+        $md={{
+          width: '100%',
+          display: 'grid' as any,
+          gridTemplateColumns: 'repeat(auto-fit, minmax(170px, 1fr))',
+        }}
+      >
         {activeQuery.chartType === ChartType.PRICE && (
           <div>
             <AdvancedPriceChartToggle
@@ -188,20 +179,18 @@ function ChartControls() {
             />
           </div>
         )}
-        <div>
-          <ChartTypeDropdown
-            options={TDP_CHART_SELECTOR_OPTIONS}
-            currentChartType={activeQuery.chartType}
-            onSelectOption={(c) => {
-              setChartType(c)
-              if (c === ChartType.PRICE) {
-                setPriceChartType(PriceChartType.LINE)
-              }
-            }}
-          />
-        </div>
-      </ChartTypeSelectorContainer>
-      <TimePeriodSelectorContainer>
+        <ChartTypeDropdown
+          options={TDP_CHART_SELECTOR_OPTIONS}
+          currentChartType={activeQuery.chartType}
+          onSelectOption={(c) => {
+            setChartType(c)
+            if (c === ChartType.PRICE) {
+              setPriceChartType(PriceChartType.LINE)
+            }
+          }}
+        />
+      </Flex>
+      <Flex $md={{ width: '100%' }}>
         <PillMultiToggle
           options={DEFAULT_PILL_TIME_SELECTOR_OPTIONS}
           currentSelected={DISPLAYS[timePeriod]}
@@ -214,7 +203,7 @@ function ChartControls() {
             }
           }}
         />
-      </TimePeriodSelectorContainer>
+      </Flex>
     </ChartActionsContainer>
   )
 }

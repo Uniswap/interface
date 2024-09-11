@@ -4,11 +4,14 @@ import { openModal } from 'src/features/modals/modalSlice'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
-import { getExperimentValue } from 'uniswap/src/features/gating/hooks'
+import { useExperimentValueWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { selectBackupReminderLastSeenTs } from 'wallet/src/features/behaviorHistory/selectors'
-import { useSelectAddressTransactions } from 'wallet/src/features/transactions/selectors'
+import {
+  selectBackupReminderLastSeenTs,
+  selectCreatedOnboardingRedesignAccount,
+} from 'wallet/src/features/behaviorHistory/selectors'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 export function useOpenBackupReminderModal(activeAccount: Account): void {
@@ -17,22 +20,29 @@ export function useOpenBackupReminderModal(activeAccount: Account): void {
   const { isOpen: isBackupReminderModalOpen } = useSelector(selectModalState(ModalName.BackupReminder))
   const backupReminderLastSeenTs = useSelector(selectBackupReminderLastSeenTs)
 
+  const createdOnboardingRedesignAccount = useSelector(selectCreatedOnboardingRedesignAccount)
+  const onboardingBackupExperimentEnabled = useExperimentValueWithExposureLoggingDisabled(
+    Experiments.OnboardingRedesignRecoveryBackup,
+    OnboardingRedesignRecoveryBackupProperties.Enabled,
+    false,
+  )
+  const enableReminder = createdOnboardingRedesignAccount && onboardingBackupExperimentEnabled
+
+  const backupReminderOpenDelaySec = useExperimentValueWithExposureLoggingDisabled(
+    Experiments.OnboardingRedesignRecoveryBackup,
+    OnboardingRedesignRecoveryBackupProperties.BackupReminderDelaySecs,
+    0, // Defaulting to 0 seconds delay
+    (x): x is number => typeof x === 'number',
+  )
+
   const isSignerAccount = activeAccount.type === AccountType.SignerMnemonic
   const shouldOpenBackupReminderModal =
     !isBackupReminderModalOpen && isSignerAccount && !!txns && !activeAccount.backups
 
   useEffect(() => {
-    const onboardingBackupExperimentEnabled = getExperimentValue(
-      Experiments.OnboardingRedesignRecoveryBackup,
-      OnboardingRedesignRecoveryBackupProperties.Enabled,
-      false,
-    )
-    const backupReminderOpenDelaySec = getExperimentValue(
-      Experiments.OnboardingRedesignRecoveryBackup,
-      OnboardingRedesignRecoveryBackupProperties.BackupReminderDelaySecs,
-      0, // Defaulting to 0 seconds delay
-      (x): x is number => typeof x === 'number',
-    )
+    if (!enableReminder) {
+      return
+    }
 
     if (shouldOpenBackupReminderModal && onboardingBackupExperimentEnabled && backupReminderLastSeenTs === undefined) {
       // Get the min addedTime from the transactions (i.e. the user's first transaction)
@@ -45,5 +55,13 @@ export function useOpenBackupReminderModal(activeAccount: Account): void {
 
       return () => clearTimeout(timeoutId)
     }
-  }, [dispatch, shouldOpenBackupReminderModal, backupReminderLastSeenTs, txns])
+  }, [
+    dispatch,
+    shouldOpenBackupReminderModal,
+    backupReminderLastSeenTs,
+    txns,
+    enableReminder,
+    onboardingBackupExperimentEnabled,
+    backupReminderOpenDelaySec,
+  ])
 }

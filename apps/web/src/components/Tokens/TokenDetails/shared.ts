@@ -1,4 +1,4 @@
-import styled from 'lib/styled-components'
+import deprecatedStyled from 'lib/styled-components'
 import { darken } from 'polished'
 import { TamaguiClickableStyle } from 'theme/components'
 import { FlexProps, TextProps } from 'ui/src'
@@ -29,19 +29,19 @@ export const ActionMenuFlyoutStyle = {
   right: 0,
 } satisfies FlexProps
 
-export const Hr = styled.hr`
+export const Hr = deprecatedStyled.hr`
   background-color: ${({ theme }) => theme.surface3};
   border: none;
   height: 0.5px;
 `
 
-export const NoInfoAvailable = styled.p`
+export const NoInfoAvailable = deprecatedStyled.p`
   color: ${({ theme }) => theme.neutral3};
   font-weight: 485;
   font-size: 16px;
 `
 
-export const TruncateDescriptionButton = styled.div`
+export const TruncateDescriptionButton = deprecatedStyled.div`
   color: ${({ theme }) => theme.neutral2};
   font-weight: 485;
   font-size: 0.85em;

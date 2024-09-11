@@ -92,7 +92,7 @@ interface UseTopTokensReturnValue {
   error?: ApolloError
 }
 
-export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
+export function useTopTokens(chain: Chain, skip?: boolean): UseTopTokensReturnValue {
   const chainId = supportedChainIdFromGQLChain(chain)
   const duration = toHistoryDuration(useAtomValue(filterTimeAtom))
   const isWindowVisible = useIsWindowVisible()
@@ -100,7 +100,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   const { data: sparklineQuery } = usePollQueryWhileMounted(
     useTopTokensSparklineQuery({
       variables: { duration, chain },
-      skip: !isWindowVisible,
+      skip: !isWindowVisible || skip,
     }),
     PollingInterval.Slow,
   )
@@ -123,7 +123,7 @@ export function useTopTokens(chain: Chain): UseTopTokensReturnValue {
   } = usePollQueryWhileMounted(
     useTopTokens100Query({
       variables: { duration, chain },
-      skip: !isWindowVisible,
+      skip: !isWindowVisible || skip,
     }),
     PollingInterval.Fast,
   )

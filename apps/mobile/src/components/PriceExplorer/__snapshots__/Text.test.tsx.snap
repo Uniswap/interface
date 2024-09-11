@@ -16,8 +16,9 @@ exports[`DatetimeText renders without error 1`] = `
   style={
     {
       "color": "#7D7D7D",
-      "fontFamily": "Basel-Book",
+      "fontFamily": "Basel Grotesk",
       "fontSize": 19,
+      "fontWeight": "400",
       "lineHeight": 24,
       "padding": 0,
     }
@@ -52,8 +53,9 @@ exports[`PriceText renders loading state 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 106,
+        "fontWeight": "400",
         "lineHeight": 60,
         "padding": 0,
       }
@@ -90,8 +92,9 @@ exports[`PriceText renders without error 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 106,
+        "fontWeight": "400",
         "lineHeight": 60,
         "padding": 0,
       }
@@ -117,8 +120,9 @@ exports[`PriceText renders without error 1`] = `
     style={
       {
         "color": "#CECECE",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 106,
+        "fontWeight": "400",
         "lineHeight": 60,
         "padding": 0,
       }
@@ -155,8 +159,9 @@ exports[`PriceText renders without error less than a dollar 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 106,
+        "fontWeight": "400",
         "lineHeight": 60,
         "padding": 0,
       }
@@ -182,8 +187,9 @@ exports[`PriceText renders without error less than a dollar 1`] = `
     style={
       {
         "color": "#222222",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 106,
+        "fontWeight": "400",
         "lineHeight": 60,
         "padding": 0,
       }
@@ -256,8 +262,9 @@ exports[`RelativeChangeText renders loading state 1`] = `
               maxFontSizeMultiplier={1.4}
               style={
                 {
-                  "fontFamily": "Basel-Book",
+                  "fontFamily": "Basel Grotesk",
                   "fontSize": 19,
+                  "fontWeight": "400",
                   "lineHeight": 24,
                   "marginHorizontal": 0,
                   "opacity": 0,
@@ -277,8 +284,9 @@ exports[`RelativeChangeText renders loading state 1`] = `
               }
               style={
                 {
-                  "fontFamily": "Basel-Book",
+                  "fontFamily": "Basel Grotesk",
                   "fontSize": 19,
+                  "fontWeight": "400",
                   "lineHeight": 24,
                   "opacity": 0,
                   "padding": 0,
@@ -425,8 +433,9 @@ exports[`RelativeChangeText renders without error 1`] = `
     style={
       {
         "color": "#FF5F52",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 19,
+        "fontWeight": "400",
         "lineHeight": 24,
         "padding": 0,
       }

@@ -7,6 +7,8 @@ export enum FeatureFlags {
   // Shared
   ForAggregator,
   DisableFiatOnRampKorea,
+  IndicativeSwapQuotes,
+  TokenProtection,
 
   // Wallet
   PrivateRpc,
@@ -24,6 +26,7 @@ export enum FeatureFlags {
   OnboardingKeyring,
   Scantastic,
   UwULink,
+  FiatOffRamp,
 
   // Extension
   ExtensionAutoConnect,
@@ -33,7 +36,6 @@ export enum FeatureFlags {
   UniversalSwap,
   NavigationHotkeys,
   Eip6936Enabled,
-  ExtensionLaunch,
   GqlTokenLists,
   LimitsFees,
   L2NFTs,
@@ -59,11 +61,12 @@ export enum FeatureFlags {
 export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
   [FeatureFlags.ForAggregator, 'for_aggregator_web'],
+  [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
+  [FeatureFlags.TokenProtection, 'token_protection'],
 
   // Web Specific
   [FeatureFlags.NavigationHotkeys, 'navigation_hotkeys'],
   [FeatureFlags.Eip6936Enabled, 'eip6963_enabled'],
-  [FeatureFlags.ExtensionLaunch, 'extension_launch'],
   [FeatureFlags.GqlTokenLists, 'gql_token_lists'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.L2NFTs, 'l2_nfts'],
@@ -92,6 +95,8 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
   [FeatureFlags.ForAggregator, 'for-aggregator'],
   [FeatureFlags.DisableFiatOnRampKorea, 'disable-fiat-onramp-korea'],
+  [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
+  [FeatureFlags.TokenProtection, 'token_protection'],
 
   // Wallet Specific
   [FeatureFlags.AATest, 'aatest1'],
@@ -106,6 +111,7 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.UnitagsDeviceAttestation, 'unitags-device-attestation'],
   [FeatureFlags.UwULink, 'uwu-link'],
   [FeatureFlags.UniswapX, 'uniswapx'],
+  [FeatureFlags.FiatOffRamp, 'fiat-offramp'],
   // Extension Specific
   [FeatureFlags.ExtensionAutoConnect, 'extension-auto-connect'],
 ])

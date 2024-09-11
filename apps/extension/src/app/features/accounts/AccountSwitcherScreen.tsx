@@ -190,6 +190,7 @@ export function AccountSwitcherScreen(): JSX.Element {
             address={activeAddress}
             captionVariant="body3"
             direction="column"
+            displayNameTextAlign="center"
             gapBetweenLines="$spacing8"
             horizontalGap="$spacing8"
             showViewOnlyBadge={isViewOnly}
@@ -246,7 +247,7 @@ export function AccountSwitcherScreen(): JSX.Element {
                 px="$spacing12"
               >
                 <PlusCircle />
-                <Text color="$neutral2" py="$spacing8" variant="buttonLabel3">
+                <Text color="$neutral2" py="$spacing8" variant="buttonLabel2">
                   {t('account.wallet.button.add')}
                 </Text>
               </Flex>

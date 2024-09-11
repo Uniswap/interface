@@ -69,7 +69,7 @@ export function InsufficientNativeTokenWarning({
             <BuyNativeTokenButton nativeCurrencyInfo={nativeCurrencyInfo} />
             <LearnMoreLink
               textColor="$neutral2"
-              textVariant="buttonLabel3"
+              textVariant="buttonLabel2"
               url={uniswapUrls.helpArticleUrls.networkFeeInfo}
             />
           </Flex>

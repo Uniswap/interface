@@ -106,7 +106,7 @@ export function RecipientPanel({ chainId }: RecipientPanelProps): JSX.Element {
           </Flex>
         ) : !sections.length ? (
           <Flex centered gap="$spacing12" mt="$spacing24" px="$spacing24">
-            <Text variant="buttonLabel2">{t('send.search.empty.title')}</Text>
+            <Text variant="buttonLabel1">{t('send.search.empty.title')}</Text>
             <Text color="$neutral3" textAlign="center" variant="body1">
               {t('send.search.empty.subtitle')}
             </Text>

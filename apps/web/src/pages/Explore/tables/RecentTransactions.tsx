@@ -1,6 +1,5 @@
 import { ApolloError } from '@apollo/client'
 import { createColumnHelper } from '@tanstack/react-table'
-import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
@@ -17,9 +16,8 @@ import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
 import { OrderDirection, getSupportedGraphQlChain } from 'graphql/data/util'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useMemo, useReducer, useState } from 'react'
-import { ThemedText } from 'theme/components'
-import { Text } from 'ui/src'
+import { memo, useMemo, useReducer, useRef, useState } from 'react'
+import { Flex, Text, styled } from 'ui/src'
 import {
   PoolTransaction,
   PoolTransactionType,
@@ -29,10 +27,17 @@ import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
 import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
-export default function RecentTransactions() {
+const TableRow = styled(Flex, {
+  row: true,
+  gap: '$gap4',
+  alignItems: 'center',
+})
+
+const RecentTransactions = memo(function RecentTransactions() {
   const activeLocalCurrency = useActiveLocalCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
+  const filterAnchorRef = useRef<HTMLDivElement>(null)
   const [filter, setFilters] = useState<TransactionType[]>([
     TransactionType.SWAP,
     TransactionType.REMOVE,
@@ -56,12 +61,12 @@ export default function RecentTransactions() {
         id: 'timestamp',
         header: () => (
           <Cell minWidth={120} justifyContent="flex-start" grow>
-            <Row gap="4px">
+            <TableRow>
               <HeaderArrow direction={OrderDirection.Desc} />
-              <HeaderSortText $active>
+              <HeaderSortText active>
                 <Trans i18nKey="common.time" />
               </HeaderSortText>
-            </Row>
+            </TableRow>
           </Cell>
         ),
         cell: (transaction) => (
@@ -77,27 +82,27 @@ export default function RecentTransactions() {
         id: 'swap-type',
         header: () => (
           <Cell minWidth={276} justifyContent="flex-start" grow>
-            <FilterHeaderRow modalOpen={filterModalIsOpen} onClick={() => toggleFilterModal()}>
+            <FilterHeaderRow clickable={filterModalIsOpen} onPress={() => toggleFilterModal()} ref={filterAnchorRef}>
               <Filter
                 allFilters={Object.values(TransactionType)}
                 activeFilter={filter}
                 setFilters={setFilters}
                 isOpen={filterModalIsOpen}
                 toggleFilterModal={toggleFilterModal}
-                isSticky={true}
+                anchorRef={filterAnchorRef}
               />
-              <ThemedText.BodySecondary>
+              <Text variant="body2" color="$neutral2">
                 <Trans i18nKey="common.type.label" />
-              </ThemedText.BodySecondary>
+              </Text>
             </FilterHeaderRow>
           </Cell>
         ),
         cell: (transaction) => {
           const amountWithSymbolA = (
             <>
-              <ThemedText.BodySecondary>
+              <Text variant="body2" color="$neutral2">
                 {BETypeToTransactionType[transaction.getValue?.().type]}
-              </ThemedText.BodySecondary>
+              </Text>
               <TokenLinkCell token={transaction.getValue?.().token0} />
             </>
           )
@@ -132,12 +137,16 @@ export default function RecentTransactions() {
         id: 'fiat-value',
         header: () => (
           <Cell minWidth={125}>
-            <ThemedText.BodySecondary>{activeLocalCurrency}</ThemedText.BodySecondary>
+            <Text variant="body2" color="$neutral2">
+              {activeLocalCurrency}
+            </Text>
           </Cell>
         ),
         cell: (fiat) => (
           <Cell loading={showLoadingSkeleton} minWidth={125}>
-            <ThemedText.BodyPrimary>{formatFiatPrice({ price: fiat.getValue?.() })}</ThemedText.BodyPrimary>
+            <Text variant="body2" color="$neutral1">
+              {formatFiatPrice({ price: fiat.getValue?.() })}
+            </Text>
           </Cell>
         ),
       }),
@@ -145,21 +154,21 @@ export default function RecentTransactions() {
         id: 'token-amount-0',
         header: () => (
           <Cell minWidth={200}>
-            <ThemedText.BodySecondary>
+            <Text variant="body2" color="$neutral2">
               <Trans i18nKey="common.tokenAmount" />
-            </ThemedText.BodySecondary>
+            </Text>
           </Cell>
         ),
         cell: (transaction) => (
           <Cell loading={showLoadingSkeleton} minWidth={200}>
-            <Row gap="8px" justify="flex-end">
-              <ThemedText.BodyPrimary>
+            <TableRow justifyContent="flex-end">
+              <Text variant="body2" color="$neutral1">
                 {formatNumber({
                   input: Math.abs(parseFloat(transaction.getValue?.().token0Quantity)) || 0,
                 })}
-              </ThemedText.BodyPrimary>
+              </Text>
               <TokenLinkCell token={transaction.getValue?.().token0} />
-            </Row>
+            </TableRow>
           </Cell>
         ),
       }),
@@ -167,21 +176,21 @@ export default function RecentTransactions() {
         id: 'token-amount-1',
         header: () => (
           <Cell minWidth={200}>
-            <ThemedText.BodySecondary>
+            <Text variant="body2" color="$neutral2">
               <Trans i18nKey="common.tokenAmount" />
-            </ThemedText.BodySecondary>
+            </Text>
           </Cell>
         ),
         cell: (transaction) => (
           <Cell loading={showLoadingSkeleton} minWidth={200}>
-            <Row gap="8px" justify="flex-end">
-              <ThemedText.BodyPrimary>
+            <TableRow justifyContent="flex-end">
+              <Text variant="body2" color="$neutral1">
                 {formatNumber({
                   input: Math.abs(parseFloat(transaction.getValue?.().token1Quantity)) || 0,
                 })}
-              </ThemedText.BodyPrimary>
+              </Text>
               <TokenLinkCell token={transaction.getValue?.().token1} />
-            </Row>
+            </TableRow>
           </Cell>
         ),
       }),
@@ -189,9 +198,9 @@ export default function RecentTransactions() {
         id: 'maker-address',
         header: () => (
           <Cell minWidth={150}>
-            <ThemedText.BodySecondary>
+            <Text variant="body2" color="$neutral2">
               <Trans i18nKey="common.wallet.label" />
-            </ThemedText.BodySecondary>
+            </Text>
           </Cell>
         ),
         cell: (makerAddress) => (
@@ -215,4 +224,6 @@ export default function RecentTransactions() {
       maxWidth={1200}
     />
   )
-}
+})
+
+export default RecentTransactions

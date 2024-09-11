@@ -54,7 +54,7 @@ struct MnemonicDisplay: View {
   @State private var buttonPadding: CGFloat = 20
   
   let rnEthersRS = RNEthersRS()
-  let interFont = UIFont(name: "Basel-Semibold", size: 20)
+  let interFont = UIFont(name: "Basel-Grotesk-Medium", size: 20)
   
   func setMnemonicId(mnemonicId: String) {
     props.mnemonicId = mnemonicId
@@ -81,7 +81,7 @@ struct MnemonicDisplay: View {
     VStack(alignment: .leading, spacing: 0) {
       ZStack {
         HStack(alignment: .center, spacing: 24) {
-          VStack(alignment: .leading, spacing: 12) {
+          VStack(alignment: .leading, spacing: 8) {
             ForEach((0...middle), id: \.self) { index in
               MnemonicTextField(index: index + 1,
                                 word: props.mnemonicWords[index]
@@ -89,7 +89,7 @@ struct MnemonicDisplay: View {
               .frame(maxWidth: .infinity, alignment: .leading)
             }
           }.frame(maxWidth: .infinity)
-          VStack(alignment: .leading, spacing: 12) {
+          VStack(alignment: .leading, spacing: 8) {
             ForEach((middle + 1...end), id: \.self) { index in
               MnemonicTextField(index: index + 1,
                                 word: props.mnemonicWords[index]

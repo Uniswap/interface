@@ -3,15 +3,15 @@ import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import styled from 'lib/styled-components'
 import { Column, Row } from 'nft/components/Flex'
 import { ChevronUpIcon } from 'nft/components/icons'
-import { Checkbox } from 'nft/components/layout/Checkbox'
 import { buttonTextMedium, caption } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { ListingMarket } from 'nft/types'
 import { getMarketplaceIcon } from 'nft/utils'
 import { ListingMarkets } from 'nft/utils/listNfts'
-import { Dispatch, FormEvent, useMemo, useReducer, useRef } from 'react'
+import { Dispatch, useMemo, useReducer, useRef } from 'react'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
+import { Checkbox } from 'ui/src'
 
 const MarketplaceRowWrapper = styled(Row)`
   gap: 6px;
@@ -38,7 +38,6 @@ interface MarketplaceRowProps {
 
 const MarketplaceRow = ({ market, setSelectedMarkets, selectedMarkets }: MarketplaceRowProps) => {
   const isSelected = selectedMarkets.includes(market)
-  const [hovered, toggleHovered] = useReducer((s) => !s, false)
 
   const toggleSelected = () => {
     if (selectedMarkets.length === 1 && isSelected) {
@@ -49,12 +48,8 @@ const MarketplaceRow = ({ market, setSelectedMarkets, selectedMarkets }: Marketp
       : setSelectedMarkets([...selectedMarkets, market])
   }
 
-  const handleCheckbox = (e: FormEvent) => {
-    e.preventDefault()
-    e.stopPropagation()
-  }
   return (
-    <MarketplaceRowWrapper onMouseEnter={toggleHovered} onMouseLeave={toggleHovered} onClick={toggleSelected}>
+    <MarketplaceRowWrapper onClick={toggleSelected}>
       <Row gap="12" onClick={toggleSelected}>
         {getMarketplaceIcon(market.name, '24')}
         <Column>
@@ -63,9 +58,7 @@ const MarketplaceRow = ({ market, setSelectedMarkets, selectedMarkets }: Marketp
         </Column>
       </Row>
 
-      <Checkbox hovered={hovered} checked={isSelected} onClick={handleCheckbox}>
-        <span />
-      </Checkbox>
+      <Checkbox checked={isSelected} onPress={toggleSelected} variant="branded" />
     </MarketplaceRowWrapper>
   )
 }

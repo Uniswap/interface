@@ -17,22 +17,28 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { WETH } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { SendTransactionParams, sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
+import {
+  SendTransactionParams,
+  sendTransaction,
+  tryGetNonce,
+} from 'wallet/src/features/transactions/sendTransactionSaga'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { SubmitUniswapXOrderParams, submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
-import {
-  SwapParams,
-  approveAndSwap,
-  getNonceForApproveAndSwap,
-  shouldSubmitViaPrivateRpc,
-} from 'wallet/src/features/transactions/swap/swapSaga'
+import { SwapParams, approveAndSwap, shouldSubmitViaPrivateRpc } from 'wallet/src/features/transactions/swap/swapSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
-import { WETH, signerMnemonicAccount } from 'wallet/src/test/fixtures'
+import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { getTxProvidersMocks } from 'wallet/src/test/mocks'
+
+jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
+  Statsig: {
+    checkGate: jest.fn().mockReturnValue(true),
+  },
+}))
 
 const account = signerMnemonicAccount()
 
@@ -79,6 +85,7 @@ const mockApproveTxRequest = {
   chainId: 1,
   to: DAI.address,
   data: '0x0',
+  nonce: 1,
 }
 
 const mockWrapTxRequest = {
@@ -104,7 +111,9 @@ const classicSwapParams = {
     approveTxRequest: mockApproveTxRequest,
     txRequest: mockSwapTxRequest,
     trade: mockTrade,
+    indicativeTrade: undefined,
     gasFee: { value: '5', isLoading: false, error: null },
+    gasFeeEstimation: {},
     approvalError: false,
   },
   onSubmit: jest.fn(),
@@ -121,6 +130,7 @@ const uniswapXSwapParams = {
     routing: Routing.DUTCH_V2,
     approveTxRequest: mockApproveTxRequest,
     trade: mockUniswapXTrade,
+    indicativeTrade: undefined,
     orderParams: { quote: { orderId: '0xMockOrderHash' } } as unknown as OrderRequest,
     wrapTxRequest: undefined,
     gasFee: { value: '5', isLoading: false, error: null },
@@ -142,6 +152,7 @@ const expectedSendApprovalParams: SendTransactionParams = {
     tokenAddress: mockApproveTxRequest.to,
     spender: permit2Address(mockApproveTxRequest.chainId),
     swapTxId: '1',
+    estimatedGasFeeDetails: undefined,
   },
   transactionOriginType: TransactionOriginType.Internal,
   analytics: {
@@ -153,7 +164,7 @@ describe(approveAndSwap, () => {
   const sharedProviders: (EffectProviders | StaticProvider)[] = [
     [select(selectWalletSwapProtectionSetting), SwapProtectionSetting.Off],
     [call(getProvider, mockSwapTxRequest.chainId), mockProvider],
-    [call(getNonceForApproveAndSwap, classicSwapParams.account.address, mockSwapTxRequest.chainId, false), nonce],
+    [call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId), nonce],
   ]
 
   it('sends a swap tx', async () => {
@@ -196,7 +207,7 @@ describe(approveAndSwap, () => {
       .next()
       .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequest.chainId)
       .next(false)
-      .call(getNonceForApproveAndSwap, classicSwapParams.account.address, mockSwapTxRequest.chainId, false)
+      .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next(nonce)
       .call(sendTransaction, expectedSendSwapParams)
       .next({ transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} })
@@ -213,7 +224,6 @@ describe(approveAndSwap, () => {
       txId: classicSwapParams.txId,
       transactionOriginType: TransactionOriginType.Internal,
     }
-
     await expectSaga(approveAndSwap, classicSwapParams)
       .provide([
         ...sharedProviders,
@@ -228,14 +238,13 @@ describe(approveAndSwap, () => {
       ])
       .call(sendTransaction, expectedSendSwapParams)
       .silentRun()
-
     testSaga(approveAndSwap, classicSwapParams)
       .next()
       .call(classicSwapParams.onSubmit)
       .next()
       .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequest.chainId)
       .next(false)
-      .call(getNonceForApproveAndSwap, classicSwapParams.account.address, mockSwapTxRequest.chainId, false)
+      .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next(nonce)
       .call(sendTransaction, expectedSendApprovalParams)
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
@@ -272,7 +281,7 @@ describe(approveAndSwap, () => {
 
     testSaga(approveAndSwap, uniswapXSwapParams)
       .next()
-      .call(getNonceForApproveAndSwap, classicSwapParams.account.address, mockSwapTxRequest.chainId, false)
+      .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next(nonce)
       .call(sendTransaction, expectedSendApprovalParams)
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
@@ -335,7 +344,7 @@ describe(approveAndSwap, () => {
 
     testSaga(approveAndSwap, uniswapXSwapEthInputParams)
       .next()
-      .call(getNonceForApproveAndSwap, classicSwapParams.account.address, mockSwapTxRequest.chainId, false)
+      .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
       .next(nonce)
       .call(sendTransaction, expectedSendApprovalParams)
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })

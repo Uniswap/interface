@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimateTransition, Flex, Loader, Skeleton, Text, isWeb } from 'ui/src'
+import { AnimateTransition, Flex, Loader, Skeleton, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/TokenOptionItem'
@@ -18,11 +18,11 @@ import {
   TokenOption,
   TokenOptionSection,
   TokenSection,
-  TokenSelectorListSections,
-  TokenWarningDismissedHook,
 } from 'uniswap/src/components/TokenSelector/types'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
+// eslint-disable-next-line no-restricted-imports
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
+import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -44,7 +44,6 @@ function TokenOptionItemWrapper({
   showWarnings,
   showTokenAddress,
   isKeyboardOpen,
-  useTokenWarningDismissedHook,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
 }: {
@@ -55,7 +54,6 @@ function TokenOptionItemWrapper({
   showWarnings: boolean
   showTokenAddress?: boolean
   isKeyboardOpen?: boolean
-  useTokenWarningDismissedHook: TokenWarningDismissedHook
 
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
@@ -65,8 +63,9 @@ function TokenOptionItemWrapper({
     () => onSelectCurrency(tokenOption.currencyInfo, section, index),
     [index, onSelectCurrency, section, tokenOption.currencyInfo],
   )
-  const { tokenWarningDismissed, dismissWarningCallback } = useTokenWarningDismissedHook(
-    tokenOption.currencyInfo.currencyId,
+
+  const { tokenWarningDismissed, onDismissTokenWarning: dismissWarningCallback } = useDismissedTokenWarnings(
+    tokenOption.currencyInfo.currency,
   )
 
   return (
@@ -102,7 +101,7 @@ function EmptyResults(): JSX.Element {
 
 interface TokenSelectorListProps {
   onSelectCurrency: OnSelectCurrency
-  sections?: TokenSelectorListSections
+  sections?: TokenSection[]
   chainFilter?: UniverseChainId | null
   showTokenWarnings: boolean
   refetch?: () => void
@@ -112,7 +111,6 @@ interface TokenSelectorListProps {
   errorText?: string
   showTokenAddress?: boolean
   isKeyboardOpen?: boolean
-  useTokenWarningDismissedHook: TokenWarningDismissedHook
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
   onDismiss: () => void
@@ -131,7 +129,6 @@ function _TokenSelectorList({
   emptyElement,
   errorText,
   showTokenAddress,
-  useTokenWarningDismissedHook,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
 }: TokenSelectorListProps): JSX.Element {
@@ -165,7 +162,6 @@ function _TokenSelectorList({
             showTokenAddress={showTokenAddress}
             showWarnings={showTokenWarnings}
             tokenOption={item}
-            useTokenWarningDismissedHook={useTokenWarningDismissedHook}
             onDismiss={onDismiss}
             onSelectCurrency={onSelectCurrency}
           />
@@ -179,7 +175,6 @@ function _TokenSelectorList({
       showTokenAddress,
       showTokenWarnings,
       isKeyboardOpen,
-      useTokenWarningDismissedHook,
       convertFiatAmountFormattedCallback,
       formatNumberOrStringCallback,
       onDismiss,
@@ -220,7 +215,7 @@ function _TokenSelectorList({
             <Loader.Box height={fonts.subheading2.lineHeight} />
           </Skeleton>
         </Flex>
-        <Loader.Token gap={isWeb ?? '$none'} repeat={15} />
+        <Loader.Token gap="$none" repeat={15} />
       </Flex>
       <TokenSectionBaseList
         ListEmptyComponent={emptyElement || <EmptyResults />}

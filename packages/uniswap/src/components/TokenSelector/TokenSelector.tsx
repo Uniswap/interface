@@ -12,26 +12,21 @@ import { TokenSelectorSendList } from 'uniswap/src/components/TokenSelector/Toke
 import { TokenSelectorSwapInputList } from 'uniswap/src/components/TokenSelector/TokenSelectorSwapInputList'
 import { TokenSelectorSwapOutputList } from 'uniswap/src/components/TokenSelector/TokenSelectorSwapOutputList'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/flowToModalName'
+import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks'
 import {
   ConvertFiatAmountFormattedCallback,
-  FilterCallbacksHookType,
-  TokenOptionsHookType,
-  TokenOptionsWithBalanceOnlySearchHookType,
-  TokenOptionsWithChainFilterHookType,
   TokenSection,
-  TokenSectionsForEmptySearchHookType,
   TokenSelectorFlow,
-  TokenWarningDismissedHook,
 } from 'uniswap/src/components/TokenSelector/types'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
-import { PortfolioValueModifier } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+// eslint-disable-next-line no-restricted-imports
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
-import { TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
@@ -64,64 +59,41 @@ export interface TokenSelectorProps {
   flow: TokenSelectorFlow
   activeAccountAddress?: string
   chainId?: UniverseChainId
-  valueModifiers?: PortfolioValueModifier[]
-  searchHistory?: TokenSearchResult[]
   isSurfaceReady?: boolean
   isLimits?: boolean
   onClose: () => void
-  onDismiss: () => void
-  onPressAnimation: () => void
+  onDismiss?: () => void
+  onPressAnimation?: () => void
   onSelectChain?: (chainId: UniverseChainId | null) => void
   onSelectCurrency: (currency: Currency, currencyField: CurrencyField, context: SearchContext) => void
   variation: TokenSelectorVariation
-  addToSearchHistoryCallback: (currencyInfo: CurrencyInfo) => void
-  navigateToBuyOrReceiveWithEmptyWalletCallback: () => void
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
-  useTokenWarningDismissedHook: TokenWarningDismissedHook
-  useCommonTokensOptionsHook: TokenOptionsHookType
-  useFavoriteTokensOptionsHook: TokenOptionsHookType
-  usePopularTokensOptionsHook: TokenOptionsWithChainFilterHookType
-  usePortfolioTokenOptionsHook: TokenOptionsHookType
-  useTokenSectionsForEmptySearchHook: TokenSectionsForEmptySearchHookType
-  useTokenSectionsForSearchResultsHook: TokenOptionsWithBalanceOnlySearchHookType
-  useFilterCallbacksHook: FilterCallbacksHookType
 }
 
 export function TokenSelectorContent({
   currencyField,
   flow,
-  searchHistory,
-  onSelectCurrency,
-  chainId,
-  valueModifiers,
-  onClose,
   variation,
+  activeAccountAddress,
+  chainId,
   isSurfaceReady = true,
   isLimits,
-  activeAccountAddress,
+  onClose,
   onDismiss,
   onSelectChain,
+  onSelectCurrency,
   onPressAnimation,
-  addToSearchHistoryCallback,
   convertFiatAmountFormattedCallback,
   formatNumberOrStringCallback,
-  navigateToBuyOrReceiveWithEmptyWalletCallback,
-  useCommonTokensOptionsHook,
-  useFavoriteTokensOptionsHook,
-  usePopularTokensOptionsHook,
-  usePortfolioTokenOptionsHook,
-  useTokenWarningDismissedHook,
-  useTokenSectionsForEmptySearchHook,
-  useTokenSectionsForSearchResultsHook,
-  useFilterCallbacksHook,
 }: Omit<TokenSelectorProps, 'isModalOpen'>): JSX.Element {
   const { onChangeChainFilter, onChangeText, searchFilter, chainFilter, parsedChainFilter, parsedSearchFilter } =
-    useFilterCallbacksHook(chainId ?? null, flow)
+    useFilterCallbacks(chainId ?? null, flow)
   const debouncedSearchFilter = useDebounce(searchFilter)
   const debouncedParsedSearchFilter = useDebounce(parsedSearchFilter)
   const scrollbarStyles = useScrollbarStyles()
   const isKeyboardOpen = useIsKeyboardOpen()
+  const { navigateToBuyOrReceiveWithEmptyWallet } = useUniswapContext()
 
   const media = useMedia()
   const isSmallScreen = (media.sm && isInterface) || isMobileApp || isMobileWeb
@@ -147,7 +119,7 @@ export function TokenSelectorContent({
   const { t } = useTranslation()
   const { page } = useTrace()
 
-  // Log currency field only for Swap as for Transfer it's always input
+  // Log currency field only for swap as for send it's always input
   const currencyFieldName =
     flow === TokenSelectorFlow.Swap
       ? currencyField === CurrencyField.INPUT
@@ -197,8 +169,8 @@ export function TokenSelectorContent({
 
   const onSendEmptyActionPress = useCallback(() => {
     onClose()
-    navigateToBuyOrReceiveWithEmptyWalletCallback()
-  }, [navigateToBuyOrReceiveWithEmptyWalletCallback, onClose])
+    navigateToBuyOrReceiveWithEmptyWallet?.()
+  }, [navigateToBuyOrReceiveWithEmptyWallet, onClose])
 
   function onCancel(): void {
     setSearchInFocus(false)
@@ -208,6 +180,8 @@ export function TokenSelectorContent({
       setSearchInFocus(true)
     }
   }
+
+  const onDismissDefined = useMemo(() => onDismiss ?? ((): void => undefined), [onDismiss])
 
   const shouldAutoFocusSearch = isWeb && !media.sm
 
@@ -219,9 +193,7 @@ export function TokenSelectorContent({
           convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
           formatNumberOrStringCallback={formatNumberOrStringCallback}
           isKeyboardOpen={isKeyboardOpen}
-          useTokenSectionsForEmptySearchHook={useTokenSectionsForEmptySearchHook}
-          useTokenWarningDismissedHook={useTokenWarningDismissedHook}
-          onDismiss={onDismiss}
+          onDismiss={onDismissDefined}
           onSelectCurrency={onSelectCurrencyCallback}
         />
       )
@@ -231,7 +203,6 @@ export function TokenSelectorContent({
       return (
         <TokenSelectorSearchResultsList
           activeAccountAddress={activeAccountAddress}
-          addToSearchHistoryCallback={addToSearchHistoryCallback}
           chainFilter={chainFilter}
           convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
           debouncedParsedSearchFilter={debouncedParsedSearchFilter}
@@ -241,10 +212,7 @@ export function TokenSelectorContent({
           isKeyboardOpen={isKeyboardOpen}
           parsedChainFilter={parsedChainFilter}
           searchFilter={searchFilter}
-          useTokenSectionsForSearchResultsHook={useTokenSectionsForSearchResultsHook}
-          useTokenWarningDismissedHook={useTokenWarningDismissedHook}
-          valueModifiers={valueModifiers}
-          onDismiss={onDismiss}
+          onDismiss={onDismissDefined}
           onSelectCurrency={onSelectCurrencyCallback}
         />
       )
@@ -259,11 +227,7 @@ export function TokenSelectorContent({
             convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
             formatNumberOrStringCallback={formatNumberOrStringCallback}
             isKeyboardOpen={isKeyboardOpen}
-            searchHistory={searchHistory}
-            usePortfolioTokenOptionsHook={usePortfolioTokenOptionsHook}
-            useTokenWarningDismissedHook={useTokenWarningDismissedHook}
-            valueModifiers={valueModifiers}
-            onDismiss={onDismiss}
+            onDismiss={onDismissDefined}
             onEmptyActionPress={onSendEmptyActionPress}
             onSelectCurrency={onSelectCurrencyCallback}
           />
@@ -276,13 +240,7 @@ export function TokenSelectorContent({
             convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
             formatNumberOrStringCallback={formatNumberOrStringCallback}
             isKeyboardOpen={isKeyboardOpen}
-            searchHistory={searchHistory}
-            useFavoriteTokensOptionsHook={useFavoriteTokensOptionsHook}
-            usePopularTokensOptionsHook={usePopularTokensOptionsHook}
-            usePortfolioTokenOptionsHook={usePortfolioTokenOptionsHook}
-            useTokenWarningDismissedHook={useTokenWarningDismissedHook}
-            valueModifiers={valueModifiers}
-            onDismiss={onDismiss}
+            onDismiss={onDismissDefined}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
@@ -294,14 +252,7 @@ export function TokenSelectorContent({
             convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
             formatNumberOrStringCallback={formatNumberOrStringCallback}
             isKeyboardOpen={isKeyboardOpen}
-            searchHistory={searchHistory}
-            useCommonTokensOptionsHook={useCommonTokensOptionsHook}
-            useFavoriteTokensOptionsHook={useFavoriteTokensOptionsHook}
-            usePopularTokensOptionsHook={usePopularTokensOptionsHook}
-            usePortfolioTokenOptionsHook={usePortfolioTokenOptionsHook}
-            useTokenWarningDismissedHook={useTokenWarningDismissedHook}
-            valueModifiers={valueModifiers}
-            onDismiss={onDismiss}
+            onDismiss={onDismissDefined}
             onSelectCurrency={onSelectCurrencyCallback}
           />
         )
@@ -309,28 +260,18 @@ export function TokenSelectorContent({
   }, [
     searchInFocus,
     searchFilter,
-    searchHistory,
     variation,
-    activeAccountAddress,
-    isKeyboardOpen,
     chainFilter,
-    parsedChainFilter,
-    debouncedSearchFilter,
-    debouncedParsedSearchFilter,
-    valueModifiers,
-    onDismiss,
-    addToSearchHistoryCallback,
     convertFiatAmountFormattedCallback,
     formatNumberOrStringCallback,
+    isKeyboardOpen,
+    onDismissDefined,
     onSelectCurrencyCallback,
+    activeAccountAddress,
+    debouncedParsedSearchFilter,
+    debouncedSearchFilter,
+    parsedChainFilter,
     onSendEmptyActionPress,
-    useCommonTokensOptionsHook,
-    useFavoriteTokensOptionsHook,
-    usePopularTokensOptionsHook,
-    usePortfolioTokenOptionsHook,
-    useTokenSectionsForEmptySearchHook,
-    useTokenSectionsForSearchResultsHook,
-    useTokenWarningDismissedHook,
   ])
 
   return (
@@ -371,7 +312,7 @@ export function TokenSelectorContent({
               value={searchFilter ?? ''}
               onCancel={isWeb ? undefined : onCancel}
               onChangeText={onChangeText}
-              onDismiss={onDismiss}
+              onDismiss={onDismissDefined}
               onFocus={onFocus}
             />
           </Flex>
@@ -401,7 +342,7 @@ function TokenSelectorModalContent(props: TokenSelectorProps): JSX.Element {
   const { isModalOpen, onDismiss } = props
 
   useEffect(() => {
-    if (isModalOpen) {
+    if (isModalOpen && onDismiss) {
       // Dismiss native keyboard when opening modal in case it was opened by the current screen.
       onDismiss()
     }

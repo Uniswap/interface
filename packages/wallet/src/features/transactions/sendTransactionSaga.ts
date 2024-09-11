@@ -2,7 +2,9 @@ import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
+import { AccountMeta, AccountType, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
@@ -14,11 +16,12 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
+import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
 import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { createTransactionId, getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
-import { getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
+import { getPrivateProvider, getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 
@@ -39,7 +42,7 @@ export interface SendTransactionParams {
 
 export function* sendTransaction(params: SendTransactionParams) {
   const { chainId, account, options } = params
-  const request = options.request
+  let request = options.request
 
   logger.debug('sendTransaction', '', `Sending tx on ${UNIVERSE_CHAIN_INFO[chainId].label} to ${request.to}`)
 
@@ -47,9 +50,19 @@ export function* sendTransaction(params: SendTransactionParams) {
     throw new Error('Account must support signing')
   }
 
+  // Only fetch nonce if it's not already set, or we could be overwriting some custom logic
+  // On swapSaga we manually set them for approve+swap to prevent errors in some L2s
+  if (!request.nonce) {
+    const nonce = yield* call(tryGetNonce, account, chainId)
+    if (nonce) {
+      request = { ...request, nonce }
+    }
+  }
+
   // Sign and send the transaction
-  const rpcType = options.submitViaPrivateRpc ? RPCType.Private : RPCType.Public
-  const provider = yield* call(getProvider, chainId, rpcType)
+  const provider = options.submitViaPrivateRpc
+    ? yield* call(getPrivateProvider, chainId, account)
+    : yield* call(getProvider, chainId)
   const signerManager = yield* call(getSignerManager)
   const { transactionResponse, populatedRequest } = yield* call(
     signAndSendTransaction,
@@ -59,6 +72,12 @@ export function* sendTransaction(params: SendTransactionParams) {
     signerManager,
   )
   logger.debug('sendTransaction', '', 'Tx submitted:', transactionResponse.hash)
+
+  const { estimatedGasFeeDetails } = params.typeInfo
+  if (estimatedGasFeeDetails) {
+    const blockNumber = yield* call([provider, provider.getBlockNumber])
+    estimatedGasFeeDetails.blockSubmitted = blockNumber
+  }
 
   // Register the tx in the store
   yield* call(addTransaction, params, transactionResponse.hash, populatedRequest)
@@ -126,4 +145,29 @@ function* addTransaction(
   }
   yield* put(transactionActions.addTransaction(transaction))
   logger.debug('sendTransaction', 'addTransaction', 'Tx added:', { chainId, ...typeInfo })
+}
+
+/**
+ * Attempts to fetch the next nonce to be used for a transaction.
+ * If the chain supports private RPC, it will use the private RPC provider, in order to account for pending private transactions.
+ *
+ * @param account - The account to fetch the nonce for.
+ * @param chainId - The chain ID to fetch the nonce for.
+ * @returns The nonce if it was successfully fetched, otherwise undefined.
+ */
+export function* tryGetNonce(account: SignerMnemonicAccountMeta, chainId: WalletChainId) {
+  try {
+    const isPrivateRpcEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
+    const provider =
+      isPrivateRpcEnabled && isPrivateRpcSupportedOnChain(chainId)
+        ? yield* call(getPrivateProvider, chainId, account)
+        : yield* call(getProvider, chainId)
+
+    return yield* call([provider, provider.getTransactionCount], account.address, 'pending')
+  } catch (error) {
+    logger.error(error, {
+      tags: { file: 'sendTransaction', function: 'tryGetNonce' },
+    })
+    return undefined
+  }
 }

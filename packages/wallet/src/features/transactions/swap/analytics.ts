@@ -1,6 +1,7 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useEffect } from 'react'
+import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
@@ -11,7 +12,6 @@ import { TransactionOriginType } from 'uniswap/src/features/transactions/types/t
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { LocalizationContextState, useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 // hook-based analytics because this one is data-lifecycle dependent
 export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {

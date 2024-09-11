@@ -226,6 +226,7 @@ export default function FeatureFlagModal() {
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
           <FeatureFlagOption flag={FeatureFlags.ForAggregator} label="Enable FOR aggregator web" />
+          <FeatureFlagOption flag={FeatureFlags.TokenProtection} label="Warning UX for scam/dangerous tokens" />
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
           </FeatureFlagGroup>
@@ -248,9 +249,6 @@ export default function FeatureFlagModal() {
           <FeatureFlagGroup name="UniswapX Flags">
             <FeatureFlagOption flag={FeatureFlags.UniswapXSyntheticQuote} label="Force synthetic quotes for UniswapX" />
             <FeatureFlagOption flag={FeatureFlags.UniswapXv2} label="UniswapX v2" />
-          </FeatureFlagGroup>
-          <FeatureFlagGroup name="Extension">
-            <FeatureFlagOption flag={FeatureFlags.ExtensionLaunch} label="General phase of go-to-market campaign" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Outage Banners">
             <FeatureFlagOption flag={FeatureFlags.OutageBannerArbitrum} label="Outage Banner for Arbitrum" />

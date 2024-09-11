@@ -2,8 +2,9 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Separator, Text, TouchableArea } from 'ui/src'
-import { AlertTriangle, AnglesMaximize, AnglesMinimize } from 'ui/src/components/icons'
+import { GestureResponderEvent } from 'react-native'
+import { Flex, Separator, Shine, Text, TouchableArea } from 'ui/src'
+import { AlertTriangleFilled, AnglesMaximize, AnglesMinimize } from 'ui/src/components/icons'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Warning } from 'uniswap/src/features/transactions/WarningModal/types'
@@ -29,6 +30,7 @@ interface TransactionDetailsProps {
   warning?: Warning
   feeOnTransferProps?: FeeOnTransferFeeGroupProps
   onShowWarning?: () => void
+  indicative?: boolean
   isSwap?: boolean
   AccountDetails?: JSX.Element
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
@@ -46,6 +48,7 @@ export function TransactionDetails({
   warning,
   feeOnTransferProps,
   onShowWarning,
+  indicative = false,
   isSwap,
   transactionUSDValue,
   AccountDetails,
@@ -62,8 +65,6 @@ export function TransactionDetails({
     setShowChildren(!showChildren)
   }
 
-  const displaySwapFeeInfo = isSwap && swapFeeInfo
-
   return (
     <Flex>
       {showWarning && warning && onShowWarning && (
@@ -77,7 +78,7 @@ export function TransactionDetails({
             px="$spacing16"
             py="$spacing8"
           >
-            <AlertTriangle color={warningColor?.text} size="$icon.16" />
+            <AlertTriangleFilled color={warningColor?.text} size="$icon.16" />
             <Flex fill py="$spacing2">
               <Text color={warningColor.text} variant="body3">
                 {warning.title}
@@ -93,35 +94,21 @@ export function TransactionDetails({
       )}
       {!showWarning && banner && <Flex py="$spacing16">{banner}</Flex>}
       {children ? (
-        <Flex centered row gap="$spacing16" mb="$spacing16" px="$spacing12">
-          <Separator />
-          <TouchableArea
-            alignItems="center"
-            flexDirection="row"
-            justifyContent="center"
-            pb="$spacing4"
-            pt="$spacing8"
-            onPress={onPressToggleShowChildren}
-          >
-            <Text color="$neutral3" variant="body3">
-              {showChildren ? t('common.button.showLess') : t('common.button.showMore')}
-            </Text>
-            {showChildren ? (
-              <AnglesMinimize color="$neutral3" size="$icon.20" />
-            ) : (
-              <AnglesMaximize color="$neutral3" size="$icon.20" />
-            )}
-          </TouchableArea>
-          <Separator />
-        </Flex>
+        <ListSeparatorToggle
+          closedText={t('common.button.showMore')}
+          isOpen={showChildren}
+          openText={t('common.button.showLess')}
+          onPress={onPressToggleShowChildren}
+        />
       ) : null}
       <Flex gap="$spacing8" pb="$spacing8" px="$spacing12">
         {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
         {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
-        {displaySwapFeeInfo && <SwapFee swapFeeInfo={swapFeeInfo} />}
+        {isSwap && <SwapFee loading={indicative} swapFeeInfo={swapFeeInfo} />}
         <NetworkFee
           chainId={chainId}
           gasFee={gasFee}
+          indicative={indicative}
           transactionUSDValue={transactionUSDValue}
           uniswapXGasBreakdown={uniswapXGasBreakdown}
         />
@@ -129,4 +116,52 @@ export function TransactionDetails({
       </Flex>
     </Flex>
   )
+}
+
+export const ListSeparatorToggle = ({
+  onPress,
+  isOpen,
+  openText,
+  closedText,
+}: {
+  onPress: ((event: GestureResponderEvent) => void) | null | undefined
+  isOpen?: boolean
+  openText: string
+  closedText: string
+}): JSX.Element => {
+  return (
+    <Flex centered row gap="$spacing16" mb="$spacing16" px="$spacing12">
+      <Separator />
+      <TouchableArea
+        alignItems="center"
+        flexDirection="row"
+        justifyContent="center"
+        pb="$spacing4"
+        pt="$spacing8"
+        onPress={onPress}
+      >
+        <Text color="$neutral3" variant="body3">
+          {isOpen ? openText : closedText}
+        </Text>
+        {isOpen ? (
+          <AnglesMinimize color="$neutral3" size="$icon.20" />
+        ) : (
+          <AnglesMaximize color="$neutral3" size="$icon.20" />
+        )}
+      </TouchableArea>
+      <Separator />
+    </Flex>
+  )
+}
+
+export function IndicativeLoadingWrapper({ children, loading }: PropsWithChildren<{ loading?: boolean }>): JSX.Element {
+  if (loading) {
+    return (
+      <Shine>
+        <Flex backgroundColor="$surface3" borderRadius={8} height={20} width={60} />
+      </Shine>
+    )
+  }
+
+  return <>{children}</>
 }

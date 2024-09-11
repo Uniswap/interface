@@ -45,7 +45,7 @@ function TableBody<Data extends RowData>({
 }: {
   table: TanstackTable<Data>
   loading?: boolean
-  error?: ApolloError
+  error?: ApolloError | boolean
 }) {
   const analyticsContext = useTrace()
 
@@ -131,7 +131,7 @@ export function Table<Data extends RowData>({
   columns: ColumnDef<Data, any>[]
   data: Data[]
   loading?: boolean
-  error?: ApolloError
+  error?: ApolloError | boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   maxWidth?: number
   maxHeight?: number
@@ -209,10 +209,10 @@ export function Table<Data extends RowData>({
   return (
     <div>
       <ScrollSync>
-        <TableContainer $maxWidth={maxWidth} $maxHeight={maxHeight}>
+        <TableContainer maxWidth={maxWidth} maxHeight={maxHeight}>
           <TableHead $isSticky={!maxHeight} $top={headerHeight}>
             <ScrollSyncPane>
-              <HeaderRow $dimmed={!!error}>
+              <HeaderRow dimmed={!!error}>
                 {table.getFlatHeaders().map((header) => (
                   <CellContainer key={header.id}>
                     {flexRender(header.column.columnDef.header, header.getContext())}
@@ -222,7 +222,7 @@ export function Table<Data extends RowData>({
             </ScrollSyncPane>
             {showReturn && (
               <FadePresence $zIndex={Z_INDEX.hover}>
-                <ReturnButtonContainer $top={maxHeight ? 55 : 75}>
+                <ReturnButtonContainer top={maxHeight ? 55 : 75}>
                   <ReturnButton
                     height="24px"
                     onClick={() => {
@@ -242,16 +242,18 @@ export function Table<Data extends RowData>({
             )}
           </TableHead>
           <ScrollSyncPane innerRef={tableBodyRef}>
-            <TableBodyContainer>
+            <TableBodyContainer maxHeight={maxHeight ? maxHeight - headerHeight : 'unset'}>
               <TableBody loading={loading} error={error} table={table} />
             </TableBodyContainer>
           </ScrollSyncPane>
-          <LoadingIndicatorContainer show={loadingMore}>
-            <LoadingIndicator>
-              <Loader />
-              <Trans i18nKey="common.loading" />
-            </LoadingIndicator>
-          </LoadingIndicatorContainer>
+          {loadingMore && (
+            <LoadingIndicatorContainer>
+              <LoadingIndicator>
+                <Loader />
+                <Trans i18nKey="common.loading" />
+              </LoadingIndicator>
+            </LoadingIndicatorContainer>
+          )}
         </TableContainer>
       </ScrollSync>
     </div>

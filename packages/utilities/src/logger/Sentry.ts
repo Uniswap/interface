@@ -1,5 +1,5 @@
 import { SeverityLevel } from '@sentry/types'
-import { NotImplementedError } from 'utilities/src/errors'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 import { LoggerErrorContext } from 'utilities/src/logger/types'
 
 export type BreadCrumb = {
@@ -21,12 +21,12 @@ export interface ISentry {
 /** This will be overridden by the compiler with platform-specific Sentry file. */
 export const Sentry: ISentry = {
   captureException: () => {
-    throw new NotImplementedError('Sentry not implemented')
+    throw new PlatformSplitStubError('Sentry not implemented')
   },
   captureMessage: () => {
-    throw new NotImplementedError('Sentry not implemented')
+    throw new PlatformSplitStubError('Sentry not implemented')
   },
   addBreadCrumb: (_breadCrumb: BreadCrumb) => {
-    throw new NotImplementedError('Sentry not implemented')
+    throw new PlatformSplitStubError('Sentry not implemented')
   },
 }

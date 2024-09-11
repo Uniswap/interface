@@ -12,11 +12,11 @@ import { parseUnits } from 'ethers/lib/utils'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useScreenSize } from 'hooks/screenSize'
 import styled, { useTheme } from 'lib/styled-components'
-import { Checkbox } from 'nft/components/layout/Checkbox'
 import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { Checkbox } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -31,10 +31,6 @@ interface LimitDetailActivityRowProps {
   onToggleSelect: (order: Activity) => void
   selected: boolean
 }
-
-const StyledCheckbox = styled(Checkbox)<{ $visible?: boolean }>`
-  opacity: ${({ $visible }) => ($visible ? 1 : 0)};
-`
 
 const TradeSummaryContainer = styled(Row)`
   * {
@@ -138,12 +134,12 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
         }}
       />
       {!cancelling && (
-        <StyledCheckbox
-          $visible={hovered || selected || isSmallScreen}
+        <Checkbox
+          variant="branded"
+          opacity={hovered || selected || isSmallScreen ? 1 : 0}
           size={18}
-          hovered={false}
           checked={selected}
-          onChange={() => onToggleSelect(order)}
+          onPress={() => onToggleSelect(order)}
         />
       )}
     </Row>

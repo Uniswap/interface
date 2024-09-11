@@ -24,7 +24,7 @@ export function UniswapXInfo({
     <WarningInfo
       infoButton={
         <LearnMoreLink
-          textVariant={isWeb ? 'buttonLabel4' : undefined}
+          textVariant={isWeb ? 'buttonLabel3' : undefined}
           url={uniswapUrls.helpArticleUrls.uniswapXInfo}
         />
       }

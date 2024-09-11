@@ -15,6 +15,7 @@ import { CopyAlt, ExternalLink, UniswapX, Unitag } from 'ui/src/components/icons
 import { borderRadii, fonts, iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { useENS } from 'uniswap/src/features/ens/useENS'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -25,7 +26,8 @@ import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { isMobileApp } from 'utilities/src/platform'
+import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useNetworkFee } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/hooks'
@@ -37,6 +39,7 @@ import {
 } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
+import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
 import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
 
 const UNISWAP_FEE = 0.0025
@@ -44,11 +47,13 @@ const UNISWAP_FEE = 0.0025
 export function TransactionDetailsInfoRows({
   transactionDetails,
   isShowingMore,
+  onClose,
 }: {
   transactionDetails: TransactionDetails
   isShowingMore: boolean
+  onClose: () => void
 }): JSX.Element {
-  const rows = useTransactionDetailsInfoRows(transactionDetails, isShowingMore)
+  const rows = useTransactionDetailsInfoRows(transactionDetails, isShowingMore, onClose)
 
   return (
     <Flex gap="$spacing8" px="$spacing8">
@@ -60,6 +65,7 @@ export function TransactionDetailsInfoRows({
 export function useTransactionDetailsInfoRows(
   transactionDetails: TransactionDetails,
   isShowingMore: boolean,
+  onClose: () => void,
 ): JSX.Element[] {
   const { t } = useTranslation()
   const isDarkMode = useIsDarkMode()
@@ -84,10 +90,12 @@ export function useTransactionDetailsInfoRows(
       specificRows.push(<DappInfoRow key="dappInfo" iconUrl={typeInfo.dapp.icon} name={typeInfo.dapp.name} />)
       break
     case TransactionType.Receive:
-      specificRows.push(<TransactionParticipantRow key="txnParticipant" address={typeInfo.sender} />)
+      specificRows.push(<TransactionParticipantRow key="txnParticipant" address={typeInfo.sender} onClose={onClose} />)
       break
     case TransactionType.Send:
-      specificRows.push(<TransactionParticipantRow key="txnParticipant" isSend address={typeInfo.recipient} />)
+      specificRows.push(
+        <TransactionParticipantRow key="txnParticipant" isSend address={typeInfo.recipient} onClose={onClose} />,
+      )
       break
     case TransactionType.OnRampPurchase:
     case TransactionType.OnRampTransfer:
@@ -253,15 +261,52 @@ function DappInfoRow({ name, iconUrl }: { name: string; iconUrl?: string | null 
   )
 }
 
-function TransactionParticipantRow({ address, isSend = false }: { address: string; isSend?: boolean }): JSX.Element {
+function TransactionParticipantRow({
+  onClose,
+  address,
+  isSend = false,
+}: {
+  onClose: () => void
+  address: string
+  isSend?: boolean
+}): JSX.Element {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const { navigateToExternalProfile } = useWalletNavigation()
   const { name: ensName } = useENS(UniverseChainId.Mainnet, address, true)
   const { unitag } = useUnitagByAddress(address)
   const personDisplayName = unitag?.username ?? ensName ?? shortenAddress(address)
+
+  const onPressParticipant = async (): Promise<void> => {
+    if (isMobileApp) {
+      // On mobile we navigate to external profile screen
+      navigateToExternalProfile({ address })
+      onClose()
+    } else {
+      // On extension we copy to clipboard either the address or the unitag (including the ".uni.eth" part)
+      await setClipboard(unitag?.username ? unitag.username + UNITAG_SUFFIX : address)
+      dispatch(
+        pushNotification({
+          type: AppNotificationType.Copied,
+          copyType: CopyNotificationType.Unitag,
+        }),
+      )
+    }
+  }
+
   return (
     <InfoRow label={isSend ? t('common.text.recipient') : t('common.text.sender')}>
-      <Text variant="body3">{personDisplayName}</Text>
-      {unitag?.username && <Unitag size="$icon.16" />}
+      <TouchableArea
+        alignItems="center"
+        flexDirection="row"
+        gap="$spacing4"
+        justifyContent="center"
+        onPress={onPressParticipant}
+      >
+        <Text variant="body3">{personDisplayName}</Text>
+        {unitag?.username && <Unitag size="$icon.16" />}
+        {!isMobileApp && <CopyAlt color="$neutral3" size="$icon.16" />}
+      </TouchableArea>
     </InfoRow>
   )
 }

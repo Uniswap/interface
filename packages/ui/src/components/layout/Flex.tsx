@@ -34,6 +34,9 @@ export const Flex = styled(View, {
       true: {
         flexDirection: 'row',
       },
+      false: {
+        flexDirection: 'column',
+      },
     },
 
     shrink: {

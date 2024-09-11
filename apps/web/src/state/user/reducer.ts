@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { SupportedLocale } from 'constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { RouterPreference } from 'state/routing/types'
-import { SerializedPair, SerializedToken, SlippageTolerance } from 'state/user/types'
+import { SerializedPair, SlippageTolerance } from 'state/user/types'
 
 const currentTimestamp = () => new Date().getTime()
 
@@ -26,12 +26,6 @@ export interface UserState {
 
   // deadline set by user in minutes, used in all txns
   userDeadline: number
-
-  tokens: {
-    [chainId: number]: {
-      [address: string]: SerializedToken
-    }
-  }
 
   pairs: {
     [chainId: number]: {
@@ -59,7 +53,6 @@ export const initialState: UserState = {
   userSlippageTolerance: SlippageTolerance.Auto,
   userSlippageToleranceHasBeenMigratedToAuto: true,
   userDeadline: DEFAULT_DEADLINE_FROM_NOW,
-  tokens: {},
   pairs: {},
   timestamp: currentTimestamp(),
   showSurveyPopup: undefined,
@@ -90,14 +83,6 @@ const userSlice = createSlice({
     updateHideClosedPositions(state, action) {
       state.userHideClosedPositions = action.payload.userHideClosedPositions
     },
-    addSerializedToken(state, { payload: { serializedToken } }) {
-      if (!state.tokens) {
-        state.tokens = {}
-      }
-      state.tokens[serializedToken.chainId] = state.tokens[serializedToken.chainId] || {}
-      state.tokens[serializedToken.chainId][serializedToken.address] = serializedToken
-      state.timestamp = currentTimestamp()
-    },
     addSerializedPair(state, { payload: { serializedPair } }) {
       if (
         serializedPair.token0.chainId === serializedPair.token1.chainId &&
@@ -117,7 +102,6 @@ const userSlice = createSlice({
 
 export const {
   addSerializedPair,
-  addSerializedToken,
   setOriginCountry,
   updateHideClosedPositions,
   updateUserRouterPreference,

@@ -8,18 +8,23 @@ import { CustomVolumeChartModel } from 'components/Charts/VolumeChart/CustomVolu
 import { StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { getCumulativeSum, getCumulativeVolume, getVolumeProtocolInfo } from 'components/Charts/VolumeChart/utils'
 import { ChartType } from 'components/Charts/utils'
-import Column from 'components/Column'
-import { RowBetween } from 'components/Row'
 import { DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
 import { useDailyProtocolTVL, useHistoricalProtocolVolume } from 'graphql/data/protocolStats'
-import { TimePeriod, getProtocolColor, getSupportedGraphQlChain } from 'graphql/data/util'
+import { TimePeriod, getProtocolColor, getProtocolGradient, getSupportedGraphQlChain } from 'graphql/data/util'
 import { useScreenSize } from 'hooks/screenSize'
-import styled, { useTheme } from 'lib/styled-components'
+import { useTheme } from 'lib/styled-components'
 import { ReactNode, useMemo, useState } from 'react'
-import { EllipsisStyle, ThemedText } from 'theme/components'
+import {
+  useDailyProtocolTVL as useRestDailyProtocolTVL,
+  useHistoricalProtocolVolume as useRestHistoricalProtocolVolume,
+} from 'state/explore/protocolStats'
+import { EllipsisTamaguiStyle } from 'theme/components'
+import { Flex, Text, styled } from 'ui/src'
 import { HistoryDuration, PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -32,54 +37,50 @@ const TIME_SELECTOR_OPTIONS = [
   { time: TimePeriod.MONTH, display: 'M' },
 ]
 
-const StyledTimePeriodSelector = styled(TimePeriodSelector)`
-  & > button {
-    padding: 4px 8px;
-    margin: 4px 0px;
-    font-size: 14px;
-  }
-`
-const ChartsContainer = styled(RowBetween)`
-  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-  width: 100%;
-  margin-left: auto;
-  margin-right: auto;
-  padding-bottom: 56px;
-`
+const ChartsContainer = styled(Flex, {
+  row: true,
+  justifyContent: 'space-between',
+  maxWidth: MAX_WIDTH_MEDIA_BREAKPOINT,
+  width: '100%',
+  ml: 'auto',
+  mr: 'auto',
+  pb: 56,
+})
+
 // a 6% gap is achieved using two 47% width containers, as a parent gap causes an autosizing error with side-by-side lightweight-charts
-const SectionContainer = styled(Column)`
-  position: relative;
-  width: 47%;
-  gap: 4px;
+const SectionContainer = styled(Flex, {
+  position: 'relative',
+  width: '47%',
+  gap: '$gap4',
+  ...EllipsisTamaguiStyle,
+  $md: {
+    backgroundColor: '$surface2',
+    borderRadius: '$rounded20',
+    height: 120,
+    p: '$padding20',
+  },
+  $xs: {
+    height: 112,
+    p: '$padding16',
+  },
+})
 
-  > * {
-    ${EllipsisStyle}
-  }
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.sm}px`}) {
-    background-color: ${({ theme }) => theme.surface2};
-    border-radius: 20px;
-    height: 120px;
-    padding: 20px;
-  }
-
-  @media only screen and (max-width: ${({ theme }) => `${theme.breakpoint.xs}px`}) {
-    height: 112px;
-    padding: 16px;
-  }
-`
-const SectionTitle = styled(ThemedText.SubHeader)`
-  color: ${({ theme }) => theme.neutral2};
-  white-space: nowrap;
-`
-const StyledChart: typeof Chart = styled(Chart)`
-  height: ${EXPLORE_CHART_HEIGHT_PX}px;
-`
+const SectionTitle = styled(Text, {
+  name: 'SectionTitle',
+  fontWeight: '300',
+  whiteSpace: 'nowrap',
+  color: '$neutral2',
+  lineHeight: 24,
+})
 
 function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const theme = useTheme()
   const isSmallScreen = !useScreenSize()['sm']
+  const { value: isMultichainExploreEnabledLoaded, isLoading: isMultichainExploreLoading } = useFeatureFlagWithLoading(
+    FeatureFlags.MultichainExplore,
+  )
+  const isMultichainExploreEnabled = isMultichainExploreEnabledLoaded || isMultichainExploreLoading
 
   function timeGranularityToHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
     // note: timePeriod on the Explore Page represents the GRANULARITY, not the timespan of data shown.
@@ -95,19 +96,43 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
     }
   }
 
-  const { entries, loading, dataQuality } = useHistoricalProtocolVolume(
+  const {
+    entries: gqlEntries,
+    loading: gqlLoading,
+    dataQuality: gqlDataQuality,
+  } = useHistoricalProtocolVolume(
     chainIdToBackendChain({ chainId, withFallback: true }),
     isSmallScreen ? HistoryDuration.Month : timeGranularityToHistoryDuration(timePeriod),
   )
-
-  const params = useMemo<{ data: StackedHistogramData[]; colors: [string, string]; headerHeight: number }>(
+  const {
+    entries: restEntries,
+    loading: restLoading,
+    dataQuality: restDataQuality,
+  } = useRestHistoricalProtocolVolume(
+    isSmallScreen ? HistoryDuration.Month : timeGranularityToHistoryDuration(timePeriod),
+  )
+  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
+  const { entries, loading, dataQuality } = isRestExploreEnabled
+    ? { entries: restEntries, loading: restLoading, dataQuality: restDataQuality }
+    : { entries: gqlEntries, loading: gqlLoading, dataQuality: gqlDataQuality }
+  const params = useMemo<{
+    data: StackedHistogramData[]
+    colors: [string, string]
+    useThinCrosshair: boolean
+    headerHeight: number
+    isMultichainExploreEnabled: boolean
+    background: string
+  }>(
     () => ({
       data: entries,
       colors: [theme.accent1, theme.accent3],
-      headerHeight: 85,
+      headerHeight: isMultichainExploreEnabled ? 0 : 80,
       stale: dataQuality === DataQuality.STALE,
+      useThinCrosshair: isMultichainExploreEnabled,
+      isMultichainExploreEnabled,
+      background: theme.background,
     }),
-    [entries, dataQuality, theme.accent1, theme.accent3],
+    [entries, theme.accent1, theme.accent3, theme.background, isMultichainExploreEnabled, dataQuality],
   )
 
   const cumulativeVolume = useMemo(() => getCumulativeVolume(entries), [entries])
@@ -123,18 +148,16 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
 
   return (
     <SectionContainer>
-      <RowBetween>
+      <Flex row justifyContent="space-between" alignItems="center" mb="$spacing8">
         <SectionTitle>
           <Trans i18nKey="explore.uniVolume" />
         </SectionTitle>
-        <div style={{ position: 'absolute', right: 0 }}>
-          <StyledTimePeriodSelector
-            options={TIME_SELECTOR_OPTIONS}
-            timePeriod={timePeriod}
-            onChangeTimePeriod={setTimePeriod}
-          />
-        </div>
-      </RowBetween>
+        <TimePeriodSelector
+          options={TIME_SELECTOR_OPTIONS}
+          timePeriod={timePeriod}
+          onChangeTimePeriod={setTimePeriod}
+        />
+      </Flex>
       {(() => {
         if (dataQuality === DataQuality.INVALID) {
           const errorText = loading ? undefined : <Trans i18nKey="explore.unableToDisplayHistorical" />
@@ -143,7 +166,14 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
           )
         }
         return (
-          <StyledChart Model={CustomVolumeChartModel<StackedHistogramData>} params={params}>
+          <Chart
+            // TODO(WEB-4820): Remove key when Chart automatically updates to theme changes
+            // Setting a key based on theme forces the chart to re-render when the theme changes
+            key={`protocol-volume-chart-${theme.darkMode ? 'dark' : 'light'}`}
+            Model={CustomVolumeChartModel<StackedHistogramData>}
+            params={params}
+            height={EXPLORE_CHART_HEIGHT_PX}
+          >
             {(crosshairData) => (
               <ChartHeader
                 value={crosshairData ? getCumulativeSum(crosshairData) : getCumulativeVolume(entries)}
@@ -152,7 +182,7 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
                 protocolData={getVolumeProtocolInfo(crosshairData, EXPLORE_PRICE_SOURCES)}
               />
             )}
-          </StyledChart>
+          </Chart>
         )
       })()}
     </SectionContainer>
@@ -161,15 +191,28 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
 
 function TVLChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
   const theme = useTheme()
+  const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
+  const {
+    entries: gqlEntries,
+    loading: gqlLoading,
+    dataQuality: gqlDataQuality,
+  } = useDailyProtocolTVL(chainIdToBackendChain({ chainId }))
+  const { entries: restEntries, loading: restLoading, dataQuality: restDataQuality } = useRestDailyProtocolTVL()
+  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
+  const { entries, loading, dataQuality } = isRestExploreEnabled
+    ? { entries: restEntries, loading: restLoading, dataQuality: restDataQuality }
+    : { entries: gqlEntries, loading: gqlLoading, dataQuality: gqlDataQuality }
 
-  const { entries, loading, dataQuality } = useDailyProtocolTVL(chainIdToBackendChain({ chainId }))
   const lastEntry = entries[entries.length - 1]
   const params = useMemo(
     () => ({
       data: entries,
       colors: EXPLORE_PRICE_SOURCES?.map((source) => getProtocolColor(source, theme)) ?? [theme.accent1],
+      gradients: isMultichainExploreEnabled
+        ? EXPLORE_PRICE_SOURCES?.map((source) => getProtocolGradient(source))
+        : undefined,
     }),
-    [entries, theme],
+    [entries, isMultichainExploreEnabled, theme],
   )
 
   const isSmallScreen = !useScreenSize()['sm']
@@ -180,7 +223,7 @@ function TVLChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
 
   return (
     <SectionContainer>
-      <SectionTitle>
+      <SectionTitle color="$neutral2" mb="$spacing8">
         <Trans i18nKey="common.uniswapTVL" />
       </SectionTitle>
       {(() => {
@@ -190,7 +233,7 @@ function TVLChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
         }
 
         return (
-          <StyledChart Model={TVLChartModel} params={params}>
+          <Chart Model={TVLChartModel} params={params} height={EXPLORE_CHART_HEIGHT_PX}>
             {(crosshairData) => (
               <ChartHeader
                 value={(crosshairData ?? lastEntry)?.values.reduce((v, sum) => (sum += v), 0)}
@@ -201,7 +244,7 @@ function TVLChartSection({ chainId }: { chainId: SupportedInterfaceChainId }) {
                 }))}
               />
             )}
-          </StyledChart>
+          </Chart>
         )
       })()}
     </SectionContainer>
@@ -213,11 +256,13 @@ function MinimalStatDisplay({ title, value, time }: { title: ReactNode; value: n
 
   return (
     <SectionContainer>
-      <SectionTitle color="neutral2">{title}</SectionTitle>
-      <ThemedText.HeadlineSmall fontSize="24px" lineHeight="32px">
-        {formatFiatPrice({ price: value, type: NumberType.ChartFiatValue })}
-      </ThemedText.HeadlineSmall>
-      {time && <ThemedText.Caption color="neutral2">{time}</ThemedText.Caption>}
+      <SectionTitle>{title}</SectionTitle>
+      <Text variant="heading3">{formatFiatPrice({ price: value, type: NumberType.ChartFiatValue })}</Text>
+      {time && (
+        <Text variant="body4" fontWeight="200" color="$neutral2">
+          {time}
+        </Text>
+      )}
     </SectionContainer>
   )
 }

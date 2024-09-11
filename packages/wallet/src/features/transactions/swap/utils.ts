@@ -1,19 +1,16 @@
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import {
-  FlatFeeOptions,
-  SwapOptions as UniversalRouterSwapOptions,
-  SwapRouter as UniversalSwapRouter,
-} from '@uniswap/universal-router-sdk'
-import { FeeOptions } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers'
 import { AppTFunction } from 'ui/src/i18n/types'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName, ElementNameType } from 'uniswap/src/features/telemetry/constants'
-import { ClassicTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { EstimatedGasFeeDetails } from 'uniswap/src/features/telemetry/types'
+import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
+  BaseSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionType,
@@ -31,8 +28,6 @@ import {
   currencyIdToChain,
 } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { LocalizationContextState } from 'wallet/src/features/language/LocalizationContext'
-import { PermitSignatureInfo } from 'wallet/src/features/transactions/swap/usePermit2Signature'
 
 export function serializeQueryParams(params: Record<string, Parameters<typeof encodeURIComponent>[0]>): string {
   const queryString = []
@@ -69,6 +64,7 @@ export function isWrapAction(wrapType: WrapType): wrapType is WrapType.Unwrap | 
 export function tradeToTransactionInfo(
   trade: Trade,
   transactedUSDValue?: number,
+  estimatedGasFeeDetails?: EstimatedGasFeeDetails,
 ): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
   const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
 
@@ -79,7 +75,8 @@ export function tradeToTransactionInfo(
   const inputCurrency = isUniswapX(trade) ? trade.inputAmount.currency.wrapped : trade.inputAmount.currency
   const outputCurrency = trade.outputAmount.currency
 
-  const baseTransactionInfo = {
+  const baseTransactionInfo: BaseSwapTransactionInfo = {
+    type: TransactionType.Swap,
     inputCurrencyId: currencyId(inputCurrency),
     outputCurrencyId: currencyId(outputCurrency),
     slippageTolerance,
@@ -88,12 +85,12 @@ export function tradeToTransactionInfo(
     routeString,
     protocol: getProtocolVersionFromTrade(trade),
     transactedUSDValue,
+    estimatedGasFeeDetails,
   }
 
   return trade.tradeType === TradeType.EXACT_INPUT
     ? {
         ...baseTransactionInfo,
-        type: TransactionType.Swap,
         tradeType: TradeType.EXACT_INPUT,
         inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
         expectedOutputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
@@ -101,7 +98,6 @@ export function tradeToTransactionInfo(
       }
     : {
         ...baseTransactionInfo,
-        type: TransactionType.Swap,
         tradeType: TradeType.EXACT_OUTPUT,
         outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
         expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
@@ -126,7 +122,7 @@ export function requireAcceptNewTrade(oldTrade: Maybe<Trade>, newTrade: Maybe<Tr
 
 export const getRateToDisplay = (
   formatter: LocalizationContextState,
-  trade: Trade,
+  trade: Trade | IndicativeTrade,
   showInverseRate: boolean,
 ): string => {
   const price = showInverseRate ? trade.executionPrice.invert() : trade.executionPrice
@@ -190,7 +186,7 @@ export const prepareSwapFormState = ({
         exactAmountToken: '',
         [CurrencyField.INPUT]: {
           address: currencyIdToAddress(inputCurrencyId),
-          chainId: currencyIdToChain(inputCurrencyId) ?? UniverseChainId.Mainnet,
+          chainId: (currencyIdToChain(inputCurrencyId) as WalletChainId) ?? UniverseChainId.Mainnet,
           type: AssetType.Currency,
         },
         [CurrencyField.OUTPUT]: null,
@@ -202,42 +198,6 @@ export const prepareSwapFormState = ({
 export const slippageToleranceToPercent = (slippage: number): Percent => {
   const basisPoints = Math.round(slippage * 100)
   return new Percent(basisPoints, 10_000)
-}
-
-interface MethodParameterArgs {
-  permit2Signature?: PermitSignatureInfo
-  trade: ClassicTrade
-  address: string
-  feeOptions?: FeeOptions
-  flatFeeOptions?: FlatFeeOptions
-}
-
-export const getSwapMethodParameters = ({
-  permit2Signature,
-  trade,
-  address,
-  feeOptions,
-  flatFeeOptions,
-}: MethodParameterArgs): { calldata: string; value: string } => {
-  const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
-  const baseOptions: UniversalRouterSwapOptions = {
-    slippageTolerance: slippageTolerancePercent,
-    recipient: address,
-    fee: feeOptions,
-    flatFee: flatFeeOptions,
-    deadlineOrPreviousBlockhash: trade.deadline,
-  }
-
-  const universalRouterSwapOptions: UniversalRouterSwapOptions = permit2Signature
-    ? {
-        ...baseOptions,
-        inputTokenPermit: {
-          signature: permit2Signature.signature,
-          ...permit2Signature.permitMessage,
-        },
-      }
-    : baseOptions
-  return UniversalSwapRouter.swapERC20CallParameters(trade, universalRouterSwapOptions)
 }
 
 export function getProtocolVersionFromTrade(trade: Trade): Protocol | undefined {

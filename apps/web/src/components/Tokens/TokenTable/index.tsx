@@ -4,7 +4,6 @@ import { InterfaceElementName } from '@uniswap/analytics-events'
 import { ParentSize } from '@visx/responsive'
 import SparklineChart from 'components/Charts/SparklineChart'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
-import Row from 'components/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Table/styled'
@@ -19,33 +18,44 @@ import {
   useSetSortMethod,
 } from 'components/Tokens/state'
 import { MouseoverTooltip } from 'components/Tooltip'
-import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
+import { chainIdToBackendChain, getChainFromChainUrlParam, useChainFromUrlParam } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
-import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL } from 'graphql/data/util'
+import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import styled from 'lib/styled-components'
-import { ReactElement, ReactNode, useMemo } from 'react'
-import { EllipsisStyle, ThemedText } from 'theme/components'
+import { ReactElement, ReactNode, memo, useMemo } from 'react'
+import { giveExploreStatDefaultValue } from 'state/explore'
+import { useTopTokens as useRestTopTokens } from 'state/explore/topTokens'
+import { TokenStat } from 'state/explore/types'
+import { Flex, Text, styled } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
-const TableWrapper = styled.div`
-  margin: 0 auto;
-  max-width: ${MAX_WIDTH_MEDIA_BREAKPOINT};
-`
+const TableWrapper = styled(Flex, {
+  m: '0 auto',
+  maxWidth: MAX_WIDTH_MEDIA_BREAKPOINT,
+})
 
-export const NameText = styled(ThemedText.BodyPrimary)`
-  ${EllipsisStyle}
-`
-const ValueText = styled(ThemedText.BodyPrimary)`
-  ${EllipsisStyle}
-`
+export const EllipsisText = styled(Text, {
+  variant: 'body2',
+  color: '$neutral1',
+  whiteSpace: 'nowrap',
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+})
 
-const SparklineContainer = styled.div`
-  width: 124px;
-  height: 40px;
-`
+const SparklineContainer = styled(Flex, {
+  width: '124px',
+  height: '$spacing40',
+})
+
+const TokenTableText = styled(Text, {
+  variant: 'body2',
+  color: '$neutral2',
+  maxWidth: '100%',
+})
 
 interface TokenTableValue {
   index: number
@@ -61,19 +71,69 @@ interface TokenTableValue {
   linkState: { preloadedLogoSrc?: string }
 }
 
-function TokenDescription({ token }: { token: TopToken }) {
+function TokenDescription({ token }: { token: TopToken | TokenStat }) {
   return (
-    <Row gap="sm">
+    <Flex row gap="$gap8">
       <QueryTokenLogo token={token} size={28} />
-      <NameText data-testid="token-name">{token?.project?.name ?? token?.name}</NameText>
-      <ThemedText.BodySecondary style={{ minWidth: 'fit-content' }}>{token?.symbol}</ThemedText.BodySecondary>
-    </Row>
+      <EllipsisText data-testid="token-name">{token?.project?.name ?? token?.name}</EllipsisText>
+      <TokenTableText
+        $platform-web={{
+          minWidth: 'fit-content',
+        }}
+      >
+        {token?.symbol}
+      </TokenTableText>
+    </Flex>
   )
 }
 
-export function TopTokensTable() {
+export const TopTokensTable = memo(function TopTokensTable() {
   const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
-  const { tokens, tokenSortRank, loadingTokens, sparklines, error } = useTopTokens(chain.backendChain.chain)
+  const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
+  const {
+    tokens: gqlTokens,
+    tokenSortRank: gqlTokenSortRank,
+    loadingTokens: gqlLoadingTokens,
+    sparklines: gqlSparklines,
+    error: gqlError,
+  } = useTopTokens(chain.backendChain.chain, isRestExploreEnabled /* skip */)
+  const {
+    topTokens: restTopTokens,
+    tokenSortRank: restTokenSortRank,
+    isLoading: restIsLoading,
+    sparklines: restSparklines,
+    isError: restError,
+  } = useRestTopTokens()
+
+  const { tokens, tokenSortRank, sparklines, loading, error } = useMemo(() => {
+    return isRestExploreEnabled
+      ? {
+          tokens: restTopTokens,
+          tokenSortRank: restTokenSortRank,
+          loading: restIsLoading,
+          sparklines: restSparklines,
+          error: restError,
+        }
+      : {
+          tokens: gqlTokens,
+          tokenSortRank: gqlTokenSortRank,
+          loading: gqlLoadingTokens,
+          sparklines: gqlSparklines,
+          error: gqlError,
+        }
+  }, [
+    isRestExploreEnabled,
+    restTopTokens,
+    restTokenSortRank,
+    restIsLoading,
+    restSparklines,
+    restError,
+    gqlTokens,
+    gqlTokenSortRank,
+    gqlLoadingTokens,
+    gqlSparklines,
+    gqlError,
+  ])
 
   return (
     <TableWrapper data-testid="top-tokens-explore-table">
@@ -81,13 +141,12 @@ export function TopTokensTable() {
         tokens={tokens}
         tokenSortRank={tokenSortRank}
         sparklines={sparklines}
-        loading={loadingTokens}
+        loading={loading}
         error={error}
-        chainId={chain.id}
       />
     </TableWrapper>
   )
-}
+})
 
 const HEADER_TEXT: Record<TokenSortMethod, ReactNode> = {
   [TokenSortMethod.FULLY_DILUTED_VALUATION]: <Trans i18nKey="stats.fdv" />,
@@ -118,9 +177,9 @@ function TokenTableHeader({
 
   return (
     <MouseoverTooltip disabled={!HEADER_DESCRIPTIONS[category]} text={HEADER_DESCRIPTIONS[category]} placement="top">
-      <ClickableHeaderRow $justify="flex-end" onClick={handleSortCategory}>
+      <ClickableHeaderRow justifyContent="flex-end" onPress={handleSortCategory}>
         {isCurrentSortMethod && <HeaderArrow direction={direction} />}
-        <HeaderSortText $active={isCurrentSortMethod}>{HEADER_TEXT[category]}</HeaderSortText>
+        <HeaderSortText active={isCurrentSortMethod}>{HEADER_TEXT[category]}</HeaderSortText>
       </ClickableHeaderRow>
     </MouseoverTooltip>
   )
@@ -133,15 +192,13 @@ function TokenTable({
   loading,
   error,
   loadMore,
-  chainId,
 }: {
-  tokens?: readonly TopToken[]
+  tokens?: readonly TopToken[] | TokenStat[]
   tokenSortRank: Record<string, number>
   sparklines: SparklineMap
   loading: boolean
-  error?: ApolloError
+  error?: ApolloError | boolean
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
-  chainId: SupportedInterfaceChainId
 }) {
   const { formatFiatPrice, formatNumber, formatDelta } = useFormatter()
   const sortAscending = useAtomValue(sortAscendingAtom)
@@ -153,14 +210,19 @@ function TokenTable({
   const tokenTableValues: TokenTableValue[] | undefined = useMemo(
     () =>
       tokens?.map((token, i) => {
-        const delta1hr = token?.market?.pricePercentChange1Hour?.value
-        const delta1d = token?.market?.pricePercentChange1Day?.value
+        const isGqlToken = !!token && 'id' in token
+        const delta1hr = isGqlToken
+          ? token?.market?.pricePercentChange1Hour?.value
+          : token?.pricePercentChange1Hour?.value
+        const delta1d = isGqlToken ? token?.market?.pricePercentChange1Day?.value : token?.pricePercentChange1Day?.value
         const tokenSortIndex = tokenSortRank[token?.address ?? NATIVE_CHAIN_ID]
+        const chainId = getChainFromChainUrlParam(token?.chain.toLowerCase())?.id
+        const unwrappedToken = chainId ? unwrapToken(chainId, token) : token
 
         return {
           index: tokenSortIndex,
-          tokenDescription: <TokenDescription token={token} />,
-          price: token?.market?.price?.value ?? 0,
+          tokenDescription: <TokenDescription token={unwrappedToken} />,
+          price: isGqlToken ? token?.market?.price?.value ?? 0 : giveExploreStatDefaultValue(token?.price?.value),
           testId: `token-table-row-${token?.address}`,
           percentChange1hr: (
             <>
@@ -174,8 +236,10 @@ function TokenTable({
               <DeltaText delta={delta1d}>{formatDelta(delta1d)}</DeltaText>
             </>
           ),
-          fdv: token?.project?.markets?.[0]?.fullyDilutedValuation?.value ?? 0,
-          volume: token?.market?.volume?.value ?? 0,
+          fdv: isGqlToken
+            ? token?.project?.markets?.[0]?.fullyDilutedValuation?.value ?? 0
+            : giveExploreStatDefaultValue(token?.fullyDilutedValuation?.value),
+          volume: isGqlToken ? token?.market?.volume?.value ?? 0 : giveExploreStatDefaultValue(token?.volume?.value),
           sparkline: (
             <SparklineContainer>
               <ParentSize>
@@ -185,7 +249,9 @@ function TokenTable({
                       width={width}
                       height={height}
                       tokenData={token}
-                      pricePercentChange={token?.market?.pricePercentChange?.value}
+                      pricePercentChange={
+                        isGqlToken ? token?.market?.pricePercentChange?.value : token?.pricePercentChange1Day?.value
+                      }
                       sparklineMap={sparklines}
                     />
                   )
@@ -194,7 +260,7 @@ function TokenTable({
             </SparklineContainer>
           ),
           link: getTokenDetailsURL({
-            address: token?.address,
+            address: unwrappedToken?.address,
             chain: chainIdToBackendChain({ chainId, withFallback: true }),
           }),
           analytics: {
@@ -210,10 +276,10 @@ function TokenTable({
               search_token_address_input: filterString,
             },
           },
-          linkState: { preloadedLogoSrc: token?.project?.logoUrl },
+          linkState: { preloadedLogoSrc: isGqlToken ? token?.project?.logoUrl : token?.logo },
         }
       }) ?? [],
-    [chainId, filterString, formatDelta, sparklines, timePeriod, tokenSortRank, tokens],
+    [filterString, formatDelta, sparklines, timePeriod, tokenSortRank, tokens],
   )
 
   const showLoadingSkeleton = loading || !!error
@@ -224,12 +290,12 @@ function TokenTable({
         id: 'index',
         header: () => (
           <Cell justifyContent="center" minWidth={44}>
-            <ThemedText.BodySecondary>#</ThemedText.BodySecondary>
+            <TokenTableText>#</TokenTableText>
           </Cell>
         ),
         cell: (index) => (
           <Cell justifyContent="center" loading={showLoadingSkeleton} minWidth={44}>
-            <ThemedText.BodySecondary>{index.getValue?.()}</ThemedText.BodySecondary>
+            <TokenTableText>{index.getValue?.()}</TokenTableText>
           </Cell>
         ),
       }),
@@ -237,14 +303,14 @@ function TokenTable({
         id: 'tokenDescription',
         header: () => (
           <Cell justifyContent="flex-start" width={240} grow>
-            <ThemedText.BodySecondary>
+            <TokenTableText>
               <Trans i18nKey="common.tokenName" />
-            </ThemedText.BodySecondary>
+            </TokenTableText>
           </Cell>
         ),
         cell: (tokenDescription) => (
           <Cell justifyContent="flex-start" width={240} loading={showLoadingSkeleton} grow testId="name-cell">
-            {tokenDescription.getValue?.()}
+            <TokenTableText>{tokenDescription.getValue?.()}</TokenTableText>
           </Cell>
         ),
       }),
@@ -261,12 +327,12 @@ function TokenTable({
         ),
         cell: (price) => (
           <Cell loading={showLoadingSkeleton} minWidth={133} grow testId="price-cell">
-            <ThemedText.BodyPrimary>
+            <Text variant="body2" color="$neutral1">
               {/* A simple 0 price indicates the price is not currently available from the api */}
               {price.getValue?.() === 0
                 ? '-'
                 : formatFiatPrice({ price: price.getValue?.(), type: NumberType.FiatTokenPrice })}
-            </ThemedText.BodyPrimary>
+            </Text>
           </Cell>
         ),
       }),
@@ -317,7 +383,7 @@ function TokenTable({
         ),
         cell: (fdv) => (
           <Cell loading={showLoadingSkeleton} width={133} grow testId="fdv-cell">
-            <ValueText>{formatNumber({ input: fdv.getValue?.(), type: NumberType.FiatTokenStats })}</ValueText>
+            <EllipsisText>{formatNumber({ input: fdv.getValue?.(), type: NumberType.FiatTokenStats })}</EllipsisText>
           </Cell>
         ),
       }),
@@ -334,7 +400,7 @@ function TokenTable({
         ),
         cell: (volume) => (
           <Cell width={133} loading={showLoadingSkeleton} grow testId="volume-cell">
-            <ValueText>{formatNumber({ input: volume.getValue?.(), type: NumberType.FiatTokenStats })}</ValueText>
+            <EllipsisText>{formatNumber({ input: volume.getValue?.(), type: NumberType.FiatTokenStats })}</EllipsisText>
           </Cell>
         ),
       }),

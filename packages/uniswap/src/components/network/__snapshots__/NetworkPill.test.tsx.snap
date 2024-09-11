@@ -32,8 +32,9 @@ exports[`NetworkPill renders a NetworkPill with border 1`] = `
     style={
       {
         "color": "#21C95E",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 16,
+        "fontWeight": "400",
         "lineHeight": 24,
         "paddingTop": 1,
       }
@@ -77,8 +78,9 @@ exports[`NetworkPill renders a NetworkPill without image 1`] = `
     style={
       {
         "color": "#21C95E",
-        "fontFamily": "Basel-Book",
+        "fontFamily": "Basel Grotesk",
         "fontSize": 16,
+        "fontWeight": "400",
         "lineHeight": 24,
         "paddingTop": 1,
       }
@@ -122,10 +124,10 @@ exports[`NetworkPill renders an InlineNetworkPill 1`] = `
     style={
       {
         "color": "#21C95E",
-        "fontFamily": "Basel-Medium",
-        "fontSize": 12,
+        "fontFamily": "Basel Grotesk",
+        "fontSize": 14,
         "fontWeight": "500",
-        "lineHeight": 16,
+        "lineHeight": 16.099999999999998,
         "paddingTop": 1,
       }
     }

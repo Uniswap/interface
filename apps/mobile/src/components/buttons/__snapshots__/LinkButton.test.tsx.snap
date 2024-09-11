@@ -42,7 +42,7 @@ exports[`LinkButton renders without error 1`] = `
         {
           "color": "#222222",
           "flexShrink": 1,
-          "fontFamily": "Basel-Book",
+          "fontFamily": "Basel Grotesk",
         }
       }
       suppressHighlighting={true}

@@ -8,12 +8,12 @@ import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { InlineNetworkPill } from 'uniswap/src/components/network/NetworkPill'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useActiveAccount, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 /**
@@ -151,7 +151,7 @@ function OtherChainBalance({
               <InlineNetworkPill
                 chainId={balance.currencyInfo.currency.chainId}
                 showBackgroundColor={false}
-                textVariant="buttonLabel4"
+                textVariant="buttonLabel2"
               />
             </Flex>
           </Flex>

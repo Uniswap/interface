@@ -1,6 +1,5 @@
 import { AnalyticsToggle } from 'components/AccountDrawer/AnalyticsToggle'
 import { GitVersionRow } from 'components/AccountDrawer/GitVersionRow'
-import { LanguageMenuItems } from 'components/AccountDrawer/LanguageMenu'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { SmallBalanceToggle } from 'components/AccountDrawer/SmallBalanceToggle'
 import { SpamToggle } from 'components/AccountDrawer/SpamToggle'
@@ -20,11 +19,6 @@ import { Trans } from 'uniswap/src/i18n'
 const Container = styled(Column)`
   height: 100%;
   justify-content: space-between;
-`
-
-const SectionTitle = styled(ThemedText.SubHeader)`
-  color: ${({ theme }) => theme.neutral2};
-  padding-bottom: 24px;
 `
 
 const ToggleWrapper = styled.div<{ currencyConversionEnabled?: boolean }>`
@@ -90,12 +84,6 @@ export default function SettingsMenu({
             <AnalyticsToggle />
             <TestnetsToggle />
           </ToggleWrapper>
-          <>
-            <SectionTitle data-testid="wallet-header">
-              <Trans i18nKey="common.language" />
-            </SectionTitle>
-            <LanguageMenuItems />
-          </>
 
           <Column>
             <SettingsButton

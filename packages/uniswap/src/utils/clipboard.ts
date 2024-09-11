@@ -1,4 +1,4 @@
-import { NotImplementedError } from 'utilities/src/errors'
+import { PlatformSplitStubError } from 'utilities/src/errors'
 
 /** Dummy clipboard class. Overridden by mobile or extension related code. */
 
@@ -11,13 +11,13 @@ export interface IClipboard {
 /** This will be overridden by the compiler with platform-specific clipboard file. */
 const Clipboard: IClipboard = {
   setClipboard: () => {
-    throw new NotImplementedError('setClipboard not implemented')
+    throw new PlatformSplitStubError('setClipboard')
   },
   getClipboard: () => {
-    throw new NotImplementedError('getClipboard not implemented')
+    throw new PlatformSplitStubError('getClipboard')
   },
   setClipboardImage: () => {
-    throw new NotImplementedError('setClipboardImage not implemented')
+    throw new PlatformSplitStubError('setClipboardImage')
   },
 }
 

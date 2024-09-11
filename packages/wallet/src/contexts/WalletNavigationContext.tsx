@@ -79,6 +79,10 @@ export type NavigateToFiatOnRampArgs = {
   prefilledCurrency?: FiatOnRampCurrency
 }
 
+export type NavigateToExternalProfileArgs = {
+  address: Address
+}
+
 export type ShareTokenArgs = {
   currencyId: string
 }
@@ -93,6 +97,7 @@ export type WalletNavigationContextState = {
   navigateToAccountTokenList: () => void
   // Action that should be taken when the user presses the "Buy crypto" or "Receive tokens" button when they open the Send flow with an empty wallet.
   navigateToBuyOrReceiveWithEmptyWallet: () => void
+  navigateToExternalProfile: (args: NavigateToExternalProfileArgs) => void
   navigateToFiatOnRamp: (args: NavigateToFiatOnRampArgs) => void
   navigateToNftDetails: (args: NavigateToNftItemArgs) => void
   navigateToNftCollection: (args: NavigateToNftCollectionArgs) => void

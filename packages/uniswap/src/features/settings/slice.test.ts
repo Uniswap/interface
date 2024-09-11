@@ -1,5 +1,6 @@
 import { createStore, Store } from '@reduxjs/toolkit'
 import {
+  initialUserSettingsState,
   setHideSmallBalances,
   setHideSpamTokens,
   userSettingsReducer,
@@ -10,10 +11,7 @@ describe(userSettingsReducer, () => {
   let store: Store<UserSettingsState>
 
   beforeEach(() => {
-    store = createStore(userSettingsReducer, {
-      hideSmallBalances: true,
-      hideSpamTokens: true,
-    })
+    store = createStore(userSettingsReducer, initialUserSettingsState)
   })
 
   it('sets small balances setting from default', () => {

@@ -5,6 +5,7 @@ import { useTradingApiQuoteQuery } from 'uniswap/src/data/apiClients/tradingApi/
 import { QuoteRequest, TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useIndicativeTrade } from 'uniswap/src/features/transactions/swap/hooks/useIndicativeTrade'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 import { TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
@@ -138,6 +139,15 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
 
   const isLoading = (amountSpecified && isDebouncing) || queryIsLoading
 
+  const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
+  const indicative = useIndicativeTrade({
+    quoteRequestArgs,
+    currencyIn,
+    currencyOut,
+    customSlippageTolerance,
+    skip: !indicativeQuotesEnabled || isUSDQuote,
+  })
+
   /***** Format `trade` type, add errors if needed.  ******/
 
   return useMemo(() => {
@@ -161,6 +171,8 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
         isLoading,
         isFetching,
         trade: null,
+        indicativeTrade: isLoading ? indicative.trade : undefined,
+        isIndicativeLoading: (amountSpecified && isDebouncing) || indicative.isLoading,
         error,
       }
     }
@@ -190,6 +202,8 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
         isLoading,
         isFetching,
         trade: null,
+        indicativeTrade: undefined, // We don't want to show the indicative trade if there is no completable trade
+        isIndicativeLoading: false,
         error: new NoRoutesError(),
       }
     }
@@ -198,6 +212,8 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
       isLoading: (amountSpecified && isDebouncing) || isLoading,
       isFetching,
       trade,
+      indicativeTrade: indicative.trade,
+      isIndicativeLoading: (amountSpecified && isDebouncing) || indicative.isLoading,
       error,
     }
   }, [
@@ -212,6 +228,8 @@ export function useTrade(args: UseTradeArgs): TradeWithStatus {
     isFetching,
     isLoading,
     isUSDQuote,
+    indicative.trade,
+    indicative.isLoading,
     quoteRequestArgs,
     tradeType,
   ])

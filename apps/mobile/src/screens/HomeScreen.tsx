@@ -8,7 +8,6 @@ import { useTranslation } from 'react-i18next'
 import { FlatList, StyleProp, View, ViewProps, ViewStyle } from 'react-native'
 import Animated, {
   FadeIn,
-  FadeOut,
   interpolateColor,
   useAnimatedRef,
   useAnimatedScrollHandler,
@@ -41,7 +40,6 @@ import {
   TabLabelProps,
   useScrollSync,
 } from 'src/components/layout/TabHelpers'
-import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { openModal } from 'src/features/modals/modalSlice'
 import { selectSomeModalOpen } from 'src/features/modals/selectSomeModalOpen'
 import { AIAssistantOverlay } from 'src/features/openai/AIAssistantOverlay'
@@ -77,14 +75,12 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
-import { selectHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/selectors'
-import { usePortfolioValueModifiers } from 'wallet/src/features/dataApi/balances'
+import { selectCreatedOnboardingRedesignAccount } from 'wallet/src/features/behaviorHistory/selectors'
 import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
 import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
-import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type HomeRoute = {
@@ -112,16 +108,15 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const isHomeScreenBlur = !isFocused || isModalOpen
   const { hapticFeedback } = useHapticFeedback()
 
-  const hasSkippedUnitagPrompt = useSelector(selectHasSkippedUnitagPrompt)
   const showFeedTab = useFeatureFlag(FeatureFlags.FeedTab)
 
-  const portfolioValueModifiers = usePortfolioValueModifiers(activeAccount.address) ?? []
-  const { data: balancesById } = usePortfolioBalances({
+  const { data: balancesById, loading: areBalancesLoading } = usePortfolioBalances({
     address: activeAccount.address,
-    valueModifiers: portfolioValueModifiers,
   })
-  const [showOnboardingRedesign, setShowOnboardingRedesign] = useState(false)
   const accountHasNoTokens = balancesById && !Object.entries(balancesById).length
+  const [showOnboardingHomeRedesign, setShowOnboardingHomeRedesign] = useState(false)
+  const isOnboardingRedesignAccount = useSelector(selectCreatedOnboardingRedesignAccount)
+  const showOnboardingIntroCards = showOnboardingHomeRedesign || isOnboardingRedesignAccount
 
   useEffect(() => {
     // Sets experiment value and exposes user only if they have no tokens
@@ -131,11 +126,11 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
         OnboardingRedesignHomeScreenProperties.Enabled,
         false,
       )
-      setShowOnboardingRedesign(experimentEnabled)
+      setShowOnboardingHomeRedesign(experimentEnabled)
     } else {
-      setShowOnboardingRedesign(false)
+      setShowOnboardingHomeRedesign(false)
     }
-  }, [accountHasNoTokens, balancesById, showOnboardingRedesign])
+  }, [accountHasNoTokens, balancesById, showOnboardingHomeRedesign])
 
   // opens the wallet restore modal if recovery phrase is missing after the app is opened
   useWalletRestore({ openModalImmediately: true })
@@ -146,7 +141,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
 
   const [routeTabIndex, setRouteTabIndex] = useState(props?.route?.params?.tab ?? HomeScreenTabIndex.Tokens)
   // Ensures that tabIndex has the proper value between the empty state and non-empty state
-  const tabIndex = showOnboardingRedesign ? 0 : routeTabIndex
+  const tabIndex = showOnboardingHomeRedesign ? 0 : routeTabIndex
 
   // Necessary to declare these as direct dependencies due to race condition with initializing react-i18next and useMemo
   const tokensTitle = t('home.tokens.title')
@@ -156,7 +151,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const exploreTitle = t('home.explore.title')
 
   const routes = useMemo((): HomeRoute[] => {
-    if (showOnboardingRedesign) {
+    if (showOnboardingHomeRedesign) {
       return [
         {
           key: SectionName.HomeExploreTab,
@@ -176,7 +171,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     }
 
     return tabs
-  }, [showOnboardingRedesign, tokensTitle, nftsTitle, activityTitle, showFeedTab, exploreTitle, feedTitle])
+  }, [showOnboardingHomeRedesign, tokensTitle, nftsTitle, activityTitle, showFeedTab, exploreTitle, feedTitle])
 
   useEffect(
     function syncTabIndex() {
@@ -235,7 +230,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const exploreTabScrollRef = useAnimatedRef<FlatList<any>>()
 
   const currentScrollValue = useDerivedValue(() => {
-    if (showOnboardingRedesign) {
+    if (showOnboardingHomeRedesign) {
       return exploreTabScrollValue.value
     } else if (tabIndex === HomeScreenTabIndex.Tokens) {
       return tokensTabScrollValue.value
@@ -248,7 +243,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   }, [
     activityTabScrollValue.value,
     exploreTabScrollValue.value,
-    showOnboardingRedesign,
+    showOnboardingHomeRedesign,
     feedTabScrollValue.value,
     nftsTabScrollValue.value,
     tabIndex,
@@ -297,7 +292,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   useScrollToTop(
     useRef({
       scrollToTop: () => {
-        if (showOnboardingRedesign) {
+        if (showOnboardingHomeRedesign) {
           exploreTabScrollRef.current?.scrollToOffset({ offset: 0, animated: true })
         } else if (currentTabIndex.value === HomeScreenTabIndex.NFTs && isNftTabsAtTop.value) {
           setRouteTabIndex(HomeScreenTabIndex.Tokens)
@@ -421,37 +416,28 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     [buyLabel, sendLabel, scanLabel, receiveLabel, onPressBuy, onPressScan, onPressSend, onPressReceive],
   )
 
-  const { canClaimUnitag } = useCanActiveAddressClaimUnitag()
-
   // This hooks handles the logic for when to open the BackupReminderModal
   useOpenBackupReminderModal(activeAccount)
 
-  const shouldPromptUnitag = isSignerAccount && !hasSkippedUnitagPrompt && canClaimUnitag
   const viewOnlyLabel = t('home.warning.viewOnly')
 
-  const promoBanner = useMemo(() => {
-    if (showOnboardingRedesign) {
-      return (
-        <Flex pt="$spacing12">
-          <OnboardingIntroCardStack />
-        </Flex>
-      )
-    } else if (shouldPromptUnitag) {
-      return (
-        <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-          <UnitagBanner address={activeAccount.address} entryPoint={MobileScreens.Home} />
-        </AnimatedFlex>
-      )
-    }
-    return null
-  }, [shouldPromptUnitag, activeAccount.address, showOnboardingRedesign])
+  const promoBanner = useMemo(
+    () => (
+      <OnboardingIntroCardStack
+        isLoading={areBalancesLoading}
+        onboardingRedesignBackupEnabled={isOnboardingRedesignAccount}
+        onboardingRedesignHomeEnabled={showOnboardingHomeRedesign}
+      />
+    ),
+    [areBalancesLoading, isOnboardingRedesignAccount, showOnboardingHomeRedesign],
+  )
 
   const contentHeader = useMemo(() => {
     return (
       <Flex
         backgroundColor="$surface1"
         gap="$spacing8"
-        pb={showOnboardingRedesign ? '$spacing8' : '$spacing16'}
+        pb={showOnboardingIntroCards ? '$spacing8' : '$spacing16'}
         px="$spacing12"
       >
         <AccountHeader />
@@ -473,7 +459,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
       </Flex>
     )
   }, [
-    showOnboardingRedesign,
+    showOnboardingIntroCards,
     activeAccount.address,
     isSignerAccount,
     actions,
@@ -482,7 +468,8 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     promoBanner,
   ])
 
-  const paddingTop = headerHeight + TAB_BAR_HEIGHT + (showOnboardingRedesign ? 0 : TAB_STYLES.tabListInner.paddingTop)
+  const paddingTop =
+    headerHeight + TAB_BAR_HEIGHT + (showOnboardingHomeRedesign ? 0 : TAB_STYLES.tabListInner.paddingTop)
   const paddingBottom = insets.bottom + SWAP_BUTTON_HEIGHT + TAB_STYLES.tabListInner.paddingBottom + spacing.spacing12
 
   const contentContainerStyle = useMemo<StyleProp<ViewStyle>>(

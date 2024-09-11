@@ -5,11 +5,11 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCountry } from 'react-native-localize'
 import { useDispatch } from 'react-redux'
-import { ColorTokens } from 'ui/src'
 import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
+import { useAppFiatCurrencyInfo, useFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import {
   useFiatOnRampAggregatorCryptoQuoteQuery,
   useFiatOnRampAggregatorGetCountryQuery,
@@ -29,6 +29,7 @@ import {
   isInvalidRequestAmountTooHigh,
   isInvalidRequestAmountTooLow,
 } from 'uniswap/src/features/fiatOnRamp/utils'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import {
@@ -41,9 +42,6 @@ import { WalletChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
 import { useDebounce } from 'utilities/src/time/timing'
-import { FiatCurrency } from 'wallet/src/features/fiatCurrency/constants'
-import { useAppFiatCurrencyInfo, useFiatCurrencyInfo } from 'wallet/src/features/fiatCurrency/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
@@ -56,7 +54,7 @@ export function useFormatExactCurrencyAmount(currencyAmount: string, currency: M
     return
   }
 
-  const formattedAmount = getFormattedCurrencyAmount(currency, currencyAmount, formatter, true, ValueType.Exact)
+  const formattedAmount = getFormattedCurrencyAmount(currency, currencyAmount, formatter, false, ValueType.Exact)
 
   // when formattedAmount is not empty it has an empty space in the end
   return formattedAmount === '' ? '0 ' : formattedAmount
@@ -131,21 +129,6 @@ export function useMeldFiatCurrencySupportInfo(
   }
 }
 
-function findTokenOptionForFiatOnRampToken(
-  currencies: CurrencyInfo[] | undefined = [],
-  fiatOnRampToken: FORSupportedToken,
-): Maybe<CurrencyInfo> {
-  return currencies.find((item) => {
-    const symbol = fiatOnRampToken.cryptoCurrencyCode.split('_')?.[0]?.toLowerCase()
-    return (
-      item &&
-      symbol &&
-      symbol === item.currency.symbol?.toLowerCase() &&
-      fiatOnRampToken.chainId === item.currency.chainId.toString()
-    )
-  })
-}
-
 function buildCurrencyIdForFORSupportedToken(supportedToken: FORSupportedToken): string | undefined {
   const chainId = toSupportedChainId(supportedToken.chainId)
   return chainId
@@ -176,11 +159,15 @@ export function useFiatOnRampSupportedTokens({
     refetch: refetchSupportedTokens,
   } = useFiatOnRampAggregatorSupportedTokensQuery({ fiatCurrency: sourceCurrencyCode, countryCode }, { skip })
 
-  const currencyIds: string[] = useMemo(
+  const supportedTokensById: Record<string, FORSupportedToken> = useMemo(
     () =>
-      supportedTokensResponse?.supportedTokens
-        .map(buildCurrencyIdForFORSupportedToken)
-        .filter((st): st is string => !!st) ?? [],
+      supportedTokensResponse?.supportedTokens.reduce<Record<string, FORSupportedToken>>((acc, token) => {
+        const currencyId = buildCurrencyIdForFORSupportedToken(token)
+        if (currencyId) {
+          acc[currencyId] = token
+        }
+        return acc
+      }, {}) ?? {},
     [supportedTokensResponse],
   )
 
@@ -189,17 +176,17 @@ export function useFiatOnRampSupportedTokens({
     error: currenciesError,
     loading: currenciesLoading,
     refetch: refetchCurrencies,
-  } = useCurrencies(currencyIds)
+  } = useCurrencies(Object.keys(supportedTokensById))
 
   const list = useMemo(
     () =>
-      (supportedTokensResponse?.supportedTokens || [])
-        .map((fiatOnRampToken) => ({
-          currencyInfo: findTokenOptionForFiatOnRampToken(currencies, fiatOnRampToken),
+      Object.entries(supportedTokensById)
+        .map(([currencyId, fiatOnRampToken]) => ({
+          currencyInfo: currencies?.find((currency) => currency.currencyId.toLowerCase() === currencyId.toLowerCase()),
           meldCurrencyCode: fiatOnRampToken.cryptoCurrencyCode,
         }))
         .filter((item) => !!item.currencyInfo),
-    [currencies, supportedTokensResponse?.supportedTokens],
+    [currencies, supportedTokensById],
   )
 
   const loading = supportedTokensLoading || currenciesLoading
@@ -276,18 +263,16 @@ export function useParseFiatOnRampError(
   currencyCode: string,
 ): {
   errorText: string | undefined
-  errorColor: ColorTokens | undefined
 } {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
 
-  let errorText, errorColor: ColorTokens | undefined
+  let errorText
   if (!error) {
-    return { errorText, errorColor }
+    return { errorText }
   }
 
   errorText = t('fiatOnRamp.error.default')
-  errorColor = '$DEP_accentWarning'
 
   if (isFiatOnRampApiError(error)) {
     if (isInvalidRequestAmountTooLow(error)) {
@@ -297,7 +282,6 @@ export function useParseFiatOnRampError(
         currencyCode,
       })
       errorText = t('fiatOnRamp.error.min', { amount: formattedAmount })
-      errorColor = '$statusCritical'
     } else if (isInvalidRequestAmountTooHigh(error)) {
       const formattedAmount = formatNumberOrString({
         value: error.data.context.maximumAllowed,
@@ -305,11 +289,10 @@ export function useParseFiatOnRampError(
         currencyCode,
       })
       errorText = t('fiatOnRamp.error.max', { amount: formattedAmount })
-      errorColor = '$statusCritical'
     }
   }
 
-  return { errorText, errorColor }
+  return { errorText }
 }
 
 export function useIsSupportedFiatOnRampCurrency(

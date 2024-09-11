@@ -127,3 +127,20 @@ export function isOnRampTransaction(tx: TransactionDetails): boolean {
     tx.typeInfo.type === TransactionType.OnRampTransfer
   )
 }
+
+export function getDiff(value1: number | string | undefined, value2: number | undefined): number | undefined {
+  if (typeof value1 === 'string') {
+    value1 = Number(value1)
+  }
+  return value1 !== undefined && value2 !== undefined ? value1 - value2 : undefined
+}
+
+export function getPercentageError(
+  diff: number | undefined,
+  estimated: number | string | undefined,
+): number | undefined {
+  if (typeof estimated === 'string') {
+    estimated = Number(estimated)
+  }
+  return diff !== undefined && estimated !== undefined && estimated !== 0 ? (diff / estimated) * 100 : undefined
+}

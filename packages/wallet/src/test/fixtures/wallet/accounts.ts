@@ -1,4 +1,5 @@
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2, SAMPLE_SEED_ADDRESS_3 } from 'uniswap/src/test/fixtures'
 import { faker } from 'uniswap/src/test/shared'
 import { createFixture, randomEnumValue } from 'uniswap/src/test/utils'
 import {
@@ -7,7 +8,6 @@ import {
   SignerMnemonicAccount,
   WalletAccountFields,
 } from 'wallet/src/features/wallet/accounts/types'
-import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2, SAMPLE_SEED_ADDRESS_3 } from 'wallet/src/test/fixtures'
 
 /**
  * Base fixtures

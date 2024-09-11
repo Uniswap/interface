@@ -1,4 +1,4 @@
-import { providers as ethersProviders } from 'ethers'
+import { Signer, providers as ethersProviders } from 'ethers'
 import { Task } from 'redux-saga'
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
@@ -16,8 +16,14 @@ interface ProviderDetails {
   blockWatcher?: Task
 }
 
+// A private provider can be authenticated and thus tied to a specific address
+interface PrivateProviderDetails extends ProviderDetails {
+  address?: Address
+}
+
 type ProviderInfo = Partial<{
-  [key in keyof RPCType as RPCType]: ProviderDetails
+  public: ProviderDetails
+  private: PrivateProviderDetails
 }>
 
 type ChainIdToProvider = Partial<Record<WalletChainId, ProviderInfo>>
@@ -31,42 +37,70 @@ export class ProviderManager {
     this.onUpdate = onUpdate
   }
 
-  tryGetProvider(chainId: WalletChainId, rpcType: RPCType): ethersProviders.JsonRpcProvider | null {
+  tryGetProvider(chainId: WalletChainId): ethersProviders.JsonRpcProvider | null {
     try {
-      return this.getProvider(chainId, rpcType)
+      return this.getProvider(chainId)
     } catch (error) {
       return null
     }
   }
 
-  getProvider(chainId: WalletChainId, rpcType: RPCType): ethersProviders.JsonRpcProvider {
-    const cachedProviderDetails = this._providers[chainId]?.[rpcType]
-    if (cachedProviderDetails?.status === ProviderStatus.Connected) {
-      return cachedProviderDetails.provider
+  getProvider(chainId: WalletChainId): ethersProviders.JsonRpcProvider {
+    const cachedProviderDetails = this._providers[chainId]?.public
+    if (!cachedProviderDetails || cachedProviderDetails.status !== ProviderStatus.Connected) {
+      this.createProvider(chainId)
     }
 
-    this.createProvider(chainId, rpcType)
-    const providerDetails = this._providers[chainId]?.[rpcType]
+    const providerDetails = this._providers[chainId]?.public
 
     if (providerDetails?.status !== ProviderStatus.Connected) {
-      throw new Error(`Provider of type ${rpcType} not connected for chain: ${chainId}`)
+      throw new Error(`Public provider not connected for chain: ${chainId}`)
     }
 
     return providerDetails.provider
   }
 
-  createProvider(chainId: WalletChainId, rpcType: RPCType = RPCType.Public): undefined {
-    const provider = createEthersProvider(chainId, rpcType)
+  async getPrivateProvider(chainId: WalletChainId, signer?: Signer): Promise<ethersProviders.JsonRpcProvider> {
+    const signerAddress = await signer?.getAddress()
+    const cachedProviderDetails = this._providers[chainId]?.private
+    if (
+      !cachedProviderDetails ||
+      cachedProviderDetails.address !== signerAddress ||
+      cachedProviderDetails.status !== ProviderStatus.Connected
+    ) {
+      this.createPrivateProvider(chainId, signer, signerAddress)
+    }
+
+    const providerDetails = this._providers[chainId]?.private
+    if (providerDetails?.status !== ProviderStatus.Connected || providerDetails.address !== signerAddress) {
+      throw new Error(`Private provider not connected for chain ${chainId}, address ${signerAddress}`)
+    }
+
+    return providerDetails.provider
+  }
+
+  createProvider(chainId: WalletChainId): undefined {
+    const provider = createEthersProvider(chainId)
     if (!provider) {
-      if (rpcType === RPCType.Public) {
-        // TODO: pop a toast one time to let the user know and maybe update a status page
-      }
       return
     }
 
     this._providers[chainId] = {
       ...this._providers[chainId],
-      [rpcType]: { provider, status: ProviderStatus.Connected },
+      public: { provider, status: ProviderStatus.Connected },
+    }
+    this.onUpdate?.()
+  }
+
+  createPrivateProvider(chainId: WalletChainId, signer?: Signer, address?: Address): undefined {
+    const provider = createEthersProvider(chainId, RPCType.Private, signer)
+    if (!provider) {
+      return
+    }
+
+    this._providers[chainId] = {
+      ...this._providers[chainId],
+      private: { provider, status: ProviderStatus.Connected, address },
     }
     this.onUpdate?.()
   }

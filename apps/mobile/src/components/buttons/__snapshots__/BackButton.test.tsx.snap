@@ -122,8 +122,9 @@ exports[`BackButton renders without error 1`] = `
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel-Book",
+          "fontFamily": "Basel Grotesk",
           "fontSize": 19,
+          "fontWeight": "400",
           "lineHeight": 24,
         }
       }

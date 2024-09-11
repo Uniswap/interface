@@ -53,8 +53,9 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
         style={
           {
             "color": "#222222",
-            "fontFamily": "Basel-Book",
+            "fontFamily": "Basel Grotesk",
             "fontSize": 24,
+            "fontWeight": "400",
             "lineHeight": 32,
           }
         }
@@ -76,8 +77,9 @@ exports[`TransactionDetails Components renders TransactionDetailsContent without
           style={
             {
               "color": "#7D7D7D",
-              "fontFamily": "Basel-Book",
+              "fontFamily": "Basel Grotesk",
               "fontSize": 16,
+              "fontWeight": "400",
               "lineHeight": 24,
             }
           }
@@ -140,21 +142,7 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
           <View
             style={
               {
-                "borderBottomColor": "#FFFFFF",
-                "borderBottomLeftRadius": 6.8999999999999995,
-                "borderBottomRightRadius": 6.8999999999999995,
-                "borderBottomWidth": 1.5,
-                "borderLeftColor": "#FFFFFF",
-                "borderLeftWidth": 1.5,
-                "borderRightColor": "#FFFFFF",
-                "borderRightWidth": 1.5,
-                "borderStyle": "solid",
-                "borderTopColor": "#FFFFFF",
-                "borderTopLeftRadius": 6.8999999999999995,
-                "borderTopRightRadius": 6.8999999999999995,
-                "borderTopWidth": 1.5,
                 "flexDirection": "column",
-                "overflow": "hidden",
               }
             }
             testID="network-logo"
@@ -164,8 +152,20 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
               dir={null}
               style={
                 {
-                  "height": "20px",
-                  "width": "20px",
+                  "borderBottomColor": "rgba(255,255,255,1.00)",
+                  "borderBottomLeftRadius": "6.8999999999999995px",
+                  "borderBottomRightRadius": "6.8999999999999995px",
+                  "borderBottomWidth": "1.5px",
+                  "borderLeftColor": "rgba(255,255,255,1.00)",
+                  "borderLeftWidth": "1.5px",
+                  "borderRightColor": "rgba(255,255,255,1.00)",
+                  "borderRightWidth": "1.5px",
+                  "borderTopColor": "rgba(255,255,255,1.00)",
+                  "borderTopLeftRadius": "6.8999999999999995px",
+                  "borderTopRightRadius": "6.8999999999999995px",
+                  "borderTopWidth": "1.5px",
+                  "height": "23px",
+                  "width": "23px",
                 }
               }
             >
@@ -213,8 +213,9 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
           style={
             {
               "color": "#222222",
-              "fontFamily": "Basel-Book",
+              "fontFamily": "Basel Grotesk",
               "fontSize": 16,
+              "fontWeight": "400",
               "lineHeight": 24,
             }
           }
@@ -229,8 +230,9 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
         style={
           {
             "color": "#7D7D7D",
-            "fontFamily": "Basel-Book",
+            "fontFamily": "Basel Grotesk",
             "fontSize": 12,
+            "fontWeight": "400",
             "lineHeight": 16,
           }
         }
@@ -426,8 +428,9 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel-Book",
+          "fontFamily": "Basel Grotesk",
           "fontSize": 14,
+          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
@@ -448,21 +451,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       <View
         style={
           {
-            "borderBottomColor": "#FFFFFF",
-            "borderBottomLeftRadius": 4.8,
-            "borderBottomRightRadius": 4.8,
-            "borderBottomWidth": 0,
-            "borderLeftColor": "#FFFFFF",
-            "borderLeftWidth": 0,
-            "borderRightColor": "#FFFFFF",
-            "borderRightWidth": 0,
-            "borderStyle": "solid",
-            "borderTopColor": "#FFFFFF",
-            "borderTopLeftRadius": 4.8,
-            "borderTopRightRadius": 4.8,
-            "borderTopWidth": 0,
             "flexDirection": "column",
-            "overflow": "hidden",
           }
         }
         testID="network-logo"
@@ -472,6 +461,18 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
           dir={null}
           style={
             {
+              "borderBottomColor": "rgba(255,255,255,1.00)",
+              "borderBottomLeftRadius": "4.8px",
+              "borderBottomRightRadius": "4.8px",
+              "borderBottomWidth": "0px",
+              "borderLeftColor": "rgba(255,255,255,1.00)",
+              "borderLeftWidth": "0px",
+              "borderRightColor": "rgba(255,255,255,1.00)",
+              "borderRightWidth": "0px",
+              "borderTopColor": "rgba(255,255,255,1.00)",
+              "borderTopLeftRadius": "4.8px",
+              "borderTopRightRadius": "4.8px",
+              "borderTopWidth": "0px",
               "height": "16px",
               "width": "16px",
             }
@@ -513,8 +514,9 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel-Book",
+          "fontFamily": "Basel Grotesk",
           "fontSize": 14,
+          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
@@ -538,8 +540,9 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
         style={
           {
             "color": "#222222",
-            "fontFamily": "Basel-Book",
+            "fontFamily": "Basel Grotesk",
             "fontSize": 14,
+            "fontWeight": "400",
             "lineHeight": 20,
           }
         }
@@ -670,8 +673,9 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel-Book",
+          "fontFamily": "Basel Grotesk",
           "fontSize": 14,
+          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
@@ -692,21 +696,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       <View
         style={
           {
-            "borderBottomColor": "#FFFFFF",
-            "borderBottomLeftRadius": 4.8,
-            "borderBottomRightRadius": 4.8,
-            "borderBottomWidth": 0,
-            "borderLeftColor": "#FFFFFF",
-            "borderLeftWidth": 0,
-            "borderRightColor": "#FFFFFF",
-            "borderRightWidth": 0,
-            "borderStyle": "solid",
-            "borderTopColor": "#FFFFFF",
-            "borderTopLeftRadius": 4.8,
-            "borderTopRightRadius": 4.8,
-            "borderTopWidth": 0,
             "flexDirection": "column",
-            "overflow": "hidden",
           }
         }
         testID="network-logo"
@@ -716,6 +706,18 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
           dir={null}
           style={
             {
+              "borderBottomColor": "rgba(255,255,255,1.00)",
+              "borderBottomLeftRadius": "4.8px",
+              "borderBottomRightRadius": "4.8px",
+              "borderBottomWidth": "0px",
+              "borderLeftColor": "rgba(255,255,255,1.00)",
+              "borderLeftWidth": "0px",
+              "borderRightColor": "rgba(255,255,255,1.00)",
+              "borderRightWidth": "0px",
+              "borderTopColor": "rgba(255,255,255,1.00)",
+              "borderTopLeftRadius": "4.8px",
+              "borderTopRightRadius": "4.8px",
+              "borderTopWidth": "0px",
               "height": "16px",
               "width": "16px",
             }
@@ -757,8 +759,9 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
       style={
         {
           "color": "#7D7D7D",
-          "fontFamily": "Basel-Book",
+          "fontFamily": "Basel Grotesk",
           "fontSize": 14,
+          "fontWeight": "400",
           "lineHeight": 20,
         }
       }
@@ -782,8 +785,9 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
         style={
           {
             "color": "#222222",
-            "fontFamily": "Basel-Book",
+            "fontFamily": "Basel Grotesk",
             "fontSize": 14,
+            "fontWeight": "400",
             "lineHeight": 20,
           }
         }

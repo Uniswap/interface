@@ -16,8 +16,8 @@ import { navigationRef } from 'src/app/navigation/NavigationContainer'
 import { store as appStore, persistedReducer } from 'src/app/store'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
-import { SharedProvider } from 'wallet/src/provider'
-import { AutoMockedApolloProvider } from 'wallet/src/test/mocks/gql/provider'
+import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
+import { SharedWalletProvider } from 'wallet/src/provider'
 
 type AppStore = typeof appStore
 
@@ -55,13 +55,13 @@ export function renderWithProviders(
   function Wrapper({ children }: PropsWithChildren<unknown>): JSX.Element {
     return (
       <AutoMockedApolloProvider resolvers={resolvers}>
-        <SharedProvider reduxStore={store}>
+        <SharedWalletProvider reduxStore={store}>
           <UnitagUpdaterContextProvider>
             <NavigationContainer ref={navigationRef}>
               <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
             </NavigationContainer>
           </UnitagUpdaterContextProvider>
-        </SharedProvider>
+        </SharedWalletProvider>
       </AutoMockedApolloProvider>
     )
   }
@@ -122,11 +122,11 @@ export function renderHookWithProviders<P, R>(
     return (
       <AutoMockedApolloProvider resolvers={resolvers}>
         <NavigationContainer ref={navigationRef}>
-          <SharedProvider reduxStore={store}>
+          <SharedWalletProvider reduxStore={store}>
             <UnitagUpdaterContextProvider>
               <MobileWalletNavigationProvider>{children}</MobileWalletNavigationProvider>
             </UnitagUpdaterContextProvider>
-          </SharedProvider>
+          </SharedWalletProvider>
         </NavigationContainer>
       </AutoMockedApolloProvider>
     )

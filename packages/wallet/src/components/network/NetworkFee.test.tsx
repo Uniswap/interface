@@ -2,7 +2,7 @@ import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { NetworkFee } from 'wallet/src/components/network/NetworkFee'
 import { render } from 'wallet/src/test/test-utils'
 
-jest.mock('wallet/src/features/gas/hooks', () => {
+jest.mock('uniswap/src/features/gas/hooks', () => {
   return {
     useUSDValue: (_chainId: WalletChainId, gasFee: string): string => gasFee,
   }

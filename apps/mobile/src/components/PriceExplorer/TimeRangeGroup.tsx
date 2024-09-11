@@ -37,7 +37,7 @@ export function TimeRangeLabel({ index, label, selectedIndex, transition }: Prop
       style={style}
       testID={`token-details-chart-time-range-button-${label}`}
       textAlign="center"
-      variant="buttonLabel3"
+      variant="buttonLabel2"
     >
       {label}
     </AnimatedText>

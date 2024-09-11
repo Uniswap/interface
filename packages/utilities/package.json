@@ -53,7 +53,8 @@
   "private": true,
   "scripts": {
     "build": "tsc -b",
-    "check:deps:usage": "depcheck",
+    "check:deps:usage": "depcheck && yarn check-promise-version",
+    "check-promise-version": "../../scripts/check-promise-version.sh",
     "format": "../../scripts/prettier.sh",
     "lint": "eslint . --ext ts,tsx --max-warnings=0",
     "lint:fix": "eslint . --ext ts,tsx --fix",

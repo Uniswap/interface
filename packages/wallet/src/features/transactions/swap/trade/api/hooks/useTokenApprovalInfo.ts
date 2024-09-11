@@ -1,9 +1,7 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { useMemo } from 'react'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useRestQuery } from 'uniswap/src/data/rest'
-import { ApprovalRequest, ApprovalResponse, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { TradingApiApolloClient } from 'uniswap/src/data/tradingApi/client'
+import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery'
+import { ApprovalRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
@@ -13,7 +11,7 @@ import {
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
+import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
 interface TokenApprovalInfoParams {
   chainId: WalletChainId
@@ -53,17 +51,13 @@ export function useTokenApprovalInfo(
     }
   }, [address, amount, chainId, currencyIn, tokenAddress])
 
-  const { data, error } = useRestQuery<ApprovalResponse, ApprovalRequest | Record<string, never>>(
-    uniswapUrls.tradingApiPaths.approval,
-    approvalRequestArgs ?? {},
-    ['approval', 'gasFee'],
-    {
-      ttlMs: ONE_MINUTE_MS,
-      skip: skip || !approvalRequestArgs || isWrap || !address,
-    },
-    'POST',
-    TradingApiApolloClient,
-  )
+  const shouldSkip = skip || !approvalRequestArgs || isWrap || !address
+
+  const { data, error } = useCheckApprovalQuery({
+    params: shouldSkip ? undefined : approvalRequestArgs,
+    staleTime: 15 * ONE_SECOND_MS,
+    immediateGcTime: ONE_MINUTE_MS,
+  })
 
   return useMemo(() => {
     if (error) {

@@ -14295,6 +14295,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/qrcode@npm:1.5.5":
+  version: 1.5.5
+  resolution: "@types/qrcode@npm:1.5.5"
+  dependencies:
+    "@types/node": "*"
+  checksum: d92c1d3e77406bf13a03ec521b2ffb1ac99b2e6ea3a17cad670f2610f62e1293554c57e4074bb2fd4e9369f475f863b69e0ae8c543cb049c4a3c1b0c2d92522a
+  languageName: node
+  linkType: hard
+
 "@types/qs@npm:*, @types/qs@npm:^6.9.5":
   version: 6.9.11
   resolution: "@types/qs@npm:6.9.11"
@@ -15141,10 +15150,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/client-explore@npm:0.0.7":
-  version: 0.0.7
-  resolution: "@uniswap/client-explore@npm:0.0.7"
-  checksum: a8b60f3fa0053f1da622b91f6ddb0ccebf6bf119e6605e38be6ab74655be913a69216cbdf3117cff5eb24dab8db16bb1e15e8a814282edc124db4c648aca7595
+"@uniswap/client-explore@npm:0.0.9":
+  version: 0.0.9
+  resolution: "@uniswap/client-explore@npm:0.0.9"
+  checksum: 206d3c42e724d9261fc9be21cc1ce9ef1fb4ab29f4fda510be5e14d2c1bc0e4aab6779303923bee11941d49c8e3ccffe541cca1dec482abed952ab9dcc804fcc
   languageName: node
   linkType: hard
 
@@ -15227,6 +15236,7 @@ __metadata:
     "@types/uuid": 9.0.1
     "@uniswap/analytics-events": 2.36.0
     "@uniswap/eslint-config": "workspace:^"
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.8
     "@uniswap/universal-router-sdk": 2.2.0
     "@uniswap/v3-sdk": 3.13.0
     "@welldone-software/why-did-you-render": 8.0.1
@@ -15281,13 +15291,6 @@ __metadata:
     zod: 3.22.4
   languageName: unknown
   linkType: soft
-
-"@uniswap/governance@npm:1.0.2":
-  version: 1.0.2
-  resolution: "@uniswap/governance@npm:1.0.2"
-  checksum: 84e4f246e9031983ddcd5b44b77b0b19fcee2228e0d7df743bd79827c476ffc273e51cd37d0a6278183461a14de6517ead0fefed520e8c4e9c46e7529451ccf0
-  languageName: node
-  linkType: hard
 
 "@uniswap/interface@workspace:apps/web":
   version: 0.0.0-use.local
@@ -15358,9 +15361,9 @@ __metadata:
     "@types/xml2js": 0.4.14
     "@uniswap/analytics": 1.7.0
     "@uniswap/analytics-events": 2.36.0
+    "@uniswap/client-explore": 0.0.9
     "@uniswap/default-token-list": 11.19.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/governance": 1.0.2
     "@uniswap/liquidity-staker": 1.0.2
     "@uniswap/merkle-distributor": 1.0.1
     "@uniswap/permit2-sdk": 1.3.0
@@ -25920,6 +25923,15 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 73b48143af4b2348312ec312d7b83b12bbbca83df7c10f6183fce46bbf8ad45ce889a818d3bc0c82f9135a44ee3a65d09f3fad842c2e6f51b891dedb18c285ed
+  languageName: node
+  linkType: hard
+
+"expo-screen-capture@patch:expo-screen-capture@npm%3A5.8.1#./.yarn/patches/expo-screen-capture-npm-5.8.1-78e5827fdf.patch::locator=universe%40workspace%3A.":
+  version: 5.8.1
+  resolution: "expo-screen-capture@patch:expo-screen-capture@npm%3A5.8.1#./.yarn/patches/expo-screen-capture-npm-5.8.1-78e5827fdf.patch::version=5.8.1&hash=0951ea&locator=universe%40workspace%3A."
+  peerDependencies:
+    expo: "*"
+  checksum: b62f7d8b1886a9a8b55038c476d2807d936e70b591099cdc92ecd62d3a48af406db8a4272e6f8fe93747daf9671a181842fcd7c053ab60903e236b7b6486f504
   languageName: node
   linkType: hard
 
@@ -44680,6 +44692,7 @@ __metadata:
     "@tamagui/react-native-media-driver": 1.108.4
     "@tamagui/remove-scroll": 1.108.4
     "@tamagui/theme-base": 1.108.4
+    "@types/qrcode": 1.5.5
     "@uniswap/eslint-config": "workspace:^"
     camelcase: ^6.0.0
     cheerio: ^1.0.0-rc.5
@@ -44706,6 +44719,7 @@ __metadata:
     typescript: 5.3.3
     uppercamelcase: ^3.0.0
     utilities: "workspace:^"
+    uuid: 9.0.0
     wcag-contrast: 3.0.0
   languageName: unknown
   linkType: soft
@@ -45009,10 +45023,14 @@ __metadata:
     "@connectrpc/connect": 1.4.0
     "@connectrpc/connect-query": 1.4.1
     "@connectrpc/connect-web": 1.4.0
+    "@ethersproject/abstract-signer": 5.7.0
     "@ethersproject/address": 5.7.0
     "@ethersproject/bignumber": 5.7.0
+    "@ethersproject/hash": 5.7.0
+    "@ethersproject/properties": 5.7.0
     "@ethersproject/providers": 5.7.2
     "@ethersproject/units": 5.7.0
+    "@ethersproject/web": 5.7.1
     "@faker-js/faker": 7.6.0
     "@gorhom/bottom-sheet": 4.5.1
     "@graphql-codegen/cli": ^3.3.1
@@ -45021,7 +45039,12 @@ __metadata:
     "@graphql-codegen/typescript-operations": ^3.0.2
     "@graphql-codegen/typescript-react-apollo": ^3.3.7
     "@graphql-codegen/typescript-resolvers": ^3.2.1
+    "@graphql-tools/graphql-file-loader": 8.0.0
+    "@graphql-tools/load": 8.0.1
+    "@graphql-tools/merge": 9.0.1
+    "@graphql-tools/mock": 9.0.0
     "@react-native-async-storage/async-storage": 1.17.10
+    "@react-native-community/netinfo": 9.3.0
     "@reduxjs/toolkit": 1.9.3
     "@tanstack/query-async-storage-persister": 5.51.21
     "@tanstack/react-query": 5.51.16
@@ -45033,7 +45056,7 @@ __metadata:
     "@types/chrome": 0.0.254
     "@types/react-window": 1.8.2
     "@uniswap/analytics-events": 2.36.0
-    "@uniswap/client-explore": 0.0.7
+    "@uniswap/client-explore": 0.0.9
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/router-sdk": 1.9.2
     "@uniswap/sdk-core": 5.3.0
@@ -45042,6 +45065,7 @@ __metadata:
     "@uniswap/v3-sdk": 3.13.0
     apollo-link-rest: 0.9.0
     axios: 1.6.5
+    dayjs: 1.11.7
     depcheck: 1.4.7
     es-toolkit: 1.10.0
     eslint: 8.44.0
@@ -45051,11 +45075,14 @@ __metadata:
     expo-web-browser: 12.8.2
     fuse.js: 6.5.3
     get-graphql-schema: ^2.1.2
+    graphql: 16.6.0
+    graphql-scalars: 1.22.4
     i18next: 23.10.0
     i18next-resources-for-ts: 1.5.0
     i18next-resources-to-backend: ^1.2.0
     idb-keyval: 6.2.1
     jest: 29.7.0
+    jest-extended: 4.0.1
     jest-presets: "workspace:^"
     lodash: 4.17.21
     openapi-typescript-codegen: 0.27.0
@@ -45069,6 +45096,7 @@ __metadata:
     react-native-gesture-handler: 2.15.0
     react-native-mmkv: 2.10.1
     react-native-reanimated: 3.15.0
+    react-native-restart: 0.0.27
     react-redux: 8.0.5
     react-test-renderer: 18.2.0
     react-virtualized-auto-sizer: 1.0.20
@@ -45077,6 +45105,7 @@ __metadata:
     statsig-react: 1.32.0
     statsig-react-native: 4.11.0
     typechain: 5.2.0
+    typed-redux-saga: 1.5.0
     typescript: 5.3.3
     ui: "workspace:^"
     utilities: "workspace:^"
@@ -46104,10 +46133,6 @@ __metadata:
     "@ethersproject/providers": 5.7.2
     "@faker-js/faker": 7.6.0
     "@gorhom/bottom-sheet": 4.5.1
-    "@graphql-tools/graphql-file-loader": 8.0.0
-    "@graphql-tools/load": 8.0.1
-    "@graphql-tools/merge": 9.0.1
-    "@graphql-tools/mock": 9.0.0
     "@react-native-community/netinfo": 9.3.0
     "@react-native-firebase/app-check": 18.4.0
     "@react-navigation/core": 6.2.2
@@ -46128,7 +46153,6 @@ __metadata:
     "@uniswap/uniswapx-sdk": ^2.1.0-beta.8
     "@uniswap/universal-router-sdk": 2.2.0
     "@uniswap/v3-sdk": 3.13.0
-    apollo-link-rest: 0.9.0
     apollo3-cache-persist: 0.14.1
     axios: 1.6.5
     dayjs: 1.11.7
@@ -46138,7 +46162,6 @@ __metadata:
     expo-web-browser: 12.8.2
     fuse.js: 6.5.3
     graphql: 16.6.0
-    graphql-scalars: 1.22.4
     i18next: 23.10.0
     jest: 29.7.0
     jest-extended: 4.0.1

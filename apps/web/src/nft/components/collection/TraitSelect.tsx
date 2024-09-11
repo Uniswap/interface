@@ -4,7 +4,6 @@ import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Filters.css'
 import { TraitsHeader } from 'nft/components/collection/TraitsHeader'
-import { Checkbox } from 'nft/components/layout/Checkbox'
 import { Input } from 'nft/components/layout/Input'
 import { subheadSmall } from 'nft/css/common.css'
 import { Trait, useCollectionFilters } from 'nft/hooks/useCollectionFilters'
@@ -13,6 +12,7 @@ import { scrollToTop } from 'nft/utils/scrollToTop'
 import { CSSProperties, FormEvent, MouseEvent, useCallback, useEffect, useMemo, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
+import { LabeledCheckbox } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 const TRAIT_ROW_HEIGHT = 44
@@ -49,8 +49,7 @@ const TraitItem = ({
     setCheckboxSelected(isTraitSelected)
   }, [isTraitSelected])
 
-  const handleCheckbox = (e: FormEvent) => {
-    e.preventDefault()
+  const handleCheckbox = () => {
     scrollToTop()
 
     if (!isCheckboxSelected) {
@@ -102,11 +101,12 @@ const TraitItem = ({
           ? `${trait.trait_value} trait${pluralize(Number(trait.trait_value))}`
           : trait.trait_value}
       </Box>
-      <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
-        <Box as="span" color="neutral2" minWidth="8" paddingTop="2" paddingRight="12" position="relative">
-          {!showFullTraitName && trait.trait_count}
-        </Box>
-      </Checkbox>
+      <LabeledCheckbox
+        checked={isCheckboxSelected}
+        onCheckPressed={handleCheckbox}
+        text={showFullTraitName ? String(trait.trait_count) : ''}
+        variant="branded"
+      />
     </Row>
   )
 }

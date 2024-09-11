@@ -2,7 +2,7 @@ import { memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { AnimatePresence, Flex, SpinningLoader, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import SlashCircleIcon from 'ui/src/assets/icons/slash-circle.svg'
-import { AlertTriangle, UniswapX } from 'ui/src/components/icons'
+import { AlertTriangleFilled, UniswapX } from 'ui/src/components/icons'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -21,6 +21,7 @@ import {
 } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useIsQueuedTransaction } from 'wallet/src/features/transactions/hooks'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { usePostTextElementPositionProps } from 'wallet/src/utils/layout'
 import { openTransactionLink } from 'wallet/src/utils/linking'
 
 const LOADING_SPINNER_SIZE = 20
@@ -73,6 +74,8 @@ function TransactionSummaryLayout({
     }
   }
 
+  const { postTextElementPositionProps, onTextLayout } = usePostTextElementPositionProps()
+
   const formattedAddedTime = useFormattedTime(transaction.addedTime)
 
   const statusIconFill = colors.surface1.get()
@@ -87,7 +90,7 @@ function TransactionSummaryLayout({
     />
   ) : status === TransactionStatus.Failed ? (
     <Flex grow alignItems="flex-end" justifyContent="space-between">
-      <AlertTriangle
+      <AlertTriangleFilled
         color={colors.DEP_accentWarning.val}
         fill={colors.DEP_accentWarning.val}
         size={TXN_STATUS_ICON_SIZE}
@@ -135,15 +138,15 @@ function TransactionSummaryLayout({
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row gap="$spacing16">
-                <Flex grow row shrink>
-                  <Text color="$neutral1" variant="body2">
+                <Flex grow row shrink pr={postTextElementPositionProps ? '$spacing24' : undefined}>
+                  <Text color="$neutral1" variant="body2" onTextLayout={onTextLayout}>
                     {caption}
                   </Text>
-                  {postCaptionElement}
+                  <Flex {...postTextElementPositionProps}>{postCaptionElement}</Flex>
                 </Flex>
                 {status === TransactionStatus.Failed && onRetry && (
                   <Flex flexShrink={0}>
-                    <Text color="$accent1" variant="buttonLabel3" onPress={onRetry}>
+                    <Text color="$accent1" variant="buttonLabel2" onPress={onRetry}>
                       {t('common.button.retry')}
                     </Text>
                   </Flex>
@@ -153,7 +156,7 @@ function TransactionSummaryLayout({
           </Flex>
           {inProgress && (
             <Flex justifyContent="center">
-              <SpinningLoader disabled={queued} size={LOADING_SPINNER_SIZE} />
+              <SpinningLoader color="$accent1" disabled={queued} size={LOADING_SPINNER_SIZE} />
             </Flex>
           )}
         </Flex>

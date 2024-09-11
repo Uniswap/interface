@@ -4,6 +4,7 @@ import { ArrowDown, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
@@ -12,7 +13,6 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { buildCurrencyId, currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
 
 export function TransactionAmountsReview({
   acceptedDerivedSwapInfo,
@@ -26,7 +26,13 @@ export function TransactionAmountsReview({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const { convertFiatAmountFormatted, formatCurrencyAmount } = useLocalizationContext()
-  const { exactCurrencyField, trade, wrapType, currencyAmounts } = acceptedDerivedSwapInfo
+  const {
+    exactCurrencyField,
+    trade: { trade, indicativeTrade },
+    wrapType,
+    currencyAmounts,
+  } = acceptedDerivedSwapInfo
+  const displayTrade = trade ?? indicativeTrade
 
   const isWrap = wrapType !== WrapType.NotApplicable
 
@@ -40,8 +46,8 @@ export function TransactionAmountsReview({
   // Token amounts
   // On review screen, always show values directly from trade object, to match exactly what is submitted on chain
   // For wraps, we have no trade object so use values from form state
-  const inputCurrencyAmount = isWrap ? wrapInputCurrencyAmount : trade.trade?.inputAmount
-  const outputCurrencyAmount = isWrap ? wrapOutputCurrencyAmount : trade.trade?.outputAmount
+  const inputCurrencyAmount = isWrap ? wrapInputCurrencyAmount : displayTrade?.inputAmount
+  const outputCurrencyAmount = isWrap ? wrapOutputCurrencyAmount : displayTrade?.outputAmount
 
   // This should never happen. It's just to keep TS happy.
   if (!inputCurrencyAmount || !outputCurrencyAmount) {
@@ -65,6 +71,9 @@ export function TransactionAmountsReview({
 
   const shouldDimInput = newTradeRequiresAcceptance && exactCurrencyField === CurrencyField.OUTPUT
   const shouldDimOutput = newTradeRequiresAcceptance && exactCurrencyField === CurrencyField.INPUT
+
+  const isInputIndicative = Boolean(displayTrade?.indicative && exactCurrencyField === CurrencyField.OUTPUT)
+  const isOutputIndicative = Boolean(displayTrade?.indicative && exactCurrencyField === CurrencyField.INPUT)
 
   // Rebuild currency infos directly from trade object to ensure it matches what is submitted on chain
   const currencyInInfo = useCurrencyInfo(
@@ -103,6 +112,7 @@ export function TransactionAmountsReview({
         currencyInfo={currencyInInfo}
         formattedFiatAmount={formattedFiatAmountIn}
         formattedTokenAmount={formattedTokenAmountIn}
+        indicative={isInputIndicative}
         shouldDim={shouldDimInput}
       />
 
@@ -112,6 +122,7 @@ export function TransactionAmountsReview({
         currencyInfo={currencyOutInfo}
         formattedFiatAmount={formattedFiatAmountOut}
         formattedTokenAmount={formattedTokenAmountOut}
+        indicative={isOutputIndicative}
         shouldDim={shouldDimOutput}
       />
     </Flex>
@@ -123,20 +134,25 @@ function CurrencyValueWithIcon({
   formattedFiatAmount,
   formattedTokenAmount,
   shouldDim,
+  indicative,
 }: {
   currencyInfo: CurrencyInfo
   formattedFiatAmount: string
   formattedTokenAmount: string
   shouldDim: boolean
+  indicative: boolean
 }): JSX.Element {
+  const amountColor = indicative ? '$neutral2' : shouldDim ? '$neutral3' : '$neutral1'
+  const fiatColor = indicative || shouldDim ? '$neutral3' : '$neutral2'
+
   return (
     <Flex centered grow row>
       <Flex grow gap="$spacing4">
-        <Text color={shouldDim ? '$neutral3' : '$neutral1'} variant="heading3">
+        <Text color={amountColor} variant="heading3">
           {formattedTokenAmount} {getSymbolDisplayText(currencyInfo.currency.symbol)}
         </Text>
 
-        <Text color={shouldDim ? '$neutral3' : '$neutral2'} variant="body2">
+        <Text color={fiatColor} variant="body2">
           {formattedFiatAmount}
         </Text>
       </Flex>

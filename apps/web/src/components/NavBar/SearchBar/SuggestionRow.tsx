@@ -1,23 +1,24 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import Column from 'components/Column'
 import QueryTokenLogo from 'components/Logo/QueryTokenLogo'
-import { useAddRecentlySearchedAsset } from 'components/NavBar/SearchBar/RecentlySearchedAssets'
 import TokenSafetyIcon from 'components/TokenSafety/TokenSafetyIcon'
 import { DeltaArrow, DeltaText } from 'components/Tokens/TokenDetails/Delta'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { useTokenWarning } from 'constants/tokenSafety'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { SearchToken } from 'graphql/data/SearchTokens'
+import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import styled, { css } from 'lib/styled-components'
 import { searchGenieCollectionToTokenSearchResult, searchTokenToTokenSearchResult } from 'lib/utils/searchBar'
 import { GenieCollection } from 'nft/types'
 import { useCallback, useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { Flex } from 'ui/src'
 import { Verified } from 'ui/src/components/icons/Verified'
 import { TokenStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
@@ -80,7 +81,7 @@ const SecondaryContainer = styled(Column)`
 `
 
 interface SuggestionRowProps {
-  suggestion: GenieCollection | SearchToken
+  suggestion: GenieCollection | GqlSearchToken
   isHovered: boolean
   setHoveredIndex: (index: number | undefined) => void
   toggleOpen: () => void
@@ -88,8 +89,8 @@ interface SuggestionRowProps {
   eventProperties: InterfaceSearchResultSelectionProperties
 }
 
-function suggestionIsToken(suggestion: GenieCollection | SearchToken): suggestion is SearchToken {
-  return (suggestion as SearchToken).decimals !== undefined
+function suggestionIsToken(suggestion: GenieCollection | GqlSearchToken): suggestion is GqlSearchToken {
+  return (suggestion as GqlSearchToken).decimals !== undefined
 }
 
 export function SuggestionRow({
@@ -102,7 +103,7 @@ export function SuggestionRow({
 }: SuggestionRowProps) {
   const { t } = useTranslation()
   const isToken = suggestionIsToken(suggestion)
-  const addRecentlySearchedAsset = useAddRecentlySearchedAsset()
+  const dispatch = useDispatch()
   const navigate = useNavigate()
   const { formatFiatPrice, formatDelta, formatNumberOrString } = useFormatter()
   const [brokenCollectionImage, setBrokenCollectionImage] = useState(false)
@@ -114,21 +115,21 @@ export function SuggestionRow({
   const handleClick = useCallback(() => {
     const address =
       !suggestion.address && suggestion.standard === TokenStandard.Native ? NATIVE_CHAIN_ID : suggestion.address
-    const asset =
-      isToken && address
-        ? searchTokenToTokenSearchResult({
-            ...suggestion,
-            address,
-            chainId: supportedChainIdFromGQLChain(suggestion.chain) as UniverseChainId,
-            isNative: address === NATIVE_CHAIN_ID,
-            isToken: suggestion.standard === TokenStandard.Erc20,
-          })
-        : searchGenieCollectionToTokenSearchResult(suggestion as GenieCollection)
-    asset && addRecentlySearchedAsset(asset)
+
+    if (isToken && address) {
+      const chainId = supportedChainIdFromGQLChain(suggestion.chain)
+      if (chainId) {
+        const searchResult = searchTokenToTokenSearchResult({ ...suggestion, address, chainId })
+        dispatch(addToSearchHistory({ searchResult }))
+      }
+    } else {
+      const searchResult = searchGenieCollectionToTokenSearchResult(suggestion as GenieCollection)
+      dispatch(addToSearchHistory({ searchResult }))
+    }
 
     toggleOpen()
     sendAnalyticsEvent(InterfaceEventName.NAVBAR_RESULT_SELECTED, { ...eventProperties })
-  }, [suggestion, isToken, addRecentlySearchedAsset, toggleOpen, eventProperties])
+  }, [suggestion, isToken, toggleOpen, eventProperties, dispatch])
 
   const path = isToken ? getTokenDetailsURL({ ...suggestion }) : `/nfts/collection/${suggestion.address}`
   // Close the modal on escape

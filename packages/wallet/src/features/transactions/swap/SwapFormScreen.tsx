@@ -7,6 +7,7 @@ import { AnimatePresence, Flex, Text, TouchableArea, isWeb, useIsShortMobileDevi
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing, zIndices } from 'ui/src/theme'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
@@ -19,6 +20,7 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { formatCurrencyAmount } from 'utilities/src/format/localeBased'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { NumberType } from 'utilities/src/format/types'
+import { usePrevious } from 'utilities/src/react/hooks'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
 import { useSyncFiatAndTokenAmountUpdater } from 'wallet/src/features/transactions/hooks/useSyncFiatAndTokenAmountUpdater'
 import { CurrencyInputPanel, CurrencyInputPanelRef } from 'wallet/src/features/transactions/swap/CurrencyInputPanel'
@@ -34,7 +36,6 @@ import { SwapFormHeader } from 'wallet/src/features/transactions/swap/SwapFormHe
 import { SwapTokenSelector } from 'wallet/src/features/transactions/swap/SwapTokenSelector'
 import { useExactOutputWillFail } from 'wallet/src/features/transactions/swap/hooks/useExactOutputWillFail'
 import { SwapSettingConfig } from 'wallet/src/features/transactions/swap/modals/settings/configs/types'
-import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/trade/hooks/useShowSwapNetworkNotification'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 
 const SWAP_DIRECTION_BUTTON_SIZE = {
@@ -84,7 +85,7 @@ function SwapFormContent(): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
   const isShortMobileDevice = useIsShortMobileDevice()
-
+  const { onShowSwapNetworkNotification } = useUniswapContext()
   const { walletNeedsRestore, openWalletRestoreModal } = useTransactionModalContext()
 
   const { screen } = useSwapScreenContext()
@@ -114,7 +115,10 @@ function SwapFormContent(): JSX.Element {
   useSyncFiatAndTokenAmountUpdater({ skip: screen !== SwapScreen.SwapForm })
 
   // Display a toast notification when the user switches networks.
-  useShowSwapNetworkNotification(chainId)
+  const prevChainId = usePrevious(chainId)
+  useEffect(() => {
+    onShowSwapNetworkNotification(chainId, prevChainId)
+  }, [chainId, prevChainId, onShowSwapNetworkNotification])
 
   const onRestorePress = (): void => {
     if (!openWalletRestoreModal) {
@@ -145,8 +149,8 @@ function SwapFormContent(): JSX.Element {
   // which can happen after the user hits `Max`.
   const decimalPadControlledField = focusOnCurrencyField ?? exactCurrencyField
 
-  // Quote is being fetched for first time
-  const isSwapDataLoading = !isWrapAction(wrapType) && trade.isLoading
+  // Quote is being fetched for first time or refetching
+  const isSwapDataLoading = !isWrapAction(wrapType) && trade.isFetching
 
   const inputRef = useRef<CurrencyInputPanelRef>(null)
   const outputRef = useRef<CurrencyInputPanelRef>(null)
@@ -472,11 +476,13 @@ function SwapFormContent(): JSX.Element {
               currencyInfo={currencies[CurrencyField.INPUT]}
               focus={focusOnCurrencyField === CurrencyField.INPUT}
               isFiatMode={isFiatMode && exactFieldIsInput}
+              isIndicativeLoading={trade.isIndicativeLoading}
               isLoading={!exactFieldIsInput && isSwapDataLoading}
               resetSelection={resetSelection}
               showSoftInputOnFocus={false}
               usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
               value={exactFieldIsInput ? exactValue : formattedDerivedValue}
+              valueIsIndicative={!exactFieldIsInput && trade.indicativeTrade && !trade.trade}
               onPressIn={onFocusInput}
               onSelectionChange={onInputSelectionChange}
               onSetExactAmount={onSetExactAmountInput}
@@ -513,6 +519,7 @@ function SwapFormContent(): JSX.Element {
               showSoftInputOnFocus={false}
               usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
               value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
+              valueIsIndicative={!exactFieldIsOutput && trade.indicativeTrade && !trade.trade}
               onPressDisabled={showTemporaryFoTWarning}
               onPressIn={onFocusOutput}
               onSelectionChange={onOutputSelectionChange}
@@ -546,7 +553,6 @@ function SwapFormContent(): JSX.Element {
             )}
           </Flex>
         </Trace>
-
         <Flex>
           {isWeb && (
             <Flex pt="$spacing12">

@@ -4,18 +4,18 @@ import { iconSizes, spacing } from 'ui/src/theme'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useAvatar } from 'uniswap/src/features/address/avatar'
+import { useAddressColorProps } from 'uniswap/src/features/address/color'
 import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
-import { useQRColorProps } from 'wallet/src/components/QRCodeScanner/useQRColorProps'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { useAvatar } from 'wallet/src/features/wallet/hooks'
 
 export function WalletQRCode({ address }: { address: Address }): JSX.Element | null {
   const colors = useSporeColors()
   const { avatar } = useAvatar(address)
   const { t } = useTranslation()
   const media = useMedia()
-  const { smartColor } = useQRColorProps(address)
+  const addressColor = useAddressColorProps(address)
 
   const QR_CODE_SIZE = media.short ? 220 : 240
   const UNICON_SIZE = QR_CODE_SIZE / 4
@@ -43,13 +43,9 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
         />
       </Flex>
       <QRCodeDisplay
-        hideOutline
-        color={smartColor}
+        color={addressColor}
         containerBackgroundColor={colors.surface1.val}
-        displayShadow={false}
         encodedValue={address}
-        logoSize={UNICON_SIZE}
-        safeAreaColor="$surface1"
         size={QR_CODE_SIZE}
       >
         <AccountIcon

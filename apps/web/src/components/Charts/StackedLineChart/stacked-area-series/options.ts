@@ -8,6 +8,7 @@ import { customSeriesDefaultOptions, CustomSeriesOptions, Logical } from 'lightw
 export interface StackedAreaSeriesOptions extends CustomSeriesOptions {
   colors: readonly string[]
   lineWidth: number
+  gradients?: { start: string; end: string }[]
   // Modification: tracks the hovered data point, used for rendering crosshair
   hoveredLogicalIndex?: Logical
 }
@@ -15,5 +16,6 @@ export interface StackedAreaSeriesOptions extends CustomSeriesOptions {
 export const defaultOptions: StackedAreaSeriesOptions = {
   ...customSeriesDefaultOptions,
   colors: [],
+  gradients: undefined,
   lineWidth: 2,
 } as const

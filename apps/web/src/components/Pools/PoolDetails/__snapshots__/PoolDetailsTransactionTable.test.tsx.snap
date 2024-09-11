@@ -2,30 +2,13 @@
 
 exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
 <DocumentFragment>
-  .c4 {
+  .c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c10 {
+.c2 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -43,37 +26,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   gap: 4px;
 }
 
-.c33 {
-  height: 16px;
-  width: 16px;
-}
-
-.c33 path {
-  stroke: #FC72FF;
-  background: #7D7D7D;
-  fill: none;
-}
-
-.c34 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
-}
-
-.c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c12 {
+.c5 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -81,7 +34,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c28 {
+.c11 {
   color: #40B66B;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -89,7 +42,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c29 {
+.c12 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -97,7 +50,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c21 {
+.c13 {
   -webkit-text-decoration: none;
   text-decoration: none;
   cursor: pointer;
@@ -108,175 +61,20 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   font-weight: 500;
 }
 
-.c21:hover {
+.c13:hover {
   opacity: 0.6;
 }
 
-.c21:active {
+.c13:active {
   opacity: 0.4;
 }
 
-.c25 {
+.c8 {
   display: inline-block;
   height: inherit;
 }
 
-.c2 {
-  max-width: px;
-  max-height: 600px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  margin: 0px auto 24px auto;
-}
-
 .c3 {
-  width: 100%;
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  background: #FFFFFF;
-}
-
-.c19 {
-  width: 100%;
-  position: relative;
-  overflow-x: auto;
-  overscroll-behavior-x: none;
-  border-right: 1px solid #22222212;
-  border-bottom: 1px solid #22222212;
-  border-left: 1px solid #22222212;
-  border-bottom-right-radius: 20px;
-  border-bottom-left-radius: 20px;
-  -ms-overflow-style: none;
-  -webkit-scrollbar-width: none;
-  -moz-scrollbar-width: none;
-  -ms-scrollbar-width: none;
-  scrollbar-width: none;
-}
-
-.c19::-webkit-scrollbar {
-  display: none;
-}
-
-.c31 {
-  position: -webkit-sticky;
-  position: sticky;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  margin-top: -48px;
-  visibility: hidden;
-}
-
-.c32 {
-  background: #FFEFFF;
-  border-radius: 8px;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  padding: 8px;
-  color: #FC72FF;
-  font-size: 16px;
-  font-weight: 535;
-  gap: 8px;
-  height: 34px;
-  z-index: 990;
-}
-
-.c6 {
-  padding: 0px 12px;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  min-width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  min-height: 64px;
-}
-
-.c7 {
-  border: 1px solid #22222212;
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
-  overflow: auto;
-  width: unset;
-  min-height: 52px;
-  background: #F9F9F9;
-  -ms-overflow-style: none;
-  -webkit-scrollbar-width: none;
-  -moz-scrollbar-width: none;
-  -ms-scrollbar-width: none;
-  scrollbar-width: none;
-  overscroll-behavior: none;
-}
-
-.c7::-webkit-scrollbar {
-  display: none;
-}
-
-.c8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-}
-
-.c8:last-child {
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-}
-
-.c8:first-child {
-  -webkit-box-flex: 0;
-  -webkit-flex-grow: 0;
-  -ms-flex-positive: 0;
-  flex-grow: 0;
-}
-
-.c23 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  color: #222222;
-}
-
-.c23:hover {
-  opacity: 0.6;
-}
-
-.c23:active {
-  opacity: 0.4;
-}
-
-.c11 {
   height: 16px;
   width: 16px;
   color: #222222;
@@ -285,33 +83,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   transform: rotate(0deg);
 }
 
-.c13 {
-  color: #222222;
-}
-
-.c15 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  gap: 4px;
-}
-
-.c15:hover {
-  opacity: 0.6;
-}
-
-.c15:active {
-  opacity: 0.4;
-}
-
-.c24 {
+.c7 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -327,122 +99,28 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
   width: 100%;
 }
 
-.c27 {
+.c10 {
   display: none;
   height: 16px;
   width: 16px;
   color: #7D7D7D;
 }
 
-.c22:hover .c26 {
+.c6:hover .c9 {
   display: block;
 }
 
-.c9 {
-  min-width: 120px;
-  -webkit-flex: 0;
-  -ms-flex: 0;
-  flex: 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c14 {
-  min-width: 144px;
-  -webkit-flex: 0;
-  -ms-flex: 0;
-  flex: 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c17 {
-  min-width: 125px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c18 {
-  min-width: 100px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c16 {
+.c4 {
   position: relative;
 }
 
-.c30 {
+.c14 {
   color: #7D7D7D;
   stroke: #7D7D7D;
 }
 
 .c0 {
   min-height: 256px;
-}
-
-@media not all and (hover:none) {
-  .c20:hover {
-    background: #22222212;
-  }
 }
 
 <span
@@ -461,25 +139,25 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
         >
           <div>
             <div
-              class="c1 c2"
+              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _mt-1256987388 _mr-1256987388 _mb-1256987388 _ml-1256987388 _maxHeight-600px scrollbar-hidden"
             >
               <div
-                class="c3"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-end _backgroundColor-568007324 scrollbar-hidden"
               >
                 <div
-                  class="c4 c5 c6 c7"
+                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none scrollbar-hidden"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c4 c10"
+                        class="c1 c2"
                       >
                         <svg
-                          class="c11"
+                          class="c3"
                           direction="desc"
                           fill="none"
                           height="24"
@@ -501,25 +179,27 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
                             points="19 12 12 19 5 12"
                           />
                         </svg>
-                        <div
-                          class="c12 c13 css-1urox24"
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                          data-disable-theme="true"
                         >
                           Time
-                        </div>
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c4 c5 c15"
+                        class="css-view-175oi2r"
+                        style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-items: center; user-select: none; gap: 4px; cursor: pointer; text-decoration: none; transition-duration: 0.2s; opacity: 1;"
                       >
                         <svg
-                          class="c16"
+                          class="c4"
                           fill="none"
                           height="17"
                           viewBox="0 0 16 17"
@@ -536,7 +216,7 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
                           />
                         </svg>
                         <div
-                          class="c12 css-1urox24"
+                          class="c5 css-1urox24"
                         >
                           Type
                         </div>
@@ -544,48 +224,48 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c12 css-1urox24"
+                        class="c5 css-1urox24"
                       >
                         USD
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c12 css-1urox24"
+                        class="c5 css-1urox24"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c12 css-1urox24"
+                        class="c5 css-1urox24"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c18"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c12 css-1urox24"
+                        class="c5 css-1urox24"
                       >
                         Wallet
                       </div>
@@ -594,36 +274,38 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
                 </div>
               </div>
               <div
-                class="c1 c19"
+                class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_scroll _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _width-10037 _position-relative _justifyContent-flex-start _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopWidth-0px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _maxHeight-528px scrollbar-hidden"
               >
                 <div
-                  class="c4 c5 c6 c20"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <a
-                        class="c21 c22 c23 c24"
+                        class="is_Anchor font_body _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-inline _boxSizing-border-box _wordWrap-break-word _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _fontWeight-233016109 _fontSize-229441189 _lineHeight-222976542 _textDecorationLine-none _cursor-pointer is_Anchor  c6 c7"
+                        data-disable-theme="true"
                         href="https://etherscan.io/tx/0x123"
                         rel="noopener noreferrer"
+                        role="link"
                         target="_blank"
                       >
                         <div
-                          class="c25"
+                          class="c8"
                         >
                           <div>
                             <div
-                              class="c12 css-1urox24"
+                              class="c5 css-1urox24"
                             >
                               1mo ago
                             </div>
                           </div>
                         </div>
                         <svg
-                          class="c26 c27"
+                          class="c9 c10"
                           fill="none"
                           height="24"
                           stroke="currentColor"
@@ -651,13 +333,13 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c28 css-1urox24"
+                        class="c11 css-1urox24"
                       >
                         <span>
                           Buy 
@@ -666,85 +348,62 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c29 css-1urox24"
+                        class="c12 css-1urox24"
                       >
                         $400.00
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c29 css-1urox24"
+                        class="c12 css-1urox24"
                       >
                         300
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c29 css-1urox24"
+                        class="c12 css-1urox24"
                       >
                         200
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c18"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <a
-                        class="c21 c30"
+                        class="c13 c14"
                         href="https://etherscan.io/address/0xabc"
                         rel="noopener noreferrer"
                         target="_blank"
                       >
                         <div
-                          class="c29 css-1urox24"
+                          class="c12 css-1urox24"
                         />
                       </a>
                     </div>
                   </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c31"
-              >
-                <div
-                  class="c4 c5 c32"
-                >
-                  <svg
-                    class="c33 c34"
-                    fill="none"
-                    stroke="#FC72FF"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2.5"
-                    />
-                  </svg>
-                  Loading
                 </div>
               </div>
             </div>
@@ -758,30 +417,13 @@ exports[`PoolDetailsTransactionsTable renders data filled state 1`] = `
 
 exports[`PoolDetailsTransactionsTable renders error state 1`] = `
 <DocumentFragment>
-  .c4 {
+  .c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c10 {
+.c2 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -799,23 +441,7 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
   gap: 4px;
 }
 
-.c27 {
-  height: 16px;
-  width: 16px;
-}
-
-.c27 path {
-  stroke: #FC72FF;
-  background: #7D7D7D;
-  fill: none;
-}
-
-.c28 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
-}
-
-.c1 {
+.c9 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -829,7 +455,7 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
   justify-content: flex-start;
 }
 
-.c12 {
+.c5 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -837,7 +463,7 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c24 {
+.c10 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -845,7 +471,7 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c23 {
+.c8 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -875,144 +501,7 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
   border-radius: 20px;
 }
 
-.c2 {
-  max-width: px;
-  max-height: 600px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  margin: 0px auto 24px auto;
-}
-
 .c3 {
-  width: 100%;
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  background: #FFFFFF;
-}
-
-.c21 {
-  width: 100%;
-  position: relative;
-  overflow-x: auto;
-  overscroll-behavior-x: none;
-  border-right: 1px solid #22222212;
-  border-bottom: 1px solid #22222212;
-  border-left: 1px solid #22222212;
-  border-bottom-right-radius: 20px;
-  border-bottom-left-radius: 20px;
-  -ms-overflow-style: none;
-  -webkit-scrollbar-width: none;
-  -moz-scrollbar-width: none;
-  -ms-scrollbar-width: none;
-  scrollbar-width: none;
-}
-
-.c21::-webkit-scrollbar {
-  display: none;
-}
-
-.c25 {
-  position: -webkit-sticky;
-  position: sticky;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  margin-top: -48px;
-  visibility: hidden;
-}
-
-.c26 {
-  background: #FFEFFF;
-  border-radius: 8px;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  padding: 8px;
-  color: #FC72FF;
-  font-size: 16px;
-  font-weight: 535;
-  gap: 8px;
-  height: 34px;
-  z-index: 990;
-}
-
-.c6 {
-  padding: 0px 12px;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  min-width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  min-height: 64px;
-}
-
-.c7 {
-  border: 1px solid #22222212;
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
-  overflow: auto;
-  width: unset;
-  min-height: 52px;
-  background: #F9F9F9;
-  -ms-overflow-style: none;
-  -webkit-scrollbar-width: none;
-  -moz-scrollbar-width: none;
-  -ms-scrollbar-width: none;
-  scrollbar-width: none;
-  overscroll-behavior: none;
-  opacity: 0.4;
-}
-
-.c7::-webkit-scrollbar {
-  display: none;
-}
-
-.c8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-}
-
-.c8:last-child {
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-}
-
-.c8:first-child {
-  -webkit-box-flex: 0;
-  -webkit-flex-grow: 0;
-  -ms-flex-positive: 0;
-  flex-grow: 0;
-}
-
-.c11 {
   height: 16px;
   width: 16px;
   color: #222222;
@@ -1021,33 +510,7 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
   transform: rotate(0deg);
 }
 
-.c13 {
-  color: #222222;
-}
-
-.c15 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  gap: 4px;
-}
-
-.c15:hover {
-  opacity: 0.6;
-}
-
-.c15:active {
-  opacity: 0.4;
-}
-
-.c18 {
+.c6 {
   border-radius: 12px;
   border-radius: 12px;
   height: 24px;
@@ -1062,111 +525,17 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
   background-size: 400%;
 }
 
-.c9 {
-  min-width: 120px;
-  -webkit-flex: 0;
-  -ms-flex: 0;
-  flex: 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c14 {
-  min-width: 144px;
-  -webkit-flex: 0;
-  -ms-flex: 0;
-  flex: 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c17 {
-  min-width: 125px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c20 {
-  min-width: 100px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c19 {
+.c7 {
   width: 75%;
   height: 16px;
 }
 
-.c16 {
+.c4 {
   position: relative;
 }
 
 .c0 {
   min-height: 256px;
-}
-
-@media not all and (hover:none) {
-  .c22:hover {
-    background: #22222212;
-  }
 }
 
 <span
@@ -1185,25 +554,25 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
         >
           <div>
             <div
-              class="c1 c2"
+              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _mt-1256987388 _mr-1256987388 _mb-1256987388 _ml-1256987388 _maxHeight-600px scrollbar-hidden"
             >
               <div
-                class="c3"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-end _backgroundColor-568007324 scrollbar-hidden"
               >
                 <div
-                  class="c4 c5 c6 c7"
+                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none _opacity-0d0t446 scrollbar-hidden"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c4 c10"
+                        class="c1 c2"
                       >
                         <svg
-                          class="c11"
+                          class="c3"
                           direction="desc"
                           fill="none"
                           height="24"
@@ -1225,25 +594,27 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
                             points="19 12 12 19 5 12"
                           />
                         </svg>
-                        <div
-                          class="c12 c13 css-1urox24"
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                          data-disable-theme="true"
                         >
                           Time
-                        </div>
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c4 c5 c15"
+                        class="css-view-175oi2r"
+                        style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-items: center; user-select: none; gap: 4px; cursor: pointer; text-decoration: none; transition-duration: 0.2s; opacity: 1;"
                       >
                         <svg
-                          class="c16"
+                          class="c4"
                           fill="none"
                           height="17"
                           viewBox="0 0 16 17"
@@ -1260,7 +631,7 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
                           />
                         </svg>
                         <div
-                          class="c12 css-1urox24"
+                          class="c5 css-1urox24"
                         >
                           Type
                         </div>
@@ -1268,50 +639,50 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c12 css-1urox24"
+                        class="c5 css-1urox24"
                       >
                         USD
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c12 css-1urox24"
+                        class="c5 css-1urox24"
                       >
                         Wallet
                       </div>
@@ -1320,542 +691,542 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
                 </div>
               </div>
               <div
-                class="c1 c21"
+                class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_scroll _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _width-10037 _position-relative _justifyContent-flex-start _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopWidth-0px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _maxHeight-528px scrollbar-hidden"
               >
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c23"
+                  class="c8"
                   data-testid="table-error-modal"
                 >
                   <div>
@@ -1888,42 +1259,19 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
                     </svg>
                   </div>
                   <div
-                    class="c1"
+                    class="c9"
                   >
                     <div
-                      class="c24 css-n8z49y"
+                      class="c10 css-n8z49y"
                     >
                       Error loading data
                     </div>
                     <div
-                      class="c12 css-142zc9n"
+                      class="c5 css-142zc9n"
                     >
                       Data is unavailable at the moment; we’re working on a fix
                     </div>
                   </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c25"
-              >
-                <div
-                  class="c4 c5 c26"
-                >
-                  <svg
-                    class="c27 c28"
-                    fill="none"
-                    stroke="#FC72FF"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2.5"
-                    />
-                  </svg>
-                  Loading
                 </div>
               </div>
             </div>
@@ -1937,30 +1285,13 @@ exports[`PoolDetailsTransactionsTable renders error state 1`] = `
 
 exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
 <DocumentFragment>
-  .c4 {
+  .c1 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
 }
 
-.c5 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c10 {
+.c2 {
   width: 100%;
   display: -webkit-box;
   display: -webkit-flex;
@@ -1978,37 +1309,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   gap: 4px;
 }
 
-.c25 {
-  height: 16px;
-  width: 16px;
-}
-
-.c25 path {
-  stroke: #FC72FF;
-  background: #7D7D7D;
-  fill: none;
-}
-
-.c26 {
-  -webkit-animation: 2s fvtopB linear infinite;
-  animation: 2s fvtopB linear infinite;
-}
-
-.c1 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c12 {
+.c5 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -2016,143 +1317,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c2 {
-  max-width: px;
-  max-height: 600px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  margin: 0px auto 24px auto;
-}
-
 .c3 {
-  width: 100%;
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  background: #FFFFFF;
-}
-
-.c21 {
-  width: 100%;
-  position: relative;
-  overflow-x: auto;
-  overscroll-behavior-x: none;
-  border-right: 1px solid #22222212;
-  border-bottom: 1px solid #22222212;
-  border-left: 1px solid #22222212;
-  border-bottom-right-radius: 20px;
-  border-bottom-left-radius: 20px;
-  -ms-overflow-style: none;
-  -webkit-scrollbar-width: none;
-  -moz-scrollbar-width: none;
-  -ms-scrollbar-width: none;
-  scrollbar-width: none;
-}
-
-.c21::-webkit-scrollbar {
-  display: none;
-}
-
-.c23 {
-  position: -webkit-sticky;
-  position: sticky;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  margin-top: -48px;
-  visibility: hidden;
-}
-
-.c24 {
-  background: #FFEFFF;
-  border-radius: 8px;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  padding: 8px;
-  color: #FC72FF;
-  font-size: 16px;
-  font-weight: 535;
-  gap: 8px;
-  height: 34px;
-  z-index: 990;
-}
-
-.c6 {
-  padding: 0px 12px;
-  width: -webkit-fit-content;
-  width: -moz-fit-content;
-  width: fit-content;
-  min-width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  min-height: 64px;
-}
-
-.c7 {
-  border: 1px solid #22222212;
-  border-top-right-radius: 20px;
-  border-top-left-radius: 20px;
-  overflow: auto;
-  width: unset;
-  min-height: 52px;
-  background: #F9F9F9;
-  -ms-overflow-style: none;
-  -webkit-scrollbar-width: none;
-  -moz-scrollbar-width: none;
-  -ms-scrollbar-width: none;
-  scrollbar-width: none;
-  overscroll-behavior: none;
-}
-
-.c7::-webkit-scrollbar {
-  display: none;
-}
-
-.c8 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-}
-
-.c8:last-child {
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-}
-
-.c8:first-child {
-  -webkit-box-flex: 0;
-  -webkit-flex-grow: 0;
-  -ms-flex-positive: 0;
-  flex-grow: 0;
-}
-
-.c11 {
   height: 16px;
   width: 16px;
   color: #222222;
@@ -2161,33 +1326,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   transform: rotate(0deg);
 }
 
-.c13 {
-  color: #222222;
-}
-
-.c15 {
-  -webkit-text-decoration: none;
-  text-decoration: none;
-  cursor: pointer;
-  -webkit-transition-duration: 125ms;
-  transition-duration: 125ms;
-  cursor: pointer;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-  gap: 4px;
-}
-
-.c15:hover {
-  opacity: 0.6;
-}
-
-.c15:active {
-  opacity: 0.4;
-}
-
-.c18 {
+.c6 {
   border-radius: 12px;
   border-radius: 12px;
   height: 24px;
@@ -2202,111 +1341,17 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
   background-size: 400%;
 }
 
-.c9 {
-  min-width: 120px;
-  -webkit-flex: 0;
-  -ms-flex: 0;
-  flex: 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c14 {
-  min-width: 144px;
-  -webkit-flex: 0;
-  -ms-flex: 0;
-  flex: 0;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c17 {
-  min-width: 125px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c20 {
-  min-width: 100px;
-  -webkit-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: end;
-  -webkit-justify-content: flex-end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  font-variant-numeric: lining-nums tabular-nums;
-  overflow: hidden;
-  padding: 12px 8px;
-}
-
-.c19 {
+.c7 {
   width: 75%;
   height: 16px;
 }
 
-.c16 {
+.c4 {
   position: relative;
 }
 
 .c0 {
   min-height: 256px;
-}
-
-@media not all and (hover:none) {
-  .c22:hover {
-    background: #22222212;
-  }
 }
 
 <span
@@ -2325,25 +1370,25 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
         >
           <div>
             <div
-              class="c1 c2"
+              class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _justifyContent-center _mt-1256987388 _mr-1256987388 _mb-1256987388 _ml-1256987388 _maxHeight-600px scrollbar-hidden"
             >
               <div
-                class="c3"
+                class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _width-10037 _position-relative _justifyContent-flex-end _backgroundColor-568007324 scrollbar-hidden"
               >
                 <div
-                  class="c4 c5 c6 c7"
+                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none scrollbar-hidden"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c4 c10"
+                        class="c1 c2"
                       >
                         <svg
-                          class="c11"
+                          class="c3"
                           direction="desc"
                           fill="none"
                           height="24"
@@ -2365,25 +1410,27 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                             points="19 12 12 19 5 12"
                           />
                         </svg>
-                        <div
-                          class="c12 c13 css-1urox24"
+                        <span
+                          class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                          data-disable-theme="true"
                         >
                           Time
-                        </div>
+                        </span>
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c4 c5 c15"
+                        class="css-view-175oi2r"
+                        style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: row; align-items: center; user-select: none; gap: 4px; cursor: pointer; text-decoration: none; transition-duration: 0.2s; opacity: 1;"
                       >
                         <svg
-                          class="c16"
+                          class="c4"
                           fill="none"
                           height="17"
                           viewBox="0 0 16 17"
@@ -2400,7 +1447,7 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                           />
                         </svg>
                         <div
-                          class="c12 css-1urox24"
+                          class="c5 css-1urox24"
                         >
                           Type
                         </div>
@@ -2408,50 +1455,50 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c12 css-1urox24"
+                        class="c5 css-1urox24"
                       >
                         USD
                       </div>
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c12 css-1urox24"
+                        class="c5 css-1urox24"
                       >
                         Wallet
                       </div>
@@ -2460,562 +1507,539 @@ exports[`PoolDetailsTransactionsTable renders loading state 1`] = `
                 </div>
               </div>
               <div
-                class="c1 c21"
+                class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_scroll _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _width-10037 _position-relative _justifyContent-flex-start _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopWidth-0px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _maxHeight-528px scrollbar-hidden"
               >
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                 </div>
                 <div
-                  class="c4 c5 c6 c22"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c9"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c14"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-144px"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c17"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-125px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
                   <div
-                    class="c8"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="c20"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
-                        class="c18 c19"
+                        class="c6 c7"
                         data-testid="cell-loading-bubble"
                       />
                     </div>
                   </div>
-                </div>
-              </div>
-              <div
-                class="c4 c5 c23"
-              >
-                <div
-                  class="c4 c5 c24"
-                >
-                  <svg
-                    class="c25 c26"
-                    fill="none"
-                    stroke="#FC72FF"
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M2,12 a10,10 0 0,1 10,-10 M12,22 a10,10 0 0,1 -10,-10 M22,12 a10,10 0 0,1 -10,10"
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2.5"
-                    />
-                  </svg>
-                  Loading
                 </div>
               </div>
             </div>

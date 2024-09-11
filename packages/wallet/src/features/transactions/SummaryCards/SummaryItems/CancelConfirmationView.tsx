@@ -5,12 +5,13 @@ import { Button, Flex, FlexLoader, Separator, Skeleton, Text, isWeb, useHapticFe
 import { SlashCircle } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
+import { useUSDValue } from 'uniswap/src/features/gas/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { NumberType } from 'utilities/src/format/types'
-import { useCancelationGasFeeInfo, useUSDValue } from 'wallet/src/features/gas/hooks'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { useCancelationGasFeeInfo } from 'wallet/src/features/gas/hooks'
 import { useSelectTransaction } from 'wallet/src/features/transactions/hooks'
 
 export function CancelConfirmationView({

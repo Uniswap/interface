@@ -20,7 +20,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { isMobileWeb } from 'utilities/src/platform'
 
 const DRAWER_WIDTH_XL = '390px'
-export const DRAWER_WIDTH = '320px'
+const DRAWER_WIDTH = '320px'
 const DRAWER_MARGIN = '8px'
 const DRAWER_OFFSET = '10px'
 

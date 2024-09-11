@@ -1,5 +1,5 @@
+import { SAMPLE_SEED_ADDRESS_1 } from 'uniswap/src/test/fixtures'
 import WalletPreviewCard from 'wallet/src/components/WalletPreviewCard/WalletPreviewCard'
-import { SAMPLE_SEED_ADDRESS_1 } from 'wallet/src/test/fixtures'
 import { render } from 'wallet/src/test/test-utils'
 
 it('renders wallet preview card', () => {

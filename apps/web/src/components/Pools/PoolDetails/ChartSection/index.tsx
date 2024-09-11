@@ -48,10 +48,6 @@ const ChartTypeSelectorContainer = styled.div`
   }
 `
 
-const StyledChart: typeof Chart = styled(Chart)`
-  height: ${PDP_CHART_HEIGHT_PX}px;
-`
-
 const PDPChartTypeSelector = ({
   chartType,
   onChartTypeChange,
@@ -103,8 +99,17 @@ function usePDPChartState(
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const [chartType, setChartType] = useState<PoolsDetailsChartType>(ChartType.VOLUME)
 
+  const isV2 = protocolVersion === ProtocolVersion.V2
   const isV3 = protocolVersion === ProtocolVersion.V3
-  const variables = { address: poolData?.address ?? '', chain, duration: toHistoryDuration(timePeriod), isV3 }
+  const isV4 = protocolVersion === ProtocolVersion.V4
+  const variables = {
+    addressOrId: poolData?.address ?? '',
+    chain,
+    duration: toHistoryDuration(timePeriod),
+    isV4,
+    isV3,
+    isV2,
+  }
 
   const priceQuery = usePDPPriceChartData(variables, poolData, tokenA, tokenB, isReversed)
   const volumeQuery = usePDPVolumeChartData(variables)
@@ -275,7 +280,7 @@ function PriceChart({
 
   const lastPrice = data[data.length - 1]
   return (
-    <StyledChart Model={PriceChartModel} params={params}>
+    <Chart height={PDP_CHART_HEIGHT_PX} Model={PriceChartModel} params={params}>
       {(crosshairData) => {
         const displayValue = crosshairData ?? lastPrice
         const currencyBAmountRaw = Math.floor(
@@ -303,7 +308,7 @@ function PriceChart({
           />
         )
       }}
-    </StyledChart>
+    </Chart>
   )
 }
 
@@ -399,7 +404,8 @@ function LiquidityChart({
   }
 
   return (
-    <StyledChart
+    <Chart
+      height={PDP_CHART_HEIGHT_PX}
       Model={LiquidityBarChartModel}
       params={params}
       TooltipBody={
@@ -431,6 +437,6 @@ function LiquidityChart({
         )
         return <ChartHeader value={display} />
       }}
-    </StyledChart>
+    </Chart>
   )
 }

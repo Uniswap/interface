@@ -36,7 +36,7 @@ export function NetworkFeeWarning({
           <UniswapXFeeContent uniswapXGasFeeInfo={uniswapXGasFeeInfo} />
         ) : (
           <LearnMoreLink
-            textVariant={isWeb ? 'buttonLabel4' : undefined}
+            textVariant={isWeb ? 'buttonLabel3' : undefined}
             url={uniswapUrls.helpArticleUrls.networkFeeInfo}
           />
         )
@@ -98,7 +98,7 @@ function UniswapXFeeContent({ uniswapXGasFeeInfo }: { uniswapXGasFeeInfo: Format
     <Flex gap="$spacing12">
       <Flex row centered={isMobileApp} width="100%">
         <LearnMoreLink
-          textVariant={isWeb ? 'buttonLabel4' : undefined}
+          textVariant={isWeb ? 'buttonLabel3' : undefined}
           url={uniswapUrls.helpArticleUrls.uniswapXInfo}
         />
       </Flex>

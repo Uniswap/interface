@@ -8,7 +8,7 @@ import { sendTokenActions } from 'wallet/src/features/transactions/send/sendToke
 import { SendTokenParams } from 'wallet/src/features/transactions/send/types'
 import { useActiveAccount } from 'wallet/src/features/wallet/hooks'
 
-/** Helper transfer callback for ERC20s */
+/** Helper send callback for ERC20s */
 export function useSendERC20Callback(
   txId?: string,
   chainId?: WalletChainId,
@@ -39,7 +39,7 @@ export function useSendERC20Callback(
   )
 }
 
-/** Helper transfer callback for NFTs */
+/** Helper send callback for NFTs */
 export function useSendNFTCallback(
   txId?: string,
   chainId?: WalletChainId,

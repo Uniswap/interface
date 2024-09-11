@@ -10,6 +10,7 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { SwapScreen, useSwapScreenContext } from 'uniswap/src/features/transactions/swap/contexts/SwapScreenContext'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useSwapFormContext } from 'wallet/src/features/transactions/contexts/SwapFormContext'
@@ -17,10 +18,9 @@ import { useParsedSwapWarnings } from 'wallet/src/features/transactions/hooks/us
 import { ViewOnlyModal } from 'wallet/src/features/transactions/swap/modals/ViewOnlyModal'
 import { isWrapAction } from 'wallet/src/features/transactions/swap/utils'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
-import { useIsBlocked } from 'wallet/src/features/trm/hooks'
 
 const KEEP_OPEN_MSG_DELAY = 3 * ONE_SECOND_MS
-export const SWAP_BUTTON_TEXT_VARIANT = isWeb ? 'buttonLabel2' : 'buttonLabel1'
+export const SWAP_BUTTON_TEXT_VARIANT = 'buttonLabel1'
 
 export function SwapFormButton(): JSX.Element {
   const { t } = useTranslation()
@@ -38,7 +38,7 @@ export function SwapFormButton(): JSX.Element {
 
   const { isBlocked, isBlockedLoading } = useIsBlocked(activeAccount?.address)
 
-  const noValidSwap = !isWrapAction(wrapType) && !trade.trade
+  const noValidSwap = !isWrapAction(wrapType) && !trade.trade && !trade.indicativeTrade
 
   const reviewButtonDisabled =
     noValidSwap || !!blockingWarning || isBlocked || isBlockedLoading || walletNeedsRestore || isSubmitting
@@ -67,6 +67,7 @@ export function SwapFormButton(): JSX.Element {
   const buttonBgColor = hasButtonWarning ? '$surface3' : isSubmitting ? '$accent2' : '$accent1'
   const buttonOpacity = isViewOnlyWallet ? 0.4 : isSubmitting ? 1 : undefined
 
+  // TODO(WEB-4821): Remove uniswapx submission logic since this component will no longer be rendered during submission
   const showUniswapXSubmittingUI = trade.trade && isUniswapX(trade?.trade) && isSubmitting
 
   return (

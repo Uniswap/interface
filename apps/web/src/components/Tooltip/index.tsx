@@ -2,7 +2,7 @@ import { Placement } from '@popperjs/core'
 import Popover, { PopoverProps } from 'components/Popover'
 import styled from 'lib/styled-components'
 import { transparentize } from 'polished'
-import { PropsWithChildren, ReactNode, useCallback, useEffect, useState } from 'react'
+import { PropsWithChildren, ReactNode, memo, useCallback, useEffect, useState } from 'react'
 import noop from 'utilities/src/react/noop'
 
 export enum TooltipSize {
@@ -83,7 +83,7 @@ type MouseoverTooltipProps = Omit<PopoverProps, 'content' | 'show'> &
     forceShow?: boolean
   }>
 
-export function MouseoverTooltip(props: MouseoverTooltipProps) {
+export const MouseoverTooltip = memo(function MouseoverTooltip(props: MouseoverTooltipProps) {
   const { text, disabled, children, onOpen, forceShow, timeout, ...rest } = props
   const [show, setShow] = useState(false)
   const open = () => {
@@ -119,7 +119,7 @@ export function MouseoverTooltip(props: MouseoverTooltipProps) {
       </div>
     </Tooltip>
   )
-}
+})
 
 const CursorFollowerContainer = styled.div`
   position: fixed;

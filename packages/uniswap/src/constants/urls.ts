@@ -81,6 +81,7 @@ export const uniswapUrls = {
   gasServicePath: '/v1/gas-fee',
   tradingApiPaths: {
     quote: '/v1/quote',
+    indicativeQuote: '/v1/indicative_quote',
     approval: '/v1/check_approval',
     swap: '/v1/swap',
     order: '/v1/order',

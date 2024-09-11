@@ -72,7 +72,7 @@ export const TokenLogo = memo(function _TokenLogo({
       size={{ height: size, width: size }}
       style={{
         image: {
-          backgroundColor: colors.surface3.val,
+          backgroundColor: colors.white.val,
           borderRadius: size / 2,
         },
       }}

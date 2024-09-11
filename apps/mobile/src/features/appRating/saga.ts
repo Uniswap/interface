@@ -9,6 +9,7 @@ import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n/i18n'
 import { openUri } from 'uniswap/src/utils/linking'
+import { isJestRun } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
@@ -20,6 +21,15 @@ const MIN_PROMPT_REMINDER_MS = 120 * ONE_DAY_MS
 const MIN_FEEDBACK_REMINDER_MS = 180 * ONE_DAY_MS
 // small delay to help ux
 const SWAP_FINALIZED_PROMPT_DELAY_MS = 3 * ONE_SECOND_MS
+
+try {
+  if (!isJestRun) {
+    import('expo-store-review')
+  }
+} catch (error) {
+  const message = error instanceof Error ? error.message : 'Store Review import error'
+  logger.warn('appRating/saga.ts', 'init', message)
+}
 
 // Wrap the StoreReview import in a function that catches the specific error
 const getStoreReview = async () => {

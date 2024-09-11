@@ -17,6 +17,7 @@ export function SwipeableCard({
   stackIndex,
   cardHeight,
   disableSwipe,
+  onPress,
   onSwiped,
   onLayout,
 }: SwipeableCardProps): JSX.Element {
@@ -63,13 +64,21 @@ export function SwipeableCard({
       }
     })
 
+  const tap = Gesture.Tap()
+    .enabled(!!onPress)
+    .runOnJS(true)
+    .onEnd(() => {
+      onPress?.()
+    })
+  const composed = Gesture.Race(pan, tap)
+
   const animatedStyle = useAnimatedStyle(() => {
     return {
       transform: [{ translateX: panOffset.value }, { translateY: yOffset.value }, { scale: scale.value }],
     }
   })
   return (
-    <GestureDetector gesture={pan}>
+    <GestureDetector gesture={composed}>
       <AnimatedFlex
         minHeight={cardHeight ? cardHeight : undefined}
         style={animatedStyle}

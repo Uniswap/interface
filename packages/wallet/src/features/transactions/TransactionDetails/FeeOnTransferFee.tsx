@@ -1,7 +1,7 @@
 import { Percent } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
-import { useLocalizationContext } from 'wallet/src/features/language/LocalizationContext'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { FeeOnTransferWarning } from 'wallet/src/features/transactions/swap/modals/FeeOnTransferWarning'
 
 export type FeeOnTransferFeeGroupProps = {

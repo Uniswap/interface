@@ -5,11 +5,12 @@ import { getFirebaseUidOrError, getFirestoreMetadataRef, getFirestoreUidRef } fr
 import { getOneSignalUserIdOrError } from 'src/features/notifications/Onesignal'
 import { all, call, put, select, takeEvery, takeLatest } from 'typed-redux-saga'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { Language } from 'uniswap/src/features/language/constants'
+import { getLocale } from 'uniswap/src/features/language/hooks'
+import { selectCurrentLanguage } from 'uniswap/src/features/settings/selectors'
+import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
 import { logger } from 'utilities/src/logger/logger'
 import { getKeys } from 'utilities/src/primitives/objects'
-import { Language } from 'wallet/src/features/language/constants'
-import { getLocale } from 'wallet/src/features/language/hooks'
-import { selectCurrentLanguage, setCurrentLanguage } from 'wallet/src/features/language/slice'
 import {
   EditAccountAction,
   TogglePushNotificationParams,

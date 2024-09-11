@@ -54,6 +54,7 @@ interface CrosshairHighlightData {
 interface HighlightBarCrosshairOptions {
   color: string
   crosshairYPosition: number
+  useThinCrosshair?: boolean
 }
 
 class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
@@ -81,16 +82,25 @@ class CrosshairHighlightPaneRenderer implements ISeriesPrimitivePaneRenderer {
         ) * 0.035
       const crosshairXPosition = crosshairPos.position + margin
 
-      // Modification: use rounded rectangle
+      // Modification: use centered 2px wide line to top
       ctx.beginPath()
-      ctx.roundRect(
-        crosshairXPosition,
-        crosshairYPosition,
-        crosshairPos.length,
-        scope.bitmapSize.height - crosshairYPosition,
-        9,
-      )
-      ctx.fill()
+      if (this._data.useThinCrosshair) {
+        ctx.fillRect(
+          crosshairXPosition + crosshairPos.length / 2,
+          crosshairYPosition,
+          2,
+          scope.bitmapSize.height - crosshairYPosition,
+        )
+      } else {
+        ctx.roundRect(
+          crosshairXPosition,
+          crosshairYPosition,
+          crosshairPos.length,
+          scope.bitmapSize.height - crosshairYPosition,
+          9,
+        )
+        ctx.fill()
+      }
 
       // Modification: lower opacity of all content outside the highlight bar
       ctx.globalCompositeOperation = 'destination-out'

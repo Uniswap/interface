@@ -4,23 +4,61 @@ import {
   SelectWalletScreenDocument,
   SelectWalletScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useENSName } from 'uniswap/src/features/ens/api'
 import { useAsyncData } from 'utilities/src/react/hooks'
+import { NUMBER_OF_WALLETS_TO_GENERATE } from 'wallet/src/features/onboarding/OnboardingContext'
 import { fetchUnitagByAddresses } from 'wallet/src/features/unitags/api'
 
-export interface ImportableAccount {
-  ownerAddress: string
-  balance: number | undefined
+export interface AddressWithBalanceAndName {
+  address: string
+  balance?: number
+  unitag?: string
+  ensName?: string
 }
 
-function isImportableAccount(account: {
-  ownerAddress: string | undefined
-  balance: Maybe<number>
-}): account is ImportableAccount {
-  return (account as ImportableAccount).ownerAddress !== undefined
+export function hasBalanceOrName(a: AddressWithBalanceAndName): boolean {
+  return Boolean((a.balance && a.balance > 0) || a.ensName || a.unitag)
 }
 
 export function useImportableAccounts(importedAddresses?: Address[]): {
-  importableAccounts?: ImportableAccount[]
+  importableAccounts?: AddressWithBalanceAndName[]
+  isLoading: boolean
+  showError?: boolean
+  refetch: () => void
+} {
+  const isLoadingAddresses = importedAddresses?.length !== NUMBER_OF_WALLETS_TO_GENERATE
+
+  const { addressInfoMap, isLoading, showError, refetch } = useAddressesBalanceAndNames(
+    isLoadingAddresses ? undefined : importedAddresses,
+  )
+
+  const accountsWithBalanceOrName = Object.values(addressInfoMap ?? {}).filter(hasBalanceOrName)
+
+  const importableAccounts: AddressWithBalanceAndName[] | undefined = useMemo(() => {
+    if (accountsWithBalanceOrName.length > 0) {
+      // If there's accounts of significance, return them
+      return accountsWithBalanceOrName
+    } else if (!isLoading && importedAddresses && importedAddresses[0]) {
+      // if there's no significant accounts, return the first address
+      return [{ address: importedAddresses[0] }]
+    } else if (!isLoading && !importedAddresses?.length) {
+      throw new Error('No imported addresses found')
+    } else {
+      // otherwise return undefined, still loading
+      return undefined
+    }
+  }, [accountsWithBalanceOrName, importedAddresses, isLoading])
+
+  return {
+    importableAccounts,
+    isLoading,
+    showError,
+    refetch,
+  }
+}
+
+export function useAddressesBalanceAndNames(addresses?: Address[]): {
+  addressInfoMap?: AddressTo<AddressWithBalanceAndName>
   isLoading: boolean
   showError?: boolean
   refetch: () => void
@@ -28,79 +66,119 @@ export function useImportableAccounts(importedAddresses?: Address[]): {
   const [refetchCount, setRefetchCount] = useState(0)
   const apolloClient = useApolloClient()
 
+  const addressesArray = useMemo(() => (addresses ? addresses : []), [addresses])
+
+  const isLoadingAddresses = addressesArray.length === 0
+
   const refetch = useCallback(async () => {
     setRefetchCount((count) => count + 1)
     return refetch()
   }, [])
 
-  const fetch = useCallback(async (): Promise<ImportableAccount[] | undefined> => {
-    if (!importedAddresses) {
-      return
+  const { ensMap, loading: ensLoading } = useAddressesEnsNames(addressesArray)
+
+  const fetch = useCallback(async (): Promise<AddressTo<AddressWithBalanceAndName>> => {
+    if (isLoadingAddresses || ensLoading) {
+      return {}
     }
 
-    const valueModifiers = importedAddresses.map((addr) => ({
+    const valueModifiers = addressesArray.map((addr) => ({
       ownerAddress: addr,
       includeSmallBalances: true,
       includeSpamTokens: false,
     }))
-
     const fetchBalances = apolloClient.query<SelectWalletScreenQuery>({
       query: SelectWalletScreenDocument,
-      variables: { ownerAddresses: importedAddresses, valueModifiers },
+      variables: { ownerAddresses: addressesArray, valueModifiers },
     })
 
-    const fetchUnitags = fetchUnitagByAddresses(importedAddresses)
+    const fetchUnitags = fetchUnitagByAddresses(addressesArray)
 
     const [balancesResponse, unitagsResponse] = await Promise.all([fetchBalances, fetchUnitags])
 
-    const unitagsByAddress = unitagsResponse?.data
+    const unitagsByAddress = unitagsResponse?.data ?? {}
 
-    const allAddressBalances = balancesResponse.data.portfolios
+    const balancesByAddress = (balancesResponse?.data?.portfolios ?? []).reduce(
+      (balances: AddressTo<number | undefined>, portfolios): AddressTo<number | undefined> => {
+        if (portfolios?.ownerAddress) {
+          balances[portfolios.ownerAddress] = portfolios.tokensTotalDenominatedValue?.value
+        }
+        return balances
+      },
+      {},
+    )
 
-    const importableAccounts = allAddressBalances
-      ?.map((address) => ({
-        ownerAddress: address?.ownerAddress,
-        balance: address?.tokensTotalDenominatedValue?.value,
-      }))
-      .filter(isImportableAccount)
+    const dataMap: AddressTo<AddressWithBalanceAndName> = addressesArray.reduce((map, address) => {
+      const entry = {
+        address,
+        balance: balancesByAddress[address],
+        unitag: unitagsByAddress[address]?.username,
+        ensName: ensMap?.[address],
+      }
+      map[entry.address] = entry
+      return map
+    }, {} as AddressTo<AddressWithBalanceAndName>)
 
-    const accountsWithBalanceOrUnitag: ImportableAccount[] | undefined = importableAccounts?.filter((address) => {
-      const hasBalance = Boolean(address.balance && address.balance > 0)
-      const hasUnitag = unitagsByAddress?.[address.ownerAddress] !== undefined
-      return hasBalance || hasUnitag
-    })
-
-    if (accountsWithBalanceOrUnitag?.length) {
-      return accountsWithBalanceOrUnitag
-    }
-
-    // If all addresses have 0 total token value and no unitags are associated with any of them, show the first address.
-    const firstImportableAccount: ImportableAccount | undefined = importableAccounts?.[0]
-    if (firstImportableAccount) {
-      return [firstImportableAccount]
-    }
-
-    // If query for address balances returned no results, show the first address.
-    const firstPendingAddress = importedAddresses[0]
-    if (firstPendingAddress) {
-      return [{ ownerAddress: firstPendingAddress, balance: undefined }]
-    }
-
-    throw new Error('No importable accounts found')
+    return dataMap
 
     // We use `refetchCount` as a dependency to manually trigger a refetch when calling the `refetch` function.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [importedAddresses, apolloClient, refetchCount])
+  }, [addressesArray, isLoadingAddresses, ensMap, ensLoading, apolloClient, refetchCount])
 
   const response = useAsyncData(fetch)
 
   return useMemo(
     () => ({
-      importableAccounts: response.data,
-      isLoading: response.isLoading || !importedAddresses,
+      addressInfoMap: response.data,
+      isLoading: response.isLoading || isLoadingAddresses,
       error: response.error && !response.data?.length,
       refetch,
     }),
-    [importedAddresses, refetch, response],
+    [isLoadingAddresses, refetch, response.data, response.error, response.isLoading],
   )
+}
+
+export function useAddressesEnsNames(addresses: Address[]): {
+  loading: boolean
+  ensMap?: AddressTo<string>
+} {
+  // Need to fetch ENS names for each derivation index
+  const ensNameStates: Array<ReturnType<typeof useENSName> | undefined> = useMemo(
+    () => Array(NUMBER_OF_WALLETS_TO_GENERATE) as undefined[],
+    [],
+  )
+
+  ensNameStates[0] = useENSName(addresses[0])
+  ensNameStates[1] = useENSName(addresses[1])
+  ensNameStates[2] = useENSName(addresses[2])
+  ensNameStates[3] = useENSName(addresses[3])
+  ensNameStates[4] = useENSName(addresses[4])
+  ensNameStates[5] = useENSName(addresses[5])
+  ensNameStates[6] = useENSName(addresses[6])
+  ensNameStates[7] = useENSName(addresses[7])
+  ensNameStates[8] = useENSName(addresses[8])
+  ensNameStates[9] = useENSName(addresses[9])
+
+  // Using these values to recalculate dependency array
+  const ensLoading = ensNameStates.some((ensState) => ensState?.isLoading)
+
+  const nameMap = useMemo((): AddressTo<string> => {
+    // skip if not all loaded
+    if (ensLoading) {
+      return {}
+    }
+
+    return addresses.reduce((map: AddressTo<string>, address: string, index: number) => {
+      const nameData = ensNameStates[index]?.data
+      if (nameData) {
+        map[address] = nameData
+      }
+      return map
+    }, {})
+  }, [addresses, ensLoading, ensNameStates])
+
+  return {
+    ensMap: ensLoading ? undefined : nameMap,
+    loading: ensLoading,
+  }
 }

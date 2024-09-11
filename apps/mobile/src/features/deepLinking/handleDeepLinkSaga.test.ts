@@ -14,15 +14,15 @@ import { waitForWcWeb3WalletIsReady } from 'src/features/walletConnect/saga'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { MobileScreens } from 'uniswap/src/types/screens/mobile'
-import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import {
   SAMPLE_CURRENCY_ID_1,
   SAMPLE_CURRENCY_ID_2,
   SAMPLE_SEED_ADDRESS_1,
   SAMPLE_SEED_ADDRESS_2,
-  signerMnemonicAccount,
-} from 'wallet/src/test/fixtures'
+} from 'uniswap/src/test/fixtures'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
+import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const account = signerMnemonicAccount()
 

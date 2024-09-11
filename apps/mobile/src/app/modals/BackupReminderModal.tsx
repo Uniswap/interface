@@ -1,37 +1,45 @@
-import { useState } from 'react'
+import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { closeModal } from 'src/features/modals/modalSlice'
+import { closeModal, openModal } from 'src/features/modals/modalSlice'
 import { LockPreviewImage } from 'src/features/onboarding/LockPreviewImage'
 import { Button, Flex, Text } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { setBackupReminderLastSeenTs } from 'wallet/src/features/behaviorHistory/slice'
 
 export function BackupReminderModal(): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
-  const [isShowingWarningModal, setIsShowingWarningModal] = useState(false)
-
-  const showWarningModal = (): void => {
-    setIsShowingWarningModal(true)
-  }
-
-  const hideWarningModal = (): void => {
-    setIsShowingWarningModal(false)
-  }
+  const closedByButtonRef = useRef<boolean>(false)
 
   const onClose = (): void => {
-    dispatch(setBackupReminderLastSeenTs(Date.now()))
     dispatch(closeModal({ name: ModalName.BackupReminder }))
   }
 
+  const checkForSwipeToDismiss = (): void => {
+    if (!closedByButtonRef.current) {
+      // Modal was swiped to dismiss, should open the BackupReminderWarning modal
+      dispatch(openModal({ name: ModalName.BackupReminderWarning }))
+    }
+
+    // Reset the ref and close the modal
+    closedByButtonRef.current = false
+    onClose()
+  }
+
+  const onPressMaybeLater = (): void => {
+    closedByButtonRef.current = true
+    dispatch(openModal({ name: ModalName.BackupReminderWarning }))
+    onClose()
+  }
+
   const onPressBackup = (): void => {
+    closedByButtonRef.current = true
+    dispatch(setBackupReminderLastSeenTs(Date.now()))
     navigate(MobileScreens.OnboardingStack, {
       screen: OnboardingScreens.Backup,
       params: { importType: ImportType.BackupOnly, entryPoint: OnboardingEntryPoint.BackupCard },
@@ -39,8 +47,8 @@ export function BackupReminderModal(): JSX.Element {
     onClose()
   }
 
-  return !isShowingWarningModal ? (
-    <Modal name={ModalName.BackupReminder} onClose={showWarningModal}>
+  return (
+    <Modal isModalOpen name={ModalName.BackupReminder} onClose={checkForSwipeToDismiss}>
       <Flex gap="$spacing24" pb="$spacing16" pt="$spacing12" px="$spacing16">
         <LockPreviewImage />
         <Flex alignItems="center" gap="$spacing4">
@@ -56,7 +64,7 @@ export function BackupReminderModal(): JSX.Element {
             flex={1}
             size="medium"
             theme="secondary"
-            onPress={showWarningModal}
+            onPress={onPressMaybeLater}
           >
             {t('common.button.later')}
           </Button>
@@ -66,18 +74,5 @@ export function BackupReminderModal(): JSX.Element {
         </Flex>
       </Flex>
     </Modal>
-  ) : (
-    <WarningModal
-      caption={t('onboarding.backup.reminder.warning.description')}
-      closeText={t('common.button.back')}
-      confirmText={t('common.button.understand')}
-      isOpen={isShowingWarningModal}
-      modalName={ModalName.BackupReminderWarning}
-      severity={WarningSeverity.High}
-      title={t('onboarding.backup.reminder.warning.title')}
-      onCancel={hideWarningModal}
-      onClose={onClose}
-      onConfirm={onClose}
-    />
   )
 }

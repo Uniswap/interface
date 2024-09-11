@@ -8,16 +8,18 @@ export {
   Image,
   Input,
   ListItem,
+  Paragraph,
   Popover,
   Portal,
+  RadioGroup,
   ScrollView,
   Select,
   Sheet,
   Square,
-  Switch,
   Tabs,
   TamaguiProvider,
   Theme,
+  View,
   YGroup,
   getToken,
   getTokenValue,
@@ -37,7 +39,9 @@ export type {
   InputProps,
   PopperProps,
   SpaceTokens,
-  SwitchProps,
+  TabLayout,
+  TabsTabProps,
+  TamaguiElement,
   TamaguiProviderProps,
   ThemeKeys,
   Tokens,
@@ -45,22 +49,23 @@ export type {
 } from 'tamagui'
 export { LinearGradient } from 'tamagui/linear-gradient'
 export * from 'ui/src/animations'
-export { AddressQRCode, QRCodeDisplay } from './components/QRCode'
-export type { GradientProps } from './components/QRCode'
+export { QRCodeDisplay } from './components/QRCode/QRCodeDisplay'
 export { Unicon } from './components/Unicon'
 export * from './components/Unicon/utils'
 export * from './components/UniversalImage/UniversalImage'
 export * from './components/UniversalImage/types'
 export * from './components/UniversalImage/utils'
 export { Button } from './components/button/Button'
+export * from './components/checkbox'
 export type { GeneratedIcon, IconProps } from './components/factories/createIcon'
-export * from './components/input/CheckBox'
 export * from './components/input/utils'
 export { Flex, Inset, Separator, flexStyles, type FlexProps } from './components/layout'
 export { ContextMenu } from './components/menu/ContextMenu'
 export { MenuContent } from './components/menu/MenuContent'
 export type { MenuContentItem } from './components/menu/types'
 export { AdaptiveWebModal, WebBottomSheet } from './components/modal/AdaptiveWebModal'
+export * from './components/radio/Radio'
+export { Switch, type SwitchProps } from './components/switch/Switch'
 export * from './components/text'
 export { Tooltip } from './components/tooltip/Tooltip'
 export * from './components/touchable'
@@ -76,6 +81,7 @@ export * from './utils/haptics/useHapticFeedback'
 export * from './styles/ScrollbarStyles'
 export * from './theme/shadows'
 export * from './utils/colors'
+export * from './utils/tamagui'
 
 // Loaders
 export * from './loading/FlexLoader'

@@ -1,9 +1,9 @@
 import { PersistState } from 'redux-persist'
-import { UserState } from 'state/user/reducer'
+import { PreV16UserState } from 'state/migrations/oldTypes'
 
 export type PersistAppStateV7 = {
   _persist: PersistState
-} & { user?: UserState & { hideAndroidAnnouncementBanner?: boolean; hideAppPromoBanner: boolean } }
+} & { user?: PreV16UserState & { hideAndroidAnnouncementBanner?: boolean; hideAppPromoBanner: boolean } }
 
 /**
  * Migration to rename hideAndroidAnnouncementBanner to hideAppPromoBanner.

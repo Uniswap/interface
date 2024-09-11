@@ -1,12 +1,10 @@
 import { useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { TextInput } from 'react-native'
-import { PasswordInput as Input } from 'src/components/input/PasswordInput'
+import { PasswordInput } from 'src/components/input/PasswordInput'
 import { useCloudBackupPasswordFormContext } from 'src/features/CloudBackup/CloudBackupForm/CloudBackupPasswordFormContext'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
 import { Flex, Text } from 'ui/src'
-import { DiamondExclamation } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
 import { useDebounce } from 'utilities/src/time/timing'
 import {
   PASSWORD_VALIDATION_DEBOUNCE_MS,
@@ -15,7 +13,7 @@ import {
   getPasswordStrengthTextAndColor,
 } from 'wallet/src/utils/password'
 
-export function PasswordInput(): JSX.Element {
+export function CloudPasswordInput(): JSX.Element {
   const { password, error, passwordStrength, isConfirmation, onPasswordChangeText, onPasswordSubmitEditing } =
     useCloudBackupPasswordFormContext()
   const debouncedPasswordStrength = useDebounce(passwordStrength, PASSWORD_VALIDATION_DEBOUNCE_MS)
@@ -34,7 +32,7 @@ export function PasswordInput(): JSX.Element {
   return (
     <Flex gap="$spacing24" mb="$spacing24">
       <Flex gap="$spacing8">
-        <Input
+        <PasswordInput
           ref={passwordInputRef}
           placeholder={
             isConfirmation
@@ -51,14 +49,6 @@ export function PasswordInput(): JSX.Element {
         {!isConfirmation && <PasswordStrengthText strength={debouncedPasswordStrength} />}
         {error ? <PasswordError errorText={errorText} /> : null}
       </Flex>
-      {!isConfirmation && (
-        <Flex centered row gap="$spacing12" px="$spacing16">
-          <DiamondExclamation color="$neutral2" size={iconSizes.icon20} />
-          <Text color="$neutral2" variant="body3">
-            {t('settings.setting.backup.password.disclaimer')}
-          </Text>
-        </Flex>
-      )}
     </Flex>
   )
 }

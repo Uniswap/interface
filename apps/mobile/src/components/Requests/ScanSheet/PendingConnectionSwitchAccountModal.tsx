@@ -36,6 +36,7 @@ export const PendingConnectionSwitchAccountModal = ({ activeAccount, onPressAcco
           <Text variant="buttonLabel2">{t('walletConnect.pending.switchAccount')}</Text>
         </Flex>
       }
+      isDismissible={false}
       isVisible={true}
       name={ModalName.AccountEdit}
       options={options}

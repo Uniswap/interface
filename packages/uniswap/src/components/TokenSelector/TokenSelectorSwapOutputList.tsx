@@ -1,15 +1,22 @@
 import { memo, useCallback, useMemo } from 'react'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
-import { filterRecentlySearchedTokenOptions } from 'uniswap/src/components/TokenSelector/hooks'
+import {
+  useCommonTokensOptions,
+  useFavoriteTokensOptions,
+  usePopularTokensOptions,
+  usePortfolioTokenOptions,
+  useRecentlySearchedTokens,
+} from 'uniswap/src/components/TokenSelector/hooks'
 import {
   ConvertFiatAmountFormattedCallback,
   OnSelectCurrency,
   TokenOptionSection,
-  TokenSectionsForSwapOutput,
-  TokenSelectorListSections,
+  TokenSection,
+  TokenSectionsHookProps,
 } from 'uniswap/src/components/TokenSelector/types'
-import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
+import { isSwapListLoading, useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
+// eslint-disable-next-line no-restricted-imports
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isExtension } from 'utilities/src/platform'
@@ -17,19 +24,13 @@ import { isExtension } from 'utilities/src/platform'
 function useTokenSectionsForSwapOutput({
   activeAccountAddress,
   chainFilter,
-  searchHistory,
-  valueModifiers,
-  usePortfolioTokenOptionsHook,
-  usePopularTokensOptionsHook,
-  useFavoriteTokensOptionsHook,
-  useCommonTokensOptionsHook,
-}: TokenSectionsForSwapOutput): GqlResult<TokenSelectorListSections> {
+}: TokenSectionsHookProps): GqlResult<TokenSection[]> {
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
     refetch: refetchPortfolioTokenOptions,
     loading: portfolioTokenOptionsLoading,
-  } = usePortfolioTokenOptionsHook(activeAccountAddress, chainFilter, valueModifiers)
+  } = usePortfolioTokenOptions(activeAccountAddress, chainFilter)
 
   const {
     data: popularTokenOptions,
@@ -37,14 +38,14 @@ function useTokenSectionsForSwapOutput({
     refetch: refetchPopularTokenOptions,
     loading: popularTokenOptionsLoading,
     // if there is no chain filter then we show mainnet tokens
-  } = usePopularTokensOptionsHook(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet, valueModifiers)
+  } = usePopularTokensOptions(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
 
   const {
     data: favoriteTokenOptions,
     error: favoriteTokenOptionsError,
     refetch: refetchFavoriteTokenOptions,
     loading: favoriteTokenOptionsLoading,
-  } = useFavoriteTokensOptionsHook(activeAccountAddress, chainFilter, valueModifiers)
+  } = useFavoriteTokensOptions(activeAccountAddress, chainFilter)
 
   const {
     data: commonTokenOptions,
@@ -52,9 +53,9 @@ function useTokenSectionsForSwapOutput({
     refetch: refetchCommonTokenOptions,
     loading: commonTokenOptionsLoading,
     // if there is no chain filter then we show mainnet tokens
-  } = useCommonTokensOptionsHook(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet, valueModifiers)
+  } = useCommonTokensOptions(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
 
-  const recentlySearchedTokenOptions = filterRecentlySearchedTokenOptions(chainFilter, searchHistory)
+  const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
   const error =
     (!portfolioTokenOptions && portfolioTokenOptionsError) ||
@@ -82,9 +83,9 @@ function useTokenSectionsForSwapOutput({
   const favoriteSection = useTokenOptionsSection(TokenOptionSection.FavoriteTokens, favoriteTokenOptions)
   const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularTokenOptions)
 
-  const sections = useMemo<TokenSelectorListSections>(() => {
-    if (loading) {
-      return []
+  const sections = useMemo(() => {
+    if (isSwapListLoading(loading, portfolioSection, popularSection)) {
+      return
     }
 
     return [
@@ -114,25 +115,14 @@ function _TokenSelectorSwapOutputList({
   onSelectCurrency,
   activeAccountAddress,
   chainFilter,
-  searchHistory,
-  valueModifiers,
   isKeyboardOpen,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
-  useCommonTokensOptionsHook,
-  useFavoriteTokensOptionsHook,
-  usePopularTokensOptionsHook,
-  usePortfolioTokenOptionsHook,
-  useTokenWarningDismissedHook,
-}: TokenSectionsForSwapOutput & {
+}: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
-  useTokenWarningDismissedHook: (currencyId: Maybe<string>) => {
-    tokenWarningDismissed: boolean
-    dismissWarningCallback: () => void
-  }
   onDismiss: () => void
 }): JSX.Element {
   const {
@@ -143,14 +133,7 @@ function _TokenSelectorSwapOutputList({
   } = useTokenSectionsForSwapOutput({
     activeAccountAddress,
     chainFilter,
-    searchHistory,
-    valueModifiers,
-    usePortfolioTokenOptionsHook,
-    usePopularTokensOptionsHook,
-    useFavoriteTokensOptionsHook,
-    useCommonTokensOptionsHook,
   })
-
   return (
     <TokenSelectorList
       chainFilter={chainFilter}
@@ -162,7 +145,6 @@ function _TokenSelectorSwapOutputList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
-      useTokenWarningDismissedHook={useTokenWarningDismissedHook}
       onDismiss={onDismiss}
       onSelectCurrency={onSelectCurrency}
     />

@@ -1,8 +1,15 @@
 import { trimToLength } from 'utilities/src/primitives/string'
 
+export class PlatformSplitStubError extends Error {
+  constructor(functionName: string) {
+    super(`${functionName} not implemented. Did you forget a platform override?`)
+    this.name = this.constructor.name
+  }
+}
+
 export class NotImplementedError extends Error {
   constructor(functionName: string) {
-    super(`${functionName}() not implemented. Did you forget a platform override?`)
+    super(`${functionName} is not implemented on this platform.`)
     this.name = this.constructor.name
   }
 }

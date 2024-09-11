@@ -4,10 +4,11 @@ import { Button } from 'ui/src'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { WarningAction } from 'uniswap/src/features/transactions/WarningModal/types'
+import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { SendScreen, useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { createTransactionId } from 'wallet/src/features/transactions/utils'
-import { useIsBlocked, useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
+import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function SendFormButton({

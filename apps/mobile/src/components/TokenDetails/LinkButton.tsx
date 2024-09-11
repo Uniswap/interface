@@ -77,7 +77,7 @@ export function LinkButton({
       >
         <Flex centered row shrink gap="$spacing8" width="auto">
           {Icon && <Icon color={colors.neutral1.get()} size="$icon.16" />}
-          <Text $short={{ variant: 'buttonLabel4' }} color="$neutral1" variant="buttonLabel3">
+          <Text $short={{ variant: 'buttonLabel3' }} color="$neutral1" variant="buttonLabel2">
             {label}
           </Text>
           {buttonType === LinkButtonType.Copy && (

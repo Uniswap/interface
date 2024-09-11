@@ -29,6 +29,7 @@ import { DynamicConfigs, UwuLinkConfigKey } from 'uniswap/src/features/gating/co
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { getDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import i18n from 'uniswap/src/i18n/i18n'
@@ -43,7 +44,6 @@ import { ScantasticParams } from 'wallet/src/features/scantastic/types'
 import { getContractManager, getProviderManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts, selectActiveAccount, selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 import { setAccountAsActive } from 'wallet/src/features/wallet/slice'
-import { UNISWAP_APP_NATIVE_TOKEN } from 'wallet/src/utils/linking'
 
 export interface DeepLink {
   url: string
@@ -62,7 +62,7 @@ const NFT_ITEM_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/asset\/(0x[a-fA-F0-9]{40})\
 const NFT_COLLECTION_SHARE_LINK_HASH_REGEX = /^(#\/)?nfts\/collection\/(0x[a-fA-F0-9]{40})$/
 const TOKEN_SHARE_LINK_HASH_REGEX = RegExp(
   // eslint-disable-next-line no-useless-escape
-  `^(#\/)?tokens\/([\\w\\d]*)\/(0x[a-fA-F0-9]{40}|${UNISWAP_APP_NATIVE_TOKEN})$`,
+  `^(#\/)?tokens\/([\\w\\d]*)\/(0x[a-fA-F0-9]{40}|${BACKEND_NATIVE_CHAIN_ADDRESS_STRING})$`,
 )
 const ADDRESS_SHARE_LINK_HASH_REGEX = /^(#\/)?address\/(0x[a-fA-F0-9]{40})$/
 
@@ -135,7 +135,7 @@ export function* handleUniswapAppDeepLink(path: string, url: string, linkSource:
       return
     }
     const currencyId =
-      contractAddress === UNISWAP_APP_NATIVE_TOKEN
+      contractAddress === BACKEND_NATIVE_CHAIN_ADDRESS_STRING
         ? buildNativeCurrencyId(chainId)
         : buildCurrencyId(chainId, contractAddress)
     yield* put(
