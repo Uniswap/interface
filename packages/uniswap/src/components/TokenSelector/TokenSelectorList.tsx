@@ -1,6 +1,6 @@
 import { memo, useCallback, useEffect, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimateTransition, Flex, Loader, Skeleton, Text } from 'ui/src'
+import { AnimateTransition, Flex, Loader, Skeleton, Text, isWeb } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/TokenOptionItem'
@@ -220,7 +220,7 @@ function _TokenSelectorList({
             <Loader.Box height={fonts.subheading2.lineHeight} />
           </Skeleton>
         </Flex>
-        <Loader.Token gap="$none" repeat={15} />
+        <Loader.Token gap={isWeb ?? '$none'} repeat={15} />
       </Flex>
       <TokenSectionBaseList
         ListEmptyComponent={emptyElement || <EmptyResults />}

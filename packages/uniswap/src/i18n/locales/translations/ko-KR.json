@@ -9,7 +9,7 @@
   "account.cloud.error.backup.message": "권한 부족, 승인 중단 또는 클라우드 오류로 인해 백업을 가져오지 못했습니다.",
   "account.cloud.error.backup.title": "백업을 가져오는 중 오류가 발생했습니다.",
   "account.cloud.error.password.title": "유효하지 않은 비밀번호. 다시 시도해 주세요.",
-  "account.cloud.error.unavailable.button.cancel": "지금은 아님",
+  "account.cloud.error.unavailable.button.cancel": "나중에",
   "account.cloud.error.unavailable.button.settings": "설정으로 바로 가기",
   "account.cloud.error.unavailable.message.android": "이 기기에서 Google 드라이브를 활성화한 상태로 Google 계정에 로그인했는지 확인한 후 다시 시도해 주세요.",
   "account.cloud.error.unavailable.message.ios": "이 기기에서 iCloud Drive가 활성화된 Apple ID로 로그인했는지 확인한 후 다시 시도하십시오.",

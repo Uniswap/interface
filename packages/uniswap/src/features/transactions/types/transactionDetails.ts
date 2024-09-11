@@ -40,8 +40,8 @@ export type TransactionListQueryResponse = NonNullable<
 >[0]
 
 /**
- * Marks if a transaction was initiated natively within app, or from external source.
- * External transactions are initiated from dapps, WC, uwulink, etc.
+ * Marks if a transaction was initiated natively within app, or from external source. 
+ * External transactions are initiated from dapps, WC, uwulink, etc. 
  */
 export enum TransactionOriginType  {
   Internal = 'internal',
@@ -52,7 +52,7 @@ interface BaseTransactionDetails extends TransactionId {
   from: Address
 
   transactionOriginType: TransactionOriginType
-
+  
   // Specific info for the tx type
   typeInfo: TransactionTypeInfo
 
@@ -296,7 +296,7 @@ export interface OnRampTransactionInfo extends BaseTransactionInfo {
   id: string
   destinationTokenSymbol: string
   destinationTokenAddress: string
-  destinationTokenAmount?: number
+  destinationTokenAmount: number
   serviceProvider: ServiceProviderInfo
   // Fees are in units of the sourceCurrency for purchases,
   // and in units of the destinationToken for transfers
@@ -308,7 +308,7 @@ export interface OnRampTransactionInfo extends BaseTransactionInfo {
 export interface OnRampPurchaseInfo extends OnRampTransactionInfo {
   type: TransactionType.OnRampPurchase
   sourceCurrency: string
-  sourceAmount?: number
+  sourceAmount: number
 }
 
 export interface OnRampTransferInfo extends OnRampTransactionInfo {

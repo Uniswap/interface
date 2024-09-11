@@ -254,6 +254,7 @@ export function SendReviewDetails({
               {t('common.wallet.label')}
             </Text>
             <AddressDisplay
+              disableForcedWidth
               address={account.address}
               hideAddressInSubtitle={true}
               horizontalGap="$spacing4"

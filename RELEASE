@@ -1,11 +1,7 @@
 We are back with some new new updates! Here’s the latest:
 
-Improved Send Flow: We’ve revamped our Send feature with a UI refresh!
-
-Other changes: 
-
 - Faster wallet imports when importing a recovery phrase!
-- Better loading states in the transaction details sheets
+- Faster loading of your NFTs on the NFT Tab
 - Added toasts when hiding and unhiding NFTs
-- Removed the hold to swap feature
+- Better loading states in the transaction details sheets
 - Various bug fixes and performance improvements

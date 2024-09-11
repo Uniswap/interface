@@ -34,7 +34,7 @@ export function OnRampTransferSummaryItem({
   const formatFiatTokenPrice = (purchaseInfo: OnRampPurchaseInfo): string => {
     try {
       return formatNumberOrString({
-        value: purchaseInfo.sourceAmount,
+        value: purchaseInfo.sourceAmount > 0 ? purchaseInfo.sourceAmount : undefined,
         type: NumberType.FiatTokenPrice,
         currencyCode: purchaseInfo.sourceCurrency,
       })

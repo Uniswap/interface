@@ -43,6 +43,9 @@ type AddressDisplayProps = {
   gapBetweenLines?: SpaceTokens
   showViewOnlyLabel?: boolean
   showViewOnlyBadge?: boolean
+
+  // TODO WALL-4545 Added flag to disable forced width causing trouble in other screens
+  disableForcedWidth?: boolean
 }
 
 type CopyButtonWrapperProps = {
@@ -89,6 +92,7 @@ export function AddressDisplay({
   notificationsBadgeContainer,
   includeUnitagSuffix = false,
   gapBetweenLines = '$none',
+  disableForcedWidth = false,
 }: AddressDisplayProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
@@ -150,6 +154,7 @@ export function AddressDisplay({
         <CopyButtonWrapper onPress={showCopy && !showAddressAsSubtitle ? onPressCopyAddress : undefined}>
           <Flex centered row gap="$spacing12">
             <DisplayNameText
+              disableForcedWidth={disableForcedWidth}
               displayName={displayName}
               forcedWidth={wrapperWidth}
               gap="$spacing4"
