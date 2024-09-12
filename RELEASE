@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmUT3C4vpZnekvr6tpufvmko2T9KRR8VfDvMB3ddJhEC8s`
-- CIDv1: `bafybeic2zedotxnbrjgoh3kki7g4oatccgiqwag5xsmcuk33tijqgv2zpq`
+- CIDv0: `QmPJRmYQHgjfL1W5skf8cUmsFMFGBxVmDS8svqWBT81Lew`
+- CIDv1: `bafybeiaojhskjkwp2cbsehkj7fm4cfv6pjsapflwz5eebreopupzbuna6q`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,40 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeic2zedotxnbrjgoh3kki7g4oatccgiqwag5xsmcuk33tijqgv2zpq.ipfs.dweb.link/
-- https://bafybeic2zedotxnbrjgoh3kki7g4oatccgiqwag5xsmcuk33tijqgv2zpq.ipfs.cf-ipfs.com/
-- [ipfs://QmUT3C4vpZnekvr6tpufvmko2T9KRR8VfDvMB3ddJhEC8s/](ipfs://QmUT3C4vpZnekvr6tpufvmko2T9KRR8VfDvMB3ddJhEC8s/)
+- https://bafybeiaojhskjkwp2cbsehkj7fm4cfv6pjsapflwz5eebreopupzbuna6q.ipfs.dweb.link/
+- https://bafybeiaojhskjkwp2cbsehkj7fm4cfv6pjsapflwz5eebreopupzbuna6q.ipfs.cf-ipfs.com/
+- [ipfs://QmPJRmYQHgjfL1W5skf8cUmsFMFGBxVmDS8svqWBT81Lew/](ipfs://QmPJRmYQHgjfL1W5skf8cUmsFMFGBxVmDS8svqWBT81Lew/)
 
-## 5.46.0 (2024-09-11)
-
-
-### Features
-
-* **web:** [multi-explore] disable not hide TX tab on all networks (#11527) 54773e6
-* **web:** add info popups to search results (#11588) bc09156
-* **web:** memoize most of explore - staging (#11748) fae44d0
-* **web:** update the columns in the explore pools tab (#11492) 7fc1c8d
-* **web:** use Spore radio button for LP fee selector (#11284) 33c77c8
+### 5.46.1 (2024-09-12)
 
 
 ### Bug Fixes
 
-* **web:** 09 09 fix web remove vote pages staging (#11700) 60b48d3
-* **web:** Add unsupported style to Explore Table network options - staging (#11708) 1fd4a47
-* **web:** connected account button toggles modal (#11343) 8834682
-* **web:** fix missing charts on PDP (#11312) 3dae6a8
-* **web:** fix uniswap wallet connect QR code (#11507) cf360ff
-* **web:** hide scroll more on midHeight (#11509) d121ce1
-* **web:** landing page should also have multichainUX (#11484) 49e7ad9
-* **web:** Show all tabs when multichain_explore is disabled (#11532) 1e5febc
-* **web:** show share menu over chart (#11513) 20035a7
-* **web:** update chart header z index (#11608) c0adb87
-* **web:** use onchain instead of swapping (#11779) e0020fd
-* **web): Revert "feat(web:** [multi-explore] disable not hide TX tab on all net… (#11775) 5a40308
-
-
-### Continuous Integration
-
-* **web:** update sitemaps 0fdba92
+* **web:** remove frontend global search sorting/filtering logic [prod hotfix] (#11829) a5fcd4e
 
 
