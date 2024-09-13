@@ -6,7 +6,7 @@
       "name": "Wrapped TARA",
       "symbol": "WTARA",
       "decimals": 18,
-      "logoURI": "https://github.com/taraswap/taraswap-interface/blob/main/packages/ui/src/assets/logos/png/taraxa-logo.png"
+      "logoURI": "https://raw.githubusercontent.com/taraswap/taraswap-interface/main/packages/ui/src/assets/logos/png/taraxa-logo.png"
     },
     {
       "chainId": 841,

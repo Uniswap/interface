@@ -94,6 +94,7 @@
     "https://wallet.crypto.com",
     "https://web3.1inch.io",
     "https://mainnet.era.zksync.io/",
+    "https://indexer.lswap.app/subgraphs/name/taraswap/uni-v3-staker-mainnet",
     "wss://*.uniswap.org",
     "wss://relay.walletconnect.com",
     "wss://relay.walletconnect.org",

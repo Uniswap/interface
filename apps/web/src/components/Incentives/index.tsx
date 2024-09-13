@@ -22,7 +22,7 @@ import {
 import { OrderDirection, getSupportedGraphQlChain } from "graphql/data/util";
 import { useActiveLocalCurrency } from "hooks/useActiveLocalCurrency";
 import { Trans } from "i18n";
-import { useMemo, useReducer, useState } from "react";
+import { useCallback, useEffect, useMemo, useReducer, useState } from "react";
 import { ThemedText } from "theme/components";
 // import {
 //   PoolTransaction,
@@ -31,9 +31,53 @@ import { ThemedText } from "theme/components";
 import { shortenAddress } from "utilities/src/addresses";
 import { useFormatter } from "utils/formatNumbers";
 import { ExplorerDataType, getExplorerLink } from "utils/getExplorerLink";
+import { TARAXA_MAINNET_LIST } from "../../constants/lists";
+import {
+  TokenInfoDetails,
+  PoolInfo,
+  subgraphApi,
+  INCENTIVES_QUERY,
+  PoolIncentivesTableValues,
+  TaraxaMainnetListResponse,
+  mockPoolData,
+  findTokenByAddress,
+} from "./types";
+import { TokenLogoImage } from "../DoubleLogo";
+import blankTokenUrl from "assets/svg/blank_token.svg";
+
+const LOGO_DEFAULT_SIZE = 30;
+
+const PoolTokenImage = ({
+  pool,
+}: {
+  pool: {
+    token0: TokenInfoDetails | undefined;
+    token1: TokenInfoDetails | undefined;
+  };
+}) => {
+  console.log("🚀 ~ pool:", pool);
+  return (
+    <Row gap="4px">
+      {pool.token0?.logoURI && (
+        <TokenLogoImage
+          size={LOGO_DEFAULT_SIZE}
+          src={pool.token0?.logoURI ?? blankTokenUrl}
+        />
+      )}
+      {pool.token1?.logoURI && (
+        <TokenLogoImage
+          size={LOGO_DEFAULT_SIZE}
+          src={pool.token1?.logoURI ?? blankTokenUrl}
+        />
+      )}
+      {pool.token0?.symbol}-{pool.token1?.symbol}
+    </Row>
+  );
+};
 
 export default function RecentTransactions() {
   const activeLocalCurrency = useActiveLocalCurrency();
+  const [tokenList, setTokenList] = useState<TokenInfoDetails[]>([]);
   const { formatNumber, formatFiatPrice } = useFormatter();
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false);
   const [filter, setFilters] = useState<TransactionType[]>([
@@ -44,6 +88,38 @@ export default function RecentTransactions() {
   const chain = getSupportedGraphQlChain(useChainFromUrlParam(), {
     fallbackToEthereum: true,
   });
+  const [poolIncentives, setPoolIncentives] =
+    useState<PoolInfo[]>(mockPoolData);
+
+  const fetchCoinDetails = useCallback(async () => {
+    const response = await fetch(TARAXA_MAINNET_LIST);
+    const data: TaraxaMainnetListResponse =
+      (await response.json()) as TaraxaMainnetListResponse;
+    if (data && data.tokens) {
+      setTokenList(data.tokens);
+    }
+  }, []);
+
+  const fetchIncentives = useCallback(async () => {
+    const response = await fetch(subgraphApi, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: INCENTIVES_QUERY,
+      }),
+    });
+    const data = await response.json();
+  }, []);
+
+  useEffect(() => {
+    fetchIncentives();
+  }, [fetchIncentives]);
+
+  useEffect(() => {
+    fetchCoinDetails();
+  }, [fetchCoinDetails]);
 
   const { transactions, loading, loadMore, errorV2, errorV3 } =
     useAllTransactions(chain.backendChain.chain, filter);
@@ -54,83 +130,24 @@ export default function RecentTransactions() {
   useUpdateManualOutage({ chainId: chain.id, errorV3, errorV2 });
   // TODO(WEB-3236): once GQL BE Transaction query is supported add usd, token0 amount, and token1 amount sort support
 
-  const LiquidityIncentives = [
-    {
-      id: 1,
-      pool: "AZUR/WETH",
-      duration: "19/JUN/2024 13:00 - 19/SEP/2024 13:00",
-      vesting: "30 days",
-      tvl: "$1,000,000",
-      totalrewards: "600,000 AZUR",
-      tokenreward: "AZUR",
-    },
-    {
-      id: 2,
-      pool: "WETH/LAKE",
-      duration: "31/AUG/2023 13:00 - 30/AUG/2024 13:00",
-      vesting: "30 days",
-      tvl: "$1,000,000",
-      totalrewards: "600,000 LAKE",
-      tokenreward: "LAKE",
-    },
-    {
-      id: 3,
-      pool: "WMINIMA/USDT",
-      duration: "15/FEB/2024 13:00 - 14/AUG/2024 13:00",
-      vesting: "30 days",
-      tvl: "$1,000,000",
-      totalrewards: "600,000 WMINIMA",
-      tokenreward: "WMINIMA",
-    },
-    {
-      id: 4,
-      pool: "LINK/SDL",
-      duration: "1/APR/2024 13:00 - 28/SEP/2024 13:00",
-      vesting: "30 days",
-      tvl: "$1,000,000",
-      totalrewards: "600,000 SDL",
-      tokenreward: "SDL",
-    },
-    {
-      id: 5,
-      pool: "TKB/WETH",
-      duration: "4/AUG/2024 13:00 - 1/AUG/2025 13:00",
-      vesting: "30 days",
-      tvl: "$1,000,000",
-      totalrewards: "600,000 TKB",
-      tokenreward: "TKB",
-    },
-  ];
-
-  interface PoolTransactionTableValues {
-    id: number;
-    pool: string;
-    duration: string;
-    vesting: string;
-    tvl: string;
-    totalrewards: string;
-    tokenreward: string;
-    link: string;
-  }
-
-  const poolTransactionTableValues: PoolTransactionTableValues[] | undefined =
+  const poolTransactionTableValues: PoolIncentivesTableValues[] | undefined =
     useMemo(
       () =>
-        LiquidityIncentives.map((pool) => ({
-          id: pool.id,
-          pool: pool.pool,
-          duration: pool.duration,
-          vesting: pool.vesting,
-          tvl: pool.tvl,
-          totalrewards: pool.totalrewards,
-          tokenreward: pool.tokenreward,
+        poolIncentives.map((pool) => ({
+          ...pool,
+          pool: {
+            token0: findTokenByAddress(tokenList, pool.token0.address),
+            token1: findTokenByAddress(tokenList, pool.token1.address),
+          },
+          totalDeposit: 0,
+          pendingRewards: 0,
           link: `/pool/${pool.id}`,
         })),
-      [LiquidityIncentives]
+      [poolIncentives, tokenList]
     );
 
   const columns = useMemo(() => {
-    const columnHelper = createColumnHelper<PoolTransactionTableValues>();
+    const columnHelper = createColumnHelper<PoolIncentivesTableValues>();
     return [
       columnHelper.accessor("pool", {
         id: "pool",
@@ -151,46 +168,24 @@ export default function RecentTransactions() {
             grow
           >
             <ThemedText.BodySecondary>
-              {pool.getValue?.()}
+              <PoolTokenImage pool={pool.getValue?.()} />
             </ThemedText.BodySecondary>
           </Cell>
         ),
       }),
-      columnHelper.accessor("duration", {
-        id: "duration",
+      columnHelper.accessor("apr1d", {
+        id: "apr1d",
         header: () => (
-          <Cell minWidth={220} justifyContent="flex-start" grow>
+          <Cell minWidth={200}>
             <ThemedText.BodySecondary>
-              <Trans i18nKey="common.incentives.duration" />
+              <Trans i18nKey="common.incentives.apr1d" />
             </ThemedText.BodySecondary>
           </Cell>
         ),
-        cell: (duration) => (
-          <Cell
-            loading={showLoadingSkeleton}
-            minWidth={150}
-            justifyContent="flex-start"
-            grow
-          >
+        cell: (apr1d) => (
+          <Cell loading={showLoadingSkeleton} minWidth={200}>
             <ThemedText.BodySecondary>
-              {duration.getValue?.()}
-            </ThemedText.BodySecondary>
-          </Cell>
-        ),
-      }),
-      columnHelper.accessor("vesting", {
-        id: "vesting",
-        header: () => (
-          <Cell minWidth={120}>
-            <ThemedText.BodySecondary>
-              <Trans i18nKey="common.incentives.vesting" />
-            </ThemedText.BodySecondary>
-          </Cell>
-        ),
-        cell: (vesting) => (
-          <Cell loading={showLoadingSkeleton} minWidth={120}>
-            <ThemedText.BodySecondary>
-              {vesting.getValue?.()}
+              {apr1d.getValue?.()}
             </ThemedText.BodySecondary>
           </Cell>
         ),
@@ -213,7 +208,7 @@ export default function RecentTransactions() {
         ),
       }),
       columnHelper.accessor("totalrewards", {
-        id: "totalreward",
+        id: "totalrewards",
         header: () => (
           <Cell minWidth={200}>
             <ThemedText.BodySecondary>
@@ -221,10 +216,10 @@ export default function RecentTransactions() {
             </ThemedText.BodySecondary>
           </Cell>
         ),
-        cell: (totalreward) => (
+        cell: (totalrewards) => (
           <Cell loading={showLoadingSkeleton} minWidth={200}>
             <ThemedText.BodySecondary>
-              {totalreward.getValue?.()}
+              {totalrewards.getValue?.()}
             </ThemedText.BodySecondary>
           </Cell>
         ),
@@ -232,16 +227,50 @@ export default function RecentTransactions() {
       columnHelper.accessor("tokenreward", {
         id: "tokenreward",
         header: () => (
-          <Cell minWidth={150}>
+          <Cell minWidth={200}>
             <ThemedText.BodySecondary>
               <Trans i18nKey="common.incentives.token.reward" />
             </ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (tokenreward) => (
-          <Cell loading={showLoadingSkeleton} minWidth={150}>
+          <Cell loading={showLoadingSkeleton} minWidth={200}>
             <ThemedText.BodySecondary>
               {tokenreward.getValue?.()}
+            </ThemedText.BodySecondary>
+          </Cell>
+        ),
+      }),
+      columnHelper.accessor("totalDeposit", {
+        id: "totalDeposit",
+        header: () => (
+          <Cell minWidth={200}>
+            <ThemedText.BodySecondary>
+              <Trans i18nKey="common.incentives.total.deposits" />
+            </ThemedText.BodySecondary>
+          </Cell>
+        ),
+        cell: (totalDeposit) => (
+          <Cell loading={showLoadingSkeleton} minWidth={200}>
+            <ThemedText.BodySecondary>
+              {totalDeposit.getValue?.()}
+            </ThemedText.BodySecondary>
+          </Cell>
+        ),
+      }),
+      columnHelper.accessor("pendingRewards", {
+        id: "pendingRewards",
+        header: () => (
+          <Cell minWidth={200}>
+            <ThemedText.BodySecondary>
+              <Trans i18nKey="common.incentives.pending.reward" />
+            </ThemedText.BodySecondary>
+          </Cell>
+        ),
+        cell: (pendingRewards) => (
+          <Cell loading={showLoadingSkeleton} minWidth={200}>
+            <ThemedText.BodySecondary>
+              {pendingRewards.getValue?.()}
             </ThemedText.BodySecondary>
           </Cell>
         ),

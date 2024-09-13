@@ -91,6 +91,12 @@ export const CircleLogoImage = styled.img<{ size: number }>`
   border-radius: 50%;
 `
 
+export const TokenLogoImage = styled.img<{ size: number }>`
+  width: ${({ size }) => size}px;
+  height: ${({ size }) => size}px;
+  border-radius: 50%;
+`
+
 interface DoubleLogoProps {
   logo1?: string
   logo2?: string
