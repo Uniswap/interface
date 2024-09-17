@@ -113,6 +113,9 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
         if (!value.feeTier) {
           return acc
         }
+
+        acc[value.feeTier] ??= [0, 0]
+
         acc[value.feeTier][0] = (acc[value.feeTier][0] ?? 0) + Number(value.token0Supply)
         acc[value.feeTier][1] = (acc[value.feeTier][1] ?? 0) + Number(value.token1Supply)
         return acc
@@ -122,7 +125,7 @@ function usePoolTVL(token0: Token | undefined, token1: Token | undefined) {
         [FeeAmount.LOW]: [undefined, undefined],
         [FeeAmount.MEDIUM]: [undefined, undefined],
         [FeeAmount.HIGH]: [undefined, undefined],
-      } as Record<FeeAmount, [number | undefined, number | undefined]>,
+      },
     )
 
     // sum total tvl for token0 and token1
