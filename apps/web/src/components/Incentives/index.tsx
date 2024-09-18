@@ -35,15 +35,25 @@ import { TARAXA_MAINNET_LIST } from "../../constants/lists";
 import {
   TokenInfoDetails,
   PoolInfo,
-  subgraphApi,
+  Incentive,
+  indexerTaraswap,
+  indexerLara,
   INCENTIVES_QUERY,
+  POOL_QUERY,
   PoolIncentivesTableValues,
   TaraxaMainnetListResponse,
-  mockPoolData,
   findTokenByAddress,
+  PoolResponse,
 } from "./types";
 import { TokenLogoImage } from "../DoubleLogo";
 import blankTokenUrl from "assets/svg/blank_token.svg";
+import { useV3Positions } from "../../hooks/useV3Positions";
+import { useAccount } from "../../hooks/useAccount";
+import { Pool } from "@taraswap/v3-sdk";
+import { Token } from "@taraswap/sdk-core";
+import { useChainId } from "wagmi";
+import { PositionDetails } from "../../types/position";
+import { position } from "polished";
 
 const LOGO_DEFAULT_SIZE = 30;
 
@@ -75,8 +85,11 @@ const PoolTokenImage = ({
   );
 };
 
-export default function RecentTransactions() {
+export default function Incentives() {
   const activeLocalCurrency = useActiveLocalCurrency();
+  const account = useAccount();
+  const chainId = useChainId();
+
   const [tokenList, setTokenList] = useState<TokenInfoDetails[]>([]);
   const { formatNumber, formatFiatPrice } = useFormatter();
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false);
@@ -88,8 +101,27 @@ export default function RecentTransactions() {
   const chain = getSupportedGraphQlChain(useChainFromUrlParam(), {
     fallbackToEthereum: true,
   });
-  const [poolIncentives, setPoolIncentives] =
-    useState<PoolInfo[]>(mockPoolData);
+  const [poolIncentives, setPoolIncentives] = useState<PoolInfo[]>([]);
+  const poolsPositions = useV3Positions(account.address);
+  const userPositions: {
+    poolAddress: string;
+    tokenId: string;
+    liquidity: string;
+  }[] = useMemo(() => {
+    return (
+      poolsPositions?.positions?.map((position) => {
+        const token0 = new Token(chainId, position.token0, 18, "");
+        const token1 = new Token(chainId, position.token1, 18, "");
+        const poolAddress = Pool.getAddress(token0, token1, position.fee);
+        return {
+          poolAddress,
+          tokenId: position.tokenId.toString(),
+          liquidity: position.liquidity.toString(),
+        };
+      }) || []
+    );
+  }, [poolsPositions, chainId]);
+  // console.log("🚀 ~ Incentives ~ userPositions:", userPositions);
 
   const fetchCoinDetails = useCallback(async () => {
     const response = await fetch(TARAXA_MAINNET_LIST);
@@ -100,8 +132,34 @@ export default function RecentTransactions() {
     }
   }, []);
 
+  const fetchTokensForPool = async (
+    poolId: string
+  ): Promise<PoolResponse | null> => {
+    if (!indexerLara || !poolId) {
+      return null;
+    }
+    const response = await fetch(indexerLara, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        query: POOL_QUERY,
+        variables: { id: poolId },
+      }),
+    });
+    const data = await response.json();
+    if (data && data.data && data.data.pools) {
+      return data.data.pools[0];
+    }
+    return null;
+  };
+
   const fetchIncentives = useCallback(async () => {
-    const response = await fetch(subgraphApi, {
+    if (!indexerTaraswap) {
+      return;
+    }
+    const response = await fetch(indexerTaraswap, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -111,9 +169,50 @@ export default function RecentTransactions() {
       }),
     });
     const data = await response.json();
-  }, []);
+
+    if (data && data.data && data.data.incentives) {
+      let poolIncentives: Incentive[] = data.data.incentives.filter(
+        (incentive: Incentive) => incentive.ended === false
+      );
+      const poolInfo: (PoolInfo | null)[] = await Promise.all(
+        poolIncentives.map(async (incentive) => {
+          const poolDetails = await fetchTokensForPool(incentive.pool);
+          if (poolDetails && poolDetails.token0 && poolDetails.token1) {
+            console.log("🚀 ~ poolPosition ~ userPositions:", userPositions);
+
+            const poolPosition = userPositions.filter((userPosition) => {
+              return userPosition.poolAddress === poolDetails.id;
+            });
+            console.log("🚀 ~ poolPosition ~ poolPosition:", poolPosition);
+            return {
+              address: poolDetails.id,
+              token0: poolDetails.token0,
+              token1: poolDetails.token1,
+              feeTier: poolDetails.feeTier,
+              tvl: poolDetails.totalValueLockedUSD,
+              totalDeposit: poolPosition[0] ? poolPosition[0].liquidity : "0",
+              positionId: poolPosition[0] ? poolPosition[0].tokenId : "",
+              totalrewards: incentive.reward,
+              tokenreward: incentive.rewardToken.symbol,
+              link:
+                poolPosition[0] && poolPosition[0].tokenId
+                  ? `/pool/${poolPosition[0].tokenId}`
+                  : `/add/${poolDetails.token0.id}/${poolDetails.token1.id}`,
+            } as PoolInfo;
+          }
+          return null;
+        })
+      );
+
+      // Filter out null values
+
+      console.log("🚀 ~ fetchIncentives ~ filtered poolInfo:", poolInfo);
+      setPoolIncentives(poolInfo.filter((pool) => pool !== null) as PoolInfo[]);
+    }
+  }, [indexerTaraswap, userPositions]);
 
   useEffect(() => {
+    console.log("Fetching Incentives:", userPositions);
     fetchIncentives();
   }, [fetchIncentives]);
 
@@ -136,12 +235,11 @@ export default function RecentTransactions() {
         poolIncentives.map((pool) => ({
           ...pool,
           pool: {
-            token0: findTokenByAddress(tokenList, pool.token0.address),
-            token1: findTokenByAddress(tokenList, pool.token1.address),
+            token0: findTokenByAddress(tokenList, pool.token0.id),
+            token1: findTokenByAddress(tokenList, pool.token1.id),
           },
-          totalDeposit: 0,
+          apr1d: 0,
           pendingRewards: 0,
-          link: `/pool/${pool.id}`,
         })),
       [poolIncentives, tokenList]
     );

@@ -11861,9 +11861,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@taraswap/v3-sdk@npm:1.1.3":
-  version: 1.1.3
-  resolution: "@taraswap/v3-sdk@npm:1.1.3"
+"@taraswap/v3-sdk@npm:1.1.4":
+  version: 1.1.4
+  resolution: "@taraswap/v3-sdk@npm:1.1.4"
   dependencies:
     "@ethersproject/abi": ^5.5.0
     "@ethersproject/solidity": ^5.0.9
@@ -11873,7 +11873,7 @@ __metadata:
     "@uniswap/v3-staker": 1.0.0
     tiny-invariant: ^1.1.0
     tiny-warning: ^1.0.3
-  checksum: 20af6fee3e78f70c3a3048979885833e1ec8d6a3bc7e7a4dcdb9d4751bcaeddf0f7569a18902dbe2800944e9820cc7cf71f7d759ca46d3f29ff5f5fbc9691af5
+  checksum: d46d2af977bfa51a5ce83df12072df768bc88aea18982bfe18757fb9e2da8028d7bb992c6e8769e5e6b267d749d8294eb2553f0ad54b2452fa8c8b2b1128fe10
   languageName: node
   linkType: hard
 
@@ -13987,7 +13987,7 @@ __metadata:
     "@taraswap/uniswapx-sdk": 1.1.7
     "@taraswap/universal-router-sdk": 1.1.14
     "@taraswap/v2-sdk": 1.1.3
-    "@taraswap/v3-sdk": 1.1.3
+    "@taraswap/v3-sdk": 1.1.4
     "@testing-library/jest-dom": 5.17.0
     "@testing-library/react": 13.4.0
     "@testing-library/react-hooks": 7.0.2
@@ -14236,7 +14236,7 @@ __metadata:
     "@storybook/react": 7.0.2
     "@tamagui/babel-plugin": 1.95.1
     "@taraswap/sdk-core": 1.4.2
-    "@taraswap/v3-sdk": 1.1.3
+    "@taraswap/v3-sdk": 1.1.4
     "@testing-library/react-hooks": 7.0.2
     "@testing-library/react-native": 11.5.0
     "@types/redux-mock-store": 1.0.6
@@ -43824,7 +43824,7 @@ __metadata:
     "@taraswap/sdk-core": 1.4.2
     "@taraswap/universal-router-sdk": 1.1.4
     "@taraswap/v2-sdk": 1.1.3
-    "@taraswap/v3-sdk": 1.1.3
+    "@taraswap/v3-sdk": 1.1.4
     "@testing-library/jest-native": 5.4.2
     "@testing-library/react-hooks": 7.0.2
     "@testing-library/react-native": 11.5.0
