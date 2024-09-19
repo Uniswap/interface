@@ -7,6 +7,7 @@ export type TokenInfo = {
 
 export type RewardToken = {
   id: string;
+  decimals: number;
   symbol: string;
 };
 
@@ -62,27 +63,23 @@ export type PoolResponse = {
   };
   liquidity: string;
   feeTier: string;
+  tick: string;
+  sqrtPrice: string;
   totalValueLockedUSD: string;
 };
 
-export type PoolInfo = {
+export type PoolInfo = PoolResponse & {
   address: string;
-  token0: {
-    name: string;
-    id: string;
-    symbol: string;
-  };
-  token1: {
-    name: string;
-    id: string;
-    symbol: string;
-  };
   tvl: string;
   totalrewards: string;
   tokenreward: string;
   totalDeposit: string;
   positionId?: string;
   link: string;
+  tickLower: string;
+  tickUpper: string;
+  displayedTotalDeposit: string;
+  apy: number;
 };
 
 export function findTokenByAddress(
@@ -111,6 +108,7 @@ export const INCENTIVES_QUERY = `
       endTime
       rewardToken {
         id
+        decimals
         symbol
       }
       pool
@@ -137,6 +135,8 @@ export const POOL_QUERY = `
       }
       liquidity
       feeTier
+      tick
+      sqrtPrice
       totalValueLockedUSD
     }
   }
@@ -148,5 +148,34 @@ export type PoolIncentivesTableValues = PoolInfo & {
     token1: TokenInfoDetails | undefined;
   };
   pendingRewards: number;
-  apr1d: number;
+};
+
+export const calculateApy = (
+  incentive: Incentive,
+  totalPoolLiquidity: number,
+  totalRewardsToken: string
+): number => {
+  // Calculate duration in days
+  const startTime = parseInt(incentive.startTime, 10);
+  const endTime = parseInt(incentive.endTime, 10);
+  const durationInDays = (endTime - startTime) / (60 * 60 * 24);
+  // Avoid division by zero
+  if (durationInDays <= 0 || totalPoolLiquidity <= 0) {
+    return 0;
+  }
+  // Calculate daily reward tokens
+  const dailyRewardTokens = parseFloat(totalRewardsToken) / durationInDays;
+
+  // Calculate daily reward per liquidity unit
+  const dailyRewardPerLiquidityUnit = dailyRewardTokens / totalPoolLiquidity;
+
+  // Annualize the reward rate
+  const annualRewardPerLiquidityUnit = dailyRewardPerLiquidityUnit * 365;
+
+  // Standardize per 1,000 liquidity units
+  const standardLiquidityAmount = 1000;
+  const annualRewardPerStandardLiquidity =
+    annualRewardPerLiquidityUnit * standardLiquidityAmount;
+
+  return annualRewardPerStandardLiquidity;
 };
