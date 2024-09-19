@@ -15,14 +15,14 @@ export function useAcceptedTrade({
 } {
   const [acceptedDerivedSwapInfo, setAcceptedDerivedSwapInfo] = useState<DerivedSwapInfo>()
 
-  const trade = derivedSwapInfo?.trade.trade
+  const { trade, indicativeTrade } = derivedSwapInfo?.trade ?? {}
   const acceptedTrade = acceptedDerivedSwapInfo?.trade.trade
 
   // Avoid prompting user to accept new trade if submission is in progress
   const newTradeRequiresAcceptance = !isSubmitting && requireAcceptNewTrade(acceptedTrade, trade)
 
   useEffect(() => {
-    if (!trade || trade === acceptedTrade) {
+    if ((!trade && !indicativeTrade) || trade === acceptedTrade) {
       return
     }
 
@@ -30,7 +30,7 @@ export function useAcceptedTrade({
     if (!acceptedTrade || !newTradeRequiresAcceptance) {
       setAcceptedDerivedSwapInfo(derivedSwapInfo)
     }
-  }, [trade, acceptedTrade, newTradeRequiresAcceptance, derivedSwapInfo])
+  }, [trade, acceptedTrade, indicativeTrade, newTradeRequiresAcceptance, derivedSwapInfo])
 
   const onAcceptTrade = (): undefined => {
     if (!trade) {

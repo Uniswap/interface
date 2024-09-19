@@ -28,7 +28,7 @@ exports[`renders a currency logo with network logo 1`] = `
       style={
         {
           "aspectRatio": undefined,
-          "backgroundColor": "rgba(34,34,34,0.05)",
+          "backgroundColor": "#FFFFFF",
           "borderRadius": 10,
           "objectFit": "contain",
         }
@@ -77,7 +77,7 @@ exports[`renders a currency logo without network logo 1`] = `
       style={
         {
           "aspectRatio": undefined,
-          "backgroundColor": "rgba(34,34,34,0.05)",
+          "backgroundColor": "#FFFFFF",
           "borderRadius": 10,
           "objectFit": "contain",
         }

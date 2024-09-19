@@ -7,7 +7,6 @@ import Row from 'components/Row'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
 import { useScreenSize } from 'hooks/screenSize'
-import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -203,8 +202,7 @@ export const SearchBar = ({
 
   const { data: collections, loading: collectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
 
-  const account = useAccount()
-  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, account.chainId ?? 1)
+  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue)
   const isNFTPage = useIsNftPage()
   const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
 

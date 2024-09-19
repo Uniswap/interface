@@ -5,7 +5,7 @@ import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonSecondary } from 'components/Button'
 import Loader, { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import StatusIcon, { IconWrapper } from 'components/Identicon/StatusIcon'
-import { AccountCTAsExperimentGroup } from 'components/NavBar'
+import { AccountCTAsExperimentGroup } from 'components/NavBar/accountCTAsExperimentUtils'
 import { RowBetween } from 'components/Row'
 import { useAccountIdentifier } from 'components/Web3Status/useAccountIdentifier'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
@@ -21,7 +21,7 @@ import { flexRowNoWrap } from 'theme/styles'
 import { Text } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons/Unitag'
 import { Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
+import { useExperimentGroupNameWithLoading } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
@@ -135,8 +135,10 @@ const StyledConnectButton = styled.button`
 
 function ExistingUserCTAButton() {
   const { t } = useTranslation()
-  const isSignIn = useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.LogInCreateAccount
+
+  const { value: accountsCTAExperimentGroup } = useExperimentGroupNameWithLoading(Experiments.AccountCTAs)
+  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
+  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
 
   return (
     <StyledConnectButton tabIndex={-1} data-testid="navbar-connect-wallet">
@@ -163,14 +165,16 @@ function Web3StatusInner() {
   const accountDrawer = useAccountDrawer()
   const handleWalletDropdownClick = useCallback(() => {
     sendAnalyticsEvent(InterfaceEventName.ACCOUNT_DROPDOWN_BUTTON_CLICKED)
-    accountDrawer.open()
+    accountDrawer.toggle()
   }, [accountDrawer])
 
   const { hasPendingActivity, pendingActivityCount } = usePendingActivity()
   const { accountIdentifier, hasUnitag, hasRecent } = useAccountIdentifier()
 
+  const { isLoading: isExperimentGroupNameLoading } = useExperimentGroupNameWithLoading(Experiments.AccountCTAs)
+
   // TODO(WEB-4173): Remove isIFrame check when we can update wagmi to version >= 2.9.4
-  if ((account.isConnecting || account.isReconnecting) && hasRecent && !isIFramed()) {
+  if (((account.isConnecting || account.isReconnecting) && hasRecent && !isIFramed()) || isExperimentGroupNameLoading) {
     return (
       <Web3StatusConnecting disabled={true} onClick={handleWalletDropdownClick} ref={ref}>
         <IconWrapper size={24}>

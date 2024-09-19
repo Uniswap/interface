@@ -81,11 +81,13 @@ function NetworkFeeText({
         i18nKey="swap.warning.networkFee.message.uniswapX"
       />
     )
-  } else if (showHighGasFeeUI) {
-    return <>{t('swap.warning.networkFee.highRelativeToValue')}</>
-  } else {
-    return <>{t('swap.warning.networkFee.message')}</>
   }
+
+  return (
+    <Text color="$neutral2" textAlign="center" variant="body2">
+      {showHighGasFeeUI ? t('swap.warning.networkFee.highRelativeToValue') : t('swap.warning.networkFee.message')}
+    </Text>
+  )
 }
 
 function UniswapXFeeContent({ uniswapXGasFeeInfo }: { uniswapXGasFeeInfo: FormattedUniswapXGasFeeInfo }): JSX.Element {

@@ -20,7 +20,14 @@ import {
   usePoolVolumeHistoryQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-type PDPChartQueryVars = { address: string; chain: Chain; duration: HistoryDuration; isV3: boolean }
+type PDPChartQueryVars = {
+  addressOrId: string
+  chain: Chain
+  duration: HistoryDuration
+  isV2: boolean
+  isV3: boolean
+  isV4: boolean
+}
 export function usePDPPriceChartData(
   variables: PDPChartQueryVars,
   poolData: PoolData | undefined,

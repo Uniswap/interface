@@ -10,7 +10,7 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { Warning } from 'uniswap/src/features/transactions/WarningModal/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -23,7 +23,7 @@ import { UniswapXGasBreakdown } from 'wallet/src/features/transactions/swap/trad
 import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
 const getFeeAmountUsd = (
-  trade: Trade<Currency, Currency, TradeType>,
+  trade: Trade<Currency, Currency, TradeType> | IndicativeTrade,
   outputCurrencyPricePerUnitExact?: string,
 ): number | undefined => {
   if (!trade.swapFee || !outputCurrencyPricePerUnitExact) {
@@ -77,8 +77,8 @@ export function SwapDetails({
   const formatter = useLocalizationContext()
   const { convertFiatAmountFormatted, formatPercent } = formatter
 
-  const trade = derivedSwapInfo.trade.trade
-  const acceptedTrade = acceptedDerivedSwapInfo.trade.trade
+  const trade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
+  const acceptedTrade = acceptedDerivedSwapInfo.trade.trade ?? acceptedDerivedSwapInfo.trade.indicativeTrade
 
   if (!trade) {
     throw new Error('Invalid render of `SwapDetails` with no `trade`')
@@ -106,8 +106,12 @@ export function SwapDetails({
       }
     : undefined
 
-  const feeOnTransferProps: FeeOnTransferFeeGroupProps = useMemo(
-    () => ({
+  const feeOnTransferProps: FeeOnTransferFeeGroupProps | undefined = useMemo(() => {
+    if (acceptedTrade.indicative) {
+      return undefined
+    }
+
+    return {
       inputTokenInfo: {
         fee: acceptedTrade.inputTax,
         tokenSymbol: acceptedTrade.inputAmount.currency.symbol ?? 'Token sell',
@@ -116,14 +120,14 @@ export function SwapDetails({
         fee: acceptedTrade.outputTax,
         tokenSymbol: acceptedTrade.outputAmount.currency.symbol ?? 'Token buy',
       },
-    }),
-    [
-      acceptedTrade.inputAmount.currency.symbol,
-      acceptedTrade.inputTax,
-      acceptedTrade.outputAmount.currency.symbol,
-      acceptedTrade.outputTax,
-    ],
-  )
+    }
+  }, [
+    acceptedTrade.inputAmount.currency.symbol,
+    acceptedTrade.inputTax,
+    acceptedTrade.outputAmount.currency.symbol,
+    acceptedTrade.outputTax,
+    acceptedTrade.indicative,
+  ])
 
   return (
     <TransactionDetails
@@ -140,6 +144,7 @@ export function SwapDetails({
       chainId={acceptedTrade.inputAmount.currency.chainId}
       feeOnTransferProps={feeOnTransferProps}
       gasFee={gasFee}
+      indicative={acceptedTrade.indicative}
       showExpandedChildren={!!customSlippageTolerance}
       showWarning={warning && !newTradeRequiresAcceptance}
       swapFeeInfo={swapFeeInfo}

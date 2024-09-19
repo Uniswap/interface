@@ -3,7 +3,7 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { GestureResponderEvent } from 'react-native'
-import { Flex, Separator, Text, TouchableArea } from 'ui/src'
+import { Flex, Separator, Shine, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled, AnglesMaximize, AnglesMinimize } from 'ui/src/components/icons'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -30,6 +30,7 @@ interface TransactionDetailsProps {
   warning?: Warning
   feeOnTransferProps?: FeeOnTransferFeeGroupProps
   onShowWarning?: () => void
+  indicative?: boolean
   isSwap?: boolean
   AccountDetails?: JSX.Element
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
@@ -47,6 +48,7 @@ export function TransactionDetails({
   warning,
   feeOnTransferProps,
   onShowWarning,
+  indicative = false,
   isSwap,
   transactionUSDValue,
   AccountDetails,
@@ -62,8 +64,6 @@ export function TransactionDetails({
     }
     setShowChildren(!showChildren)
   }
-
-  const displaySwapFeeInfo = isSwap && swapFeeInfo
 
   return (
     <Flex>
@@ -104,10 +104,11 @@ export function TransactionDetails({
       <Flex gap="$spacing8" pb="$spacing8" px="$spacing12">
         {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
         {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
-        {displaySwapFeeInfo && <SwapFee swapFeeInfo={swapFeeInfo} />}
+        {isSwap && <SwapFee loading={indicative} swapFeeInfo={swapFeeInfo} />}
         <NetworkFee
           chainId={chainId}
           gasFee={gasFee}
+          indicative={indicative}
           transactionUSDValue={transactionUSDValue}
           uniswapXGasBreakdown={uniswapXGasBreakdown}
         />
@@ -151,4 +152,16 @@ export const ListSeparatorToggle = ({
       <Separator />
     </Flex>
   )
+}
+
+export function IndicativeLoadingWrapper({ children, loading }: PropsWithChildren<{ loading?: boolean }>): JSX.Element {
+  if (loading) {
+    return (
+      <Shine>
+        <Flex backgroundColor="$surface3" borderRadius={8} height={20} width={60} />
+      </Shine>
+    )
+  }
+
+  return <>{children}</>
 }

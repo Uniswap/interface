@@ -13,7 +13,7 @@ import { useResetAtom } from 'jotai/utils'
 import { ExploreChartsSection } from 'pages/Explore/charts/ExploreChartsSection'
 import { useExploreParams } from 'pages/Explore/redirects'
 import RecentTransactions from 'pages/Explore/tables/RecentTransactions'
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { NamedExoticComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ExploreContextProvider } from 'state/explore'
 import { StyledInternalLink } from 'theme/components'
@@ -34,7 +34,7 @@ export enum ExploreTab {
 interface Page {
   title: React.ReactNode
   key: ExploreTab
-  component: () => JSX.Element
+  component: NamedExoticComponent<object>
   loggingElementName: InterfaceElementName
 }
 

@@ -28,6 +28,7 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import {
   ExtensionEventName,
+  FiatOffRampEventName,
   FiatOnRampEventName,
   InstitutionTransferEventName,
   InterfaceEventNameLocal,
@@ -235,6 +236,29 @@ export enum OnboardingCardLoggingName {
   ClaimUnitag = 'claim_unitag',
 }
 
+export type FORAmountEnteredProperties = ITraceContext & {
+  source: 'chip' | 'textInput'
+  amountUSD?: number
+}
+
+export type FORTokenSelectedProperties = ITraceContext & { token: string; isUnsupported?: boolean }
+
+export type FORTransactionUpdatedProperties = {
+  status: string
+  externalTransactionId: string
+  serviceProvider: string
+}
+
+export type FORWidgetOpenedProperties = ITraceContext & {
+  countryCode?: string
+  countryState?: string
+  cryptoCurrency: string
+  externalTransactionId: string
+  fiatCurrency: string
+  preselectedServiceProvider?: string
+  serviceProvider: string
+}
+
 // Please sort new values by EventName type!
 export type UniverseEventProperties = {
   [ExtensionEventName.OnboardingLoad]: undefined
@@ -258,25 +282,19 @@ export type UniverseEventProperties = {
   }
   [ExtensionEventName.SidebarDisconnect]: undefined
   [ExtensionEventName.UnknownMethodRequest]: WindowEthereumRequestProperties
-  [FiatOnRampEventName.FiatOnRampAmountEntered]: ITraceContext & {
-    source: 'chip' | 'textInput'
-    amountUSD?: number
+  [FiatOffRampEventName.FORBuySellToggled]: ITraceContext & {
+    value: 'BUY' | 'SELL'
   }
-  [FiatOnRampEventName.FiatOnRampTokenSelected]: ITraceContext & { token: string }
-  [FiatOnRampEventName.FiatOnRampTransactionUpdated]: {
-    status: string
-    externalTransactionId: string
-    serviceProvider: string
-  }
-  [FiatOnRampEventName.FiatOnRampWidgetOpened]: ITraceContext & {
-    countryCode?: string
-    countryState?: string
-    cryptoCurrency: string
-    externalTransactionId: string
-    fiatCurrency: string
-    preselectedServiceProvider?: string
-    serviceProvider: string
-  }
+  [FiatOffRampEventName.FiatOffRampAmountEntered]: FORAmountEnteredProperties
+  [FiatOffRampEventName.FiatOffRampTokenSelected]: FORTokenSelectedProperties
+  [FiatOffRampEventName.FiatOffRampTransactionUpdated]: FORTransactionUpdatedProperties
+  [FiatOffRampEventName.FiatOffRampWidgetOpened]: FORWidgetOpenedProperties
+  [FiatOffRampEventName.FiatOffRampWidgetCompleted]: undefined
+  [FiatOffRampEventName.FiatOffRampFundsSent]: undefined
+  [FiatOnRampEventName.FiatOnRampAmountEntered]: FORAmountEnteredProperties
+  [FiatOnRampEventName.FiatOnRampTokenSelected]: FORTokenSelectedProperties
+  [FiatOnRampEventName.FiatOnRampTransactionUpdated]: FORTransactionUpdatedProperties
+  [FiatOnRampEventName.FiatOnRampWidgetOpened]: FORWidgetOpenedProperties
   [InstitutionTransferEventName.InstitutionTransferTransactionUpdated]: {
     status: string
     externalTransactionId: string

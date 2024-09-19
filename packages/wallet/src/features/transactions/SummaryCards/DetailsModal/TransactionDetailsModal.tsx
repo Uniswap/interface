@@ -205,7 +205,11 @@ export function TransactionDetailsModal({
             <ShowMoreSeparator isShowingMore={isShowingMore} setIsShowingMore={setIsShowingMore} />
           )}
           {!hideBottomSeparator && !hasMoreInfoRows && <Separator />}
-          <TransactionDetailsInfoRows isShowingMore={isShowingMore} transactionDetails={transactionDetails} />
+          <TransactionDetailsInfoRows
+            isShowingMore={isShowingMore}
+            transactionDetails={transactionDetails}
+            onClose={onClose}
+          />
           {buttons.length > 0 && (
             <Flex gap="$spacing8" pt="$spacing8">
               {buttons}

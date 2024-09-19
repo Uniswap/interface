@@ -23,7 +23,7 @@ import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
 import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
-import { ReactElement, ReactNode, useMemo } from 'react'
+import { ReactElement, ReactNode, memo, useMemo } from 'react'
 import { giveExploreStatDefaultValue } from 'state/explore'
 import { useTopTokens as useRestTopTokens } from 'state/explore/topTokens'
 import { TokenStat } from 'state/explore/types'
@@ -87,7 +87,7 @@ function TokenDescription({ token }: { token: TopToken | TokenStat }) {
   )
 }
 
-export function TopTokensTable() {
+export const TopTokensTable = memo(function TopTokensTable() {
   const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
   const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
   const {
@@ -146,7 +146,7 @@ export function TopTokensTable() {
       />
     </TableWrapper>
   )
-}
+})
 
 const HEADER_TEXT: Record<TokenSortMethod, ReactNode> = {
   [TokenSortMethod.FULLY_DILUTED_VALUATION]: <Trans i18nKey="stats.fdv" />,

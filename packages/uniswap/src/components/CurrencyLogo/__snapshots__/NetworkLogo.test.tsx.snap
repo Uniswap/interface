@@ -4,21 +4,7 @@ exports[`NetworkLogo renders without error 1`] = `
 <View
   style={
     {
-      "borderBottomColor": "#131313",
-      "borderBottomLeftRadius": 6,
-      "borderBottomRightRadius": 6,
-      "borderBottomWidth": 0,
-      "borderLeftColor": "#131313",
-      "borderLeftWidth": 0,
-      "borderRightColor": "#131313",
-      "borderRightWidth": 0,
-      "borderStyle": "solid",
-      "borderTopColor": "#131313",
-      "borderTopLeftRadius": 6,
-      "borderTopRightRadius": 6,
-      "borderTopWidth": 0,
       "flexDirection": "column",
-      "overflow": "hidden",
     }
   }
   testID="network-logo"
@@ -28,6 +14,18 @@ exports[`NetworkLogo renders without error 1`] = `
     dir={null}
     style={
       {
+        "borderBottomColor": "rgba(19,19,19,1.00)",
+        "borderBottomLeftRadius": "6px",
+        "borderBottomRightRadius": "6px",
+        "borderBottomWidth": "0px",
+        "borderLeftColor": "rgba(19,19,19,1.00)",
+        "borderLeftWidth": "0px",
+        "borderRightColor": "rgba(19,19,19,1.00)",
+        "borderRightWidth": "0px",
+        "borderTopColor": "rgba(19,19,19,1.00)",
+        "borderTopLeftRadius": "6px",
+        "borderTopRightRadius": "6px",
+        "borderTopWidth": "0px",
         "height": "20px",
         "width": "20px",
       }
@@ -46,21 +44,7 @@ exports[`TransactionSummaryNetworkLogo renders without error 1`] = `
 <View
   style={
     {
-      "borderBottomColor": "#131313",
-      "borderBottomLeftRadius": 6.8999999999999995,
-      "borderBottomRightRadius": 6.8999999999999995,
-      "borderBottomWidth": 1.5,
-      "borderLeftColor": "#131313",
-      "borderLeftWidth": 1.5,
-      "borderRightColor": "#131313",
-      "borderRightWidth": 1.5,
-      "borderStyle": "solid",
-      "borderTopColor": "#131313",
-      "borderTopLeftRadius": 6.8999999999999995,
-      "borderTopRightRadius": 6.8999999999999995,
-      "borderTopWidth": 1.5,
       "flexDirection": "column",
-      "overflow": "hidden",
     }
   }
   testID="network-logo"
@@ -70,8 +54,20 @@ exports[`TransactionSummaryNetworkLogo renders without error 1`] = `
     dir={null}
     style={
       {
-        "height": "20px",
-        "width": "20px",
+        "borderBottomColor": "rgba(19,19,19,1.00)",
+        "borderBottomLeftRadius": "6.8999999999999995px",
+        "borderBottomRightRadius": "6.8999999999999995px",
+        "borderBottomWidth": "1.5px",
+        "borderLeftColor": "rgba(19,19,19,1.00)",
+        "borderLeftWidth": "1.5px",
+        "borderRightColor": "rgba(19,19,19,1.00)",
+        "borderRightWidth": "1.5px",
+        "borderTopColor": "rgba(19,19,19,1.00)",
+        "borderTopLeftRadius": "6.8999999999999995px",
+        "borderTopRightRadius": "6.8999999999999995px",
+        "borderTopWidth": "1.5px",
+        "height": "23px",
+        "width": "23px",
       }
     }
   >

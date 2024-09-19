@@ -49,7 +49,11 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
     )
   }
 
-  if (isUniswapXSwapRequest(dappRequest)) {
+  const { name, version, chainId: domainChainId, verifyingContract, salt } = parsedTypedData?.domain || {}
+  const chainId = toSupportedChainId(domainChainId)
+
+  // this check needs to happen before isPermit2 since uniswapX requests are Permit2 requests
+  if (isUniswapXSwapRequest(dappRequest, chainId || undefined)) {
     return <UniswapXSwapRequestContent dappRequest={dappRequest} />
   }
 
@@ -57,10 +61,7 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
     return <Permit2RequestContent dappRequest={dappRequest} />
   }
 
-  const { name, version, chainId: domainChainId, verifyingContract, salt } = parsedTypedData?.domain || {}
-
   // todo(EXT-883): remove this when we start rejecting unsupported chain signTypedData requests
-  const chainId = toSupportedChainId(domainChainId)
   const renderMessageContent = (
     message: EIP712Message | EIP712Message[keyof EIP712Message],
     i = 1,

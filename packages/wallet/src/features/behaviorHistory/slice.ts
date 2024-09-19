@@ -11,6 +11,7 @@ export interface BehaviorHistoryState {
   hasViewedWelcomeWalletCard: boolean
   hasUsedExplore: boolean
   backupReminderLastSeenTs?: number
+  hasViewedOffRampTooltip: boolean
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
@@ -20,6 +21,7 @@ export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasViewedWelcomeWalletCard: false,
   hasUsedExplore: false,
   backupReminderLastSeenTs: undefined,
+  hasViewedOffRampTooltip: false,
 }
 
 const slice = createSlice({
@@ -44,6 +46,9 @@ const slice = createSlice({
     setBackupReminderLastSeenTs: (state, action: PayloadAction<number | undefined>) => {
       state.backupReminderLastSeenTs = action.payload
     },
+    setHasViewedOffRampTooltip: (state, action: PayloadAction<boolean>) => {
+      state.hasViewedOffRampTooltip = action.payload
+    },
 
     // Should only be used for testing
     resetBehaviorHistory: (state, _action: PayloadAction) => {
@@ -64,6 +69,7 @@ export const {
   setHasViewedWelcomeWalletCard,
   setHasUsedExplore,
   setBackupReminderLastSeenTs,
+  setHasViewedOffRampTooltip,
   resetBehaviorHistory,
 } = slice.actions
 

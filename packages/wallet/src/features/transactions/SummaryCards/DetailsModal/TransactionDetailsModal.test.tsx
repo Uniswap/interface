@@ -116,17 +116,27 @@ describe('TransactionDetails Components', () => {
   })
 
   it('renders TransactionDetailsInfoRows without error with isShowingMore false', () => {
-    const tree = render(<TransactionDetailsInfoRows isShowingMore={false} transactionDetails={mockTransaction} />, {
-      preloadedState,
-    })
+    const onClose = jest.fn()
+
+    const tree = render(
+      <TransactionDetailsInfoRows isShowingMore={false} transactionDetails={mockTransaction} onClose={onClose} />,
+      {
+        preloadedState,
+      },
+    )
 
     expect(tree).toMatchSnapshot()
   })
 
   it('renders TransactionDetailsInfoRows without error with isShowingMore true', () => {
-    const tree = render(<TransactionDetailsInfoRows isShowingMore={true} transactionDetails={mockTransaction} />, {
-      preloadedState,
-    })
+    const onClose = jest.fn()
+
+    const tree = render(
+      <TransactionDetailsInfoRows isShowingMore={true} transactionDetails={mockTransaction} onClose={onClose} />,
+      {
+        preloadedState,
+      },
+    )
 
     expect(tree).toMatchSnapshot()
   })

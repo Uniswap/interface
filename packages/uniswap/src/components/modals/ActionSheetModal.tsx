@@ -66,15 +66,28 @@ export function ActionSheetModalContent(props: ActionSheetModalContentProps): JS
 interface ActionSheetModalProps extends ActionSheetModalContentProps {
   isVisible: boolean
   name: ModalNameType
+  isDismissible?: boolean
 }
 
-export function ActionSheetModal({ isVisible, onClose, name, ...rest }: ActionSheetModalProps): JSX.Element | null {
+export function ActionSheetModal({
+  isVisible,
+  onClose,
+  name,
+  isDismissible = true,
+  ...rest
+}: ActionSheetModalProps): JSX.Element | null {
   if (!isVisible) {
     return null
   }
 
   return (
-    <BottomSheetDetachedModal hideHandlebar backgroundColor="$transparent" name={name} onClose={onClose}>
+    <BottomSheetDetachedModal
+      hideHandlebar
+      backgroundColor="$transparent"
+      isDismissible={isDismissible}
+      name={name}
+      onClose={onClose}
+    >
       <ActionSheetModalContent onClose={onClose} {...rest} />
     </BottomSheetDetachedModal>
   )

@@ -149,8 +149,8 @@ function SwapFormContent(): JSX.Element {
   // which can happen after the user hits `Max`.
   const decimalPadControlledField = focusOnCurrencyField ?? exactCurrencyField
 
-  // Quote is being fetched for first time
-  const isSwapDataLoading = !isWrapAction(wrapType) && trade.isLoading
+  // Quote is being fetched for first time or refetching
+  const isSwapDataLoading = !isWrapAction(wrapType) && trade.isFetching
 
   const inputRef = useRef<CurrencyInputPanelRef>(null)
   const outputRef = useRef<CurrencyInputPanelRef>(null)
@@ -476,11 +476,13 @@ function SwapFormContent(): JSX.Element {
               currencyInfo={currencies[CurrencyField.INPUT]}
               focus={focusOnCurrencyField === CurrencyField.INPUT}
               isFiatMode={isFiatMode && exactFieldIsInput}
+              isIndicativeLoading={trade.isIndicativeLoading}
               isLoading={!exactFieldIsInput && isSwapDataLoading}
               resetSelection={resetSelection}
               showSoftInputOnFocus={false}
               usdValue={currencyAmountsUSDValue[CurrencyField.INPUT]}
               value={exactFieldIsInput ? exactValue : formattedDerivedValue}
+              valueIsIndicative={!exactFieldIsInput && trade.indicativeTrade && !trade.trade}
               onPressIn={onFocusInput}
               onSelectionChange={onInputSelectionChange}
               onSetExactAmount={onSetExactAmountInput}
@@ -517,6 +519,7 @@ function SwapFormContent(): JSX.Element {
               showSoftInputOnFocus={false}
               usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
               value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
+              valueIsIndicative={!exactFieldIsOutput && trade.indicativeTrade && !trade.trade}
               onPressDisabled={showTemporaryFoTWarning}
               onPressIn={onFocusOutput}
               onSelectionChange={onOutputSelectionChange}
@@ -550,7 +553,6 @@ function SwapFormContent(): JSX.Element {
             )}
           </Flex>
         </Trace>
-
         <Flex>
           {isWeb && (
             <Flex pt="$spacing12">

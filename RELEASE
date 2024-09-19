@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmZnW9JioRugnBAzvSbo2kEYERqzoHTTvbxJhGSnWqRVG3`
-- CIDv1: `bafybeifkb74n6zzyd2lqtflyz2hvlmgzms5b7jevm3cldxtyzcowqu4h7a`
+- CIDv0: `QmQHmbvMgf6snJLsy86wQW21owJimqnkJJCYYGbBpcCoig`
+- CIDv1: `bafybeia47jwp444qim2245sns24s5dnmr4wzkd3tvyeykxiimn7i6aedwe`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifkb74n6zzyd2lqtflyz2hvlmgzms5b7jevm3cldxtyzcowqu4h7a.ipfs.dweb.link/
-- https://bafybeifkb74n6zzyd2lqtflyz2hvlmgzms5b7jevm3cldxtyzcowqu4h7a.ipfs.cf-ipfs.com/
-- [ipfs://QmZnW9JioRugnBAzvSbo2kEYERqzoHTTvbxJhGSnWqRVG3/](ipfs://QmZnW9JioRugnBAzvSbo2kEYERqzoHTTvbxJhGSnWqRVG3/)
+- https://bafybeia47jwp444qim2245sns24s5dnmr4wzkd3tvyeykxiimn7i6aedwe.ipfs.dweb.link/
+- https://bafybeia47jwp444qim2245sns24s5dnmr4wzkd3tvyeykxiimn7i6aedwe.ipfs.cf-ipfs.com/
+- [ipfs://QmQHmbvMgf6snJLsy86wQW21owJimqnkJJCYYGbBpcCoig/](ipfs://QmQHmbvMgf6snJLsy86wQW21owJimqnkJJCYYGbBpcCoig/)
 
-### 5.45.5 (2024-09-09)
+### 5.46.2 (2024-09-17)
 
 
 ### Bug Fixes
 
-* **web:** Add unsupported style to Explore Table network options - prod (#11706) 26abc8e
+* **web:** prevent crash from new Base fee tiers [prod hotfix] (#11933) e570b30
 
 

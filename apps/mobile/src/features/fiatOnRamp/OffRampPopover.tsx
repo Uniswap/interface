@@ -1,15 +1,41 @@
+import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useDispatch, useSelector } from 'react-redux'
 import { Popover, Text } from 'ui/src'
+import { isAndroid } from 'utilities/src/platform'
+import { selectHasViewedOffRampTooltip } from 'wallet/src/features/behaviorHistory/selectors'
+import { setHasViewedOffRampTooltip } from 'wallet/src/features/behaviorHistory/slice'
 
 const POPOVER_OFFSET_X = 31
-const POPOVER_OFFSET_Y = 18
+const POPOVER_OFFSET_Y = isAndroid ? 42 : 18
 const POPOVER_WIDTH = 200
+const POPOVER_DELAY_MS = 1500
 
 export function OffRampPopover({ triggerContent }: { triggerContent: JSX.Element }): JSX.Element {
   const { t } = useTranslation()
+  const dispatch = useDispatch()
+  const [delayedOpen, setDelayedOpen] = useState(false)
+  const hasViewedOffRampTooltip = useSelector(selectHasViewedOffRampTooltip)
+
+  useEffect(() => {
+    setTimeout(() => {
+      setDelayedOpen(true)
+    }, POPOVER_DELAY_MS)
+  }, [])
+
+  function onOpenChange(open: boolean): void {
+    if (!open) {
+      dispatch(setHasViewedOffRampTooltip(true))
+    }
+  }
 
   return (
-    <Popover defaultOpen offset={{ mainAxis: POPOVER_OFFSET_Y, crossAxis: POPOVER_OFFSET_X }} placement="bottom">
+    <Popover
+      offset={{ mainAxis: POPOVER_OFFSET_Y, crossAxis: POPOVER_OFFSET_X }}
+      open={delayedOpen && !hasViewedOffRampTooltip}
+      placement="bottom"
+      onOpenChange={onOpenChange}
+    >
       <Popover.Trigger>{triggerContent}</Popover.Trigger>
       <Popover.Content
         animation={[

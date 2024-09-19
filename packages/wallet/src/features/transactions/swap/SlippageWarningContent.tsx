@@ -10,13 +10,13 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
-import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { NumberType } from 'utilities/src/format/types'
 import { WarningInfo } from 'wallet/src/components/modals/WarningModal/WarningInfo'
 import { slippageToleranceToPercent } from 'wallet/src/features/transactions/swap/utils'
 
 type SlippageWarningContentProps = PropsWithChildren<{
-  trade: Trade<Currency, Currency, TradeType>
+  trade: Trade<Currency, Currency, TradeType> | IndicativeTrade
   isCustomSlippage: boolean
   autoSlippageTolerance?: number
 }>
@@ -31,6 +31,11 @@ export function SlippageWarningContent({
   const colors = useSporeColors()
 
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
+
+  // Avoid showing min out / max in UI when on an indicative quote.
+  if (trade.indicative) {
+    return <>{children}</>
+  }
 
   const { slippageTolerance, tradeType } = trade
   const showSlippageWarning = autoSlippageTolerance && slippageTolerance > autoSlippageTolerance

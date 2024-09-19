@@ -16,6 +16,7 @@ import {
 import { selectLockoutEndTime, selectPasswordAttempts } from 'src/features/CloudBackup/selectors'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { PasswordError } from 'src/features/onboarding/PasswordError'
+import { onRestoreComplete } from 'src/screens/Import/onRestoreComplete'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Text, TouchableArea } from 'ui/src'
 import { Cloud } from 'ui/src/components/icons'
@@ -78,6 +79,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
 
   const isRestoringMnemonic = params.importType === ImportType.RestoreMnemonic
 
+  const [isLoading, setIsLoading] = useState(false)
   const [enteredPassword, setEnteredPassword] = useState('')
   const [errorMessage, setErrorMessage] = useState<string | undefined>(undefined)
 
@@ -111,15 +113,15 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
     // Attempt to restore backup with encrypted mnemonic using password
     async function checkCorrectPassword(): Promise<void> {
       try {
+        setIsLoading(true)
         await restoreMnemonicFromCloudStorage(params.mnemonicId, enteredPassword)
         await generateImportedAccounts({ mnemonicId: params.mnemonicId, backupType: BackupType.Cloud })
 
         dispatch(resetPasswordAttempts())
-        // restore flow is handled in saga after `restoreMnemonicComplete` is dispatched
-        if (!isRestoringMnemonic) {
-          navigation.navigate({ name: OnboardingScreens.SelectWallet, params, merge: true })
-        }
+        setIsLoading(false)
+        onRestoreComplete({ isRestoringMnemonic, dispatch, params, navigation })
       } catch (error) {
+        setIsLoading(false)
         dispatch(incrementPasswordAttempts())
         const updatedLockoutEndTime = calculateLockoutEndTime(passwordAttemptCount + 1)
         if (updatedLockoutEndTime) {
@@ -171,7 +173,11 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
             </Text>
           </TouchableArea>
         )}
-        <Button disabled={!enteredPassword || isLockedOut} testID={TestID.Continue} onPress={onPasswordSubmit}>
+        <Button
+          disabled={!enteredPassword || isLockedOut || isLoading}
+          testID={TestID.Continue}
+          onPress={onPasswordSubmit}
+        >
           {t('common.button.continue')}
         </Button>
       </Flex>

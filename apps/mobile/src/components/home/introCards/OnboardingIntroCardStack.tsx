@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { FundWalletModal } from 'src/components/home/introCards/FundWalletModal'
 import { CardType, IntroCardProps } from 'src/components/home/introCards/IntroCard'
-import { IntroCardStack, IntroCardWrapper } from 'src/components/home/introCards/IntroCardStack'
+import { INTRO_CARD_MIN_HEIGHT, IntroCardStack, IntroCardWrapper } from 'src/components/home/introCards/IntroCardStack'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
 import { useUnitagClaimHandler } from 'src/features/unitags/useUnitagClaimHandler'
 import { Flex } from 'ui/src'
@@ -164,18 +164,25 @@ export function OnboardingIntroCardStack({
     [cards, dispatch, hasViewedWelcomeWalletCard, welcomeCardTitle],
   )
 
-  if (isLoading) {
-    return null
+  if (cards.length) {
+    return (
+      <Flex pt="$spacing12">
+        {isLoading ? (
+          <Flex height={INTRO_CARD_MIN_HEIGHT} />
+        ) : (
+          <IntroCardStack cards={cards} keyExtractor={(card) => card.title} onSwiped={handleSwiped} />
+        )}
+
+        {showFundModal && <FundWalletModal onClose={() => setShowFundModal(false)} />}
+      </Flex>
+    )
+  } else if (shouldPromptUnitag) {
+    return (
+      <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
+        <UnitagBanner address={activeAccount.address} entryPoint={MobileScreens.Home} />
+      </AnimatedFlex>
+    )
   }
 
-  return cards.length ? (
-    <Flex pt="$spacing12">
-      <IntroCardStack cards={cards} keyExtractor={(card) => card.title} onSwiped={handleSwiped} />
-      {showFundModal && <FundWalletModal onClose={() => setShowFundModal(false)} />}
-    </Flex>
-  ) : shouldPromptUnitag ? (
-    <AnimatedFlex entering={FadeIn} exiting={FadeOut}>
-      <UnitagBanner address={activeAccount.address} entryPoint={MobileScreens.Home} />
-    </AnimatedFlex>
-  ) : null
+  return null
 }

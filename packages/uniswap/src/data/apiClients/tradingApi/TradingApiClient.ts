@@ -9,6 +9,8 @@ import {
   CreateSwapResponse,
   DutchQuoteV2,
   GetOrdersResponse,
+  IndicativeQuoteRequest,
+  IndicativeQuoteResponse,
   OrderRequest,
   OrderResponse,
   QuoteRequest,
@@ -41,6 +43,12 @@ const TradingApiClient = createApiClient({
 
 export async function fetchQuote(params: QuoteRequest): Promise<DiscriminatedQuoteResponse> {
   return await TradingApiClient.post<DiscriminatedQuoteResponse>(uniswapUrls.tradingApiPaths.quote, {
+    body: JSON.stringify(params),
+  })
+}
+
+export async function fetchIndicativeQuote(params: IndicativeQuoteRequest): Promise<IndicativeQuoteResponse> {
+  return await TradingApiClient.post<IndicativeQuoteResponse>(uniswapUrls.tradingApiPaths.indicativeQuote, {
     body: JSON.stringify(params),
   })
 }

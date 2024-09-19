@@ -16,7 +16,7 @@ export default function QueryTokenLogo(
     token?: TopToken | TokenQueryData | GqlSearchToken | TokenStat
   },
 ) {
-  const chain = getChainFromChainUrlParam(props.token?.chain?.toLowerCase())
+  const chain = getChainFromChainUrlParam(props.token?.chain.toLowerCase())
   const chainId = chain?.id ?? UniverseChainId.Mainnet
   const isNative = props.token?.address === NATIVE_CHAIN_ID
   const isTokenStat = !!props.token && 'volume' in props.token

@@ -111,7 +111,7 @@ exports[`TokenItem renders without error 1`] = `
             style={
               {
                 "aspectRatio": undefined,
-                "backgroundColor": "rgba(34,34,34,0.05)",
+                "backgroundColor": "#FFFFFF",
                 "borderRadius": 20,
                 "flex": undefined,
               }

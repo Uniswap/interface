@@ -4,7 +4,7 @@ import { MissingImageLogo } from 'components/Logo/AssetLogo'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import styled, { css } from 'lib/styled-components'
-import { useState } from 'react'
+import { memo, useState } from 'react'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { useLogolessColorScheme } from 'ui/src'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
@@ -21,7 +21,7 @@ function LogolessPlaceholder({ currency, size }: { currency?: Currency; size: st
   )
 }
 
-export function DoubleCurrencyLogo({
+export const DoubleCurrencyLogo = memo(function DoubleCurrencyLogo({
   currencies,
   size = 32,
 }: {
@@ -55,7 +55,7 @@ export function DoubleCurrencyLogo({
   return (
     <DoubleLogo logo1={currencyInfos[0]?.logoUrl as string} logo2={currencyInfos[1]?.logoUrl as string} size={size} />
   )
-}
+})
 
 const logoContainerCss = css`
   display: flex;

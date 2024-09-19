@@ -16,6 +16,7 @@ import {
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { SwapScreen, useSwapScreenContext } from 'uniswap/src/features/transactions/swap/contexts/SwapScreenContext'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
@@ -45,12 +46,12 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
   const [shouldSubmitTx, setShouldSubmitTx] = useState(false)
 
   const account = useAccountMeta()
-  const { bottomSheetViewStyles, onClose, BiometricsIcon, authTrigger } = useTransactionModalContext()
+  const { bottomSheetViewStyles, onClose, authTrigger } = useTransactionModalContext()
 
   const { setScreen } = useSwapScreenContext()
 
   const swapTxContext = useSwapTxContext()
-  const { gasFee, trade } = swapTxContext
+  const { gasFee } = swapTxContext
   const uniswapXGasBreakdown = isUniswapX(swapTxContext) ? swapTxContext.gasFeeBreakdown : undefined
   const { hapticFeedback } = useHapticFeedback()
 
@@ -72,6 +73,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     customSlippageTolerance,
     txId,
     wrapType,
+    trade: { trade, indicativeTrade },
   } = derivedSwapInfo
 
   const isWrap = isWrapAction(wrapType)
@@ -205,11 +207,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     (!validSwap && !isWrap) || !!blockingWarning || newTradeRequiresAcceptance || isSubmitting
 
   const showUniswapXSubmittingUI = isUniswapX(swapTxContext) && isSubmitting
-  const submitButtonIcon = showUniswapXSubmittingUI ? (
-    <SpinningLoader color="$accent1" size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />
-  ) : (
-    BiometricsIcon
-  )
 
   const onConfirmWarning = useCallback(() => {
     setWarningAcknowledged(true)
@@ -238,7 +235,7 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
     setShowWarningModal(false)
   }, [])
 
-  if (hideContent || !acceptedDerivedSwapInfo || (!isWrap && (!acceptedTrade || !trade))) {
+  if (hideContent || !acceptedDerivedSwapInfo || (!isWrap && !indicativeTrade && (!acceptedTrade || !trade))) {
     // We forcefully hide the content via `hideContent` to allow the bottom sheet to animate faster while still allowing all API requests to trigger ASAP.
     // A missing `acceptedTrade` or `trade` can happen when the user leaves the app and comes back to the review screen after 1 minute when the TTL for the quote has expired.
     // When that happens, we remove the quote from the cache before refetching, so there's no `trade`.
@@ -249,8 +246,6 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
       </Flex>
     )
   }
-
-  const actionText = getActionName(t, wrapType)
 
   const currencyInInfo = currencies[CurrencyField.INPUT]
   const currencyOutInfo = currencies[CurrencyField.OUTPUT]
@@ -328,28 +323,86 @@ export function SwapReviewScreen({ hideContent }: { hideContent: boolean }): JSX
               onPress={onPrev}
             />
           )}
-
-          <Button
-            fill
-            backgroundColor={showUniswapXSubmittingUI ? '$accent2' : '$accent1'}
-            color={showUniswapXSubmittingUI ? '$accent1' : undefined}
-            disabled={submitButtonDisabled}
-            icon={submitButtonIcon}
-            opacity={showUniswapXSubmittingUI ? 1 : undefined}
-            size={isWeb ? 'medium' : isShortMobileDevice ? 'small' : 'large'}
-            testID={TestID.Swap}
-            onPress={onSubmitTransaction}
-          >
-            {showUniswapXSubmittingUI ? (
-              <SubmittingText />
-            ) : (
-              <Text color="$white" variant={SWAP_BUTTON_TEXT_VARIANT}>
-                {actionText}
-              </Text>
-            )}
-          </Button>
+          <SubmitButton
+            indicative={Boolean(!trade && indicativeTrade)}
+            showUniswapXSubmittingUI={showUniswapXSubmittingUI}
+            submitButtonDisabled={submitButtonDisabled}
+            wrapType={wrapType}
+            onSubmitTransaction={onSubmitTransaction}
+          />
         </Flex>
       </TransactionModalFooterContainer>
     </>
   )
+}
+
+function SubmitButton({
+  submitButtonDisabled,
+  onSubmitTransaction,
+  showUniswapXSubmittingUI,
+  indicative,
+  wrapType,
+}: {
+  submitButtonDisabled: boolean
+  onSubmitTransaction: () => void
+  showUniswapXSubmittingUI: boolean
+  indicative: boolean
+  wrapType: WrapType
+}): JSX.Element {
+  const { t } = useTranslation()
+  const { BiometricsIcon } = useTransactionModalContext()
+  const isShortMobileDevice = useIsShortMobileDevice()
+  const size = isWeb ? 'medium' : isShortMobileDevice ? 'small' : 'large'
+  const actionText = getActionName(t, wrapType)
+
+  switch (true) {
+    case indicative: {
+      return (
+        <Button
+          fill
+          backgroundColor="$surface2"
+          disabled={true}
+          icon={<SpinningLoader color="$neutral2" size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />}
+          opacity={1} // For indicative loading UI, opacity should be full despite disabled state
+          size={size}
+        >
+          <Text color="$neutral2" flex={1} textAlign="center" variant={SWAP_BUTTON_TEXT_VARIANT}>
+            {t('swap.finalizingQuote')}
+          </Text>
+        </Button>
+      )
+    }
+    case showUniswapXSubmittingUI: {
+      return (
+        <Button
+          fill
+          backgroundColor="$accent2"
+          color="$accent1"
+          disabled={true}
+          icon={<SpinningLoader color="$accent1" size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />}
+          opacity={1} // For UniswapX submitting UI, opacity should be full despite disabled state
+          size={size}
+        >
+          <SubmittingText />
+        </Button>
+      )
+    }
+    default: {
+      return (
+        <Button
+          fill
+          backgroundColor="$accent1"
+          disabled={submitButtonDisabled}
+          icon={BiometricsIcon}
+          size={size}
+          testID={TestID.Swap}
+          onPress={onSubmitTransaction}
+        >
+          <Text color="$white" variant={SWAP_BUTTON_TEXT_VARIANT}>
+            {actionText}
+          </Text>
+        </Button>
+      )
+    }
+  }
 }

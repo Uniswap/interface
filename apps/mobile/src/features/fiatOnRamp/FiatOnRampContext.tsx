@@ -25,6 +25,7 @@ interface FiatOnRampContextType {
   baseCurrencyInfo?: FiatCurrencyInfo
   setBaseCurrencyInfo: (baseCurrency: FiatCurrencyInfo | undefined) => void
   quoteCurrency: FiatOnRampCurrency
+  defaultCurrency: FiatOnRampCurrency
   setQuoteCurrency: (quoteCurrency: FiatOnRampCurrency) => void
   amount?: number
   setAmount: (amount: number | undefined) => void
@@ -43,6 +44,7 @@ const initialState: FiatOnRampContextType = {
   countryCode: '',
   countryState: undefined,
   quoteCurrency: { currencyInfo: undefined },
+  defaultCurrency: { currencyInfo: undefined },
   isOffRamp: false,
   setIsOffRamp: () => undefined,
 }
@@ -69,12 +71,11 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
   const ethCurrencyInfo = useCurrencyInfo(
     buildCurrencyId(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Mainnet)),
   )
-  const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>(
-    prefilledCurrency ?? {
-      currencyInfo: ethCurrencyInfo,
-      meldCurrencyCode: 'ETH',
-    },
-  )
+  const defaultCurrency: FiatOnRampCurrency = {
+    currencyInfo: ethCurrencyInfo,
+    meldCurrencyCode: 'ETH',
+  }
+  const [quoteCurrency, setQuoteCurrency] = useState<FiatOnRampCurrency>(prefilledCurrency ?? defaultCurrency)
 
   return (
     <FiatOnRampContext.Provider
@@ -90,6 +91,7 @@ export function FiatOnRampProvider({ children }: { children: React.ReactNode }):
         baseCurrencyInfo,
         setBaseCurrencyInfo,
         quoteCurrency,
+        defaultCurrency,
         setQuoteCurrency,
         amount,
         setAmount,

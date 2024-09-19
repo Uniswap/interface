@@ -23,7 +23,7 @@ export function useSetTradeSlippage(
       return { trade, autoSlippageTolerance }
     }
 
-    const { isLoading, error, isFetching } = trade
+    const { isLoading, error, isFetching, indicativeTrade, isIndicativeLoading } = trade
     const { tradeType, deadline, quote, inputAmount, outputAmount } = trade.trade
 
     if (!quote) {
@@ -44,6 +44,8 @@ export function useSetTradeSlippage(
         isLoading,
         isFetching,
         trade: newTrade,
+        indicativeTrade,
+        isIndicativeLoading,
         error,
       },
       autoSlippageTolerance,

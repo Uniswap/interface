@@ -2,7 +2,7 @@ import { useShowMoonpayText } from 'components/AccountDrawer/MiniPortfolio/hooks
 import Column from 'components/Column'
 import { CollapsedIcon } from 'components/Icons/Collapse'
 import { ExpandIcon } from 'components/Icons/Expand'
-import { AccountCTAsExperimentGroup } from 'components/NavBar'
+import { AccountCTAsExperimentGroup } from 'components/NavBar/accountCTAsExperimentUtils'
 import Row, { AutoRow } from 'components/Row'
 import ConnectionErrorView from 'components/WalletModal/ConnectionErrorView'
 import { Option } from 'components/WalletModal/Option'

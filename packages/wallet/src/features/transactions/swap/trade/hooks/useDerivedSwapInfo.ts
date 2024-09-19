@@ -63,6 +63,7 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
 
   const otherCurrency = isExactIn ? currencyOut : currencyIn
   const exactCurrency = isExactIn ? currencyIn : currencyOut
+  const isWrap = isWrapAction(wrapType)
 
   // amountSpecified, otherCurrency, tradeType fully defines a trade
   const amountSpecified = useMemo(() => {
@@ -73,20 +74,24 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
     })
   }, [exactAmountToken, exactCurrency])
 
-  const otherAmountSpecified = useMemo(() => {
-    return getCurrencyAmount({
-      value: exactAmountToken,
-      valueType: ValueType.Exact,
-      currency: otherCurrency,
-    })
-  }, [exactAmountToken, otherCurrency])
+  const otherAmountForWrap = useMemo(() => {
+    //  we only use otherAmountForWrap when it's a wrap action,
+    //  otherwise parsing exactAmountToken using otherCurrency can lead to errors,
+    //  e.g. otherCurrency.decimals !== exactCurrency.decimals
+    if (isWrap) {
+      return getCurrencyAmount({
+        value: exactAmountToken,
+        valueType: ValueType.Exact,
+        currency: otherCurrency,
+      })
+    }
+  }, [exactAmountToken, isWrap, otherCurrency])
 
-  const shouldGetQuote = !isWrapAction(wrapType)
   const sendPortionEnabled = useFeatureFlag(FeatureFlags.PortionFields)
 
   const tradeParams = {
     account,
-    amountSpecified: shouldGetQuote ? amountSpecified : null,
+    amountSpecified: isWrap ? null : amountSpecified,
     otherCurrency,
     tradeType: isExactIn ? TradeType.EXACT_INPUT : TradeType.EXACT_OUTPUT,
     customSlippageTolerance,
@@ -99,26 +104,28 @@ export function useDerivedSwapInfo(state: TransactionState): DerivedSwapInfo {
   // Calculate auto slippage tolerance for trade. If customSlippageTolerance is undefined, then the Trade slippage is set to the calculated value.
   const { trade, autoSlippageTolerance } = useSetTradeSlippage(tradeTradeWithoutSlippage, customSlippageTolerance)
 
+  const displayableTrade = trade.trade ?? trade.indicativeTrade
+
   const currencyAmounts = useMemo(
     () =>
-      shouldGetQuote
+      isWrap
         ? {
-            [CurrencyField.INPUT]:
-              exactCurrencyField === CurrencyField.INPUT ? amountSpecified : trade.trade?.inputAmount,
-            [CurrencyField.OUTPUT]:
-              exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : trade.trade?.outputAmount,
+            [CurrencyField.INPUT]: amountSpecified,
+            [CurrencyField.OUTPUT]: otherAmountForWrap,
           }
         : {
-            [CurrencyField.INPUT]: amountSpecified,
-            [CurrencyField.OUTPUT]: otherAmountSpecified,
+            [CurrencyField.INPUT]:
+              exactCurrencyField === CurrencyField.INPUT ? amountSpecified : displayableTrade?.inputAmount,
+            [CurrencyField.OUTPUT]:
+              exactCurrencyField === CurrencyField.OUTPUT ? amountSpecified : displayableTrade?.outputAmount,
           },
     [
-      shouldGetQuote,
+      isWrap,
       exactCurrencyField,
       amountSpecified,
-      otherAmountSpecified,
-      trade.trade?.inputAmount,
-      trade.trade?.outputAmount,
+      otherAmountForWrap,
+      displayableTrade?.inputAmount,
+      displayableTrade?.outputAmount,
     ],
   )
 

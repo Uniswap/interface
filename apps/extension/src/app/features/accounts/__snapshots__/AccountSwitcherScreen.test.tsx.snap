@@ -125,7 +125,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-1481558307"
                       >
                         <span
-                          class="font_heading _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _wordWrap-break-word _fontFamily-299667014 _fontSize-18px _lineHeight-24px _fontWeight-233016202 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _flexShrink-1"
+                          class="font_heading _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _wordWrap-break-word _fontFamily-299667014 _fontSize-18px _lineHeight-24px _fontWeight-233016202 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _flexShrink-1"
                           data-disable-theme="true"
                           data-testid="address-display/name/Jacob Haley"
                         >
@@ -359,7 +359,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                       class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _gap-1481558307"
                     >
                       <span
-                        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _wordWrap-break-word _fontFamily-299667014 _fontSize-18px _lineHeight-24px _fontWeight-233016202 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _flexShrink-1"
+                        class="font_heading _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _wordWrap-break-word _fontFamily-299667014 _fontSize-18px _lineHeight-24px _fontWeight-233016202 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _flexShrink-1"
                         data-disable-theme="true"
                         data-testid="address-display/name/Jacob Haley"
                       >

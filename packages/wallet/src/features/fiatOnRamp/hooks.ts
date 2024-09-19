@@ -5,7 +5,6 @@ import { useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
 import { getCountry } from 'react-native-localize'
 import { useDispatch } from 'react-redux'
-import { ColorTokens } from 'ui/src'
 import { useCurrencies } from 'uniswap/src/components/TokenSelector/hooks'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
@@ -264,18 +263,16 @@ export function useParseFiatOnRampError(
   currencyCode: string,
 ): {
   errorText: string | undefined
-  errorColor: ColorTokens | undefined
 } {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
 
-  let errorText, errorColor: ColorTokens | undefined
+  let errorText
   if (!error) {
-    return { errorText, errorColor }
+    return { errorText }
   }
 
   errorText = t('fiatOnRamp.error.default')
-  errorColor = '$DEP_accentWarning'
 
   if (isFiatOnRampApiError(error)) {
     if (isInvalidRequestAmountTooLow(error)) {
@@ -285,7 +282,6 @@ export function useParseFiatOnRampError(
         currencyCode,
       })
       errorText = t('fiatOnRamp.error.min', { amount: formattedAmount })
-      errorColor = '$statusCritical'
     } else if (isInvalidRequestAmountTooHigh(error)) {
       const formattedAmount = formatNumberOrString({
         value: error.data.context.maximumAllowed,
@@ -293,11 +289,10 @@ export function useParseFiatOnRampError(
         currencyCode,
       })
       errorText = t('fiatOnRamp.error.max', { amount: formattedAmount })
-      errorColor = '$statusCritical'
     }
   }
 
-  return { errorText, errorColor }
+  return { errorText }
 }
 
 export function useIsSupportedFiatOnRampCurrency(

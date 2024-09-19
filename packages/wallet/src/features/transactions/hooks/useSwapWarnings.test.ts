@@ -44,7 +44,7 @@ const swapState: DerivedSwapInfo = {
     [CurrencyField.OUTPUT]: undefined,
   },
   exactCurrencyField: CurrencyField.INPUT,
-  trade: { isLoading: false, error: null, trade: null },
+  trade: { isLoading: false, error: null, trade: null, indicativeTrade: undefined, isIndicativeLoading: false },
 }
 
 const insufficientBalanceState: DerivedSwapInfo = {
@@ -66,7 +66,7 @@ const insufficientBalanceState: DerivedSwapInfo = {
     [CurrencyField.OUTPUT]: daiCurrencyInfo(),
   },
   exactCurrencyField: CurrencyField.INPUT,
-  trade: { isLoading: false, error: null, trade: null },
+  trade: { isLoading: false, error: null, trade: null, indicativeTrade: undefined, isIndicativeLoading: false },
 }
 
 const tradeErrorState: DerivedSwapInfo = {
@@ -92,6 +92,8 @@ const tradeErrorState: DerivedSwapInfo = {
     isLoading: false,
     error: new Error('Generic error'),
     trade: null,
+    indicativeTrade: undefined,
+    isIndicativeLoading: false,
   },
 }
 const { formatPercent } = mockLocalizedFormatter

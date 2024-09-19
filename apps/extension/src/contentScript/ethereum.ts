@@ -48,9 +48,12 @@ addWindowMessageListener(isValidContentScriptToProxyEmission, (message) => {
   logger.debug('ethereum.ts', `Emitting ${message.emitKey} via WindowEthereumProxy`, message.emitValue)
   uniswapProvider.emit(message.emitKey, message.emitValue)
 })
+
+const providerUuid = uuid()
+
 function announceProvider(): void {
   const info: EIP6963ProviderInfo = {
-    uuid: uuid(),
+    uuid: providerUuid,
     name: UNISWAP_NAME,
     icon: UNISWAP_LOGO,
     rdns: UNISWAP_RDNS,

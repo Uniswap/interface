@@ -1,4 +1,4 @@
-import { useIsAccountCTAExperimentControl } from 'components/NavBar'
+import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useScreenSize } from 'hooks/screenSize'
 import { PropsWithChildren, ReactNode } from 'react'
 import { ThemedText } from 'theme/components'
@@ -12,7 +12,7 @@ export function ModalContent({
   rightThumbnail,
   children,
 }: PropsWithChildren<{ title: string; subtext: string; rightThumbnail?: ReactNode }>) {
-  const isAccountCTAExperimentControl = useIsAccountCTAExperimentControl()
+  const { isControl: isAccountCTAExperimentControl } = useIsAccountCTAExperimentControl()
   const showRightThumbnail = useScreenSize()['lg']
 
   return isAccountCTAExperimentControl ? (

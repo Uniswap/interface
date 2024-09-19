@@ -190,6 +190,7 @@ export function AccountSwitcherScreen(): JSX.Element {
             address={activeAddress}
             captionVariant="body3"
             direction="column"
+            displayNameTextAlign="center"
             gapBetweenLines="$spacing8"
             horizontalGap="$spacing8"
             showViewOnlyBadge={isViewOnly}

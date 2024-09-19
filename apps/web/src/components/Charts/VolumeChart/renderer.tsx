@@ -28,7 +28,7 @@ export interface SingleHistogramData extends CustomData {
 }
 
 export interface StackedHistogramData extends CustomData {
-  values: Record<PriceSource, number>
+  values: Record<PriceSource, number | undefined>
   time: UTCTimestamp
 }
 
@@ -47,11 +47,13 @@ export interface CustomHistogramSeriesOptions extends CustomSeriesOptions {
 
 function cumulativeBuildUp(data: StackedHistogramData): number[] {
   let sum = 0
-  return Object.values(data.values).map((value) => {
-    const newValue = sum + value
-    sum = newValue
-    return newValue
-  })
+  return Object.values(data.values)
+    .filter((value: number | undefined): value is number => value !== undefined)
+    .map((value) => {
+      const newValue = sum + value
+      sum = newValue
+      return newValue
+    })
 }
 
 export interface CustomHistogramProps {

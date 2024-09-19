@@ -14,7 +14,7 @@ import {
   TokenSection,
   TokenSectionsHookProps,
 } from 'uniswap/src/components/TokenSelector/types'
-import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
+import { isSwapListLoading, useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 // eslint-disable-next-line no-restricted-imports
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
@@ -83,9 +83,9 @@ function useTokenSectionsForSwapOutput({
   const favoriteSection = useTokenOptionsSection(TokenOptionSection.FavoriteTokens, favoriteTokenOptions)
   const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularTokenOptions)
 
-  const sections = useMemo<TokenSection[]>(() => {
-    if (loading) {
-      return []
+  const sections = useMemo(() => {
+    if (isSwapListLoading(loading, portfolioSection, popularSection)) {
+      return
     }
 
     return [
@@ -134,7 +134,6 @@ function _TokenSelectorSwapOutputList({
     activeAccountAddress,
     chainFilter,
   })
-
   return (
     <TokenSelectorList
       chainFilter={chainFilter}

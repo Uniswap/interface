@@ -1,4 +1,7 @@
-import { AccountCTAsExperimentGroup, useIsAccountCTAExperimentControl } from 'components/NavBar'
+import {
+  AccountCTAsExperimentGroup,
+  useIsAccountCTAExperimentControl,
+} from 'components/NavBar/accountCTAsExperimentUtils'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { Button, Text, styled } from 'ui/src'
@@ -37,7 +40,7 @@ export function NewUserCTAButton() {
 
   const openModal = useOpenModal(ApplicationModal.GET_THE_APP)
 
-  const isSignInExperimentControl = useIsAccountCTAExperimentControl()
+  const { isControl: isSignInExperimentControl } = useIsAccountCTAExperimentControl()
   const isSignUp = useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp
   const isCreateAccount =
     useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.LogInCreateAccount

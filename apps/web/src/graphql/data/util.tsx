@@ -232,6 +232,11 @@ const PROTOCOL_META: { [source in PriceSource]: ProtocolMeta } = {
     color: 'accent1',
     gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
   },
+  [PriceSource.SubgraphV4]: {
+    name: 'v4',
+    color: 'accent1', // TODO(WEB-4618): update the colors when they are available
+    gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
+  },
   /* [PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */
 }
 

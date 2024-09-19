@@ -1,5 +1,11 @@
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { FORCurrencyOrBalance, FORLogo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
+import {
+  FORCurrencyOrBalance,
+  FORLogo,
+  FORQuote,
+  FiatOnRampCurrency,
+  InitialQuoteSelection,
+} from 'uniswap/src/features/fiatOnRamp/types'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { v4 as uuid } from 'uuid'
 
@@ -97,6 +103,30 @@ export function getServiceProviderLogo(logos: FORLogo, isDarkMode: boolean): str
 export function createOnRampTransactionId(serviceProvider?: string): string {
   // The backend expects MoonPay transactions to have the MOONPAY prefix.
   return `${serviceProvider?.toUpperCase() === 'MOONPAY' ? 'MOONPAY' : ''}${uuid()}`
+}
+
+export function selectInitialQuote(quotes: FORQuote[] | undefined): {
+  quote: FORQuote | undefined
+  type: InitialQuoteSelection | undefined
+} {
+  const quoteFromLastUsedProvider = quotes?.find((q) => q.isMostRecentlyUsedProvider)
+  if (quoteFromLastUsedProvider) {
+    return {
+      quote: quoteFromLastUsedProvider,
+      type: InitialQuoteSelection.MostRecent,
+    }
+  }
+
+  const bestQuote = quotes && quotes.length && quotes[0]
+  if (bestQuote) {
+    return {
+      quote: quotes.reduce<FORQuote>((prev, curr) => {
+        return curr.destinationAmount > prev.destinationAmount ? curr : prev
+      }, bestQuote),
+      type: InitialQuoteSelection.Best,
+    }
+  }
+  return { quote: undefined, type: undefined }
 }
 
 export function isSupportedFORCurrency(currency: FORCurrencyOrBalance): currency is FiatOnRampCurrency {

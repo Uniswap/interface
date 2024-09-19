@@ -43,7 +43,6 @@ function OnRampError({ errorText, color }: { errorText: string; color: ColorToke
 interface FiatOnRampAmountSectionProps {
   disabled?: boolean
   value: string
-  errorColor: ColorTokens | undefined
   errorText: string | undefined
   currency: FiatOnRampCurrency
   onEnterAmount: OnChangeAmount
@@ -70,7 +69,6 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
       disabled,
       value,
       onSelectionChange: selectionChange,
-      errorColor,
       errorText,
       onEnterAmount,
       onChoosePredifendAmount,
@@ -168,8 +166,8 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
         style={{ marginTop: (fullHeight - MIN_SCREEN_HEIGHT) / 6 }} // 6 was chosen empirically
         onLayout={onInputLayout}
       >
-        <Flex minHeight={spacing.spacing20}>
-          <Text color={errorColor} lineHeight={spacing.spacing20} textAlign="center" variant="buttonLabel2">
+        <Flex minHeight={spacing.spacing32}>
+          <Text color="$statusCritical" lineHeight={spacing.spacing32} textAlign="center" variant="body3">
             {debouncedErrorText}
           </Text>
         </Flex>

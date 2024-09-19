@@ -26,9 +26,9 @@ function AddressQRCode({ address, ecl, size, eyeSize, backgroundColor, color }: 
       backgroundColor={backgroundColor}
       color={color}
       ecl={ecl}
+      eyeSize={eyeSize}
       overlayColor={colors.neutral1.val}
       size={size}
-      eyeSize={eyeSize}
       value={address}
     />
   )
@@ -55,8 +55,8 @@ const _QRCodeDisplay = ({
         backgroundColor={containerBackgroundColor}
         color={color}
         ecl={ecl}
-        size={size}
         eyeSize={eyeSize}
+        size={size}
       />
       <Flex
         alignItems="center"

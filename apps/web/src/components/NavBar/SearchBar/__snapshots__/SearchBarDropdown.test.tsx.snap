@@ -1,7 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`disable nft on searchbar dropdown should not render popular nft collections 1`] = `
-.c0 {
+.c5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -13,48 +13,10 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+  gap: 8px;
 }
 
 .c7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
-.c2 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c3 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
-.c9 {
   border-radius: 12px;
   border-radius: 12px;
   height: 20px;
@@ -69,7 +31,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   background-size: 400%;
 }
 
-.c10 {
+.c8 {
   border-radius: 12px;
   border-radius: 12px;
   height: 20px;
@@ -84,7 +46,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   background-size: 400%;
 }
 
-.c11 {
+.c9 {
   border-radius: 12px;
   border-radius: 12px;
   height: 16px;
@@ -99,7 +61,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   background-size: 400%;
 }
 
-.c12 {
+.c10 {
   border-radius: 12px;
   border-radius: 12px;
   height: 16px;
@@ -114,7 +76,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   background-size: 400%;
 }
 
-.c5 {
+.c3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -137,11 +99,11 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   transition: background 250ms ease;
 }
 
-.c5:hover {
+.c3:hover {
   background: #22222212;
 }
 
-.c6 {
+.c4 {
   width: 36px;
   height: 36px;
   border-radius: 9999px;
@@ -151,46 +113,54 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   flex-shrink: 0;
 }
 
-.c8 {
+.c6 {
   width: 100%;
+}
+
+.c0 {
+  display: inline-block;
+  height: inherit;
 }
 
 .c1 {
-  width: 100%;
-  -webkit-backdrop-filter: blur(60px);
-  backdrop-filter: blur(60px);
-  overflow-y: auto;
-  -webkit-transition: 125;
-  transition: 125;
-  opacity: 1;
-  -webkit-scrollbar-width: thin;
-  -moz-scrollbar-width: thin;
-  -ms-scrollbar-width: thin;
-  scrollbar-width: thin;
-  -webkit-scrollbar-color: #22222212 transparent;
-  -moz-scrollbar-color: #22222212 transparent;
-  -ms-scrollbar-color: #22222212 transparent;
-  scrollbar-color: #22222212 transparent;
-  height: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: 0px;
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: none;
+  outline: none;
+  cursor: default;
+  border-radius: 36px;
+  font-size: 12px;
+  border-radius: 12px;
 }
 
-.c1::-webkit-scrollbar {
-  background: transparent;
-  width: 4px;
-  overflow-y: scroll;
+.c1:hover,
+.c1:focus {
+  opacity: 0.7;
 }
 
-.c1::-webkit-scrollbar-thumb {
-  background: #22222212;
-  border-radius: 8px;
-}
-
-.c4 {
-  color: #7D7D7D;
-  line-height: 20px;
-  padding: 4px 16px;
-  font-weight: 500;
+.c2 {
   font-size: 14px;
+  margin-left: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #7D7D7D;
+  margin-top: 2.5px;
 }
 
 <div>
@@ -205,7 +175,8 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c0 c1"
+          class="css-view-175oi2r"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; overflow-y: auto; width: 100%; opacity: 1;"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558152"
@@ -215,7 +186,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
               data-testid="searchbar-dropdown"
             >
               <div
-                class="c2 c3 c4"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _pt-1481558307 _pb-1481558307 _pr-1481558183 _pl-1481558183 _gap-8px"
               >
                 <svg
                   fill="none"
@@ -235,33 +206,67 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
                     points="17 6 23 6 23 12"
                   />
                 </svg>
-                Popular tokens
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202"
+                  data-disable-theme="true"
+                >
+                  Popular tokens
+                </span>
+                <span
+                  style="margin-left: 4px; display: flex; align-items: center;"
+                >
+                  <div
+                    class="c0"
+                  >
+                    <div>
+                      <div
+                        class="c1"
+                      >
+                        <span
+                          class="c2"
+                        >
+                          <svg
+                            fill="none"
+                            stroke-width="8"
+                            style="color: rgb(206, 206, 206); width: 16px; height: 16px;"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </span>
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558307"
               >
                 <div
-                  class="c5"
+                  class="c3"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c6"
+                      class="c4"
                     />
                     <div
-                      class="c7 c8"
+                      class="c5 c6"
                     >
                       <div
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c9"
+                          class="c7"
                           height="20px"
                           width="180px"
                         />
                         <div
-                          class="c10"
+                          class="c8"
                           height="20px"
                           width="48px"
                         />
@@ -270,12 +275,12 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c11"
+                          class="c9"
                           height="16px"
                           width="120px"
                         />
                         <div
-                          class="c12"
+                          class="c10"
                           height="16px"
                           width="48px"
                         />
@@ -284,27 +289,27 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
                   </div>
                 </div>
                 <div
-                  class="c5"
+                  class="c3"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c6"
+                      class="c4"
                     />
                     <div
-                      class="c7 c8"
+                      class="c5 c6"
                     >
                       <div
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c9"
+                          class="c7"
                           height="20px"
                           width="180px"
                         />
                         <div
-                          class="c10"
+                          class="c8"
                           height="20px"
                           width="48px"
                         />
@@ -313,12 +318,12 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c11"
+                          class="c9"
                           height="16px"
                           width="120px"
                         />
                         <div
-                          class="c12"
+                          class="c10"
                           height="16px"
                           width="48px"
                         />
@@ -327,27 +332,27 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
                   </div>
                 </div>
                 <div
-                  class="c5"
+                  class="c3"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c6"
+                      class="c4"
                     />
                     <div
-                      class="c7 c8"
+                      class="c5 c6"
                     >
                       <div
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c9"
+                          class="c7"
                           height="20px"
                           width="180px"
                         />
                         <div
-                          class="c10"
+                          class="c8"
                           height="20px"
                           width="48px"
                         />
@@ -356,12 +361,12 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c11"
+                          class="c9"
                           height="16px"
                           width="120px"
                         />
                         <div
-                          class="c12"
+                          class="c10"
                           height="16px"
                           width="48px"
                         />
@@ -380,7 +385,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
 `;
 
 exports[`disable nft on searchbar dropdown should render popular nft collections 1`] = `
-.c0 {
+.c5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -392,48 +397,10 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
+  gap: 8px;
 }
 
 .c7 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
-.c2 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-}
-
-.c3 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
-}
-
-.c9 {
   border-radius: 12px;
   border-radius: 12px;
   height: 20px;
@@ -448,7 +415,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   background-size: 400%;
 }
 
-.c10 {
+.c8 {
   border-radius: 12px;
   border-radius: 12px;
   height: 20px;
@@ -463,7 +430,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   background-size: 400%;
 }
 
-.c11 {
+.c9 {
   border-radius: 12px;
   border-radius: 12px;
   height: 16px;
@@ -478,7 +445,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   background-size: 400%;
 }
 
-.c12 {
+.c10 {
   border-radius: 12px;
   border-radius: 12px;
   height: 16px;
@@ -493,7 +460,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   background-size: 400%;
 }
 
-.c5 {
+.c3 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -516,11 +483,11 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   transition: background 250ms ease;
 }
 
-.c5:hover {
+.c3:hover {
   background: #22222212;
 }
 
-.c6 {
+.c4 {
   width: 36px;
   height: 36px;
   border-radius: 9999px;
@@ -530,46 +497,54 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   flex-shrink: 0;
 }
 
-.c8 {
+.c6 {
   width: 100%;
+}
+
+.c0 {
+  display: inline-block;
+  height: inherit;
 }
 
 .c1 {
-  width: 100%;
-  -webkit-backdrop-filter: blur(60px);
-  backdrop-filter: blur(60px);
-  overflow-y: auto;
-  -webkit-transition: 125;
-  transition: 125;
-  opacity: 1;
-  -webkit-scrollbar-width: thin;
-  -moz-scrollbar-width: thin;
-  -ms-scrollbar-width: thin;
-  scrollbar-width: thin;
-  -webkit-scrollbar-color: #22222212 transparent;
-  -moz-scrollbar-color: #22222212 transparent;
-  -ms-scrollbar-color: #22222212 transparent;
-  scrollbar-color: #22222212 transparent;
-  height: 100%;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  padding: 0px;
+  width: 18px;
+  height: 18px;
+  border: none;
+  background: none;
+  outline: none;
+  cursor: default;
+  border-radius: 36px;
+  font-size: 12px;
+  border-radius: 12px;
 }
 
-.c1::-webkit-scrollbar {
-  background: transparent;
-  width: 4px;
-  overflow-y: scroll;
+.c1:hover,
+.c1:focus {
+  opacity: 0.7;
 }
 
-.c1::-webkit-scrollbar-thumb {
-  background: #22222212;
-  border-radius: 8px;
-}
-
-.c4 {
-  color: #7D7D7D;
-  line-height: 20px;
-  padding: 4px 16px;
-  font-weight: 500;
+.c2 {
   font-size: 14px;
+  margin-left: 8px;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  color: #7D7D7D;
+  margin-top: 2.5px;
 }
 
 <div>
@@ -584,7 +559,8 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="c0 c1"
+          class="css-view-175oi2r"
+          style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; overflow-y: auto; width: 100%; opacity: 1;"
         >
           <div
             class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558152"
@@ -594,7 +570,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
               data-testid="searchbar-dropdown"
             >
               <div
-                class="c2 c3 c4"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _pt-1481558307 _pb-1481558307 _pr-1481558183 _pl-1481558183 _gap-8px"
               >
                 <svg
                   fill="none"
@@ -614,33 +590,67 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                     points="17 6 23 6 23 12"
                   />
                 </svg>
-                Popular tokens
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202"
+                  data-disable-theme="true"
+                >
+                  Popular tokens
+                </span>
+                <span
+                  style="margin-left: 4px; display: flex; align-items: center;"
+                >
+                  <div
+                    class="c0"
+                  >
+                    <div>
+                      <div
+                        class="c1"
+                      >
+                        <span
+                          class="c2"
+                        >
+                          <svg
+                            fill="none"
+                            stroke-width="8"
+                            style="color: rgb(206, 206, 206); width: 16px; height: 16px;"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </span>
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558307"
               >
                 <div
-                  class="c5"
+                  class="c3"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c6"
+                      class="c4"
                     />
                     <div
-                      class="c7 c8"
+                      class="c5 c6"
                     >
                       <div
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c9"
+                          class="c7"
                           height="20px"
                           width="180px"
                         />
                         <div
-                          class="c10"
+                          class="c8"
                           height="20px"
                           width="48px"
                         />
@@ -649,12 +659,12 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c11"
+                          class="c9"
                           height="16px"
                           width="120px"
                         />
                         <div
-                          class="c12"
+                          class="c10"
                           height="16px"
                           width="48px"
                         />
@@ -663,27 +673,27 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                   </div>
                 </div>
                 <div
-                  class="c5"
+                  class="c3"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c6"
+                      class="c4"
                     />
                     <div
-                      class="c7 c8"
+                      class="c5 c6"
                     >
                       <div
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c9"
+                          class="c7"
                           height="20px"
                           width="180px"
                         />
                         <div
-                          class="c10"
+                          class="c8"
                           height="20px"
                           width="48px"
                         />
@@ -692,12 +702,12 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c11"
+                          class="c9"
                           height="16px"
                           width="120px"
                         />
                         <div
-                          class="c12"
+                          class="c10"
                           height="16px"
                           width="48px"
                         />
@@ -706,27 +716,27 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                   </div>
                 </div>
                 <div
-                  class="c5"
+                  class="c3"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c6"
+                      class="c4"
                     />
                     <div
-                      class="c7 c8"
+                      class="c5 c6"
                     >
                       <div
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c9"
+                          class="c7"
                           height="20px"
                           width="180px"
                         />
                         <div
-                          class="c10"
+                          class="c8"
                           height="20px"
                           width="48px"
                         />
@@ -735,12 +745,12 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c11"
+                          class="c9"
                           height="16px"
                           width="120px"
                         />
                         <div
-                          class="c12"
+                          class="c10"
                           height="16px"
                           width="48px"
                         />
@@ -755,7 +765,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
               data-testid="searchbar-dropdown"
             >
               <div
-                class="c2 c3 c4"
+                class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _pt-1481558307 _pb-1481558307 _pr-1481558183 _pl-1481558183 _gap-8px"
               >
                 <svg
                   fill="none"
@@ -775,33 +785,67 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                     points="17 6 23 6 23 12"
                   />
                 </svg>
-                Popular NFT collections
+                <span
+                  class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202"
+                  data-disable-theme="true"
+                >
+                  Popular NFT collections
+                </span>
+                <span
+                  style="margin-left: 4px; display: flex; align-items: center;"
+                >
+                  <div
+                    class="c0"
+                  >
+                    <div>
+                      <div
+                        class="c1"
+                      >
+                        <span
+                          class="c2"
+                        >
+                          <svg
+                            fill="none"
+                            stroke-width="8"
+                            style="color: rgb(206, 206, 206); width: 16px; height: 16px;"
+                            viewBox="0 0 16 16"
+                          >
+                            <path
+                              d="M8.00001 1.33334C4.31801 1.33334 1.33334 4.318 1.33334 8C1.33334 11.682 4.31801 14.6667 8.00001 14.6667C11.682 14.6667 14.6667 11.682 14.6667 8C14.6667 4.318 11.682 1.33334 8.00001 1.33334ZM8.50001 11C8.50001 11.276 8.27601 11.5 8.00001 11.5C7.72401 11.5 7.50001 11.276 7.50001 11V7.95264C7.50001 7.67664 7.72401 7.45264 8.00001 7.45264C8.27601 7.45264 8.50001 7.67664 8.50001 7.95264V11ZM8.01336 6.33334C7.64536 6.33334 7.34327 6.03467 7.34327 5.66667C7.34327 5.29867 7.63868 5 8.00668 5H8.01336C8.38202 5 8.68002 5.29867 8.68002 5.66667C8.68002 6.03467 8.38136 6.33334 8.01336 6.33334Z"
+                              fill="currentColor"
+                            />
+                          </svg>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </span>
               </div>
               <div
                 class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558307"
               >
                 <div
-                  class="c5"
+                  class="c3"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c6"
+                      class="c4"
                     />
                     <div
-                      class="c7 c8"
+                      class="c5 c6"
                     >
                       <div
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c9"
+                          class="c7"
                           height="20px"
                           width="180px"
                         />
                         <div
-                          class="c10"
+                          class="c8"
                           height="20px"
                           width="48px"
                         />
@@ -810,12 +854,12 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c11"
+                          class="c9"
                           height="16px"
                           width="120px"
                         />
                         <div
-                          class="c12"
+                          class="c10"
                           height="16px"
                           width="48px"
                         />
@@ -824,27 +868,27 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                   </div>
                 </div>
                 <div
-                  class="c5"
+                  class="c3"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
                   >
                     <div
-                      class="c6"
+                      class="c4"
                     />
                     <div
-                      class="c7 c8"
+                      class="c5 c6"
                     >
                       <div
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c9"
+                          class="c7"
                           height="20px"
                           width="180px"
                         />
                         <div
-                          class="c10"
+                          class="c8"
                           height="20px"
                           width="48px"
                         />
@@ -853,12 +897,12 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                         class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761"
                       >
                         <div
-                          class="c11"
+                          class="c9"
                           height="16px"
                           width="120px"
                         />
                         <div
-                          class="c12"
+                          class="c10"
                           height="16px"
                           width="48px"
                         />

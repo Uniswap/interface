@@ -4,11 +4,11 @@ import { Flex, isWeb, SpinningLoader, Text } from 'ui/src'
 import { Gas } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
+import { useUSDValue } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
-import { useUSDValue } from 'wallet/src/features/gas/hooks'
 import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
 
 type GasFeeRowProps = {

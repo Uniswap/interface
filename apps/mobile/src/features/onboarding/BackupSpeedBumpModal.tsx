@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { LockPreviewImage } from 'src/features/onboarding/LockPreviewImage'
-import { Button, CheckBox, Flex, Text, useIsDarkMode, useShadowPropsShort } from 'ui/src'
+import { Button, Flex, LabeledCheckbox, Text, useIsDarkMode, useShadowPropsShort } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -60,7 +60,7 @@ export function BackupSpeedBumpModal({ backupType, onContinue, onClose }: Backup
           py="$spacing16"
           onPress={() => setChecked(!checked)}
         >
-          <CheckBox
+          <LabeledCheckbox
             checked={checked}
             checkedColor="$accent1"
             onCheckPressed={() => {

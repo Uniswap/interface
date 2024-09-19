@@ -1,75 +1,18 @@
 import { BigNumber, providers } from 'ethers'
 import { useCallback, useMemo } from 'react'
-import { PollingInterval } from 'uniswap/src/constants/misc'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'uniswap/src/constants/transactions'
-import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
-import { FeeType, GasFeeResult, GasSpeed } from 'uniswap/src/features/gas/types'
-import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
+import { FeeType, GasSpeed } from 'uniswap/src/features/gas/types'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { FeeDetails, getAdjustedGasFeeDetails } from 'wallet/src/features/gas/adjustGasFee'
 import { getCancelOrderTxRequest } from 'wallet/src/features/transactions/cancelTransactionSaga'
 
 export type CancelationGasFeeDetails = {
   cancelRequest: providers.TransactionRequest
   cancelationGasFee: string
-}
-
-export function useTransactionGasFee(
-  tx: providers.TransactionRequest | undefined,
-  speed: GasSpeed = GasSpeed.Urgent,
-  skip?: boolean,
-  refetchInterval?: PollingInterval,
-): GasFeeResult {
-  const pollingIntervalForChain = usePollingIntervalByChain(tx?.chainId)
-
-  const { data, error, isLoading } = useGasFeeQuery({
-    params: skip ? undefined : tx,
-    refetchInterval,
-    staleTime: pollingIntervalForChain,
-    immediateGcTime: pollingIntervalForChain + 15 * ONE_SECOND_MS,
-  })
-
-  return useMemo(() => {
-    if (!data) {
-      return { error: error ?? null, isLoading }
-    }
-
-    const params =
-      data.type === FeeType.Eip1559
-        ? {
-            maxPriorityFeePerGas: data.maxPriorityFeePerGas[speed],
-            maxFeePerGas: data.maxFeePerGas[speed],
-            gasLimit: data.gasLimit,
-          }
-        : {
-            gasPrice: data.gasPrice[speed],
-            gasLimit: data.gasLimit,
-          }
-    return {
-      value: data.gasFee[speed],
-      isLoading,
-      error: error ?? null,
-      params,
-    }
-  }, [data, error, isLoading, speed])
-}
-
-export function useUSDValue(chainId?: WalletChainId, ethValueInWei?: string): string | undefined {
-  const currencyAmount = getCurrencyAmount({
-    value: ethValueInWei,
-    valueType: ValueType.Raw,
-    currency: chainId ? NativeCurrency.onChain(chainId) : undefined,
-  })
-
-  return useUSDCValue(currencyAmount)?.toExact()
 }
 
 /**

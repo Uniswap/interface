@@ -85,6 +85,7 @@ describe('useSwapTxAndGasInfo', () => {
         },
       },
       approvalError: false,
+      indicativeTrade: undefined,
     })
   })
 })

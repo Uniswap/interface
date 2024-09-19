@@ -17,6 +17,7 @@ import { DynamicSection } from 'pages/AddLiquidity/styled'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Box } from 'rebass'
 import { ThemedText } from 'theme/components'
+import { RadioButtonGroup } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
@@ -190,22 +191,24 @@ export default function FeeSelector({
 
         {chainId && showOptions && (
           <Select>
-            {[FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map((_feeAmount, i) => {
-              const { supportedChains } = FEE_AMOUNT_DETAIL[_feeAmount]
-              if ((supportedChains as unknown as InterfaceChainId[]).includes(chainId)) {
-                return (
-                  <FeeOption
-                    feeAmount={_feeAmount}
-                    active={feeAmount === _feeAmount}
-                    onClick={() => handleFeePoolSelectWithEvent(_feeAmount)}
-                    distributions={distributions}
-                    poolState={poolsByFeeTier[_feeAmount]}
-                    key={i}
-                  />
-                )
-              }
-              return null
-            })}
+            <RadioButtonGroup value={feeAmount?.toString()} orientation="horizontal" justifyContent="space-around">
+              {[FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map((_feeAmount, i) => {
+                const { supportedChains } = FEE_AMOUNT_DETAIL[_feeAmount]
+                if ((supportedChains as unknown as InterfaceChainId[]).includes(chainId)) {
+                  return (
+                    <FeeOption
+                      feeAmount={_feeAmount}
+                      selected={_feeAmount === feeAmount}
+                      onClick={() => handleFeePoolSelectWithEvent(_feeAmount)}
+                      distributions={distributions}
+                      poolState={poolsByFeeTier[_feeAmount]}
+                      key={i}
+                    />
+                  )
+                }
+                return null
+              })}
+            </RadioButtonGroup>
           </Select>
         )}
       </DynamicSection>

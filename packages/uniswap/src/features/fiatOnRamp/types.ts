@@ -194,3 +194,8 @@ export type FiatCurrencyInfo = {
 } & FiatCurrencyComponents
 
 export type FORCurrencyOrBalance = FiatOnRampCurrency | PortfolioBalance
+
+export enum RampToggle {
+  BUY = 'BUY',
+  SELL = 'SELL',
+}

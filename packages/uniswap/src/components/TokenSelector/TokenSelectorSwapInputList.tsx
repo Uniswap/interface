@@ -13,7 +13,11 @@ import {
   TokenSection,
   TokenSectionsHookProps,
 } from 'uniswap/src/components/TokenSelector/types'
-import { tokenOptionDifference, useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
+import {
+  isSwapListLoading,
+  tokenOptionDifference,
+  useTokenOptionsSection,
+} from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
 // eslint-disable-next-line no-restricted-imports
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
@@ -68,7 +72,7 @@ function useTokenSectionsForSwapInput({
   const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularMinusPortfolioTokens)
 
   const sections = useMemo(() => {
-    if (loading && (!portfolioSection || !popularSection)) {
+    if (isSwapListLoading(loading, portfolioSection, popularSection)) {
       return
     }
 

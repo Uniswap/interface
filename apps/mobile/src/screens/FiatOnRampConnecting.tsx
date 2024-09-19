@@ -15,7 +15,7 @@ import { useFiatOnRampAggregatorWidgetQuery } from 'uniswap/src/features/fiatOnR
 import { ServiceProviderLogoStyles } from 'uniswap/src/features/fiatOnRamp/constants'
 import { getOptionalServiceProviderLogo } from 'uniswap/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
+import { FiatOffRampEventName, FiatOnRampEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { forceFetchFiatOnRampTransactions } from 'uniswap/src/features/transactions/slice'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -100,15 +100,18 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     async function navigateToWidget(widgetUrl: string): Promise<void> {
       dispatch(closeModal({ name: ModalName.FiatOnRampAggregator }))
       if (serviceProvider && quoteCurrency?.meldCurrencyCode && baseCurrencyInfo && quotesSections?.[0]?.data?.[0]) {
-        sendAnalyticsEvent(FiatOnRampEventName.FiatOnRampWidgetOpened, {
-          externalTransactionId,
-          serviceProvider: serviceProvider.serviceProvider,
-          preselectedServiceProvider: quotesSections?.[0]?.data?.[0]?.serviceProviderDetails.serviceProvider,
-          countryCode,
-          countryState,
-          fiatCurrency: baseCurrencyInfo?.code.toLowerCase(),
-          cryptoCurrency: quoteCurrency.meldCurrencyCode.toLowerCase(),
-        })
+        sendAnalyticsEvent(
+          isOffRamp ? FiatOffRampEventName.FiatOffRampWidgetOpened : FiatOnRampEventName.FiatOnRampWidgetOpened,
+          {
+            externalTransactionId,
+            serviceProvider: serviceProvider.serviceProvider,
+            preselectedServiceProvider: quotesSections?.[0]?.data?.[0]?.serviceProviderDetails.serviceProvider,
+            countryCode,
+            countryState,
+            fiatCurrency: baseCurrencyInfo?.code.toLowerCase(),
+            cryptoCurrency: quoteCurrency.meldCurrencyCode.toLowerCase(),
+          },
+        )
       }
       dispatchAddTransaction()
       await openUri(widgetUrl).catch(onError)
@@ -134,6 +137,7 @@ export function FiatOnRampConnectingScreen({ navigation }: Props): JSX.Element |
     quotesSections,
     countryCode,
     countryState,
+    isOffRamp,
   ])
 
   const isDarkMode = useIsDarkMode()

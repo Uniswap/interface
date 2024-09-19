@@ -12,7 +12,7 @@ interface UniswapContext {
   useProviderHook: (chainId: number) => JsonRpcProvider | undefined
 }
 
-const UniswapContext = createContext<UniswapContext | null>(null)
+export const UniswapContext = createContext<UniswapContext | null>(null)
 
 export function UniswapProvider({
   children,

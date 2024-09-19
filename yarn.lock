@@ -15236,6 +15236,7 @@ __metadata:
     "@types/uuid": 9.0.1
     "@uniswap/analytics-events": 2.36.0
     "@uniswap/eslint-config": "workspace:^"
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.8
     "@uniswap/universal-router-sdk": 2.2.0
     "@uniswap/v3-sdk": 3.13.0
     "@welldone-software/why-did-you-render": 8.0.1
@@ -15290,13 +15291,6 @@ __metadata:
     zod: 3.22.4
   languageName: unknown
   linkType: soft
-
-"@uniswap/governance@npm:1.0.2":
-  version: 1.0.2
-  resolution: "@uniswap/governance@npm:1.0.2"
-  checksum: 84e4f246e9031983ddcd5b44b77b0b19fcee2228e0d7df743bd79827c476ffc273e51cd37d0a6278183461a14de6517ead0fefed520e8c4e9c46e7529451ccf0
-  languageName: node
-  linkType: hard
 
 "@uniswap/interface@workspace:apps/web":
   version: 0.0.0-use.local
@@ -15370,7 +15364,6 @@ __metadata:
     "@uniswap/client-explore": 0.0.9
     "@uniswap/default-token-list": 11.19.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/governance": 1.0.2
     "@uniswap/liquidity-staker": 1.0.2
     "@uniswap/merkle-distributor": 1.0.1
     "@uniswap/permit2-sdk": 1.3.0
@@ -25930,6 +25923,15 @@ __metadata:
   peerDependencies:
     expo: "*"
   checksum: 73b48143af4b2348312ec312d7b83b12bbbca83df7c10f6183fce46bbf8ad45ce889a818d3bc0c82f9135a44ee3a65d09f3fad842c2e6f51b891dedb18c285ed
+  languageName: node
+  linkType: hard
+
+"expo-screen-capture@patch:expo-screen-capture@npm%3A5.8.1#./.yarn/patches/expo-screen-capture-npm-5.8.1-78e5827fdf.patch::locator=universe%40workspace%3A.":
+  version: 5.8.1
+  resolution: "expo-screen-capture@patch:expo-screen-capture@npm%3A5.8.1#./.yarn/patches/expo-screen-capture-npm-5.8.1-78e5827fdf.patch::version=5.8.1&hash=0951ea&locator=universe%40workspace%3A."
+  peerDependencies:
+    expo: "*"
+  checksum: b62f7d8b1886a9a8b55038c476d2807d936e70b591099cdc92ecd62d3a48af406db8a4272e6f8fe93747daf9671a181842fcd7c053ab60903e236b7b6486f504
   languageName: node
   linkType: hard
 
@@ -44717,6 +44719,7 @@ __metadata:
     typescript: 5.3.3
     uppercamelcase: ^3.0.0
     utilities: "workspace:^"
+    uuid: 9.0.0
     wcag-contrast: 3.0.0
   languageName: unknown
   linkType: soft

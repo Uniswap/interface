@@ -38,7 +38,7 @@ export function SwapFormButton(): JSX.Element {
 
   const { isBlocked, isBlockedLoading } = useIsBlocked(activeAccount?.address)
 
-  const noValidSwap = !isWrapAction(wrapType) && !trade.trade
+  const noValidSwap = !isWrapAction(wrapType) && !trade.trade && !trade.indicativeTrade
 
   const reviewButtonDisabled =
     noValidSwap || !!blockingWarning || isBlocked || isBlockedLoading || walletNeedsRestore || isSubmitting
@@ -67,6 +67,7 @@ export function SwapFormButton(): JSX.Element {
   const buttonBgColor = hasButtonWarning ? '$surface3' : isSubmitting ? '$accent2' : '$accent1'
   const buttonOpacity = isViewOnlyWallet ? 0.4 : isSubmitting ? 1 : undefined
 
+  // TODO(WEB-4821): Remove uniswapx submission logic since this component will no longer be rendered during submission
   const showUniswapXSubmittingUI = trade.trade && isUniswapX(trade?.trade) && isSubmitting
 
   return (

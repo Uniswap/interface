@@ -88,4 +88,8 @@ export const animations = createAnimations({
     stiffness: 1250,
     mass: 1.4,
   },
+  simple: {
+    type: 'timing',
+    duration: 80,
+  },
 })

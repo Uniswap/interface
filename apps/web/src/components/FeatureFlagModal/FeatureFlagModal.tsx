@@ -226,6 +226,7 @@ export default function FeatureFlagModal() {
           <FeatureFlagOption flag={FeatureFlags.MultipleRoutingOptions} label="Enable Multiple Routing Options" />
           <FeatureFlagOption flag={FeatureFlags.NavigationHotkeys} label="Navigation hotkeys" />
           <FeatureFlagOption flag={FeatureFlags.ForAggregator} label="Enable FOR aggregator web" />
+          <FeatureFlagOption flag={FeatureFlags.TokenProtection} label="Warning UX for scam/dangerous tokens" />
           <FeatureFlagGroup name="New Chains">
             <FeatureFlagOption flag={FeatureFlags.Zora} label="Enable Zora" />
           </FeatureFlagGroup>

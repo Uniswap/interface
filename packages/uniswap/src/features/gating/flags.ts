@@ -7,6 +7,8 @@ export enum FeatureFlags {
   // Shared
   ForAggregator,
   DisableFiatOnRampKorea,
+  IndicativeSwapQuotes,
+  TokenProtection,
 
   // Wallet
   PrivateRpc,
@@ -59,6 +61,8 @@ export enum FeatureFlags {
 export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
   [FeatureFlags.ForAggregator, 'for_aggregator_web'],
+  [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
+  [FeatureFlags.TokenProtection, 'token_protection'],
 
   // Web Specific
   [FeatureFlags.NavigationHotkeys, 'navigation_hotkeys'],
@@ -91,6 +95,8 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
   [FeatureFlags.ForAggregator, 'for-aggregator'],
   [FeatureFlags.DisableFiatOnRampKorea, 'disable-fiat-onramp-korea'],
+  [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
+  [FeatureFlags.TokenProtection, 'token_protection'],
 
   // Wallet Specific
   [FeatureFlags.AATest, 'aatest1'],

@@ -2,7 +2,7 @@ import { Options, Placement } from '@popperjs/core'
 import Portal from '@reach/portal'
 import useInterval from 'lib/hooks/useInterval'
 import styled from 'lib/styled-components'
-import React, { CSSProperties, useCallback, useMemo, useState } from 'react'
+import React, { CSSProperties, memo, useCallback, useMemo, useState } from 'react'
 import { usePopper } from 'react-popper'
 import { Z_INDEX } from 'theme/zIndex'
 
@@ -86,7 +86,7 @@ export interface PopoverProps {
   style?: CSSProperties
 }
 
-export default function Popover({
+const Popover = memo(function Popover({
   content,
   show,
   children,
@@ -143,4 +143,6 @@ export default function Popover({
       </Portal>
     </>
   )
-}
+})
+
+export default Popover

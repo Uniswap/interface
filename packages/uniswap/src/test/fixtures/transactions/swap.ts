@@ -41,6 +41,8 @@ export const createMockTradeWithStatus = (
     ],
     mixedRoutes: [],
   }),
+  indicativeTrade: undefined,
+  isIndicativeLoading: false,
   isLoading: false,
   error: null,
 })

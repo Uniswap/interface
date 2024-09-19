@@ -39,6 +39,9 @@ export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.
     // no-op until we have proper NFT collection
   }, [])
   const navigateToFiatOnRamp = useNavigateToFiatOnRamp()
+  const navigateToExternalProfile = useCallback(() => {
+    // no-op until we have an external profile screen on extension
+  }, [])
 
   return (
     <WalletNavigationProvider
@@ -47,6 +50,7 @@ export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.
       navigateToAccountActivityList={navigateToAccountActivityList}
       navigateToAccountTokenList={navigateToAccountTokenList}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
+      navigateToExternalProfile={navigateToExternalProfile}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       navigateToNftCollection={navigateToNftCollection}
       navigateToNftDetails={navigateToNftDetails}
