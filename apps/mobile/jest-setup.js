@@ -9,7 +9,7 @@ import mockRNCNetInfo from '@react-native-community/netinfo/jest/netinfo-mock.js
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
 import { TextDecoder, TextEncoder } from 'util'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
-import { mockLocalizationContext } from 'wallet/src/test/mocks/utils'
+import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
 import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
 

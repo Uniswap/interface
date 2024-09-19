@@ -1,7 +1,7 @@
-import { SmallButtonPrimary } from 'components/Button'
-import Column from 'components/Column'
+import { SmallButtonPrimary } from 'components/Button/buttons'
 import Modal from 'components/Modal'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
 import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
@@ -214,6 +214,7 @@ export default function FeatureFlagModal() {
           </CloseButton>
         </Header>
         <FlagsColumn>
+          <FeatureFlagOption flag={FeatureFlags.UniversalSwap} label="Enable swap flow from the Uniswap Package" />
           <FeatureFlagOption
             flag={FeatureFlags.Eip6936Enabled}
             label="Enable EIP-6963: Multi Injected Provider Discovery"

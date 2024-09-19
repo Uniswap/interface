@@ -288,7 +288,7 @@ function TransactionParticipantRow({
       dispatch(
         pushNotification({
           type: AppNotificationType.Copied,
-          copyType: CopyNotificationType.Unitag,
+          copyType: unitag?.username ? CopyNotificationType.Unitag : CopyNotificationType.Address,
         }),
       )
     }

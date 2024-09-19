@@ -6,7 +6,7 @@ import { ActivityIndicator, Alert, Image, Platform, StyleSheet } from 'react-nat
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
-import { enroll, tryLocalAuthenticate } from 'src/features/biometrics'
+import { enroll, tryLocalAuthenticate } from 'src/features/biometrics/biometrics'
 import {
   biometricAuthenticationSuccessful,
   checkOsBiometricAuthEnabled,

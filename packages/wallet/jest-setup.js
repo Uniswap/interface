@@ -3,7 +3,7 @@ import 'utilities/src/logger/mocks'
 
 import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
 import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
-import { mockLocalizationContext } from 'wallet/src/test/mocks/utils'
+import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
 import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
 
@@ -23,7 +23,7 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
   }
 })
 
-jest.mock('utilities/src/environment', () => ({
+jest.mock('utilities/src/environment/env', () => ({
   isTestEnv: jest.fn(() => true),
   isDevEnv: jest.fn(() => false),
   isBetaEnv: jest.fn(() => false),

@@ -65,3 +65,11 @@ export type GasFeeResult = {
   error: SerializedError | FetchError | Error | null
   params?: TransactionLegacyFeeParams | TransactionEip1559FeeParams
 }
+
+export type FormattedUniswapXGasFeeInfo = {
+  approvalFeeFormatted?: string
+  wrapFeeFormatted?: string
+  swapFeeFormatted: string
+  preSavingsGasFeeFormatted: string
+  inputTokenSymbol?: string
+}

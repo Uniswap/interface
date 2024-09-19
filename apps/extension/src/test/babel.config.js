@@ -4,7 +4,7 @@
 module.exports = function (api) {
   api.cache.using(() => process.env.NODE_ENV)
   var plugins = [
-    "react-native-web",
+    'react-native-web',
     [
       'module:react-native-dotenv',
       {

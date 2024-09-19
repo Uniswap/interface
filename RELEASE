@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmQHmbvMgf6snJLsy86wQW21owJimqnkJJCYYGbBpcCoig`
-- CIDv1: `bafybeia47jwp444qim2245sns24s5dnmr4wzkd3tvyeykxiimn7i6aedwe`
+- CIDv0: `Qmdg6ij4etmGwSPx9hQ8HLTKjxPFjRSK9R5pN8GhkrVZ4x`
+- CIDv1: `bafybeihd3k76qlvihfnaz3kgznkhzzr56vstcuzlpum67p6yudbbwnoagu`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,45 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeia47jwp444qim2245sns24s5dnmr4wzkd3tvyeykxiimn7i6aedwe.ipfs.dweb.link/
-- https://bafybeia47jwp444qim2245sns24s5dnmr4wzkd3tvyeykxiimn7i6aedwe.ipfs.cf-ipfs.com/
-- [ipfs://QmQHmbvMgf6snJLsy86wQW21owJimqnkJJCYYGbBpcCoig/](ipfs://QmQHmbvMgf6snJLsy86wQW21owJimqnkJJCYYGbBpcCoig/)
+- https://bafybeihd3k76qlvihfnaz3kgznkhzzr56vstcuzlpum67p6yudbbwnoagu.ipfs.dweb.link/
+- https://bafybeihd3k76qlvihfnaz3kgznkhzzr56vstcuzlpum67p6yudbbwnoagu.ipfs.cf-ipfs.com/
+- [ipfs://Qmdg6ij4etmGwSPx9hQ8HLTKjxPFjRSK9R5pN8GhkrVZ4x/](ipfs://Qmdg6ij4etmGwSPx9hQ8HLTKjxPFjRSK9R5pN8GhkrVZ4x/)
 
-### 5.46.2 (2024-09-17)
+## 5.47.0 (2024-09-19)
+
+
+### Features
+
+* **web:** add a sample position (#11732) 5f549b5
+* **web:** add shared swap flow to interface (#11767) 4600e7c
+* **web:** add the add liquidity modal and refactor modals to accept an initial state (#11721) 86bcbff
+* **web:** correctly utilize token balances provider (#11440) 596ec67
+* **web:** Fake Inf Scroll on Top Tokens and Pools table (#11830) 6452fae
+* **web:** Fix Tamagui crash on explore (#11838) c4d8def
+* **web:** memoize most of explore (#11745) e04492c
+* **web:** replace PillMultiToggle with Spore SegmentedControl (incl. snapshot changes) (#11361) 8b25df9
+* **web:** use cursor position instead of index for volume bar hover state (#11633) ec5818c
+* **web:** v4 pool flow progress indicator (#11793) de3e082
 
 
 ### Bug Fixes
 
-* **web:** prevent crash from new Base fee tiers [prod hotfix] (#11933) e570b30
+* **web:** Add unsupported style to Explore Table network options (#11698) 9a2f08b
+* **web:** avoid redirecting to / on Sign In Here (#11696) 0d0dce3
+* **web:** filter search sugesstions if token chain is undefined (#11582) da16520
+* **web:** migrate missing default userSettings fields (#11768) b2ea34a
+* **web:** nav dropdown height overflow and scroll (#12004) f46006f
+* **web:** prevent crash from new Base fee tiers [staging hotfix] (#11948) 4d44d04
+* **web:** reduce bundle size to 8/15/2024 levels (#11871) aafd834
+* **web:** remove frontend global search sorting/filtering logic [main] (#11832) dc095c9
+* **web:** remove vote pages (#11686) 2d10cc2
+* **web:** update cta on web mobile to open the app (#11603) daa2589
+* **web:** use onchain instead of swapping (#11778) 1b95a00
+* **web:** use overflow auto instead of scroll (#12009) f3d6323
+
+
+### Continuous Integration
+
+* **web:** update sitemaps f3f3f11
 
 

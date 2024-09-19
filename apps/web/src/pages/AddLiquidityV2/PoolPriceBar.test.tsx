@@ -1,8 +1,8 @@
 import { Price, WETH9 } from '@uniswap/sdk-core'
-import { USDC_MAINNET } from 'constants/tokens'
 import { PoolPriceBar } from 'pages/AddLiquidityV2/PoolPriceBar'
 import { Field } from 'state/mint/actions'
 import { render, screen } from 'test-utils/render'
+import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 
 const currencies = {
   [Field.CURRENCY_A]: WETH9[1],

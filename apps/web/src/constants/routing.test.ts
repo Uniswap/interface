@@ -1,4 +1,4 @@
-import { COMMON_BASES } from 'constants/routing'
+import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 describe('Routing', () => {

@@ -1751,28 +1751,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   font-weight: 535;
 }
 
-.c24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c25 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -1821,6 +1799,28 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   width: 10px;
   height: 20px;
   border-radius: 50%;
+}
+
+.c24 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c23 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .c21 {
@@ -2750,28 +2750,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   font-weight: 535;
 }
 
-.c24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c25 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -2820,6 +2798,28 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   width: 10px;
   height: 20px;
   border-radius: 50%;
+}
+
+.c24 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c23 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .c21 {
@@ -3749,28 +3749,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   font-weight: 535;
 }
 
-.c24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c25 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -3819,6 +3797,28 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   width: 10px;
   height: 20px;
   border-radius: 50%;
+}
+
+.c24 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c23 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .c21 {
@@ -4789,28 +4789,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   font-weight: 535;
 }
 
-.c24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c25 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -4859,6 +4837,28 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   width: 10px;
   height: 20px;
   border-radius: 50%;
+}
+
+.c24 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c23 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .c21 {
@@ -5842,28 +5842,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   font-weight: 535;
 }
 
-.c24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
 .c25 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -5912,6 +5890,28 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   width: 10px;
   height: 20px;
   border-radius: 50%;
+}
+
+.c24 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c23 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
 }
 
 .c21 {

@@ -16,7 +16,7 @@ import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
 import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
-import { Loader } from 'src/components/loading'
+import { Loader } from 'src/components/loading/loaders'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { useSkeletonLoading } from 'src/utils/useSkeletonLoading'
@@ -36,7 +36,8 @@ import {
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
+import { currencyIdToContractInput, gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
+import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Language } from 'uniswap/src/features/language/constants'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
@@ -58,7 +59,6 @@ import {
 import { NumberType } from 'utilities/src/format/types'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { useIsSupportedFiatOnRampCurrency } from 'wallet/src/features/fiatOnRamp/hooks'
 import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -186,6 +186,8 @@ function TokenDetails({
   const token = data?.token
   const tokenLogoUrl = token?.project?.logoUrl
   const tokenSymbol = token?.project?.name
+
+  const currencyInfo = token && gqlTokenToCurrencyInfo(token)
 
   const crossChainTokens = token?.project?.tokens
   const { currentChainBalance, otherChainBalances } = useCrossChainBalances(_currencyId, crossChainTokens)
@@ -361,18 +363,18 @@ function TokenDetails({
         </AnimatedFlex>
       ) : null}
 
-      <TokenWarningModal
-        currencyId={_currencyId}
-        disableAccept={activeTransactionType === undefined}
-        isVisible={showWarningModal}
-        safetyLevel={safetyLevel}
-        tokenLogoUrl={token?.project?.logoUrl}
-        onAccept={onAcceptWarning}
-        onClose={(): void => {
-          setActiveTransactionType(undefined)
-          setShowWarningModal(false)
-        }}
-      />
+      {currencyInfo && (
+        <TokenWarningModal
+          currencyInfo0={currencyInfo}
+          disableAccept={activeTransactionType === undefined}
+          isVisible={showWarningModal}
+          onAccept={onAcceptWarning}
+          onClose={(): void => {
+            setActiveTransactionType(undefined)
+            setShowWarningModal(false)
+          }}
+        />
+      )}
 
       {showBuyNativeTokenModal && (
         <BuyNativeTokenModal

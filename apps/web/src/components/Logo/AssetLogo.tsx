@@ -4,22 +4,6 @@ import styled from 'lib/styled-components'
 import React from 'react'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
-export const MissingImageLogo = styled.div<{ $size?: string; $textColor: string; $backgroundColor: string }>`
-  --size: ${({ $size }) => $size};
-  border-radius: 100px;
-  color: ${({ $textColor }) => $textColor};
-  background-color: ${({ $backgroundColor }) => $backgroundColor};
-  font-size: calc(var(--size) / 3);
-  font-weight: 535;
-  height: ${({ $size }) => $size ?? '24px'};
-  line-height: ${({ $size }) => $size ?? '24px'};
-  text-align: center;
-  width: ${({ $size }) => $size ?? '24px'};
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
-
 export type AssetLogoBaseProps = {
   symbol?: string | null
   primaryImg?: string | null

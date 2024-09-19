@@ -1,4 +1,4 @@
-import { OpacityHoverState } from 'components/Common'
+import { OpacityHoverState } from 'components/Common/styles'
 import styled from 'lib/styled-components'
 import { X } from 'react-feather'
 import { BREAKPOINTS } from 'theme'

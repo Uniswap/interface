@@ -1,15 +1,19 @@
 import { SharedEventName } from '@uniswap/analytics-events'
-import { PropsWithChildren, memo } from 'react'
+import { PropsWithChildren, memo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useInterfaceBuyNavigator } from 'src/app/features/for/utils'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { AnimatePresence, ContextMenu, Flex, Loader } from 'ui/src'
+import { ShieldCheck } from 'ui/src/components/icons'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
-import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, ModalName, SectionName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
+import { InfoLinkModal } from 'wallet/src/components/modals/InfoLinkModal'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { HiddenTokensRow } from 'wallet/src/features/portfolio/HiddenTokensRow'
@@ -129,15 +133,59 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
     setHiddenTokensExpanded,
   } = useTokenBalanceListContext()
 
+  const { t } = useTranslation()
+  const [isModalVisible, setModalVisible] = useState(false)
+
+  const handlePressToken = (): void => {
+    setModalVisible(true)
+  }
+
+  const closeModal = (): void => {
+    setModalVisible(false)
+  }
+
+  const handleAnalytics = (): void => {
+    sendAnalyticsEvent(WalletEventName.ExternalLinkOpened, {
+      url: uniswapUrls.helpArticleUrls.hiddenTokenInfo,
+    })
+  }
+
   if (item === HIDDEN_TOKEN_BALANCES_ROW) {
     return (
-      <HiddenTokensRow
-        isExpanded={hiddenTokensExpanded}
-        numHidden={hiddenTokensCount}
-        onPress={(): void => {
-          setHiddenTokensExpanded(!hiddenTokensExpanded)
-        }}
-      />
+      <>
+        <HiddenTokensRow
+          isExpanded={hiddenTokensExpanded}
+          numHidden={hiddenTokensCount}
+          onPress={(): void => {
+            setHiddenTokensExpanded(!hiddenTokensExpanded)
+          }}
+        />
+        {hiddenTokensExpanded && (
+          <Flex mx="$spacing12">
+            <InformationBanner infoText={t('hidden.tokens.info.banner.text')} onPress={handlePressToken} />
+          </Flex>
+        )}
+
+        <InfoLinkModal
+          showCloseButton
+          buttonText={t('common.button.close')}
+          buttonTheme="tertiary"
+          description={t('hidden.tokens.info.text.info')}
+          icon={
+            <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
+              <ShieldCheck color="$neutral1" size="$icon.24" />
+            </Flex>
+          }
+          isOpen={isModalVisible}
+          linkText={t('common.button.learn')}
+          linkUrl={uniswapUrls.helpArticleUrls.hiddenTokenInfo}
+          name={ModalName.HiddenTokenInfoModal}
+          title={t('hidden.tokens.info.text.title')}
+          onAnalyticsEvent={handleAnalytics}
+          onButtonPress={closeModal}
+          onDismiss={closeModal}
+        />
+      </>
     )
   }
 

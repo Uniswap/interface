@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		0013F5F72C93399400D6EF09 /* ProtectionInfo.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0013F5F62C93399400D6EF09 /* ProtectionInfo.graphql.swift */; };
+		00265F792C933CE300A5DA57 /* ProtectionResult.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00265F772C933CE300A5DA57 /* ProtectionResult.graphql.swift */; };
+		00265F7A2C933CE300A5DA57 /* ProtectionAttackType.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = 00265F782C933CE300A5DA57 /* ProtectionAttackType.graphql.swift */; };
 		005446EF1B67FC63C0A7383A /* libPods-OneSignalNotificationServiceExtension.a in Frameworks */ = {isa = PBXBuildFile; fileRef = F1868582E97BBB7469EA4C78 /* libPods-OneSignalNotificationServiceExtension.a */; };
 		00E356F31AD99517003FC87E /* UniswapTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 00E356F21AD99517003FC87E /* UniswapTests.m */; };
 		037C5AAA2C04970B00B1D808 /* CopyIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 037C5AA92C04970B00B1D808 /* CopyIcon.swift */; };
@@ -186,10 +189,7 @@
 		A70E4DD82C260416002D6D86 /* SwapOrderStatus.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70E4DD62C260416002D6D86 /* SwapOrderStatus.graphql.swift */; };
 		A7B8EFCB2BF68F0D00CA4A1C /* FeeData.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8EFCA2BF68F0D00CA4A1C /* FeeData.graphql.swift */; };
 		AC0EE0982BD826E700BCCF07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AC0EE0972BD826E700BCCF07 /* PrivacyInfo.xcprivacy */; };
-		AE1757582C49B0A7000120A5 /* Basel-Grotesk-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = AE1757572C49B0A1000120A5 /* Basel-Grotesk-Book.otf */; };
-		AE1757592C49B0AA000120A5 /* Basel-Grotesk-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = AE1757562C49B0A1000120A5 /* Basel-Grotesk-Medium.otf */; };
-		AEB2767B2C49CB060056FE52 /* Basel-Grotesk-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = AE1757562C49B0A1000120A5 /* Basel-Grotesk-Medium.otf */; };
-		AEB2767C2C49CB080056FE52 /* Basel-Grotesk-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = AE1757572C49B0A1000120A5 /* Basel-Grotesk-Book.otf */; };
+		AC2EF4032C914B1600EEEFDB /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = AC2EF4022C914B1600EEEFDB /* fonts */; };
 		B193AD315CF844A3BDC3D11D /* Basel-Grotesk-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3C606D2C81014A0A8898F38E /* Basel-Grotesk-Medium.otf */; };
 		D3B63ACA9B0C42F68080B080 /* InputMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1834199AFFB04D91B05FFB64 /* InputMono-Regular.ttf */; };
 		F35AFD3E27EE49990011A725 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35AFD3D27EE49990011A725 /* NotificationService.swift */; };
@@ -294,6 +294,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		0013F5F62C93399400D6EF09 /* ProtectionInfo.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtectionInfo.graphql.swift; path = MobileSchema/Schema/Objects/ProtectionInfo.graphql.swift; sourceTree = "<group>"; };
+		00265F772C933CE300A5DA57 /* ProtectionResult.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtectionResult.graphql.swift; path = MobileSchema/Schema/Enums/ProtectionResult.graphql.swift; sourceTree = "<group>"; };
+		00265F782C933CE300A5DA57 /* ProtectionAttackType.graphql.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ProtectionAttackType.graphql.swift; path = MobileSchema/Schema/Enums/ProtectionAttackType.graphql.swift; sourceTree = "<group>"; };
 		00E356EE1AD99517003FC87E /* UniswapTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = UniswapTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		00E356F11AD99517003FC87E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		00E356F21AD99517003FC87E /* UniswapTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = UniswapTests.m; sourceTree = "<group>"; };
@@ -503,8 +506,7 @@
 		A7C9F415D0E128A43003E071 /* Pods-Uniswap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.debug.xcconfig"; sourceTree = "<group>"; };
 		AC0EE0972BD826E700BCCF07 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Uniswap/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AC2794442C51541E00F9AF68 /* sourcemaps-datadog.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "sourcemaps-datadog.sh"; sourceTree = "<group>"; };
-		AE1757562C49B0A1000120A5 /* Basel-Grotesk-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Basel-Grotesk-Medium.otf"; path = "../../src/assets/fonts/Basel-Grotesk-Medium.otf"; sourceTree = "<group>"; };
-		AE1757572C49B0A1000120A5 /* Basel-Grotesk-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Basel-Grotesk-Book.otf"; path = "../../src/assets/fonts/Basel-Grotesk-Book.otf"; sourceTree = "<group>"; };
+		AC2EF4022C914B1600EEEFDB /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../src/assets/fonts; sourceTree = "<group>"; };
 		B0DA4D39B1A6D74A1D05B99F /* Pods-WidgetsCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.debug.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.debug.xcconfig"; sourceTree = "<group>"; };
 		B2176D5449C2B3B68A17466B /* libPods-WidgetsCoreTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WidgetsCoreTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCB2A43E5FB0D7B69CA02312 /* Pods-WidgetsCore.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.dev.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.dev.xcconfig"; sourceTree = "<group>"; };
@@ -649,6 +651,9 @@
 		072E23872A44D5BD006AD6C9 /* WidgetsCore */ = {
 			isa = PBXGroup;
 			children = (
+				00265F782C933CE300A5DA57 /* ProtectionAttackType.graphql.swift */,
+				00265F772C933CE300A5DA57 /* ProtectionResult.graphql.swift */,
+				0013F5F62C93399400D6EF09 /* ProtectionInfo.graphql.swift */,
 				A70E4DD32C25DA0A002D6D86 /* NetworkFee.graphql.swift */,
 				A70E4DD62C260416002D6D86 /* SwapOrderStatus.graphql.swift */,
 				A70E4DD52C260416002D6D86 /* SwapOrderType.graphql.swift */,
@@ -692,15 +697,6 @@
 				074321A62A83E3C900F8518D /* Schema */,
 			);
 			path = MobileSchema;
-			sourceTree = "<group>";
-		};
-		074321872A82BA2700F8518D /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				AE1757572C49B0A1000120A5 /* Basel-Grotesk-Book.otf */,
-				AE1757562C49B0A1000120A5 /* Basel-Grotesk-Medium.otf */,
-			);
-			path = Fonts;
 			sourceTree = "<group>";
 		};
 		0743218E2A83E3C900F8518D /* Operations */ = {
@@ -1025,8 +1021,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				AC2EF4022C914B1600EEEFDB /* fonts */,
 				AC2794442C51541E00F9AF68 /* sourcemaps-datadog.sh */,
-				074321872A82BA2700F8518D /* Fonts */,
 				FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */,
 				13B07FAE1A68108700A75B9A /* Uniswap */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -1419,8 +1415,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AEB2767B2C49CB060056FE52 /* Basel-Grotesk-Medium.otf in Resources */,
-				AEB2767C2C49CB080056FE52 /* Basel-Grotesk-Book.otf in Resources */,
 				072F6C2B2A44A32F00DA720A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1436,13 +1430,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE1757592C49B0AA000120A5 /* Basel-Grotesk-Medium.otf in Resources */,
 				FD7304CE28A364FC0085BDEA /* Colors.xcassets in Resources */,
 				A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */,
 				AC0EE0982BD826E700BCCF07 /* PrivacyInfo.xcprivacy in Resources */,
 				D3B63ACA9B0C42F68080B080 /* InputMono-Regular.ttf in Resources */,
+				AC2EF4032C914B1600EEEFDB /* fonts in Resources */,
 				A3551F2CAC134AD49D40927F /* Basel-Grotesk-Book.otf in Resources */,
 				B193AD315CF844A3BDC3D11D /* Basel-Grotesk-Medium.otf in Resources */,
 			);
@@ -1862,6 +1856,7 @@
 				074322362A83E3CA00F8518D /* NftCollectionsFilterInput.graphql.swift in Sources */,
 				0743223B2A83E3CA00F8518D /* NftAssetsFilterInput.graphql.swift in Sources */,
 				0DC6ADF02B1E2C100092909C /* PortfolioValueModifier.graphql.swift in Sources */,
+				0013F5F72C93399400D6EF09 /* ProtectionInfo.graphql.swift in Sources */,
 				074322282A83E3CA00F8518D /* TokenProjectMarket.graphql.swift in Sources */,
 				A7B8EFCB2BF68F0D00CA4A1C /* FeeData.graphql.swift in Sources */,
 				0743220F2A83E3CA00F8518D /* NftApproveForAll.graphql.swift in Sources */,
@@ -1922,12 +1917,14 @@
 				8EE7C0582AFD7B2100E0D9CD /* DescriptionTranslations.graphql.swift in Sources */,
 				074322172A83E3CA00F8518D /* NftTransfer.graphql.swift in Sources */,
 				074322202A83E3CA00F8518D /* NftAssetEdge.graphql.swift in Sources */,
+				00265F792C933CE300A5DA57 /* ProtectionResult.graphql.swift in Sources */,
 				077E60392A85587800ABC4B9 /* TokensQuery.graphql.swift in Sources */,
 				0743223D2A83E3CA00F8518D /* IAmount.graphql.swift in Sources */,
 				074321F32A83E3CA00F8518D /* FavoriteTokenCardQuery.graphql.swift in Sources */,
 				074322262A83E3CA00F8518D /* NftAsset.graphql.swift in Sources */,
 				074322012A83E3CA00F8518D /* HistoryDuration.graphql.swift in Sources */,
 				074322182A83E3CA00F8518D /* TokenApproval.graphql.swift in Sources */,
+				00265F7A2C933CE300A5DA57 /* ProtectionAttackType.graphql.swift in Sources */,
 				07F5CF712A6AD97D00C648A5 /* Chart.swift in Sources */,
 				074321F42A83E3CA00F8518D /* NFTItemScreenQuery.graphql.swift in Sources */,
 				0743222D2A83E3CA00F8518D /* NftProfile.graphql.swift in Sources */,

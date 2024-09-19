@@ -265,7 +265,7 @@ if (danger.github.pr.additions < danger.github.pr.deletions) {
 }
 
 // GraphQL update warnings
-const updatedGraphQLfile = danger.git.modified_files.find((file) => file.includes('__generated__/types-and-hooks.ts'))
+const updatedGraphQLfile = danger.git.modified_files.find((file) => file.endsWith('.graphql'))
 
 if (updatedGraphQLfile) {
   warn(

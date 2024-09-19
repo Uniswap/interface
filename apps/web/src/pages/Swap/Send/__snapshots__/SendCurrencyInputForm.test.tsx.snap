@@ -1,6 +1,53 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
+.c23 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c23 img {
+  width: 18px;
+  height: 36px;
+  object-fit: cover;
+}
+
+.c23 img:first-child {
+  border-radius: 18px 0 0 18px;
+  object-position: 0 0;
+}
+
+.c23 img:last-child {
+  border-radius: 0 18px 18px 0;
+  object-position: 100% 0;
+}
+
+.c24 {
+  width: 18px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
 .c4 {
   box-sizing: border-box;
   margin: 0;
@@ -108,67 +155,6 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c23 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 img {
-  width: 18px;
-  height: 36px;
-  object-fit: cover;
-}
-
-.c23 img:first-child {
-  border-radius: 18px 0 0 18px;
-  object-position: 0 0;
-}
-
-.c23 img:last-child {
-  border-radius: 0 18px 18px 0;
-  object-position: 100% 0;
-}
-
-.c24 {
-  width: 18px;
-  height: 36px;
-  border-radius: 50%;
-}
-
-.c22 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
 .c11 {
   -webkit-filter: none;
   filter: none;
@@ -225,6 +211,20 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
 
 .c8::placeholder {
   color: #CECECE;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c6 {
@@ -565,6 +565,53 @@ exports[`SendCurrencyInputform renders input in fiat correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
+.c22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c22 img {
+  width: 18px;
+  height: 36px;
+  object-fit: cover;
+}
+
+.c22 img:first-child {
+  border-radius: 18px 0 0 18px;
+  object-position: 0 0;
+}
+
+.c22 img:last-child {
+  border-radius: 0 18px 18px 0;
+  object-position: 100% 0;
+}
+
+.c23 {
+  width: 18px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c21 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
 .c4 {
   box-sizing: border-box;
   margin: 0;
@@ -672,67 +719,6 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c22 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c22 img {
-  width: 18px;
-  height: 36px;
-  object-fit: cover;
-}
-
-.c22 img:first-child {
-  border-radius: 18px 0 0 18px;
-  object-position: 0 0;
-}
-
-.c22 img:last-child {
-  border-radius: 0 18px 18px 0;
-  object-position: 100% 0;
-}
-
-.c23 {
-  width: 18px;
-  height: 36px;
-  border-radius: 50%;
-}
-
-.c21 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
 .c10 {
   -webkit-filter: none;
   filter: none;
@@ -789,6 +775,20 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
 
 .c7::placeholder {
   color: #CECECE;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c6 {
@@ -1113,6 +1113,53 @@ exports[`SendCurrencyInputform renders input in token amount correctly 1`] = `
 `;
 
 exports[`SendCurrencyInputform should render placeholder values 1`] = `
+.c23 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c23 img {
+  width: 18px;
+  height: 36px;
+  object-fit: cover;
+}
+
+.c23 img:first-child {
+  border-radius: 18px 0 0 18px;
+  object-position: 0 0;
+}
+
+.c23 img:last-child {
+  border-radius: 0 18px 18px 0;
+  object-position: 100% 0;
+}
+
+.c24 {
+  width: 18px;
+  height: 36px;
+  border-radius: 50%;
+}
+
+.c22 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
 .c4 {
   box-sizing: border-box;
   margin: 0;
@@ -1220,67 +1267,6 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c23 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 img {
-  width: 18px;
-  height: 36px;
-  object-fit: cover;
-}
-
-.c23 img:first-child {
-  border-radius: 18px 0 0 18px;
-  object-position: 0 0;
-}
-
-.c23 img:last-child {
-  border-radius: 0 18px 18px 0;
-  object-position: 100% 0;
-}
-
-.c24 {
-  width: 18px;
-  height: 36px;
-  border-radius: 50%;
-}
-
-.c22 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
 .c11 {
   -webkit-filter: none;
   filter: none;
@@ -1337,6 +1323,20 @@ exports[`SendCurrencyInputform should render placeholder values 1`] = `
 
 .c8::placeholder {
   color: #CECECE;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c6 {

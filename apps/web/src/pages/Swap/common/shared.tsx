@@ -1,5 +1,5 @@
 import { Input, InputProps } from 'components/NumericalInput'
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import styled, { css } from 'lib/styled-components'
 import { useLayoutEffect, useState } from 'react'
 

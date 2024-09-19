@@ -28,6 +28,12 @@ export enum OnboardingRedesignRecoveryBackupProperties {
   BackupReminderDelaySecs = 'backupReminderDelaySecs',
 }
 
+export enum AccountCTAsExperimentGroup {
+  Control = 'Control', // Get the app / Connect
+  SignInSignUp = 'SignIn-SignUp',
+  LogInCreateAccount = 'LogIn-CreateAccount',
+}
+
 export type ExperimentProperties = {
   [Experiments.ArbitrumXV2OpenOrders]: ArbitrumXV2OpenOrderProperties
   [Experiments.OnboardingRedesignHomeScreen]: OnboardingRedesignHomeScreenProperties

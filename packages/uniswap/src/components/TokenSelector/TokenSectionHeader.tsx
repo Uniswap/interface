@@ -37,7 +37,7 @@ export function useTokenOptionsSectionTitle(section: TokenOptionSection): string
     case TokenOptionSection.YourTokens:
       return t('tokens.selector.section.yours')
     case TokenOptionSection.PopularTokens:
-      return t('tokens.selector.section.popular')
+      return t('common.tokens')
     case TokenOptionSection.RecentTokens:
       return t('tokens.selector.section.recent')
     case TokenOptionSection.FavoriteTokens:

@@ -1,6 +1,7 @@
 import { memo, useCallback, useMemo } from 'react'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import {
+  useCommonTokensOptionsWithFallback,
   useFavoriteTokensOptions,
   usePopularTokensOptions,
   usePortfolioTokenOptions,
@@ -18,11 +19,12 @@ import {
   tokenOptionDifference,
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { GqlResult } from 'uniswap/src/data/types'
 // eslint-disable-next-line no-restricted-imports
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { isExtension } from 'utilities/src/platform'
+import { isMobileApp } from 'utilities/src/platform'
 
 function useTokenSectionsForSwapInput({
   activeAccountAddress,
@@ -50,6 +52,11 @@ function useTokenSectionsForSwapInput({
     loading: favoriteTokenOptionsLoading,
   } = useFavoriteTokensOptions(activeAccountAddress, chainFilter)
 
+  const { data: commonTokenOptions } = useCommonTokensOptionsWithFallback(
+    activeAccountAddress,
+    chainFilter ?? UniverseChainId.Mainnet,
+  )
+
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
   const error =
@@ -65,6 +72,11 @@ function useTokenSectionsForSwapInput({
     refetchFavoriteTokenOptions?.()
   }, [refetchPopularTokenOptions, refetchPortfolioTokenOptions, refetchFavoriteTokenOptions])
 
+  const isTestnet = chainFilter ? UNIVERSE_CHAIN_INFO[chainFilter].testnet : false
+
+  const suggestedSection = useTokenOptionsSection(TokenOptionSection.SuggestedTokens, [
+    (isTestnet ? commonTokenOptions : []) ?? [],
+  ])
   const portfolioSection = useTokenOptionsSection(TokenOptionSection.YourTokens, portfolioTokenOptions)
   const recentSection = useTokenOptionsSection(TokenOptionSection.RecentTokens, recentlySearchedTokenOptions)
   const favoriteSection = useTokenOptionsSection(TokenOptionSection.FavoriteTokens, favoriteTokenOptions)
@@ -77,14 +89,15 @@ function useTokenSectionsForSwapInput({
     }
 
     return [
+      ...(suggestedSection ?? []),
       ...(portfolioSection ?? []),
       ...(recentSection ?? []),
       // TODO(WEB-3061): Favorited wallets/tokens
-      // Extension does not support favoriting but has a default list, so we can't rely on empty array check
-      ...(isExtension ? [] : favoriteSection ?? []),
+      // Extension & interface do not support favoriting but has a default list, so we can't rely on empty array check
+      ...(isMobileApp ? favoriteSection ?? [] : []),
       ...(popularSection ?? []),
     ] satisfies TokenSection[]
-  }, [favoriteSection, loading, popularSection, portfolioSection, recentSection])
+  }, [suggestedSection, favoriteSection, loading, popularSection, portfolioSection, recentSection])
 
   return useMemo(
     () => ({
@@ -98,7 +111,6 @@ function useTokenSectionsForSwapInput({
 }
 
 function _TokenSelectorSwapInputList({
-  onDismiss,
   onSelectCurrency,
   activeAccountAddress,
   chainFilter,
@@ -108,7 +120,6 @@ function _TokenSelectorSwapInputList({
 }: TokenSectionsHookProps & {
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
-  onDismiss: () => void
   onSelectCurrency: OnSelectCurrency
 }): JSX.Element {
   const {
@@ -132,7 +143,6 @@ function _TokenSelectorSwapInputList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
-      onDismiss={onDismiss}
       onSelectCurrency={onSelectCurrency}
     />
   )

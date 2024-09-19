@@ -3,8 +3,9 @@ import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { TopTokensTable } from 'components/Tokens/TokenTable'
 import TableNetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
-import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
+import VolumeTimeFrameSelector from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
+import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useChainFromUrlParam } from 'constants/chains'
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
 import { getTokenExploreURL, isBackendSupportedChain } from 'graphql/data/util'
@@ -16,8 +17,8 @@ import RecentTransactions from 'pages/Explore/tables/RecentTransactions'
 import { NamedExoticComponent, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ExploreContextProvider } from 'state/explore'
-import { StyledInternalLink } from 'theme/components'
-import { Flex, Text } from 'ui/src'
+import { TamaguiClickableStyle } from 'theme/components'
+import { Flex, Text, styled as tamaguiStyled } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -58,6 +59,36 @@ const Pages: Array<Page> = [
     loggingElementName: InterfaceElementName.EXPLORE_TRANSACTIONS_TAB,
   },
 ]
+
+const HeaderTab = tamaguiStyled(Text, {
+  ...TamaguiClickableStyle,
+  fontSize: 28,
+  fontWeight: '$book',
+  userSelect: 'none',
+  color: '$neutral2',
+  variants: {
+    large: {
+      true: {
+        fontSize: 24,
+        lineHeight: 32,
+      },
+    },
+    active: {
+      true: {
+        color: '$neutral1',
+      },
+    },
+    disabled: {
+      true: {
+        color: '$neutral3',
+        cursor: 'default',
+        hoverStyle: {
+          opacity: 1,
+        },
+      },
+    },
+  },
+})
 
 const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
   const tabNavRef = useRef<HTMLDivElement>(null)
@@ -149,43 +180,39 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
               data-testid="explore-navbar"
             >
               {Pages.map(({ title, loggingElementName, key }, index) => {
-                // hide Transactions tab if no chain is selected and multichain explore is enabled
-                return key === ExploreTab.Transactions && isMultichainExploreEnabled && !chain ? null : (
+                // disable Transactions tab if no chain is selected
+                const disabled = isMultichainExploreEnabled && key === ExploreTab.Transactions && !chain
+                const url = getTokenExploreURL({ tab: key, chain: chain?.backendChain.chain })
+                return (
                   <Trace
                     logPress
                     eventOnTrigger={SharedEventName.NAVBAR_CLICKED}
                     element={loggingElementName}
                     key={index}
                   >
-                    <StyledInternalLink
-                      onClick={() => setCurrentTab(index)}
-                      to={
-                        `/explore/${key}` +
-                        (chain?.id || (!isMultichainExploreEnabled && chain?.id !== UniverseChainId.Mainnet)
-                          ? `/${chain?.urlParam}`
-                          : '')
-                      }
+                    <MouseoverTooltip
+                      size={TooltipSize.Max}
+                      placement="bottom"
+                      offsetX={68}
+                      text={<Trans i18nKey="explore.transactions.disabled" />}
+                      disabled={!disabled}
                     >
-                      <Text
-                        variant="heading3"
-                        fontSize={28}
-                        $lg={{ fontSize: 24, lineHeight: 32 }}
-                        fontWeight="$book"
-                        color={currentTab === index ? '$neutral1' : '$neutral2'}
-                        cursor="pointer"
-                        animation="quick"
+                      <HeaderTab
+                        onPress={() => !disabled && navigate(url)}
+                        active={currentTab === index}
+                        disabled={disabled}
                         key={key}
                       >
                         {title}
-                      </Text>
-                    </StyledInternalLink>
+                      </HeaderTab>
+                    </MouseoverTooltip>
                   </Trace>
                 )
               })}
             </Flex>
             <Flex row gap="$spacing8" height="$spacing40" justifyContent="flex-start">
               <TableNetworkFilter />
-              {currentKey === ExploreTab.Tokens && <TimeSelector />}
+              {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}
               {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}
             </Flex>
           </Flex>

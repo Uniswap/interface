@@ -10,7 +10,7 @@ import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/t
 import { getTxFixtures } from 'uniswap/src/test/fixtures'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { noOpFunction } from 'utilities/src/test/utils'
-import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
+import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import {
   sendTransaction,
   signAndSendTransaction,

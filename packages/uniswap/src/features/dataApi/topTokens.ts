@@ -1,4 +1,5 @@
 import { useMemo } from 'react'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   TokenSortableField,
   useTopTokensQuery,
@@ -11,6 +12,7 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function usePopularTokens(chainFilter: UniverseChainId): GqlResult<CurrencyInfo[]> {
   const gqlChainFilter = toGraphQLChain(chainFilter)
+  const isTestnet = UNIVERSE_CHAIN_INFO[chainFilter].testnet
 
   const { data, loading, error, refetch } = useTopTokensQuery({
     variables: {
@@ -19,6 +21,7 @@ export function usePopularTokens(chainFilter: UniverseChainId): GqlResult<Curren
       pageSize: 100,
       orderBy: TokenSortableField.Popularity,
     },
+    skip: isTestnet,
   })
   const persistedError = usePersistedError(loading, error)
 

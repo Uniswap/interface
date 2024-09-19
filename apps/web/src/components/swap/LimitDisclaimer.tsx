@@ -1,4 +1,4 @@
-import Column from 'components/Column'
+import Column from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
 import { ExternalLink, ThemedText } from 'theme/components'
 import { Trans } from 'uniswap/src/i18n'

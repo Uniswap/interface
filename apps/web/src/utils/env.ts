@@ -1,4 +1,4 @@
-import { isBetaEnv, isProdEnv } from 'utilities/src/environment'
+import { isBetaEnv, isProdEnv } from 'utilities/src/environment/env'
 
 function isAppUniswapOrg({ hostname }: { hostname: string }): boolean {
   return hostname === 'app.uniswap.org'

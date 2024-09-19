@@ -4,13 +4,9 @@ import { FadeIn, useAnimatedStyle, useSharedValue } from 'react-native-reanimate
 import { useDispatch, useSelector } from 'react-redux'
 import { FavoriteHeaderRow } from 'src/components/explore/FavoriteHeaderRow'
 import FavoriteWalletCard from 'src/components/explore/FavoriteWalletCard'
-import { Loader } from 'src/components/loading'
-import {
-  AutoScrollProps,
-  SortableGrid,
-  SortableGridChangeEvent,
-  SortableGridRenderItem,
-} from 'src/components/sortableGrid'
+import { Loader } from 'src/components/loading/loaders'
+import { SortableGrid } from 'src/components/sortableGrid/SortableGrid'
+import { AutoScrollProps, SortableGridChangeEvent, SortableGridRenderItem } from 'src/components/sortableGrid/types'
 import { Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { selectWatchedAddressSet } from 'uniswap/src/features/favorites/selectors'

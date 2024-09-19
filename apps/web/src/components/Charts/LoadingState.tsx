@@ -1,6 +1,6 @@
 import { ChartType } from 'components/Charts/utils'
-import Column from 'components/Column'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { MissingDataIcon } from 'components/Table/icons'
 import styled, { useTheme } from 'lib/styled-components'
 import { lighten } from 'polished'

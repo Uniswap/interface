@@ -1,21 +1,14 @@
-import { showTestnetsAtom } from 'components/AccountDrawer/TestnetsToggle'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import ChainSelectorRow from 'components/NavBar/ChainSelector/ChainSelectorRow'
 import { NavDropdown } from 'components/NavBar/NavDropdown/NavDropdown'
 import { NavIcon } from 'components/NavBar/NavIcon'
-import { CONNECTION } from 'components/Web3Provider/constants'
-import {
-  ALL_CHAIN_IDS,
-  CHAIN_IDS_TO_NAMES,
-  TESTNET_CHAIN_IDS,
-  getChainPriority,
-  useIsSupportedChainIdCallback,
-} from 'constants/chains'
+import { CHAIN_IDS_TO_NAMES, useIsSupportedChainIdCallback } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
+import { useConnectedWalletSupportedChains } from 'hooks/useConnectedWalletSupportedChains'
 import useSelectChain from 'hooks/useSelectChain'
-import { useAtomValue } from 'jotai/utils'
+import { useSupportedChainIds } from 'hooks/useSupportedChainIds'
 import { useTheme } from 'lib/styled-components'
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { AlertTriangle } from 'react-feather'
 import { useSearchParams } from 'react-router-dom'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
@@ -24,27 +17,6 @@ import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
-import { Connector } from 'wagmi'
-
-type WalletConnectConnector = Connector & {
-  type: typeof CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID
-  getNamespaceChainsIds: () => InterfaceChainId[]
-}
-
-function useWalletSupportedChains(): InterfaceChainId[] {
-  const { connector } = useAccount()
-
-  switch (connector?.type) {
-    case CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID:
-    case CONNECTION.WALLET_CONNECT_CONNECTOR_ID:
-      // Wagmi currently offers no way to discriminate a Connector as a WalletConnect connector providing access to getNamespaceChainsIds.
-      return (connector as WalletConnectConnector).getNamespaceChainsIds?.().length
-        ? (connector as WalletConnectConnector).getNamespaceChainsIds?.()
-        : ALL_CHAIN_IDS
-    default:
-      return ALL_CHAIN_IDS
-  }
-}
 
 type ChainSelectorProps = {
   isNavSelector?: boolean
@@ -59,31 +31,13 @@ export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) 
 
   const theme = useTheme()
   const popoverRef = useRef<Popover>(null)
-  const walletSupportsChain = useWalletSupportedChains()
+  const connectedWalletSupportedChains = useConnectedWalletSupportedChains()
   const isSupportedChain = useIsSupportedChainIdCallback()
-  const showTestnets = useAtomValue(showTestnetsAtom)
   const [isOpen, setIsOpen] = useState<boolean>(false)
   const selectChain = useSelectChain()
   const [searchParams, setSearchParams] = useSearchParams()
 
-  const [supportedChains, unsupportedChains] = useMemo(() => {
-    const { supported, unsupported } = ALL_CHAIN_IDS.filter((chain: number) => {
-      return isSupportedChain(chain) && (showTestnets || !TESTNET_CHAIN_IDS.includes(chain))
-    })
-      .sort((a, b) => getChainPriority(a) - getChainPriority(b))
-      .reduce(
-        (acc, chain) => {
-          if (walletSupportsChain.includes(chain)) {
-            acc.supported.push(chain)
-          } else {
-            acc.unsupported.push(chain)
-          }
-          return acc
-        },
-        { supported: [], unsupported: [] } as Record<string, InterfaceChainId[]>,
-      )
-    return [supported, unsupported]
-  }, [isSupportedChain, showTestnets, walletSupportsChain])
+  const { supported: supportedChains, unsupported: unsupportedChains } = useSupportedChainIds()
 
   const [pendingChainId, setPendingChainId] = useState<InterfaceChainId | undefined>(undefined)
 
@@ -119,6 +73,7 @@ export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) 
           onPressChain={onSelectChain}
           showUnsupportedConnectedChainWarning={isUnsupportedConnectedChain}
           hideArrow={hideArrow}
+          chainIds={supportedChains}
           styles={{
             sticky: true,
           }}
@@ -143,7 +98,7 @@ export const ChainSelector = ({ isNavSelector, hideArrow }: ChainSelectorProps) 
         <Flex p="$spacing8" data-testid="chain-selector-options">
           {supportedChains.map((selectorChain) => (
             <ChainSelectorRow
-              disabled={!walletSupportsChain.includes(selectorChain)}
+              disabled={!connectedWalletSupportedChains.includes(selectorChain)}
               onSelectChain={onSelectChain}
               targetChain={selectorChain}
               key={selectorChain}

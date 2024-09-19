@@ -17,6 +17,11 @@ type AccountSwitcherModalParams = {
   initialState?: undefined
 }
 
+type HiddenTokenInfoModalParams = {
+  name: typeof ModalName.HiddenTokenInfoModal
+  initialState?: undefined
+}
+
 type KoreaCexTransferInfoModalParams = {
   name: typeof ModalName.KoreaCexTransferInfoModal
   initialState?: undefined
@@ -100,6 +105,7 @@ export type OpenModalParams =
   | BackupReminderParams
   | BackupWarningParams
   | KoreaCexTransferInfoModalParams
+  | HiddenTokenInfoModalParams
   | ExchangeTransferModalParams
   | ExperimentsModalParams
   | ExploreModalParams

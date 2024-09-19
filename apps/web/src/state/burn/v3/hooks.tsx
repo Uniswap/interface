@@ -9,6 +9,8 @@ import { selectPercent } from 'state/burn/v3/actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { InterfaceState } from 'state/webReducer'
 import { PositionDetails } from 'types/position'
+import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
+import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
@@ -73,9 +75,19 @@ export function useDerivedV3BurnInfo(
   const outOfRange =
     pool && position ? pool.tickCurrent < position.tickLower || pool.tickCurrent > position.tickUpper : false
 
+  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
+  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
+  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
+
   let error: ReactNode | undefined
   if (!account.isConnected) {
-    error = <Trans i18nKey="common.connectWallet.button" />
+    error = isSignIn ? (
+      <Trans i18nKey="nav.signIn.button" />
+    ) : isLogIn ? (
+      <Trans i18nKey="nav.logIn.button" />
+    ) : (
+      <Trans i18nKey="common.connectWallet.button" />
+    )
   }
   if (percent === 0) {
     error = error ?? <Trans i18nKey="burn.input.enterAPercent.error" />

@@ -18,6 +18,7 @@ import {
 } from 'uniswap/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES, getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { DAI, USDC, USDT, WBTC } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
@@ -94,6 +95,7 @@ export function searchResultToCurrencyInfo({
   name,
   logoUrl,
   safetyLevel,
+  safetyInfo,
 }: TokenSearchResult): CurrencyInfo | null {
   const currency = buildCurrency({
     chainId: chainId as WalletChainId,
@@ -114,6 +116,7 @@ export function searchResultToCurrencyInfo({
     safetyLevel: safetyLevel ?? SafetyLevel.StrongWarning,
     // defaulting to not spam, as user has searched and chosen this token before
     isSpam: false,
+    safetyInfo,
   }
   return currencyInfo
 }
@@ -220,6 +223,7 @@ function currencyInfoToTokenSearchResult(currencyInfo: CurrencyInfo): TokenSearc
     symbol: currencyInfo.currency.symbol ?? '',
     logoUrl: currencyInfo.logoUrl ?? null,
     safetyLevel: currencyInfo.safetyLevel ?? null,
+    safetyInfo: currencyInfo.safetyInfo,
   }
 }
 
@@ -341,7 +345,7 @@ export function useCurrencyInfosToTokenOptions({
   }, [currencyInfos, portfolioBalancesById, sortAlphabetically])
 }
 
-export function useCommonTokensOptions(
+function useCommonTokensOptions(
   address: Address | undefined,
   chainFilter: UniverseChainId | null,
 ): GqlResult<TokenOption[] | undefined> {
@@ -382,6 +386,23 @@ export function useCommonTokensOptions(
     refetch,
     error: error || undefined,
     loading: loadingPorfolioBalancesById || loadingCommonBaseCurrencies,
+  }
+}
+
+export function useCommonTokensOptionsWithFallback(
+  address: Address | undefined,
+  chainFilter: UniverseChainId | null,
+): GqlResult<TokenOption[] | undefined> {
+  const { data, error, refetch, loading } = useCommonTokensOptions(address, chainFilter)
+  const commonBases = chainFilter ? currencyInfosToTokenOptions(COMMON_BASES[chainFilter]) : undefined
+
+  const shouldFallback = !loading && data?.length === 0 && commonBases?.length
+
+  return {
+    data: shouldFallback ? commonBases : data,
+    error: shouldFallback ? undefined : error,
+    refetch,
+    loading,
   }
 }
 

@@ -1,9 +1,10 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { DAI, USDC_MAINNET, nativeOnChain } from '../../../src/constants/tokens'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getTestSelector, setupHardhat } from '../../utils'
 import { stubNonPriceQuoteWith, stubSwapTxReceipt } from '../../utils/uniswapx-swap'
+import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 
 const QuoteWhereUniswapXIsBetter = 'uniswapx-v2/quote1.json'
 const QuoteWithEthInput = 'uniswapx-v2/quote2.json'
@@ -288,16 +289,16 @@ describe('UniswapX v2 - Multichain UX Enabled', () => {
         submitUniswapXOrder()
         cy.get(getTestSelector('confirmation-close-icon')).click()
 
-        cy.interceptGraphqlOperation('PortfolioBalancesWeb', 'mini-portfolio/tokens.json').as('PortfolioBalancesWeb')
+        cy.interceptGraphqlOperation('PortfolioBalances', 'mini-portfolio/tokens.json').as('PortfolioBalances')
 
         // Expect balances to refetch after filling
         cy.wait('@orderStatusOpen')
         cy.get(getTestSelector('web3-status-connected')).click()
-        cy.wait('@PortfolioBalancesWeb')
+        cy.wait('@PortfolioBalances')
 
         cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx-v2/filledStatusResponse.json' }).as('orderStatusFilled')
         cy.wait('@orderStatusFilled')
-        cy.wait('@PortfolioBalancesWeb')
+        cy.wait('@PortfolioBalances')
       })
     })
   })

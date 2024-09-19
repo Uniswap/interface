@@ -1,5 +1,5 @@
 import { DropdownIcon } from 'components/Table/icons'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import deprecatedStyled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'

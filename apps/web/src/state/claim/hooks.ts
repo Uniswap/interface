@@ -2,7 +2,6 @@ import type { TransactionResponse } from '@ethersproject/providers'
 import MerkleDistributorJSON from '@uniswap/merkle-distributor/build/MerkleDistributor.json'
 import { CurrencyAmount, MERKLE_DISTRIBUTOR_ADDRESS, Token } from '@uniswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
-import { UNI } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useContract } from 'hooks/useContract'
 import JSBI from 'jsbi'
@@ -10,6 +9,7 @@ import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useEffect, useState } from 'react'
 import { useTransactionAdder } from 'state/transactions/hooks'
 import { TransactionType } from 'state/transactions/types'
+import { UNI } from 'uniswap/src/constants/tokens'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { calculateGasMargin } from 'utils/calculateGasMargin'
@@ -154,7 +154,7 @@ export function useUserUnclaimedAmount(account: string | null | undefined): Curr
   const userClaimData = useUserClaimData(account)
   const canClaim = useUserHasAvailableClaim(account)
 
-  const uni = chainId ? UNI[chainId] : undefined
+  const uni = chainId ? (UNI as { [chainId: number]: Token })[chainId] : undefined
   if (!uni) {
     return undefined
   }

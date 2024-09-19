@@ -1,6 +1,6 @@
-import Pools from 'components/AccountDrawer/MiniPortfolio/Pools'
+import Pools from 'components/AccountDrawer/MiniPortfolio/Pools/PoolsTab'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
-import Column from 'components/Column'
+import Column from 'components/deprecated/Column'
 import styled from 'lib/styled-components'
 import { Trans } from 'uniswap/src/i18n'
 

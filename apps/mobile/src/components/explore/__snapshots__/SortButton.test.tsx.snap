@@ -1,39 +1,7 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`SortButton renders without error 1`] = `
-<ContextMenu
-  actions={
-    [
-      {
-        "orderBy": "VOLUME",
-        "systemIcon": "checkmark",
-        "title": "Uniswap volume (24H)",
-      },
-      {
-        "orderBy": "TOTAL_VALUE_LOCKED",
-        "systemIcon": "",
-        "title": "Uniswap TVL",
-      },
-      {
-        "orderBy": "MARKET_CAP",
-        "systemIcon": "",
-        "title": "Market cap",
-      },
-      {
-        "orderBy": "PriceChangePercentage24hDesc",
-        "systemIcon": "",
-        "title": "Price increase (24H)",
-      },
-      {
-        "orderBy": "PriceChangePercentage24hAsc",
-        "systemIcon": "",
-        "title": "Price decrease (24H)",
-      },
-    ]
-  }
-  dropdownMenuMode={true}
-  onPress={[Function]}
->
+[
   <View
     cancelable={true}
     disabled={false}
@@ -42,7 +10,6 @@ exports[`SortButton renders without error 1`] = `
     minPressDuration={0}
     onBlur={[Function]}
     onFocus={[Function]}
-    onLongPress={[Function]}
     onMouseEnter={[Function]}
     onMouseLeave={[Function]}
     onPress={[Function]}
@@ -50,18 +17,8 @@ exports[`SortButton renders without error 1`] = `
     onPressOut={[Function]}
     style={
       {
-        "alignItems": "center",
-        "backgroundColor": "#FFFFFF",
-        "borderBottomLeftRadius": 999999,
-        "borderBottomRightRadius": 999999,
-        "borderTopLeftRadius": 999999,
-        "borderTopRightRadius": 999999,
-        "flexDirection": "row",
+        "flexDirection": "column",
         "opacity": 1,
-        "paddingBottom": 8,
-        "paddingLeft": 16,
-        "paddingRight": 16,
-        "paddingTop": 8,
         "transform": [
           {
             "scale": 1,
@@ -71,112 +28,151 @@ exports[`SortButton renders without error 1`] = `
     }
   >
     <View
+      collapsable={false}
       style={
         {
+          "alignItems": "center",
           "flexDirection": "row",
-          "gap": 4,
+          "gap": 8,
+          "justifyContent": "center",
+          "paddingBottom": 8,
+          "paddingTop": 8,
         }
       }
+      testID="chain-selector"
     >
-      <Text
-        allowFontScaling={true}
-        lineBreakMode="clip"
-        maxFontSizeMultiplier={1.2}
-        numberOfLines={1}
-        style={
-          {
-            "color": "#7D7D7D",
-            "flexShrink": 1,
-            "fontFamily": "Basel Grotesk",
-            "fontSize": 17,
-            "fontWeight": "500",
-            "lineHeight": 19.549999999999997,
-          }
-        }
-        suppressHighlighting={true}
-      >
-        Volume
-      </Text>
       <View
         style={
           {
-            "alignItems": "center",
-            "borderBottomLeftRadius": 999999,
-            "borderBottomRightRadius": 999999,
-            "borderTopLeftRadius": 999999,
-            "borderTopRightRadius": 999999,
-            "flexDirection": "column",
-            "justifyContent": "center",
-            "transform": [
-              {
-                "rotate": "270deg",
-              },
-            ],
+            "backgroundColor": "#FFFFFF",
+            "borderBottomLeftRadius": 20,
+            "borderBottomRightRadius": 20,
+            "borderTopLeftRadius": 20,
+            "borderTopRightRadius": 20,
+            "flexDirection": "row",
+            "gap": 4,
+            "paddingBottom": 8,
+            "paddingLeft": 16,
+            "paddingRight": 16,
+            "paddingTop": 8,
           }
         }
       >
-        <RNSVGSvgView
-          align="xMidYMid"
-          bbHeight={20}
-          bbWidth={20}
-          fill="none"
-          focusable={false}
-          meetOrSlice={0}
-          minX={0}
-          minY={0}
-          strokeWidth={8}
+        <Text
+          allowFontScaling={true}
+          lineBreakMode="clip"
+          maxFontSizeMultiplier={1.2}
+          numberOfLines={1}
           style={
-            [
-              {
-                "backgroundColor": "transparent",
-                "borderWidth": 0,
-              },
-              {
-                "color": "#7D7D7D",
-                "height": 20,
-                "width": 20,
-              },
-              {
-                "flex": 0,
-                "height": 20,
-                "width": 20,
-              },
-            ]
+            {
+              "color": "#7D7D7D",
+              "flexShrink": 1,
+              "fontFamily": "Basel Grotesk",
+              "fontSize": 17,
+              "fontWeight": "500",
+              "lineHeight": 19.549999999999997,
+            }
           }
-          tintColor="#7D7D7D"
-          vbHeight={24}
-          vbWidth={24}
+          suppressHighlighting={true}
         >
-          <RNSVGGroup
-            fill={null}
-            propList={
+          Volume
+        </Text>
+        <View
+          style={
+            {
+              "alignItems": "center",
+              "borderBottomLeftRadius": 999999,
+              "borderBottomRightRadius": 999999,
+              "borderTopLeftRadius": 999999,
+              "borderTopRightRadius": 999999,
+              "flexDirection": "column",
+              "justifyContent": "center",
+              "transform": [
+                {
+                  "rotate": "270deg",
+                },
+              ],
+            }
+          }
+        >
+          <RNSVGSvgView
+            align="xMidYMid"
+            bbHeight={20}
+            bbWidth={20}
+            fill="none"
+            focusable={false}
+            meetOrSlice={0}
+            minX={0}
+            minY={0}
+            strokeWidth={8}
+            style={
               [
-                "fill",
-                "strokeWidth",
+                {
+                  "backgroundColor": "transparent",
+                  "borderWidth": 0,
+                },
+                {
+                  "color": "#7D7D7D",
+                  "height": 20,
+                  "width": 20,
+                },
+                {
+                  "flex": 0,
+                  "height": 20,
+                  "width": 20,
+                },
               ]
             }
-            strokeWidth={8}
+            tintColor="#7D7D7D"
+            vbHeight={24}
+            vbWidth={24}
           >
-            <RNSVGPath
-              clipRule={0}
-              d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
-              fill={
-                {
-                  "type": 2,
-                }
-              }
-              fillRule={0}
+            <RNSVGGroup
+              fill={null}
               propList={
                 [
                   "fill",
-                  "fillRule",
+                  "strokeWidth",
                 ]
               }
-            />
-          </RNSVGGroup>
-        </RNSVGSvgView>
+              strokeWidth={8}
+            >
+              <RNSVGPath
+                clipRule={0}
+                d="M15.7071 5.29289C16.0976 5.68342 16.0976 6.31658 15.7071 6.70711L10.4142 12L15.7071 17.2929C16.0976 17.6834 16.0976 18.3166 15.7071 18.7071C15.3166 19.0976 14.6834 19.0976 14.2929 18.7071L8.2929 12.7071C7.9024 12.3166 7.9024 11.6834 8.2929 11.2929L14.2929 5.29289C14.6834 4.90237 15.3166 4.90237 15.7071 5.29289Z"
+                fill={
+                  {
+                    "type": 2,
+                  }
+                }
+                fillRule={0}
+                propList={
+                  [
+                    "fill",
+                    "fillRule",
+                  ]
+                }
+              />
+            </RNSVGGroup>
+          </RNSVGSvgView>
+        </View>
       </View>
     </View>
-  </View>
-</ContextMenu>
+  </View>,
+  <View
+    pointerEvents="box-none"
+    style={
+      {
+        "bottom": 0,
+        "flexDirection": "column",
+        "left": 0,
+        "maxWidth": "100%",
+        "position": "absolute",
+        "right": 0,
+        "top": 0,
+        "zIndex": 1070,
+      }
+    }
+  />,
+]
 `;

@@ -1,42 +1,61 @@
-import { ReactElement, useState } from 'react'
+import { ReactElement, useMemo, useState } from 'react'
 import {
   AnimatePresence,
   GetThemeValueForKey,
   Checkbox as TamaguiCheckbox,
   CheckboxProps as TamaguiCheckboxPops,
+  getTokenValue,
 } from 'tamagui'
 import { Check } from 'ui/src/components/icons'
 import { Flex } from 'ui/src/components/layout'
 import { SporeComponentVariant } from 'ui/src/components/types'
+import { IconSizeTokens } from 'ui/src/theme'
 import { v4 as uuid } from 'uuid'
 
-const sizes = {
-  FocusRing: 26,
-  CheckboxButton: 20,
-  CheckSizeDefault: 16,
-  CheckSizePressed: 18,
-  UnselectedHoverIndicator: 4,
-  UnselectedPressedIndicator: 6,
+type CheckboxSizes = {
+  FocusRing: number
+  CheckboxButton: number
+  CheckSizeDefault: number
+  CheckSizePressed: number
+  UnselectedHoverIndicator: number
+  UnselectedPressedIndicator: number
 }
+
+function getSizes(size?: IconSizeTokens): CheckboxSizes {
+  const buttonSize = size ? getTokenValue(size) : 20
+  return {
+    FocusRing: Math.round(buttonSize * 1.3),
+    CheckboxButton: buttonSize, // Default 20
+    CheckSizeDefault: buttonSize - 4,
+    CheckSizePressed: buttonSize - 2,
+    UnselectedHoverIndicator: Math.round(buttonSize * 0.2),
+    UnselectedPressedIndicator: Math.round(buttonSize * 0.3),
+  }
+}
+
+export type CheckboxSizeTokens = '$icon.16' | '$icon.18' | '$icon.20'
 
 type CheckboxProps = {
   variant?: SporeComponentVariant
   checked: boolean
-} & TamaguiCheckboxPops
+  size?: CheckboxSizeTokens
+} & Omit<TamaguiCheckboxPops, 'size'>
 
 /**
  * Spore Checkbox
  *
  * @param checked - boolean value that determines if the checkbox is checked
  * @param variant - determines the color of the button in the selected state (branded is pink)
+ * @param size - determines size of the checkbox - currently supports $icon.16 $icon.18 $icon.20
  * @returns
  */
-export function Checkbox({ checked, variant = 'default', ...rest }: CheckboxProps): ReactElement {
+export function Checkbox({ checked, variant = 'default', size = '$icon.20', ...rest }: CheckboxProps): ReactElement {
   const [isHovered, setIsHovered] = useState(false)
   const [isFocused, setIsFocused] = useState(false)
   const [isPressed, setIsPressed] = useState(false)
 
   const accentColor = getAccentColor(variant, isHovered)
+  const sizes = useMemo(() => getSizes(size), [size])
 
   return (
     // This outer ring is only shown when the button is focused.

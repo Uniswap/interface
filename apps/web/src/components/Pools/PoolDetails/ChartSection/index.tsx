@@ -1,22 +1,24 @@
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import { ChartHeader } from 'components/Charts/ChartHeader'
-import { Chart } from 'components/Charts/ChartModel'
+import { Chart, refitChartContentAtom } from 'components/Charts/ChartModel'
 import { LiquidityBarChartModel, useLiquidityBarData } from 'components/Charts/LiquidityChart'
 import { LiquidityBarData } from 'components/Charts/LiquidityChart/renderer'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { PriceChartData, PriceChartDelta, PriceChartModel } from 'components/Charts/PriceChart'
-import { refitChartContentAtom } from 'components/Charts/TimeSelector'
 import { VolumeChart } from 'components/Charts/VolumeChart'
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { ChartType, PriceChartType } from 'components/Charts/utils'
 import { usePDPPriceChartData, usePDPVolumeChartData } from 'components/Pools/PoolDetails/ChartSection/hooks'
-import PillMultiToggle from 'components/Toggle/PillMultiToggle'
 import { ChartActionsContainer, DEFAULT_PILL_TIME_SELECTOR_OPTIONS } from 'components/Tokens/TokenDetails/ChartSection'
 import { ChartTypeDropdown } from 'components/Tokens/TokenDetails/ChartSection/ChartTypeSelector'
 import { ChartQueryResult, DataQuality } from 'components/Tokens/TokenDetails/ChartSection/util'
 import { LoadingChart } from 'components/Tokens/TokenDetails/Skeleton'
-import { DISPLAYS, TimePeriodDisplay, getTimePeriodFromDisplay } from 'components/Tokens/TokenTable/TimeSelector'
+import {
+  DISPLAYS,
+  TimePeriodDisplay,
+  getTimePeriodFromDisplay,
+} from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { PoolData } from 'graphql/data/pools/usePoolData'
 import { TimePeriod, gqlToCurrency, supportedChainIdFromGQLChain, toHistoryDuration } from 'graphql/data/util'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
@@ -25,6 +27,7 @@ import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { textFadeIn } from 'theme/styles'
+import { SegmentedControl } from 'ui/src'
 import { Chain, ProtocolVersion } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans, t } from 'uniswap/src/i18n'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
@@ -225,9 +228,9 @@ export default function ChartSection(props: ChartSectionProps) {
         />
         {activeQuery.chartType !== ChartType.LIQUIDITY && (
           <TimePeriodSelectorContainer>
-            <PillMultiToggle
+            <SegmentedControl
               options={filteredTimeOptions.options}
-              currentSelected={filteredTimeOptions.selected}
+              selectedOption={filteredTimeOptions.selected}
               onSelectOption={(option) => {
                 const time = getTimePeriodFromDisplay(option as TimePeriodDisplay)
                 if (time === timePeriod) {

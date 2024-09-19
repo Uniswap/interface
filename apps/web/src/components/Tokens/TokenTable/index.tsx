@@ -22,9 +22,10 @@ import { chainIdToBackendChain, getChainFromChainUrlParam, useChainFromUrlParam 
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
 import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
+import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtomValue } from 'jotai/utils'
 import { ReactElement, ReactNode, memo, useMemo } from 'react'
-import { giveExploreStatDefaultValue } from 'state/explore'
+import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
 import { useTopTokens as useRestTopTokens } from 'state/explore/topTokens'
 import { TokenStat } from 'state/explore/types'
 import { Flex, Text, styled } from 'ui/src'
@@ -105,10 +106,12 @@ export const TopTokensTable = memo(function TopTokensTable() {
     isError: restError,
   } = useRestTopTokens()
 
+  const { page, loadMore } = useSimplePagination()
+
   const { tokens, tokenSortRank, sparklines, loading, error } = useMemo(() => {
     return isRestExploreEnabled
       ? {
-          tokens: restTopTokens,
+          tokens: restTopTokens?.slice(0, page * TABLE_PAGE_SIZE),
           tokenSortRank: restTokenSortRank,
           loading: restIsLoading,
           sparklines: restSparklines,
@@ -124,6 +127,7 @@ export const TopTokensTable = memo(function TopTokensTable() {
   }, [
     isRestExploreEnabled,
     restTopTokens,
+    page,
     restTokenSortRank,
     restIsLoading,
     restSparklines,
@@ -142,6 +146,7 @@ export const TopTokensTable = memo(function TopTokensTable() {
         tokenSortRank={tokenSortRank}
         sparklines={sparklines}
         loading={loading}
+        loadMore={loadMore}
         error={error}
       />
     </TableWrapper>

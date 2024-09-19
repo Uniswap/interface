@@ -1,7 +1,7 @@
 import { InterfacePageName, NFTEventName } from '@uniswap/analytics-events'
 import { MouseoverTooltip } from 'components/Tooltip'
+import { Box } from 'components/deprecated/Box'
 import styled from 'lib/styled-components'
-import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Activity.css'
 import {

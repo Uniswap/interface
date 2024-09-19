@@ -1,6 +1,6 @@
 import { Token } from '@uniswap/sdk-core'
-import { ButtonPrimary } from 'components/Button'
-import { AutoColumn } from 'components/Column'
+import { ButtonPrimary } from 'components/Button/buttons'
+import { AutoColumn } from 'components/deprecated/Column'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import TokenSafetyLabel from 'components/TokenSafety/TokenSafetyLabel'
 import {
@@ -199,7 +199,7 @@ const StyledExternalLink = styled(ExternalLink)`
 `
 
 export interface TokenSafetyProps {
-  token0?: Token
+  token0: Token
   token1?: Token
   onContinue: () => void
   onCancel: () => void

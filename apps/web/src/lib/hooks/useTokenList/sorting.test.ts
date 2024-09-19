@@ -1,6 +1,6 @@
 import { Token as InterfaceToken } from '@uniswap/sdk-core'
-import { DAI, USDC_MAINNET, USDT, WBTC, nativeOnChain } from 'constants/tokens'
 import { getSortedPortfolioTokens } from 'lib/hooks/useTokenList/sorting'
+import { DAI, USDC_MAINNET, USDT, WBTC, nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   Chain,
   Currency,
@@ -16,6 +16,11 @@ const nativeToken: Token = {
   standard: TokenStandard.Native,
   decimals: 18,
   address: 'ETH',
+  project: {
+    id: '',
+    tokens: [],
+    isSpam: false,
+  },
 }
 
 const nonnativeToken = (token: InterfaceToken) => ({
@@ -38,15 +43,6 @@ const tokens: TokenBalance[] = [
       id: '',
       value: 0.5,
     },
-    tokenProjectMarket: {
-      id: '',
-      currency: Currency.Eth,
-      tokenProject: {
-        id: '',
-        tokens: [nativeToken],
-        isSpam: false,
-      },
-    },
     token: nativeToken,
   },
   // 0.01 DAI
@@ -59,16 +55,7 @@ const tokens: TokenBalance[] = [
       currency: Currency.Usd,
       value: 0.01,
     },
-    tokenProjectMarket: {
-      id: '',
-      currency: Currency.Eth,
-      tokenProject: {
-        id: '',
-        tokens: [nonnativeToken(DAI)],
-        isSpam: false,
-      },
-    },
-    token: nonnativeToken(DAI),
+    token: { ...nonnativeToken(DAI), project: { id: '', tokens: [nonnativeToken(DAI)], isSpam: false } },
   },
   // 100 USDC, but marked as spam
   {
@@ -79,16 +66,10 @@ const tokens: TokenBalance[] = [
       id: '',
       value: 100,
     },
-    tokenProjectMarket: {
-      id: '',
-      currency: Currency.Eth,
-      tokenProject: {
-        id: '',
-        tokens: [nonnativeToken(USDC_MAINNET)],
-        isSpam: true,
-      },
+    token: {
+      ...nonnativeToken(USDC_MAINNET),
+      project: { id: '', tokens: [nonnativeToken(USDC_MAINNET)], isSpam: true },
     },
-    token: nonnativeToken(USDC_MAINNET),
   },
   // 100 USDT
   {
@@ -99,16 +80,7 @@ const tokens: TokenBalance[] = [
       id: '',
       value: 100,
     },
-    tokenProjectMarket: {
-      id: '',
-      currency: Currency.Eth,
-      tokenProject: {
-        id: '',
-        tokens: [nonnativeToken(USDT)],
-        isSpam: false,
-      },
-    },
-    token: nonnativeToken(USDT),
+    token: { ...nonnativeToken(USDT), project: { id: '', tokens: [nonnativeToken(USDT)], isSpam: false } },
   },
   // empty balance for WBTC
   {
@@ -120,16 +92,7 @@ const tokens: TokenBalance[] = [
       // @ts-ignore this is evidently possible but not represented in our types
       value: undefined,
     },
-    tokenProjectMarket: {
-      id: '',
-      currency: Currency.Eth,
-      tokenProject: {
-        id: '',
-        tokens: [nonnativeToken(WBTC)],
-        isSpam: false,
-      },
-    },
-    token: nonnativeToken(WBTC),
+    token: { ...nonnativeToken(WBTC), project: { id: '', tokens: [nonnativeToken(WBTC)], isSpam: false } },
   },
 ]
 

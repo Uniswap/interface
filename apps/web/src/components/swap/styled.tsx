@@ -1,4 +1,4 @@
-import { AutoColumn } from 'components/Column'
+import { AutoColumn } from 'components/deprecated/Column'
 import styled, { css } from 'lib/styled-components'
 import { transparentize } from 'polished'
 import { ReactNode } from 'react'

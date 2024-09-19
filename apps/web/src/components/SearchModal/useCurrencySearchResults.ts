@@ -213,7 +213,7 @@ export function useCurrencySearchResults({
     if (!isEmpty(searchQuery) || portfolioTokens.length === 0) {
       return [
         new CurrencyListSectionTitle(
-          searchQuery ? t('tokens.selector.section.search') : t('tokens.selector.section.popular'),
+          searchQuery ? t('tokens.selector.section.search') : t('explore.search.section.popularTokens'),
         ),
         ...sortedCombinedTokens.map(searchQuery ? searchResultsCurrencyListMapper : currencyListRowMapper),
       ]
@@ -226,7 +226,7 @@ export function useCurrencySearchResults({
       return [
         new CurrencyListSectionTitle(t('tokens.selector.section.yours')),
         ...portfolioTokens.map(currencyListRowMapper),
-        new CurrencyListSectionTitle(t('tokens.selector.section.popular')),
+        new CurrencyListSectionTitle(t('common.tokens')),
         ...sortedTokensWithoutPortfolio.map(currencyListRowMapper),
       ]
     }

@@ -9,7 +9,7 @@ import { selectPopupState } from 'src/app/features/popups/selectors'
 import { PopupName, closePopup, openPopup } from 'src/app/features/popups/slice'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Circle, Flex, Image, Popover, Text, TouchableArea } from 'ui/src'
+import { Circle, Flex, Popover, Text, TouchableArea, UniversalImage } from 'ui/src'
 import { animationPresets } from 'ui/src/animations'
 import { CopyAlt, Globe, RotatableChevron, Settings } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
@@ -180,7 +180,7 @@ function ConnectionStatusIcon({
   const isConnectedToNetwork = isConnected && lastChainId
   return isConnectedToNetwork ? (
     <Flex>
-      <Image height={iconSizes.icon20} resizeMode="contain" source={{ uri: dappIconUrl }} width={iconSizes.icon20} />
+      <UniversalImage size={{ height: iconSizes.icon20, width: iconSizes.icon20 }} uri={dappIconUrl} />
 
       <Flex backgroundColor="$surface2" borderRadius="$roundedFull" position="absolute" right={8} top={-3}>
         <Circle

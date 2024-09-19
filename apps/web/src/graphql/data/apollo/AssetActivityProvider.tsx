@@ -1,6 +1,5 @@
 import { SubscriptionResult } from '@apollo/client'
 import { createAdaptiveRefetchContext } from 'graphql/data/apollo/AdaptiveRefetch'
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import ms from 'ms'
@@ -15,6 +14,7 @@ import {
   useState,
 } from 'react'
 import { useFiatOnRampTransactions } from 'state/fiatOnRampTransactions/hooks'
+import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
 import {
   ActivityWebQueryResult,
   AssetActivityPartsFragment,

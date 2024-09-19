@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { BiometricAuthWarningModal } from 'src/components/Settings/BiometricAuthWarningModal'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { enroll } from 'src/features/biometrics'
+import { enroll } from 'src/features/biometrics/biometrics'
 import {
   checkOsBiometricAuthEnabled,
   useBiometricAppSettings,

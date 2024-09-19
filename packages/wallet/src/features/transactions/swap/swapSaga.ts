@@ -1,20 +1,23 @@
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { call, select } from 'typed-redux-saga'
+import { call, put, select } from 'typed-redux-saga'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
+import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import { tradeToTransactionInfo } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
   ApproveTransactionInfo,
   TransactionOriginType,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
-import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
-import { ValidatedSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { sendTransaction, tryGetNonce } from 'wallet/src/features/transactions/sendTransactionSaga'
-import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
-import { tradeToTransactionInfo } from 'wallet/src/features/transactions/swap/utils'
 import { wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
@@ -96,6 +99,7 @@ export function* approveAndSwap(params: SwapParams) {
           account,
           inputCurrencyAmount,
           swapTxId: txId,
+          skipPushNotification: true, // wrap is abstracted away in UX; we avoid showing a wrap notification
         })
         wrapTxHash = wrapResponse?.transactionResponse.hash
       }
@@ -127,6 +131,7 @@ export function* approveAndSwap(params: SwapParams) {
         transactionOriginType: TransactionOriginType.Internal,
       }
       yield* call(sendTransaction, sendTransactionParams)
+      yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
     }
   } catch (error) {
     logger.error(error, {
