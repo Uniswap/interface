@@ -7,30 +7,31 @@ import InfoCircleFilled from 'ui/src/assets/icons/info-circle-filled.svg'
 import { AlertCircle } from 'ui/src/components/icons'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes, spacing } from 'ui/src/theme'
+import { CurrencyInputPanel, CurrencyInputPanelRef } from 'uniswap/src/components/CurrencyInputPanel/CurrencyInputPanel'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import {
+  DecimalPadCalculateSpace,
+  DecimalPadInput,
+  DecimalPadInputRef,
+} from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
+import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useUSDTokenUpdater'
+import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
+import { SwapArrowButton } from 'uniswap/src/features/transactions/swap/form/SwapArrowButton'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
 import { RecipientInputPanel } from 'wallet/src/components/input/RecipientInputPanel'
-import { WarningModal, getAlertColor } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { NFTTransfer } from 'wallet/src/components/nfts/NFTTransfer'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { GasFeeRow } from 'wallet/src/features/transactions/send/GasFeeRow'
 import { useShowSendNetworkNotification } from 'wallet/src/features/transactions/send/hooks/useShowSendNetworkNotification'
-import { CurrencyInputPanel, CurrencyInputPanelRef } from 'wallet/src/features/transactions/swap/CurrencyInputPanel'
-import {
-  DecimalPadCalculateSpace,
-  DecimalPadInput,
-  DecimalPadInputRef,
-} from 'wallet/src/features/transactions/swap/DecimalPadInput'
-import { SwapArrowButton } from 'wallet/src/features/transactions/swap/SwapArrowButton'
-import { useUSDTokenUpdater } from 'wallet/src/features/transactions/swap/trade/hooks/useUSDTokenUpdater'
-import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 import { useIsBlockedActiveAddress } from 'wallet/src/features/trm/hooks'
 
 const TRANSFER_DIRECTION_BUTTON_SIZE = iconSizes.icon20

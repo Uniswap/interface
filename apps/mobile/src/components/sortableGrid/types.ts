@@ -1,3 +1,4 @@
+import { PropsWithChildren } from 'react'
 import { FlatList, ScrollView, View } from 'react-native'
 import { SharedValue } from 'react-native-reanimated'
 
@@ -51,3 +52,42 @@ export type SortableGridRenderItemInfo<I> = {
 }
 
 export type SortableGridRenderItem<I> = (info: SortableGridRenderItemInfo<I>) => JSX.Element
+
+export type DragContextType = {
+  // DRAG SETTINGS
+  editable: boolean
+  // ACTIVE ITEM
+  activeItemKey: SharedValue<string | null>
+  activeItemDropped: SharedValue<boolean>
+  // DRAGA ACTIVATION
+  activationProgress: SharedValue<number>
+  activeItemPosition: SharedValue<Vector>
+  // ACTIVE ITEM DECORATION
+  activeItemScale: SharedValue<number>
+  activeItemOpacity: SharedValue<number>
+  activeItemShadowOpacity: SharedValue<number>
+}
+
+export type DragContextProviderProps<I> = PropsWithChildren<
+  Partial<ActiveItemDecorationSettings> & {
+    data: I[]
+    itemKeys: string[]
+    editable?: boolean
+    hapticFeedback?: boolean
+    onChange?: (e: SortableGridChangeEvent<I>) => void
+    onDragStart?: (e: SortableGridDragStartEvent<I>) => void
+    onDrop?: (e: SortableGridDropEvent<I>) => void
+    keyExtractor: (item: I, index: number) => string
+  }
+>
+
+export type AutoScrollContextType = {
+  // REFS
+  gridContainerRef: React.RefObject<View>
+  // MEASUREMENTS
+  containerStartOffset: SharedValue<number>
+  containerEndOffset: SharedValue<number>
+  scrollOffsetDiff: SharedValue<number>
+  startScrollOffset: SharedValue<number>
+  scrollY: SharedValue<number>
+}

@@ -10,6 +10,7 @@ import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   ExactInputSwapTransactionInfo,
@@ -17,15 +18,17 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { WETH } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
   SendTransactionParams,
   sendTransaction,
   tryGetNonce,
 } from 'wallet/src/features/transactions/sendTransactionSaga'
-import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { SubmitUniswapXOrderParams, submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import { SwapParams, approveAndSwap, shouldSubmitViaPrivateRpc } from 'wallet/src/features/transactions/swap/swapSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
@@ -58,7 +61,7 @@ const mockTransactionTypeInfo: ExactInputSwapTransactionInfo = {
   protocol: Protocol.V3,
 }
 
-jest.mock('wallet/src/features/transactions/swap/utils', () => {
+jest.mock('uniswap/src/features/transactions/swap/utils/trade', () => {
   return {
     tradeToTransactionInfo: (): TransactionTypeInfo => mockTransactionTypeInfo,
   }
@@ -211,6 +214,8 @@ describe(approveAndSwap, () => {
       .next(nonce)
       .call(sendTransaction, expectedSendSwapParams)
       .next({ transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} })
+      .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
+      .next()
       .isDone()
   })
 
@@ -250,6 +255,8 @@ describe(approveAndSwap, () => {
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
       .call(sendTransaction, expectedSendSwapParams)
       .next({ transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} })
+      .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
+      .next()
       .isDone()
   })
 

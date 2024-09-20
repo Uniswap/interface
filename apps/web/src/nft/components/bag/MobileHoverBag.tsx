@@ -1,4 +1,4 @@
-import { Box } from 'nft/components/Box'
+import { Box } from 'components/deprecated/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/bag/MobileHoverBag.css'
 import { body, bodySmall } from 'nft/css/common.css'

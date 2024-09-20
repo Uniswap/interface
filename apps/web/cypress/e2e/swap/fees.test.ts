@@ -1,6 +1,6 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { URAQuoteResponse } from 'state/routing/types'
-import { USDC_MAINNET } from '../../../src/constants/tokens'
+import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
 describe('Swap with fees', () => {

@@ -3,22 +3,26 @@ import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import {
   ApplicationModal,
+  CloseModalParams,
+  OpenModalParams,
   PopupContent,
   PopupType,
   addPopup,
   addSuppressedPopups,
   removePopup,
   removeSuppressedPopups,
+  setCloseModal,
   setFiatOnrampAvailability,
   setOpenModal,
 } from 'state/application/reducer'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { InterfaceState } from 'state/webReducer'
+import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 
-export function useModalIsOpen(modal: ApplicationModal): boolean {
-  const openModal = useAppSelector((state: InterfaceState) => state.application.openModal)
+export function useModalIsOpen(modal: ApplicationModal | ModalNameType): boolean {
+  const openModal = useAppSelector((state: InterfaceState) => state.application.openModal?.name)
   return openModal === modal
 }
 
@@ -91,30 +95,27 @@ export function useFiatOnrampAvailability(shouldCheck: boolean, callback?: () =>
   return { available, availabilityChecked, loading, error }
 }
 
+// TODO(WEB-4889): Remove this
+/** @deprecated - use separate open and close modal hooks for new modals instead */
 export function useToggleModal(modal: ApplicationModal): () => void {
   const isOpen = useModalIsOpen(modal)
   const dispatch = useAppDispatch()
-  return useCallback(() => dispatch(setOpenModal(isOpen ? null : modal)), [dispatch, modal, isOpen])
+
+  return useCallback(() => {
+    if (isOpen) {
+      dispatch(setCloseModal(modal))
+    } else {
+      dispatch(setOpenModal({ name: modal }))
+    }
+  }, [dispatch, modal, isOpen])
 }
 
-export function useCloseModal() {
+export function useCloseModal(modal?: CloseModalParams) {
   const dispatch = useAppDispatch()
-  const currentlyOpenModal = useAppSelector((state: InterfaceState) => state.application.openModal)
-  return useCallback(
-    (modalToClose?: ApplicationModal) => {
-      if (!modalToClose) {
-        // Close any open modal if no modal is specified.
-        dispatch(setOpenModal(null))
-      } else if (currentlyOpenModal === modalToClose) {
-        // Close the currently open modal if it is the one specified.
-        dispatch(setOpenModal(null))
-      }
-    },
-    [currentlyOpenModal, dispatch],
-  )
+  return useCallback(() => dispatch(setCloseModal(modal)), [dispatch, modal])
 }
 
-export function useOpenModal(modal: ApplicationModal): () => void {
+export function useOpenModal(modal: OpenModalParams): () => void {
   const dispatch = useAppDispatch()
   return useCallback(() => dispatch(setOpenModal(modal)), [dispatch, modal])
 }

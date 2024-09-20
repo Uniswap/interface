@@ -1,6 +1,6 @@
-import Column from 'components/Column'
 import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
-import { RowBetween, RowFixed } from 'components/Row'
+import Column from 'components/deprecated/Column'
+import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { RouterPreference } from 'state/routing/types'
 import { useRouterPreference } from 'state/user/hooks'

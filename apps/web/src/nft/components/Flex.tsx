@@ -1,4 +1,4 @@
-import { Box, BoxProps } from 'nft/components/Box'
+import { Box, BoxProps } from 'components/deprecated/Box'
 import { ForwardedRef, forwardRef } from 'react'
 
 export const Row = forwardRef((props: BoxProps, ref: ForwardedRef<HTMLElement>) => {

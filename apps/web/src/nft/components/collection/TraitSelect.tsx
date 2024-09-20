@@ -1,6 +1,6 @@
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
+import { Box } from 'components/deprecated/Box'
 import useDebounce from 'hooks/useDebounce'
-import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Filters.css'
 import { TraitsHeader } from 'nft/components/collection/TraitsHeader'

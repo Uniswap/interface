@@ -6212,37 +6212,37 @@
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/ethereum/0x34a43471377dcce420ce8e3ffd9360b2e08fa7b4</loc>
-    <lastmod>2024-08-30T21:42:45.808Z</lastmod>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/arbitrum/0x34a43471377dcce420ce8e3ffd9360b2e08fa7b4</loc>
-    <lastmod>2024-08-30T21:42:45.808Z</lastmod>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/optimism/0x34a43471377dcce420ce8e3ffd9360b2e08fa7b4</loc>
-    <lastmod>2024-08-30T21:42:45.808Z</lastmod>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/polygon/0x34a43471377dcce420ce8e3ffd9360b2e08fa7b4</loc>
-    <lastmod>2024-08-30T21:42:45.808Z</lastmod>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/base/0x34a43471377dcce420ce8e3ffd9360b2e08fa7b4</loc>
-    <lastmod>2024-08-30T21:42:45.808Z</lastmod>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/bnb/0x34a43471377dcce420ce8e3ffd9360b2e08fa7b4</loc>
-    <lastmod>2024-08-30T21:42:45.808Z</lastmod>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://app.uniswap.org/explore/pools/celo/0x34a43471377dcce420ce8e3ffd9360b2e08fa7b4</loc>
-    <lastmod>2024-08-30T21:42:45.808Z</lastmod>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
     <priority>0.8</priority>
   </url>
   <url>
@@ -6283,6 +6283,91 @@
   <url>
     <loc>https://app.uniswap.org/explore/pools/celo/0x0f44a1c2b66418f784607d2067fe695703809bff</loc>
     <lastmod>2024-09-06T21:31:35.073Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/ethereum/0x0da6253560822973185297d5f32ff8fa38243afe</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/ethereum/0x622270721fb38fde831ab23a8e177665557f6fa9</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/arbitrum/0xa95b0f5a65a769d82ab4f3e82842e45b8bbaf101</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/arbitrum/0x622270721fb38fde831ab23a8e177665557f6fa9</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/optimism/0x886b4f0cb357e0d6ec07b7a3985f346cc17ece7d</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/optimism/0x622270721fb38fde831ab23a8e177665557f6fa9</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/polygon/0x50defb73a76efe5d5d35cf267ffb02dfd6cd96bc</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/polygon/0x622270721fb38fde831ab23a8e177665557f6fa9</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0x7aea2e8a3843516afa07293a10ac8e49906dabd1</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0x8c7080564b5a792a33ef2fd473fba6364d5495e5</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0x8f81b80d950e5996346530b76aba2962da5c9edb</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0x7bc0f74d8d94e8e9fdaa40bbc04cc44fb8e0f081</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0x09c149c856e6fb6e40aa39209142411b554b1a41</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0x622270721fb38fde831ab23a8e177665557f6fa9</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0x7ef0a523c49b1dd07e3593198c5260a95ad7859a</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/bnb/0x622270721fb38fde831ab23a8e177665557f6fa9</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/celo/0x622270721fb38fde831ab23a8e177665557f6fa9</loc>
+    <lastmod>2024-09-13T19:11:58.336Z</lastmod>
     <priority>0.8</priority>
   </url>
 </urlset>

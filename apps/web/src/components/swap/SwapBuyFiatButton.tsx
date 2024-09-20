@@ -31,7 +31,7 @@ export default function SwapBuyFiatButton({
   setTriggerBuyFlow?: (value: boolean) => void
 }) {
   const account = useAccount()
-  const openFiatOnRampModal = useOpenModal(ApplicationModal.FIAT_ONRAMP)
+  const openFiatOnRampModal = useOpenModal({ name: ApplicationModal.FIAT_ONRAMP })
   const shouldShowBuyFiatButton = !isPathBlocked('/buy')
   const [checkFiatRegionAvailability, setCheckFiatRegionAvailability] = useState(false)
   const {

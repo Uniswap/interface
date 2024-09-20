@@ -15,7 +15,7 @@ import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
 import { WalletNavigationContextState, WalletNavigationProvider } from 'wallet/src/contexts/WalletNavigationContext'
-import { SharedWalletProvider } from 'wallet/src/provider'
+import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 import { WalletStateReducersOnly, walletRootReducer } from 'wallet/src/state/walletReducer'
 
 // This type extends the default options for render from RTL, as well

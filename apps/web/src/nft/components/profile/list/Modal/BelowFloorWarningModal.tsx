@@ -1,5 +1,5 @@
-import { ButtonPrimary } from 'components/Button'
-import Column from 'components/Column'
+import { ButtonPrimary } from 'components/Button/buttons'
+import Column from 'components/deprecated/Column'
 import styled, { useTheme } from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
 import { Overlay } from 'nft/components/modals/Overlay'

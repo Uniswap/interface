@@ -1,10 +1,11 @@
 import { chainIdToBackendChain } from 'constants/chains'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { GqlSearchToken } from 'graphql/data/SearchTokens'
 import { GenieCollection } from 'nft/types'
 import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { MAX_RECENT_SEARCH_RESULTS } from 'uniswap/src/components/TokenSelector/hooks'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   Chain,
   NftCollection,

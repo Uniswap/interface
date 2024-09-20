@@ -1,7 +1,7 @@
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
 import clsx from 'clsx'
+import { Box } from 'components/deprecated/Box'
 import styled from 'lib/styled-components'
-import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'

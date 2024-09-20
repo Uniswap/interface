@@ -1,7 +1,10 @@
-import { createSlice, nanoid } from '@reduxjs/toolkit'
+import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
+import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+/* eslint-disable-next-line no-restricted-imports */
+import { Position } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 
 export enum PopupType {
   Transaction = 'transaction',
@@ -29,6 +32,8 @@ export type PopupContent =
       action: SwapTab
     }
 
+// TODO(WEB-4888): remove this type
+/** @deprecated add new Modals to the ModalName object in uniswap/src/features/telemetry/constants */
 export enum ApplicationModal {
   ADDRESS_CLAIM,
   BLOCKED_ACCOUNT,
@@ -39,26 +44,30 @@ export enum ApplicationModal {
   FIAT_ONRAMP,
   RECEIVE_CRYPTO,
   RECEIVE_CRYPTO_QR,
-  MENU,
-  METAMASK_CONNECTION_ERROR,
-  NETWORK_SELECTOR,
   PRIVACY_POLICY,
   QUEUE,
   SELF_CLAIM,
   SETTINGS,
-  SHARE,
-  TAX_SERVICE,
   VOTE,
   UK_DISCLAIMER,
   GET_THE_APP,
 }
+
+type AddLiquidityModalParams = {
+  name: typeof ModalName.AddLiquidity
+  initialState: Position
+}
+
+export type OpenModalParams = { name: ApplicationModal; initialState?: undefined } | AddLiquidityModalParams
+
+export type CloseModalParams = ModalNameType | ApplicationModal
 
 export type PopupList = Array<{ key: string; show: boolean; content: PopupContent; removeAfterMs: number | null }>
 
 export interface ApplicationState {
   readonly chainId: number | null
   readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
-  readonly openModal: ApplicationModal | null
+  readonly openModal: OpenModalParams | null
   readonly popupList: PopupList
   readonly suppressedPopups: PopupType[]
 }
@@ -82,8 +91,14 @@ const applicationSlice = createSlice({
       const { chainId } = action.payload
       state.chainId = chainId
     },
-    setOpenModal(state, action) {
+    setOpenModal(state, action: PayloadAction<OpenModalParams>) {
       state.openModal = action.payload
+    },
+    setCloseModal(state, action: PayloadAction<CloseModalParams | undefined>) {
+      const { payload } = action
+      if (!payload || (state.openModal?.name as any) === payload) {
+        state.openModal = null
+      }
     },
     addPopup(state, { payload: { content, key, removeAfterMs = DEFAULT_TXN_DISMISS_MS } }) {
       key = key || nanoid()
@@ -118,6 +133,7 @@ export const {
   updateChainId,
   setFiatOnrampAvailability,
   setOpenModal,
+  setCloseModal,
   addPopup,
   removePopup,
   addSuppressedPopups,

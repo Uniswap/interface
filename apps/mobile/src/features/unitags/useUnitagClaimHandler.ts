@@ -1,11 +1,10 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
-import { UnitagEntryPoint } from 'src/app/navigation/types'
 import { openModal } from 'src/features/modals/modalSlice'
 import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
+import { MobileScreens, OnboardingScreens, UnitagEntryPoint, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { selectHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 

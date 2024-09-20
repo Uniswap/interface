@@ -1,5 +1,5 @@
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { AutoColumn } from 'components/Column'
+import { AutoColumn } from 'components/deprecated/Column'
 import { FeeTierPercentageBadge } from 'components/FeeSelector/FeeTierPercentageBadge'
 import { FEE_AMOUNT_DETAIL } from 'components/FeeSelector/shared'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'

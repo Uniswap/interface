@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import { MouseoverTooltip } from 'components/Tooltip'
 import styled from 'lib/styled-components'

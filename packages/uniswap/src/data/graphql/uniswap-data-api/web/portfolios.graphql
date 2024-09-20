@@ -57,44 +57,6 @@ fragment PortfolioTokenBalanceParts on TokenBalance {
   }
 }
 
-query PortfolioBalancesWeb(
-  $ownerAddress: String!
-  $chains: [Chain!]!
-  $includeSmallBalances: Boolean = false
-  $includeSpamTokens: Boolean = false
-) {
-  portfolios(
-    ownerAddresses: [$ownerAddress]
-    chains: $chains
-    valueModifiers: [
-      {
-        ownerAddress: $ownerAddress
-        includeSpamTokens: $includeSpamTokens
-        includeSmallBalances: $includeSmallBalances
-      }
-    ]
-  ) {
-    id
-    tokensTotalDenominatedValue {
-      id
-      value
-    }
-    tokensTotalDenominatedValueChange(duration: DAY) {
-      absolute {
-        id
-        value
-      }
-      percentage {
-        id
-        value
-      }
-    }
-    tokenBalances {
-      ...PortfolioTokenBalanceParts
-    }
-  }
-}
-
 # Query only returns basic token, quantity, and denominated value.
 query QuickTokenBalancesWeb($ownerAddress: String!, $chains: [Chain!]!) {
   portfolios(ownerAddresses: [$ownerAddress], chains: $chains) {

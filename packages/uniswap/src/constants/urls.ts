@@ -1,4 +1,4 @@
-import { isDevEnv, isTestEnv } from 'utilities/src/environment'
+import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 
 enum TrafficFlows {
@@ -31,6 +31,7 @@ export const uniswapUrls = {
     extensionDappTroubleshooting: `${helpUrl}/articles/25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps`,
     feeOnTransferHelp: `${helpUrl}/articles/18673568523789-What-is-a-token-fee-`,
     howToSwapTokens: `${helpUrl}/articles/8370549680909-How-to-swap-tokens-`,
+    hiddenTokenInfo: `${helpUrl}/articles/16948032550285-Where-are-my-tokens-in-the-Uniswap-Wallet`,
     impermanentLoss: `${helpUrl}/articles/20904453751693-What-is-Impermanent-Loss`,
     limitsFailure: `${helpUrl}/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute`,
     limitsInfo: `${helpUrl}/sections/24372644881293`,
@@ -86,6 +87,7 @@ export const uniswapUrls = {
     swap: '/v1/swap',
     order: '/v1/order',
     orders: '/v1/orders',
+    swappableTokens: '/v1/swappable_tokens',
   },
 
   // App and Redirect URL's

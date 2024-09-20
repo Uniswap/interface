@@ -7,10 +7,9 @@ import { TransactionStatus, TransactionType } from 'uniswap/src/features/transac
 import i18n from 'uniswap/src/i18n/i18n'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
-import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { getCurrencyDisplayText, getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { WalletConnectNotification } from 'wallet/src/features/notifications/types'
-import { getCurrencyDisplayText, getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
   const { event, dappName, chainId } = appNotification

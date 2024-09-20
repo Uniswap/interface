@@ -10,17 +10,17 @@ import SwiftUI
 
 public extension Text {
   func withHeading1Style() -> some View {
-    self.font(.custom("Basel Grotesk Book", size: 28))
+    self.font(.custom("BaselGrotesk-Book", size: 28))
       .foregroundColor(.white)
   }
   
   func withHeading2Style() -> some View {
-    self.font(.custom("Basel Grotesk Book", size: 20))
+    self.font(.custom("BaselGrotesk-Book", size: 20))
       .foregroundColor(.widgetLightGrey)
   }
   
   func withHeading3Style() -> some View {
-    self.font(.custom("Basel Grotesk Medium", size: 12))
+    self.font(.custom("BaselGrotesk-Medium", size: 12))
       .foregroundColor(.widgetGrey)
   }
 }

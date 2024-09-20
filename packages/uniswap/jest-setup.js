@@ -1,10 +1,21 @@
 import 'uniswap/src/i18n/i18n' // Uses real translations for tests
 import 'utilities/src/logger/mocks'
 
+import { localizeMock as mockRNLocalize } from 'react-native-localize/mock'
+import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { TextEncoder, TextDecoder } from 'util';
 import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
 
-jest.mock('utilities/src/environment', () => ({
+jest.mock('react-native-localize', () => mockRNLocalize)
+
+jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext)
+
+// Use native modal
+jest.mock('uniswap/src/components/modals/Modal', () => {
+  return jest.requireActual('uniswap/src/components/modals/Modal.native.tsx')
+})
+
+jest.mock('utilities/src/environment/env', () => ({
   isTestEnv: jest.fn(() => true),
   isDevEnv: jest.fn(() => false),
   isBetaEnv: jest.fn(() => false),

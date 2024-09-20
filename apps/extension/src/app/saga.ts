@@ -5,7 +5,7 @@ import { call, spawn } from 'typed-redux-saga'
 import { appLanguageWatcherSaga } from 'uniswap/src/features/language/saga'
 import { apolloClientRef } from 'wallet/src/data/apollo/usePersistedApolloClient'
 import { authActions, authReducer, authSaga, authSagaName } from 'wallet/src/features/auth/saga'
-import { initProviders } from 'wallet/src/features/providers'
+import { initProviders } from 'wallet/src/features/providers/saga'
 import { swapActions, swapReducer, swapSaga, swapSagaName } from 'wallet/src/features/transactions/swap/swapSaga'
 import {
   tokenWrapActions,

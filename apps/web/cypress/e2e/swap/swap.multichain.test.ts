@@ -1,7 +1,7 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
+import { UNI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
 const UNI_MAINNET = UNI[UniverseChainId.Mainnet]
@@ -65,7 +65,7 @@ describe('Swap - Multichain UX Enabled', () => {
 
     it('clears input amounts when chain is changed', () => {
       cy.interceptGraphqlOperation('Token', 'uni_token.json').as('Token')
-      cy.interceptGraphqlOperation('PortfolioBalancesWeb', 'mini-portfolio/tokens.json').as('PortfolioBalancesWeb')
+      cy.interceptGraphqlOperation('PortfolioBalances', 'mini-portfolio/tokens.json').as('PortfolioBalances')
       cy.interceptGraphqlOperation('QuickTokenBalancesWeb', 'quick_token_balances.json').as('QuickTokenBalancesWeb')
       cy.interceptGraphqlOperation('TopTokens', 'top_tokens.json').as('TopTokens')
       cy.interceptGraphqlOperation('TokenProjects', 'token_projects.json').as('TokenProjects')
@@ -136,7 +136,7 @@ describe('Swap - Multichain UX Enabled', () => {
 
   it('shows balances for disconnected chains', () => {
     cy.interceptGraphqlOperation('PortfolioBalances', 'portfolio_balances.json').as('PortfolioBalances')
-    cy.interceptGraphqlOperation('PortfolioBalancesWeb', 'mini-portfolio/tokens.json').as('PortfolioBalancesWeb')
+    cy.interceptGraphqlOperation('PortfolioBalances', 'mini-portfolio/tokens.json').as('PortfolioBalances')
     cy.interceptGraphqlOperation('QuickTokenBalancesWeb', 'quick_token_balances.json').as('QuickTokenBalancesWeb')
     cy.interceptGraphqlOperation('TopTokens', 'top_tokens.json').as('TopTokens')
     cy.interceptGraphqlOperation('TokenProjects', 'token_projects.json').as('TokenProjects')

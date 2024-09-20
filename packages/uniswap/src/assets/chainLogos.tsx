@@ -1,14 +1,12 @@
-import { BlockExplorer } from 'ui/src/components/icons'
-import {
-  ArbiscanLogoDark,
-  ArbiscanLogoLight,
-  EtherscanLogoDark,
-  EtherscanLogoLight,
-  OpEtherscanLogoDark,
-  OpEtherscanLogoLight,
-  PolygonscanLogoDark,
-  PolygonscanLogoLight,
-} from 'ui/src/components/logos'
+import { BlockExplorer } from 'ui/src/components/icons/BlockExplorer'
+import { ArbiscanLogoDark } from 'ui/src/components/logos/ArbiscanLogoDark'
+import { ArbiscanLogoLight } from 'ui/src/components/logos/ArbiscanLogoLight'
+import { EtherscanLogoDark } from 'ui/src/components/logos/EtherscanLogoDark'
+import { EtherscanLogoLight } from 'ui/src/components/logos/EtherscanLogoLight'
+import { OpEtherscanLogoDark } from 'ui/src/components/logos/OpEtherscanLogoDark'
+import { OpEtherscanLogoLight } from 'ui/src/components/logos/OpEtherscanLogoLight'
+import { PolygonscanLogoDark } from 'ui/src/components/logos/PolygonscanLogoDark'
+import { PolygonscanLogoLight } from 'ui/src/components/logos/PolygonscanLogoLight'
 import { UniverseChainId, UniverseChainLogoInfo } from 'uniswap/src/types/chains'
 
 // Keeping this separate from UNIVERSE_CHAIN_INFO to avoid import issues on extension content script

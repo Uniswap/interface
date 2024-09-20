@@ -4,6 +4,7 @@ import reducer, {
   ApplicationModal,
   ApplicationState,
   removePopup,
+  setCloseModal,
   setOpenModal,
   updateChainId,
 } from 'state/application/reducer'
@@ -73,9 +74,9 @@ describe('application reducer', () => {
 
   describe('setOpenModal', () => {
     it('should correctly set the open modal', () => {
-      store.dispatch(setOpenModal(ApplicationModal.CLAIM_POPUP))
-      expect(store.getState().openModal).toEqual(ApplicationModal.CLAIM_POPUP)
-      store.dispatch(setOpenModal(null))
+      store.dispatch(setOpenModal({ name: ApplicationModal.CLAIM_POPUP }))
+      expect(store.getState().openModal).toEqual({ name: ApplicationModal.CLAIM_POPUP })
+      store.dispatch(setCloseModal())
       expect(store.getState().openModal).toEqual(null)
     })
   })

@@ -1,5 +1,6 @@
 import { NetworkStatus, Reference, useApolloClient, WatchQueryFetchPolicy } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
+import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   ContractInput,
@@ -78,7 +79,7 @@ export function usePortfolioBalances({
     notifyOnNetworkStatusChange: true,
     onCompleted,
     pollInterval: internalPollInterval,
-    variables: address ? { ownerAddress: address, valueModifiers } : undefined,
+    variables: address ? { ownerAddress: address, valueModifiers, chains: GQL_MAINNET_CHAINS_MUTABLE } : undefined,
     skip: !address,
   })
 
@@ -190,7 +191,7 @@ export function usePortfolioTotalValue({
     notifyOnNetworkStatusChange: true,
     onCompleted,
     pollInterval: internalPollInterval,
-    variables: address ? { ownerAddress: address, valueModifiers } : undefined,
+    variables: address ? { ownerAddress: address, valueModifiers, chains: GQL_MAINNET_CHAINS_MUTABLE } : undefined,
     skip: !address,
   })
 

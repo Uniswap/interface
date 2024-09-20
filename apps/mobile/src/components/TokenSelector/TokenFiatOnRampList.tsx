@@ -11,9 +11,9 @@ import { FORCurrencyOrBalance, FiatOnRampCurrency } from 'uniswap/src/features/f
 import { getUnsupportedFORTokensWithBalance, isSupportedFORCurrency } from 'uniswap/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
+import { ListSeparatorToggle } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { ListSeparatorToggle } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 
 interface Props {
   onSelectCurrency: (currency: FiatOnRampCurrency) => void

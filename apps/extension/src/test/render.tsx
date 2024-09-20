@@ -14,7 +14,7 @@ import { AppStore } from 'src/store/store'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
-import { SharedWalletProvider } from 'wallet/src/provider'
+import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 // This type extends the default options for render from RTL, as well
 // as allows the user to specify other things such as initialState, store.

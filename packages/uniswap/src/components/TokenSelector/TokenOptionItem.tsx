@@ -44,7 +44,7 @@ function _TokenOptionItem({
   isSelected,
 }: OptionProps): JSX.Element {
   const { currencyInfo, isUnsupported } = option
-  const { currency, currencyId, safetyLevel, logoUrl } = currencyInfo
+  const { currency, safetyLevel } = currencyInfo
   const [showWarningModal, setShowWarningModal] = useState(false)
 
   const handleShowWarningModal = useCallback((): void => {
@@ -151,10 +151,8 @@ function _TokenOptionItem({
       </TouchableArea>
 
       <TokenWarningModal
-        currencyId={currencyId}
+        currencyInfo0={currencyInfo}
         isVisible={showWarningModal}
-        safetyLevel={safetyLevel}
-        tokenLogoUrl={logoUrl}
         onAccept={onAcceptTokenWarning}
         onClose={(): void => setShowWarningModal(false)}
       />

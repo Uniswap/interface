@@ -46,6 +46,7 @@ module.exports = {
     'spellcheck',
     '@typescript-eslint',
     '@jambit/typed-redux-saga',
+    'check-file',
   ],
   rules: {
     ...complexityRules,
@@ -72,6 +73,7 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'error',
     // use throughout the app when importing devtools, or in test files
     '@typescript-eslint/no-var-requires': 'off',
+    'check-file/no-index': ['error', { ignoreMiddleExtensions: true }],
     '@typescript-eslint/no-require-imports': 'off',
     '@typescript-eslint/no-unused-expressions': [
       2,
@@ -161,8 +163,7 @@ module.exports = {
           {
             name: '@gorhom/bottom-sheet',
             importNames: ['BottomSheetTextInput'],
-            message:
-              'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/Modal`.',
+            message: 'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/Modal`.',
           },
           {
             name: 'expo-haptics',
@@ -231,7 +232,7 @@ module.exports = {
         callbacksLast: true,
         shorthandFirst: true,
         ignoreCase: false,
-        noSortAlphabetically: false,
+        noSortAlphabetically: true,
         reservedFirst: true,
       },
     ],

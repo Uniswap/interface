@@ -99,12 +99,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   // Search for matching wallets
 
-  const {
-    wallets: walletSearchResults,
-    loading: walletsLoading,
-    exactENSMatch,
-    exactUnitagMatch,
-  } = useWalletSearchResults(searchQuery)
+  const { wallets: walletSearchResults, exactENSMatch, exactUnitagMatch } = useWalletSearchResults(searchQuery)
 
   const validAddress: Address | undefined = useMemo(
     () => getValidAddress(searchQuery, true, false) ?? undefined,
@@ -164,7 +159,8 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     walletSearchResults,
   ])
 
-  if (searchResultsLoading || walletsLoading) {
+  // Don't wait for wallet search results if there are already token search results, do wait for token results
+  if (searchResultsLoading) {
     return <SearchResultsLoader />
   }
 

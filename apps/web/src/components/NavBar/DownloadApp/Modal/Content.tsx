@@ -1,5 +1,5 @@
 import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { PropsWithChildren, ReactNode } from 'react'
 import { ThemedText } from 'theme/components'
 import { Flex, Image, Text } from 'ui/src'

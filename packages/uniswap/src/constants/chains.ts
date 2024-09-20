@@ -22,7 +22,7 @@ import {
   DAI_ARBITRUM_ONE,
   DAI_OPTIMISM,
   DAI_POLYGON,
-  MATIC_POLYGON,
+  POL_POLYGON,
   USDB_BLAST,
   USDC,
   USDC_ARBITRUM,
@@ -620,7 +620,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     backendChain: {
       chain: BackendChainId.Polygon as InterfaceGqlChain,
       backendSupported: true,
-      nativeTokenBackendAddress: MATIC_POLYGON.address,
+      nativeTokenBackendAddress: POL_POLYGON.address,
       isSecondaryChain: false,
     },
     blockWaitMsBeforeWarning: 600000,
@@ -641,8 +641,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     logo: POLYGON_LOGO,
     name: 'Polygon Mainnet',
     nativeCurrency: {
-      name: 'Polygon Matic',
-      symbol: 'MATIC',
+      name: 'Polygon POL',
+      symbol: 'POL',
       decimals: 18,
       address: '0x0000000000000000000000000000000000001010',
     },
@@ -661,8 +661,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     supportsGasEstimates: true,
     urlParam: 'polygon',
     wrappedNativeCurrency: {
-      name: 'Wrapped MATIC',
-      symbol: 'WMATIC',
+      name: 'Wrapped POL',
+      symbol: 'WPOL',
       decimals: 18,
       address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
     },
@@ -676,7 +676,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       chain: BackendChainId.Polygon as InterfaceGqlChain,
       isSecondaryChain: true,
       backendSupported: true,
-      nativeTokenBackendAddress: MATIC_POLYGON.address,
+      nativeTokenBackendAddress: POL_POLYGON.address,
     },
     blockPerMainnetEpochForChainId: 1,
     blockWaitMsBeforeWarning: 600000,
@@ -696,8 +696,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     label: 'Polygon Mumbai',
     logo: MUMBAI_LOGO,
     nativeCurrency: {
-      name: 'Polygon Mumbai Matic',
-      symbol: 'mMATIC',
+      name: 'Polygon Mumbai POL',
+      symbol: 'mPOL',
       decimals: 18,
       address: '0x0000000000000000000000000000000000001010',
     },
@@ -715,8 +715,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     supportsGasEstimates: false,
     urlParam: 'polygon_mumbai',
     wrappedNativeCurrency: {
-      name: 'Wrapped MATIC',
-      symbol: 'WMATIC',
+      name: 'Wrapped POL',
+      symbol: 'WPOL',
       decimals: 18,
       address: '0x9c3c9283d3e44854697cd22d3faa240cfb032889',
     },
@@ -1042,3 +1042,13 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     },
   } as const satisfies UniverseChainInfo,
 }
+
+export const GQL_MAINNET_CHAINS = Object.values(UNIVERSE_CHAIN_INFO)
+  .filter((chain) => !chain.testnet && !chain.backendChain.isSecondaryChain)
+  .map((chain) => chain.backendChain.chain)
+  .filter((backendChain) => !!backendChain)
+
+/** Used for making graphql queries to all chains supported by the graphql backend. Must be mutable for some apollo typechecking. */
+export const GQL_MAINNET_CHAINS_MUTABLE = GQL_MAINNET_CHAINS.map((c) => c)
+
+export const ALL_CHAIN_IDS: UniverseChainId[] = Object.values(UNIVERSE_CHAIN_INFO).map((chain) => chain.id)

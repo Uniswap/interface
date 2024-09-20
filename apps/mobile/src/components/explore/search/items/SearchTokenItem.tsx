@@ -28,7 +28,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
   const dispatch = useDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
-  const { chainId, address, name, symbol, logoUrl, safetyLevel } = token
+  const { chainId, address, name, symbol, logoUrl, safetyLevel, safetyInfo } = token
   const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId as WalletChainId)
 
   const onPress = (): void => {
@@ -56,6 +56,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
           symbol,
           logoUrl,
           safetyLevel,
+          safetyInfo,
         },
       }),
     )

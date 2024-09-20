@@ -24,10 +24,11 @@ import {
   unwrapToken,
 } from 'graphql/data/util'
 import { useCurrencyInfo } from 'hooks/Tokens'
+import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
 import { ReactElement, ReactNode, memo, useCallback, useEffect, useMemo } from 'react'
-import { giveExploreStatDefaultValue } from 'state/explore'
+import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
 import { useTopPools as useRestTopPools } from 'state/explore/topPools'
 import { PoolStat } from 'state/explore/types'
 import { Flex, Text, styled } from 'ui/src'
@@ -200,14 +201,16 @@ export const TopPoolTable = memo(function TopPoolTable() {
     isError: restIsError,
   } = useRestTopPools({ sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc })
 
+  const { page, loadMore } = useSimplePagination()
+
   const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
   const { topPools, loading, error } = isRestExploreEnabled
-    ? { topPools: restTopPools, loading: restIsLoading, error: restIsError }
+    ? { topPools: restTopPools?.slice(0, page * TABLE_PAGE_SIZE), loading: restIsLoading, error: restIsError }
     : { topPools: gqlTopPools, loading: allDataStillLoading, error: combinedError }
 
   return (
     <TableWrapper data-testid="top-pools-explore-table">
-      <PoolsTable pools={topPools} loading={loading} error={error} maxWidth={1200} />
+      <PoolsTable pools={topPools} loading={loading} error={error} loadMore={loadMore} maxWidth={1200} />
     </TableWrapper>
   )
 })

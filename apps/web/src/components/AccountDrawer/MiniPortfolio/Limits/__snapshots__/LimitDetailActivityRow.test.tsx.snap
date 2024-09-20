@@ -1,29 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`LimitDetailActivityRow should render with valid details 1`] = `
-.c6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c4 {
-  display: grid;
-  grid-auto-rows: auto;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-}
-
 .c0 {
   box-sizing: border-box;
   margin: 0;
@@ -86,6 +63,29 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c4 {
+  display: grid;
+  grid-auto-rows: auto;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
 }
 
 .c2 {
@@ -206,13 +206,13 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
         </div>
         <div
           class="css-view-175oi2r"
-          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; align-items: center; justify-content: center; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; border-top-color: rgba(0,0,0,0.00); border-right-color: rgba(0,0,0,0.00); border-bottom-color: rgba(0,0,0,0.00); border-left-color: rgba(0,0,0,0.00); border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; border-bottom-left-radius: 6px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; height: 26px; width: 26px;"
+          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; align-items: center; justify-content: center; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; border-top-color: rgba(0,0,0,0.00); border-right-color: rgba(0,0,0,0.00); border-bottom-color: rgba(0,0,0,0.00); border-left-color: rgba(0,0,0,0.00); border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; border-bottom-left-radius: 6px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; height: 23px; width: 23px;"
         >
           <div
             aria-checked="false"
             class="css-view-175oi2r"
             role="checkbox"
-            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; align-items: center; cursor: pointer; justify-content: center; pointer-events: auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-color: rgba(125,125,125,1.00); border-right-color: rgba(125,125,125,1.00); border-bottom-color: rgba(125,125,125,1.00); border-left-color: rgba(125,125,125,1.00); opacity: 0; background-color: rgba(0, 0, 0, 0); border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; height: 20px; width: 20px;"
+            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; align-items: center; cursor: pointer; justify-content: center; pointer-events: auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; border-top-color: rgba(125,125,125,1.00); border-right-color: rgba(125,125,125,1.00); border-bottom-color: rgba(125,125,125,1.00); border-left-color: rgba(125,125,125,1.00); opacity: 0; background-color: rgba(0, 0, 0, 0); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; height: 18px; width: 18px;"
             tabindex="0"
           />
         </div>

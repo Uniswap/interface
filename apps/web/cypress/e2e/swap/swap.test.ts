@@ -1,6 +1,6 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { UNI, USDC_MAINNET } from '../../../src/constants/tokens'
+import { UNI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { getBalance, getTestSelector } from '../../utils'
 
 const UNI_MAINNET = UNI[UniverseChainId.Mainnet]

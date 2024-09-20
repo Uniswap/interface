@@ -1,15 +1,15 @@
 import { Currency } from '@uniswap/sdk-core'
 import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
+import Identicon from 'components/Identicon'
+import { ChainLogo } from 'components/Logo/ChainLogo'
 import {
   CircleLogoImage,
   DoubleCurrencyLogo,
   DoubleLogo,
   L2LogoContainer,
   SingleLogoContainer,
-} from 'components/DoubleLogo'
-import Identicon from 'components/Identicon'
-import { ChainLogo } from 'components/Logo/ChainLogo'
+} from 'components/Logo/DoubleLogo'
 import styled from 'lib/styled-components'
 import React, { memo } from 'react'
 import { Flex, SpinningLoader, styled as TamaguiStyled } from 'ui/src'

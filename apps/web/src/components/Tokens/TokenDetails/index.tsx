@@ -16,7 +16,7 @@ import { CHAIN_ID_TO_BACKEND_NAME, isSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { ScrollDirection, useScroll } from 'hooks/useScroll'
@@ -156,16 +156,18 @@ function TDPSwapComponent() {
         />
       </div>
       {warning && <TokenSafetyMessage tokenAddress={address} warning={warning} />}
-      <TokenSafetyModal
-        isOpen={openTokenSafetyModal || !!continueSwap}
-        token0={currency.isToken ? currency : undefined}
-        onContinue={() => onResolveSwap(true)}
-        onBlocked={() => {
-          setOpenTokenSafetyModal(false)
-        }}
-        onCancel={() => onResolveSwap(false)}
-        showCancel={true}
-      />
+      {currency.isToken && (
+        <TokenSafetyModal
+          isOpen={openTokenSafetyModal || !!continueSwap}
+          token0={currency}
+          onContinue={() => onResolveSwap(true)}
+          onBlocked={() => {
+            setOpenTokenSafetyModal(false)
+          }}
+          onCancel={() => onResolveSwap(false)}
+          showCancel={true}
+        />
+      )}
     </>
   )
 }

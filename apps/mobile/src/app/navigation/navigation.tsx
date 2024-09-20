@@ -11,7 +11,6 @@ import {
   FiatOnRampStackParamList,
   OnboardingStackParamList,
   SettingsStackParamList,
-  UnitagStackParamList,
 } from 'src/app/navigation/types'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
@@ -68,7 +67,13 @@ import { spacing } from 'ui/src/theme'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
-import { FiatOnRampScreens, MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
+import {
+  FiatOnRampScreens,
+  MobileScreens,
+  OnboardingScreens,
+  UnitagScreens,
+  UnitagStackParamList,
+} from 'uniswap/src/types/screens/mobile'
 import { OnboardingContextProvider } from 'wallet/src/features/onboarding/OnboardingContext'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { selectFinishedOnboarding } from 'wallet/src/features/wallet/selectors'

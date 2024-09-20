@@ -25,6 +25,22 @@ module.exports = {
 
   overrides: [
     {
+      files: [
+        'src/index.tsx',
+        'cypress/utils/index.ts',
+        'src/tracing/index.ts',
+        'src/state/index.ts',
+        'src/state/explore/index.tsx',
+        'src/components/**',
+        'src/nft/**',
+        'src/theme/**',
+        'src/pages/**',
+      ],
+      rules: {
+        'check-file/no-index': 'off',
+      },
+    },
+    {
       files: ['src/**/*.ts', 'src/**/*.tsx'],
       rules: {
         'no-relative-import-paths/no-relative-import-paths': [
@@ -60,20 +76,15 @@ module.exports = {
             paths: [
               {
                 name: 'react-i18next',
-                message: 'Import from `uniswap/src/i18n` instead.'
+                message: 'Import from `uniswap/src/i18n` instead.',
               },
               {
                 name: 'i18next',
-                message: 'Import from `uniswap/src/i18n` instead.'
+                message: 'Import from `uniswap/src/i18n` instead.',
               },
               {
                 name: 'styled-components',
-                message: 'Styled components is deprecated, please use Flex or styled from "ui/src" instead.'
-              },
-              {
-                name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',
-                importNames: ['usePortfolioBalancesQuery', 'usePortfolioBalancesWebLazyQuery'],
-                message: 'Import cached/subscription-based balance hooks from `TokenBalancesProvider.tsx` instead.',
+                message: 'Styled components is deprecated, please use Flex or styled from "ui/src" instead.',
               },
               {
                 name: 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks',

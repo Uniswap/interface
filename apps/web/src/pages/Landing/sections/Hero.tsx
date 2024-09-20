@@ -1,4 +1,4 @@
-import { ColumnCenter } from 'components/Column'
+import { ColumnCenter } from 'components/deprecated/Column'
 import { useCurrency } from 'hooks/Tokens'
 import { useScroll } from 'hooks/useScroll'
 import { TokenCloud } from 'pages/Landing/components/TokenCloud'

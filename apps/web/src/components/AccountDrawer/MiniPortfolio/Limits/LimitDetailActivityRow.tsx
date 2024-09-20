@@ -6,11 +6,11 @@ import {
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
 import { FormatType, formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
-import Column from 'components/Column'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { parseUnits } from 'ethers/lib/utils'
 import { useCurrencyInfo } from 'hooks/Tokens'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { useTheme } from 'lib/styled-components'
 import { useMemo, useState } from 'react'
 import { ArrowRight } from 'react-feather'
@@ -137,7 +137,7 @@ export function LimitDetailActivityRow({ order, onToggleSelect, selected }: Limi
         <Checkbox
           variant="branded"
           opacity={hovered || selected || isSmallScreen ? 1 : 0}
-          size={18}
+          size="$icon.18"
           checked={selected}
           onPress={() => onToggleSelect(order)}
         />

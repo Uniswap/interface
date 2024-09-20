@@ -1,6 +1,6 @@
-import Column from 'components/Column'
 import Loader from 'components/Icons/LoadingSpinner'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import styled, { css, useTheme } from 'lib/styled-components'
 import { VerifiedIcon } from 'nft/components/icons'
 import { AssetRow, CollectionRow, ListingStatus } from 'nft/types'

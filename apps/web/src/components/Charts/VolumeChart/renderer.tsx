@@ -13,7 +13,6 @@ import {
   CustomData,
   CustomSeriesOptions,
   ICustomSeriesPaneRenderer,
-  Logical,
   PaneRendererCustomData,
   PriceToCoordinateConverter,
   Time,
@@ -42,7 +41,7 @@ interface BarItem {
 
 export interface CustomHistogramSeriesOptions extends CustomSeriesOptions {
   colors: string[]
-  hoveredLogicalIndex?: Logical
+  hoveredXPos?: number
 }
 
 function cumulativeBuildUp(data: StackedHistogramData): number[] {
@@ -76,9 +75,7 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
   }
 
   draw(target: CanvasRenderingTarget2D, priceConverter: PriceToCoordinateConverter): void {
-    target.useBitmapCoordinateSpace((scope) =>
-      this._drawImpl(scope, priceConverter, this._options?.hoveredLogicalIndex),
-    )
+    target.useBitmapCoordinateSpace((scope) => this._drawImpl(scope, priceConverter, this._options?.hoveredXPos))
   }
 
   update(data: PaneRendererCustomData<Time, TData>, options: CustomHistogramSeriesOptions): void {
@@ -89,7 +86,7 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
   _drawImpl(
     renderingScope: BitmapCoordinatesRenderingScope,
     priceToCoordinate: PriceToCoordinateConverter,
-    hoveredIndex?: number | null,
+    hoveredXPos?: number | null,
   ): void {
     if (
       this._data === null ||
@@ -154,11 +151,12 @@ export class CustomHistogramSeriesRenderer<TData extends CustomHistogramData> im
       // Modification: draw the stack's boxes atop the total volume bar, resulting in the top and bottom boxes being rounded
       ctx.globalCompositeOperation = 'source-atop'
       const isStackedHistogram = stack.ys.length > 1
+      // Determine if bar is being hovered by checking if the cursor is without the bounds of the bar
+      const isHovered = hoveredXPos && hoveredXPos >= stack.x - width / 4 && hoveredXPos <= stack.x + width / 4 + 1
       stack.ys.forEach((y, index) => {
         const color = this._colors[this._colors.length - 1 - index] // color v2, then v3
         const stackBoxPositions = positionsBox(previousY, y, renderingScope.verticalPixelRatio)
         ctx.fillStyle = color
-        const isHovered = i === hoveredIndex
         ctx.globalAlpha = isStackedHistogram && !isHovered && isMultichainExploreEnabled ? 0.24 : 1
         ctx.fillRect(column.left + margin, stackBoxPositions.position, width - margin, stackBoxPositions.length)
         if (isStackedHistogram && isMultichainExploreEnabled && !isHovered) {

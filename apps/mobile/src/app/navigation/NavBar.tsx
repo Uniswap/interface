@@ -31,11 +31,11 @@ import { borderRadii, fonts, opacify } from 'ui/src/theme'
 import { useHighestBalanceNativeCurrencyId } from 'uniswap/src/features/dataApi/balances'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { prepareSwapFormState } from 'uniswap/src/features/transactions/types/transactionState'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid, isIOS } from 'utilities/src/platform'
 import { setHasUsedExplore } from 'wallet/src/features/behaviorHistory/slice'
-import { prepareSwapFormState } from 'wallet/src/features/transactions/swap/utils'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export const NAV_BAR_HEIGHT_XS = 52

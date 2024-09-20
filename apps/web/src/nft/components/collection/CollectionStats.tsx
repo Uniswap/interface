@@ -1,7 +1,8 @@
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { useIsMobile, useScreenSize } from 'hooks/screenSize'
+import { Box, BoxProps } from 'components/deprecated/Box'
+import { useIsMobile } from 'hooks/screenSize/useIsMobile'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import styled, { css } from 'lib/styled-components'
-import { Box, BoxProps } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/CollectionStats.css'
 import {

@@ -1,6 +1,6 @@
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { AutoColumn, ColumnCenter } from 'components/Column'
+import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import { Chart } from 'components/LiquidityChartRangeInput/Chart'
 import { useDensityChartData } from 'components/LiquidityChartRangeInput/hooks'

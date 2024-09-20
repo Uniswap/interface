@@ -1,4 +1,4 @@
-import { Box } from 'nft/components/Box'
+import { Box } from 'components/deprecated/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { getSortDropdownOptions } from 'nft/components/collection/CollectionNfts'
 import * as styles from 'nft/components/collection/Filters.css'

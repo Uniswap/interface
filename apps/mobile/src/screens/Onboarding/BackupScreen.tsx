@@ -4,9 +4,13 @@ import { StackScreenProps } from '@react-navigation/stack'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import { AppStackParamList, OnboardingStackParamList, useOnboardingStackNavigation } from 'src/app/navigation/types'
+import {
+  AppStackParamList,
+  EducationContentType,
+  OnboardingStackParamList,
+  useOnboardingStackNavigation,
+} from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { EducationContentType } from 'src/components/education'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'

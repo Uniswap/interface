@@ -1,5 +1,5 @@
 import { InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
-import Badge from 'components/Badge'
+import Badge from 'components/Badge/Badge'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { AllNetworksIcon } from 'components/Tokens/TokenTable/icons'

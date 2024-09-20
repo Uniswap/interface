@@ -8,6 +8,7 @@ import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
+import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import {
   TransactionDetails,
   TransactionOptions,
@@ -17,10 +18,10 @@ import {
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WalletChainId } from 'uniswap/src/types/chains'
+import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
-import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
-import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
-import { createTransactionId, getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
+import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
+import { getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
 import { getPrivateProvider, getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'

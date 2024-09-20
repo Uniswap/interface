@@ -2,6 +2,7 @@ import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { _TypedDataEncoder } from '@ethersproject/hash'
 import { Signer, UnsignedTransaction, providers, utils } from 'ethers'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { SignsTypedData } from 'uniswap/src/features/transactions/signing'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
@@ -11,7 +12,7 @@ import { Keyring } from 'wallet/src/features/wallet/Keyring/Keyring'
  * NOTE: provide Keyring.platform.ts at runtime.
  */
 
-export class NativeSigner extends Signer {
+export class NativeSigner extends Signer implements SignsTypedData {
   constructor(
     private readonly address: string,
     provider?: providers.Provider,

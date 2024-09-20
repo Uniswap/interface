@@ -1,5 +1,9 @@
 import { useEffect, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { useTotalBalancesUsdPerChain } from 'uniswap/src/data/balances/utils'
+import { usePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { MobileAppsFlyerEvents, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
@@ -27,6 +31,7 @@ import { useAccounts } from 'wallet/src/features/wallet/hooks'
 export function useLastBalancesReporter(): void {
   const dispatch = useDispatch()
 
+  const account = useAccountMeta()
   const accounts = useAccounts()
   const lastBalancesReport = useSelector(selectLastBalancesReport)
   const lastBalancesReportValue = useSelector(selectLastBalancesReportValue)
@@ -42,6 +47,12 @@ export function useLastBalancesReporter(): void {
     addresses: signerAccountAddresses,
     fetchPolicy: 'cache-first',
   })
+
+  const portfolioBalancesQuery = usePortfolioBalancesQuery({
+    fetchPolicy: 'cache-only',
+    variables: account?.address ? { ownerAddress: account.address, chains: GQL_MAINNET_CHAINS_MUTABLE } : undefined,
+  })
+  const totalBalancesUsdPerChain = useTotalBalancesUsdPerChain(portfolioBalancesQuery)
 
   const signerAccountValues = useMemo(() => {
     const valuesUnfiltered = data?.portfolios
@@ -77,6 +88,14 @@ export function useLastBalancesReporter(): void {
         wallets: signerAccountAddresses,
         balances: signerAccountValues,
       })
+
+      // Send a report per chain
+      if (totalBalancesUsdPerChain && account?.address) {
+        sendAnalyticsEvent(UniswapEventName.BalancesReportPerChain, {
+          total_balances_usd_per_chain: totalBalancesUsdPerChain,
+          wallet: account.address,
+        })
+      }
       // record that a report has been sent
       dispatch(recordBalancesReport({ totalBalance }))
     }

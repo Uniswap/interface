@@ -1,11 +1,11 @@
 import { renderHook } from '@testing-library/react'
 import { CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { DEFAULT_LOCAL_CURRENCY } from 'constants/localCurrencies'
-import { USDC_MAINNET } from 'constants/tokens'
 import { useLocalCurrencyConversionRate } from 'graphql/data/ConversionRate'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { mocked } from 'test-utils/mocked'
+import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { Currency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 

@@ -6,10 +6,10 @@ import { MnemonicDisplay } from 'src/components/mnemonic/MnemonicDisplay'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { Button, Flex } from 'ui/src'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 
 type Props = {
   mnemonicId: string

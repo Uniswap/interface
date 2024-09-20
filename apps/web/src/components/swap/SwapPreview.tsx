@@ -1,5 +1,5 @@
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
-import Column, { AutoColumn } from 'components/Column'
+import Column, { AutoColumn } from 'components/deprecated/Column'
 import { SwapModalHeaderAmount } from 'components/swap/SwapModalHeaderAmount'
 import { Field } from 'components/swap/constants'
 import { useUSDPrice } from 'hooks/useUSDPrice'

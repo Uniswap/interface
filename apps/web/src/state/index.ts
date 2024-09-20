@@ -9,11 +9,11 @@ import { quickRouteApi } from 'state/routing/quickRouteSlice'
 import { routingApi } from 'state/routing/slice'
 import { InterfaceState, interfacePersistedStateList, interfaceReducer } from 'state/webReducer'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
-import { isDevEnv, isTestEnv } from 'utilities/src/environment'
+import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 
 const persistConfig: PersistConfig<InterfaceState> = {
   key: 'interface',
-  version: 17, // see migrations.ts for more details about this version
+  version: 18, // see migrations.ts for more details about this version
   storage: localForage.createInstance({
     name: INDEXED_DB_REDUX_TABLE_NAME,
     driver: localForage.LOCALSTORAGE,
