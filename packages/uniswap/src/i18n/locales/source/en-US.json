@@ -2069,7 +2069,7 @@
   "v3.blast.yield.usdbAndWeth": "On Blast, USDB and WETH are rebasing tokens that automatically earn yield. Due to incompatibility with Uniswap v3, LP positions with USDB or WETH won’t earn rebasing yield, but will in Uniswap v2.",
   "v3.continue": "Continue on v3",
   "v3.rebase.unavailable": "Rebasing is unavailable on v3",
-  "wallet.appSignIn": "",
+  "wallet.appSignIn": "Sign in with the app",
   "wallet.connectingAgreement": "By connecting a wallet, you agree to Uniswap Labs’ <termsLink>Terms of Service</termsLink> and consent to its <privacyLink>Privacy Policy</privacyLink>.",
   "wallet.connectionFailed.message": "The connection attempt failed. Please click try again and follow the steps to connect in your wallet.",
   "wallet.other": "Other wallets",
