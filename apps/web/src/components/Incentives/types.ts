@@ -80,6 +80,7 @@ export type PoolInfo = PoolResponse & {
   tickUpper: string;
   displayedTotalDeposit: string;
   apy: number;
+  pendingRewards: number;
 };
 
 export function findTokenByAddress(
@@ -147,7 +148,6 @@ export type PoolIncentivesTableValues = PoolInfo & {
     token0: TokenInfoDetails | undefined;
     token1: TokenInfoDetails | undefined;
   };
-  pendingRewards: number;
 };
 
 export const calculateApy = (
@@ -173,7 +173,7 @@ export const calculateApy = (
   const annualRewardPerLiquidityUnit = dailyRewardPerLiquidityUnit * 365;
 
   // Standardize per 1,000 liquidity units
-  const standardLiquidityAmount = 1000;
+  const standardLiquidityAmount = 1000000000;
   const annualRewardPerStandardLiquidity =
     annualRewardPerLiquidityUnit * standardLiquidityAmount;
 

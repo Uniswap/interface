@@ -28,8 +28,19 @@ import { FeeAmount, Pool, Position } from "@taraswap/v3-sdk";
 import { Token } from "@taraswap/sdk-core";
 import { useChainId } from "wagmi";
 import { formatUnits } from "viem/utils";
+import { MouseoverTooltip } from "components/Tooltip";
+import styled from "styled-components";
+import { Info } from "react-feather";
+import { useV3StakerContract } from "../../hooks/useV3StakerContract";
 
 const LOGO_DEFAULT_SIZE = 30;
+
+const StyledInfoIcon = styled(Info)`
+  height: 12px;
+  width: 12px;
+  flex: 1 1 auto;
+  stroke: ${({ theme }) => theme.neutral2};
+`;
 
 const PoolTokenImage = ({
   pool,
@@ -61,6 +72,7 @@ const PoolTokenImage = ({
 export default function Incentives() {
   const account = useAccount();
   const chainId = useChainId();
+  const v3StakerContract = useV3StakerContract(true);
   const [tokenList, setTokenList] = useState<TokenInfoDetails[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [rawIncentivesData, setRawIncentivesData] = useState<Incentive[]>([]);
@@ -162,7 +174,7 @@ export default function Incentives() {
       const poolInfo = await Promise.all(
         rawIncentivesData.map(async (incentive) => {
           const poolDetails = await fetchTokensForPool(incentive.pool);
-
+          let pendingRewards = "0";
           if (poolDetails && poolDetails.token0 && poolDetails.token1) {
             // Extract necessary data
             const totalPoolLiquidity = parseFloat(poolDetails.liquidity);
@@ -171,6 +183,16 @@ export default function Incentives() {
               BigInt(incentive.reward),
               incentive.rewardToken.decimals
             );
+            if (v3StakerContract) {
+              const allRewards = await v3StakerContract?.rewards(
+                incentive.rewardToken.id,
+                account.address
+              );
+              pendingRewards = formatUnits(
+                BigInt(allRewards),
+                incentive.rewardToken.decimals
+              );
+            }
 
             const annualRewardPerStandardLiquidity = calculateApy(
               incentive,
@@ -203,6 +225,7 @@ export default function Incentives() {
                 poolPosition[0] && poolPosition[0].tokenId
                   ? `/pool/${poolPosition[0].tokenId}`
                   : `/add/${poolDetails.token0.id}/${poolDetails.token1.id}`,
+              pendingRewards,
             } as unknown as PoolInfo;
           }
           return null;
@@ -229,7 +252,12 @@ export default function Incentives() {
               const token0 = findTokenByAddress(tokenList, pool.token0.id);
               const token1 = findTokenByAddress(tokenList, pool.token1.id);
               const feeTier: FeeAmount = Number(pool.feeTier) as FeeAmount;
-              if (token0 && token1) {
+              if (
+                token0 &&
+                token1 &&
+                Number(pool.tickLower) !== 0 &&
+                Number(pool.tickUpper) !== 0
+              ) {
                 const tokenA = new Token(
                   chainId,
                   token0.address,
@@ -269,14 +297,13 @@ export default function Incentives() {
                   token1: findTokenByAddress(tokenList, pool.token1.id),
                 },
                 displayedTotalDeposit,
-                pendingRewards: 0,
               };
             })
           );
         }
       });
     }
-  }, [rawIncentivesData, tokenList]);
+  }, [rawIncentivesData, tokenList, userPositions]);
 
   useEffect(() => {
     fetchCoinDetails();
@@ -314,14 +341,22 @@ export default function Incentives() {
         header: () => (
           <Cell minWidth={200}>
             <ThemedText.BodySecondary>
-              <Trans i18nKey="common.incentives.apr1d" />
+              <Row gap="4px">
+                <Trans i18nKey="common.incentives.apy" />
+                <MouseoverTooltip
+                  placement="right"
+                  text={<Trans i18nKey="common.incentives.apy.description" />}
+                >
+                  <StyledInfoIcon />
+                </MouseoverTooltip>
+              </Row>
             </ThemedText.BodySecondary>
           </Cell>
         ),
         cell: (apy) => (
           <Cell loading={isLoading} minWidth={200}>
             <ThemedText.BodySecondary>
-              {apy.getValue?.()}
+              {apy.getValue?.().toFixed(8)}
             </ThemedText.BodySecondary>
           </Cell>
         ),
