@@ -369,11 +369,14 @@ query PortfolioBalances(
           logoUrl
           name
           safetyLevel
-          isSpam
         }
         feeData {
           buyFeeBps
           sellFeeBps
+        }
+        protectionInfo {
+          result
+          attackTypes
         }
       }
       tokenProjectMarket {
