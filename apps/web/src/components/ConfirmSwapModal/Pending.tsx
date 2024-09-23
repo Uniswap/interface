@@ -5,10 +5,10 @@ import {
   LogoContainer,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/Logos'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
+import Column, { ColumnCenter } from 'components/Column'
 import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
 import { slideInAnimation, slideOutAnimation } from 'components/ConfirmSwapModal/animations'
-import Column, { ColumnCenter } from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
+import Row from 'components/Row'
 import { useAccount } from 'hooks/useAccount'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { useUnmountingAnimation } from 'hooks/useUnmountingAnimation'

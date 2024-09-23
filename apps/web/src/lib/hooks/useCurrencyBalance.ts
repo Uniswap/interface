@@ -1,5 +1,6 @@
 import { Interface } from '@ethersproject/abi'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { nativeOnChain } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useInterfaceMulticall } from 'hooks/useContract'
 import { useTokenBalances } from 'hooks/useTokenBalances'
@@ -8,7 +9,6 @@ import { useMultipleContractSingleData, useSingleContractMultipleData } from 'li
 import { useMemo } from 'react'
 import ERC20ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20Interface } from 'uniswap/src/abis/types/Erc20'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { isAddress } from 'utilities/src/addresses'
 import { currencyKey } from 'utils/currencyKey'
 

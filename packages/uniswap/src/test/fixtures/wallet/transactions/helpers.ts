@@ -1,6 +1,6 @@
 import { TransactionRequest, TransactionResponse } from '@ethersproject/providers'
 import { BigNumber, providers } from 'ethers/lib/ethers'
-import merge from 'lodash/merge'
+import { merge } from 'lodash'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   ClassicTransactionDetails,

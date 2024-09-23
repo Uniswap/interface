@@ -1,4 +1,4 @@
-import { OpacityHoverState } from 'components/Common/styles'
+import { OpacityHoverState } from 'components/Common'
 import styled from 'lib/styled-components'
 import { BagCloseIcon } from 'nft/components/icons'
 import { useMemo } from 'react'

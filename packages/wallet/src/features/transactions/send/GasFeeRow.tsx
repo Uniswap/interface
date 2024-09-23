@@ -7,9 +7,9 @@ import { iconSizes } from 'ui/src/theme'
 import { useUSDValue } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { NetworkFeeWarning } from 'uniswap/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
+import { NetworkFeeWarning } from 'wallet/src/features/transactions/swap/modals/NetworkFeeWarning'
 
 type GasFeeRowProps = {
   gasFee: GasFeeResult

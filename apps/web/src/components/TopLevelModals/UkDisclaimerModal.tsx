@@ -1,5 +1,5 @@
-import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
-import Column from 'components/deprecated/Column'
+import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button'
+import Column from 'components/Column'
 import Modal from 'components/Modal'
 import { bannerText } from 'components/TopLevelBanners/UkBanner'
 import styled from 'lib/styled-components'

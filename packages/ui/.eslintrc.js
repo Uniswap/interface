@@ -32,7 +32,8 @@ module.exports = {
           ...noRestrictedImportsPaths,
           {
             name: 'ui/src',
-            message: 'Avoid importing directly from ui/src from within the ui package which causes circular imports.',
+            message:
+              'Avoid importing directly from ui/src from within the ui package which causes circular imports.',
           },
         ],
       },
@@ -42,7 +43,6 @@ module.exports = {
     {
       files: ['*.ts', '*.tsx'],
       rules: {
-        'check-file/no-index': 'off',
         'no-relative-import-paths/no-relative-import-paths': [
           'error',
           {
@@ -53,4 +53,4 @@ module.exports = {
       },
     },
   ],
-}
+};

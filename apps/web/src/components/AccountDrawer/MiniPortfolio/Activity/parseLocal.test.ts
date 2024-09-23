@@ -8,6 +8,7 @@ import {
   transactionToActivity,
   useLocalActivities,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/parseLocal'
+import { DAI as MockDAI, USDC_MAINNET as MockUSDC_MAINNET, USDT as MockUSDT, nativeOnChain } from 'constants/tokens'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import {
   ExactInputSwapTransactionInfo,
@@ -19,12 +20,6 @@ import {
 import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import {
-  DAI as MockDAI,
-  USDC_MAINNET as MockUSDC_MAINNET,
-  USDT as MockUSDT,
-  nativeOnChain,
-} from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useFormatter } from 'utils/formatNumbers'

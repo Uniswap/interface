@@ -1,6 +1,6 @@
 import SizingImage from 'assets/images/sizingImage.png'
-import { Box } from 'components/deprecated/Box'
 import { ASSET_PAGE_SIZE } from 'graphql/data/nft/Asset'
+import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/CollectionAssetLoading.css'
 import { loadingAsset } from 'nft/css/loading.css'

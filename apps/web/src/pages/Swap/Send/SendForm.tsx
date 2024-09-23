@@ -1,7 +1,7 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonLight, ButtonPrimary } from 'components/Button/buttons'
-import Column from 'components/deprecated/Column'
+import { ButtonLight, ButtonPrimary } from 'components/Button'
+import Column from 'components/Column'
 import { useIsSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
@@ -17,8 +17,6 @@ import { SendContextProvider, useSendContext } from 'state/send/SendContext'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
@@ -187,10 +185,6 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
       .catch(() => undefined)
   }, [handleModalState, sendCallback, setSendState])
 
-  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
-
   return (
     <>
       <Column gap="xs">
@@ -203,13 +197,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
             element={InterfaceElementName.CONNECT_WALLET_BUTTON}
           >
             <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
-              {isSignIn ? (
-                <Trans i18nKey="nav.signIn.button" />
-              ) : isLogIn ? (
-                <Trans i18nKey="nav.logIn.button" />
-              ) : (
-                <Trans i18nKey="common.connectWallet.button" />
-              )}
+              <Trans i18nKey="common.connectWallet.button" />
             </ButtonLight>
           </Trace>
         ) : !multichainUXEnabled && initialChainId && initialChainId !== account.chainId ? (

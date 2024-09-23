@@ -1,4 +1,5 @@
 import { Fraction, TradeType } from '@uniswap/sdk-core'
+import { nativeOnChain } from 'constants/tokens'
 import { BigNumber } from 'ethers/lib/ethers'
 import { useCurrency, useToken } from 'hooks/Tokens'
 import useENSName from 'hooks/useENSName'
@@ -24,7 +25,6 @@ import {
   VoteTransactionInfo,
   WrapTransactionInfo,
 } from 'state/transactions/types'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { Trans } from 'uniswap/src/i18n'
 
 function formatAmount(amountRaw: string, decimals: number, sigFigs: number): string {

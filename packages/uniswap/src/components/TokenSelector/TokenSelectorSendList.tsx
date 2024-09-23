@@ -76,6 +76,7 @@ function _TokenSelectorSendList({
   activeAccountAddress,
   chainFilter,
   isKeyboardOpen,
+  onDismiss,
   onSelectCurrency,
   onEmptyActionPress,
   formatNumberOrStringCallback,
@@ -85,6 +86,7 @@ function _TokenSelectorSendList({
   onEmptyActionPress: () => void
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
+  onDismiss: () => void
 }): JSX.Element {
   const {
     data: sections,
@@ -109,6 +111,7 @@ function _TokenSelectorSendList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={false}
+      onDismiss={onDismiss}
       onSelectCurrency={onSelectCurrency}
     />
   )

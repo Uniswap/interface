@@ -1,4 +1,4 @@
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
+import { useScreenSize } from 'hooks/screenSize'
 import { BREAKPOINTS } from 'theme'
 
 export const NAV_BREAKPOINT = {

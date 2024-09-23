@@ -16,18 +16,14 @@ import { useAccount } from 'hooks/useAccount'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import Bag from 'nft/components/bag/Bag'
 import TransactionCompleteModal from 'nft/components/collection/TransactionCompleteModal'
-import { AddLiquidityModal } from 'pages/AddLiquidity/AddLiquidityModal'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
+import { isBetaEnv, isDevEnv } from 'utilities/src/environment'
 
 export default function TopLevelModals() {
   const addressClaimOpen = useModalIsOpen(ApplicationModal.ADDRESS_CLAIM)
   const addressClaimToggle = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
   const blockedAccountModalOpen = useModalIsOpen(ApplicationModal.BLOCKED_ACCOUNT)
-  const isAddLiquidityModalOpen = useModalIsOpen(ModalName.AddLiquidity)
-
   const account = useAccount()
   useAccountRiskCheck(account.address)
   const accountBlocked = Boolean(blockedAccountModalOpen && account.isConnected)
@@ -53,8 +49,6 @@ export default function TopLevelModals() {
       <FeatureFlagModal />
       {shouldShowDevFlags && <DevFlagsBox />}
       <ExtensionLaunchModal />
-
-      {isAddLiquidityModalOpen && <AddLiquidityModal />}
     </>
   )
 }

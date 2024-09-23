@@ -1,5 +1,5 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
-import Badge, { BadgeVariant } from 'components/Badge/Badge'
+import Badge, { BadgeVariant } from 'components/Badge'
 import Loader from 'components/Icons/LoadingSpinner'
 import { DetectedBadge } from 'components/WalletModal/shared'
 import { CONNECTOR_ICON_OVERRIDE_MAP, useRecentConnectorId } from 'components/Web3Provider/constants'

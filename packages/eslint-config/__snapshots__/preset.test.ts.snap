@@ -16,7 +16,6 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     "sourceType": "module",
   },
   "plugins": [
-    "check-file",
     "unused-imports",
     "import",
     "@typescript-eslint",
@@ -83,12 +82,6 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
     ],
     "@typescript-eslint/triple-slash-reference": [
       "error",
-    ],
-    "check-file/no-index": [
-      "error",
-      {
-        "ignoreMiddleExtensions": true,
-      },
     ],
     "constructor-super": [
       "off",
@@ -374,7 +367,6 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     "sourceType": "module",
   },
   "plugins": [
-    "check-file",
     "unused-imports",
     "import",
     "@typescript-eslint",
@@ -441,12 +433,6 @@ exports[`should have a correct configuration for a Jest file 1`] = `
     ],
     "@typescript-eslint/triple-slash-reference": [
       "error",
-    ],
-    "check-file/no-index": [
-      "error",
-      {
-        "ignoreMiddleExtensions": true,
-      },
     ],
     "constructor-super": [
       "off",
@@ -778,7 +764,6 @@ exports[`should have a correct configuration for a React file 1`] = `
     "sourceType": "module",
   },
   "plugins": [
-    "check-file",
     "unused-imports",
     "import",
     "@typescript-eslint",
@@ -870,14 +855,6 @@ exports[`should have a correct configuration for a React file 1`] = `
             "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
             "name": "ethers",
           },
-          {
-            "message": "Please import icons directly from their respective files, e.g. \`ui/src/components/icons/SpecificIcon\`. This is to avoid importing the entire icons folder when only some icons are needed, which increases bundle size",
-            "name": "ui/src/components/icons",
-          },
-          {
-            "message": "Please import logos directly from their respective files, e.g. \`ui/src/components/logos/SpecificLogo\`. This is to avoid importing the entire logos folder when only some logos are needed, which increases bundle size",
-            "name": "ui/src/components/logos",
-          },
         ],
         "patterns": [
           {
@@ -892,8 +869,6 @@ exports[`should have a correct configuration for a React file 1`] = `
               "!react-native-reanimated",
               "!react-native-image-colors",
               "!@testing-library/react-native",
-              "!@react-native-community/netinfo",
-              "!react-native-localize",
             ],
             "message": "React Native modules should not be imported outside of .native.ts files. If this is a .native.ts file, add an ignore comment to the top of the file. If you're trying to import a cross-platform module, add it to the whitelist in crossPlatform.js.",
           },
@@ -920,12 +895,6 @@ exports[`should have a correct configuration for a React file 1`] = `
     ],
     "@typescript-eslint/triple-slash-reference": [
       "error",
-    ],
-    "check-file/no-index": [
-      "error",
-      {
-        "ignoreMiddleExtensions": true,
-      },
     ],
     "constructor-super": [
       "off",
@@ -1279,7 +1248,6 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     "sourceType": "module",
   },
   "plugins": [
-    "check-file",
     "unused-imports",
     "import",
     "@typescript-eslint",
@@ -1345,12 +1313,6 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
     ],
     "@typescript-eslint/triple-slash-reference": [
       "error",
-    ],
-    "check-file/no-index": [
-      "error",
-      {
-        "ignoreMiddleExtensions": true,
-      },
     ],
     "constructor-super": [
       "off",

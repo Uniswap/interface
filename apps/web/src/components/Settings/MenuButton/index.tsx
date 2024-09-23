@@ -1,5 +1,5 @@
 import { Settings } from 'components/Icons/Settings'
-import Row from 'components/deprecated/Row'
+import Row from 'components/Row'
 import styled from 'lib/styled-components'
 import { InterfaceTrade } from 'state/routing/types'
 import { isUniswapXTrade } from 'state/routing/utils'

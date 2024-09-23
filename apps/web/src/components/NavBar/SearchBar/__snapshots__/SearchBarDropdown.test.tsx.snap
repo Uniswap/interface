@@ -1,6 +1,21 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`disable nft on searchbar dropdown should not render popular nft collections 1`] = `
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c7 {
   border-radius: 12px;
   border-radius: 12px;
@@ -59,21 +74,6 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
   background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
   will-change: background-position;
   background-size: 400%;
-}
-
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
 }
 
 .c3 {
@@ -385,6 +385,21 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
 `;
 
 exports[`disable nft on searchbar dropdown should render popular nft collections 1`] = `
+.c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
 .c7 {
   border-radius: 12px;
   border-radius: 12px;
@@ -443,21 +458,6 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
   background: linear-gradient( to left, #22222212 25%, rgba(53,53,53,0.07) 50%, #22222212 75% );
   will-change: background-position;
   background-size: 400%;
-}
-
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 8px;
 }
 
 .c3 {

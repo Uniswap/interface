@@ -3,12 +3,12 @@ import { StoreEnhancerStoreCreator } from 'redux'
 import { PlatformSplitStubError } from 'utilities/src/errors'
 import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
 
-interface Config {
-  shouldLogReduxState: (state: any) => boolean
+export function setupDatadog(): void {
+  throw new PlatformSplitStubError('setupDatadog')
 }
 
-export function setupDatadog(_envNameFunc: () => string): void {
-  throw new PlatformSplitStubError('setupDatadog')
+interface Config {
+  shouldLogReduxState: (state: any) => boolean
 }
 
 export function createDatadogReduxEnhancer(

@@ -28,7 +28,6 @@
     "eslint-config-prettier": "^8.5.0",
     "eslint-config-turbo": "latest",
     "eslint-import-resolver-typescript": "^3.5.2",
-    "eslint-plugin-check-file": "2.8.0",
     "eslint-plugin-cypress": "^2.12.1",
     "eslint-plugin-detox": "1.0.0",
     "eslint-plugin-import": "2.27.5",

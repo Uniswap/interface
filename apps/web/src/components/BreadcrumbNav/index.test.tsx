@@ -1,9 +1,8 @@
 import userEvent from '@testing-library/user-event'
 import { CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
 import { TokenFromList } from 'state/lists/tokenFromList'
 import { act, render, screen } from 'test-utils/render'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 describe('BreadcrumbNav', () => {

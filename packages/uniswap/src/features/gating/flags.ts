@@ -63,12 +63,8 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.ForAggregator, 'for_aggregator_web'],
   [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
   [FeatureFlags.TokenProtection, 'token_protection'],
-  [FeatureFlags.PortionFields, 'portion-fields'],
-  [FeatureFlags.UniswapX, 'uniswapx'],
-  [FeatureFlags.Datadog, 'datadog'],
 
   // Web Specific
-  [FeatureFlags.UniversalSwap, 'universal_swap'],
   [FeatureFlags.NavigationHotkeys, 'navigation_hotkeys'],
   [FeatureFlags.Eip6936Enabled, 'eip6963_enabled'],
   [FeatureFlags.GqlTokenLists, 'gql_token_lists'],
@@ -91,6 +87,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.OutageBannerArbitrum, 'outage_banner_feb_2024_arbitrum'],
   [FeatureFlags.OutageBannerOptimism, 'outage_banner_feb_2024_optimism'],
   [FeatureFlags.OutageBannerPolygon, 'outage_banner_feb_2024_polygon'],
+  [FeatureFlags.UniversalSwap, 'universal_swap'],
 ])
 
 // These names must match the gate name on statsig

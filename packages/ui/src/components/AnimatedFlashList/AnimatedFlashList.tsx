@@ -15,7 +15,7 @@ type AnimatedFlashListProps = FlatListProps<any> &
   Pick<
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     FlashListProps<any>,
-    'disableAutoLayout' | 'estimatedItemSize' | 'estimatedListSize' | 'getItemType' | 'overrideItemLayout'
+    'disableAutoLayout' | 'estimatedItemSize' | 'estimatedListSize' | 'getItemType'
   >
 
 // difficult to properly type

@@ -1,12 +1,12 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
-import { NetworkAlert } from 'components/NetworkAlert'
+import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import SwapHeader from 'components/swap/SwapHeader'
 import { Field } from 'components/swap/constants'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
 import { useSupportedChainId } from 'constants/chains'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
+import { useScreenSize } from 'hooks/screenSize'
 import { useAccount } from 'hooks/useAccount'
 import { BuyForm } from 'pages/Swap/Buy/BuyForm'
 import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
@@ -24,10 +24,8 @@ import { Flex } from 'ui/src'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-import noop from 'utilities/src/react/noop'
 
 export function getIsReviewableQuote(
   trade: InterfaceTrade | undefined,
@@ -122,7 +120,6 @@ export function Swap({
   const isDark = useIsDarkMode()
   const screenSize = useScreenSize()
   const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
-  const universalSwapFlow = useFeatureFlag(FeatureFlags.UniversalSwap)
 
   return (
     <SwapAndLimitContextProvider
@@ -142,18 +139,13 @@ export function Swap({
             <Flex width="100%">
               <SwapWrapper isDark={isDark} className={className} id="swap-page">
                 {!hideHeader && <SwapHeader compact={compact || !screenSize.sm} syncTabToUrl={syncTabToUrl} />}
-                {currentTab === SwapTab.Swap &&
-                  (universalSwapFlow ? (
-                    <Flex fill p="$spacing12">
-                      <SwapFlow onClose={noop} swapCallback={noop} wrapCallback={noop} />
-                    </Flex>
-                  ) : (
-                    <SwapForm
-                      onCurrencyChange={onCurrencyChange}
-                      initialCurrencyLoading={initialCurrencyLoading}
-                      disableTokenInputs={disableTokenInputs}
-                    />
-                  ))}
+                {currentTab === SwapTab.Swap && (
+                  <SwapForm
+                    onCurrencyChange={onCurrencyChange}
+                    initialCurrencyLoading={initialCurrencyLoading}
+                    disableTokenInputs={disableTokenInputs}
+                  />
+                )}
                 {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
                 {currentTab === SwapTab.Send && (
                   <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />

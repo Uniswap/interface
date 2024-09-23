@@ -1,12 +1,13 @@
 import { InterfaceElementName, InterfaceEventName, InterfaceSectionName } from '@uniswap/analytics-events'
-import { ScrollBarStyles } from 'components/Common/styles'
+import { ScrollBarStyles } from 'components/Common'
 import { NavIcon } from 'components/NavBar/NavIcon'
 import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import { SearchBarDropdown } from 'components/NavBar/SearchBar/SearchBarDropdown'
-import Row from 'components/deprecated/Row'
+import Row from 'components/Row'
 import { useSearchTokens } from 'graphql/data/SearchTokens'
 import { useCollectionSearch } from 'graphql/data/nft/CollectionSearch'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
+import { useScreenSize } from 'hooks/screenSize'
+import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import { useDisableNFTRoutes } from 'hooks/useDisableNFTRoutes'
 import { useIsNftPage } from 'hooks/useIsNftPage'
@@ -202,7 +203,8 @@ export const SearchBar = ({
 
   const { data: collections, loading: collectionsAreLoading } = useCollectionSearch(debouncedSearchValue)
 
-  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue)
+  const account = useAccount()
+  const { data: tokens, loading: tokensAreLoading } = useSearchTokens(debouncedSearchValue, account.chainId ?? 1)
   const isNFTPage = useIsNftPage()
   const [reducedTokens, reducedCollections] = organizeSearchResults(isNFTPage, tokens ?? [], collections ?? [])
 

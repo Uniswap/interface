@@ -1,4 +1,4 @@
-import { OpacityHoverState, ScrollBarStyles } from 'components/Common/styles'
+import { OpacityHoverState, ScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
 import styled from 'lib/styled-components'
 import { EventCell } from 'nft/components/collection/ActivityCells'

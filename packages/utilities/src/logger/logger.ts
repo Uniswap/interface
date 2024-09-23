@@ -173,3 +173,14 @@ function formatMessage(
     return [`${timeString}::${fileName}#${functionName}`, message]
   }
 }
+
+export function createAndLogError(funcName: string): Error {
+  const e = new Error('Unsupported app environment that failed all checks')
+  logger.error(e, {
+    tags: {
+      file: 'utilities/src/environment/index.ts',
+      function: funcName,
+    },
+  })
+  return e
+}

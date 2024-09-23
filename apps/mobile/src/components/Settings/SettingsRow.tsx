@@ -10,12 +10,12 @@ import {
 } from 'src/app/navigation/types'
 import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Switch, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { openUri } from 'uniswap/src/utils/linking'
+import { Arrow } from 'wallet/src/components/icons/Arrow'
 
 export interface SettingsSection {
   subTitle: string

@@ -3,6 +3,7 @@ import { WalletConnectRequest } from 'src/features/walletConnect/walletConnectSl
 import { AssetType } from 'uniswap/src/entities/assets'
 import { DynamicConfigs, UwuLinkConfigKey } from 'uniswap/src/features/gating/configs'
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { RPCType } from 'uniswap/src/types/chains'
 import {
   EthMethod,
   EthTransaction,
@@ -212,7 +213,7 @@ async function toTokenTransferRequest(
   providerManager: ProviderManager,
   contractManager: ContractManager,
 ): Promise<EthTransaction> {
-  const provider = providerManager.getProvider(request.chainId)
+  const provider = providerManager.getProvider(request.chainId, RPCType.Public)
   const params: SendCurrencyParams = {
     type: AssetType.Currency,
     account,

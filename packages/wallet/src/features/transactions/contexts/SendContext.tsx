@@ -3,18 +3,19 @@ import { Currency } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { ReactNode, createContext, useCallback, useContext, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { WarningAction } from 'uniswap/src/components/modals/WarningModal/types'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
-import { useTransactionGasFee, useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
+import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult, GasSpeed } from 'uniswap/src/features/gas/types'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
-import { useFormattedWarnings } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
+import { WarningAction } from 'uniswap/src/features/transactions/WarningModal/types'
 import { ParsedWarnings } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
+import { useParsedSendWarnings } from 'wallet/src/features/transactions/hooks/useParsedTransactionWarnings'
+import { useTransactionGasWarning } from 'wallet/src/features/transactions/hooks/useTransactionGasWarning'
 import { useDerivedSendInfo } from 'wallet/src/features/transactions/send/hooks/useDerivedSendInfo'
 import { useSendTransactionRequest } from 'wallet/src/features/transactions/send/hooks/useSendTransactionRequest'
 import { useSendWarnings } from 'wallet/src/features/transactions/send/hooks/useSendWarnings'
@@ -98,7 +99,7 @@ export function SendContextProvider({
   const allSendWarnings = useMemo(() => {
     return !gasWarning ? warnings : [...warnings, gasWarning]
   }, [warnings, gasWarning])
-  const parsedSendWarnings = useFormattedWarnings(allSendWarnings)
+  const parsedSendWarnings = useParsedSendWarnings(allSendWarnings)
 
   // helper function for currency selection
   const onSelectCurrency = useCallback(

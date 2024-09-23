@@ -1,5 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { permit2Address } from '@uniswap/permit2-sdk'
+import { USDC_MAINNET } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import store from 'state'
 import {
@@ -13,7 +14,6 @@ import { clearAllTransactions, finalizeTransaction } from 'state/transactions/re
 import { ApproveTransactionInfo, TransactionInfo, TransactionType } from 'state/transactions/types'
 import { mocked } from 'test-utils/mocked'
 import { act, renderHook } from 'test-utils/render'
-import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 

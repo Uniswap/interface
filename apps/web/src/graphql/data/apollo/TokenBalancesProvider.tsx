@@ -1,15 +1,15 @@
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { createAdaptiveRefetchContext } from 'graphql/data/apollo/AdaptiveRefetch'
 import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
+import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
-import { useTotalBalancesUsdPerChain } from 'uniswap/src/data/balances/utils'
 import {
   OnAssetActivitySubscription,
-  PortfolioBalancesQueryResult,
+  PortfolioBalancesWebQueryResult,
   SwapOrderStatus,
-  usePortfolioBalancesLazyQuery,
+  // eslint-disable-next-line @typescript-eslint/no-restricted-imports
+  usePortfolioBalancesWebLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -24,7 +24,7 @@ const {
   Provider: AdaptiveTokenBalancesProvider,
   useQuery: useTokenBalancesQuery,
   PrefetchWrapper: PrefetchBalancesWrapper,
-} = createAdaptiveRefetchContext<PortfolioBalancesQueryResult>()
+} = createAdaptiveRefetchContext<PortfolioBalancesWebQueryResult>()
 
 /** Returns whether an update may affect token balances. */
 function mayAffectTokenBalances(data?: OnAssetActivitySubscription) {
@@ -85,7 +85,7 @@ function usePortfolioValueModifiers(): {
 }
 
 export function TokenBalancesProvider({ children }: PropsWithChildren) {
-  const [lazyFetch, query] = usePortfolioBalancesLazyQuery({ errorPolicy: 'all' })
+  const [lazyFetch, query] = usePortfolioBalancesWebLazyQuery({ errorPolicy: 'all' })
   const account = useAccount()
   const hasAccountUpdate = useHasAccountUpdate()
   const valueModifiers = usePortfolioValueModifiers()
@@ -99,15 +99,8 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
       variables: {
         ownerAddress: account.address,
         chains: GQL_MAINNET_CHAINS_MUTABLE,
-        valueModifiers: [
-          {
-            ownerAddress: account.address,
-            includeSpamTokens: valueModifiers.includeSpamTokens,
-            includeSmallBalances: valueModifiers.includeSmallBalances,
-            tokenExcludeOverrides: [],
-            tokenIncludeOverrides: [],
-          },
-        ],
+        includeSpamTokens: valueModifiers.includeSpamTokens,
+        includeSmallBalances: valueModifiers.includeSmallBalances,
       },
     })
   }, [account.address, lazyFetch, valueModifiers])
@@ -134,10 +127,9 @@ export function useTotalBalancesUsdForAnalytics(): number | undefined {
 export function useReportTotalBalancesUsdForAnalytics() {
   const account = useAccount()
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
-  const totalBalancesUsdPerChain = useTotalBalancesUsdPerChain(useTokenBalancesQuery({ cacheOnly: true }))
 
-  const sendBalancesReport = useCallback(async () => {
-    if (!portfolioBalanceUsd || !totalBalancesUsdPerChain || !account.address) {
+  useEffect(() => {
+    if (!portfolioBalanceUsd || !account.address) {
       return
     }
 
@@ -146,18 +138,7 @@ export function useReportTotalBalancesUsdForAnalytics() {
       wallets: [account.address],
       balances: [portfolioBalanceUsd],
     })
-
-    sendAnalyticsEvent(UniswapEventName.BalancesReportPerChain, {
-      total_balances_usd_per_chain: totalBalancesUsdPerChain,
-      wallet: account.address,
-    })
-  }, [portfolioBalanceUsd, totalBalancesUsdPerChain, account.address])
-
-  useEffect(() => {
-    if (portfolioBalanceUsd !== undefined && totalBalancesUsdPerChain !== undefined) {
-      sendBalancesReport()
-    }
-  }, [portfolioBalanceUsd, totalBalancesUsdPerChain, sendBalancesReport])
+  }, [portfolioBalanceUsd, account.address])
 }
 
 export { PrefetchBalancesWrapper, useTokenBalancesQuery }

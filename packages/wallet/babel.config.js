@@ -28,7 +28,7 @@ module.exports = function (api) {
     // TypeScript compiles this, but in production builds, metro doesn't use tsc
     '@babel/plugin-proposal-logical-assignment-operators',
     // metro doesn't like these
-    '@babel/plugin-proposal-numeric-separator',
+    '@babel/plugin-proposal-numeric-separator'
   ]
 
   if (inProduction) {

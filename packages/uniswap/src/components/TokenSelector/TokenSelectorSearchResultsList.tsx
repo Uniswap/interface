@@ -38,6 +38,7 @@ function _TokenSelectorSearchResultsList({
   debouncedParsedSearchFilter,
   isBalancesOnlySearch,
   isKeyboardOpen,
+  onDismiss,
   formatNumberOrStringCallback,
   convertFiatAmountFormattedCallback,
 }: {
@@ -52,6 +53,7 @@ function _TokenSelectorSearchResultsList({
   isKeyboardOpen?: boolean
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
+  onDismiss: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const { registerSearch } = useAddToSearchHistory()
@@ -92,6 +94,7 @@ function _TokenSelectorSearchResultsList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
+      onDismiss={onDismiss}
       onSelectCurrency={onSelectCurrency}
     />
   )

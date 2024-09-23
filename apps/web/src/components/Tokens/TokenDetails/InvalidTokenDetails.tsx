@@ -1,5 +1,5 @@
 import { ReactComponent as EyeIcon } from 'assets/svg/eye.svg'
-import { ButtonPrimary } from 'components/Button/buttons'
+import { ButtonPrimary } from 'components/Button'
 import { useIsSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'

@@ -39,7 +39,7 @@ import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/feature
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { setCurrentFiatCurrency, setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
-import { isDevEnv } from 'utilities/src/environment/env'
+import { isDevEnv } from 'utilities/src/environment'
 import noop from 'utilities/src/react/noop'
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
 import { authActions } from 'wallet/src/features/auth/saga'

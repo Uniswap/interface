@@ -20,13 +20,13 @@ describe('useAccountRiskCheck', () => {
     const account = 'blocked-account'
     mocked(useIsBlocked).mockReturnValue({ isBlocked: true, isBlockedLoading: false })
     renderHook(() => useAccountRiskCheck(account))
-    expect(dispatchMock).toHaveBeenCalledWith(setOpenModal({ name: ApplicationModal.BLOCKED_ACCOUNT }))
+    expect(dispatchMock).toHaveBeenCalledWith(setOpenModal(ApplicationModal.BLOCKED_ACCOUNT))
   })
 
   it('should handle non-blocked account', async () => {
     const account = 'non-blocked-account'
     mocked(useIsBlocked).mockReturnValue({ isBlocked: false, isBlockedLoading: false })
     renderHook(() => useAccountRiskCheck(account))
-    expect(dispatchMock).not.toHaveBeenCalledWith(setOpenModal({ name: ApplicationModal.BLOCKED_ACCOUNT }))
+    expect(dispatchMock).not.toHaveBeenCalledWith(setOpenModal(ApplicationModal.BLOCKED_ACCOUNT))
   })
 })

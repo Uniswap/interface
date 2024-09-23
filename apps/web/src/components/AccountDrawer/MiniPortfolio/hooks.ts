@@ -18,11 +18,7 @@ export function useAccountDrawer() {
     updateAccountDrawerOpen(false)
   }, [setShowMoonpayTextInDrawer, updateAccountDrawerOpen])
 
-  const toggle = useCallback(() => {
-    updateAccountDrawerOpen((prev) => !prev)
-  }, [updateAccountDrawerOpen])
-
-  return useMemo(() => ({ isOpen, open, close, toggle }), [isOpen, open, close, toggle])
+  return useMemo(() => ({ isOpen, open, close }), [isOpen, open, close])
 }
 
 // Only show Moonpay text if the user opens the Account Drawer by clicking 'Buy'

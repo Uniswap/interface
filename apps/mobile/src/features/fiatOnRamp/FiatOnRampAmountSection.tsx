@@ -4,27 +4,19 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import {
-  ColorTokens,
-  Flex,
-  Text,
-  TouchableArea,
-  useHapticFeedback,
-  useIsShortMobileDevice,
-  useSporeColors,
-} from 'ui/src'
-import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
+import { ColorTokens, Flex, Text, TouchableArea, useHapticFeedback, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
-import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts, spacing } from 'ui/src/theme'
-import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { Pill } from 'uniswap/src/components/pill/Pill'
-import { useFormatExactCurrencyAmount } from 'uniswap/src/features/fiatOnRamp/hooks'
 import { FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
+import { AmountInput } from 'wallet/src/components/input/AmountInput'
+import { useFormatExactCurrencyAmount } from 'wallet/src/features/fiatOnRamp/hooks'
+import { errorShakeAnimation } from 'wallet/src/utils/animations'
+import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 const MAX_INPUT_FONT_SIZE = 56
 const MIN_INPUT_FONT_SIZE = 32
@@ -91,7 +83,6 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
     forwardedRef,
   ): JSX.Element {
     const { t } = useTranslation()
-    const isShortMobileDevice = useIsShortMobileDevice()
     const {
       onLayout: onInputLayout,
       fontSize,
@@ -221,7 +212,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
           </Flex>
         </AnimatedFlex>
         {!value && predefinedAmountsSupported ? (
-          <Flex centered row gap="$spacing12" mt={isShortMobileDevice ? 0 : '$spacing8'} pb="$spacing4">
+          <Flex centered row gap="$spacing12" mt="$spacing8" pb="$spacing4">
             {PREDEFINED_AMOUNTS.map((amount) => (
               <PredefinedAmount
                 key={amount}

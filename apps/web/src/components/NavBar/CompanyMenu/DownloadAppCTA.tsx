@@ -1,7 +1,7 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import { MobileAppLogo } from 'components/Icons/MobileAppLogo'
 import { NAV_BREAKPOINT, useIsMobileDrawer } from 'components/NavBar/ScreenSizes'
-import Row from 'components/deprecated/Row'
+import Row from 'components/Row'
 import styled, { css } from 'lib/styled-components'
 import { Text } from 'rebass'
 import { useOpenModal } from 'state/application/hooks'
@@ -34,7 +34,7 @@ const DownloadCTA = styled(Row)<{ isMobile: boolean }>`
   }
 `
 export function DownloadApp({ onClick }: { onClick?: () => void }) {
-  const openGetTheAppModal = useOpenModal({ name: ApplicationModal.GET_THE_APP })
+  const openGetTheAppModal = useOpenModal(ApplicationModal.GET_THE_APP)
   const isTouchDevice = useIsTouchDevice()
   const isMobileDrawer = useIsMobileDrawer()
 

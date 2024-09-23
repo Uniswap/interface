@@ -86,8 +86,9 @@ function DappRequestQueueContent(): JSX.Element {
                       <Text
                         color="$neutral2"
                         opacity={1}
-                        // `variant` prop must be first
                         variant="body4"
+                        // `variant` prop must be first
+                        // eslint-disable-next-line react/jsx-sort-props
                         fontWeight="500"
                       />
                     ),

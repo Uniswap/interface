@@ -102,6 +102,7 @@ export function _RecipientSelect({
           value={pattern ?? ''}
           onBack={recipient ? onHideRecipientSelector : undefined}
           onChangeText={setPattern}
+          onDismiss={() => Keyboard.dismiss()}
         />
         {!sections.length ? (
           <Flex centered gap="$spacing12" mt="$spacing24" px="$spacing24">

@@ -15,13 +15,7 @@ import {
   usePersistedError,
 } from 'uniswap/src/features/dataApi/utils'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import {
-  SAMPLE_CURRENCY_ID_1,
-  SAMPLE_CURRENCY_ID_2,
-  ethToken,
-  removeSafetyInfo,
-  usdcTokenProject,
-} from 'uniswap/src/test/fixtures'
+import { SAMPLE_CURRENCY_ID_1, SAMPLE_CURRENCY_ID_2, ethToken, usdcTokenProject } from 'uniswap/src/test/fixtures'
 import { renderHook } from 'uniswap/src/test/test-utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
@@ -56,13 +50,13 @@ describe(tokenProjectToCurrencyInfos, () => {
     }) as CurrencyInfo
 
   it('converts tokenProject to CurrencyInfo', () => {
-    const result = tokenProjectToCurrencyInfos([project]).map(removeSafetyInfo)
+    const result = tokenProjectToCurrencyInfos([project])
 
     expect(result).toEqual(project.tokens.map((token) => getExpectedResult(project, token)))
   })
 
   it('filters by chainId if chainFilter is provided', () => {
-    const result = tokenProjectToCurrencyInfos([project], UniverseChainId.Polygon).map(removeSafetyInfo)
+    const result = tokenProjectToCurrencyInfos([project], UniverseChainId.Polygon)
 
     expect(result).toEqual(
       project.tokens.filter((token) => token.chain === 'POLYGON').map((token) => getExpectedResult(project, token)),
@@ -81,9 +75,7 @@ describe(tokenProjectToCurrencyInfos, () => {
       ],
     } as TokenProject
 
-    const result = tokenProjectToCurrencyInfos([projectWithInvalidTokens], UniverseChainId.Mainnet).map(
-      removeSafetyInfo,
-    )
+    const result = tokenProjectToCurrencyInfos([projectWithInvalidTokens], UniverseChainId.Mainnet)
 
     expect(result).toEqual([getExpectedResult(project, project.tokens[0] as GQLToken)])
   })
@@ -137,7 +129,7 @@ describe(buildCurrency, () => {
 describe(gqlTokenToCurrencyInfo, () => {
   it('returns formatted CurrencyInfo for a given token', () => {
     const token = ethToken()
-    const result = removeSafetyInfo(gqlTokenToCurrencyInfo(token))
+    const result = gqlTokenToCurrencyInfo(token)
 
     expect(result).toEqual({
       currency: buildCurrency({

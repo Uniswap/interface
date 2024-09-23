@@ -1,39 +1,60 @@
+import { useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, ImpactFeedbackStyle, Separator, Text, TouchableArea } from 'ui/src'
-import { AnglesDownUp, SortVertical } from 'ui/src/components/icons'
+import { Easing, useAnimatedStyle, useSharedValue, withTiming } from 'react-native-reanimated'
+import { Flex, ImpactFeedbackStyle, Text, TouchableArea } from 'ui/src'
+import { RotatableChevron } from 'ui/src/components/icons'
+import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
+import { iconSizes } from 'ui/src/theme'
 
-export function HiddenNftsRow({
-  numHidden,
-  isExpanded,
-  onPress,
-}: {
-  numHidden: number
-  isExpanded: boolean
-  onPress: () => void
-}): JSX.Element {
+export function HiddenNftsRowLeft({ numHidden }: { numHidden: number }): JSX.Element {
   const { t } = useTranslation()
 
   return (
-    <TouchableArea hapticFeedback activeOpacity={1} hapticStyle={ImpactFeedbackStyle.Light} onPress={onPress}>
-      <Flex row alignItems="center" justifyContent="space-between" py="$spacing12">
-        <Flex centered grow row gap="$spacing12">
-          <Separator />
+    <Flex grow row alignItems="center" justifyContent="flex-start" ml="$spacing12" my="$spacing16" py="$spacing4">
+      <Text color="$neutral2" variant="subheading2">
+        {t('tokens.nfts.hidden.label', { numHidden })}
+      </Text>
+    </Flex>
+  )
+}
 
-          <Flex centered row gap="$gap4">
-            <Text color="$neutral3" textAlign="center" variant="body3">
-              {t('hidden.nfts.info.text.button', { numHidden })}
-            </Text>
+export function HiddenNftsRowRight({ isExpanded, onPress }: { isExpanded: boolean; onPress: () => void }): JSX.Element {
+  const { t } = useTranslation()
 
-            <Flex centered justifyContent="center">
-              {isExpanded ? (
-                <AnglesDownUp color="$neutral3" size="$icon.16" />
-              ) : (
-                <SortVertical color="$neutral3" size="$icon.16" />
-              )}
-            </Flex>
-          </Flex>
+  const chevronRotate = useSharedValue(isExpanded ? 180 : 0)
 
-          <Separator />
+  const chevronAnimatedStyle = useAnimatedStyle(() => {
+    return {
+      transform: [{ rotateZ: `${chevronRotate.value}deg` }],
+    }
+  }, [chevronRotate])
+
+  const onPressRow = useCallback(() => {
+    chevronRotate.value = withTiming(chevronRotate.value === 0 ? 180 : 0, {
+      duration: 150,
+      easing: Easing.ease,
+    })
+    onPress()
+  }, [chevronRotate, onPress])
+
+  return (
+    <TouchableArea hapticFeedback flexGrow={1} hapticStyle={ImpactFeedbackStyle.Light} onPress={onPressRow}>
+      <Flex row justifyContent="flex-end" mr="$spacing4" my="$spacing16">
+        <Flex
+          row
+          alignItems="center"
+          backgroundColor="$surface2"
+          borderRadius="$roundedFull"
+          pl="$spacing12"
+          pr="$spacing8"
+          py="$spacing4"
+        >
+          <Text color="$neutral2" variant="buttonLabel2">
+            {isExpanded ? t('common.button.hide') : t('common.button.show')}
+          </Text>
+          <AnimatedFlex style={chevronAnimatedStyle}>
+            <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />
+          </AnimatedFlex>
         </Flex>
       </Flex>
     </TouchableArea>

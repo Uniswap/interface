@@ -1,8 +1,3 @@
-//
-// @deprecated Prefer Modal from packages/uniswap/src/components/modals/Modal.tsx
-//
-// TODO(WEB-4886): Remove this
-//
 import { DialogContent, DialogOverlay } from '@reach/dialog'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import styled from 'lib/styled-components'

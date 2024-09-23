@@ -18,10 +18,11 @@ import {
   UnitagGetAvatarUploadUrlResponse,
 } from 'uniswap/src/features/unitags/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
-import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck/appCheck'
+import { getFirebaseAppCheckToken } from 'wallet/src/features/appCheck'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
@@ -126,7 +127,10 @@ export const getUnitagFormatError = (unitag: string, t: TFunction): string | und
   return undefined
 }
 
-export const useCanClaimUnitagName = (unitag: string | undefined): { error: string | undefined; loading: boolean } => {
+export const useCanClaimUnitagName = (
+  unitagAddress: Address | undefined,
+  unitag: string | undefined,
+): { error: string | undefined; loading: boolean; requiresENSMatch: boolean } => {
   const { t } = useTranslation()
 
   // Check for length and alphanumeric characters
@@ -138,14 +142,19 @@ export const useCanClaimUnitagName = (unitag: string | undefined): { error: stri
     params: unitagToSearch ? { username: unitagToSearch } : undefined,
     staleTime: 2 * ONE_MINUTE_MS,
   })
-  const { loading: ensLoading } = useENS(UniverseChainId.Mainnet, unitagToSearch, true)
+  const { loading: ensLoading, address: ensAddress } = useENS(UniverseChainId.Mainnet, unitagToSearch, true)
   const loading = unitagLoading || ensLoading
 
-  // Check for availability
-  if (!loading && !!data && !data.available) {
+  // Check for availability and ENS match
+  const dataLoaded = !loading && !!data
+  const ensAddressMatchesUnitagAddress = areAddressesEqual(unitagAddress, ensAddress)
+  if (dataLoaded && !data.available) {
     error = t('unitags.claim.error.unavailable')
   }
-  return { error, loading }
+  if (dataLoaded && data.requiresEnsMatch && !ensAddressMatchesUnitagAddress) {
+    error = t('unitags.claim.error.ensMismatch')
+  }
+  return { error, loading, requiresENSMatch: data?.requiresEnsMatch ?? false }
 }
 
 /**

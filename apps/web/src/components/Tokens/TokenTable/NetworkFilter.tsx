@@ -1,5 +1,5 @@
 import { InterfaceEventName, InterfacePageName } from '@uniswap/analytics-events'
-import Badge from 'components/Badge/Badge'
+import Badge from 'components/Badge'
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import { AllNetworksIcon } from 'components/Tokens/TokenTable/icons'
@@ -155,10 +155,8 @@ const TableNetworkItem = memo(function TableNetworkItem({
     >
       <InternalMenuItem
         data-testid={`tokens-network-filter-option-${display.toLowerCase()}`}
-        disabled={unsupported}
         onPress={() => {
-          !unsupported &&
-            navigate(`/explore/${tab ?? ExploreTab.Tokens}${!isAllNetworks ? `/${display.toLowerCase()}` : ''}`)
+          navigate(`/explore/${tab ?? ExploreTab.Tokens}${!isAllNetworks ? `/${display.toLowerCase()}` : ''}`)
           toggleMenu(false)
         }}
       >

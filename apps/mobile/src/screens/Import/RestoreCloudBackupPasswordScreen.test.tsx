@@ -5,7 +5,7 @@ import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { RestoreCloudBackupPasswordScreen } from 'src/screens/Import/RestoreCloudBackupPasswordScreen'
 import { render } from 'src/test/test-utils'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { TamaguiProvider } from 'wallet/src/providers/tamagui-provider'
+import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 
 const setOptionsSpy = jest.fn()
 const routeProp = { params: {} } as RouteProp<OnboardingStackParamList, OnboardingScreens.RestoreCloudBackupPassword>

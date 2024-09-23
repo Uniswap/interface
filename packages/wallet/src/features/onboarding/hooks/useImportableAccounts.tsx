@@ -77,9 +77,9 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
 
   const { ensMap, loading: ensLoading } = useAddressesEnsNames(addressesArray)
 
-  const fetch = useCallback(async (): Promise<AddressTo<AddressWithBalanceAndName>> => {
-    if (isLoadingAddresses || ensLoading) {
-      return {}
+  const fetchBalanceAndUnitags = useCallback(async (): Promise<AddressTo<AddressWithBalanceAndName> | undefined> => {
+    if (addressesArray.length === 0) {
+      return undefined
     }
 
     const valueModifiers = addressesArray.map((addr) => ({
@@ -87,6 +87,7 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
       includeSmallBalances: true,
       includeSpamTokens: false,
     }))
+
     const fetchBalances = apolloClient.query<SelectWalletScreenQuery>({
       query: SelectWalletScreenDocument,
       variables: { ownerAddresses: addressesArray, valueModifiers },
@@ -113,7 +114,6 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
         address,
         balance: balancesByAddress[address],
         unitag: unitagsByAddress[address]?.username,
-        ensName: ensMap?.[address],
       }
       map[entry.address] = entry
       return map
@@ -123,18 +123,47 @@ export function useAddressesBalanceAndNames(addresses?: Address[]): {
 
     // We use `refetchCount` as a dependency to manually trigger a refetch when calling the `refetch` function.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [addressesArray, isLoadingAddresses, ensMap, ensLoading, apolloClient, refetchCount])
+  }, [addressesArray, apolloClient, refetchCount])
 
-  const response = useAsyncData(fetch)
+  const {
+    data: balanceAndUnitags,
+    isLoading: balanceAndUnitagsLoading,
+    error: fetchingError,
+  } = useAsyncData(fetchBalanceAndUnitags)
+
+  const addressInfoMap = useMemo(() => {
+    if (balanceAndUnitags === undefined) {
+      return undefined
+    } else {
+      const res: AddressTo<AddressWithBalanceAndName> = {}
+      Object.entries(balanceAndUnitags).forEach(([address, info]) => {
+        res[address] = {
+          ...info,
+          ensName: ensMap && ensMap[address],
+        }
+      })
+      return res
+    }
+  }, [balanceAndUnitags, ensMap])
 
   return useMemo(
     () => ({
-      addressInfoMap: response.data,
-      isLoading: response.isLoading || isLoadingAddresses,
-      error: response.error && !response.data?.length,
+      addressInfoMap,
+      // This function is loading if we don't have addresses or are waiting on data. The first two are data, the
+      // last two cases occur when we are waiting for addresses
+      isLoading: balanceAndUnitagsLoading || ensLoading || isLoadingAddresses || addressInfoMap === undefined,
+      error: fetchingError && !balanceAndUnitags?.length,
       refetch,
     }),
-    [isLoadingAddresses, refetch, response.data, response.error, response.isLoading],
+    [
+      addressInfoMap,
+      balanceAndUnitags,
+      balanceAndUnitagsLoading,
+      ensLoading,
+      fetchingError,
+      isLoadingAddresses,
+      refetch,
+    ],
   )
 }
 

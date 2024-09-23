@@ -83,6 +83,7 @@ export function NftTransactionContent({
         borderBottomRightRadius="$rounded20"
         borderColor="$surface3"
         borderWidth={1}
+        // eslint-disable-next-line react/jsx-sort-props
         borderTopWidth={0}
         p="$spacing12"
       >

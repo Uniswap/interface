@@ -3,7 +3,7 @@ import { Currency, V2_ROUTER_ADDRESSES } from '@uniswap/sdk-core'
 import ms from 'ms'
 import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
-import { GQL_MAINNET_CHAINS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -92,6 +92,11 @@ export const CHAIN_IDS_TO_NAMES = Object.fromEntries(
   Object.entries(UNIVERSE_CHAIN_INFO).map(([key, value]) => [key, value.interfaceName]),
 ) as { [chainId in SupportedInterfaceChainId]: string }
 
+export const GQL_MAINNET_CHAINS = Object.values(UNIVERSE_CHAIN_INFO)
+  .filter((chain) => !chain.testnet && !chain.backendChain.isSecondaryChain)
+  .map((chain) => chain.backendChain.chain)
+  .filter((backendChain) => !!backendChain)
+
 const GQL_TESTNET_CHAINS = Object.values(UNIVERSE_CHAIN_INFO)
   .filter((chain) => chain.testnet && !chain.backendChain.isSecondaryChain)
   .map((chain) => chain.backendChain.chain)
@@ -127,6 +132,8 @@ export const CHAIN_NAME_TO_CHAIN_ID = Object.fromEntries(
     .filter(([, value]) => !value.backendChain.isSecondaryChain)
     .map(([key, value]) => [value.backendChain.chain, parseInt(key) as SupportedInterfaceChainId]),
 ) as { [chain in InterfaceGqlChain]: SupportedInterfaceChainId }
+
+export const ALL_CHAIN_IDS: UniverseChainId[] = Object.values(UNIVERSE_CHAIN_INFO).map((chain) => chain.id)
 
 export const SUPPORTED_GAS_ESTIMATE_CHAIN_IDS = Object.keys(UNIVERSE_CHAIN_INFO)
   .filter((key) => UNIVERSE_CHAIN_INFO[parseInt(key) as SupportedInterfaceChainId].supportsGasEstimates)

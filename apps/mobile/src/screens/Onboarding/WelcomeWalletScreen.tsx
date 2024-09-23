@@ -8,7 +8,6 @@ import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePictur
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Loader, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
-import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { fonts, iconSizes, opacify } from 'ui/src/theme'
 import { useENSAvatar } from 'uniswap/src/features/ens/api'
 import { Experiments, OnboardingRedesignRecoveryBackupProperties } from 'uniswap/src/features/gating/experiments'
@@ -21,6 +20,7 @@ import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobi
 import { NumberType } from 'utilities/src/format/types'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
+import { Arrow } from 'wallet/src/components/icons/Arrow'
 import {
   useCreateOnboardingAccountIfNone,
   useOnboardingContext,

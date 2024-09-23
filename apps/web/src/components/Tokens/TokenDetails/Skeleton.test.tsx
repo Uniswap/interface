@@ -1,6 +1,6 @@
 import { getLoadingTitle, TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleton'
+import { USDC_MAINNET } from 'constants/tokens'
 import { render } from 'test-utils/render'
-import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 describe('TDP Skeleton', () => {

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, LabeledCheckbox, SpinningLoader, Text } from 'ui/src'
+import { Button, CheckBox, Flex, SpinningLoader, Text } from 'ui/src'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 
 export function RemoveLastMnemonicWalletFooter({
@@ -18,7 +18,7 @@ export function RemoveLastMnemonicWalletFooter({
   return (
     <>
       <Flex backgroundColor="$surface2" borderRadius="$rounded16" mx="$spacing16" p="$spacing12" width="100%">
-        <LabeledCheckbox
+        <CheckBox
           checked={checkBoxAccepted}
           text={
             <Flex>

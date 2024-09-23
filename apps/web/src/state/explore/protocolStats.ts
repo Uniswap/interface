@@ -59,7 +59,6 @@ export function useHistoricalProtocolVolume(duration: HistoryDuration) {
         values: {
           ['SUBGRAPH_V2']: values['v2'],
           ['SUBGRAPH_V3']: values['v3'],
-          ['SUBGRAPH_V4']: values['v4'],
         },
       })
       return acc

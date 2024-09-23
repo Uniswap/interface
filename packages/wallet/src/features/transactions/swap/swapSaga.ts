@@ -1,25 +1,27 @@
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { call, put, select } from 'typed-redux-saga'
+import { call, select } from 'typed-redux-saga'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
-import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
-import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
-import { tradeToTransactionInfo } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { makeSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
+import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   ApproveTransactionInfo,
   TransactionOriginType,
+  TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
+import { RPCType } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
-import { sendTransaction, tryGetNonce } from 'wallet/src/features/transactions/sendTransactionSaga'
+import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers'
+import { ValidatedSwapTxContext } from 'wallet/src/features/transactions/contexts/SwapTxContext'
+import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
+import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
+import { tradeToTransactionInfo } from 'wallet/src/features/transactions/swap/utils'
 import { wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
@@ -38,6 +40,7 @@ export function* approveAndSwap(params: SwapParams) {
     const { swapTxContext, account, txId, analytics, onSubmit, onFailure } = params
     const { trade, routing, approveTxRequest } = swapTxContext
     const isUniswapX = routing === Routing.DUTCH_V2
+    const { address } = account
 
     const chainId = swapTxContext.trade.inputAmount.currency.chainId
 
@@ -49,9 +52,7 @@ export function* approveAndSwap(params: SwapParams) {
 
     // MEV protection is not needed for UniswapX approval and/or wrap transactions.
     const submitViaPrivateRpc = !isUniswapX && (yield* call(shouldSubmitViaPrivateRpc, chainId))
-    // We must manually set the nonce when submitting multiple transactions in a row,
-    // otherwise for some L2s the Provider might fetch the same nonce for both transactions.
-    let nonce = yield* call(tryGetNonce, account, chainId)
+    let nonce = yield* call(getNonceForApproveAndSwap, address, chainId, submitViaPrivateRpc)
 
     const gasFeeEstimation = swapTxContext.routing === Routing.CLASSIC ? swapTxContext.gasFeeEstimation : undefined
 
@@ -66,7 +67,7 @@ export function* approveAndSwap(params: SwapParams) {
         estimatedGasFeeDetails: gasFeeEstimation?.approvalFee,
       }
 
-      const options = { request: { ...approveTxRequest, nonce }, submitViaPrivateRpc }
+      const options = { request: approveTxRequest, submitViaPrivateRpc }
 
       const sendTransactionParams = {
         chainId,
@@ -79,7 +80,7 @@ export function* approveAndSwap(params: SwapParams) {
 
       // TODO(WEB-4406) - Refactor the approval submission's rpc call latency to not delay wrap submission
       approveTxHash = (yield* call(sendTransaction, sendTransactionParams)).transactionResponse.hash
-      nonce = nonce ? nonce + 1 : undefined
+      nonce++
     }
 
     // Default to input for USD volume amount
@@ -99,7 +100,6 @@ export function* approveAndSwap(params: SwapParams) {
           account,
           inputCurrencyAmount,
           swapTxId: txId,
-          skipPushNotification: true, // wrap is abstracted away in UX; we avoid showing a wrap notification
         })
         wrapTxHash = wrapResponse?.transactionResponse.hash
       }
@@ -120,7 +120,9 @@ export function* approveAndSwap(params: SwapParams) {
     }
     // Swap Logic - Classic
     else {
-      const options = { request: { ...swapTxContext.txRequest, nonce }, submitViaPrivateRpc }
+      const { txRequest: swapTxRequest } = swapTxContext
+      const request = { ...swapTxRequest, nonce }
+      const options = { request, submitViaPrivateRpc }
       const sendTransactionParams = {
         txId,
         chainId,
@@ -131,7 +133,6 @@ export function* approveAndSwap(params: SwapParams) {
         transactionOriginType: TransactionOriginType.Internal,
       }
       yield* call(sendTransaction, sendTransactionParams)
-      yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
     }
   } catch (error) {
     logger.error(error, {
@@ -148,10 +149,42 @@ export const {
   actions: swapActions,
 } = createMonitoredSaga<SwapParams>(approveAndSwap, 'swap')
 
+export function* getNonceForApproveAndSwap(address: Address, chainId: number, submitViaPrivateRpc: boolean) {
+  const rpcType = submitViaPrivateRpc ? RPCType.Private : RPCType.Public
+  const provider = yield* call(getProvider, chainId, rpcType)
+  const nonce = yield* call([provider, provider.getTransactionCount], address, 'pending')
+
+  const pendingPrivateTransactionCount = yield* call(getPendingPrivateTxCount, address, chainId)
+  if (rpcType !== RPCType.Private) {
+    // only need to add the `pendingPrivateTransactionCount` when submitting via a public RPC
+    // because it is unaware of pending txs in private pools
+    return nonce + pendingPrivateTransactionCount
+  }
+
+  return nonce
+}
+
 export function* shouldSubmitViaPrivateRpc(chainId: number) {
   const swapProtectionSetting = yield* select(selectWalletSwapProtectionSetting)
   const swapProtectionOn = swapProtectionSetting === SwapProtectionSetting.On
   const privateRpcFeatureEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
   const privateRpcSupportedOnChain = chainId ? isPrivateRpcSupportedOnChain(chainId) : false
   return Boolean(swapProtectionOn && privateRpcSupportedOnChain && privateRpcFeatureEnabled)
+}
+
+const selectAddressTransactions = makeSelectAddressTransactions()
+
+function* getPendingPrivateTxCount(address: Address, chainId: number) {
+  const pendingTransactions = yield* select(selectAddressTransactions, address)
+  if (!pendingTransactions) {
+    return 0
+  }
+
+  return pendingTransactions.filter(
+    (tx) =>
+      tx.chainId === chainId &&
+      tx.status === TransactionStatus.Pending &&
+      isClassic(tx) &&
+      Boolean(tx.options.submitViaPrivateRpc),
+  ).length
 }

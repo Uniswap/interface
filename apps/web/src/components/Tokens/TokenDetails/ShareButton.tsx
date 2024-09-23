@@ -10,7 +10,7 @@ import { useSearchParams } from 'react-router-dom'
 import { colors } from 'theme/colors'
 import { opacify } from 'theme/utils'
 import { Text, useSporeColors } from 'ui/src'
-import { Check } from 'ui/src/components/icons/Check'
+import { Check } from 'ui/src/components/icons'
 import { useTranslation } from 'uniswap/src/i18n/useTranslation'
 import { isMobileWeb } from 'utilities/src/platform'
 

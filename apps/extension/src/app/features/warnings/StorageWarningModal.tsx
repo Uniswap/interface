@@ -4,9 +4,9 @@ import { useCheckLowStorage } from 'src/app/features/warnings/useCheckLowStorage
 import { AppRoutes, SettingsRoutes } from 'src/app/navigation/constants'
 import { useExtensionNavigation } from 'src/app/navigation/utils'
 import { spacing } from 'ui/src/theme'
-import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
+import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 
 export type StorageWarningModalProps = {
   isOnboarding: boolean

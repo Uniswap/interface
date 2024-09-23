@@ -2,21 +2,7 @@
 
 exports[`NftCard renders correctly 1`] = `
 <DocumentFragment>
-  .c9 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c2 {
+  .c2 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -45,6 +31,20 @@ exports[`NftCard renders correctly 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
+}
+
+.c9 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c1 {

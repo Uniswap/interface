@@ -4,8 +4,8 @@ import { Price, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { PositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/cache'
 import { PoolDetailsPositionsTable } from 'components/Pools/PoolDetails/PoolDetailsPositionsTable'
+import { USDC_MAINNET } from 'constants/tokens'
 import { render, screen } from 'test-utils/render'
-import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 
 const mockPositionInfo: PositionInfo = {
   owner: '0x1234',

@@ -1,10 +1,12 @@
 import { DropdownIcon } from 'components/Table/icons'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
+import { useScreenSize } from 'hooks/screenSize'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import deprecatedStyled from 'lib/styled-components'
 import { Portal } from 'nft/components/common/Portal'
-import { RefObject, useCallback, useRef } from 'react'
-import { Checkbox, Flex, Text, styled } from 'ui/src'
+import { Checkbox } from 'nft/components/layout/Checkbox'
+import { RefObject, useCallback, useRef, useState } from 'react'
+import { ThemedText } from 'theme/components'
+import { Flex, styled } from 'ui/src'
 
 const StyledDropdownIcon = deprecatedStyled(DropdownIcon)`
   position: relative;
@@ -59,6 +61,7 @@ export function Filter<T extends string>({
   toggleFilterModal,
   anchorRef,
 }: FilterProps<T>) {
+  const [hoveredRow, setHoveredRow] = useState(-1)
   const isScreenSize = useScreenSize()
   const isMobile = !isScreenSize['sm']
   const filterModalRef = useRef<HTMLDivElement>(null)
@@ -85,16 +88,19 @@ export function Filter<T extends string>({
             top={isMobile ? 'unset' : anchorRef.current.getBoundingClientRect().y + 42 + window.scrollY}
             left={anchorRef.current.getBoundingClientRect().x}
           >
-            {allFilters.map((filter) => (
-              <FilterRow key={filter}>
-                <Text $short={{ variant: 'buttonLabel4' }} variant="subheading2">
-                  {filter}
-                </Text>
-                <Checkbox
-                  checked={activeFilter.includes(filter)}
-                  variant="branded"
-                  onPress={() => handleFilterOptionClick(filter)}
-                />
+            {allFilters.map((filter, index) => (
+              <FilterRow
+                key={filter}
+                onPress={(e) => {
+                  e.stopPropagation()
+                  e.preventDefault()
+                  handleFilterOptionClick(filter)
+                }}
+                onMouseEnter={() => setHoveredRow(index)}
+                onMouseLeave={() => setHoveredRow(-1)}
+              >
+                <ThemedText.BodySecondary>{filter}</ThemedText.BodySecondary>
+                <Checkbox checked={activeFilter.includes(filter)} hovered={index === hoveredRow} size={20} />
               </FilterRow>
             ))}
           </FilterDropdown>

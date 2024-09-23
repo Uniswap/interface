@@ -3,14 +3,14 @@ import { useCallback, useLayoutEffect, useState } from 'react'
 import { NativeSyntheticEvent, TextInputSelectionChangeEventData } from 'react-native'
 import { Flex, FlexProps, Text, TouchableArea } from 'ui/src'
 import { ArrowUpDown } from 'ui/src/components/icons'
-import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
 import { fonts } from 'ui/src/theme'
-import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
-import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
-import { useTokenAndFiatDisplayAmounts } from 'uniswap/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
+import { WarningLabel } from 'uniswap/src/features/transactions/WarningModal/types'
 import { ParsedWarnings } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { AmountInput } from 'wallet/src/components/input/AmountInput'
+import { useTokenAndFiatDisplayAmounts } from 'wallet/src/features/transactions/hooks/useTokenAndFiatDisplayAmounts'
+import { useDynamicFontSizing } from 'wallet/src/utils/useDynamicFontSizing'
 
 type SendAmountInputProps = {
   currencyInfo: Maybe<CurrencyInfo>

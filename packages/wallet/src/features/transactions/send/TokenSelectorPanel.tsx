@@ -1,10 +1,10 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { Maybe } from 'graphql/jsutils/Maybe'
 import { useTranslation } from 'react-i18next'
+import { Keyboard, LayoutAnimation } from 'react-native'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { MaxAmountButton } from 'uniswap/src/components/CurrencyInputPanel/MaxAmountButton'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { TokenSelectorModal, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
@@ -14,6 +14,7 @@ import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { MaxAmountButton } from 'wallet/src/components/input/MaxAmountButton'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface TokenSelectorPanelProps {
@@ -60,6 +61,8 @@ export function TokenSelectorPanel({
           isSurfaceReady={true}
           variation={TokenSelectorVariation.BalancesOnly}
           onClose={onHideTokenSelector}
+          onDismiss={() => Keyboard.dismiss()}
+          onPressAnimation={() => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)}
           onSelectCurrency={onSelectCurrency}
         />
       </Flex>

@@ -1,7 +1,7 @@
 import { LimitPriceErrorType } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
+import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { LimitPriceError } from 'pages/Swap/Limit/LimitPriceError'
 import { render } from 'test-utils/render'
-import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 
 describe('LimitPriceError', () => {
   it.each([

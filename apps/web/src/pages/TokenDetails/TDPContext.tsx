@@ -3,12 +3,16 @@ import { Currency } from '@uniswap/sdk-core'
 import { TDPChartState } from 'components/Tokens/TokenDetails/ChartSection'
 import { InterfaceGqlChain, SupportedInterfaceChainId } from 'constants/chains'
 import { Warning } from 'constants/tokenSafety'
-import { PortfolioBalance } from 'graphql/data/portfolios'
 import { PropsWithChildren, createContext, useContext } from 'react'
-import { Chain, Exact, TokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  Chain,
+  Exact,
+  PortfolioTokenBalancePartsFragment,
+  TokenWebQuery,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 export type MultiChainMap = {
-  [chain in Chain]?: { address?: string; balance?: PortfolioBalance } | undefined
+  [chain in Chain]?: { address?: string; balance?: PortfolioTokenBalancePartsFragment } | undefined
 }
 
 type BaseTDPContext = {

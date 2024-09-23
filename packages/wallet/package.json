@@ -16,6 +16,7 @@
     "@ethersproject/contracts": "5.7.0",
     "@ethersproject/providers": "5.7.2",
     "@gorhom/bottom-sheet": "4.5.1",
+    "@react-native-community/netinfo": "9.3.0",
     "@react-native-firebase/app-check": "18.4.0",
     "@react-navigation/core": "6.2.2",
     "@redux-saga/core": "1.2.3",
@@ -64,11 +65,13 @@
     "ui": "workspace:^",
     "uniswap": "workspace:^",
     "utilities": "workspace:^",
+    "uuid": "9.0.0",
     "zod": "3.22.4",
     "zxcvbn": "4.4.2"
   },
   "devDependencies": {
     "@faker-js/faker": "7.6.0",
+    "@testing-library/react-hooks": "7.0.2",
     "@testing-library/react-native": "11.5.0",
     "@types/react": "^18.0.15",
     "@types/zxcvbn": "4.4.2",

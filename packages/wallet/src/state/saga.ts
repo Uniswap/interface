@@ -1,7 +1,7 @@
 import { combineReducers, Reducer } from '@reduxjs/toolkit'
 import { spawn } from 'typed-redux-saga'
 import { notificationWatcher } from 'wallet/src/features/notifications/notificationWatcherSaga'
-import { initProviders } from 'wallet/src/features/providers/saga'
+import { initProviders } from 'wallet/src/features/providers'
 import {
   sendTokenActions,
   sendTokenReducer,

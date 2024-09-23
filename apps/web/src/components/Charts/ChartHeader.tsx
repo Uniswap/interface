@@ -143,16 +143,7 @@ export function ChartHeader({
   const isHovered = !!time
   const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
   return (
-    <Flex
-      row
-      position="absolute"
-      width="100%"
-      gap="$gap8"
-      alignItems="flex-start"
-      animation="fast"
-      zIndex="$tooltip"
-      id="chart-header"
-    >
+    <Flex row position="absolute" width="100%" gap="$gap8" alignItems="flex-start" animation="fast" id="chart-header">
       <Flex position="absolute" gap="$gap4" pb={14} pointerEvents="none" width="70%">
         <HeaderValueDisplay value={value} valueFormatterType={valueFormatterType} />
         <Flex row gap="$gap8" {...EllipsisTamaguiStyle}>

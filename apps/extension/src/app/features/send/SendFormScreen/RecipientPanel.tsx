@@ -1,5 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
+import { Keyboard } from 'react-native'
 import { Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron, WalletFilled } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
@@ -74,6 +75,7 @@ export function RecipientPanel({ chainId }: RecipientPanelProps): JSX.Element {
               py="$none"
               value={pattern ?? ''}
               onChangeText={setPattern}
+              onDismiss={() => Keyboard.dismiss()}
               onFocus={() => onSetShowRecipientSelector(true)}
             />
           </Flex>

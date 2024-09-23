@@ -1,7 +1,6 @@
 import { PropsWithChildren, ReactElement, createContext, useContext, useState } from 'react'
 import { AnimatePresence, GetThemeValueForKey, RadioGroup, RadioGroupItemProps, RadioGroupProps } from 'tamagui'
 import { Flex } from 'ui/src/components/layout'
-import { SporeComponentVariant } from 'ui/src/components/types'
 
 // Used to pass the selected value of the RadioGroup down to the RadioButtons.
 const RadioButtonGroupContext = createContext<string | undefined>(undefined)
@@ -41,8 +40,9 @@ const sizes = {
   UnselectedPressedIndicator: 6,
 }
 
+type RadioButtonVariant = 'branded' | 'default'
 type RadioButtonProps = {
-  variant?: SporeComponentVariant
+  variant?: RadioButtonVariant
 } & RadioGroupItemProps
 
 /**
@@ -156,7 +156,7 @@ export function RadioButton({ value, variant = 'default', ...rest }: RadioButton
   )
 }
 
-function getAccentColor(variant: SporeComponentVariant, isHovered: boolean): GetThemeValueForKey<'backgroundColor'> {
+function getAccentColor(variant: RadioButtonVariant, isHovered: boolean): GetThemeValueForKey<'backgroundColor'> {
   if (variant === 'branded') {
     return isHovered ? '$accent1Hovered' : '$accent1'
   }
@@ -164,7 +164,7 @@ function getAccentColor(variant: SporeComponentVariant, isHovered: boolean): Get
 }
 
 function getFocusedRingColor(
-  variant: SporeComponentVariant,
+  variant: RadioButtonVariant,
   isFocused: boolean,
   isSelected: boolean,
   accentColor: GetThemeValueForKey<'backgroundColor'>,

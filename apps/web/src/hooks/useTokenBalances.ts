@@ -1,10 +1,10 @@
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
-import { PortfolioBalance } from 'graphql/data/portfolios'
+import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
 import { useAccount } from 'hooks/useAccount'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import { useMemo } from 'react'
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
 import {
+  PortfolioTokenBalancePartsFragment,
   QuickTokenBalancePartsFragment,
   useQuickTokenBalancesWebQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -17,7 +17,7 @@ import { currencyKeyFromGraphQL } from 'utils/currencyKey'
  */
 export function useTokenBalances({ cacheOnly }: { cacheOnly?: boolean } = {}): {
   balanceMap: TokenBalances
-  balanceList: readonly (QuickTokenBalancePartsFragment | PortfolioBalance | undefined)[]
+  balanceList: readonly (QuickTokenBalancePartsFragment | PortfolioTokenBalancePartsFragment | undefined)[]
   loading: boolean
 } {
   const account = useAccount()

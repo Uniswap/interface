@@ -1,10 +1,12 @@
-import { ScrollBarStyles } from 'components/Common/styles'
+import { ScrollBarStyles } from 'components/Common'
 import { LoadingBubble } from 'components/Tokens/loading'
-import { AnimatedBox, Box } from 'components/deprecated/Box'
-import { useIsMobile } from 'hooks/screenSize/useIsMobile'
+import { useIsMobile } from 'hooks/screenSize'
 import styled from 'lib/styled-components'
+import { AnimatedBox, Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { XMarkIcon } from 'nft/components/icons'
+import { Checkbox } from 'nft/components/layout/Checkbox'
+import { checkbox } from 'nft/components/layout/Checkbox.css'
 import { Input } from 'nft/components/layout/Input'
 import { WALLET_COLLECTIONS_PAGINATION_LIMIT } from 'nft/components/profile/view/ProfilePage'
 import * as styles from 'nft/components/profile/view/ProfilePage.css'
@@ -12,14 +14,23 @@ import { subhead } from 'nft/css/common.css'
 import { themeVars } from 'nft/css/sprinkles.css'
 import { useFiltersExpanded, useWalletCollections } from 'nft/hooks'
 import { WalletCollection } from 'nft/types'
-import { CSSProperties, Dispatch, FormEvent, SetStateAction, useCallback, useEffect, useMemo, useState } from 'react'
+import {
+  CSSProperties,
+  Dispatch,
+  FormEvent,
+  SetStateAction,
+  useCallback,
+  useEffect,
+  useMemo,
+  useReducer,
+  useState,
+} from 'react'
 import { easings, useSpring } from 'react-spring'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList, ListOnItemsRenderedProps } from 'react-window'
 import InfiniteLoader from 'react-window-infinite-loader'
 import { ThemedText } from 'theme/components'
 import { TRANSITION_DURATIONS } from 'theme/styles'
-import { LabeledCheckbox } from 'ui/src'
 import noop from 'utilities/src/react/noop'
 
 const COLLECTION_ROW_HEIGHT = 44
@@ -52,7 +63,7 @@ const LoadingCollectionItem = ({ style }: { style?: CSSProperties }) => {
         <SmallLoadingBubble />
         <LongLoadingBubble />
       </Row>
-      <Box as="span" borderColor="surface3" aria-hidden="true" />
+      <Box as="span" borderColor="surface3" className={checkbox} aria-hidden="true" />
     </Row>
   )
 }
@@ -288,6 +299,9 @@ const CollectionItem = ({
   style?: CSSProperties
 }) => {
   const [isCheckboxSelected, setCheckboxSelected] = useState(false)
+  const [hovered, toggleHovered] = useReducer((state) => {
+    return !state
+  }, false)
   const isChecked = useCallback(
     (address: string) => {
       return collectionFilters.some((collection) => collection === address)
@@ -317,6 +331,8 @@ const CollectionItem = ({
       }}
       maxHeight={`${COLLECTION_ROW_HEIGHT}`}
       as="li"
+      onMouseEnter={toggleHovered}
+      onMouseLeave={toggleHovered}
       onClick={handleCheckbox}
     >
       <Row>
@@ -334,11 +350,11 @@ const CollectionItem = ({
         </Box>
       </Row>
 
-      <LabeledCheckbox
-        checked={isChecked(collection.address)}
-        onCheckPressed={handleCheckbox}
-        text={String(collection.count)}
-      />
+      <Checkbox checked={isChecked(collection.address)} hovered={hovered} onChange={handleCheckbox}>
+        <Box as="span" color="neutral3" marginRight="12" marginLeft="auto">
+          {collection.count}
+        </Box>
+      </Checkbox>
     </Row>
   )
 }

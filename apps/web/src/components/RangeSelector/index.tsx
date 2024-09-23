@@ -1,6 +1,6 @@
 import { Currency, Price, Token } from '@uniswap/sdk-core'
-import StepCounter from 'components/InputStepCounter'
-import { AutoRow } from 'components/deprecated/Row'
+import StepCounter from 'components/InputStepCounter/InputStepCounter'
+import { AutoRow } from 'components/Row'
 import { Bound } from 'state/mint/v3/actions'
 import { Trans } from 'uniswap/src/i18n'
 

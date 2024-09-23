@@ -2,7 +2,7 @@ import { ChartModel, ChartModelParams } from 'components/Charts/ChartModel'
 import { CrosshairHighlightPrimitive } from 'components/Charts/VolumeChart/CrosshairHighlightPrimitive'
 import { CustomHistogramSeries } from 'components/Charts/VolumeChart/custom-histogram-series'
 import { CustomHistogramData, CustomHistogramSeriesOptions } from 'components/Charts/VolumeChart/renderer'
-import { BarPrice, DeepPartial, ISeriesApi } from 'lightweight-charts'
+import { BarPrice, DeepPartial, ISeriesApi, Logical } from 'lightweight-charts'
 import { NumberType } from 'utils/formatNumbers'
 
 export type CustomVolumeChartModelParams = {
@@ -18,7 +18,7 @@ export type CustomVolumeChartModelParams = {
 export class CustomVolumeChartModel<TDataType extends CustomHistogramData> extends ChartModel<TDataType> {
   protected series: ISeriesApi<'Custom'>
   private highlightBarPrimitive: CrosshairHighlightPrimitive
-  private hoveredXPos: number | undefined
+  private hoveredLogicalIndex: Logical | null | undefined
 
   constructor(chartDiv: HTMLDivElement, params: ChartModelParams<TDataType> & CustomVolumeChartModelParams) {
     super(chartDiv, params)
@@ -45,10 +45,10 @@ export class CustomVolumeChartModel<TDataType extends CustomHistogramData> exten
     this.fitContent()
 
     this.api.subscribeCrosshairMove((param) => {
-      if (param?.point?.x !== this.hoveredXPos) {
-        this.hoveredXPos = param?.point?.x
+      if (param?.logical !== this.hoveredLogicalIndex) {
+        this.hoveredLogicalIndex = param?.logical
         this.series.applyOptions({
-          hoveredXPos: this.hoveredXPos ?? -1, // -1 is used because series will use prev value if undefined is passed
+          hoveredLogicalIndex: this.hoveredLogicalIndex ?? (-1 as Logical), // -1 is used because series will use prev value if undefined is passed
         } as DeepPartial<CustomHistogramSeriesOptions>)
       }
     })

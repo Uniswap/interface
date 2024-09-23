@@ -1,7 +1,6 @@
 import dayjs from 'dayjs'
 import { BigNumber, providers } from 'ethers'
 import { expectSaga } from 'redux-saga-test-plan'
-import { throwError } from 'redux-saga-test-plan/providers'
 import { call } from 'redux-saga/effects'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -10,27 +9,11 @@ import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/t
 import { getTxFixtures } from 'uniswap/src/test/fixtures'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { noOpFunction } from 'utilities/src/test/utils'
-import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
-import {
-  sendTransaction,
-  signAndSendTransaction,
-  tryGetNonce,
-} from 'wallet/src/features/transactions/sendTransactionSaga'
+import { sendTransaction, signAndSendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { ReadOnlyAccount } from 'wallet/src/features/wallet/accounts/types'
-import {
-  getPrivateProvider,
-  getProvider,
-  getProviderManager,
-  getSignerManager,
-} from 'wallet/src/features/wallet/context'
+import { getProvider, getProviderManager, getSignerManager } from 'wallet/src/features/wallet/context'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { provider, providerManager, signerManager } from 'wallet/src/test/mocks'
-
-jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
-  Statsig: {
-    checkGate: jest.fn().mockReturnValue(true),
-  },
-}))
 
 const account = signerMnemonicAccount()
 
@@ -114,102 +97,5 @@ describe(sendTransaction, () => {
       account: readOnlyAccount,
     }
     return expectSaga(sendTransaction, params).throws(new Error('Account must support signing')).silentRun()
-  })
-
-  it('Adds nonce to transaction request when not provided', async () => {
-    const mockNonce = 5
-    const request = {
-      to: '0x1234567890123456789012345678901234567890',
-      value: '0x0',
-      data: '0x',
-    }
-    const sendParamsWithoutNonce = {
-      ...sendParams,
-      options: {
-        request,
-      },
-    }
-
-    return expectSaga(sendTransaction, sendParamsWithoutNonce)
-      .provide([
-        [call(tryGetNonce, account, sendParams.chainId), mockNonce],
-        [call(getProvider, sendParams.chainId), provider],
-        [call(getSignerManager), signerManager],
-        [
-          call(
-            signAndSendTransaction,
-            { ...request, nonce: mockNonce },
-            account,
-            provider as providers.Provider,
-            signerManager,
-          ),
-          { transactionResponse: txResponse, populatedRequest: { ...request, nonce: mockNonce } },
-        ],
-      ])
-      .call(tryGetNonce, account, sendParams.chainId)
-      .call(
-        signAndSendTransaction,
-        {
-          ...request,
-          nonce: mockNonce,
-        },
-        account,
-        provider as providers.Provider,
-        signerManager,
-      )
-      .silentRun()
-  })
-
-  describe(tryGetNonce, () => {
-    it('Uses private RPC provider when feature flag is enabled and chain is supported', async () => {
-      const mockNonce = 10
-      const privateProvider = {
-        getTransactionCount: jest.fn(),
-      } as unknown as providers.Provider
-
-      return expectSaga(tryGetNonce, account, UniverseChainId.Mainnet)
-        .provide([
-          [call(isPrivateRpcSupportedOnChain, UniverseChainId.Mainnet), true],
-          [call(getPrivateProvider, UniverseChainId.Mainnet, account), privateProvider],
-          [call([privateProvider, privateProvider.getTransactionCount], account.address, 'pending'), mockNonce],
-        ])
-        .call(getPrivateProvider, UniverseChainId.Mainnet, account)
-        .call([privateProvider, privateProvider.getTransactionCount], account.address, 'pending')
-        .returns(mockNonce)
-        .silentRun()
-    })
-
-    it('Uses public provider when private RPC is not supported for the chain', async () => {
-      const mockNonce = 15
-      const publicProvider = {
-        getTransactionCount: jest.fn(),
-      } as unknown as providers.Provider
-
-      return expectSaga(tryGetNonce, account, UniverseChainId.Optimism)
-        .provide([
-          [call(isPrivateRpcSupportedOnChain, UniverseChainId.Optimism), false],
-          [call(getProvider, UniverseChainId.Optimism), publicProvider],
-          [call([publicProvider, publicProvider.getTransactionCount], account.address, 'pending'), mockNonce],
-        ])
-        .call(getProvider, UniverseChainId.Optimism)
-        .call([publicProvider, publicProvider.getTransactionCount], account.address, 'pending')
-        .returns(mockNonce)
-        .silentRun()
-    })
-
-    it('Returns undefined when nonce fetching fails', async () => {
-      const error = new Error('Failed to fetch nonce')
-
-      return expectSaga(tryGetNonce, account, UniverseChainId.Mainnet)
-        .provide([
-          [call(isPrivateRpcSupportedOnChain, UniverseChainId.Mainnet), true],
-          [call(getPrivateProvider, UniverseChainId.Mainnet, account), provider],
-          [call([provider, provider.getTransactionCount], account.address, 'pending'), throwError(error)],
-        ])
-        .call(getPrivateProvider, UniverseChainId.Mainnet, account)
-        .call([provider, provider.getTransactionCount], account.address, 'pending')
-        .returns(undefined)
-        .silentRun()
-    })
   })
 })

@@ -4,7 +4,6 @@ import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { finalizeTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
-import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import {
   QueuedOrderStatus,
   TransactionOriginType,
@@ -12,13 +11,11 @@ import {
   TransactionTypeInfo,
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { WalletChainId } from 'uniswap/src/types/chains'
-import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
+import { createTransactionId } from 'wallet/src/features/transactions/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
 // If the app is closed during the waiting period and then reopened, the saga will resume;
@@ -109,7 +106,6 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
   const properties = { routing: order.routing, order_hash: orderHash, ...analytics }
   yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, properties)
 
-  yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
   // onSubmit does not need to be wrapped in yield* call() here, but doing so makes it easier to test call ordering in submitOrder.test.ts
   yield* call(onSubmit)
 }

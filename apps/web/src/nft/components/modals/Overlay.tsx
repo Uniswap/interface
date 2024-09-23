@@ -1,4 +1,4 @@
-import { Box } from 'components/deprecated/Box'
+import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/modals/Overlay.css'
 import noop from 'utilities/src/react/noop'
 

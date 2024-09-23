@@ -1,24 +1,11 @@
-IPFS hash of the deployment:
-- CIDv0: `Qmd5cU5oxvZbaCyPX5DuQRTKK7peSqUL2FeuEQNELe4Fm3`
-- CIDv1: `bafybeig3auhjmdkcpqylnaij33ewk5hwmmvuwsccfezaku6r3izhzoy5li`
+We are back with some new new updates! Here's the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Added more supported tokens on Fiat Onramp — Now users can enjoy access to USDC & Ethereum on more chains, including ZKSync, Celo, Avalanche, and more.
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Other changes: 
 
-IPFS gateways:
-- https://bafybeig3auhjmdkcpqylnaij33ewk5hwmmvuwsccfezaku6r3izhzoy5li.ipfs.dweb.link/
-- https://bafybeig3auhjmdkcpqylnaij33ewk5hwmmvuwsccfezaku6r3izhzoy5li.ipfs.cf-ipfs.com/
-- [ipfs://Qmd5cU5oxvZbaCyPX5DuQRTKK7peSqUL2FeuEQNELe4Fm3/](ipfs://Qmd5cU5oxvZbaCyPX5DuQRTKK7peSqUL2FeuEQNELe4Fm3/)
-
-### 5.47.2 (2024-09-23)
-
-
-### Bug Fixes
-
-* **web:** token caching fix 9/23 prod (#12151) bc98440
-
-
+- Support for “Enter” during onboarding
+- Username support on notification toasts
+- Improved warning modals
+- Improved linkouts to helpcenter articles
+- Various bug fixes and performance improvements

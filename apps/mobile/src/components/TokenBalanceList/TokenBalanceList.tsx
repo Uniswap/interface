@@ -1,25 +1,21 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import { useFocusEffect } from '@react-navigation/core'
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
-import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
-import { useDispatch } from 'react-redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TokenBalanceItemContextMenu } from 'src/components/TokenBalanceList/TokenBalanceItemContextMenu'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TAB_VIEW_SCROLL_THROTTLE, TabProps } from 'src/components/layout/TabHelpers'
-import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Loader, useDeviceInsets, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { zIndices } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
-import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { HiddenTokensRow } from 'wallet/src/features/portfolio/HiddenTokensRow'
 import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
@@ -246,34 +242,16 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
     setHiddenTokensExpanded,
   } = useTokenBalanceListContext()
 
-  const dispatch = useDispatch()
-  const { t } = useTranslation()
-
-  const onPressInfo = useCallback(() => {
-    dispatch(
-      openModal({
-        name: ModalName.HiddenTokenInfoModal,
-      }),
-    )
-  }, [dispatch])
-
   if (item === HIDDEN_TOKEN_BALANCES_ROW) {
     return (
-      <Flex>
-        <HiddenTokensRow
-          padded
-          isExpanded={hiddenTokensExpanded}
-          numHidden={hiddenTokensCount}
-          onPress={(): void => {
-            setHiddenTokensExpanded(!hiddenTokensExpanded)
-          }}
-        />
-        {hiddenTokensExpanded && (
-          <Flex mx="$spacing12">
-            <InformationBanner infoText={t('hidden.tokens.info.banner.text')} onPress={onPressInfo} />
-          </Flex>
-        )}
-      </Flex>
+      <HiddenTokensRow
+        padded
+        isExpanded={hiddenTokensExpanded}
+        numHidden={hiddenTokensCount}
+        onPress={(): void => {
+          setHiddenTokensExpanded(!hiddenTokensExpanded)
+        }}
+      />
     )
   }
 

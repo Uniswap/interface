@@ -10,7 +10,7 @@ import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { AnimatedBottomSheetFlatList } from 'src/components/layout/AnimatedFlatList'
-import { AutoScrollProps } from 'src/components/sortableGrid/types'
+import { AutoScrollProps } from 'src/components/sortableGrid'
 import {
   getClientTokensOrderByCompareFn,
   getTokenMetadataDisplayType,

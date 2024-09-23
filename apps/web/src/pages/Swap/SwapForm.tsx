@@ -7,14 +7,14 @@ import {
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
-import { GrayCard } from 'components/Card/cards'
+import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
+import { GrayCard } from 'components/Card'
+import Column, { AutoColumn } from 'components/Column'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import ErrorIcon from 'components/Icons/Error'
+import Row from 'components/Row'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
-import Column, { AutoColumn } from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
@@ -52,8 +52,6 @@ import { Text } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
-import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
@@ -512,10 +510,6 @@ export function SwapForm({
   // @ts-ignore
   const isUsingBlockedExtension = window.ethereum?.['isPocketUniverseZ']
 
-  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
-
   return (
     <>
       <TokenSafetyModal
@@ -682,13 +676,7 @@ export function SwapForm({
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
               <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
-                {isSignIn ? (
-                  <Trans i18nKey="nav.signIn.button" />
-                ) : isLogIn ? (
-                  <Trans i18nKey="nav.logIn.button" />
-                ) : (
-                  <Trans i18nKey="common.connectWallet.button" />
-                )}
+                <Trans i18nKey="common.connectWallet.button" />
               </ButtonLight>
             </Trace>
           ) : !multichainUXEnabled && initialChainId && initialChainId !== connectedChainId ? (

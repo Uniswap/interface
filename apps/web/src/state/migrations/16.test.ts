@@ -58,7 +58,7 @@ const migrator = createMigrate(
   { debug: false },
 )
 
-describe('migration to v16', () => {
+describe('migration to v15', () => {
   it('migrates from user.tokens to shared tokens slice', async () => {
     const result: any = await migrator(previousState, 16)
     expect(result.user.tokens).toBe(undefined)

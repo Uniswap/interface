@@ -1,4 +1,4 @@
-import { ButtonGray } from 'components/Button/buttons'
+import { ButtonGray } from 'components/Button'
 import { ZoomLevels } from 'components/LiquidityChartRangeInput/types'
 import { ScaleLinear, select, zoom, ZoomBehavior, zoomIdentity, ZoomTransform } from 'd3'
 import styled from 'lib/styled-components'

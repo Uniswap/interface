@@ -2,11 +2,11 @@ import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
-import { UniswapXFee } from 'uniswap/src/components/gas/NetworkFee'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 import { isMobileApp } from 'utilities/src/platform'
+import { UniswapXFee } from 'wallet/src/components/network/NetworkFee'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 
 interface NetworkFeeFooterProps {

@@ -1,9 +1,8 @@
 import { WETH9 } from '@uniswap/sdk-core'
 import { getDefaultCurrencyCode, parsePathParts } from 'components/FiatOnrampModal/utils'
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   MATIC_MAINNET,
+  NATIVE_CHAIN_ID,
   USDC_ARBITRUM,
   USDC_MAINNET,
   USDC_OPTIMISM,
@@ -11,7 +10,8 @@ import {
   USDT,
   WBTC,
   WETH_POLYGON,
-} from 'uniswap/src/constants/tokens'
+} from 'constants/tokens'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 

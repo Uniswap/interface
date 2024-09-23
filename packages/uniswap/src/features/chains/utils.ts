@@ -4,7 +4,7 @@ import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { NetworkLayer, UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
-import { isTestEnv } from 'utilities/src/environment/env'
+import { isTestEnv } from 'utilities/src/environment'
 
 export function toGraphQLChain(chainId: ChainId | number): Chain | undefined {
   switch (chainId) {

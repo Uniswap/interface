@@ -19,7 +19,9 @@ import { ONBOARDING_LANDING_DARK, ONBOARDING_LANDING_LIGHT, UNISWAP_LOGO } from 
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { imageSizes } from 'ui/src/theme'
-import { isAndroid } from 'utilities/src/platform'
+import { Language } from 'uniswap/src/features/language/constants'
+import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
+import { isAndroid, isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import {
@@ -313,6 +315,7 @@ export const LandingBackground = ({
 }): JSX.Element | null => {
   const [blurred, setBlurred] = useState(false)
   const [hideAnimation, setHideAnimation] = useState(false)
+  const language = useCurrentLanguage()
 
   useEffect(() => {
     return navigationEventConsumer?.addListener('blur', () => {
@@ -351,9 +354,8 @@ export const LandingBackground = ({
   // Android 9 and 10 have issues with Rive, so we fallback on image
   if (
     // Android Platform.Version is always a number
-    isAndroid &&
-    typeof Platform.Version === 'number' &&
-    Platform.Version < 30
+    (isAndroid && typeof Platform.Version === 'number' && Platform.Version < 30) ||
+    (language !== Language.English && isMobileApp)
   ) {
     return <OnboardingStaticImage />
   }

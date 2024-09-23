@@ -1,5 +1,5 @@
-import { ButtonOutlined } from 'components/Button/buttons'
-import { AutoRow } from 'components/deprecated/Row'
+import { ButtonOutlined } from 'components/Button'
+import { AutoRow } from 'components/Row'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components'
 import { Trans } from 'uniswap/src/i18n'
