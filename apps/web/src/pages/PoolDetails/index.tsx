@@ -1,28 +1,35 @@
-import { InterfacePageName } from '@uniswap/analytics-events'
-import Column from 'components/Column'
-import ChartSection from 'components/Pools/PoolDetails/ChartSection'
-import { PoolDetailsBreadcrumb, PoolDetailsHeader } from 'components/Pools/PoolDetails/PoolDetailsHeader'
-import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
-import { PoolDetailsStats } from 'components/Pools/PoolDetails/PoolDetailsStats'
-import { PoolDetailsStatsButtons } from 'components/Pools/PoolDetails/PoolDetailsStatsButtons'
-import { PoolDetailsTableTab } from 'components/Pools/PoolDetails/PoolDetailsTable'
-import Row from 'components/Row'
-import { useChainFromUrlParam } from 'constants/chains'
-import { PoolData, usePoolData } from 'graphql/data/pools/usePoolData'
-import { getSupportedGraphQlChain, gqlToCurrency, unwrapToken } from 'graphql/data/util'
-import { useColor } from 'hooks/useColor'
-import { Trans } from 'i18n'
-import NotFound from 'pages/NotFound'
-import { getPoolDetailPageTitle } from 'pages/PoolDetails/utils'
-import { useDynamicMetatags } from 'pages/metatags'
-import { useMemo, useReducer } from 'react'
-import { Helmet } from 'react-helmet-async/lib/index'
-import { useParams } from 'react-router-dom'
-import { Text } from 'rebass'
-import styled, { useTheme } from 'styled-components'
-import { BREAKPOINTS, ThemeProvider } from 'theme'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isAddress } from 'utilities/src/addresses'
+import { InterfacePageName } from "@uniswap/analytics-events";
+import Column from "components/Column";
+import ChartSection from "components/Pools/PoolDetails/ChartSection";
+import {
+  PoolDetailsBreadcrumb,
+  PoolDetailsHeader,
+} from "components/Pools/PoolDetails/PoolDetailsHeader";
+import { PoolDetailsLink } from "components/Pools/PoolDetails/PoolDetailsLink";
+import { PoolDetailsStats } from "components/Pools/PoolDetails/PoolDetailsStats";
+import { PoolDetailsStatsButtons } from "components/Pools/PoolDetails/PoolDetailsStatsButtons";
+import { PoolDetailsTableTab } from "components/Pools/PoolDetails/PoolDetailsTable";
+import Row from "components/Row";
+import { useChainFromUrlParam } from "constants/chains";
+import { PoolData, usePoolData } from "graphql/data/pools/usePoolData";
+import {
+  getSupportedGraphQlChain,
+  gqlToCurrency,
+  unwrapToken,
+} from "graphql/data/util";
+import { useColor } from "hooks/useColor";
+import { Trans } from "i18n";
+import NotFound from "pages/NotFound";
+import { getPoolDetailPageTitle } from "pages/PoolDetails/utils";
+import { useDynamicMetatags } from "pages/metatags";
+import { useMemo, useReducer } from "react";
+import { Helmet } from "react-helmet-async/lib/index";
+import { useParams } from "react-router-dom";
+import { Text } from "rebass";
+import styled, { useTheme } from "styled-components";
+import { BREAKPOINTS, ThemeProvider } from "theme";
+import Trace from "uniswap/src/features/telemetry/Trace";
+import { isAddress } from "utilities/src/addresses";
 
 const PageWrapper = styled(Row)`
   padding: 0 16px 52px;
@@ -42,7 +49,7 @@ const PageWrapper = styled(Row)`
   @media screen and (min-width: ${({ theme }) => theme.breakpoint.xl}px) {
     gap: 60px;
   }
-`
+`;
 
 const LeftColumn = styled(Column)`
   gap: 40px;
@@ -54,12 +61,12 @@ const LeftColumn = styled(Column)`
     width: 100%;
     max-width: unset;
   }
-`
+`;
 
 const HR = styled.hr`
   border: 0.5px solid ${({ theme }) => theme.surface3};
   width: 100%;
-`
+`;
 
 const RightColumn = styled(Column)`
   gap: 24px;
@@ -73,7 +80,7 @@ const RightColumn = styled(Column)`
       margin-top: -24px;
     }
   }
-`
+`;
 
 const TokenDetailsWrapper = styled(Column)`
   gap: 24px;
@@ -88,65 +95,78 @@ const TokenDetailsWrapper = styled(Column)`
   @media (max-width: ${BREAKPOINTS.sm}px) {
     padding: unset;
   }
-`
+`;
 
 const TokenDetailsHeader = styled(Text)`
   width: 100%;
   font-size: 24px;
   font-weight: 485;
   line-height: 32px;
-`
+`;
 
 const LinksContainer = styled(Column)`
   gap: 16px;
   width: 100%;
-`
+`;
 
 function getUnwrappedPoolToken(poolData?: PoolData, chainId?: number) {
   return poolData?.token0 && poolData?.token1 && chainId
-    ? [unwrapToken(chainId, poolData?.token0), unwrapToken(chainId, poolData?.token1)]
-    : [undefined, undefined]
+    ? [
+        unwrapToken(chainId, poolData?.token0),
+        unwrapToken(chainId, poolData?.token1),
+      ]
+    : [undefined, undefined];
 }
 
 export default function PoolDetailsPage() {
-  const { poolAddress } = useParams<{ poolAddress: string }>()
-  const chainInfo = getSupportedGraphQlChain(useChainFromUrlParam())
-  const { data: poolData, loading } = usePoolData(poolAddress?.toLowerCase() ?? '', chainInfo?.id)
-  const [isReversed, toggleReversed] = useReducer((x) => !x, false)
-  const unwrappedTokens = getUnwrappedPoolToken(poolData, chainInfo?.id)
-  const [token0, token1] = isReversed ? [unwrappedTokens?.[1], unwrappedTokens?.[0]] : unwrappedTokens
+  const { poolAddress } = useParams<{ poolAddress: string }>();
+  const chainInfo = getSupportedGraphQlChain(useChainFromUrlParam());
+  const { data: poolData, loading } = usePoolData(
+    poolAddress?.toLowerCase() ?? "",
+    chainInfo?.id
+  );
+  const [isReversed, toggleReversed] = useReducer((x) => !x, false);
+  const unwrappedTokens = getUnwrappedPoolToken(poolData, chainInfo?.id);
+  const [token0, token1] = isReversed
+    ? [unwrappedTokens?.[1], unwrappedTokens?.[0]]
+    : unwrappedTokens;
 
-  const { darkMode, surface2, accent1 } = useTheme()
+  const { darkMode, surface2, accent1 } = useTheme();
   const color0 = useColor(token0 && gqlToCurrency(token0), {
     backgroundColor: surface2,
     darkMode,
-  })
+  });
   const color1 = useColor(token1 && gqlToCurrency(token1), {
     backgroundColor: surface2,
     darkMode,
-  })
+  });
 
-  const isInvalidPool = !poolAddress || !chainInfo || !isAddress(poolAddress)
-  const poolNotFound = (!loading && !poolData) || isInvalidPool
+  const isInvalidPool = !poolAddress || !chainInfo || !isAddress(poolAddress);
+  const poolNotFound = (!loading && !poolData) || isInvalidPool;
+
+  console.log("pool address", poolAddress);
 
   const metatagProperties = useMemo(() => {
-    const token0Symbol = poolData?.token0.symbol
-    const token1Symbol = poolData?.token1.symbol
-    const poolName = `${token0Symbol}/${token1Symbol}`
-    const chainName = chainInfo?.label ?? 'Ethereum'
+    const token0Symbol = poolData?.token0.symbol;
+    const token1Symbol = poolData?.token1.symbol;
+    const poolName = `${token0Symbol}/${token1Symbol}`;
+    const chainName = chainInfo?.label ?? "Ethereum";
     return {
       title: poolName,
       url: window.location.href,
       description: `Swap ${poolName} on ${chainName}. Trade tokens and provide liquidity. Real-time prices, charts, transaction data, and more.`,
-    }
-  }, [chainInfo?.label, poolData?.token0.symbol, poolData?.token1.symbol])
-  const metatags = useDynamicMetatags(metatagProperties)
+    };
+  }, [chainInfo?.label, poolData?.token0.symbol, poolData?.token1.symbol]);
+  const metatags = useDynamicMetatags(metatagProperties);
 
   if (poolNotFound) {
-    return <NotFound />
+    return <NotFound />;
   }
   return (
-    <ThemeProvider token0={color0 !== accent1 ? color0 : undefined} token1={color1 !== accent1 ? color1 : undefined}>
+    <ThemeProvider
+      token0={color0 !== accent1 ? color0 : undefined}
+      token1={color1 !== accent1 ? color1 : undefined}
+    >
       <Helmet>
         <title>{getPoolDetailPageTitle(poolData)}</title>
         {metatags.map((tag, index) => (
@@ -213,7 +233,12 @@ export default function PoolDetailsPage() {
               feeTier={poolData?.feeTier}
               loading={loading}
             />
-            <PoolDetailsStats poolData={poolData} isReversed={isReversed} chainId={chainInfo?.id} loading={loading} />
+            <PoolDetailsStats
+              poolData={poolData}
+              isReversed={isReversed}
+              chainId={chainInfo?.id}
+              loading={loading}
+            />
             <TokenDetailsWrapper>
               <TokenDetailsHeader>
                 <Trans i18nKey="common.links" />
@@ -243,5 +268,5 @@ export default function PoolDetailsPage() {
         </PageWrapper>
       </Trace>
     </ThemeProvider>
-  )
+  );
 }

@@ -1,14 +1,14 @@
-import { useScreenSize } from 'hooks/screenSize'
-import { Trans } from 'i18n'
-import { Link } from 'react-router-dom'
-import { useTogglePrivacyPolicy } from 'state/application/hooks'
-import styled, { css } from 'styled-components'
-import { ExternalLink } from 'theme/components'
+import { useScreenSize } from "hooks/screenSize";
+import { Trans } from "i18n";
+import { Link } from "react-router-dom";
+import { useTogglePrivacyPolicy } from "state/application/hooks";
+import styled, { css } from "styled-components";
+import { ExternalLink } from "theme/components";
 
-import Row from 'components/Row'
-import { Body1, Box, H3 } from '../components/Generics'
-import { Discord, Github, Twitter } from '../components/Icons'
-import { Wiggle } from '../components/animations'
+import Row from "components/Row";
+import { Body1, Box, H3 } from "../components/Generics";
+import { Discord, Github, Twitter } from "../components/Icons";
+import { Wiggle } from "../components/animations";
 
 const SocialIcon = styled(Wiggle)`
   flex: 0;
@@ -19,24 +19,24 @@ const SocialIcon = styled(Wiggle)`
   &:hover {
     fill: ${(props) => props.$hoverColor};
   }
-`
+`;
 const RowToCol = styled(Box)`
   height: auto;
   flex-shrink: 1;
   @media (max-width: 768px) {
     flex-direction: column;
   }
-`
+`;
 const HideWhenSmall = styled(Box)`
   @media (max-width: 768px) {
     display: none;
   }
-`
+`;
 const HideWhenLarge = styled(Box)`
   @media (min-width: 768px) {
     display: none;
   }
-`
+`;
 const MenuItemStyles = css`
   padding: 0;
   margin: 0;
@@ -54,21 +54,21 @@ const MenuItemStyles = css`
     color: ${({ theme }) => theme.neutral1};
     opacity: 1;
   }
-`
+`;
 const StyledInternalLink = styled(Link)`
   ${MenuItemStyles}
-`
+`;
 const StyledExternalLink = styled(ExternalLink)`
   ${MenuItemStyles}
-`
+`;
 const DownloadLink = styled.a`
   ${MenuItemStyles}
-`
+`;
 const ModalItem = styled.div`
   ${MenuItemStyles}
   cursor: pointer;
   user-select: none;
-`
+`;
 export function Socials({ iconSize }: { iconSize?: string }) {
   return (
     <Row gap="24px" maxHeight={iconSize} align="flex-start">
@@ -88,15 +88,20 @@ export function Socials({ iconSize }: { iconSize?: string }) {
         </StyledExternalLink>
       </SocialIcon>
     </Row>
-  )
+  );
 }
 
 export function Footer() {
-  const screenIsLarge = useScreenSize()['lg']
-  const togglePrivacyPolicy = useTogglePrivacyPolicy()
+  const screenIsLarge = useScreenSize()["lg"];
+  const togglePrivacyPolicy = useTogglePrivacyPolicy();
 
   return (
-    <Box as="footer" direction="column" align="center" padding={screenIsLarge ? '0 40px' : '0 48px'}>
+    <Box
+      as="footer"
+      direction="column"
+      align="center"
+      padding={screenIsLarge ? "0 40px" : "0 48px"}
+    >
       <Box direction="row" maxWidth="1280px" gap="24px">
         <RowToCol direction="row" justify-content="space-between" gap="32px">
           <Box direction="column" height="100%" gap="64px">
@@ -142,9 +147,9 @@ export function Footer() {
                 <Body1>
                   <Trans i18nKey="common.company" />
                 </Body1>
-                <StyledExternalLink href="https://boards.greenhouse.io/uniswaplabs">
+                {/* <StyledExternalLink href="https://boards.greenhouse.io/uniswaplabs">
                   <Trans i18nKey="common.careers" />
-                </StyledExternalLink>
+                </StyledExternalLink> */}
                 <StyledExternalLink href="https://blog.uniswap.org/">
                   <Trans i18nKey="common.blog" />
                 </StyledExternalLink>
@@ -177,5 +182,5 @@ export function Footer() {
         </RowToCol>
       </Box>
     </Box>
-  )
+  );
 }

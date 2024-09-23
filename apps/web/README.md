@@ -1,8 +1,8 @@
 # Uniswap Labs Web Interface
 
-## Accessing the Uniswap Interface
+## Accessing the Taraswap Interface
 
-To access the Uniswap Interface, use an IPFS gateway link from the
+To access the Taraswap Interface, use an IPFS gateway link from the
 [latest release](https://github.com/Uniswap/uniswap-interface/releases/latest),
 or visit [app.uniswap.org](https://app.uniswap.org).
 
@@ -15,7 +15,7 @@ yarn web start
 
 ## Accessing Uniswap V2
 
-The Uniswap Interface supports swapping, adding liquidity, removing liquidity and migrating liquidity for Uniswap protocol V2.
+The Taraswap Interface supports swapping, adding liquidity, removing liquidity and migrating liquidity for Uniswap protocol V2.
 
 - Swap on Uniswap V2: <https://app.uniswap.org/swap?use=v2>
 - View V2 liquidity: <https://app.uniswap.org/pools/v2>

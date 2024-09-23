@@ -39,6 +39,7 @@ import {
 import {
   NonfungiblePositionManager,
   UniswapInterfaceMulticall,
+  UniswapV3Staker,
 } from "uniswap/src/abis/types/v3";
 import { V3Migrator } from "uniswap/src/abis/types/v3/V3Migrator";
 import WETH_ABI from "uniswap/src/abis/weth.json";

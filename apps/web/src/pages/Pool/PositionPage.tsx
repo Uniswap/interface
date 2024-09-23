@@ -304,12 +304,8 @@ function UserDetailsCard() {
       </RowBetween>
       <LightCard padding="12px" width="100%">
         <AutoColumn gap="md" justify="center">
-          <ButtonPrimary onClick={deposit}>
-            Deposit
-          </ButtonPrimary>
-          <ButtonPrimary onClick={stake}>
-            Stake
-          </ButtonPrimary>
+          <ButtonPrimary onClick={deposit}>Deposit</ButtonPrimary>
+          <ButtonPrimary onClick={stake}>Stake</ButtonPrimary>
         </AutoColumn>
       </LightCard>
     </AutoColumn>
@@ -638,6 +634,8 @@ function PositionPageContent() {
     token0 && token1 && feeAmount
       ? Pool.getAddress(token0, token1, feeAmount)
       : undefined;
+
+  console.log("pool address", poolAddress);
 
   // construct Position from details returned
   const [poolState, pool] = usePool(

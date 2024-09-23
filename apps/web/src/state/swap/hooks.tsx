@@ -240,7 +240,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     ? trade.trade.slippageTolerance
     : undefined;
 
-  // Uniswap interface recommended slippage amount
+  // Taraswap interface recommended slippage amount
   const autoSlippage = uniswapXAutoSlippage ?? classicAutoSlippage;
   const classicAllowedSlippage =
     useUserSlippageToleranceWithDefault(autoSlippage);
