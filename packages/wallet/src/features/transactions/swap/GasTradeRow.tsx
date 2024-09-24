@@ -104,14 +104,13 @@ function GasRow({ gasInfo }: { gasInfo: DebouncedGasInfo }): JSX.Element | null 
       <Flex centered row animation="quick" enterStyle={{ opacity: 0 }} opacity={gasInfo.isLoading ? 0.6 : 1}>
         <NetworkFeeWarning
           gasFeeHighRelativeToValue={gasInfo.isHighRelativeToValue}
-          placement="bottom"
-          tooltipTrigger={
-            <Flex centered row gap="$spacing4">
-              {body}
-            </Flex>
-          }
+          tooltipTrigger={null}
           uniswapXGasFeeInfo={gasInfo.uniswapXGasFeeInfo}
-        />
+        >
+          <Flex centered row gap="$spacing4">
+            {body}
+          </Flex>
+        </NetworkFeeWarning>
       </Flex>
     )
   } else {

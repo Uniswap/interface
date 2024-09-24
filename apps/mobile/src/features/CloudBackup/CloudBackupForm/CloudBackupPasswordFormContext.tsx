@@ -62,7 +62,7 @@ export function CloudBackupPasswordFormContextProvider({
 
   const onPasswordChangeText = useCallback(
     (newPassword: string): void => {
-      if (isConfirmation && newPassword === password) {
+      if (isConfirmation) {
         setError(undefined)
       }
       // always reset error if not confirmation
@@ -72,7 +72,7 @@ export function CloudBackupPasswordFormContextProvider({
       }
       setPassword(newPassword)
     },
-    [isConfirmation, password],
+    [isConfirmation],
   )
 
   const onPasswordSubmitEditing = useCallback((): void => {

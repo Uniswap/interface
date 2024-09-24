@@ -186,10 +186,7 @@
 		A70E4DD82C260416002D6D86 /* SwapOrderStatus.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A70E4DD62C260416002D6D86 /* SwapOrderStatus.graphql.swift */; };
 		A7B8EFCB2BF68F0D00CA4A1C /* FeeData.graphql.swift in Sources */ = {isa = PBXBuildFile; fileRef = A7B8EFCA2BF68F0D00CA4A1C /* FeeData.graphql.swift */; };
 		AC0EE0982BD826E700BCCF07 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = AC0EE0972BD826E700BCCF07 /* PrivacyInfo.xcprivacy */; };
-		AE1757582C49B0A7000120A5 /* Basel-Grotesk-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = AE1757572C49B0A1000120A5 /* Basel-Grotesk-Book.otf */; };
-		AE1757592C49B0AA000120A5 /* Basel-Grotesk-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = AE1757562C49B0A1000120A5 /* Basel-Grotesk-Medium.otf */; };
-		AEB2767B2C49CB060056FE52 /* Basel-Grotesk-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = AE1757562C49B0A1000120A5 /* Basel-Grotesk-Medium.otf */; };
-		AEB2767C2C49CB080056FE52 /* Basel-Grotesk-Book.otf in Resources */ = {isa = PBXBuildFile; fileRef = AE1757572C49B0A1000120A5 /* Basel-Grotesk-Book.otf */; };
+		AC2EF4032C914B1600EEEFDB /* fonts in Resources */ = {isa = PBXBuildFile; fileRef = AC2EF4022C914B1600EEEFDB /* fonts */; };
 		B193AD315CF844A3BDC3D11D /* Basel-Grotesk-Medium.otf in Resources */ = {isa = PBXBuildFile; fileRef = 3C606D2C81014A0A8898F38E /* Basel-Grotesk-Medium.otf */; };
 		D3B63ACA9B0C42F68080B080 /* InputMono-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 1834199AFFB04D91B05FFB64 /* InputMono-Regular.ttf */; };
 		F35AFD3E27EE49990011A725 /* NotificationService.swift in Sources */ = {isa = PBXBuildFile; fileRef = F35AFD3D27EE49990011A725 /* NotificationService.swift */; };
@@ -503,8 +500,7 @@
 		A7C9F415D0E128A43003E071 /* Pods-Uniswap.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Uniswap.debug.xcconfig"; path = "Target Support Files/Pods-Uniswap/Pods-Uniswap.debug.xcconfig"; sourceTree = "<group>"; };
 		AC0EE0972BD826E700BCCF07 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; name = PrivacyInfo.xcprivacy; path = Uniswap/PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		AC2794442C51541E00F9AF68 /* sourcemaps-datadog.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "sourcemaps-datadog.sh"; sourceTree = "<group>"; };
-		AE1757562C49B0A1000120A5 /* Basel-Grotesk-Medium.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Basel-Grotesk-Medium.otf"; path = "../../src/assets/fonts/Basel-Grotesk-Medium.otf"; sourceTree = "<group>"; };
-		AE1757572C49B0A1000120A5 /* Basel-Grotesk-Book.otf */ = {isa = PBXFileReference; lastKnownFileType = file; name = "Basel-Grotesk-Book.otf"; path = "../../src/assets/fonts/Basel-Grotesk-Book.otf"; sourceTree = "<group>"; };
+		AC2EF4022C914B1600EEEFDB /* fonts */ = {isa = PBXFileReference; lastKnownFileType = folder; name = fonts; path = ../src/assets/fonts; sourceTree = "<group>"; };
 		B0DA4D39B1A6D74A1D05B99F /* Pods-WidgetsCore.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.debug.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.debug.xcconfig"; sourceTree = "<group>"; };
 		B2176D5449C2B3B68A17466B /* libPods-WidgetsCoreTests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-WidgetsCoreTests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		BCB2A43E5FB0D7B69CA02312 /* Pods-WidgetsCore.dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-WidgetsCore.dev.xcconfig"; path = "Target Support Files/Pods-WidgetsCore/Pods-WidgetsCore.dev.xcconfig"; sourceTree = "<group>"; };
@@ -692,15 +688,6 @@
 				074321A62A83E3C900F8518D /* Schema */,
 			);
 			path = MobileSchema;
-			sourceTree = "<group>";
-		};
-		074321872A82BA2700F8518D /* Fonts */ = {
-			isa = PBXGroup;
-			children = (
-				AE1757572C49B0A1000120A5 /* Basel-Grotesk-Book.otf */,
-				AE1757562C49B0A1000120A5 /* Basel-Grotesk-Medium.otf */,
-			);
-			path = Fonts;
 			sourceTree = "<group>";
 		};
 		0743218E2A83E3C900F8518D /* Operations */ = {
@@ -1025,8 +1012,8 @@
 		83CBB9F61A601CBA00E9B192 = {
 			isa = PBXGroup;
 			children = (
+				AC2EF4022C914B1600EEEFDB /* fonts */,
 				AC2794442C51541E00F9AF68 /* sourcemaps-datadog.sh */,
-				074321872A82BA2700F8518D /* Fonts */,
 				FD54D51C296C79A4007A37E9 /* GoogleServiceInfo */,
 				13B07FAE1A68108700A75B9A /* Uniswap */,
 				832341AE1AAA6A7D00B99B32 /* Libraries */,
@@ -1419,8 +1406,6 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AEB2767B2C49CB060056FE52 /* Basel-Grotesk-Medium.otf in Resources */,
-				AEB2767C2C49CB080056FE52 /* Basel-Grotesk-Book.otf in Resources */,
 				072F6C2B2A44A32F00DA720A /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1436,13 +1421,13 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				AE1757592C49B0AA000120A5 /* Basel-Grotesk-Medium.otf in Resources */,
 				FD7304CE28A364FC0085BDEA /* Colors.xcassets in Resources */,
 				A32F9FBD272343C9002CFCDB /* GoogleService-Info.plist in Resources */,
 				13B07FBF1A68108700A75B9A /* Images.xcassets in Resources */,
 				77CF6065C8A24FE48204A2C1 /* SplashScreen.storyboard in Resources */,
 				AC0EE0982BD826E700BCCF07 /* PrivacyInfo.xcprivacy in Resources */,
 				D3B63ACA9B0C42F68080B080 /* InputMono-Regular.ttf in Resources */,
+				AC2EF4032C914B1600EEEFDB /* fonts in Resources */,
 				A3551F2CAC134AD49D40927F /* Basel-Grotesk-Book.otf in Resources */,
 				B193AD315CF844A3BDC3D11D /* Basel-Grotesk-Medium.otf in Resources */,
 			);

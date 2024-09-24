@@ -2,7 +2,46 @@
 
 exports[`PoolDetailsHeader renders link for pool address 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c5 img {
+  width: 10px;
+  height: 20px;
+  object-fit: cover;
+}
+
+.c5 img:first-child {
+  border-radius: 10px 0 0 10px;
+  object-position: 0 0;
+}
+
+.c5 img:last-child {
+  border-radius: 0 10px 10px 0;
+  object-position: 100% 0;
+}
+
+.c6 {
+  width: 10px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c4 {
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -42,56 +81,17 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   justify-content: flex-start;
 }
 
+.c11 {
+  display: inline-block;
+  height: inherit;
+}
+
 .c7 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c5 img {
-  width: 10px;
-  height: 20px;
-  object-fit: cover;
-}
-
-.c5 img:first-child {
-  border-radius: 10px 0 0 10px;
-  object-position: 0 0;
-}
-
-.c5 img:last-child {
-  border-radius: 0 10px 10px 0;
-  object-position: 100% 0;
-}
-
-.c6 {
-  width: 10px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c4 {
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c11 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c14 {
@@ -340,7 +340,52 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
 
 exports[`PoolDetailsHeader renders link for token address 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c4 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c6 img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c7 {
+  width: 10px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c0 {
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
@@ -398,62 +443,17 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   gap: 4px;
 }
 
+.c13 {
+  display: inline-block;
+  height: inherit;
+}
+
 .c8 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c4 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c6 img {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c7 {
-  width: 10px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c13 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c16 {

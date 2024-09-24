@@ -251,7 +251,7 @@ export const TopAndBottomGradient = (): JSX.Element => {
 const SCREEN_WIDTH_BUFFER = 50
 
 // Used for initial layout larger than all screen sizes
-const MAX_DEVICE_WIDTH = isWeb ? undefined : 1000
+const MAX_DEVICE_WIDTH = 1000
 
 type AnimatedNumberProps = {
   loadingPlaceholderText: string

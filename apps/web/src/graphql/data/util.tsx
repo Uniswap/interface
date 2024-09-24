@@ -57,11 +57,11 @@ export function usePollQueryWhileMounted<T, K extends OperationVariables>(
 }
 
 export enum TimePeriod {
-  HOUR,
-  DAY,
-  WEEK,
-  MONTH,
-  YEAR,
+  HOUR = 'H',
+  DAY = 'D',
+  WEEK = 'W',
+  MONTH = 'M',
+  YEAR = 'Y',
 }
 
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {

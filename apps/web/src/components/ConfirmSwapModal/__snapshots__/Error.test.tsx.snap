@@ -55,6 +55,61 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   align-items: center;
 }
 
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  background: #7D7D7D;
+  fill: #7D7D7D;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c10 {
   box-sizing: border-box;
   margin: 0;
@@ -111,61 +166,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 0
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c14 img {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c15 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c4 {
-  height: 24px;
-  width: 24px;
-}
-
-.c4 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
-}
-
-.c13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c12 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c16 {
@@ -525,6 +525,61 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   align-items: center;
 }
 
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  background: #7D7D7D;
+  fill: #7D7D7D;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c10 {
   box-sizing: border-box;
   margin: 0;
@@ -581,61 +636,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 1
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c14 img {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c15 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c4 {
-  height: 24px;
-  width: 24px;
-}
-
-.c4 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
-}
-
-.c13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c12 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c16 {
@@ -995,6 +995,61 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   align-items: center;
 }
 
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  background: #7D7D7D;
+  fill: #7D7D7D;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c10 {
   box-sizing: border-box;
   margin: 0;
@@ -1051,61 +1106,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 3
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c14 img {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c15 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c4 {
-  height: 24px;
-  width: 24px;
-}
-
-.c4 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
-}
-
-.c13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c12 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c16 {
@@ -1465,6 +1465,61 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   align-items: center;
 }
 
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  background: #7D7D7D;
+  fill: #7D7D7D;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c10 {
   box-sizing: border-box;
   margin: 0;
@@ -1521,61 +1576,6 @@ exports[`ConfirmSwapModal/Error renders "classic trade" correctly, with error= 4
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c14 img {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c15 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c4 {
-  height: 24px;
-  width: 24px;
-}
-
-.c4 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
-}
-
-.c13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c12 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c16 {
@@ -1935,6 +1935,61 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   align-items: center;
 }
 
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  background: #7D7D7D;
+  fill: #7D7D7D;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c10 {
   box-sizing: border-box;
   margin: 0;
@@ -1991,61 +2046,6 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 3 1
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c14 img {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c15 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c4 {
-  height: 24px;
-  width: 24px;
-}
-
-.c4 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
-}
-
-.c13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c12 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c16 {
@@ -2403,6 +2403,61 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   align-items: center;
 }
 
+.c14 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c14 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c15 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c4 {
+  height: 24px;
+  width: 24px;
+}
+
+.c4 path {
+  background: #7D7D7D;
+  fill: #7D7D7D;
+}
+
+.c13 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c10 {
   box-sizing: border-box;
   margin: 0;
@@ -2459,61 +2514,6 @@ exports[`ConfirmSwapModal/Error renders "limit order" correctly, with error= 4 1
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c14 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c14 img {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c15 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c4 {
-  height: 24px;
-  width: 24px;
-}
-
-.c4 path {
-  background: #7D7D7D;
-  fill: #7D7D7D;
-}
-
-.c13 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c12 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c16 {

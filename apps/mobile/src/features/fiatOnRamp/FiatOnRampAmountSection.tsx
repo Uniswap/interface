@@ -4,7 +4,15 @@ import { useTranslation } from 'react-i18next'
 import { NativeSyntheticEvent, TextInput, TextInputSelectionChangeEventData } from 'react-native'
 import { TouchableOpacity } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
-import { ColorTokens, Flex, Text, TouchableArea, useHapticFeedback, useSporeColors } from 'ui/src'
+import {
+  ColorTokens,
+  Flex,
+  Text,
+  TouchableArea,
+  useHapticFeedback,
+  useIsShortMobileDevice,
+  useSporeColors,
+} from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { fonts, spacing } from 'ui/src/theme'
@@ -83,6 +91,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
     forwardedRef,
   ): JSX.Element {
     const { t } = useTranslation()
+    const isShortMobileDevice = useIsShortMobileDevice()
     const {
       onLayout: onInputLayout,
       fontSize,
@@ -212,7 +221,7 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
           </Flex>
         </AnimatedFlex>
         {!value && predefinedAmountsSupported ? (
-          <Flex centered row gap="$spacing12" mt="$spacing8" pb="$spacing4">
+          <Flex centered row gap="$spacing12" mt={isShortMobileDevice ? 0 : '$spacing8'} pb="$spacing4">
             {PREDEFINED_AMOUNTS.map((amount) => (
               <PredefinedAmount
                 key={amount}

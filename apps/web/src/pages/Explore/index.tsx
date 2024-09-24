@@ -3,7 +3,7 @@ import { TopPoolTable } from 'components/Pools/PoolTable/PoolTable'
 import { TopTokensTable } from 'components/Tokens/TokenTable'
 import TableNetworkFilter from 'components/Tokens/TokenTable/NetworkFilter'
 import SearchBar from 'components/Tokens/TokenTable/SearchBar'
-import TimeSelector from 'components/Tokens/TokenTable/TimeSelector'
+import VolumeTimeFrameSelector from 'components/Tokens/TokenTable/VolumeTimeFrameSelector'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { useChainFromUrlParam } from 'constants/chains'
 import { manualChainOutageAtom } from 'featureFlags/flags/outageBanner'
@@ -185,7 +185,7 @@ const Explore = ({ initialTab }: { initialTab?: ExploreTab }) => {
             </Flex>
             <Flex row gap="$spacing8" height="$spacing40" justifyContent="flex-start">
               <TableNetworkFilter />
-              {currentKey === ExploreTab.Tokens && <TimeSelector />}
+              {currentKey === ExploreTab.Tokens && <VolumeTimeFrameSelector />}
               {currentKey !== ExploreTab.Transactions && <SearchBar tab={currentKey} />}
             </Flex>
           </Flex>

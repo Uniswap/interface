@@ -50,6 +50,7 @@ export type {
 export { LinearGradient } from 'tamagui/linear-gradient'
 export * from 'ui/src/animations'
 export { QRCodeDisplay } from './components/QRCode/QRCodeDisplay'
+export * from './components/SegmentedControl/SegmentedControl'
 export { Unicon } from './components/Unicon'
 export * from './components/Unicon/utils'
 export * from './components/UniversalImage/UniversalImage'

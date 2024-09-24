@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { ComponentProps, useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
@@ -344,7 +345,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
         {isSheetReady && (
           <AnimatedFlex entering={FadeIn} exiting={FadeOut} gap="$spacing16" px="$spacing24" width="100%">
             {isOffRampEnabled ? (
-              <Flex row justifyContent="center" mt="$spacing6">
+              <Flex row justifyContent="center" mt={isShortMobileDevice ? 0 : '$spacing6'}>
                 <OffRampPopover
                   triggerContent={
                     <PillMultiToggle
@@ -400,15 +401,15 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
             <AnimatedFlex
               bottom={0}
               exiting={FadeOutDown}
-              gap="$spacing8"
+              gap={isShortMobileDevice ? 0 : '$spacing8'}
               left={0}
               opacity={decimalPadReady ? 1 : 0}
-              pb="$spacing24"
+              pb={isShortMobileDevice ? '$spacing4' : '$spacing24'}
               position="absolute"
               px="$spacing24"
               right={0}
             >
-              {quoteCurrency.currencyInfo && formattedAmount && (
+              {quoteCurrency.currencyInfo && (
                 <TokenSelectorBalanceDisplay
                   disabled={notAvailableInThisRegion}
                   formattedAmount={formattedAmount}

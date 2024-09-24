@@ -16,6 +16,51 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   justify-content: flex-start;
 }
 
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c11 img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c12 {
+  width: 10px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c10 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c9 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c5 {
   box-sizing: border-box;
   margin: 0;
@@ -69,61 +114,16 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   padding: 4px 0px;
 }
 
+.c18 {
+  color: #FF5F52;
+}
+
 .c4 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c11 img {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c12 {
-  width: 10px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c10 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c9 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c18 {
-  color: #FF5F52;
 }
 
 .c2 {
@@ -499,6 +499,51 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   justify-content: flex-start;
 }
 
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c12 img {
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c13 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c11 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c10 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c5 {
   box-sizing: border-box;
   margin: 0;
@@ -552,61 +597,16 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   padding: 4px 0px;
 }
 
+.c20 {
+  color: #FF5F52;
+}
+
 .c4 {
   color: #7D7D7D;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c12 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c12 img {
-  width: 16px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c13 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
-}
-
-.c11 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c10 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c20 {
-  color: #FF5F52;
 }
 
 .c2 {

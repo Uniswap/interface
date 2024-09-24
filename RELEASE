@@ -4,8 +4,7 @@ Added more supported tokens on Fiat Onramp — Now users can enjoy access to USD
 
 Other changes: 
 
-- Support for “Enter” during onboarding
 - Username support on notification toasts
 - Improved warning modals
-- Improved linkouts to helpcenter articles
+- Improved linkouts to help center articles
 - Various bug fixes and performance improvements

@@ -58,7 +58,7 @@ const StyledDropdown = {
 } satisfies FlexProps
 
 // TODO: change this to reflect data pipeline
-export default function TimeSelector() {
+export default function VolumeTimeFrameSelector() {
   const { t } = useTranslation()
   const theme = useTheme()
   const [isMenuOpen, toggleMenu] = useState(false)
