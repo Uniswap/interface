@@ -1,6 +1,7 @@
 import i18n from 'i18next'
 import resourcesToBackend from 'i18next-resources-to-backend'
 import { initReactI18next } from 'react-i18next'
+import { Locale } from 'uniswap/src/features/language/constants'
 import enUsLocale from 'uniswap/src/i18n/locales/source/en-US.json'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -17,16 +18,30 @@ export function setupi18n(): undefined {
   i18n
     .use(initReactI18next)
     .use(
-      resourcesToBackend((language: string) => {
+      resourcesToBackend((locale: string) => {
         // not sure why but it tries to load es THEN es-ES, for any language, but we just want the second
-        if (!language.includes('-')) {
-          return
+        if (!locale.includes('-')) {
+          return undefined
         }
-        if (language === 'en-US') {
+
+        if (locale === Locale.EnglishUnitedStates) {
           return enUsLocale
         }
+
+        const localeNameToFileNameOverrides: Record<string, string> = {
+          [Locale.ChineseSimplified]: 'zh-CN',
+          [Locale.ChineseTraditional]: 'zh-TW',
+          [Locale.SpanishLatam]: Locale.SpanishSpain,
+          [Locale.SpanishUnitedStates]: Locale.SpanishSpain,
+        }
+
+        if (Object.keys(localeNameToFileNameOverrides).includes(locale)) {
+          // eslint-disable-next-line no-unsanitized/method
+          return import(`./locales/translations/${localeNameToFileNameOverrides[locale]}.json`)
+        }
+
         // eslint-disable-next-line no-unsanitized/method
-        return import(`./locales/translations/${language}.json`)
+        return import(`./locales/translations/${locale}.json`)
       }),
     )
     .on('failedLoading', (language, namespace, msg) => {

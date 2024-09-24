@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmQ8UanH84ztdAz6r982h7KRAmtSvPwd9LDSYJ9VEW83iH`
-- CIDv1: `bafybeia2td2e2swyfxgrspubtq3bzklw3r74qmjhjvnej3bclxjgqs24vi`
+- CIDv0: `QmSen79xDfziDqosVLQFWT5F1cxK7pYHirdnMMkCjZqtDz`
+- CIDv1: `bafybeicacoiqphc6t7aqqtkawiwotwqxwxqdtapccc4iy64xx3ompux7du`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,48 +10,10 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeia2td2e2swyfxgrspubtq3bzklw3r74qmjhjvnej3bclxjgqs24vi.ipfs.dweb.link/
-- https://bafybeia2td2e2swyfxgrspubtq3bzklw3r74qmjhjvnej3bclxjgqs24vi.ipfs.cf-ipfs.com/
-- [ipfs://QmQ8UanH84ztdAz6r982h7KRAmtSvPwd9LDSYJ9VEW83iH/](ipfs://QmQ8UanH84ztdAz6r982h7KRAmtSvPwd9LDSYJ9VEW83iH/)
+- https://bafybeicacoiqphc6t7aqqtkawiwotwqxwxqdtapccc4iy64xx3ompux7du.ipfs.dweb.link/
+- https://bafybeicacoiqphc6t7aqqtkawiwotwqxwxqdtapccc4iy64xx3ompux7du.ipfs.cf-ipfs.com/
+- [ipfs://QmSen79xDfziDqosVLQFWT5F1cxK7pYHirdnMMkCjZqtDz/](ipfs://QmSen79xDfziDqosVLQFWT5F1cxK7pYHirdnMMkCjZqtDz/)
 
-## 5.48.0 (2024-09-24)
-
-
-### Features
-
-* **web:** add address to suggestion row (#12045) 6676db9
-* **web:** add ConnectWalletButtonText (#12042) 218baff
-* **web:** add new fee tiers to base (#12013) 01a9528
-* **web:** add the input form and context (#11978) b6c1ec4
-* **web:** adding range selection screen to v4 (#11998) 8eec4b3
-* **web:** allow copying v4 hooks (#11950) 9c4375d
-* **web:** calculate depended amount for v2 (#12062) 2bf4c53
-* **web:** calculate dependent token value from the sdk (#12040) 141d691
-* **web:** create positions page v4 (#11974) 6fc32bc
-* **web:** fix v4 URL paths for existing routes (#11903) 6ded044
-* **web:** Migrate assets from org (#11937) c436f4c
-* **web:** migrate to shared currency state (#11030) eb21f0a
-* **web:** migrate to shared language state (#11029) 6ae056f
-* **web:** shared swap tabs (#11769) d811690
-* **web:** toolbar for v4 create page (#12012) 7bc5579
-* **web:** v4 call trading-api reduce LP position endpoint (#11883) 392e1c5
-* **web:** v4 migrate page (#11823) 79084f4
-* **web:** v4 my positions list page (#11831) 93bd2c0
-* **web:** v4 remove LP modal (#11755) e881123
-
-
-### Bug Fixes
-
-* **web:** Fix sign in translation string (#12090) 2fcbd22
-* **web:** nav dropdown height overflow and scroll (#11987) 566e661
-* **web:** prevent crash from new Base fee tiers (#11932) 229efd6
-* **web:** removing feature flag on route definitions for v4 (#11975) 4f360d6
-* **web:** token caching fix in mini portfolio (#12152) 58ef42d
-* **web:** use overflow auto instead of scroll (#12008) ca9cb0c
-
-
-### Continuous Integration
-
-* **web:** update sitemaps 4849e2e
+### 5.48.1 (2024-09-24)
 
 
