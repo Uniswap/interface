@@ -1,4 +1,4 @@
-import { OpacityHoverState } from 'components/Common/styles'
+import { OpacityHoverState } from 'components/Common'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import styled from 'lib/styled-components'
 import { CollectionInfoForAsset, GenieAsset } from 'nft/types'

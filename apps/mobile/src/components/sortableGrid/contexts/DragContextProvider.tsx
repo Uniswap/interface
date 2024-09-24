@@ -1,9 +1,30 @@
-import { createContext, useContext, useMemo } from 'react'
-import { runOnJS, useAnimatedReaction, useDerivedValue, useSharedValue } from 'react-native-reanimated'
+import { PropsWithChildren, createContext, useContext, useMemo } from 'react'
+import { SharedValue, runOnJS, useAnimatedReaction, useDerivedValue, useSharedValue } from 'react-native-reanimated'
 import { useLayoutContext } from 'src/components/sortableGrid/contexts/LayoutContextProvider'
-import { useStableCallback } from 'src/components/sortableGrid/internal/utils'
-import { DragContextProviderProps, DragContextType, Vector } from 'src/components/sortableGrid/types'
+import { useStableCallback } from 'src/components/sortableGrid/hooks'
+import {
+  ActiveItemDecorationSettings,
+  SortableGridChangeEvent,
+  SortableGridDragStartEvent,
+  SortableGridDropEvent,
+  Vector,
+} from 'src/components/sortableGrid/types'
 import { ImpactFeedbackStyle, useHapticFeedback } from 'ui/src'
+
+export type DragContextType = {
+  // DRAG SETTINGS
+  editable: boolean
+  // ACTIVE ITEM
+  activeItemKey: SharedValue<string | null>
+  activeItemDropped: SharedValue<boolean>
+  // DRAGA ACTIVATION
+  activationProgress: SharedValue<number>
+  activeItemPosition: SharedValue<Vector>
+  // ACTIVE ITEM DECORATION
+  activeItemScale: SharedValue<number>
+  activeItemOpacity: SharedValue<number>
+  activeItemShadowOpacity: SharedValue<number>
+}
 
 const DragContext = createContext<DragContextType | null>(null)
 
@@ -16,6 +37,19 @@ export function useDragContext(): DragContextType {
 
   return context
 }
+
+export type DragContextProviderProps<I> = PropsWithChildren<
+  Partial<ActiveItemDecorationSettings> & {
+    data: I[]
+    itemKeys: string[]
+    editable?: boolean
+    hapticFeedback?: boolean
+    onChange?: (e: SortableGridChangeEvent<I>) => void
+    onDragStart?: (e: SortableGridDragStartEvent<I>) => void
+    onDrop?: (e: SortableGridDropEvent<I>) => void
+    keyExtractor: (item: I, index: number) => string
+  }
+>
 
 export function DragContextProvider<I>({
   data,

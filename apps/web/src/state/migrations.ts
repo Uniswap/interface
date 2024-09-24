@@ -10,8 +10,6 @@ import { migration13 } from 'state/migrations/13'
 import { migration14 } from 'state/migrations/14'
 import { migration15 } from 'state/migrations/15'
 import { migration16 } from 'state/migrations/16'
-import { migration17 } from 'state/migrations/17'
-import { migration18 } from 'state/migrations/18'
 import { migration2 } from 'state/migrations/2'
 import { migration3 } from 'state/migrations/3'
 import { migration4 } from 'state/migrations/4'
@@ -49,8 +47,6 @@ export const migrations: MigrationManifest = {
   14: migration14,
   15: migration15,
   16: migration16,
-  17: migration17,
-  18: migration18,
 } as const
 
 export const INDEXED_DB_REDUX_TABLE_NAME = 'redux'

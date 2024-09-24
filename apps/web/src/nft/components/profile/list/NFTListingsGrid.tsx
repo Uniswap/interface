@@ -1,5 +1,5 @@
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
+import Column from 'components/Column'
+import Row from 'components/Row'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import styled, { css } from 'lib/styled-components'
 import { Dropdown } from 'nft/components/profile/list/Dropdown'

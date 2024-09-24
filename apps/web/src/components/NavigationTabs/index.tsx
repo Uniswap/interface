@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import { RowBetween } from 'components/deprecated/Row'
+import { RowBetween } from 'components/Row'
 import SettingsTab from 'components/Settings'
 import { useAccount } from 'hooks/useAccount'
 import styled, { useTheme } from 'lib/styled-components'

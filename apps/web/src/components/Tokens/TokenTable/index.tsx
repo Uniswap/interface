@@ -22,10 +22,9 @@ import { chainIdToBackendChain, getChainFromChainUrlParam, useChainFromUrlParam 
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { SparklineMap, TopToken, useTopTokens } from 'graphql/data/TopTokens'
 import { OrderDirection, getSupportedGraphQlChain, getTokenDetailsURL, unwrapToken } from 'graphql/data/util'
-import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtomValue } from 'jotai/utils'
-import { ReactElement, ReactNode, memo, useMemo } from 'react'
-import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
+import { ReactElement, ReactNode, useMemo } from 'react'
+import { giveExploreStatDefaultValue } from 'state/explore'
 import { useTopTokens as useRestTopTokens } from 'state/explore/topTokens'
 import { TokenStat } from 'state/explore/types'
 import { Flex, Text, styled } from 'ui/src'
@@ -88,7 +87,7 @@ function TokenDescription({ token }: { token: TopToken | TokenStat }) {
   )
 }
 
-export const TopTokensTable = memo(function TopTokensTable() {
+export function TopTokensTable() {
   const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
   const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
   const {
@@ -106,12 +105,10 @@ export const TopTokensTable = memo(function TopTokensTable() {
     isError: restError,
   } = useRestTopTokens()
 
-  const { page, loadMore } = useSimplePagination()
-
   const { tokens, tokenSortRank, sparklines, loading, error } = useMemo(() => {
     return isRestExploreEnabled
       ? {
-          tokens: restTopTokens?.slice(0, page * TABLE_PAGE_SIZE),
+          tokens: restTopTokens,
           tokenSortRank: restTokenSortRank,
           loading: restIsLoading,
           sparklines: restSparklines,
@@ -127,7 +124,6 @@ export const TopTokensTable = memo(function TopTokensTable() {
   }, [
     isRestExploreEnabled,
     restTopTokens,
-    page,
     restTokenSortRank,
     restIsLoading,
     restSparklines,
@@ -146,12 +142,11 @@ export const TopTokensTable = memo(function TopTokensTable() {
         tokenSortRank={tokenSortRank}
         sparklines={sparklines}
         loading={loading}
-        loadMore={loadMore}
         error={error}
       />
     </TableWrapper>
   )
-})
+}
 
 const HEADER_TEXT: Record<TokenSortMethod, ReactNode> = {
   [TokenSortMethod.FULLY_DILUTED_VALUATION]: <Trans i18nKey="stats.fdv" />,

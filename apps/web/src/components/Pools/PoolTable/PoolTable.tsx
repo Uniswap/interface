@@ -11,7 +11,7 @@ import { ClickableHeaderRow, HeaderArrow, HeaderSortText } from 'components/Tabl
 import { EllipsisText } from 'components/Tokens/TokenTable'
 import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
-import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
+import { MouseoverTooltip } from 'components/Tooltip'
 import { chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
 import { BIPS_BASE } from 'constants/misc'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
@@ -24,11 +24,10 @@ import {
   unwrapToken,
 } from 'graphql/data/util'
 import { useCurrencyInfo } from 'hooks/Tokens'
-import useSimplePagination from 'hooks/useSimplePagination'
 import { useAtom } from 'jotai'
 import { atomWithReset, useAtomValue, useResetAtom, useUpdateAtom } from 'jotai/utils'
-import { ReactElement, ReactNode, memo, useCallback, useEffect, useMemo } from 'react'
-import { TABLE_PAGE_SIZE, giveExploreStatDefaultValue } from 'state/explore'
+import { ReactElement, ReactNode, useCallback, useEffect, useMemo } from 'react'
+import { giveExploreStatDefaultValue } from 'state/explore'
 import { useTopPools as useRestTopPools } from 'state/explore/topPools'
 import { PoolStat } from 'state/explore/types'
 import { Flex, Text, styled } from 'ui/src'
@@ -40,11 +39,11 @@ import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const HEADER_DESCRIPTIONS: Record<PoolSortFields, ReactNode | undefined> = {
-  [PoolSortFields.TVL]: <Trans i18nKey="stats.tvl" />,
-  [PoolSortFields.Volume24h]: <Trans i18nKey="stats.volume.1d" />,
-  [PoolSortFields.VolumeWeek]: <Trans i18nKey="pool.volume.sevenDay" />,
-  [PoolSortFields.VolOverTvl]: undefined,
-  [PoolSortFields.Apr]: <Trans i18nKey="pool.apr.description" />,
+  [PoolSortFields.TVL]: undefined,
+  [PoolSortFields.Volume24h]: undefined,
+  [PoolSortFields.VolumeWeek]: undefined,
+  [PoolSortFields.TxCount]: undefined,
+  [PoolSortFields.OneDayApr]: <Trans i18nKey="pool.apr.feesNotice" />,
 }
 
 const TableWrapper = styled(Flex, {
@@ -64,12 +63,22 @@ const Badge = styled(Text, {
 interface PoolTableValues {
   index: number
   poolDescription: ReactElement
+  txCount: number
   tvl: number
-  apr: Percent
   volume24h: number
-  volumeWeek: number // TODO(WEB-4856): update to 30D once this data is available
-  volOverTvl?: number
+  volumeWeek: number
+  oneDayApr: Percent
   link: string
+}
+
+export enum PoolTableColumns {
+  Index,
+  PoolDescription,
+  Transactions,
+  TVL,
+  Volume24h,
+  VolumeWeek,
+  OneDayApr,
 }
 
 function getRestTokenLogo(token?: Token | TokenStats, currencyLogo?: string | null): string | undefined {
@@ -136,10 +145,10 @@ function useSetSortMethod(newSortMethod: PoolSortFields) {
 
 const HEADER_TEXT: Record<PoolSortFields, ReactNode> = {
   [PoolSortFields.TVL]: <Trans i18nKey="common.totalValueLocked" />,
-  [PoolSortFields.Volume24h]: <Trans i18nKey="stats.volume.1d.short" />,
-  [PoolSortFields.VolumeWeek]: <Trans i18nKey="pool.volume.sevenDay.short" />,
-  [PoolSortFields.Apr]: <Trans i18nKey="pool.apr" />,
-  [PoolSortFields.VolOverTvl]: <Trans i18nKey="pool.volOverTvl" />,
+  [PoolSortFields.Volume24h]: <Trans i18nKey="stats.volume.1d" />,
+  [PoolSortFields.VolumeWeek]: <Trans i18nKey="pool.volume.sevenDay" />,
+  [PoolSortFields.OneDayApr]: <Trans i18nKey="pool.apr.oneDay" />,
+  [PoolSortFields.TxCount]: <Trans i18nKey="common.transactions" />,
 }
 
 function PoolTableHeader({
@@ -153,12 +162,7 @@ function PoolTableHeader({
 }) {
   const handleSortCategory = useSetSortMethod(category)
   return (
-    <MouseoverTooltip
-      disabled={!HEADER_DESCRIPTIONS[category]}
-      size={TooltipSize.Max}
-      text={HEADER_DESCRIPTIONS[category]}
-      placement="top"
-    >
+    <MouseoverTooltip disabled={!HEADER_DESCRIPTIONS[category]} text={HEADER_DESCRIPTIONS[category]} placement="top">
       <ClickableHeaderRow justifyContent="flex-end" onPress={handleSortCategory}>
         {isCurrentSortMethod && <HeaderArrow direction={direction} />}
         <HeaderSortText active={isCurrentSortMethod}>{HEADER_TEXT[category]}</HeaderSortText>
@@ -167,7 +171,7 @@ function PoolTableHeader({
   )
 }
 
-export const TopPoolTable = memo(function TopPoolTable() {
+export function TopPoolTable() {
   const chain = getSupportedGraphQlChain(useChainFromUrlParam(), { fallbackToEthereum: true })
   const sortMethod = useAtomValue(sortMethodAtom)
   const sortAscending = useAtomValue(sortAscendingAtom)
@@ -201,19 +205,17 @@ export const TopPoolTable = memo(function TopPoolTable() {
     isError: restIsError,
   } = useRestTopPools({ sortBy: sortMethod, sortDirection: sortAscending ? OrderDirection.Asc : OrderDirection.Desc })
 
-  const { page, loadMore } = useSimplePagination()
-
   const isRestExploreEnabled = useFeatureFlag(FeatureFlags.RestExplore)
   const { topPools, loading, error } = isRestExploreEnabled
-    ? { topPools: restTopPools?.slice(0, page * TABLE_PAGE_SIZE), loading: restIsLoading, error: restIsError }
+    ? { topPools: restTopPools, loading: restIsLoading, error: restIsError }
     : { topPools: gqlTopPools, loading: allDataStillLoading, error: combinedError }
 
   return (
     <TableWrapper data-testid="top-pools-explore-table">
-      <PoolsTable pools={topPools} loading={loading} error={error} loadMore={loadMore} maxWidth={1200} />
+      <PoolsTable pools={topPools} loading={loading} error={error} maxWidth={1200} />
     </TableWrapper>
   )
-})
+}
 
 export function PoolsTable({
   pools,
@@ -230,7 +232,7 @@ export function PoolsTable({
   loadMore?: ({ onComplete }: { onComplete?: () => void }) => void
   maxWidth?: number
   maxHeight?: number
-  hiddenColumns?: PoolSortFields[]
+  hiddenColumns?: PoolTableColumns[]
 }) {
   const { formatNumber, formatPercent } = useFormatter()
   const sortAscending = useAtomValue(sortAscendingAtom)
@@ -255,11 +257,11 @@ export function PoolsTable({
               protocolVersion={pool.protocolVersion}
             />
           ),
+          txCount: pool.txCount ?? 0,
           tvl: isGqlPool ? pool.tvl : giveExploreStatDefaultValue(pool.totalLiquidity?.value),
           volume24h: isGqlPool ? pool.volume24h : giveExploreStatDefaultValue(pool.volume1Day?.value),
           volumeWeek: isGqlPool ? pool.volumeWeek : giveExploreStatDefaultValue(pool.volume1Week?.value),
-          volOverTvl: pool.volOverTvl,
-          apr: pool.apr,
+          oneDayApr: pool.oneDayApr,
           link: `/explore/pools/${chainIdToBackendChain({ chainId, withFallback: true }).toLowerCase()}/${isGqlPool ? pool.hash : pool.id}`,
           analytics: {
             elementName: InterfaceElementName.POOLS_TABLE_ROW,
@@ -285,39 +287,64 @@ export function PoolsTable({
   const columns = useMemo(() => {
     const columnHelper = createColumnHelper<PoolTableValues>()
     return [
-      columnHelper.accessor((row) => row.index, {
-        id: 'index',
-        header: () => (
-          <Cell justifyContent="center" minWidth={44}>
-            <Text variant="body2" color="$neutral2">
-              #
-            </Text>
-          </Cell>
-        ),
-        cell: (index) => (
-          <Cell justifyContent="center" loading={showLoadingSkeleton} minWidth={44}>
-            <Text variant="body2" color="$neutral2">
-              {index.getValue?.()}
-            </Text>
-          </Cell>
-        ),
-      }),
-      columnHelper.accessor((row) => row.poolDescription, {
-        id: 'poolDescription',
-        header: () => (
-          <Cell justifyContent="flex-start" width={240} grow>
-            <Text variant="body2" color="$neutral2">
-              <Trans i18nKey="common.pool" />
-            </Text>
-          </Cell>
-        ),
-        cell: (poolDescription) => (
-          <Cell justifyContent="flex-start" alignItems="center" loading={showLoadingSkeleton} width={240} grow>
-            {poolDescription.getValue?.()}
-          </Cell>
-        ),
-      }),
-      !hiddenColumns?.includes(PoolSortFields.TVL)
+      !hiddenColumns?.includes(PoolTableColumns.Index)
+        ? columnHelper.accessor((row) => row.index, {
+            id: 'index',
+            header: () => (
+              <Cell justifyContent="center" minWidth={44}>
+                <Text variant="body2" color="$neutral2">
+                  #
+                </Text>
+              </Cell>
+            ),
+            cell: (index) => (
+              <Cell justifyContent="center" loading={showLoadingSkeleton} minWidth={44}>
+                <Text variant="body2" color="$neutral2">
+                  {index.getValue?.()}
+                </Text>
+              </Cell>
+            ),
+          })
+        : null,
+      !hiddenColumns?.includes(PoolTableColumns.PoolDescription)
+        ? columnHelper.accessor((row) => row.poolDescription, {
+            id: 'poolDescription',
+            header: () => (
+              <Cell justifyContent="flex-start" width={240} grow>
+                <Text variant="body2" color="$neutral2">
+                  <Trans i18nKey="common.pool" />
+                </Text>
+              </Cell>
+            ),
+            cell: (poolDescription) => (
+              <Cell justifyContent="flex-start" alignItems="center" loading={showLoadingSkeleton} width={240} grow>
+                {poolDescription.getValue?.()}
+              </Cell>
+            ),
+          })
+        : null,
+      !hiddenColumns?.includes(PoolTableColumns.Transactions)
+        ? columnHelper.accessor((row) => row.txCount, {
+            id: 'transactions',
+            header: () => (
+              <Cell minWidth={120} grow>
+                <PoolTableHeader
+                  category={PoolSortFields.TxCount}
+                  isCurrentSortMethod={sortMethod === PoolSortFields.TxCount}
+                  direction={orderDirection}
+                />
+              </Cell>
+            ),
+            cell: (txCount) => (
+              <Cell loading={showLoadingSkeleton} minWidth={120} grow>
+                <Text variant="body2" color="$neutral1">
+                  {formatNumber({ input: txCount.getValue?.(), type: NumberType.NFTCollectionStats })}
+                </Text>
+              </Cell>
+            ),
+          })
+        : null,
+      !hiddenColumns?.includes(PoolTableColumns.TVL)
         ? columnHelper.accessor((row) => row.tvl, {
             id: 'tvl',
             header: () => (
@@ -338,28 +365,7 @@ export function PoolsTable({
             ),
           })
         : null,
-      !hiddenColumns?.includes(PoolSortFields.Apr)
-        ? columnHelper.accessor((row) => row.apr, {
-            id: 'apr',
-            header: () => (
-              <Cell minWidth={100} grow>
-                <PoolTableHeader
-                  category={PoolSortFields.Apr}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.Apr}
-                  direction={orderDirection}
-                />
-              </Cell>
-            ),
-            cell: (oneDayApr) => (
-              <Cell minWidth={100} loading={showLoadingSkeleton} grow>
-                <Text variant="body2" color="$neutral1">
-                  {formatPercent(oneDayApr.getValue?.())}
-                </Text>
-              </Cell>
-            ),
-          })
-        : null,
-      !hiddenColumns?.includes(PoolSortFields.Volume24h)
+      !hiddenColumns?.includes(PoolTableColumns.Volume24h)
         ? columnHelper.accessor((row) => row.volume24h, {
             id: 'volume24h',
             header: () => (
@@ -380,7 +386,7 @@ export function PoolsTable({
             ),
           })
         : null,
-      !hiddenColumns?.includes(PoolSortFields.VolumeWeek)
+      !hiddenColumns?.includes(PoolTableColumns.VolumeWeek)
         ? columnHelper.accessor((row) => row.volumeWeek, {
             id: 'volumeWeek',
             header: () => (
@@ -401,32 +407,29 @@ export function PoolsTable({
             ),
           })
         : null,
-      !hiddenColumns?.includes(PoolSortFields.VolOverTvl)
-        ? columnHelper.accessor((row) => row.volOverTvl, {
-            id: 'volOverTvl',
+      !hiddenColumns?.includes(PoolTableColumns.OneDayApr)
+        ? columnHelper.accessor((row) => row.oneDayApr, {
+            id: 'oneDayApr',
             header: () => (
-              <Cell minWidth={120} grow>
+              <Cell minWidth={100} grow>
                 <PoolTableHeader
-                  category={PoolSortFields.VolOverTvl}
-                  isCurrentSortMethod={sortMethod === PoolSortFields.VolOverTvl}
+                  category={PoolSortFields.OneDayApr}
+                  isCurrentSortMethod={sortMethod === PoolSortFields.OneDayApr}
                   direction={orderDirection}
                 />
               </Cell>
             ),
-            cell: (volOverTvl) => (
+            cell: (oneDayApr) => (
               <Cell minWidth={100} loading={showLoadingSkeleton} grow>
                 <Text variant="body2" color="$neutral1">
-                  {formatNumber({
-                    input: volOverTvl.getValue?.(),
-                    type: NumberType.TokenQuantityStats,
-                    placeholder: '-',
-                  })}
+                  {formatPercent(oneDayApr.getValue?.())}
                 </Text>
               </Cell>
             ),
           })
         : null,
-    ].filter((column): column is ColumnDef<PoolTableValues, any> => Boolean(column))
+      // Filter out null values
+    ].filter(Boolean) as ColumnDef<PoolTableValues, any>[]
   }, [formatNumber, formatPercent, hiddenColumns, orderDirection, showLoadingSkeleton, sortMethod])
 
   return (

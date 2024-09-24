@@ -1,11 +1,9 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonLight } from 'components/Button/buttons'
+import { ButtonLight } from 'components/Button'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { Button, Flex, SpinningLoader, Text, WidthAnimator } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
-import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
-import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { useTranslation } from 'uniswap/src/i18n'
 import { useAccount } from 'wagmi'
 
 interface BuyFormButtonProps {
@@ -21,22 +19,8 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
   const { inputAmount } = buyFormState
   const { notAvailableInThisRegion, quotes, fetchingQuotes, error } = derivedBuyFormInfo
 
-  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
-
   if (!account.isConnected) {
-    return (
-      <ButtonLight onClick={accountDrawer.open}>
-        {isSignIn ? (
-          <Trans i18nKey="nav.signIn.button" />
-        ) : isLogIn ? (
-          <Trans i18nKey="nav.logIn.button" />
-        ) : (
-          <Trans i18nKey="common.connectWallet.button" />
-        )}
-      </ButtonLight>
-    )
+    return <ButtonLight onClick={accountDrawer.open}>{t('common.connectWallet.button')}</ButtonLight>
   }
 
   if (!inputAmount || forceDisabled || notAvailableInThisRegion) {

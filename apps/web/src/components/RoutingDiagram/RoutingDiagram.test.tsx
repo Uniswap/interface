@@ -2,8 +2,8 @@ import { Protocol } from '@uniswap/router-sdk'
 import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
 import RoutingDiagram from 'components/RoutingDiagram/RoutingDiagram'
+import { DAI, USDC_MAINNET, WBTC } from 'constants/tokens'
 import { render } from 'test-utils/render'
-import { DAI, USDC_MAINNET, WBTC } from 'uniswap/src/constants/tokens'
 import { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
 
 const percent = (strings: TemplateStringsArray) => new Percent(parseInt(strings[0]), 100)

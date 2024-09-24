@@ -37,6 +37,7 @@ export function isSuggestedTokenSection(section: TokenSection): boolean {
 
 function TokenOptionItemWrapper({
   tokenOption,
+  onDismiss,
   onSelectCurrency,
   section,
   index,
@@ -56,6 +57,7 @@ function TokenOptionItemWrapper({
 
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
+  onDismiss: () => void
 }): JSX.Element {
   const onPress = useCallback(
     () => onSelectCurrency(tokenOption.currencyInfo, section, index),
@@ -80,6 +82,7 @@ function TokenOptionItemWrapper({
       showTokenAddress={showTokenAddress}
       showWarnings={showWarnings}
       tokenWarningDismissed={tokenWarningDismissed}
+      onDismiss={onDismiss}
       onPress={onPress}
     />
   )
@@ -110,10 +113,12 @@ interface TokenSelectorListProps {
   isKeyboardOpen?: boolean
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
+  onDismiss: () => void
 }
 
 function _TokenSelectorList({
   onSelectCurrency,
+  onDismiss,
   sections,
   chainFilter,
   showTokenWarnings,
@@ -157,6 +162,7 @@ function _TokenSelectorList({
             showTokenAddress={showTokenAddress}
             showWarnings={showTokenWarnings}
             tokenOption={item}
+            onDismiss={onDismiss}
             onSelectCurrency={onSelectCurrency}
           />
         )
@@ -171,6 +177,7 @@ function _TokenSelectorList({
       isKeyboardOpen,
       convertFiatAmountFormattedCallback,
       formatNumberOrStringCallback,
+      onDismiss,
     ],
   )
 

@@ -2,7 +2,6 @@ import { SEARCH_RESULT_HEADER_KEY } from 'src/components/explore/search/constant
 import { SearchResultOrHeader } from 'src/components/explore/search/types'
 import { Chain, ExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import {
   NFTCollectionSearchResult,
   SearchResultType,
@@ -31,7 +30,7 @@ export function formatTokenSearchResults(
       return tokensMap
     }
 
-    const { chain, address, symbol, project, market, protectionInfo } = token
+    const { chain, address, symbol, project, market } = token
     const chainId = fromGraphQLChain(chain)
 
     if (!chainId || !project) {
@@ -49,7 +48,6 @@ export function formatTokenSearchResults(
       safetyLevel: safetyLevel ?? null,
       logoUrl: logoUrl ?? null,
       volume1D: market?.volume?.value ?? 0,
-      safetyInfo: getCurrencySafetyInfo(safetyLevel, protectionInfo),
     }
 
     // For token results that share the same TokenProject id, use the token with highest volume

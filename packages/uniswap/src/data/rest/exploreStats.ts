@@ -5,7 +5,7 @@ import { useQuery } from '@connectrpc/connect-query'
 import { UseQueryResult } from '@tanstack/react-query'
 import { exploreStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service-ExploreStatsService_connectquery'
 import { ExploreStatsRequest, ExploreStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
-import { uniswapGetTransport } from 'uniswap/src/data/rest/base'
+import { uniswapGetTransport } from 'uniswap/src/data/rest'
 
 /**
  * Wrapper around Tanstack useQuery for the Uniswap REST BE service ExploreStats

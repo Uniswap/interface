@@ -9,7 +9,7 @@ import { renderWithProviders } from 'src/test/render'
 import { render } from 'src/test/test-utils'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
-import { TamaguiProvider } from 'wallet/src/providers/tamagui-provider'
+import { TamaguiProvider } from 'wallet/src/provider/tamagui-provider'
 import { ACCOUNT, preloadedWalletPackageState } from 'wallet/src/test/fixtures'
 
 jest.mock('wallet/src/features/onboarding/OnboardingContext', () => ({

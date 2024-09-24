@@ -1,13 +1,13 @@
 import { FeePoolSelectAction, LiquidityEventName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { ButtonGray } from 'components/Button/buttons'
-import Card from 'components/Card/cards'
+import { ButtonGray } from 'components/Button'
+import Card from 'components/Card'
+import { AutoColumn } from 'components/Column'
 import { FeeOption } from 'components/FeeSelector/FeeOption'
 import { FeeTierPercentageBadge } from 'components/FeeSelector/FeeTierPercentageBadge'
 import { FEE_AMOUNT_DETAIL } from 'components/FeeSelector/shared'
-import { AutoColumn } from 'components/deprecated/Column'
-import { RowBetween } from 'components/deprecated/Row'
+import { RowBetween } from 'components/Row'
 import { useAccount } from 'hooks/useAccount'
 import { useFeeTierDistribution } from 'hooks/useFeeTierDistribution'
 import { PoolState, usePools } from 'hooks/usePools'
@@ -17,7 +17,6 @@ import { DynamicSection } from 'pages/AddLiquidity/styled'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { Box } from 'rebass'
 import { ThemedText } from 'theme/components'
-import { RadioButtonGroup } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
@@ -191,24 +190,22 @@ export default function FeeSelector({
 
         {chainId && showOptions && (
           <Select>
-            <RadioButtonGroup value={feeAmount?.toString()} orientation="horizontal" justifyContent="space-around">
-              {[FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map((_feeAmount, i) => {
-                const { supportedChains } = FEE_AMOUNT_DETAIL[_feeAmount]
-                if ((supportedChains as unknown as InterfaceChainId[]).includes(chainId)) {
-                  return (
-                    <FeeOption
-                      feeAmount={_feeAmount}
-                      selected={_feeAmount === feeAmount}
-                      onClick={() => handleFeePoolSelectWithEvent(_feeAmount)}
-                      distributions={distributions}
-                      poolState={poolsByFeeTier[_feeAmount]}
-                      key={i}
-                    />
-                  )
-                }
-                return null
-              })}
-            </RadioButtonGroup>
+            {[FeeAmount.LOWEST, FeeAmount.LOW, FeeAmount.MEDIUM, FeeAmount.HIGH].map((_feeAmount, i) => {
+              const { supportedChains } = FEE_AMOUNT_DETAIL[_feeAmount]
+              if ((supportedChains as unknown as InterfaceChainId[]).includes(chainId)) {
+                return (
+                  <FeeOption
+                    feeAmount={_feeAmount}
+                    active={feeAmount === _feeAmount}
+                    onClick={() => handleFeePoolSelectWithEvent(_feeAmount)}
+                    distributions={distributions}
+                    poolState={poolsByFeeTier[_feeAmount]}
+                    key={i}
+                  />
+                )
+              }
+              return null
+            })}
           </Select>
         )}
       </DynamicSection>

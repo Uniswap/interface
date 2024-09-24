@@ -4,7 +4,8 @@ import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonError, ButtonLight } from 'components/Button/buttons'
+import { ButtonError, ButtonLight } from 'components/Button'
+import Column from 'components/Column'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
 import {
@@ -12,13 +13,13 @@ import {
   useCurrentPriceAdjustment,
 } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import Row from 'components/Row'
 import { CurrencySearchFilters } from 'components/SearchModal/DeprecatedCurrencySearch'
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { getChain, isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
+import { nativeOnChain } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
@@ -39,10 +40,7 @@ import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Anchor, Text, styled as tamaguiStyled } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { colors, validColor } from 'ui/src/theme'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
@@ -471,10 +469,6 @@ function SubmitOrderButton({
   const account = useAccount()
   const { chainId } = useSwapAndLimitContext()
 
-  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
-
   if (!isUniswapXSupportedChain(chainId)) {
     return (
       <ButtonError disabled>
@@ -486,13 +480,7 @@ function SubmitOrderButton({
   if (!account.isConnected) {
     return (
       <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
-        {isSignIn ? (
-          <Trans i18nKey="nav.signIn.button" />
-        ) : isLogIn ? (
-          <Trans i18nKey="nav.logIn.button" />
-        ) : (
-          <Trans i18nKey="common.connectWallet.button" />
-        )}
+        <Trans i18nKey="common.connectWallet.button" />
       </ButtonLight>
     )
   }

@@ -1,6 +1,6 @@
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import ENSAvatarIcon from 'components/Identicon/ENSAvatarIcon'
-import { UnitagProfilePicture } from 'components/UnitagProfilePicture'
+import { UniTagProfilePicture } from 'components/UniTag/UniTagProfilePicture'
 import useENSAvatar from 'hooks/useENSAvatar'
 import styled from 'lib/styled-components'
 import { fadeInAnimation } from 'theme/components/FadePresence'
@@ -54,7 +54,7 @@ export default function Identicon({ account, size }: { account?: string; size: n
     case IdenticonType.UNITAG_PROFILE_PICTURE:
       return (
         <FadeInContainer>
-          <UnitagProfilePicture account={account} size={size} />
+          <UniTagProfilePicture account={account} size={size} />
         </FadeInContainer>
       )
     case IdenticonType.ENS_AVATAR:

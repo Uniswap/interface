@@ -3,8 +3,8 @@ import { useTranslation } from 'react-i18next'
 import { ColorValue, Keyboard } from 'react-native'
 import { TouchableArea, TouchableAreaProps, useSporeColors } from 'ui/src'
 import InfoCircle from 'ui/src/assets/icons/info-circle.svg'
-import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 
 const DEFAULT_ICON_SIZE = 20
 

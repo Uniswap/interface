@@ -1,9 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, isWeb } from 'ui/src'
-import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { WarningLabel } from 'uniswap/src/features/transactions/WarningModal/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 

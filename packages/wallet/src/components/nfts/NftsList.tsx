@@ -13,10 +13,14 @@ import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__gen
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { HiddenNftsRow } from 'wallet/src/components/nfts/NFTHiddenRow'
-import { ShowNFTModal } from 'wallet/src/components/nfts/ShowNFTModal'
+import { HiddenNftsRowLeft, HiddenNftsRowRight } from 'wallet/src/components/nfts/NFTHiddenRow'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { EMPTY_NFT_ITEM, ESTIMATED_NFT_LIST_ITEM_SIZE, HIDDEN_NFTS_ROW } from 'wallet/src/features/nfts/constants'
+import {
+  EMPTY_NFT_ITEM,
+  ESTIMATED_NFT_LIST_ITEM_SIZE,
+  HIDDEN_NFTS_ROW_LEFT_ITEM,
+  HIDDEN_NFTS_ROW_RIGHT_ITEM,
+} from 'wallet/src/features/nfts/constants'
 import { useGroupNftsByVisibility } from 'wallet/src/features/nfts/hooks'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { formatNftItems, getNFTAssetKey } from 'wallet/src/features/nfts/utils'
@@ -124,23 +128,16 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
       if (typeof item !== 'string') {
         return renderNFTItem(item, index)
       }
-
       switch (item) {
         case LOADING_ITEM:
           // This case probably never occurs
           return <Loader.NFT />
         case EMPTY_NFT_ITEM:
           return null
-        case HIDDEN_NFTS_ROW:
-          return (
-            <>
-              <Flex grow>
-                <HiddenNftsRow isExpanded={hiddenNftsExpanded} numHidden={numHidden} onPress={onHiddenRowPressed} />
-                {hiddenNftsExpanded && <ShowNFTModal />}
-              </Flex>
-            </>
-          )
-
+        case HIDDEN_NFTS_ROW_LEFT_ITEM:
+          return <HiddenNftsRowLeft numHidden={numHidden} />
+        case HIDDEN_NFTS_ROW_RIGHT_ITEM:
+          return <HiddenNftsRowRight isExpanded={hiddenNftsExpanded} onPress={onHiddenRowPressed} />
         default:
           return null
       }
@@ -149,14 +146,6 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
   )
 
   const onRetry = useCallback(() => refetch(), [refetch])
-
-  const renderLayout = useCallback((layout: { span?: number }, item: string | NFTItem) => {
-    if (item === HIDDEN_NFTS_ROW) {
-      layout.span = 2
-    }
-
-    return layout
-  }, [])
 
   const List = renderedInModal ? AnimatedBottomSheetFlashList : AnimatedFlashList
 
@@ -210,7 +199,6 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
       estimatedItemSize={ESTIMATED_NFT_LIST_ITEM_SIZE}
       keyExtractor={keyExtractor}
       numColumns={numColumns}
-      overrideItemLayout={renderLayout}
       refreshControl={refreshControl}
       refreshing={refreshing}
       renderItem={renderItem}

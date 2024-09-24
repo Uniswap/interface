@@ -1,6 +1,6 @@
 import { TextStyle } from '@tamagui/core'
-import { InterfaceEventName } from '@uniswap/analytics-events'
 import { ReactComponent as TooltipTriangle } from 'assets/svg/tooltip_triangle.svg'
+import { outboundLink } from 'components/analytics'
 import useCopyClipboard from 'hooks/useCopyClipboard'
 import styled, { css, keyframes } from 'lib/styled-components'
 import React, {
@@ -17,7 +17,6 @@ import { AlertTriangle, ArrowLeft, CheckCircle, Copy, Icon, X } from 'react-feat
 import { Link } from 'react-router-dom'
 import { Z_INDEX } from 'theme/zIndex'
 import { FlexProps, TextProps } from 'ui/src'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 import { anonymizeLink } from 'utils/anonymizeLink'
 
@@ -143,12 +142,6 @@ export const UniTokenAnimated = styled.img`
   padding: 2rem 0 0 0;
   filter: drop-shadow(0px 2px 4px rgba(0, 0, 0, 0.15));
 `
-
-function outboundLink({ label }: { label: string }) {
-  sendAnalyticsEvent(InterfaceEventName.EXTERNAL_LINK_CLICK, {
-    label,
-  })
-}
 
 function handleClickExternalLink(event: React.MouseEvent<HTMLAnchorElement>) {
   const { target, href } = event.currentTarget

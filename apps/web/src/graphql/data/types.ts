@@ -1,14 +1,9 @@
 import { SupportedInterfaceChainId, isSupportedChainId } from 'constants/chains'
+import { COMMON_BASES, buildCurrencyInfo } from 'constants/routing'
+import { USDC_OPTIMISM } from 'constants/tokens'
 import { fiatOnRampToCurrency, gqlToCurrency } from 'graphql/data/util'
-import { COMMON_BASES, buildCurrencyInfo } from 'uniswap/src/constants/routing'
-import { USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
-import {
-  Token as GqlToken,
-  ProtectionResult,
-  SafetyLevel,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
-import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
+import { Token as GqlToken, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
 import { isSameAddress } from 'utilities/src/addresses'
 import { currencyId } from 'utils/currencyId'
@@ -33,7 +28,6 @@ export function gqlTokenToCurrencyInfo(token?: GqlToken): CurrencyInfo | undefin
     logoUrl: token.project?.logo?.url ?? token.project?.logoUrl,
     safetyLevel: token.project?.safetyLevel ?? SafetyLevel.StrongWarning,
     isSpam: token.project?.isSpam ?? false,
-    safetyInfo: getCurrencySafetyInfo(token.project?.safetyLevel, token.protectionInfo),
   }
   return currencyInfo
 }
@@ -74,10 +68,6 @@ export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedTok
     currencyId: currencyId(currency),
     logoUrl: forCurrency.symbol,
     safetyLevel: SafetyLevel.Verified,
-    safetyInfo: {
-      tokenList: TokenList.Default,
-      protectionResult: ProtectionResult.Benign,
-    },
     isSpam: false,
   }
 }

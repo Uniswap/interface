@@ -1,6 +1,6 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonPrimary } from 'components/Button/buttons'
+import { ButtonPrimary } from 'components/Button'
 import { useAccount } from 'hooks/useAccount'
 import useENSName from 'hooks/useENSName'
 import styled from 'lib/styled-components'

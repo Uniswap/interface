@@ -20,9 +20,8 @@ import { CurrencyState, SerializedCurrencyState, SwapInfo, SwapState } from 'sta
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
-import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useExperimentGroupName, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
@@ -221,22 +220,15 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     isClassicTrade(trade.trade) && (nativeCurrencyBalanceUSD ?? 0) < (trade.trade.totalGasUseEstimateUSDWithBuffer ?? 0)
 
   const { isDisconnected } = useAccount()
-  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
-
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
 
     if (!account.isConnected) {
-      const disconnectedInputError = isSignIn ? (
-        <Trans i18nKey="nav.signIn.button" />
-      ) : isLogIn ? (
-        <Trans i18nKey="nav.logIn.button" />
-      ) : (
+      inputError = isDisconnected ? (
         <Trans i18nKey="common.connectWallet.button" />
+      ) : (
+        <Trans i18nKey="common.connectingWallet" />
       )
-      inputError = isDisconnected ? disconnectedInputError : <Trans i18nKey="common.connectingWallet" />
     }
 
     if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
@@ -277,13 +269,11 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     account.isConnected,
     currencies,
     parsedAmount,
-    insufficientGas,
     currencyBalances,
     trade?.trade,
     allowedSlippage,
-    isSignIn,
-    isLogIn,
     isDisconnected,
+    insufficientGas,
     nativeCurrency.symbol,
   ])
 

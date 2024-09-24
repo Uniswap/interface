@@ -22,7 +22,7 @@ export function createApiClient({
   readonly get: <T>(
     path: string,
     options?: Parameters<typeof fetch>[1] & {
-      params?: Record<string, string | number | boolean>
+      params?: Record<string, string | number | boolean | undefined | null>
     },
   ) => Promise<T>
   readonly post: <T>(path: string, options: Parameters<typeof fetch>[1]) => Promise<T>
@@ -45,12 +45,16 @@ export function createApiClient({
     get get() {
       return async <T>(
         path: string,
-        options?: Parameters<typeof fetch>[1] & { params?: Record<string, string | number | boolean> },
+        options?: Parameters<typeof fetch>[1] & {
+          params?: Record<string, string | number | boolean | undefined | null>
+        },
       ): Promise<T> => {
         if (options?.params) {
           const searchParams = new URLSearchParams()
           for (const [key, value] of Object.entries(options.params)) {
-            searchParams.append(key, value.toString())
+            if (value !== undefined && value !== null) {
+              searchParams.append(key, value.toString())
+            }
           }
           path += '?' + searchParams.toString()
         }

@@ -1,4 +1,4 @@
-import Row from 'components/deprecated/Row'
+import Row from 'components/Row'
 import styled from 'lib/styled-components'
 
 export const Input = styled.input`

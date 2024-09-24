@@ -1,11 +1,11 @@
 import { Percent } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
+import { nativeOnChain } from 'constants/tokens'
 import { SwapForm } from 'pages/Swap/SwapForm'
 import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
 import { SwapAndLimitContext, SwapInfo } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { render, screen } from 'test-utils/render'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 

@@ -6,6 +6,7 @@ import {
   AVERAGE_L1_BLOCK_TIME,
   BACKEND_SUPPORTED_CHAINS,
   CHAIN_NAME_TO_CHAIN_ID,
+  GQL_MAINNET_CHAINS,
   InterfaceGqlChain,
   SupportedInterfaceChainId,
   UX_SUPPORTED_GQL_CHAINS,
@@ -13,16 +14,14 @@ import {
   getChainFromChainUrlParam,
   isSupportedChainId,
 } from 'constants/chains'
-
-import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
 import { DefaultTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { ExploreTab } from 'pages/Explore'
 import { useEffect } from 'react'
 import { TokenStat } from 'state/explore/types'
 import { ThemeColors } from 'theme/colors'
-import { GQL_MAINNET_CHAINS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import {
   Chain,
   ContractInput,
@@ -58,11 +57,11 @@ export function usePollQueryWhileMounted<T, K extends OperationVariables>(
 }
 
 export enum TimePeriod {
-  HOUR = 'H',
-  DAY = 'D',
-  WEEK = 'W',
-  MONTH = 'M',
-  YEAR = 'Y',
+  HOUR,
+  DAY,
+  WEEK,
+  MONTH,
+  YEAR,
 }
 
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
@@ -85,6 +84,9 @@ export type PricePoint = { timestamp: number; value: number }
 export function isPricePoint(p: PricePoint | undefined): p is PricePoint {
   return p !== undefined
 }
+
+/** Used for making graphql queries to all chains supported by the graphql backend. Must be mutable for some apollo typechecking. */
+export const GQL_MAINNET_CHAINS_MUTABLE = GQL_MAINNET_CHAINS.map((c) => c)
 
 export function isGqlSupportedChain(chainId?: SupportedInterfaceChainId) {
   return !!chainId && GQL_MAINNET_CHAINS.includes(UNIVERSE_CHAIN_INFO[chainId].backendChain.chain)
@@ -161,9 +163,9 @@ export function isBackendSupportedChain(chain: Chain): chain is InterfaceGqlChai
   return (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(chain)
 }
 
-export function getTokenExploreURL({ tab, chain }: { tab: ExploreTab; chain?: Chain }) {
-  const chainName = chain?.toLowerCase()
-  return `/explore/${tab}${chain ? `/${chainName}` : ''}`
+export function getTokenExploreURL({ tab, chain }: { tab: ExploreTab; chain: Chain }) {
+  const chainName = chain.toLowerCase()
+  return `/explore/${tab}/${chainName}`
 }
 
 export function getTokenDetailsURL({
@@ -228,11 +230,6 @@ const PROTOCOL_META: { [source in PriceSource]: ProtocolMeta } = {
   [PriceSource.SubgraphV3]: {
     name: 'v3',
     color: 'accent1',
-    gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
-  },
-  [PriceSource.SubgraphV4]: {
-    name: 'v4',
-    color: 'accent1', // TODO(WEB-4618): update the colors when they are available
     gradient: { start: 'rgba(252, 116, 254, 0.20)', end: 'rgba(252, 116, 254, 0.00)' },
   },
   /* [PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */

@@ -2,14 +2,14 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { Token, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import PositionListItem from 'components/PositionListItem'
+import { USDC_MAINNET } from 'constants/tokens'
 import { useToken } from 'hooks/Tokens'
 import { PoolState, usePool } from 'hooks/usePools'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
-import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
-jest.mock('components/Logo/DoubleLogo')
+jest.mock('components/DoubleLogo')
 jest.mock('hooks/Tokens')
 jest.mock('hooks/usePools')
 jest.mock('utils/unwrappedToken')

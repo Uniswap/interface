@@ -6,6 +6,8 @@ jest.mock('components/AccountDrawer/MiniPortfolio/Activity/getCurrency')
 
 import { Currency, WETH9 } from '@uniswap/sdk-core'
 import { getCurrency } from 'components/AccountDrawer/MiniPortfolio/Activity/getCurrency'
+import { COMMON_BASES } from 'constants/routing'
+import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC } from 'constants/tokens'
 import { useCurrency, useCurrencyInfo } from 'hooks/Tokens'
 import {
   DAI_ARBITRUM_INFO,
@@ -24,8 +26,6 @@ import {
   WETH_INFO,
 } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
-import { COMMON_BASES } from 'uniswap/src/constants/routing'
-import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC } from 'uniswap/src/constants/tokens'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 

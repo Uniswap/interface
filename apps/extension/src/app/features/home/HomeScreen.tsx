@@ -210,7 +210,7 @@ const TabButton = ({
       <Text color={isActive ? '$neutral1' : '$neutral2'} userSelect="none" variant="subheading2">
         {children}
       </Text>
-      {showPendingNotificationBadge && !isActive && <PendingNotificationBadge />}
+      {showPendingNotificationBadge && <PendingNotificationBadge />}
     </TouchableArea>
   )
 }

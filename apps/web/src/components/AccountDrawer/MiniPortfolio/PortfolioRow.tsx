@@ -1,5 +1,5 @@
-import Column, { AutoColumn } from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
+import Column, { AutoColumn } from 'components/Column'
+import Row from 'components/Row'
 import { LoadingBubble } from 'components/Tokens/loading'
 import styled, { css, keyframes } from 'lib/styled-components'
 

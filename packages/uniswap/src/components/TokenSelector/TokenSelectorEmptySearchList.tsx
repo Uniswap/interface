@@ -8,6 +8,7 @@ import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatt
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 function _TokenSelectorEmptySearchList({
+  onDismiss,
   chainFilter,
   onSelectCurrency,
   formatNumberOrStringCallback,
@@ -18,6 +19,7 @@ function _TokenSelectorEmptySearchList({
   isKeyboardOpen?: boolean
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
+  onDismiss: () => void
 }): JSX.Element {
   const { t } = useTranslation()
 
@@ -34,6 +36,7 @@ function _TokenSelectorEmptySearchList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
+      onDismiss={onDismiss}
       onSelectCurrency={onSelectCurrency}
     />
   )

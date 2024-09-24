@@ -1,12 +1,12 @@
 import userEvent from '@testing-library/user-event'
 import { TokenDescription } from 'components/Tokens/TokenDetails/TokenDescription'
+import { USDC_MAINNET } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
 import { mocked } from 'test-utils/mocked'
 import { validUSDCCurrency } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
 import { validTokenProjectResponse } from 'test-utils/tokens/fixtures'
-import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
 jest.mock('hooks/Tokens')

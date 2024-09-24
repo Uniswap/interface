@@ -417,6 +417,22 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   height: inherit;
 }
 
+.c50 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
+}
+
+.c42 {
+  position: relative;
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+}
+
 .c44 {
   display: -webkit-box;
   display: -webkit-flex;
@@ -452,22 +468,6 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   position: relative;
   top: 0;
   left: 0;
-}
-
-.c50 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c42 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
 }
 
 .c56 {
@@ -1221,6 +1221,9 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                       </div>
                     </div>
                   </div>
+                  <div
+                    tabindex="0"
+                  />
                   <div
                     style="display: relative;"
                   >

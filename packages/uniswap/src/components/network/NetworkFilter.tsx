@@ -1,6 +1,5 @@
 import { useCallback } from 'react'
 import { Flex, useHapticFeedback } from 'ui/src'
-import { easeInEaseOutLayoutAnimation } from 'ui/src/animations/layout/layoutAnimation'
 import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
 import { Ellipsis } from 'ui/src/components/icons/Ellipsis'
 import { colors, iconSizes } from 'ui/src/theme'
@@ -10,17 +9,16 @@ import {
   ActionSheetDropdownStyleProps,
 } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { useNetworkOptions } from 'uniswap/src/components/network/hooks'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
-import { isMobileApp } from 'utilities/src/platform'
+import { UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
 
 const ELLIPSIS = 'ellipsis'
 const NETWORK_ICON_SIZE = iconSizes.icon20
 const NETWORK_ICON_SHIFT = 8
 
 interface NetworkFilterProps {
-  chainIds: UniverseChainId[]
   selectedChain: UniverseChainId | null
   onPressChain: (chainId: UniverseChainId | null) => void
+  onPressAnimation?: () => void
   onDismiss?: () => void
   includeAllNetworks?: boolean
   showUnsupportedConnectedChainWarning?: boolean
@@ -76,9 +74,9 @@ export function NetworksInSeries({
 }
 
 export function NetworkFilter({
-  chainIds,
   selectedChain,
   onPressChain,
+  onPressAnimation,
   onDismiss,
   includeAllNetworks,
   showUnsupportedConnectedChainWarning,
@@ -88,21 +86,18 @@ export function NetworkFilter({
   const { hapticFeedback } = useHapticFeedback()
   const onPress = useCallback(
     async (chainId: UniverseChainId | null) => {
-      // Ensures smooth animation on mobile
-      if (isMobileApp) {
-        easeInEaseOutLayoutAnimation()
-      }
+      onPressAnimation?.()
       await hapticFeedback.selection()
       onPressChain(chainId)
     },
-    [hapticFeedback, onPressChain],
+    [onPressAnimation, hapticFeedback, onPressChain],
   )
 
   const networkOptions = useNetworkOptions({
     selectedChain,
     onPress,
     includeAllNetworks,
-    chainIds,
+    chainIds: WALLET_SUPPORTED_CHAIN_IDS,
   })
 
   return (

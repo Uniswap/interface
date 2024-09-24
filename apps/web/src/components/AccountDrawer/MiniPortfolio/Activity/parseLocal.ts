@@ -11,6 +11,7 @@ import {
   getActivityTitle,
 } from 'components/AccountDrawer/MiniPortfolio/constants'
 import { SupportedInterfaceChainId } from 'constants/chains'
+import { nativeOnChain } from 'constants/tokens'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import { isConfirmedTx, useMultichainTransactions } from 'state/transactions/hooks'
@@ -29,7 +30,6 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'state/transactions/types'
-import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { t } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'

@@ -11,10 +11,6 @@ query SearchPopularTokens {
       logoUrl
       safetyLevel
     }
-    protectionInfo {
-      result
-      attackTypes
-    }
   }
   # `topTokens` returns WETH rather than ETH
   # here we retrieve ETH information to swap out in the UI
@@ -29,10 +25,6 @@ query SearchPopularTokens {
       name
       logoUrl
       safetyLevel
-    }
-    protectionInfo {
-      result
-      attackTypes
     }
   }
 }

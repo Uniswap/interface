@@ -1,4 +1,4 @@
-import { Box } from 'components/deprecated/Box'
+import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import { getSortDropdownOptions } from 'nft/components/collection/CollectionNfts'
 import * as styles from 'nft/components/collection/Filters.css'
@@ -6,12 +6,13 @@ import { MarketplaceSelect } from 'nft/components/collection/MarketplaceSelect'
 import { PriceRange } from 'nft/components/collection/PriceRange'
 import { TraitSelect } from 'nft/components/collection/TraitSelect'
 import { FilterSortDropdown } from 'nft/components/common/SortDropdown'
+import { Checkbox } from 'nft/components/layout/Checkbox'
+import { subhead } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks'
 import { Trait } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition } from 'nft/hooks/useTraitsOpen'
 import { DropDownOption } from 'nft/types'
-import { useMemo } from 'react'
-import { Checkbox, Flex, Text } from 'ui/src'
+import { useMemo, useReducer } from 'react'
 import { isMobileWeb } from 'utilities/src/platform'
 
 export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait[]> }) => {
@@ -21,6 +22,7 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
   }))
   const setSortBy = useCollectionFilters((state) => state.setSortBy)
   const hasRarity = useCollectionFilters((state) => state.hasRarity)
+  const [buyNowHovered, toggleBuyNowHover] = useReducer((state) => !state, false)
 
   const handleBuyNowToggle = () => {
     setBuyNow(!buyNow)
@@ -35,10 +37,28 @@ export const Filters = ({ traitsByGroup }: { traitsByGroup: Record<string, Trait
     <Box className={styles.container}>
       <Row width="full" justifyContent="space-between"></Row>
       <Column marginTop="8">
-        <Flex row width="100%" justifyContent="space-between" px="$spacing12">
-          <Text>Buy now</Text>
-          <Checkbox checked={buyNow} onPress={handleBuyNowToggle} variant="branded" />
-        </Flex>
+        <Row
+          justifyContent="space-between"
+          className={`${styles.row} ${styles.rowHover}`}
+          gap="2"
+          borderRadius="12"
+          paddingTop="12"
+          paddingBottom="12"
+          paddingLeft="12"
+          onClick={(e) => {
+            e.preventDefault()
+            handleBuyNowToggle()
+          }}
+          onMouseEnter={toggleBuyNowHover}
+          onMouseLeave={toggleBuyNowHover}
+        >
+          <Box data-testid="nft-collection-filter-buy-now" className={subhead}>
+            Buy now
+          </Box>
+          <Checkbox hovered={buyNowHovered} checked={buyNow} onClick={handleBuyNowToggle}>
+            <span />
+          </Checkbox>
+        </Row>
         {isMobileWeb && <FilterSortDropdown sortDropDownOptions={sortDropDownOptions} />}
         <MarketplaceSelect />
         <PriceRange />

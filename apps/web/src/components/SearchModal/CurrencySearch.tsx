@@ -5,7 +5,6 @@ import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import useSelectChain from 'hooks/useSelectChain'
 import { useShowSwapNetworkNotification } from 'hooks/useShowSwapNetworkNotification'
-import { useSupportedChainIds } from 'hooks/useSupportedChainIds'
 import { useCallback, useEffect } from 'react'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Flex } from 'ui/src'
@@ -38,7 +37,6 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
   const activeLocale = useActiveLocale()
 
   const selectChain = useSelectChain()
-  const { supported: supportedChains } = useSupportedChainIds()
 
   const handleCurrencySelectTokenSelectorCallback = useCallback(
     async (currency: Currency) => {
@@ -76,7 +74,6 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
           activeAccountAddress={account.address!}
           isLimits={currentTab === SwapTab.Limit}
           chainId={!multichainUXEnabled || isUserSelectedToken ? chainId : undefined}
-          chainIds={supportedChains}
           convertFiatAmountFormattedCallback={(fromAmount) =>
             formatNumber({
               input: fromAmount as number,
@@ -95,7 +92,9 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
           }
           isSurfaceReady={true}
           variation={
-            currencyField === CurrencyField.INPUT ? TokenSelectorVariation.SwapInput : TokenSelectorVariation.SwapOutput
+            currencyField === CurrencyField.INPUT
+              ? TokenSelectorVariation.BalancesAndPopular
+              : TokenSelectorVariation.SuggestedAndFavoritesAndPopular
           }
           onClose={onDismiss}
           onSelectCurrency={handleCurrencySelectTokenSelectorCallback}

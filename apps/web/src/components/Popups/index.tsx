@@ -1,4 +1,4 @@
-import { AutoColumn } from 'components/deprecated/Column'
+import { AutoColumn } from 'components/Column'
 import ClaimPopup from 'components/Popups/ClaimPopup'
 import PopupItem from 'components/Popups/PopupItem'
 import styled from 'lib/styled-components'

@@ -1,7 +1,7 @@
-import { Box } from 'components/deprecated/Box'
+import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
+import { HeaderRow } from 'nft/components/collection/Activity'
 import { eventRow } from 'nft/components/collection/Activity.css'
-import { HeaderRow } from 'nft/components/collection/ActivityHeaderRow'
 import * as styles from 'nft/components/collection/ActivityLoader.css'
 
 const LoadingSquare = () => {

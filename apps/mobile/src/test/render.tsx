@@ -17,7 +17,7 @@ import { store as appStore, persistedReducer } from 'src/app/store'
 import { Resolvers } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import { AutoMockedApolloProvider } from 'uniswap/src/test/mocks'
-import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
+import { SharedWalletProvider } from 'wallet/src/provider'
 
 type AppStore = typeof appStore
 

@@ -1,6 +1,9 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { providers } from 'ethers'
-import { call, put } from 'typed-redux-saga'
+import { Contract, providers } from 'ethers'
+import { call } from 'typed-redux-saga'
+import { Weth } from 'uniswap/src/abis/types'
+import WETH_ABI from 'uniswap/src/abis/weth.json'
+import { getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import {
   TransactionOptions,
@@ -8,10 +11,8 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
@@ -22,12 +23,15 @@ export type WrapParams = {
   txRequest: providers.TransactionRequest
   account: AccountMeta
   inputCurrencyAmount: CurrencyAmount<Currency>
-  skipPushNotification?: boolean
+}
+
+export async function getWethContract(chainId: WalletChainId, provider: providers.Provider): Promise<Weth> {
+  return new Contract(getWrappedNativeAddress(chainId), WETH_ABI, provider) as Weth
 }
 
 export function* wrap(params: WrapParams) {
   try {
-    const { account, inputCurrencyAmount, txRequest, txId, skipPushNotification, swapTxId } = params
+    const { account, inputCurrencyAmount, txRequest, txId, swapTxId } = params
     let typeInfo: TransactionTypeInfo
 
     if (inputCurrencyAmount.currency.isNative) {
@@ -50,7 +54,7 @@ export function* wrap(params: WrapParams) {
       request: txRequest,
     }
 
-    const result = yield* call(sendTransaction, {
+    return yield* call(sendTransaction, {
       txId,
       chainId: inputCurrencyAmount.currency.chainId,
       account,
@@ -58,13 +62,6 @@ export function* wrap(params: WrapParams) {
       typeInfo,
       transactionOriginType: TransactionOriginType.Internal,
     })
-
-    if (!skipPushNotification) {
-      const wrapType = inputCurrencyAmount.currency.isNative ? WrapType.Wrap : WrapType.Unwrap
-      yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType }))
-    }
-
-    return result
   } catch (error) {
     logger.error(error, { tags: { file: 'wrapSaga', function: 'wrap' } })
   }

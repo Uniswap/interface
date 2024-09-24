@@ -1,4 +1,4 @@
-import Column from 'components/deprecated/Column'
+import Column from 'components/Column'
 import { MissingDataIcon } from 'components/Table/icons'
 import styled from 'lib/styled-components'
 import { ThemedText } from 'theme/components'

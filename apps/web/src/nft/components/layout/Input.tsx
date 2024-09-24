@@ -1,4 +1,4 @@
-import { Box, BoxProps } from 'components/deprecated/Box'
+import { Box, BoxProps } from 'nft/components/Box'
 import { FormEvent, forwardRef } from 'react'
 
 const isNumber = (s: string): boolean => {

@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { TouchableWithoutFeedback } from 'react-native'
+import { Keyboard, LayoutAnimation, TouchableWithoutFeedback } from 'react-native'
 import Animated from 'react-native-reanimated'
 import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import { SendFormButton } from 'src/features/send/SendFormButton'
@@ -13,8 +13,6 @@ import { iconSizes } from 'ui/src/theme'
 import { TokenSelectorModal, TokenSelectorVariation } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
-import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import {
@@ -22,7 +20,9 @@ import {
   TransactionModalInnerContainer,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
 
@@ -146,6 +146,8 @@ export function SendFormContent({
           formatNumberOrStringCallback={formatNumberOrString}
           variation={TokenSelectorVariation.BalancesOnly}
           onClose={onHideTokenSelector}
+          onDismiss={() => Keyboard.dismiss()}
+          onPressAnimation={() => LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut)}
           onSelectCurrency={onSelectCurrency}
         />
       )}

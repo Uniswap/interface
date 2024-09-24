@@ -3,7 +3,7 @@ import { PropsWithChildren, useEffect, useState } from 'react'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { logger } from 'utilities/src/logger/logger'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/hooks/useShowSwapNetworkNotification'
+import { useShowSwapNetworkNotification } from 'wallet/src/features/transactions/swap/trade/hooks/useShowSwapNetworkNotification'
 import { useProvider, useWalletSigners } from 'wallet/src/features/wallet/context'
 import { useActiveAccount, useActiveSignerAccount } from 'wallet/src/features/wallet/hooks'
 
@@ -37,14 +37,13 @@ function useWalletSigner(): ethers.Signer | undefined {
 export function WalletUniswapProvider({ children }: PropsWithChildren): JSX.Element {
   const account = useActiveAccount() ?? undefined
   const signer = useWalletSigner()
-  const { navigateToBuyOrReceiveWithEmptyWallet, navigateToFiatOnRamp } = useWalletNavigation()
+  const { navigateToBuyOrReceiveWithEmptyWallet } = useWalletNavigation()
   const showSwapNetworkNotification = useShowSwapNetworkNotification()
 
   return (
     <UniswapProvider
       account={account}
       navigateToBuyOrReceiveWithEmptyWallet={navigateToBuyOrReceiveWithEmptyWallet}
-      navigateToFiatOnRamp={navigateToFiatOnRamp}
       signer={signer}
       useProviderHook={useWalletProvider}
       onShowSwapNetworkNotification={showSwapNetworkNotification}

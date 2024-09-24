@@ -3,11 +3,11 @@ import 'test-utils/tokens/mocks'
 import { WETH9 } from '@uniswap/sdk-core'
 import { OrderContent } from 'components/AccountDrawer/MiniPortfolio/Activity/OffchainActivityModal'
 import { formatTimestamp } from 'components/AccountDrawer/MiniPortfolio/formatTimestamp'
+import { DAI } from 'constants/tokens'
 import { SignatureType } from 'state/signatures/types'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/formatTimestamp', () => ({

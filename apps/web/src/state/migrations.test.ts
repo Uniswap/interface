@@ -13,7 +13,7 @@ const defaultState = {
   user: {},
   _persist: {
     rehydrated: true,
-    version: 18,
+    version: 16,
   },
   application: {
     chainId: null,
@@ -56,12 +56,6 @@ const defaultState = {
   wallets: {
     connectedWallets: [],
     switchingChain: false,
-  },
-  userSettings: {
-    currentLanguage: 'en',
-    currentCurrency: 'USD',
-    hideSmallBalances: true,
-    hideSpamTokens: true,
   },
 }
 

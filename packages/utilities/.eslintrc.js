@@ -13,12 +13,6 @@ module.exports = {
   },
   overrides: [
     {
-      files: ['src/index.ts', 'src/platform/*', 'src/addresses/*', 'src/errors/*', 'src/platform/*'],
-      rules: {
-        'check-file/no-index': 'off',
-      },
-    },
-    {
       files: ['*.ts', '*.tsx'],
       rules: {
         'no-relative-import-paths/no-relative-import-paths': [

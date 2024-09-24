@@ -312,23 +312,22 @@ query NftsTab(
 query PortfolioBalances(
   $ownerAddress: String!
   $valueModifiers: [PortfolioValueModifier!]
-  $chains: [Chain!] = [
-    ETHEREUM
-    POLYGON
-    ARBITRUM
-    OPTIMISM
-    BASE
-    BNB
-    BLAST
-    ZORA
-    CELO
-    AVALANCHE
-    ZKSYNC
-  ]
 ) {
   portfolios(
     ownerAddresses: [$ownerAddress]
-    chains: $chains
+    chains: [
+      ETHEREUM
+      POLYGON
+      ARBITRUM
+      OPTIMISM
+      BASE
+      BNB
+      BLAST
+      ZORA
+      CELO
+      AVALANCHE
+      ZKSYNC
+    ]
     valueModifiers: $valueModifiers
   ) {
     id
@@ -351,29 +350,20 @@ query PortfolioBalances(
       quantity
       isHidden
       denominatedValue {
-        id
         currency
         value
       }
       token {
-        id
-        address
         chain
-        decimals
-        name
-        standard
+        address
         symbol
+        decimals
         project {
           id
-          isSpam
-          logoUrl
           name
+          logoUrl
           safetyLevel
           isSpam
-        }
-        feeData {
-          buyFeeBps
-          sellFeeBps
         }
       }
       tokenProjectMarket {
@@ -553,10 +543,6 @@ query Token($chain: Chain!, $address: String) {
       buyFeeBps
       sellFeeBps
     }
-    protectionInfo {
-      result
-      attackTypes
-    }
   }
 }
 
@@ -571,7 +557,6 @@ query TokenDetailsScreen(
   $includeChineseTraditional: Boolean = false
 ) {
   token(chain: $chain, address: $address) {
-    id
     address
     chain
     symbol
@@ -633,10 +618,6 @@ query TokenDetailsScreen(
     feeData {
       buyFeeBps
       sellFeeBps
-    }
-    protectionInfo {
-      result
-      attackTypes
     }
   }
 }
@@ -1049,10 +1030,6 @@ query SearchTokens($searchQuery: String!, $chains: [Chain!]) {
       logoUrl
       safetyLevel
     }
-    protectionInfo {
-      result
-      attackTypes
-    }
   }
 }
 
@@ -1076,10 +1053,6 @@ query ExploreSearch(
       name
       logoUrl
       safetyLevel
-    }
-    protectionInfo {
-      result
-      attackTypes
     }
   }
   nftCollections(filter: $nftCollectionsFilter, first: 4) {

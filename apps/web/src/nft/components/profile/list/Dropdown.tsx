@@ -1,5 +1,5 @@
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
+import Column from 'components/Column'
+import Row from 'components/Row'
 import styled, { useTheme } from 'lib/styled-components'
 import { DropDownOption } from 'nft/types'
 import { Check } from 'react-feather'

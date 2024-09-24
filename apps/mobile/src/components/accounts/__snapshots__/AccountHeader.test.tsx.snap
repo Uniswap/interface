@@ -181,6 +181,7 @@ exports[`AccountHeader renders correctly 1`] = `
             ],
           }
         }
+        testID="account-header-settings-icon"
       >
         <RNSVGSvgView
           align="xMidYMid"

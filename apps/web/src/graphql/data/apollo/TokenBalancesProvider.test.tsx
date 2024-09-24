@@ -18,7 +18,7 @@ const mockBalanceQueryResponse = [
 
 jest.mock('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts', () => ({
   ...jest.requireActual('uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks.ts'),
-  usePortfolioBalancesLazyQuery: () => mockBalanceQueryResponse,
+  usePortfolioBalancesWebLazyQuery: () => mockBalanceQueryResponse,
   useOnAssetActivitySubscription: jest.fn(),
 }))
 

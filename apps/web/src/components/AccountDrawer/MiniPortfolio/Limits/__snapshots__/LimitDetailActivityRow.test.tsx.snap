@@ -1,6 +1,29 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`LimitDetailActivityRow should render with valid details 1`] = `
+.c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c4 {
+  display: grid;
+  grid-auto-rows: auto;
+  -webkit-box-flex: 1;
+  -webkit-flex-grow: 1;
+  -ms-flex-positive: 1;
+  flex-grow: 1;
+}
+
 .c0 {
   box-sizing: border-box;
   margin: 0;
@@ -65,29 +88,6 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
   letter-spacing: -0.01em;
 }
 
-.c6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c4 {
-  display: grid;
-  grid-auto-rows: auto;
-  -webkit-box-flex: 1;
-  -webkit-flex-grow: 1;
-  -ms-flex-positive: 1;
-  flex-grow: 1;
-}
-
 .c2 {
   gap: 12px;
   height: 68px;
@@ -101,12 +101,79 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
   cursor: pointer;
 }
 
+.c12 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-align-items: center;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.c14 {
+  border-color: #CECECE;
+  display: inline-block;
+  margin-right: 1px;
+  border-radius: 4px;
+  height: 18px;
+  width: 18px;
+  border-style: solid;
+  border-width: 1.5px;
+  position: relative;
+  -webkit-text-decoration: none;
+  text-decoration: none;
+  cursor: pointer;
+  -webkit-transition-duration: 125ms;
+  transition-duration: 125ms;
+}
+
+.c14:hover {
+  opacity: 0.6;
+}
+
+.c14:active {
+  opacity: 0.4;
+}
+
+.c15 {
+  position: absolute;
+  top: -24px;
+  -webkit-clip: rect(0 0 0 0);
+  clip: rect(0 0 0 0);
+  -webkit-clip-path: inset(50%);
+  clip-path: inset(50%);
+  height: 1px;
+  overflow: hidden;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+.c16 {
+  display: none;
+  height: 18px;
+  width: 18px;
+  color: white;
+  position: absolute;
+  right: 1px;
+}
+
 .c3 {
   padding: 8px 0;
   height: unset;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.c13 {
+  opacity: 0;
 }
 
 .c8 * {
@@ -204,18 +271,39 @@ exports[`LimitDetailActivityRow should render with valid details 1`] = `
             </div>
           </div>
         </div>
-        <div
-          class="css-view-175oi2r"
-          style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; align-items: center; justify-content: center; border-bottom-style: solid; border-top-style: solid; border-left-style: solid; border-right-style: solid; border-top-color: rgba(0,0,0,0.00); border-right-color: rgba(0,0,0,0.00); border-bottom-color: rgba(0,0,0,0.00); border-left-color: rgba(0,0,0,0.00); border-top-left-radius: 6px; border-top-right-radius: 6px; border-bottom-right-radius: 6px; border-bottom-left-radius: 6px; border-top-width: 1px; border-right-width: 1px; border-bottom-width: 1px; border-left-width: 1px; height: 23px; width: 23px;"
+        <label
+          class="c12 c13"
         >
-          <div
-            aria-checked="false"
-            class="css-view-175oi2r"
-            role="checkbox"
-            style="display: flex; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; align-items: center; cursor: pointer; justify-content: center; pointer-events: auto; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; border-top-left-radius: 4px; border-top-right-radius: 4px; border-bottom-right-radius: 4px; border-bottom-left-radius: 4px; border-top-color: rgba(125,125,125,1.00); border-right-color: rgba(125,125,125,1.00); border-bottom-color: rgba(125,125,125,1.00); border-left-color: rgba(125,125,125,1.00); opacity: 0; background-color: rgba(0, 0, 0, 0); border-top-width: 2px; border-right-width: 2px; border-bottom-width: 2px; border-left-width: 2px; height: 18px; width: 18px;"
-            tabindex="0"
+          <span
+            aria-hidden="true"
+            class="c14"
+            size="18"
           />
-        </div>
+          <input
+            class="c15"
+            size="18"
+            type="checkbox"
+          />
+          <svg
+            class="c16"
+            fill="none"
+            height="16"
+            size="18"
+            viewBox="0 0 16 16"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <g
+              id="Icon"
+            >
+              <path
+                d="M5.99993 11.3333C5.99927 11.3333 5.9986 11.3333 5.99727 11.3333C5.81927 11.3326 5.64993 11.2613 5.52526 11.1346L2.8586 8.42664C2.59993 8.16397 2.60327 7.74197 2.86594 7.48397C3.1286 7.22597 3.54993 7.22863 3.8086 7.4913L6.00393 9.72063L12.1959 3.5293C12.4566 3.26863 12.8779 3.26863 13.1386 3.5293C13.3993 3.7893 13.3993 4.21197 13.1386 4.47197L6.47193 11.1386C6.34659 11.2633 6.1766 11.3333 5.99993 11.3333Z"
+                fill="white"
+                id="Vector"
+              />
+            </g>
+          </svg>
+        </label>
       </div>
     </span>
   </span>

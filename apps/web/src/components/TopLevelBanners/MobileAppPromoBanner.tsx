@@ -1,6 +1,6 @@
 import { ReactComponent as UniswapLogo } from 'assets/svg/uniswap_app_logo.svg'
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
+import Column from 'components/Column'
+import Row from 'components/Row'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { useAtom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'

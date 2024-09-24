@@ -1,6 +1,6 @@
-import { BoxProps } from 'components/deprecated/Box'
-import Row from 'components/deprecated/Row'
+import Row from 'components/Row'
 import styled from 'lib/styled-components'
+import { BoxProps } from 'nft/components/Box'
 import { useRef } from 'react'
 import { v4 as uuid } from 'uuid'
 

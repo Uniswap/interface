@@ -24,12 +24,12 @@ function mapDataByTimestamp(
   const dataByTime: Record<number, Record<ProtocolVersion, number>> = {}
   v2Data?.forEach((v2Point) => {
     const timestamp = v2Point.timestamp
-    dataByTime[timestamp] = { [ProtocolVersion.V2]: v2Point.value, [ProtocolVersion.V3]: 0, [ProtocolVersion.V4]: 0 }
+    dataByTime[timestamp] = { [ProtocolVersion.V2]: v2Point.value, [ProtocolVersion.V3]: 0 }
   })
   v3Data?.forEach((v3Point) => {
     const timestamp = v3Point.timestamp
     if (!dataByTime[timestamp]) {
-      dataByTime[timestamp] = { [ProtocolVersion.V4]: 0, [ProtocolVersion.V2]: 0, [ProtocolVersion.V3]: v3Point.value }
+      dataByTime[timestamp] = { [ProtocolVersion.V2]: 0, [ProtocolVersion.V3]: v3Point.value }
     } else {
       dataByTime[timestamp][ProtocolVersion.V3] = v3Point.value
     }
@@ -57,7 +57,6 @@ export function useHistoricalProtocolVolume(
         values: {
           [PriceSource.SubgraphV2]: values[ProtocolVersion.V2],
           [PriceSource.SubgraphV3]: values[ProtocolVersion.V3],
-          [PriceSource.SubgraphV4]: values[ProtocolVersion.V4],
         },
       })
       return acc

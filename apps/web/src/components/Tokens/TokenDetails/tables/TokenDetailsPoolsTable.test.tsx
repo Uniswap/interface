@@ -67,8 +67,7 @@ describe('TDPPoolTable', () => {
         tvl: 300,
         volume24h: 400,
         volumeWeek: 500,
-        volOverTvl: 1.84,
-        apr: new Percent(6, 100),
+        oneDayApr: new Percent(6, 100),
         protocolVersion: ProtocolVersion.V3,
       },
     ]

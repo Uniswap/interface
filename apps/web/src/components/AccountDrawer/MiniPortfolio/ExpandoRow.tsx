@@ -1,5 +1,5 @@
-import Column from 'components/deprecated/Column'
-import Row from 'components/deprecated/Row'
+import Column from 'components/Column'
+import Row from 'components/Row'
 import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
 import { ChevronDown } from 'react-feather'

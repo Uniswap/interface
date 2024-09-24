@@ -16,7 +16,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { isDevEnv } from 'utilities/src/environment/env'
+import { isDevEnv } from 'utilities/src/environment'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import useIsFocused from 'wallet/src/features/focus/useIsFocused'
@@ -37,7 +37,6 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
   }, [isScreenFocused, pressProgress])
 
   const tap = Gesture.Tap()
-    .withTestId(TestID.AccountHeaderSettings)
     .shouldCancelWhenOutside(true)
     .onBegin(() => {
       pressProgress.value = withTiming(1)
@@ -60,7 +59,7 @@ const RotatingSettingsIcon = ({ onPressSettings }: { onPressSettings(): void }):
 
   return (
     <GestureDetector gesture={tap}>
-      <Animated.View style={animatedStyle}>
+      <Animated.View style={animatedStyle} testID={TestID.AccountHeaderSettings}>
         <Settings color="$neutral2" opacity={0.8} size="$icon.24" />
       </Animated.View>
     </GestureDetector>

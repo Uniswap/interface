@@ -8,9 +8,9 @@ import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ethersTransactionRequest, getTxFixtures, transactionDetails } from 'uniswap/src/test/fixtures'
-import * as CreateTransactionId from 'uniswap/src/utils/createTransactionId'
 import { attemptReplaceTransaction } from 'wallet/src/features/transactions/replaceTransactionSaga'
 import { sendTransaction, signAndSendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
+import * as TxnUtils from 'wallet/src/features/transactions/utils'
 import { getProvider, getProviderManager, getSignerManager } from 'wallet/src/features/wallet/context'
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 import { ACCOUNT } from 'wallet/src/test/fixtures'
@@ -34,7 +34,7 @@ describe(sendTransaction, () => {
 
   beforeAll(() => {
     // Mock uuid for new txns
-    txnUtilSpy = jest.spyOn(CreateTransactionId, 'createTransactionId').mockReturnValue(NEW_UNIQUE_ID)
+    txnUtilSpy = jest.spyOn(TxnUtils, 'createTransactionId').mockReturnValue(NEW_UNIQUE_ID)
     MockDate.reset()
   })
 

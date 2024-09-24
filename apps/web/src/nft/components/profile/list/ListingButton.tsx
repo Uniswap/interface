@@ -1,5 +1,5 @@
-import { BaseButton } from 'components/Button/buttons'
-import { useIsMobile } from 'hooks/screenSize/useIsMobile'
+import { BaseButton } from 'components/Button'
+import { useIsMobile } from 'hooks/screenSize'
 import styled from 'lib/styled-components'
 import { BelowFloorWarningModal } from 'nft/components/profile/list/Modal/BelowFloorWarningModal'
 import { findListingIssues } from 'nft/components/profile/list/utils'

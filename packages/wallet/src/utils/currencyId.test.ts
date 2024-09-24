@@ -88,7 +88,7 @@ describe(isNativeCurrencyAddress, () => {
     expect(isNativeCurrencyAddress(UniverseChainId.Mainnet, getNativeAddress(UniverseChainId.Mainnet))).toEqual(true)
   })
 
-  it('returns true for POL native address', () => {
+  it('returns true for matic native address', () => {
     expect(isNativeCurrencyAddress(UniverseChainId.Polygon, getNativeAddress(UniverseChainId.Polygon))).toEqual(true)
   })
 
@@ -126,7 +126,7 @@ describe(currencyIdToGraphQLAddress, () => {
     expect(currencyIdToGraphQLAddress(`1-0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`)).toEqual(null)
   })
 
-  it('returns POL address for Polygon native asset', () => {
+  it('returns MATIC address for Polygon native asset', () => {
     expect(currencyIdToGraphQLAddress('137-0x0000000000000000000000000000000000001010')).toEqual(
       '0x0000000000000000000000000000000000001010',
     )

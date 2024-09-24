@@ -3,14 +3,13 @@ module.exports = {
     es6: true,
     node: true,
   },
-  plugins: ['import', 'unused-imports', 'check-file'],
+  plugins: ['import', 'unused-imports'],
   extends: ['eslint:recommended'],
   parserOptions: {
     ecmaVersion: 2020,
     sourceType: 'module',
   },
   rules: {
-    'check-file/no-index': ['error', { ignoreMiddleExtensions: true }],
     'import/no-unused-modules': ['error', { unusedExports: true }],
     'object-shorthand': ['error', 'always'],
     'unused-imports/no-unused-imports': 'error',

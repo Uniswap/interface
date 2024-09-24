@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
 import { routingPreferencesAtom } from 'components/Settings/MultipleRoutingOptions'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import useDebounce from 'hooks/useDebounce'
 import { useAtomValue } from 'jotai/utils'
@@ -8,7 +9,6 @@ import { ClassicTrade, InterfaceTrade, QuoteMethod, RouterPreference, TradeState
 import { usePreviewTrade } from 'state/routing/usePreviewTrade'
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { useRouterPreference } from 'state/user/hooks'
-import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 

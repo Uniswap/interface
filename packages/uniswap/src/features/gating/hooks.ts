@@ -44,14 +44,6 @@ export function useExperimentGroupName(experiment: Experiments): string | null {
   return statsigExperiment.getGroupName()
 }
 
-export function useExperimentGroupNameWithLoading(experiment: Experiments): {
-  value: string | null
-  isLoading: boolean
-} {
-  const statsigExperiment = useExperiment(experiment)
-  return { value: statsigExperiment.config.getGroupName(), isLoading: statsigExperiment.isLoading }
-}
-
 function getValueFromConfig<ValType>(
   config: DynamicConfig,
   param: string,

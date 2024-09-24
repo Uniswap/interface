@@ -1,4 +1,4 @@
-import { OpacityHoverState } from 'components/Common/styles'
+import { OpacityHoverState } from 'components/Common'
 import { useTrendingCollections } from 'graphql/data/nft/TrendingCollections'
 import styled from 'lib/styled-components'
 import CollectionTable from 'nft/components/explore/CollectionTable'

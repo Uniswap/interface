@@ -1,10 +1,10 @@
 import 'test-utils/tokens/mocks'
 
 import { PoolDetailsLink } from 'components/Pools/PoolDetails/PoolDetailsLink'
+import { USDC_MAINNET } from 'constants/tokens'
 import store from 'state'
 import { usdcWethPoolAddress, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { render, screen } from 'test-utils/render'
-import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 

@@ -673,10 +673,6 @@ export type UniverseEventProperties = {
     wallets: string[]
     balances: number[]
   }
-  [UniswapEventName.BalancesReportPerChain]: {
-    total_balances_usd_per_chain: Record<string, number>
-    wallet: string
-  }
   [UniswapEventName.TokenSelected]:
     | (ITraceContext &
         AssetDetailsBaseProperties &
@@ -702,9 +698,6 @@ export type UniverseEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
-  [WalletEventName.ExternalLinkOpened]: {
-    url: string
-  }
   [WalletEventName.GasEstimateAccuracy]: GasEstimateAccuracyProperties
   [WalletEventName.TokenVisibilityChanged]: { currencyId: string; visible: boolean }
   [WalletEventName.TransferSubmitted]: TransferProperties

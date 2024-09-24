@@ -1,7 +1,7 @@
 import { memo, useCallback, useMemo } from 'react'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import {
-  useCommonTokensOptionsWithFallback,
+  useCommonTokensOptions,
   useFavoriteTokensOptions,
   usePopularTokensOptions,
   usePortfolioTokenOptions,
@@ -19,7 +19,7 @@ import { GqlResult } from 'uniswap/src/data/types'
 // eslint-disable-next-line no-restricted-imports
 import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { isMobileApp } from 'utilities/src/platform'
+import { isExtension } from 'utilities/src/platform'
 
 function useTokenSectionsForSwapOutput({
   activeAccountAddress,
@@ -53,7 +53,7 @@ function useTokenSectionsForSwapOutput({
     refetch: refetchCommonTokenOptions,
     loading: commonTokenOptionsLoading,
     // if there is no chain filter then we show mainnet tokens
-  } = useCommonTokensOptionsWithFallback(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
+  } = useCommonTokensOptions(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
@@ -93,8 +93,8 @@ function useTokenSectionsForSwapOutput({
       ...(portfolioSection ?? []),
       ...(recentSection ?? []),
       // TODO(WEB-3061): Favorited wallets/tokens
-      // Extension & interface do not support favoriting but has a default list, so we can't rely on empty array check
-      ...(isMobileApp ? favoriteSection ?? [] : []),
+      // Extension does not support favoriting but has a default list, so we can't rely on empty array check
+      ...(isExtension ? [] : favoriteSection ?? []),
       ...(popularSection ?? []),
     ]
   }, [favoriteSection, loading, popularSection, portfolioSection, recentSection, suggestedSection])
@@ -111,6 +111,7 @@ function useTokenSectionsForSwapOutput({
 }
 
 function _TokenSelectorSwapOutputList({
+  onDismiss,
   onSelectCurrency,
   activeAccountAddress,
   chainFilter,
@@ -122,6 +123,7 @@ function _TokenSelectorSwapOutputList({
   chainFilter: UniverseChainId | null
   formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
   convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
+  onDismiss: () => void
 }): JSX.Element {
   const {
     data: sections,
@@ -143,6 +145,7 @@ function _TokenSelectorSwapOutputList({
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
+      onDismiss={onDismiss}
       onSelectCurrency={onSelectCurrency}
     />
   )

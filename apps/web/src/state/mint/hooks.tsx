@@ -10,8 +10,6 @@ import { useCurrencyBalances } from 'state/connection/hooks'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { Field, typeInput } from 'state/mint/actions'
 import { InterfaceState } from 'state/webReducer'
-import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -183,19 +181,9 @@ export function useDerivedMintInfo(
     }
   }, [liquidityMinted, totalSupply])
 
-  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
-
   let error: ReactNode | undefined
   if (!account.isConnected) {
-    error = isSignIn ? (
-      <Trans i18nKey="nav.signIn.button" />
-    ) : isLogIn ? (
-      <Trans i18nKey="nav.logIn.button" />
-    ) : (
-      <Trans i18nKey="common.connectWallet.button" />
-    )
+    error = <Trans i18nKey="common.connectWallet.button" />
   }
 
   if (pairState === PairState.INVALID) {

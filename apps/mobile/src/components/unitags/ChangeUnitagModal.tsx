@@ -49,7 +49,10 @@ export function ChangeUnitagModal({
   const [isChangeResponseLoading, setIsChangeResponseLoading] = useState(false)
   const [unitagToCheck, setUnitagToCheck] = useState(unitag)
 
-  const { error: canClaimUnitagNameError, loading: loadingUnitagErrorCheck } = useCanClaimUnitagName(unitagToCheck)
+  const { error: canClaimUnitagNameError, loading: loadingUnitagErrorCheck } = useCanClaimUnitagName(
+    address,
+    unitagToCheck,
+  )
   const { errorCode } = useCanAddressClaimUnitag(address, true)
   const { triggerRefetchUnitags } = useUnitagUpdater()
   const { keyboardHeight } = useBottomSheetSafeKeyboard()

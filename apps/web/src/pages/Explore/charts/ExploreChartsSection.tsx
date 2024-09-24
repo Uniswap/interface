@@ -1,7 +1,8 @@
 import { ChartHeader } from 'components/Charts/ChartHeader'
-import { Chart, refitChartContentAtom } from 'components/Charts/ChartModel'
+import { Chart } from 'components/Charts/ChartModel'
 import { ChartSkeleton } from 'components/Charts/LoadingState'
 import { TVLChartModel } from 'components/Charts/StackedLineChart'
+import TimePeriodSelector from 'components/Charts/TimeSelector'
 import { formatHistoryDuration } from 'components/Charts/VolumeChart'
 import { CustomVolumeChartModel } from 'components/Charts/VolumeChart/CustomVolumeChartModel'
 import { StackedHistogramData } from 'components/Charts/VolumeChart/renderer'
@@ -12,8 +13,7 @@ import { MAX_WIDTH_MEDIA_BREAKPOINT } from 'components/Tokens/constants'
 import { SupportedInterfaceChainId, chainIdToBackendChain, useChainFromUrlParam } from 'constants/chains'
 import { useDailyProtocolTVL, useHistoricalProtocolVolume } from 'graphql/data/protocolStats'
 import { TimePeriod, getProtocolColor, getProtocolGradient, getSupportedGraphQlChain } from 'graphql/data/util'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
-import { useAtomValue } from 'jotai/utils'
+import { useScreenSize } from 'hooks/screenSize'
 import { useTheme } from 'lib/styled-components'
 import { ReactNode, useMemo, useState } from 'react'
 import {
@@ -21,7 +21,7 @@ import {
   useHistoricalProtocolVolume as useRestHistoricalProtocolVolume,
 } from 'state/explore/protocolStats'
 import { EllipsisTamaguiStyle } from 'theme/components'
-import { Flex, SegmentedControl, Text, styled } from 'ui/src'
+import { Flex, Text, styled } from 'ui/src'
 import { HistoryDuration, PriceSource } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
@@ -31,7 +31,11 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 const EXPLORE_CHART_HEIGHT_PX = 368
 const EXPLORE_PRICE_SOURCES = [PriceSource.SubgraphV2, PriceSource.SubgraphV3]
 
-const TIME_SELECTOR_OPTIONS = [{ value: TimePeriod.DAY }, { value: TimePeriod.WEEK }, { value: TimePeriod.MONTH }]
+const TIME_SELECTOR_OPTIONS = [
+  { time: TimePeriod.DAY, display: 'D' },
+  { time: TimePeriod.WEEK, display: 'W' },
+  { time: TimePeriod.MONTH, display: 'M' },
+]
 
 const ChartsContainer = styled(Flex, {
   row: true,
@@ -77,7 +81,6 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
     FeatureFlags.MultichainExplore,
   )
   const isMultichainExploreEnabled = isMultichainExploreEnabledLoaded || isMultichainExploreLoading
-  const refitChartContent = useAtomValue(refitChartContentAtom)
 
   function timeGranularityToHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
     // note: timePeriod on the Explore Page represents the GRANULARITY, not the timespan of data shown.
@@ -149,17 +152,10 @@ function VolumeChartSection({ chainId }: { chainId: SupportedInterfaceChainId })
         <SectionTitle>
           <Trans i18nKey="explore.uniVolume" />
         </SectionTitle>
-        <SegmentedControl
+        <TimePeriodSelector
           options={TIME_SELECTOR_OPTIONS}
-          selectedOption={timePeriod}
-          onSelectOption={(option) => {
-            if (option === timePeriod) {
-              refitChartContent?.()
-            } else {
-              setTimePeriod(option)
-            }
-          }}
-          size="small"
+          timePeriod={timePeriod}
+          onChangeTimePeriod={setTimePeriod}
         />
       </Flex>
       {(() => {

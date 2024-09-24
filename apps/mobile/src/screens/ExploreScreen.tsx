@@ -2,7 +2,7 @@ import { useScrollToTop } from '@react-navigation/native'
 import { SharedEventName } from '@uniswap/analytics-events'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { KeyboardAvoidingView, TextInput } from 'react-native'
+import { Keyboard, KeyboardAvoidingView, TextInput } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
 import { useExploreStackNavigation } from 'src/app/navigation/types'
@@ -83,6 +83,7 @@ export function ExploreScreen(): JSX.Element {
           showShadow={!isSearchMode}
           onCancel={onSearchCancel}
           onChangeText={onSearchChangeText}
+          onDismiss={() => Keyboard.dismiss()}
           onFocus={onSearchFocus}
         />
       </Flex>

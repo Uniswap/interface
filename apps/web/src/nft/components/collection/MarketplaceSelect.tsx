@@ -1,17 +1,17 @@
 import { NFTEventName, NFTFilterTypes } from '@uniswap/analytics-events'
 import clsx from 'clsx'
-import { Box } from 'components/deprecated/Box'
 import styled from 'lib/styled-components'
+import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Filters.css'
 import { ChevronUpIcon } from 'nft/components/icons'
+import { Checkbox } from 'nft/components/layout/Checkbox'
 import { subheadSmall } from 'nft/css/common.css'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'
 import { TraitPosition, useTraitsOpen } from 'nft/hooks/useTraitsOpen'
 import { getMarketplaceIcon } from 'nft/utils'
-import { useEffect, useMemo, useState } from 'react'
+import { FormEvent, useEffect, useMemo, useReducer, useState } from 'react'
 import { ThemedText } from 'theme/components'
-import { LabeledCheckbox } from 'ui/src'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 
 const FilterItemWrapper = styled(Row)`
@@ -72,10 +72,12 @@ const MarketplaceItem = ({
   count?: number
 }) => {
   const [isCheckboxSelected, setCheckboxSelected] = useState(false)
+  const [hovered, toggleHover] = useReducer((state) => !state, false)
   useEffect(() => {
     setCheckboxSelected(isMarketSelected)
   }, [isMarketSelected])
-  const handleCheckbox = () => {
+  const handleCheckbox = (e: FormEvent) => {
+    e.preventDefault()
     if (!isCheckboxSelected) {
       addMarket(value)
       setCheckboxSelected(true)
@@ -87,12 +89,11 @@ const MarketplaceItem = ({
   }
 
   const checkbox = (
-    <LabeledCheckbox
-      variant="branded"
-      checked={isCheckboxSelected}
-      onCheckPressed={handleCheckbox}
-      text={String(count)}
-    />
+    <Checkbox checked={isCheckboxSelected} hovered={hovered} onChange={handleCheckbox}>
+      <Box as="span" color="neutral2" marginLeft="4" paddingRight="12">
+        {count}
+      </Box>
+    </Checkbox>
   )
 
   const titleWithLogo = (
@@ -103,7 +104,7 @@ const MarketplaceItem = ({
   )
 
   return (
-    <div key={value}>
+    <div key={value} onMouseEnter={toggleHover} onMouseLeave={toggleHover}>
       <FilterItem title={titleWithLogo} element={checkbox} onClick={handleCheckbox} />
     </div>
   )

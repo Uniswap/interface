@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'uniswap/src/constants/tokens'
+import { nativeOnChain, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 
 export function unwrappedToken(currency: Currency): Currency {
   if (currency.isNative) {

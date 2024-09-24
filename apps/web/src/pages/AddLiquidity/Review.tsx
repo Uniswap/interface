@@ -1,6 +1,6 @@
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
-import { AutoColumn } from 'components/deprecated/Column'
+import { AutoColumn } from 'components/Column'
 import { PositionPreview } from 'components/PositionPreview'
 import styled from 'lib/styled-components'
 import { Bound, Field } from 'state/mint/v3/actions'

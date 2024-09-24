@@ -10,7 +10,6 @@ import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
-import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   ExactInputSwapTransactionInfo,
@@ -18,30 +17,23 @@ import {
   TransactionType,
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { WETH } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import {
-  SendTransactionParams,
-  sendTransaction,
-  tryGetNonce,
-} from 'wallet/src/features/transactions/sendTransactionSaga'
+import { SendTransactionParams, sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
+import { getBaseTradeAnalyticsProperties } from 'wallet/src/features/transactions/swap/analytics'
 import { SubmitUniswapXOrderParams, submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
-import { SwapParams, approveAndSwap, shouldSubmitViaPrivateRpc } from 'wallet/src/features/transactions/swap/swapSaga'
+import {
+  SwapParams,
+  approveAndSwap,
+  getNonceForApproveAndSwap,
+  shouldSubmitViaPrivateRpc,
+} from 'wallet/src/features/transactions/swap/swapSaga'
 import { getProvider } from 'wallet/src/features/wallet/context'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 import { getTxProvidersMocks } from 'wallet/src/test/mocks'
-
-jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
-  Statsig: {
-    checkGate: jest.fn().mockReturnValue(true),
-  },
-}))
 
 const account = signerMnemonicAccount()
 
@@ -61,7 +53,7 @@ const mockTransactionTypeInfo: ExactInputSwapTransactionInfo = {
   protocol: Protocol.V3,
 }
 
-jest.mock('uniswap/src/features/transactions/swap/utils/trade', () => {
+jest.mock('wallet/src/features/transactions/swap/utils', () => {
   return {
     tradeToTransactionInfo: (): TransactionTypeInfo => mockTransactionTypeInfo,
   }
@@ -88,7 +80,6 @@ const mockApproveTxRequest = {
   chainId: 1,
   to: DAI.address,
   data: '0x0',
-  nonce: 1,
 }
 
 const mockWrapTxRequest = {
@@ -167,7 +158,7 @@ describe(approveAndSwap, () => {
   const sharedProviders: (EffectProviders | StaticProvider)[] = [
     [select(selectWalletSwapProtectionSetting), SwapProtectionSetting.Off],
     [call(getProvider, mockSwapTxRequest.chainId), mockProvider],
-    [call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId), nonce],
+    [call(getNonceForApproveAndSwap, classicSwapParams.account.address, mockSwapTxRequest.chainId, false), nonce],
   ]
 
   it('sends a swap tx', async () => {
@@ -210,12 +201,10 @@ describe(approveAndSwap, () => {
       .next()
       .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequest.chainId)
       .next(false)
-      .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
+      .call(getNonceForApproveAndSwap, classicSwapParams.account.address, mockSwapTxRequest.chainId, false)
       .next(nonce)
       .call(sendTransaction, expectedSendSwapParams)
       .next({ transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} })
-      .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
-      .next()
       .isDone()
   })
 
@@ -229,6 +218,7 @@ describe(approveAndSwap, () => {
       txId: classicSwapParams.txId,
       transactionOriginType: TransactionOriginType.Internal,
     }
+
     await expectSaga(approveAndSwap, classicSwapParams)
       .provide([
         ...sharedProviders,
@@ -243,20 +233,19 @@ describe(approveAndSwap, () => {
       ])
       .call(sendTransaction, expectedSendSwapParams)
       .silentRun()
+
     testSaga(approveAndSwap, classicSwapParams)
       .next()
       .call(classicSwapParams.onSubmit)
       .next()
       .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequest.chainId)
       .next(false)
-      .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
+      .call(getNonceForApproveAndSwap, classicSwapParams.account.address, mockSwapTxRequest.chainId, false)
       .next(nonce)
       .call(sendTransaction, expectedSendApprovalParams)
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
       .call(sendTransaction, expectedSendSwapParams)
       .next({ transactionResponse: { hash: '0xMockSwapTxHash' }, populatedRequest: {} })
-      .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
-      .next()
       .isDone()
   })
 
@@ -288,7 +277,7 @@ describe(approveAndSwap, () => {
 
     testSaga(approveAndSwap, uniswapXSwapParams)
       .next()
-      .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
+      .call(getNonceForApproveAndSwap, classicSwapParams.account.address, mockSwapTxRequest.chainId, false)
       .next(nonce)
       .call(sendTransaction, expectedSendApprovalParams)
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })
@@ -351,7 +340,7 @@ describe(approveAndSwap, () => {
 
     testSaga(approveAndSwap, uniswapXSwapEthInputParams)
       .next()
-      .call(tryGetNonce, classicSwapParams.account, mockSwapTxRequest.chainId)
+      .call(getNonceForApproveAndSwap, classicSwapParams.account.address, mockSwapTxRequest.chainId, false)
       .next(nonce)
       .call(sendTransaction, expectedSendApprovalParams)
       .next({ transactionResponse: { hash: '0xMockApprovalTxHash' }, populatedRequest: {} })

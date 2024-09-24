@@ -1,4 +1,4 @@
-import Row from 'components/deprecated/Row'
+import Row from 'components/Row'
 import styled from 'lib/styled-components'
 import { getHeightFromAspectRatio, getMediaAspectRatio, handleUniformAspectRatio } from 'nft/components/card/utils'
 import { UniformAspectRatio, UniformAspectRatios } from 'nft/types'

@@ -7,8 +7,8 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { BuyNativeTokenButton } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/BuyNativeTokenButton'
 import { WalletChainId } from 'uniswap/src/types/chains'
+import { BuyNativeTokenButton } from 'wallet/src/features/transactions/InsufficientNativeTokenWarning/BuyNativeTokenButton'
 
 export function BuyNativeTokenModal({
   chainId,

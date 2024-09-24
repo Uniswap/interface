@@ -1,7 +1,7 @@
 import { InterfaceModalName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import Modal from 'components/Modal'
-import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
+import { useIsAccountCTAExperimentControl } from 'components/NavBar'
 import { GetStarted } from 'components/NavBar/DownloadApp/Modal/GetStarted'
 import { GetTheApp } from 'components/NavBar/DownloadApp/Modal/GetTheApp'
 import styled from 'lib/styled-components'
@@ -63,7 +63,7 @@ export function GetTheAppModal() {
   const showBackButton = page !== Page.GetStarted
   const accountDrawer = useAccountDrawer()
 
-  const { isControl: isAccountCTAExperimentControl } = useIsAccountCTAExperimentControl()
+  const isAccountCTAExperimentControl = useIsAccountCTAExperimentControl()
 
   return (
     <Trace modal={InterfaceModalName.GETTING_STARTED_MODAL}>

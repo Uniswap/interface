@@ -37,18 +37,5 @@ export function useENS(
   }
 }
 
-export function getCompletedENSName(name: string | null): string | null {
-  if (!name) {
-    return null
-  }
-
-  // If this is the top level uni.eth, we should not query for it as this query will time out.
-  // We don't fully understand why this times out but suspect it has to do with the top level ENS record.
-  // Other subdomains may have this issue, which is accounted for in usage of the `useENS` hook
-  if (name === 'uni') {
-    return null
-  }
-
-  // Append the .eth if does not already exist
-  return name.endsWith('.eth') ? name : name.concat('.eth')
-}
+export const getCompletedENSName = (name: string | null): string | null =>
+  name?.concat(name ? (!name?.endsWith('.eth') ? '.eth' : '') : '') ?? null

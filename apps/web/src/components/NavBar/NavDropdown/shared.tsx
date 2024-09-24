@@ -1,4 +1,4 @@
-import Column from 'components/deprecated/Column'
+import Column from 'components/Column'
 import { NAV_BREAKPOINT } from 'components/NavBar/ScreenSizes'
 import styled from 'lib/styled-components'
 

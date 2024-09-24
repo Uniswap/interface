@@ -1,10 +1,10 @@
 import 'test-utils/tokens/mocks'
 
 import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
+import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { LimitContext } from 'state/limit/LimitContext'
 import { SwapAndLimitContext } from 'state/swap/types'
 import { render, screen } from 'test-utils/render'
-import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { LimitsExpiry } from 'uniswap/src/types/limits'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 

@@ -1,10 +1,10 @@
+import { refitChartContentAtom } from 'components/Charts/TimeSelector'
 import { PROTOCOL_LEGEND_ELEMENT_ID, SeriesDataItemType } from 'components/Charts/types'
 import { formatTickMarks } from 'components/Charts/utils'
 import { MissingDataBars } from 'components/Table/icons'
-import { useScreenSize } from 'hooks/screenSize/useScreenSize'
+import { useScreenSize } from 'hooks/screenSize'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { atom } from 'jotai'
 import { useUpdateAtom } from 'jotai/utils'
 import { DefaultTheme, useTheme } from 'lib/styled-components'
 import {
@@ -24,8 +24,6 @@ import { Flex, TamaguiElement, assertWebElement, styled } from 'ui/src'
 import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 import { v4 as uuidv4 } from 'uuid'
-
-export const refitChartContentAtom = atom<(() => void) | undefined>(undefined)
 
 interface ChartUtilParams<TDataType extends SeriesDataItemType> {
   locale: string

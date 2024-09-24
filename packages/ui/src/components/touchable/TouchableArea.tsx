@@ -5,7 +5,7 @@ import { withAnimated } from 'ui/src/components/factories/animated'
 import { TouchableAreaProps } from 'ui/src/components/touchable/types'
 import { defaultHitslopInset } from 'ui/src/theme'
 import { useHapticFeedback } from 'ui/src/utils/haptics/useHapticFeedback'
-import { isTestEnv } from 'utilities/src/environment/env'
+import { isTestEnv } from 'utilities/src/environment'
 
 /**
  * If you are trying to implement a standard button DO NOT USE this component. Use the Button component instead with the desired size and emphasis.

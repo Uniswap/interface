@@ -1,10 +1,10 @@
 import { useMemo } from 'react'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { hasSufficientFundsIncludingGas } from 'wallet/src/features/transactions/utils'
 
 export function useHasSufficientFunds({
   account,

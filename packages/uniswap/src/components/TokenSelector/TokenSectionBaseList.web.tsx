@@ -1,4 +1,3 @@
-import isArray from 'lodash/isArray'
 import isEqual from 'lodash/isEqual'
 import React, { CSSProperties, Key, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
@@ -114,12 +113,6 @@ export function TokenSectionBaseList({
       }
 
       if (isSuggestedTokenRowInfo(item)) {
-        if (!isSectionHeader(item)) {
-          if (isArray(item.item) && !item.item.length) {
-            return 0
-          }
-        }
-
         const measuredHeight = rowHeightMap.current[index]
         if (measuredHeight) {
           return measuredHeight

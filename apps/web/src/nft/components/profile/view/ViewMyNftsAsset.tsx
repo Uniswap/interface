@@ -1,5 +1,5 @@
 import { NFTEventName } from '@uniswap/analytics-events'
-import { useIsMobile } from 'hooks/screenSize/useIsMobile'
+import { useIsMobile } from 'hooks/screenSize'
 import { NftCard, NftCardDisplayProps } from 'nft/components/card'
 import { detailsHref } from 'nft/components/card/utils'
 import { VerifiedIcon } from 'nft/components/icons'

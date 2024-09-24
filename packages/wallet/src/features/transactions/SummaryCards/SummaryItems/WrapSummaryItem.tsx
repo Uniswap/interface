@@ -3,10 +3,10 @@ import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useNativeCurrencyInfo, useWrappedNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TransactionDetails, WrapTransactionInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { getFormattedCurrencyAmount } from 'uniswap/src/utils/currency'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
+import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
 export function WrapSummaryItem({
   transaction,

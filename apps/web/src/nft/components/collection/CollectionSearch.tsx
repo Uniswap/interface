@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { Box } from 'components/deprecated/Box'
+import { Box } from 'nft/components/Box'
 import * as styles from 'nft/components/collection/CollectionSearch.css'
 import { useIsCollectionLoading } from 'nft/hooks'
 import { useCollectionFilters } from 'nft/hooks/useCollectionFilters'

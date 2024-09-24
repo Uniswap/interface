@@ -10,20 +10,21 @@ import {
 import { Currency, Percent, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { computePairAddress } from '@uniswap/v2-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
-import { BlueCard, LightCard } from 'components/Card/cards'
+import { ButtonConfirmed, ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
+import { BlueCard, LightCard } from 'components/Card'
+import { AutoColumn, ColumnCenter } from 'components/Column'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
+import { DoubleCurrencyLogo } from 'components/DoubleLogo'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import { MinimalPositionCard } from 'components/PositionCard'
+import Row, { RowBetween, RowFixed } from 'components/Row'
 import Slider from 'components/Slider'
 import TransactionConfirmationModal, { ConfirmationModalContent } from 'components/TransactionConfirmationModal'
 import { V2Unsupported } from 'components/V2Unsupported'
-import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
-import Row, { RowBetween, RowFixed } from 'components/deprecated/Row'
 import { Dots } from 'components/swap/styled'
 import { useIsSupportedChainId } from 'constants/chains'
+import { WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { ApprovalState, useApproveCallback } from 'hooks/useApproveCallback'
@@ -47,9 +48,6 @@ import { TransactionType } from 'state/transactions/types'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
-import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
@@ -503,10 +501,6 @@ function RemoveLiquidity() {
     liquidityPercentChangeCallback,
   )
 
-  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
-
   if (!networkSupportsV2) {
     return <V2Unsupported />
   }
@@ -715,13 +709,7 @@ function RemoveLiquidity() {
                   element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                 >
                   <ButtonLight onClick={accountDrawer.open}>
-                    {isSignIn ? (
-                      <Trans i18nKey="nav.signIn.button" />
-                    ) : isLogIn ? (
-                      <Trans i18nKey="nav.logIn.button" />
-                    ) : (
-                      <Trans i18nKey="common.connectWallet.button" />
-                    )}
+                    <Trans i18nKey="common.connectWallet.button" />
                   </ButtonLight>
                 </Trace>
               ) : (

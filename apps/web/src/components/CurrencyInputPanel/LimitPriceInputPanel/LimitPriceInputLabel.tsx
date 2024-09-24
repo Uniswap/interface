@@ -1,6 +1,6 @@
 import { Currency } from '@uniswap/sdk-core'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import Row from 'components/deprecated/Row'
+import Row from 'components/Row'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import styled from 'lib/styled-components'
 import { ClickableStyle, ThemedText } from 'theme/components'

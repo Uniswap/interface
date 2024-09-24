@@ -1,6 +1,6 @@
 import { getOneSignalPushToken } from 'src/features/notifications/Onesignal'
 import { config } from 'uniswap/src/config'
-import { isTestEnv } from 'utilities/src/environment/env'
+import { isTestEnv } from 'utilities/src/environment'
 import { logger } from 'utilities/src/logger/logger'
 import { isAndroid } from 'utilities/src/platform'
 

@@ -1,5 +1,5 @@
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { ButtonLight } from 'components/Button/buttons'
+import { ButtonLight } from 'components/Button'
 import { useAbbreviatedTimeString } from 'components/Table/utils'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'

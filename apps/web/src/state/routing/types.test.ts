@@ -1,6 +1,6 @@
 import { CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { DAI, USDC_MAINNET } from 'constants/tokens'
 import { LIMIT_ORDER_TRADE } from 'test-utils/constants'
-import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 
 describe('LimitOrderTrade', () => {
   it('should have the correct values', () => {

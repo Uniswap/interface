@@ -2,15 +2,7 @@
 
 exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
 <DocumentFragment>
-  .c7 {
-  -webkit-filter: none;
-  filter: none;
-  opacity: 1;
-  -webkit-transition: opacity 250ms ease-in-out;
-  transition: opacity 250ms ease-in-out;
-}
-
-.c0 {
+  .c0 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -37,6 +29,14 @@ exports[`SwapDetailsDropdown.tsx renders a trade 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 8px;
+}
+
+.c7 {
+  -webkit-filter: none;
+  filter: none;
+  opacity: 1;
+  -webkit-transition: opacity 250ms ease-in-out;
+  transition: opacity 250ms ease-in-out;
 }
 
 .c2 {
