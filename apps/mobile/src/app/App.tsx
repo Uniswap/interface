@@ -80,7 +80,7 @@ import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary
 import { selectAllowAnalytics } from 'wallet/src/features/telemetry/selectors'
 // eslint-disable-next-line no-restricted-imports
 import { usePersistedApolloClient } from 'wallet/src/data/apollo/usePersistedApolloClient'
-import { initFirebaseAppCheck } from 'wallet/src/features/appCheck'
+import { initFirebaseAppCheck } from 'wallet/src/features/appCheck/appCheck'
 import { useCurrentAppearanceSetting } from 'wallet/src/features/appearance/hooks'
 import { selectHapticsEnabled } from 'wallet/src/features/appearance/slice'
 import { clearNotificationQueue } from 'wallet/src/features/notifications/slice'
@@ -89,7 +89,7 @@ import { WalletUniswapProvider } from 'wallet/src/features/transactions/contexts
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { WalletContextProvider } from 'wallet/src/features/wallet/context'
 import { useAccounts } from 'wallet/src/features/wallet/hooks'
-import { SharedWalletProvider } from 'wallet/src/provider'
+import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 import { beforeSend } from 'wallet/src/utils/sentry'
 
 enableFreeze(true)
@@ -358,9 +358,6 @@ function AppInner(): JSX.Element {
   const allowAnalytics = useSelector(selectAllowAnalytics)
   const hapticsUserEnabled = useSelector(selectHapticsEnabled)
   const { setHapticsEnabled } = useHapticFeedback()
-
-  // WALL-4357 Remove when A/A test is done, using it to check statsig migration
-  useFeatureFlag(FeatureFlags.AATest)
 
   // handles AppsFlyer enable/disable based on the allow analytics toggle
   useEffect(() => {

@@ -312,22 +312,23 @@ query NftsTab(
 query PortfolioBalances(
   $ownerAddress: String!
   $valueModifiers: [PortfolioValueModifier!]
+  $chains: [Chain!] = [
+    ETHEREUM
+    POLYGON
+    ARBITRUM
+    OPTIMISM
+    BASE
+    BNB
+    BLAST
+    ZORA
+    CELO
+    AVALANCHE
+    ZKSYNC
+  ]
 ) {
   portfolios(
     ownerAddresses: [$ownerAddress]
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BNB
-      BLAST
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
     valueModifiers: $valueModifiers
   ) {
     id
@@ -350,20 +351,32 @@ query PortfolioBalances(
       quantity
       isHidden
       denominatedValue {
+        id
         currency
         value
       }
       token {
-        chain
+        id
         address
-        symbol
+        chain
         decimals
+        name
+        standard
+        symbol
         project {
           id
-          name
-          logoUrl
-          safetyLevel
           isSpam
+          logoUrl
+          name
+          safetyLevel
+        }
+        feeData {
+          buyFeeBps
+          sellFeeBps
+        }
+        protectionInfo {
+          result
+          attackTypes
         }
       }
       tokenProjectMarket {
@@ -425,9 +438,9 @@ query MultiplePortfolioBalances(
         address
         symbol
         decimals
+        name
         project {
           id
-          name
           logoUrl
           safetyLevel
           isSpam
@@ -543,6 +556,10 @@ query Token($chain: Chain!, $address: String) {
       buyFeeBps
       sellFeeBps
     }
+    protectionInfo {
+      result
+      attackTypes
+    }
   }
 }
 
@@ -557,6 +574,7 @@ query TokenDetailsScreen(
   $includeChineseTraditional: Boolean = false
 ) {
   token(chain: $chain, address: $address) {
+    id
     address
     chain
     symbol
@@ -619,16 +637,20 @@ query TokenDetailsScreen(
       buyFeeBps
       sellFeeBps
     }
+    protectionInfo {
+      result
+      attackTypes
+    }
   }
 }
 
 query TokenProjects($contracts: [ContractInput!]!) {
   tokenProjects(contracts: $contracts) {
     id
-    name
     logoUrl
     safetyLevel
     tokens {
+      name
       chain
       address
       decimals
@@ -1024,11 +1046,15 @@ query SearchTokens($searchQuery: String!, $chains: [Chain!]) {
     address
     decimals
     symbol
+    name
     project {
       id
-      name
       logoUrl
       safetyLevel
+    }
+    protectionInfo {
+      result
+      attackTypes
     }
   }
 }
@@ -1048,11 +1074,15 @@ query ExploreSearch(
         value
       }
     }
+    name
     project {
       id
-      name
       logoUrl
       safetyLevel
+    }
+    protectionInfo {
+      result
+      attackTypes
     }
   }
   nftCollections(filter: $nftCollectionsFilter, first: 4) {
@@ -1089,9 +1119,9 @@ fragment TopTokenParts on Token {
       value
     }
   }
+  name
   project {
     id
-    name
     logoUrl
     markets(currencies: [USD]) {
       id
@@ -1136,8 +1166,8 @@ fragment AITopTokenParts on Token {
       value
     }
   }
+  name
   project {
-    name
     markets(currencies: [USD]) {
       price {
         value
@@ -1167,9 +1197,9 @@ fragment HomeScreenTokenParts on Token {
   symbol
   chain
   address
+  name
   project {
     id
-    name
     logoUrl
     markets(currencies: [USD]) {
       id
@@ -1197,9 +1227,9 @@ query FavoriteTokenCard($chain: Chain!, $address: String) {
     symbol
     chain
     address
+    name
     project {
       id
-      name
       logoUrl
       markets(currencies: [USD]) {
         id
@@ -1219,9 +1249,7 @@ query Tokens($contracts: [ContractInput!]!) {
     symbol
     chain
     address
-    project {
-      name
-    }
+    name
   }
 }
 

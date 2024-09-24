@@ -1,5 +1,5 @@
 import { BottomSheetFooter, BottomSheetView, KEYBOARD_STATE, useBottomSheetInternal } from '@gorhom/bottom-sheet'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import { StyleProp, TouchableWithoutFeedback, ViewStyle } from 'react-native'
 import {
   Extrapolate,
@@ -15,22 +15,28 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, opacify } from 'ui/src/theme'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { TransactionModalContextProvider } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import {
+  TransactionModalContextProvider,
+  TransactionScreen,
+} from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import {
   TransactionModalFooterContainerProps,
   TransactionModalInnerContainerProps,
   TransactionModalProps,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalProps'
+import { TransactionModalUpdateLogger } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalUpdateLogger'
 
 const HANLDEBAR_HEIGHT = 32
 
 export function TransactionModal({
   children,
-  fullscreen,
   modalName,
   onClose,
   ...transactionContextProps
 }: TransactionModalProps): JSX.Element {
+  const [screen, setScreen] = useState<TransactionScreen>(TransactionScreen.Form)
+  const fullscreen = screen === TransactionScreen.Form
+
   const colors = useSporeColors()
   const insets = useDeviceInsets()
   const dimensions = useDeviceDimensions()
@@ -80,10 +86,13 @@ export function TransactionModal({
     >
       <TransactionModalContextProvider
         bottomSheetViewStyles={bottomSheetViewStyles}
+        screen={screen}
+        setScreen={setScreen}
         onClose={onClose}
         {...transactionContextProps}
       >
         {children}
+        <TransactionModalUpdateLogger modalName={modalName} />
       </TransactionModalContextProvider>
     </Modal>
   )

@@ -27,7 +27,7 @@ describe('Buy Crypto Form', () => {
 
   it('change input token', () => {
     cy.contains('ETH').click()
-    cy.contains('DAI').click({force: true})
+    cy.contains('DAI').click()
     cy.get(getTestSelector('buy-form-amount-input')).type('123').should('have.value', '123')
     cy.contains('Continue').click()
     cy.get('#ChooseProviderModal').should('be.visible')

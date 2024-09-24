@@ -1,10 +1,9 @@
 import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { useAccount } from 'hooks/useAccount'
-import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useActiveLocale } from 'hooks/useActiveLocale'
 import useSelectChain from 'hooks/useSelectChain'
 import { useShowSwapNetworkNotification } from 'hooks/useShowSwapNetworkNotification'
+import { useSupportedChainIds } from 'hooks/useSupportedChainIds'
 import { useCallback, useEffect } from 'react'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Flex } from 'ui/src'
@@ -14,10 +13,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 // eslint-disable-next-line no-restricted-imports
-import { formatNumberOrString } from 'utilities/src/format/localeBased'
-import { NumberType as UtilitiesNumberType } from 'utilities/src/format/types'
 import { usePrevious } from 'utilities/src/react/hooks'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 interface CurrencySearchProps {
   currencyField: CurrencyField
@@ -30,13 +26,10 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
   const { chainId, setSelectedChainId, isUserSelectedToken, setIsUserSelectedToken, currentTab, multichainUXEnabled } =
     useSwapAndLimitContext()
   const prevChainId = usePrevious(chainId)
-  const { formatNumber } = useFormatter()
   const showSwapNetworkNotification = useShowSwapNetworkNotification()
 
-  const activeCurrencyCode = useActiveLocalCurrency()
-  const activeLocale = useActiveLocale()
-
   const selectChain = useSelectChain()
+  const { supported: supportedChains } = useSupportedChainIds()
 
   const handleCurrencySelectTokenSelectorCallback = useCallback(
     async (currency: Currency) => {
@@ -74,27 +67,12 @@ export function CurrencySearch({ currencyField, onCurrencySelect, onDismiss }: C
           activeAccountAddress={account.address!}
           isLimits={currentTab === SwapTab.Limit}
           chainId={!multichainUXEnabled || isUserSelectedToken ? chainId : undefined}
-          convertFiatAmountFormattedCallback={(fromAmount) =>
-            formatNumber({
-              input: fromAmount as number,
-              type: NumberType.FiatTokenPrice,
-            })
-          }
+          chainIds={supportedChains}
           currencyField={currencyField}
           flow={TokenSelectorFlow.Swap}
-          formatNumberOrStringCallback={(input) =>
-            formatNumberOrString({
-              price: input.value,
-              currencyCode: activeCurrencyCode,
-              locale: activeLocale,
-              type: UtilitiesNumberType.TokenNonTx,
-            })
-          }
           isSurfaceReady={true}
           variation={
-            currencyField === CurrencyField.INPUT
-              ? TokenSelectorVariation.BalancesAndPopular
-              : TokenSelectorVariation.SuggestedAndFavoritesAndPopular
+            currencyField === CurrencyField.INPUT ? TokenSelectorVariation.SwapInput : TokenSelectorVariation.SwapOutput
           }
           onClose={onDismiss}
           onSelectCurrency={handleCurrencySelectTokenSelectorCallback}

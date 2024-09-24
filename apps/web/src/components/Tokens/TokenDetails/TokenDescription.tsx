@@ -14,9 +14,9 @@ import { ClickableTamaguiStyle, EllipsisTamaguiStyle, ExternalLink, ThemedText }
 import { Flex, Paragraph, styled, Text } from 'ui/src'
 import { t, Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const TokenInfoSection = styled(Flex, {
   gap: '$gap16',
@@ -194,19 +194,19 @@ export function TokenDescription() {
               <ThemedText.BodyPrimary>
                 {currency.symbol}&nbsp;
                 <Trans i18nKey="token.fee.label" />
-                &nbsp;{sellFeeString}
+                :&nbsp;{sellFeeString}
               </ThemedText.BodyPrimary>
             ) : (
               <>
                 <ThemedText.BodyPrimary>
                   {currency.symbol}&nbsp;
                   <Trans i18nKey="token.fee.buy.label" />
-                  &nbsp;{buyFeeString}
+                  :&nbsp;{buyFeeString}
                 </ThemedText.BodyPrimary>{' '}
                 <ThemedText.BodyPrimary>
                   {currency.symbol}&nbsp;
                   <Trans i18nKey="token.fee.sell.label" />
-                  &nbsp;{sellFeeString}
+                  :&nbsp;{sellFeeString}
                 </ThemedText.BodyPrimary>{' '}
               </>
             )}

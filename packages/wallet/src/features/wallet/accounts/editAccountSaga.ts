@@ -202,4 +202,4 @@ export const {
   wrappedSaga: editAccountSaga,
   reducer: editAccountReducer,
   actions: editAccountActions,
-} = createMonitoredSaga<EditAccountParams>(editAccount, 'editAccount')
+} = createMonitoredSaga(editAccount, 'editAccount')

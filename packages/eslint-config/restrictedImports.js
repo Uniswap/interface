@@ -30,6 +30,7 @@ exports.shared = {
     },
     {
       name: 'uniswap/src/features/fiatCurrency/conversion',
+      importNames: ['useFiatConverter'],
       message: 'Use via `useLocalizationContext` instead.',
     },
     {
@@ -52,6 +53,14 @@ exports.crossPlatform = {
       name: 'ethers',
       message: "Please import from '@ethersproject/module' directly to support tree-shaking.",
     },
+    {
+      name: 'ui/src/components/icons',
+      message: "Please import icons directly from their respective files, e.g. `ui/src/components/icons/SpecificIcon`. This is to avoid importing the entire icons folder when only some icons are needed, which increases bundle size",
+    },
+    {
+      name: 'ui/src/components/logos',
+      message: "Please import logos directly from their respective files, e.g. `ui/src/components/logos/SpecificLogo`. This is to avoid importing the entire logos folder when only some logos are needed, which increases bundle size",
+    },
   ],
   patterns: [
     ...exports.shared.patterns,
@@ -62,6 +71,8 @@ exports.crossPlatform = {
         '!react-native-reanimated',
         '!react-native-image-colors',
         '!@testing-library/react-native',
+        '!@react-native-community/netinfo',
+        '!react-native-localize',
       ],
       message:
         "React Native modules should not be imported outside of .native.ts files. If this is a .native.ts file, add an ignore comment to the top of the file. If you're trying to import a cross-platform module, add it to the whitelist in crossPlatform.js.",

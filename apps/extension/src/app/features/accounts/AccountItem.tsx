@@ -5,16 +5,16 @@ import { useDispatch } from 'react-redux'
 import { EditLabelModal } from 'src/app/features/accounts/EditLabelModal'
 import { removeAllDappConnectionsForAccount } from 'src/app/features/dapp/actions'
 import { ContextMenu, Flex, MenuContentItem, Text, TouchableArea } from 'ui/src'
-import { CopySheets, Edit, TrashFilled, TripleDots } from 'ui/src/components/icons'
+import { CopySheets, Edit, Ellipsis, TrashFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { NumberType } from 'utilities/src/format/types'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { EditAccountAction, editAccountActions } from 'wallet/src/features/wallet/accounts/editAccountSaga'
@@ -179,7 +179,7 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
                 opacity={0}
                 p="$spacing4"
               >
-                <TripleDots color="$neutral2" size="$icon.16" />
+                <Ellipsis color="$neutral2" size="$icon.16" />
               </Flex>
             </ContextMenu>
           </Flex>

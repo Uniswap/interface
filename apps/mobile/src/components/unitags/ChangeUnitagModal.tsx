@@ -1,7 +1,7 @@
 import { useNavigation } from '@react-navigation/native'
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator, Keyboard } from 'react-native'
+import { ActivityIndicator } from 'react-native'
 import { getUniqueId } from 'react-native-device-info'
 import { useDispatch } from 'react-redux'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
@@ -15,6 +15,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import { UnitagErrorCodes } from 'uniswap/src/features/unitags/types'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -49,10 +50,7 @@ export function ChangeUnitagModal({
   const [isChangeResponseLoading, setIsChangeResponseLoading] = useState(false)
   const [unitagToCheck, setUnitagToCheck] = useState(unitag)
 
-  const { error: canClaimUnitagNameError, loading: loadingUnitagErrorCheck } = useCanClaimUnitagName(
-    address,
-    unitagToCheck,
-  )
+  const { error: canClaimUnitagNameError, loading: loadingUnitagErrorCheck } = useCanClaimUnitagName(unitagToCheck)
   const { errorCode } = useCanAddressClaimUnitag(address, true)
   const { triggerRefetchUnitags } = useUnitagUpdater()
   const { keyboardHeight } = useBottomSheetSafeKeyboard()
@@ -71,7 +69,7 @@ export function ChangeUnitagModal({
     isUnitagInvalid
 
   const onFinishEditing = (): void => {
-    Keyboard.dismiss()
+    dismissNativeKeyboard()
   }
 
   const onCloseConfirmModal = (): void => {

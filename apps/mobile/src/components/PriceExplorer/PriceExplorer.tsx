@@ -9,7 +9,7 @@ import { CURSOR_INNER_SIZE, CURSOR_SIZE, TIME_RANGES } from 'src/components/Pric
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
 import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
-import { Loader } from 'src/components/loading'
+import { Loader } from 'src/components/loading/loaders'
 import { Flex, SegmentedControl, Text, useHapticFeedback } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -141,6 +141,7 @@ export const PriceExplorer = memo(function PriceExplorer({
         <Flex px="$spacing8">
           <SegmentedControl
             fullWidth
+            outlined={false}
             options={TIME_RANGES.map(([duration, label, elementName]) => ({
               value: duration,
               wrapper: <TimeRangeTraceWrapper key={`${duration}-trace`} elementName={elementName} />,

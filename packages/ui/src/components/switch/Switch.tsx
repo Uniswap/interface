@@ -4,6 +4,7 @@ import { Check } from 'ui/src/components/icons'
 import { Flex, FlexProps } from 'ui/src/components/layout'
 import { SporeComponentVariant } from 'ui/src/components/types'
 import { useSporeColors } from 'ui/src/hooks/useSporeColors'
+import { isTestEnv } from 'utilities/src/environment/env'
 import { isWeb } from 'utilities/src/platform'
 
 export type SwitchProps = TamaguiSwitchProps & {
@@ -12,7 +13,7 @@ export type SwitchProps = TamaguiSwitchProps & {
 
 const animationProp =
   // TODO tamagui data-testid breaks with animation, this fixes tests
-  process.env.NODE_ENV === 'test'
+  isTestEnv()
     ? undefined
     : {
         animation: [

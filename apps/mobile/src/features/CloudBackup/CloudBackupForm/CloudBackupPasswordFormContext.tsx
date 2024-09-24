@@ -1,5 +1,5 @@
 import { PropsWithChildren, createContext, useCallback, useContext, useMemo, useState } from 'react'
-import { Keyboard } from 'react-native'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import {
   PasswordErrors,
   PasswordStrength,
@@ -84,7 +84,7 @@ export function CloudBackupPasswordFormContextProvider({
       return
     }
     setError(undefined)
-    Keyboard.dismiss()
+    dismissNativeKeyboard()
   }, [isConfirmation, isStrongPassword, matchesPassword])
 
   const onPressNext = useCallback((): void => {

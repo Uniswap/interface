@@ -102,8 +102,17 @@ function usePDPChartState(
   const [timePeriod, setTimePeriod] = useState<TimePeriod>(TimePeriod.DAY)
   const [chartType, setChartType] = useState<PoolsDetailsChartType>(ChartType.VOLUME)
 
+  const isV2 = protocolVersion === ProtocolVersion.V2
   const isV3 = protocolVersion === ProtocolVersion.V3
-  const variables = { address: poolData?.address ?? '', chain, duration: toHistoryDuration(timePeriod), isV3 }
+  const isV4 = protocolVersion === ProtocolVersion.V4
+  const variables = {
+    addressOrId: poolData?.address ?? '',
+    chain,
+    duration: toHistoryDuration(timePeriod),
+    isV4,
+    isV3,
+    isV2,
+  }
 
   const priceQuery = usePDPPriceChartData(variables, poolData, tokenA, tokenB, isReversed)
   const volumeQuery = usePDPVolumeChartData(variables)

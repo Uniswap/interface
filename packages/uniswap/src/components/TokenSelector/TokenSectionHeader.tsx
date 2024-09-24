@@ -4,6 +4,7 @@ import { Clock } from 'ui/src/components/icons/Clock'
 import { Coins } from 'ui/src/components/icons/Coins'
 import { Pin } from 'ui/src/components/icons/Pin'
 import { Search } from 'ui/src/components/icons/Search'
+import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { Star } from 'ui/src/components/icons/Star'
 import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 
@@ -34,6 +35,8 @@ export function SectionHeader({ sectionKey, rightElement }: TokenSectionHeaderPr
 export function useTokenOptionsSectionTitle(section: TokenOptionSection): string {
   const { t } = useTranslation()
   switch (section) {
+    case TokenOptionSection.BridgingTokens:
+      return t('tokens.selector.section.bridging')
     case TokenOptionSection.YourTokens:
       return t('tokens.selector.section.yours')
     case TokenOptionSection.PopularTokens:
@@ -53,6 +56,8 @@ export function useTokenOptionsSectionTitle(section: TokenOptionSection): string
 
 function getTokenOptionsSectionIcon(section: TokenOptionSection): JSX.Element | null {
   switch (section) {
+    case TokenOptionSection.BridgingTokens:
+      return <Shuffle color="$neutral2" size="$icon.16" />
     case TokenOptionSection.YourTokens:
       return <Coins color="$neutral2" size="$icon.16" />
     case TokenOptionSection.PopularTokens:

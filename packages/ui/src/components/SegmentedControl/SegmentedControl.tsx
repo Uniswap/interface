@@ -23,6 +23,15 @@ const OptionsSelector = styled(Tabs.List, {
         width: '100%',
       },
     },
+    outlined: {
+      true: {
+        borderColor: '$surface3',
+        borderWidth: '$spacing1',
+      },
+      false: {
+        borderWidth: 0,
+      },
+    },
     size: {
       small: {
         height: 30,
@@ -151,6 +160,7 @@ interface SegmentedControlProps<T extends string = string> {
   size?: SegmentedControlSize
   disabled?: boolean
   fullWidth?: boolean
+  outlined?: boolean
 }
 
 /**
@@ -178,6 +188,7 @@ export function SegmentedControl<T extends string = string>({
   size = 'default',
   disabled,
   fullWidth,
+  outlined = true,
 }: SegmentedControlProps<T>): JSX.Element {
   assert(options.length >= 2 && options.length <= 6, 'Segmented control must have between 2 and 6 options, inclusive.')
 
@@ -202,8 +213,8 @@ export function SegmentedControl<T extends string = string>({
     }
   }
 
-  const activeIndicatorXAdjustment = isMobileApp ? 2 : 0
-  const activeIndicatorYAdjustment = isMobileApp ? -1 : 0
+  const activeIndicatorXAdjustment = isMobileApp ? 2.5 : 0
+  const activeIndicatorYAdjustment = isMobileApp ? -1.5 : 0
 
   return (
     <Tabs
@@ -220,6 +231,7 @@ export function SegmentedControl<T extends string = string>({
         unstyled
         backgroundColor="transparent"
         fullWidth={fullWidth}
+        outlined={outlined}
         loop={false}
         size={size}
       >

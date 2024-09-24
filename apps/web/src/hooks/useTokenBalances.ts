@@ -1,15 +1,13 @@
 import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
-import { GQL_MAINNET_CHAINS_MUTABLE } from 'graphql/data/util'
+import { PortfolioBalance } from 'graphql/data/portfolios'
 import { useAccount } from 'hooks/useAccount'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'
 import { useMemo } from 'react'
+import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
 import {
-  PortfolioTokenBalancePartsFragment,
   QuickTokenBalancePartsFragment,
   useQuickTokenBalancesWebQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { currencyKeyFromGraphQL } from 'utils/currencyKey'
 
 /**
@@ -17,11 +15,10 @@ import { currencyKeyFromGraphQL } from 'utils/currencyKey'
  */
 export function useTokenBalances({ cacheOnly }: { cacheOnly?: boolean } = {}): {
   balanceMap: TokenBalances
-  balanceList: readonly (QuickTokenBalancePartsFragment | PortfolioTokenBalancePartsFragment | undefined)[]
+  balanceList: readonly (QuickTokenBalancePartsFragment | PortfolioBalance | undefined)[]
   loading: boolean
 } {
   const account = useAccount()
-  const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
 
   // Quick result is always available at pageload, but never refetched when stale
   const quickQueryResult = useQuickTokenBalancesWebQuery({
@@ -29,7 +26,7 @@ export function useTokenBalances({ cacheOnly }: { cacheOnly?: boolean } = {}): {
       ownerAddress: account.address ?? '',
       chains: GQL_MAINNET_CHAINS_MUTABLE,
     },
-    skip: !account.address || !multichainUXEnabled,
+    skip: !account.address,
     fetchPolicy: 'cache-first',
   })
   // Full query result is not available at pageload, but is refetched when needed in UI

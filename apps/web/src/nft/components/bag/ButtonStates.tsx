@@ -1,3 +1,4 @@
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { DefaultTheme } from 'lib/styled-components'
 import { PriceImpact } from 'nft/hooks/usePriceImpact'
 import { ReactNode } from 'react'
@@ -58,7 +59,7 @@ export function getBuyButtonStateData(
       ...defaultBuyButtonState,
       handleClick: handleClickOverride ?? (() => undefined),
       disabled: false,
-      buttonText: <Trans i18nKey="common.connectWallet.button" />,
+      buttonText: <ConnectWalletButtonText />,
     },
     [BuyButtonStates.NOT_SUPPORTED_CHAIN]: {
       ...defaultBuyButtonState,

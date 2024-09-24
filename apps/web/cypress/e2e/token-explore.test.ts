@@ -1,4 +1,4 @@
-import { getTestSelector, getTestSelectorStartsWith, waitsForActiveChain } from '../utils'
+import { getTestSelector, getTestSelectorStartsWith } from '../utils'
 
 describe('Token explore', () => {
   before(() => {
@@ -60,6 +60,5 @@ describe('Token explore', () => {
     cy.get(getTestSelector('tokens-network-filter-selected')).click()
     cy.get(getTestSelector('tokens-network-filter-option-optimism')).first().click()
     cy.get(getTestSelector('tokens-network-filter-selected')).invoke('attr', 'alt').should('eq', `Optimism logo`)
-    waitsForActiveChain('Ethereum')
   })
 })

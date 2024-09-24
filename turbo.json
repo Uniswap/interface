@@ -147,7 +147,7 @@
       "inputs": [
         "yarn.lock",
         "**/package.json",
-        "{packages,apps}/src/**/*"
+        "src/**/*"
       ],
       "outputs": [
         "**/build/**"
@@ -161,8 +161,8 @@
       "inputs": [
         "yarn.lock",
         "**/package.json",
-        "{packages,apps}/src/**.ts",
-        "{packages,apps}/src/**.tsx"
+        "src/**.ts",
+        "src/**.tsx"
       ],
       "outputs": [
         "**/dist/**",

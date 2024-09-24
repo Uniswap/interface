@@ -1,6 +1,6 @@
 import { InMemoryCache } from '@apollo/client'
 import { Reference, relayStylePagination } from '@apollo/client/utilities'
-import { isTestEnv } from 'utilities/src/environment'
+import { isTestEnv } from 'utilities/src/environment/env'
 
 export function setupWalletCache(): InMemoryCache {
   return new InMemoryCache({

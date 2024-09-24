@@ -1,7 +1,7 @@
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
 import React, { memo, useCallback, useMemo, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, ListRenderItemInfo } from 'react-native'
+import { ListRenderItemInfo } from 'react-native'
 import { Flex, Inset, Loader } from 'ui/src'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/TokenOptionItem'
@@ -11,9 +11,9 @@ import { FORCurrencyOrBalance, FiatOnRampCurrency } from 'uniswap/src/features/f
 import { getUnsupportedFORTokensWithBalance, isSupportedFORCurrency } from 'uniswap/src/features/fiatOnRamp/utils'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
+import { ListSeparatorToggle } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
-import { ListSeparatorToggle } from 'wallet/src/features/transactions/TransactionDetails/TransactionDetails'
 
 interface Props {
   onSelectCurrency: (currency: FiatOnRampCurrency) => void
@@ -69,7 +69,6 @@ function TokenOptionItemWrapper({
       quantityFormatted={formatNumberOrString({ value: option.quantity, type: NumberType.TokenTx })}
       showWarnings={true}
       tokenWarningDismissed={tokenWarningDismissed}
-      onDismiss={() => Keyboard.dismiss()}
       onPress={onPress}
     />
   )

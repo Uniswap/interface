@@ -5,12 +5,15 @@ import { isInterface } from 'utilities/src/platform'
  */
 export enum FeatureFlags {
   // Shared
+  Bridging,
   ForAggregator,
   DisableFiatOnRampKorea,
   IndicativeSwapQuotes,
   TokenProtection,
+  SelfReportSpamNFTs,
 
   // Wallet
+  FlashbotsPrivateRpc,
   PrivateRpc,
   PortionFields,
   TransactionDetailsSheet,
@@ -19,7 +22,6 @@ export enum FeatureFlags {
   UniswapX,
 
   // Mobile
-  AATest,
   Datadog,
   ExtensionPromotionGA,
   FeedTab,
@@ -39,7 +41,6 @@ export enum FeatureFlags {
   GqlTokenLists,
   LimitsFees,
   L2NFTs,
-  MultichainUX,
   MultichainExplore,
   MultipleRoutingOptions,
   QuickRouteMainnet,
@@ -60,17 +61,21 @@ export enum FeatureFlags {
 // These names must match the gate name on statsig
 export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
+  [FeatureFlags.Bridging, 'bridging'],
   [FeatureFlags.ForAggregator, 'for_aggregator_web'],
   [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
   [FeatureFlags.TokenProtection, 'token_protection'],
+  [FeatureFlags.PortionFields, 'portion-fields'],
+  [FeatureFlags.UniswapX, 'uniswapx'],
+  [FeatureFlags.Datadog, 'datadog'],
 
   // Web Specific
+  [FeatureFlags.UniversalSwap, 'universal_swap'],
   [FeatureFlags.NavigationHotkeys, 'navigation_hotkeys'],
   [FeatureFlags.Eip6936Enabled, 'eip6963_enabled'],
   [FeatureFlags.GqlTokenLists, 'gql_token_lists'],
   [FeatureFlags.LimitsFees, 'limits_fees'],
   [FeatureFlags.L2NFTs, 'l2_nfts'],
-  [FeatureFlags.MultichainUX, 'multichain_ux'],
   [FeatureFlags.MultichainExplore, 'multichain_explore'],
   [FeatureFlags.MultipleRoutingOptions, 'multiple_routing_options'],
   [FeatureFlags.QuickRouteMainnet, 'enable_quick_route_mainnet'],
@@ -87,21 +92,22 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.OutageBannerArbitrum, 'outage_banner_feb_2024_arbitrum'],
   [FeatureFlags.OutageBannerOptimism, 'outage_banner_feb_2024_optimism'],
   [FeatureFlags.OutageBannerPolygon, 'outage_banner_feb_2024_polygon'],
-  [FeatureFlags.UniversalSwap, 'universal_swap'],
 ])
 
 // These names must match the gate name on statsig
 export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   // Shared
+  [FeatureFlags.Bridging, 'bridging'],
   [FeatureFlags.ForAggregator, 'for-aggregator'],
   [FeatureFlags.DisableFiatOnRampKorea, 'disable-fiat-onramp-korea'],
   [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
   [FeatureFlags.TokenProtection, 'token_protection'],
+  [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
 
   // Wallet Specific
-  [FeatureFlags.AATest, 'aatest1'],
   [FeatureFlags.Datadog, 'datadog'],
   [FeatureFlags.FeedTab, 'feed-tab'],
+  [FeatureFlags.FlashbotsPrivateRpc, 'flashbots-private-rpc'],
   [FeatureFlags.PrivateRpc, 'mev-blocker'],
   [FeatureFlags.OpenAIAssistant, 'openai-assistant'],
   [FeatureFlags.OnboardingKeyring, 'onboarding-keyring'],

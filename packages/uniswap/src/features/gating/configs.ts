@@ -1,3 +1,5 @@
+import { GasStrategy } from 'uniswap/src/data/tradingApi/__generated__'
+
 /**
  * Dynamic Configs
  * These should match the dynamic config's `Config Name` on Statsig
@@ -8,6 +10,7 @@ export enum DynamicConfigs {
   OnDeviceRecovery = 'on_device_recovery',
   UwuLink = 'uwulink_config',
   Swap = 'swap_config',
+  GasStrategies = 'gas_strategy',
 
   // Web
   QuickRouteChains = 'quick_route_chains',
@@ -46,6 +49,24 @@ export enum SwapConfigKey {
 
 export enum UwuLinkConfigKey {
   Allowlist = 'allowlist',
+}
+
+export type GasStrategyType = 'general' | 'swap'
+
+export type GasStrategyConditions = {
+  name: string
+  chainId: number
+  types: GasStrategyType
+  isActive: boolean
+}
+
+export type GasStrategyWithConditions = {
+  strategy: GasStrategy
+  conditions: GasStrategyConditions
+}
+
+export type GasStrategies = {
+  strategies: GasStrategyWithConditions[]
 }
 
 // Web

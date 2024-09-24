@@ -142,6 +142,7 @@ export interface UniverseChainInfo extends WagmiChain {
     decimals: number // 18,
     address: string // '0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee'
     explorerLink?: string // Special override for native ETH explorer link
+    logo: ImageSourcePropType
   }
   readonly networkLayer: NetworkLayer
   readonly pendingTransactionsRetryOptions: RetryOptions | undefined

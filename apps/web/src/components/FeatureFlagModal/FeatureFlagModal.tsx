@@ -1,7 +1,7 @@
-import { SmallButtonPrimary } from 'components/Button'
-import Column from 'components/Column'
+import { SmallButtonPrimary } from 'components/Button/buttons'
 import Modal from 'components/Modal'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { useQuickRouteChains } from 'featureFlags/dynamicConfig/quickRouteChains'
 import styled from 'lib/styled-components'
 import { PropsWithChildren } from 'react'
@@ -154,7 +154,10 @@ function FeatureFlagOption({ flag, label }: FeatureFlagProps) {
   )
 }
 
-function DynamicConfigDropdown<Conf extends DynamicConfigs, Key extends DynamicConfigKeys[Conf]>({
+function DynamicConfigDropdown<
+  Conf extends Exclude<DynamicConfigs, DynamicConfigs.GasStrategies>,
+  Key extends DynamicConfigKeys[Conf],
+>({
   config,
   key,
   label,
@@ -214,6 +217,12 @@ export default function FeatureFlagModal() {
           </CloseButton>
         </Header>
         <FlagsColumn>
+          <FeatureFlagOption flag={FeatureFlags.UniversalSwap} label="Enable swap flow from the Uniswap Package" />
+          <FeatureFlagOption flag={FeatureFlags.UniswapX} label="[Universal Swap Flow Only] Enable UniswapX" />
+          <FeatureFlagOption
+            flag={FeatureFlags.IndicativeSwapQuotes}
+            label="[Universal Swap Flow Only] Enable Quick Routes"
+          />
           <FeatureFlagOption
             flag={FeatureFlags.Eip6936Enabled}
             label="Enable EIP-6963: Multi Injected Provider Discovery"
@@ -232,7 +241,6 @@ export default function FeatureFlagModal() {
           </FeatureFlagGroup>
           <FeatureFlagOption flag={FeatureFlags.L2NFTs} label="L2 NFTs" />
           <FeatureFlagGroup name="Multichain UX">
-            <FeatureFlagOption flag={FeatureFlags.MultichainUX} label="Enable Multichain Swap/Send UX" />
             <FeatureFlagOption flag={FeatureFlags.MultichainExplore} label="Enable Multichain Explore Page" />
           </FeatureFlagGroup>
           <FeatureFlagGroup name="Quick routes">

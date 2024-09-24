@@ -1,5 +1,8 @@
 import { ComponentProps } from 'react'
 
+/**
+ * @deprecated use ui/src/icons instead
+ */
 export const ReverseArrow = (props: ComponentProps<'svg'>) => (
   <svg width="20" height="20" viewBox="0 0 20 20" {...props} fill="none" xmlns="http://www.w3.org/2000/svg">
     <path

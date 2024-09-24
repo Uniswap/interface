@@ -1,7 +1,7 @@
 describe('Redirect', () => {
   it('should redirect to /vote/create-proposal when visiting /create-proposal', () => {
     cy.visit('/create-proposal')
-    cy.url().should('match', /\/vote\/create-proposal/)
+    cy.url().should('match', /\/vote.uniswapfoundation.org/)
   })
   it('should redirect to /not-found when visiting nonexist url', () => {
     cy.visit('/none-exist-url')

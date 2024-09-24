@@ -1,8 +1,8 @@
 import { useTranslation } from 'react-i18next'
 import { Button, Flex, Text, isWeb, useSporeColors } from 'ui/src'
 import { opacify } from 'ui/src/theme'
-import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
 import { Modal } from 'uniswap/src/components/modals/Modal'
+import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 

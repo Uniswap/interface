@@ -176,7 +176,7 @@ export default function parseTradeTransaction(
     const name = nftChange.asset?.name
     const collectionName = nftChange.asset?.collection?.name
     const imageURL = nftChange.asset?.image?.url
-    const tokenId = nftChange.asset?.name
+    const tokenId = nftChange.asset?.tokenId
     const purchaseCurrencyId =
       tokenChange.tokenStandard === TokenStandard.Native
         ? buildNativeCurrencyId(chainId)

@@ -1,4 +1,5 @@
-import { dappStore } from 'src/app/features/dapp/store'
+import { DappInfo, dappStore } from 'src/app/features/dapp/store'
+import { getCapitalizedDisplayNameFromTab } from 'src/app/features/dapp/utils'
 import { externalDappMessageChannel } from 'src/background/messagePassing/messageChannels'
 import {
   ExtensionChainChange,
@@ -23,8 +24,20 @@ export async function saveDappChain(dappUrl: string, chainId: WalletChainId): Pr
   await externalDappMessageChannel.sendMessageToTabUrl(dappUrl, response)
 }
 
-export async function saveDappConnection(dappUrl: string, account: Account): Promise<void> {
-  dappStore.saveDappActiveAccount(dappUrl, account)
+export async function saveDappConnection(dappUrl: string, account: Account, iconUrl?: string): Promise<void> {
+  const displayName = await getCapitalizedDisplayNameFromTab(dappUrl)
+
+  const initialProperties: Partial<DappInfo> = {}
+
+  if (displayName) {
+    initialProperties.displayName = displayName
+  }
+
+  if (iconUrl) {
+    initialProperties.iconUrl = iconUrl
+  }
+
+  dappStore.saveDappActiveAccount(dappUrl, account, initialProperties)
   await updateConnectionFromExtension(dappUrl)
 }
 
@@ -43,6 +56,26 @@ async function updateConnectionFromExtension(dappUrl: string): Promise<void> {
   await externalDappMessageChannel.sendMessageToTabUrl(dappUrl, response)
 }
 
+/**
+ * Set the display name of a dapp from the tab title
+ * @param dappUrl - extracted url for dapp
+ */
+export async function updateDisplayNameFromTab(dappUrl: string): Promise<void> {
+  // do not update if dapp is not in state
+  if (!dappStore.getDappInfo(dappUrl)) {
+    return
+  }
+
+  const displayName = await getCapitalizedDisplayNameFromTab(dappUrl)
+
+  // no-op if display name isn't found (prevents overwriting existing display name)
+  if (!displayName) {
+    return
+  }
+
+  dappStore.updateDappDisplayName(dappUrl, displayName)
+}
+
 export async function updateDappConnectedAddressFromExtension(address: Address): Promise<void> {
   dappStore.updateDappConnectedAddress(address)
   const connectedDapps = dappStore.getConnectedDapps(address)
@@ -53,8 +86,9 @@ export async function updateDappConnectedAddressFromExtension(address: Address):
 
 export async function removeAllDappConnectionsForAccount(account: Account): Promise<void> {
   const connectedDapps = dappStore.getConnectedDapps(account.address)
+  dappStore.removeAccountDappConnections(account)
   for (const dappUrl of connectedDapps) {
-    await removeDappConnection(dappUrl, account)
+    await updateConnectionFromExtension(dappUrl)
   }
 }
 

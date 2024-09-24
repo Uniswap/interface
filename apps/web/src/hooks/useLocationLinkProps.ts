@@ -1,13 +1,12 @@
-import { SupportedLocale } from 'constants/locales'
 import useParsedQueryString from 'hooks/useParsedQueryString'
 import { stringify } from 'qs'
 import { useMemo } from 'react'
 import type { To } from 'react-router-dom'
 import { useLocation } from 'react-router-dom'
+import { Locale } from 'uniswap/src/features/language/constants'
 
-export function useLocationLinkProps(locale: SupportedLocale | null): {
+export function useLocationLinkProps(locale: Locale | null): {
   to?: To
-  onClick?: () => void
 } {
   const location = useLocation()
   const qs = useParsedQueryString()

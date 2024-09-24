@@ -27,6 +27,13 @@ import { TokenSelectorBalanceDisplay } from 'uniswap/src/features/fiatOnRamp/Tok
 import UnsupportedTokenModal from 'uniswap/src/features/fiatOnRamp/UnsupportedTokenModal'
 import { useFiatOnRampAggregatorGetCountryQuery } from 'uniswap/src/features/fiatOnRamp/api'
 import {
+  useFiatOnRampQuotes,
+  useFiatOnRampSupportedTokens,
+  useFormatExactCurrencyAmount,
+  useMeldFiatCurrencySupportInfo,
+  useParseFiatOnRampError,
+} from 'uniswap/src/features/fiatOnRamp/hooks'
+import {
   FORCurrencyOrBalance,
   FORServiceProvider,
   FiatOnRampCurrency,
@@ -43,6 +50,11 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { FiatOffRampEventName, FiatOnRampEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { FORAmountEnteredProperties } from 'uniswap/src/features/telemetry/types'
+import {
+  DecimalPadCalculateSpace,
+  DecimalPadInput,
+  DecimalPadInputRef,
+} from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPadInput'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
@@ -50,20 +62,8 @@ import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimal
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
-import {
-  useFiatOnRampQuotes,
-  useFiatOnRampSupportedTokens,
-  useFormatExactCurrencyAmount,
-  useMeldFiatCurrencySupportInfo,
-  useParseFiatOnRampError,
-} from 'wallet/src/features/fiatOnRamp/hooks'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import {
-  DecimalPadCalculateSpace,
-  DecimalPadInput,
-  DecimalPadInputRef,
-} from 'wallet/src/features/transactions/swap/DecimalPadInput'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 type Props = NativeStackScreenProps<FiatOnRampStackParamList, FiatOnRampScreens.AmountInput>

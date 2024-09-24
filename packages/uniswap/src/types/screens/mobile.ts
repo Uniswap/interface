@@ -60,6 +60,34 @@ export enum UnitagScreens {
   EditProfile = 'EditProfile',
 }
 
+export type UnitagEntryPoint = OnboardingScreens.Landing | MobileScreens.Home | MobileScreens.Settings
+
+export type UnitagStackParamList = SharedUnitagScreenParams & {
+  [UnitagScreens.UnitagConfirmation]: {
+    unitag: string
+    address: Address
+    profilePictureUri?: string
+  };
+  [UnitagScreens.EditProfile]: {
+    address: Address
+    unitag: string
+    entryPoint: UnitagScreens.UnitagConfirmation | MobileScreens.SettingsWallet
+  }
+}
+
+export type SharedUnitagScreenParams = {
+  [UnitagScreens.ClaimUnitag]: {
+    entryPoint: UnitagEntryPoint
+    address?: Address
+  };
+  [UnitagScreens.ChooseProfilePicture]: {
+    entryPoint: UnitagEntryPoint
+    unitag: string
+    unitagFontSize: number
+    address: Address
+  }
+}
+
 export enum FiatOnRampScreens {
   AmountInput = 'FiatOnRampAmountInput',
   ServiceProviders = 'FiatOnRampServiceProviders',

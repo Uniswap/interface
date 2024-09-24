@@ -1,7 +1,7 @@
 import React from 'react'
 import { Flex, flexStyles, Text, TouchableArea } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
+import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import {
   SafetyLevel,
   TokenDetailsScreenQuery,
@@ -27,7 +27,7 @@ export function TokenDetailsHeader({
     <Flex gap="$spacing12" mx="$spacing16">
       <TokenLogo
         chainId={fromGraphQLChain(token?.chain) ?? undefined}
-        name={token?.project?.name ?? undefined}
+        name={token?.name ?? undefined}
         symbol={token?.symbol ?? undefined}
         url={tokenProject?.logoUrl ?? undefined}
       />
@@ -40,13 +40,13 @@ export function TokenDetailsHeader({
           testID={TestID.TokenDetailsHeaderText}
           variant="subheading1"
         >
-          {tokenProject?.name ?? '—'}
+          {token?.name ?? '—'}
         </Text>
         {/* Suppress warning icon on low warning level */}
         {(tokenProject?.safetyLevel === SafetyLevel.StrongWarning ||
           tokenProject?.safetyLevel === SafetyLevel.Blocked) && (
           <TouchableArea onPress={onPressWarningIcon}>
-            <WarningIcon safetyLevel={tokenProject?.safetyLevel} size="$icon.20" strokeColorOverride="neutral3" />
+            <WarningIcon safetyLevel={tokenProject?.safetyLevel} size="$icon.20" strokeColorOverride="$neutral3" />
           </TouchableArea>
         )}
       </Flex>

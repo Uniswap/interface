@@ -8,6 +8,7 @@ export {
   Image,
   Input,
   ListItem,
+  Main,
   Paragraph,
   Popover,
   Portal,
@@ -57,8 +58,8 @@ export * from './components/UniversalImage/UniversalImage'
 export * from './components/UniversalImage/types'
 export * from './components/UniversalImage/utils'
 export { Button } from './components/button/Button'
+export * from './components/checkbox'
 export type { GeneratedIcon, IconProps } from './components/factories/createIcon'
-export * from './components/input/CheckBox'
 export * from './components/input/utils'
 export { Flex, Inset, Separator, flexStyles, type FlexProps } from './components/layout'
 export { ContextMenu } from './components/menu/ContextMenu'
@@ -76,6 +77,7 @@ export { useIsShortMobileDevice } from './hooks/useIsShortMobileDevice'
 export { useSporeColors, type DynamicColor } from './hooks/useSporeColors'
 // eslint-disable-next-line no-restricted-imports
 export { ImpactFeedbackStyle } from 'expo-haptics'
+export * from './components/InlineCard/InlineCard'
 export * from './utils/haptics/useHapticFeedback'
 
 // Theme

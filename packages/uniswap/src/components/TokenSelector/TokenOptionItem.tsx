@@ -4,17 +4,17 @@ import { Check } from 'ui/src/components/icons/Check'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
-import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
+import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isInterface } from 'utilities/src/platform'
 
 interface OptionProps {
   option: TokenOption
   showWarnings: boolean
-  onDismiss?: () => void
   onPress: () => void
   showTokenAddress?: boolean
   tokenWarningDismissed: boolean
@@ -32,7 +32,6 @@ interface OptionProps {
 function _TokenOptionItem({
   option,
   showWarnings,
-  onDismiss,
   onPress,
   showTokenAddress,
   tokenWarningDismissed,
@@ -44,13 +43,13 @@ function _TokenOptionItem({
   isSelected,
 }: OptionProps): JSX.Element {
   const { currencyInfo, isUnsupported } = option
-  const { currency, currencyId, safetyLevel, logoUrl } = currencyInfo
+  const { currency, safetyLevel } = currencyInfo
   const [showWarningModal, setShowWarningModal] = useState(false)
 
   const handleShowWarningModal = useCallback((): void => {
-    onDismiss?.()
+    dismissNativeKeyboard()
     setShowWarningModal(true)
-  }, [onDismiss, setShowWarningModal])
+  }, [setShowWarningModal])
 
   const onPressTokenOption = useCallback(() => {
     if (
@@ -98,6 +97,9 @@ function _TokenOptionItem({
           justifyContent="space-between"
           px="$spacing16"
           py="$spacing12"
+          style={{
+            pointerEvents: 'auto',
+          }}
           testID={`token-option-${currency.chainId}-${currency.symbol}`}
         >
           <Flex row shrink alignItems="center" gap="$spacing12">
@@ -114,7 +116,7 @@ function _TokenOptionItem({
                 </Text>
                 {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
                   <Flex>
-                    <WarningIcon safetyLevel={safetyLevel} size="$icon.16" strokeColorOverride="neutral3" />
+                    <WarningIcon safetyLevel={safetyLevel} size="$icon.16" strokeColorOverride="$neutral3" />
                   </Flex>
                 )}
               </Flex>
@@ -151,10 +153,8 @@ function _TokenOptionItem({
       </TouchableArea>
 
       <TokenWarningModal
-        currencyId={currencyId}
+        currencyInfo0={currencyInfo}
         isVisible={showWarningModal}
-        safetyLevel={safetyLevel}
-        tokenLogoUrl={logoUrl}
         onAccept={onAcceptTokenWarning}
         onClose={(): void => setShowWarningModal(false)}
       />

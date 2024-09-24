@@ -41,6 +41,11 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   left: 0;
 }
 
+.c11 {
+  display: inline-block;
+  height: inherit;
+}
+
 .c0 {
   box-sizing: border-box;
   margin: 0;
@@ -79,11 +84,6 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
   -webkit-justify-content: flex-start;
   -ms-flex-pack: start;
   justify-content: flex-start;
-}
-
-.c11 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c7 {
@@ -340,7 +340,30 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
 
 exports[`PoolDetailsHeader renders link for token address 1`] = `
 <DocumentFragment>
-  .c5 {
+  .c6 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c6 img {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c7 {
+  width: 10px;
+  height: 20px;
+  border-radius: 50%;
+}
+
+.c5 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -362,27 +385,9 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   display: flex;
 }
 
-.c6 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c6 img {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c7 {
-  width: 10px;
-  height: 20px;
-  border-radius: 50%;
+.c13 {
+  display: inline-block;
+  height: inherit;
 }
 
 .c0 {
@@ -441,11 +446,6 @@ exports[`PoolDetailsHeader renders link for token address 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   gap: 4px;
-}
-
-.c13 {
-  display: inline-block;
-  height: inherit;
 }
 
 .c8 {

@@ -1,6 +1,6 @@
 import { Currency, Price, Token } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
-import { AutoColumn, ColumnCenter } from 'components/Column'
+import { AutoColumn, ColumnCenter } from 'components/deprecated/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import { Chart } from 'components/LiquidityChartRangeInput/Chart'
 import { useDensityChartData } from 'components/LiquidityChartRangeInput/hooks'
@@ -16,19 +16,18 @@ import { ThemedText } from 'theme/components'
 import { Trans } from 'uniswap/src/i18n'
 import { useFormatter } from 'utils/formatNumbers'
 
+const LOW_ZOOM_LEVEL = {
+  initialMin: 0.999,
+  initialMax: 1.001,
+  min: 0.00001,
+  max: 1.5,
+}
 const ZOOM_LEVELS: Record<FeeAmount, ZoomLevels> = {
-  [FeeAmount.LOWEST]: {
-    initialMin: 0.999,
-    initialMax: 1.001,
-    min: 0.00001,
-    max: 1.5,
-  },
-  [FeeAmount.LOW]: {
-    initialMin: 0.999,
-    initialMax: 1.001,
-    min: 0.00001,
-    max: 1.5,
-  },
+  [FeeAmount.LOWEST]: LOW_ZOOM_LEVEL,
+  [FeeAmount.LOW_200]: LOW_ZOOM_LEVEL,
+  [FeeAmount.LOW_300]: LOW_ZOOM_LEVEL,
+  [FeeAmount.LOW_400]: LOW_ZOOM_LEVEL,
+  [FeeAmount.LOW]: LOW_ZOOM_LEVEL,
   [FeeAmount.MEDIUM]: {
     initialMin: 0.5,
     initialMax: 2,

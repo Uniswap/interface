@@ -1,11 +1,36 @@
 import {
   getActiveConnectedAccount,
+  getCapitalizedDisplayNameFromTab,
   getOrderedConnectedAddresses,
   isConnectedAccount,
 } from 'src/app/features/dapp/utils'
 import { SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2, SAMPLE_SEED_ADDRESS_3 } from 'uniswap/src/test/fixtures'
+import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
+import { promiseTimeout } from 'utilities/src/time/timing'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { ACCOUNT, ACCOUNT2, ACCOUNT3 } from 'wallet/src/test/fixtures'
+
+jest.mock('utilities/src/format/extractNameFromUrl', () => ({
+  extractNameFromUrl: jest.fn(),
+}))
+
+jest.mock('utilities/src/time/timing', () => ({
+  promiseTimeout: jest.fn(),
+}))
+
+const mockChromeTabsQuery = jest.fn()
+
+global.chrome = {
+  tabs: {
+    ...global.chrome.tabs,
+    query: mockChromeTabsQuery,
+  },
+} as unknown as typeof global.chrome
+
+const mockFunctions = {
+  extractNameFromUrl: extractNameFromUrl as jest.Mock,
+  promiseTimeout: promiseTimeout as jest.Mock,
+}
 
 describe('isConnectedAccount', () => {
   it('returns true if the account is connected', () => {
@@ -56,5 +81,62 @@ describe('getOrderedConnectedAddresses', () => {
     const expectedOrder = [SAMPLE_SEED_ADDRESS_1, SAMPLE_SEED_ADDRESS_2, SAMPLE_SEED_ADDRESS_3] // Original order since active address is not found
     const result = getOrderedConnectedAddresses(accounts, activeAddress)
     expect(result).toEqual(expectedOrder)
+  })
+})
+
+describe('getCapitalizedDisplayNameFromTab', () => {
+  beforeEach(() => {
+    jest.clearAllMocks()
+  })
+
+  it('should return the capitalized display name when the title contains the dapp name', async () => {
+    const dappUrl = 'https://example.com'
+    const dappName = 'example'
+    const tabTitle = 'Example - Dapp'
+
+    mockFunctions.extractNameFromUrl.mockReturnValue(dappName)
+    mockChromeTabsQuery.mockResolvedValue([{ title: tabTitle }])
+    mockFunctions.promiseTimeout.mockResolvedValue([{ title: tabTitle }])
+
+    const result = await getCapitalizedDisplayNameFromTab(dappUrl)
+
+    expect(result).toBe('Example')
+  })
+
+  it('should return undefined when the title does not contain the dapp name', async () => {
+    const dappUrl = 'https://example.com'
+    const dappName = 'example'
+    const tabTitle = 'Another Dapp'
+
+    mockFunctions.extractNameFromUrl.mockReturnValue(dappName)
+    mockChromeTabsQuery.mockResolvedValue([{ title: tabTitle }])
+    mockFunctions.promiseTimeout.mockResolvedValue([{ title: tabTitle }])
+
+    const result = await getCapitalizedDisplayNameFromTab(dappUrl)
+
+    expect(result).toBeUndefined()
+  })
+
+  it('should return undefined when there is no active tab', async () => {
+    const dappUrl = 'https://example.com'
+
+    mockFunctions.extractNameFromUrl.mockReturnValue('example')
+    mockChromeTabsQuery.mockResolvedValue([])
+    mockFunctions.promiseTimeout.mockResolvedValue([])
+
+    const result = await getCapitalizedDisplayNameFromTab(dappUrl)
+
+    expect(result).toBeUndefined()
+  })
+
+  it('should return undefined when promiseTimeout times out', async () => {
+    const dappUrl = 'https://example.com'
+
+    mockFunctions.extractNameFromUrl.mockReturnValue('example')
+    mockFunctions.promiseTimeout.mockResolvedValue(undefined)
+
+    const result = await getCapitalizedDisplayNameFromTab(dappUrl)
+
+    expect(result).toBeUndefined()
   })
 })

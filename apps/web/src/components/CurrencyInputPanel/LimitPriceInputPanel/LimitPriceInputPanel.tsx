@@ -9,19 +9,19 @@ import { InputPanel } from 'components/CurrencyInputPanel/SwapCurrencyInputPanel
 import { formatCurrencySymbol } from 'components/CurrencyInputPanel/utils'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { StyledNumericalInput } from 'components/NumericalInput'
-import Row from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import Row from 'components/deprecated/Row'
 import { parseUnits } from 'ethers/lib/utils'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import JSBI from 'jsbi'
 import styled from 'lib/styled-components'
 import { ReversedArrowsIcon } from 'nft/components/icons'
-import { LIMIT_FORM_CURRENCY_SEARCH_FILTERS } from 'pages/Swap/Limit/LimitForm'
 import { useCallback, useMemo, useState } from 'react'
 import { useLimitContext, useLimitPrice } from 'state/limit/LimitContext'
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { ClickableStyle, ThemedText } from 'theme/components'
+import { Locale } from 'uniswap/src/features/language/constants'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import {
@@ -156,7 +156,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
           amount: marketOutputAmount,
           type: NumberType.SwapTradeAmount,
           placeholder: limitPrice,
-          locale: 'en-US',
+          locale: Locale.EnglishUnitedStates,
         }),
       )
       setLimitState((prev) => ({ ...prev, limitPriceEdited: true }))
@@ -198,7 +198,7 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
                     ),
                   type: NumberType.SwapTradeAmount,
                   placeholder: '',
-                  locale: 'en-US',
+                  locale: Locale.EnglishUnitedStates,
                 }),
               )
             }
@@ -275,7 +275,6 @@ export function LimitPriceInputPanel({ onCurrencySelect }: LimitPriceInputPanelP
         }}
         selectedCurrency={quoteCurrency}
         otherSelectedCurrency={baseCurrency}
-        currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
       />
     </Container>
   )

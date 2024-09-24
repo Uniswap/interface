@@ -133,7 +133,7 @@ exports[`SplitLogo renders without error 1`] = `
   onPressOut={[Function]}
   style={
     {
-      "backgroundColor": "#311C31",
+      "backgroundColor": "#361A37",
       "borderBottomLeftRadius": 12,
       "borderBottomRightRadius": 12,
       "borderTopLeftRadius": 12,

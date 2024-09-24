@@ -1,5 +1,5 @@
 export enum FiatCurrency {
-  AustrialianDollor = 'AUD',
+  AustralianDollar = 'AUD',
   BrazilianReal = 'BRL',
   CanadianDollar = 'CAD',
   ChineseYuan = 'CNY',
@@ -21,9 +21,11 @@ export enum FiatCurrency {
   VietnameseDong = 'VND',
 }
 
+export const DEFAULT_LOCAL_CURRENCY: FiatCurrency = FiatCurrency.UnitedStatesDollar
+
 export const ORDERED_CURRENCIES: FiatCurrency[] = [
   FiatCurrency.UnitedStatesDollar,
-  FiatCurrency.AustrialianDollor,
+  FiatCurrency.AustralianDollar,
   FiatCurrency.BrazilianReal,
   FiatCurrency.CanadianDollar,
   FiatCurrency.ChineseYuan,

@@ -4,6 +4,7 @@ export enum WalletEventName {
   NFTVisibilityChanged = 'NFT Visibility Changed',
   NFTsLoaded = 'NFTs Loaded',
   NetworkFilterSelected = 'Network Filter Selected',
+  ExternalLinkOpened = 'External Link Opened',
   PerformanceGraphql = 'Performance GraphQL',
   PortfolioBalanceFreshnessLag = 'Portfolio Balance Freshness Lag',
   SendRecipientSelected = 'Send Recipient Selected',

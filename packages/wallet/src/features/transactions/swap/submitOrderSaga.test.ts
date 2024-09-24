@@ -14,8 +14,11 @@ import {
   TransactionType,
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
+import { pushNotification } from 'wallet/src/features/notifications/slice'
+import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import {
   ORDER_STALENESS_THRESHOLD,
   SubmitUniswapXOrderParams,
@@ -85,6 +88,8 @@ describe(submitUniswapXOrder, () => {
         transactionOriginType: TransactionOriginType.Internal,
       })
       .next()
+      .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
+      .next()
       .call(baseSubmitOrderParams.onSubmit)
       .next()
       .isDone()
@@ -147,6 +152,8 @@ describe(submitUniswapXOrder, () => {
           transactionOriginType: TransactionOriginType.Internal,
         })
         .next()
+        .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
+        .next()
         .call(baseSubmitOrderParams.onSubmit)
         .next()
         .isDone()
@@ -177,6 +184,8 @@ describe(submitUniswapXOrder, () => {
           transactionOriginType: TransactionOriginType.Internal,
         })
         .next()
+        .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
+        .next()
         .call(baseSubmitOrderParams.onSubmit)
         .next()
         .isDone()
@@ -206,6 +215,8 @@ describe(submitUniswapXOrder, () => {
           order_hash: baseExpectedInitialOrderDetails.orderHash,
           transactionOriginType: TransactionOriginType.Internal,
         })
+        .next()
+        .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
         .next()
         .call(baseSubmitOrderParams.onSubmit)
         .next()

@@ -5,7 +5,6 @@ import {
   CHAIN_ID_TO_BACKEND_NAME,
   CHAIN_NAME_TO_CHAIN_ID,
   ChainSlug,
-  GQL_MAINNET_CHAINS,
   INFURA_PREFIX_TO_CHAIN_ID,
   InterfaceGqlChain,
   SUPPORTED_GAS_ESTIMATE_CHAIN_IDS,
@@ -15,7 +14,7 @@ import {
   getChainFromChainUrlParam,
   getChainPriority,
 } from 'constants/chains'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { GQL_MAINNET_CHAINS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceChainId, UniverseChainId, WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 

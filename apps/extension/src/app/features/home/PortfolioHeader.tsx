@@ -9,10 +9,10 @@ import { selectPopupState } from 'src/app/features/popups/selectors'
 import { PopupName, closePopup, openPopup } from 'src/app/features/popups/slice'
 import { AppRoutes } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
-import { Circle, Flex, Image, Popover, Text, TouchableArea } from 'ui/src'
+import { Circle, Flex, Popover, Text, TouchableArea, UniversalImage } from 'ui/src'
 import { animationPresets } from 'ui/src/animations'
 import { CopyAlt, Globe, RotatableChevron, Settings } from 'ui/src/components/icons'
-import { iconSizes } from 'ui/src/theme'
+import { borderRadii, iconSizes } from 'ui/src/theme'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -20,6 +20,8 @@ import { WalletChainId } from 'uniswap/src/types/chains'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
+import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
+import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AnimatedUnitagDisplayName } from 'wallet/src/components/accounts/AnimatedUnitagDisplayName'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -113,7 +115,12 @@ export const PortfolioHeader = memo(function _PortfolioHeader({ address }: Portf
             >
               <Popover.Trigger onPress={toggleConnectPopup}>
                 <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing8">
-                  <ConnectionStatusIcon dappIconUrl={dappIconUrl} isConnected={isConnected} lastChainId={lastChainId} />
+                  <ConnectionStatusIcon
+                    dappIconUrl={dappIconUrl}
+                    dappUrl={dappUrl}
+                    isConnected={isConnected}
+                    lastChainId={lastChainId}
+                  />
                 </TouchableArea>
               </Popover.Trigger>
               <Popover.Content
@@ -172,16 +179,23 @@ function ConnectionStatusIcon({
   isConnected,
   lastChainId,
   dappIconUrl,
+  dappUrl,
 }: {
   isConnected: boolean
   lastChainId?: WalletChainId
   dappIconUrl?: string
+  dappUrl?: string
 }): JSX.Element {
+  const uppercaseDappName = extractNameFromUrl(dappUrl).toUpperCase()
   const isConnectedToNetwork = isConnected && lastChainId
   return isConnectedToNetwork ? (
     <Flex>
-      <Image height={iconSizes.icon20} resizeMode="contain" source={{ uri: dappIconUrl }} width={iconSizes.icon20} />
-
+      <UniversalImage
+        fallback={<DappIconPlaceholder iconSize={iconSizes.icon20} name={uppercaseDappName} />}
+        size={{ height: iconSizes.icon20, width: iconSizes.icon20 }}
+        style={{ image: { borderRadius: borderRadii.rounded8 } }}
+        uri={dappIconUrl}
+      />
       <Flex backgroundColor="$surface2" borderRadius="$roundedFull" position="absolute" right={8} top={-3}>
         <Circle
           backgroundColor="$statusSuccess"

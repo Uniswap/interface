@@ -1,11 +1,11 @@
 import { put } from 'typed-redux-saga'
 import { logger } from 'utilities/src/logger/logger'
-import { SignerMnemonicAccount } from 'wallet/src/features/wallet/accounts/types'
+import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { addAccounts, setAccountAsActive } from 'wallet/src/features/wallet/slice'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 
 export interface CreateAccountsParams {
-  accounts: SignerMnemonicAccount[]
+  accounts: Account[]
 }
 
 export function* createAccounts({ accounts }: CreateAccountsParams) {
@@ -29,4 +29,4 @@ export const {
   wrappedSaga: createAccountsSaga,
   reducer: createAccountsReducer,
   actions: createAccountsActions,
-} = createMonitoredSaga<CreateAccountsParams>(createAccounts, 'createAccounts')
+} = createMonitoredSaga(createAccounts, 'createAccounts')

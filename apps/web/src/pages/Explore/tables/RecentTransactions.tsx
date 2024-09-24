@@ -16,16 +16,16 @@ import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { BETypeToTransactionType, TransactionType, useAllTransactions } from 'graphql/data/useAllTransactions'
 import { OrderDirection, getSupportedGraphQlChain } from 'graphql/data/util'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useMemo, useReducer, useRef, useState } from 'react'
+import { memo, useMemo, useReducer, useRef, useState } from 'react'
 import { Flex, Text, styled } from 'ui/src'
 import {
   PoolTransaction,
   PoolTransactionType,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const TableRow = styled(Flex, {
   row: true,
@@ -33,7 +33,7 @@ const TableRow = styled(Flex, {
   alignItems: 'center',
 })
 
-export default function RecentTransactions() {
+const RecentTransactions = memo(function RecentTransactions() {
   const activeLocalCurrency = useActiveLocalCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)
@@ -224,4 +224,6 @@ export default function RecentTransactions() {
       maxWidth={1200}
     />
   )
-}
+})
+
+export default RecentTransactions

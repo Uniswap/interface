@@ -58,7 +58,8 @@ describe('PoolTable', () => {
         tvl: 300,
         volume24h: 400,
         volumeWeek: 500,
-        oneDayApr: new Percent(6, 100),
+        apr: new Percent(6, 100),
+        volOverTvl: 1.84,
         protocolVersion: ProtocolVersion.V3,
       },
     ]

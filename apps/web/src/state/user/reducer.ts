@@ -1,5 +1,4 @@
 import { createSlice } from '@reduxjs/toolkit'
-import { SupportedLocale } from 'constants/locales'
 import { DEFAULT_DEADLINE_FROM_NOW } from 'constants/misc'
 import { RouterPreference } from 'state/routing/types'
 import { SerializedPair, SlippageTolerance } from 'state/user/types'
@@ -9,8 +8,6 @@ const currentTimestamp = () => new Date().getTime()
 export interface UserState {
   // the timestamp of the last updateVersion action
   lastUpdateVersionTimestamp?: number
-
-  userLocale: SupportedLocale | null
 
   // which router should be used to calculate trades
   userRouterPreference: RouterPreference
@@ -47,7 +44,6 @@ function pairKey(token0Address: string, token1Address: string) {
 }
 
 export const initialState: UserState = {
-  userLocale: null,
   userRouterPreference: RouterPreference.X,
   userHideClosedPositions: false,
   userSlippageTolerance: SlippageTolerance.Auto,
@@ -63,12 +59,6 @@ const userSlice = createSlice({
   name: 'user',
   initialState,
   reducers: {
-    updateUserLocale(state, action) {
-      if (action.payload.userLocale !== state.userLocale) {
-        state.userLocale = action.payload.userLocale
-        state.timestamp = currentTimestamp()
-      }
-    },
     updateUserSlippageTolerance(state, action) {
       state.userSlippageTolerance = action.payload.userSlippageTolerance
       state.timestamp = currentTimestamp()
@@ -106,7 +96,6 @@ export const {
   updateHideClosedPositions,
   updateUserRouterPreference,
   updateUserDeadline,
-  updateUserLocale,
   updateUserSlippageTolerance,
 } = userSlice.actions
 export default userSlice.reducer

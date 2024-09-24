@@ -15,6 +15,7 @@
     "@ethersproject/constants": "5.7.0",
     "@ethersproject/contracts": "5.7.0",
     "@ethersproject/providers": "5.7.2",
+    "@react-native-community/netinfo": "9.3.0",
     "@react-navigation/core": "6.2.2",
     "@sentry/core": "7.80.0",
     "@sentry/react": "7.80.0",

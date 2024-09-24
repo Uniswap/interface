@@ -2,16 +2,15 @@ import { InterfaceElementName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { ReactComponent as DropDown } from 'assets/images/dropdown.svg'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
-import { ButtonLight } from 'components/Button'
-import Column from 'components/Column'
+import { ButtonLight } from 'components/Button/buttons'
 import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { LoadingOpacityContainer } from 'components/Loader/styled'
 import { isInputGreaterThanDecimals } from 'components/NumericalInput'
-import Row, { RowBetween } from 'components/Row'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
+import Column from 'components/deprecated/Column'
+import Row, { RowBetween } from 'components/deprecated/Row'
 import { getChain, useSupportedChainId } from 'constants/chains'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
-import { useAccount } from 'hooks/useAccount'
 import { useActiveLocalCurrency, useActiveLocalCurrencyComponents } from 'hooks/useActiveLocalCurrency'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import styled, { css } from 'lib/styled-components'
@@ -196,7 +195,6 @@ export default function SendCurrencyInputForm({
 }) {
   const { chainId } = useSwapAndLimitContext()
   const supportedChain = useSupportedChainId(chainId)
-  const account = useAccount()
   const { formatCurrencyAmount } = useFormatter()
   const { symbol: fiatSymbol } = useActiveLocalCurrencyComponents()
   const { formatNumber } = useFormatter()
@@ -294,13 +292,6 @@ export default function SendCurrencyInputForm({
     }
   }, [maxInputAmount, setSendState])
 
-  const currencyFilters = useMemo(
-    () => ({
-      onlyShowCurrenciesWithBalance: account.isConnected,
-    }),
-    [account.isConnected],
-  )
-
   return (
     <Wrapper $disabled={disabled}>
       <InputWrapper>
@@ -373,7 +364,6 @@ export default function SendCurrencyInputForm({
         onDismiss={() => setTokenSelectorOpen(false)}
         onCurrencySelect={handleSelectCurrency}
         selectedCurrency={inputCurrency}
-        currencySearchFilters={currencyFilters}
       />
     </Wrapper>
   )

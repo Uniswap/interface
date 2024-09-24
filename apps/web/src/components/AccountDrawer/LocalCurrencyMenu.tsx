@@ -1,10 +1,11 @@
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { MenuColumn, MenuItem } from 'components/AccountDrawer/shared'
-import { SUPPORTED_LOCAL_CURRENCIES, SupportedLocalCurrency, getLocalCurrencyIcon } from 'constants/localCurrencies'
+import { getLocalCurrencyIcon } from 'constants/localCurrencies'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useLocalCurrencyLinkProps } from 'hooks/useLocalCurrencyLinkProps'
 import styled from 'lib/styled-components'
 import { useMemo } from 'react'
+import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { Trans } from 'uniswap/src/i18n'
 
 const StyledLocalCurrencyIcon = styled.div`
@@ -14,13 +15,7 @@ const StyledLocalCurrencyIcon = styled.div`
   overflow: hidden;
 `
 
-function LocalCurrencyMenuItem({
-  localCurrency,
-  isActive,
-}: {
-  localCurrency: SupportedLocalCurrency
-  isActive: boolean
-}) {
+function LocalCurrencyMenuItem({ localCurrency, isActive }: { localCurrency: FiatCurrency; isActive: boolean }) {
   const { to, onClick } = useLocalCurrencyLinkProps(localCurrency)
 
   const LocalCurrencyIcon = useMemo(() => {
@@ -48,7 +43,7 @@ export function LocalCurrencyMenuItems() {
 
   return (
     <>
-      {SUPPORTED_LOCAL_CURRENCIES.map((localCurrency) => (
+      {ORDERED_CURRENCIES.map((localCurrency) => (
         <LocalCurrencyMenuItem
           localCurrency={localCurrency}
           isActive={activeLocalCurrency === localCurrency}

@@ -1,17 +1,19 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
-import Column from 'components/Column'
 import { GooglePlayStoreLogo } from 'components/Icons/GooglePlayStoreLogo'
-import Row from 'components/Row'
 import { DownloadWalletOption } from 'components/WalletModal/DownloadWalletOption'
 import { DetectedBadge } from 'components/WalletModal/shared'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
 import { CONNECTION } from 'components/Web3Provider/constants'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { useConnect } from 'hooks/useConnect'
 import styled from 'lib/styled-components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Flex, Image, Text } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
-import { AppStoreLogo, PhoneDownload, ScanQr } from 'ui/src/components/icons'
+import { AppStoreLogo } from 'ui/src/components/icons/AppStoreLogo'
+import { PhoneDownload } from 'ui/src/components/icons/PhoneDownload'
+import { ScanQr } from 'ui/src/components/icons/ScanQr'
 import { iconSizes } from 'ui/src/theme'
 import { Trans } from 'uniswap/src/i18n'
 import { isMobileWeb, isWebIOS } from 'utilities/src/platform'
@@ -71,14 +73,18 @@ export function UniswapWalletOptions() {
           <DownloadWalletOption />
         ) : null}
         <OptionContainer gap="md" onClick={() => connect({ connector: uniswapWalletConnectConnector })}>
-          <ScanQr size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} p={7} />
+          {isMobileWeb ? (
+            <Image height={iconSizes.icon40} source={UNISWAP_LOGO} width={iconSizes.icon40} />
+          ) : (
+            <ScanQr size="$icon.40" minWidth={40} color="$accent1" backgroundColor="$accent2" borderRadius={8} p={7} />
+          )}
           <Row gap="xs">
             <Column>
               <Text variant="buttonLabel2" color="$neutral1" whiteSpace="nowrap">
                 <Trans i18nKey="common.uniswapMobile" />
               </Text>
               <Text variant="body4" color="$neutral2" whiteSpace="nowrap">
-                <Trans i18nKey="wallet.scanToConnect" />
+                {isMobileWeb ? <Trans i18nKey="wallet.appSignIn" /> : <Trans i18nKey="wallet.scanToConnect" />}
               </Text>
             </Column>
           </Row>

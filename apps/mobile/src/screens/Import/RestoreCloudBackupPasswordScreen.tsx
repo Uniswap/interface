@@ -2,7 +2,7 @@ import { useFocusEffect } from '@react-navigation/core'
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, TextInput } from 'react-native'
+import { TextInput } from 'react-native'
 import { useDispatch, useSelector } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { PasswordInput } from 'src/components/input/PasswordInput'
@@ -24,6 +24,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { MINUTES_IN_HOUR, ONE_HOUR_MS, ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
@@ -135,7 +136,7 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
 
     await checkCorrectPassword()
     setEnteredPassword('')
-    Keyboard.dismiss()
+    dismissNativeKeyboard()
   }
 
   const navigateToEnterRecoveryPhrase = (): void => {

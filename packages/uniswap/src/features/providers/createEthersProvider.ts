@@ -1,7 +1,9 @@
 import { Signer, providers as ethersProviders } from 'ethers/lib/ethers'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { FLASHBOTS_RPC_URL, FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
-import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
+import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
+import { FlashbotsRpcProvider } from 'uniswap/src/features/providers/FlashbotsRpcProvider'
+import { RPCType, UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 
 // Should use ProviderManager for provider access unless being accessed outside of ProviderManagerContext (e.g., Apollo initialization)
@@ -16,9 +18,13 @@ export function createEthersProvider(
       if (!privateRPCUrl) {
         throw new Error(`No private RPC available for chain ${chainId}`)
       }
-      if (privateRPCUrl === FLASHBOTS_RPC_URL) {
+
+      const useFlashbots =
+        chainId === UniverseChainId.Mainnet && Statsig.checkGate(getFeatureFlagName(FeatureFlags.FlashbotsPrivateRpc))
+      if (useFlashbots) {
         return new FlashbotsRpcProvider(signer)
       }
+
       return new ethersProviders.JsonRpcProvider(privateRPCUrl)
     }
 

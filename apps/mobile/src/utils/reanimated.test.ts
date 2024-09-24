@@ -59,7 +59,7 @@ describe('reanimated numberToLocaleStringWorklet', function () {
 
   it('returns a string formatted in IT style (1.234,5) when passed IT', function () {
     const num = 1234.5
-    const locale = 'it'
+    const locale = 'it-IT'
 
     expect(numberToLocaleStringWorklet(num, locale)).toBe('1.234,50')
   })

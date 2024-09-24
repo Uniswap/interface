@@ -13,6 +13,18 @@ module.exports = {
   },
   overrides: [
     {
+      files: [
+        'src/index.ts',
+        'src/features/telemetry/constants/index.ts',
+        'src/i18n/index.ts',
+        'src/state/index.ts',
+        'src/test/**',
+      ],
+      rules: {
+        'check-file/no-index': 'off',
+      },
+    },
+    {
       files: ['*.ts', '*.tsx'],
       rules: {
         'no-relative-import-paths/no-relative-import-paths': [

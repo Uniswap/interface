@@ -63,6 +63,7 @@ const typeInfo: SendTokenTransactionInfo = {
   tokenAddress: erc20TranferParams.tokenAddress,
   type: TransactionType.Send,
   currencyAmountUSD: undefined,
+  gasEstimates: undefined,
 }
 
 describe('sendTokenSaga', () => {
@@ -139,6 +140,7 @@ describe('sendTokenSaga', () => {
           tokenId: erc721TransferParams.tokenId,
           type: TransactionType.Send,
           currencyAmountUSD: undefined,
+          gasEstimates: undefined,
         },
         txId: '1',
       })
@@ -165,6 +167,7 @@ describe('sendTokenSaga', () => {
           tokenId: erc1155TransferParams.tokenId,
           type: TransactionType.Send,
           currencyAmountUSD: undefined,
+          gasEstimates: undefined,
         },
         txId: '1',
       })

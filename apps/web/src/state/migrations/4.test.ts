@@ -1,4 +1,3 @@
-import { DEFAULT_LOCALE } from 'constants/locales'
 import { createMigrate } from 'redux-persist'
 import { migration1 } from 'state/migrations/1'
 import { migration2 } from 'state/migrations/2'
@@ -6,6 +5,7 @@ import { migration3 } from 'state/migrations/3'
 import { migration4, PersistAppStateV4 } from 'state/migrations/4'
 import { RouterPreference } from 'state/routing/types'
 import { SlippageTolerance } from 'state/user/types'
+import { DEFAULT_LOCALE } from 'uniswap/src/features/language/constants'
 
 const previousState: PersistAppStateV4 = {
   user: {

@@ -2,6 +2,7 @@ import { Store } from '@reduxjs/toolkit'
 import { persistStore } from 'redux-persist'
 import { createDefaultStore } from 'state'
 import { initialState as initialListsState } from 'state/lists/reducer'
+import { PERSIST_VERSION } from 'state/migrations'
 import { RouterPreference } from 'state/routing/types'
 import { initialState as initialSignaturesState } from 'state/signatures/reducer'
 import { initialState as initialTransactionsState } from 'state/transactions/reducer'
@@ -13,7 +14,7 @@ const defaultState = {
   user: {},
   _persist: {
     rehydrated: true,
-    version: 16,
+    version: PERSIST_VERSION,
   },
   application: {
     chainId: null,
@@ -56,6 +57,12 @@ const defaultState = {
   wallets: {
     connectedWallets: [],
     switchingChain: false,
+  },
+  userSettings: {
+    currentLanguage: 'en',
+    currentCurrency: 'USD',
+    hideSmallBalances: true,
+    hideSpamTokens: true,
   },
 }
 

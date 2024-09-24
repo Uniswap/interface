@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/components/explore/hooks'
-import { Loader } from 'src/components/loading'
+import { Loader } from 'src/components/loading/loaders'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
 import { AnimatedTouchableArea, Flex, ImpactFeedbackStyle, Text } from 'ui/src'
@@ -124,7 +124,7 @@ function FavoriteTokenCard({
                 <Flex grow row alignItems="center" gap="$spacing8">
                   <TokenLogo
                     chainId={chainId ?? undefined}
-                    name={token?.project?.name ?? undefined}
+                    name={token?.name ?? undefined}
                     size={imageSizes.image20}
                     symbol={token?.symbol ?? undefined}
                     url={token?.project?.logoUrl ?? undefined}

@@ -1,9 +1,10 @@
 import { Currency } from '@uniswap/sdk-core'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { COMMON_BASES } from 'constants/routing'
-import { NATIVE_CHAIN_ID, nativeOnChain } from 'constants/tokens'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { apolloClient } from 'graphql/data/apollo/client'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
+import { COMMON_BASES } from 'uniswap/src/constants/routing'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   Token,
   TokenDocument,

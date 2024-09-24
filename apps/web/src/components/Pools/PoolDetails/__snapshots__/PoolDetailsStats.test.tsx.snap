@@ -2,21 +2,7 @@
 
 exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
 <DocumentFragment>
-  .c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c11 {
+  .c11 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -59,6 +45,24 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+}
+
+.c18 {
+  color: #FF5F52;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c5 {
@@ -112,10 +116,6 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   padding: 4px 0px;
-}
-
-.c18 {
-  color: #FF5F52;
 }
 
 .c4 {
@@ -485,21 +485,7 @@ exports[`PoolDetailsStats pool balance chart not visible on mobile 1`] = `
 
 exports[`PoolDetailsStats renders stats text correctly 1`] = `
 <DocumentFragment>
-  .c0 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-}
-
-.c12 {
+  .c12 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -542,6 +528,24 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   display: -webkit-flex;
   display: -ms-flexbox;
   display: flex;
+}
+
+.c20 {
+  color: #FF5F52;
+}
+
+.c0 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
 }
 
 .c5 {
@@ -595,10 +599,6 @@ exports[`PoolDetailsStats renders stats text correctly 1`] = `
   -ms-flex-pack: start;
   justify-content: flex-start;
   padding: 4px 0px;
-}
-
-.c20 {
-  color: #FF5F52;
 }
 
 .c4 {

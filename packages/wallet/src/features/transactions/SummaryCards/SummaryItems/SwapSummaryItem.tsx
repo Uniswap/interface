@@ -9,13 +9,12 @@ import {
   TransactionDetails,
   isConfirmedSwapTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
+import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
-import { getFormattedCurrencyAmount } from 'wallet/src/utils/currency'
 
 const MAX_SHOW_RETRY_TIME = 15 * ONE_MINUTE_MS
 

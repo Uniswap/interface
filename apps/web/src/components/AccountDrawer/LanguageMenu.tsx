@@ -1,32 +1,34 @@
 import { InterfaceEventName } from '@uniswap/analytics-events'
 import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { MenuColumn, MenuItem } from 'components/AccountDrawer/shared'
-import { LOCALE_LABEL, SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
-import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useActiveLanguage } from 'hooks/useActiveLocale'
 import { useLocationLinkProps } from 'hooks/useLocationLinkProps'
-import { useUserLocaleManager } from 'state/user/hooks'
+import { useDispatch } from 'react-redux'
+import { Language, WEB_SUPPORTED_LANGUAGES } from 'uniswap/src/features/language/constants'
+import { useLanguageInfo } from 'uniswap/src/features/language/hooks'
+import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 
-function LanguageMenuItem({ locale }: { locale: SupportedLocale }) {
-  const activeLocale = useActiveLocale()
+function LanguageMenuItem({ language }: { language: Language }) {
+  const currentLanguage = useActiveLanguage()
+  const languageInfo = useLanguageInfo(language)
+  const dispatch = useDispatch()
 
-  const { to, onClick } = useLocationLinkProps(locale)
-  const [, setUserLocale] = useUserLocaleManager()
+  const { to } = useLocationLinkProps(languageInfo.locale)
 
   return (
     <MenuItem
-      label={LOCALE_LABEL[locale]}
+      label={languageInfo.displayName}
       onClick={() => {
-        onClick?.()
-        setUserLocale(locale)
+        dispatch(setCurrentLanguage(language))
         sendAnalyticsEvent(InterfaceEventName.LANGUAGE_SELECTED, {
-          previous_language: activeLocale,
-          new_language: locale,
+          previous_language: currentLanguage,
+          new_language: language,
         })
       }}
+      isActive={language === currentLanguage}
       to={to}
-      isActive={locale === activeLocale}
       testId="wallet-language-item"
     />
   )
@@ -35,8 +37,8 @@ function LanguageMenuItem({ locale }: { locale: SupportedLocale }) {
 export function LanguageMenuItems() {
   return (
     <>
-      {SUPPORTED_LOCALES.map((locale) => (
-        <LanguageMenuItem locale={locale} key={locale} />
+      {WEB_SUPPORTED_LANGUAGES.map((language) => (
+        <LanguageMenuItem language={language} key={language} />
       ))}
     </>
   )

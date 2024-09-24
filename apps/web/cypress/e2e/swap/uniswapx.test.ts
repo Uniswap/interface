@@ -1,6 +1,7 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
+import { DAI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { DAI, USDC_MAINNET, nativeOnChain } from '../../../src/constants/tokens'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { getTestSelector, setupHardhat } from '../../utils'
 import { stubNonPriceQuoteWith, stubSwapTxReceipt } from '../../utils/uniswapx-swap'
 
@@ -288,21 +289,20 @@ describe('UniswapX v1', () => {
       })
 
       it('balances should refetch after uniswapx swap is filled', () => {
+        cy.interceptGraphqlOperation('PortfolioBalances', 'portfolio_balances.json').as('PortfolioBalances')
         // Expect balances to fetch upon opening mini portfolio
         cy.get('#swap-currency-input .token-amount-input').type('300')
         submitUniswapXOrder()
         cy.get(getTestSelector('confirmation-close-icon')).click()
 
-        cy.interceptGraphqlOperation('PortfolioBalancesWeb', 'mini-portfolio/tokens.json').as('PortfolioBalancesWeb')
-
         // Expect balances to refetch after filling
         cy.wait('@orderStatusOpen')
         cy.get(getTestSelector('web3-status-connected')).click()
-        cy.wait('@PortfolioBalancesWeb')
+        cy.wait('@PortfolioBalances')
 
         cy.intercept(OrderStatusEndpoint, { fixture: 'uniswapx/filledStatusResponse.json' }).as('orderStatusFilled')
         cy.wait('@orderStatusFilled')
-        cy.wait('@PortfolioBalancesWeb')
+        cy.wait('@PortfolioBalances')
       })
     })
   })

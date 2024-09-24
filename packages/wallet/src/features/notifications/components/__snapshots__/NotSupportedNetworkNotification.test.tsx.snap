@@ -62,11 +62,11 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
         "marginRight": "auto",
         "shadowColor": "rgb(0,0,0)",
         "shadowOffset": {
-          "height": 6,
+          "height": 1,
           "width": 0,
         },
-        "shadowOpacity": 0.1607843137254902,
-        "shadowRadius": 12,
+        "shadowOpacity": 0.0196078431372549,
+        "shadowRadius": 6,
       }
     }
   >

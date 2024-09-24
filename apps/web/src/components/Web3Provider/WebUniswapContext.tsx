@@ -1,8 +1,10 @@
+import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersProvider } from 'hooks/useEthersProvider'
 import { useEthersSigner } from 'hooks/useEthersSigner'
 import { useShowSwapNetworkNotification } from 'hooks/useShowSwapNetworkNotification'
-import { PropsWithChildren, useMemo } from 'react'
+import { PropsWithChildren, useCallback, useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { UniswapProvider } from 'uniswap/src/contexts/UniswapContext'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 
@@ -31,6 +33,9 @@ export function WebUniswapProvider({ children }: PropsWithChildren) {
   const account = useWagmiAccount()
   const signer = useEthersSigner()
   const showSwapNetworkNotification = useShowSwapNetworkNotification()
+  const navigate = useNavigate()
+  const navigateToFiatOnRamp = useCallback(() => navigate(`/buy`, { replace: true }), [navigate])
+  const accountDrawer = useAccountDrawer()
 
   return (
     <UniswapProvider
@@ -38,6 +43,8 @@ export function WebUniswapProvider({ children }: PropsWithChildren) {
       signer={signer}
       useProviderHook={useWebProvider}
       onShowSwapNetworkNotification={showSwapNetworkNotification}
+      navigateToFiatOnRamp={navigateToFiatOnRamp}
+      onConnectWallet={accountDrawer.open}
     >
       {children}
     </UniswapProvider>

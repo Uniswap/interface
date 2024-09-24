@@ -5,18 +5,19 @@ import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRe
 import { NetworksFooter } from 'src/app/features/dappRequests/requestContent/NetworksFooter'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { Anchor, AnimatePresence, Button, Flex, Text, UniversalImage, UniversalImageResizeMode, styled } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { borderRadii, iconSizes } from 'ui/src/theme'
 import { useUSDValue } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { formatDappURL } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
 import { DappIconPlaceholder } from 'wallet/src/components/WalletConnect/DappIconPlaceholder'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
-import { hasSufficientFundsIncludingGas } from 'wallet/src/features/transactions/utils'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 interface DappRequestHeaderProps {
@@ -107,7 +108,7 @@ export function DappRequestContent({
 
 function DappRequestHeader({ headerIcon, title }: DappRequestHeaderProps): JSX.Element {
   const { dappIconUrl, dappUrl } = useDappRequestQueueContext()
-  const hostname = new URL(dappUrl).hostname.toUpperCase()
+  const hostname = extractNameFromUrl(dappUrl).toUpperCase()
   const fallbackIcon = <DappIconPlaceholder iconSize={iconSizes.icon40} name={hostname} />
 
   return (
@@ -116,6 +117,7 @@ function DappRequestHeader({ headerIcon, title }: DappRequestHeaderProps): JSX.E
         <Flex grow>
           {headerIcon || (
             <UniversalImage
+              style={{ image: { borderRadius: borderRadii.rounded8 } }}
               fallback={fallbackIcon}
               size={{
                 width: iconSizes.icon40,

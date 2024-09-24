@@ -1,7 +1,7 @@
 import { DropdownSelector, InternalMenuItem } from 'components/DropdownSelector'
 import { filterTimeAtom } from 'components/Tokens/state'
 import { TimePeriod } from 'graphql/data/util'
-import { useScreenSize } from 'hooks/screenSize'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAtom } from 'jotai'
 import { useTheme } from 'lib/styled-components'
 import { useState } from 'react'

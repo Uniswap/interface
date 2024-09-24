@@ -1,25 +1,26 @@
 import { memo, useCallback, useMemo } from 'react'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import {
-  useCommonTokensOptions,
+  useCommonTokensOptionsWithFallback,
   useFavoriteTokensOptions,
   usePopularTokensOptions,
   usePortfolioTokenOptions,
   useRecentlySearchedTokens,
 } from 'uniswap/src/components/TokenSelector/hooks'
 import {
-  ConvertFiatAmountFormattedCallback,
   OnSelectCurrency,
   TokenOptionSection,
   TokenSection,
   TokenSectionsHookProps,
 } from 'uniswap/src/components/TokenSelector/types'
-import { isSwapListLoading, useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/utils'
+import {
+  isSwapListLoading,
+  tokenOptionDifference,
+  useTokenOptionsSection,
+} from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
-// eslint-disable-next-line no-restricted-imports
-import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { isExtension } from 'utilities/src/platform'
+import { isMobileApp } from 'utilities/src/platform'
 
 function useTokenSectionsForSwapOutput({
   activeAccountAddress,
@@ -53,7 +54,7 @@ function useTokenSectionsForSwapOutput({
     refetch: refetchCommonTokenOptions,
     loading: commonTokenOptionsLoading,
     // if there is no chain filter then we show mainnet tokens
-  } = useCommonTokensOptions(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
+  } = useCommonTokensOptionsWithFallback(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
@@ -81,7 +82,9 @@ function useTokenSectionsForSwapOutput({
   const portfolioSection = useTokenOptionsSection(TokenOptionSection.YourTokens, portfolioTokenOptions)
   const recentSection = useTokenOptionsSection(TokenOptionSection.RecentTokens, recentlySearchedTokenOptions)
   const favoriteSection = useTokenOptionsSection(TokenOptionSection.FavoriteTokens, favoriteTokenOptions)
-  const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularTokenOptions)
+
+  const popularMinusPortfolioTokens = tokenOptionDifference(popularTokenOptions, portfolioTokenOptions)
+  const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularMinusPortfolioTokens)
 
   const sections = useMemo(() => {
     if (isSwapListLoading(loading, portfolioSection, popularSection)) {
@@ -93,8 +96,8 @@ function useTokenSectionsForSwapOutput({
       ...(portfolioSection ?? []),
       ...(recentSection ?? []),
       // TODO(WEB-3061): Favorited wallets/tokens
-      // Extension does not support favoriting but has a default list, so we can't rely on empty array check
-      ...(isExtension ? [] : favoriteSection ?? []),
+      // Extension & interface do not support favoriting but has a default list, so we can't rely on empty array check
+      ...(isMobileApp ? favoriteSection ?? [] : []),
       ...(popularSection ?? []),
     ]
   }, [favoriteSection, loading, popularSection, portfolioSection, recentSection, suggestedSection])
@@ -111,19 +114,13 @@ function useTokenSectionsForSwapOutput({
 }
 
 function _TokenSelectorSwapOutputList({
-  onDismiss,
   onSelectCurrency,
   activeAccountAddress,
   chainFilter,
   isKeyboardOpen,
-  formatNumberOrStringCallback,
-  convertFiatAmountFormattedCallback,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
-  formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
-  convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
-  onDismiss: () => void
 }): JSX.Element {
   const {
     data: sections,
@@ -137,15 +134,12 @@ function _TokenSelectorSwapOutputList({
   return (
     <TokenSelectorList
       chainFilter={chainFilter}
-      convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
-      formatNumberOrStringCallback={formatNumberOrStringCallback}
       hasError={Boolean(error)}
       isKeyboardOpen={isKeyboardOpen}
       loading={loading}
       refetch={refetch}
       sections={sections}
       showTokenWarnings={true}
-      onDismiss={onDismiss}
       onSelectCurrency={onSelectCurrency}
     />
   )

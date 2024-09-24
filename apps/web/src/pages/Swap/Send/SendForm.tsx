@@ -1,7 +1,8 @@
 import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonLight, ButtonPrimary } from 'components/Button'
-import Column from 'components/Column'
+import { ButtonLight, ButtonPrimary } from 'components/Button/buttons'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
+import Column from 'components/deprecated/Column'
 import { useIsSupportedChainId } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useGroupedRecentTransfers } from 'hooks/useGroupedRecentTransfers'
@@ -197,7 +198,7 @@ function SendFormInner({ disableTokenInputs = false, onCurrencyChange }: SendFor
             element={InterfaceElementName.CONNECT_WALLET_BUTTON}
           >
             <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
-              <Trans i18nKey="common.connectWallet.button" />
+              <ConnectWalletButtonText />
             </ButtonLight>
           </Trace>
         ) : !multichainUXEnabled && initialChainId && initialChainId !== account.chainId ? (

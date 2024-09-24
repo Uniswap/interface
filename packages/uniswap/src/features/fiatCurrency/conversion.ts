@@ -30,7 +30,7 @@ type SupportedServerCurrency = Extract<
   | Currency.Vnd
 >
 const mapServerCurrencyToFiatCurrency: Record<Currency, FiatCurrency | undefined> = {
-  [Currency.Aud]: FiatCurrency.AustrialianDollor,
+  [Currency.Aud]: FiatCurrency.AustralianDollar,
   [Currency.Brl]: FiatCurrency.BrazilianReal,
   [Currency.Cad]: FiatCurrency.CanadianDollar,
   [Currency.Cny]: FiatCurrency.ChineseYuan,
@@ -53,8 +53,8 @@ const mapServerCurrencyToFiatCurrency: Record<Currency, FiatCurrency | undefined
   [Currency.Eth]: undefined,
   [Currency.Matic]: undefined,
 }
-const mapFiatCurrencyToServerCurrency: Record<FiatCurrency, SupportedServerCurrency> = {
-  [FiatCurrency.AustrialianDollor]: Currency.Aud,
+export const mapFiatCurrencyToServerCurrency: Record<FiatCurrency, SupportedServerCurrency> = {
+  [FiatCurrency.AustralianDollar]: Currency.Aud,
   [FiatCurrency.BrazilianReal]: Currency.Brl,
   [FiatCurrency.CanadianDollar]: Currency.Cad,
   [FiatCurrency.ChineseYuan]: Currency.Cny,
@@ -91,7 +91,7 @@ const SOURCE_CURRENCY = Currency.Usd // Assuming all currency data comes from US
  * Hook used to return a converter with a set of all necessary conversion logic needed for
  * fiat currency. This is based off of the currently selected language and fiat currency
  * in settings, using a graphql endpoint to retrieve the conversion rate.
- * This ensures that the converted and formatted values are properly localized. If any addditonal
+ * This ensures that the converted and formatted values are properly localized. If any additional
  * conversion logic is needed, please add them here.
  * @returns set of localized fiat currency conversion functions
  */

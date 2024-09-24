@@ -2,7 +2,7 @@
 import { ApolloError } from '@apollo/client'
 import { TransactionRequest as EthersTransactionRequest } from '@ethersproject/providers'
 import { SerializedError } from '@reduxjs/toolkit'
-import { Currency } from '@uniswap/sdk-core'
+import { Currency, TradeType } from '@uniswap/sdk-core'
 // eslint-disable-next-line no-restricted-imports
 import { FetchBaseQueryError } from '@reduxjs/toolkit/dist/query'
 import {
@@ -22,10 +22,8 @@ import {
   WalletConnectionResult,
 } from '@uniswap/analytics-events'
 import { Protocol } from '@uniswap/router-sdk'
-import {
-  Currency as FiatCurrency,
-  NftStandard,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { NftStandard } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import {
   ExtensionEventName,
   FiatOffRampEventName,
@@ -52,21 +50,6 @@ import { EthMethod, UwULinkMethod, WCEventType, WCRequestOutcome } from 'uniswap
 import { WidgetEvent, WidgetType } from 'uniswap/src/types/widgets'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
-// Events related to Moonpay internal transactions
-// NOTE: we do not currently have access to the full life cycle of these txs
-// because we do not yet use Moonpay's webhook
-export type MoonpayTransactionEventProperties = ITraceContext &
-  // allow any object of strings for now
-  Record<string, string>
-
-export type EstimatedGasFeeDetails = {
-  gasUseEstimate?: string
-  maxFeePerGas?: string
-  maxPriorityFeePerGas?: string
-  gasFee?: string
-  blockSubmitted?: number
-}
-
 export type GasEstimateAccuracyProperties = {
   tx_hash?: string
   transaction_type: string
@@ -82,6 +65,8 @@ export type GasEstimateAccuracyProperties = {
   gas_price?: number
   max_priority_fee_per_gas?: string
   private_rpc?: boolean
+  is_shadow?: boolean
+  name?: string
 }
 
 export type AssetDetailsBaseProperties = {
@@ -109,21 +94,35 @@ type OnboardingCompletedProps = {
 
 export type SwapTradeBaseProperties = {
   transactionOriginType: string
+  // We have both `allowed_slippage` (percentage) and `allowed_slippage_basis_points` because web and wallet used to track this in different ways.
+  // We should eventually standardize on one or the other.
+  allowed_slippage?: number
   allowed_slippage_basis_points?: number
   token_in_symbol?: string
   token_out_symbol?: string
   token_in_address?: string
   token_out_address?: string
   price_impact_basis_points?: string | number
-  estimated_network_fee_usd?: number
+  estimated_network_fee_usd?: string
   chain_id?: number
   token_in_amount?: string | number
   token_out_amount?: string | number
   token_in_amount_usd?: number
   token_out_amount_usd?: number
+  token_in_amount_max?: string
+  token_out_amount_min?: string
+  token_in_detected_tax?: number
+  token_out_detected_tax?: number
+  minimum_output_after_slippage?: string
   fee_amount?: string
+  // `requestId` is the same as `ura_request_id`. We should eventually standardize on one or the other.
   requestId?: string
+  ura_request_id?: string
+  ura_block_number?: string
   quoteId?: string
+  swap_quote_block_number?: string
+  fee_usd?: number
+  type?: TradeType
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
@@ -176,8 +175,8 @@ export type WindowEthereumRequestProperties = {
 
 export type DappContextProperties = {
   dappUrl?: string
-  chainId: WalletChainId
-  activeConnectedAddress: Address
+  chainId?: WalletChainId
+  activeConnectedAddress?: Address
   connectedAddresses: Address[]
 }
 
@@ -219,9 +218,7 @@ type NFTBagProperties = {
 
 type InterfaceTokenSelectedProperties = {
   is_imported_by_user: boolean
-  // TODO(WEB-4739): Remove total_balances_usd when we clean up old token selector
-  total_balances_usd?: number
-  token_balance_usd?: number
+  token_balance_usd?: number | string
 }
 
 export enum DappRequestAction {
@@ -267,6 +264,8 @@ export type UniverseEventProperties = {
   [ExtensionEventName.ChangeLockedState]: { locked: boolean; location: 'background' | 'sidebar' }
   [ExtensionEventName.DappConnect]: DappContextProperties
   [ExtensionEventName.DappConnectRequest]: DappContextProperties
+  [ExtensionEventName.DappDisconnect]: DappContextProperties
+  [ExtensionEventName.DappDisconnectAll]: Pick<DappContextProperties, 'activeConnectedAddress'>
   [ExtensionEventName.DappRequest]: DappContextProperties & { action: DappRequestAction; requestType: string } // TODO: requestType should be of the type DappRequestType
   [ExtensionEventName.DappChangeChain]: Omit<DappContextProperties, 'connectedAddresses'>
   [ExtensionEventName.DappTroubleConnecting]: Pick<DappContextProperties, 'dappUrl'>
@@ -673,6 +672,10 @@ export type UniverseEventProperties = {
     wallets: string[]
     balances: number[]
   }
+  [UniswapEventName.BalancesReportPerChain]: {
+    total_balances_usd_per_chain: Record<string, number>
+    wallet: string
+  }
   [UniswapEventName.TokenSelected]:
     | (ITraceContext &
         AssetDetailsBaseProperties &
@@ -698,6 +701,9 @@ export type UniverseEventProperties = {
     twitter: boolean
   }
   [UnitagEventName.UnitagRemoved]: undefined
+  [WalletEventName.ExternalLinkOpened]: {
+    url: string
+  }
   [WalletEventName.GasEstimateAccuracy]: GasEstimateAccuracyProperties
   [WalletEventName.TokenVisibilityChanged]: { currencyId: string; visible: boolean }
   [WalletEventName.TransferSubmitted]: TransferProperties

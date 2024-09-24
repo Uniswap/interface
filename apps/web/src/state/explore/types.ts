@@ -10,6 +10,12 @@ export interface TokenStat
   priceHistory?: PricePoint[]
 }
 
-export interface PoolStat extends PoolStats {
-  oneDayApr: Percent
+type PoolStatWithoutMethods = Omit<
+  PoolStats,
+  'clone' | 'toBinary' | 'toJson' | 'equals' | 'fromBinary' | 'fromJson' | 'fromJsonString' | 'toJsonString' | 'getType'
+>
+
+export interface PoolStat extends PoolStatWithoutMethods {
+  apr: Percent
+  volOverTvl?: number
 }

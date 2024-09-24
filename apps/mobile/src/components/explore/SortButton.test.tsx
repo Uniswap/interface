@@ -1,4 +1,3 @@
-import ContextMenu from 'react-native-context-menu-view'
 import { SortButton } from 'src/components/explore/SortButton'
 import { render } from 'src/test/test-utils'
 import { TokenSortableField } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -39,43 +38,6 @@ describe('SortButton', () => {
       const selectedOption = queryByText(label)
 
       expect(selectedOption).toBeTruthy()
-    })
-
-    it(`returns correct context menu actions with checmark near the ${label} option`, () => {
-      jest.clearAllMocks()
-      render(<SortButton orderBy={orderBy} />)
-
-      expect((ContextMenu as unknown as jest.Mock).mock.calls[0][0]).toEqual(
-        expect.objectContaining({
-          actions: [
-            {
-              title: 'Uniswap volume (24H)',
-              systemIcon: orderBy === TokenSortableField.Volume ? 'checkmark' : '',
-              orderBy: TokenSortableField.Volume,
-            },
-            {
-              title: 'Uniswap TVL',
-              systemIcon: orderBy === TokenSortableField.TotalValueLocked ? 'checkmark' : '',
-              orderBy: TokenSortableField.TotalValueLocked,
-            },
-            {
-              title: 'Market cap',
-              systemIcon: orderBy === TokenSortableField.MarketCap ? 'checkmark' : '',
-              orderBy: TokenSortableField.MarketCap,
-            },
-            {
-              title: 'Price increase (24H)',
-              systemIcon: orderBy === ClientTokensOrderBy.PriceChangePercentage24hDesc ? 'checkmark' : '',
-              orderBy: ClientTokensOrderBy.PriceChangePercentage24hDesc,
-            },
-            {
-              title: 'Price decrease (24H)',
-              systemIcon: orderBy === ClientTokensOrderBy.PriceChangePercentage24hAsc ? 'checkmark' : '',
-              orderBy: ClientTokensOrderBy.PriceChangePercentage24hAsc,
-            },
-          ],
-        }),
-      )
     })
   })
 })

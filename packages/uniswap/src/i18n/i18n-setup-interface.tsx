@@ -60,7 +60,7 @@ export function setupi18n(): undefined {
       })
     })
 
-  // add default english ns right away
+  // add default english translations right away
   i18n.addResourceBundle('en-US', 'translations', {
     'en-US': {
       translation: enUsLocale,

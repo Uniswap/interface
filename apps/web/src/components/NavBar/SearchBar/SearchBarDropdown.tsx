@@ -1,5 +1,5 @@
 import { InterfaceSectionName, NavBarSearchTypes } from '@uniswap/analytics-events'
-import Badge from 'components/Badge'
+import Badge from 'components/Badge/Badge'
 import { ChainLogo } from 'components/Logo/ChainLogo'
 import {
   InterfaceRemoteSearchHistoryItem,
@@ -24,7 +24,11 @@ import { useLocation } from 'react-router-dom'
 import { ThemedText } from 'theme/components'
 import { Flex, Text, useScrollbarStyles } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { HistoryDuration, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import {
+  HistoryDuration,
+  SafetyLevel,
+  Token,
+} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
@@ -159,7 +163,13 @@ function SearchBarDropdownContents({
 }: SearchBarDropdownProps): JSX.Element {
   const [hoveredIndex, setHoveredIndex] = useState<number | undefined>(0)
   const { data: searchHistory } = useRecentlySearchedAssets()
-  const shortenedHistory = useMemo(() => searchHistory ?? [...Array<GqlSearchToken>(2)], [searchHistory])
+  const shortenedHistory = useMemo(
+    () =>
+      searchHistory?.filter((item) => 'isVerified' in (item as GenieCollection) || (item as Token).chain) ?? [
+        ...Array<GqlSearchToken>(2),
+      ],
+    [searchHistory],
+  )
   const { pathname } = useLocation()
   const isNFTPage = useIsNftPage()
   const isTokenPage = pathname.includes('/explore')

@@ -1,5 +1,5 @@
 import { NFTEventName } from '@uniswap/analytics-events'
-import { useIsMobile } from 'hooks/screenSize'
+import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import { Column } from 'nft/components/Flex'
 import { BagRow, PriceChangeBagRow, UnavailableAssetsHeaderRow } from 'nft/components/bag/BagRow'
 import { useBag, useNativeUsdPrice } from 'nft/hooks'

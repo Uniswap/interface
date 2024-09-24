@@ -16,6 +16,7 @@ import { addRequest } from 'src/app/features/dappRequests/saga'
 import { ReceiveScreen } from 'src/app/features/receive/ReceiveScreen'
 import { SendFlow } from 'src/app/features/send/SendFlow'
 import { DevMenuScreen } from 'src/app/features/settings/DevMenuScreen'
+import { SettingsManageConnectionsScreen } from 'src/app/features/settings/SettingsManageConnectionsScreen/SettingsManageConnectionsScreen'
 import { SettingsPrivacyScreen } from 'src/app/features/settings/SettingsPrivacyScreen'
 import { RemoveRecoveryPhraseVerify } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseVerify'
 import { RemoveRecoveryPhraseWallets } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/RemoveRecoveryPhraseWallets'
@@ -25,8 +26,8 @@ import { SettingsScreenWrapper } from 'src/app/features/settings/SettingsScreenW
 import { SettingsChangePasswordScreen } from 'src/app/features/settings/password/SettingsChangePasswordScreen'
 import { SwapFlowScreen } from 'src/app/features/swap/SwapFlowScreen'
 import { useIsWalletUnlocked } from 'src/app/hooks/useIsWalletUnlocked'
-import { MainContent, WebNavigation } from 'src/app/navigation'
 import { AppRoutes, RemoveRecoveryPhraseRoutes, SettingsRoutes } from 'src/app/navigation/constants'
+import { MainContent, WebNavigation } from 'src/app/navigation/navigation'
 import { setRouter, setRouterState } from 'src/app/navigation/state'
 import { SentryAppNameTag, initializeSentry, sentryCreateHashRouter } from 'src/app/sentry'
 import { initExtensionAnalytics } from 'src/app/utils/analytics'
@@ -45,12 +46,12 @@ import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
-import { isDevEnv } from 'utilities/src/environment'
+import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
-import { SharedWalletProvider } from 'wallet/src/provider'
+import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 getLocalUserId()
   .then((userId) => {
@@ -114,6 +115,10 @@ const router = sentryCreateHashRouter([
           {
             path: SettingsRoutes.Privacy,
             element: <SettingsPrivacyScreen />,
+          },
+          {
+            path: SettingsRoutes.ManageConnections,
+            element: <SettingsManageConnectionsScreen />,
           },
         ],
       },
