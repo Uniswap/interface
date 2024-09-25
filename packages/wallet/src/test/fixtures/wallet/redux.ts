@@ -28,4 +28,4 @@ export const preloadedWalletPackageState = createFixture<
   account: undefined,
 })(({ account }) => ({
   wallet: preloadedWalletReducerState({ account }),
-}))
+})) as (options?: PreloadedSharedStateOptions) => PreloadedState<WalletPackageState>

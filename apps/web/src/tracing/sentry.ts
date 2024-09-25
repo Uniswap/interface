@@ -1,9 +1,8 @@
 import { BrowserTracing } from '@sentry/browser'
 import * as Sentry from '@sentry/react'
+import { getEnvName } from 'tracing/env'
 import { beforeSend } from 'tracing/errors'
 import { v4 as uuidv4 } from 'uuid'
-// eslint-disable-next-line @typescript-eslint/no-restricted-imports
-import { getEnvName } from 'utilities/src/environment'
 
 const SENTRY_USER_ID_KEY = 'sentry-user-id'
 

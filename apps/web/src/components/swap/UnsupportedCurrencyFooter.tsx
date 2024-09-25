@@ -1,10 +1,10 @@
 import { Currency, Token } from '@uniswap/sdk-core'
-import { ButtonEmpty } from 'components/Button'
-import Card, { OutlineCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
+import { ButtonEmpty } from 'components/Button/buttons'
+import Card, { OutlineCard } from 'components/Card/cards'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import Modal from 'components/Modal'
-import { AutoRow, RowBetween } from 'components/Row'
+import { AutoColumn } from 'components/deprecated/Column'
+import { AutoRow, RowBetween } from 'components/deprecated/Row'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import styled from 'lib/styled-components'
@@ -15,7 +15,7 @@ import { Text } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
   padding-top: calc(16px + 2rem);

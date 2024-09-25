@@ -11,8 +11,9 @@ import { TokenDetailsScreenQuery } from 'uniswap/src/data/graphql/uniswap-data-a
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { currencyIdToAddress, currencyIdToChain, isDefaultNativeAddress } from 'wallet/src/utils/currencyId'
-import { ExplorerDataType, getExplorerLink, getTwitterLink } from 'wallet/src/utils/linking'
+import { getTwitterLink } from 'wallet/src/utils/linking'
 
 export function TokenDetailsLinks({
   currencyId,

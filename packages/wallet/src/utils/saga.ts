@@ -1,48 +1,16 @@
-import { createAction, createReducer, PayloadActionCreator } from '@reduxjs/toolkit'
+import {
+  ActionCreatorWithoutPayload,
+  ActionCreatorWithPayload,
+  createAction,
+  createReducer,
+  PayloadActionCreator,
+} from '@reduxjs/toolkit'
+import { ReducerWithInitialState } from '@reduxjs/toolkit/dist/createReducer'
 import { call, delay, put, race, take } from 'typed-redux-saga'
 import { errorToString } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-
-/**
- * A convenience utility to create a saga and trigger action
- * Use to create simple sagas, for more complex ones use createMonitoredSaga.
- * Note: the wrapped saga this returns must be added to rootSaga.ts
- */
-export function createSaga<SagaParams = void>(
-  saga: (params: SagaParams) => unknown,
-  name: string,
-): {
-  wrappedSaga: () => Generator<unknown, void, unknown>
-  actions: {
-    trigger: PayloadActionCreator<SagaParams>
-  }
-} {
-  const triggerAction = createAction<SagaParams>(`${name}/trigger`)
-
-  const wrappedSaga = function* () {
-    while (true) {
-      try {
-        const trigger = yield* take<{ type: typeof triggerAction.type; payload: SagaParams }>(triggerAction.type)
-        logger.debug('saga', 'wrappedSaga', `${name} triggered`)
-        yield* call(saga, trigger.payload)
-      } catch (error) {
-        logger.error(error, {
-          tags: { file: 'utils/saga', function: 'createSaga' },
-          extra: { sagaName: name },
-        })
-      }
-    }
-  }
-
-  return {
-    wrappedSaga,
-    actions: {
-      trigger: triggerAction,
-    },
-  }
-}
 
 const DEFAULT_TIMEOUT = 90 * 1000 // 1.5 minutes
 
@@ -70,18 +38,21 @@ interface MonitoredSagaOptions {
  * Use to create complex sagas that need more coordination with the UI.
  * Note: the wrapped saga and reducer this returns must be added to rootSaga.ts
  */
-export function createMonitoredSaga<SagaParams = void>(
-  saga: (params: SagaParams) => unknown,
+export function createMonitoredSaga<SagaParams, SagaYieldType, SagaResultType>(
+  saga: (params: SagaParams) => Generator<SagaYieldType, SagaResultType, unknown>,
   name: string,
   options?: MonitoredSagaOptions,
 ): {
   name: string
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  wrappedSaga: () => any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  reducer: any
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  actions: any
+  wrappedSaga: () => Generator
+  reducer: ReducerWithInitialState<SagaState>
+  actions: {
+    trigger: PayloadActionCreator<SagaParams>
+    cancel: ActionCreatorWithoutPayload
+    progress: ActionCreatorWithPayload<SagaStatus, string>
+    error: ActionCreatorWithPayload<string, string>
+    reset: ActionCreatorWithoutPayload
+  }
 } {
   const triggerAction = createAction<SagaParams>(`${name}/trigger`)
   const cancelAction = createAction<void>(`${name}/cancel`)
@@ -105,8 +76,7 @@ export function createMonitoredSaga<SagaParams = void>(
       }),
   )
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const wrappedSaga = function* (): any {
+  const wrappedSaga = function* () {
     while (true) {
       try {
         const trigger = yield* take<{ type: typeof triggerAction.type; payload: SagaParams }>(triggerAction.type)

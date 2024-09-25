@@ -1,10 +1,10 @@
 import { skipToken } from '@reduxjs/toolkit/query/react'
-import { buildCurrencyInfo } from 'constants/routing'
-import { nativeOnChain } from 'constants/tokens'
 import { useUSDTokenUpdater } from 'hooks/useUSDTokenUpdater'
 import { useFiatOnRampSupportedTokens, useMeldFiatCurrencyInfo } from 'pages/Swap/Buy/hooks'
 import { formatFiatOnRampFiatAmount } from 'pages/Swap/Buy/shared'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
+import { buildCurrencyInfo } from 'uniswap/src/constants/routing'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   useFiatOnRampAggregatorCountryListQuery,
   useFiatOnRampAggregatorCryptoQuoteQuery,

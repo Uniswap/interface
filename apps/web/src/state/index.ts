@@ -2,18 +2,19 @@ import { configureStore } from '@reduxjs/toolkit'
 import { setupListeners } from '@reduxjs/toolkit/query/react'
 import localForage from 'localforage'
 import { PersistConfig, persistReducer, persistStore } from 'redux-persist'
+import createSagaMiddleware from 'redux-saga'
 import { updateVersion } from 'state/global/actions'
 import { sentryEnhancer } from 'state/logging'
-import { INDEXED_DB_REDUX_TABLE_NAME, customCreateMigrate, migrations } from 'state/migrations'
+import { INDEXED_DB_REDUX_TABLE_NAME, PERSIST_VERSION, customCreateMigrate, migrations } from 'state/migrations'
 import { quickRouteApi } from 'state/routing/quickRouteSlice'
 import { routingApi } from 'state/routing/slice'
 import { InterfaceState, interfacePersistedStateList, interfaceReducer } from 'state/webReducer'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
-import { isDevEnv, isTestEnv } from 'utilities/src/environment'
+import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 
 const persistConfig: PersistConfig<InterfaceState> = {
   key: 'interface',
-  version: 16, // see migrations.ts for more details about this version
+  version: PERSIST_VERSION,
   storage: localForage.createInstance({
     name: INDEXED_DB_REDUX_TABLE_NAME,
     driver: localForage.LOCALSTORAGE,
@@ -62,7 +63,8 @@ export function createDefaultStore() {
       })
         .concat(routingApi.middleware)
         .concat(quickRouteApi.middleware)
-        .concat(fiatOnRampAggregatorApi.middleware),
+        .concat(fiatOnRampAggregatorApi.middleware)
+        .concat(createSagaMiddleware()),
   })
 }
 

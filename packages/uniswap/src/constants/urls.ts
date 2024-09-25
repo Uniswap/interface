@@ -1,4 +1,4 @@
-import { isDevEnv, isTestEnv } from 'utilities/src/environment'
+import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
 import { isAndroid, isExtension, isInterface, isMobileApp } from 'utilities/src/platform'
 
 enum TrafficFlows {
@@ -31,6 +31,8 @@ export const uniswapUrls = {
     extensionDappTroubleshooting: `${helpUrl}/articles/25811698471565-Connecting-Uniswap-Extension-Beta-to-other-dapps`,
     feeOnTransferHelp: `${helpUrl}/articles/18673568523789-What-is-a-token-fee-`,
     howToSwapTokens: `${helpUrl}/articles/8370549680909-How-to-swap-tokens-`,
+    hiddenTokenInfo: `${helpUrl}/articles/30432674756749-How-to-hide-and-unhide-tokens-in-the-Uniswap-Wallet`,
+    hiddenNFTInfo: `${helpUrl}/articles/14185028445837-How-to-hide-and-unhide-NFTs-in-the-Uniswap-Wallet`,
     impermanentLoss: `${helpUrl}/articles/20904453751693-What-is-Impermanent-Loss`,
     limitsFailure: `${helpUrl}/articles/24300813697933-Why-did-my-limit-order-fail-or-not-execute`,
     limitsInfo: `${helpUrl}/sections/24372644881293`,
@@ -86,6 +88,12 @@ export const uniswapUrls = {
     swap: '/v1/swap',
     order: '/v1/order',
     orders: '/v1/orders',
+    swappableTokens: '/v1/swappable_tokens',
+    checkLpApproval: '/v1/check_approval_lp',
+    createLp: '/v1/create_lp_position',
+    increaseLp: '/v1/increase_lp_position',
+    reduceLp: '/v1/reduce_lp_position',
+    claimLpFees: '/v1/claim_lp_fees',
   },
 
   // App and Redirect URL's

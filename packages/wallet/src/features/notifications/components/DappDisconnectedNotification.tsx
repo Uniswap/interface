@@ -1,6 +1,6 @@
 import { useTranslation } from 'react-i18next'
-import { Image } from 'ui/src'
-import { iconSizes } from 'ui/src/theme'
+import { UniversalImage } from 'ui/src'
+import { borderRadii, iconSizes } from 'ui/src/theme'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
 import { DappDisconnectedNotification as DappDisconnectedNotificationType } from 'wallet/src/features/notifications/types'
 
@@ -17,7 +17,14 @@ export function DappDisconnectedNotification({
       hideDelay={hideDelay}
       icon={
         dappIconUrl ? (
-          <Image height={iconSizes.icon20} source={{ uri: dappIconUrl }} width={iconSizes.icon20} />
+          <UniversalImage
+            uri={dappIconUrl}
+            style={{ image: { borderRadius: borderRadii.rounded8 } }}
+            size={{
+              width: iconSizes.icon20,
+              height: iconSizes.icon20,
+            }}
+          />
         ) : undefined
       }
       title={t('common.text.disconnected')}

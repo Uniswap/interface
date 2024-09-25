@@ -3,7 +3,6 @@ import { SharedEventName } from '@uniswap/analytics-events'
 import { TFunction } from 'i18next'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard } from 'react-native'
 import { useDispatch } from 'react-redux'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
 import { GenericImportForm } from 'src/features/import/GenericImportForm'
@@ -20,6 +19,7 @@ import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
 import { areAddressesEqual, getValidAddress } from 'uniswap/src/utils/addresses'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { normalizeTextInput } from 'utilities/src/primitives/string'
 import { createViewOnlyAccount } from 'wallet/src/features/onboarding/createViewOnlyAccount'
 import { useIsSmartContractAddress } from 'wallet/src/features/transactions/send/hooks/useIsSmartContractAddress'
@@ -168,7 +168,9 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
           value={value}
           onChange={onChange}
           onSubmit={(): void => {
-            isValid && Keyboard.dismiss()
+            if (isValid) {
+              dismissNativeKeyboard()
+            }
           }}
         />
         <Flex

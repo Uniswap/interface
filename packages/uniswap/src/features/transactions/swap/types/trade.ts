@@ -4,7 +4,7 @@ import { UnsignedV2DutchOrderInfo, V2DutchOrderTrade } from '@uniswap/uniswapx-s
 import { Route as V2RouteSDK } from '@uniswap/v2-sdk'
 import { Route as V3RouteSDK } from '@uniswap/v3-sdk'
 import { AxiosError } from 'axios'
-import { ClassicQuoteResponse, DiscriminatedQuoteResponse, DutchQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { BridgeQuoteResponse, ClassicQuoteResponse, DiscriminatedQuoteResponse, DutchQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { BigNumber, providers } from 'ethers/lib/ethers'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
@@ -15,6 +15,7 @@ import {
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { TradeProtocolPreference } from 'uniswap/src/features/transactions/types/transactionState'
 import { getCurrencyAmount, ValueType } from 'uniswap/src/features/tokens/getCurrencyAmount'
+import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export class UniswapXTrade extends V2DutchOrderTrade<Currency, Currency, TradeType> {
   readonly routing = Routing.DUTCH_V2
@@ -113,9 +114,11 @@ export type Trade<
   TInput extends Currency = Currency,
   TOutput extends Currency = Currency,
   TTradeType extends TradeType = TradeType,
-> = ClassicTrade<TInput, TOutput, TTradeType> | UniswapXTrade
+> = ClassicTrade<TInput, TOutput, TTradeType> | UniswapXTrade | BridgeTrade
 
-// TODO(WALL-4573) - Cleanup usage of optionality/null/undefined 
+export type TradeWithSlippage = Exclude<Trade, BridgeTrade>
+
+// TODO(WALL-4573) - Cleanup usage of optionality/null/undefined
 export interface TradeWithStatus<T extends Trade = Trade> {
   isLoading: boolean
   isFetching?: boolean
@@ -123,6 +126,7 @@ export interface TradeWithStatus<T extends Trade = Trade> {
   trade: T | null
   indicativeTrade: IndicativeTrade | undefined
   isIndicativeLoading: boolean
+  gasEstimates: GasFeeEstimates | undefined
 }
 
 export interface UseTradeArgs {
@@ -136,6 +140,7 @@ export interface UseTradeArgs {
   sendPortionEnabled?: boolean
   skip?: boolean
   tradeProtocolPreference?: TradeProtocolPreference
+  isDebouncing?: boolean
 }
 
 export type SwapFee = { recipient?: string; percent: Percent; amount: string }
@@ -159,6 +164,9 @@ export enum ApprovalAction {
 
   Permit2Approve = 'permit2-approve',
 
+  // revoke required before token can be approved
+  RevokeAndPermit2Approve = 'revoke-and-permit2-approve',
+
   // Unable to fetch approval status, should block submission UI
   Unknown = 'unknown',
 }
@@ -167,10 +175,16 @@ export type TokenApprovalInfo =
   | {
       action: ApprovalAction.None | ApprovalAction.Permit | ApprovalAction.Unknown
       txRequest: null
+      cancelTxRequest: null
     }
   | {
       action: ApprovalAction.Approve | ApprovalAction.Permit2Approve
       txRequest: providers.TransactionRequest
+      cancelTxRequest: null
+    } | {
+      action: ApprovalAction.RevokeAndPermit2Approve
+      txRequest: providers.TransactionRequest
+      cancelTxRequest: providers.TransactionRequest
     }
 
 // Converts from BE type to SDK type
@@ -234,7 +248,7 @@ export class IndicativeTrade {
 
   constructor({ quote, currencyIn, currencyOut, slippageTolerance }: { quote: ValidatedIndicativeQuoteResponse, currencyIn: Currency, currencyOut: Currency, slippageTolerance?: number }) {
     this.quote = quote
-    
+
     const inputAmount = getCurrencyAmount({ value: this.quote.input.amount, valueType: ValueType.Raw, currency: currencyIn })
     const outputAmount = getCurrencyAmount({ value: this.quote.output.amount, valueType: ValueType.Raw, currency: currencyOut })
 
@@ -245,5 +259,59 @@ export class IndicativeTrade {
     this.outputAmount = outputAmount
     this.executionPrice = new Price(currencyIn, currencyOut, this.quote.input.amount, this.quote.output.amount)
     this.slippageTolerance = slippageTolerance
+  }
+}
+
+export class BridgeTrade {
+  quote: BridgeQuoteResponse
+  inputAmount: CurrencyAmount<Currency>
+  outputAmount: CurrencyAmount<Currency>
+  executionPrice: Price<Currency, Currency>
+
+  tradeType: TradeType
+  readonly routing = Routing.BRIDGE
+  readonly indicative = false
+  readonly swapFee?: SwapFee
+  readonly inputTax: Percent = ZERO_PERCENT
+  readonly outputTax: Percent = ZERO_PERCENT
+
+  readonly slippageTolerance: undefined
+  readonly priceImpact: undefined
+  readonly deadline: undefined
+
+  constructor({ quote, currencyIn, currencyOut, tradeType }: { quote: BridgeQuoteResponse, currencyIn: Currency, currencyOut: Currency, tradeType: TradeType }) {
+    this.quote = quote
+    this.swapFee = getSwapFee(quote)
+
+    const quoteInputAmount = quote.quote.input?.amount
+    const quoteOutputAmount = quote.quote.output?.amount
+    if (!quoteInputAmount || !quoteOutputAmount) {
+      throw new Error('Error parsing bridge quote currency amounts')
+    }
+
+    const inputAmount = getCurrencyAmount({ value: quoteInputAmount, valueType: ValueType.Raw, currency: currencyIn })
+    const outputAmount = getCurrencyAmount({ value: quoteOutputAmount, valueType: ValueType.Raw, currency: currencyOut })
+    if (!inputAmount || !outputAmount) {
+      throw new Error('Error parsing bridge quote currency amounts')
+    }
+
+    this.inputAmount = inputAmount
+    this.outputAmount = outputAmount
+    this.executionPrice = new Price(currencyIn, currencyOut, quoteInputAmount, quoteOutputAmount)
+    this.tradeType = tradeType
+  }
+
+  /* Bridge trades have no slippage and hence a static execution price. 
+  The following methods are overridden for compatibility with other trade types */
+  worstExecutionPrice(_threshold: Percent): Price<Currency, Currency> {
+    return this.executionPrice
+  }
+
+  maximumAmountIn(_slippageTolerance: Percent, _amountIn?: CurrencyAmount<Currency>): CurrencyAmount<Currency> {
+    return this.inputAmount
+  }
+  
+  minimumAmountOut(_slippageTolerance: Percent, _amountOut?: CurrencyAmount<Currency>): CurrencyAmount<Currency> {
+    return this.outputAmount
   }
 }

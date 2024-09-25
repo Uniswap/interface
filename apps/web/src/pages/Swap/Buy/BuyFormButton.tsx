@@ -1,5 +1,6 @@
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonLight } from 'components/Button'
+import { ButtonLight } from 'components/Button/buttons'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useBuyFormContext } from 'pages/Swap/Buy/BuyFormContext'
 import { Button, Flex, SpinningLoader, Text, WidthAnimator } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
@@ -20,7 +21,11 @@ export function BuyFormButton({ forceDisabled }: BuyFormButtonProps) {
   const { notAvailableInThisRegion, quotes, fetchingQuotes, error } = derivedBuyFormInfo
 
   if (!account.isConnected) {
-    return <ButtonLight onClick={accountDrawer.open}>{t('common.connectWallet.button')}</ButtonLight>
+    return (
+      <ButtonLight onClick={accountDrawer.open}>
+        <ConnectWalletButtonText />
+      </ButtonLight>
+    )
   }
 
   if (!inputAmount || forceDisabled || notAvailableInThisRegion) {

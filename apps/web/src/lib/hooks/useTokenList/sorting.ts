@@ -1,7 +1,7 @@
 import { Token } from '@uniswap/sdk-core'
-import { nativeOnChain } from 'constants/tokens'
+import { PortfolioBalance } from 'graphql/data/portfolios'
 import { supportedChainIdFromGQLChain } from 'graphql/data/util'
-import { PortfolioTokenBalancePartsFragment } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyKey } from 'utils/currencyKey'
 import { SplitOptions, splitHiddenTokens } from 'utils/splitHiddenTokens'
@@ -40,7 +40,7 @@ function tokenComparator(balances: TokenBalances, a: Token, b: Token) {
 
 /** Given the results of the PortfolioTokenBalances query, returns a filtered list of tokens sorted by USD value. */
 export function getSortedPortfolioTokens(
-  portfolioTokenBalances: readonly (PortfolioTokenBalancePartsFragment | undefined)[] | undefined,
+  portfolioTokenBalances: readonly (PortfolioBalance | undefined)[] | undefined,
   balances: TokenBalances,
   chainId: InterfaceChainId | undefined,
   splitOptions?: SplitOptions,
@@ -66,7 +66,7 @@ export function getSortedPortfolioTokens(
         address,
         tokenBalance.token?.decimals,
         tokenBalance.token?.symbol,
-        tokenBalance.token?.project?.name ?? tokenBalance.token?.name,
+        tokenBalance.token?.name ?? tokenBalance.token?.project?.name,
       )
 
       return portfolioToken

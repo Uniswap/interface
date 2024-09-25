@@ -11,13 +11,13 @@ import { useENS } from 'uniswap/src/features/ens/useENS'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { EthMethod, EthTransaction } from 'uniswap/src/types/walletConnect'
 import { getValidAddress, shortenAddress } from 'uniswap/src/utils/addresses'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import {
   SpendingDetails,
   SpendingEthDetails,
 } from 'wallet/src/features/transactions/TransactionRequest/SpendingDetails'
-import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
 import { useNoYoloParser } from 'wallet/src/utils/useNoYoloParser'
 import { useTransactionCurrencies } from 'wallet/src/utils/useTransactionCurrencies'
 

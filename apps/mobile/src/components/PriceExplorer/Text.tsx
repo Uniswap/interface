@@ -91,5 +91,9 @@ export function DatetimeText({ loading }: { loading: boolean }): JSX.Element | n
     return null
   }
 
-  return <AnimatedText color="$neutral2" text={datetime.formatted} variant="body1" />
+  return (
+    <Flex alignItems={isAndroid ? 'center' : 'flex-end'} gap="$spacing2" mt={isAndroid ? '$none' : '$spacing2'}>
+      <AnimatedText color="$neutral2" text={datetime.formatted} variant="body1" />
+    </Flex>
+  )
 }

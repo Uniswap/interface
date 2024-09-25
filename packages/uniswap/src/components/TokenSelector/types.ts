@@ -18,6 +18,7 @@ export enum TokenOptionSection {
   FavoriteTokens = 'favoriteTokens',
   SearchResults = 'searchResults',
   SuggestedTokens = 'suggestedTokens',
+  BridgingTokens = 'bridgingTokens',
 }
 
 export type TokenSection = {

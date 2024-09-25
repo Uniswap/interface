@@ -1,6 +1,6 @@
 import { default as React } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Loader } from 'src/components/loading'
+import { Loader } from 'src/components/loading/loaders'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import VerifiedIcon from 'ui/src/assets/icons/verified.svg'

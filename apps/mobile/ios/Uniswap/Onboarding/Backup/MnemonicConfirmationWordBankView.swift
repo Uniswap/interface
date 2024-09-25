@@ -14,8 +14,8 @@ struct BankWord: Hashable {
 }
 
 struct MnemonicConfirmationWordBankView: View {
-  let smallFont = UIFont(name: "Basel Grotesk Book", size: 14)
-  let mediumFont = UIFont(name: "Basel Grotesk Book", size: 16)
+  let smallFont = UIFont(name: "BaselGrotesk-Book", size: 14)
+  let mediumFont = UIFont(name: "BaselGrotesk-Book", size: 16)
   
   var groupedWords: [[BankWord]] = [[BankWord]]()
   let screenWidth = UIScreen.main.bounds.width // Used to calculate max number of tags per row

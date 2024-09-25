@@ -17,7 +17,7 @@ export default function useAccountRiskCheck(account: string | null | undefined) 
     }
 
     if (isBlocked) {
-      dispatch(setOpenModal(ApplicationModal.BLOCKED_ACCOUNT))
+      dispatch(setOpenModal({ name: ApplicationModal.BLOCKED_ACCOUNT }))
     }
   }, [account, isBlockedLoading, isBlocked, dispatch])
 }

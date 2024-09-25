@@ -1,11 +1,13 @@
-import { DAI, NATIVE_CHAIN_ID, USDC_MAINNET, nativeOnChain } from 'constants/tokens'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { gqlTokenToCurrencyInfo } from 'graphql/data/types'
+import { DAI, USDC_MAINNET, nativeOnChain } from 'uniswap/src/constants/tokens'
 import {
   Chain,
   SafetyLevel,
   Token,
   TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { removeSafetyInfo } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const MAINNET_NATIVE_GQL_TOKEN = {
@@ -54,7 +56,7 @@ describe('gqlTokenToCurrencyInfo', () => {
       id: '0x',
       chain: Chain.Ethereum,
     })
-    expect(result).toEqual({
+    expect(removeSafetyInfo(result)).toEqual({
       ...MAINNET_NATIVE_CURRENCY_INFO,
       logoUrl: undefined,
       safetyLevel: SafetyLevel.StrongWarning,
@@ -66,7 +68,7 @@ describe('gqlTokenToCurrencyInfo', () => {
       ...MAINNET_NATIVE_GQL_TOKEN,
       address: undefined,
     })
-    expect(result).toEqual(MAINNET_NATIVE_CURRENCY_INFO)
+    expect(removeSafetyInfo(result)).toEqual(MAINNET_NATIVE_CURRENCY_INFO)
   })
 
   it('should return the native CurrencyInfo for token with NATIVE address and no standard', () => {
@@ -74,7 +76,7 @@ describe('gqlTokenToCurrencyInfo', () => {
       ...MAINNET_NATIVE_GQL_TOKEN,
       standard: undefined,
     })
-    expect(result).toEqual(MAINNET_NATIVE_CURRENCY_INFO)
+    expect(removeSafetyInfo(result)).toEqual(MAINNET_NATIVE_CURRENCY_INFO)
   })
 
   it('should return the native CurrencyInfo for token with no address or standard', () => {
@@ -83,7 +85,7 @@ describe('gqlTokenToCurrencyInfo', () => {
       standard: undefined,
       address: undefined,
     })
-    expect(result).toEqual(MAINNET_NATIVE_CURRENCY_INFO)
+    expect(removeSafetyInfo(result)).toEqual(MAINNET_NATIVE_CURRENCY_INFO)
   })
 
   it('should throw for an invalid non-native token', () => {
@@ -134,7 +136,7 @@ describe('gqlTokenToCurrencyInfo', () => {
         },
       },
     })
-    expect(result).toEqual({
+    expect(removeSafetyInfo(result)).toEqual({
       currency: DAI,
       currencyId: DAI.address,
       isSpam: false,
@@ -149,7 +151,7 @@ describe('gqlTokenToCurrencyInfo', () => {
       address: USDC_MAINNET.address,
       chain: Chain.Ethereum,
     })
-    expect(result).toEqual({
+    expect(removeSafetyInfo(result)).toEqual({
       currency: {
         ...USDC_MAINNET,
         decimals: 18, // default since it's missing

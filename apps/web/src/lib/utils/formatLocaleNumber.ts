@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, Price } from '@uniswap/sdk-core'
-import { DEFAULT_LOCALE, SUPPORTED_LOCALES } from 'constants/locales'
+import { DEFAULT_LOCALE, Locale } from 'uniswap/src/features/language/constants'
 
 interface FormatLocaleNumberArgs {
   number: CurrencyAmount<Currency> | Price<Currency, Currency> | number
@@ -17,7 +17,8 @@ export default function formatLocaleNumber({
   options = {},
 }: FormatLocaleNumberArgs): string {
   let localeArg: string | string[]
-  if (!locale || (locale && !SUPPORTED_LOCALES.includes(locale))) {
+  const isSupportedLocale = locale && Object.values(Locale).includes(locale as Locale)
+  if (!isSupportedLocale) {
     localeArg = DEFAULT_LOCALE
   } else {
     localeArg = [locale, DEFAULT_LOCALE]

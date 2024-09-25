@@ -54,7 +54,7 @@ struct MnemonicDisplay: View {
   @State private var buttonPadding: CGFloat = 20
   
   let rnEthersRS = RNEthersRS()
-  let interFont = UIFont(name: "Basel-Grotesk-Medium", size: 20)
+  let interFont = UIFont(name: "BaselGrotesk-Medium", size: 20)
   
   func setMnemonicId(mnemonicId: String) {
     props.mnemonicId = mnemonicId

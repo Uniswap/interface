@@ -38,6 +38,24 @@ export function getLocale(language: Language): Locale {
  */
 export function getLanguageInfo(t: AppTFunction, language: Language): LanguageInfo {
   const languageToLanguageInfo: Record<Language, LanguageInfo> = {
+    [Language.Afrikaans]: {
+      displayName: t('language.afrikaans'),
+      originName: t('language.afrikaans', { lng: getLocale(Language.Afrikaans) }),
+      loggingName: 'Afrikaans',
+      locale: getLocale(Language.Afrikaans),
+    },
+    [Language.Arabic]: {
+      displayName: t('language.arabic'),
+      originName: t('language.arabic', { lng: getLocale(Language.Arabic) }),
+      loggingName: 'Arabic',
+      locale: getLocale(Language.Arabic),
+    },
+    [Language.Catalan]: {
+      displayName: t('language.catalan'),
+      originName: t('language.catalan', { lng: getLocale(Language.Catalan) }),
+      loggingName: 'Catalan',
+      locale: getLocale(Language.Catalan),
+    },
     [Language.ChineseSimplified]: {
       displayName: t('language.chineseSimplified'),
       originName: t('language.chineseSimplified', { lng: getLocale(Language.ChineseSimplified) }),
@@ -52,6 +70,18 @@ export function getLanguageInfo(t: AppTFunction, language: Language): LanguageIn
       loggingName: 'Chinese, Traditional',
       locale: getLocale(Language.ChineseTraditional),
     },
+    [Language.Czech]: {
+      displayName: t('language.czech'),
+      originName: t('language.czech', { lng: getLocale(Language.Czech) }),
+      loggingName: 'Czech',
+      locale: getLocale(Language.Czech),
+    },
+    [Language.Danish]: {
+      displayName: t('language.danish'),
+      originName: t('language.danish', { lng: getLocale(Language.Danish) }),
+      loggingName: 'Danish',
+      locale: getLocale(Language.Danish),
+    },
     [Language.Dutch]: {
       displayName: t('language.dutch'),
       originName: t('language.dutch', { lng: getLocale(Language.Dutch) }),
@@ -64,11 +94,29 @@ export function getLanguageInfo(t: AppTFunction, language: Language): LanguageIn
       loggingName: 'English',
       locale: getLocale(Language.English),
     },
+    [Language.Finnish]: {
+      displayName: t('language.finnish'),
+      originName: t('language.finnish', { lng: getLocale(Language.Finnish) }),
+      loggingName: 'Finnish',
+      locale: getLocale(Language.Finnish),
+    },
     [Language.French]: {
       displayName: t('language.french'),
       originName: t('language.french', { lng: getLocale(Language.French) }),
       loggingName: 'French',
       locale: getLocale(Language.French),
+    },
+    [Language.Greek]: {
+      displayName: t('language.greek'),
+      originName: t('language.greek', { lng: getLocale(Language.Greek) }),
+      loggingName: 'Greek',
+      locale: getLocale(Language.Greek),
+    },
+    [Language.Hebrew]: {
+      displayName: t('language.hebrew'),
+      originName: t('language.hebrew', { lng: getLocale(Language.Hebrew) }),
+      loggingName: 'Hebrew',
+      locale: getLocale(Language.Hebrew),
     },
     [Language.Hindi]: {
       displayName: t('language.hindi'),
@@ -76,11 +124,23 @@ export function getLanguageInfo(t: AppTFunction, language: Language): LanguageIn
       loggingName: 'Hindi',
       locale: getLocale(Language.Hindi),
     },
+    [Language.Hungarian]: {
+      displayName: t('language.hungarian'),
+      originName: t('language.hungarian', { lng: getLocale(Language.Hungarian) }),
+      loggingName: 'Hungarian',
+      locale: getLocale(Language.Hungarian),
+    },
     [Language.Indonesian]: {
       displayName: t('language.indonesian'),
       originName: t('language.indonesian', { lng: getLocale(Language.Indonesian) }),
       loggingName: 'Indonesian',
       locale: getLocale(Language.Indonesian),
+    },
+    [Language.Italian]: {
+      displayName: t('language.italian'),
+      originName: t('language.italian', { lng: getLocale(Language.Italian) }),
+      loggingName: 'Italian',
+      locale: getLocale(Language.Italian),
     },
     [Language.Japanese]: {
       displayName: t('language.japanese'),
@@ -88,11 +148,29 @@ export function getLanguageInfo(t: AppTFunction, language: Language): LanguageIn
       loggingName: 'Japanese',
       locale: getLocale(Language.Japanese),
     },
+    [Language.Korean]: {
+      displayName: t('language.korean'),
+      originName: t('language.korean', { lng: getLocale(Language.Korean) }),
+      loggingName: 'Korean',
+      locale: getLocale(Language.Korean),
+    },
     [Language.Malay]: {
       displayName: t('language.malay'),
       originName: t('language.malay', { lng: getLocale(Language.Malay) }),
       loggingName: 'Malay',
       locale: getLocale(Language.Malay),
+    },
+    [Language.Norwegian]: {
+      displayName: t('language.norwegian'),
+      originName: t('language.norwegian', { lng: getLocale(Language.Norwegian) }),
+      loggingName: 'Norweigan',
+      locale: getLocale(Language.Norwegian),
+    },
+    [Language.Polish]: {
+      displayName: t('language.polish'),
+      originName: t('language.polish', { lng: getLocale(Language.Polish) }),
+      loggingName: 'Polish',
+      locale: getLocale(Language.Polish),
     },
     [Language.Portuguese]: {
       displayName: t('language.portuguese'),
@@ -100,11 +178,23 @@ export function getLanguageInfo(t: AppTFunction, language: Language): LanguageIn
       loggingName: 'Portuguese',
       locale: getLocale(Language.Portuguese),
     },
+    [Language.Romanian]: {
+      displayName: t('language.romanian'),
+      originName: t('language.romanian', { lng: getLocale(Language.Romanian) }),
+      loggingName: 'Romanian',
+      locale: getLocale(Language.Romanian),
+    },
     [Language.Russian]: {
       displayName: t('language.russian'),
       originName: t('language.russian', { lng: getLocale(Language.Russian) }),
       loggingName: 'Russian',
       locale: getLocale(Language.Russian),
+    },
+    [Language.Serbian]: {
+      displayName: t('language.serbian'),
+      originName: t('language.serbian', { lng: getLocale(Language.Serbian) }),
+      loggingName: 'Serbian',
+      locale: getLocale(Language.Serbian),
     },
     [Language.SpanishSpain]: {
       displayName: t('language.spanishSpain'),
@@ -123,6 +213,18 @@ export function getLanguageInfo(t: AppTFunction, language: Language): LanguageIn
       originName: t('language.spanishUs', { lng: getLocale(Language.SpanishUnitedStates) }),
       loggingName: 'Spanish (US)',
       locale: getLocale(Language.SpanishUnitedStates),
+    },
+    [Language.Swahili]: {
+      displayName: t('language.swahili'),
+      originName: t('language.swahili', { lng: getLocale(Language.Swahili) }),
+      loggingName: 'Swahili',
+      locale: getLocale(Language.Swahili),
+    },
+    [Language.Swedish]: {
+      displayName: t('language.swedish'),
+      originName: t('language.swedish', { lng: getLocale(Language.Swedish) }),
+      loggingName: 'Swedish',
+      locale: getLocale(Language.Swedish),
     },
     [Language.Thai]: {
       displayName: t('language.thai'),

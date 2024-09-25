@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useToken } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
 import { usePool } from 'hooks/usePools'
@@ -75,7 +76,7 @@ export function useDerivedV3BurnInfo(
 
   let error: ReactNode | undefined
   if (!account.isConnected) {
-    error = <Trans i18nKey="common.connectWallet.button" />
+    error = <ConnectWalletButtonText />
   }
   if (percent === 0) {
     error = error ?? <Trans i18nKey="burn.input.enterAPercent.error" />

@@ -1,14 +1,14 @@
 import { useEffect, useState } from 'react'
+// eslint-disable-next-line no-restricted-imports
 import { EmitterSubscription, Keyboard } from 'react-native'
+import { KeyboardInfo } from 'uniswap/src/components/modals/useBottomSheetSafeKeyboard'
 import { isIOS } from 'utilities/src/platform'
 
 /**
  *  Hook to substitute KeyboardAvoidingView for a bottom sheet modal
  *  Dynamically add bottom padding equal to keyboard height so that elements have room to shift up
  */
-export function useBottomSheetSafeKeyboard(): {
-  keyboardHeight: number
-} {
+export function useBottomSheetSafeKeyboard(): KeyboardInfo {
   const [keyboardHeight, setKeyboardHeight] = useState(0)
 
   useEffect(() => {

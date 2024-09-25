@@ -102,13 +102,14 @@ function* validateSend(sendTokenParams: SendTokenParams) {
 }
 
 function getSendTypeInfo(params: SendTokenParams): SendTokenTransactionInfo {
-  const { type: assetType, toAddress, tokenAddress, currencyAmountUSD } = params
+  const { type: assetType, toAddress, tokenAddress, currencyAmountUSD, gasEstimates } = params
   const typeInfo: SendTokenTransactionInfo = {
     assetType,
     recipient: toAddress,
     tokenAddress,
     type: TransactionType.Send,
     currencyAmountUSD,
+    gasEstimates,
   }
 
   if (assetType === AssetType.ERC721 || assetType === AssetType.ERC1155) {
@@ -125,4 +126,4 @@ export const {
   wrappedSaga: sendTokenSaga,
   reducer: sendTokenReducer,
   actions: sendTokenActions,
-} = createMonitoredSaga<Params>(sendToken, 'sendToken')
+} = createMonitoredSaga(sendToken, 'sendToken')

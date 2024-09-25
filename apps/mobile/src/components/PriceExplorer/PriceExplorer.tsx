@@ -1,21 +1,22 @@
-import { memo, useMemo } from 'react'
+import { PropsWithChildren, ReactElement, memo, useMemo } from 'react'
 import { I18nManager } from 'react-native'
 import { SharedValue, useDerivedValue } from 'react-native-reanimated'
 import { LineChart, LineChartProvider } from 'react-native-wagmi-charts'
 import PriceExplorerAnimatedNumber from 'src/components/PriceExplorer/PriceExplorerAnimatedNumber'
 import { PriceExplorerError } from 'src/components/PriceExplorer/PriceExplorerError'
 import { DatetimeText, RelativeChangeText } from 'src/components/PriceExplorer/Text'
-import { TimeRangeGroup } from 'src/components/PriceExplorer/TimeRangeGroup'
-import { CURSOR_INNER_SIZE, CURSOR_SIZE } from 'src/components/PriceExplorer/constants'
+import { CURSOR_INNER_SIZE, CURSOR_SIZE, TIME_RANGES } from 'src/components/PriceExplorer/constants'
 import { useChartDimensions } from 'src/components/PriceExplorer/useChartDimensions'
 import { useLineChartPrice } from 'src/components/PriceExplorer/usePrice'
 import { PriceNumberOfDigits, TokenSpotData, useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHistory'
-import { Loader } from 'src/components/loading'
-import { Flex, useHapticFeedback } from 'ui/src'
+import { Loader } from 'src/components/loading/loaders'
+import { Flex, SegmentedControl, Text, useHapticFeedback } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import Trace from 'uniswap/src/features/telemetry/Trace'
+import { ElementNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
@@ -42,6 +43,15 @@ function PriceTextSection({ loading, numberOfDigits, spotPrice }: PriceTextProps
     </Flex>
   )
 }
+
+const TimeRangeTraceWrapper = ({
+  children,
+  elementName,
+}: PropsWithChildren<{ elementName: ElementNameType }>): ReactElement => (
+  <Trace logPress element={elementName}>
+    {children}
+  </Trace>
+)
 
 export type LineChartPriceAndDateTimeTextProps = {
   currencyId: CurrencyId
@@ -128,7 +138,27 @@ export const PriceExplorer = memo(function PriceExplorer({
           spotPrice={convertedSpot?.value}
         />
         {content}
-        <TimeRangeGroup setDuration={setDuration} />
+        <Flex px="$spacing8">
+          <SegmentedControl
+            fullWidth
+            outlined={false}
+            options={TIME_RANGES.map(([duration, label, elementName]) => ({
+              value: duration,
+              wrapper: <TimeRangeTraceWrapper key={`${duration}-trace`} elementName={elementName} />,
+              display: (
+                <Text
+                  allowFontScaling={false}
+                  testID={`token-details-chart-time-range-button-${label}`}
+                  variant="buttonLabel2"
+                >
+                  {label}
+                </Text>
+              ),
+            }))}
+            selectedOption={selectedDuration}
+            onSelectOption={setDuration}
+          />
+        </Flex>
       </Flex>
     </LineChartProvider>
   )

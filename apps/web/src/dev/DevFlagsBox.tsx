@@ -1,5 +1,5 @@
-import { ColumnCenter } from 'components/Column'
-import { RowBetween } from 'components/Row'
+import { ColumnCenter } from 'components/deprecated/Column'
+import { RowBetween } from 'components/deprecated/Row'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
@@ -9,7 +9,7 @@ import { ApplicationModal } from 'state/application/reducer'
 import { ThemedText } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment'
+import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 
 const Box = styled.div`
   position: fixed;

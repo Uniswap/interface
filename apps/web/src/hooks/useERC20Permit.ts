@@ -1,7 +1,6 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { splitSignature } from '@ethersproject/bytes'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { DAI, UNI, USDC_MAINNET } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import { useEIP2612Contract } from 'hooks/useContract'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
@@ -9,6 +8,7 @@ import useIsArgentWallet from 'hooks/useIsArgentWallet'
 import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
+import { DAI, UNI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 
 export enum PermitType {

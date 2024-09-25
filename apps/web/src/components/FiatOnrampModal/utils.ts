@@ -11,7 +11,7 @@ import {
   USDT,
   WBTC,
   WETH_POLYGON,
-} from 'constants/tokens'
+} from 'uniswap/src/constants/tokens'
 import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 

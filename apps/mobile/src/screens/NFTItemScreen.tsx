@@ -8,7 +8,7 @@ import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch, useSelector } from 'react-redux'
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
-import { Loader } from 'src/components/loading'
+import { Loader } from 'src/components/loading/loaders'
 import { LongMarkdownText } from 'src/components/text/LongMarkdownText'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { PriceAmount } from 'src/features/nfts/collection/ListPriceCard'
@@ -415,6 +415,7 @@ function RightElement({ asset, owner, isSpam }: { asset: GQLNftAsset; owner?: st
     owner,
     showNotification: true,
     isSpam,
+    chainId: fromGraphQLChain(asset?.nftContract?.chain) ?? undefined,
   })
 
   return (

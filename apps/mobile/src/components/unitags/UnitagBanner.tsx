@@ -1,6 +1,5 @@
 import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { Keyboard } from 'react-native'
 import { useUnitagClaimHandler } from 'src/features/unitags/useUnitagClaimHandler'
 import { Flex, Image, Text, TouchableArea, TouchableAreaProps, useIsDarkMode, useIsShortMobileDevice } from 'ui/src'
 import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
@@ -8,6 +7,7 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
 
 const IMAGE_ASPECT_RATIO = 0.42
@@ -41,7 +41,7 @@ export function UnitagBanner({
   })
 
   const onPressClaimNow = (): void => {
-    Keyboard.dismiss()
+    dismissNativeKeyboard()
     handleClaim()
   }
 

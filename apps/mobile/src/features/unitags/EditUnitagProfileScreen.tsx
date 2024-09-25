@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, KeyboardAvoidingView, StyleSheet } from 'react-native'
+import { KeyboardAvoidingView, StyleSheet } from 'react-native'
 import ContextMenu from 'react-native-context-menu-view'
 import { useDispatch } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
@@ -14,7 +14,7 @@ import { DeleteUnitagModal } from 'src/components/unitags/DeleteUnitagModal'
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
 import { HeaderRadial, solidHeaderProps } from 'src/features/externalProfile/ProfileHeader'
 import { Button, Flex, LinearGradient, ScrollView, Text, getUniconColors, useIsDarkMode, useSporeColors } from 'ui/src'
-import { Pen, TripleDots } from 'ui/src/components/icons'
+import { Ellipsis, Pen } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useExtractedColors } from 'ui/src/utils/colors'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
@@ -27,6 +27,7 @@ import { ProfileMetadata } from 'uniswap/src/features/unitags/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { logger } from 'utilities/src/logger/logger'
 import { isIOS } from 'utilities/src/platform'
 import { normalizeTwitterUsername } from 'utilities/src/primitives/string'
@@ -132,7 +133,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
   }, [avatarImageUri, avatarColors, colors.surface1.val, uniconColor])
 
   const openAvatarModal = (): void => {
-    Keyboard.dismiss()
+    dismissNativeKeyboard()
     setShowAvatarModal(true)
   }
 
@@ -148,7 +149,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
   })
 
   const onPressSaveChanges = async (): Promise<void> => {
-    Keyboard.dismiss()
+    dismissNativeKeyboard()
 
     // Try to upload avatar or skip avatar upload if not needed
     try {
@@ -257,7 +258,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
                 dropdownMenuMode
                 actions={menuActions}
                 onPress={(e): void => {
-                  Keyboard.dismiss()
+                  dismissNativeKeyboard()
                   // Emitted index based on order of menu action array
                   // Edit username
                   if (e.nativeEvent.index === 0) {
@@ -270,7 +271,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
                 }}
               >
                 <Flex pr="$spacing8">
-                  <TripleDots color="$neutral2" size={iconSizes.icon24} />
+                  <Ellipsis color="$neutral2" size={iconSizes.icon24} />
                 </Flex>
               </ContextMenu>
             ) : undefined

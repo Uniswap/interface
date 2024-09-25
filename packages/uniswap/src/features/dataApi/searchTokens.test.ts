@@ -2,7 +2,7 @@ import { waitFor } from '@testing-library/react-native'
 import { useSearchTokens } from 'uniswap/src/features/dataApi/searchTokens'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { gqlTokenToCurrencyInfo } from 'uniswap/src/features/dataApi/utils'
-import { token } from 'uniswap/src/test/fixtures'
+import { removeSafetyInfo, token } from 'uniswap/src/test/fixtures'
 import { renderHook } from 'uniswap/src/test/test-utils'
 import { createArray, queryResolvers } from 'uniswap/src/test/utils'
 
@@ -30,7 +30,10 @@ describe(useTokenProjects, () => {
     })
 
     await waitFor(async () => {
-      expect(result.current.data).toEqual((await resolved.searchTokens).map(gqlTokenToCurrencyInfo))
+      const expectedData = (await resolved.searchTokens).map(gqlTokenToCurrencyInfo).map(removeSafetyInfo)
+      const actualData = result.current.data?.map(removeSafetyInfo)
+
+      expect(actualData).toEqual(expectedData)
     })
   })
 })

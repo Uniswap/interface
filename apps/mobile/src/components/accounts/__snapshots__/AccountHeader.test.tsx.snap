@@ -181,7 +181,6 @@ exports[`AccountHeader renders correctly 1`] = `
             ],
           }
         }
-        testID="account-header-settings-icon"
       >
         <RNSVGSvgView
           align="xMidYMid"
@@ -350,7 +349,7 @@ exports[`AccountHeader renders correctly 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "color": "#CECECE",
+                      "color": "#BFBFBF",
                       "fontSize": 19,
                       "fontWeight": "400",
                       "lineHeight": 24,
@@ -361,7 +360,7 @@ exports[`AccountHeader renders correctly 1`] = `
                 maxFontSizeMultiplier={1.4}
                 style={
                   {
-                    "color": "#CECECE",
+                    "color": "#BFBFBF",
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 19,
                     "fontWeight": "400",
@@ -416,7 +415,7 @@ exports[`AccountHeader renders correctly 1`] = `
                   numberOfLines={1}
                   style={
                     {
-                      "color": "#CECECE",
+                      "color": "#BFBFBF",
                       "fontFamily": "Basel Grotesk",
                       "fontSize": 17,
                       "fontWeight": "400",
@@ -444,7 +443,7 @@ exports[`AccountHeader renders correctly 1`] = `
                         "borderWidth": 0,
                       },
                       {
-                        "color": "#CECECE",
+                        "color": "#BFBFBF",
                         "height": 16,
                         "width": 16,
                       },
@@ -455,7 +454,7 @@ exports[`AccountHeader renders correctly 1`] = `
                       },
                     ]
                   }
-                  tintColor="#CECECE"
+                  tintColor="#BFBFBF"
                   vbHeight={16}
                   vbWidth={16}
                 >

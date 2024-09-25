@@ -138,30 +138,6 @@ exports[`PoolTable renders data filled state 1`] = `
                           <div
                             class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
                           >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              Transactions
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
                             <svg
                               class="c1"
                               direction="desc"
@@ -200,54 +176,6 @@ exports[`PoolTable renders data filled state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              1 day volume
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              7 day volume
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
@@ -261,7 +189,79 @@ exports[`PoolTable renders data filled state 1`] = `
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
-                              1 day APR
+                              APR
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              1D vol
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              7D vol
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              1D vol/TVL
                             </span>
                           </div>
                         </div>
@@ -351,7 +351,7 @@ exports[`PoolTable renders data filled state 1`] = `
                           class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                           data-disable-theme="true"
                         >
-                          200
+                          $300.00
                         </span>
                       </div>
                     </div>
@@ -359,13 +359,13 @@ exports[`PoolTable renders data filled state 1`] = `
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                     >
                       <div
-                        class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                        class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                       >
                         <span
                           class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                           data-disable-theme="true"
                         >
-                          $300.00
+                          6%
                         </span>
                       </div>
                     </div>
@@ -407,7 +407,7 @@ exports[`PoolTable renders data filled state 1`] = `
                           class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                           data-disable-theme="true"
                         >
-                          6%
+                          1.84
                         </span>
                       </div>
                     </div>
@@ -425,7 +425,21 @@ exports[`PoolTable renders data filled state 1`] = `
 
 exports[`PoolTable renders error state 1`] = `
 <DocumentFragment>
-  .c6 {
+  .c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-flex-direction: column;
+  -ms-flex-direction: column;
+  flex-direction: column;
+  -webkit-box-pack: start;
+  -webkit-justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
+}
+
+.c6 {
   color: #222222;
   -webkit-letter-spacing: -0.01em;
   -moz-letter-spacing: -0.01em;
@@ -439,20 +453,6 @@ exports[`PoolTable renders error state 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-flex-direction: column;
-  -ms-flex-direction: column;
-  flex-direction: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
 }
 
 .c4 {
@@ -587,30 +587,6 @@ exports[`PoolTable renders error state 1`] = `
                           <div
                             class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
                           >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              Transactions
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
                             <svg
                               class="c1"
                               direction="desc"
@@ -649,54 +625,6 @@ exports[`PoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              1 day volume
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              7 day volume
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
@@ -710,7 +638,79 @@ exports[`PoolTable renders error state 1`] = `
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
-                              1 day APR
+                              APR
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              1D vol
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              7D vol
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              1D vol/TVL
                             </span>
                           </div>
                         </div>
@@ -765,7 +765,7 @@ exports[`PoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -853,7 +853,7 @@ exports[`PoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -941,7 +941,7 @@ exports[`PoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1029,7 +1029,7 @@ exports[`PoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1117,7 +1117,7 @@ exports[`PoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1205,7 +1205,7 @@ exports[`PoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1293,7 +1293,7 @@ exports[`PoolTable renders error state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1500,30 +1500,6 @@ exports[`PoolTable renders loading state 1`] = `
                           <div
                             class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
                           >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              Transactions
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
                             <svg
                               class="c1"
                               direction="desc"
@@ -1562,54 +1538,6 @@ exports[`PoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              1 day volume
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
-                    >
-                      <div
-                        class="c0"
-                      >
-                        <div>
-                          <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
-                          >
-                            <span
-                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
-                              data-disable-theme="true"
-                            >
-                              7 day volume
-                            </span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
-                  >
-                    <div
                       class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
@@ -1623,7 +1551,79 @@ exports[`PoolTable renders loading state 1`] = `
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
                               data-disable-theme="true"
                             >
-                              1 day APR
+                              APR
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              1D vol
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              7D vol
+                            </span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
+                  >
+                    <div
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                    >
+                      <div
+                        class="c0"
+                      >
+                        <div>
+                          <div
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                          >
+                            <span
+                              class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
+                              data-disable-theme="true"
+                            >
+                              1D vol/TVL
                             </span>
                           </div>
                         </div>
@@ -1678,7 +1678,7 @@ exports[`PoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1766,7 +1766,7 @@ exports[`PoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1854,7 +1854,7 @@ exports[`PoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -1942,7 +1942,7 @@ exports[`PoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -2030,7 +2030,7 @@ exports[`PoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -2118,7 +2118,7 @@ exports[`PoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"
@@ -2206,7 +2206,7 @@ exports[`PoolTable renders loading state 1`] = `
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
                   >
                     <div
-                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-120px _flexGrow-1"
+                      class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-end _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _minWidth-100px _flexGrow-1"
                     >
                       <div
                         class="c2 c3"

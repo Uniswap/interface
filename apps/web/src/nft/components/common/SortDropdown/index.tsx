@@ -1,6 +1,6 @@
 import clsx from 'clsx'
+import { Box } from 'components/deprecated/Box'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
-import { Box } from 'nft/components/Box'
 import { Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/common/SortDropdown/SortDropdown.css'
 import { ArrowsIcon, ChevronUpIcon, ReversedArrowsIcon } from 'nft/components/icons'

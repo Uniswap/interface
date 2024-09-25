@@ -5,7 +5,6 @@ import reducer, {
   initialState,
   updateHideClosedPositions,
   updateUserDeadline,
-  updateUserLocale,
   updateUserRouterPreference,
   updateUserSlippageTolerance,
   UserState,
@@ -29,13 +28,6 @@ describe('swap reducer', () => {
 
   beforeEach(() => {
     store = createStore(reducer, initialState)
-  })
-
-  describe('updateUserLocale', () => {
-    it('updates the userLocale', () => {
-      store.dispatch(updateUserLocale({ userLocale: 'en' }))
-      expect(store.getState().userLocale).toEqual('en')
-    })
   })
 
   describe('updateUserSlippageTolerance', () => {

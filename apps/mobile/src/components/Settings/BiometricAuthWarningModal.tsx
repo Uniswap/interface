@@ -1,10 +1,10 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { useBiometricName } from 'src/features/biometrics/hooks'
+import { WarningModal, WarningModalProps } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
 import { isAndroid } from 'utilities/src/platform'
-import { WarningModal, WarningModalProps } from 'wallet/src/components/modals/WarningModal/WarningModal'
 
 type Props = {
   isOpen: boolean

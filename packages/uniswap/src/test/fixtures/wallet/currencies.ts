@@ -1,5 +1,5 @@
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
+import { ProtectionResult, SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { faker } from 'uniswap/src/test/shared'
 import { createFixture } from 'uniswap/src/test/utils'
@@ -72,3 +72,17 @@ export const UNI_CURRENCY_INFO = uniCurrencyInfo()
 export const DAI_CURRENCY_INFO = daiCurrencyInfo()
 export const ARBITRUM_DAI_CURRENCY_INFO = arbitrumDaiCurrencyInfo()
 export const USDC_CURRENCY_INFO = usdcCurrencyInfo()
+
+export const benignSafetyInfo = {
+  tokenList: TokenList.Default,
+  protectionResult: ProtectionResult.Benign,
+}
+
+export const removeSafetyInfo = (item: Maybe<CurrencyInfo>): Maybe<CurrencyInfo> => {
+  if (!item) {
+    return item
+  }
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  const { safetyInfo: _, ...rest } = item
+  return rest
+}

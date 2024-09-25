@@ -6,9 +6,10 @@ import { PreferenceMenu } from 'components/NavBar/PreferencesMenu'
 import { useTabsVisible } from 'components/NavBar/ScreenSizes'
 import { SearchBar } from 'components/NavBar/SearchBar'
 import { Tabs } from 'components/NavBar/Tabs/Tabs'
-import Row from 'components/Row'
+import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
 import Web3Status from 'components/Web3Status'
-import { useScreenSize } from 'hooks/screenSize'
+import Row from 'components/deprecated/Row'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { useAccount } from 'hooks/useAccount'
 import { useIsExplorePage } from 'hooks/useIsExplorePage'
 import { useIsLandingPage } from 'hooks/useIsLandingPage'
@@ -21,20 +22,8 @@ import { useProfilePageState } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { BREAKPOINTS, NAV_HEIGHT } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
-import { Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useExperimentGroupName, useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
-
-export enum AccountCTAsExperimentGroup {
-  Control = 'Control', // Get the app / Connect
-  SignInSignUp = 'SignIn-SignUp',
-  LogInCreateAccount = 'LogIn-CreateAccount',
-}
-
-export function useIsAccountCTAExperimentControl() {
-  const experimentGroupName = useExperimentGroupName(Experiments.AccountCTAs)
-  return experimentGroupName === AccountCTAsExperimentGroup.Control || experimentGroupName === null
-}
+import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 
 const Nav = styled.nav`
   padding: 0px 12px;
@@ -86,9 +75,6 @@ function useShouldHideChainSelector() {
   const isSwapPage = useIsSwapPage()
   const isLimitPage = useIsLimitPage()
   const isExplorePage = useIsExplorePage()
-  const { value: multichainFlagEnabled, isLoading: isMultichainFlagLoading } = useFeatureFlagWithLoading(
-    FeatureFlags.MultichainUX,
-  )
   const { value: multichainExploreFlagEnabled, isLoading: isMultichainExploreFlagLoading } = useFeatureFlagWithLoading(
     FeatureFlags.MultichainExplore,
   )
@@ -100,9 +86,7 @@ function useShouldHideChainSelector() {
   const hideChainSelector =
     multichainExploreFlagEnabled || isMultichainExploreFlagLoading
       ? multichainExploreHiddenPages
-      : multichainFlagEnabled || isMultichainFlagLoading
-        ? multichainHiddenPages
-        : baseHiddenPages
+      : multichainHiddenPages
 
   return hideChainSelector
 }
@@ -121,7 +105,8 @@ export default function Navbar() {
 
   const hideChainSelector = useShouldHideChainSelector()
 
-  const isSignInExperimentControl = useIsAccountCTAExperimentControl()
+  const { isControl: isSignInExperimentControl, isLoading: isSignInExperimentControlLoading } =
+    useIsAccountCTAExperimentControl()
 
   return (
     <Nav>
@@ -138,11 +123,15 @@ export default function Navbar() {
         <Right>
           {collapseSearchBar && <SearchBar maxHeight={NAV_SEARCH_MAX_HEIGHT} fullScreen={isSmallScreen} />}
           {isNftPage && sellPageState !== ProfilePageStateType.LISTING && <Bag />}
-          {isSignInExperimentControl && isLandingPage && !isSmallScreen && <NewUserCTAButton />}
+          {isSignInExperimentControl && !isSignInExperimentControlLoading && isLandingPage && !isSmallScreen && (
+            <NewUserCTAButton />
+          )}
           {!account.isConnected && !account.isConnecting && <PreferenceMenu />}
-          {!hideChainSelector && <ChainSelector isNavSelector />}
+          {!hideChainSelector && <ChainSelector />}
           <Web3Status />
-          {!isSignInExperimentControl && !account.address && !isMediumScreen && <NewUserCTAButton />}
+          {!isSignInExperimentControl && !isSignInExperimentControlLoading && !account.address && !isMediumScreen && (
+            <NewUserCTAButton />
+          )}
         </Right>
       </NavContents>
     </Nav>

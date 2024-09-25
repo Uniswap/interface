@@ -2,15 +2,14 @@ import { default as React } from 'react'
 import { useDispatch } from 'react-redux'
 import { getBlockExplorerIcon } from 'src/components/icons/BlockExplorerIcon'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import { EtherscanSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
-import { openUri } from 'uniswap/src/utils/linking'
-import { Arrow } from 'wallet/src/components/icons/Arrow'
-import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
+import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 
 type SearchEtherscanItemProps = {
   etherscanResult: EtherscanSearchResult

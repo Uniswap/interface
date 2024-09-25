@@ -1,3 +1,4 @@
+import { cloneDeep } from '@apollo/client/utilities'
 import EventEmitter from 'eventemitter3'
 import { getOrderedConnectedAddresses, isConnectedAccount } from 'src/app/features/dapp/utils'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
@@ -9,6 +10,8 @@ export interface DappInfo {
   lastChainId: WalletChainId
   connectedAccounts: Account[]
   activeConnectedAddress: Address
+  iconUrl?: string
+  displayName?: string
 }
 
 export interface DappState {
@@ -68,6 +71,7 @@ function getConnectedDapps(address: Address): string[] {
     .map(([dappUrl]) => dappUrl)
 }
 
+// TODO(WALL-4643): explore usage of immer here
 /** Returns connected addresses with the currently connected address listed first. */
 function getDappOrderedConnectedAddresses(dappUrl: string): string[] | undefined {
   const dappInfo = state[dappUrl]
@@ -105,6 +109,50 @@ function updateDappConnectedAddress(address: Address): void {
   queueDappStateSync()
 }
 
+/**
+ * Helper function to update a specific property of a dapp in the state
+ * @param dappUrl - extracted url for dapp
+ * @param property - key of dapp property to update
+ * @param value - new value for the property
+ */
+function updateDappProperty<T extends keyof DappInfo>(dappUrl: string, property: T, value?: DappInfo[T]): void {
+  const info = state?.[dappUrl]
+
+  if (!info) {
+    return
+  }
+
+  state = {
+    ...state,
+    [dappUrl]: {
+      ...info,
+      [property]: value,
+    },
+  }
+
+  queueDappStateSync()
+}
+
+/**
+ * Update the display name for a dapp; the dapp must be in state already for this to work
+ * (ie can't run immediately after a dapp is connected)
+ * @param dappUrl - extracted url for dapp
+ * @param newDisplayName - new display name for dapp
+ */
+function updateDappDisplayName(dappUrl: string, newDisplayName?: string): void {
+  updateDappProperty(dappUrl, 'displayName', newDisplayName)
+}
+
+/**
+ * Update the icon URL for a dapp
+ * @param dappUrl - extracted url for dapp
+ * @param newIconUrl - new icon URL for dapp
+ */
+function updateDappIconUrl(dappUrl: string, newIconUrl?: string): void {
+  updateDappProperty(dappUrl, 'iconUrl', newIconUrl)
+}
+
+// TODO(WALL-4643): if we migrate to immer, let's avoid iterating over the the object here
 function updateDappLatestChainId(dappUrl: string, chainId: WalletChainId): void {
   // Never directly mutate state, as some of its fields could have `writable: false`
   state = Object.fromEntries(
@@ -118,11 +166,12 @@ function updateDappLatestChainId(dappUrl: string, chainId: WalletChainId): void 
   queueDappStateSync()
 }
 
-function saveDappActiveAccount(dappUrl: string, account: Account): void {
+function saveDappActiveAccount(dappUrl: string, account: Account, initialProperties?: Partial<DappInfo>): void {
   // Never directly mutate state, as some of its fields could have `writable: false`
   state = {
     ...state,
     [dappUrl]: {
+      ...state[dappUrl],
       lastChainId: state[dappUrl]?.lastChainId ?? UniverseChainId.Mainnet,
       activeConnectedAddress: account.address,
       connectedAccounts: ((): Account[] => {
@@ -134,6 +183,7 @@ function saveDappActiveAccount(dappUrl: string, account: Account): void {
         }
         return currConnectedAccounts
       })(),
+      ...initialProperties,
     },
   }
   queueDappStateSync()
@@ -147,34 +197,55 @@ function saveDappActiveAccount(dappUrl: string, account: Account): void {
  */
 function removeDappConnection(dappUrl: string, account?: Account): void {
   // Never directly mutate state, as some of its fields could have `writable: false`
-  state = ((): DappState => {
-    const dappUrlState = state[dappUrl]
-
-    if (!dappUrlState) {
-      return state
-    }
-
-    const updatedAccounts = account
-      ? dappUrlState.connectedAccounts?.filter((existingAccount) => existingAccount.address !== account.address)
-      : []
-
-    const activeConnected = updatedAccounts[0]
-    if (activeConnected) {
-      return {
-        ...state,
-        [dappUrl]: {
-          ...dappUrlState,
-          connectedAccounts: updatedAccounts,
-          activeConnectedAddress: activeConnected.address,
-        },
-      }
-    } else {
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const { [dappUrl]: _, ...restState } = state
-      return restState
-    }
-  })()
+  state = removeDappConnectionHelper(state, dappUrl, account)
   queueDappStateSync()
+}
+
+/**
+ * Remove all dapp connections for a specific account
+ * @param account - the account to remove all connections for
+ */
+function removeAccountDappConnections(account: Account): void {
+  let updatedState = { ...state }
+
+  for (const dappUrl of getDappUrls()) {
+    updatedState = removeDappConnectionHelper(updatedState, dappUrl, account)
+  }
+
+  state = updatedState
+  queueDappStateSync()
+}
+
+/**
+ * Helper function to remove a dapp connection
+ * @param initialState - the initial mapping of dapp URLs to DappInfo
+ * @param dappUrl - the URL of the dapp (key) to target
+ * @param account - the account to remove from the target dapp; if undefined, all accounts will be removed
+ * @returns the updated state
+ */
+function removeDappConnectionHelper(initialState: DappState, dappUrl: string, account?: Account): DappState {
+  const newState = cloneDeep(initialState)
+  const dappInfo = newState[dappUrl]
+
+  if (!dappInfo) {
+    return initialState
+  }
+
+  dappInfo.connectedAccounts = dappInfo.connectedAccounts.filter(
+    (existingAccount) => existingAccount.address !== account?.address,
+  )
+
+  const nextConnectedAccount = dappInfo.connectedAccounts[0]
+
+  if (!nextConnectedAccount || !account) {
+    delete newState[dappUrl]
+    return newState
+  }
+
+  if (dappInfo.activeConnectedAddress === account.address) {
+    dappInfo.activeConnectedAddress = nextConnectedAccount.address
+  }
+  return newState
 }
 
 function removeAllDappConnections(): void {
@@ -190,10 +261,13 @@ export const dappStore = {
   getDappUrls,
   init,
   removeAllDappConnections,
+  removeAccountDappConnections,
   removeDappConnection,
   saveDappActiveAccount,
   addListener: dappStoreEventEmitter.addListener.bind(dappStoreEventEmitter),
   removeListener: dappStoreEventEmitter.removeListener.bind(dappStoreEventEmitter),
   updateDappConnectedAddress,
   updateDappLatestChainId,
+  updateDappIconUrl,
+  updateDappDisplayName,
 }

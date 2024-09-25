@@ -1,12 +1,9 @@
-import Row from 'components/Row'
-import PillMultiToggle from 'components/Toggle/PillMultiToggle'
 import { atom, useAtom } from 'jotai'
 import { atomWithStorage, useAtomValue, useUpdateAtom } from 'jotai/utils'
-import styled, { useTheme } from 'lib/styled-components'
 import ms from 'ms'
 import { useCallback, useEffect, useMemo } from 'react'
 import { Moon, Sun } from 'react-feather'
-import { ThemedText } from 'theme/components/text'
+import { Flex, SegmentedControl, Text, styled, useSporeColors } from 'ui/src'
 import { Moon as MoonFilled } from 'ui/src/components/icons/Moon'
 import { Sun as SunFilled } from 'ui/src/components/icons/Sun'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
@@ -16,24 +13,25 @@ const THEME_UPDATE_DELAY = ms(`0.1s`)
 const DARKMODE_MEDIA_QUERY = window.matchMedia('(prefers-color-scheme: dark)')
 
 export enum ThemeMode {
-  LIGHT = 0,
-  DARK,
-  AUTO,
+  LIGHT = 'Light',
+  DARK = 'Dark',
+  AUTO = 'Auto',
 }
 
-const OptionPill = styled.div`
-  padding: 6px 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
-const CompactOptionPill = styled.div`
-  height: 28px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 0 8px;
-`
+const OptionPill = styled(Flex, {
+  py: '$padding6',
+  px: '$padding10',
+  row: true,
+  justifyContent: 'center',
+  alignItems: 'center',
+})
+
+const CompactOptionPill = styled(Flex, {
+  px: '$padding8',
+  height: '$spacing28',
+  justifyContent: 'center',
+  alignItems: 'center',
+})
 
 // Tracks the device theme
 const systemThemeAtom = atom<ThemeMode.LIGHT | ThemeMode.DARK>(
@@ -97,13 +95,9 @@ export function useDarkModeManager(): [boolean, (mode: ThemeMode) => void] {
   }, [isDarkMode, setMode])
 }
 
-const ThemePillMultiToggleContainer = styled.div`
-  width: fit;
-`
-
 export function ThemeSelector({ disabled, compact = false }: { disabled?: boolean; compact?: boolean }) {
-  const theme = useTheme()
   const { t } = useTranslation()
+  const colors = useSporeColors()
   const [mode, setMode] = useAtom(themeModeAtom)
   const switchMode = useCallback(
     (mode: string | number) => {
@@ -117,14 +111,16 @@ export function ThemeSelector({ disabled, compact = false }: { disabled?: boolea
     {
       value: ThemeMode.AUTO,
       display: (
-        <CompactOptionPill data-testid="theme-auto">{t('settings.setting.appearance.option.auto')}</CompactOptionPill>
+        <CompactOptionPill data-testid="theme-auto">
+          <Text variant="buttonLabel3">{t('settings.setting.appearance.option.auto')}</Text>
+        </CompactOptionPill>
       ),
     },
     {
       value: ThemeMode.LIGHT,
       display: (
         <CompactOptionPill data-testid="theme-light">
-          <SunFilled size="$icon.20" />
+          <SunFilled size="$icon.20" color={colors.neutral1.get()} />
         </CompactOptionPill>
       ),
     },
@@ -132,7 +128,7 @@ export function ThemeSelector({ disabled, compact = false }: { disabled?: boolea
       value: ThemeMode.DARK,
       display: (
         <CompactOptionPill data-testid="theme-dark">
-          <MoonFilled size="$icon.20" />
+          <MoonFilled size="$icon.20" color={colors.neutral1.get()} />
         </CompactOptionPill>
       ),
     },
@@ -141,13 +137,17 @@ export function ThemeSelector({ disabled, compact = false }: { disabled?: boolea
   const defaultOptions = [
     {
       value: ThemeMode.AUTO,
-      display: <OptionPill data-testid="theme-auto">{t('settings.setting.appearance.option.auto')}</OptionPill>,
+      display: (
+        <OptionPill data-testid="theme-auto">
+          <Text variant="buttonLabel3">{t('settings.setting.appearance.option.auto')}</Text>
+        </OptionPill>
+      ),
     },
     {
       value: ThemeMode.LIGHT,
       display: (
         <OptionPill data-testid="theme-light">
-          <Sun size="20" />
+          <Sun size="20" color={colors.neutral1.val} />
         </OptionPill>
       ),
     },
@@ -155,34 +155,34 @@ export function ThemeSelector({ disabled, compact = false }: { disabled?: boolea
       value: ThemeMode.DARK,
       display: (
         <OptionPill data-testid="theme-dark">
-          <Moon size="20" />
+          <Moon size="20" color={colors.neutral1.val} />
         </OptionPill>
       ),
     },
   ]
 
   return (
-    <ThemePillMultiToggleContainer>
-      <PillMultiToggle
+    <Flex width="fit">
+      <SegmentedControl
+        key={mode} // force re-render when mode changes to avoid visual glitch
         options={compact ? compactOptions : defaultOptions}
-        currentSelected={mode}
+        selectedOption={mode}
         onSelectOption={switchMode}
-        activePillColor={theme.accent2}
-        activeTextColor={theme.accent1}
+        size="large"
       />
-    </ThemePillMultiToggleContainer>
+    </Flex>
   )
 }
 
 export default function ThemeToggle({ disabled }: { disabled?: boolean }) {
   return (
-    <Row align="center" justify="space-between">
-      <Row width="40%">
-        <ThemedText.SubHeaderSmall color="primary">
+    <Flex row alignItems="center" justifyContent="space-between">
+      <Flex row width="40%">
+        <Text variant="body3" color="$neutral1">
           <Trans i18nKey="themeToggle.theme" />
-        </ThemedText.SubHeaderSmall>
-      </Row>
+        </Text>
+      </Flex>
       <ThemeSelector disabled={disabled} />
-    </Row>
+    </Flex>
   )
 }

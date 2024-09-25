@@ -1,6 +1,6 @@
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { Statsig, StatsigOverrides } from 'uniswap/src/features/gating/sdk/statsig'
-import { isDevEnv } from 'utilities/src/environment'
+import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
 
 const STATSIG_PERSISTED_OVERRIDE_KEY = 'STATSIG_PERSISTED_OVERRIDE_KEY'

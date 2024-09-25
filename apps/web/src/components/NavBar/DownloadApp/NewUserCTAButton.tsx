@@ -1,8 +1,8 @@
-import { AccountCTAsExperimentGroup, useIsAccountCTAExperimentControl } from 'components/NavBar'
+import { useIsAccountCTAExperimentControl } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useOpenModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { Button, Text, styled } from 'ui/src'
-import { Experiments } from 'uniswap/src/features/gating/experiments'
+import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
 import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import { useTranslation } from 'uniswap/src/i18n'
 
@@ -35,9 +35,9 @@ const StyledButton = styled(Button, {
 export function NewUserCTAButton() {
   const { t } = useTranslation()
 
-  const openModal = useOpenModal(ApplicationModal.GET_THE_APP)
+  const openModal = useOpenModal({ name: ApplicationModal.GET_THE_APP })
 
-  const isSignInExperimentControl = useIsAccountCTAExperimentControl()
+  const { isControl: isSignInExperimentControl } = useIsAccountCTAExperimentControl()
   const isSignUp = useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.SignInSignUp
   const isCreateAccount =
     useExperimentGroupName(Experiments.AccountCTAs) === AccountCTAsExperimentGroup.LogInCreateAccount

@@ -6,7 +6,7 @@ import { useExploreTokenContextMenu } from 'src/components/explore/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
-import WarningIcon from 'uniswap/src/components/icons/WarningIcon'
+import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
@@ -28,7 +28,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
   const dispatch = useDispatch()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
-  const { chainId, address, name, symbol, logoUrl, safetyLevel } = token
+  const { chainId, address, name, symbol, logoUrl, safetyLevel, safetyInfo } = token
   const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId as WalletChainId)
 
   const onPress = (): void => {
@@ -56,6 +56,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
           symbol,
           logoUrl,
           safetyLevel,
+          safetyInfo,
         },
       }),
     )
@@ -86,7 +87,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
                 </Text>
               </Flex>
               {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
-                <WarningIcon safetyLevel={safetyLevel} size="$icon.16" strokeColorOverride="neutral3" />
+                <WarningIcon safetyLevel={safetyLevel} size="$icon.16" strokeColorOverride="$neutral3" />
               )}
             </Flex>
             <Flex centered row gap="$spacing8">

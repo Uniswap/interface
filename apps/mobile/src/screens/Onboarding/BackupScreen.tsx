@@ -4,9 +4,13 @@ import { StackScreenProps } from '@react-navigation/stack'
 import React, { useCallback, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Alert } from 'react-native'
-import { AppStackParamList, OnboardingStackParamList, useOnboardingStackNavigation } from 'src/app/navigation/types'
+import {
+  AppStackParamList,
+  EducationContentType,
+  OnboardingStackParamList,
+  useOnboardingStackNavigation,
+} from 'src/app/navigation/types'
 import { BackButton } from 'src/components/buttons/BackButton'
-import { EducationContentType } from 'src/components/education'
 import { isCloudStorageAvailable } from 'src/features/CloudBackup/RNCloudStorageBackupsManager'
 import { OnboardingScreen } from 'src/features/onboarding/OnboardingScreen'
 import { OptionCard } from 'src/features/onboarding/OptionCard'
@@ -16,6 +20,7 @@ import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { getCloudProviderName } from 'uniswap/src/utils/cloud-backup/getCloudProviderName'
 import { isAndroid } from 'utilities/src/platform'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingContext'
@@ -131,7 +136,7 @@ export function BackupScreen({ navigation, route: { params } }: Props): JSX.Elem
     <OptionCard
       key={ElementName.AddCloudBackup}
       badgeText={t('onboarding.backup.option.badge.quick')}
-      blurb={t('onboarding.backup.option.cloud.description')}
+      blurb={t('onboarding.backup.option.cloud.description', { cloudProviderName: getCloudProviderName() })}
       disabled={hasCloudBackup}
       elementName={ElementName.AddCloudBackup}
       icon={<Cloud color="$accent1" size="$icon.16" />}

@@ -9,7 +9,7 @@ import { DappRequestStoreItemForEthSendTxn } from 'src/app/features/dappRequests
 import { isApproveRequest, isLPRequest, isSwapRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
-import { GasFeeResult, GasSpeed } from 'uniswap/src/features/gas/types'
+import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
 import { formatExternalTxnWithGasEstimates } from 'wallet/src/features/gas/formatExternalTxnWithGasEstimates'
@@ -28,7 +28,6 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
 
   const transactionGasFeeResult = useTransactionGasFee(
     formattedTxnForGasQuery,
-    /*speed=*/ GasSpeed.Urgent,
     /*skip=*/ !formattedTxnForGasQuery,
     /*pollingInterval=*/ PollingInterval.LightningMcQueen,
   )

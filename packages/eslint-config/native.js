@@ -46,6 +46,7 @@ module.exports = {
     'spellcheck',
     '@typescript-eslint',
     '@jambit/typed-redux-saga',
+    'check-file',
   ],
   rules: {
     ...complexityRules,
@@ -72,6 +73,7 @@ module.exports = {
     '@typescript-eslint/no-shadow': 'error',
     // use throughout the app when importing devtools, or in test files
     '@typescript-eslint/no-var-requires': 'off',
+    'check-file/no-index': ['error', { ignoreMiddleExtensions: true }],
     '@typescript-eslint/no-require-imports': 'off',
     '@typescript-eslint/no-unused-expressions': [
       2,
@@ -149,6 +151,12 @@ module.exports = {
             message: 'Use our custom Switch component instead.',
           },
           {
+            name: 'react-native',
+            importNames: ['Keyboard'],
+            message:
+              'Please use dismissNativeKeyboard() instead for dismissals. addListener is okay to ignore this import for!',
+          },
+          {
             name: 'wallet/src/data/__generated__/types-and-hooks',
             importNames: ['usePortfolioBalancesQuery'],
             message: 'Use `usePortfolioBalances` instead.',
@@ -161,8 +169,7 @@ module.exports = {
           {
             name: '@gorhom/bottom-sheet',
             importNames: ['BottomSheetTextInput'],
-            message:
-              'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/Modal`.',
+            message: 'Use our internal `BottomSheetTextInput` wrapper from `/uniswap/src/components/modals/Modal`.',
           },
           {
             name: 'expo-haptics',
@@ -231,7 +238,7 @@ module.exports = {
         callbacksLast: true,
         shorthandFirst: true,
         ignoreCase: false,
-        noSortAlphabetically: false,
+        noSortAlphabetically: true,
         reservedFirst: true,
       },
     ],

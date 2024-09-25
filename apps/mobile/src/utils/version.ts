@@ -1,5 +1,5 @@
 import DeviceInfo from 'react-native-device-info'
-import { isBetaEnv, isDevEnv } from 'utilities/src/environment'
+import { isBetaEnv, isDevEnv } from 'utilities/src/environment/env'
 import { StatsigEnvironmentTier } from 'wallet/src/version'
 
 /**

@@ -1,4 +1,4 @@
-import { getTestSelector, resetHardhatChain, waitsForActiveChain } from '../utils'
+import { getTestSelector, resetHardhatChain } from '../utils'
 
 describe('Add Liquidity', () => {
   it('loads the token pair', () => {
@@ -17,7 +17,6 @@ describe('Add Liquidity', () => {
       cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'ETH')
       cy.get(getTestSelector('chain-selector')).last().click()
       cy.contains('Polygon').click()
-      waitsForActiveChain('Polygon')
       cy.get('#add-liquidity-input-tokenb .token-symbol-container').should('contain.text', 'MATIC')
       cy.get('#add-liquidity-input-tokena .token-symbol-container').should('not.contain.text', 'UNI')
     })

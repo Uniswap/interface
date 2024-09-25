@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { FlatList, Keyboard } from 'react-native'
+import { FlatList } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
 import { SearchPopularNFTCollections } from 'src/components/explore/search/SearchPopularNFTCollections'
@@ -12,12 +12,13 @@ import ClockIcon from 'ui/src/assets/icons/clock.svg'
 import { InfoCircleFilled, Star, TrendUp } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { SearchResultType, WalletSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WarningSeverity } from 'uniswap/src/features/transactions/WarningModal/types'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 
 const TrendUpIcon = <TrendUp color="$neutral2" size="$icon.24" />
 
@@ -47,7 +48,7 @@ export function SearchEmptySection(): JSX.Element {
   }
 
   const onPopularTokenInfoPress = (): void => {
-    Keyboard.dismiss()
+    dismissNativeKeyboard()
     setShowPopularInfo(true)
   }
 

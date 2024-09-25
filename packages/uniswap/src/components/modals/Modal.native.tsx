@@ -9,7 +9,7 @@ import {
 } from '@gorhom/bottom-sheet'
 import { BlurView } from 'expo-blur'
 import React, { ComponentProps, useCallback, useEffect, useMemo, useRef, useState } from 'react'
-import { BackHandler, Keyboard, StyleProp, StyleSheet, ViewStyle } from 'react-native'
+import { BackHandler, StyleProp, StyleSheet, ViewStyle } from 'react-native'
 import Animated, { Extrapolate, interpolate, useAnimatedStyle, useSharedValue } from 'react-native-reanimated'
 import { Flex, useDeviceInsets, useIsDarkMode, useMedia, useSporeColors } from 'ui/src'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
@@ -19,6 +19,7 @@ import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { useKeyboardLayout } from 'uniswap/src/utils/useKeyboardLayout'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { isIOS } from 'utilities/src/platform'
 
 /**
@@ -191,7 +192,7 @@ function BottomSheetModalContents({
         (hideKeyboardOnDismiss && toIndex === DISAPPEARS_ON_INDEX) ||
         (hideKeyboardOnSwipeDown && toIndex < fromIndex)
       ) {
-        Keyboard.dismiss()
+        dismissNativeKeyboard()
       }
 
       // When a sheet has too much content it can lag and take a while to begin opening, so we want to delay rendering some of the content until the sheet is ready.

@@ -1,10 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { useSporeColors } from 'ui/src'
 import { ShieldCheck } from 'ui/src/components/icons'
+import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { WarningModal } from 'wallet/src/components/modals/WarningModal/WarningModal'
 
 export function SwapProtectionInfoModal({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }): JSX.Element {
   const colors = useSporeColors()

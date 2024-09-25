@@ -34,6 +34,7 @@ export enum SettingsRoutes {
   ViewRecoveryPhrase = 'view-recovery-phrase',
   RemoveRecoveryPhrase = 'remove-recovery-phrase',
   Privacy = 'privacy',
+  ManageConnections = 'manage-connections',
 }
 
 export enum RemoveRecoveryPhraseRoutes {

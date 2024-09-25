@@ -91,7 +91,7 @@ export function* saveAccount({ url, favIconUrl }: SenderTabInfo) {
     return
   }
 
-  yield* call(saveDappConnection, dappUrl, activeAccount)
+  yield* call(saveDappConnection, dappUrl, activeAccount, favIconUrl)
   // No dapp info means that this is a first time connection request
   if (!dappInfo) {
     yield* put(

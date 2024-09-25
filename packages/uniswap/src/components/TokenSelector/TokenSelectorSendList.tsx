@@ -6,7 +6,6 @@ import { SectionHeader } from 'uniswap/src/components/TokenSelector/TokenSection
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { usePortfolioTokenOptions } from 'uniswap/src/components/TokenSelector/hooks'
 import {
-  ConvertFiatAmountFormattedCallback,
   OnSelectCurrency,
   TokenOptionSection,
   TokenSection,
@@ -16,8 +15,6 @@ import { useTokenOptionsSection } from 'uniswap/src/components/TokenSelector/uti
 import { GqlResult } from 'uniswap/src/data/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-// eslint-disable-next-line no-restricted-imports
-import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 
 function useTokenSectionsForSend({
   activeAccountAddress,
@@ -76,17 +73,11 @@ function _TokenSelectorSendList({
   activeAccountAddress,
   chainFilter,
   isKeyboardOpen,
-  onDismiss,
   onSelectCurrency,
   onEmptyActionPress,
-  formatNumberOrStringCallback,
-  convertFiatAmountFormattedCallback,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   onEmptyActionPress: () => void
-  formatNumberOrStringCallback: (input: FormatNumberOrStringInput) => string
-  convertFiatAmountFormattedCallback: ConvertFiatAmountFormattedCallback
-  onDismiss: () => void
 }): JSX.Element {
   const {
     data: sections,
@@ -102,16 +93,13 @@ function _TokenSelectorSendList({
   return (
     <TokenSelectorList
       chainFilter={chainFilter}
-      convertFiatAmountFormattedCallback={convertFiatAmountFormattedCallback}
       emptyElement={emptyElement}
-      formatNumberOrStringCallback={formatNumberOrStringCallback}
       hasError={Boolean(error)}
       isKeyboardOpen={isKeyboardOpen}
       loading={loading}
       refetch={refetch}
       sections={sections}
       showTokenWarnings={false}
-      onDismiss={onDismiss}
       onSelectCurrency={onSelectCurrency}
     />
   )

@@ -12,7 +12,7 @@ import {
   TransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { CurrencyIdToVisibility } from 'uniswap/src/features/favorites/slice'
+import { CurrencyIdToVisibility, NFTKeyToVisibility } from 'uniswap/src/features/favorites/slice'
 import { FORMAT_DATE_MONTH, FORMAT_DATE_MONTH_YEAR, LocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
@@ -26,6 +26,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
+import { getIsNftHidden } from 'wallet/src/features/nfts/utils'
 import { extractOnRampTransactionDetails } from 'wallet/src/features/transactions/history/conversion/extractFiatOnRampTransactionDetails'
 import extractTransactionDetails from 'wallet/src/features/transactions/history/conversion/extractTransactionDetails'
 import { extractUniswapXOrderDetails } from 'wallet/src/features/transactions/history/conversion/extractUniswapXOrderDetails'
@@ -103,6 +104,26 @@ export function formatTransactionsByDate(
   }
 }
 
+function isNftTransactionHidden(
+  parsed: TransactionDetails | null,
+  nftVisibility?: NFTKeyToVisibility,
+  isSpam?: boolean,
+): boolean {
+  if (parsed?.typeInfo && 'nftSummaryInfo' in parsed.typeInfo && nftVisibility) {
+    const nftSummaryInfo = parsed.typeInfo.nftSummaryInfo
+
+    return nftSummaryInfo
+      ? getIsNftHidden({
+          contractAddress: nftSummaryInfo.address,
+          tokenId: nftSummaryInfo.tokenId,
+          isSpam,
+          nftVisibility,
+        })
+      : false
+  }
+  return false
+}
+
 /**
  * Transforms api txn data to formatted TransactionDetails array
  * @param data Transaction history data response
@@ -110,6 +131,7 @@ export function formatTransactionsByDate(
 export function parseDataResponseToTransactionDetails(
   data: TransactionListQuery,
   hideSpamTokens: boolean,
+  nftVisibility?: NFTKeyToVisibility,
   tokenVisibilityOverrides?: CurrencyIdToVisibility,
 ): TransactionDetails[] | undefined {
   if (data.portfolios?.[0]?.assetActivities) {
@@ -119,8 +141,9 @@ export function parseDataResponseToTransactionDetails(
         const isSpam = parsed?.typeInfo.isSpam
         const currencyId = extractCurrencyIdFromTx(parsed)
         const spamOverride = currencyId ? tokenVisibilityOverrides?.[currencyId]?.isVisible : false
+        const isNFTSpam = isNftTransactionHidden(parsed, nftVisibility, isSpam)
 
-        if (parsed && !(hideSpamTokens && isSpam && !spamOverride)) {
+        if (parsed && !(hideSpamTokens && isSpam && !spamOverride) && !isNFTSpam) {
           accum.push(parsed)
         }
       } else if (t?.details?.__typename === TransactionDetailsType.OnRamp) {

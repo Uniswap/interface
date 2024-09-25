@@ -1,11 +1,11 @@
 import { CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from 'components/Button'
-import { LightCard } from 'components/Card'
-import { AutoColumn } from 'components/Column'
-import { DoubleCurrencyLogo } from 'components/DoubleLogo'
+import { ButtonEmpty, ButtonPrimary, ButtonSecondary } from 'components/Button/buttons'
+import { LightCard } from 'components/Card/cards'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
-import { AutoRow, RowBetween, RowFixed } from 'components/Row'
+import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
+import { AutoColumn } from 'components/deprecated/Column'
+import { AutoRow, RowBetween, RowFixed } from 'components/deprecated/Row'
 import { CardNoise } from 'components/earn/styled'
 import { Dots } from 'components/swap/styled'
 import { BIG_INT_ZERO } from 'constants/misc'
@@ -40,7 +40,7 @@ interface PositionCardProps {
   stakedBalance?: CurrencyAmount<Token> // optional balance to indicate that liquidity is deposited in mining pool
 }
 
-export default function V2PositionCard({ pair, border, stakedBalance }: PositionCardProps) {
+export default function MigrateV2PositionCard({ pair, border, stakedBalance }: PositionCardProps) {
   const account = useAccount()
 
   const currency0 = unwrappedToken(pair.token0)

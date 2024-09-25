@@ -1,4 +1,5 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { Field } from 'components/swap/constants'
 import { CHAIN_IDS_TO_NAMES, useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -20,8 +21,6 @@ import { CurrencyState, SerializedCurrencyState, SwapInfo, SwapState } from 'sta
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
@@ -224,11 +223,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     let inputError: ReactNode | undefined
 
     if (!account.isConnected) {
-      inputError = isDisconnected ? (
-        <Trans i18nKey="common.connectWallet.button" />
-      ) : (
-        <Trans i18nKey="common.connectingWallet" />
-      )
+      inputError = isDisconnected ? <ConnectWalletButtonText /> : <Trans i18nKey="common.connectingWallet" />
     }
 
     if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
@@ -269,11 +264,11 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     account.isConnected,
     currencies,
     parsedAmount,
+    insufficientGas,
     currencyBalances,
     trade?.trade,
     allowedSlippage,
     isDisconnected,
-    insufficientGas,
     nativeCurrency.symbol,
   ])
 
@@ -391,7 +386,6 @@ export function useInitialCurrencyState(): {
   initialChainId: InterfaceChainId
   initialCurrencyLoading: boolean
 } {
-  const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
   const { chainId, setIsUserSelectedToken } = useSwapAndLimitContext()
 
   const parsedQs = useParsedQueryString()
@@ -411,7 +405,7 @@ export function useInitialCurrencyState(): {
 
   const { initialInputCurrencyAddress, initialChainId } = useMemo(() => {
     // Default to ETH if multichain
-    if (multichainUXEnabled && !hasCurrencyQueryParams) {
+    if (!hasCurrencyQueryParams) {
       return {
         initialInputCurrencyAddress: 'ETH',
         initialChainId: UniverseChainId.Mainnet,
@@ -431,7 +425,6 @@ export function useInitialCurrencyState(): {
     }
   }, [
     hasCurrencyQueryParams,
-    multichainUXEnabled,
     parsedCurrencyState.inputCurrencyId,
     parsedCurrencyState.outputCurrencyId,
     supportedChainId,

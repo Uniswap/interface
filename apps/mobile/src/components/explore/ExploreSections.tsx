@@ -10,7 +10,7 @@ import { SortButton } from 'src/components/explore/SortButton'
 import { TokenItem } from 'src/components/explore/TokenItem'
 import { TokenItemData } from 'src/components/explore/TokenItemData'
 import { AnimatedBottomSheetFlatList } from 'src/components/layout/AnimatedFlatList'
-import { AutoScrollProps } from 'src/components/sortableGrid'
+import { AutoScrollProps } from 'src/components/sortableGrid/types'
 import {
   getClientTokensOrderByCompareFn,
   getTokenMetadataDisplayType,
@@ -224,8 +224,8 @@ function gqlTokenToTokenItemData(
     return null
   }
 
-  const { symbol, address, chain, project, market } = token
-  const { logoUrl, markets, name } = project
+  const { name, symbol, address, chain, project, market } = token
+  const { logoUrl, markets } = project
   const tokenProjectMarket = markets?.[0]
 
   const chainId = fromGraphQLChain(chain)

@@ -1,5 +1,5 @@
-import { RowBetween, RowFixed } from 'components/Row'
 import SettingsTab from 'components/Settings'
+import { RowBetween, RowFixed } from 'components/deprecated/Row'
 import SwapBuyFiatButton from 'components/swap/SwapBuyFiatButton'
 import { SwapHeaderTabButton } from 'components/swap/styled'
 import styled from 'lib/styled-components'

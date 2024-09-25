@@ -8,7 +8,9 @@ describe('Swap wrap', () => {
   // Turn off automine so that intermediate screens are available to assert on.
   before(() => cy.hardhat({ automine: false }))
 
-  beforeEach(() => cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${WETH.address}`))
+  beforeEach(() =>
+    cy.visit(`/swap?inputCurrency=ETH&outputCurrency=${WETH.address}`),
+  )
 
   it('ETH to wETH is same value (wrapped swaps have no price impact)', () => {
     cy.get('#swap-currency-input .token-amount-input').type('0.01').should('have.value', '0.01')

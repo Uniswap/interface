@@ -1,5 +1,7 @@
 import * as WebBrowser from 'expo-web-browser'
 import { colorsLight } from 'ui/src/theme'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { canOpenURL, openURL } from 'uniswap/src/utils/link'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -63,5 +65,61 @@ export async function openUri(
     }
   } catch (error) {
     logger.error(error, { tags: { file: 'linking', function: 'openUri' } })
+  }
+}
+
+export enum ExplorerDataType {
+  TRANSACTION = 'transaction',
+  TOKEN = 'token',
+  ADDRESS = 'address',
+  BLOCK = 'block',
+  NFT = 'nft',
+  NATIVE = 'native',
+}
+
+/**
+ * Return the explorer link for the given data and data type
+ * @param chainId the ID of the chain for which to return the data
+ * @param data the data to return a link for
+ * @param type the type of the data
+ */
+export function getExplorerLink(chainId: UniverseChainId, data: string, type: ExplorerDataType): string {
+  const prefix = UNIVERSE_CHAIN_INFO[chainId].explorer.url
+
+  switch (type) {
+    case ExplorerDataType.TRANSACTION:
+      return `${prefix}tx/${data}`
+
+    case ExplorerDataType.TOKEN:
+      if (
+        data === UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.address &&
+        UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.explorerLink
+      ) {
+        return UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.explorerLink ?? `${prefix}token/${data}`
+      }
+      return `${prefix}token/${data}`
+
+    case ExplorerDataType.BLOCK:
+      if (chainId === UniverseChainId.Optimism) {
+        return `${prefix}tx/${data}`
+      }
+      return `${prefix}block/${data}`
+
+    case ExplorerDataType.ADDRESS:
+      return `${prefix}address/${data}`
+
+    case ExplorerDataType.NFT:
+      if (chainId === UniverseChainId.Zora) {
+        // Zora Energy Explorer uses a different URL format of [blockExplorerUrl]/token/[contractAddress]/instance/[tokenId]
+        // We need to split the data to get the contract address and token ID
+        const splitData = data.split('/')
+        const contractAddress = splitData[0] ?? ''
+        const tokenAddress = splitData[1] ?? ''
+        return `${prefix}token/${contractAddress}/instance/${tokenAddress}`
+      }
+      return `${prefix}nft/${data}`
+
+    default:
+      return `${prefix}`
   }
 }

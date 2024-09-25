@@ -1,4 +1,4 @@
-import AnimatedDropdown from 'components/AnimatedDropdown/index'
+import AnimatedDropdown from 'components/AnimatedDropdown'
 import { render, screen, waitFor } from 'test-utils/render'
 
 describe('AnimatedDropdown', () => {

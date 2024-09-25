@@ -31,4 +31,5 @@ export type DerivedSwapInfo<
   txId?: string
   autoSlippageTolerance?: number
   customSlippageTolerance?: number
+  customDeadline?: number
 }

@@ -1,9 +1,9 @@
-import Column from 'components/Column'
 import { ConfirmModalState } from 'components/ConfirmSwapModal'
-import { Step, StepDetails, StepStatus } from 'components/ConfirmSwapModal/Step'
+import { Step } from 'components/ConfirmSwapModal/Step'
 import { Sign } from 'components/Icons/Sign'
 import { Swap } from 'components/Icons/Swap'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
+import Column from 'components/deprecated/Column'
 import { useAccount } from 'hooks/useAccount'
 import { useBlockConfirmationTime } from 'hooks/useBlockConfirmationTime'
 import { useColor } from 'hooks/useColor'
@@ -18,6 +18,7 @@ import { useIsTransactionConfirmed, useSwapTransactionStatus } from 'state/trans
 import { colors } from 'theme/colors'
 import { Divider } from 'theme/components'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { StepDetails, StepStatus } from 'uniswap/src/components/ConfirmSwapModal/Step'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { t } from 'uniswap/src/i18n'
@@ -104,11 +105,11 @@ export default function ProgressIndicator({
     const currentIndex = steps.indexOf(currentStep)
     const targetIndex = steps.indexOf(targetStep)
     if (currentIndex < targetIndex) {
-      return StepStatus.PREVIEW
+      return StepStatus.Preview
     } else if (currentIndex === targetIndex) {
-      return transactionPending ? StepStatus.IN_PROGRESS : StepStatus.ACTIVE
+      return transactionPending ? StepStatus.InProgress : StepStatus.Active
     } else {
-      return StepStatus.COMPLETE
+      return StepStatus.Complete
     }
   }
 

@@ -1,4 +1,5 @@
 import { EffectCallback, useEffect } from 'react'
+// eslint-disable-next-line no-restricted-imports
 import { Keyboard } from 'react-native'
 
 // Emprirically determined value

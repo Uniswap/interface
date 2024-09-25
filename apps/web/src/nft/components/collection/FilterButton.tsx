@@ -1,5 +1,5 @@
 import clsx from 'clsx'
-import { Box } from 'nft/components/Box'
+import { Box } from 'components/deprecated/Box'
 import * as styles from 'nft/components/collection/FilterButton.css'
 import { FilterIcon } from 'nft/components/icons'
 import { buttonTextMedium } from 'nft/css/common.css'

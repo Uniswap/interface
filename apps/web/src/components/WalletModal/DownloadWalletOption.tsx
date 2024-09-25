@@ -1,7 +1,7 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import UNIWALLET_ICON from 'assets/wallets/uniswap-wallet-icon.png'
-import Column from 'components/Column'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { AppIcon, OptionContainer } from 'components/WalletModal/UniswapWalletOptions'
 import styled from 'lib/styled-components'
 import { useState } from 'react'
@@ -39,7 +39,7 @@ const BackgroundImage = styled.div<{ backgroundImage?: string; isHovered?: boole
 `
 
 export const DownloadWalletOption = () => {
-  const openGetTheAppModal = useOpenModal(ApplicationModal.GET_THE_APP)
+  const openGetTheAppModal = useOpenModal({ name: ApplicationModal.GET_THE_APP })
   // Hovered state is passed from the background component to the background image which is layered underneath the option container
   const [optionHovered, setOptionHovered] = useState(false)
   return (

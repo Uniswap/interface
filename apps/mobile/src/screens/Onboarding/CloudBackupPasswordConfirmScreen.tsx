@@ -1,15 +1,15 @@
 import { NativeStackScreenProps } from '@react-navigation/native-stack'
 import React, { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard } from 'react-native'
 import { OnboardingStackParamList } from 'src/app/navigation/types'
-import { CloudBackupPassword } from 'src/features/CloudBackup/CloudBackupForm'
+import { CloudBackupPassword } from 'src/features/CloudBackup/CloudBackupForm/CloudBackupPassword'
 import { BackupSpeedBumpModal } from 'src/features/onboarding/BackupSpeedBumpModal'
 import { SafeKeyboardOnboardingScreen } from 'src/features/onboarding/SafeKeyboardOnboardingScreen'
 import { Flex } from 'ui/src'
 import { Cloud } from 'ui/src/components/icons'
 import { OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
 import { OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { BackupType } from 'wallet/src/features/wallet/accounts/types'
 
 export type Props = NativeStackScreenProps<OnboardingStackParamList, OnboardingScreens.BackupCloudPasswordConfirm>
@@ -47,7 +47,7 @@ export function CloudBackupPasswordConfirmScreen({ navigation, route: { params }
               onPressContinue={
                 onboardingExperimentEnabled
                   ? (): void => {
-                      Keyboard.dismiss()
+                      dismissNativeKeyboard()
                       setShowSpeedBumpModal(true)
                     }
                   : undefined

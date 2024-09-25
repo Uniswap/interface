@@ -1,9 +1,9 @@
 import { Input, InputProps } from 'components/NumericalInput'
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import styled, { css } from 'lib/styled-components'
 import { useLayoutEffect, useState } from 'react'
 
-const NumericalInputFontStyle = css`
+export const NumericalInputFontStyle = css`
   text-align: left;
   font-size: 70px;
   font-weight: 500;

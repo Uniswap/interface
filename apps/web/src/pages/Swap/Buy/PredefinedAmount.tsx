@@ -12,7 +12,7 @@ interface PredefinedAmountProps {
   onClick: () => void
 }
 
-const ClickablePill = styled(Pill)<{ $disabled: boolean; $active: boolean }>`
+export const ClickablePill = styled(Pill)<{ $disabled: boolean; $active: boolean }>`
   background-color: ${({ $disabled, $active, theme }) =>
     $disabled ? theme.surface2 : $active ? theme.surface3 : theme.surface1};
   user-select: none;

@@ -1,6 +1,7 @@
 import ContextMenu from 'react-native-context-menu-view'
 import { Flex, ImpactFeedbackStyle, TouchableArea } from 'ui/src'
 import { borderRadii } from 'ui/src/theme'
+import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import noop from 'utilities/src/react/noop'
 import { NFTViewer } from 'wallet/src/features/images/NFTViewer'
 import { ESTIMATED_NFT_LIST_ITEM_SIZE, MAX_NFT_IMAGE_SIZE } from 'wallet/src/features/nfts/constants'
@@ -24,6 +25,7 @@ export function NftView({
     owner,
     isSpam: item.isSpam,
     showNotification: true,
+    chainId: fromGraphQLChain(item.chain) ?? undefined,
   })
 
   return (

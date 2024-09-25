@@ -7,7 +7,7 @@ import { SignTypedDataRequest } from 'src/app/features/dappRequests/types/DappRe
 import { Flex, Text, TouchableArea } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
-import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 interface Permit2RequestProps {
   dappRequest: SignTypedDataRequest

@@ -1,11 +1,13 @@
 import { ApolloError, NetworkStatus } from '@apollo/client'
 import { useCallback, useMemo } from 'react'
+import { useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
   useFeedTransactionListQuery,
   useTransactionListQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { usePersistedError } from 'uniswap/src/features/dataApi/utils'
+import { selectNftsVisibility } from 'uniswap/src/features/favorites/selectors'
 import { useLocalizedDayjs } from 'uniswap/src/features/language/localizedDayjs'
 import { useCurrencyIdToVisibility } from 'uniswap/src/features/transactions/selectors'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -147,6 +149,7 @@ export function useFormattedTransactionDataForActivity(
 
   const addresses = Object.keys(useAccounts())
   const tokenVisibilityOverrides = useCurrencyIdToVisibility(addresses)
+  const nftVisibility = useSelector(selectNftsVisibility)
 
   const keyExtractor = useCallback(
     (info: TransactionDetails | SectionHeader | LoadingItem) => {
@@ -169,8 +172,8 @@ export function useFormattedTransactionDataForActivity(
       return
     }
 
-    return parseDataResponseToTransactionDetails(data, hideSpamTokens, tokenVisibilityOverrides)
-  }, [data, hideSpamTokens, tokenVisibilityOverrides])
+    return parseDataResponseToTransactionDetails(data, hideSpamTokens, nftVisibility, tokenVisibilityOverrides)
+  }, [data, hideSpamTokens, tokenVisibilityOverrides, nftVisibility])
 
   const transactions = useMergeLocalFunction(address, formattedTransactions)
 

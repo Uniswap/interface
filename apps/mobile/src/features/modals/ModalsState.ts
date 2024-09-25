@@ -18,6 +18,7 @@ export interface ModalsState {
   [ModalName.BackupReminder]: AppModalState<undefined>
   [ModalName.BackupReminderWarning]: AppModalState<undefined>
   [ModalName.KoreaCexTransferInfoModal]: AppModalState<undefined>
+  [ModalName.HiddenTokenInfoModal]: AppModalState<undefined>
   [ModalName.ExchangeTransferModal]: AppModalState<{
     serviceProvider: FORServiceProvider
   }>

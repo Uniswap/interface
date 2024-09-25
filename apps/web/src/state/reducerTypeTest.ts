@@ -1,8 +1,7 @@
 import { TokenList } from '@uniswap/token-lists'
-import { SupportedLocale } from 'constants/locales'
 import multicall from 'lib/state/multicall'
 import { CombinedState } from 'redux'
-import { ApplicationModal, ApplicationState, PopupList, PopupType } from 'state/application/reducer'
+import { ApplicationState, OpenModalParams, PopupList, PopupType } from 'state/application/reducer'
 import { Field as BurnField } from 'state/burn/actions'
 import { BurnState } from 'state/burn/reducer'
 import { BurnV3State } from 'state/burn/v3/reducer'
@@ -86,7 +85,6 @@ assert<Equals<InterfaceState, ExpectedAppState>>()
 
 interface ExpectedUserState {
   lastUpdateVersionTimestamp?: number
-  userLocale: SupportedLocale | null
   userRouterPreference: RouterPreference
   userHideClosedPositions: boolean
   userSlippageTolerance: number | SlippageTolerance.Auto
@@ -129,7 +127,7 @@ assert<Equals<ListsState, ExpectedListsState>>()
 interface ExpectedApplicationState {
   readonly chainId: number | null
   readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
-  readonly openModal: ApplicationModal | null
+  readonly openModal: OpenModalParams | null
   readonly popupList: PopupList
   readonly suppressedPopups: PopupType[]
 }
