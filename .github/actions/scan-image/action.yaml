@@ -1,0 +1,95 @@
+name: "Image Scanning"
+description: "Action to scan the image for vulnerabilities and send Slack notifications if failed."
+inputs:
+  image-uri:
+    description: "URI of the image that will be scanned."
+    required: true
+  project:
+    description: "Name of the project."
+    required: true
+  slack-bot-token:
+    description: "Slack Bot Token to send notifications to channels."
+    required: true
+  github-run-id:
+    description: "Github Actions Run ID of the workflow."
+    required: true
+outputs:
+  scan-result:
+    description: "If scan result is success or not."
+    value: ${{ steps.image-scan.outcome }}
+runs:
+  using: "composite"
+  steps:
+    - name: Scan image
+      id: image-scan
+      uses: anchore/scan-action@v3
+      continue-on-error: true
+      with:
+        image: "${{ inputs.image-uri }}"
+        fail-build: true
+        severity-cutoff: high
+        output-format: table
+
+    - name: Report critical and high vulnerabilities to Slack
+      id: slack
+      uses: slackapi/slack-github-action@v1.26.0
+      if: steps.image-scan.outcome != 'success'
+      with:
+        channel-id: "curves-eng-feed"
+        payload: |
+          {
+            "blocks": [
+              {
+                "type": "image",
+                "image_url": "https://cdn.iconscout.com/icon/free/png-256/free-docker-3445553-2878480.png",
+                "alt_text": "container"
+              },
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "Anchore - Image Vulnerability Scan 🔍🦠 ${{ inputs.project }}"
+                }
+              },
+              {
+                "type": "rich_text",
+                "elements": [
+                  {
+                    "type": "rich_text_section",
+                    "elements": [
+                      {
+                        "type": "text",
+                        "text": "🚨 Built image has "
+                      },
+                      {
+                        "type": "text",
+                        "text": "CRITICAL and/or HIGH ",
+                        "style": {
+                          "bold": true
+                        }
+                      },
+                      {
+                        "type": "text",
+                        "text": "vulnerabilities. Github Actions workflow has failed. ❌"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "Go to Workflow"
+                    },
+                    "url": "https://github.com/roll-network/uniswap-frontend/actions/runs/${{ inputs.github-run-id }}"
+                  }
+                ]
+              }
+            ]
+          }
+      env:
+        SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}

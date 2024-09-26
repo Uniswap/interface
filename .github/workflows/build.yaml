@@ -1,0 +1,140 @@
+name: build
+
+on:
+  release:
+    types:
+      - published
+      
+env:
+  IMAGE_TAG: release-${{ github.event.release.tag_name }}
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Run tests
+    runs-on: ubuntu-22.04
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 12
+          cache: 'npm'
+
+      - run: npm install
+
+      - run: npm test
+          
+  build-and-push:
+    name: Build and push Docker image
+    runs-on: ubuntu-22.04
+    needs: ["test"]
+    permissions:
+      contents: read
+      id-token: write
+    environment: production
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - id: configure-aws-ecr-credentials
+        name: Configure the AWS SDK
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.ECR_PUSH_ROLE }}
+          aws-region: us-east-1
+
+      - id: ecr-login
+        name: Login to the AWS container registry
+        uses: aws-actions/amazon-ecr-login@v1
+        with:
+          mask-password: true
+
+      - id: image-build
+        name: Build image
+        uses: docker/build-push-action@v4
+        with:
+          build-args: |
+            CURRENT_BRANCH=master
+            REACT_APP_NETWORK_URL=${{ vars.REACT_APP_NETWORK_URL }}
+            REACT_APP_PORTIS_ID=${{ vars.REACT_APP_PORTIS_ID }}
+            REACT_APP_FORTMATIC_KEY=${{ secrets.REACT_APP_FORTMATIC_KEY }}
+          provenance: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          context: "."
+          load: true
+          push: false
+          tags: |
+            ${{ steps.ecr-login.outputs.registry }}/uniswap-exchange:${{ env.IMAGE_TAG }}
+     
+      - name: Scan image for vulnerabilities
+        id: image-scan
+        uses: ./.github/actions/scan-image
+        with:
+          image-uri: "${{ steps.ecr-login.outputs.registry }}/uniswap-exchange:${{ env.IMAGE_TAG }}"
+          project: roll-uniswap-frontend
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          github-run-id: ${{ github.run_id }}
+
+      # - name: Fail the workflow if the image has CRITICAL or HIGH vulnerabilities
+      #   if: steps.image-scan.outputs.scan-result != 'success'
+      #   run: exit 1
+
+      - name: Push built image to ECR
+        run: docker push ${{ steps.ecr-login.outputs.registry }}/uniswap-exchange:${{ env.IMAGE_TAG }}
+
+      - name: Checkout GitOps repo
+        uses: actions/checkout@v4
+        with:
+          path: gitops
+          repository: roll-network/gitops
+          ref: roll-apps
+          token: ${{ secrets.FLUXCD_PAT }}
+
+      - name: Update values.yaml 
+        run: |
+          sed -i "s/tag: .*/tag: ${{ env.IMAGE_TAG }}/g" gitops/charts/roll-uniswap-frontend/values.yaml
+          cat gitops/charts/roll-uniswap-frontend/values.yaml
+
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@v9.1.4
+        with:
+          add: charts/roll-uniswap-frontend/values.yaml
+          message: Update roll-uniswap-frontend values.yaml with the new image tag
+          fetch: false
+          cwd: gitops
+          author_name: github-actions[bot]-roll-uniswap-frontend
+          author_email: 41898282+github-actions[bot]@users.noreply.github.com
+
+  notify-on-failures:
+    name: Send Slack notifications if the workflow has failed
+    runs-on: ubuntu-22.04
+    needs: [build-and-push]
+    if: ${{ always() && contains(needs.*.result, 'failure') }}
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Send failure notification to Slack
+        uses: ./.github/actions/notify-on-failure
+        with:
+          environment: Prod
+          project: roll-uniswap-frontend
+          operation: Build
+          slack-bot-token: ${{ secrets.SLACK_BOT_TOKEN }}
+          github-run-id: ${{ github.run_id }}

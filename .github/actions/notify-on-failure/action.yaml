@@ -1,0 +1,77 @@
+name: "Workflow Failure Notifications"
+description: "Action to send Slack notifications when the workflow has failed."
+inputs:
+  environment:
+    description: "Environment which the workflow is running on."
+    required: false
+    default: ""
+  project:
+    description: "Name of the project."
+    required: true
+  operation:
+    description: "Which operation is being run in the workflow."
+    required: true
+  slack-bot-token:
+    description: "Slack Bot Token to send notifications to channels."
+    required: true
+  github-run-id:
+    description: "Github Actions Run ID of the workflow."
+    required: true
+  channel-id:
+    description: "Slack channel name to send the notification."
+    required: false
+    default: "curves-eng-feed"
+runs:
+  using: "composite"
+  steps:
+    - name: Send failure notification to Slack
+      id: slack
+      uses: slackapi/slack-github-action@v1.26.0
+      with:
+        channel-id: ${{ inputs.channel-id }}
+        payload: |
+          {
+            "blocks": [
+              {
+                "type": "image",
+                "image_url": "https://cdn3.emoji.gg/emojis/1391_fail.png",
+                "alt_text": "fail"
+              },
+              {
+                "type": "header",
+                "text": {
+                  "type": "plain_text",
+                  "text": "[${{ inputs.environment }}] ${{ inputs.project }} 🔧⚙ ${{ inputs.operation }}"
+                }
+              },
+              {
+                "type": "rich_text",
+                "elements": [
+                  {
+                    "type": "rich_text_section",
+                    "elements": [
+                      {
+                        "type": "text",
+                        "text": "Github Actions workflow has failed. ❌"
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "type": "actions",
+                "elements": [
+                  {
+                    "type": "button",
+                    "text": {
+                      "type": "plain_text",
+                      "text": "Go to Workflow"
+                    },
+                    "url": "https://github.com/roll-network/uniswap-frontend/actions/runs/${{ inputs.github-run-id }}"
+                  }
+                ]
+              }
+            ]
+          }
+      env:
+        SLACK_BOT_TOKEN: ${{ inputs.slack-bot-token }}
