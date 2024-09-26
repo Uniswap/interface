@@ -1,26 +1,31 @@
 import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { createApiClient } from 'uniswap/src/data/apiClients/createApiClient'
+import { SwappableTokensParams } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import {
   ApprovalRequest,
   ApprovalResponse,
+  BridgeQuote,
   ClassicQuote,
   CreateSwapRequest,
   CreateSwapResponse,
   DutchQuoteV2,
   GetOrdersResponse,
+  GetSwappableTokensResponse,
   IndicativeQuoteRequest,
   IndicativeQuoteResponse,
   OrderRequest,
   OrderResponse,
   QuoteRequest,
   QuoteResponse,
+  ReduceLPPositionRequest,
+  ReduceLPPositionResponse,
   Routing,
 } from 'uniswap/src/data/tradingApi/__generated__'
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
 // See: https://linear.app/uniswap/issue/API-236/explore-changing-the-quote-schema-to-pull-out-a-basequoteresponse
-export type DiscriminatedQuoteResponse = ClassicQuoteResponse | DutchQuoteResponse
+export type DiscriminatedQuoteResponse = ClassicQuoteResponse | DutchQuoteResponse | BridgeQuoteResponse
 
 export type DutchQuoteResponse = QuoteResponse & {
   quote: DutchQuoteV2
@@ -30,6 +35,11 @@ export type DutchQuoteResponse = QuoteResponse & {
 export type ClassicQuoteResponse = QuoteResponse & {
   quote: ClassicQuote
   routing: Routing.CLASSIC
+}
+
+export type BridgeQuoteResponse = QuoteResponse & {
+  quote: BridgeQuote
+  routing: Routing.BRIDGE
 }
 
 export const TRADING_API_CACHE_KEY = 'TradingApi'
@@ -76,5 +86,25 @@ export async function fetchOrders({ orderIds }: { orderIds: string[] }): Promise
     params: {
       orderIds: orderIds.join(','),
     },
+  })
+}
+
+export async function fetchSwappableTokens(params: SwappableTokensParams): Promise<GetSwappableTokensResponse> {
+  return await TradingApiClient.get<GetSwappableTokensResponse>(uniswapUrls.tradingApiPaths.swappableTokens, {
+    params: {
+      tokenIn: params.tokenIn,
+      tokenInChainId: params.tokenInChainId,
+      ...(params.tokenOut && { tokenOut: params.tokenOut }),
+      ...(params.tokenOutChainId && { tokenOutChainId: params.tokenOutChainId }),
+    },
+  })
+}
+
+export async function reduceLpPosition(params: ReduceLPPositionRequest): Promise<ReduceLPPositionResponse> {
+  return await TradingApiClient.post<ReduceLPPositionResponse>(uniswapUrls.tradingApiPaths.reduceLp, {
+    body: JSON.stringify({
+      ...params,
+      includeGasInfo: true,
+    }),
   })
 }

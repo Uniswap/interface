@@ -23,6 +23,7 @@ import {
   Chart,
   Coins,
   FileListLock,
+  Globe,
   HelpCenter,
   Key,
   Language,
@@ -39,7 +40,7 @@ import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/feature
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { setCurrentFiatCurrency, setHideSmallBalances, setHideSpamTokens } from 'uniswap/src/features/settings/slice'
-import { isDevEnv } from 'utilities/src/environment'
+import { isDevEnv } from 'utilities/src/environment/env'
 import noop from 'utilities/src/react/noop'
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
 import { authActions } from 'wallet/src/features/auth/saga'
@@ -118,6 +119,11 @@ export function SettingsScreen(): JSX.Element {
               checked={hideSmallBalances}
               title={t('settings.setting.smallBalances.title')}
               onCheckedChange={handleSmallBalancesToggle}
+            />
+            <SettingsItem
+              Icon={Globe}
+              title={t('settings.setting.wallet.connections.title')}
+              onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.ManageConnections}`)}
             />
             <SettingsToggleRow
               Icon={ShieldQuestion}

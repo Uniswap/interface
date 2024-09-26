@@ -22,7 +22,6 @@ import {
   DAI_ARBITRUM_ONE,
   DAI_OPTIMISM,
   DAI_POLYGON,
-  MATIC_POLYGON,
   USDB_BLAST,
   USDC,
   USDC_ARBITRUM,
@@ -114,6 +113,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://etherscan.io/chart/etherprice',
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
@@ -181,6 +181,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://sepolia.etherscan.io/chart/etherprice',
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
@@ -247,6 +248,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://etherscan.io/chart/etherprice', // goerli.etherscan.io doesn't work
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
@@ -309,6 +311,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://arbiscan.io/chart/etherprice',
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
@@ -367,6 +370,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://goerli.arbiscan.io/chart/etherprice',
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
@@ -422,6 +426,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://optimistic.etherscan.io/chart/etherprice',
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
@@ -477,6 +482,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://basescan.org/chart/etherprice',
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
@@ -535,6 +541,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
       explorerLink: 'https://goerli-optimism.etherscan.io/chart/etherprice',
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: DEFAULT_RETRY_OPTIONS,
@@ -589,6 +596,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'BNB',
       decimals: 18,
       address: '0xb8c77482e45f1f44de1745f52c74426c631bdd52',
+      logo: BNB_LOGO,
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
@@ -619,7 +627,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     backendChain: {
       chain: BackendChainId.Polygon as InterfaceGqlChain,
       backendSupported: true,
-      nativeTokenBackendAddress: MATIC_POLYGON.address,
+      nativeTokenBackendAddress: '0x0000000000000000000000000000000000001010',
       isSecondaryChain: false,
     },
     blockWaitMsBeforeWarning: 600000,
@@ -640,10 +648,11 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     logo: POLYGON_LOGO,
     name: 'Polygon Mainnet',
     nativeCurrency: {
-      name: 'Polygon Matic',
-      symbol: 'MATIC',
+      name: 'Polygon POL',
+      symbol: 'POL',
       decimals: 18,
       address: '0x0000000000000000000000000000000000001010',
+      logo: POLYGON_LOGO,
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
@@ -660,8 +669,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     supportsGasEstimates: true,
     urlParam: 'polygon',
     wrappedNativeCurrency: {
-      name: 'Wrapped MATIC',
-      symbol: 'WMATIC',
+      name: 'Wrapped POL',
+      symbol: 'WPOL',
       decimals: 18,
       address: '0x0d500b1d8e8ef31e21c99d1db9a6444d3adf1270',
     },
@@ -675,7 +684,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       chain: BackendChainId.Polygon as InterfaceGqlChain,
       isSecondaryChain: true,
       backendSupported: true,
-      nativeTokenBackendAddress: MATIC_POLYGON.address,
+      nativeTokenBackendAddress: '0x0000000000000000000000000000000000001010',
     },
     blockPerMainnetEpochForChainId: 1,
     blockWaitMsBeforeWarning: 600000,
@@ -695,10 +704,11 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     label: 'Polygon Mumbai',
     logo: MUMBAI_LOGO,
     nativeCurrency: {
-      name: 'Polygon Mumbai Matic',
-      symbol: 'mMATIC',
+      name: 'Polygon Mumbai POL',
+      symbol: 'mPOL',
       decimals: 18,
       address: '0x0000000000000000000000000000000000001010',
+      logo: MUMBAI_LOGO,
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
@@ -714,8 +724,8 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     supportsGasEstimates: false,
     urlParam: 'polygon_mumbai',
     wrappedNativeCurrency: {
-      name: 'Wrapped MATIC',
-      symbol: 'WMATIC',
+      name: 'Wrapped POL',
+      symbol: 'WPOL',
       decimals: 18,
       address: '0x9c3c9283d3e44854697cd22d3faa240cfb032889',
     },
@@ -761,6 +771,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
+      logo: ETHEREUM_LOGO,
     },
     rpcUrls: {
       [RPCType.Public]: { http: [config.quicknodeBlastRpcUrl] },
@@ -803,7 +814,13 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     label: 'Avalanche',
     logo: AVALANCHE_LOGO,
     name: 'Avalanche C-Chain',
-    nativeCurrency: { name: 'AVAX', symbol: 'AVAX', decimals: 18, address: DEFAULT_NATIVE_ADDRESS },
+    nativeCurrency: {
+      name: 'AVAX',
+      symbol: 'AVAX',
+      decimals: 18,
+      address: DEFAULT_NATIVE_ADDRESS,
+      logo: AVALANCHE_LOGO,
+    },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
@@ -858,6 +875,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'CELO',
       decimals: 18,
       address: '0x471EcE3750Da237f93B8E339c536989b8978a438',
+      logo: CELO_LOGO,
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
@@ -912,6 +930,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'CELO',
       decimals: 18,
       address: '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
+      logo: CELO_LOGO,
     },
     networkLayer: NetworkLayer.L1,
     pendingTransactionsRetryOptions: undefined,
@@ -966,6 +985,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
+      logo: ETHEREUM_LOGO,
     },
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
@@ -1019,6 +1039,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
       symbol: 'ETH',
       decimals: 18,
       address: DEFAULT_NATIVE_ADDRESS,
+      logo: ETHEREUM_LOGO,
     },
     networkLayer: NetworkLayer.L2,
     pendingTransactionsRetryOptions: undefined,
@@ -1041,3 +1062,13 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     },
   } as const satisfies UniverseChainInfo,
 }
+
+export const GQL_MAINNET_CHAINS = Object.values(UNIVERSE_CHAIN_INFO)
+  .filter((chain) => !chain.testnet && !chain.backendChain.isSecondaryChain)
+  .map((chain) => chain.backendChain.chain)
+  .filter((backendChain) => !!backendChain)
+
+/** Used for making graphql queries to all chains supported by the graphql backend. Must be mutable for some apollo typechecking. */
+export const GQL_MAINNET_CHAINS_MUTABLE = GQL_MAINNET_CHAINS.map((c) => c)
+
+export const ALL_CHAIN_IDS: UniverseChainId[] = Object.values(UNIVERSE_CHAIN_INFO).map((chain) => chain.id)

@@ -7,7 +7,7 @@ import { getPollingIntervalByBlocktime } from 'uniswap/src/features/chains/utils
 import { createEthersProvider } from 'uniswap/src/features/providers/createEthersProvider'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { currencyAddress as getCurrencyAddress } from 'uniswap/src/utils/currencyId'
 
 const ONCHAIN_BALANCES_CACHE_KEY = 'OnchainBalances'
@@ -77,7 +77,7 @@ export function useOnChainCurrencyBalance(
 }
 
 export function useOnChainNativeCurrencyBalance(
-  chain: WalletChainId,
+  chain: UniverseChainId,
   accountAddress?: Address,
 ): { balance: CurrencyAmount<NativeCurrencyClass> | undefined; isLoading: boolean } {
   const currency = NativeCurrency.onChain(chain)

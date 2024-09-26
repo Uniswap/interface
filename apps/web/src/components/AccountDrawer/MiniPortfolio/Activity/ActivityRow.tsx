@@ -4,17 +4,17 @@ import { useTimeSince } from 'components/AccountDrawer/MiniPortfolio/Activity/pa
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import PortfolioRow from 'components/AccountDrawer/MiniPortfolio/PortfolioRow'
-import Column from 'components/Column'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV2 } from 'components/Icons/LoadingSpinner'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { useCallback } from 'react'
 import { SignatureType } from 'state/signatures/types'
 import { EllipsisStyle, ThemedText } from 'theme/components'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const ActivityRowDescriptor = styled(ThemedText.BodySmall)`
   color: ${({ theme }) => theme.neutral2};

@@ -1,7 +1,4 @@
-import { NetInfoState } from '@react-native-community/netinfo'
-import { CurrencyAmount, NativeCurrency } from '@uniswap/sdk-core'
 import { BigNumber, providers } from 'ethers'
-import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionStatus,
@@ -11,7 +8,6 @@ import {
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WalletChainId } from 'uniswap/src/types/chains'
-import { v4 as uuid } from 'uuid'
 
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
@@ -35,50 +31,10 @@ export function getSerializableTransactionRequest(
   }
 }
 
-function getNativeCurrencyTotalSpend(
-  value?: CurrencyAmount<NativeCurrency>,
-  gasFee?: string,
-  nativeCurrency?: NativeCurrency,
-): Maybe<CurrencyAmount<NativeCurrency>> {
-  if (!gasFee || !nativeCurrency) {
-    return value
-  }
-
-  const gasFeeAmount = getCurrencyAmount({
-    value: gasFee,
-    valueType: ValueType.Raw,
-    currency: nativeCurrency,
-  })
-
-  return value && gasFeeAmount ? gasFeeAmount.add(value) : gasFeeAmount
-}
-
-export function hasSufficientFundsIncludingGas(params: {
-  transactionAmount?: CurrencyAmount<NativeCurrency>
-  gasFee?: string
-  nativeCurrencyBalance?: CurrencyAmount<NativeCurrency>
-}): boolean {
-  const { transactionAmount, gasFee, nativeCurrencyBalance } = params
-  const totalSpend = getNativeCurrencyTotalSpend(transactionAmount, gasFee, nativeCurrencyBalance?.currency)
-  return !totalSpend || !nativeCurrencyBalance?.lessThan(totalSpend)
-}
-
-export function createTransactionId(): string {
-  return uuid()
-}
-
 export const ANIMATE_SPRING_CONFIG = {
   stiffness: 90,
   damping: 15,
   mass: 0.8,
-}
-
-export function isOffline(networkStatus: NetInfoState): boolean {
-  return (
-    networkStatus.type !== 'unknown' &&
-    typeof networkStatus.isInternetReachable === 'boolean' &&
-    networkStatus.isConnected === false
-  )
 }
 
 // Based on the current status of the transaction, we determine the new status.

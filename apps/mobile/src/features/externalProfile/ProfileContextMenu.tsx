@@ -17,11 +17,11 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { openUri } from 'uniswap/src/utils/linking'
+import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { ExplorerDataType, getExplorerLink, getProfileUrl } from 'wallet/src/utils/linking'
+import { getProfileUrl } from 'wallet/src/utils/linking'
 
 type MenuAction = {
   title: string

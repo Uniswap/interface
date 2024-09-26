@@ -1,3 +1,4 @@
+/* eslint-disable max-lines */
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
@@ -5,6 +6,8 @@ import { BigNumberish, providers } from 'ethers'
 import { call, delay, fork, put, race, select, take, takeEvery } from 'typed-redux-saga'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
+import { findGasStrategyName } from 'uniswap/src/features/gas/hooks'
+import { getGasPrice } from 'uniswap/src/features/gas/types'
 import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
 import { selectIncompleteTransactions, selectSwapTransactionsCount } from 'uniswap/src/features/transactions/selectors'
@@ -430,10 +433,13 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
 }
 
 function maybeLogGasEstimateAccuracy(transaction: FinalizedTransactionDetails) {
-  const { estimatedGasFeeDetails } = transaction.typeInfo
-  if (estimatedGasFeeDetails) {
-    const gasUseDiff = getDiff(estimatedGasFeeDetails.gasUseEstimate, transaction.receipt?.gasUsed)
-    const gasPriceDiff = getDiff(estimatedGasFeeDetails.maxFeePerGas, transaction.receipt?.effectiveGasPrice)
+  const { gasEstimates } = transaction.typeInfo
+  if (!gasEstimates) {
+    return
+  }
+  for (const estimate of [gasEstimates.activeEstimate, ...(gasEstimates.shadowEstimates || [])]) {
+    const gasUseDiff = getDiff(estimate.gasLimit, transaction.receipt?.gasUsed)
+    const gasPriceDiff = getDiff(getGasPrice(estimate), transaction.receipt?.effectiveGasPrice)
 
     sendAnalyticsEvent(WalletEventName.GasEstimateAccuracy, {
       tx_hash: transaction.hash,
@@ -441,15 +447,17 @@ function maybeLogGasEstimateAccuracy(transaction: FinalizedTransactionDetails) {
       chain_id: transaction.chainId,
       final_status: transaction.status,
       time_to_confirmed_ms: getDiff(transaction.receipt?.confirmedTime, transaction.addedTime),
-      blocks_to_confirmed: getDiff(transaction.receipt?.blockNumber, estimatedGasFeeDetails.blockSubmitted),
+      blocks_to_confirmed: getDiff(transaction.receipt?.blockNumber, gasEstimates.blockSubmitted),
       gas_use_diff: gasUseDiff,
-      gas_use_diff_percentage: getPercentageError(gasUseDiff, estimatedGasFeeDetails.gasUseEstimate),
+      gas_use_diff_percentage: getPercentageError(gasUseDiff, estimate.gasLimit),
       gas_used: transaction.receipt?.gasUsed,
       gas_price_diff: gasPriceDiff,
-      gas_price_diff_percentage: getPercentageError(gasPriceDiff, estimatedGasFeeDetails.gasUseEstimate),
+      gas_price_diff_percentage: getPercentageError(gasPriceDiff, getGasPrice(estimate)),
       gas_price: transaction.receipt?.effectiveGasPrice,
-      max_priority_fee_per_gas: estimatedGasFeeDetails.maxPriorityFeePerGas,
+      max_priority_fee_per_gas: 'maxPriorityFeePerGas' in estimate ? estimate.maxPriorityFeePerGas : undefined,
       private_rpc: isClassic(transaction) ? transaction.options.submitViaPrivateRpc : false,
+      is_shadow: estimate !== gasEstimates.activeEstimate,
+      name: findGasStrategyName(estimate),
     })
   }
 }

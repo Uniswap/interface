@@ -1,15 +1,15 @@
 import { Percent } from '@uniswap/sdk-core'
 import { Scrim } from 'components/AccountDrawer'
 import AnimatedDropdown from 'components/AnimatedDropdown'
-import Column, { AutoColumn } from 'components/Column'
-import Row from 'components/Row'
+import Column, { AutoColumn } from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import MaxSlippageSettings from 'components/Settings/MaxSlippageSettings'
 import MenuButton from 'components/Settings/MenuButton'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
 import RouterPreferenceSettings from 'components/Settings/RouterPreferenceSettings'
 import TransactionDeadlineSettings from 'components/Settings/TransactionDeadlineSettings'
 import { isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
-import { useIsMobile } from 'hooks/screenSize'
+import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import styled from 'lib/styled-components'
@@ -124,8 +124,8 @@ export default function SettingsTab({
   const menuNode = useRef<HTMLDivElement | null>(null)
   const isOpen = useModalIsOpen(ApplicationModal.SETTINGS)
 
-  const closeModal = useCloseModal()
-  const closeMenu = useCallback(() => closeModal(ApplicationModal.SETTINGS), [closeModal])
+  const closeModal = useCloseModal(ApplicationModal.SETTINGS)
+  const closeMenu = useCallback(() => closeModal(), [closeModal])
   const toggleMenu = useToggleSettingsMenu()
 
   const isMobile = useIsMobile()

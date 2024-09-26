@@ -1,8 +1,8 @@
 import { BigNumber, providers } from 'ethers'
 import { useCallback, useMemo } from 'react'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'uniswap/src/constants/transactions'
+import { FeeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
-import { FeeType, GasSpeed } from 'uniswap/src/features/gas/types'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { logger } from 'utilities/src/logger/logger'
@@ -32,9 +32,9 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
   const isUniswapXTx = isUniswapX(transaction)
 
   const uniswapXCancelRequest = useUniswapXCancelRequest(transaction)
-  const uniswapXGasFee = useTransactionGasFee(uniswapXCancelRequest?.data, GasSpeed.Urgent, !isUniswapXTx)
+  const uniswapXGasFee = useTransactionGasFee(uniswapXCancelRequest?.data, !isUniswapXTx)
 
-  const baseTxGasFee = useTransactionGasFee(classicCancelRequest, GasSpeed.Urgent, /* skip = */ isUniswapXTx)
+  const baseTxGasFee = useTransactionGasFee(classicCancelRequest, /* skip = */ isUniswapXTx)
   return useMemo(() => {
     if (isUniswapXTx) {
       if (!uniswapXCancelRequest.data || !uniswapXGasFee.value) {
@@ -84,7 +84,7 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
 
 function getCancelationGasFee(adjustedFeeDetails: FeeDetails, gasLimit: string): string {
   // doing object destructuring here loses ts checks based on FeeDetails.type >:(
-  if (adjustedFeeDetails.type === FeeType.Legacy) {
+  if (adjustedFeeDetails.type === FeeType.LEGACY) {
     return BigNumber.from(gasLimit).mul(adjustedFeeDetails.params.gasPrice).toString()
   }
 

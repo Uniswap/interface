@@ -30,3 +30,25 @@ export type SimpleHashNftsResponse = {
 export async function fetchNft({ contractAddress, tokenId }: SimpleHashNftsRequest): Promise<SimpleHashNftsResponse> {
   return await SimpleHashApiClient.get<SimpleHashNftsResponse>(`/nfts/ethereum/${contractAddress}/${tokenId}`)
 }
+
+export type SimpleHashResponse = {
+  message: string
+  success: boolean
+}
+
+export type ReportSpamRequest = {
+  contractAddress?: string
+  tokenId?: string
+  networkName?: string
+}
+
+export async function reportNftSpamToSimpleHash(params: ReportSpamRequest): Promise<SimpleHashResponse> {
+  return await SimpleHashApiClient.post<SimpleHashResponse>('/nfts/report/spam', {
+    body: JSON.stringify({
+      contract_address: params.contractAddress,
+      token_id: params.tokenId,
+      chain_id: params.networkName,
+      event_type: 'label_spam',
+    }),
+  })
+}

@@ -1,11 +1,12 @@
-import { OpacityHoverState } from 'components/Common'
+import { OpacityHoverState } from 'components/Common/styles'
+import { Box } from 'components/deprecated/Box'
 import { useNftActivity } from 'graphql/data/nft/NftActivity'
-import { useIsMobile } from 'hooks/screenSize'
+import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import styled from 'lib/styled-components'
-import { Box } from 'nft/components/Box'
 import { Column, Row } from 'nft/components/Flex'
 import * as styles from 'nft/components/collection/Activity.css'
 import { AddressCell, BuyCell, EventCell, ItemCell, PriceCell } from 'nft/components/collection/ActivityCells'
+import { HeaderRow } from 'nft/components/collection/ActivityHeaderRow'
 import { ActivityLoader, ActivityPageLoader } from 'nft/components/collection/ActivityLoader'
 import { useBag, useNativeUsdPrice } from 'nft/hooks'
 import { ActivityEventType } from 'nft/types'
@@ -14,14 +15,6 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { Link } from 'react-router-dom'
 import { NftActivityType } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 
-enum ColumnHeaders {
-  Item = 'Item',
-  Event = 'Event',
-  Price = 'Price',
-  By = 'By',
-  To = 'To',
-}
-
 const FilterBox = styled.div<{ isActive: boolean }>`
   display: flex;
   color: ${({ isActive, theme }) => (isActive ? theme.neutral1 : theme.neutral1)};
@@ -29,19 +22,6 @@ const FilterBox = styled.div<{ isActive: boolean }>`
   border: ${({ isActive, theme }) => `1px solid ${isActive ? theme.surface3 : theme.surface3}`};
   ${OpacityHoverState};
 `
-
-export const HeaderRow = () => {
-  return (
-    <Box className={styles.headerRow}>
-      <Box>{ColumnHeaders.Item}</Box>
-      <Box>{ColumnHeaders.Event}</Box>
-      <Box display={{ sm: 'none', md: 'block' }}>{ColumnHeaders.Price}</Box>
-      <Box display={{ sm: 'none', xl: 'block' }}>{ColumnHeaders.By}</Box>
-      <Box display={{ sm: 'none', xxl: 'block' }}>{ColumnHeaders.To}</Box>
-    </Box>
-  )
-}
-
 interface ActivityProps {
   contractAddress: string
   rarityVerified: boolean

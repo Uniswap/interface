@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Keyboard } from 'react-native'
 import { PaginatedModalRenderer, PaginatedModals } from 'uniswap/src/components/modals/PaginatedModals'
+import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 
 export type ConditionalModalRenderer = {
   renderModal: PaginatedModalRenderer
@@ -42,7 +42,7 @@ export function SpeedBumps({
     const newModals = modalRenderers.filter(({ condition }) => condition).map(({ renderModal }) => renderModal)
 
     if (newModals.length > 0) {
-      Keyboard.dismiss()
+      dismissNativeKeyboard()
       setDisplayedModals(newModals)
     } else {
       handleConfirm()

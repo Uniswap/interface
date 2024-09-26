@@ -1,7 +1,7 @@
 import { ExternalProvider, JsonRpcProvider, JsonRpcSigner, Web3Provider } from '@ethersproject/providers'
 import { CurrencyAmount } from '@uniswap/sdk-core'
-import { DAI, nativeOnChain } from 'constants/tokens'
 import { act, renderHook } from 'test-utils/render'
+import { DAI, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useCreateTransferTransaction } from 'utils/transfer'
 

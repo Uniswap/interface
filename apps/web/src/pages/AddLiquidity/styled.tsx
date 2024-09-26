@@ -1,4 +1,4 @@
-import { AutoColumn } from 'components/Column'
+import { AutoColumn } from 'components/deprecated/Column'
 import { Input } from 'components/NumericalInput'
 import styled from 'lib/styled-components'
 

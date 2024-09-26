@@ -9,6 +9,7 @@ import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 import {
   NavigateToFiatOnRampArgs,
@@ -22,7 +23,7 @@ import {
   getNavigateToSwapFlowArgsInitialState,
 } from 'wallet/src/contexts/WalletNavigationContext'
 import { CopyNotificationType } from 'wallet/src/features/notifications/types'
-import { ExplorerDataType, getExplorerLink, getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
+import { getNftUrl, getTokenUrl } from 'wallet/src/utils/linking'
 
 export function SideBarNavigationProvider({ children }: PropsWithChildren): JSX.Element {
   const handleShareNft = useHandleShareNft()

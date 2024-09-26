@@ -1,14 +1,14 @@
-import { ColumnCenter } from 'components/Column'
 import { TradeSummary } from 'components/ConfirmSwapModal/TradeSummary'
 import { DialogButtonType, DialogContent } from 'components/Dialog/Dialog'
 import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
+import { ColumnCenter } from 'components/deprecated/Column'
 import { SwapResult } from 'hooks/useSwapCallback'
 import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isLimitTrade, isUniswapXTrade } from 'state/routing/utils'
 import { ExternalLink } from 'theme/components'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { Trans } from 'uniswap/src/i18n'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 export enum PendingModalError {
   TOKEN_APPROVAL_ERROR,

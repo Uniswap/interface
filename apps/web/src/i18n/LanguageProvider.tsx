@@ -1,7 +1,9 @@
-import { DEFAULT_LOCALE } from 'constants/locales'
 import { navigatorLocale, parseLocale, storeLocale, useActiveLocale } from 'hooks/useActiveLocale'
 import { ReactNode, useEffect } from 'react'
-import { useUserLocaleManager } from 'state/user/hooks'
+import { useAppDispatch } from 'state/hooks'
+import { DEFAULT_LOCALE, mapLocaleToLanguage } from 'uniswap/src/features/language/constants'
+import { useCurrentLocale } from 'uniswap/src/features/language/hooks'
+import { setCurrentLanguage } from 'uniswap/src/features/settings/slice'
 import { changeLanguage } from 'uniswap/src/i18n'
 
 function setupInitialLanguage() {
@@ -16,14 +18,16 @@ if (process.env.NODE_ENV !== 'test') {
 
 export function LanguageProvider({ children }: { children: ReactNode }): JSX.Element {
   const activeLocale = useActiveLocale()
-  const [userLocale, setUserLocale] = useUserLocaleManager()
+  const userLocale = useCurrentLocale()
+  const dispatch = useAppDispatch()
   const locale = userLocale || activeLocale
 
   useEffect(() => {
     changeLanguage(locale)
     document.documentElement.setAttribute('lang', locale)
-    setUserLocale(locale) // stores the selected locale to persist across sessions
-  }, [setUserLocale, locale])
+    // stores the selected locale to persist across sessions
+    dispatch(setCurrentLanguage(mapLocaleToLanguage[locale]))
+  }, [locale, dispatch])
 
   return <>{children}</>
 }

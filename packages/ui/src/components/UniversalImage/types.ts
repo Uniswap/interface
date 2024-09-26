@@ -39,6 +39,7 @@ export interface UniversalImageProps {
   fastImage?: boolean
   testID?: string
   allowLocalUri?: boolean
+  onLoad?: () => void
 }
 
 export interface PlainImageProps {
@@ -48,6 +49,7 @@ export interface PlainImageProps {
   style?: UniversalImageStyle
   resizeMode?: UniversalImageResizeMode
   testID?: string
+  onLoad?: () => void
 }
 
 export type FastImageWrapperProps = PlainImageProps & {

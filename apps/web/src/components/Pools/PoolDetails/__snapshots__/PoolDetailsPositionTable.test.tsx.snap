@@ -2,7 +2,40 @@
 
 exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c5 img {
+  width: 8px;
+  height: 16px;
+  object-fit: cover;
+}
+
+.c5 img:first-child {
+  border-radius: 8px 0 0 8px;
+  object-position: 0 0;
+}
+
+.c5 img:last-child {
+  border-radius: 0 8px 8px 0;
+  object-position: 100% 0;
+}
+
+.c6 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c0 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -78,39 +111,6 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c5 img {
-  width: 8px;
-  height: 16px;
-  object-fit: cover;
-}
-
-.c5 img:first-child {
-  border-radius: 8px 0 0 8px;
-  object-position: 0 0;
-}
-
-.c5 img:last-child {
-  border-radius: 0 8px 8px 0;
-  object-position: 100% 0;
-}
-
-.c6 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
 }
 
 .c1 {
@@ -313,7 +313,40 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
 
 exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c5 img {
+  width: 8px;
+  height: 16px;
+  object-fit: cover;
+}
+
+.c5 img:first-child {
+  border-radius: 8px 0 0 8px;
+  object-position: 0 0;
+}
+
+.c5 img:last-child {
+  border-radius: 0 8px 8px 0;
+  object-position: 100% 0;
+}
+
+.c6 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c0 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -389,39 +422,6 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c5 img {
-  width: 8px;
-  height: 16px;
-  object-fit: cover;
-}
-
-.c5 img:first-child {
-  border-radius: 8px 0 0 8px;
-  object-position: 0 0;
-}
-
-.c5 img:last-child {
-  border-radius: 0 8px 8px 0;
-  object-position: 100% 0;
-}
-
-.c6 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
 }
 
 .c1 {
@@ -599,7 +599,40 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
 
 exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] = `
 <DocumentFragment>
-  .c0 {
+  .c5 {
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 2px;
+  position: relative;
+  top: 0;
+  left: 0;
+}
+
+.c5 img {
+  width: 8px;
+  height: 16px;
+  object-fit: cover;
+}
+
+.c5 img:first-child {
+  border-radius: 8px 0 0 8px;
+  object-position: 0 0;
+}
+
+.c5 img:last-child {
+  border-radius: 0 8px 8px 0;
+  object-position: 100% 0;
+}
+
+.c6 {
+  width: 8px;
+  height: 16px;
+  border-radius: 50%;
+}
+
+.c0 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -675,39 +708,6 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
   -moz-letter-spacing: -0.01em;
   -ms-letter-spacing: -0.01em;
   letter-spacing: -0.01em;
-}
-
-.c5 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c5 img {
-  width: 8px;
-  height: 16px;
-  object-fit: cover;
-}
-
-.c5 img:first-child {
-  border-radius: 8px 0 0 8px;
-  object-position: 0 0;
-}
-
-.c5 img:last-child {
-  border-radius: 0 8px 8px 0;
-  object-position: 100% 0;
-}
-
-.c6 {
-  width: 8px;
-  height: 16px;
-  border-radius: 50%;
 }
 
 .c1 {

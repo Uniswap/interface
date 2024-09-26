@@ -1,6 +1,6 @@
 import { Currency, Percent, Price } from '@uniswap/sdk-core'
-import { AutoColumn } from 'components/Column'
-import { AutoRow } from 'components/Row'
+import { AutoColumn } from 'components/deprecated/Column'
+import { AutoRow } from 'components/deprecated/Row'
 import { ONE_BIPS } from 'constants/misc'
 import { useTheme } from 'lib/styled-components'
 import { Text } from 'rebass'

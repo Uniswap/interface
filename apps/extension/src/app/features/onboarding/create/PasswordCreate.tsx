@@ -7,11 +7,11 @@ import { useOnboardingContext } from 'wallet/src/features/onboarding/OnboardingC
 
 export function PasswordCreate(): JSX.Element {
   const { goToNextStep } = useOnboardingSteps()
-  const { generateOnboardingAccount } = useOnboardingContext()
+  const { generateOnboardingAccount, resetOnboardingContextData } = useOnboardingContext()
 
   const onComplete = async (password: string): Promise<void> => {
+    resetOnboardingContextData()
     goToNextStep()
-
     // TODO: EXT-1164 - Move Keyring methods to workers to not block main thread during onboarding
     // start running the validation after going to next step since they clog the main thread with work
     // plus just a bit of extra leeway since animations can take just a tad extra to finish

@@ -1,8 +1,8 @@
 import { Protocol } from '@uniswap/router-sdk'
-import Column from 'components/Column'
 import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import QuestionHelper from 'components/QuestionHelper'
-import Row, { RowBetween } from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row, { RowBetween } from 'components/deprecated/Row'
 import { isUniswapXSupportedChain } from 'constants/chains'
 import { atom, useAtom } from 'jotai'
 import styled from 'lib/styled-components'
@@ -107,7 +107,7 @@ function RoutePreferenceToggle({
         {subheading && <ThemedText.BodySmall color="neutral2">{subheading}</ThemedText.BodySmall>}
       </LabelWrapper>
       <Switch
-        data-testid={`route-preference-toggle-${preference}`}
+        testID={`route-preference-toggle-${preference}`}
         checked={isActive}
         disabled={disabled}
         variant="branded"

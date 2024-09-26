@@ -23,7 +23,7 @@ import { TransactionDetails, TransactionType } from 'uniswap/src/features/transa
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
-import { openUri } from 'uniswap/src/utils/linking'
+import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType } from 'utilities/src/format/types'
 import { isMobileApp } from 'utilities/src/platform'
@@ -40,7 +40,6 @@ import {
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
-import { ExplorerDataType, getExplorerLink } from 'wallet/src/utils/linking'
 
 const UNISWAP_FEE = 0.0025
 

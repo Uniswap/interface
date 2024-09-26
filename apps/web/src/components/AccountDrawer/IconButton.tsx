@@ -1,4 +1,4 @@
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import styled, { DefaultTheme, css } from 'lib/styled-components'
 import React, { forwardRef, useCallback, useEffect, useRef, useState } from 'react'
 import { Icon } from 'react-feather'

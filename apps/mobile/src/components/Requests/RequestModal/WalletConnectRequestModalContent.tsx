@@ -19,12 +19,12 @@ import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useUSDValue } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { EthMethod, isPrimaryTypePermit } from 'uniswap/src/types/walletConnect'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 import { AddressFooter } from 'wallet/src/features/transactions/TransactionRequest/AddressFooter'
 import { NetworkFeeFooter } from 'wallet/src/features/transactions/TransactionRequest/NetworkFeeFooter'
-import { BlockedAddressWarning } from 'wallet/src/features/trm/BlockedAddressWarning'
 
 const MAX_MODAL_MESSAGE_HEIGHT = 200
 

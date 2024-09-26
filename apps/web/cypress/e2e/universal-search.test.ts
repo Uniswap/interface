@@ -1,4 +1,5 @@
-import { NATIVE_CHAIN_ID, UNI } from 'constants/tokens'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
+import { UNI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getTestSelector } from '../utils'
 

@@ -37,7 +37,9 @@ export function formatSearchResults(
   }
 
   const formattedOptions = searchResultCurrencies.map((currencyInfo): TokenOption => {
-    return portfolioBalancesById?.[currencyInfo.currencyId] ?? createEmptyBalanceOption(currencyInfo)
+    const portfolioBalanceResult = portfolioBalancesById?.[currencyInfo.currencyId]
+    // Use currencyInfo from Search Results because the search query fetches protectionInfo but portfolioBalances does not
+    return portfolioBalanceResult ? { ...portfolioBalanceResult, currencyInfo } : createEmptyBalanceOption(currencyInfo)
   })
 
   // Sort to bring exact matches to the top

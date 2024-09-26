@@ -7,8 +7,6 @@ import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { atom } from 'jotai'
 import { useAtomValue } from 'jotai/utils'
 import { PropsWithChildren, createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 // MulticallUpdater is outside of the SwapAndLimitContext but we still want to use the swap context chainId for swap-related multicalls
@@ -44,8 +42,7 @@ export function useMainnetBlockNumber(): number | undefined {
 export function BlockNumberProvider({ children }: PropsWithChildren) {
   const account = useAccount()
   const multicallUpdaterSwapChainId = useAtomValue(multicallUpdaterSwapChainIdAtom)
-  const multichainFlagEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
-  const multicallChainId = multichainFlagEnabled ? multicallUpdaterSwapChainId ?? account.chainId : account.chainId
+  const multicallChainId = multicallUpdaterSwapChainId ?? account.chainId
   const provider = useEthersProvider({ chainId: multicallChainId })
   const [{ chainId, block, mainnetBlock }, setChainBlock] = useState<{
     chainId?: number

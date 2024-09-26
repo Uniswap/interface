@@ -7,7 +7,8 @@ export enum HomeTabs {
 export enum ExtensionScreens {
   Home = 'home',
   PopupOpenExtension = 'PopupOpenExtension',
-  UnsupportedBrowserScreen = 'UnsupportedBrowserScreen'
+  UnsupportedBrowserScreen = 'UnsupportedBrowserScreen',
+  ManageDappConnectionsScreen = 'ManageDappConnectionsScreen',
 }
 
 export enum ExtensionOnboardingFlow {

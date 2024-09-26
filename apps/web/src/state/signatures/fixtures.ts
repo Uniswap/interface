@@ -1,5 +1,5 @@
 import { WETH9 } from '@uniswap/sdk-core'
-import { DAI } from 'constants/tokens'
+import { DAI } from 'uniswap/src/constants/tokens'
 import {
   AssetActivityPartsFragment,
   Chain,

@@ -62,10 +62,10 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         onChangeText={[Function]}
         onFocus={[Function]}
         onSubmitEditing={[Function]}
-        placeholderTextColor="#CECECE"
+        placeholderTextColor="#BFBFBF"
         returnKeyType="done"
         scrollEnabled={false}
-        selectionColor="#CECECE"
+        selectionColor="#BFBFBF"
         spellCheck={false}
         style={
           {

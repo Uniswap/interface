@@ -4,7 +4,7 @@ import { toIncludeSameMembers } from 'jest-extended'
 import { PreloadedState } from 'redux'
 import {
   useAllCommonBaseCurrencies,
-  useCommonTokensOptions,
+  useCommonTokensOptionsWithFallback,
   useCurrencyInfosToTokenOptions,
   useFavoriteCurrencies,
   useFavoriteTokensOptions,
@@ -615,7 +615,7 @@ describe(usePopularTokensOptions, () => {
   })
 })
 
-describe(useCommonTokensOptions, () => {
+describe(useCommonTokensOptionsWithFallback, () => {
   const tokens = [eth, dai, usdc]
   const tokenBalances = [ethBalance, daiBalance, usdcBalance]
 
@@ -668,7 +668,9 @@ describe(useCommonTokensOptions, () => {
     const { resolvers } = queryResolvers(
       Object.fromEntries(Object.entries(resolverResults).map(([name, resolver]) => [name, queryResolver(resolver)])),
     )
-    const { result } = renderHook(() => useCommonTokensOptions(SAMPLE_SEED_ADDRESS_1, chainFilter), { resolvers })
+    const { result } = renderHook(() => useCommonTokensOptionsWithFallback(SAMPLE_SEED_ADDRESS_1, chainFilter), {
+      resolvers,
+    })
 
     expect(result.current.loading).toEqual(true)
 

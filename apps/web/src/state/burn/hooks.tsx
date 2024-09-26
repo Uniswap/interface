@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useAccount } from 'hooks/useAccount'
 import { useTotalSupply } from 'hooks/useTotalSupply'
 import { useV2Pair } from 'hooks/useV2Pairs'
@@ -122,7 +123,7 @@ export function useDerivedBurnInfo(
 
   let error: ReactNode | undefined
   if (!account.isConnected) {
-    error = <Trans i18nKey="common.connectWallet.button" />
+    error = <ConnectWalletButtonText />
   }
 
   if (!parsedAmounts[Field.LIQUIDITY] || !parsedAmounts[Field.CURRENCY_A] || !parsedAmounts[Field.CURRENCY_B]) {

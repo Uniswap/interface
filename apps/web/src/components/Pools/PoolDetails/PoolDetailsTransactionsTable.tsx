@@ -1,26 +1,27 @@
 import { createColumnHelper } from '@tanstack/react-table'
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import { Table } from 'components/Table'
 import { Cell } from 'components/Table/Cell'
 import { Filter } from 'components/Table/Filter'
 import { FilterHeaderRow, HeaderArrow, HeaderSortText, TimestampCell } from 'components/Table/styled'
 import { useChainFromUrlParam } from 'constants/chains'
-import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY } from 'constants/tokens'
+import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import {
   PoolTableTransaction,
   PoolTableTransactionType,
   usePoolTransactions,
 } from 'graphql/data/pools/usePoolTransactions'
-import { OrderDirection, getSupportedGraphQlChain, supportedChainIdFromGQLChain } from 'graphql/data/util'
+import { getSupportedGraphQlChain, OrderDirection, supportedChainIdFromGQLChain } from 'graphql/data/util'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import styled from 'lib/styled-components'
 import { useMemo, useReducer, useRef, useState } from 'react'
 import { ExternalLink, ThemedText } from 'theme/components'
+import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
 import { ProtocolVersion, Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
+import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
-import { ExplorerDataType, getExplorerLink } from 'utils/getExplorerLink'
 
 const StyledExternalLink = styled(ExternalLink)`
   color: ${({ theme }) => theme.neutral2};

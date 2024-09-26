@@ -1,5 +1,5 @@
-import Column from 'components/Column'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ThemedText } from 'theme/components'
@@ -33,7 +33,7 @@ export function SettingsToggle({ title, description, dataid, isActive, toggle }:
           </Row>
         )}
       </StyledColumn>
-      <Switch data-testid={dataid} variant="branded" checked={isActive} onCheckedChange={toggle} />
+      <Switch testID={dataid} variant="branded" checked={isActive} onCheckedChange={toggle} />
     </Row>
   )
 }

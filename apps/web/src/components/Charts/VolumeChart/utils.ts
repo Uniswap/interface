@@ -8,7 +8,11 @@ export function isStackedHistogramData(data: CustomHistogramData): data is Stack
 
 // Get summed value of each bar of data
 export function getCumulativeSum(data: CustomHistogramData): number {
-  return isStackedHistogramData(data) ? Object.values(data.values).reduce((sum, curr) => (sum += curr), 0) : data.value
+  return isStackedHistogramData(data)
+    ? Object.values(data.values)
+        .filter((value: number | undefined): value is number => value !== undefined)
+        .reduce((sum, curr) => (sum += curr), 0)
+    : data.value
 }
 
 // Get summed value of all bars of data

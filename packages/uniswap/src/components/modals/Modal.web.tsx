@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { AdaptiveWebModal } from 'ui/src'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isInterface } from 'utilities/src/platform'
+import { isExtension, isInterface } from 'utilities/src/platform'
 
 const ANIMATION_MS = 200
 
@@ -42,6 +42,8 @@ export function Modal({
   return (
     <Trace logImpression={isModalOpen} modal={name}>
       <AdaptiveWebModal
+        shadowOpacity={isExtension ? 0 : undefined}
+        borderWidth={isExtension ? 0 : undefined}
         adaptToSheet={isInterface}
         alignment={alignment}
         backgroundColor={backgroundColor}

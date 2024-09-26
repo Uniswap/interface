@@ -1,7 +1,13 @@
 // eslint-disable-next-line no-restricted-imports
 import { PoolStats } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
-import { PoolSortFields, PoolTableSortState, V2_BIPS, calculateOneDayApr } from 'graphql/data/pools/useTopPools'
+import {
+  PoolSortFields,
+  PoolTableSortState,
+  V2_BIPS,
+  calculate1DVolOverTvl,
+  calculateApr,
+} from 'graphql/data/pools/useTopPools'
 import { OrderDirection } from 'graphql/data/util'
 import { useAtomValue } from 'jotai/utils'
 import { useContext, useMemo } from 'react'
@@ -39,10 +45,10 @@ function useFilteredPools(pools?: PoolStat[]) {
 function sortPools(sortState: PoolTableSortState, pools?: PoolStat[]) {
   return pools?.sort((a, b) => {
     switch (sortState.sortBy) {
-      case PoolSortFields.TxCount:
+      case PoolSortFields.VolOverTvl:
         return sortState.sortDirection === OrderDirection.Desc
-          ? (b?.txCount ?? 0) - (a?.txCount ?? 0)
-          : (a?.txCount ?? 0) - (b?.txCount ?? 0)
+          ? (b?.volOverTvl ?? 0) - (a?.volOverTvl ?? 0)
+          : (a?.volOverTvl ?? 0) - (b?.volOverTvl ?? 0)
       case PoolSortFields.Volume24h:
         return sortState.sortDirection === OrderDirection.Desc
           ? giveExploreStatDefaultValue(b?.volume1Day?.value) - giveExploreStatDefaultValue(a?.volume1Day?.value)
@@ -51,12 +57,12 @@ function sortPools(sortState: PoolTableSortState, pools?: PoolStat[]) {
         return sortState.sortDirection === OrderDirection.Desc
           ? giveExploreStatDefaultValue(b.volume1Week?.value) - giveExploreStatDefaultValue(a.volume1Week?.value)
           : giveExploreStatDefaultValue(a.volume1Week?.value) - giveExploreStatDefaultValue(b.volume1Week?.value)
-      case PoolSortFields.OneDayApr:
+      case PoolSortFields.Apr:
         return sortState.sortDirection === OrderDirection.Desc
-          ? b.oneDayApr.greaterThan(a.oneDayApr)
+          ? b.apr.greaterThan(a.apr)
             ? 1
             : -1
-          : a.oneDayApr.greaterThan(b.oneDayApr)
+          : a.apr.greaterThan(b.apr)
             ? 1
             : -1
       default:
@@ -72,13 +78,14 @@ function sortPools(sortState: PoolTableSortState, pools?: PoolStat[]) {
 function convertPoolStatsToPoolStat(poolStats: PoolStats): PoolStat {
   return {
     ...poolStats,
-    oneDayApr: calculateOneDayApr(
+    apr: calculateApr(
       giveExploreStatDefaultValue(poolStats.volume1Day?.value),
       giveExploreStatDefaultValue(poolStats.totalLiquidity?.value),
       poolStats.feeTier ?? V2_BIPS,
     ),
     feeTier: poolStats.feeTier ?? V2_BIPS,
-  } as PoolStat
+    volOverTvl: calculate1DVolOverTvl(poolStats.volume1Day?.value, poolStats.totalLiquidity?.value),
+  }
 }
 
 export function useTopPools(sortState: PoolTableSortState) {

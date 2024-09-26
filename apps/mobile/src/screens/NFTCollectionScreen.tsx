@@ -7,7 +7,7 @@ import { useAnimatedScrollHandler, useSharedValue, withTiming } from 'react-nati
 import { AppStackScreenProp, useAppStackNavigation } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
 import { ScrollHeader } from 'src/components/layout/screens/ScrollHeader'
-import { Loader } from 'src/components/loading'
+import { Loader } from 'src/components/loading/loaders'
 import { ListPriceBadge } from 'src/features/nfts/collection/ListPriceCard'
 import { NFTCollectionContextMenu } from 'src/features/nfts/collection/NFTCollectionContextMenu'
 import { NFTCollectionHeader, NFT_BANNER_HEIGHT } from 'src/features/nfts/collection/NFTCollectionHeader'

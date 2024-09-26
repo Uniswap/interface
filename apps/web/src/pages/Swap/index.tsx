@@ -1,18 +1,16 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
-import { NetworkAlert } from 'components/NetworkAlert/NetworkAlert'
+import { NetworkAlert } from 'components/NetworkAlert'
 import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import SwapHeader from 'components/swap/SwapHeader'
 import { Field } from 'components/swap/constants'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
-import { useSupportedChainId } from 'constants/chains'
-import { useScreenSize } from 'hooks/screenSize'
-import { useAccount } from 'hooks/useAccount'
+import { useScreenSize } from 'hooks/screenSize/useScreenSize'
 import { BuyForm } from 'pages/Swap/Buy/BuyForm'
 import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
 import { SendForm } from 'pages/Swap/Send/SendForm'
 import { SwapForm } from 'pages/Swap/SwapForm'
-import { ReactNode } from 'react'
+import { ReactNode, useState } from 'react'
 import { useLocation } from 'react-router-dom'
 import { InterfaceTrade, TradeState } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
@@ -20,12 +18,17 @@ import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/Swa
 import { useInitialCurrencyState } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { Flex } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
+import { AppTFunction } from 'ui/src/i18n/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { SwapFlow } from 'uniswap/src/features/transactions/swap/SwapFlow'
+import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
+import { useTranslation } from 'uniswap/src/i18n'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
+import noop from 'utilities/src/react/noop'
 
 export function getIsReviewableQuote(
   trade: InterfaceTrade | undefined,
@@ -45,7 +48,6 @@ export function getIsReviewableQuote(
 
 export default function SwapPage({ className }: { className?: string }) {
   const location = useLocation()
-  const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
   // (WEB-4737): Remove this line after completing A/A Test on Web
   useFeatureFlag(FeatureFlags.AATestWeb)
 
@@ -57,8 +59,6 @@ export default function SwapPage({ className }: { className?: string }) {
     initialField,
     initialCurrencyLoading,
   } = useInitialCurrencyState()
-  const isUnsupportedConnectedChain = useSupportedChainId(useAccount().chainId) === undefined
-  const shouldDisableTokenInputs = multichainUXEnabled ? false : isUnsupportedConnectedChain
 
   return (
     <Trace logImpression page={InterfacePageName.SWAP_PAGE}>
@@ -66,8 +66,7 @@ export default function SwapPage({ className }: { className?: string }) {
         <Swap
           className={className}
           chainId={initialChainId}
-          multichainUXEnabled={multichainUXEnabled}
-          disableTokenInputs={shouldDisableTokenInputs}
+          multichainUXEnabled
           initialInputCurrency={initialInputCurrency}
           initialOutputCurrency={initialOutputCurrency}
           initialTypedValue={initialTypedValue}
@@ -120,6 +119,20 @@ export function Swap({
   const isDark = useIsDarkMode()
   const screenSize = useScreenSize()
   const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
+  const universalSwapFlow = useFeatureFlag(FeatureFlags.UniversalSwap)
+
+  if (universalSwapFlow) {
+    return (
+      <SwapAndLimitContextProvider
+        initialChainId={chainId}
+        initialInputCurrency={initialInputCurrency}
+        initialOutputCurrency={initialOutputCurrency}
+        multichainUXEnabled={multichainUXEnabled}
+      >
+        <UniversalSwapFlow />
+      </SwapAndLimitContextProvider>
+    )
+  }
 
   return (
     <SwapAndLimitContextProvider
@@ -158,5 +171,54 @@ export function Swap({
         )}
       </SwapAndLimitContext.Consumer>
     </SwapAndLimitContextProvider>
+  )
+}
+
+const SWAP_TABS = [SwapTab.Swap, SwapTab.Limit, SwapTab.Send, SwapTab.Buy]
+const TAB_TYPE_TO_LABEL = {
+  [SwapTab.Swap]: (t: AppTFunction) => t('swap.form.header'),
+  [SwapTab.Limit]: (t: AppTFunction) => t('swap.limit'),
+  [SwapTab.Send]: (t: AppTFunction) => t('send.title'),
+  [SwapTab.Buy]: (t: AppTFunction) => t('common.buy.label'),
+}
+
+function UniversalSwapFlow({
+  onCurrencyChange,
+  disableTokenInputs = false,
+}: {
+  onCurrencyChange?: (selected: CurrencyState) => void
+  disableTokenInputs?: boolean
+}) {
+  const [currentTab, setCurrentTab] = useState(SwapTab.Swap)
+  const { t } = useTranslation()
+  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
+
+  return (
+    <Flex gap="$spacing8">
+      <Flex row gap="$spacing16">
+        {SWAP_TABS.map((tab) => (
+          <TouchableArea
+            key={tab}
+            backgroundColor={currentTab === tab ? '$surface3' : undefined}
+            borderRadius="$rounded20"
+            px="$padding16"
+            py="$padding8"
+            onPress={() => setCurrentTab(tab)}
+          >
+            <Text variant="buttonLabel3" color={currentTab === tab ? '$neutral1' : '$neutral2'}>
+              {TAB_TYPE_TO_LABEL[tab](t)}
+            </Text>
+          </TouchableArea>
+        ))}
+      </Flex>
+      {currentTab === SwapTab.Swap && (
+        <SwapFlow customSettings={[Deadline]} onClose={noop} swapCallback={noop} wrapCallback={noop} />
+      )}
+      {currentTab === SwapTab.Limit && <LimitFormWrapper onCurrencyChange={onCurrencyChange} />}
+      {currentTab === SwapTab.Send && (
+        <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
+      )}
+      {currentTab === SwapTab.Buy && forAggregatorEnabled && <BuyForm disabled={disableTokenInputs} />}
+    </Flex>
   )
 }

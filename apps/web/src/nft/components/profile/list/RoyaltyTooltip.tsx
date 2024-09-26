@@ -1,5 +1,5 @@
-import Column from 'components/Column'
-import Row from 'components/Row'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import styled, { css } from 'lib/styled-components'
 import { getRoyalty } from 'nft/components/profile/list/utils'
 import { ListingMarket, WalletAsset } from 'nft/types'

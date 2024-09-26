@@ -2,6 +2,7 @@ import { meldSupportedCurrencyToCurrencyInfo } from 'graphql/data/types'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
 import { useMemo } from 'react'
+import { getFiatCurrencyName } from 'uniswap/src/features/fiatCurrency/hooks'
 import {
   useFiatOnRampAggregatorSupportedFiatCurrenciesQuery,
   useFiatOnRampAggregatorSupportedTokensQuery,
@@ -10,7 +11,6 @@ import { FORCountry, FiatCurrencyInfo, FiatOnRampCurrency } from 'uniswap/src/fe
 import { useTranslation } from 'uniswap/src/i18n'
 // eslint-disable-next-line no-restricted-imports
 import { getFiatCurrencyComponents } from 'utilities/src/format/localeBased'
-import { getFiatCurrencyName } from 'utils/fiatCurrency'
 
 type FiatOnRampCurrencyInfo = {
   meldSupportedFiatCurrency: FiatCurrencyInfo

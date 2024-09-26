@@ -8,14 +8,14 @@ import { mocked } from 'test-utils/mocked'
 import { act, render, screen, waitForElementToBeRemoved, within } from 'test-utils/render'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { getExplorerLink } from 'utils/getExplorerLink'
+import { getExplorerLink } from 'uniswap/src/utils/linking'
 
 const unsupportedTokenAddress = '0x4e83b6287588a96321B2661c5E041845fF7814af'
 const unsupportedTokenSymbol = 'ALTDOM-MAR2021'
 const unsupportedToken = new Token(1, unsupportedTokenAddress, 18, 'ALTDOM-MAR2021')
 const unsupportedTokenExplorerLink = 'www.blahblah.com'
 
-jest.mock('../../utils/getExplorerLink')
+jest.mock('uniswap/src/utils/linking')
 jest.setTimeout(15_000)
 
 describe('UnsupportedCurrencyFooter.tsx with unsupported tokens', () => {

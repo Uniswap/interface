@@ -1,4 +1,4 @@
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
 import { useLimitContext } from 'state/limit/LimitContext'
 import { ClickableStyle, ThemedText } from 'theme/components'

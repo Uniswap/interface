@@ -4,16 +4,16 @@ import { SlideOutMenu } from 'components/AccountDrawer/SlideOutMenu'
 import { SmallBalanceToggle } from 'components/AccountDrawer/SmallBalanceToggle'
 import { SpamToggle } from 'components/AccountDrawer/SpamToggle'
 import { TestnetsToggle } from 'components/AccountDrawer/TestnetsToggle'
-import Column from 'components/Column'
-import Row from 'components/Row'
-import { LOCALE_LABEL } from 'constants/locales'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
-import { useActiveLocale } from 'hooks/useActiveLocale'
+import { useActiveLanguage } from 'hooks/useActiveLocale'
 import styled from 'lib/styled-components'
 import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
+import { useLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { Trans } from 'uniswap/src/i18n'
 
 const Container = styled(Column)`
@@ -70,8 +70,9 @@ export default function SettingsMenu({
   openLanguageSettings: () => void
   openLocalCurrencySettings: () => void
 }) {
-  const activeLocale = useActiveLocale()
+  const activeLanguage = useActiveLanguage()
   const activeLocalCurrency = useActiveLocalCurrency()
+  const languageInfo = useLanguageInfo(activeLanguage)
 
   return (
     <SlideOutMenu title={<Trans i18nKey="common.settings" />} onClose={onClose}>
@@ -88,7 +89,7 @@ export default function SettingsMenu({
           <Column>
             <SettingsButton
               title={<Trans i18nKey="common.language" />}
-              currentState={LOCALE_LABEL[activeLocale]}
+              currentState={languageInfo.displayName}
               onClick={openLanguageSettings}
               testId="language-settings-button"
             />

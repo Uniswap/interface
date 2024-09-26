@@ -4,8 +4,7 @@ import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
 import { OpenLimitOrdersButton } from 'components/AccountDrawer/MiniPortfolio/Limits/OpenLimitOrdersButton'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonError, ButtonLight } from 'components/Button'
-import Column from 'components/Column'
+import { ButtonError, ButtonLight } from 'components/Button/buttons'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import { LimitPriceInputPanel } from 'components/CurrencyInputPanel/LimitPriceInputPanel/LimitPriceInputPanel'
 import {
@@ -13,13 +12,13 @@ import {
   useCurrentPriceAdjustment,
 } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import Row from 'components/Row'
-import { CurrencySearchFilters } from 'components/SearchModal/DeprecatedCurrencySearch'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
+import Column from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
 import { getChain, isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
-import { nativeOnChain } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
 import { SwapResult, useSwapCallback } from 'hooks/useSwapCallback'
@@ -40,7 +39,9 @@ import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Anchor, Text, styled as tamaguiStyled } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { colors, validColor } from 'ui/src/theme'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { Locale } from 'uniswap/src/features/language/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
@@ -85,10 +86,6 @@ const LearnMore = tamaguiStyled(Text, {
     opacity: 0.4,
   },
 })
-
-export const LIMIT_FORM_CURRENCY_SEARCH_FILTERS: CurrencySearchFilters = {
-  showCommonBases: true,
-}
 
 type LimitFormProps = {
   onCurrencyChange?: (selected: CurrencyState) => void
@@ -138,7 +135,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
       })(),
       type: NumberType.SwapTradeAmount,
       placeholder: '',
-      locale: 'en-US',
+      locale: Locale.EnglishUnitedStates,
     })
 
     setLimitState((prev) => ({
@@ -328,7 +325,6 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
             onCurrencySelect={(currency) => onSelectCurrency('inputCurrency', currency)}
             otherCurrency={outputCurrency}
             onMax={handleMaxInput}
-            currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
             id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
           />
         </Trace>
@@ -355,7 +351,6 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
             onUserInput={onTypeInput('outputAmount')}
             onCurrencySelect={(currency) => onSelectCurrency('outputCurrency', currency)}
             otherCurrency={inputCurrency}
-            currencySearchFilters={LIMIT_FORM_CURRENCY_SEARCH_FILTERS}
             id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
           />
         </Trace>
@@ -480,7 +475,7 @@ function SubmitOrderButton({
   if (!account.isConnected) {
     return (
       <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
-        <Trans i18nKey="common.connectWallet.button" />
+        <ConnectWalletButtonText />
       </ButtonLight>
     )
   }

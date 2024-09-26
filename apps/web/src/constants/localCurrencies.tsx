@@ -21,103 +21,66 @@ import {
   VND_ICON,
 } from 'constants/localCurrencyIcons'
 import { ReactNode } from 'react'
-import { Currency } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-
-export const SUPPORTED_LOCAL_CURRENCIES = [
-  Currency.Usd,
-  Currency.Aud,
-  Currency.Brl,
-  Currency.Cad,
-  Currency.Cny,
-  Currency.Eur,
-  Currency.Gbp,
-  Currency.Hkd,
-  Currency.Idr,
-  Currency.Inr,
-  Currency.Jpy,
-  Currency.Krw,
-  Currency.Ngn,
-  Currency.Pkr,
-  Currency.Rub,
-  Currency.Sgd,
-  Currency.Thb,
-  Currency.Try,
-  Currency.Uah,
-  Currency.Vnd,
-] as const
-
-export type SupportedLocalCurrency = (typeof SUPPORTED_LOCAL_CURRENCIES)[number]
-
-export const DEFAULT_LOCAL_CURRENCY: SupportedLocalCurrency = Currency.Usd
+import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 
 // some currencies need to be forced to use the narrow symbol and others need to be forced to use symbol
 // for example: when CAD is set to narrowSymbol it is displayed as $ which offers no differentiation from USD
 // but when set to symbol it is displayed as CA$ which is correct
 // On the other hand when TBH is set to symbol it is displayed as THB, but when set to narrowSymbol it is ฿ which is correct
-export const LOCAL_CURRENCY_SYMBOL_DISPLAY_TYPE: Record<SupportedLocalCurrency, 'narrowSymbol' | 'symbol'> = {
-  USD: 'narrowSymbol',
-  EUR: 'narrowSymbol',
-  CNY: 'narrowSymbol',
-  RUB: 'narrowSymbol',
-  INR: 'narrowSymbol',
-  GBP: 'narrowSymbol',
-  JPY: 'narrowSymbol',
-  KRW: 'narrowSymbol',
-  VND: 'narrowSymbol',
-  SGD: 'symbol',
-  BRL: 'symbol',
-  HKD: 'symbol',
-  CAD: 'symbol',
-  IDR: 'narrowSymbol',
-  TRY: 'narrowSymbol',
-  NGN: 'narrowSymbol',
-  UAH: 'narrowSymbol',
-  PKR: 'narrowSymbol',
-  AUD: 'symbol',
-  THB: 'narrowSymbol',
+export function getCurrencySymbolDisplayType(currency: FiatCurrency): 'narrowSymbol' | 'symbol' {
+  switch (currency) {
+    case FiatCurrency.SingaporeDollar:
+    case FiatCurrency.BrazilianReal:
+    case FiatCurrency.HongKongDollar:
+    case FiatCurrency.CanadianDollar:
+    case FiatCurrency.AustralianDollar:
+      return 'symbol'
+    default:
+      return 'narrowSymbol'
+  }
 }
 
-export function getLocalCurrencyIcon(localCurrency: SupportedLocalCurrency, size = 20): ReactNode {
+export function getLocalCurrencyIcon(localCurrency: FiatCurrency, size = 20): ReactNode {
   switch (localCurrency) {
-    case Currency.Usd:
+    case FiatCurrency.UnitedStatesDollar:
       return <USD_ICON width={size} height={size} />
-    case Currency.Eur:
+    case FiatCurrency.Euro:
       return <EUR_ICON width={size} height={size} />
-    case Currency.Rub:
+    case FiatCurrency.RussianRuble:
       return <RUB_ICON width={size} height={size} />
-    case Currency.Inr:
+    case FiatCurrency.IndianRupee:
       return <INR_ICON width={size} height={size} />
-    case Currency.Gbp:
+    case FiatCurrency.BritishPound:
       return <GBP_ICON width={size} height={size} />
-    case Currency.Jpy:
+    case FiatCurrency.JapaneseYen:
       return <JPY_ICON width={size} height={size} />
-    case Currency.Krw:
+    case FiatCurrency.SouthKoreanWon:
       return <KRW_ICON width={size} height={size} />
-    case Currency.Vnd:
+    case FiatCurrency.VietnameseDong:
       return <VND_ICON width={size} height={size} />
-    case Currency.Sgd:
+    case FiatCurrency.SingaporeDollar:
       return <SGD_ICON width={size} height={size} />
-    case Currency.Brl:
+    case FiatCurrency.BrazilianReal:
       return <BRL_ICON width={size} height={size} />
-    case Currency.Hkd:
+    case FiatCurrency.HongKongDollar:
       return <HKD_ICON width={size} height={size} />
-    case Currency.Cad:
+    case FiatCurrency.CanadianDollar:
       return <CAD_ICON width={size} height={size} />
-    case Currency.Idr:
+    case FiatCurrency.IndonesianRupiah:
       return <IDR_ICON width={size} height={size} />
-    case Currency.Try:
+    case FiatCurrency.TurkishLira:
       return <TRY_ICON width={size} height={size} />
-    case Currency.Ngn:
+    case FiatCurrency.NigerianNaira:
       return <NGN_ICON width={size} height={size} />
-    case Currency.Aud:
+    case FiatCurrency.AustralianDollar:
       return <AUD_ICON width={size} height={size} />
-    case Currency.Pkr:
+    case FiatCurrency.PakistaniRupee:
       return <PKR_ICON width={size} height={size} />
-    case Currency.Uah:
+    case FiatCurrency.UkrainianHryvnia:
       return <UAH_ICON width={size} height={size} />
-    case Currency.Thb:
+    case FiatCurrency.ThaiBaht:
       return <THB_ICON width={size} height={size} />
-    case Currency.Cny:
+    case FiatCurrency.ChineseYuan:
       return <CNY_ICON width={size} height={size} />
     default:
       return null

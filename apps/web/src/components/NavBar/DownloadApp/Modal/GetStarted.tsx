@@ -1,19 +1,18 @@
 import { InterfaceElementName } from '@uniswap/analytics-events'
 import ExtensionIllustration from 'assets/images/extensionIllustration.png'
 import WalletIllustration from 'assets/images/walletIllustration.png'
-import Column from 'components/Column'
 import { AndroidLogo } from 'components/Icons/AndroidLogo'
 import { AppleLogo } from 'components/Icons/AppleLogo'
 import { GoogleChromeLogo } from 'components/Icons/GoogleChromeLogo'
-import { AccountCTAsExperimentGroup } from 'components/NavBar'
 import { ModalContent } from 'components/NavBar/DownloadApp/Modal/Content'
+import Column from 'components/deprecated/Column'
 import styled, { useTheme } from 'lib/styled-components'
 import { Wiggle } from 'pages/Landing/components/animations'
 import { PropsWithChildren } from 'react'
 import { StyledInternalLink } from 'theme/components'
 import { Button, Flex, Text, styled as tamaguiStyled } from 'ui/src'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { Experiments } from 'uniswap/src/features/gating/experiments'
+import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
 import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -141,7 +140,14 @@ export function GetStarted({
             components={{
               signInHere: (
                 <Trace logPress element={ElementName.AlreadyHaveWalletSignIn}>
-                  <StyledInternalLink style={{ color: theme.neutral1 }} to="" onClick={toConnectWalletDrawer}>
+                  <StyledInternalLink
+                    style={{ color: theme.neutral1 }}
+                    to=""
+                    onClick={(e) => {
+                      e.preventDefault()
+                      toConnectWalletDrawer()
+                    }}
+                  >
                     {t('downloadApp.modal.alreadyHaveWallet.signInLink')}
                   </StyledInternalLink>
                 </Trace>

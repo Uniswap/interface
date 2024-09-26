@@ -1,7 +1,6 @@
 import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
 import { Field } from 'components/swap/constants'
 import { isStablecoin } from 'constants/chains'
-import { nativeOnChain } from 'constants/tokens'
 import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
@@ -14,6 +13,7 @@ import { LimitOrderTrade, RouterPreference, SubmittableTrade, SwapFeeInfo, WrapI
 import { useRoutingAPITrade } from 'state/routing/useRoutingAPITrade'
 import { getUSDCostPerGas, isClassicTrade } from 'state/routing/utils'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
+import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 

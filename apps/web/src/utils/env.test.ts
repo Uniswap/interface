@@ -1,4 +1,4 @@
-import { isBetaEnv, isDevEnv, isProdEnv, isTestEnv } from 'utilities/src/environment'
+import { isBetaEnv, isDevEnv, isProdEnv, isTestEnv } from 'utilities/src/environment/env'
 
 describe('env', () => {
   const ENV = process.env

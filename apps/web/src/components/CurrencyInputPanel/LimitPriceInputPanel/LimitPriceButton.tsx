@@ -1,5 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import styled, { css } from 'lib/styled-components'
 import { X } from 'react-feather'
 import { ClickableStyle, ThemedText } from 'theme/components'

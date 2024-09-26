@@ -51,6 +51,7 @@ type ActionSheetDropdownProps = PropsWithChildren<{
   testID?: string
   onDismiss?: () => void
   showArrow?: boolean
+  closeOnSelect?: boolean
 }>
 
 export function ActionSheetDropdown({
@@ -59,6 +60,7 @@ export function ActionSheetDropdown({
   testID,
   onDismiss,
   showArrow,
+  closeOnSelect = true,
   ...contentProps
 }: ActionSheetDropdownProps): JSX.Element {
   const insets = useDeviceInsets()
@@ -162,6 +164,7 @@ export function ActionSheetDropdown({
                 dropdownMaxHeight={styles?.dropdownMaxHeight}
                 handleClose={closeDropdown}
                 toggleMeasurements={toggleMeasurements}
+                closeOnSelect={closeOnSelect}
               />
             </>
           )}
@@ -177,6 +180,7 @@ type DropdownContentProps = FlexProps & {
   dropdownMaxHeight?: number
   toggleMeasurements: LayoutMeasurements & { sticky?: boolean }
   handleClose?: () => void
+  closeOnSelect: boolean
 }
 
 /**
@@ -203,6 +207,7 @@ function DropdownContent({
   dropdownMaxHeight,
   toggleMeasurements,
   handleClose,
+  closeOnSelect,
   ...rest
 }: DropdownContentProps): JSX.Element {
   const insets = useDeviceInsets()
@@ -308,7 +313,9 @@ function DropdownContent({
                   borderRadius="$rounded8"
                   onPress={() => {
                     onPress()
-                    handleClose?.()
+                    if (closeOnSelect) {
+                      handleClose?.()
+                    }
                   }}
                 >
                   <Flex testID={key}>{render()}</Flex>

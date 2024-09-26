@@ -41,7 +41,7 @@ export function useFiatCurrencyComponents(currency: FiatCurrency): FiatCurrencyC
  */
 export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { name: string; shortName: string } {
   const currencyToCurrencyName: Record<FiatCurrency, string> = {
-    [FiatCurrency.AustrialianDollor]: t('currency.aud'),
+    [FiatCurrency.AustralianDollar]: t('currency.aud'),
     [FiatCurrency.BrazilianReal]: t('currency.brl'),
     [FiatCurrency.CanadianDollar]: t('currency.cad'),
     [FiatCurrency.ChineseYuan]: t('currency.cny'),
@@ -63,7 +63,7 @@ export function getFiatCurrencyName(t: AppTFunction, currency: FiatCurrency): { 
     [FiatCurrency.VietnameseDong]: t('currency.vnd'),
   }
   const currencyToGlobalSymbol: Record<FiatCurrency, string> = {
-    [FiatCurrency.AustrialianDollor]: '$',
+    [FiatCurrency.AustralianDollar]: '$',
     [FiatCurrency.BrazilianReal]: 'R$',
     [FiatCurrency.CanadianDollar]: '$',
     [FiatCurrency.ChineseYuan]: '¥',

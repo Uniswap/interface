@@ -10,6 +10,7 @@ const NodePolyfillPlugin = require('node-polyfill-webpack-plugin')
 const { sentryWebpackPlugin } = require('@sentry/webpack-plugin')
 
 const NODE_ENV = process.env.NODE_ENV || 'development'
+const POLL_ENV = process.env.WEBPACK_POLLING_INTERVAL
 
 // if not set tamagui wont add nice data-at, data-in etc debug attributes
 process.env.NODE_ENV = NODE_ENV
@@ -92,6 +93,9 @@ const {
 } = isDevelopment
   ? {
       dir: 'dev',
+      watchOptions: {
+        poll: POLL_ENV ? Number(POLL_ENV) : undefined,
+      },
       devServer: {
         // watchFiles: ['src/**/*', 'webpack.config.js'],
         host: '127.0.0.1',

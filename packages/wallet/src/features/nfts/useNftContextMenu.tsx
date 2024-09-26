@@ -4,19 +4,25 @@ import { NativeSyntheticEvent } from 'react-native'
 import { ContextMenuAction, ContextMenuOnPressNativeEvent } from 'react-native-context-menu-view'
 import { useDispatch, useSelector } from 'react-redux'
 import { GeneratedIcon, isWeb, useIsDarkMode } from 'ui/src'
-import { Eye, EyeOff } from 'ui/src/components/icons'
+import { Eye, EyeOff, Trash } from 'ui/src/components/icons'
 import { UNIVERSE_CHAIN_LOGO } from 'uniswap/src/assets/chainLogos'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
+import { reportNftSpamToSimpleHash } from 'uniswap/src/data/apiClients/simpleHashApi/SimpleHashApiClient'
+import { AccountType } from 'uniswap/src/features/accounts/types'
 import { selectNftsVisibility } from 'uniswap/src/features/favorites/selectors'
 import { toggleNftVisibility } from 'uniswap/src/features/favorites/slice'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { WalletChainId } from 'uniswap/src/types/chains'
+import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { getIsNftHidden, getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { useAccounts } from 'wallet/src/features/wallet/hooks'
+import { useAccounts, useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 import { getExplorerName } from 'wallet/src/utils/linking'
 
 interface NFTMenuParams {
@@ -45,6 +51,9 @@ export function useNFTContextMenu({
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const isDarkMode = useIsDarkMode()
+  const isSelfReportSpamNFTEnabled = useFeatureFlag(FeatureFlags.SelfReportSpamNFTs)
+  const account = useActiveAccountWithThrow()
+  const isViewOnlyWallet = account.type === AccountType.Readonly
 
   const { handleShareNft, navigateToNftDetails } = useWalletNavigation()
 
@@ -54,6 +63,7 @@ export function useNFTContextMenu({
   const nftVisibility = useSelector(selectNftsVisibility)
   const nftKey = contractAddress && tokenId ? getNFTAssetKey(contractAddress, tokenId) : undefined
   const hidden = getIsNftHidden({ contractAddress, tokenId, isSpam, nftVisibility })
+  const networkName = chainId && UNIVERSE_CHAIN_INFO[chainId].label
 
   const onPressShare = useCallback(async (): Promise<void> => {
     if (!contractAddress || !tokenId) {
@@ -61,6 +71,36 @@ export function useNFTContextMenu({
     }
     handleShareNft({ contractAddress, tokenId })
   }, [contractAddress, handleShareNft, tokenId])
+
+  const onPressReport = useCallback(async () => {
+    if (!nftKey) {
+      return
+    }
+
+    if (!hidden) {
+      dispatch(toggleNftVisibility({ nftKey, isSpam: true }))
+    }
+
+    try {
+      await reportNftSpamToSimpleHash({
+        contractAddress,
+        tokenId,
+        networkName,
+      })
+    } catch (e) {
+      logger.error(e, {
+        tags: { file: 'useNftContextMenu.tsx', function: 'useSimpleHashNftReport' },
+      })
+      return
+    }
+
+    dispatch(
+      pushNotification({
+        type: AppNotificationType.Success,
+        title: t('notification.spam.NFT.successful'),
+      }),
+    )
+  }, [t, dispatch, contractAddress, hidden, networkName, nftKey, tokenId])
 
   const onPressHiddenStatus = useCallback(() => {
     if (!nftKey) {
@@ -120,6 +160,22 @@ export function useNFTContextMenu({
                   },
                 ]
               : []),
+            ...(isSelfReportSpamNFTEnabled && !isViewOnlyWallet
+              ? [
+                  {
+                    title: t('nft.reportSpam'),
+                    ...(isWeb
+                      ? {
+                          Icon: Trash,
+                        }
+                      : {
+                          systemIcon: 'trash',
+                        }),
+
+                    onPress: onPressReport,
+                  },
+                ]
+              : []),
             ...((isLocalAccount && [
               {
                 title: hidden ? t('tokens.nfts.hidden.action.unhide') : t('tokens.nfts.hidden.action.hide'),
@@ -145,8 +201,11 @@ export function useNFTContextMenu({
       isDarkMode,
       onPressShare,
       isLocalAccount,
+      isViewOnlyWallet,
       hidden,
+      isSelfReportSpamNFTEnabled,
       onPressHiddenStatus,
+      onPressReport,
     ],
   )
 

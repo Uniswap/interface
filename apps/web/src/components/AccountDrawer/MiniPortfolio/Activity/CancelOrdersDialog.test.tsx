@@ -3,10 +3,10 @@ import {
   CancelOrdersDialog,
   CancellationState,
 } from 'components/AccountDrawer/MiniPortfolio/Activity/CancelOrdersDialog'
-import { DAI } from 'constants/tokens'
 import { SignatureType, UniswapXOrderDetails } from 'state/signatures/types'
 import { render, screen } from 'test-utils/render'
 import { UniswapXOrderStatus } from 'types/uniswapx'
+import { DAI } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const mockOrderDetails: UniswapXOrderDetails = {

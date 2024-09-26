@@ -1,4 +1,4 @@
-import Row from 'components/Row'
+import Row from 'components/deprecated/Row'
 import { MouseoverTooltip } from 'components/Tooltip'
 import styled from 'lib/styled-components'
 import { getMarketplaceIcon } from 'nft/components/card/utils'

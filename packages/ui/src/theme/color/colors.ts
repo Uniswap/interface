@@ -157,7 +157,7 @@ const sporeLight = {
   neutral1Hovered: '#131313',
   neutral2: '#7D7D7D',
   neutral2Hovered: '#6B6B6B',
-  neutral3: '#CECECE',
+  neutral3: '#BFBFBF',
   neutral3Hovered: '#ADADAD',
 
   surface1: colors.white,
@@ -216,7 +216,7 @@ const sporeDark = {
 
   accent1: '#FC72FF',
   accent1Hovered: '#FD3CFE',
-  accent2: '#311C31',
+  accent2: '#361A37',
   accent2Hovered: '#510D43',
   accent3: colors.white,
   accent3Hovered: '#F5F5F5',

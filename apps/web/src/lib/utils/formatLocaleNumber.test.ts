@@ -1,23 +1,31 @@
-import { SUPPORTED_LOCALES, SupportedLocale } from 'constants/locales'
 import formatLocaleNumber from 'lib/utils/formatLocaleNumber'
+import { Locale, WEB_SUPPORTED_LANGUAGES } from 'uniswap/src/features/language/constants'
+import { getLocale } from 'uniswap/src/features/language/hooks'
 
 const INPUT = 4000000.123 // 4 million
 
-function expectedOutput(l: SupportedLocale): string {
+function expectedOutput(l: Locale): string {
   switch (l) {
     case 'en-US':
     case 'he-IL':
     case 'ja-JP':
-    case 'ko-KR':
-    case 'zh-CN':
+    case 'zh-Hant':
     case 'sw-TZ':
-    case 'zh-TW':
+    case 'zh-Hans':
+    case 'ur-PK':
+    case 'th-TH':
+    case 'es-US':
+    case 'es-419':
+    case 'ms-MY':
+    case 'ko-KR':
       return `4,000,000.123`
     case 'fr-FR':
       // eslint-disable-next-line no-irregular-whitespace
       return `4 000 000,123`
     case 'ar-SA':
       return `٤٬٠٠٠٬٠٠٠٫١٢٣`
+    case 'hi-IN':
+      return `40,00,000.123`
     case 'cs-CZ':
     case 'fi-FI':
     case 'af-ZA':
@@ -44,14 +52,14 @@ function expectedOutput(l: SupportedLocale): string {
     case 'vi-VN':
       return `4.000.000,123`
     default:
-      throw new Error('unreachable')
+      throw new Error(`Missing test locale: ${l}`)
   }
 }
 
-const TEST_MATRIX = SUPPORTED_LOCALES.map((locale) => ({
-  locale,
+const TEST_MATRIX = WEB_SUPPORTED_LANGUAGES.map((language) => ({
+  locale: getLocale(language),
   input: INPUT,
-  expected: expectedOutput(locale),
+  expected: expectedOutput(getLocale(language)),
 }))
 
 describe('formatLocaleNumber', () => {

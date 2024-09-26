@@ -66,7 +66,7 @@ export function formatCommonPropertiesForTrade(
       trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
         ? trade.inputAmount.currency.chainId
         : undefined,
-    estimated_network_fee_usd: getEstimatedNetworkFee(trade),
+    estimated_network_fee_usd: getEstimatedNetworkFee(trade)?.toString(),
     minimum_output_after_slippage: trade.minimumAmountOut(allowedSlippage).toSignificant(6),
     allowed_slippage: formatPercentNumber(allowedSlippage),
     method: getQuoteMethod(trade),
@@ -118,7 +118,7 @@ export const formatSwapQuoteReceivedEventProperties = (
 ) => {
   return {
     ...formatCommonPropertiesForTrade(trade, allowedSlippage, outputFeeFiatValue),
-    swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber : undefined,
+    swap_quote_block_number: isClassicTrade(trade) ? trade.blockNumber ?? undefined : undefined,
     allowed_slippage_basis_points: formatPercentInBasisPointsNumber(allowedSlippage),
     token_in_amount_max: trade.maximumAmountIn(allowedSlippage).toExact(),
     token_out_amount_min: trade.minimumAmountOut(allowedSlippage).toExact(),

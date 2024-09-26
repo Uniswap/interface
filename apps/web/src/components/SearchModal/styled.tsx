@@ -1,13 +1,6 @@
 import searchIcon from 'assets/svg/search.svg'
-import { AutoColumn } from 'components/Column'
-import { LoadingRows as BaseLoadingRows } from 'components/Loader/styled'
-import { RowBetween } from 'components/Row'
+import { RowBetween } from 'components/deprecated/Row'
 import styled from 'lib/styled-components'
-
-export const PaddedColumn = styled(AutoColumn)`
-  position: relative;
-  padding: 20px;
-`
 
 export const MenuItem = styled(RowBetween)<{ dim?: boolean }>`
   padding: 4px 20px;
@@ -57,32 +50,5 @@ export const SearchInput = styled.input`
     border: 1px solid ${({ theme }) => theme.surface3};
     background-color: ${({ theme }) => theme.surface2};
     outline: none;
-  }
-`
-export const Separator = styled.div`
-  width: 100%;
-  height: 1px;
-  background-color: ${({ theme }) => theme.surface3};
-`
-
-export const LoadingRows = styled(BaseLoadingRows)`
-  grid-column-gap: 0.5em;
-  grid-template-columns: repeat(12, 1fr);
-  max-width: 960px;
-  padding: 12px 20px;
-
-  & > div:nth-child(4n + 1) {
-    grid-column: 1 / 8;
-    height: 1em;
-    margin-bottom: 0.25em;
-  }
-  & > div:nth-child(4n + 2) {
-    grid-column: 12;
-    height: 1em;
-    margin-top: 0.25em;
-  }
-  & > div:nth-child(4n + 3) {
-    grid-column: 1 / 4;
-    height: 0.75em;
   }
 `

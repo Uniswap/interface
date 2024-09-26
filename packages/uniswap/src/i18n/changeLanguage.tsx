@@ -1,8 +1,8 @@
 import i18n from 'i18next'
-import { SupportedLocale } from 'uniswap/src/i18n/locales'
+import { Locale } from 'uniswap/src/features/language/constants'
 
 let changingTo = ''
-export async function changeLanguage(locale: SupportedLocale): Promise<void> {
+export async function changeLanguage(locale: Locale): Promise<void> {
   if (i18n.language === locale || locale === changingTo) {
     return
   }

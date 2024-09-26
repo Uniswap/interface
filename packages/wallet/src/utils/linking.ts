@@ -7,7 +7,7 @@ import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search
 import { ServiceProviderInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { currencyIdToChain, currencyIdToGraphQLAddress } from 'uniswap/src/utils/currencyId'
-import { openUri } from 'uniswap/src/utils/linking'
+import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 
 export function dismissInAppBrowser(): void {
   WebBrowser.dismissBrowser()
@@ -33,67 +33,12 @@ export async function openSettings(): Promise<void> {
   await Linking.openSettings()
 }
 
-export enum ExplorerDataType {
-  TRANSACTION = 'transaction',
-  TOKEN = 'token',
-  ADDRESS = 'address',
-  BLOCK = 'block',
-  NFT = 'nft',
-}
-
 /**
  * Return the explorer name for the given chain ID
  * @param chainId the ID of the chain for which to return the explorer name
  */
 export function getExplorerName(chainId: UniverseChainId): string {
   return UNIVERSE_CHAIN_INFO[chainId].explorer.name
-}
-
-/**
- * Return the explorer link for the given data and data type
- * @param chainId the ID of the chain for which to return the data
- * @param data the data to return a link for
- * @param type the type of the data
- */
-export function getExplorerLink(chainId: WalletChainId, data: string, type: ExplorerDataType): string {
-  const prefix = UNIVERSE_CHAIN_INFO[chainId].explorer.url
-
-  switch (type) {
-    case ExplorerDataType.TRANSACTION:
-      return `${prefix}tx/${data}`
-
-    case ExplorerDataType.TOKEN:
-      if (
-        data === UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.address &&
-        UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.explorerLink
-      ) {
-        return UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.explorerLink ?? `${prefix}token/${data}`
-      }
-      return `${prefix}token/${data}`
-
-    case ExplorerDataType.BLOCK:
-      if (chainId === UniverseChainId.Optimism) {
-        return `${prefix}tx/${data}`
-      }
-      return `${prefix}block/${data}`
-
-    case ExplorerDataType.ADDRESS:
-      return `${prefix}address/${data}`
-
-    case ExplorerDataType.NFT:
-      if (chainId === UniverseChainId.Zora) {
-        // Zora Energy Explorer uses a different URL format of [blockExplorerUrl]/token/[contractAddress]/instance/[tokenId]
-        // We need to split the data to get the contract address and token ID
-        const splitData = data.split('/')
-        const contractAddress = splitData[0] ?? ''
-        const tokenAddress = splitData[1] ?? ''
-        return `${prefix}token/${contractAddress}/instance/${tokenAddress}`
-      }
-      return `${prefix}nft/${data}`
-
-    default:
-      return `${prefix}`
-  }
 }
 
 export function getNftCollectionUrl(contractAddress: Maybe<string>): string | undefined {

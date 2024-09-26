@@ -1,4 +1,4 @@
-import { ColumnCenter } from 'components/Column'
+import { ColumnCenter } from 'components/deprecated/Column'
 import { useCurrency } from 'hooks/Tokens'
 import { useScroll } from 'hooks/useScroll'
 import { TokenCloud } from 'pages/Landing/components/TokenCloud'
@@ -8,8 +8,6 @@ import { Fragment } from 'react'
 import { ChevronDown } from 'react-feather'
 import { NAV_HEIGHT } from 'theme'
 import { Flex, Text } from 'ui/src'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
@@ -19,8 +17,6 @@ interface HeroProps {
 }
 
 export function Hero({ scrollToRef, transition }: HeroProps) {
-  const multichainUXEnabled = useFeatureFlag(FeatureFlags.MultichainUX)
-
   const { height: scrollPosition } = useScroll()
   const initialInputCurrency = useCurrency('ETH')
   const { t } = useTranslation()
@@ -97,7 +93,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
               hideHeader
               chainId={initialInputCurrency?.chainId ?? UniverseChainId.Mainnet}
               initialInputCurrency={initialInputCurrency}
-              multichainUXEnabled={multichainUXEnabled}
+              multichainUXEnabled
             />
           </Flex>
         </RiseIn>

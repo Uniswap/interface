@@ -7,14 +7,15 @@ import {
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
-import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button'
-import { GrayCard } from 'components/Card'
-import Column, { AutoColumn } from 'components/Column'
+import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
+import { GrayCard } from 'components/Card/cards'
 import { ConfirmSwapModal } from 'components/ConfirmSwapModal'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
 import ErrorIcon from 'components/Icons/Error'
-import Row from 'components/Row'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
+import Column, { AutoColumn } from 'components/deprecated/Column'
+import Row from 'components/deprecated/Row'
 import PriceImpactModal from 'components/swap/PriceImpactModal'
 import SwapDetailsDropdown from 'components/swap/SwapDetailsDropdown'
 import confirmPriceImpactWithoutFee from 'components/swap/confirmPriceImpactWithoutFee'
@@ -66,10 +67,6 @@ import { maxAmountSpend } from 'utils/maxAmountSpend'
 import { largerPercentValue } from 'utils/percent'
 import { computeRealizedPriceImpact, warningSeverity } from 'utils/prices'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
-
-const SWAP_FORM_CURRENCY_SEARCH_FILTERS = {
-  showCommonBases: true,
-}
 
 interface SwapFormProps {
   disableTokenInputs?: boolean
@@ -572,7 +569,6 @@ export function SwapForm({
               fiatValue={showFiatValueInput ? fiatValueInput : undefined}
               onCurrencySelect={handleInputSelect}
               otherCurrency={currencies[Field.OUTPUT]}
-              currencySearchFilters={SWAP_FORM_CURRENCY_SEARCH_FILTERS}
               id={InterfaceSectionName.CURRENCY_INPUT_PANEL}
               loading={independentField === Field.OUTPUT && routeIsSyncing}
               initialCurrencyLoading={initialCurrencyLoading}
@@ -622,7 +618,6 @@ export function SwapForm({
                 currencyField={CurrencyField.OUTPUT}
                 onCurrencySelect={handleOutputSelect}
                 otherCurrency={currencies[Field.INPUT]}
-                currencySearchFilters={SWAP_FORM_CURRENCY_SEARCH_FILTERS}
                 id={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}
                 loading={independentField === Field.INPUT && routeIsSyncing}
                 numericalInputSettings={{
@@ -676,7 +671,7 @@ export function SwapForm({
               element={InterfaceElementName.CONNECT_WALLET_BUTTON}
             >
               <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
-                <Trans i18nKey="common.connectWallet.button" />
+                <ConnectWalletButtonText />
               </ButtonLight>
             </Trace>
           ) : !multichainUXEnabled && initialChainId && initialChainId !== connectedChainId ? (

@@ -1,5 +1,5 @@
 import { datadogLogs } from '@datadog/browser-logs'
-import { getEnvName, isTestEnv } from 'utilities/src/environment'
+import { isTestEnv } from 'utilities/src/environment/env'
 import { NotImplementedError } from 'utilities/src/errors'
 import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
 import { v4 as uuidv4 } from 'uuid'
@@ -7,7 +7,7 @@ import { v4 as uuidv4 } from 'uuid'
 // setup user information
 const USER_ID_KEY = 'datadog-user-id'
 
-export function setupDatadog(): void {
+export function setupDatadog(envNameFunc: () => string): void {
   if (isTestEnv()) {
     return
   }
@@ -31,7 +31,7 @@ export function setupDatadog(): void {
     id: userId,
   })
 
-  datadogLogs.setUserProperty('env', getEnvName())
+  datadogLogs.setUserProperty('env', envNameFunc())
   datadogLogs.setUserProperty('version', process.env.REACT_APP_GIT_COMMIT_HASH)
 }
 

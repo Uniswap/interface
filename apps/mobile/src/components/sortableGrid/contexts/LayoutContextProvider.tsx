@@ -7,9 +7,9 @@ import {
   withDelay,
   withTiming,
 } from 'react-native-reanimated'
-import { ITEM_ANIMATION_DURATION, OFFSET_EPS } from 'src/components/sortableGrid/constants'
+import { ITEM_ANIMATION_DURATION, OFFSET_EPS } from 'src/components/sortableGrid/internal/constants'
+import { areArraysDifferent, getColumnIndex, getRowIndex } from 'src/components/sortableGrid/internal/utils'
 import { Dimensions, Vector } from 'src/components/sortableGrid/types'
-import { areArraysDifferent, getColumnIndex, getRowIndex } from 'src/components/sortableGrid/utils'
 
 const EMPTY_ARRAY: unknown[] = []
 const EMPTY_OBJECT = {}

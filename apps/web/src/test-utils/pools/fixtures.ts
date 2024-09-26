@@ -1,8 +1,8 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import { Currency, WETH9 } from '@uniswap/sdk-core'
 import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
-import { USDC_MAINNET } from 'constants/tokens'
 import { PoolData } from 'graphql/data/pools/usePoolData'
+import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 

@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { ExploreStatsResponse, ProtocolStatsResponse } from '@uniswap/client-explore/dist/uniswap/explore/v1/service_pb'
 import { createContext, useMemo } from 'react'
-import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest'
+import { ALL_NETWORKS_ARG } from 'uniswap/src/data/rest/base'
 import { useExploreStatsQuery } from 'uniswap/src/data/rest/exploreStats'
 import { useProtocolStatsQuery } from 'uniswap/src/data/rest/protocolStats'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -38,6 +38,8 @@ export const ExploreContext = createContext<ExploreContextType>({
     error: false,
   },
 })
+
+export const TABLE_PAGE_SIZE = 20
 
 export function ExploreContextProvider({
   chainId,

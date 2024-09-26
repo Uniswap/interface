@@ -1,6 +1,6 @@
 import { useCallback } from 'react'
 import { useLockScreenContext } from 'src/features/authentication/lockScreenContext'
-import { BiometricAuthenticationStatus } from 'src/features/biometrics'
+import { BiometricAuthenticationStatus } from 'src/features/biometrics/biometrics'
 import { useBiometricContext } from 'src/features/biometrics/context'
 import { useBiometricAppSettings, useBiometricPrompt } from 'src/features/biometrics/hooks'
 import { hideSplashScreen } from 'src/utils/splashScreen'

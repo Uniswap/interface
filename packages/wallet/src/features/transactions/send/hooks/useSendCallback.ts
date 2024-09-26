@@ -3,6 +3,7 @@ import { providers } from 'ethers'
 import { useMemo } from 'react'
 import { useDispatch } from 'react-redux'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { sendTokenActions } from 'wallet/src/features/transactions/send/sendTokenSaga'
 import { SendTokenParams } from 'wallet/src/features/transactions/send/types'
@@ -18,6 +19,7 @@ export function useSendERC20Callback(
   transferTxWithGasSettings?: providers.TransactionRequest,
   onSubmit?: () => void,
   currencyAmountUSD?: Maybe<CurrencyAmount<Currency>>, // for analytics
+  gasEstimates?: GasFeeEstimates,
 ): (() => void) | null {
   const account = useActiveAccount()
 
@@ -32,6 +34,7 @@ export function useSendERC20Callback(
           type: AssetType.Currency,
           txId,
           currencyAmountUSD,
+          gasEstimates,
         }
       : undefined,
     transferTxWithGasSettings,
@@ -48,6 +51,7 @@ export function useSendNFTCallback(
   tokenId?: string,
   txRequest?: providers.TransactionRequest,
   onSubmit?: () => void,
+  gasEstimates?: GasFeeEstimates,
 ): (() => void) | null {
   const account = useActiveAccount()
 
@@ -61,6 +65,7 @@ export function useSendNFTCallback(
           tokenId,
           type: AssetType.ERC721,
           txId,
+          gasEstimates,
         }
       : undefined,
     txRequest,

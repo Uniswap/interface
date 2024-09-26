@@ -6,7 +6,7 @@ import { ScreenHeader } from 'src/app/components/layout/ScreenHeader'
 import { removeAllDappConnectionsFromExtension } from 'src/app/features/dapp/actions'
 import { SettingsRecoveryPhrase } from 'src/app/features/settings/SettingsRecoveryPhraseScreen/SettingsRecoveryPhrase'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
-import { CheckBox, Flex, Text, inputStyles } from 'ui/src'
+import { Flex, LabeledCheckbox, Text, inputStyles } from 'ui/src'
 import { TrashFilled } from 'ui/src/components/icons'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -119,7 +119,7 @@ export function RemoveRecoveryPhraseVerify(): JSX.Element {
             </Text>
           </Flex>
           <Flex pb="$spacing24">
-            <CheckBox
+            <LabeledCheckbox
               checked={checked}
               text={
                 <Flex>

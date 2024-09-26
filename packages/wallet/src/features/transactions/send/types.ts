@@ -1,5 +1,6 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { AssetType, NFTAssetType } from 'uniswap/src/entities/assets'
+import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 
@@ -11,6 +12,7 @@ interface BaseSendParams {
   toAddress: Address
   tokenAddress: Address
   currencyAmountUSD?: Maybe<CurrencyAmount<Currency>> // for analytics
+  gasEstimates?: GasFeeEstimates
 }
 
 export interface SendCurrencyParams extends BaseSendParams {

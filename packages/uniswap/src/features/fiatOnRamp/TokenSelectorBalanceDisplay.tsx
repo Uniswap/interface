@@ -10,7 +10,7 @@ import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 interface TokenSelectorBalanceDisplayProps {
   onPress: () => void
   selectedCurrencyInfo: CurrencyInfo
-  formattedAmount: string
+  formattedAmount?: string
   disabled?: boolean
   loading?: boolean
   chevronDirection?: ComponentProps<typeof RotatableChevron>['direction']
@@ -20,7 +20,7 @@ interface TokenSelectorBalanceDisplayProps {
 export function TokenSelectorBalanceDisplay({
   selectedCurrencyInfo,
   onPress,
-  formattedAmount,
+  formattedAmount = '-',
   disabled,
   loading,
   chevronDirection = 'end',

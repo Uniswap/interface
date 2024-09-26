@@ -1,4 +1,4 @@
-import Column from 'components/Column'
+import Column from 'components/deprecated/Column'
 import Loader from 'components/Icons/LoadingSpinner'
 import { LoadingBubble } from 'components/Tokens/loading'
 import styled, { useTheme } from 'lib/styled-components'

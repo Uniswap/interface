@@ -10,6 +10,7 @@ import {
   priceToClosestTick,
   tickToPrice,
 } from '@uniswap/v3-sdk'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { BIG_INT_ZERO } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { PoolState, usePool } from 'hooks/usePools'
@@ -450,7 +451,7 @@ export function useV3DerivedMintInfo(
 
   let errorMessage: ReactNode | undefined
   if (!account.isConnected) {
-    errorMessage = <Trans i18nKey="common.connectWallet.button" />
+    errorMessage = <ConnectWalletButtonText />
   }
 
   if (poolState === PoolState.INVALID) {

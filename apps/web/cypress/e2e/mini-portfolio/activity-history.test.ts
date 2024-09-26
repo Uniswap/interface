@@ -1,4 +1,4 @@
-import { USDC_MAINNET } from '../../../src/constants/tokens'
+import { USDC_MAINNET } from 'uniswap/src/constants/tokens'
 import { getTestSelector } from '../../utils'
 
 describe('mini-portfolio activity history', () => {

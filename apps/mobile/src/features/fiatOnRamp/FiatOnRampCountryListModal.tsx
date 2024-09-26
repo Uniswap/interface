@@ -1,10 +1,10 @@
 import { BottomSheetFlatList } from '@gorhom/bottom-sheet'
 import React, { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Keyboard, ListRenderItemInfo } from 'react-native'
+import { ListRenderItemInfo } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { SvgUri } from 'react-native-svg'
-import { Loader } from 'src/components/loading'
+import { Loader } from 'src/components/loading/loaders'
 import { Flex, Text, TouchableArea, useDeviceInsets, useSporeColors } from 'ui/src'
 import Check from 'ui/src/assets/icons/check.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
@@ -86,7 +86,6 @@ function CountrySelectorContent({ onSelectCountry, countryCode }: CountrySelecto
         py="$spacing8"
         value={searchText}
         onChangeText={setSearchText}
-        onDismiss={() => Keyboard.dismiss()}
       />
       <Flex grow>
         <AnimatedFlex grow entering={FadeIn} exiting={FadeOut}>
