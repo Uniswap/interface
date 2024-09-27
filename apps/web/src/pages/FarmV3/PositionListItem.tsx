@@ -1,5 +1,5 @@
 import { BigNumber } from '@ethersproject/bignumber'
-import { Percent, Price, Token } from '@ubeswap/sdk-core'
+import { CurrencyAmount, Price, Token } from '@ubeswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { SmallButtonPrimary } from 'components/Button'
@@ -10,6 +10,7 @@ import { RowBetween } from 'components/Row'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePool } from 'hooks/usePools'
+import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { Trans } from 'i18n'
 import { darken } from 'polished'
 import { useMemo } from 'react'
@@ -18,7 +19,7 @@ import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
 import { HideSmall, SmallOnly, ThemedText } from 'theme/components'
 import { useMedia } from 'ui'
-import { useFormatter } from 'utils/formatNumbers'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 import { unwrappedToken } from 'utils/unwrappedToken'
 
 import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../constants/tokens'
@@ -208,7 +209,7 @@ export default function PositionListItem({
   onWithdraw, // eslint-disable-line
   onDeposit, // eslint-disable-line
 }: PositionListItemProps) {
-  const { formatDelta, formatTickPrice } = useFormatter()
+  const { formatTickPrice, formatCurrencyAmount } = useFormatter()
   const media = useMedia()
 
   const token0 = useToken(token0Address)
@@ -232,8 +233,26 @@ export default function PositionListItem({
   // prices
   const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)
 
+  if (position) {
+    console.log('position', position)
+    console.log(position.amount0.toExact(), position.amount1.toExact())
+  }
+
   const currencyQuote = quote && unwrappedToken(quote)
   const currencyBase = base && unwrappedToken(base)
+
+  const amountQuote = quote?.symbol == position?.amount0.currency.symbol ? position?.amount0 : position?.amount1
+  const amountBase = base?.symbol == position?.amount0.currency.symbol ? position?.amount0 : position?.amount1
+
+  const price0 = useStablecoinPrice(token0 ?? undefined)
+  const price1 = useStablecoinPrice(token1 ?? undefined)
+
+  const fiatValueOfLiquidity: CurrencyAmount<Token> | null = useMemo(() => {
+    if (!price0 || !price1 || !position) return null
+    const amount0 = price0.quote(position.amount0)
+    const amount1 = price1.quote(position.amount1)
+    return amount0.add(amount1)
+  }, [price0, price1, position])
 
   // check if price is within range
   const outOfRange: boolean = pool ? pool.tickCurrent < tickLower || pool.tickCurrent >= tickUpper : false
@@ -248,10 +267,31 @@ export default function PositionListItem({
         <PrimaryPositionIdData>
           <DoubleCurrencyLogo currency0={currencyBase} currency1={currencyQuote} size={18} margin />
           <ThemedText.SubHeader>
-            &nbsp;{currencyQuote?.symbol}&nbsp;/&nbsp;{currencyBase?.symbol}
+            {formatCurrencyAmount({
+              amount: amountQuote,
+              type: NumberType.TokenNonTx,
+              placeholder: '',
+            })}
+            &nbsp;
+            {currencyQuote?.symbol}
+            &nbsp;/&nbsp;
+            {formatCurrencyAmount({
+              amount: amountBase,
+              type: NumberType.TokenNonTx,
+              placeholder: '',
+            })}
+            &nbsp;
+            {currencyBase?.symbol}
           </ThemedText.SubHeader>
 
-          <FeeTierText>{formatDelta(parseFloat(new Percent(feeAmount, 1_000_000).toSignificant()))}</FeeTierText>
+          <FeeTierText>
+            =&nbsp;
+            {formatCurrencyAmount({
+              amount: fiatValueOfLiquidity,
+              type: NumberType.FiatTokenPrice,
+            })}
+          </FeeTierText>
+
           <div style={{ width: '8px' }}></div>
           {media.md ? <RangeDot inRange={!outOfRange} /> : <RangeBadge removed={removed} inRange={!outOfRange} />}
         </PrimaryPositionIdData>
