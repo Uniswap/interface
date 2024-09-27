@@ -299,7 +299,6 @@ export function useV3Farms(): TableFarm[] {
           )
         }
 
-        console.log('##SET## farms')
         setFarms([
           {
             hash: '0x3efc8d831b754d3ed58a2b4c37818f2e69dadd19-v3',
@@ -330,7 +329,7 @@ export function useActiveFarms(sortState: FarmTableSortState, chainId?: ChainId)
   const farms = useFarmRegistry()
   const v3Farms = useV3Farms()
   const tokens = useDefaultActiveTokens(ChainId.CELO)
-  const loading = farms.length == 0 || v3Farms.length == 0
+  const loading = v3Farms.length == 0
 
   const unfilteredPools = useMemo(() => {
     const fff: TableFarm[] =
