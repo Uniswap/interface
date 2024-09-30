@@ -2,18 +2,20 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { CurrencyAmount, Price, Token } from '@ubeswap/sdk-core'
 import { Position } from '@uniswap/v3-sdk'
 import RangeBadge from 'components/Badge/RangeBadge'
-import { SmallButtonPrimary } from 'components/Button'
+import { ButtonGray, SmallButtonPrimary } from 'components/Button'
 import DoubleCurrencyLogo from 'components/DoubleLogo'
 import HoverInlineText from 'components/HoverInlineText'
 import Loader from 'components/Icons/LoadingSpinner'
+import { FlyoutAlignment, InternalMenuItem, MenuFlyout, StyledMenu } from 'components/Menu'
 import { RowBetween } from 'components/Row'
 import { useToken } from 'hooks/Tokens'
 import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
+import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { usePool } from 'hooks/usePools'
 import useStablecoinPrice from 'hooks/useStablecoinPrice'
 import { Trans } from 'i18n'
-import { darken } from 'polished'
-import { useMemo } from 'react'
+import { useCallback, useMemo, useRef, useState } from 'react'
+import { Eye, LogOut, MoreVertical } from 'react-feather'
 import { Bound } from 'state/mint/v3/actions'
 import styled from 'styled-components'
 import { MEDIA_WIDTHS } from 'theme'
@@ -26,23 +28,6 @@ import { DAI, USDC_MAINNET, USDT, WBTC, WRAPPED_NATIVE_CURRENCY } from '../../co
 
 const DepositButton = styled(SmallButtonPrimary)`
   padding: 6px 12px;
-`
-const WithdrawButton = styled(SmallButtonPrimary)`
-  padding: 6px 12px;
-
-  background-color: ${({ theme }) => theme.red4};
-  color: ${({ theme }) => theme.neutralContrast};
-  &:focus {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.05, theme.red4)};
-    background-color: ${({ theme }) => darken(0.05, theme.red4)};
-  }
-  &:hover {
-    background-color: ${({ theme }) => darken(0.05, theme.red4)};
-  }
-  &:active {
-    box-shadow: 0 0 0 1pt ${({ theme }) => darken(0.1, theme.red4)};
-    background-color: ${({ theme }) => darken(0.1, theme.red4)};
-  }
 `
 
 const LinkRow = styled.div`
@@ -126,6 +111,41 @@ const PrimaryPositionIdData = styled.div`
   flex-direction: row;
   align-items: center;
   > * {
+    margin-right: 8px;
+  }
+`
+
+const PoolMenuItem = styled.div`
+  align-items: center;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  font-weight: 535;
+`
+const MoreOptionsButton = styled(ButtonGray)`
+  border-radius: 12px;
+  flex: 1 1 auto;
+  padding: 8px;
+  width: 100%;
+  background-color: ${({ theme }) => theme.surface1};
+  border: 1px solid ${({ theme }) => theme.surface3};
+  margin-right: 8px;
+`
+const StyledInternalMenuItem = styled(InternalMenuItem)`
+  width: 100%;
+`
+const MenuWrapper = styled.div`
+  flex: 1;
+  padding: 0.5rem 0.5rem;
+  color: ${({ theme }) => theme.neutral2};
+  width: 100%;
+  text-decoration: none;
+  :hover {
+    color: ${({ theme }) => theme.neutral1};
+    cursor: pointer;
+    text-decoration: none;
+  }
+  > svg {
     margin-right: 8px;
   }
 `
@@ -233,11 +253,6 @@ export default function PositionListItem({
   // prices
   const { priceLower, priceUpper, quote, base } = getPriceOrderingFromPositionForUI(position)
 
-  if (position) {
-    console.log('position', position)
-    console.log(position.amount0.toExact(), position.amount1.toExact())
-  }
-
   const currencyQuote = quote && unwrappedToken(quote)
   const currencyBase = base && unwrappedToken(base)
 
@@ -260,6 +275,13 @@ export default function PositionListItem({
   // const positionSummaryLink = '/pools/' + tokenId
 
   const removed = liquidity?.eq(0)
+
+  const node = useRef<HTMLDivElement>()
+  const [isMenuOpened, setIsMenuOpened] = useState(false)
+  const toggleMenu = useCallback(() => {
+    setIsMenuOpened((curr) => !curr)
+  }, [setIsMenuOpened])
+  useOnClickOutside(node, isMenuOpened ? toggleMenu : undefined)
 
   return (
     <LinkRow>
@@ -284,22 +306,42 @@ export default function PositionListItem({
             {currencyBase?.symbol}
           </ThemedText.SubHeader>
 
-          <FeeTierText>
-            =&nbsp;
-            {formatCurrencyAmount({
-              amount: fiatValueOfLiquidity,
-              type: NumberType.FiatTokenPrice,
-            })}
-          </FeeTierText>
+          {!media.md && (
+            <FeeTierText>
+              =&nbsp;
+              {formatCurrencyAmount({
+                amount: fiatValueOfLiquidity,
+                type: NumberType.FiatTokenPrice,
+              })}
+            </FeeTierText>
+          )}
 
           <div style={{ width: '8px' }}></div>
           {media.md ? <RangeDot inRange={!outOfRange} /> : <RangeBadge removed={removed} inRange={!outOfRange} />}
         </PrimaryPositionIdData>
 
         {isStaked ? (
-          <WithdrawButton onClick={() => onWithdraw(tokenId)}>
-            <Trans>Withdraw</Trans>
-          </WithdrawButton>
+          <StyledMenu ref={node as any}>
+            <MoreOptionsButton onClick={toggleMenu}>
+              <MoreVertical size={15} />
+            </MoreOptionsButton>
+            {isMenuOpened && (
+              <MenuFlyout flyoutAlignment={FlyoutAlignment.RIGHT}>
+                <StyledInternalMenuItem to={'/pools/' + tokenId.toString() + '?from_farm=true'}>
+                  <PoolMenuItem>
+                    <Trans>See Details</Trans>
+                    <Eye size={15} />
+                  </PoolMenuItem>
+                </StyledInternalMenuItem>
+                <MenuWrapper>
+                  <PoolMenuItem onClick={() => onWithdraw(tokenId)}>
+                    <Trans>Withdraw</Trans>
+                    <LogOut size={15} />
+                  </PoolMenuItem>
+                </MenuWrapper>
+              </MenuFlyout>
+            )}
+          </StyledMenu>
         ) : (
           <DepositButton onClick={() => onDeposit(tokenId)}>
             <Trans>Deposit</Trans>

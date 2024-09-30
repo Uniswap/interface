@@ -109,7 +109,6 @@ const PositionstWrapper = styled.div`
   border-radius: 16px;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
 `
 
 export const RowBetweenRelative = styled(Row)`

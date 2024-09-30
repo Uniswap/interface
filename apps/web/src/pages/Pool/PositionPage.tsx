@@ -30,7 +30,7 @@ import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useParams, useSearchParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
 import { useIsTransactionPending, useTransactionAdder } from 'state/transactions/hooks'
 import styled, { useTheme } from 'styled-components'
@@ -395,6 +395,8 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 
 function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>()
+  const [searchParams] = useSearchParams()
+  const fromFarm = searchParams.get('from_farm') === 'true'
   const { chainId, account, provider } = useWeb3React()
   const theme = useTheme()
   const { formatCurrencyAmount, formatDelta, formatTickPrice } = useFormatter()
@@ -694,11 +696,9 @@ function PositionPageContent() {
               <Link
                 data-cy="visit-pool"
                 style={{ textDecoration: 'none', width: 'fit-content', marginBottom: '0.5rem' }}
-                to="/pool"
+                to={fromFarm ? '/farmv3/' + poolAddress?.toLowerCase() : '/pool'}
               >
-                <HoverText>
-                  <Trans>← Back to Pool</Trans>
-                </HoverText>
+                <HoverText>{fromFarm ? <Trans>← Back to Farm</Trans> : <Trans>← Back to Pool</Trans>}</HoverText>
               </Link>
               <ResponsiveRow>
                 <PositionLabelRow>

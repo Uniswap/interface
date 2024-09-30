@@ -19,7 +19,7 @@ const StyledMenuIcon = styled(MenuIcon)`
   }
 `
 
-const StyledMenu = styled.div`
+export const StyledMenu = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -28,7 +28,7 @@ const StyledMenu = styled.div`
   text-align: left;
 `
 
-const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
+export const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   min-width: 196px;
   max-height: 350px;
   overflow: auto;
@@ -70,7 +70,7 @@ const MenuItem = styled(ExternalLink)`
   }
 `
 
-const InternalMenuItem = styled(Link)`
+export const InternalMenuItem = styled(Link)`
   flex: 1;
   padding: 0.5rem 0.5rem;
   color: ${({ theme }) => theme.neutral2};
@@ -97,7 +97,7 @@ interface MenuProps {
   }[]
 }
 
-const ExternalMenuItem = styled(MenuItem)`
+export const ExternalMenuItem = styled(MenuItem)`
   width: max-content;
   text-decoration: none;
 `

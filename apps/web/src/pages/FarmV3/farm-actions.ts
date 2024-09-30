@@ -59,7 +59,6 @@ export function useDepositCallback(): [
       }
 
       try {
-        console.log('##SET## ispending')
         setIsPending(true)
 
         const data = encodeKeys(incentives)
@@ -81,7 +80,6 @@ export function useDepositCallback(): [
           })
           .catch((error) => {
             console.error('Failed to send transaction', error)
-            console.log('##SET## ispending false')
             setIsPending(false)
             setTxHash('')
             if (error?.code !== 4001) {
@@ -91,7 +89,6 @@ export function useDepositCallback(): [
       } catch (e) {
         console.error(e)
       } finally {
-        console.log('##SET## ispending false 2')
         setIsPending(false)
         setTxHash('')
       }
@@ -100,6 +97,13 @@ export function useDepositCallback(): [
   )
 
   return [cb, txHash, isPending]
+}
+
+interface CollectRewardParams {
+  key: IncentiveKey
+  tokenId: BigNumber
+  accumulatedRewards: BigNumber
+  proof: string[]
 }
 
 export function useWithdrawCallback(): [
@@ -142,7 +146,6 @@ export function useWithdrawCallback(): [
       }
 
       try {
-        console.log('##SET## ispending 3')
         setIsPending(true)
 
         const calldatas: string[] = [
@@ -177,7 +180,6 @@ export function useWithdrawCallback(): [
           })
           .catch((error) => {
             console.error('Failed to send transaction', error)
-            console.log('##SET## ispending 4')
             setIsPending(false)
             setTxHash('')
             if (error?.code !== 4001) {
@@ -187,7 +189,6 @@ export function useWithdrawCallback(): [
       } catch (e) {
         console.error(e)
       } finally {
-        console.log('##SET## ispending 5')
         setIsPending(false)
         setTxHash('')
       }
@@ -198,12 +199,6 @@ export function useWithdrawCallback(): [
   return [cb, txHash, isPending]
 }
 
-interface CollectRewardParams {
-  key: IncentiveKey
-  tokenId: BigNumber
-  accumulatedRewards: BigNumber
-  proof: string[]
-}
 export function useCollectRewardCallback(): [(collectParams: CollectRewardParams[]) => Promise<void>, string, boolean] {
   const { account } = useWeb3React()
   const addTransaction = useTransactionAdder()
@@ -240,7 +235,6 @@ export function useCollectRewardCallback(): [(collectParams: CollectRewardParams
       }
 
       try {
-        console.log('##SET## ispending 5')
         setIsPending(true)
 
         const calldatas: string[] = [
@@ -271,7 +265,6 @@ export function useCollectRewardCallback(): [(collectParams: CollectRewardParams
           })
           .catch((error) => {
             console.error('Failed to send transaction', error)
-            console.log('##SET## ispending 6')
             setIsPending(false)
             setTxHash('')
             if (error?.code !== 4001) {
@@ -281,7 +274,91 @@ export function useCollectRewardCallback(): [(collectParams: CollectRewardParams
       } catch (e) {
         console.error(e)
       } finally {
-        console.log('##SET## ispending 7')
+        setIsPending(false)
+        setTxHash('')
+      }
+    },
+    [isPending, farmContract, account, pendingTxs, addTransaction]
+  )
+
+  return [cb, txHash, isPending]
+}
+
+export function useCollectFeeCallback(): [(collectParams: CollectRewardParams[]) => Promise<void>, string, boolean] {
+  const { account } = useWeb3React()
+  const addTransaction = useTransactionAdder()
+
+  const pendingTxs = usePendingTransactions()
+  const [isPending, setIsPending] = useState(false)
+  const [txHash, setTxHash] = useState<string>('')
+
+  const farmContract = useUbeswapV3FarmingContract(FARM_ADDRESS)
+
+  const cb = useCallback(
+    async (collectParams: CollectRewardParams[]): Promise<void> => {
+      if (!account) {
+        console.error('no account')
+        return
+      }
+      if (pendingTxs.length > 0) {
+        console.error('already pending transaction')
+        return
+      }
+      if (isPending) {
+        console.error('already pending')
+        return
+      }
+
+      if (!farmContract || !farmContract.signer) {
+        console.error('contract or signer is null')
+        return
+      }
+
+      if (collectParams.length === 0) {
+        console.error('collectParams is empty')
+        return
+      }
+
+      try {
+        setIsPending(true)
+
+        const calldatas: string[] = [
+          ...collectParams.map((collectParam) =>
+            farmContract.interface.encodeFunctionData('collectReward', [
+              collectParam.key,
+              collectParam.tokenId,
+              collectParam.accumulatedRewards,
+              collectParam.proof,
+            ])
+          ),
+        ]
+        await farmContract.estimateGas
+          .multicall(calldatas)
+          .then((estimatedGasLimit) => {
+            return farmContract
+              .multicall(calldatas, {
+                gasLimit: calculateGasMargin(estimatedGasLimit),
+              })
+              .then((response: TransactionResponse) => {
+                setTxHash(response.hash)
+                addTransaction(response, {
+                  type: TransactionType.CUSTOM,
+                  summary: 'Collecting Rewards',
+                })
+                return response.wait(2)
+              })
+          })
+          .catch((error) => {
+            console.error('Failed to send transaction', error)
+            setIsPending(false)
+            setTxHash('')
+            if (error?.code !== 4001) {
+              console.error(error)
+            }
+          })
+      } catch (e) {
+        console.error(e)
+      } finally {
         setIsPending(false)
         setTxHash('')
       }
