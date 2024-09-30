@@ -269,36 +269,42 @@ export function useV3IncentiveFullData(incentiveId: string): IncentiveDataItem[]
   return data
 }
 
+function getV3FarmNumbers(metadata: Metadata, nativePrice: number, ubePrice: number): { apr: Percent; tvl: number } {
+  const activeTvlNative = parseFloat(formatEther(BigNumber.from(metadata.activeTvlNative)))
+  const inactiveTvlNative = parseFloat(formatEther(BigNumber.from(metadata.inactiveTvlNative)))
+  const ubeYearlyReward = parseFloat(
+    formatEther(
+      BigNumber.from(metadata.distributedRewards)
+        .mul(365 * 24 * 60 * 60)
+        .div(metadata.duration)
+    )
+  )
+  const ubeYearlyRewardUsd = ubeYearlyReward * ubePrice
+  console.log('ubeYearlyRewardUsd', ubeYearlyRewardUsd)
+  let apr = new Percent(0)
+  if (activeTvlNative * nativePrice > 0) {
+    apr = new Percent(Math.round(ubeYearlyRewardUsd * 1_000_000), Math.round(activeTvlNative * nativePrice * 1_000_000))
+  }
+
+  return {
+    apr,
+    tvl: (activeTvlNative + inactiveTvlNative) * nativePrice,
+  }
+}
+
 export function useV3Farms(): TableFarm[] {
   const tokens = useDefaultActiveTokens(ChainId.CELO)
   const [farms, setFarms] = useState<TableFarm[]>([])
   const nativePrice = useUSDPrice(CurrencyAmount.fromRawAmount(CELO_CELO, 1e18)).data
   const ubePrice = useUSDPrice(CurrencyAmount.fromRawAmount(UBE[ChainId.CELO], 1e18)).data
-  const metadata = useV3IncentiveMetadata('0xeec6459eb0d7379623c6b1d8b323cc64dea67f43e6ca85e8909a27424d21e812')
+  const metadataUbe = useV3IncentiveMetadata('0xeec6459eb0d7379623c6b1d8b323cc64dea67f43e6ca85e8909a27424d21e812')
+  const metadataGlo = useV3IncentiveMetadata('0x82774b5b1443759f20679a61497abf11115a4d0e2076caedf9d700a8c53f286f')
 
   useEffect(() => {
-    console.log('---', metadata, nativePrice, ubePrice)
-    if (metadata && nativePrice && ubePrice) {
+    if (metadataUbe && metadataGlo && nativePrice && ubePrice) {
       try {
-        const activeTvlNative = parseFloat(formatEther(BigNumber.from(metadata.activeTvlNative)))
-        const inactiveTvlNative = parseFloat(formatEther(BigNumber.from(metadata.inactiveTvlNative)))
-        const ubeYearlyReward = parseFloat(
-          formatEther(
-            BigNumber.from(metadata.distributedRewards)
-              .mul(365 * 24 * 60 * 60)
-              .div(metadata.duration)
-          )
-        )
-        const ubeYearlyRewardUsd = ubeYearlyReward * ubePrice
-        console.log('ubeYearlyRewardUsd', ubeYearlyRewardUsd)
-        let apr = new Percent(0)
-        if (activeTvlNative * nativePrice > 0) {
-          apr = new Percent(
-            Math.round(ubeYearlyRewardUsd * 1_000_000),
-            Math.round(activeTvlNative * nativePrice * 1_000_000)
-          )
-        }
-
+        const ubeNumbers = getV3FarmNumbers(metadataUbe, nativePrice, ubePrice)
+        const gloNumbers = getV3FarmNumbers(metadataGlo, nativePrice, ubePrice)
         setFarms([
           {
             hash: '0x3efc8d831b754d3ed58a2b4c37818f2e69dadd19-v3',
@@ -308,18 +314,32 @@ export function useV3Farms(): TableFarm[] {
             token1: tokens['0x71e26d0E519D14591b9dE9a0fE9513A398101490'],
             token0Amount: new Fraction(0),
             token1Amount: new Fraction(0),
-            tvl: (activeTvlNative + inactiveTvlNative) * nativePrice,
-            apr,
+            tvl: ubeNumbers.tvl,
+            apr: ubeNumbers.apr,
             feeTier: 100,
             protocolVersion: ProtocolVersion.V3,
             incentiveIds: ['0xeec6459eb0d7379623c6b1d8b323cc64dea67f43e6ca85e8909a27424d21e812'],
+          },
+          {
+            hash: '0x28ade0134b9d0bc7041f4e5ea74fecb58504720b-v3',
+            farmAddress: '0x13b0a5Bf2589d603BB735c79813ee1AA6C12FB1d',
+            poolAddress: '0x28ade0134b9d0bc7041f4e5ea74fecb58504720b',
+            token0: tokens['0x4F604735c1cF31399C6E711D5962b2B3E0225AD3'],
+            token1: tokens['0xcebA9300f2b948710d2653dD7B07f33A8B32118C'],
+            token0Amount: new Fraction(0),
+            token1Amount: new Fraction(0),
+            tvl: gloNumbers.tvl,
+            apr: gloNumbers.apr,
+            feeTier: 100,
+            protocolVersion: ProtocolVersion.V3,
+            incentiveIds: ['0x82774b5b1443759f20679a61497abf11115a4d0e2076caedf9d700a8c53f286f'],
           },
         ])
       } catch (e) {
         console.error(e)
       }
     }
-  }, [tokens, metadata, nativePrice, ubePrice])
+  }, [tokens, metadataUbe, metadataGlo, nativePrice, ubePrice])
 
   return farms
 }
