@@ -11,6 +11,7 @@ import { usePool } from 'hooks/usePools'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { AppTFunction } from 'ui/src/i18n/types'
+import { shortenAddress } from 'utilities/src/addresses'
 
 export function getProtocolVersionLabel(version: ProtocolVersion): string | undefined {
   switch (version) {
@@ -120,7 +121,7 @@ export function usePositionInfo(position?: Position): PositionInfo | undefined {
         status: position.status,
         feeTier: undefined,
         version: position.protocolVersion,
-        v4hook: v4Position.hooks[0]?.address,
+        v4hook: v4Position.hooks[0]?.address ? shortenAddress(v4Position.hooks[0].address) : undefined,
         restPosition: position,
         currency0Amount: CurrencyAmount.fromRawAmount(
           token0,

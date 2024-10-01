@@ -8,6 +8,7 @@ const NavDropdownContent = styled(Flex, {
   borderStyle: 'solid',
   borderColor: '$surface2',
   backgroundColor: '$surface1',
+  overflow: 'scroll',
   maxHeight: `calc(100dvh - ${NAV_HEIGHT * 2}px)`,
   $sm: {
     width: '100%',
@@ -15,10 +16,6 @@ const NavDropdownContent = styled(Flex, {
     borderWidth: 0,
     shadowColor: '$transparent',
     maxHeight: `calc(100dvh - ${NAV_HEIGHT}px)`,
-  },
-  '$platform-web': {
-    overflowY: 'auto',
-    overflowX: 'hidden',
   },
 })
 

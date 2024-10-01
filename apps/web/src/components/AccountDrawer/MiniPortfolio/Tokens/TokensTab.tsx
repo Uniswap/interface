@@ -106,13 +106,13 @@ function TokenRow({
       element={InterfaceElementName.MINI_PORTFOLIO_TOKEN_ROW}
       properties={{
         chain_id: currency.chainId,
-        token_name: token?.name ?? token?.project?.name,
+        token_name: token?.project?.name ?? token?.name,
         address: token?.address,
       }}
     >
       <PortfolioRow
         left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size={40} />}
-        title={<TokenNameText>{token?.name ?? token?.project?.name}</TokenNameText>}
+        title={<TokenNameText>{token?.project?.name ?? token?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>
             {formatNumber({

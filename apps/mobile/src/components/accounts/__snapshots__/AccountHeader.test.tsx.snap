@@ -349,7 +349,7 @@ exports[`AccountHeader renders correctly 1`] = `
                 jestAnimatedStyle={
                   {
                     "value": {
-                      "color": "#BFBFBF",
+                      "color": "#CECECE",
                       "fontSize": 19,
                       "fontWeight": "400",
                       "lineHeight": 24,
@@ -360,7 +360,7 @@ exports[`AccountHeader renders correctly 1`] = `
                 maxFontSizeMultiplier={1.4}
                 style={
                   {
-                    "color": "#BFBFBF",
+                    "color": "#CECECE",
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 19,
                     "fontWeight": "400",
@@ -415,7 +415,7 @@ exports[`AccountHeader renders correctly 1`] = `
                   numberOfLines={1}
                   style={
                     {
-                      "color": "#BFBFBF",
+                      "color": "#CECECE",
                       "fontFamily": "Basel Grotesk",
                       "fontSize": 17,
                       "fontWeight": "400",
@@ -443,7 +443,7 @@ exports[`AccountHeader renders correctly 1`] = `
                         "borderWidth": 0,
                       },
                       {
-                        "color": "#BFBFBF",
+                        "color": "#CECECE",
                         "height": 16,
                         "width": 16,
                       },
@@ -454,7 +454,7 @@ exports[`AccountHeader renders correctly 1`] = `
                       },
                     ]
                   }
-                  tintColor="#BFBFBF"
+                  tintColor="#CECECE"
                   vbHeight={16}
                   vbWidth={16}
                 >

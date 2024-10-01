@@ -11,7 +11,7 @@ import { getTokenDetailsURL, supportedChainIdFromGQLChain } from 'graphql/data/u
 import styled, { css } from 'lib/styled-components'
 import { searchGenieCollectionToTokenSearchResult, searchTokenToTokenSearchResult } from 'lib/utils/searchBar'
 import { GenieCollection } from 'nft/types'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Link, useNavigate } from 'react-router-dom'
 import { EllipsisStyle, ThemedText } from 'theme/components'
@@ -23,7 +23,6 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceSearchResultSelectionProperties } from 'uniswap/src/features/telemetry/types'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const PriceChangeContainer = styled.div`
@@ -148,14 +147,6 @@ export function SuggestionRow({
     }
   }, [toggleOpen, isHovered, suggestion, navigate, handleClick, path])
 
-  const shortenedAddress = useMemo<string | null>(() => {
-    if (isToken && suggestion.address && suggestion.address !== NATIVE_CHAIN_ID) {
-      return shortenAddress(suggestion.address)
-    }
-
-    return null
-  }, [suggestion, isToken])
-
   return (
     <StyledLink
       to={path}
@@ -187,20 +178,13 @@ export function SuggestionRow({
             <PrimaryText lineHeight="24px">{suggestion.name}</PrimaryText>
             {isToken ? <TokenSafetyIcon warning={warning} /> : suggestion.isVerified && <Verified size={14} />}
           </Flex>
-          <Flex row gap="$spacing4">
-            <ThemedText.SubHeaderSmall lineHeight="20px">
-              {isToken
-                ? suggestion.symbol
-                : t('search.results.count', {
-                    count: suggestion?.stats?.total_supply ?? 0,
-                  })}
-            </ThemedText.SubHeaderSmall>
-            {shortenedAddress && (
-              <ThemedText.SubHeaderSmall lineHeight="20px" color="neutral3">
-                {shortenedAddress}
-              </ThemedText.SubHeaderSmall>
-            )}
-          </Flex>
+          <ThemedText.SubHeaderSmall lineHeight="20px">
+            {isToken
+              ? suggestion.symbol
+              : t('search.results.count', {
+                  count: suggestion?.stats?.total_supply ?? 0,
+                })}
+          </ThemedText.SubHeaderSmall>
         </PrimaryContainer>
       </Flex>
 

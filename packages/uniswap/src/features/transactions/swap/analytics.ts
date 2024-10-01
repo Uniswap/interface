@@ -1,5 +1,5 @@
 import { SwapEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useEffect } from 'react'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -13,6 +13,7 @@ import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/s
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
+import { percentFromFloat } from 'utilities/src/format/percent'
 import { NumberType } from 'utilities/src/format/types'
 
 // hook-based analytics because this one is data-lifecycle dependent
@@ -60,14 +61,14 @@ export function getBaseTradeAnalyticsProperties({
 
   const finalOutputAmount = feeCurrencyAmount ? trade.outputAmount.subtract(feeCurrencyAmount) : trade.outputAmount
 
-  const slippagePercent = new Percent((trade.slippageTolerance ?? 0) * 100, 100)
+  const slippagePercent = percentFromFloat(trade.slippageTolerance ?? 0)
 
   return {
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
     token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
-    price_impact_basis_points: trade.priceImpact?.multiply(100).toSignificant(),
+    price_impact_basis_points: trade.priceImpact.multiply(100).toSignificant(),
     chain_id: trade.inputAmount.currency.chainId,
     token_in_amount: trade.inputAmount.toExact(),
     token_out_amount: formatter.formatCurrencyAmount({
@@ -76,9 +77,8 @@ export function getBaseTradeAnalyticsProperties({
     }),
     token_in_amount_usd: currencyInAmountUSD ? parseFloat(currencyInAmountUSD.toFixed(2)) : undefined,
     token_out_amount_usd: currencyOutAmountUSD ? parseFloat(currencyOutAmountUSD.toFixed(2)) : undefined,
-    allowed_slippage:
-      trade.slippageTolerance !== undefined ? parseFloat(trade.slippageTolerance.toFixed(2)) : undefined,
-    allowed_slippage_basis_points: trade.slippageTolerance ? trade.slippageTolerance * 100 : undefined,
+    allowed_slippage: parseFloat(trade.slippageTolerance.toFixed(2)),
+    allowed_slippage_basis_points: trade.slippageTolerance * 100,
     fee_amount: portionAmount,
     requestId: trade.quote?.requestId,
     ura_request_id: trade.quote?.requestId,
@@ -139,7 +139,7 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     token_out_symbol: outputCurrencyAmount?.currency.symbol,
     token_in_address: inputCurrencyAmount ? getCurrencyAddressForAnalytics(inputCurrencyAmount?.currency) : '',
     token_out_address: outputCurrencyAmount ? getCurrencyAddressForAnalytics(outputCurrencyAmount?.currency) : '',
-    price_impact_basis_points: derivedSwapInfo.trade.trade?.priceImpact?.multiply(100)?.toSignificant(),
+    price_impact_basis_points: derivedSwapInfo.trade.trade?.priceImpact.multiply(100).toSignificant(),
     estimated_network_fee_usd: undefined,
     chain_id: chainId,
     token_in_amount: inputCurrencyAmount?.toExact() ?? '',

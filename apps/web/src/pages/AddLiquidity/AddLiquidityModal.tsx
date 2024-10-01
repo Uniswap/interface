@@ -2,9 +2,8 @@ import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDet
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { AddLiquidityContextProvider, useAddLiquidityContext } from 'components/addLiquidity/AddLiquidityContext'
-import { InputForm } from 'components/addLiquidity/InputForm'
+import { Field, InputForm } from 'components/addLiquidity/InputForm'
 import { useCloseModal } from 'state/application/hooks'
-import { PositionField } from 'types/position'
 import { Button, Flex } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -26,7 +25,7 @@ function AddLiquidityModalInner() {
   const token0 = currency0Amount.currency
   const token1 = currency1Amount.currency
 
-  const handleUserInput = (field: PositionField, newValue: string) => {
+  const handleUserInput = (field: Field, newValue: string) => {
     setAddLiquidityState((prev) => ({
       ...prev,
       exactField: field,
@@ -34,7 +33,7 @@ function AddLiquidityModalInner() {
     }))
   }
 
-  const handleOnSetMax = (field: PositionField, amount: string) => {
+  const handleOnSetMax = (field: Field, amount: string) => {
     setAddLiquidityState((prev) => ({
       ...prev,
       exactField: field,

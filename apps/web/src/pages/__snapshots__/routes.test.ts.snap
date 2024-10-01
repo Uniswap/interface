@@ -132,7 +132,7 @@ Array [
     "getElement": [Function],
     "getTitle": [Function],
     "nestedPaths": Array [],
-    "path": "/positions/create",
+    "path": "/positions/new",
   },
   Object {
     "enabled": [Function],

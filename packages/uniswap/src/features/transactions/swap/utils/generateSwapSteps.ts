@@ -3,8 +3,8 @@ import { Currency, Token } from '@uniswap/sdk-core'
 import { fetchSwap } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { CreateSwapRequest, NullablePermit } from 'uniswap/src/data/tradingApi/__generated__'
 import { SwapTxAndGasInfo, isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   ValidatedTransactionRequest,
   validateTransactionRequest,
@@ -144,7 +144,7 @@ function orderUniswapXSteps(flow: UniswapXSwapFlow): UniswapXSwapSteps[] {
 
 function createWrapTransactionStep(
   txRequest: ValidatedTransactionRequest | undefined,
-  trade: UniswapXTrade | ClassicTrade | BridgeTrade | null,
+  trade: UniswapXTrade | ClassicTrade | null,
 ): WrapTransactionStep | undefined {
   if (!trade) {
     return undefined
@@ -161,7 +161,7 @@ function createWrapTransactionStep(
 
 function createRevocationTransactionStep(
   txRequest: ValidatedTransactionRequest | undefined,
-  trade: UniswapXTrade | ClassicTrade | BridgeTrade | null,
+  trade: UniswapXTrade | ClassicTrade | null,
 ): TokenRevocationTransactionStep | undefined {
   if (!trade) {
     return undefined
@@ -178,7 +178,7 @@ function createRevocationTransactionStep(
 
 function createApprovalTransactionStep(
   txRequest: ValidatedTransactionRequest | undefined,
-  trade: UniswapXTrade | ClassicTrade | BridgeTrade | null,
+  trade: UniswapXTrade | ClassicTrade | null,
 ): TokenApprovalTransactionStep | undefined {
   if (!trade) {
     return undefined
@@ -204,7 +204,7 @@ function createSignOrderUniswapXStep(permitData: NullablePermit | undefined): Un
 
 function createPermit2SignatureStep(
   permitData: NullablePermit | undefined,
-  trade: UniswapXTrade | ClassicTrade | BridgeTrade,
+  trade: UniswapXTrade | ClassicTrade,
 ): Permit2SignatureStep {
   return {
     type: TransactionStepType.Permit2Signature,
@@ -274,24 +274,6 @@ export function generateSwapSteps(swapTxContext: SwapTxAndGasInfo): TransactionS
       wrap: createWrapTransactionStep(swapTxContext.wrapTxRequest, trade),
       approval: createApprovalTransactionStep(approveTxRequest, trade),
       signOrder: createSignOrderUniswapXStep(permitData),
-    })
-  } else if (isBridge(swapTxContext)) {
-    const { swapRequestArgs } = swapTxContext
-    const isSwapAsync = !!swapTxContext.permitData && !swapTxContext.permitSignature
-
-    if (isSwapAsync) {
-      return orderSwapSteps({
-        revocation: createRevocationTransactionStep(revocationTxRequest, trade),
-        approval: createApprovalTransactionStep(approveTxRequest, trade),
-        permit: createPermit2SignatureStep(permitData, trade),
-        swap: createSwapTransactionAsyncStep(swapRequestArgs),
-      })
-    }
-    return orderSwapSteps({
-      revocation: createRevocationTransactionStep(revocationTxRequest, trade),
-      approval: createApprovalTransactionStep(approveTxRequest, trade),
-      permit: undefined,
-      swap: createSwapTransactionStep(swapTxContext.txRequest),
     })
   }
 

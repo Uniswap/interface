@@ -30,7 +30,7 @@ export const paths = [
   '/pools',
   '/pools/:tokenId',
   '/positions',
-  '/positions/create',
+  '/positions/new',
   '/add/v2',
   '/add',
   '/increase',

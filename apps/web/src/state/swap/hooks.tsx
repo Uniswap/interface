@@ -1,5 +1,4 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { Field } from 'components/swap/constants'
 import { CHAIN_IDS_TO_NAMES, useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
@@ -21,6 +20,8 @@ import { CurrencyState, SerializedCurrencyState, SwapInfo, SwapState } from 'sta
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
+import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
@@ -219,11 +220,22 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     isClassicTrade(trade.trade) && (nativeCurrencyBalanceUSD ?? 0) < (trade.trade.totalGasUseEstimateUSDWithBuffer ?? 0)
 
   const { isDisconnected } = useAccount()
+  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
+  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
+  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
+
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
 
     if (!account.isConnected) {
-      inputError = isDisconnected ? <ConnectWalletButtonText /> : <Trans i18nKey="common.connectingWallet" />
+      const disconnectedInputError = isSignIn ? (
+        <Trans i18nKey="nav.signIn.button" />
+      ) : isLogIn ? (
+        <Trans i18nKey="nav.logIn.button" />
+      ) : (
+        <Trans i18nKey="common.connectWallet.button" />
+      )
+      inputError = isDisconnected ? disconnectedInputError : <Trans i18nKey="common.connectingWallet" />
     }
 
     if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
@@ -268,6 +280,8 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     currencyBalances,
     trade?.trade,
     allowedSlippage,
+    isSignIn,
+    isLogIn,
     isDisconnected,
     nativeCurrency.symbol,
   ])

@@ -49,10 +49,11 @@ describe('useSwapTxAndGasInfo', () => {
         maxFeePerGas: '500000',
         maxPriorityFeePerGas: '600000',
       },
+      gasFee: '200000',
       gasEstimates: {
         activeEstimate: {
           gasLimit: '100000',
-          gasFee: '200000',
+          gasFee: '220000',
           maxFeePerGas: '300000',
           maxPriorityFeePerGas: '400000',
           type: FeeType.EIP1559,
@@ -105,7 +106,7 @@ describe('useSwapTxAndGasInfo', () => {
         approvalEstimates: {
           activeEstimate: {
             gasLimit: '100000',
-            gasFee: '200000',
+            gasFee: '220000',
             maxFeePerGas: '300000',
             maxPriorityFeePerGas: '400000',
             type: FeeType.EIP1559,

@@ -1,23 +1,23 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PositionInfo, useModalLiquidityPositionInfo } from 'components/Liquidity/utils'
+import { Field } from 'components/addLiquidity/InputForm'
 import { useDerivedAddLiquidityInfo } from 'components/addLiquidity/hooks'
 import { Dispatch, PropsWithChildren, SetStateAction, createContext, useContext, useMemo, useState } from 'react'
-import { PositionField } from 'types/position'
 
 export interface AddLiquidityState {
   position?: PositionInfo
-  exactField: PositionField
+  exactField: Field
   exactAmount?: string
 }
 const DEFAULT_ADD_LIQUIDITY_STATE = {
-  exactField: PositionField.TOKEN0,
+  exactField: Field.TOKEN0,
 }
 
 export interface AddLiquidityInfo {
-  formattedAmounts?: { [field in PositionField]?: string }
-  currencyBalances?: { [field in PositionField]?: CurrencyAmount<Currency> }
-  currencyAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
-  currencyAmountsUSDValue?: { [field in PositionField]?: CurrencyAmount<Currency> }
+  formattedAmounts?: { [field in Field]?: string }
+  currencyBalances?: { [field in Field]?: CurrencyAmount<Currency> }
+  currencyAmounts?: { [field in Field]?: CurrencyAmount<Currency> }
+  currencyAmountsUSDValue?: { [field in Field]?: CurrencyAmount<Currency> }
 }
 
 interface AddLiquidityContextType {

@@ -31,14 +31,14 @@ export function formatTokenSearchResults(
       return tokensMap
     }
 
-    const { name, chain, address, symbol, project, market, protectionInfo } = token
+    const { chain, address, symbol, project, market, protectionInfo } = token
     const chainId = fromGraphQLChain(chain)
 
     if (!chainId || !project) {
       return tokensMap
     }
 
-    const { safetyLevel, logoUrl } = project
+    const { name, safetyLevel, logoUrl } = project
 
     const tokenResult: TokenSearchResult & { volume1D: number } = {
       type: SearchResultType.Token,

@@ -37,6 +37,7 @@ export function AddressFooter({
         }
       >
         <AddressDisplay
+          disableForcedWidth
           hideAddressInSubtitle
           address={currentAccountAddress}
           horizontalGap="$spacing4"

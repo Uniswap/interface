@@ -111,7 +111,7 @@ export function gqlToCurrency(token: DeepPartial<GqlToken | TokenStat>): Currenc
       token.address,
       token.decimals ?? 18,
       token.symbol ?? undefined,
-      token.name ?? token.project?.name ?? undefined,
+      token.project?.name ?? token.name ?? undefined,
     )
   }
 }

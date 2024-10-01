@@ -9,7 +9,3 @@ export function isUniswapX<T extends { routing: Routing }>(
 export function isClassic<T extends { routing: Routing }>(obj: T): obj is T & { routing: Routing.CLASSIC } {
   return obj.routing === Routing.CLASSIC
 }
-
-export function isBridge<T extends { routing: Routing }>(obj: T): obj is T & { routing: Routing.BRIDGE } {
-  return obj.routing === Routing.BRIDGE
-}

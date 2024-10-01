@@ -1,19 +1,11 @@
-IPFS hash of the deployment:
-- CIDv0: `QmSen79xDfziDqosVLQFWT5F1cxK7pYHirdnMMkCjZqtDz`
-- CIDv1: `bafybeicacoiqphc6t7aqqtkawiwotwqxwxqdtapccc4iy64xx3ompux7du`
+We are back with some new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Manage dapp connections - Users can now see all dapps they’re connected to, and disconnect to one or all of them.  
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Report Spam NFTs - You can now report spam NFTs and hide them from your feed and activity. 
 
-IPFS gateways:
-- https://bafybeicacoiqphc6t7aqqtkawiwotwqxwxqdtapccc4iy64xx3ompux7du.ipfs.dweb.link/
-- https://bafybeicacoiqphc6t7aqqtkawiwotwqxwxqdtapccc4iy64xx3ompux7du.ipfs.cf-ipfs.com/
-- [ipfs://QmSen79xDfziDqosVLQFWT5F1cxK7pYHirdnMMkCjZqtDz/](ipfs://QmSen79xDfziDqosVLQFWT5F1cxK7pYHirdnMMkCjZqtDz/)
+Other changes: 
 
-### 5.48.1 (2024-09-24)
-
-
+- Added explainers for hidden tokens, popular tokens, and hidden NFTs
+- Removed activity feed items related to any hidden NFTs
+- Various bug fixes and performance improvements

@@ -3,7 +3,7 @@ import { PropsWithChildren, ReactNode } from 'react'
 import type { ColorValue } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { ThemeNames, opacify } from 'ui/src/theme'
+import { opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -23,8 +23,6 @@ export type WarningModalProps = {
   captionComponent?: ReactNode
   closeText?: string
   confirmText?: string
-  closeButtonTheme?: ThemeNames
-  confirmButtonTheme?: ThemeNames
   severity?: WarningSeverity
   isDismissible?: boolean
   hideHandlebar?: boolean
@@ -47,9 +45,7 @@ export function WarningModal({
   caption,
   captionComponent,
   closeText,
-  closeButtonTheme,
   confirmText,
-  confirmButtonTheme,
   severity = WarningSeverity.Medium,
   children,
   isDismissible = true,
@@ -113,23 +109,12 @@ export function WarningModal({
         {children}
         <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'} width="100%">
           {closeText && (
-            <Button
-              flex={1}
-              flexBasis={1}
-              theme={closeButtonTheme ?? alertColor.buttonTheme}
-              onPress={onCancel ?? onClose}
-            >
+            <Button flex={1} flexBasis={1} theme="secondary" onPress={onCancel ?? onClose}>
               {closeText}
             </Button>
           )}
           {confirmText && (
-            <Button
-              flex={1}
-              flexBasis={1}
-              testID={TestID.Confirm}
-              theme={confirmButtonTheme ?? alertColor.buttonTheme}
-              onPress={onConfirm}
-            >
+            <Button flex={1} flexBasis={1} testID={TestID.Confirm} theme={alertColor.buttonTheme} onPress={onConfirm}>
               {confirmText}
             </Button>
           )}

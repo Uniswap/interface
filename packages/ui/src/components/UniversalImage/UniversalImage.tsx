@@ -19,7 +19,6 @@ export function UniversalImage({
   fallback,
   fastImage = false,
   testID,
-  onLoad,
   allowLocalUri = false,
 }: UniversalImageProps): JSX.Element | null {
   // Allow calculation of fields as needed
@@ -129,7 +128,6 @@ export function UniversalImage({
       style={style?.image}
       testID={testID ? `img-${testID}` : undefined}
       uri={imageHttpUrl}
-      onLoad={onLoad}
     />
   )
 }

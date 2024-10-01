@@ -124,7 +124,7 @@ function FavoriteTokenCard({
                 <Flex grow row alignItems="center" gap="$spacing8">
                   <TokenLogo
                     chainId={chainId ?? undefined}
-                    name={token?.name ?? undefined}
+                    name={token?.project?.name ?? undefined}
                     size={imageSizes.image20}
                     symbol={token?.symbol ?? undefined}
                     url={token?.project?.logoUrl ?? undefined}

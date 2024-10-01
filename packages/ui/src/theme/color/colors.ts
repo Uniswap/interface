@@ -157,7 +157,7 @@ const sporeLight = {
   neutral1Hovered: '#131313',
   neutral2: '#7D7D7D',
   neutral2Hovered: '#6B6B6B',
-  neutral3: '#BFBFBF',
+  neutral3: '#CECECE',
   neutral3Hovered: '#ADADAD',
 
   surface1: colors.white,

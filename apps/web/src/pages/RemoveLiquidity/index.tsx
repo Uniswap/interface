@@ -15,7 +15,6 @@ import { BlueCard, LightCard } from 'components/Card/cards'
 import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
-import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import { MinimalPositionCard } from 'components/PositionCard'
 import Slider from 'components/Slider'
@@ -49,6 +48,8 @@ import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { StyledInternalLink, ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
+import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
@@ -502,6 +503,10 @@ function RemoveLiquidity() {
     liquidityPercentChangeCallback,
   )
 
+  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
+  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
+  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
+
   if (!networkSupportsV2) {
     return <V2Unsupported />
   }
@@ -710,7 +715,13 @@ function RemoveLiquidity() {
                   element={InterfaceElementName.CONNECT_WALLET_BUTTON}
                 >
                   <ButtonLight onClick={accountDrawer.open}>
-                    <ConnectWalletButtonText />
+                    {isSignIn ? (
+                      <Trans i18nKey="nav.signIn.button" />
+                    ) : isLogIn ? (
+                      <Trans i18nKey="nav.logIn.button" />
+                    ) : (
+                      <Trans i18nKey="common.connectWallet.button" />
+                    )}
                   </ButtonLight>
                 </Trace>
               ) : (

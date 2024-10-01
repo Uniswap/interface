@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import { EditLabelModal } from 'src/app/features/accounts/EditLabelModal'
 import { removeAllDappConnectionsForAccount } from 'src/app/features/dapp/actions'
 import { ContextMenu, Flex, MenuContentItem, Text, TouchableArea } from 'ui/src'
-import { CopySheets, Edit, Ellipsis, TrashFilled } from 'ui/src/components/icons'
+import { CopySheets, Edit, TrashFilled, TripleDots } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -179,7 +179,7 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
                 opacity={0}
                 p="$spacing4"
               >
-                <Ellipsis color="$neutral2" size="$icon.16" />
+                <TripleDots color="$neutral2" size="$icon.16" />
               </Flex>
             </ContextMenu>
           </Flex>

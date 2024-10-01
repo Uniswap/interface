@@ -271,11 +271,12 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
       align="xMidYMid"
       bbHeight={20}
       bbWidth={20}
-      fill="none"
+      fill="currentColor"
       focusable={false}
       meetOrSlice={0}
       minX={0}
       minY={0}
+      stroke="currentColor"
       strokeWidth={8}
       style={
         [
@@ -300,17 +301,27 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
       vbWidth={18}
     >
       <RNSVGGroup
-        fill={null}
+        fill={
+          {
+            "type": 2,
+          }
+        }
         propList={
           [
             "fill",
+            "stroke",
             "strokeWidth",
           ]
+        }
+        stroke={
+          {
+            "type": 2,
+          }
         }
         strokeWidth={8}
       >
         <RNSVGPath
-          d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
+          d="M9 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
           fill={
             {
               "payload": 4278190080,
@@ -335,7 +346,7 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
           strokeWidth="2"
         />
         <RNSVGPath
-          d="M16 3C16.5523 3 17 2.55228 17 2C17 1.44772 16.5523 1 16 1C15.4477 1 15 1.44772 15 2C15 2.55228 15.4477 3 16 3Z"
+          d="M16 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
           fill={
             {
               "payload": 4278190080,
@@ -360,7 +371,7 @@ exports[`TransactionDetails Components renders TransactionDetailsHeader without 
           strokeWidth="2"
         />
         <RNSVGPath
-          d="M2 3C2.55228 3 3 2.55228 3 2C3 1.44772 2.55228 1 2 1C1.44772 1 1 1.44772 1 2C1 2.55228 1.44772 3 2 3Z"
+          d="M2 3a1 1 0 1 0 0-2 1 1 0 0 0 0 2Z"
           fill={
             {
               "payload": 4278190080,
@@ -581,7 +592,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
                 "borderWidth": 0,
               },
               {
-                "color": "#BFBFBF",
+                "color": "#CECECE",
                 "height": 16,
                 "width": 16,
               },
@@ -592,7 +603,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
               },
             ]
           }
-          tintColor="#BFBFBF"
+          tintColor="#CECECE"
           vbHeight={16}
           vbWidth={16}
         >
@@ -826,7 +837,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
                 "borderWidth": 0,
               },
               {
-                "color": "#BFBFBF",
+                "color": "#CECECE",
                 "height": 16,
                 "width": 16,
               },
@@ -837,7 +848,7 @@ exports[`TransactionDetails Components renders TransactionDetailsInfoRows withou
               },
             ]
           }
-          tintColor="#BFBFBF"
+          tintColor="#CECECE"
           vbHeight={16}
           vbWidth={16}
         >

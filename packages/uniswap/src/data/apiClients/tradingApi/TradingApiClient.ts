@@ -5,7 +5,6 @@ import { SwappableTokensParams } from 'uniswap/src/data/apiClients/tradingApi/us
 import {
   ApprovalRequest,
   ApprovalResponse,
-  BridgeQuote,
   ClassicQuote,
   CreateSwapRequest,
   CreateSwapResponse,
@@ -25,7 +24,7 @@ import {
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
 // See: https://linear.app/uniswap/issue/API-236/explore-changing-the-quote-schema-to-pull-out-a-basequoteresponse
-export type DiscriminatedQuoteResponse = ClassicQuoteResponse | DutchQuoteResponse | BridgeQuoteResponse
+export type DiscriminatedQuoteResponse = ClassicQuoteResponse | DutchQuoteResponse
 
 export type DutchQuoteResponse = QuoteResponse & {
   quote: DutchQuoteV2
@@ -35,11 +34,6 @@ export type DutchQuoteResponse = QuoteResponse & {
 export type ClassicQuoteResponse = QuoteResponse & {
   quote: ClassicQuote
   routing: Routing.CLASSIC
-}
-
-export type BridgeQuoteResponse = QuoteResponse & {
-  quote: BridgeQuote
-  routing: Routing.BRIDGE
 }
 
 export const TRADING_API_CACHE_KEY = 'TradingApi'

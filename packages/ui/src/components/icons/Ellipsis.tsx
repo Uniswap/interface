@@ -6,7 +6,7 @@ import { createIcon } from '../factories/createIcon'
 export const [Ellipsis, AnimatedEllipsis] = createIcon({
   name: 'Ellipsis',
   getIcon: (props) => (
-    <Svg viewBox="0 0 18 4" fill="none" {...props}>
+    <Svg width="16" height="16" viewBox="0 0 18 4" fill="none" {...props}>
       <Path
         d="M9 3C9.55228 3 10 2.55228 10 2C10 1.44772 9.55228 1 9 1C8.44772 1 8 1.44772 8 2C8 2.55228 8.44772 3 9 3Z"
         stroke="currentColor"

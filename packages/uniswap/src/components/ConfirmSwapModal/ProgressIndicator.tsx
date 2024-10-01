@@ -8,7 +8,7 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { useCurrencyInfo, useNativeCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { TransactionStep, TransactionStepType } from 'uniswap/src/features/transactions/swap/utils/generateSwapSteps'
 import { t } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -41,7 +41,7 @@ export default function ProgressIndicator({
 }: {
   steps: TransactionStep[]
   currentStep?: { step: TransactionStep; accepted: boolean }
-  trade: ClassicTrade | UniswapXTrade | BridgeTrade
+  trade: ClassicTrade | UniswapXTrade
 }): JSX.Element | null {
   const colors = useSporeColors()
   const nativeCurrency = useNativeCurrencyInfo(trade?.inputAmount.currency.chainId)

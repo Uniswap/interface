@@ -369,14 +369,11 @@ query PortfolioBalances(
           logoUrl
           name
           safetyLevel
+          isSpam
         }
         feeData {
           buyFeeBps
           sellFeeBps
-        }
-        protectionInfo {
-          result
-          attackTypes
         }
       }
       tokenProjectMarket {
@@ -438,9 +435,9 @@ query MultiplePortfolioBalances(
         address
         symbol
         decimals
-        name
         project {
           id
+          name
           logoUrl
           safetyLevel
           isSpam
@@ -647,10 +644,10 @@ query TokenDetailsScreen(
 query TokenProjects($contracts: [ContractInput!]!) {
   tokenProjects(contracts: $contracts) {
     id
+    name
     logoUrl
     safetyLevel
     tokens {
-      name
       chain
       address
       decimals
@@ -1046,9 +1043,9 @@ query SearchTokens($searchQuery: String!, $chains: [Chain!]) {
     address
     decimals
     symbol
-    name
     project {
       id
+      name
       logoUrl
       safetyLevel
     }
@@ -1074,9 +1071,9 @@ query ExploreSearch(
         value
       }
     }
-    name
     project {
       id
+      name
       logoUrl
       safetyLevel
     }
@@ -1119,9 +1116,9 @@ fragment TopTokenParts on Token {
       value
     }
   }
-  name
   project {
     id
+    name
     logoUrl
     markets(currencies: [USD]) {
       id
@@ -1166,8 +1163,8 @@ fragment AITopTokenParts on Token {
       value
     }
   }
-  name
   project {
+    name
     markets(currencies: [USD]) {
       price {
         value
@@ -1197,9 +1194,9 @@ fragment HomeScreenTokenParts on Token {
   symbol
   chain
   address
-  name
   project {
     id
+    name
     logoUrl
     markets(currencies: [USD]) {
       id
@@ -1227,9 +1224,9 @@ query FavoriteTokenCard($chain: Chain!, $address: String) {
     symbol
     chain
     address
-    name
     project {
       id
+      name
       logoUrl
       markets(currencies: [USD]) {
         id
@@ -1249,7 +1246,9 @@ query Tokens($contracts: [ContractInput!]!) {
     symbol
     chain
     address
-    name
+    project {
+      name
+    }
   }
 }
 

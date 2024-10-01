@@ -187,31 +187,11 @@ exports[`LogoWithTxStatus renders without error 1`] = `
         "flexDirection": "column",
         "height": 40,
         "justifyContent": "center",
-        "position": "relative",
         "width": 40,
       }
     }
     testID="token-logo"
   >
-    <View
-      style={
-        {
-          "backgroundColor": "#FFFFFF",
-          "borderBottomLeftRadius": 20,
-          "borderBottomRightRadius": 20,
-          "borderTopLeftRadius": 20,
-          "borderTopRightRadius": 20,
-          "flexDirection": "column",
-          "height": "96%",
-          "left": "2%",
-          "opacity": 0,
-          "position": "absolute",
-          "top": "2%",
-          "width": "96%",
-          "zIndex": -1,
-        }
-      }
-    />
     <View
       style={
         {
@@ -223,11 +203,11 @@ exports[`LogoWithTxStatus renders without error 1`] = `
       <img
         height={40}
         onError={[Function]}
-        onLoad={[Function]}
         src="https://token-icons.s3.amazonaws.com/eth.png"
         style={
           {
             "aspectRatio": undefined,
+            "backgroundColor": "#FFFFFF",
             "borderRadius": 20,
             "objectFit": "contain",
           }

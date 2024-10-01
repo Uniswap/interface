@@ -15,8 +15,3 @@ export interface PositionDetails {
   tokensOwed0: BigNumber
   tokensOwed1: BigNumber
 }
-
-export enum PositionField {
-  TOKEN0 = 'TOKEN0',
-  TOKEN1 = 'TOKEN1',
-}

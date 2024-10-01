@@ -35,7 +35,6 @@ export function useSwapTxAndGasInfo({
     chainId,
     wrapType,
     currencyInAmount: currencyAmounts[CurrencyField.INPUT],
-    currencyOutAmount: currencyAmounts[CurrencyField.OUTPUT],
     routing: trade?.routing,
   })
 
@@ -67,7 +66,7 @@ export function useSwapTxAndGasInfo({
       const orderParams = signature ? { signature, quote: trade.quote.quote, routing: Routing.DUTCH_V2 } : undefined
       const gasFeeBreakdown: UniswapXGasBreakdown = {
         classicGasUseEstimateUSD: trade.quote.quote.classicGasUseEstimateUSD,
-        approvalCost: tokenApprovalInfo?.gasEstimates?.activeEstimate.gasFee,
+        approvalCost: tokenApprovalInfo?.gasFee,
         wrapCost: swapTxInfo.gasFeeResult.value,
         inputTokenSymbol: trade.inputAmount.currency.wrapped.symbol,
       }
@@ -87,22 +86,6 @@ export function useSwapTxAndGasInfo({
         permitDataLoading: swapTxInfo.permitDataLoading,
         swapRequestArgs: swapTxInfo.swapRequestArgs,
         permitSignature: swapTxInfo.permitSignature,
-      }
-    } else if (trade?.routing === Routing.BRIDGE) {
-      return {
-        routing: Routing.BRIDGE,
-        trade,
-        indicativeTrade: undefined, // Bridge trades don't have indicative trades
-        txRequest,
-        approveTxRequest,
-        revocationTxRequest,
-        gasFee,
-        gasFeeEstimation,
-        approvalError,
-        permitData: swapTxInfo.permitData,
-        permitDataLoading: swapTxInfo.permitDataLoading,
-        permitSignature: swapTxInfo.permitSignature,
-        swapRequestArgs: swapTxInfo.swapRequestArgs,
       }
     } else {
       return {
@@ -166,10 +149,6 @@ function getTotalGasFee(
     return { value: undefined, error, isLoading }
   }
 
-  const value = sumGasFees([
-    swapGasResult.value,
-    tokenApprovalInfo.gasEstimates?.activeEstimate.gasFee,
-    tokenApprovalInfo.cancelGasFee,
-  ])
+  const value = sumGasFees([swapGasResult.value, tokenApprovalInfo.gasFee, tokenApprovalInfo.cancelGasFee])
   return { value, error, isLoading }
 }

@@ -16,20 +16,25 @@ import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
-interface TokenApprovalInfoParams {
+export interface TokenApprovalInfoParams {
   chainId: WalletChainId
   wrapType: WrapType
   currencyInAmount: Maybe<CurrencyAmount<Currency>>
-  currencyOutAmount?: Maybe<CurrencyAmount<Currency>>
   routing: Routing | undefined
   account?: AccountMeta
   skip?: boolean
 }
 
+interface TokenApprovalGasInfo {
+  gasFee?: string
+  cancelGasFee?: string
+  gasEstimates?: GasFeeEstimates
+}
+
 export function useTokenApprovalInfo(
   params: TokenApprovalInfoParams,
-): (TokenApprovalInfo & { gasEstimates?: GasFeeEstimates; cancelGasFee?: string }) | undefined {
-  const { account, chainId, wrapType, currencyInAmount, currencyOutAmount, routing, skip } = params
+): (TokenApprovalInfo & TokenApprovalGasInfo) | undefined {
+  const { account, chainId, wrapType, currencyInAmount, routing, skip } = params
 
   const isWrap = wrapType !== WrapType.NotApplicable
 
@@ -38,34 +43,22 @@ export function useTokenApprovalInfo(
   const currencyIn = routing === Routing.DUTCH_V2 ? currencyInAmount?.currency.wrapped : currencyInAmount?.currency
   const amount = currencyInAmount?.quotient.toString()
 
-  const tokenInAddress = getTokenAddressForApi(currencyIn)
-
-  // Only used for bridging
-  const isBridge = routing === Routing.BRIDGE
-  const currencyOut = currencyOutAmount?.currency
-  const tokenOutAddress = getTokenAddressForApi(currencyOut)
+  const tokenAddress = getTokenAddressForApi(currencyIn)
 
   const approvalRequestArgs: ApprovalRequest | undefined = useMemo(() => {
-    const tokenInChainId = toTradingApiSupportedChainId(chainId)
-    const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
+    const supportedChainId = toTradingApiSupportedChainId(chainId)
 
-    if (!address || !amount || !currencyIn || !tokenInAddress || !tokenInChainId) {
+    if (!address || !amount || !currencyIn || !tokenAddress || !supportedChainId) {
       return undefined
     }
-    if (isBridge && !tokenOutAddress && !tokenOutChainId) {
-      return undefined
-    }
-
     return {
       walletAddress: address,
-      token: tokenInAddress,
+      token: tokenAddress,
       amount,
-      chainId: tokenInChainId,
+      chainId: supportedChainId,
       includeGasInfo: true,
-      tokenOut: tokenOutAddress,
-      tokenOutChainId,
     }
-  }, [address, amount, chainId, currencyIn, currencyOut?.chainId, isBridge, tokenInAddress, tokenOutAddress])
+  }, [address, amount, chainId, currencyIn, tokenAddress])
 
   const shouldSkip = skip || !approvalRequestArgs || isWrap || !address
   const activeGasStrategy = useActiveGasStrategy(chainId, 'general')
@@ -129,6 +122,7 @@ export function useTokenApprovalInfo(
         return {
           action: ApprovalAction.Permit2Approve,
           txRequest: data.approval,
+          gasFee: data.gasFee,
           gasEstimates,
           cancelTxRequest: null,
         }

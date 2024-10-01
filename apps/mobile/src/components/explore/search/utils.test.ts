@@ -7,7 +7,15 @@ import {
 import { Chain, ExploreSearchQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { SearchResultType } from 'uniswap/src/features/search/SearchResult'
-import { amount, ethToken, nftCollection, nftContract, token, tokenMarket } from 'uniswap/src/test/fixtures'
+import {
+  amount,
+  ethToken,
+  nftCollection,
+  nftContract,
+  token,
+  tokenMarket,
+  tokenProject,
+} from 'uniswap/src/test/fixtures'
 import { createArray } from 'uniswap/src/test/utils'
 
 type ExploreSearchResult = NonNullable<ExploreSearchQuery>
@@ -54,8 +62,8 @@ describe(formatTokenSearchResults, () => {
 
   it('sorts results by best search query match', () => {
     const data: ExploreSearchResult['searchTokens'] = [
-      token({ name: 'UniswapStartingName' }),
-      token({ name: 'Uniswap' }),
+      ethToken({ project: tokenProject({ name: 'UniswapStartingName' }) }),
+      ethToken({ project: tokenProject({ name: 'Uniswap' }) }),
     ]
 
     const result = formatTokenSearchResults(data, 'uniswap')
@@ -75,7 +83,7 @@ describe(formatTokenSearchResults, () => {
     expect(result?.[0]?.type).toEqual(SearchResultType.Token)
     expect(result?.[0]?.chainId).toEqual(fromGraphQLChain(searchToken.chain))
     expect(result?.[0]?.address).toEqual(searchToken.address)
-    expect(result?.[0]?.name).toEqual(searchToken.name)
+    expect(result?.[0]?.name).toEqual(searchToken.project?.name)
     expect(result?.[0]?.symbol).toEqual(searchToken.symbol)
     expect(result?.[0]?.logoUrl).toEqual(searchToken.project?.logoUrl)
     expect(result?.[0]?.safetyLevel).toEqual(searchToken.project?.safetyLevel)

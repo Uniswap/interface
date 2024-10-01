@@ -5,7 +5,6 @@ import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/u
 import {
   CreateSwapRequest,
   NullablePermit,
-  Routing,
   TransactionFailureReason,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
@@ -21,11 +20,7 @@ import { useWrapTransactionRequest } from 'uniswap/src/features/transactions/swa
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import {
-  getBridgeQuoteFromResponse,
-  getClassicQuoteFromResponse,
-  isClassicQuote,
-} from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
@@ -64,10 +59,8 @@ export function useTransactionRequestInfo({
   const { trade: tradeWithStatus, customDeadline } = derivedSwapInfo
   const { trade } = tradeWithStatus || { trade: undefined }
 
-  const isBridgeTrade = trade?.routing === Routing.BRIDGE
   const permitData = trade?.quote?.permitData
-  // checks within functions for type of trade
-  const swapQuote = getClassicQuoteFromResponse(trade?.quote) ?? getBridgeQuoteFromResponse(trade?.quote)
+  const swapQuote = getClassicQuoteFromResponse(trade?.quote)
 
   // Quote indicates we need to include a signed permit message
   const requiresPermit2Sig = !!permitData
@@ -75,11 +68,9 @@ export function useTransactionRequestInfo({
   const signatureInfo = usePermit2SignatureWithData({ permitData, skip })
 
   /**
-   * Simulate transactions to ensure they will not fail on-chain.
-   * Do not simulate for bridge transactions or txs that need an approval
-   * as those require Tenderly to simulate and it is not currently integrated into the gas servic
+   * Simulate transactions to ensure they will not fail on-chain. Do not simulate for txs that need an approval as those require Tenderly to simulate and it is not currently integrated into the gas service
    */
-  const shouldSimulateTxn = isBridgeTrade ? false : tokenApprovalInfo?.action === ApprovalAction.None
+  const shouldSimulateTxn = tokenApprovalInfo?.action === ApprovalAction.None
 
   // Format request args
   const swapRequestArgs: CreateSwapRequest | undefined = useMemo(() => {
@@ -91,14 +82,14 @@ export function useTransactionRequestInfo({
       return undefined
     }
     // We cant get correct calldata from /swap if we dont have a valid slippage tolerance
-    if (tradeWithStatus.trade?.slippageTolerance === undefined && !isBridgeTrade) {
+    if (tradeWithStatus.trade?.slippageTolerance === undefined) {
       return undefined
     }
-    // TODO: update this when api does slippage calculation for us
+    // TODO: remove this when api does slippage calculation for us
     // https://linear.app/uniswap/issue/MOB-2581/remove-slippage-adjustment-in-swap-request
-    const quote = {
+    const quoteWithSlippage = {
       ...swapQuote,
-      slippage: tradeWithStatus.trade?.slippageTolerance,
+      slippage: tradeWithStatus.trade.slippageTolerance,
     }
 
     // if custom deadline is set (in minutes), convert to unix timestamp format from now
@@ -106,7 +97,7 @@ export function useTransactionRequestInfo({
     const deadline = customDeadline ? Math.floor(Date.now() / 1000) + deadlineSeconds : undefined
 
     const swapArgs: CreateSwapRequest = {
-      quote,
+      quote: quoteWithSlippage,
       permitData: permitData ?? undefined,
       signature: signatureInfo.signature,
       simulateTransaction: shouldSimulateTxn,
@@ -119,14 +110,13 @@ export function useTransactionRequestInfo({
   }, [
     activeGasStrategy,
     customDeadline,
-    isBridgeTrade,
     permitData,
     requiresPermit2Sig,
     shadowGasStrategies,
     shouldSimulateTxn,
     signatureInfo.signature,
     swapQuote,
-    tradeWithStatus,
+    tradeWithStatus.trade?.slippageTolerance,
   ])
 
   // Wrap transaction request
@@ -145,6 +135,7 @@ export function useTransactionRequestInfo({
   )
 
   const skipTransactionRequest = !swapRequestArgs || isWrapApplicable || skip
+
   const tradingApiSwapRequestMs = useDynamicConfigValue(
     DynamicConfigs.Swap,
     SwapConfigKey.TradingApiSwapRequestMs,
@@ -168,8 +159,7 @@ export function useTransactionRequestInfo({
   const swapGasFee = swapQuote?.gasFee
 
   // This is a case where simulation fails on backend, meaning txn is expected to fail
-  const simulationError =
-    isClassicQuote(swapQuote) && swapQuote?.txFailureReasons?.includes(TransactionFailureReason.SIMULATION_ERROR)
+  const simulationError = swapQuote?.txFailureReasons?.includes(TransactionFailureReason.SIMULATION_ERROR)
   const gasEstimateError = useMemo(
     () => (simulationError ? new Error(UNKNOWN_SIM_ERROR) : error),
     [simulationError, error],

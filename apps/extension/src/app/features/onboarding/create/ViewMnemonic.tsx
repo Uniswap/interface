@@ -132,7 +132,7 @@ export function ViewMnemonic(): JSX.Element {
         ) : (
           <Flex gap="$spacing16" my="$spacing24" pt="$spacing8" width="100%">
             <MnemonicViewer mnemonic={onboardingAccountMnemonic} />
-            <Flex backgroundColor="$surface2" borderRadius="$rounded16" p="$spacing12">
+            <Flex backgroundColor="$surface2" borderRadius="$rounded16" p="$spacing12" overflow="hidden">
               <LabeledCheckbox
                 checked={disclaimerChecked}
                 text={<Text variant="body3">{t('onboarding.backup.view.disclaimer')}</Text>}

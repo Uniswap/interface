@@ -102,8 +102,8 @@ export function usePortfolioBalances({
         quantity,
         isHidden,
       } = balance || {}
-      const { name, address: tokenAddress, chain, decimals, symbol, project } = token || {}
-      const { logoUrl, isSpam, safetyLevel } = project || {}
+      const { address: tokenAddress, chain, decimals, symbol, project } = token || {}
+      const { name, logoUrl, isSpam, safetyLevel } = project || {}
       const chainId = fromGraphQLChain(chain)
 
       // require all of these fields to be defined

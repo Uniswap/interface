@@ -122,7 +122,7 @@ exports[`PriceText renders without error 1`] = `
     jestAnimatedStyle={
       {
         "value": {
-          "color": "#BFBFBF",
+          "color": "#CECECE",
           "fontSize": 106,
         },
       }
@@ -130,7 +130,7 @@ exports[`PriceText renders without error 1`] = `
     maxFontSizeMultiplier={1.2}
     style={
       {
-        "color": "#BFBFBF",
+        "color": "#CECECE",
         "fontFamily": "Basel Grotesk",
         "fontSize": 106,
         "fontWeight": "400",

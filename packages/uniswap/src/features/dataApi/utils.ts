@@ -49,8 +49,8 @@ export function tokenProjectToCurrencyInfos(
   return tokenProjects
     ?.flatMap((project) =>
       project?.tokens.map((token) => {
-        const { logoUrl, safetyLevel } = project ?? {}
-        const { name, chain, address, decimals, symbol } = token ?? {}
+        const { logoUrl, safetyLevel, name } = project ?? {}
+        const { chain, address, decimals, symbol } = token ?? {}
         const chainId = fromGraphQLChain(chain)
 
         if (chainFilter && chainFilter !== chainId) {
@@ -163,7 +163,7 @@ export function getCurrencySafetyInfo(
 }
 
 export function gqlTokenToCurrencyInfo(token: NonNullable<NonNullable<TokenQuery['token']>>): CurrencyInfo | null {
-  const { name, chain, address, decimals, symbol, project, feeData, protectionInfo } = token
+  const { chain, address, decimals, symbol, project, feeData, protectionInfo } = token
   const chainId = fromGraphQLChain(chain)
 
   const currency = buildCurrency({
@@ -171,7 +171,7 @@ export function gqlTokenToCurrencyInfo(token: NonNullable<NonNullable<TokenQuery
     address,
     decimals,
     symbol,
-    name,
+    name: project?.name,
     buyFeeBps: feeData?.buyFeeBps,
     sellFeeBps: feeData?.sellFeeBps,
   })

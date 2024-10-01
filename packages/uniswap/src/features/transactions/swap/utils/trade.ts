@@ -22,7 +22,8 @@ export function tradeToTransactionInfo(
   transactedUSDValue?: number,
   gasEstimates?: GasFeeEstimates,
 ): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
-  const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance ?? 0)
+  const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
+
   const { quote, slippageTolerance } = trade
   const { quoteId, gasUseEstimate, routeString } = getClassicQuoteFromResponse(quote) ?? {}
 

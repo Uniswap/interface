@@ -123,7 +123,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const tokenColor =
     useSrcColor(
       extractedColorSrc,
-      tokenQuery.data?.token?.name ?? tokenQuery.data?.token?.project?.name,
+      tokenQuery.data?.token?.project?.name ?? tokenQuery.data?.token?.name,
       theme.surface2,
     ).tokenColor ?? undefined
 

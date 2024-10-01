@@ -35,7 +35,7 @@ export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalance
     address: balance.token.address,
     decimals: balance.token.decimals,
     symbol: balance.token.symbol,
-    name: balance.token.name,
+    name: balance.token.project?.name,
   })
 
   if (!currency) {

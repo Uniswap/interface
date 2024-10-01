@@ -14,7 +14,6 @@ export const ModalName = {
   BackupReminder: 'backup-reminder-modal',
   BackupReminderWarning: 'backup-reminder-warning-modal',
   BlockedAddress: 'blocked-address',
-  BridgingWarning: 'bridging-warning-modal',
   BuyNativeToken: 'buy-native-token-modal',
   ChooseProfilePhoto: 'choose-profile-photo-modal',
   CloudBackupInfo: 'cloud-backup-info-modal',

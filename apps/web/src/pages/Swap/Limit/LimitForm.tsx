@@ -12,7 +12,6 @@ import {
   useCurrentPriceAdjustment,
 } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
-import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { Field } from 'components/swap/constants'
@@ -41,6 +40,8 @@ import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled
 import { colors, validColor } from 'ui/src/theme'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
+import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import { Locale } from 'uniswap/src/features/language/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
@@ -464,6 +465,10 @@ function SubmitOrderButton({
   const account = useAccount()
   const { chainId } = useSwapAndLimitContext()
 
+  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
+  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
+  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
+
   if (!isUniswapXSupportedChain(chainId)) {
     return (
       <ButtonError disabled>
@@ -475,7 +480,13 @@ function SubmitOrderButton({
   if (!account.isConnected) {
     return (
       <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
-        <ConnectWalletButtonText />
+        {isSignIn ? (
+          <Trans i18nKey="nav.signIn.button" />
+        ) : isLogIn ? (
+          <Trans i18nKey="nav.logIn.button" />
+        ) : (
+          <Trans i18nKey="common.connectWallet.button" />
+        )}
       </ButtonLight>
     )
   }

@@ -141,9 +141,9 @@ export function TokenDetailsScreen({ route }: AppStackScreenProp<MobileScreens.T
     () => ({
       address: currencyIdToAddress(_currencyId),
       chain: currencyIdToChain(_currencyId),
-      currencyName: data?.token?.name,
+      currencyName: data?.token?.project?.name,
     }),
-    [_currencyId, data?.token?.name],
+    [_currencyId, data?.token?.project?.name],
   )
 
   return (
@@ -186,7 +186,7 @@ function TokenDetails({
 
   const token = data?.token
   const tokenLogoUrl = token?.project?.logoUrl
-  const tokenSymbol = token?.name
+  const tokenSymbol = token?.project?.name
 
   const currencyInfo = useCurrencyInfo(_currencyId)
 

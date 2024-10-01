@@ -98,7 +98,7 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
             "borderWidth": 0,
           },
           {
-            "color": "#BFBFBF",
+            "color": "#CECECE",
             "height": 20,
             "transform": [
               {
@@ -114,7 +114,7 @@ exports[`SwapTransactionDetails Component renders SwapTransactionDetails without
           },
         ]
       }
-      tintColor="#BFBFBF"
+      tintColor="#CECECE"
       vbHeight={24}
       vbWidth={24}
     >

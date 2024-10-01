@@ -8,7 +8,7 @@ import { t } from 'uniswap/src/i18n'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
-import { CreatePosition } from 'pages/Pool/Positions/create/CreatePosition'
+import { NewPosition } from 'pages/LegacyPool/NewPosition'
 import Swap from 'pages/Swap'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
@@ -202,8 +202,8 @@ export const routes: RouteDefinition[] = [
   }),
   // Refreshed pool routes
   createRouteDefinition({
-    path: '/positions/create',
-    getElement: () => <CreatePosition />,
+    path: '/positions/new',
+    getElement: () => <NewPosition />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),

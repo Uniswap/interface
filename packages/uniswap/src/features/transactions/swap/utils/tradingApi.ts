@@ -6,7 +6,6 @@ import { BigNumber } from 'ethers/lib/ethers'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
-  BridgeQuote,
   ClassicQuote,
   Quote,
   QuoteResponse,
@@ -19,7 +18,7 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { BridgeTrade, ClassicTrade, Trade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { ClassicTrade, Trade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { TradeProtocolPreference } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -32,7 +31,7 @@ interface TradingApiResponseToTradeArgs {
   currencyIn: Currency
   currencyOut: Currency
   tradeType: TradeType
-  deadline: number | undefined
+  deadline: number
   slippageTolerance: number | undefined
   data: DiscriminatedQuoteResponse | undefined
 }
@@ -44,7 +43,7 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
     case Routing.CLASSIC: {
       const routes = computeRoutes(currencyIn.isNative, currencyOut.isNative, data)
 
-      if (!routes || !deadline) {
+      if (!routes) {
         return null
       }
 
@@ -70,9 +69,6 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
       }
 
       return new UniswapXTrade({ quote: data, currencyIn, currencyOut, tradeType })
-    }
-    case Routing.BRIDGE: {
-      return new BridgeTrade({ quote: data, currencyIn, currencyOut, tradeType })
     }
     default: {
       return null
@@ -270,10 +266,6 @@ export function getClassicQuoteFromResponse(quote?: QuoteResponse): ClassicQuote
   return isClassicQuote(quote?.quote) ? quote.quote : undefined
 }
 
-export function getBridgeQuoteFromResponse(quote?: QuoteResponse): BridgeQuote | undefined {
-  return quote?.routing === Routing.BRIDGE ? quote.quote : undefined
-}
-
 /**
  * The trade object should always have the same currencies and amounts as the form values
  * from state - to avoid bad swap submissions we should invalidate the trade object if there are mismatches.
@@ -334,15 +326,10 @@ export function validateTrade({
 export function getRoutingPreferenceForSwapRequest(
   protocolPreference: TradeProtocolPreference | undefined,
   uniswapXEnabled: boolean,
-  isBridging: boolean,
   isUSDQuote?: boolean,
 ): RoutingPreference {
   if (isUSDQuote) {
     return RoutingPreference.CLASSIC
-  }
-
-  if (isBridging) {
-    return RoutingPreference.BEST_PRICE
   }
 
   switch (protocolPreference) {

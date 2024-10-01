@@ -1,6 +1,5 @@
 import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useAccount } from 'hooks/useAccount'
 import { useTotalSupply } from 'hooks/useTotalSupply'
 import { useV2Pair } from 'hooks/useV2Pairs'
@@ -11,6 +10,8 @@ import { ReactNode, useCallback } from 'react'
 import { Field, typeInput } from 'state/burn/actions'
 import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { InterfaceState } from 'state/webReducer'
+import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
+import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
 
 export function useBurnState(): InterfaceState['burn'] {
@@ -121,9 +122,19 @@ export function useDerivedBurnInfo(
         : undefined,
   }
 
+  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
+  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
+  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
+
   let error: ReactNode | undefined
   if (!account.isConnected) {
-    error = <ConnectWalletButtonText />
+    error = isSignIn ? (
+      <Trans i18nKey="nav.signIn.button" />
+    ) : isLogIn ? (
+      <Trans i18nKey="nav.logIn.button" />
+    ) : (
+      <Trans i18nKey="common.connectWallet.button" />
+    )
   }
 
   if (!parsedAmounts[Field.LIQUIDITY] || !parsedAmounts[Field.CURRENCY_A] || !parsedAmounts[Field.CURRENCY_B]) {

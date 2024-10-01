@@ -22,7 +22,7 @@ public class DataQueries {
           let tokens = graphQLResult.data?.tokens ?? []
           let tokenResponses = tokens.map {
             let symbol = $0?.symbol
-            let name = $0?.name
+            let name = $0?.project?.name
             let chain = $0?.chain
             let address = $0?.address
             return TokenResponse(chain: chain?.rawValue ?? "", address: address, symbol: symbol ?? "", name: name ?? "")
@@ -43,7 +43,7 @@ public class DataQueries {
           let topTokens = graphQLResult.data?.topTokens ?? []
           let tokenResponses = topTokens.map { (tokenData) -> TokenResponse in
             let symbol = tokenData?.symbol
-            let name = tokenData?.name
+            let name = tokenData?.project?.name
             let chain = tokenData?.chain
             let address = tokenData?.address
             return TokenResponse(chain: chain?.rawValue ?? "", address: address, symbol: symbol ?? "", name: name ?? "")
@@ -63,7 +63,7 @@ public class DataQueries {
         case .success(let graphQLResult):
           let token = graphQLResult.data?.token
           let symbol = token?.symbol
-          let name = token?.name
+          let name = token?.project?.name
           let logoUrl = token?.project?.logoUrl ?? nil
           let markets = token?.project?.markets
           let spotPrice = (markets != nil) && !markets!.isEmpty ? markets?[0]?.price?.value : nil
@@ -109,7 +109,7 @@ public class DataQueries {
             $0?.tokenBalances?.forEach { tokenBalance in
               let value = tokenBalance?.denominatedValue?.value
               let token = tokenBalance?.token
-              let tokenResponse = TokenResponse(chain: token?.chain.rawValue ?? "", address: token?.address, symbol: token?.symbol ?? "", name: token?.name ?? "")
+              let tokenResponse = TokenResponse(chain: token?.chain.rawValue ?? "", address: token?.address, symbol: token?.symbol ?? "", name: token?.project?.name ?? "")
               let isSpam = token?.project?.isSpam ?? false
               if (!isSpam) {
                 tokens[tokenResponse] = (tokens[tokenResponse] ?? 0) + (value ?? 0)
