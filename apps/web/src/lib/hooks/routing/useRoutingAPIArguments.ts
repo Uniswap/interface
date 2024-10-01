@@ -67,7 +67,8 @@ export function useRoutingAPIArguments({
 
   const chainId = tokenIn?.chainId
   const isUniswapXSupportedChain = useIsUniswapXSupportedChain(chainId)
-  const isPriorityOrder = isPriorityOrdersEnabled && routerPreference === RouterPreference.X && isUniswapXSupportedChain
+  const isPriorityOrder =
+    routerPreference === RouterPreference.X && isPriorityOrdersEnabled && chainId === UniverseChainId.Base // UniswapX priority orders are only available on Base for now
 
   return useMemo(
     () =>
