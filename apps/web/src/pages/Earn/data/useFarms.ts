@@ -20,6 +20,14 @@ export function sortFarms(pools: TableFarm[], sortState: FarmTableSortState) {
   return pools.sort((a, b) => {
     switch (sortState.sortBy) {
       case FarmSortFields.APR:
+        if (a.apr.equalTo(b.apr)) {
+          if (a.farmAddress == '0x534408e91d755a0d898e1c508e987e8d0615b52c') {
+            return -1
+          } else if (b.farmAddress == '0x534408e91d755a0d898e1c508e987e8d0615b52c') {
+            return 1
+          }
+        }
+
         return sortState.sortDirection === OrderDirection.Desc
           ? b.apr.greaterThan(a.apr)
             ? 1
@@ -99,7 +107,6 @@ export function useInactiveFarms(sortState: FarmTableSortState, chainId?: ChainI
   const unfilteredPools = useMemo(() => {
     const fff: TableFarm[] =
       farms
-        .filter((farm) => farm.stakingAddress.toLowerCase() != '0x534408e91d755a0d898e1c508e987e8d0615b52c')
         .map((farm) => {
           const token0Address = isAddress(farm.token0Address)
           const token1Address = isAddress(farm.token1Address)
@@ -346,42 +353,12 @@ export function useV3Farms(): TableFarm[] {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function useActiveFarms(sortState: FarmTableSortState, chainId?: ChainId) {
-  const farms = useFarmRegistry()
   const v3Farms = useV3Farms()
-  const tokens = useDefaultActiveTokens(ChainId.CELO)
   const loading = v3Farms.length == 0
 
   const unfilteredPools = useMemo(() => {
-    const fff: TableFarm[] =
-      farms
-        .filter((farm) => farm.stakingAddress.toLowerCase() == '0x534408e91d755a0d898e1c508e987e8d0615b52c')
-        .map((farm) => {
-          const token0Address = isAddress(farm.token0Address)
-          const token1Address = isAddress(farm.token1Address)
-          if (token0Address && tokens[token0Address] && token1Address && tokens[token1Address]) {
-            return {
-              hash: farm.stakingAddress,
-              farmAddress: farm.stakingAddress,
-              poolAddress: '',
-              token0: tokens[token0Address],
-              token1: tokens[token1Address],
-              token0Amount: new Fraction(0),
-              token1Amount: new Fraction(0),
-              tvl: farm.tvlUSD ? Number(formatEther(farm.tvlUSD)) : 0,
-              apr: new Percent(0),
-              feeTier: V2_BIPS,
-              protocolVersion: 'V2',
-              incentiveIds: [],
-            } as TableFarm
-          }
-          console.error('this should not happen')
-          return []
-        })
-        .flat() ?? []
-
-    const rt = sortFarms([...fff.concat(v3Farms)], sortState)
-    return rt
-  }, [farms, tokens, sortState, v3Farms])
+    return sortFarms(v3Farms, sortState)
+  }, [sortState, v3Farms])
 
   const filteredFarms = useFilteredFarms(unfilteredPools).slice(0, 100)
   return { farms: filteredFarms, loading }
