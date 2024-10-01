@@ -1,5 +1,6 @@
 import { AccountList } from 'src/components/accounts/AccountList'
 import { cleanup, fireEvent, render, screen } from 'src/test/test-utils'
+import { Locale } from 'uniswap/src/features/language/constants'
 import { ON_PRESS_EVENT_PAYLOAD, amounts, portfolio } from 'uniswap/src/test/fixtures'
 import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
 import { createArray, queryResolvers } from 'uniswap/src/test/utils'
@@ -12,13 +13,15 @@ const { resolvers } = queryResolvers({
   portfolios: () => [portfolio({ tokensTotalDenominatedValue })],
 })
 
+const formatter = mockLocalizedFormatter(Locale.EnglishUnitedStates)
+
 describe(AccountList, () => {
   it('renders without error', async () => {
     const tree = render(<AccountList accounts={[ACCOUNT]} onPress={jest.fn()} />, { resolvers })
 
     expect(
       await screen.findByText(
-        mockLocalizedFormatter.formatNumberOrString({
+        formatter.formatNumberOrString({
           value: tokensTotalDenominatedValue.value,
           type: NumberType.PortfolioBalance,
           currencyCode: 'usd',
@@ -36,7 +39,7 @@ describe(AccountList, () => {
     // go to success state
     expect(
       await screen.findByText(
-        mockLocalizedFormatter.formatNumberOrString({
+        formatter.formatNumberOrString({
           value: tokensTotalDenominatedValue.value,
           type: NumberType.PortfolioBalance,
           currencyCode: 'usd',

@@ -22,6 +22,7 @@ const wrapTxInfo: WrapTransactionInfo = {
   unwrapped: false,
   currencyAmountRaw: '200000',
   swapTxId: undefined,
+  gasEstimates: undefined,
 }
 
 const unwrapTxInfo: WrapTransactionInfo = {

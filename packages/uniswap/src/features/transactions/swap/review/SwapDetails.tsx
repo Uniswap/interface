@@ -9,11 +9,13 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
+import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/MaxSlippageRow'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { getSwapFeeUsdFromDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/utils/getSwapFeeUsd'
+import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -49,6 +51,8 @@ export function SwapDetails({
   const formatter = useLocalizationContext()
   const { convertFiatAmountFormatted, formatPercent } = formatter
 
+  const isBridgeTrade = derivedSwapInfo.trade.trade && isBridge(derivedSwapInfo.trade.trade)
+
   const trade = derivedSwapInfo.trade.trade ?? derivedSwapInfo.trade.indicativeTrade
   const acceptedTrade = acceptedDerivedSwapInfo.trade.trade ?? acceptedDerivedSwapInfo.trade.indicativeTrade
 
@@ -77,7 +81,7 @@ export function SwapDetails({
     : undefined
 
   const feeOnTransferProps: FeeOnTransferFeeGroupProps | undefined = useMemo(() => {
-    if (acceptedTrade.indicative) {
+    if (acceptedTrade.indicative || isBridge(acceptedTrade)) {
       return undefined
     }
 
@@ -91,13 +95,17 @@ export function SwapDetails({
         tokenSymbol: acceptedTrade.outputAmount.currency.symbol ?? 'Token buy',
       },
     }
-  }, [
-    acceptedTrade.inputAmount.currency.symbol,
-    acceptedTrade.inputTax,
-    acceptedTrade.outputAmount.currency.symbol,
-    acceptedTrade.outputTax,
-    acceptedTrade.indicative,
-  ])
+  }, [acceptedTrade])
+
+  const estimatedBridgingTime = useMemo(() => {
+    const tradeQuote = derivedSwapInfo.trade.trade?.quote
+
+    if (!tradeQuote || !isBridge(tradeQuote)) {
+      return undefined
+    }
+
+    return tradeQuote.quote.estimatedFillTimeMs
+  }, [derivedSwapInfo.trade.trade?.quote])
 
   return (
     <TransactionDetails
@@ -121,6 +129,8 @@ export function SwapDetails({
       transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
       uniswapXGasBreakdown={uniswapXGasBreakdown}
       warning={warning}
+      estimatedBridgingTime={estimatedBridgingTime}
+      isBridgeTrade={isBridgeTrade ?? false}
       onShowWarning={onShowWarning}
     >
       <Flex row alignItems="center" justifyContent="space-between">
@@ -131,11 +141,14 @@ export function SwapDetails({
           <SwapRateRatio trade={trade} />
         </Flex>
       </Flex>
-      <MaxSlippageRow
-        acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
-        autoSlippageTolerance={autoSlippageTolerance}
-        customSlippageTolerance={customSlippageTolerance}
-      />
+      {isBridgeTrade && <EstimatedTime timeMs={estimatedBridgingTime} />}
+      {!isBridgeTrade && (
+        <MaxSlippageRow
+          acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}
+          autoSlippageTolerance={autoSlippageTolerance}
+          customSlippageTolerance={customSlippageTolerance}
+        />
+      )}
     </TransactionDetails>
   )
 }

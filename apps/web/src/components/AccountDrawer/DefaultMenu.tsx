@@ -47,7 +47,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
       }, 250)
       return () => clearTimeout(timer)
     }
-    return
+    return undefined
   }, [drawerOpen, menu, closeSettings])
 
   useEffect(() => {
@@ -58,6 +58,7 @@ function DefaultMenu({ drawerOpen }: { drawerOpen: boolean }) {
     sendAnalyticsEvent(InterfaceEventNameLocal.PortfolioMenuOpened, { name: menu })
   }, [menu])
 
+  // eslint-disable-next-line consistent-return
   const SubMenu = useMemo(() => {
     switch (menu) {
       case MenuState.DEFAULT:

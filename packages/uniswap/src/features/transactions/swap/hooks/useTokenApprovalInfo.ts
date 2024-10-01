@@ -20,6 +20,7 @@ export interface TokenApprovalInfoParams {
   chainId: WalletChainId
   wrapType: WrapType
   currencyInAmount: Maybe<CurrencyAmount<Currency>>
+  currencyOutAmount?: Maybe<CurrencyAmount<Currency>>
   routing: Routing | undefined
   account?: AccountMeta
   skip?: boolean
@@ -34,7 +35,7 @@ interface TokenApprovalGasInfo {
 export function useTokenApprovalInfo(
   params: TokenApprovalInfoParams,
 ): (TokenApprovalInfo & TokenApprovalGasInfo) | undefined {
-  const { account, chainId, wrapType, currencyInAmount, routing, skip } = params
+  const { account, chainId, wrapType, currencyInAmount, currencyOutAmount, routing, skip } = params
 
   const isWrap = wrapType !== WrapType.NotApplicable
 
@@ -43,22 +44,34 @@ export function useTokenApprovalInfo(
   const currencyIn = routing === Routing.DUTCH_V2 ? currencyInAmount?.currency.wrapped : currencyInAmount?.currency
   const amount = currencyInAmount?.quotient.toString()
 
-  const tokenAddress = getTokenAddressForApi(currencyIn)
+  const tokenInAddress = getTokenAddressForApi(currencyIn)
+
+  // Only used for bridging
+  const isBridge = routing === Routing.BRIDGE
+  const currencyOut = currencyOutAmount?.currency
+  const tokenOutAddress = getTokenAddressForApi(currencyOut)
 
   const approvalRequestArgs: ApprovalRequest | undefined = useMemo(() => {
-    const supportedChainId = toTradingApiSupportedChainId(chainId)
+    const tokenInChainId = toTradingApiSupportedChainId(chainId)
+    const tokenOutChainId = toTradingApiSupportedChainId(currencyOut?.chainId)
 
-    if (!address || !amount || !currencyIn || !tokenAddress || !supportedChainId) {
+    if (!address || !amount || !currencyIn || !tokenInAddress || !tokenInChainId) {
       return undefined
     }
+    if (isBridge && !tokenOutAddress && !tokenOutChainId) {
+      return undefined
+    }
+
     return {
       walletAddress: address,
-      token: tokenAddress,
+      token: tokenInAddress,
       amount,
-      chainId: supportedChainId,
+      chainId: tokenInChainId,
       includeGasInfo: true,
+      tokenOut: tokenOutAddress,
+      tokenOutChainId,
     }
-  }, [address, amount, chainId, currencyIn, tokenAddress])
+  }, [address, amount, chainId, currencyIn, currencyOut?.chainId, isBridge, tokenInAddress, tokenOutAddress])
 
   const shouldSkip = skip || !approvalRequestArgs || isWrap || !address
   const activeGasStrategy = useActiveGasStrategy(chainId, 'general')

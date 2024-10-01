@@ -88,7 +88,7 @@ export function usePortfolioBalances({
 
   const formattedData = useMemo(() => {
     if (!balancesForAddress) {
-      return
+      return undefined
     }
 
     const byId: Record<CurrencyId, PortfolioBalance> = {}
@@ -102,8 +102,8 @@ export function usePortfolioBalances({
         quantity,
         isHidden,
       } = balance || {}
-      const { address: tokenAddress, chain, decimals, symbol, project } = token || {}
-      const { name, logoUrl, isSpam, safetyLevel } = project || {}
+      const { name, address: tokenAddress, chain, decimals, symbol, project } = token || {}
+      const { logoUrl, isSpam, safetyLevel } = project || {}
       const chainId = fromGraphQLChain(chain)
 
       // require all of these fields to be defined
@@ -200,7 +200,7 @@ export function usePortfolioTotalValue({
 
   const formattedData = useMemo(() => {
     if (!portfolioForAddress) {
-      return
+      return undefined
     }
 
     return {

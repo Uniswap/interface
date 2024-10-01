@@ -1,5 +1,5 @@
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
-import { Field } from 'components/swap/constants'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { CHAIN_IDS_TO_NAMES, useSupportedChainId } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { useCurrency, useCurrencyInfo } from 'hooks/Tokens'
@@ -20,18 +20,17 @@ import { CurrencyState, SerializedCurrencyState, SwapInfo, SwapState } from 'sta
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { useUserSlippageToleranceWithDefault } from 'state/user/hooks'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
-import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyId } from 'uniswap/src/utils/currencyId'
 import { isAddress } from 'utilities/src/addresses'
 import { getParsedChainId } from 'utils/chains'
 
 export function useSwapActionHandlers(): {
-  onCurrencySelection: (field: Field, currency: Currency) => void
+  onCurrencySelection: (field: CurrencyField, currency?: Currency) => void
   onSwitchTokens: (options: { newOutputHasTax: boolean; previouslyEstimatedOutput: string }) => void
-  onUserInput: (field: Field, typedValue: string) => void
+  onUserInput: (field: CurrencyField, typedValue: string) => void
 } {
   const { swapState, setSwapState } = useSwapContext()
   const { currencyState, setCurrencyState } = useSwapAndLimitContext()
@@ -44,31 +43,32 @@ export function useSwapActionHandlers(): {
   )
 
   const onCurrencySelection = useCallback(
-    (field: Field, currency: Currency) => {
+    (field: CurrencyField, currency?: Currency) => {
       const [currentCurrencyKey, otherCurrencyKey]: (keyof CurrencyState)[] =
-        field === Field.INPUT ? ['inputCurrency', 'outputCurrency'] : ['outputCurrency', 'inputCurrency']
+        field === CurrencyField.INPUT ? ['inputCurrency', 'outputCurrency'] : ['outputCurrency', 'inputCurrency']
       const otherCurrency = currencyState[otherCurrencyKey]
       // the case where we have to swap the order
-      if (otherCurrency && currency.equals(otherCurrency)) {
+      if (otherCurrency && currency?.equals(otherCurrency)) {
         setCurrencyState({
           [currentCurrencyKey]: currency,
           [otherCurrencyKey]: currencyState[currentCurrencyKey],
         })
         setSwapState((swapState) => ({
           ...swapState,
-          independentField: swapState.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
+          independentField:
+            swapState.independentField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT,
         }))
         // multichain ux case where we set input or output to different chain
-      } else if (otherCurrency?.chainId !== currency.chainId) {
-        const otherCurrencyTokenProjects = field === Field.INPUT ? outputTokenProjects : inputTokenProjects
+      } else if (currency && otherCurrency?.chainId !== currency.chainId) {
+        const otherCurrencyTokenProjects = field === CurrencyField.INPUT ? outputTokenProjects : inputTokenProjects
         const otherCurrency = otherCurrencyTokenProjects?.data?.find(
-          (project) => project?.currency.chainId === currency.chainId,
+          (project) => project?.currency.chainId === currency?.chainId,
         )
         setCurrencyState((state) => ({
           ...state,
           [currentCurrencyKey]: currency,
           [otherCurrencyKey]:
-            otherCurrency && !areCurrencyIdsEqual(currencyId(currency), otherCurrency.currencyId)
+            otherCurrency && currency && !areCurrencyIdsEqual(currencyId(currency), otherCurrency.currencyId)
               ? otherCurrency.currency
               : undefined,
         }))
@@ -91,7 +91,7 @@ export function useSwapActionHandlers(): {
       previouslyEstimatedOutput: string
     }) => {
       // To prevent swaps with FOT tokens as exact-outputs, we leave it as an exact-in swap and use the previously estimated output amount as the new exact-in amount.
-      if (newOutputHasTax && swapState.independentField === Field.INPUT) {
+      if (newOutputHasTax && swapState.independentField === CurrencyField.INPUT) {
         setSwapState((swapState) => ({
           ...swapState,
           typedValue: previouslyEstimatedOutput,
@@ -99,7 +99,7 @@ export function useSwapActionHandlers(): {
       } else {
         setSwapState((prev) => ({
           ...prev,
-          independentField: prev.independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT,
+          independentField: prev.independentField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT,
         }))
       }
 
@@ -112,7 +112,7 @@ export function useSwapActionHandlers(): {
   )
 
   const onUserInput = useCallback(
-    (field: Field, typedValue: string) => {
+    (field: CurrencyField, typedValue: string) => {
       setSwapState((state) => {
         return {
           ...state,
@@ -159,7 +159,7 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     useMemo(() => [inputCurrency ?? undefined, outputCurrency ?? undefined], [inputCurrency, outputCurrency]),
   )
 
-  const isExactIn: boolean = independentField === Field.INPUT
+  const isExactIn: boolean = independentField === CurrencyField.INPUT
   const parsedAmount = useMemo(
     () => tryParseCurrencyAmount(typedValue, (isExactIn ? inputCurrency : outputCurrency) ?? undefined),
     [inputCurrency, isExactIn, outputCurrency, typedValue],
@@ -188,16 +188,16 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
 
   const currencyBalances = useMemo(
     () => ({
-      [Field.INPUT]: relevantTokenBalances[0],
-      [Field.OUTPUT]: relevantTokenBalances[1],
+      [CurrencyField.INPUT]: relevantTokenBalances[0],
+      [CurrencyField.OUTPUT]: relevantTokenBalances[1],
     }),
     [relevantTokenBalances],
   )
 
-  const currencies: { [field in Field]?: Currency } = useMemo(
+  const currencies: { [field in CurrencyField]?: Currency } = useMemo(
     () => ({
-      [Field.INPUT]: inputCurrency,
-      [Field.OUTPUT]: outputCurrency,
+      [CurrencyField.INPUT]: inputCurrency,
+      [CurrencyField.OUTPUT]: outputCurrency,
     }),
     [inputCurrency, outputCurrency],
   )
@@ -220,25 +220,14 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     isClassicTrade(trade.trade) && (nativeCurrencyBalanceUSD ?? 0) < (trade.trade.totalGasUseEstimateUSDWithBuffer ?? 0)
 
   const { isDisconnected } = useAccount()
-  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
-
   const inputError = useMemo(() => {
     let inputError: ReactNode | undefined
 
     if (!account.isConnected) {
-      const disconnectedInputError = isSignIn ? (
-        <Trans i18nKey="nav.signIn.button" />
-      ) : isLogIn ? (
-        <Trans i18nKey="nav.logIn.button" />
-      ) : (
-        <Trans i18nKey="common.connectWallet.button" />
-      )
-      inputError = isDisconnected ? disconnectedInputError : <Trans i18nKey="common.connectingWallet" />
+      inputError = isDisconnected ? <ConnectWalletButtonText /> : <Trans i18nKey="common.connectingWallet" />
     }
 
-    if (!currencies[Field.INPUT] || !currencies[Field.OUTPUT]) {
+    if (!currencies[CurrencyField.INPUT] || !currencies[CurrencyField.OUTPUT]) {
       inputError = inputError ?? <Trans i18nKey="common.selectToken.label" />
     }
 
@@ -258,7 +247,10 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     }
 
     // compare input balance to max input based on version
-    const [balanceIn, maxAmountIn] = [currencyBalances[Field.INPUT], trade?.trade?.maximumAmountIn(allowedSlippage)]
+    const [balanceIn, maxAmountIn] = [
+      currencyBalances[CurrencyField.INPUT],
+      trade?.trade?.maximumAmountIn(allowedSlippage),
+    ]
 
     if (balanceIn && maxAmountIn && balanceIn.lessThan(maxAmountIn)) {
       inputError = (
@@ -280,8 +272,6 @@ export function useDerivedSwapInfo(state: SwapState): SwapInfo {
     currencyBalances,
     trade?.trade,
     allowedSlippage,
-    isSignIn,
-    isLogIn,
     isDisconnected,
     nativeCurrency.symbol,
   ])
@@ -396,7 +386,7 @@ export function useInitialCurrencyState(): {
   initialInputCurrency?: Currency
   initialOutputCurrency?: Currency
   initialTypedValue?: string
-  initialField?: Field
+  initialField?: CurrencyField
   initialChainId: InterfaceChainId
   initialCurrencyLoading: boolean
 } {
@@ -455,8 +445,8 @@ export function useInitialCurrencyState(): {
   const initialOutputCurrency = useCurrency(initialOutputCurrencyAddress, initialChainId)
   const initialTypedValue = initialInputCurrency || initialOutputCurrency ? parsedCurrencyState.value : undefined
   const initialField =
-    initialTypedValue && parsedCurrencyState.field && parsedCurrencyState.field in Field
-      ? Field[parsedCurrencyState.field as keyof typeof Field]
+    initialTypedValue && parsedCurrencyState.field && parsedCurrencyState.field in CurrencyField
+      ? CurrencyField[parsedCurrencyState.field as keyof typeof CurrencyField]
       : undefined
 
   return {

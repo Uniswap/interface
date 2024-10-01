@@ -43,11 +43,13 @@ export function getBaseTradeAnalyticsProperties({
   trade,
   currencyInAmountUSD,
   currencyOutAmountUSD,
+  portfolioBalanceUsd,
 }: {
   formatter: LocalizationContextState
   trade: Trade<Currency, Currency, TradeType>
   currencyInAmountUSD?: Maybe<CurrencyAmount<Currency>>
   currencyOutAmountUSD?: Maybe<CurrencyAmount<Currency>>
+  portfolioBalanceUsd?: number
 }): SwapTradeBaseProperties {
   const portionAmount = getClassicQuoteFromResponse(trade?.quote)?.portionAmount
 
@@ -64,11 +66,12 @@ export function getBaseTradeAnalyticsProperties({
   const slippagePercent = percentFromFloat(trade.slippageTolerance ?? 0)
 
   return {
+    total_balances_usd: portfolioBalanceUsd,
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
     token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
-    price_impact_basis_points: trade.priceImpact.multiply(100).toSignificant(),
+    price_impact_basis_points: trade.priceImpact?.multiply(100).toSignificant(),
     chain_id: trade.inputAmount.currency.chainId,
     token_in_amount: trade.inputAmount.toExact(),
     token_out_amount: formatter.formatCurrencyAmount({
@@ -77,8 +80,9 @@ export function getBaseTradeAnalyticsProperties({
     }),
     token_in_amount_usd: currencyInAmountUSD ? parseFloat(currencyInAmountUSD.toFixed(2)) : undefined,
     token_out_amount_usd: currencyOutAmountUSD ? parseFloat(currencyOutAmountUSD.toFixed(2)) : undefined,
-    allowed_slippage: parseFloat(trade.slippageTolerance.toFixed(2)),
-    allowed_slippage_basis_points: trade.slippageTolerance * 100,
+    allowed_slippage:
+      trade.slippageTolerance !== undefined ? parseFloat(trade.slippageTolerance.toFixed(2)) : undefined,
+    allowed_slippage_basis_points: trade.slippageTolerance ? trade.slippageTolerance * 100 : undefined,
     fee_amount: portionAmount,
     requestId: trade.quote?.requestId,
     ura_request_id: trade.quote?.requestId,
@@ -139,7 +143,7 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     token_out_symbol: outputCurrencyAmount?.currency.symbol,
     token_in_address: inputCurrencyAmount ? getCurrencyAddressForAnalytics(inputCurrencyAmount?.currency) : '',
     token_out_address: outputCurrencyAmount ? getCurrencyAddressForAnalytics(outputCurrencyAmount?.currency) : '',
-    price_impact_basis_points: derivedSwapInfo.trade.trade?.priceImpact.multiply(100).toSignificant(),
+    price_impact_basis_points: derivedSwapInfo.trade.trade?.priceImpact?.multiply(100)?.toSignificant(),
     estimated_network_fee_usd: undefined,
     chain_id: chainId,
     token_in_amount: inputCurrencyAmount?.toExact() ?? '',

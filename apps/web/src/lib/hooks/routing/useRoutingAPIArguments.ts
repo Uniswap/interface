@@ -1,18 +1,18 @@
 import { SkipToken, skipToken } from '@reduxjs/toolkit/query/react'
 import { Protocol } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
+import { useIsUniswapXSupportedChain } from 'constants/chains'
 import { useMemo } from 'react'
 import { GetQuoteArgs, INTERNAL_ROUTER_PREFERENCE_PRICE, RouterPreference } from 'state/routing/types'
 import { currencyAddressForSwapQuote } from 'state/routing/utils'
-import { ArbitrumXV2OpenOrderProperties, Experiments } from 'uniswap/src/features/gating/experiments'
+import {
+  ArbitrumXV2ExperimentGroup,
+  ArbitrumXV2OpenOrderProperties,
+  Experiments,
+} from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useExperimentGroupName, useExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-
-enum ArbitrumXV2ExperimentGroup {
-  Test = 'Test',
-  Control = 'Control',
-}
 
 /**
  * Returns query arguments for the Routing API query or undefined if the
@@ -37,6 +37,7 @@ export function useRoutingAPIArguments({
   protocolPreferences?: Protocol[]
 }): GetQuoteArgs | SkipToken {
   const uniswapXForceSyntheticQuotes = useFeatureFlag(FeatureFlags.UniswapXSyntheticQuote)
+  const isPriorityOrdersEnabled = useFeatureFlag(FeatureFlags.UniswapXPriorityOrders)
   const isXv2 = useFeatureFlag(FeatureFlags.UniswapXv2)
   const xv2ArbitrumEnabled =
     useExperimentGroupName(Experiments.ArbitrumXV2OpenOrders) === ArbitrumXV2ExperimentGroup.Test
@@ -63,6 +64,10 @@ export function useRoutingAPIArguments({
   )
   // Don't enable fee logic if this is a quote for pricing
   const sendPortionEnabled = routerPreference !== INTERNAL_ROUTER_PREFERENCE_PRICE
+
+  const chainId = tokenIn?.chainId
+  const isUniswapXSupportedChain = useIsUniswapXSupportedChain(chainId)
+  const isPriorityOrder = isPriorityOrdersEnabled && routerPreference === RouterPreference.X && isUniswapXSupportedChain
 
   return useMemo(
     () =>
@@ -91,6 +96,8 @@ export function useRoutingAPIArguments({
             forceOpenOrders,
             deadlineBufferSecs,
             arbitrumXV2SlippageTolerance,
+            isPriorityOrder,
+            isUniswapXSupportedChain,
           },
     [
       tokenIn,
@@ -108,6 +115,8 @@ export function useRoutingAPIArguments({
       forceOpenOrders,
       deadlineBufferSecs,
       arbitrumXV2SlippageTolerance,
+      isPriorityOrder,
+      isUniswapXSupportedChain,
     ],
   )
 }

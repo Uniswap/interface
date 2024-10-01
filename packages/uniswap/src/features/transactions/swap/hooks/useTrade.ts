@@ -73,7 +73,14 @@ export function useTrade({
   const activeGasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')
   const shadowGasStrategies = useShadowGasStrategies(tokenInChainId, 'swap')
 
-  const routingPreference = getRoutingPreferenceForSwapRequest(tradeProtocolPreference, uniswapXEnabled, isUSDQuote)
+  const isBridging = currencyIn?.chainId !== currencyOut?.chainId
+
+  const routingPreference = getRoutingPreferenceForSwapRequest(
+    tradeProtocolPreference,
+    uniswapXEnabled,
+    isBridging,
+    isUSDQuote,
+  )
 
   const requestTradeType =
     tradeType === TradeType.EXACT_INPUT ? TradingApiTradeType.EXACT_INPUT : TradingApiTradeType.EXACT_OUTPUT

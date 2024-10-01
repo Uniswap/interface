@@ -1,6 +1,6 @@
 import { ReactNode, RefObject } from 'react'
-import { NAV_HEIGHT } from 'theme'
 import { Flex, Popover, WebBottomSheet, styled, useScrollbarStyles, useShadowPropsMedium } from 'ui/src'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 const NavDropdownContent = styled(Flex, {
   borderRadius: '$rounded16',
@@ -8,14 +8,17 @@ const NavDropdownContent = styled(Flex, {
   borderStyle: 'solid',
   borderColor: '$surface2',
   backgroundColor: '$surface1',
-  overflow: 'scroll',
-  maxHeight: `calc(100dvh - ${NAV_HEIGHT * 2}px)`,
+  maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT * 2}px)`,
   $sm: {
     width: '100%',
     borderRadius: '$none',
     borderWidth: 0,
     shadowColor: '$transparent',
-    maxHeight: `calc(100dvh - ${NAV_HEIGHT}px)`,
+    maxHeight: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
+  },
+  '$platform-web': {
+    overflowY: 'auto',
+    overflowX: 'hidden',
   },
 })
 

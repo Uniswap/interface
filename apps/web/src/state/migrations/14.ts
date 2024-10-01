@@ -12,7 +12,7 @@ export const hideSpamBalancesAtomName = 'hideSpamBalances'
  */
 export const migration14 = (state: PersistAppStateV14 | undefined) => {
   if (!state) {
-    return
+    return undefined
   }
 
   const newState: any = { ...state }

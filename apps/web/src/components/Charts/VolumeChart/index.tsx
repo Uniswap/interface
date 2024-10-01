@@ -47,6 +47,7 @@ class VolumeChartModel extends CustomVolumeChartModel<SingleHistogramData> {
   }
 }
 
+// eslint-disable-next-line consistent-return
 export function formatHistoryDuration(duration: HistoryDuration): string {
   switch (duration) {
     case HistoryDuration.FiveMinute:

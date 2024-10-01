@@ -8,11 +8,31 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
       "flexDirection": "column",
       "height": 40,
       "justifyContent": "center",
+      "position": "relative",
       "width": 40,
     }
   }
   testID="token-logo"
 >
+  <View
+    style={
+      {
+        "backgroundColor": "#FFFFFF",
+        "borderBottomLeftRadius": 20,
+        "borderBottomRightRadius": 20,
+        "borderTopLeftRadius": 20,
+        "borderTopRightRadius": 20,
+        "flexDirection": "column",
+        "height": "96%",
+        "left": "2%",
+        "opacity": 0,
+        "position": "absolute",
+        "top": "2%",
+        "width": "96%",
+        "zIndex": -1,
+      }
+    }
+  />
   <View
     style={
       {
@@ -24,11 +44,11 @@ exports[`CurrencyLogo renders a currency logo with network logo 1`] = `
     <img
       height={40}
       onError={[Function]}
+      onLoad={[Function]}
       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
       style={
         {
           "aspectRatio": undefined,
-          "backgroundColor": "#FFFFFF",
           "borderRadius": 20,
           "objectFit": "contain",
         }
@@ -95,11 +115,31 @@ exports[`CurrencyLogo renders without error 1`] = `
       "flexDirection": "column",
       "height": 40,
       "justifyContent": "center",
+      "position": "relative",
       "width": 40,
     }
   }
   testID="token-logo"
 >
+  <View
+    style={
+      {
+        "backgroundColor": "#FFFFFF",
+        "borderBottomLeftRadius": 20,
+        "borderBottomRightRadius": 20,
+        "borderTopLeftRadius": 20,
+        "borderTopRightRadius": 20,
+        "flexDirection": "column",
+        "height": "96%",
+        "left": "2%",
+        "opacity": 0,
+        "position": "absolute",
+        "top": "2%",
+        "width": "96%",
+        "zIndex": -1,
+      }
+    }
+  />
   <View
     style={
       {
@@ -111,11 +151,11 @@ exports[`CurrencyLogo renders without error 1`] = `
     <img
       height={40}
       onError={[Function]}
+      onLoad={[Function]}
       src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984/logo.png"
       style={
         {
           "aspectRatio": undefined,
-          "backgroundColor": "#FFFFFF",
           "borderRadius": 20,
           "objectFit": "contain",
         }

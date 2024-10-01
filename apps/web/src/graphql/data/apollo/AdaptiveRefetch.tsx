@@ -80,7 +80,7 @@ export function createAdaptiveRefetchContext<T>() {
     // Subscribing/unsubscribing allows AdaptiveRefetchProvider to track whether components are currently using the query or not, impacting whether or not to re-fetch when stale.
     useEffect(() => {
       if (options?.cacheOnly === true) {
-        return
+        return undefined
       }
       return subscribe()
     }, [options?.cacheOnly, subscribe])

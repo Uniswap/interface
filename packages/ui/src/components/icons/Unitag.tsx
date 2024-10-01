@@ -12,10 +12,24 @@ function _Unitag({ size = '$icon.24' }: { size: IconSizeTokens | number }): JSX.
   const sizeNumber = typeof size === 'number' ? size : getTokenValue(size)
   const universalImageSize = { height: sizeNumber, width: sizeNumber }
 
-  return isDarkMode ? (
-    <UniversalImage size={universalImageSize} uri={isMobileApp ? UNITAG_DARK : UNITAG_DARK_SMALL} allowLocalUri />
-  ) : (
-    <UniversalImage size={universalImageSize} uri={isMobileApp ? UNITAG_LIGHT : UNITAG_LIGHT_SMALL} allowLocalUri />
+  const getUri = () => {
+    if (isDarkMode) {
+      return isMobileApp ? UNITAG_DARK : UNITAG_DARK_SMALL
+    }
+    return isMobileApp ? UNITAG_LIGHT : UNITAG_LIGHT_SMALL
+  }
+
+  return (
+    <UniversalImage
+      style={{
+        image: {
+          verticalAlign: 'bottom',
+        },
+      }}
+      size={universalImageSize}
+      uri={getUri()}
+      allowLocalUri
+    />
   )
 }
 

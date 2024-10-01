@@ -16,7 +16,7 @@ export function SearchPopularNFTCollections(): JSX.Element {
 
   const formattedItems = useMemo(() => {
     if (!data?.topCollections?.edges) {
-      return
+      return undefined
     }
 
     const searchResults = data.topCollections.edges.map(({ node }) => gqlNFTToNFTCollectionSearchResult(node))

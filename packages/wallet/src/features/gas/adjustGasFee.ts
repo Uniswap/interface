@@ -1,5 +1,5 @@
 import { BigNumber, BigNumberish, providers } from 'ethers'
-import { FeeType } from 'uniswap/src/data/tradingApi/__generated__'
+import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { BigNumberMax } from 'wallet/src/utils/number'
 

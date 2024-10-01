@@ -108,7 +108,7 @@ const isErrorResponse = (res: Response, gasFee: GasFeeResponse): gasFee is GasFe
 function useGasFeeQuery(tx?: TransactionRequest, skip: boolean = !tx) {
   const gasFeeFetcher = useCallback(async () => {
     if (skip) {
-      return
+      return undefined
     }
 
     const res = await fetch(`${UNISWAP_API_URL}/v1/gas-fee`, {
@@ -119,7 +119,7 @@ function useGasFeeQuery(tx?: TransactionRequest, skip: boolean = !tx) {
     const body = (await res.json()) as GasFeeResponse
 
     if (isErrorResponse(res, body)) {
-      return
+      return undefined
     }
 
     return body

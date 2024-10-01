@@ -9,7 +9,7 @@ import { isAndroid } from 'utilities/src/platform'
 type Props = {
   isOpen: boolean
   isTouchIdDevice: boolean
-  onConfirm: WarningModalProps['onConfirm']
+  onConfirm: WarningModalProps['onAcknowledge']
   onClose: WarningModalProps['onClose']
 }
 
@@ -23,14 +23,14 @@ export function BiometricAuthWarningModal({ isOpen, isTouchIdDevice, onConfirm, 
           ? t('settings.setting.biometrics.warning.message.android')
           : t('settings.setting.biometrics.warning.message.ios', { biometricsMethod })
       }
-      closeText={t('common.button.back')}
-      confirmText={t('common.button.skip')}
+      rejectText={t('common.button.back')}
+      acknowledgeText={t('common.button.skip')}
       isOpen={isOpen}
       modalName={ModalName.FaceIDWarning}
       severity={WarningSeverity.Low}
       title={t('settings.setting.biometrics.warning.title')}
       onClose={onClose}
-      onConfirm={onConfirm}
+      onAcknowledge={onConfirm}
     />
   )
 }

@@ -83,6 +83,7 @@ export interface FiatConverter {
     numberType: FiatNumberType,
     placeholder?: string,
   ) => string
+  conversionRate?: number
 }
 
 const SOURCE_CURRENCY = Currency.Usd // Assuming all currency data comes from USD
@@ -151,9 +152,10 @@ export function useFiatConverter({
 
   return useMemo(
     () => ({
+      conversionRate,
       convertFiatAmount: convertFiatAmountInner,
       convertFiatAmountFormatted: convertFiatAmountFormattedInner,
     }),
-    [convertFiatAmountFormattedInner, convertFiatAmountInner],
+    [conversionRate, convertFiatAmountFormattedInner, convertFiatAmountInner],
   )
 }

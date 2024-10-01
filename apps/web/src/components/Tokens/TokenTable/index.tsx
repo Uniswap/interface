@@ -76,7 +76,7 @@ function TokenDescription({ token }: { token: TopToken | TokenStat }) {
   return (
     <Flex row gap="$gap8">
       <QueryTokenLogo token={token} size={28} />
-      <EllipsisText data-testid="token-name">{token?.project?.name ?? token?.name}</EllipsisText>
+      <EllipsisText data-testid="token-name">{token?.name ?? token?.project?.name}</EllipsisText>
       <TokenTableText
         $platform-web={{
           minWidth: 'fit-content',

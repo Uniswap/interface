@@ -137,7 +137,7 @@ export function Pending({
     } else if (uniswapXOrder && uniswapXOrder.status === UniswapXOrderStatus.FILLED) {
       txHash = uniswapXOrder.txHash
     } else {
-      return
+      return undefined
     }
     return getExplorerLink(chainId || UniverseChainId.Mainnet, txHash, ExplorerDataType.TRANSACTION)
   }, [chainId, swapResult, uniswapXOrder])

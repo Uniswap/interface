@@ -135,15 +135,15 @@ export function SettingsCloudBackupStatus({
         caption={t('settings.setting.backup.delete.warning', {
           cloudProviderName: getCloudProviderName(),
         })}
-        closeText={t('common.button.close')}
-        confirmText={t('common.button.delete')}
+        rejectText={t('common.button.close')}
+        acknowledgeText={t('common.button.delete')}
         isOpen={showBackupDeleteWarning}
         modalName={ModalName.ViewSeedPhraseWarning}
         title={t('settings.setting.backup.delete.confirm.title')}
         onClose={(): void => {
           setShowBackupDeleteWarning(false)
         }}
-        onConfirm={onConfirmDeleteBackup}
+        onAcknowledge={onConfirmDeleteBackup}
       >
         {associatedAccounts.length > 1 && (
           <Flex>

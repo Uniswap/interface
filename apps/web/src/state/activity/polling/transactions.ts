@@ -120,7 +120,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
 
   useEffect(() => {
     if (!account.chainId || !provider || !lastBlockNumber || !hasPending) {
-      return
+      return undefined
     }
 
     const cancels = pendingTransactions

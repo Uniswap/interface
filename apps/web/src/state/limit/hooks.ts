@@ -1,5 +1,4 @@
 import { Currency, CurrencyAmount, Price, TradeType } from '@uniswap/sdk-core'
-import { Field } from 'components/swap/constants'
 import { isStablecoin } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import JSBI from 'jsbi'
@@ -16,10 +15,11 @@ import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { CurrencyField } from 'uniswap/src/types/currency'
 
 export type LimitInfo = {
-  currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
-  parsedAmounts: { [field in Field]?: CurrencyAmount<Currency> }
+  currencyBalances: { [field in CurrencyField]?: CurrencyAmount<Currency> }
+  parsedAmounts: { [field in CurrencyField]?: CurrencyAmount<Currency> }
   parsedLimitPrice?: Price<Currency, Currency>
   limitOrderTrade?: LimitOrderTrade
   marketPrice?: Price<Currency, Currency>
@@ -55,8 +55,8 @@ export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetSta
 
   const currencyBalances = useMemo(
     () => ({
-      [Field.INPUT]: relevantTokenBalances[0],
-      [Field.OUTPUT]: relevantTokenBalances[1],
+      [CurrencyField.INPUT]: relevantTokenBalances[0],
+      [CurrencyField.OUTPUT]: relevantTokenBalances[1],
     }),
     [relevantTokenBalances],
   )
@@ -100,8 +100,8 @@ export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetSta
     }
 
     return {
-      [Field.INPUT]: parsedInputAmount,
-      [Field.OUTPUT]: parsedOutputAmount,
+      [CurrencyField.INPUT]: parsedInputAmount,
+      [CurrencyField.OUTPUT]: parsedOutputAmount,
     }
   }, [
     inputAmount,
@@ -120,7 +120,7 @@ export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetSta
   const { trade } = useRoutingAPITrade(
     skip,
     TradeType.EXACT_INPUT,
-    parsedAmounts?.[Field.INPUT],
+    parsedAmounts?.[CurrencyField.INPUT],
     outputCurrency,
     RouterPreference.API,
   )
@@ -128,7 +128,7 @@ export function useDerivedLimitInfo(state: LimitState, setState: Dispatch<SetSta
   const limitOrderTrade = useLimitOrderTrade({
     inputCurrency,
     parsedAmounts,
-    outputAmount: parsedAmounts[Field.OUTPUT],
+    outputAmount: parsedAmounts[CurrencyField.OUTPUT],
     trade,
     state,
     swapFee,
@@ -154,7 +154,7 @@ function useLimitOrderTrade({
   state: LimitState
   trade?: SubmittableTrade
   inputCurrency?: Currency
-  parsedAmounts: { [field in Field]?: CurrencyAmount<Currency> }
+  parsedAmounts: { [field in CurrencyField]?: CurrencyAmount<Currency> }
   outputAmount?: CurrencyAmount<Currency>
   swapFee?: SwapFeeInfo
 }) {
@@ -185,10 +185,10 @@ function useLimitOrderTrade({
   }, [account.address, inputCurrency, trade])
 
   const limitOrderTrade = useMemo(() => {
-    if (!inputCurrency || !parsedAmounts?.[Field.INPUT] || !account.address || !outputAmount || !wrapInfo) {
+    if (!inputCurrency || !parsedAmounts?.[CurrencyField.INPUT] || !account.address || !outputAmount || !wrapInfo) {
       return undefined
     }
-    const amountIn = CurrencyAmount.fromRawAmount(inputCurrency.wrapped, parsedAmounts?.[Field.INPUT].quotient)
+    const amountIn = CurrencyAmount.fromRawAmount(inputCurrency.wrapped, parsedAmounts?.[CurrencyField.INPUT].quotient)
     return new LimitOrderTrade({
       amountIn,
       amountOut: outputAmount,

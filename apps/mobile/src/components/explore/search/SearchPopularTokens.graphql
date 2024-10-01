@@ -5,9 +5,9 @@ query SearchPopularTokens {
     chain
     symbol
     decimals
+    name
     project {
       id
-      name
       logoUrl
       safetyLevel
     }

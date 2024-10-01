@@ -166,15 +166,15 @@ export function AccountSwitcherScreen(): JSX.Element {
       />
       <WarningModal
         caption={t('account.recoveryPhrase.remove.import.description')}
-        closeText={t('common.button.cancel')}
-        confirmText={t('common.button.continue')}
+        rejectText={t('common.button.cancel')}
+        acknowledgeText={t('common.button.continue')}
         icon={<WalletFilled color="$statusCritical" size="$icon.24" />}
         isOpen={showRemoveWalletModal}
         modalName={ModalName.RemoveWallet}
         severity={WarningSeverity.High}
         title={t('account.wallet.button.import')}
         onClose={() => setShowRemoveWalletModal(false)}
-        onConfirm={onNavigateToRemoveWallet}
+        onAcknowledge={onNavigateToRemoveWallet}
       />
       <CreateWalletModal
         isOpen={showCreateWalletModal}

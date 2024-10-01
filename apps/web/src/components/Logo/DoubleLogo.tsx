@@ -89,7 +89,7 @@ export const SingleLogoContainer = styled.div<{ size: number }>`
 const DoubleLogoContainer = styled.div<{ size: number }>`
   ${logoContainerCss}
   img {
-    width: ${({ size }) => size / 2}px;
+    width: ${({ size }) => size / 2 - 1}px;
     height: ${({ size }) => size}px;
     object-fit: cover;
   }

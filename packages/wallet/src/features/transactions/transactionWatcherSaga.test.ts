@@ -206,6 +206,7 @@ describe(watchFiatOnRampTransaction, () => {
                     return confirmedTx
                 }
               }
+              return undefined
             },
           },
           [delay(PollingInterval.Fast), Promise.resolve(() => undefined)],
@@ -238,6 +239,7 @@ describe(watchFiatOnRampTransaction, () => {
                     return confirmedTx
                 }
               }
+              return undefined
             },
           },
         ])

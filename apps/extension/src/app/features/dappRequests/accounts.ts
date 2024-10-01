@@ -88,7 +88,7 @@ export function* saveAccount({ url, favIconUrl }: SenderTabInfo) {
   const dappInfo = yield* call(dappStore.getDappInfo, dappUrl)
 
   if (!dappUrl || !activeAccount) {
-    return
+    return undefined
   }
 
   yield* call(saveDappConnection, dappUrl, activeAccount, favIconUrl)

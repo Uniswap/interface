@@ -1,6 +1,7 @@
 import { CurrencyAmount } from '@uniswap/sdk-core'
 import { WarningLabel } from 'uniswap/src/components/modals/WarningModal/types'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
+import { Locale } from 'uniswap/src/features/language/constants'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { getSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
@@ -111,7 +112,7 @@ const tradeErrorState: DerivedSwapInfo = {
     gasEstimates: createGasFeeEstimates(),
   },
 }
-const { formatPercent } = mockLocalizedFormatter
+const { formatPercent } = mockLocalizedFormatter(Locale.EnglishUnitedStates)
 
 describe(getSwapWarnings, () => {
   it('catches incomplete form errors', async () => {

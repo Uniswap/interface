@@ -28,6 +28,7 @@ import { DappLogoWithWCBadge, LogoWithTxStatus } from 'wallet/src/components/Cur
 import {
   SwapTypeTransactionInfo,
   isApproveTransactionInfo,
+  isBridgeTransactionInfo,
   isLocalOnRampTransactionInfo,
   isNFTApproveTransactionInfo,
   isNFTMintTransactionInfo,
@@ -93,6 +94,8 @@ export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element
       return <TokenTransferHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else if (isSwapTransactionInfo(typeInfo)) {
       return <SwapHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
+    } else if (isBridgeTransactionInfo(typeInfo)) {
+      return null // TODO: Update when bridge logo is added
     } else if (isWCConfirmTransactionInfo(typeInfo)) {
       return <WCConfirmHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else if (isWrapTransactionInfo(typeInfo)) {

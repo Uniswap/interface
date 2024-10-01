@@ -25,7 +25,7 @@ export function useQueryWithImmediateGarbageCollection<T>(
 
   useEffect(() => {
     if (skip || !immediateGcTime) {
-      return
+      return undefined
     }
 
     const timeSinceLastUpdate = Date.now() - dataUpdatedAt

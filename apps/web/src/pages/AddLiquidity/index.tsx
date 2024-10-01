@@ -21,6 +21,7 @@ import CurrencyInputPanel from 'components/CurrencyInputPanel'
 import FeeSelector from 'components/FeeSelector'
 import HoverInlineText from 'components/HoverInlineText'
 import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { AddRemoveTabs } from 'components/NavigationTabs'
 import { PositionPreview } from 'components/PositionPreview'
 import RangeSelector from 'components/RangeSelector'
@@ -84,8 +85,6 @@ import { ThemedText } from 'theme/components'
 import { Text } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
-import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans, t } from 'uniswap/src/i18n'
@@ -543,10 +542,6 @@ function AddLiquidity() {
   }, [searchParams])
   // END: sync values with query string
 
-  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
-
   const Buttons = () =>
     addIsUnsupported ? (
       <ButtonPrimary disabled={true} $borderRadius="12px" padding="12px">
@@ -562,13 +557,7 @@ function AddLiquidity() {
         element={InterfaceElementName.CONNECT_WALLET_BUTTON}
       >
         <ButtonLight onClick={accountDrawer.open} $borderRadius="12px" padding="12px">
-          {isSignIn ? (
-            <Trans i18nKey="nav.signIn.button" />
-          ) : isLogIn ? (
-            <Trans i18nKey="nav.logIn.button" />
-          ) : (
-            <Trans i18nKey="common.connectWallet.button" />
-          )}
+          <ConnectWalletButtonText />
         </ButtonLight>
       </Trace>
     ) : (

@@ -28,7 +28,7 @@ export function ShowNFTModal(): JSX.Element {
 
   return (
     <>
-      <Flex mx="$spacing12">
+      <Flex>
         <InformationBanner infoText={t('hidden.nfts.info.banner.text')} onPress={handlePressToken} />
       </Flex>
 

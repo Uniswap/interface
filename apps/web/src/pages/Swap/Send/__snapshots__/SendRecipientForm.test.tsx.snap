@@ -351,7 +351,7 @@ exports[`SendCurrencyInputform should render correctly with unitag 1`] = `
                   <img
                     height="18"
                     src="unitag-light-small.png"
-                    style="object-fit: contain;"
+                    style="object-fit: contain; vertical-align: bottom;"
                     width="18"
                   />
                 </div>

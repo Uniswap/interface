@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ActivityIndicator } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
-import { AnimatePresence, Button, Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AnimatePresence, Button, Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
@@ -22,6 +22,7 @@ import {
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { logger } from 'utilities/src/logger/logger'
+import { isExtension } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { UnitagInfoModal } from 'wallet/src/features/unitags/UnitagInfoModal'
 import { UnitagName } from 'wallet/src/features/unitags/UnitagName'
@@ -44,13 +45,17 @@ const UNITAG_NAME_ANIMATE_DISTANCE_Y = imageSizes.image100 + spacing.spacing48 +
 export function ClaimUnitagContent({
   unitagAddress,
   entryPoint,
+  animateY = true,
   navigationEventConsumer,
   onNavigateContinue,
+  onComplete,
 }: {
   unitagAddress?: string
   entryPoint: UnitagEntryPoint
+  animateY?: boolean
   navigationEventConsumer?: EventConsumer<EventMapBase>
-  onNavigateContinue: (params: SharedUnitagScreenParams[UnitagScreens.ChooseProfilePicture]) => void // fix this any
+  onNavigateContinue?: (params: SharedUnitagScreenParams[UnitagScreens.ChooseProfilePicture]) => void
+  onComplete?: () => void
 }): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
@@ -71,7 +76,7 @@ export function ClaimUnitagContent({
     return {
       opacity: addressViewOpacity.value,
     }
-  })
+  }, [addressViewOpacity])
 
   const { error: canClaimUnitagNameError, loading: loadingUnitagErrorCheck } = useCanClaimUnitagName(unitagToCheck)
 
@@ -138,7 +143,7 @@ export function ClaimUnitagContent({
 
   const navigateWithAnimation = useCallback(
     (unitag: string) => {
-      if (!unitagAddress) {
+      if (entryPoint === OnboardingScreens.Landing && !unitagAddress) {
         const err = new Error('unitagAddress should always be defined')
         logger.error(err, {
           tags: { file: 'ClaimUnitagScreen', function: 'navigateWithAnimation' },
@@ -168,10 +173,21 @@ export function ClaimUnitagContent({
       )
       // Navigate to ChooseProfilePicture screen after initial delay + translation to allow animations to finish
       setTimeout(() => {
-        onNavigateContinue({ unitag, entryPoint, address: unitagAddress, unitagFontSize: fontSize })
+        onComplete?.()
+        if (unitagAddress && onNavigateContinue) {
+          onNavigateContinue({ unitag, entryPoint, address: unitagAddress, unitagFontSize: fontSize })
+        }
       }, initialDelay + translateYDuration)
     },
-    [onNavigateContinue, addressViewOpacity, entryPoint, unitagAddress, unitagInputContainerTranslateY, fontSize],
+    [
+      onComplete,
+      onNavigateContinue,
+      addressViewOpacity,
+      entryPoint,
+      unitagAddress,
+      unitagInputContainerTranslateY,
+      fontSize,
+    ],
   )
 
   // Handle when useUnitagError completes loading and returns a result after onPressContinue is called
@@ -197,6 +213,20 @@ export function ClaimUnitagContent({
     }
   }
 
+  const extensionStyling: FlexProps = isExtension
+    ? {
+        backgroundColor: '$surface1',
+        borderRadius: '$rounded20',
+        borderWidth: 1,
+        borderColor: '$surface3',
+        py: '$spacing12',
+        px: '$spacing20',
+        mb: '$spacing20',
+        width: '100%',
+        justifyContent: 'space-between',
+      }
+    : {}
+
   return (
     <>
       <Flex
@@ -211,8 +241,9 @@ export function ClaimUnitagContent({
         {/* Fixed text that animates in when TextInput is animated out */}
         <AnimatedFlex
           centered
+          width="100%"
           height={fonts.heading2.lineHeight}
-          style={{ transform: [{ translateY: unitagInputContainerTranslateY }] }}
+          style={{ transform: [{ translateY: animateY ? unitagInputContainerTranslateY : 0 }] }}
         >
           {!showTextInputView && (
             <Flex position="absolute">
@@ -228,6 +259,7 @@ export function ClaimUnitagContent({
                 enterStyle={{ opacity: 0, x: 40 }}
                 exitStyle={{ opacity: 0, x: 40 }}
                 gap="$none"
+                {...extensionStyling}
               >
                 <TextInput
                   autoFocus
@@ -236,7 +268,7 @@ export function ClaimUnitagContent({
                   autoCorrect={false}
                   borderWidth={0}
                   fontFamily="$heading"
-                  fontSize={fontSize}
+                  fontSize={isExtension ? fonts.subheading1.fontSize : fontSize}
                   fontWeight="$book"
                   numberOfLines={1}
                   p="$none"
@@ -255,7 +287,7 @@ export function ClaimUnitagContent({
                   enterStyle={{ opacity: 0, x: 40 }}
                   exitStyle={{ opacity: 0, x: 40 }}
                   fontFamily="$heading"
-                  fontSize={fontSize}
+                  fontSize={isExtension ? fonts.subheading1.fontSize : fontSize}
                   fontWeight="$book"
                   lineHeight={fonts.heading2.lineHeight}
                 >
@@ -284,15 +316,13 @@ export function ClaimUnitagContent({
             <InfoCircleFilled color={colors.neutral3.get()} size="$icon.20" />
           </TouchableArea>
         </AnimatedFlex>
-        {canClaimUnitagNameError && unitagToCheck === unitagInputValue && (
-          <Flex row gap="$spacing8">
-            <Text color="$statusCritical" textAlign="center" variant="body2">
-              {canClaimUnitagNameError}
-            </Text>
-          </Flex>
-        )}
+        <Flex row gap="$spacing8" minHeight={fonts.body2.lineHeight}>
+          <Text color="$statusCritical" textAlign="center" variant="body2">
+            {canClaimUnitagNameError}
+          </Text>
+        </Flex>
       </Flex>
-      <Flex gap="$spacing24" justifyContent="flex-end">
+      <Flex gap="$spacing24" pt={isExtension ? '$spacing24' : undefined} justifyContent="flex-end">
         <Button
           disabled={
             (entryPoint === OnboardingScreens.Landing && !unitagAddress) ||

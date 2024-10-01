@@ -84,7 +84,7 @@ jest.mock('@react-navigation/elements', () => ({
 
 require('react-native-reanimated').setUpTests()
 
-jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext)
+jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 
 jest.mock('react-native/Libraries/Share/Share', () => ({
   share: jest.fn(),

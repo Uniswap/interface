@@ -4,20 +4,21 @@ import { FadeIn, FadeOut } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { FundWalletModal } from 'src/components/home/introCards/FundWalletModal'
-import { CardType, IntroCardProps } from 'src/components/home/introCards/IntroCard'
-import { INTRO_CARD_MIN_HEIGHT, IntroCardStack, IntroCardWrapper } from 'src/components/home/introCards/IntroCardStack'
 import { UnitagBanner } from 'src/components/unitags/UnitagBanner'
-import { useUnitagClaimHandler } from 'src/features/unitags/useUnitagClaimHandler'
+import { openModal } from 'src/features/modals/modalSlice'
 import { Flex } from 'ui/src'
 import { Buy, Person, ShieldCheck, UniswapLogo } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { AccountType } from 'uniswap/src/features/accounts/types'
-import { ElementName, MobileEventName } from 'uniswap/src/features/telemetry/constants'
+import { ElementName, MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
 import { useTranslation } from 'uniswap/src/i18n'
 import { ImportType, OnboardingEntryPoint } from 'uniswap/src/types/onboarding'
-import { MobileScreens, OnboardingScreens } from 'uniswap/src/types/screens/mobile'
+import { MobileScreens, OnboardingScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
+import { CardType, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
+import { INTRO_CARD_MIN_HEIGHT, IntroCardStack } from 'wallet/src/components/introCards/IntroCardStack'
+import { IntroCardWithLogging } from 'wallet/src/components/introCards/useSharedIntroCards'
 import {
   selectHasSkippedUnitagPrompt,
   selectHasViewedWelcomeWalletCard,
@@ -25,11 +26,8 @@ import {
 import { setHasViewedWelcomeWalletCard } from 'wallet/src/features/behaviorHistory/slice'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
 import { useCanActiveAddressClaimUnitag } from 'wallet/src/features/unitags/hooks'
+import { useUnitagClaimHandler } from 'wallet/src/features/unitags/useUnitagClaimHandler'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-
-type IntroCardWithName = IntroCardWrapper & {
-  loggingName: OnboardingCardLoggingName
-}
 
 type OnboardingIntroCardStackProps = {
   onboardingRedesignHomeEnabled: boolean
@@ -44,17 +42,37 @@ export function OnboardingIntroCardStack({
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const activeAccount = useActiveAccountWithThrow()
+  const address = activeAccount.address
   const hasBackups = activeAccount.backups && activeAccount.backups.length > 0
 
   const welcomeCardTitle = t('onboarding.home.intro.welcome.title')
   const hasViewedWelcomeWalletCard = useSelector(selectHasViewedWelcomeWalletCard)
 
+  const navigateToUnitagClaim = useCallback(() => {
+    navigate(MobileScreens.UnitagStack, {
+      screen: UnitagScreens.ClaimUnitag,
+      params: {
+        entryPoint: MobileScreens.Home,
+        address,
+      },
+    })
+  }, [address])
+
+  const navigateToUnitagIntro = useCallback(() => {
+    dispatch(
+      openModal({
+        name: ModalName.UnitagsIntro,
+        initialState: { address, entryPoint: MobileScreens.Home },
+      }),
+    )
+  }, [dispatch, address])
+
   const hasSkippedUnitagPrompt = useSelector(selectHasSkippedUnitagPrompt)
   const { canClaimUnitag } = useCanActiveAddressClaimUnitag()
   const { handleClaim: handleUnitagClaim, handleDismiss: handleUnitagDismiss } = useUnitagClaimHandler({
-    address: activeAccount.address,
-    entryPoint: MobileScreens.Home,
     analyticsEntryPoint: 'home',
+    navigateToClaim: navigateToUnitagClaim,
+    navigateToIntro: navigateToUnitagIntro,
   })
 
   const [showFundModal, setShowFundModal] = useState(false)
@@ -67,7 +85,7 @@ export function OnboardingIntroCardStack({
       return []
     }
 
-    const output: IntroCardWithName[] = []
+    const output: IntroCardWithLogging[] = []
 
     if (!hasViewedWelcomeWalletCard) {
       output.push({
@@ -167,11 +185,7 @@ export function OnboardingIntroCardStack({
   if (cards.length) {
     return (
       <Flex pt="$spacing12">
-        {isLoading ? (
-          <Flex height={INTRO_CARD_MIN_HEIGHT} />
-        ) : (
-          <IntroCardStack cards={cards} keyExtractor={(card) => card.title} onSwiped={handleSwiped} />
-        )}
+        {isLoading ? <Flex height={INTRO_CARD_MIN_HEIGHT} /> : <IntroCardStack cards={cards} onSwiped={handleSwiped} />}
 
         {showFundModal && <FundWalletModal onClose={() => setShowFundModal(false)} />}
       </Flex>

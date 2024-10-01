@@ -63,6 +63,7 @@ export const ProtocolPreference: SwapSettingConfig = {
   },
 }
 
+// eslint-disable-next-line consistent-return
 export function getTitleFromProtocolPreference(preference: TradeProtocolPreference, t: TFunction): string {
   switch (preference) {
     case TradeProtocolPreference.Default:

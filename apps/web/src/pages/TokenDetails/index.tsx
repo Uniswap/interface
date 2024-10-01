@@ -5,7 +5,7 @@ import { TokenDetailsPageSkeleton } from 'components/Tokens/TokenDetails/Skeleto
 import { useChainFromUrlParam } from 'constants/chains'
 import { useTokenWarning } from 'constants/deprecatedTokenSafety'
 import { NATIVE_CHAIN_ID, UNKNOWN_TOKEN_SYMBOL } from 'constants/tokens'
-import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { getSupportedGraphQlChain, gqlToCurrency } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
@@ -123,7 +123,7 @@ function useCreateTDPContext(): PendingTDPContext | LoadedTDPContext {
   const tokenColor =
     useSrcColor(
       extractedColorSrc,
-      tokenQuery.data?.token?.project?.name ?? tokenQuery.data?.token?.name,
+      tokenQuery.data?.token?.name ?? tokenQuery.data?.token?.project?.name,
       theme.surface2,
     ).tokenColor ?? undefined
 

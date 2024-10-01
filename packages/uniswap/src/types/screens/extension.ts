@@ -25,6 +25,7 @@ export enum ExtensionOnboardingScreens {
   SetPassword = 'SetPassword',
 
   // New Wallet Flow
+  ClaimUnitag = 'ClaimUnitag',
   NameWallet = 'NameWallet',
   ViewSeedPhrase = 'ViewSeedPhrase',
   ConfirmSeedPhrase = 'ConfirmSeedPhrase',

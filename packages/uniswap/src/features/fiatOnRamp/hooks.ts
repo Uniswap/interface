@@ -51,7 +51,7 @@ export function useFormatExactCurrencyAmount(currencyAmount: string, currency: M
   const formatter = useLocalizationContext()
 
   if (!currencyAmount || !currency) {
-    return
+    return undefined
   }
 
   const formattedAmount = getFormattedCurrencyAmount(currency, currencyAmount, formatter, false, ValueType.Exact)

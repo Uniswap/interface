@@ -39,6 +39,8 @@ function useModalBackHandler(modalRef: React.RefObject<BaseModal>, enabled: bool
 
       return subscription.remove
     }
+
+    return undefined
   }, [modalRef, enabled])
 }
 

@@ -317,6 +317,7 @@ export async function signatureToActivity(
   switch (signature.type) {
     case SignatureType.SIGN_UNISWAPX_ORDER:
     case SignatureType.SIGN_UNISWAPX_V2_ORDER:
+    case SignatureType.SIGN_PRIORITY_ORDER:
     case SignatureType.SIGN_LIMIT: {
       // Only returns Activity items for orders that don't have an on-chain counterpart
       if (isOnChainOrder(signature.status)) {

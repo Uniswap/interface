@@ -80,14 +80,13 @@ export const ActivityTab = memo(
           // `sectionData` will be either an array of transactions or an array of loading skeletons
           data={sectionData}
           estimatedItemSize={ESTIMATED_ITEM_SIZE}
-          initialNumToRender={20}
+          initialNumToRender={10}
           keyExtractor={keyExtractor}
-          maxToRenderPerBatch={20}
+          maxToRenderPerBatch={10}
           refreshControl={refreshControl}
           refreshing={refreshing}
           renderItem={renderActivityItem}
           showsVerticalScrollIndicator={false}
-          updateCellsBatchingPeriod={10}
           onContentSizeChange={onContentSizeChange}
           onRefresh={onRefresh}
           onScroll={scrollHandler}

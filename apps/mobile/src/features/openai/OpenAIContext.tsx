@@ -71,7 +71,7 @@ async function handleRunStatus(
   if (run.status === 'completed') {
     processMessages()
   } else if (run.status === 'requires_action') {
-    return await handleRequiresAction(threadId, run, processMessages, toolsMap)
+    await handleRequiresAction(threadId, run, processMessages, toolsMap)
   } else {
     logger.debug('OpenAIContext.tsx', 'handleRunStatus', `Run did not complete: ${run.id}`)
   }
@@ -400,6 +400,7 @@ function _OpenAIContextProvider({ children }: { children: React.ReactNode }): JS
       })
       return listener.remove
     }
+    return undefined
   }, [mainThread, sendMessage])
 
   const value = {

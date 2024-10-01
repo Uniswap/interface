@@ -1,4 +1,4 @@
-import { GasStrategy } from 'uniswap/src/data/tradingApi/__generated__'
+import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 
 /**
  * Dynamic Configs

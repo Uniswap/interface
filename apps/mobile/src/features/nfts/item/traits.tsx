@@ -8,7 +8,7 @@ import { NftAssetTrait } from 'uniswap/src/data/graphql/uniswap-data-api/__gener
 
 const formatTraitValue = (trait: NftAssetTrait): string | undefined => {
   if (!trait.value) {
-    return
+    return undefined
   }
 
   if (trait.name?.toLowerCase().split(' ').includes('date')) {

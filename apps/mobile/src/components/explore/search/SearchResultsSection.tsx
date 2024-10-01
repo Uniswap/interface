@@ -81,7 +81,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   const tokenResults = useMemo<TokenSearchResult[] | undefined>(() => {
     if (!searchResultsData || !searchResultsData.searchTokens) {
-      return
+      return undefined
     }
 
     return formatTokenSearchResults(searchResultsData.searchTokens, searchQuery)
@@ -91,7 +91,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
   const nftCollectionResults = useMemo<NFTCollectionSearchResult[] | undefined>(() => {
     if (!searchResultsData || !searchResultsData.nftCollections) {
-      return
+      return undefined
     }
 
     return formatNFTCollectionSearchResults(searchResultsData.nftCollections)

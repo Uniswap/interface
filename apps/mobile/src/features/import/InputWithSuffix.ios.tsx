@@ -41,7 +41,6 @@ export default function InputWithSuffix({
         spellCheck={false}
         testID={TestID.ImportAccountInput}
         textAlign={isInputEmpty ? 'left' : textInputAlignment}
-        textAlignVertical="bottom"
         value={value}
         {...inputProps}
       />
@@ -57,7 +56,6 @@ export default function InputWithSuffix({
           px="$none"
           py="$none"
           scrollEnabled={false}
-          textAlignVertical="bottom"
           value={inputSuffix}
         />
       ) : null}

@@ -161,7 +161,7 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({ item }: { item: 
           }}
         />
         {hiddenTokensExpanded && (
-          <Flex mx="$spacing12">
+          <Flex>
             <InformationBanner infoText={t('hidden.tokens.info.banner.text')} onPress={handlePressToken} />
           </Flex>
         )}

@@ -18,7 +18,7 @@ export function useTokenProjects(currencyIds: CurrencyId[]): GqlResult<CurrencyI
 
   const formattedData = useMemo(() => {
     if (!data || !data.tokenProjects) {
-      return
+      return undefined
     }
 
     return tokenProjectToCurrencyInfos(data.tokenProjects)

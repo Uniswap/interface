@@ -101,7 +101,7 @@ const RollNumber = ({
         key={idx}
         allowFontScaling={false}
         fontFamily="$heading"
-        style={[AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT, color: currentColor }]}
+        style={[AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT, color: nextColor ?? currentColor }]}
       >
         {char}
       </Text>

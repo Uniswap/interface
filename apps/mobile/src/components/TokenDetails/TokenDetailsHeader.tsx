@@ -27,7 +27,7 @@ export function TokenDetailsHeader({
     <Flex gap="$spacing12" mx="$spacing16">
       <TokenLogo
         chainId={fromGraphQLChain(token?.chain) ?? undefined}
-        name={token?.project?.name ?? undefined}
+        name={token?.name ?? undefined}
         symbol={token?.symbol ?? undefined}
         url={tokenProject?.logoUrl ?? undefined}
       />
@@ -40,7 +40,7 @@ export function TokenDetailsHeader({
           testID={TestID.TokenDetailsHeaderText}
           variant="subheading1"
         >
-          {tokenProject?.name ?? '—'}
+          {token?.name ?? '—'}
         </Text>
         {/* Suppress warning icon on low warning level */}
         {(tokenProject?.safetyLevel === SafetyLevel.StrongWarning ||

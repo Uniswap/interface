@@ -56,6 +56,7 @@ describe('FlashbotsRpcProvider', () => {
           expect(connection.headers?.['X-Flashbots-Signature']).toBe(`${testAddress}:0xsignature`)
           return Promise.resolve(0x3)
         }
+        return undefined
       })
 
       const result = await provider.getTransactionCount(testAddress, 'pending')

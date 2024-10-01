@@ -62,7 +62,6 @@ export default function InputWithSuffix({
         px="$none"
         py="$none"
         scrollEnabled={false}
-        textAlignVertical="bottom"
         value={inputSuffix}
       />
     ) : null
@@ -86,7 +85,6 @@ export default function InputWithSuffix({
         autoCapitalize="none"
         backgroundColor="$transparent"
         color="$neutral1"
-        flexShrink={1}
         fontSize={inputFontSize}
         lineHeight={inputFontSize}
         maxFontSizeMultiplier={inputMaxFontSizeMultiplier}
@@ -98,8 +96,8 @@ export default function InputWithSuffix({
         spellCheck={false}
         testID={TestID.ImportAccountInput}
         textAlign={isInputEmpty ? 'left' : textInputAlignment}
-        textAlignVertical={isInputEmpty ? 'center' : 'bottom'}
         value={value}
+        verticalAlign="center"
         onLayout={measureInputWidth}
         {...inputProps}
       />

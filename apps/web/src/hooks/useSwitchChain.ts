@@ -1,14 +1,14 @@
 import { useIsSupportedChainIdCallback } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { useCallback } from 'react'
-import { useAppDispatch } from 'state/hooks'
+import { useDispatch } from 'react-redux'
 import { endSwitchingChain, startSwitchingChain } from 'state/wallets/reducer'
 import { trace } from 'tracing/trace'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { useSwitchChain as useSwitchChainWagmi } from 'wagmi'
 
 export function useSwitchChain() {
-  const dispatch = useAppDispatch()
+  const dispatch = useDispatch()
   const isSupportedChainCallback = useIsSupportedChainIdCallback()
   const { switchChain } = useSwitchChainWagmi()
   const account = useAccount()
@@ -21,7 +21,7 @@ export function useSwitchChain() {
       }
       if (account.chainId === chainId) {
         // some wallets (e.g. SafeWallet) only support single-chain & will throw error on `switchChain` even if already on the correct chain
-        return
+        return undefined
       }
       return trace(
         { name: 'Switch chain', op: 'wallet.switch_chain' },

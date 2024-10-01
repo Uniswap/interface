@@ -3,13 +3,13 @@ import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { MouseoverTooltip } from 'components/Tooltip'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { Field } from 'components/swap/constants'
 import { useWindowSize } from 'hooks/screenSize/useWindowSize'
 import styled from 'lib/styled-components'
 import { PropsWithChildren, ReactNode } from 'react'
 import { TextProps } from 'rebass'
 import { BREAKPOINTS } from 'theme'
 import { ThemedText } from 'theme/components'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const Label = styled(ThemedText.BodySmall)<{ cursor?: string }>`
@@ -30,7 +30,7 @@ const ResponsiveHeadline = ({ children, ...textProps }: PropsWithChildren<TextPr
 
 interface AmountProps {
   isLoading: boolean
-  field: Field
+  field: CurrencyField
   tooltipText?: ReactNode
   label: ReactNode
   amount: CurrencyAmount<Currency>

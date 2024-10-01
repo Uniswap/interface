@@ -9,6 +9,7 @@ import { PersistGate } from 'redux-persist/integration/react'
 import { ExtensionStatsigProvider } from 'src/app/StatsigProvider'
 import { GraphqlProvider } from 'src/app/apollo'
 import { ErrorElement } from 'src/app/components/ErrorElement'
+import { ClaimUnitagScreen } from 'src/app/features/onboarding/ClaimUnitagScreen'
 import { Complete } from 'src/app/features/onboarding/Complete'
 import {
   CreateOnboardingSteps,
@@ -55,6 +56,14 @@ const unsupportedRoute: RouteObject = {
   element: <UnsupportedBrowserScreen />,
 }
 
+const createSteps = {
+  [CreateOnboardingSteps.Password]: <PasswordCreate />,
+  [CreateOnboardingSteps.ViewMnemonic]: <ViewMnemonic />,
+  [CreateOnboardingSteps.TestMnemonic]: <TestMnemonic />,
+  [CreateOnboardingSteps.Naming]: <NameWallet />,
+  [CreateOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.New} />,
+}
+
 const allRoutes = [
   {
     path: '',
@@ -66,15 +75,16 @@ const allRoutes = [
   },
   {
     path: OnboardingRoutes.Create,
+    element: <OnboardingStepsProvider key={OnboardingRoutes.Create} steps={createSteps} />,
+  },
+  {
+    path: OnboardingRoutes.Claim,
     element: (
       <OnboardingStepsProvider
-        key={OnboardingRoutes.Create}
+        key={OnboardingRoutes.Claim}
         steps={{
-          [CreateOnboardingSteps.Password]: <PasswordCreate />,
-          [CreateOnboardingSteps.ViewMnemonic]: <ViewMnemonic />,
-          [CreateOnboardingSteps.TestMnemonic]: <TestMnemonic />,
-          [CreateOnboardingSteps.Naming]: <NameWallet />,
-          [CreateOnboardingSteps.Complete]: <Complete flow={ExtensionOnboardingFlow.New} />,
+          [CreateOnboardingSteps.ClaimUnitag]: <ClaimUnitagScreen />,
+          ...createSteps,
         }}
       />
     ),

@@ -19,7 +19,7 @@ export function useUSDTokenUpdater(
 } {
   const { price, state } = useStablecoinPrice(exactCurrency)
   const { convertToFiatAmount, formatCurrencyAmount } = useFormatter()
-  const conversionRate = convertToFiatAmount().amount
+  const conversionRate = convertToFiatAmount(1).amount
   const supportedChainId = useSupportedChainId(exactCurrency?.chainId)
 
   return useMemo(() => {

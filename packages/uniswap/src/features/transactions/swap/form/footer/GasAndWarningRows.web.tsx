@@ -24,7 +24,7 @@ export function GasAndWarningRows(): JSX.Element {
   const { derivedSwapInfo } = useSwapFormContext()
 
   const { trade } = derivedSwapInfo
-  const priceImpact = trade.trade ? normalizePriceImpact(trade.trade?.priceImpact) : undefined
+  const priceImpact = trade.trade?.priceImpact ? normalizePriceImpact(trade.trade?.priceImpact) : undefined
 
   const [showWarningModal, setShowWarningModal] = useState(false)
 

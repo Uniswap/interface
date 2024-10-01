@@ -8,6 +8,7 @@ export enum TopLevelRoutes {
 export enum OnboardingRoutes {
   Import = 'import',
   Create = 'create',
+  Claim = 'claim',
   Scan = 'scan',
   Reset = 'reset',
   ResetScan = 'reset-scan',

@@ -1,4 +1,4 @@
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { PlusMinusButton, PlusMinusButtonType } from 'ui/src/components/button/PlusMinusButton'
@@ -13,7 +13,7 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
 import { useSlippageSettings } from 'uniswap/src/features/transactions/swap/settings/useSlippageSettings'
-import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { BridgeTrade, TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -71,6 +71,12 @@ export const Slippage: SwapSettingConfig = {
       onBlurSlippageInput,
       onPressPlusMinusButton,
     } = useSlippageSettings()
+
+    if (trade instanceof BridgeTrade) {
+      // Check exists to make sure trade conforms to TradeWithSlippage,
+      // since this component should not be rendered for bridge trades which don't have slippage
+      return null
+    }
 
     return (
       <Flex centered gap="$spacing16">
@@ -150,7 +156,7 @@ function SlippageMessage({
   showEmpty = true,
 }: {
   inputWarning?: string
-  trade: Trade<Currency, Currency, TradeType> | null
+  trade: TradeWithSlippage | null
   slippageTolerance: number
   showSlippageWarning: boolean
   showEmpty?: boolean

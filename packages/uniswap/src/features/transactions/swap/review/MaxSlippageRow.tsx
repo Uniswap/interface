@@ -1,4 +1,4 @@
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@uniswap/sdk-core'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
@@ -13,7 +13,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { BridgeTrade, IndicativeTrade, TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { NumberType } from 'utilities/src/format/types'
 
@@ -37,6 +37,10 @@ export function MaxSlippageRow({
 
   if (!acceptedTrade) {
     throw new Error('Invalid render of `MaxSlippageInfo` with no `acceptedTrade`')
+  }
+
+  if (acceptedTrade instanceof BridgeTrade) {
+    throw new Error('Invalid render of `MaxSlippageInfo` for bridge trade')
   }
 
   // If we don't have a custom slippage tolerance set, we won't have a tolerance to display for an indicative quote,
@@ -83,7 +87,7 @@ export function MaxSlippageRow({
 }
 
 type SlippageWarningContentProps = PropsWithChildren<{
-  trade: Trade<Currency, Currency, TradeType> | IndicativeTrade
+  trade: TradeWithSlippage | IndicativeTrade
   isCustomSlippage: boolean
   autoSlippageTolerance?: number
 }>
@@ -182,7 +186,7 @@ export function SlippageWarningContent({
       modalProps={{
         backgroundIconColor: colors.surface2.get(),
         captionComponent: captionContent,
-        closeText: t('common.button.close'),
+        rejectText: t('common.button.close'),
         icon: <Settings color="$neutral2" size="$icon.28" />,
         modalName: ModalName.SlippageInfo,
         severity: WarningSeverity.None,

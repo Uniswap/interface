@@ -1,13 +1,15 @@
 import providers from '@ethersproject/providers'
 import { Protocol } from '@uniswap/router-sdk'
 import { Percent, TradeType } from '@uniswap/sdk-core'
+import { NullablePermit, Permit } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
-import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
   BaseSwapTransactionInfo,
+  BridgeTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   GasFeeEstimates,
@@ -21,15 +23,28 @@ export function tradeToTransactionInfo(
   trade: Trade,
   transactedUSDValue?: number,
   gasEstimates?: GasFeeEstimates,
-): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo {
-  const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance)
-
+): ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | BridgeTransactionInfo {
+  const slippageTolerancePercent = slippageToleranceToPercent(trade.slippageTolerance ?? 0)
   const { quote, slippageTolerance } = trade
   const { quoteId, gasUseEstimate, routeString } = getClassicQuoteFromResponse(quote) ?? {}
 
   // UniswapX trades wrap native input before swapping
   const inputCurrency = isUniswapX(trade) ? trade.inputAmount.currency.wrapped : trade.inputAmount.currency
   const outputCurrency = trade.outputAmount.currency
+
+  if (isBridge(trade)) {
+    return {
+      type: TransactionType.Bridge,
+      inputCurrencyId: currencyId(inputCurrency),
+      inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+      outputCurrencyId: currencyId(outputCurrency),
+      outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+      quoteId,
+      gasUseEstimate,
+      transactedUSDValue,
+      gasEstimates,
+    }
+  }
 
   const baseTransactionInfo: BaseSwapTransactionInfo = {
     type: TransactionType.Swap,
@@ -121,6 +136,19 @@ export function validateTransactionRequest(
 ): ValidatedTransactionRequest | undefined {
   if (request?.to && request.chainId) {
     return { ...request, to: request.to, chainId: request.chainId }
+  }
+  return undefined
+}
+
+type RemoveUndefined<T> = {
+  [P in keyof T]-?: Exclude<T[P], undefined>
+}
+
+export type ValidatedPermit = RemoveUndefined<Permit>
+export function validatePermit(permit: NullablePermit | undefined): ValidatedPermit | undefined {
+  const { domain, types, values } = permit ?? {}
+  if (domain && types && values) {
+    return { domain, types, values }
   }
   return undefined
 }

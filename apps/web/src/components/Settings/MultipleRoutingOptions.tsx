@@ -3,7 +3,7 @@ import UniswapXBrandMark from 'components/Logo/UniswapXBrandMark'
 import QuestionHelper from 'components/QuestionHelper'
 import Column from 'components/deprecated/Column'
 import Row, { RowBetween } from 'components/deprecated/Row'
-import { isUniswapXSupportedChain } from 'constants/chains'
+import { useIsUniswapXSupportedChain } from 'constants/chains'
 import { atom, useAtom } from 'jotai'
 import styled from 'lib/styled-components'
 import { ReactNode, useCallback } from 'react'
@@ -122,7 +122,7 @@ export default function MultipleRoutingOptions({ chainId }: { chainId?: number }
   const [, setRoutingPreferences] = useAtom(routingPreferencesAtom)
   const shouldDisableProtocolOptionToggle =
     !routePreferenceOptions[RoutePreferenceOption.v2] || !routePreferenceOptions[RoutePreferenceOption.v3]
-  const uniswapXSupportedChain = chainId && isUniswapXSupportedChain(chainId)
+  const uniswapXSupportedChain = useIsUniswapXSupportedChain(chainId)
   const handleSetRoutePreferenceOptions = useCallback(
     (options: RoutePreferenceOptionsType) => {
       if (options[RoutePreferenceOption.Optimal]) {

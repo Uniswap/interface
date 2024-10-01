@@ -150,7 +150,7 @@ export async function focusOrCreateTokensExploreTab({ currencyId }: { currencyId
       tags: { file: 'navigation/utils.ts', function: 'focusOrCreateTokensExploreTab' },
       extra: { currencyId },
     })
-    return
+    return undefined
   }
 
   return focusOrCreateUniswapInterfaceTab({

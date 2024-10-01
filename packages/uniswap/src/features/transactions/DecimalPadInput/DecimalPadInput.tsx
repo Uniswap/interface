@@ -1,4 +1,14 @@
-import { RefObject, forwardRef, memo, useCallback, useEffect, useImperativeHandle, useMemo, useState } from 'react'
+import {
+  RefObject,
+  forwardRef,
+  memo,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useMemo,
+  useRef,
+  useState,
+} from 'react'
 import { Flex } from 'ui/src'
 import { TextInputProps } from 'uniswap/src/components/input/TextInput'
 import { DecimalPad } from 'uniswap/src/features/transactions/DecimalPadInput/DecimalPad'
@@ -6,6 +16,9 @@ import { DecimalPad } from 'uniswap/src/features/transactions/DecimalPadInput/De
 import type { LayoutChangeEvent } from 'react-native'
 import { KeyAction, KeyLabel } from 'uniswap/src/features/transactions/DecimalPadInput/types'
 import { maxDecimalsReached } from 'utilities/src/format/truncateToMaxDecimals'
+
+const LONG_PRESS_DELETE_INTERVAL_MS = 20
+const LONG_PRESS_DELETE_INTERVAL_DELIMITER_MS = 750
 
 type DisableKeyCondition = (value: string) => boolean
 
@@ -186,16 +199,76 @@ export const DecimalPadInput = memo(
       [disabled, handleInsert, handleDelete],
     )
 
-    const onLongPress = useCallback(
+    const deletingTimeout = useRef<ReturnType<typeof setTimeout> | undefined>(undefined)
+    const stopDeleting = useCallback(() => clearTimeout(deletingTimeout.current), [])
+
+    const onLongPressStart = useCallback(
       (_: KeyLabel, action: KeyAction) => {
         if (disabled || action !== KeyAction.Delete) {
           return
         }
-        resetSelection({ start: 0, end: 0 })
-        updateValue('')
+
+        // We delete one character at a time until we've deleted either half of the input text or more than 5 characters,
+        // and then we start deleting by "word" (ie. up until the next decimal or thousand separator).
+
+        const initialAmountLength = valueRef.current.length
+
+        const deleteWithTimeout = (): void => {
+          const start = getCurrentSelection().start ?? valueRef.current.length
+          const isCursorAtTheEnd = start === valueRef.current.length
+
+          const hasDeletedMoreThanHalfCharacters = valueRef.current.length <= initialAmountLength / 2
+          const hasDeletedMoreThanFiveCharacters = initialAmountLength - valueRef.current.length >= 5
+
+          // If we haven't deleted more than half of the input or more than 5 characters, we delete one character at a time.
+          if (!isCursorAtTheEnd || !(hasDeletedMoreThanHalfCharacters || hasDeletedMoreThanFiveCharacters)) {
+            handleDelete()
+            deletingTimeout.current = setTimeout(deleteWithTimeout, LONG_PRESS_DELETE_INTERVAL_MS)
+            return
+          }
+
+          const nextDelimiterPosition = Math.max(
+            valueRef.current.lastIndexOf('.'),
+            valueRef.current.lastIndexOf(','),
+            valueRef.current.lastIndexOf(' '),
+          )
+
+          // If we found a thousand or decimal separator, we delete up until that delimiter.
+          if (nextDelimiterPosition > 0) {
+            resetSelection({ start: nextDelimiterPosition, end: nextDelimiterPosition })
+            updateValue(valueRef.current.slice(0, nextDelimiterPosition))
+
+            // When we delete by delimiter, we want to have a slightly longer delay so the user has enough time to stop long pressing.
+            deletingTimeout.current = setTimeout(deleteWithTimeout, LONG_PRESS_DELETE_INTERVAL_DELIMITER_MS)
+            return
+          }
+
+          // If we've already deleted more than half of the input and there are no more delimiters to delete by, we delete everything.
+          resetSelection({ start: 0, end: 0 })
+          updateValue('')
+          return
+        }
+
+        deleteWithTimeout()
       },
-      [disabled, updateValue, resetSelection],
+      [disabled, getCurrentSelection, handleDelete, resetSelection, updateValue, valueRef],
     )
+
+    const onLongPressEnd = useCallback(
+      (_: KeyLabel, action: KeyAction) => {
+        if (disabled || action !== KeyAction.Delete) {
+          return
+        }
+        stopDeleting()
+      },
+      [disabled, stopDeleting],
+    )
+
+    useEffect(() => {
+      // Clear the interval when the component unmounts.
+      // This shouldn't be necessary, but it's a good practice to avoid potential issues with `onLongPressEnd` not firing in some unknown edge case.
+      return () => stopDeleting()
+    }, [stopDeleting])
 
     return (
       <DecimalPad
@@ -203,7 +276,8 @@ export const DecimalPadInput = memo(
         disabledKeys={disabledKeys}
         hideDecimal={hideDecimal}
         maxHeight={maxHeight}
-        onKeyLongPress={onLongPress}
+        onKeyLongPressStart={onLongPressStart}
+        onKeyLongPressEnd={onLongPressEnd}
         onKeyPress={onPress}
         onReady={onReady}
         onTriggerInputShakeAnimation={onTriggerInputShakeAnimation}

@@ -176,6 +176,8 @@ export function DappLogoWithTxStatus({
         return <Approve color={green} fill={fill} size={statusSize} testID="icon-approve" />
       case WalletConnectEvent.TransactionFailed:
         return <AlertTriangleFilled color={yellow} fill={fill} size={statusSize} testID="icon-alert" />
+      default:
+        return undefined
     }
   }
 

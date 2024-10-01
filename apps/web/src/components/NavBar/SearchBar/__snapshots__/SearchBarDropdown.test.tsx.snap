@@ -228,7 +228,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
                           <svg
                             fill="none"
                             stroke-width="8"
-                            style="color: rgb(206, 206, 206); width: 16px; height: 16px;"
+                            style="color: rgb(191, 191, 191); width: 16px; height: 16px;"
                             viewBox="0 0 16 16"
                           >
                             <path
@@ -612,7 +612,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                           <svg
                             fill="none"
                             stroke-width="8"
-                            style="color: rgb(206, 206, 206); width: 16px; height: 16px;"
+                            style="color: rgb(191, 191, 191); width: 16px; height: 16px;"
                             viewBox="0 0 16 16"
                           >
                             <path
@@ -807,7 +807,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                           <svg
                             fill="none"
                             stroke-width="8"
-                            style="color: rgb(206, 206, 206); width: 16px; height: 16px;"
+                            style="color: rgb(191, 191, 191); width: 16px; height: 16px;"
                             viewBox="0 0 16 16"
                           >
                             <path

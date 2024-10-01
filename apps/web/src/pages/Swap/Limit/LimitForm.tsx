@@ -12,11 +12,11 @@ import {
   useCurrentPriceAdjustment,
 } from 'components/CurrencyInputPanel/LimitPriceInputPanel/useCurrentPriceAdjustment'
 import SwapCurrencyInputPanel from 'components/CurrencyInputPanel/SwapCurrencyInputPanel'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
-import { Field } from 'components/swap/constants'
 import { ArrowContainer, ArrowWrapper, SwapSection } from 'components/swap/styled'
-import { getChain, isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
+import { getChain, useIsSupportedChainId, useIsUniswapXSupportedChain } from 'constants/chains'
 import { ZERO_PERCENT } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import usePermit2Allowance, { AllowanceState } from 'hooks/usePermit2Allowance'
@@ -37,11 +37,8 @@ import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { Anchor, Text, styled as tamaguiStyled } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { colors, validColor } from 'ui/src/theme'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
-import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import { Locale } from 'uniswap/src/features/language/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, InterfacePageNameLocal } from 'uniswap/src/features/telemetry/constants'
@@ -100,6 +97,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
     setCurrencyState,
   } = useSwapAndLimitContext()
   const isSupportedChain = useIsSupportedChainId(chainId)
+  const isUniswapXSupportedChain = useIsUniswapXSupportedChain(chainId)
 
   const { limitState, setLimitState, derivedLimitInfo } = useLimitContext()
   const { currencyBalances, parsedAmounts, parsedLimitPrice, limitOrderTrade, marketPrice } = derivedLimitInfo
@@ -173,7 +171,8 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   const onSelectCurrency = useCallback(
     (type: keyof CurrencyState, newCurrency: Currency) => {
       if ((type === 'inputCurrency' ? outputCurrency : inputCurrency)?.equals(newCurrency)) {
-        return switchTokens()
+        switchTokens()
+        return
       }
       const [newInput, newOutput] =
         type === 'inputCurrency' ? [newCurrency, outputCurrency] : [inputCurrency, newCurrency]
@@ -228,54 +227,56 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
   }, [])
 
   const maxInputAmount: CurrencyAmount<Currency> | undefined = useMemo(
-    () => maxAmountSpend(currencyBalances[Field.INPUT]),
+    () => maxAmountSpend(currencyBalances[CurrencyField.INPUT]),
     [currencyBalances],
   )
-  const showMaxButton = Boolean(maxInputAmount?.greaterThan(0) && !parsedAmounts[Field.INPUT]?.equalTo(maxInputAmount))
+  const showMaxButton = Boolean(
+    maxInputAmount?.greaterThan(0) && !parsedAmounts[CurrencyField.INPUT]?.equalTo(maxInputAmount),
+  )
 
   const handleMaxInput = useCallback(() => {
     maxInputAmount && onTypeInput('inputAmount')(maxInputAmount.toExact())
   }, [maxInputAmount, onTypeInput])
 
   const hasInsufficientFunds =
-    parsedAmounts.INPUT && currencyBalances.INPUT ? currencyBalances.INPUT.lessThan(parsedAmounts.INPUT) : false
+    parsedAmounts.input && currencyBalances.input ? currencyBalances.input.lessThan(parsedAmounts.input) : false
 
   const allowance = usePermit2Allowance(
-    parsedAmounts.INPUT?.currency?.isNative ? undefined : (parsedAmounts.INPUT as CurrencyAmount<Token>),
+    parsedAmounts.input?.currency?.isNative ? undefined : (parsedAmounts.input as CurrencyAmount<Token>),
     isSupportedChain ? UNIVERSAL_ROUTER_ADDRESS(chainId) : undefined,
     TradeFillType.UniswapX,
   )
 
-  const fiatValueTradeInput = useUSDPrice(parsedAmounts.INPUT)
-  const fiatValueTradeOutput = useUSDPrice(parsedAmounts.OUTPUT)
+  const fiatValueTradeInput = useUSDPrice(parsedAmounts.input)
+  const fiatValueTradeOutput = useUSDPrice(parsedAmounts.output)
 
   const formattedAmounts = useMemo(() => {
     // if there is no Price field, then just default to user-typed amounts
     if (!limitState.limitPrice) {
       return {
-        [Field.INPUT]: limitState.inputAmount,
-        [Field.OUTPUT]: limitState.outputAmount,
+        [CurrencyField.INPUT]: limitState.inputAmount,
+        [CurrencyField.OUTPUT]: limitState.outputAmount,
       }
     }
 
     const formattedInput = limitState.isInputAmountFixed
       ? limitState.inputAmount
       : formatCurrencyAmount({
-          amount: derivedLimitInfo.parsedAmounts[Field.INPUT],
+          amount: derivedLimitInfo.parsedAmounts[CurrencyField.INPUT],
           type: NumberType.SwapTradeAmount,
           placeholder: '',
         })
     const formattedOutput = limitState.isInputAmountFixed
       ? formatCurrencyAmount({
-          amount: derivedLimitInfo.parsedAmounts[Field.OUTPUT],
+          amount: derivedLimitInfo.parsedAmounts[CurrencyField.OUTPUT],
           type: NumberType.SwapTradeAmount,
           placeholder: '',
         })
       : limitState.outputAmount
 
     return {
-      [Field.INPUT]: formattedInput,
-      [Field.OUTPUT]: formattedOutput,
+      [CurrencyField.INPUT]: formattedInput,
+      [CurrencyField.OUTPUT]: formattedOutput,
     }
   }, [
     limitState.limitPrice,
@@ -318,7 +319,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         <Trace section={InterfaceSectionName.CURRENCY_INPUT_PANEL}>
           <SwapCurrencyInputPanel
             label={<Trans i18nKey="common.sell.label" />}
-            value={formattedAmounts[Field.INPUT]}
+            value={formattedAmounts[CurrencyField.INPUT]}
             showMaxButton={showMaxButton}
             currency={inputCurrency ?? null}
             currencyField={CurrencyField.INPUT}
@@ -345,7 +346,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         <Trace section={InterfaceSectionName.CURRENCY_OUTPUT_PANEL}>
           <SwapCurrencyInputPanel
             label={<Trans i18nKey="common.buy.label" />}
-            value={formattedAmounts[Field.OUTPUT]}
+            value={formattedAmounts[CurrencyField.OUTPUT]}
             showMaxButton={false}
             currency={outputCurrency ?? null}
             currencyField={CurrencyField.OUTPUT}
@@ -366,7 +367,7 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         hasInsufficientFunds={hasInsufficientFunds}
         limitPriceError={priceError}
       />
-      {isUniswapXSupportedChain(chainId) && !!priceError && inputCurrency && outputCurrency && limitOrderTrade && (
+      {isUniswapXSupportedChain && !!priceError && inputCurrency && outputCurrency && limitOrderTrade && (
         <LimitPriceError
           priceError={priceError}
           priceAdjustmentPercentage={currentPriceAdjustment}
@@ -376,9 +377,9 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
         />
       )}
       <LimitDisclaimerContainer>
-        <StyledAlertIcon size={20} color={!isUniswapXSupportedChain(chainId) ? theme.critical : theme.neutral2} />
+        <StyledAlertIcon size={20} color={!isUniswapXSupportedChain ? theme.critical : theme.neutral2} />
         <Text variant="body3">
-          {!isUniswapXSupportedChain(chainId) ? (
+          {!isUniswapXSupportedChain ? (
             <Trans
               i18nKey="limits.form.disclaimer.mainnet"
               components={{
@@ -432,8 +433,8 @@ function LimitForm({ onCurrencyChange }: LimitFormProps) {
           }}
           fiatValueInput={fiatValueTradeInput}
           fiatValueOutput={fiatValueTradeOutput}
-          onCurrencySelection={(field: Field, currency) => {
-            onSelectCurrency(field === Field.INPUT ? 'inputCurrency' : 'outputCurrency', currency)
+          onCurrencySelection={(field: CurrencyField, currency) => {
+            onSelectCurrency(field === CurrencyField.INPUT ? 'inputCurrency' : 'outputCurrency', currency)
           }}
           onConfirm={handleSubmit}
           onDismiss={() => {
@@ -465,11 +466,7 @@ function SubmitOrderButton({
   const account = useAccount()
   const { chainId } = useSwapAndLimitContext()
 
-  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
-  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
-  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
-
-  if (!isUniswapXSupportedChain(chainId)) {
+  if (!useIsUniswapXSupportedChain(chainId)) {
     return (
       <ButtonError disabled>
         <Trans i18nKey="limits.selectSupportedTokens" />
@@ -480,13 +477,7 @@ function SubmitOrderButton({
   if (!account.isConnected) {
     return (
       <ButtonLight onClick={accountDrawer.open} fontWeight={535} $borderRadius="16px">
-        {isSignIn ? (
-          <Trans i18nKey="nav.signIn.button" />
-        ) : isLogIn ? (
-          <Trans i18nKey="nav.logIn.button" />
-        ) : (
-          <Trans i18nKey="common.connectWallet.button" />
-        )}
+        <ConnectWalletButtonText />
       </ButtonLight>
     )
   }
@@ -513,7 +504,7 @@ function SubmitOrderButton({
         data-testid="submit-order-button"
         disabled={!trade || !!limitPriceError}
       >
-        <Text color={validColor(colors.white)} fontSize={20}>
+        <Text color="neutralContrast" fontSize={20}>
           <Trans i18nKey="common.confirm" />
         </Text>
       </ButtonError>

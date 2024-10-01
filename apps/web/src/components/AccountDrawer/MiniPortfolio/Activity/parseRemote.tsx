@@ -495,7 +495,7 @@ function parseUniswapXOrder(activity: OrderActivity): Activity | undefined {
 
   // If the order is open, do not render it.
   if (signature.status === UniswapXOrderStatus.OPEN) {
-    return
+    return undefined
   }
 
   const { inputToken, inputTokenQuantity, outputToken, outputTokenQuantity } = activity.details

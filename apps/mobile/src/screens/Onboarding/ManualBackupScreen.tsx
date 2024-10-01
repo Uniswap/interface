@@ -89,7 +89,7 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
 
   useEffect(() => {
     if (view !== View.SeedPhrase) {
-      return
+      return undefined
     }
 
     const listener = addScreenshotListener(() => setShowScreenShotWarningModal(true))
@@ -135,11 +135,11 @@ export function ManualBackupScreen({ navigation, route: { params } }: Props): JS
         >
           <WarningModal
             caption={t('onboarding.recoveryPhrase.warning.screenshot.message')}
-            confirmText={t('common.button.ok')}
+            acknowledgeText={t('common.button.ok')}
             isOpen={showScreenShotWarningModal}
             modalName={ModalName.ScreenshotWarning}
             title={t('onboarding.recoveryPhrase.warning.screenshot.title')}
-            onConfirm={(): void => setShowScreenShotWarningModal(false)}
+            onAcknowledge={(): void => setShowScreenShotWarningModal(false)}
           />
           <Flex grow justifyContent="space-between">
             <Flex grow>

@@ -26,7 +26,7 @@ export function useDismissedTokenWarnings(info: Maybe<Currency | BasicTokenInfo>
     } else {
       // handle tokens
       if (info?.isToken) {
-        return dispatch(dismissTokenWarning({ token: serializeToken(info) }))
+        dispatch(dismissTokenWarning({ token: serializeToken(info) }))
       }
     }
   }, [isBasicInfo, info, dispatch])

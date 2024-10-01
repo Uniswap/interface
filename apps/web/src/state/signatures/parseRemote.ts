@@ -14,6 +14,7 @@ const SIGNATURE_TYPE_MAP: { [key in SwapOrderType]: SignatureType } = {
   [SwapOrderType.Limit]: SignatureType.SIGN_LIMIT,
   [SwapOrderType.Dutch]: SignatureType.SIGN_UNISWAPX_ORDER,
   [SwapOrderType.DutchV2]: SignatureType.SIGN_UNISWAPX_V2_ORDER,
+  // [SwapOrderType.Priority]: SignatureType.SIGN_PRIORITY_ORDER,
 }
 
 const ORDER_STATUS_MAP: { [key in SwapOrderStatus]: UniswapXOrderStatus } = {

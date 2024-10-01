@@ -13246,6 +13246,18 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@ts-morph/common@npm:~0.24.0":
+  version: 0.24.0
+  resolution: "@ts-morph/common@npm:0.24.0"
+  dependencies:
+    fast-glob: ^3.3.2
+    minimatch: ^9.0.4
+    mkdirp: ^3.0.1
+    path-browserify: ^1.0.1
+  checksum: 793bc8a47c93ab55c6c036f94480d3b0e948661aef4bb7dbc29279b1dda2fc4fce809a88e221537867a313541842e12d1ecbd32b4769688abe1303807ec09db6
+  languageName: node
+  linkType: hard
+
 "@tsconfig/node10@npm:^1.0.7":
   version: 1.0.9
   resolution: "@tsconfig/node10@npm:1.0.9"
@@ -15132,10 +15144,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/analytics-events@npm:2.36.0":
-  version: 2.36.0
-  resolution: "@uniswap/analytics-events@npm:2.36.0"
-  checksum: 26cbec530092a5660eec633ef9381d321f089e644b9954ecb635345433483f1a6ab5883a1561edf158159c9137e7308e4069d29d73ecd36643ca2a7f80f8be46
+"@uniswap/analytics-events@npm:2.37.0":
+  version: 2.37.0
+  resolution: "@uniswap/analytics-events@npm:2.37.0"
+  checksum: 5cdf2ba599c31e15588effcf0f311a82afc674545f770f4fe7761a08baae0c7433830d855cb64cb9c6e36ff5e9c5ef063bea40c7bee0e5a497ed6582fd4cb933
   languageName: node
   linkType: hard
 
@@ -15157,10 +15169,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/client-pools@npm:0.0.0":
-  version: 0.0.0
-  resolution: "@uniswap/client-pools@npm:0.0.0"
-  checksum: e4e26e3f472fcd8ea88124c6e59b8adfe3ca7e8daf59b53bd40438820761f074106e455d4072bde6d8fa2f68132bdab6c3d4e94fddba511847f00972edd24c84
+"@uniswap/client-pools@npm:0.0.3":
+  version: 0.0.3
+  resolution: "@uniswap/client-pools@npm:0.0.3"
+  checksum: 0ac91616e266484b200d3148127d5850a75e723b448c4db5a1087d509b9348a8d4b5c30b8b68a0b62e4431f7664406b7b801df4a705213ffcb849cc45cb80312
   languageName: node
   linkType: hard
 
@@ -15242,9 +15254,9 @@ __metadata:
     "@types/redux-persist-webextension-storage": 1.0.3
     "@types/ua-parser-js": 0.7.31
     "@types/uuid": 9.0.1
-    "@uniswap/analytics-events": 2.36.0
+    "@uniswap/analytics-events": 2.37.0
     "@uniswap/eslint-config": "workspace:^"
-    "@uniswap/uniswapx-sdk": ^2.1.0-beta.8
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
     "@uniswap/universal-router-sdk": 2.2.0
     "@uniswap/v3-sdk": 3.14.0
     "@welldone-software/why-did-you-render": 8.0.1
@@ -15368,9 +15380,9 @@ __metadata:
     "@types/wcag-contrast": 3.0.0
     "@types/xml2js": 0.4.14
     "@uniswap/analytics": 1.7.0
-    "@uniswap/analytics-events": 2.36.0
+    "@uniswap/analytics-events": 2.37.0
     "@uniswap/client-explore": 0.0.9
-    "@uniswap/client-pools": 0.0.0
+    "@uniswap/client-pools": 0.0.3
     "@uniswap/default-token-list": 11.19.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/liquidity-staker": 1.0.2
@@ -15381,7 +15393,7 @@ __metadata:
     "@uniswap/sdk-core": 5.3.0
     "@uniswap/smart-order-router": 3.17.3
     "@uniswap/token-lists": 1.0.0-beta.33
-    "@uniswap/uniswapx-sdk": ^2.1.0-beta.8
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
     "@uniswap/universal-router-sdk": 2.2.0
     "@uniswap/v2-core": 1.0.1
     "@uniswap/v2-periphery": 1.1.0-beta.0
@@ -15495,6 +15507,7 @@ __metadata:
     tiny-invariant: 1.3.1
     ts-jest: ^29.1.1
     tsafe: 1.6.4
+    typed-redux-saga: 1.5.0
     typescript: 5.3.3
     ui: "workspace:^"
     uniswap: "workspace:^"
@@ -15595,7 +15608,7 @@ __metadata:
     "@testing-library/react-native": 11.5.0
     "@types/redux-mock-store": 1.0.6
     "@uniswap/analytics": 1.7.0
-    "@uniswap/analytics-events": 2.36.0
+    "@uniswap/analytics-events": 2.37.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/ethers-rs-mobile": 0.0.5
     "@uniswap/sdk-core": 5.3.0
@@ -15803,16 +15816,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@uniswap/uniswapx-sdk@npm:^2.1.0-beta.8":
-  version: 2.1.0-beta.13
-  resolution: "@uniswap/uniswapx-sdk@npm:2.1.0-beta.13"
+"@uniswap/uniswapx-sdk@npm:^2.1.0-beta.14":
+  version: 2.1.0-beta.14
+  resolution: "@uniswap/uniswapx-sdk@npm:2.1.0-beta.14"
   dependencies:
     "@ethersproject/bytes": ^5.7.0
     "@ethersproject/providers": ^5.7.0
     "@uniswap/permit2-sdk": ^1.2.1
     "@uniswap/sdk-core": ^5.0.0
     ethers: ^5.7.0
-  checksum: c5254a72dad61d1377249e16c4af36687105257add6436ac5974e3e5e3c987b8f5ea8ee9a9cc6f20a7fbb663019594e227cdf366e1ec72eccd6dd7ce0014d52c
+  checksum: 1e608a9958c4e95cde3a507e4808e76750fe4161ccae1a9d449bb7647ec613290b27fa09365913e44463337d22f374602391597c75aa4a9d6ec3a4ccab07f94d
   languageName: node
   linkType: hard
 
@@ -20568,6 +20581,13 @@ __metadata:
     chalk: ^2.4.1
     q: ^1.1.2
   checksum: 44736914aac2160d3d840ed64432a90a3bb72285a0cd6a688eb5cabdf15d15a85eee0915b3f6f2a4659d5075817b1cb577340d3c9cbb47d636d59ab69f819552
+  languageName: node
+  linkType: hard
+
+"code-block-writer@npm:^13.0.1":
+  version: 13.0.2
+  resolution: "code-block-writer@npm:13.0.2"
+  checksum: 8052ae6f27ef73366bd5df04b6f9beced493261fcaef5cbd0f3853644b5e0aa5af18d099b96448be88ea3d000c7b180207d371044edd9fcf98fea22c9f8ba3a1
   languageName: node
   linkType: hard
 
@@ -26165,7 +26185,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.5, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0":
+"fast-glob@npm:^3.2.11, fast-glob@npm:^3.2.5, fast-glob@npm:^3.2.9, fast-glob@npm:^3.3.0, fast-glob@npm:^3.3.2":
   version: 3.3.2
   resolution: "fast-glob@npm:3.3.2"
   dependencies:
@@ -34215,6 +34235,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"minimatch@npm:^9.0.4":
+  version: 9.0.5
+  resolution: "minimatch@npm:9.0.5"
+  dependencies:
+    brace-expansion: ^2.0.1
+  checksum: 2c035575eda1e50623c731ec6c14f65a85296268f749b9337005210bb2b34e2705f8ef1a358b188f69892286ab99dc42c8fb98a57bde55c8d81b3023c19cea28
+  languageName: node
+  linkType: hard
+
 "minimist-options@npm:4.1.0":
   version: 4.1.0
   resolution: "minimist-options@npm:4.1.0"
@@ -34384,6 +34413,15 @@ __metadata:
   bin:
     mkdirp: bin/cmd.js
   checksum: a96865108c6c3b1b8e1d5e9f11843de1e077e57737602de1b82030815f311be11f96f09cce59bd5b903d0b29834733e5313f9301e3ed6d6f6fba2eae0df4298f
+  languageName: node
+  linkType: hard
+
+"mkdirp@npm:^3.0.1":
+  version: 3.0.1
+  resolution: "mkdirp@npm:3.0.1"
+  bin:
+    mkdirp: dist/cjs/src/bin.js
+  checksum: 972deb188e8fb55547f1e58d66bd6b4a3623bf0c7137802582602d73e6480c1c2268dcbafbfb1be466e00cc7e56ac514d7fd9334b7cf33e3e2ab547c16f83a8d
   languageName: node
   linkType: hard
 
@@ -44094,9 +44132,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"ts-morph@npm:23.0.0":
+  version: 23.0.0
+  resolution: "ts-morph@npm:23.0.0"
+  dependencies:
+    "@ts-morph/common": ~0.24.0
+    code-block-writer: ^13.0.1
+  checksum: 3282eb0f8bd4577770874736c3259b97501da9a86137160b5d68f106b7848ea7b1fbccf9e198a3d930ec40c993e9951d4bfae31e2562dac8f3de0d7bb0e23615
+  languageName: node
+  linkType: hard
+
 "ts-node@npm:^10.7.0, ts-node@npm:^10.8.1":
-  version: 10.9.1
-  resolution: "ts-node@npm:10.9.1"
+  version: 10.9.2
+  resolution: "ts-node@npm:10.9.2"
   dependencies:
     "@cspotcode/source-map-support": ^0.8.0
     "@tsconfig/node10": ^1.0.7
@@ -44128,7 +44176,7 @@ __metadata:
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
-  checksum: 090adff1302ab20bd3486e6b4799e90f97726ed39e02b39e566f8ab674fd5bd5f727f43615debbfc580d33c6d9d1c6b1b3ce7d8e3cca3e20530a145ffa232c35
+  checksum: fde256c9073969e234526e2cfead42591b9a2aec5222bac154b0de2fa9e4ceb30efcd717ee8bc785a56f3a119bdd5aa27b333d9dbec94ed254bd26f8944c67ac
   languageName: node
   linkType: hard
 
@@ -45077,14 +45125,14 @@ __metadata:
     "@typechain/ethers-v5": 7.2.0
     "@types/chrome": 0.0.254
     "@types/react-window": 1.8.2
-    "@uniswap/analytics-events": 2.36.0
+    "@uniswap/analytics-events": 2.37.0
     "@uniswap/client-explore": 0.0.9
-    "@uniswap/client-pools": 0.0.0
+    "@uniswap/client-pools": 0.0.3
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/router-sdk": 1.9.2
     "@uniswap/sdk-core": 5.3.0
-    "@uniswap/uniswapx-sdk": ^2.1.0-beta.8
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
     "@uniswap/v2-sdk": 4.3.2
     "@uniswap/v3-sdk": 3.14.0
     apollo-link-rest: 0.9.0
@@ -45131,6 +45179,7 @@ __metadata:
     statsig-react: 1.32.0
     statsig-react-native: 4.11.0
     tiny-invariant: 1.3.1
+    ts-morph: 23.0.0
     tsafe: 1.6.4
     typechain: 5.2.0
     typed-redux-saga: 1.5.0
@@ -45626,7 +45675,7 @@ __metadata:
     "@types/react": ^18.0.15
     "@types/uuid": 9.0.1
     "@uniswap/analytics": 1.7.0
-    "@uniswap/analytics-events": 2.36.0
+    "@uniswap/analytics-events": 2.37.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/sdk-core": 5.3.0
     aws-appsync-auth-link: 3.0.7
@@ -46172,12 +46221,12 @@ __metadata:
     "@testing-library/react-native": 11.5.0
     "@types/react": ^18.0.15
     "@types/zxcvbn": 4.4.2
-    "@uniswap/analytics-events": 2.36.0
+    "@uniswap/analytics-events": 2.37.0
     "@uniswap/eslint-config": "workspace:^"
     "@uniswap/permit2-sdk": 1.3.0
     "@uniswap/router-sdk": 1.9.2
     "@uniswap/sdk-core": 5.3.0
-    "@uniswap/uniswapx-sdk": ^2.1.0-beta.8
+    "@uniswap/uniswapx-sdk": ^2.1.0-beta.14
     "@uniswap/universal-router-sdk": 2.2.0
     "@uniswap/v3-sdk": 3.14.0
     apollo3-cache-persist: 0.14.1

@@ -14,7 +14,7 @@ export const activeLocalCurrencyAtomName = 'activeLocalCurrency'
  */
 export const migration20 = (state: PersistAppStateV20 | undefined) => {
   if (!state) {
-    return
+    return undefined
   }
   // Translate existing atom value
   const atomLocalCurrencyAtomValue = localStorage.getItem(activeLocalCurrencyAtomName) as FiatCurrency

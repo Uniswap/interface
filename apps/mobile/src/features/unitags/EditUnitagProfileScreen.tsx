@@ -14,7 +14,7 @@ import { DeleteUnitagModal } from 'src/components/unitags/DeleteUnitagModal'
 import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
 import { HeaderRadial, solidHeaderProps } from 'src/features/externalProfile/ProfileHeader'
 import { Button, Flex, LinearGradient, ScrollView, Text, getUniconColors, useIsDarkMode, useSporeColors } from 'ui/src'
-import { Pen, TripleDots } from 'ui/src/components/icons'
+import { Ellipsis, Pen } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useExtractedColors } from 'ui/src/utils/colors'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
@@ -271,7 +271,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
                 }}
               >
                 <Flex pr="$spacing8">
-                  <TripleDots color="$neutral2" size={iconSizes.icon24} />
+                  <Ellipsis color="$neutral2" size={iconSizes.icon24} />
                 </Flex>
               </ContextMenu>
             ) : undefined

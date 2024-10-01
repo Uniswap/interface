@@ -14,7 +14,7 @@ exports[`PoolTable renders data filled state 1`] = `
 }
 
 .c4 img {
-  width: 14px;
+  width: 13px;
   height: 28px;
   object-fit: cover;
 }

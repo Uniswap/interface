@@ -89,6 +89,7 @@ export function getIsFeeRelatedWarning(currency?: Currency, safetyInfo?: Maybe<S
   )
 }
 
+// eslint-disable-next-line consistent-return
 export function getTokenWarningDesignTreatment(
   currency?: Currency,
   safetyInfo?: Maybe<SafetyInfo>,
@@ -124,7 +125,7 @@ export function getTokenWarningDesignTreatment(
 
 // Only combine into one plural-languaged modal if there are two tokens prefilled at the same time, and BOTH are low or BOTH are blocked
 // i.e. interface PDP, or interface prefilled via URL `?inputCurrency=0x...&outputCurrency=0x...`
-export function getShouldHavePluralTreatment(
+export function getShouldHaveCombinedPluralTreatment(
   currency0: Currency,
   safetyInfo0?: Maybe<SafetyInfo>,
   currency1?: Currency,
@@ -144,13 +145,14 @@ export function getShouldHavePluralTreatment(
   return plural ?? false
 }
 
+// eslint-disable-next-line consistent-return
 export function useModalHeaderText(
   currency0: Currency,
   safetyInfo0?: Maybe<SafetyInfo>,
   currency1?: Currency,
   safetyInfo1?: Maybe<SafetyInfo>,
 ): string | null {
-  const shouldHavePluralTreatment = getShouldHavePluralTreatment(currency0, safetyInfo0, currency1, safetyInfo1)
+  const shouldHavePluralTreatment = getShouldHaveCombinedPluralTreatment(currency0, safetyInfo0, currency1, safetyInfo1)
   if (!shouldHavePluralTreatment && (currency1 || safetyInfo1)) {
     throw new Error('Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked')
   }
@@ -192,7 +194,7 @@ export function useModalHeaderText(
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, consistent-return
 function useCardHeaderText(currency: Currency, safetyInfo?: Maybe<SafetyInfo>): string | null {
   const { t } = useTranslation()
   const tokenProtectionWarning = getTokenProtectionWarning(currency, safetyInfo)
@@ -232,7 +234,7 @@ export function useModalSubtitleText(
   currency1?: Currency,
   safetyInfo1?: Maybe<SafetyInfo>,
 ): string | null {
-  const shouldHavePluralTreatment = getShouldHavePluralTreatment(currency0, safetyInfo0, currency1, safetyInfo1)
+  const shouldHavePluralTreatment = getShouldHaveCombinedPluralTreatment(currency0, safetyInfo0, currency1, safetyInfo1)
   if (!shouldHavePluralTreatment && (currency1 || safetyInfo1)) {
     throw new Error('Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked')
   }
@@ -255,6 +257,7 @@ export function useModalSubtitleText(
     type: NumberType.Percentage,
   })
 
+  // eslint-disable-next-line consistent-return
   const warningCopy = ((): string | null => {
     switch (tokenProtectionWarning) {
       case TokenProtectionWarning.MaliciousHoneypot:
@@ -313,7 +316,7 @@ export function useModalSubtitleText(
   return warningCopy
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
+// eslint-disable-next-line @typescript-eslint/no-unused-vars, consistent-return
 function useCardSubtitleText(currency: Currency, safetyInfo?: Maybe<SafetyInfo>): string | null {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()

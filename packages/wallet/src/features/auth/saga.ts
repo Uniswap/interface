@@ -14,6 +14,8 @@ function* auth(params: UnlockParams | LockParams) {
   } else if (params.type === AuthActionType.Lock) {
     return yield* call(lock)
   }
+
+  return undefined
 }
 
 function* unlock({ password }: UnlockParams) {

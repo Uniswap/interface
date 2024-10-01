@@ -1,11 +1,63 @@
-We are back with some new updates! Here’s the latest:
+IPFS hash of the deployment:
+- CIDv0: `Qmd28dj63MAN4SSYPnXMSDe5bKUbnwSFKijHz59isELY4t`
+- CIDv1: `bafybeig2edl4hxzvem7w6ujx735fox2jnpdaizovofieutl3rvawydroqu`
 
-Manage dapp connections - Users can now see all dapps they’re connected to, and disconnect to one or all of them.  
+The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
-Report Spam NFTs - You can now report spam NFTs and hide them from your feed and activity. 
+You can also access the Uniswap Interface from an IPFS gateway.
+**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
+**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
+Your Uniswap settings are never remembered across different URLs.
 
-Other changes: 
+IPFS gateways:
+- https://bafybeig2edl4hxzvem7w6ujx735fox2jnpdaizovofieutl3rvawydroqu.ipfs.dweb.link/
+- https://bafybeig2edl4hxzvem7w6ujx735fox2jnpdaizovofieutl3rvawydroqu.ipfs.cf-ipfs.com/
+- [ipfs://Qmd28dj63MAN4SSYPnXMSDe5bKUbnwSFKijHz59isELY4t/](ipfs://Qmd28dj63MAN4SSYPnXMSDe5bKUbnwSFKijHz59isELY4t/)
 
-- Added explainers for hidden tokens, popular tokens, and hidden NFTs
-- Removed activity feed items related to any hidden NFTs
-- Various bug fixes and performance improvements
+## 5.49.0 (2024-10-01)
+
+
+### Features
+
+* **web:** [1/2] fee tier selection modal (#12092) fa1f56d
+* **web:** [2/2] fee tier selection modal (create new) (#12110) 780bbc0
+* **web:** add fee tier and price range selection to migrate page (#12064) f417a3f
+* **web:** add fiat values props to swap logs in new saga (#12215) 857119c
+* **web:** add price impact events (#12208) 30b8c39
+* **web:** add total_balances_usd prop to swap logs in new saga (#12173) 79a0b17
+* **web:** add UniswapX priority orders in swap flow (#12088) d55a9bd
+* **web:** add uniswapx saga to shared web flow (#11973) d10498e
+* **web:** add url param to create positions page (#12212) b89e5d1
+* **web:** add wrap saga for shared flow (#11971) f14a41a
+* **web:** adding multiple protocols to create page (#12132) b4bff49
+* **web:** changing create page based on version (#12136) bc16817
+* **web:** classic swap saga (#11922) f74c332
+* **web:** keep input to all networks unless output selected (#12274) e43b95d
+* **web:** log SWAP_MODIFIED_IN_WALLET event in new swap saga (#12247) 16e9f56
+* **web:** log SWAP_SIGNED event in new swag saga (#12170) 2494b9d
+* **web:** log UniswapXOrderPostError and UniswapXSignatureRequested in new saga (#12114) 454666b
+* **web:** log UniswapXOrderSubmitted in new saga (#12113) 9ae3373
+* **web:** pulling from backend for create page (#12143) 8f6aa1e
+* **web:** swap saga notifications (#12070) e28ec03
+* **web:** v2 position page refreshed (#11972) da6c705
+* **web:** v4 Position detail page (#11904) a735564
+
+
+### Bug Fixes
+
+* **web:** fix AddressQRModal eyeSize (#12318) 33f8160
+* **web:** fix language file mapping (#12207) bbfe66d
+* **web:** fix overflow issue in search results (#12158) fbd7358
+* **web:** limit form button color should be neutralContrast (#12416) d923cdd
+* **web:** shared swap landing page (#12026) fe2d0b6
+* **web:** token caching fix in mini portfolio (#12149) 4c2d402
+* **web:** token selector height (#12028) 3adb0d0
+* **web:** use percentFromFloat (#12142) 18f819b
+* **web:** use swap saga prefilled state (#12082) c6bd810
+
+
+### Continuous Integration
+
+* **web:** update sitemaps d8b4a5a
+
+

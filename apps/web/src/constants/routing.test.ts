@@ -17,7 +17,7 @@ describe('Routing', () => {
     })
     it('contains all coins for polygon', () => {
       const symbols = COMMON_BASES[UniverseChainId.Polygon].map((coin) => coin.currency.symbol)
-      expect(symbols).toEqual(['MATIC', 'WETH', 'USDC', 'DAI', 'USDT', 'WBTC'])
+      expect(symbols).toEqual(['POL', 'WETH', 'USDC', 'DAI', 'USDT', 'WBTC'])
     })
     it('contains all coins for celo', () => {
       const symbols = COMMON_BASES[UniverseChainId.Celo].map((coin) => coin.currency.symbol)
