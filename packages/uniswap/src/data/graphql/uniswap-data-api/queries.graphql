@@ -1224,22 +1224,23 @@ query HomeScreenTokens($contracts: [ContractInput!]!, $chain: Chain!) {
 
 query FavoriteTokenCard($chain: Chain!, $address: String) {
   token(chain: $chain, address: $address) {
-    symbol
-    chain
+    id
     address
+    chain
+    symbol
     name
+    market(currency: USD) {
+      id
+      price {
+        value
+      }
+      pricePercentChange(duration: DAY) {
+        value
+      }
+    }
     project {
       id
       logoUrl
-      markets(currencies: [USD]) {
-        id
-        price {
-          value
-        }
-        pricePercentChange24h {
-          value
-        }
-      }
     }
   }
 }

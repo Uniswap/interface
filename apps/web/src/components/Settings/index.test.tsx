@@ -1,6 +1,6 @@
 import { Percent } from '@uniswap/sdk-core'
 import SettingsTab from 'components/Settings/index'
-import { isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
+import { useIsSupportedChainId, useIsUniswapXSupportedChain } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import { mocked } from 'test-utils/mocked'
 import { fireEvent, render, screen, waitFor } from 'test-utils/render'
@@ -20,7 +20,7 @@ describe('Settings Tab', () => {
     })
 
     it('renders routing settings when hideRoutingSettings is false', async () => {
-      mocked(isUniswapXSupportedChain).mockReturnValue(true)
+      mocked(useIsUniswapXSupportedChain).mockReturnValue(true)
       render(<SettingsTab hideRoutingSettings={false} chainId={1} autoSlippage={slippage} />)
 
       const settingsButton = screen.getByTestId('open-settings-dialog-button')
@@ -43,7 +43,7 @@ describe('Settings Tab', () => {
     })
 
     it('does not render routing settings when uniswapx is not enabled', async () => {
-      mocked(isUniswapXSupportedChain).mockReturnValue(false)
+      mocked(useIsUniswapXSupportedChain).mockReturnValue(false)
       render(<SettingsTab hideRoutingSettings chainId={1} autoSlippage={slippage} />)
 
       const settingsButton = screen.getByTestId('open-settings-dialog-button')

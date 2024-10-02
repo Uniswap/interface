@@ -14,6 +14,7 @@ import { useUSDTokenUpdater } from 'uniswap/src/features/transactions/hooks/useU
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
@@ -168,7 +169,7 @@ export function SendFormScreen(): JSX.Element {
           py="$spacing12"
           {...inputShadowProps}
         >
-          <RecipientPanel chainId={chainId} />
+          <RecipientPanel chainId={chainId as WalletChainId} />
         </Flex>
         {!showRecipientSelector && (
           <>
@@ -184,7 +185,7 @@ export function SendFormScreen(): JSX.Element {
               />
             )}
             <ReviewButton disabled={isBlocked || isBlockedLoading} onPress={onPressReview} />
-            <GasFeeRow chainId={chainId} gasFee={gasFee} />
+            <GasFeeRow chainId={chainId as WalletChainId} gasFee={gasFee} />
             <InsufficientNativeTokenWarning flow="send" gasFee={gasFee} warnings={warnings.warnings} />
           </>
         )}

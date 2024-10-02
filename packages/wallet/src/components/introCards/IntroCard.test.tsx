@@ -1,6 +1,6 @@
-import { CardType, IntroCard, IntroCardProps } from 'src/components/home/introCards/IntroCard'
-import { render, screen } from 'src/test/test-utils'
 import { Wallet } from 'ui/src/components/icons'
+import { CardType, IntroCard, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
+import { render, screen } from 'wallet/src/test/test-utils'
 
 describe(IntroCard, () => {
   it('should render the passed values', () => {

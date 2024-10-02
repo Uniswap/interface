@@ -5,13 +5,21 @@ import {
   UniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { TransactionStepType, generateSwapSteps } from 'uniswap/src/features/transactions/swap/utils/generateSwapSteps'
+import {
+  TransactionStepType,
+  generateTransactionSteps,
+} from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import {
   createMockCurrencyAmount,
   createMockTradeWithStatus,
-  createMockUniswapXQuote,
   createMockUniswapXTrade,
 } from 'uniswap/src/test/fixtures/transactions/swap'
+
+const UserAgentMock = jest.requireMock('utilities/src/platform')
+jest.mock('utilities/src/platform', () => ({
+  ...jest.requireActual('utilities/src/platform'),
+}))
 
 const mockTrade = createMockTradeWithStatus(
   createMockCurrencyAmount(USDC, '1000000000000000000'),
@@ -35,9 +43,7 @@ const baseSwapTxContext: SwapTxAndGasInfo = {
   gasFee: { error: null, isLoading: false, value: '1000000000000000000' },
   gasFeeEstimation: { swapEstimates: undefined, approvalEstimates: undefined },
   indicativeTrade: undefined,
-  permitData: null,
-  permitDataLoading: false,
-  permitSignature: undefined,
+  permit: undefined,
   routing: Routing.CLASSIC,
   swapRequestArgs: {
     permitData: undefined,
@@ -48,12 +54,13 @@ const baseSwapTxContext: SwapTxAndGasInfo = {
   },
   trade: mockTrade.trade as ClassicTrade,
   txRequest: mockTxRequest,
+  unsigned: false,
 }
 
-describe('generateSwapSteps', () => {
+describe('generateTransactionSteps', () => {
   describe(Routing.CLASSIC, () => {
     it('should return steps for classic trade with txRequest', () => {
-      expect(generateSwapSteps(baseSwapTxContext)).toEqual([
+      expect(generateTransactionSteps(baseSwapTxContext)).toEqual([
         {
           txRequest: baseSwapTxContext.txRequest,
           type: TransactionStepType.SwapTransaction,
@@ -68,13 +75,17 @@ describe('generateSwapSteps', () => {
         revocationTxRequest: mockTxRequest,
       }
 
-      expect(generateSwapSteps(swapTxContext)).toEqual([
+      expect(generateTransactionSteps(swapTxContext)).toEqual([
         {
+          amount: '0',
+          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
           txRequest: swapTxContext.revocationTxRequest,
           token: USDC,
           type: TransactionStepType.TokenRevocationTransaction,
         },
         {
+          amount: '1000000000000000000',
+          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
           txRequest: swapTxContext.approveTxRequest,
           token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
@@ -92,8 +103,10 @@ describe('generateSwapSteps', () => {
         approveTxRequest: mockTxRequest,
       }
 
-      expect(generateSwapSteps(swapTxContext)).toEqual([
+      expect(generateTransactionSteps(swapTxContext)).toEqual([
         {
+          amount: '1000000000000000000',
+          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
           txRequest: swapTxContext.approveTxRequest,
           token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
@@ -106,29 +119,26 @@ describe('generateSwapSteps', () => {
     })
 
     it('should return steps for classic trade with approval and permit required', () => {
+      // We only expect `SwapTransactionAsync` step when on interface swap (unsigned w/o a wallet interaction)
+      UserAgentMock.isInterface = true
+
       const swapTxContext = {
         ...baseSwapTxContext,
         approveTxRequest: mockTxRequest,
-        permitData: {
-          domain: {
-            name: 'Uniswap',
-            version: '1.0',
-            chainId: 1,
-            verifyingContract: '0x123',
-          },
-        },
+        unsigned: true,
+        permit: mockPermit,
       }
 
-      expect(generateSwapSteps(swapTxContext)).toEqual([
+      expect(generateTransactionSteps(swapTxContext)).toEqual([
         {
+          amount: '1000000000000000000',
+          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
           txRequest: swapTxContext.approveTxRequest,
           token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
         },
         {
-          ...swapTxContext.permitData,
-          types: undefined,
-          value: undefined,
+          ...swapTxContext.permit,
           token: USDC,
           type: TransactionStepType.Permit2Signature,
         },
@@ -146,10 +156,6 @@ describe('generateSwapSteps', () => {
         ...baseSwapTxContext,
         trade: mockUniswapXTrade,
         routing: Routing.DUTCH_V2,
-        orderParams: {
-          quote: createMockUniswapXQuote(USDC.address),
-          signature: '0x000',
-        },
         wrapTxRequest: mockTxRequest,
         gasFeeBreakdown: {
           approvalCost: '1000000000000000000',
@@ -157,27 +163,20 @@ describe('generateSwapSteps', () => {
           inputTokenSymbol: 'USDC',
           wrapCost: '1000000000000000000',
         },
-        permitData: {
-          domain: {
-            name: 'Uniswap',
-            version: '1.0',
-            chainId: 1,
-            verifyingContract: '0x123',
-          },
-          types: undefined,
-          value: undefined,
-        },
+        permit: mockPermit,
       }
 
-      expect(generateSwapSteps(swapTxContext)).toEqual([
+      expect(generateTransactionSteps(swapTxContext)).toEqual([
         {
           txRequest: swapTxContext.wrapTxRequest,
           type: TransactionStepType.WrapTransaction,
-          native: USDC,
+          amount: mockUniswapXTrade.inputAmount,
         },
         {
-          ...swapTxContext.permitData,
+          ...swapTxContext.permit,
           type: TransactionStepType.UniswapXSignature,
+          quote: swapTxContext.trade.quote.quote,
+          deadline: mockUniswapXTrade.quote.quote.orderInfo.deadline,
         },
       ])
     })
@@ -187,10 +186,6 @@ describe('generateSwapSteps', () => {
         ...baseSwapTxContext,
         trade: mockUniswapXTrade,
         routing: Routing.DUTCH_V2,
-        orderParams: {
-          quote: createMockUniswapXQuote(USDC.address),
-          signature: '0x000',
-        },
         approveTxRequest: mockTxRequest,
         revocationTxRequest: mockTxRequest,
         wrapTxRequest: mockTxRequest,
@@ -200,37 +195,34 @@ describe('generateSwapSteps', () => {
           inputTokenSymbol: 'USDC',
           wrapCost: '1000000000000000000',
         },
-        permitData: {
-          domain: {
-            name: 'Uniswap',
-            version: '1.0',
-            chainId: 1,
-            verifyingContract: '0x123',
-          },
-          types: undefined,
-          value: undefined,
-        },
+        permit: mockPermit,
       }
 
-      expect(generateSwapSteps(swapTxContext)).toEqual([
+      expect(generateTransactionSteps(swapTxContext)).toEqual([
         {
           txRequest: swapTxContext.wrapTxRequest,
           type: TransactionStepType.WrapTransaction,
-          native: USDC,
+          amount: mockUniswapXTrade.inputAmount,
         },
         {
+          amount: '0',
+          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
           txRequest: swapTxContext.revocationTxRequest,
           token: USDC,
           type: TransactionStepType.TokenRevocationTransaction,
         },
         {
+          amount: '44000',
+          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
           txRequest: swapTxContext.approveTxRequest,
           token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
         },
         {
-          ...swapTxContext.permitData,
+          ...swapTxContext.permit,
           type: TransactionStepType.UniswapXSignature,
+          quote: swapTxContext.trade.quote.quote,
+          deadline: mockUniswapXTrade.quote.quote.orderInfo.deadline,
         },
       ])
     })
@@ -240,10 +232,6 @@ describe('generateSwapSteps', () => {
         ...baseSwapTxContext,
         trade: mockUniswapXTrade,
         routing: Routing.DUTCH_V2,
-        orderParams: {
-          quote: createMockUniswapXQuote(USDC.address),
-          signature: '0x000',
-        },
         approveTxRequest: mockTxRequest,
         wrapTxRequest: mockTxRequest,
         gasFeeBreakdown: {
@@ -252,32 +240,27 @@ describe('generateSwapSteps', () => {
           inputTokenSymbol: 'USDC',
           wrapCost: '1000000000000000000',
         },
-        permitData: {
-          domain: {
-            name: 'Uniswap',
-            version: '1.0',
-            chainId: 1,
-            verifyingContract: '0x123',
-          },
-          types: undefined,
-          value: undefined,
-        },
+        permit: mockPermit,
       }
 
-      expect(generateSwapSteps(swapTxContext)).toEqual([
+      expect(generateTransactionSteps(swapTxContext)).toEqual([
         {
           txRequest: swapTxContext.wrapTxRequest,
           type: TransactionStepType.WrapTransaction,
-          native: USDC,
+          amount: mockUniswapXTrade.inputAmount,
         },
         {
+          amount: '44000',
+          spender: '0x000000000022D473030F116dDEE9F6B43aC78BA3',
           txRequest: swapTxContext.approveTxRequest,
           token: USDC,
           type: TransactionStepType.TokenApprovalTransaction,
         },
         {
-          ...swapTxContext.permitData,
+          ...swapTxContext.permit,
           type: TransactionStepType.UniswapXSignature,
+          quote: swapTxContext.trade.quote.quote,
+          deadline: mockUniswapXTrade.quote.quote.orderInfo.deadline,
         },
       ])
     })

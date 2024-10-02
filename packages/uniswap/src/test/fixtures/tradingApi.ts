@@ -1,4 +1,4 @@
-import { FeeType, GasEstimateEip1559, GasEstimateLegacy } from 'uniswap/src/data/tradingApi/__generated__'
+import { FeeType, GasEstimateEip1559, GasEstimateLegacy } from 'uniswap/src/data/tradingApi/types'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export const createGasFeeEstimates = (): GasFeeEstimates => {

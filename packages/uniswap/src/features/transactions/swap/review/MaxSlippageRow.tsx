@@ -186,7 +186,7 @@ export function SlippageWarningContent({
       modalProps={{
         backgroundIconColor: colors.surface2.get(),
         captionComponent: captionContent,
-        closeText: t('common.button.close'),
+        rejectText: t('common.button.close'),
         icon: <Settings color="$neutral2" size="$icon.28" />,
         modalName: ModalName.SlippageInfo,
         severity: WarningSeverity.None,

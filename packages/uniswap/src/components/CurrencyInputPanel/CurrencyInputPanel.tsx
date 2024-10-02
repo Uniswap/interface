@@ -19,7 +19,7 @@ import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
-import { fonts } from 'ui/src/theme'
+import { fonts, spacing } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { MaxAmountButton } from 'uniswap/src/components/CurrencyInputPanel/MaxAmountButton'
 import { SelectTokenButton } from 'uniswap/src/components/CurrencyInputPanel/SelectTokenButton'
@@ -164,6 +164,8 @@ export const CurrencyInputPanel = memo(
         MIN_INPUT_FONT_SIZE,
       )
 
+      const lineHeight = fontSize * 1.2
+
       // This is needed to ensure that the text resizes when modified from outside the component (e.g. custom numpad)
       useEffect(() => {
         if (value) {
@@ -233,6 +235,7 @@ export const CurrencyInputPanel = memo(
               alignItems="center"
               justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
               py="$spacing8"
+              minHeight={MAX_INPUT_FONT_SIZE * 1.2 + 2 * spacing.spacing8}
               style={shakeStyle}
             >
               {isFiatMode && (
@@ -240,8 +243,7 @@ export const CurrencyInputPanel = memo(
                   allowFontScaling
                   color={showInsufficientBalanceWarning ? '$statusCritical' : color}
                   fontSize={fontSize}
-                  height={fontSize}
-                  lineHeight={fontSize}
+                  lineHeight={lineHeight}
                   mr="$spacing4"
                 >
                   {fiatCurrencySymbol}
@@ -281,10 +283,11 @@ export const CurrencyInputPanel = memo(
                       // (the text input height is greater than the font size and the input is
                       // centered vertically, so the caret is cut off but the text is not)
                       fontSize={fontSize}
+                      lineHeight={lineHeight}
                       fontWeight="$book"
                       maxDecimals={isFiatMode ? MAX_FIAT_INPUT_DECIMALS : currencyInfo.currency.decimals}
                       maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
-                      minHeight={2 * MAX_INPUT_FONT_SIZE}
+                      minHeight={lineHeight}
                       overflow="visible"
                       placeholder="0"
                       placeholderTextColor={colors.neutral3.val}
@@ -327,7 +330,7 @@ export const CurrencyInputPanel = memo(
                     </Text>
                   </Flex>
                 </TouchableArea>
-                <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
+                <Flex row centered gap="$spacing8" justifyContent="flex-end">
                   {showInsufficientBalanceWarning && <AlertTriangleFilled color="$neutral2" size="$icon.16" />}
                   {!hideCurrencyBalance && (
                     <Text color="$neutral2" variant="body3">

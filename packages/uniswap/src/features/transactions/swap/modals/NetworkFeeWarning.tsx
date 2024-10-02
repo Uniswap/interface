@@ -46,7 +46,7 @@ export function NetworkFeeWarning({
         captionComponent: (
           <NetworkFeeText showHighGasFeeUI={showHighGasFeeUI} uniswapXGasFeeInfo={uniswapXGasFeeInfo} />
         ),
-        closeText: t('common.button.close'),
+        rejectText: t('common.button.close'),
         icon: <Gas color={showHighGasFeeUI ? '$statusCritical' : '$neutral2'} size="$icon.24" />,
         modalName: ModalName.NetworkFeeInfo,
         severity: WarningSeverity.None,

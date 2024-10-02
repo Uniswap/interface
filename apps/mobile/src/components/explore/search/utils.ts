@@ -20,7 +20,7 @@ export function formatTokenSearchResults(
   searchQuery: string,
 ): TokenSearchResult[] | undefined {
   if (!data) {
-    return
+    return undefined
   }
 
   // Prevent showing "duplicate" token search results for tokens that are on multiple chains
@@ -87,7 +87,7 @@ export function formatNFTCollectionSearchResults(
   data: ExploreSearchResult['nftCollections'],
 ): NFTCollectionSearchResult[] | undefined {
   if (!data) {
-    return
+    return undefined
   }
 
   return data.edges.reduce<NFTCollectionSearchResult[]>((accum, { node }) => {

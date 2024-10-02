@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers/lib/ethers'
+import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import {
@@ -21,12 +22,13 @@ import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { BridgeTrade, ClassicTrade, Trade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { TradeProtocolPreference } from 'uniswap/src/features/transactions/types/transactionState'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
 
-const NATIVE_ADDRESS_FOR_TRADING_API = '0x0000000000000000000000000000000000000000'
+export const NATIVE_ADDRESS_FOR_TRADING_API = '0x0000000000000000000000000000000000000000'
 
 interface TradingApiResponseToTradeArgs {
   currencyIn: Currency
@@ -99,13 +101,13 @@ export function computeRoutes(
   | undefined {
   // TODO : remove quote type check for Uniswap X integration
   if (!quoteResponse || !quoteResponse.quote || !isClassicQuote(quoteResponse.quote)) {
-    return
+    return undefined
   }
 
   const { quote } = quoteResponse
 
   if (!quote.route || quote.route?.length === 0) {
-    return
+    return undefined
   }
 
   const tokenIn = quote.route[0]?.[0]?.tokenIn
@@ -165,7 +167,7 @@ export function computeRoutes(
       }
     })
   } catch (e) {
-    return
+    return undefined
   }
 }
 
@@ -227,6 +229,14 @@ function isV2OnlyRouteApi(route: (TradingApiV2PoolInRoute | TradingApiV3PoolInRo
 
 function isV3OnlyRouteApi(route: (TradingApiV2PoolInRoute | TradingApiV3PoolInRoute)[]): boolean {
   return route.every((pool) => pool.type === 'v3-pool')
+}
+
+export function getTokenAddressFromChainForTradingApi(address: Address, chainId: UniverseChainId): string {
+  // For native currencies, we need to map to 0x0000000000000000000000000000000000000000
+  if (address === UNIVERSE_CHAIN_INFO[chainId].nativeCurrency.address) {
+    return NATIVE_ADDRESS_FOR_TRADING_API
+  }
+  return address
 }
 
 export function getTokenAddressForApi(currency: Maybe<Currency>): string | undefined {

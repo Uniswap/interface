@@ -19,6 +19,7 @@ import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'uniswap/src/feature
 import { usePermit2SignatureWithData } from 'uniswap/src/features/transactions/swap/hooks/usePermit2Signature'
 import { useWrapTransactionRequest } from 'uniswap/src/features/transactions/swap/hooks/useWrapTransactionRequest'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { SwapGasFeeEstimation } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { ApprovalAction, TokenApprovalInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
@@ -30,7 +31,7 @@ import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transac
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { isDetoxBuild } from 'utilities/src/environment/constants'
 import { logger } from 'utilities/src/logger/logger'
-import { isMobileApp } from 'utilities/src/platform'
+import { isInterface, isMobileApp } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const UNKNOWN_SIM_ERROR = 'Unknown gas simulation error'
@@ -42,7 +43,7 @@ export interface TransactionRequestInfo {
   permitData?: NullablePermit
   permitDataLoading?: boolean
   gasFeeResult: GasFeeResult
-  gasEstimates?: GasFeeEstimates
+  gasEstimate: SwapGasFeeEstimation
   swapRequestArgs: CreateSwapRequest | undefined
 }
 
@@ -72,7 +73,8 @@ export function useTransactionRequestInfo({
   // Quote indicates we need to include a signed permit message
   const requiresPermit2Sig = !!permitData
 
-  const signatureInfo = usePermit2SignatureWithData({ permitData, skip })
+  // On interface, we do not fetch signature until after swap is clicked, as it requires user interaction.
+  const signatureInfo = usePermit2SignatureWithData({ permitData, skip: skip || isInterface })
 
   /**
    * Simulate transactions to ensure they will not fail on-chain.
@@ -80,12 +82,10 @@ export function useTransactionRequestInfo({
    * as those require Tenderly to simulate and it is not currently integrated into the gas servic
    */
   const shouldSimulateTxn = isBridgeTrade ? false : tokenApprovalInfo?.action === ApprovalAction.None
+  const missingSig = requiresPermit2Sig && !signatureInfo.signature
 
   // Format request args
   const swapRequestArgs: CreateSwapRequest | undefined = useMemo(() => {
-    if (requiresPermit2Sig && !signatureInfo.signature) {
-      return undefined
-    }
     // TODO: MOB(2438) https://linear.app/uniswap/issue/MOB-2438/uniswap-x-clean-old-trading-api-code
     if (!swapQuote) {
       return undefined
@@ -121,7 +121,6 @@ export function useTransactionRequestInfo({
     customDeadline,
     isBridgeTrade,
     permitData,
-    requiresPermit2Sig,
     shadowGasStrategies,
     shouldSimulateTxn,
     signatureInfo.signature,
@@ -139,12 +138,18 @@ export function useTransactionRequestInfo({
     wrapGasFeeRef.current = currentWrapGasFee
   }
   // Wrap gas cost should not change significantly between trades, so we can use the last value if current is unavailable.
-  const wrapGasFee = useMemo(
+  const wrapGasFee: GasFeeResult = useMemo(
     () => ({ ...currentWrapGasFee, value: currentWrapGasFee.value ?? wrapGasFeeRef.current.value }),
     [currentWrapGasFee],
   )
 
-  const skipTransactionRequest = !swapRequestArgs || isWrapApplicable || skip
+  const wrapTxRequestWithGasFee = useMemo(
+    () => ({ ...wrapTxRequest, ...(wrapGasFee.params ?? {}) }),
+    [wrapTxRequest, wrapGasFee],
+  )
+
+  const skipTransactionRequest = !swapRequestArgs || isWrapApplicable || skip || missingSig
+
   const tradingApiSwapRequestMs = useDynamicConfigValue(
     DynamicConfigs.Swap,
     SwapConfigKey.TradingApiSwapRequestMs,
@@ -220,23 +225,27 @@ export function useTransactionRequestInfo({
     }
   }, [data?.swap, derivedSwapInfo, formatter, gasEstimateError, swapRequestArgs, trade])
 
-  const gasEstimates = useMemo(() => {
+  const gasEstimate: SwapGasFeeEstimation = useMemo(() => {
     const activeGasEstimate = data?.gasEstimates?.find((e) => areEqualGasStrategies(e.strategy, activeGasStrategy))
-    return activeGasEstimate
+    const swapGasEstimate: GasFeeEstimates | undefined = activeGasEstimate
       ? {
           activeEstimate: activeGasEstimate,
           shadowEstimates: data?.gasEstimates?.filter((e) => e !== activeGasEstimate),
         }
       : undefined
-  }, [data?.gasEstimates, activeGasStrategy])
+    return {
+      swapEstimates: swapGasEstimate,
+      wrapEstimates: wrapGasFee.gasEstimates,
+    }
+  }, [data?.gasEstimates, activeGasStrategy, wrapGasFee.gasEstimates])
 
   return {
     gasFeeResult,
-    transactionRequest: isWrapApplicable ? wrapTxRequest : data?.swap,
+    transactionRequest: isWrapApplicable ? wrapTxRequestWithGasFee : data?.swap,
     permitSignature: signatureInfo.signature,
     permitDataLoading: signatureInfo.isLoading,
     permitData,
-    gasEstimates,
+    gasEstimate,
     swapRequestArgs,
   }
 }

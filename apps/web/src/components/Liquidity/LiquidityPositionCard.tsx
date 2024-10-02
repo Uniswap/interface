@@ -21,6 +21,7 @@ export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidit
       borderRadius="$rounded20"
       borderColor="$surface3"
       width="100%"
+      overflow="hidden"
       {...rest}
     >
       <Flex row alignItems="center" justifyContent="space-between">

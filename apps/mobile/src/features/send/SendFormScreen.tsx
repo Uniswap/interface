@@ -21,6 +21,7 @@ import {
   TransactionModalInnerContainer,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -69,7 +70,7 @@ function SendFormScreenContent({ hideContent }: { hideContent: boolean }): JSX.E
           >
             <Flex fill px="$spacing16">
               <RecipientSelect
-                chainId={derivedSendInfo.chainId}
+                chainId={derivedSendInfo.chainId as WalletChainId}
                 focusInput={showRecipientSelector}
                 hideBackButton={true}
                 recipient={recipient}
@@ -117,14 +118,14 @@ export function SendFormContent({
     <>
       <WarningModal
         caption={t('send.warning.viewOnly.message')}
-        confirmText={t('common.button.dismiss')}
+        acknowledgeText={t('common.button.dismiss')}
         icon={<EyeIcon color={colors.neutral2.get()} height={iconSizes.icon24} width={iconSizes.icon24} />}
         isOpen={showViewOnlyModal}
         modalName={ModalName.SwapWarning}
         severity={WarningSeverity.Low}
         title={t('send.warning.viewOnly.title')}
         onClose={(): void => setShowViewOnlyModal(false)}
-        onConfirm={(): void => setShowViewOnlyModal(false)}
+        onAcknowledge={(): void => setShowViewOnlyModal(false)}
       />
 
       <TouchableWithoutFeedback>

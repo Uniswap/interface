@@ -11,7 +11,7 @@ import { useEffect } from 'react'
 export default function useInterval(callback: () => void | Promise<void>, delay: null | number, leading = true) {
   useEffect(() => {
     if (delay === null) {
-      return
+      return undefined
     }
 
     let timeout: ReturnType<typeof setTimeout>

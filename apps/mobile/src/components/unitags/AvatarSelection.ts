@@ -19,6 +19,7 @@ export async function selectPhotoFromLibrary(): Promise<string | undefined> {
   if (!response.didCancel && !response.errorCode && response.assets) {
     return response.assets[0]?.uri
   }
+  return undefined
 }
 
 export function useAvatarSelectionHandler({

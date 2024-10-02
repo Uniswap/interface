@@ -1,6 +1,7 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
@@ -24,9 +25,8 @@ export function useSwapCallback(): SwapCallback {
         account,
         swapTxContext,
         txId,
-        onSubmit,
+        onSuccess,
         onFailure,
-        steps,
         currencyInAmountUSD,
         currencyOutAmountUSD,
         isAutoSlippage,
@@ -34,8 +34,13 @@ export function useSwapCallback(): SwapCallback {
       } = args
       const { trade, gasFee } = swapTxContext
 
+      // unsigned (missing permit signature) swaps are only supported on interface; this is an unreachable state and the following check is included for type safety.
+      if (swapTxContext.routing === Routing.CLASSIC && swapTxContext.unsigned) {
+        throw new Error('Swaps with async signatures are not implemented for wallet')
+      }
+
       const analytics = getBaseTradeAnalyticsProperties({ formatter, trade, currencyInAmountUSD, currencyOutAmountUSD })
-      appDispatch(swapActions.trigger({ swapTxContext, txId, account, analytics, steps, onSubmit, onFailure }))
+      appDispatch(swapActions.trigger({ swapTxContext, txId, account, analytics, onSuccess, onFailure }))
 
       const blockNumber = getClassicQuoteFromResponse(trade?.quote)?.blockNumber?.toString()
 

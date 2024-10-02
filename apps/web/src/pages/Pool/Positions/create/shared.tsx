@@ -10,9 +10,20 @@ export const Container = styled(Flex, {
   borderWidth: '$spacing1',
   borderColor: '$surface3',
   maxWidth: 580,
+  overflow: 'hidden',
 })
 
-export function AdvancedButton({ title, Icon, onPress }: { title: string; Icon: GeneratedIcon; onPress: () => void }) {
+export function AdvancedButton({
+  title,
+  tooltip = true,
+  Icon,
+  onPress,
+}: {
+  title: string
+  tooltip?: boolean
+  Icon: GeneratedIcon
+  onPress: () => void
+}) {
   const { t } = useTranslation()
   return (
     <Flex row gap="$spacing8" alignItems="center">
@@ -32,7 +43,8 @@ export function AdvancedButton({ title, Icon, onPress }: { title: string; Icon: 
       <Text variant="body3" color="$neutral3">
         ({t('common.advanced')})
       </Text>
-      <InfoCircleFilled size={iconSizes.icon16} color="$neutral3" />
+      {/* TODO(WEB-4920): implement tooltip text here */}
+      {tooltip && <InfoCircleFilled size={iconSizes.icon16} color="$neutral3" />}
     </Flex>
   )
 }

@@ -106,6 +106,7 @@ describe(sendTransaction, () => {
               maxPriorityFeePerGas: undefined,
               maxFeePerGas: undefined,
             },
+            timeoutTimestampMs: undefined,
           },
         }),
       )

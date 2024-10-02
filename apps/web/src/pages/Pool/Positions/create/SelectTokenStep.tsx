@@ -1,5 +1,9 @@
-import { Currency } from '@uniswap/sdk-core'
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Currency, Percent } from '@uniswap/sdk-core'
 import { FeeAmount } from '@uniswap/v3-sdk'
+import { PositionInfoBadge } from 'components/Liquidity/LiquidityPositionInfoBadges'
+import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import CurrencySearchModal from 'components/SearchModal/CurrencySearchModal'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { AddHook } from 'pages/Pool/Positions/create/AddHook'
@@ -8,7 +12,7 @@ import { AdvancedButton, Container } from 'pages/Pool/Positions/create/shared'
 import { useCallback, useReducer, useState } from 'react'
 import { TamaguiClickableStyle } from 'theme/components'
 import { PositionField } from 'types/position'
-import { Button, Flex, Text, styled } from 'ui/src'
+import { Button, Flex, FlexProps, Text, styled } from 'ui/src'
 import { CheckCircleFilled } from 'ui/src/components/icons/CheckCircleFilled'
 import { Dollar } from 'ui/src/components/icons/Dollar'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -102,17 +106,23 @@ const FeeTier = ({
   )
 }
 
-export function SelectTokensStep({ onContinue }: { onContinue: () => void }) {
-  const { formatDelta } = useFormatter()
+export function SelectTokensStep({
+  onContinue,
+  tokensLocked,
+  ...rest
+}: { tokensLocked?: boolean; onContinue: () => void } & FlexProps) {
+  const { formatPercent } = useFormatter()
   const { t } = useTranslation()
 
   const {
     positionState: {
       tokenInputs: { TOKEN0: token0, TOKEN1: token1 },
       fee,
+      protocolVersion,
     },
     setPositionState,
     derivedPositionInfo,
+    setFeeTierSearchModalOpen,
   } = useCreatePositionContext()
 
   const [currencySearchInputState, setCurrencySearchInputState] = useState<PositionField | undefined>(undefined)
@@ -152,22 +162,31 @@ export function SelectTokensStep({ onContinue }: { onContinue: () => void }) {
 
   return (
     <>
-      <Container>
+      <Container {...rest}>
         <Flex gap="$spacing16">
           <Flex gap="$spacing12">
             <Flex>
-              <Text variant="subheading1">
-                <Trans i18nKey="pool.selectPair" />
-              </Text>
+              <Text variant="subheading1">{tokensLocked ? t('pool.tokenPair') : t('pool.selectPair')}</Text>
               <Text variant="body3" color="$neutral2">
-                <Trans i18nKey="position.provide.liquidity" />
+                {tokensLocked ? t('position.migrate.liquidity') : t('position.provide.liquidity')}
               </Text>
             </Flex>
-            <Flex row gap="$gap16">
-              <CurrencySelector currency={token0} onPress={() => setCurrencySearchInputState(PositionField.TOKEN0)} />
-              <CurrencySelector currency={token1} onPress={() => setCurrencySearchInputState(PositionField.TOKEN1)} />
-            </Flex>
-            <AddHook />
+            {tokensLocked && token0 && token1 ? (
+              <Flex row gap="$gap16" py="$spacing4" alignItems="center">
+                <DoubleCurrencyAndChainLogo chainId={token0.chainId} currencies={[token0, token1]} size={44} />
+                <Flex grow>
+                  <Text variant="heading3">
+                    {token0.symbol} / {token1.symbol}
+                  </Text>
+                </Flex>
+              </Flex>
+            ) : (
+              <Flex row gap="$gap16">
+                <CurrencySelector currency={token0} onPress={() => setCurrencySearchInputState(PositionField.TOKEN0)} />
+                <CurrencySelector currency={token1} onPress={() => setCurrencySearchInputState(PositionField.TOKEN1)} />
+              </Flex>
+            )}
+            {protocolVersion === ProtocolVersion.V4 && <AddHook />}
           </Flex>
         </Flex>
         <Flex gap="$spacing24">
@@ -176,61 +195,81 @@ export function SelectTokensStep({ onContinue }: { onContinue: () => void }) {
               <Trans i18nKey="fee.tier" />
             </Text>
             <Text variant="body3" color="$neutral2">
-              <Trans i18nKey="fee.tier.description" />
+              {protocolVersion === ProtocolVersion.V2 ? t('fee.tier.description.v2') : t('fee.tier.description')}
             </Text>
           </Flex>
         </Flex>
-        <Flex gap="$spacing8">
-          <Flex
-            row
-            py="$spacing12"
-            px="$spacing16"
-            gap="$spacing24"
-            justifyContent="space-between"
-            borderRadius="$rounded12"
-            borderWidth={1}
-            borderColor="$surface3"
-          >
-            <Flex>
-              <Flex row>
-                <Text variant="subheading2" color="$neutral1">
-                  <Trans i18nKey="fee.tierExact" values={{ fee: formatDelta(fee / 10_000) }} />
-                </Text>
-              </Flex>
-              <Text variant="body3" color="$neutral2">
-                <Trans i18nKey="fee.tier.label" />
-              </Text>
-            </Flex>
-            <Button
-              py="$spacing8"
-              px="$spacing12"
-              gap="$gap4"
-              theme="secondary"
-              onPress={toggleShowMoreFeeTiersEnabled}
+        {protocolVersion !== ProtocolVersion.V2 && (
+          <Flex gap="$spacing8">
+            <Flex
+              row
+              py="$spacing12"
+              px="$spacing16"
+              gap="$spacing24"
+              justifyContent="space-between"
+              borderRadius="$rounded12"
+              borderWidth={1}
+              borderColor="$surface3"
             >
-              <Text variant="buttonLabel4">{isShowMoreFeeTiersEnabled ? t('common.less') : t('common.more')}</Text>
-              <RotatableChevron
-                direction={isShowMoreFeeTiersEnabled ? 'up' : 'down'}
-                color="$neutral2"
-                width={iconSizes.icon20}
-                height={iconSizes.icon20}
-              />
-            </Button>
-          </Flex>
-          {isShowMoreFeeTiersEnabled && (
-            <Flex row gap={10}>
-              {feeTiers.map((feeTier) => (
-                <FeeTier
-                  key={feeTier.value}
-                  feeTier={feeTier}
-                  selected={feeTier.value === fee}
-                  onSelect={handleFeeTierSelect}
+              <Flex>
+                <Flex row>
+                  <Text variant="subheading2" color="$neutral1">
+                    <Trans i18nKey="fee.tierExact" values={{ fee: formatPercent(new Percent(fee, 10_000)) }} />
+                  </Text>
+                </Flex>
+                <Text variant="body3" color="$neutral2">
+                  <Trans i18nKey="fee.tier.label" />
+                </Text>
+                {fee === FeeAmount.MEDIUM ? (
+                  <PositionInfoBadge placement="only" size="small">
+                    <Trans i18nKey="fee.tier.recommended" />
+                  </PositionInfoBadge>
+                ) : feeTiers.find((tier) => tier.value === fee) ? null : (
+                  <PositionInfoBadge placement="only" size="small">
+                    <Trans i18nKey="fee.tier.new" />
+                  </PositionInfoBadge>
+                )}
+              </Flex>
+              <Button
+                py="$spacing8"
+                px="$spacing12"
+                gap="$gap4"
+                theme="secondary"
+                onPress={toggleShowMoreFeeTiersEnabled}
+              >
+                <Text variant="buttonLabel4">{isShowMoreFeeTiersEnabled ? t('common.less') : t('common.more')}</Text>
+                <RotatableChevron
+                  direction={isShowMoreFeeTiersEnabled ? 'up' : 'down'}
+                  color="$neutral2"
+                  width={iconSizes.icon20}
+                  height={iconSizes.icon20}
                 />
-              ))}
+              </Button>
             </Flex>
-          )}
-          <AdvancedButton title={t('fee.tier.search')} Icon={Dollar} onPress={() => {}} />
-        </Flex>
+            {isShowMoreFeeTiersEnabled && (
+              <Flex row gap={10}>
+                {feeTiers.map((feeTier) => (
+                  <FeeTier
+                    key={feeTier.value}
+                    feeTier={feeTier}
+                    selected={feeTier.value === fee}
+                    onSelect={handleFeeTierSelect}
+                  />
+                ))}
+              </Flex>
+            )}
+            {protocolVersion === ProtocolVersion.V4 && (
+              <AdvancedButton
+                tooltip={false}
+                title={t('fee.tier.search')}
+                Icon={Dollar}
+                onPress={() => {
+                  setFeeTierSearchModalOpen(true)
+                }}
+              />
+            )}
+          </Flex>
+        )}
         <Button
           flex={1}
           py="$spacing16"

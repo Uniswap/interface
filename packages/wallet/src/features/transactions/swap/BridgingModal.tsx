@@ -50,16 +50,16 @@ export function BridgingModal({
         fromNetwork: UNIVERSE_CHAIN_INFO[fromNetwork].label,
         toNetwork: UNIVERSE_CHAIN_INFO[toNetwork].label,
       })}
-      closeText={t('common.button.back')}
-      confirmText={t('common.button.continue')}
-      confirmButtonTheme="primary"
+      rejectText={t('common.button.back')}
+      acknowledgeText={t('common.button.continue')}
+      acknowledgeButtonTheme="primary"
       icon={icon}
       isOpen={isOpen}
       modalName={ModalName.BridgingWarning}
       severity={WarningSeverity.None}
       title={t('swap.bridging.title')}
       onClose={onClose}
-      onConfirm={onContinue}
+      onAcknowledge={onContinue}
     >
       <TouchableArea onPress={onPressDoNotShowAgain}>
         <Flex row alignItems="center" gap="$spacing4">

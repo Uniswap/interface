@@ -1,6 +1,6 @@
 import { useWeb3React } from '@web3-react/core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useTokenBalances } from 'hooks/useTokenBalances'
 import { mocked } from 'test-utils/mocked'
 import { renderHook } from 'test-utils/render'
@@ -13,8 +13,8 @@ jest.mock('@web3-react/core', () => ({
   useWeb3React: jest.fn(() => ({ account: '0x123', chainId: 1 })),
 }))
 
-jest.mock('graphql/data/apollo/TokenBalancesProvider', () => ({
-  ...jest.requireActual('graphql/data/apollo/TokenBalancesProvider'),
+jest.mock('graphql/data/apollo/AdaptiveTokenBalancesProvider', () => ({
+  ...jest.requireActual('graphql/data/apollo/AdaptiveTokenBalancesProvider'),
   useTokenBalancesQuery: jest.fn(() => ({ data: {}, loading: false })),
 }))
 

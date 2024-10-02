@@ -8,6 +8,7 @@ import { sentryEnhancer } from 'state/logging'
 import { INDEXED_DB_REDUX_TABLE_NAME, PERSIST_VERSION, customCreateMigrate, migrations } from 'state/migrations'
 import { quickRouteApi } from 'state/routing/quickRouteSlice'
 import { routingApi } from 'state/routing/slice'
+import { rootWebSaga } from 'state/sagas/root'
 import { InterfaceState, interfacePersistedStateList, interfaceReducer } from 'state/webReducer'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { isDevEnv, isTestEnv } from 'utilities/src/environment/env'
@@ -32,8 +33,10 @@ const persistConfig: PersistConfig<InterfaceState> = {
 
 const persistedReducer = persistReducer(persistConfig, interfaceReducer)
 
+const sagaMiddleware = createSagaMiddleware()
+
 export function createDefaultStore() {
-  return configureStore({
+  const store = configureStore({
     reducer: persistedReducer,
     enhancers: (defaultEnhancers) => defaultEnhancers.concat(sentryEnhancer),
     middleware: (getDefaultMiddleware) =>
@@ -64,8 +67,11 @@ export function createDefaultStore() {
         .concat(routingApi.middleware)
         .concat(quickRouteApi.middleware)
         .concat(fiatOnRampAggregatorApi.middleware)
-        .concat(createSagaMiddleware()),
+        .concat(sagaMiddleware),
   })
+  sagaMiddleware.run(rootWebSaga)
+
+  return store
 }
 
 const store = createDefaultStore()

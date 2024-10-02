@@ -4,7 +4,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useQueryWithImmediateGarbageCollection } from 'uniswap/src/data/apiClients/hooks/useQueryWithImmediateGarbageCollection'
 import { UseQueryWithImmediateGarbageCollectionApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { UNISWAP_API_CACHE_KEY, fetchGasFee } from 'uniswap/src/data/apiClients/uniswapApi/UniswapApiClient'
-import { GasStrategy } from 'uniswap/src/data/tradingApi/__generated__'
+import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { GasFeeResponse } from 'uniswap/src/features/gas/types'
 
 export function useGasFeeQuery({

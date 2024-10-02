@@ -85,7 +85,7 @@ export function findAllowedTokenRecipientForUwuLink(
   allowlist: UwULinkAllowlist,
 ): UwULinkAllowlistItem | undefined {
   if (request.method !== UwULinkMethod.Erc20Send) {
-    return
+    return undefined
   }
 
   const { chainId, recipient } = request

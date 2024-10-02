@@ -86,6 +86,9 @@ export function InfoLinkModal({
             backgroundColor="transparent"
             borderRadius="$rounded12"
             color="$neutral2"
+            hoverStyle={{
+              backgroundColor: 'transparent',
+            }}
             px="$spacing40"
             theme="secondary"
             onPress={openUniswapURL}

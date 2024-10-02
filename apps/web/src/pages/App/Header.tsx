@@ -7,9 +7,9 @@ import { useBag } from 'nft/hooks'
 import { GRID_AREAS } from 'pages/App/utils/shared'
 import { memo } from 'react'
 import { useLocation } from 'react-router-dom'
-import { NAV_HEIGHT } from 'theme'
 import { Z_INDEX } from 'theme/zIndex'
 import { useIsTouchDevice } from 'ui/src'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 const AppHeader = styled.div`
   grid-area: ${GRID_AREAS.HEADER};
@@ -18,6 +18,11 @@ const AppHeader = styled.div`
   position: sticky;
   top: 0px;
   z-index: ${Z_INDEX.sticky};
+  pointer-events: none;
+
+  & > * {
+    pointer-events: auto;
+  }
 `
 const Banners = styled.div`
   position: relative;
@@ -28,7 +33,7 @@ const NavOnScroll = styled.div<{ $hide: boolean; $transparent?: boolean }>`
   transition: transform ${({ theme }) => theme.transition.duration.slow};
   background-color: ${({ theme, $transparent }) => !$transparent && theme.surface1};
   border-bottom: ${({ theme, $transparent }) => !$transparent && `1px solid ${theme.surface3}`};
-  ${({ $hide }) => $hide && `transform: translateY(-${NAV_HEIGHT}px);`}
+  ${({ $hide }) => $hide && `transform: translateY(-${INTERFACE_NAV_HEIGHT}px);`}
 `
 
 export const Header = memo(function Header() {

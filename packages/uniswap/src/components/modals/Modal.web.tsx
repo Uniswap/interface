@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
-import { AdaptiveWebModal } from 'ui/src'
+import { AdaptiveWebModal, isWeb } from 'ui/src'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { isExtension, isInterface } from 'utilities/src/platform'
 
 const ANIMATION_MS = 200
@@ -15,6 +16,7 @@ export function Modal({
   isModalOpen = true,
   alignment = 'center',
   maxWidth,
+  maxHeight,
   padding = '$spacing12',
 }: ModalProps): JSX.Element {
   const [fullyClosed, setFullyClosed] = useState(false)
@@ -35,9 +37,11 @@ export function Modal({
         clearTimeout(tm)
       }
     }
+    return undefined
   }, [isModalOpen])
 
   const isTopAligned = alignment === 'top'
+  const justifyContent = isTopAligned ? 'flex-start' : isWeb ? undefined : 'center'
 
   return (
     <Trace logImpression={isModalOpen} modal={name}>
@@ -49,9 +53,15 @@ export function Modal({
         backgroundColor={backgroundColor}
         height={fullScreen ? '100%' : undefined}
         isOpen={isModalOpen}
-        justifyContent={isTopAligned ? 'flex-start' : 'center'}
+        justifyContent={justifyContent}
         m="$none"
         maxWidth={maxWidth}
+        maxHeight={maxHeight}
+        $sm={{
+          '$platform-web': {
+            height: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
+          },
+        }}
         p={padding}
         position={isTopAligned ? 'absolute' : undefined}
         top={isTopAligned ? '$spacing16' : undefined}

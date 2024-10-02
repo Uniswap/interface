@@ -1,9 +1,10 @@
 import type { ImageRequireSource } from 'react-native'
-import { FlexProps } from 'ui/src/components/layout/Flex'
+import type { FlexProps } from 'ui/src/components/layout/Flex'
 
 export interface UniversalImageStyle {
   backgroundColor?: string
   borderRadius?: number
+  verticalAlign?: FlexProps['verticalAlign']
 }
 
 export enum UniversalImageResizeMode {

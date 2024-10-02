@@ -8,7 +8,7 @@ import PortfolioRow, {
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import Row from 'components/deprecated/Row'
-import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { PortfolioBalance, PortfolioToken } from 'graphql/data/portfolios'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import styled from 'lib/styled-components'

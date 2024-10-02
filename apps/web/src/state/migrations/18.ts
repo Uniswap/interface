@@ -13,7 +13,7 @@ export type PersistAppStateV18 = {
  */
 export const migration18 = (state: PersistAppStateV18 | undefined) => {
   if (!state?.userSettings) {
-    return
+    return undefined
   }
   const newState: any = { ...state }
 

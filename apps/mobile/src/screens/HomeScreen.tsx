@@ -550,7 +550,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                 {...sceneProps}
                 indicatorStyle={TAB_STYLES.activeTabIndicator}
                 navigationState={{ index: tabIndex, routes }}
-                pressColor={colors.surface3.val} // Android only
+                pressColor="transparent" // Android only
                 renderLabel={renderTabLabel}
                 style={[
                   TAB_STYLES.tabBar,

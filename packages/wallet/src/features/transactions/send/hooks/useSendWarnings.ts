@@ -25,7 +25,7 @@ export function getSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo, 
   const isMissingRequiredParams = checkIsMissingRequiredParams(
     currencyInInfo,
     nftIn,
-    chainId,
+    chainId as WalletChainId,
     recipient,
     !!currencyAmountIn,
     !!currencyBalanceIn,

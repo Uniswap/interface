@@ -81,6 +81,8 @@ const MOCK_ARGS: GetQuoteArgs = {
   deadlineBufferSecs: 0,
   arbitrumXV2SlippageTolerance: undefined as any,
   protocolPreferences: undefined,
+  isPriorityOrder: false,
+  isUniswapXSupportedChain: true,
 }
 
 describe('#useRoutingAPITrade ExactIn', () => {

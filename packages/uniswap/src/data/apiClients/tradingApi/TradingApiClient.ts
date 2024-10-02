@@ -6,12 +6,14 @@ import {
   ApprovalRequest,
   ApprovalResponse,
   BridgeQuote,
+  ChainId,
   ClassicQuote,
   CreateSwapRequest,
   CreateSwapResponse,
   DutchQuoteV2,
   GetOrdersResponse,
   GetSwappableTokensResponse,
+  GetSwapsResponse,
   IndicativeQuoteRequest,
   IndicativeQuoteResponse,
   OrderRequest,
@@ -21,6 +23,7 @@ import {
   ReduceLPPositionRequest,
   ReduceLPPositionResponse,
   Routing,
+  TransactionHash,
 } from 'uniswap/src/data/tradingApi/__generated__'
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
@@ -106,5 +109,14 @@ export async function reduceLpPosition(params: ReduceLPPositionRequest): Promise
       ...params,
       includeGasInfo: true,
     }),
+  })
+}
+
+export async function fetchSwaps(params: { txHashes: TransactionHash[]; chainId: ChainId }): Promise<GetSwapsResponse> {
+  return await TradingApiClient.get<GetSwapsResponse>(uniswapUrls.tradingApiPaths.swaps, {
+    params: {
+      txHashes: params.txHashes.join(','),
+      chainId: params.chainId,
+    },
   })
 }

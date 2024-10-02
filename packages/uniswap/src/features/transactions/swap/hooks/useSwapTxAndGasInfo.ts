@@ -13,8 +13,9 @@ import {
 import { ApprovalAction, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { sumGasFees } from 'uniswap/src/features/transactions/swap/utils/gas'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { isInterface } from 'utilities/src/platform'
 
 export function useSwapTxAndGasInfo({
   derivedSwapInfo,
@@ -52,7 +53,7 @@ export function useSwapTxAndGasInfo({
     const approvalError = tokenApprovalInfo?.action === ApprovalAction.Unknown
 
     const gasFeeEstimation: SwapGasFeeEstimation = {
-      swapEstimates: swapTxInfo.gasEstimates,
+      ...swapTxInfo.gasEstimate,
       approvalEstimates: tokenApprovalInfo?.gasEstimates,
     }
 
@@ -61,13 +62,15 @@ export function useSwapTxAndGasInfo({
     const approveTxRequest = validateTransactionRequest(tokenApprovalInfo?.txRequest)
     const revocationTxRequest = validateTransactionRequest(tokenApprovalInfo?.cancelTxRequest)
     const txRequest = validateTransactionRequest(swapTxInfo.transactionRequest)
+    const permit = validatePermit(swapTxInfo.permitData)
+    const unsigned = Boolean(isInterface && swapTxInfo.permitData)
 
     if (trade?.routing === Routing.DUTCH_V2) {
       const signature = swapTxInfo.permitSignature
       const orderParams = signature ? { signature, quote: trade.quote.quote, routing: Routing.DUTCH_V2 } : undefined
       const gasFeeBreakdown: UniswapXGasBreakdown = {
         classicGasUseEstimateUSD: trade.quote.quote.classicGasUseEstimateUSD,
-        approvalCost: tokenApprovalInfo?.gasEstimates?.activeEstimate.gasFee,
+        approvalCost: tokenApprovalInfo?.gasFee,
         wrapCost: swapTxInfo.gasFeeResult.value,
         inputTokenSymbol: trade.inputAmount.currency.wrapped.symbol,
       }
@@ -81,12 +84,10 @@ export function useSwapTxAndGasInfo({
         revocationTxRequest,
         orderParams,
         gasFee,
+        gasFeeEstimation,
         gasFeeBreakdown,
         approvalError,
-        permitData: swapTxInfo.permitData,
-        permitDataLoading: swapTxInfo.permitDataLoading,
-        swapRequestArgs: swapTxInfo.swapRequestArgs,
-        permitSignature: swapTxInfo.permitSignature,
+        permit,
       }
     } else if (trade?.routing === Routing.BRIDGE) {
       return {
@@ -99,10 +100,9 @@ export function useSwapTxAndGasInfo({
         gasFee,
         gasFeeEstimation,
         approvalError,
-        permitData: swapTxInfo.permitData,
-        permitDataLoading: swapTxInfo.permitDataLoading,
-        permitSignature: swapTxInfo.permitSignature,
         swapRequestArgs: swapTxInfo.swapRequestArgs,
+        permit,
+        unsigned,
       }
     } else {
       return {
@@ -115,20 +115,18 @@ export function useSwapTxAndGasInfo({
         gasFee,
         gasFeeEstimation,
         approvalError,
-        permitData: swapTxInfo.permitData,
-        permitDataLoading: swapTxInfo.permitDataLoading,
         swapRequestArgs: swapTxInfo.swapRequestArgs,
-        permitSignature: swapTxInfo.permitSignature,
+        permit,
+        unsigned,
       }
     }
   }, [
     indicativeTrade,
-    swapTxInfo.gasEstimates,
+    swapTxInfo.gasEstimate,
     swapTxInfo.gasFeeResult,
     swapTxInfo.permitSignature,
     swapTxInfo.transactionRequest,
     swapTxInfo.permitData,
-    swapTxInfo.permitDataLoading,
     swapTxInfo.swapRequestArgs,
     tokenApprovalInfo,
     trade,
@@ -166,10 +164,6 @@ function getTotalGasFee(
     return { value: undefined, error, isLoading }
   }
 
-  const value = sumGasFees([
-    swapGasResult.value,
-    tokenApprovalInfo.gasEstimates?.activeEstimate.gasFee,
-    tokenApprovalInfo.cancelGasFee,
-  ])
+  const value = sumGasFees([swapGasResult.value, tokenApprovalInfo.gasFee, tokenApprovalInfo.cancelGasFee])
   return { value, error, isLoading }
 }

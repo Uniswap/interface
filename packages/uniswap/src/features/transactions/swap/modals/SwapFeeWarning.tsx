@@ -30,7 +30,7 @@ export function SwapFeeWarning({ noFee, children }: PropsWithChildren<{ noFee: b
         hideIcon: true,
         backgroundIconColor: colors.surface2.get(),
         caption,
-        closeText: t('common.button.close'),
+        rejectText: t('common.button.close'),
         modalName: ModalName.NetworkFeeInfo,
         severity: WarningSeverity.None,
         title: t('swap.warning.uniswapFee.title'),

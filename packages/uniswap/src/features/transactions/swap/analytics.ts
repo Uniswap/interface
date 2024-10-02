@@ -1,5 +1,5 @@
 import { SwapEventName } from '@uniswap/analytics-events'
-import { Currency, CurrencyAmount, Percent, TradeType } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useEffect } from 'react'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -13,6 +13,7 @@ import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/s
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getCurrencyAddressForAnalytics } from 'uniswap/src/utils/currencyId'
+import { percentFromFloat } from 'utilities/src/format/percent'
 import { NumberType } from 'utilities/src/format/types'
 
 // hook-based analytics because this one is data-lifecycle dependent
@@ -42,11 +43,13 @@ export function getBaseTradeAnalyticsProperties({
   trade,
   currencyInAmountUSD,
   currencyOutAmountUSD,
+  portfolioBalanceUsd,
 }: {
   formatter: LocalizationContextState
   trade: Trade<Currency, Currency, TradeType>
   currencyInAmountUSD?: Maybe<CurrencyAmount<Currency>>
   currencyOutAmountUSD?: Maybe<CurrencyAmount<Currency>>
+  portfolioBalanceUsd?: number
 }): SwapTradeBaseProperties {
   const portionAmount = getClassicQuoteFromResponse(trade?.quote)?.portionAmount
 
@@ -60,9 +63,10 @@ export function getBaseTradeAnalyticsProperties({
 
   const finalOutputAmount = feeCurrencyAmount ? trade.outputAmount.subtract(feeCurrencyAmount) : trade.outputAmount
 
-  const slippagePercent = new Percent((trade.slippageTolerance ?? 0) * 100, 100)
+  const slippagePercent = percentFromFloat(trade.slippageTolerance ?? 0)
 
   return {
+    total_balances_usd: portfolioBalanceUsd,
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
     token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),

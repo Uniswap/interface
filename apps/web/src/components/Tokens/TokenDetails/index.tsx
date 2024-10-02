@@ -3,7 +3,6 @@ import { Currency } from '@uniswap/sdk-core'
 import { BreadcrumbNavContainer, BreadcrumbNavLink, CurrentPageBreadcrumb } from 'components/BreadcrumbNav'
 import { MobileBottomBar, TDPActionTabs } from 'components/NavBar/MobileBottomBar'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
-import TokenSafetyModal from 'components/TokenSafety/TokenSafetyModal'
 import { ActivitySection } from 'components/Tokens/TokenDetails/ActivitySection'
 import BalanceSummary, { PageChainBalanceSummary } from 'components/Tokens/TokenDetails/BalanceSummary'
 import ChartSection from 'components/Tokens/TokenDetails/ChartSection'
@@ -23,7 +22,7 @@ import { ScrollDirection, useScroll } from 'hooks/useScroll'
 import deprecatedStyled from 'lib/styled-components'
 import { Swap } from 'pages/Swap'
 import { useTDPContext } from 'pages/TokenDetails/TDPContext'
-import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
+import { PropsWithChildren, useCallback, useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { useNavigate } from 'react-router-dom'
 import { CurrencyState } from 'state/swap/types'
@@ -127,47 +126,18 @@ function TDPSwapComponent() {
   // Other token to prefill the swap form with
   const initialInputCurrency = useSwapInitialInputCurrency()
 
-  const [openTokenSafetyModal, setOpenTokenSafetyModal] = useState(false)
-  const [continueSwap, setContinueSwap] = useState<{ resolve: (value: boolean | PromiseLike<boolean>) => void }>()
-
-  const onResolveSwap = useCallback(
-    (value: boolean) => {
-      continueSwap?.resolve(value)
-      setContinueSwap(undefined)
-    },
-    [continueSwap, setContinueSwap],
-  )
-  const isBlockedToken = warning?.canProceed === false
-
   return (
     <>
-      <div
-        style={{ pointerEvents: isBlockedToken ? 'none' : 'auto' }}
-        onClick={() => isBlockedToken && setOpenTokenSafetyModal(true)}
-      >
-        <Swap
-          syncTabToUrl={false}
-          chainId={currency.chainId}
-          initialInputCurrency={initialInputCurrency}
-          initialOutputCurrency={currency}
-          onCurrencyChange={handleCurrencyChange}
-          disableTokenInputs={account.isConnected && currency.chainId !== account.chainId}
-          compact
-        />
-      </div>
+      <Swap
+        syncTabToUrl={false}
+        chainId={currency.chainId}
+        initialInputCurrency={initialInputCurrency}
+        initialOutputCurrency={currency}
+        onCurrencyChange={handleCurrencyChange}
+        disableTokenInputs={account.isConnected && currency.chainId !== account.chainId}
+        compact
+      />
       {warning && <TokenSafetyMessage tokenAddress={address} warning={warning} />}
-      {currency.isToken && (
-        <TokenSafetyModal
-          isOpen={openTokenSafetyModal || !!continueSwap}
-          token0={currency}
-          onContinue={() => onResolveSwap(true)}
-          onBlocked={() => {
-            setOpenTokenSafetyModal(false)
-          }}
-          onCancel={() => onResolveSwap(false)}
-          showCancel={true}
-        />
-      )}
     </>
   )
 }

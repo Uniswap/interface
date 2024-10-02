@@ -75,6 +75,7 @@ module.exports = {
     '@typescript-eslint/no-var-requires': 'off',
     'check-file/no-index': ['error', { ignoreMiddleExtensions: true }],
     '@typescript-eslint/no-require-imports': 'off',
+    'consistent-return': ['error', { treatUndefinedAsUnspecified: false }],
     '@typescript-eslint/no-unused-expressions': [
       2,
       {

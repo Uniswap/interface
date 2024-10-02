@@ -2,7 +2,7 @@ import { CopyHelper } from 'theme/components'
 import { styled, Text } from 'ui/src'
 import { isAddress, shortenAddress } from 'utilities/src/addresses'
 
-const PositionInfoBadge = styled(Text, {
+export const PositionInfoBadge = styled(Text, {
   display: 'flex',
   flexDirection: 'row',
   gap: '$spacing2',

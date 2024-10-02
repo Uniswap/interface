@@ -155,8 +155,8 @@ function _TokenOptionItem({
       <TokenWarningModal
         currencyInfo0={currencyInfo}
         isVisible={showWarningModal}
-        onAccept={onAcceptTokenWarning}
-        onClose={(): void => setShowWarningModal(false)}
+        closeModalOnly={(): void => setShowWarningModal(false)}
+        onAcknowledge={onAcceptTokenWarning}
       />
     </>
   )

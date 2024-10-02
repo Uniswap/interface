@@ -76,6 +76,7 @@ export const portfolioBalances = createFixture<PortfolioBalance[], PortfolioBala
             fromBalance: balance as RequireNonNullable<TokenBalance, 'quantity' | 'token'>,
           })
         }
+        return undefined
       })
       .filter(Boolean) as PortfolioBalance[]) ?? [],
 )

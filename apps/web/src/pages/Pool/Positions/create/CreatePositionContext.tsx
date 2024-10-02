@@ -1,24 +1,20 @@
-import { useDerivedPositionInfo } from 'pages/Pool/Positions/create/hooks'
+/* eslint-disable-next-line no-restricted-imports */
 import {
   CreatePositionContextType,
+  DEFAULT_POSITION_STATE,
   PositionFlowStep,
-  PositionState,
   PriceRangeContextType,
   PriceRangeState,
 } from 'pages/Pool/Positions/create/types'
 import React, { useContext, useState } from 'react'
 
-export const DEFAULT_POSITION_STATE: PositionState = {
-  tokenInputs: {},
-  fee: 3000,
-  hook: undefined,
-}
-
-const CreatePositionContext = React.createContext<CreatePositionContextType>({
-  step: PositionFlowStep.SELECT_TOKENS,
+export const CreatePositionContext = React.createContext<CreatePositionContextType>({
+  step: PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER,
   setStep: () => undefined,
   positionState: DEFAULT_POSITION_STATE,
   setPositionState: () => undefined,
+  feeTierSearchModalOpen: false,
+  setFeeTierSearchModalOpen: () => undefined,
   derivedPositionInfo: {
     pool: undefined,
   },
@@ -26,18 +22,6 @@ const CreatePositionContext = React.createContext<CreatePositionContextType>({
 
 export const useCreatePositionContext = () => {
   return useContext(CreatePositionContext)
-}
-
-export function CreatePositionContextProvider({ children }: { children: React.ReactNode }) {
-  const [positionState, setPositionState] = useState<PositionState>(DEFAULT_POSITION_STATE)
-  const [step, setStep] = useState<PositionFlowStep>(PositionFlowStep.SELECT_TOKENS)
-  const derivedPositionInfo = useDerivedPositionInfo(positionState)
-
-  return (
-    <CreatePositionContext.Provider value={{ step, setStep, positionState, setPositionState, derivedPositionInfo }}>
-      {children}
-    </CreatePositionContext.Provider>
-  )
 }
 
 export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {

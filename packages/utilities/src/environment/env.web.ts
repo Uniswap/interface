@@ -15,6 +15,8 @@ export function isDevEnv(): boolean {
     return process.env.NODE_ENV === 'development'
   } else if (isExtension) {
     return __DEV__ || chrome.runtime.id === EXTENSION_ID_DEV || chrome.runtime.id === EXTENSION_ID_LOCAL
+  } else if (isTestEnv()) {
+    return false
   } else {
     throw createAndLogError('isProdEnv')
   }
@@ -26,6 +28,8 @@ export function isBetaEnv(): boolean {
     return Boolean(process.env.REACT_APP_STAGING)
   } else if (isExtension) {
     return chrome.runtime.id === EXTENSION_ID_BETA
+  } else if (isTestEnv()) {
+    return false
   } else {
     throw createAndLogError('isBetaEnv')
   }
@@ -36,6 +40,8 @@ export function isProdEnv(): boolean {
     return process.env.NODE_ENV === 'production' && !isBetaEnv()
   } else if (isExtension) {
     return chrome.runtime.id === EXTENSION_ID_PROD
+  } else if (isTestEnv()) {
+    return false
   } else {
     throw createAndLogError('isProdEnv')
   }

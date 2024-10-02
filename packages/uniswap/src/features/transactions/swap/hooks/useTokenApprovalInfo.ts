@@ -16,7 +16,7 @@ import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
-interface TokenApprovalInfoParams {
+export interface TokenApprovalInfoParams {
   chainId: WalletChainId
   wrapType: WrapType
   currencyInAmount: Maybe<CurrencyAmount<Currency>>
@@ -26,9 +26,15 @@ interface TokenApprovalInfoParams {
   skip?: boolean
 }
 
+interface TokenApprovalGasInfo {
+  gasFee?: string
+  cancelGasFee?: string
+  gasEstimates?: GasFeeEstimates
+}
+
 export function useTokenApprovalInfo(
   params: TokenApprovalInfoParams,
-): (TokenApprovalInfo & { gasEstimates?: GasFeeEstimates; cancelGasFee?: string }) | undefined {
+): (TokenApprovalInfo & TokenApprovalGasInfo) | undefined {
   const { account, chainId, wrapType, currencyInAmount, currencyOutAmount, routing, skip } = params
 
   const isWrap = wrapType !== WrapType.NotApplicable
@@ -129,6 +135,7 @@ export function useTokenApprovalInfo(
         return {
           action: ApprovalAction.Permit2Approve,
           txRequest: data.approval,
+          gasFee: data.gasFee,
           gasEstimates,
           cancelTxRequest: null,
         }

@@ -16,6 +16,7 @@ export function useSwapPrefilledState(initialState: TransactionState | undefined
             exactAmountFiat: initialState.exactAmountFiat,
             exactAmountToken: initialState.exactAmountToken,
             exactCurrencyField: initialState.exactCurrencyField,
+            filteredChainIds: {},
             focusOnCurrencyField: getFocusOnCurrencyFieldFromInitialState(initialState),
             input: initialState.input ?? undefined,
             output: initialState.output ?? undefined,

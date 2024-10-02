@@ -152,7 +152,13 @@ export function GenericImportForm({
               py="$spacing16"
               top={0}
             >
-              <Text color="$neutral2" fontSize={INPUT_FONT_SIZE} pointerEvents="none">
+              <Text
+                color="$neutral2"
+                fontSize={INPUT_FONT_SIZE}
+                lineHeight={INPUT_FONT_SIZE}
+                verticalAlign="bottom"
+                pointerEvents="none"
+              >
                 {placeholderLabel}
               </Text>
             </Flex>

@@ -2,7 +2,7 @@ import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Posit
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { useCallback, useMemo } from 'react'
 import { Minus, Plus } from 'react-feather'
-import { Button, Flex, SegmentedControl, Text, useSporeColors } from 'ui/src'
+import { Button, Flex, FlexProps, SegmentedControl, Text, useSporeColors } from 'ui/src'
 import { SwapActionButton } from 'ui/src/components/icons/SwapActionButton'
 import { fonts } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
@@ -75,7 +75,7 @@ function RangeInput({ input }: { input: RangeSelectionInput }) {
           borderWidth={0}
           borderRadius="$none"
           color="$neutral1"
-          fontFamily="$heading3"
+          fontFamily="$heading"
           fontSize={fonts.heading3.fontSize}
           fontWeight={fonts.heading3.fontWeight}
           maxDecimals={quoteCurrency?.decimals ?? 18}
@@ -109,7 +109,7 @@ function RangeInput({ input }: { input: RangeSelectionInput }) {
   )
 }
 
-export const SelectPriceRangeStep = ({ onContinue }: { onContinue: () => void }) => {
+export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () => void } & FlexProps) => {
   const { t } = useTranslation()
 
   const {
@@ -157,7 +157,7 @@ export const SelectPriceRangeStep = ({ onContinue }: { onContinue: () => void })
   ]
 
   return (
-    <Container>
+    <Container {...rest}>
       <Flex gap="$gap20">
         <Flex row alignItems="center">
           <Text flex={1} variant="subheading1">

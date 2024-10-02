@@ -15,7 +15,7 @@ export type PersistAppStateV16 = {
  */
 export const migration16 = (state: PersistAppStateV16 | undefined) => {
   if (!state) {
-    return
+    return undefined
   }
 
   const newState: any = { ...state }

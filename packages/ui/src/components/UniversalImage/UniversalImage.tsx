@@ -110,6 +110,7 @@ export function UniversalImage({
         alignItems="center"
         backgroundColor={style?.image?.backgroundColor as ColorTokens}
         borderRadius={style?.image?.borderRadius}
+        verticalAlign={style?.image?.verticalAlign}
         height={size.height}
         overflow="hidden"
         testID={testID ? `svg-${testID}` : undefined}

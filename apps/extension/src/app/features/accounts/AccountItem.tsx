@@ -131,15 +131,15 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
         caption={t('account.recoveryPhrase.remove.mnemonic.description', {
           walletNames: [activeAccountDisplayName?.name ?? ''],
         })}
-        closeText={t('common.button.cancel')}
-        confirmText={t('common.button.continue')}
+        rejectText={t('common.button.cancel')}
+        acknowledgeText={t('common.button.continue')}
         icon={<TrashFilled color="$statusCritical" size="$icon.24" strokeWidth="$spacing1" />}
         isOpen={showRemoveWalletModal}
         modalName={ModalName.RemoveWallet}
         severity={WarningSeverity.High}
         title={t('account.wallet.remove.title', { name: displayName?.name ?? '' })}
         onClose={() => setShowRemoveWalletModal(false)}
-        onConfirm={onRemoveWallet}
+        onAcknowledge={onRemoveWallet}
       />
       <EditLabelModal address={address} isOpen={showEditLabelModal} onClose={() => setShowEditLabelModal(false)} />
       <TouchableArea

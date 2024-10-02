@@ -88,7 +88,7 @@ export function usePortfolioBalances({
 
   const formattedData = useMemo(() => {
     if (!balancesForAddress) {
-      return
+      return undefined
     }
 
     const byId: Record<CurrencyId, PortfolioBalance> = {}
@@ -200,7 +200,7 @@ export function usePortfolioTotalValue({
 
   const formattedData = useMemo(() => {
     if (!portfolioForAddress) {
-      return
+      return undefined
     }
 
     return {

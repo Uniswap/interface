@@ -11,7 +11,8 @@ export interface DecimalPadProps {
   disabledKeys?: Partial<Record<KeyLabel, boolean>>
   maxHeight: number | null
   onKeyPress?: (label: KeyLabel, action: KeyAction) => void
-  onKeyLongPress?: (label: KeyLabel, action: KeyAction) => void
+  onKeyLongPressStart?: (label: KeyLabel, action: KeyAction) => void
+  onKeyLongPressEnd?: (label: KeyLabel, action: KeyAction) => void
   onReady: () => void
   onTriggerInputShakeAnimation: () => void
 }

@@ -3,7 +3,7 @@ import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__ge
 import { AttackType, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import {
   TokenWarningDesignTreatment,
-  getShouldHavePluralTreatment,
+  getShouldHaveCombinedPluralTreatment,
   getTokenWarningDesignTreatment,
   useModalHeaderText,
   useModalSubtitleText,
@@ -95,18 +95,20 @@ describe('safetyUtils', () => {
 
   describe('getShouldHavePluralTreatment', () => {
     it('should return false when only one currency is provided', () => {
-      expect(getShouldHavePluralTreatment(mockCurrency, mockSafetyInfo)).toBe(false)
+      expect(getShouldHaveCombinedPluralTreatment(mockCurrency, mockSafetyInfo)).toBe(false)
     })
 
     it('should return true when both currencies have Low warning', () => {
       const lowSafetyInfo = { ...mockSafetyInfo, tokenList: TokenList.NonDefault }
-      expect(getShouldHavePluralTreatment(mockCurrency, lowSafetyInfo, mockCurrency, lowSafetyInfo)).toBe(true)
+      expect(getShouldHaveCombinedPluralTreatment(mockCurrency, lowSafetyInfo, mockCurrency, lowSafetyInfo)).toBe(true)
     })
 
     it('should return false when one has low warning and the other has high warning', () => {
       const lowSafetyInfo = { ...mockSafetyInfo, tokenList: TokenList.NonDefault }
       const highSafetyInfo = { ...mockSafetyInfo, protectionResult: ProtectionResult.Malicious }
-      expect(getShouldHavePluralTreatment(mockCurrency, lowSafetyInfo, mockCurrency, highSafetyInfo)).toBe(false)
+      expect(getShouldHaveCombinedPluralTreatment(mockCurrency, lowSafetyInfo, mockCurrency, highSafetyInfo)).toBe(
+        false,
+      )
     })
   })
 

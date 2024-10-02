@@ -1,21 +1,18 @@
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { navigate } from 'src/app/navigation/rootNavigation'
-import { openModal } from 'src/features/modals/modalSlice'
-import { ModalName, UnitagEventName } from 'uniswap/src/features/telemetry/constants'
+import { UnitagEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { MobileScreens, OnboardingScreens, UnitagEntryPoint, UnitagScreens } from 'uniswap/src/types/screens/mobile'
 import { selectHasCompletedUnitagsIntroModal } from 'wallet/src/features/behaviorHistory/selectors'
 import { setHasSkippedUnitagPrompt } from 'wallet/src/features/behaviorHistory/slice'
 
 export function useUnitagClaimHandler({
-  address,
-  entryPoint,
   analyticsEntryPoint,
+  navigateToClaim,
+  navigateToIntro,
 }: {
-  address: string
-  entryPoint: Exclude<UnitagEntryPoint, OnboardingScreens.Landing>
   analyticsEntryPoint: 'home' | 'settings'
+  navigateToClaim: () => void
+  navigateToIntro: () => void
 }): {
   handleClaim: () => void
   handleDismiss: () => void
@@ -30,22 +27,11 @@ export function useUnitagClaimHandler({
     })
 
     if (hasCompletedUnitagsIntroModal) {
-      navigate(MobileScreens.UnitagStack, {
-        screen: UnitagScreens.ClaimUnitag,
-        params: {
-          entryPoint,
-          address,
-        },
-      })
+      navigateToClaim()
     } else {
-      dispatch(
-        openModal({
-          name: ModalName.UnitagsIntro,
-          initialState: { address, entryPoint },
-        }),
-      )
+      navigateToIntro()
     }
-  }, [address, analyticsEntryPoint, dispatch, entryPoint, hasCompletedUnitagsIntroModal])
+  }, [analyticsEntryPoint, hasCompletedUnitagsIntroModal, navigateToClaim, navigateToIntro])
 
   const handleDismiss = useCallback(() => {
     sendAnalyticsEvent(UnitagEventName.UnitagBannerActionTaken, {

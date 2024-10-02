@@ -25,6 +25,7 @@ export const DISPLAYS: Record<TimePeriod, TimePeriodDisplay> = {
   [TimePeriod.YEAR]: TimePeriodDisplay.YEAR,
 }
 
+// eslint-disable-next-line consistent-return
 export function getTimePeriodFromDisplay(display: TimePeriodDisplay): TimePeriod {
   switch (display) {
     case TimePeriodDisplay.HOUR:

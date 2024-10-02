@@ -1,6 +1,7 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { UNI, WBTC } from 'uniswap/src/constants/tokens'
-import { FeeType, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { AccountType, SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/hooks'
 import { useSwapTxAndGasInfo } from 'uniswap/src/features/transactions/swap/hooks/useSwapTxAndGasInfo'
@@ -49,10 +50,11 @@ describe('useSwapTxAndGasInfo', () => {
         maxFeePerGas: '500000',
         maxPriorityFeePerGas: '600000',
       },
+      gasFee: '200000',
       gasEstimates: {
         activeEstimate: {
           gasLimit: '100000',
-          gasFee: '200000',
+          gasFee: '220000',
           maxFeePerGas: '300000',
           maxPriorityFeePerGas: '400000',
           type: FeeType.EIP1559,
@@ -63,14 +65,16 @@ describe('useSwapTxAndGasInfo', () => {
     const mockSwapTxInfo: TransactionRequestInfo = {
       transactionRequest: { to: '0x456', chainId: 1 },
       gasFeeResult: { value: '123', isLoading: false, error: null },
-      gasEstimates: {
-        activeEstimate: {
-          gasLimit: '500000',
-          gasFee: '600000',
-          maxFeePerGas: '700000',
-          maxPriorityFeePerGas: '800000',
-          type: FeeType.EIP1559,
-          strategy: DEFAULT_GAS_STRATEGY,
+      gasEstimate: {
+        swapEstimates: {
+          activeEstimate: {
+            gasLimit: '500000',
+            gasFee: '600000',
+            maxFeePerGas: '700000',
+            maxPriorityFeePerGas: '800000',
+            type: FeeType.EIP1559,
+            strategy: DEFAULT_GAS_STRATEGY,
+          },
         },
       },
       permitSignature: undefined,
@@ -105,7 +109,7 @@ describe('useSwapTxAndGasInfo', () => {
         approvalEstimates: {
           activeEstimate: {
             gasLimit: '100000',
-            gasFee: '200000',
+            gasFee: '220000',
             maxFeePerGas: '300000',
             maxPriorityFeePerGas: '400000',
             type: FeeType.EIP1559,
@@ -115,10 +119,9 @@ describe('useSwapTxAndGasInfo', () => {
       },
       approvalError: false,
       indicativeTrade: undefined,
-      permitSignature: undefined,
-      permitData: undefined,
-      permitDataLoading: undefined,
+      permit: undefined,
       swapRequestArgs: undefined,
+      unsigned: false,
     })
   })
 })

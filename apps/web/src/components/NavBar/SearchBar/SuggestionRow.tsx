@@ -50,15 +50,12 @@ const SuggestionRowStyles = css<{ $isFocused: boolean }>`
   background: ${theme.surface2};
 `}
 `
+
 const StyledLink = styled(Link)`
   ${SuggestionRowStyles}
 `
 const SkeletonSuggestionRow = styled.div`
   ${SuggestionRowStyles}
-`
-const PrimaryContainer = styled(Column)`
-  align-items: flex-start;
-  width: 90%;
 `
 const CollectionImageStyles = css`
   width: 36px;
@@ -165,7 +162,7 @@ export function SuggestionRow({
       onMouseLeave={() => isHovered && setHoveredIndex(undefined)}
       data-testid={isToken ? `searchbar-token-row-${suggestion.chain}-${suggestion.address ?? NATIVE_CHAIN_ID}` : ''}
     >
-      <Flex row width="60%" gap="$spacing8">
+      <Flex row gap="$spacing8" shrink grow overflow="hidden">
         {isToken ? (
           <QueryTokenLogo
             token={suggestion}
@@ -182,8 +179,8 @@ export function SuggestionRow({
             onError={() => setBrokenCollectionImage(true)}
           />
         )}
-        <PrimaryContainer>
-          <Flex row gap="$spacing4" centered>
+        <Flex alignItems="flex-start" justifyContent="flex-start" shrink grow>
+          <Flex row gap="$spacing4" shrink width="95%">
             <PrimaryText lineHeight="24px">{suggestion.name}</PrimaryText>
             {isToken ? <TokenSafetyIcon warning={warning} /> : suggestion.isVerified && <Verified size={14} />}
           </Flex>
@@ -201,7 +198,7 @@ export function SuggestionRow({
               </ThemedText.SubHeaderSmall>
             )}
           </Flex>
-        </PrimaryContainer>
+        </Flex>
       </Flex>
 
       <SecondaryContainer>

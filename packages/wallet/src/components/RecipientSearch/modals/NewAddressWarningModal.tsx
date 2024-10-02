@@ -14,11 +14,11 @@ import { DisplayNameType } from 'wallet/src/features/wallet/types'
 
 type NewAddressWarningModalProps = {
   address: string
-  onConfirm: () => void
+  onAcknowledge: () => void
   onClose: () => void
 }
 
-export function NewAddressWarningModal({ address, onConfirm, onClose }: NewAddressWarningModalProps): JSX.Element {
+export function NewAddressWarningModal({ address, onAcknowledge, onClose }: NewAddressWarningModalProps): JSX.Element {
   const { t } = useTranslation()
 
   const validated = getValidAddress(address)
@@ -86,7 +86,7 @@ export function NewAddressWarningModal({ address, onConfirm, onClose }: NewAddre
           <Button flex={1} flexBasis={1} theme="secondary" onPress={onClose}>
             {t('common.button.back')}
           </Button>
-          <Button flex={1} flexBasis={1} theme="primary" onPress={onConfirm}>
+          <Button flex={1} flexBasis={1} theme="primary" onPress={onAcknowledge}>
             {t('common.button.confirm')}
           </Button>
         </Flex>

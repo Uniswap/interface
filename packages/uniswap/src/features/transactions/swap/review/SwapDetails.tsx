@@ -9,6 +9,7 @@ import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { FeeOnTransferFeeGroupProps } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { TransactionDetails } from 'uniswap/src/features/transactions/TransactionDetails/TransactionDetails'
+import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/MaxSlippageRow'
 import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/SwapRateRatio'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
@@ -96,6 +97,16 @@ export function SwapDetails({
     }
   }, [acceptedTrade])
 
+  const estimatedBridgingTime = useMemo(() => {
+    const tradeQuote = derivedSwapInfo.trade.trade?.quote
+
+    if (!tradeQuote || !isBridge(tradeQuote)) {
+      return undefined
+    }
+
+    return tradeQuote.quote.estimatedFillTimeMs
+  }, [derivedSwapInfo.trade.trade?.quote])
+
   return (
     <TransactionDetails
       isSwap
@@ -118,6 +129,8 @@ export function SwapDetails({
       transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
       uniswapXGasBreakdown={uniswapXGasBreakdown}
       warning={warning}
+      estimatedBridgingTime={estimatedBridgingTime}
+      isBridgeTrade={isBridgeTrade ?? false}
       onShowWarning={onShowWarning}
     >
       <Flex row alignItems="center" justifyContent="space-between">
@@ -128,6 +141,7 @@ export function SwapDetails({
           <SwapRateRatio trade={trade} />
         </Flex>
       </Flex>
+      {isBridgeTrade && <EstimatedTime timeMs={estimatedBridgingTime} />}
       {!isBridgeTrade && (
         <MaxSlippageRow
           acceptedDerivedSwapInfo={acceptedDerivedSwapInfo}

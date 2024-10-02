@@ -43,7 +43,7 @@ const keyExtractor = (item: NFTItem | string, index: number): string =>
 function gqlNFTAssetToNFTItem(data: NftCollectionScreenQuery | undefined): NFTItem[] | undefined {
   const items = data?.nftAssets?.edges?.flatMap((item) => item.node)
   if (!items) {
-    return
+    return undefined
   }
 
   return items.map((item): NFTItem => {

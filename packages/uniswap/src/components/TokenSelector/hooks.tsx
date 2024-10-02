@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { ApolloError } from '@apollo/client/errors'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -13,15 +14,21 @@ import {
 } from 'uniswap/src/components/TokenSelector/types'
 import {
   createEmptyBalanceOption,
+  createEmptyTokenOptionFromSwappableToken,
   formatSearchResults,
+  mergeSearchResultsWithBridgingTokens,
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES, getNativeAddress } from 'uniswap/src/constants/addresses'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { DAI, USDC, USDT, WBTC } from 'uniswap/src/constants/tokens'
+import { useTradingApiSwappableTokensQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { GetSwappableTokensResponse } from 'uniswap/src/data/tradingApi/__generated__'
 import { GqlResult } from 'uniswap/src/data/types'
+import { TradeableAsset } from 'uniswap/src/entities/assets'
+import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import {
   sortPortfolioBalances,
   usePortfolioBalances,
@@ -33,6 +40,8 @@ import { usePopularTokens as usePopularTokensGql } from 'uniswap/src/features/da
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { addToSearchHistory, clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
@@ -41,13 +50,23 @@ import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { usePopularTokens } from 'uniswap/src/features/tokens/hooks'
 import {
+  NATIVE_ADDRESS_FOR_TRADING_API,
+  getTokenAddressFromChainForTradingApi,
+  toTradingApiSupportedChainId,
+} from 'uniswap/src/features/transactions/swap/utils/tradingApi'
+import {
   UniverseChainId,
   WALLET_SUPPORTED_CHAIN_IDS,
   WEB_SUPPORTED_CHAIN_IDS,
   WalletChainId,
 } from 'uniswap/src/types/chains'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
-import { buildNativeCurrencyId, buildWrappedNativeCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
+import {
+  buildCurrencyId,
+  buildNativeCurrencyId,
+  buildWrappedNativeCurrencyId,
+  currencyId,
+} from 'uniswap/src/utils/currencyId'
 import { isInterface } from 'utilities/src/platform'
 
 const nativeCurrencyNames = (isInterface ? WEB_SUPPORTED_CHAIN_IDS : WALLET_SUPPORTED_CHAIN_IDS)
@@ -127,7 +146,7 @@ export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
 
 export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> {
   const { data: baseCurrencyInfos, loading, error, refetch } = useTokenProjects(currencyIds)
-  const persistedError = usePersistedError(loading, error)
+  const persistedError = usePersistedError(loading, error instanceof ApolloError ? error : undefined)
 
   // TokenProjects returns tokens on every network, so filter out native assets that have a
   // bridged version on other networks
@@ -176,7 +195,7 @@ export function useFavoriteCurrencies(): GqlResult<CurrencyInfo[]> {
   const favoriteCurrencyIds = useSelector(selectFavoriteTokens)
   const { data: favoriteTokensOnAllChains, loading, error, refetch } = useTokenProjects(favoriteCurrencyIds)
 
-  const persistedError = usePersistedError(loading, error)
+  const persistedError = usePersistedError(loading, error instanceof ApolloError ? error : undefined)
 
   // useTokenProjects returns each token on Arbitrum, Optimism, Polygon,
   // so we need to filter out the tokens which user has actually favorited
@@ -315,6 +334,72 @@ export function useTokenSectionsForEmptySearch(chainFilter: UniverseChainId | nu
   )
 }
 
+export function useBridgingTokensOptions({
+  input,
+  walletAddress,
+  chainFilter,
+}: {
+  input: TradeableAsset | undefined
+  walletAddress: Address | undefined
+  chainFilter: UniverseChainId | null
+}): GqlResult<TokenOption[] | undefined> {
+  const isBridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
+
+  const tokenIn = input?.address ? getTokenAddressFromChainForTradingApi(input.address, input.chainId) : undefined
+  const tokenInChainId = toTradingApiSupportedChainId(input?.chainId)
+
+  const {
+    data: swappableTokens,
+    isLoading: loadingSwappableTokens,
+    error: errorSwappableTokens,
+    refetch: refetchSwappableTokens,
+  } = useTradingApiSwappableTokensQuery({
+    params:
+      tokenIn && tokenInChainId && isBridgingEnabled
+        ? {
+            tokenIn,
+            tokenInChainId,
+          }
+        : undefined,
+  })
+
+  // Get portfolio balance for returned tokens
+  const {
+    data: portfolioBalancesById,
+    error: portfolioBalancesByIdError,
+    refetch: portfolioBalancesByIdRefetch,
+    loading: loadingPorfolioBalancesById,
+  } = usePortfolioBalancesForAddressById(isBridgingEnabled ? walletAddress : undefined)
+
+  const tokenOptions = useSwappableTokensToTokenOptions(swappableTokens?.tokens, portfolioBalancesById)
+  const filteredTokenOptions = useMemo(() => filter(tokenOptions ?? null, chainFilter), [chainFilter, tokenOptions])
+
+  const error = (!portfolioBalancesById && portfolioBalancesByIdError) || (!tokenOptions && errorSwappableTokens)
+
+  const refetch = useCallback(async () => {
+    if (isBridgingEnabled) {
+      portfolioBalancesByIdRefetch?.()
+      await refetchSwappableTokens?.()
+    }
+  }, [portfolioBalancesByIdRefetch, refetchSwappableTokens, isBridgingEnabled])
+
+  if (!isBridgingEnabled) {
+    return {
+      data: undefined,
+      loading: false,
+      error: undefined,
+      refetch: undefined,
+    }
+  }
+
+  return {
+    data: filteredTokenOptions,
+    loading: loadingSwappableTokens || loadingPorfolioBalancesById,
+    error: error || undefined,
+    refetch,
+  }
+}
+
 export function useCurrencyInfosToTokenOptions({
   currencyInfos,
   portfolioBalancesById,
@@ -345,7 +430,48 @@ export function useCurrencyInfosToTokenOptions({
   }, [currencyInfos, portfolioBalancesById, sortAlphabetically])
 }
 
-function useCommonTokensOptions(
+export function useSwappableTokensToTokenOptions(
+  swappableTokens: GetSwappableTokensResponse['tokens'] | undefined,
+  portfolioBalancesById?: Record<string, PortfolioBalance>,
+): TokenOption[] | undefined {
+  return useMemo(() => {
+    if (!swappableTokens) {
+      return undefined
+    }
+
+    // We sort the tokens by chain in the same order chains in the network selector
+    const chainOrder = WALLET_SUPPORTED_CHAIN_IDS
+    const sortedSwappableTokens = [...swappableTokens].sort((a, b) => {
+      if (!a || !b) {
+        return 0
+      }
+      const chainIdA = toSupportedChainId(a.chainId)
+      const chainIdB = toSupportedChainId(b.chainId)
+      if (!chainIdA || !chainIdB) {
+        return 0
+      }
+      return chainOrder.indexOf(chainIdA) - chainOrder.indexOf(chainIdB)
+    })
+
+    return sortedSwappableTokens
+      .map((token) => {
+        const chainId = toSupportedChainId(token.chainId)
+        const validInput = token.address && token.chainId && portfolioBalancesById
+        if (!chainId || !validInput) {
+          return undefined
+        }
+
+        const isNative = token.address === NATIVE_ADDRESS_FOR_TRADING_API
+        return (
+          portfolioBalancesById[isNative ? buildNativeCurrencyId(chainId) : buildCurrencyId(chainId, token.address)] ??
+          createEmptyTokenOptionFromSwappableToken(token)
+        )
+      })
+      .filter((tokenOption): tokenOption is TokenOption => tokenOption !== undefined)
+  }, [swappableTokens, portfolioBalancesById])
+}
+
+export function useCommonTokensOptions(
   address: Address | undefined,
   chainFilter: UniverseChainId | null,
 ): GqlResult<TokenOption[] | undefined> {
@@ -559,7 +685,11 @@ export function useTokenSectionsForSearchResults(
   chainFilter: UniverseChainId | null,
   searchFilter: string | null,
   isBalancesOnlySearch: boolean,
+  input: TradeableAsset | undefined,
 ): GqlResult<TokenSection[]> {
+  const { t } = useTranslation()
+  const isBridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
+
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
@@ -574,6 +704,14 @@ export function useTokenSectionsForSearchResults(
     loading: portfolioTokenOptionsLoading,
   } = usePortfolioTokenOptions(address, chainFilter, searchFilter ?? undefined)
 
+  // Bridging tokens are only shown if input is provided
+  const {
+    data: bridgingTokenOptions,
+    error: bridgingTokenOptionsError,
+    refetch: refetchBridgingTokenOptions,
+    loading: bridgingTokenOptionsLoading,
+  } = useBridgingTokensOptions({ input, walletAddress: address, chainFilter })
+
   // Only call search endpoint if isBalancesOnlySearch is false
   const {
     data: searchResultCurrencies,
@@ -587,15 +725,29 @@ export function useTokenSectionsForSearchResults(
   }, [searchResultCurrencies, portfolioBalancesById, searchFilter])
 
   const loading =
-    portfolioTokenOptionsLoading || portfolioBalancesByIdLoading || (!isBalancesOnlySearch && searchTokensLoading)
+    portfolioTokenOptionsLoading ||
+    portfolioBalancesByIdLoading ||
+    (!isBalancesOnlySearch && searchTokensLoading) ||
+    bridgingTokenOptionsLoading
 
-  const sections = useTokenOptionsSection(
+  const searchResultsSections = useTokenOptionsSection(
     TokenOptionSection.SearchResults,
     // Use local search when only searching balances
     isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
   )
 
+  // If there are bridging options, we need to extract them from the search results and then prepend them as a new section above.
+  // The remaining non-bridging search results will be shown in a section with a different name
+  const networkName = chainFilter ? UNIVERSE_CHAIN_INFO[chainFilter].label : undefined
+  const searchResultsSectionHeader = networkName
+    ? t('tokens.selector.section.otherSearchResults', { network: networkName })
+    : undefined
+  const sections = isBridgingEnabled
+    ? mergeSearchResultsWithBridgingTokens(searchResultsSections, bridgingTokenOptions, searchResultsSectionHeader)
+    : searchResultsSections
+
   const error =
+    (!bridgingTokenOptions && bridgingTokenOptionsError) ||
     (!portfolioBalancesById && portfolioBalancesByIdError) ||
     (!portfolioTokenOptions && portfolioTokenOptionsError) ||
     (!isBalancesOnlySearch && !searchResults && searchTokensError)
@@ -604,7 +756,16 @@ export function useTokenSectionsForSearchResults(
     refetchPortfolioBalances?.()
     refetchSearchTokens?.()
     refetchPortfolioTokenOptions?.()
-  }, [refetchPortfolioBalances, refetchPortfolioTokenOptions, refetchSearchTokens])
+    if (isBridgingEnabled) {
+      refetchBridgingTokenOptions?.()
+    }
+  }, [
+    isBridgingEnabled,
+    refetchBridgingTokenOptions,
+    refetchPortfolioBalances,
+    refetchPortfolioTokenOptions,
+    refetchSearchTokens,
+  ])
 
   return useMemo(
     () => ({

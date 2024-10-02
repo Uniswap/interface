@@ -3,14 +3,14 @@ import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Posit
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { useCallback } from 'react'
-import { Button, Flex, Text } from 'ui/src'
+import { Button, Flex, FlexProps, Text } from 'ui/src'
 import { Edit } from 'ui/src/components/icons/Edit'
 import { iconSizes } from 'ui/src/theme'
 import { Trans } from 'uniswap/src/i18n'
 
-const EditStep = ({ children, onClick }: { children: JSX.Element; onClick: () => void }) => {
+const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onClick: () => void } & FlexProps) => {
   return (
-    <Container row justifyContent="space-between" alignItems="center" borderRadius="$rounded12">
+    <Container row justifyContent="space-between" alignItems="center" borderRadius="$rounded12" {...rest}>
       {children}
       <Button theme="secondary" py="$spacing8" px="$spacing12" gap="$gap8" height={36} onPress={onClick}>
         <Edit size={iconSizes.icon20} color="$neutral1" />
@@ -22,7 +22,7 @@ const EditStep = ({ children, onClick }: { children: JSX.Element; onClick: () =>
   )
 }
 
-export const EditSelectTokensStep = () => {
+export const EditSelectTokensStep = (props?: FlexProps) => {
   const {
     positionState: {
       tokenInputs: { TOKEN0: token0, TOKEN1: token1 },
@@ -32,11 +32,11 @@ export const EditSelectTokensStep = () => {
   const currencies = [token0, token1]
 
   const handleEdit = useCallback(() => {
-    setStep(PositionFlowStep.SELECT_TOKENS)
+    setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
   }, [setStep])
 
   return (
-    <EditStep onClick={handleEdit}>
+    <EditStep onClick={handleEdit} {...props}>
       <Flex row py="$spacing8" gap="$gap12">
         <DoubleCurrencyLogo currencies={currencies} size={iconSizes.icon32} />
         <Flex row gap="$gap8">
@@ -49,7 +49,7 @@ export const EditSelectTokensStep = () => {
   )
 }
 
-export const EditRangeSelectionStep = () => {
+export const EditRangeSelectionStep = (props?: FlexProps) => {
   const {
     positionState: {
       tokenInputs: { TOKEN0: token0, TOKEN1: token1 },
@@ -68,7 +68,7 @@ export const EditRangeSelectionStep = () => {
   }, [setStep])
 
   return (
-    <EditStep onClick={handleEdit}>
+    <EditStep onClick={handleEdit} {...props}>
       <Flex row gap={10}>
         <Text variant="subheading1" width={80}>
           <Trans i18nKey="common.range" />

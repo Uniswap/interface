@@ -63,8 +63,8 @@ function FavoriteTokenCard({
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
   const chainId = fromGraphQLChain(token?.chain) ?? UniverseChainId.Mainnet
 
-  const price = convertFiatAmountFormatted(token?.project?.markets?.[0]?.price?.value, NumberType.FiatTokenPrice)
-  const pricePercentChange = token?.project?.markets?.[0]?.pricePercentChange24h?.value
+  const price = convertFiatAmountFormatted(token?.market?.price?.value, NumberType.FiatTokenPrice)
+  const pricePercentChange = token?.market?.pricePercentChange?.value
 
   const onRemove = useCallback(() => {
     if (currencyId) {

@@ -31,7 +31,7 @@ export const UnitagInfoModal = ({
       caption={t('unitags.onboarding.info.description', {
         unitagDomain: UNITAG_SUFFIX_NO_LEADING_DOT,
       })}
-      closeText={t('common.button.close')}
+      rejectText={t('common.button.close')}
       icon={
         <Flex centered row gap="$spacing4">
           <Pill

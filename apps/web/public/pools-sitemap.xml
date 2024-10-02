@@ -6460,4 +6460,49 @@
     <lastmod>2024-09-20T21:06:11.923Z</lastmod>
     <priority>0.8</priority>
   </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/arbitrum/0xb736330326cf379ecd918dba10614bd63c2713da</loc>
+    <lastmod>2024-09-27T19:51:14.628Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/arbitrum/0xe3d4faff3179f0a664a3a84c3e1da3b90e27f186</loc>
+    <lastmod>2024-09-27T19:51:14.628Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/arbitrum/0x50e7b9293aef80c304234e86c84a01be8401c530</loc>
+    <lastmod>2024-09-27T19:51:14.628Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/optimism/0x87dddd2e152bf1955e7e03d9f23a9dcc163eebf6</loc>
+    <lastmod>2024-09-27T19:51:14.628Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/optimism/0xd9dd34576c7034beb0b11a99afffc49e91011235</loc>
+    <lastmod>2024-09-27T19:51:14.628Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/optimism/0x394a9fcbab8599437d9ec4e5a4a0eb7cb1fd2f69</loc>
+    <lastmod>2024-09-27T19:51:14.628Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0xb3adde966b8a1a6f22a04914ee9fe0798e71fc5b</loc>
+    <lastmod>2024-09-27T19:51:14.628Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/base/0xa2d4a8e00daad32acace1a0dd0905f6aaf57e84e</loc>
+    <lastmod>2024-09-27T19:51:14.628Z</lastmod>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://app.uniswap.org/explore/pools/celo/0x2392ae4ba6daf181ce7343d237b695cdf525e233</loc>
+    <lastmod>2024-09-27T19:51:14.628Z</lastmod>
+    <priority>0.8</priority>
+  </url>
 </urlset>

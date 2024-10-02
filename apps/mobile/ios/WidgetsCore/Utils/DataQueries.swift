@@ -65,9 +65,9 @@ public class DataQueries {
           let symbol = token?.symbol
           let name = token?.name
           let logoUrl = token?.project?.logoUrl ?? nil
-          let markets = token?.project?.markets
-          let spotPrice = (markets != nil) && !markets!.isEmpty ? markets?[0]?.price?.value : nil
-          let pricePercentChange = (markets != nil) && !markets!.isEmpty ? markets?[0]?.pricePercentChange24h?.value : nil
+          let market = token?.market
+          let spotPrice = market?.price?.value
+          let pricePercentChange = market?.pricePercentChange?.value
           let tokenPriceResponse = TokenPriceResponse(chain: chain, address: address, symbol: symbol ?? "", name: name ?? "", logoUrl: logoUrl ?? "", spotPrice: spotPrice, pricePercentChange: pricePercentChange)
           continuation.resume(returning: tokenPriceResponse)
         case .failure(let error):

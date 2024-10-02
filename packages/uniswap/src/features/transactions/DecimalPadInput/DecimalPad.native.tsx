@@ -30,7 +30,8 @@ export const DecimalPad = memo(function DecimalPad({
   disabledKeys = {},
   maxHeight,
   onKeyPress,
-  onKeyLongPress,
+  onKeyLongPressStart,
+  onKeyLongPressEnd,
   onReady,
   onTriggerInputShakeAnimation,
 }: DecimalPadProps): JSX.Element {
@@ -146,7 +147,8 @@ export const DecimalPad = memo(function DecimalPad({
                 // Because of this, we don't set the `disabled` prop on the number keys so we can trigger the `onPress` event.
                 disabled={disabled || (isKeyDisabled && !shouldTriggerShake)}
                 sizeMultiplier={sizeMultiplier}
-                onLongPress={shouldTriggerShake ? onTriggerInputShakeAnimation : onKeyLongPress}
+                onLongPressStart={shouldTriggerShake ? onTriggerInputShakeAnimation : onKeyLongPressStart}
+                onLongPressEnd={shouldTriggerShake ? undefined : onKeyLongPressEnd}
                 onPress={shouldTriggerShake ? onTriggerInputShakeAnimation : onKeyPress}
               />
             )
@@ -161,7 +163,8 @@ type KeyButtonProps = KeyProps & {
   disabled?: boolean
   sizeMultiplier: SizeMultiplier
   onPress?: (label: KeyLabel, action: KeyAction) => void
-  onLongPress?: (label: KeyLabel, action: KeyAction) => void
+  onLongPressStart?: (label: KeyLabel, action: KeyAction) => void
+  onLongPressEnd?: (label: KeyLabel, action: KeyAction) => void
 }
 
 const animationOptions = { duration: KEY_PRESS_ANIMATION_DURATION_MS }
@@ -172,7 +175,8 @@ const KeyButton = memo(function KeyButton({
   label,
   sizeMultiplier,
   onPress,
-  onLongPress,
+  onLongPressStart,
+  onLongPressEnd,
 }: KeyButtonProps): JSX.Element {
   const { decimalSeparator } = useAppFiatCurrencyInfo()
   const { hapticFeedback } = useHapticFeedback()
@@ -181,24 +185,24 @@ const KeyButton = memo(function KeyButton({
   const opacity = useSharedValue(1)
 
   const handlePress = useCallback(async (): Promise<void> => {
-    if (disabled) {
-      return
-    }
     onPress?.(label, action)
     scale.value = withSequence(withTiming(1.3, animationOptions), withTiming(1, animationOptions))
     opacity.value = withSequence(withTiming(0.75, animationOptions), withTiming(1, animationOptions))
     await hapticFeedback.impact()
-  }, [action, disabled, hapticFeedback, label, onPress, opacity, scale])
+  }, [action, hapticFeedback, label, onPress, opacity, scale])
 
-  const handleLongPress = useCallback((): void => {
-    if (disabled) {
-      return
-    }
-    onLongPress?.(label, action)
-  }, [action, disabled, label, onLongPress])
+  const handleLongPressStart = useCallback((): void => {
+    onLongPressStart?.(label, action)
+  }, [action, label, onLongPressStart])
 
-  const tap = Gesture.Tap().onBegin(handlePress)
-  const longPress = Gesture.LongPress().onStart(handleLongPress)
+  const handleLongPressEnd = useCallback((): void => {
+    onLongPressEnd?.(label, action)
+  }, [action, label, onLongPressEnd])
+
+  // We use `onBegin` because we want to react as soon as the user touches the key, not when they release it.
+  const tap = Gesture.Tap().onBegin(handlePress).enabled(!disabled)
+  // We use `onStart` because we want to start reacting to this event when the long press is actually detected.
+  const longPress = Gesture.LongPress().onStart(handleLongPressStart).onEnd(handleLongPressEnd).enabled(!disabled)
   const composedGesture = Gesture.Simultaneous(tap, longPress)
 
   const color = disabled ? '$neutral3' : '$neutral1'

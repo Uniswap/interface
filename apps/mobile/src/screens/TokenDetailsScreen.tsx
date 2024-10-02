@@ -34,6 +34,8 @@ import {
   TokenDetailsScreenQuery,
   useTokenDetailsScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { AssetType } from 'uniswap/src/entities/assets'
+import { useSwappableTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/useSwappableTokenWithHighestBalance'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
@@ -236,6 +238,12 @@ function TokenDetails({
 
   const safetyLevel = token?.project?.safetyLevel
 
+  const swappableTokenWithHighestBalance = useSwappableTokenWithHighestBalance({
+    currencyAddress,
+    currencyChainId,
+    otherChainBalances,
+  })
+
   const onPressSend = useCallback(() => {
     // Do not show warning modal speedbump if user is trying to send tokens they own
     navigateToSend({ currencyAddress, chainId: currencyChainId })
@@ -249,12 +257,38 @@ function TokenDetails({
       } else if (safetyLevel !== SafetyLevel.Verified && !tokenWarningDismissed) {
         setActiveTransactionType(currencyField)
         setShowWarningModal(true)
+      } else if (swappableTokenWithHighestBalance && currencyField === CurrencyField.OUTPUT) {
+        // When clicking "Buy", if the user has a balance in another chain, we prepopulate the input token with that token.
+        setActiveTransactionType(undefined)
+        navigateToSwapFlow({
+          initialState: {
+            exactCurrencyField: CurrencyField.INPUT,
+            input: {
+              address: currencyIdToAddress(swappableTokenWithHighestBalance.currencyInfo.currencyId),
+              chainId: swappableTokenWithHighestBalance.currencyInfo.currency.chainId,
+              type: AssetType.Currency,
+            },
+            output: {
+              address: currencyAddress,
+              chainId: currencyChainId,
+              type: AssetType.Currency,
+            },
+            exactAmountToken: '',
+          },
+        })
       } else {
         setActiveTransactionType(undefined)
         navigateToSwapFlow({ currencyField, currencyAddress, currencyChainId })
       }
     },
-    [currencyAddress, currencyChainId, navigateToSwapFlow, safetyLevel, tokenWarningDismissed],
+    [
+      currencyAddress,
+      currencyChainId,
+      navigateToSwapFlow,
+      safetyLevel,
+      swappableTokenWithHighestBalance,
+      tokenWarningDismissed,
+    ],
   )
 
   const onPressBuyFiatOnRamp = useCallback((): void => {
@@ -367,13 +401,13 @@ function TokenDetails({
       {currencyInfo && (
         <TokenWarningModal
           currencyInfo0={currencyInfo}
-          disableAccept={activeTransactionType === undefined}
+          isInfoOnlyWarning={activeTransactionType === undefined}
           isVisible={showWarningModal}
-          onAccept={onAcceptWarning}
-          onClose={(): void => {
+          closeModalOnly={(): void => {
             setActiveTransactionType(undefined)
             setShowWarningModal(false)
           }}
+          onAcknowledge={onAcceptWarning}
         />
       )}
 

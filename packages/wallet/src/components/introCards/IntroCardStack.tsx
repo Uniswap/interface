@@ -1,22 +1,22 @@
-import { IntroCard, IntroCardProps } from 'src/components/home/introCards/IntroCard'
 import { SwipeableCardStack } from 'ui/src/components/swipeablecards/SwipeableCardStack'
+import { isExtension } from 'utilities/src/platform'
+import { IntroCard, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
 
 export type IntroCardWrapper = IntroCardProps & { onPress?: () => void }
 
 type IntroCardStackProps = {
   cards: IntroCardWrapper[]
 
-  keyExtractor: (card: IntroCardProps) => string
   onSwiped?: (card: IntroCardProps, index: number) => void
 }
 
-export const INTRO_CARD_MIN_HEIGHT = 110
+export const INTRO_CARD_MIN_HEIGHT = isExtension ? 84 : 110
 
-export function IntroCardStack({ cards, keyExtractor, onSwiped }: IntroCardStackProps): JSX.Element {
+export function IntroCardStack({ cards, onSwiped }: IntroCardStackProps): JSX.Element {
   return (
     <SwipeableCardStack
       cards={cards}
-      keyExtractor={keyExtractor}
+      keyExtractor={(card) => card.title}
       minCardHeight={INTRO_CARD_MIN_HEIGHT}
       renderCard={(card) => <IntroCard {...card} />}
       onSwiped={onSwiped}

@@ -2,9 +2,11 @@
 import { ApolloClient, NormalizedCacheObject } from '@apollo/client'
 import { SwapEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
-import { BigNumberish, providers } from 'ethers'
+import { BigNumber, BigNumberish, providers } from 'ethers'
 import { call, delay, fork, put, race, select, take, takeEvery } from 'typed-redux-saga'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { fetchSwaps } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { SwapStatus } from 'uniswap/src/data/tradingApi/__generated__'
 import { FiatOnRampTransactionDetails } from 'uniswap/src/features/fiatOnRamp/types'
 import { findGasStrategyName } from 'uniswap/src/features/gas/hooks'
 import { getGasPrice } from 'uniswap/src/features/gas/types'
@@ -20,7 +22,8 @@ import {
   updateTransaction,
   upsertFiatOnRampTransaction,
 } from 'uniswap/src/features/transactions/slice'
-import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
   BaseSwapTransactionInfo,
   FinalizedTransactionDetails,
@@ -49,6 +52,16 @@ import {
   receiptFromEthersReceipt,
 } from 'wallet/src/features/transactions/utils'
 import { getProvider } from 'wallet/src/features/wallet/context'
+
+export const SWAP_STATUS_TO_TX_STATUS: { [key in SwapStatus]: TransactionStatus } = {
+  [SwapStatus.PENDING]: TransactionStatus.Pending,
+  [SwapStatus.SUCCESS]: TransactionStatus.Success,
+  [SwapStatus.NOT_FOUND]: TransactionStatus.Unknown,
+  [SwapStatus.FAILED]: TransactionStatus.Failed,
+  [SwapStatus.EXPIRED]: TransactionStatus.Expired,
+}
+
+const FINALIZED_BRIDGE_SWAP_STATUS = [SwapStatus.SUCCESS, SwapStatus.FAILED, SwapStatus.EXPIRED]
 
 export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClient<NormalizedCacheObject> }) {
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
@@ -185,12 +198,13 @@ export function* watchTransaction({
   logger.debug('transactionWatcherSaga', 'watchTransaction', 'Watching for updates for tx:', hash)
   const provider = yield* call(getProvider, chainId)
 
-  const nonce = isUniswapX(transaction) ? undefined : transaction.options.request.nonce
-  const { updatedTransaction, cancel, replace, invalidated } = yield* race({
+  const options = isUniswapX(transaction) ? undefined : transaction.options
+  const { updatedTransaction, cancel, replace, invalidated, timeout } = yield* race({
     updatedTransaction: call(waitForRemoteUpdate, transaction, provider),
     cancel: call(waitForCancellation, chainId, id),
     replace: call(waitForReplacement, chainId, id),
-    invalidated: call(waitForTxnInvalidated, chainId, id, nonce),
+    invalidated: call(waitForTxnInvalidated, chainId, id, options?.request.nonce),
+    ...(options?.timeoutTimestampMs ? { timeout: call(waitForTimeout, options.timeoutTimestampMs) } : {}),
   })
 
   // `cancel` and `updatedTransaction` conditions apply to both Classic and UniswapX transactions
@@ -240,6 +254,16 @@ export function* watchTransaction({
     }
     return
   }
+
+  if (timeout && transaction.status === TransactionStatus.Pending) {
+    logger.warn('transactionWatcherSaga', 'watchTransaction', 'Timeout for pending tx', {
+      hash,
+      chainId,
+      id,
+    })
+    yield* call(maybeLogGasEstimateAccuracy, transaction)
+    return
+  }
 }
 
 export async function waitForReceipt(
@@ -251,6 +275,16 @@ export async function waitForReceipt(
     logger.debug('transactionWatcherSaga', 'waitForTransactionReceipt', 'Tx receipt received', hash)
   }
   return txReceipt
+}
+
+function* waitForTimeout(timeoutTimestampMs: number) {
+  const currentTime = Date.now()
+  const delayTime = timeoutTimestampMs - currentTime
+  if (delayTime <= 0) {
+    return true
+  }
+  yield* delay(delayTime)
+  return true
 }
 
 function* waitForRemoteUpdate(transaction: TransactionDetails, provider: providers.Provider) {
@@ -269,7 +303,7 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
     }
   }
 
-  // At this point, the tx should either be a classic tx or a filled order, both of which have hashes
+  // At this point, the tx should either be a classic / bridge tx or a filled order, both of which have hashes
   if (!hash) {
     logger.error(new Error('Watching for tx with no hash'), {
       tags: {
@@ -278,17 +312,62 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
       },
       extra: { transaction },
     })
-    return
+    return undefined
   }
 
   const ethersReceipt = yield* call(waitForReceipt, hash, provider)
   const receipt = receiptFromEthersReceipt(ethersReceipt)
+
+  if (isBridge(transaction)) {
+    // Bridge swaps become non-cancellable after the transaction is submitted to chain.
+    // Update should happen without watching to avoid an infinite re-watch loop.
+    const updatedTransaction = { ...transaction, cancellable: false }
+    yield* put(transactionActions.updateTransactionWithoutWatch(updatedTransaction))
+
+    // Poll for bridging status from BE
+    status = yield* call(waitForBridgingStatus, transaction)
+  }
 
   // Classic transaction status is based on receipt, while UniswapX status is based backend response.
   if (isClassic(transaction)) {
     status = getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
   }
   return { ...transaction, status, receipt, hash }
+}
+
+function* waitForBridgingStatus(transaction: TransactionDetails) {
+  const txHash = transaction.hash
+  const chainId = toTradingApiSupportedChainId(transaction.chainId)
+
+  if (!txHash || !chainId) {
+    return TransactionStatus.Unknown
+  }
+
+  let swapStatus: SwapStatus | undefined
+  const initialPollIntervalMs = 500
+  const maxRetries = 5
+  const backoffFactor = 2 // Each retry will double the wait time
+
+  let pollIndex = 0
+  while (pollIndex < maxRetries) {
+    const currentPollInterval = initialPollIntervalMs * Math.pow(backoffFactor, pollIndex)
+    yield* delay(currentPollInterval)
+
+    const data = yield* call(fetchSwaps, {
+      txHashes: [txHash],
+      chainId,
+    })
+
+    const currentSwapStatus = data.swaps?.[0]?.status
+    if (currentSwapStatus && FINALIZED_BRIDGE_SWAP_STATUS.includes(currentSwapStatus)) {
+      swapStatus = currentSwapStatus
+      break
+    }
+
+    pollIndex++
+  }
+  // If we didn't get a status after polling, assume it's failed
+  return swapStatus ? SWAP_STATUS_TO_TX_STATUS[swapStatus] : TransactionStatus.Failed
 }
 
 function* waitForCancellation(chainId: WalletChainId, id: string) {
@@ -432,11 +511,24 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
   maybeLogGasEstimateAccuracy(payload)
 }
 
-function maybeLogGasEstimateAccuracy(transaction: FinalizedTransactionDetails) {
+function maybeLogGasEstimateAccuracy(transaction: TransactionDetails) {
   const { gasEstimates } = transaction.typeInfo
   if (!gasEstimates) {
     return
   }
+
+  const transactionGasLimit = 'options' in transaction ? transaction.options.request.gasLimit : undefined
+  const out_of_gas =
+    !!transaction.receipt &&
+    !!transactionGasLimit &&
+    transaction.status === TransactionStatus.Failed &&
+    BigNumber.from(transactionGasLimit).toString() === transaction.receipt?.gasUsed.toString()
+  const timed_out =
+    !transaction.receipt &&
+    'options' in transaction &&
+    !!transaction.options.timeoutTimestampMs &&
+    Date.now() > transaction.options.timeoutTimestampMs
+
   for (const estimate of [gasEstimates.activeEstimate, ...(gasEstimates.shadowEstimates || [])]) {
     const gasUseDiff = getDiff(estimate.gasLimit, transaction.receipt?.gasUsed)
     const gasPriceDiff = getDiff(getGasPrice(estimate), transaction.receipt?.effectiveGasPrice)
@@ -455,9 +547,11 @@ function maybeLogGasEstimateAccuracy(transaction: FinalizedTransactionDetails) {
       gas_price_diff_percentage: getPercentageError(gasPriceDiff, getGasPrice(estimate)),
       gas_price: transaction.receipt?.effectiveGasPrice,
       max_priority_fee_per_gas: 'maxPriorityFeePerGas' in estimate ? estimate.maxPriorityFeePerGas : undefined,
-      private_rpc: isClassic(transaction) ? transaction.options.submitViaPrivateRpc : false,
+      out_of_gas,
+      private_rpc: isClassic(transaction) ? transaction.options.submitViaPrivateRpc ?? false : false,
       is_shadow: estimate !== gasEstimates.activeEstimate,
       name: findGasStrategyName(estimate),
+      timed_out,
     })
   }
 }
@@ -476,7 +570,7 @@ export function* finalizeTransaction({
   // Refetch data when a local tx has confirmed
   yield* refetchGQLQueries({ transaction, apolloClient })
 
-  if (transaction.typeInfo.type === TransactionType.Swap) {
+  if (transaction.typeInfo.type === TransactionType.Swap || transaction.typeInfo.type === TransactionType.Bridge) {
     const hasDoneOneSwap = (yield* select(selectSwapTransactionsCount)) === 1
     if (hasDoneOneSwap) {
       // Only log event if it's a user's first ever swap
