@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmZqX6QCCokYMm8oRdYVi85GDzqDKJZZL1M3djEQXJeXeF`
-- CIDv1: `bafybeifk2xe6jgopl2yr55xs3py2ot6rernc2mokn2xxjgybkbomb53tqa`
+- CIDv0: `QmZNKQNeHGqEJfGMyWbH1zYCgs8pazXe2FajiS4KVzxfPL`
+- CIDv1: `bafybeifd3xryjkpe4lqgqfonwz7pdfzjtdlspryilb44sn7utv26mpxab4`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifk2xe6jgopl2yr55xs3py2ot6rernc2mokn2xxjgybkbomb53tqa.ipfs.dweb.link/
-- https://bafybeifk2xe6jgopl2yr55xs3py2ot6rernc2mokn2xxjgybkbomb53tqa.ipfs.cf-ipfs.com/
-- [ipfs://QmZqX6QCCokYMm8oRdYVi85GDzqDKJZZL1M3djEQXJeXeF/](ipfs://QmZqX6QCCokYMm8oRdYVi85GDzqDKJZZL1M3djEQXJeXeF/)
+- https://bafybeifd3xryjkpe4lqgqfonwz7pdfzjtdlspryilb44sn7utv26mpxab4.ipfs.dweb.link/
+- https://bafybeifd3xryjkpe4lqgqfonwz7pdfzjtdlspryilb44sn7utv26mpxab4.ipfs.cf-ipfs.com/
+- [ipfs://QmZNKQNeHGqEJfGMyWbH1zYCgs8pazXe2FajiS4KVzxfPL/](ipfs://QmZNKQNeHGqEJfGMyWbH1zYCgs8pazXe2FajiS4KVzxfPL/)
 
-### 5.49.1 (2024-10-01)
+### 5.49.2 (2024-10-03)
 
 
 ### Bug Fixes
 
-* **web:** priority orders only enabled on base (#12438) c44ffba
+* **web:** dont respect url flag overrides on prod - prod (#12548) a2b2517
 
 
