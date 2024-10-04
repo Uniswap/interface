@@ -82,8 +82,6 @@ export const TokenItem = memo(function _TokenItem({
         })
       case TokenMetadataDisplayType.Symbol:
         return symbol
-      default:
-        return undefined
     }
   }
 

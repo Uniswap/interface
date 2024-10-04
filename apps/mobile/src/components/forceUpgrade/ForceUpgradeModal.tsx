@@ -65,7 +65,7 @@ export function ForceUpgradeModal(): JSX.Element {
   return (
     <>
       <WarningModal
-        acknowledgeText={t('forceUpgrade.action.confirm')}
+        confirmText={t('forceUpgrade.action.confirm')}
         hideHandlebar={upgradeStatus === UpgradeStatus.Required}
         isDismissible={upgradeStatus !== UpgradeStatus.Required}
         isOpen={isVisible}
@@ -73,7 +73,7 @@ export function ForceUpgradeModal(): JSX.Element {
         severity={WarningSeverity.High}
         title={t('forceUpgrade.title')}
         onClose={onClose}
-        onAcknowledge={onPressConfirm}
+        onConfirm={onPressConfirm}
       >
         <Text color="$neutral2" textAlign="center" variant="body2">
           {t('forceUpgrade.description')}

@@ -5,12 +5,12 @@ import { ContentWrapper } from 'pages/Swap/Buy/shared'
 import { ChangeEvent, useCallback, useMemo, useRef, useState } from 'react'
 import AutoSizer from 'react-virtualized-auto-sizer'
 import { FixedSizeList } from 'react-window'
+import { NAV_HEIGHT } from 'theme'
 import { CloseIcon } from 'theme/components'
 import { AdaptiveWebModal, Flex, styled } from 'ui/src'
 import { Text } from 'ui/src/components/text/Text'
 import { FORCountry } from 'uniswap/src/features/fiatOnRamp/types'
 import { useTranslation } from 'uniswap/src/i18n'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { bubbleToTop } from 'utilities/src/primitives/array'
 
 const ROW_ITEM_SIZE = 56
@@ -67,7 +67,7 @@ export function CountryListModal({
       flex={1}
       onClose={closeModal}
       maxHeight={700}
-      $sm={{ height: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)` }}
+      $sm={{ height: `calc(100dvh - ${NAV_HEIGHT}px)` }}
     >
       <ContentWrapper>
         <HeaderContent>

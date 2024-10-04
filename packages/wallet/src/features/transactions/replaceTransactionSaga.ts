@@ -2,7 +2,6 @@ import { BigNumber, providers } from 'ethers'
 import { call, put, select } from 'typed-redux-saga'
 import { addTransaction, deleteTransaction } from 'uniswap/src/features/transactions/slice'
 import {
-  BridgeTransactionDetails,
   ClassicTransactionDetails,
   TransactionDetails,
   TransactionStatus,
@@ -19,7 +18,7 @@ import { getProvider, getSignerManager } from 'wallet/src/features/wallet/contex
 import { selectAccounts } from 'wallet/src/features/wallet/selectors'
 
 export function* attemptReplaceTransaction(
-  transaction: ClassicTransactionDetails | BridgeTransactionDetails,
+  transaction: ClassicTransactionDetails,
   newTxRequest: providers.TransactionRequest,
   isCancellation = false,
 ) {

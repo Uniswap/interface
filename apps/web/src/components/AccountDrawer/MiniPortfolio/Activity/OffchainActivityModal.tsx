@@ -19,6 +19,7 @@ import Column, { AutoColumn } from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { LimitDisclaimer } from 'components/swap/LimitDisclaimer'
 import { SwapModalHeaderAmount } from 'components/swap/SwapModalHeaderAmount'
+import { Field } from 'components/swap/constants'
 import { useCurrency } from 'hooks/Tokens'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import { atom } from 'jotai'
@@ -34,7 +35,6 @@ import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constant
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { CurrencyField } from 'uniswap/src/types/currency'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { logger } from 'utilities/src/logger/logger'
 
@@ -238,7 +238,7 @@ export function OrderContent({
       <OffchainModalDivider />
       <Column gap="md">
         <SwapModalHeaderAmount
-          field={CurrencyField.INPUT}
+          field={Field.INPUT}
           label={undefined}
           amount={amounts.inputAmount}
           currency={amounts.inputAmount.currency}
@@ -248,7 +248,7 @@ export function OrderContent({
         />
         <ArrowDown color={theme.neutral3} />
         <SwapModalHeaderAmount
-          field={CurrencyField.OUTPUT}
+          field={Field.OUTPUT}
           label={undefined}
           amount={amounts.outputAmount}
           currency={amounts.outputAmount.currency}

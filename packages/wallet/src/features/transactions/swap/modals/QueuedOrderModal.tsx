@@ -142,7 +142,7 @@ function useTransactionState(transaction: TransactionDetails | undefined): Trans
 
   return useMemo(() => {
     if (!isSwap || !inputCurrency || !outputCurrency) {
-      return undefined
+      return
     }
 
     const input: TradeableAsset = {

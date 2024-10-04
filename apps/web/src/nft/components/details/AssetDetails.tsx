@@ -203,7 +203,6 @@ const AssetView = ({
   mediaType: MediaType
   asset: GenieAsset
   dominantColor: [number, number, number]
-  // eslint-disable-next-line consistent-return
 }) => {
   const style = { ['--shadow' as string]: `rgba(${dominantColor.join(', ')}, 0.5)` }
 

@@ -14,7 +14,7 @@ export async function getExtractedColors(
   cache = true,
 ): Promise<ExtractedColors | undefined> {
   if (!imageUrl) {
-    return undefined
+    return
   }
 
   const imageColors = await ImageColors.getColors(imageUrl, {
@@ -44,5 +44,5 @@ export async function getExtractedColors(
       }
   }
 
-  return undefined
+  return
 }

@@ -65,7 +65,6 @@ export function CloudBackupProcessingAnimation({
       const timer = setTimeout(onBackupComplete, ONE_SECOND_MS)
       return () => clearTimeout(timer)
     }
-    return undefined
   }, [account?.backups, onBackupComplete])
 
   // Handle backup to Cloud when screen appears

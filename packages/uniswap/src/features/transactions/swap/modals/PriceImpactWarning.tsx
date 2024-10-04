@@ -14,7 +14,7 @@ export function PriceImpactWarning({ children, warning }: PropsWithChildren<{ wa
     <WarningInfo
       modalProps={{
         caption,
-        rejectText: t('common.button.close'),
+        closeText: t('common.button.close'),
         modalName: ModalName.SwapWarning,
         severity: warning.severity,
         title: warning.title ?? '',

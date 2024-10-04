@@ -1,30 +1,13 @@
-import { Currency } from '@uniswap/sdk-core'
 import { createContext, PropsWithChildren, useContext, useMemo } from 'react'
 /* eslint-disable no-restricted-imports */
 import type { StyleProp } from 'react-native/Libraries/StyleSheet/StyleSheet'
 import type { ViewStyle } from 'react-native/Libraries/StyleSheet/StyleSheetTypes'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { CurrencyField } from 'uniswap/src/types/currency'
 
 export enum TransactionScreen {
   Form = 'Form',
   Review = 'Review',
 }
-
-export type SwapRedirectFn = ({
-  inputCurrency,
-  outputCurrency,
-  typedValue,
-  independentField,
-  chainId,
-}: {
-  inputCurrency?: Currency
-  outputCurrency?: Currency
-  typedValue?: string
-  independentField?: CurrencyField
-  chainId: UniverseChainId
-}) => void
 
 export type TransactionModalContextState = {
   bottomSheetViewStyles: StyleProp<ViewStyle>
@@ -35,7 +18,6 @@ export type TransactionModalContextState = {
   authTrigger?: AuthTrigger
   screen: TransactionScreen
   setScreen: (newScreen: TransactionScreen) => void
-  swapRedirectCallback?: SwapRedirectFn
 }
 
 export const TransactionModalContext = createContext<TransactionModalContextState | undefined>(undefined)
@@ -50,7 +32,6 @@ export function TransactionModalContextProvider({
   walletNeedsRestore,
   screen,
   setScreen,
-  swapRedirectCallback,
 }: PropsWithChildren<TransactionModalContextState>): JSX.Element {
   const state = useMemo<TransactionModalContextState>(
     (): TransactionModalContextState => ({
@@ -61,7 +42,6 @@ export function TransactionModalContextProvider({
       openWalletRestoreModal,
       screen,
       setScreen,
-      swapRedirectCallback,
       walletNeedsRestore,
     }),
     [
@@ -72,7 +52,6 @@ export function TransactionModalContextProvider({
       openWalletRestoreModal,
       screen,
       setScreen,
-      swapRedirectCallback,
       walletNeedsRestore,
     ],
   )

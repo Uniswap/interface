@@ -36,7 +36,7 @@ export function useUSDTokenUpdater({
 
   useEffect(() => {
     if (!currency || !price) {
-      return undefined
+      return
     }
 
     const exactAmountUSD = (parseFloat(exactAmountFiat) / conversionRate).toFixed(NUM_DECIMALS_USD)

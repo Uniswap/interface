@@ -19,15 +19,15 @@ export function StorageWarningModal({ isOnboarding }: StorageWarningModalProps):
   return (
     <WarningModal
       caption={t('extension.warning.storage.message')}
-      rejectText={t('common.button.close')}
-      acknowledgeText={isOnboarding ? undefined : t('extension.warning.storage.button')}
+      closeText={t('common.button.close')}
+      confirmText={isOnboarding ? undefined : t('extension.warning.storage.button')}
       isOpen={showStorageWarning}
       maxWidth={isOnboarding ? ONBOARDING_CONTENT_WIDTH - spacing.spacing16 * 2 : undefined}
       modalName={ModalName.StorageWarning}
       severity={WarningSeverity.High}
       title={t('extension.warning.storage.title')}
       onClose={onStorageWarningClose}
-      onAcknowledge={
+      onConfirm={
         isOnboarding
           ? undefined
           : (): void => {

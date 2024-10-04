@@ -39,8 +39,6 @@ type ExploreSectionsProps = {
   listRef: React.MutableRefObject<null>
 }
 
-type GqlToken = NonNullable<ExploreTokensTabQuery['topTokens']>[0]
-
 export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element {
   const { t } = useTranslation()
   const insets = useDeviceInsets()
@@ -74,31 +72,25 @@ export function ExploreSections({ listRef }: ExploreSectionsProps): JSX.Element 
 
   const topTokenItems = useMemo(() => {
     if (!data || !data.topTokens) {
-      return undefined
+      return
     }
 
     // special case to replace weth with eth because the backend does not return eth data
     // eth will be defined only if all the required data is available
     // when eth data is not fully available, we do not replace weth with eth
     const { eth } = data
-
     const wethAddress = getWrappedNativeAddress(UniverseChainId.Mainnet)
 
-    const isWeth = (token: GqlToken): boolean =>
-      areAddressesEqual(token?.address, wethAddress) && token?.chain === Chain.Ethereum
-
-    // Indentified by symbol because ETH token data comes with undefined address
-    const isEth = (token: GqlToken): boolean => token?.symbol === 'ETH'
-
     const topTokens = data.topTokens
-      .filter((token, _, tokens) => !(isWeth(token) && tokens.some(isEth)))
       .map((token) => {
         if (!token) {
-          return undefined
+          return
         }
 
+        const isWeth = areAddressesEqual(token.address, wethAddress) && token?.chain === Chain.Ethereum
+
         // manually replace weth with eth given backend only returns eth data as a proxy for eth
-        if (isWeth(token) && eth) {
+        if (isWeth && eth) {
           return gqlTokenToTokenItemData(eth)
         }
 
@@ -232,8 +224,8 @@ function gqlTokenToTokenItemData(
     return null
   }
 
-  const { name, symbol, address, chain, project, market } = token
-  const { logoUrl, markets } = project
+  const { symbol, address, chain, project, market } = token
+  const { logoUrl, markets, name } = project
   const tokenProjectMarket = markets?.[0]
 
   const chainId = fromGraphQLChain(chain)

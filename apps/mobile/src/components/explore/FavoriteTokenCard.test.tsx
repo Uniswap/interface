@@ -9,8 +9,8 @@ import {
   SAMPLE_CURRENCY_ID_1,
   amount,
   ethToken,
-  tokenMarket,
   tokenProject,
+  tokenProjectMarket,
 } from 'uniswap/src/test/fixtures'
 import { queryResolvers } from 'uniswap/src/test/utils'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
@@ -31,10 +31,13 @@ jest.mock('@react-navigation/native', () => {
 const mockStore = configureMockStore()
 
 const favoriteToken = ethToken({
-  project: tokenProject(),
-  market: tokenMarket({
-    price: amount({ value: 12345.67 }),
-    pricePercentChange: amount({ value: 4.56 }),
+  project: tokenProject({
+    markets: [
+      tokenProjectMarket({
+        price: amount({ value: 12345.67 }),
+        pricePercentChange24h: amount({ value: 4.56 }),
+      }),
+    ],
   }),
 })
 
@@ -95,7 +98,7 @@ describe('FavoriteTokenCard', () => {
       const { findByTestId } = render(<FavoriteTokenCard {...defaultProps} />, { resolvers })
 
       const touchable = await findByTestId(`token-box-${favoriteToken.symbol}`)
-      act(() => {
+      await act(() => {
         fireEvent.press(touchable, ON_PRESS_EVENT_PAYLOAD)
       })
 

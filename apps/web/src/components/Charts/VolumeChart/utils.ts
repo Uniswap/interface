@@ -205,7 +205,7 @@ export function calculateColumnPositionsInPlace(
   if (common.spacing > 0 && minColumnWidth < alignToMinimalWidthLimit) {
     ;(items as ColumnPositionItem[]).forEach((item: ColumnPositionItem, index: number) => {
       if (!item.column || index < startIndex || index > endIndex) {
-        return undefined
+        return
       }
       const width = item.column.right - item.column.left + 1
       if (width <= minColumnWidth) {

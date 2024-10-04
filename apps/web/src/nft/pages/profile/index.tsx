@@ -1,7 +1,6 @@
 import { InterfacePageName } from '@uniswap/analytics-events'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonPrimary } from 'components/Button/buttons'
-import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useAccount } from 'hooks/useAccount'
 import useENSName from 'hooks/useENSName'
 import styled from 'lib/styled-components'
@@ -118,7 +117,7 @@ export default function Profile() {
               </ThemedText.HeadlineMedium>
               <ConnectWalletButton onClick={accountDrawer.open}>
                 <ThemedText.SubHeader color="white" lineHeight="20px">
-                  <ConnectWalletButtonText />
+                  <Trans i18nKey="common.connectWallet.button" />
                 </ThemedText.SubHeader>
               </ConnectWalletButton>
             </Center>

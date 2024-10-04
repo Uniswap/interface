@@ -247,7 +247,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
 }
 
 .c4 img {
-  width: 19px;
+  width: 20px;
   height: 40px;
   object-fit: cover;
 }
@@ -372,7 +372,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
                 >
                   <div
                     class="c13 css-vhdk4b"
-                    data-testid="input-amount"
+                    data-testid="INPUT-amount"
                   >
                     252.074
                      
@@ -442,7 +442,7 @@ exports[`OrderContent should render without error, filled order 1`] = `
                 >
                   <div
                     class="c13 css-vhdk4b"
-                    data-testid="output-amount"
+                    data-testid="OUTPUT-amount"
                   >
                     0.10684
                      
@@ -878,7 +878,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
 }
 
 .c4 img {
-  width: 19px;
+  width: 20px;
   height: 40px;
   object-fit: cover;
 }
@@ -1019,7 +1019,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
                 >
                   <div
                     class="c13 css-vhdk4b"
-                    data-testid="input-amount"
+                    data-testid="INPUT-amount"
                   >
                     252.074
                      
@@ -1089,7 +1089,7 @@ exports[`OrderContent should render without error, limit order 1`] = `
                 >
                   <div
                     class="c13 css-vhdk4b"
-                    data-testid="output-amount"
+                    data-testid="OUTPUT-amount"
                   >
                     0.10684
                      
@@ -1534,7 +1534,7 @@ exports[`OrderContent should render without error, open order 1`] = `
 }
 
 .c4 img {
-  width: 19px;
+  width: 20px;
   height: 40px;
   object-fit: cover;
 }
@@ -1664,7 +1664,7 @@ exports[`OrderContent should render without error, open order 1`] = `
                 >
                   <div
                     class="c13 css-vhdk4b"
-                    data-testid="input-amount"
+                    data-testid="INPUT-amount"
                   >
                     252.074
                      
@@ -1734,7 +1734,7 @@ exports[`OrderContent should render without error, open order 1`] = `
                 >
                   <div
                     class="c13 css-vhdk4b"
-                    data-testid="output-amount"
+                    data-testid="OUTPUT-amount"
                   >
                     0.10684
                      

@@ -30,12 +30,12 @@ import {
 import useDebounce from 'hooks/useDebounce'
 import { useEffect, useMemo, useRef, useState } from 'react'
 import { ScrollSync, ScrollSyncPane } from 'react-scroll-sync'
+import { NAV_HEIGHT } from 'theme'
 import { ThemedText } from 'theme/components'
 import { FadePresence } from 'theme/components/FadePresence'
 import { Z_INDEX } from 'theme/zIndex'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 function TableBody<Data extends RowData>({
@@ -154,7 +154,7 @@ export function Table<Data extends RowData>({
   useEffect(() => {
     const scrollableElement = maxHeight ? tableBodyRef.current : window
     if (scrollableElement === null) {
-      return undefined
+      return
     }
     const updateScrollPosition = () => {
       if (scrollableElement instanceof HTMLDivElement) {
@@ -203,7 +203,7 @@ export function Table<Data extends RowData>({
   })
   const headerHeight = useMemo(() => {
     const header = document.getElementById('AppHeader')
-    return header?.clientHeight || INTERFACE_NAV_HEIGHT
+    return header?.clientHeight || NAV_HEIGHT
   }, [])
 
   return (

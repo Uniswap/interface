@@ -14,7 +14,7 @@ exports[`PoolDetailsHeader renders link for pool address 1`] = `
 }
 
 .c5 img {
-  width: 9px;
+  width: 10px;
   height: 20px;
   object-fit: cover;
 }

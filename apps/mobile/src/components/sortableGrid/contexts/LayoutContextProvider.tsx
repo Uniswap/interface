@@ -150,8 +150,6 @@ export function LayoutContextProvider({
         }
         rowOffsets.value = offsets
       }
-
-      return undefined
     },
     [numColumns],
   )

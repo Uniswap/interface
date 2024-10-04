@@ -157,7 +157,7 @@ const sporeLight = {
   neutral1Hovered: '#131313',
   neutral2: '#7D7D7D',
   neutral2Hovered: '#6B6B6B',
-  neutral3: '#BFBFBF',
+  neutral3: '#CECECE',
   neutral3Hovered: '#ADADAD',
 
   surface1: colors.white,
@@ -177,7 +177,6 @@ const sporeLight = {
   accent3Hovered: colors.black,
 
   DEP_accentSoft: '#FC72FF33', //33 = 20%
-  DEP_blue400: '#4C82FB',
 
   statusSuccess: '#21C95E',
   statusSuccessHovered: '#15863C',
@@ -223,7 +222,6 @@ const sporeDark = {
   accent3Hovered: '#F5F5F5',
 
   DEP_accentSoft: '#FC72FF33', //33 = 20%
-  DEP_blue400: '#4C82FB',
 
   statusSuccess: '#21C95E',
   statusSuccessHovered: '#15863C',
@@ -270,7 +268,6 @@ export const colorsLight = {
   accent3Hovered: sporeLight.accent3Hovered,
 
   DEP_accentSoft: sporeLight.DEP_accentSoft,
-  DEP_blue400: sporeLight.DEP_blue400,
 
   statusSuccess: sporeLight.statusSuccess,
   statusSuccess2: sporeLight.statusSuccess2,
@@ -349,7 +346,6 @@ export const colorsDark = {
   accent3Hovered: sporeDark.accent3Hovered,
 
   DEP_accentSoft: sporeDark.DEP_accentSoft,
-  DEP_blue400: sporeDark.DEP_blue400,
 
   statusSuccess: sporeDark.statusSuccess,
   statusSuccess2: sporeDark.statusSuccess2,

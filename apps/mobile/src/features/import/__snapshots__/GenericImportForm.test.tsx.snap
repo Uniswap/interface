@@ -62,10 +62,10 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         onChangeText={[Function]}
         onFocus={[Function]}
         onSubmitEditing={[Function]}
-        placeholderTextColor="#BFBFBF"
+        placeholderTextColor="#CECECE"
         returnKeyType="done"
         scrollEnabled={false}
-        selectionColor="#BFBFBF"
+        selectionColor="#CECECE"
         spellCheck={false}
         style={
           {
@@ -99,6 +99,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           }
         }
         testID="import-account-input"
+        textAlignVertical="bottom"
       />
     </View>
     <View
@@ -125,11 +126,10 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "fontFamily": "Basel Grotesk",
             "fontSize": 17,
             "fontWeight": "400",
-            "lineHeight": 17,
+            "lineHeight": 24,
           }
         }
         suppressHighlighting={true}
-        textAlignVertical="bottom"
       >
         seed phrase
       </Text>

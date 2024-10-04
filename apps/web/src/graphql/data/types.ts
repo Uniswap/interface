@@ -40,7 +40,7 @@ export function gqlTokenToCurrencyInfo(token?: GqlToken): CurrencyInfo | undefin
 
 export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedToken): CurrencyInfo | undefined {
   if (!isSupportedChainId(Number(forCurrency.chainId))) {
-    return undefined
+    return
   }
 
   const supportedChainId = Number(forCurrency.chainId) as SupportedInterfaceChainId
@@ -67,7 +67,7 @@ export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedTok
 
   const currency = fiatOnRampToCurrency(forCurrency)
   if (!currency) {
-    return undefined
+    return
   }
   return {
     currency,

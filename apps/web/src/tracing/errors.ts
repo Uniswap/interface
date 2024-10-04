@@ -1,6 +1,6 @@
 import { ClientOptions, ErrorEvent, EventHint } from '@sentry/types'
 import { ProviderRpcError } from '@web3-react/types'
-import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
+import { wagmiConfig } from 'components/Web3Provider/wagmi'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 import { getAccount } from 'wagmi/actions'
 

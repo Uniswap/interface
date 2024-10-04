@@ -16,8 +16,6 @@ import {
   FeeOnTransferFeeGroupProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { SwapFee } from 'uniswap/src/features/transactions/TransactionDetails/SwapFee'
-import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/modals/AcrossRoutingInfo'
-import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { SwapFeeInfo } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WalletChainId } from 'uniswap/src/types/chains'
@@ -35,8 +33,6 @@ interface TransactionDetailsProps {
   onShowWarning?: () => void
   indicative?: boolean
   isSwap?: boolean
-  isBridgeTrade?: boolean
-  estimatedBridgingTime?: number
   AccountDetails?: JSX.Element
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
 }
@@ -56,9 +52,7 @@ export function TransactionDetails({
   indicative = false,
   isSwap,
   transactionUSDValue,
-  isBridgeTrade,
   AccountDetails,
-  estimatedBridgingTime,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const { t } = useTranslation()
   const warningColor = getAlertColor(warning?.severity)
@@ -111,7 +105,6 @@ export function TransactionDetails({
       <Flex gap="$spacing8" pb="$spacing8" px="$spacing12">
         {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
         {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
-        {isSwap && isBridgeTrade && <EstimatedTime showOnlyIfLong timeMs={estimatedBridgingTime} />}
         {isSwap && <SwapFee loading={indicative} swapFeeInfo={swapFeeInfo} />}
         <NetworkFee
           chainId={chainId}
@@ -120,7 +113,6 @@ export function TransactionDetails({
           transactionUSDValue={transactionUSDValue}
           uniswapXGasBreakdown={uniswapXGasBreakdown}
         />
-        {isSwap && isBridgeTrade && <AcrossRoutingInfo />}
         {AccountDetails}
       </Flex>
     </Flex>

@@ -8,7 +8,7 @@ import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/moc
 import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
 
 jest.mock('react-native-localize', () => mockRNLocalize)
-jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
+jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext)
 
 // Mock the appearance hook for all tests
 const mockAppearanceSetting = AppearanceSettingType.System

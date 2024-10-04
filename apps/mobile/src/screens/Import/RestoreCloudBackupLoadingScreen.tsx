@@ -70,7 +70,7 @@ export function RestoreCloudBackupLoadingScreen({ navigation, route: { params } 
    */
   useEffect(() => {
     if (!isLoading) {
-      return undefined
+      return
     }
     const timer = setTimeout(
       () => {

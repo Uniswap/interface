@@ -255,7 +255,7 @@ exports[`FavoriteWalletCard renders without error 1`] = `
             style={
               {
                 "alignItems": "center",
-                "backgroundColor": "#BFBFBF",
+                "backgroundColor": "#CECECE",
                 "borderBottomLeftRadius": 999999,
                 "borderBottomRightRadius": 999999,
                 "borderTopLeftRadius": 999999,

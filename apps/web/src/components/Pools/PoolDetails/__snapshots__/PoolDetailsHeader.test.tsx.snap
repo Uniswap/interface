@@ -364,7 +364,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
 }
 
 .c4 img {
-  width: 15px;
+  width: 16px;
   height: 32px;
   object-fit: cover;
 }

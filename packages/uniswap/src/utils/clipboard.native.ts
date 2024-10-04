@@ -16,7 +16,6 @@ const Clipboard: IClipboard = {
       return value
     } catch (error) {
       logger.error(error, { tags: { file: 'clipboard', function: 'getClipboard' } })
-      return undefined
     }
   },
   setClipboardImage: async (imageUrl: string | undefined) => {

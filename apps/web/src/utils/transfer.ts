@@ -39,7 +39,7 @@ async function getTransferTransaction(transferInfo: TransferInfo): Promise<Trans
   const { provider, account, chainId, currencyAmount, toAddress } = transferInfo
 
   if (!provider || !account || !chainId || !currencyAmount || !toAddress) {
-    return undefined
+    return
   }
 
   const currency = currencyAmount.currency

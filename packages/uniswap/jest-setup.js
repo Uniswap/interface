@@ -8,7 +8,7 @@ import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/moc
 
 jest.mock('react-native-localize', () => mockRNLocalize)
 
-jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
+jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext)
 
 // Use native modal
 jest.mock('uniswap/src/components/modals/Modal', () => {

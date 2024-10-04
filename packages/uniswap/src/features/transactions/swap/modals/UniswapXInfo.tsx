@@ -31,7 +31,7 @@ export function UniswapXInfo({
       modalProps={{
         backgroundIconColor: opacify(16, colors.uniswapXPurple),
         caption: t('uniswapx.description'),
-        rejectText: t('common.button.close'),
+        closeText: t('common.button.close'),
         icon: <UniswapX size="$icon.24" />,
         modalName: ModalName.UniswapXInfo,
         severity: WarningSeverity.None,

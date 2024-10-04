@@ -108,7 +108,7 @@ export function SearchEmptySection(): JSX.Element {
       <WarningModal
         backgroundIconColor={colors.surface2.get()}
         caption={t('explore.search.section.popularTokenInfo')}
-        rejectText={t('common.button.close')}
+        closeText={t('common.button.close')}
         icon={<Star color="$neutral2" size="$icon.24" />}
         isOpen={showPopularInfo}
         modalName={ModalName.NetworkFeeInfo}

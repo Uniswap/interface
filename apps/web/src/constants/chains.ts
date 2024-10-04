@@ -5,9 +5,8 @@ import { useCallback, useMemo } from 'react'
 import { useParams } from 'react-router-dom'
 import { GQL_MAINNET_CHAINS, UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { Chain as BackendChainId } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ArbitrumXV2ExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useExperimentGroupName, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfaceChainId, UniverseChainId, UniverseChainInfo, WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 export const AVERAGE_L1_BLOCK_TIME = ms(`12s`)
@@ -53,7 +52,7 @@ export function useIsSupportedChainIdCallback() {
 export function useSupportedChainId(chainId?: number): SupportedInterfaceChainId | undefined {
   const featureFlaggedChains = useFeatureFlaggedChainIds()
   if (!chainId || WEB_SUPPORTED_CHAIN_IDS.indexOf(chainId) === -1) {
-    return undefined
+    return
   }
 
   const chainDisabled = featureFlaggedChains[chainId as SupportedInterfaceChainId] === false
@@ -180,16 +179,8 @@ export function getChainPriority(chainId: InterfaceChainId): number {
   return Infinity
 }
 
-export function useIsUniswapXSupportedChain(chainId?: number) {
-  const xv2ArbitrumEnabled =
-    useExperimentGroupName(Experiments.ArbitrumXV2OpenOrders) === ArbitrumXV2ExperimentGroup.Test
-  const isPriorityOrdersEnabled = useFeatureFlag(FeatureFlags.UniswapXPriorityOrders)
-
-  return (
-    chainId === UniverseChainId.Mainnet ||
-    (xv2ArbitrumEnabled && chainId === UniverseChainId.ArbitrumOne) ||
-    (isPriorityOrdersEnabled && chainId === UniverseChainId.Base) // UniswapX priority orders are only available on Base for now
-  )
+export function isUniswapXSupportedChain(chainId?: number) {
+  return chainId === UniverseChainId.Mainnet
 }
 
 export function isStablecoin(currency?: Currency): boolean {

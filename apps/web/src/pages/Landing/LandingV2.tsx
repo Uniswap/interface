@@ -1,7 +1,7 @@
 import { Hero } from 'pages/Landing/sections/Hero'
 import { Suspense, lazy, memo, useRef } from 'react'
+import { NAV_HEIGHT } from 'theme'
 import { Flex, styled } from 'ui/src'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 // The Fold is always loaded, but is lazy-loaded because it is not seen without user interaction.
 // Annotating it with webpackPreload allows it to be ready when requested.
@@ -29,13 +29,7 @@ function LandingV2({ transition }: { transition?: boolean }) {
   }
 
   return (
-    <Flex
-      position="relative"
-      alignItems="center"
-      mt={-INTERFACE_NAV_HEIGHT}
-      minWidth="100vw"
-      data-testid="landing-page"
-    >
+    <Flex position="relative" alignItems="center" mt={-NAV_HEIGHT} minWidth="100vw" data-testid="landing-page">
       <Grain />
       <Hero scrollToRef={scrollToRef} transition={transition} />
       <Suspense>

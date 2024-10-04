@@ -145,7 +145,7 @@ export function useDisplayName(address: Maybe<string>, options?: DisplayNameOpti
   const localName = maybeLocalName ?? onboardingAccount?.name
 
   if (!address) {
-    return undefined
+    return
   }
 
   if (overrideDisplayName) {

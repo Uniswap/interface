@@ -3,7 +3,6 @@ import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import {
-  GasFeeEstimates,
   TransactionOptions,
   TransactionOriginType,
   TransactionType,
@@ -24,12 +23,11 @@ export type WrapParams = {
   account: AccountMeta
   inputCurrencyAmount: CurrencyAmount<Currency>
   skipPushNotification?: boolean
-  gasEstimates?: GasFeeEstimates
 }
 
 export function* wrap(params: WrapParams) {
   try {
-    const { account, inputCurrencyAmount, txRequest, txId, skipPushNotification, swapTxId, gasEstimates } = params
+    const { account, inputCurrencyAmount, txRequest, txId, skipPushNotification, swapTxId } = params
     let typeInfo: TransactionTypeInfo
 
     if (inputCurrencyAmount.currency.isNative) {
@@ -38,7 +36,6 @@ export function* wrap(params: WrapParams) {
         unwrapped: false,
         currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
         swapTxId,
-        gasEstimates,
       }
     } else {
       typeInfo = {
@@ -46,7 +43,6 @@ export function* wrap(params: WrapParams) {
         unwrapped: true,
         currencyAmountRaw: inputCurrencyAmount.quotient.toString(),
         swapTxId,
-        gasEstimates,
       }
     }
 
@@ -71,7 +67,6 @@ export function* wrap(params: WrapParams) {
     return result
   } catch (error) {
     logger.error(error, { tags: { file: 'wrapSaga', function: 'wrap' } })
-    return undefined
   }
 }
 

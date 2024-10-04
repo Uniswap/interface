@@ -29,8 +29,7 @@ const LimitExpiryButton = styled.button<{ $selected: boolean }>`
 
 const EXPIRY_OPTIONS = [LimitsExpiry.Day, LimitsExpiry.Week, LimitsExpiry.Month, LimitsExpiry.Year]
 
-// eslint-disable-next-line consistent-return
-function getExpiryLabelText(expiry: LimitsExpiry): string {
+function getExpiryLabelText(expiry: LimitsExpiry) {
   switch (expiry) {
     case LimitsExpiry.Day:
       return t('common.oneDay')

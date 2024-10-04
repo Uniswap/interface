@@ -162,7 +162,7 @@ export const syncLocalFiltersWithURL = (state: CollectionFilters) => {
 
 export const applyFiltersFromURL = (location: Location, collectionStats: GenieCollection) => {
   if (!location.search) {
-    return undefined
+    return
   }
 
   const query = qs.parse(location.search, {

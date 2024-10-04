@@ -3,7 +3,7 @@ import { PropsWithChildren, ReactNode } from 'react'
 import type { ColorValue } from 'react-native'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
-import { ThemeNames, opacify } from 'ui/src/theme'
+import { opacify } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -11,20 +11,21 @@ import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { isWeb } from 'utilities/src/platform'
 
-type WarningModalContentProps = {
+export type WarningModalProps = {
+  isOpen: boolean
   onClose?: () => void
-  onReject?: () => void
-  onAcknowledge?: () => void
-  hideHandlebar?: boolean
+  onCancel?: () => void
+  onConfirm?: () => void
+  modalName: ModalNameType
   title?: string
   titleComponent?: ReactNode
   caption?: string
   captionComponent?: ReactNode
-  rejectText?: string
-  acknowledgeText?: string
-  rejectButtonTheme?: ThemeNames
-  acknowledgeButtonTheme?: ThemeNames
+  closeText?: string
+  confirmText?: string
   severity?: WarningSeverity
+  isDismissible?: boolean
+  hideHandlebar?: boolean
   icon?: ReactNode
   // when icon is undefined we default it to triangle, this allows us to hide it
   hideIcon?: boolean
@@ -33,105 +34,30 @@ type WarningModalContentProps = {
   maxWidth?: number
 }
 
-export type WarningModalProps = {
-  isOpen: boolean
-  isDismissible?: boolean
-  modalName: ModalNameType
-} & WarningModalContentProps
-
-export function WarningModalContent({
+export function WarningModal({
+  isOpen,
   onClose,
-  onReject,
-  onAcknowledge,
+  onCancel,
+  onConfirm,
+  modalName,
   title,
   titleComponent,
   caption,
   captionComponent,
-  rejectText: rejectText,
-  rejectButtonTheme,
-  acknowledgeText,
-  acknowledgeButtonTheme,
+  closeText,
+  confirmText,
   severity = WarningSeverity.Medium,
   children,
+  isDismissible = true,
+  hideHandlebar = false,
   icon,
   hideIcon,
-  maxWidth,
-  hideHandlebar = false,
   backgroundIconColor,
-}: PropsWithChildren<WarningModalContentProps>): JSX.Element {
+  maxWidth,
+}: PropsWithChildren<WarningModalProps>): JSX.Element {
   const colors = useSporeColors()
   const alertColor = getAlertColor(severity)
   const alertColorValue = alertColor.text as keyof typeof colors
-
-  return (
-    <Flex
-      centered
-      gap="$spacing12"
-      maxWidth={maxWidth}
-      pb={isWeb ? '$none' : '$spacing12'}
-      pt={hideHandlebar ? '$spacing24' : '$spacing12'}
-      px={isWeb ? '$none' : '$spacing24'}
-    >
-      {!hideIcon && (
-        <Flex
-          centered
-          borderRadius="$rounded12"
-          mb="$spacing8"
-          p={backgroundIconColor === false ? '$none' : '$spacing12'}
-          style={
-            backgroundIconColor === false
-              ? undefined
-              : {
-                  backgroundColor: backgroundIconColor ?? opacify(12, colors[alertColorValue].val),
-                }
-          }
-        >
-          {icon ?? <AlertTriangleFilled color={alertColor.text} size="$icon.24" />}
-        </Flex>
-      )}
-      {title && (
-        <Text textAlign="center" variant={isWeb ? 'subheading2' : 'body1'}>
-          {title}
-        </Text>
-      )}
-      {titleComponent}
-      {caption && (
-        <Text color="$neutral2" textAlign="center" variant="body3">
-          {caption}
-        </Text>
-      )}
-      {captionComponent}
-      {children}
-      <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'} width="100%">
-        {rejectText && (
-          <Button
-            flex={1}
-            flexBasis={1}
-            theme={rejectButtonTheme ?? alertColor.buttonTheme}
-            onPress={onReject ?? onClose}
-          >
-            {rejectText}
-          </Button>
-        )}
-        {acknowledgeText && (
-          <Button
-            flex={1}
-            flexBasis={1}
-            testID={TestID.Confirm}
-            theme={acknowledgeButtonTheme ?? alertColor.buttonTheme}
-            onPress={onAcknowledge}
-          >
-            {acknowledgeText}
-          </Button>
-        )}
-      </Flex>
-    </Flex>
-  )
-}
-
-export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.Element {
-  const { hideHandlebar, isDismissible = true, isOpen, maxWidth, modalName, onClose } = props
-  const colors = useSporeColors()
 
   return (
     <Modal
@@ -143,7 +69,57 @@ export function WarningModal(props: PropsWithChildren<WarningModalProps>): JSX.E
       name={modalName}
       onClose={onClose}
     >
-      <WarningModalContent {...props} />
+      <Flex
+        centered
+        gap="$spacing12"
+        maxWidth={maxWidth}
+        pb={isWeb ? '$none' : '$spacing12'}
+        pt={hideHandlebar ? '$spacing24' : '$spacing12'}
+        px={isWeb ? '$none' : '$spacing24'}
+      >
+        {!hideIcon && (
+          <Flex
+            centered
+            borderRadius="$rounded12"
+            mb="$spacing8"
+            p={backgroundIconColor === false ? '$none' : '$spacing12'}
+            style={
+              backgroundIconColor === false
+                ? undefined
+                : {
+                    backgroundColor: backgroundIconColor ?? opacify(12, colors[alertColorValue].val),
+                  }
+            }
+          >
+            {icon ?? <AlertTriangleFilled color={alertColor.text} size="$icon.24" />}
+          </Flex>
+        )}
+        {title && (
+          <Text textAlign="center" variant={isWeb ? 'subheading2' : 'body1'}>
+            {title}
+          </Text>
+        )}
+        {titleComponent}
+        {caption && (
+          <Text color="$neutral2" textAlign="center" variant="body3">
+            {caption}
+          </Text>
+        )}
+        {captionComponent}
+        {children}
+        <Flex centered row gap="$spacing12" pt={children ? '$spacing12' : '$spacing24'} width="100%">
+          {closeText && (
+            <Button flex={1} flexBasis={1} theme="secondary" onPress={onCancel ?? onClose}>
+              {closeText}
+            </Button>
+          )}
+          {confirmText && (
+            <Button flex={1} flexBasis={1} testID={TestID.Confirm} theme={alertColor.buttonTheme} onPress={onConfirm}>
+              {confirmText}
+            </Button>
+          )}
+        </Flex>
+      </Flex>
     </Modal>
   )
 }

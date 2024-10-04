@@ -14,14 +14,8 @@ export function HiddenNftsRow({
   const { t } = useTranslation()
 
   return (
-    <TouchableArea
-      hapticFeedback
-      activeOpacity={1}
-      hapticStyle={ImpactFeedbackStyle.Light}
-      mx="$spacing4"
-      onPress={onPress}
-    >
-      <Flex row alignItems="center" justifyContent="space-between" py="$spacing8">
+    <TouchableArea hapticFeedback activeOpacity={1} hapticStyle={ImpactFeedbackStyle.Light} onPress={onPress}>
+      <Flex row alignItems="center" justifyContent="space-between" py="$spacing12">
         <Flex centered grow row gap="$spacing12">
           <Separator />
 

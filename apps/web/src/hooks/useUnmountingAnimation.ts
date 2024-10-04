@@ -40,7 +40,7 @@ export function useUnmountingAnimation(
 
     // If we can't remove the child or skipping is requested, stop here.
     if (!(parent && removeChild) || skip) {
-      return undefined
+      return
     }
 
     // Override the parent's removeChild function to add our animation logic

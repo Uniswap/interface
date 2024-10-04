@@ -75,7 +75,6 @@ export function OnDeviceRecoveryScreen({
         if (mnemonicId !== selectedMnemonicId) {
           return Keyring.removeMnemonic(mnemonicId)
         }
-        return Promise.resolve()
       }),
     )
   }
@@ -87,7 +86,6 @@ export function OnDeviceRecoveryScreen({
         if (!selectedRecoveryWalletInfos.find((walletInfo) => walletInfo.address === address)) {
           return Keyring.removePrivateKey(address)
         }
-        return Promise.resolve()
       }),
     )
   }
@@ -249,15 +247,15 @@ export function OnDeviceRecoveryScreen({
           </Flex>
           <WarningModal
             caption={t('onboarding.import.onDeviceRecovery.warning.caption')}
-            rejectText={t('common.button.back')}
-            acknowledgeText={t('common.button.continue')}
+            closeText={t('common.button.back')}
+            confirmText={t('common.button.continue')}
             icon={<PapersText color={colors.neutral1.get()} size="$icon.20" strokeWidth={1.5} />}
             isOpen={showConfirmationModal}
             modalName={ModalName.OnDeviceRecoveryConfirmation}
             severity={WarningSeverity.None}
             title={t('onboarding.import.onDeviceRecovery.warning.title')}
             onClose={onPressClose}
-            onAcknowledge={onPressConfirm}
+            onConfirm={onPressConfirm}
           />
         </Screen>
       </Trace>

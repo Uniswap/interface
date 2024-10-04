@@ -34,7 +34,6 @@ export const ETH_LOGO = require('./logos/png/eth-logo.png')
 export const OPENSEA_LOGO = require('./logos/png/opensea-logo.png')
 export const ENS_LOGO = require('./logos/png/ens-logo.png')
 export const FROGGY = require('./graphics/froggy.png')
-export const ACROSS_LOGO = require('./logos/png/across-logo.png')
 
 export const CEX_TRANSFER_MODAL_BG_LIGHT = require('./graphics/cex-transfer-modal-bg-light.png')
 export const CEX_TRANSFER_MODAL_BG_DARK = require('./graphics/cex-transfer-modal-bg-dark.png')

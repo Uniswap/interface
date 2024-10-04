@@ -1,20 +1,30 @@
 import { usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
-import { AdaptiveTokenBalancesProvider } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { createAdaptiveRefetchContext } from 'graphql/data/apollo/AdaptiveRefetch'
 import { useAssetActivitySubscription } from 'graphql/data/apollo/AssetActivityProvider'
 import { useAccount } from 'hooks/useAccount'
-import { PropsWithChildren, useCallback, useMemo } from 'react'
+import { PropsWithChildren, useCallback, useEffect, useMemo } from 'react'
 import { GQL_MAINNET_CHAINS_MUTABLE } from 'uniswap/src/constants/chains'
+import { useTotalBalancesUsdPerChain } from 'uniswap/src/data/balances/utils'
 import {
   OnAssetActivitySubscription,
+  PortfolioBalancesQueryResult,
   SwapOrderStatus,
   usePortfolioBalancesLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useHideSmallBalancesSetting, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { UniswapEventName } from 'uniswap/src/features/telemetry/constants'
+import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 import { usePrevious } from 'utilities/src/react/hooks'
+
+const {
+  Provider: AdaptiveTokenBalancesProvider,
+  useQuery: useTokenBalancesQuery,
+  PrefetchWrapper: PrefetchBalancesWrapper,
+} = createAdaptiveRefetchContext<PortfolioBalancesQueryResult>()
 
 /** Returns whether an update may affect token balances. */
 function mayAffectTokenBalances(data?: OnAssetActivitySubscription) {
@@ -112,3 +122,42 @@ export function TokenBalancesProvider({ children }: PropsWithChildren) {
     </AdaptiveTokenBalancesProvider>
   )
 }
+
+/**
+ * Retrieves cached token balances, avoiding new fetches to reduce backend load.
+ * Analytics should use balances from transaction flows instead of initiating fetches at pageload.
+ */
+export function useTotalBalancesUsdForAnalytics(): number | undefined {
+  return useTokenBalancesQuery({ cacheOnly: true }).data?.portfolios?.[0]?.tokensTotalDenominatedValue?.value
+}
+
+export function useReportTotalBalancesUsdForAnalytics() {
+  const account = useAccount()
+  const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
+  const totalBalancesUsdPerChain = useTotalBalancesUsdPerChain(useTokenBalancesQuery({ cacheOnly: true }))
+
+  const sendBalancesReport = useCallback(async () => {
+    if (!portfolioBalanceUsd || !totalBalancesUsdPerChain || !account.address) {
+      return
+    }
+
+    sendAnalyticsEvent(UniswapEventName.BalancesReport, {
+      total_balances_usd: portfolioBalanceUsd,
+      wallets: [account.address],
+      balances: [portfolioBalanceUsd],
+    })
+
+    sendAnalyticsEvent(UniswapEventName.BalancesReportPerChain, {
+      total_balances_usd_per_chain: totalBalancesUsdPerChain,
+      wallet: account.address,
+    })
+  }, [portfolioBalanceUsd, totalBalancesUsdPerChain, account.address])
+
+  useEffect(() => {
+    if (portfolioBalanceUsd !== undefined && totalBalancesUsdPerChain !== undefined) {
+      sendBalancesReport()
+    }
+  }, [portfolioBalanceUsd, totalBalancesUsdPerChain, sendBalancesReport])
+}
+
+export { PrefetchBalancesWrapper, useTokenBalancesQuery }

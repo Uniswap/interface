@@ -11,11 +11,10 @@ import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 export type TokenSectionHeaderProps = {
   sectionKey: TokenOptionSection
   rightElement?: JSX.Element
-  name?: string
 }
 
-export function SectionHeader({ sectionKey, rightElement, name }: TokenSectionHeaderProps): JSX.Element | null {
-  const title = useTokenOptionsSectionTitle(sectionKey, name)
+export function SectionHeader({ sectionKey, rightElement }: TokenSectionHeaderProps): JSX.Element | null {
+  const title = useTokenOptionsSectionTitle(sectionKey)
   const icon = getTokenOptionsSectionIcon(sectionKey)
   if (sectionKey === TokenOptionSection.SuggestedTokens) {
     return null
@@ -33,7 +32,7 @@ export function SectionHeader({ sectionKey, rightElement, name }: TokenSectionHe
   )
 }
 
-export function useTokenOptionsSectionTitle(section: TokenOptionSection, name?: string): string {
+export function useTokenOptionsSectionTitle(section: TokenOptionSection): string {
   const { t } = useTranslation()
   switch (section) {
     case TokenOptionSection.BridgingTokens:
@@ -50,10 +49,8 @@ export function useTokenOptionsSectionTitle(section: TokenOptionSection, name?: 
       return t('tokens.selector.section.search')
     case TokenOptionSection.SuggestedTokens:
       return '' // no suggested tokens header
-    case TokenOptionSection.SearchResultsByNetwork:
-      return name ?? ''
     default:
-      return section
+      return ''
   }
 }
 

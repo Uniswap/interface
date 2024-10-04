@@ -60,7 +60,7 @@ type AddLiquidityModalParams = {
 
 type RemoveLiquidityModalParams = {
   name: typeof ModalName.RemoveLiquidity
-  initialState: Position
+  initialState?: Position
 }
 
 export type OpenModalParams =
@@ -108,12 +108,7 @@ const applicationSlice = createSlice({
         state.openModal = null
       }
     },
-    addPopup(
-      state,
-      {
-        payload: { content, key, removeAfterMs = DEFAULT_TXN_DISMISS_MS },
-      }: { payload: { content: PopupContent; key?: string; removeAfterMs?: number } },
-    ) {
+    addPopup(state, { payload: { content, key, removeAfterMs = DEFAULT_TXN_DISMISS_MS } }) {
       key = key || nanoid()
       state.popupList = [
         ...state.popupList.filter((popup) => popup.key !== key),

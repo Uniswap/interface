@@ -7,7 +7,6 @@ export enum FiatOnRampTransactionStatus {
   FAILED = 'FAILED',
 }
 
-// eslint-disable-next-line consistent-return
 export function backendStatusToFiatOnRampStatus(status: TransactionStatus) {
   switch (status) {
     case TransactionStatus.Confirmed:

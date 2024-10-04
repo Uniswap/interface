@@ -9,7 +9,6 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
-import { ElementAfterText } from 'wallet/src/features/images/ElementAfterText'
 import { TransactionDetailsModal } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
 import { useTransactionActions } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActions'
 import { TransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryTitle'
@@ -22,6 +21,7 @@ import {
 } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useIsQueuedTransaction } from 'wallet/src/features/transactions/hooks'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
+import { usePostTextElementPositionProps } from 'wallet/src/utils/layout'
 import { openTransactionLink } from 'wallet/src/utils/linking'
 
 const LOADING_SPINNER_SIZE = 20
@@ -73,6 +73,8 @@ function TransactionSummaryLayout({
       }
     }
   }
+
+  const { postTextElementPositionProps, onTextLayout } = usePostTextElementPositionProps()
 
   const formattedAddedTime = useFormattedTime(transaction.addedTime)
 
@@ -136,14 +138,12 @@ function TransactionSummaryLayout({
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row gap="$spacing16">
-                <ElementAfterText
-                  wrapperProps={{
-                    grow: true,
-                    shrink: true,
-                  }}
-                  image={postCaptionElement}
-                  caption={caption}
-                />
+                <Flex grow row shrink pr={postTextElementPositionProps ? '$spacing24' : undefined}>
+                  <Text color="$neutral1" variant="body2" onTextLayout={onTextLayout}>
+                    {caption}
+                  </Text>
+                  <Flex {...postTextElementPositionProps}>{postCaptionElement}</Flex>
+                </Flex>
                 {status === TransactionStatus.Failed && onRetry && (
                   <Flex flexShrink={0}>
                     <Text color="$accent1" variant="buttonLabel2" onPress={onRetry}>

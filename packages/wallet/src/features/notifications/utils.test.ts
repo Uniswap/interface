@@ -1,17 +1,14 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
-import { Locale } from 'uniswap/src/features/language/constants'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { mockLocalizedFormatter } from 'uniswap/src/test/mocks'
 import { formSwapNotificationTitle } from 'wallet/src/features/notifications/utils'
-
-const mockFormatter = mockLocalizedFormatter(Locale.EnglishUnitedStates)
 
 describe(formSwapNotificationTitle, () => {
   it('formats successful local swap title', () => {
     expect(
       formSwapNotificationTitle(
-        mockFormatter,
+        mockLocalizedFormatter,
         TransactionStatus.Success,
         DAI,
         USDC,
@@ -27,7 +24,7 @@ describe(formSwapNotificationTitle, () => {
   it('formats successful remote swap title', () => {
     expect(
       formSwapNotificationTitle(
-        mockFormatter,
+        mockLocalizedFormatter,
         TransactionStatus.Success,
         DAI,
         USDC,
@@ -42,7 +39,7 @@ describe(formSwapNotificationTitle, () => {
   it('formats canceled swap title', () => {
     expect(
       formSwapNotificationTitle(
-        mockFormatter,
+        mockLocalizedFormatter,
         TransactionStatus.Canceled,
         DAI,
         USDC,
@@ -58,7 +55,7 @@ describe(formSwapNotificationTitle, () => {
   it('formats failed swap title', () => {
     expect(
       formSwapNotificationTitle(
-        mockFormatter,
+        mockLocalizedFormatter,
         TransactionStatus.Failed,
         DAI,
         USDC,

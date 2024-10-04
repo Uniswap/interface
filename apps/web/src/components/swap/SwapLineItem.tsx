@@ -130,7 +130,6 @@ function FeeRow({ trade: { swapFee, outputAmount } }: { trade: SubmittableTrade 
   return <>{formatNumber({ input: outputFeeFiatValue, type: NumberType.FiatGasPrice })}</>
 }
 
-// eslint-disable-next-line consistent-return
 function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
   const { trade, syncing, allowedSlippage, type, priceImpact } = props
   const { formatPercent } = useFormatter()
@@ -158,7 +157,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       }
     case SwapLineItemType.NETWORK_COST:
       if (!SUPPORTED_GAS_ESTIMATE_CHAIN_IDS.includes(chainId)) {
-        return undefined
+        return
       }
       return {
         Label: () => <Trans i18nKey="common.networkCost" />,
@@ -173,7 +172,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
     case SwapLineItemType.PRICE_IMPACT:
       // Hides price impact row if the current trade is UniswapX or we're expecting a preview trade to result in UniswapX
       if (isUniswapX || !priceImpact || (isPreview && isUniswapXTradeType(lastSubmittableFillType))) {
-        return undefined
+        return
       }
       return {
         Label: () => <Trans i18nKey="swap.priceImpact" />,
@@ -206,7 +205,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
     }
     case SwapLineItemType.MAXIMUM_INPUT:
       if (trade.tradeType === TradeType.EXACT_INPUT) {
-        return undefined
+        return
       }
       return {
         Label: () => <Trans i18nKey="swap.payAtMost" />,
@@ -243,7 +242,7 @@ function useLineItem(props: SwapLineItemProps): LineItemData | undefined {
       return getFOTLineItem(props)
     case SwapLineItemType.EXPIRY:
       if (!isLimitTrade(trade)) {
-        return undefined
+        return
       }
       return {
         Label: () => <Trans i18nKey="common.expiry" />,
@@ -257,7 +256,7 @@ function getFOTLineItem({ type, trade }: SwapLineItemProps): LineItemData | unde
   const currency = isInput ? trade.inputAmount.currency : trade.outputAmount.currency
   const tax = isInput ? trade.inputTax : trade.outputTax
   if (tax.equalTo(0)) {
-    return undefined
+    return
   }
 
   const tokenSymbol = currency.symbol ?? currency.name

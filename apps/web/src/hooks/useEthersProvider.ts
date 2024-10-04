@@ -7,7 +7,7 @@ import { useClient, useConnectorClient } from 'wagmi'
 
 const providers = new WeakMap<Client, Web3Provider>()
 
-export function clientToProvider(client?: Client<Transport, UniverseChainInfo>, chainId?: number) {
+function clientToProvider(client?: Client<Transport, UniverseChainInfo>, chainId?: number) {
   if (!client) {
     return undefined
   }

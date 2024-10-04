@@ -36,14 +36,6 @@ const slice = createSlice({
       assert(state?.[from]?.[chainId]?.[id], `updateTransaction: Attempted to update a missing tx with id ${id}`)
       state[from]![chainId]![id] = transaction
     },
-    updateTransactionWithoutWatch: (state, { payload: transaction }: PayloadAction<TransactionDetails>) => {
-      const { chainId, id, from } = transaction
-      assert(
-        state?.[from]?.[chainId]?.[id],
-        `updateTransactionWithoutWatch: Attempted to update a missing tx with id ${id}`,
-      )
-      state[from]![chainId]![id] = transaction
-    },
     finalizeTransaction: (state, { payload: transaction }: PayloadAction<FinalizedTransactionDetails>) => {
       const { chainId, id, status, receipt, from, hash } = transaction
       assert(state?.[from]?.[chainId]?.[id], `finalizeTransaction: Attempted to finalize a missing tx with id ${id}`)
@@ -134,7 +126,6 @@ export const {
   resetTransactions,
   upsertFiatOnRampTransaction,
   updateTransaction,
-  updateTransactionWithoutWatch,
 } = slice.actions
 
 export const { reducer: transactionReducer } = slice

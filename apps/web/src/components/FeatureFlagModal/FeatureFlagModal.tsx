@@ -224,10 +224,6 @@ export default function FeatureFlagModal() {
             label="[Universal Swap Flow Only] Enable Quick Routes"
           />
           <FeatureFlagOption
-            flag={FeatureFlags.UniswapXPriorityOrders}
-            label="UniswapX Priority Orders (on Base only)"
-          />
-          <FeatureFlagOption
             flag={FeatureFlags.Eip6936Enabled}
             label="Enable EIP-6963: Multi Injected Provider Discovery"
           />

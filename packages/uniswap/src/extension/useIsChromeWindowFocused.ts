@@ -9,7 +9,7 @@ export function useIsChromeWindowFocused(): boolean {
     useCallback(async () => {
       if (!isExtension) {
         // This hook is ignored and always returns `true` when not in the Extension.
-        return undefined
+        return
       }
 
       const onFocusChangedListener = async (): Promise<void> => {
@@ -39,7 +39,7 @@ export function useIsChromeWindowFocusedWithTimeout(timeoutInMs: number): boolea
   useEffect(() => {
     if (isFocused) {
       setIsFocusedWithTimeout(true)
-      return undefined
+      return
     }
 
     const timeout = setTimeout(() => setIsFocusedWithTimeout(false), timeoutInMs)

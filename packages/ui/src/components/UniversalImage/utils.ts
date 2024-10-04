@@ -51,7 +51,6 @@ export function useSvgData(uri: string, autoplay = false): SvgData | undefined {
       return await fetchSVG(uri, autoplay, controllerRef.current.signal)
     } catch (error) {
       logger.error(error, { tags: { file: 'WebSvgUri', function: 'fetchSvg' }, extra: { uri } })
-      return undefined
     }
   }, [autoplay, uri])
 

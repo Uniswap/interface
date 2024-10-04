@@ -1,9 +1,7 @@
 import { CurrencyAmount, Currency } from "@uniswap/sdk-core"
 import { SignerMnemonicAccountMeta } from "uniswap/src/features/accounts/types"
 import { ValidatedSwapTxContext } from "uniswap/src/features/transactions/swap/types/swapTxAndGasInfo"
-import { TransactionStep } from "uniswap/src/features/transactions/swap/utils/generateTransactionSteps"
-
-export type SetCurrentStepFn = (args: { step: TransactionStep; accepted: boolean }) => void
+import { TransactionStep } from "uniswap/src/features/transactions/swap/utils/generateSwapSteps"
 
 export interface SwapCallbackParams {
   account: SignerMnemonicAccountMeta
@@ -11,11 +9,10 @@ export interface SwapCallbackParams {
   currencyInAmountUSD: Maybe<CurrencyAmount<Currency>>
   currencyOutAmountUSD: Maybe<CurrencyAmount<Currency>>
   isAutoSlippage: boolean
-  onSuccess: () => void
+  onSubmit: () => void
   onFailure: () => void
   txId?: string
-  setCurrentStep: SetCurrentStepFn
-  setSteps: (steps: TransactionStep[]) => void
+  steps: TransactionStep[]
   isFiatInputMode?: boolean
 }
 

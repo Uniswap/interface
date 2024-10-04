@@ -1,6 +1,7 @@
 import renderer from 'react-test-renderer'
 import { FiatCurrencyInfo } from 'uniswap/src/features/fiatOnRamp/types'
 import { Locale } from 'uniswap/src/features/language/constants'
+import { mockLocalizationContext } from 'uniswap/src/test/mocks'
 import { TamaguiProvider } from 'wallet/src/providers/tamagui-provider'
 
 // Needs to be imported after the mock localization context
@@ -30,6 +31,8 @@ jest.mock('uniswap/src/features/fiatCurrency/hooks', () => {
     useAppFiatCurrencyInfo: (): FiatCurrencyInfo => mockFiatCurrencyInfo,
   }
 })
+
+jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext)
 
 it('renders a relative change', () => {
   const tree = renderer.create(

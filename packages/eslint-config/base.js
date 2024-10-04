@@ -14,7 +14,6 @@ module.exports = {
     'import/no-unused-modules': ['error', { unusedExports: true }],
     'object-shorthand': ['error', 'always'],
     'unused-imports/no-unused-imports': 'error',
-    'consistent-return': ['error', { treatUndefinedAsUnspecified: false }],
   },
   overrides: [
     {

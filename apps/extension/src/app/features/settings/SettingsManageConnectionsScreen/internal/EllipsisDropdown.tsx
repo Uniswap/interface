@@ -2,7 +2,7 @@ import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { removeAllDappConnectionsForAccount } from 'src/app/features/dapp/actions'
 import { ContextMenu, Flex, TouchableArea } from 'ui/src'
-import { Ellipsis, Power } from 'ui/src/components/icons'
+import { Power, TripleDots } from 'ui/src/components/icons'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -49,7 +49,7 @@ export function EllipsisDropdown(): JSX.Element {
       onLeftClick={true}
     >
       <TouchableArea borderRadius="$roundedFull" hoverStyle={{ backgroundColor: '$surface2Hovered' }} p="$spacing8">
-        <Ellipsis color="$neutral2" size="$icon.16" />
+        <TripleDots color="$neutral2" size="$icon.16" />
       </TouchableArea>
     </ContextMenu>
   )

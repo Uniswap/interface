@@ -1,7 +1,7 @@
 import { memo, useCallback, useRef, useState } from 'react'
 
 export type PaginatedModalProps = {
-  onAcknowledge: () => void
+  onConfirm: () => void
   onClose: () => void
   key: number
 }
@@ -62,5 +62,5 @@ type PageProps = {
 }
 
 const Page = memo(function _Page({ modalIndex, renderModal, onClose, onConfirm }: PageProps): JSX.Element | null {
-  return renderModal({ onClose: () => onClose(modalIndex), onAcknowledge: onConfirm, key: modalIndex })
+  return renderModal({ onClose: () => onClose(modalIndex), onConfirm, key: modalIndex })
 })

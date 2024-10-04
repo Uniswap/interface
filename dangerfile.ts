@@ -349,7 +349,7 @@ if (
   (updatedMobileMigrationsFile && !updatedMobileMigrationsTestFile) ||
   (updatedExtensionMigrationsFile && !updatedExtensionMigrationsTestFile)
 ) {
-  warn('You updated the migrations file but did not write any new tests. Each migration must have a test!')
+  fail('You updated the migrations file but did not write any new tests. Each migration must have a test!')
 }
 
 if (updatedMobileMigrationsFile !== updatedExtensionMigrationsFile) {

@@ -5,15 +5,12 @@ import { SwappableTokensParams } from 'uniswap/src/data/apiClients/tradingApi/us
 import {
   ApprovalRequest,
   ApprovalResponse,
-  BridgeQuote,
-  ChainId,
   ClassicQuote,
   CreateSwapRequest,
   CreateSwapResponse,
   DutchQuoteV2,
   GetOrdersResponse,
   GetSwappableTokensResponse,
-  GetSwapsResponse,
   IndicativeQuoteRequest,
   IndicativeQuoteResponse,
   OrderRequest,
@@ -23,12 +20,11 @@ import {
   ReduceLPPositionRequest,
   ReduceLPPositionResponse,
   Routing,
-  TransactionHash,
 } from 'uniswap/src/data/tradingApi/__generated__'
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
 // See: https://linear.app/uniswap/issue/API-236/explore-changing-the-quote-schema-to-pull-out-a-basequoteresponse
-export type DiscriminatedQuoteResponse = ClassicQuoteResponse | DutchQuoteResponse | BridgeQuoteResponse
+export type DiscriminatedQuoteResponse = ClassicQuoteResponse | DutchQuoteResponse
 
 export type DutchQuoteResponse = QuoteResponse & {
   quote: DutchQuoteV2
@@ -38,11 +34,6 @@ export type DutchQuoteResponse = QuoteResponse & {
 export type ClassicQuoteResponse = QuoteResponse & {
   quote: ClassicQuote
   routing: Routing.CLASSIC
-}
-
-export type BridgeQuoteResponse = QuoteResponse & {
-  quote: BridgeQuote
-  routing: Routing.BRIDGE
 }
 
 export const TRADING_API_CACHE_KEY = 'TradingApi'
@@ -109,14 +100,5 @@ export async function reduceLpPosition(params: ReduceLPPositionRequest): Promise
       ...params,
       includeGasInfo: true,
     }),
-  })
-}
-
-export async function fetchSwaps(params: { txHashes: TransactionHash[]; chainId: ChainId }): Promise<GetSwapsResponse> {
-  return await TradingApiClient.get<GetSwapsResponse>(uniswapUrls.tradingApiPaths.swaps, {
-    params: {
-      txHashes: params.txHashes.join(','),
-      chainId: params.chainId,
-    },
   })
 }

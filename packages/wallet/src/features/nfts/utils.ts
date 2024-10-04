@@ -5,7 +5,7 @@ import { NFTItem } from 'wallet/src/features/nfts/types'
 export function formatNftItems(data: NftsTabQuery | undefined): NFTItem[] | undefined {
   const items = data?.nftBalances?.edges?.flatMap((item) => item.node)
   if (!items) {
-    return undefined
+    return
   }
 
   const nfts = items

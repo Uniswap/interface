@@ -1,18 +1,14 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { Trans, useTranslation } from 'react-i18next'
-import { useDispatch } from 'react-redux'
-import { navigate } from 'src/app/navigation/rootNavigation'
-import { openModal } from 'src/features/modals/modalSlice'
+import { useUnitagClaimHandler } from 'src/features/unitags/useUnitagClaimHandler'
 import { Flex, Image, Text, TouchableArea, TouchableAreaProps, useIsDarkMode, useIsShortMobileDevice } from 'ui/src'
 import { UNITAGS_BANNER_VERTICAL_DARK, UNITAGS_BANNER_VERTICAL_LIGHT } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { iconSizes } from 'ui/src/theme'
-import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { MobileScreens, UnitagScreens } from 'uniswap/src/types/screens/mobile'
+import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { UNITAG_SUFFIX_NO_LEADING_DOT } from 'wallet/src/features/unitags/constants'
-import { useUnitagClaimHandler } from 'wallet/src/features/unitags/useUnitagClaimHandler'
 
 const IMAGE_ASPECT_RATIO = 0.42
 const IMAGE_SCREEN_WIDTH_PROPORTION = 0.18
@@ -31,7 +27,6 @@ export function UnitagBanner({
   const { fullWidth } = useDeviceDimensions()
   const isDarkMode = useIsDarkMode()
   const isShortDevice = useIsShortMobileDevice()
-  const dispatch = useDispatch()
 
   const imageWidth = compact
     ? COMPACT_IMAGE_SCREEN_WIDTH_PROPORTION * fullWidth
@@ -39,29 +34,10 @@ export function UnitagBanner({
   const imageHeight = imageWidth / IMAGE_ASPECT_RATIO
   const analyticsEntryPoint = entryPoint === MobileScreens.Home ? 'home' : 'settings'
 
-  const navigateToClaim = useCallback(() => {
-    navigate(MobileScreens.UnitagStack, {
-      screen: UnitagScreens.ClaimUnitag,
-      params: {
-        entryPoint: MobileScreens.Home,
-        address,
-      },
-    })
-  }, [address])
-
-  const navigateToIntro = useCallback(() => {
-    dispatch(
-      openModal({
-        name: ModalName.UnitagsIntro,
-        initialState: { address, entryPoint: MobileScreens.Home },
-      }),
-    )
-  }, [dispatch, address])
-
   const { handleClaim, handleDismiss } = useUnitagClaimHandler({
+    address,
+    entryPoint,
     analyticsEntryPoint,
-    navigateToClaim,
-    navigateToIntro,
   })
 
   const onPressClaimNow = (): void => {

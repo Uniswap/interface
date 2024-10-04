@@ -19,7 +19,7 @@ registerSetupTests()
 const log = Cypress.log
 Cypress.log = function (options, ...args) {
   if (options.displayName === 'script' || options.name === 'request') {
-    return undefined
+    return
   }
   return log(options, ...args)
 } as typeof log

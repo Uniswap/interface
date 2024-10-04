@@ -6,10 +6,6 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 // we silence the error logs to keep the test output clean.
 jest.mock('utilities/src/logger/logger')
 
-jest.mock('ui/src/components/UniversalImage/internal/PlainImage', () => ({
-  ...jest.requireActual('ui/src/components/UniversalImage/internal/PlainImage.web'),
-}))
-
 describe('TokenLogo', () => {
   it('renders without error', () => {
     const tree = render(<TokenLogo chainId={UniverseChainId.ArbitrumOne} symbol="DAI" url="https://example.com" />)

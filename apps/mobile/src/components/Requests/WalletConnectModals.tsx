@@ -128,7 +128,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
     return (
       <WarningModal
         caption={t('walletConnect.request.warning.message')}
-        rejectText={t('common.button.dismiss')}
+        closeText={t('common.button.dismiss')}
         icon={
           <EyeIcon color={colors.neutral2.get()} height={iconSizes.icon24} strokeWidth={1.5} width={iconSizes.icon24} />
         }
@@ -136,7 +136,7 @@ function RequestModal({ currRequest }: RequestModalProps): JSX.Element {
         modalName={ModalName.WCViewOnlyWarning}
         severity={WarningSeverity.None}
         title={t('walletConnect.request.warning.title')}
-        onReject={onClose}
+        onCancel={onClose}
         onClose={onClose}
       >
         <Flex alignSelf="stretch" backgroundColor="$surface2" borderRadius="$rounded16" p="$spacing16">

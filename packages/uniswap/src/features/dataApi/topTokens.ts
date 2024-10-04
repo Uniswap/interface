@@ -27,7 +27,7 @@ export function usePopularTokens(chainFilter: UniverseChainId): GqlResult<Curren
 
   const formattedData = useMemo(() => {
     if (!data || !data.topTokens) {
-      return undefined
+      return
     }
 
     return data.topTokens

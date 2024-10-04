@@ -242,14 +242,14 @@ export function SendTokenForm(): JSX.Element {
       {transferWarning?.title && (
         <WarningModal
           caption={transferWarning.message}
-          acknowledgeText={t('common.button.close')}
+          confirmText={t('common.button.close')}
           icon={<SendWarningIcon color={transferWarningColor.text} size={iconSizes.icon24} />}
           isOpen={showWarningModal}
           modalName={ModalName.SendWarning}
           severity={transferWarning.severity}
           title={transferWarning.title}
           onClose={(): void => setShowWarningModal(false)}
-          onAcknowledge={(): void => setShowWarningModal(false)}
+          onConfirm={(): void => setShowWarningModal(false)}
         />
       )}
       <Flex grow gap="$spacing8" justifyContent="space-between">

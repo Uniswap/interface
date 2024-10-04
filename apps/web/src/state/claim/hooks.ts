@@ -179,7 +179,7 @@ export function useClaimCallback(address: string | null | undefined): {
 
   const claimCallback = async function () {
     if (!claimData || !address || !provider || !account.chainId || !distributorContract) {
-      return undefined
+      return
     }
 
     const args = [claimData.index, address, claimData.amount, claimData.proof]

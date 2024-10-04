@@ -1,7 +1,8 @@
 /* eslint-disable complexity */
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, Button, ColorTokens, Flex, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { AnimatePresence, Button, ColorTokens, Flex, SpinningLoader, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { iconSizes } from 'ui/src/theme'
 import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
@@ -16,6 +17,7 @@ import {
 import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnlyModal'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -31,13 +33,13 @@ export function SwapFormButton(): JSX.Element {
   const isShortMobileDevice = useIsShortMobileDevice()
 
   const activeAccount = useAccountMeta()
-  const { walletNeedsRestore, setScreen, swapRedirectCallback } = useTransactionModalContext()
+  const { walletNeedsRestore, setScreen } = useTransactionModalContext()
   const { derivedSwapInfo, isSubmitting, updateSwapForm, exactAmountFiat, exactAmountToken } = useSwapFormContext()
   const { blockingWarning, insufficientBalanceWarning, insufficientGasFundsWarning } = useParsedSwapWarnings()
 
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
 
-  const { wrapType, trade, currencies, chainId, exactCurrencyField } = derivedSwapInfo
+  const { wrapType, trade, currencies, chainId } = derivedSwapInfo
 
   const { isBlocked, isBlockedLoading } = useIsBlocked(activeAccount?.address)
 
@@ -53,16 +55,8 @@ export function SwapFormButton(): JSX.Element {
   const { onConnectWallet } = useUniswapContext()
 
   const onReviewPress = useCallback(() => {
-    if (swapRedirectCallback) {
-      swapRedirectCallback({
-        inputCurrency: currencies[CurrencyField.INPUT]?.currency,
-        outputCurrency: currencies[CurrencyField.OUTPUT]?.currency,
-        typedValue: exactAmountToken,
-        independentField: exactCurrencyField,
-        chainId,
-      })
-      // Active account will only ever be undefined on web
-    } else if (!activeAccount && onConnectWallet) {
+    // Active account will only ever be undefined on web
+    if (!activeAccount && onConnectWallet) {
       onConnectWallet()
     } else if (isViewOnlyWallet) {
       setShowViewOnlyModal(true)
@@ -70,18 +64,10 @@ export function SwapFormButton(): JSX.Element {
       updateSwapForm({ txId: createTransactionId() })
       setScreen(TransactionScreen.Review)
     }
-  }, [
-    activeAccount,
-    currencies,
-    onConnectWallet,
-    exactAmountToken,
-    exactCurrencyField,
-    chainId,
-    isViewOnlyWallet,
-    setScreen,
-    swapRedirectCallback,
-    updateSwapForm,
-  ])
+  }, [activeAccount, isViewOnlyWallet, onConnectWallet, setScreen, updateSwapForm])
+
+  // TODO(WEB-4821): Remove uniswapx submission logic since this component will no longer be rendered during submission
+  const showUniswapXSubmittingUI = trade.trade && isUniswapX(trade?.trade) && isSubmitting
 
   const invalidTokenSelection = Object.values(currencies).some((currency) => !currency)
   const invalidAmountSelection = !exactAmountFiat && !exactAmountToken
@@ -94,9 +80,6 @@ export function SwapFormButton(): JSX.Element {
   const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
 
   const getButtonText = (): string => {
-    if (swapRedirectCallback) {
-      return t('common.getStarted')
-    }
     if (!activeAccount) {
       return isSignIn ? t('nav.signIn.button') : isLogIn ? t('nav.logIn.button') : t('common.connectWallet.button')
     }
@@ -127,16 +110,8 @@ export function SwapFormButton(): JSX.Element {
     buttonText: string
   } = {
     backgroundColor:
-      !activeAccount || isSubmitting
-        ? '$accent2'
-        : isBlockingWithCustomMessage && !swapRedirectCallback
-          ? '$surface2'
-          : '$accent1',
-    buttonTextColor: !activeAccount
-      ? '$accent1'
-      : isBlockingWithCustomMessage && !swapRedirectCallback
-        ? '$neutral2'
-        : '$white',
+      !activeAccount || isSubmitting ? '$accent2' : isBlockingWithCustomMessage ? '$surface2' : '$accent1',
+    buttonTextColor: !activeAccount ? '$accent1' : isBlockingWithCustomMessage ? '$neutral2' : '$white',
     buttonText: getButtonText(),
   }
 
@@ -149,7 +124,8 @@ export function SwapFormButton(): JSX.Element {
           pressStyle={{ backgroundColor: buttonProps.backgroundColor, opacity: 0.7 }}
           hoverStyle={{ backgroundColor: buttonProps.backgroundColor, opacity: 0.9 }}
           backgroundColor={buttonProps.backgroundColor}
-          disabled={!!activeAccount && reviewButtonDisabled && !isViewOnlyWallet && !swapRedirectCallback}
+          disabled={!!activeAccount && reviewButtonDisabled && !isViewOnlyWallet}
+          icon={showUniswapXSubmittingUI ? <SpinningLoader color="$accent1" size={iconSizes.icon24} /> : undefined}
           // use opacity 1 for states with error text, because surface2 is hard to read with default disabled opacity
           opacity={isViewOnlyWallet ? 0.4 : isBlockingWithCustomMessage ? 1 : undefined}
           size={isShortMobileDevice ? 'small' : isWeb ? 'medium' : 'large'}
@@ -157,9 +133,13 @@ export function SwapFormButton(): JSX.Element {
           width="100%"
           onPress={onReviewPress}
         >
-          <Text color={buttonProps.buttonTextColor} variant={SWAP_BUTTON_TEXT_VARIANT}>
-            {buttonProps.buttonText}
-          </Text>
+          {showUniswapXSubmittingUI ? (
+            <SubmittingText />
+          ) : (
+            <Text color={buttonProps.buttonTextColor} variant={SWAP_BUTTON_TEXT_VARIANT}>
+              {buttonProps.buttonText}
+            </Text>
+          )}
         </Button>
       </Trace>
       <ViewOnlyModal isOpen={showViewOnlyModal} onDismiss={(): void => setShowViewOnlyModal(false)} />

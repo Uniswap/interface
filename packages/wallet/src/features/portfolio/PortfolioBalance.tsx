@@ -6,8 +6,6 @@ import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { useAppFiatCurrency, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NumberType } from 'utilities/src/format/types'
-import { isWeb } from 'utilities/src/platform'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
 import { isWarmLoadingStatus } from 'wallet/src/data/utils'
 import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
@@ -15,10 +13,6 @@ import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
 interface PortfolioBalanceProps {
   owner: Address
 }
-
-// This ensures the color changes quicker after animating on web platforms. This could be
-// safe for mobile to be the same but was kept the same as this animation is fragile
-const BALANCE_CHANGE_INDICATION_DURATION = isWeb ? ONE_SECOND_MS / 2 : ONE_SECOND_MS * 2
 
 export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: PortfolioBalanceProps): JSX.Element {
   const { data, loading, networkStatus } = usePortfolioTotalValue({
@@ -47,7 +41,7 @@ export const PortfolioBalance = memo(function _PortfolioBalance({ owner }: Portf
     <Flex gap="$spacing4">
       <AnimatedNumber
         balance={balanceUSD}
-        colorIndicationDuration={BALANCE_CHANGE_INDICATION_DURATION}
+        colorIndicationDuration={2000}
         loading={isLoading}
         loadingPlaceholderText="000000.00"
         shouldFadeDecimals={shouldFadePortfolioDecimals}

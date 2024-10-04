@@ -23,7 +23,6 @@ import {
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -91,7 +90,7 @@ export function SendReviewDetails({
 
   const transferERC20Callback = useSendERC20Callback(
     txId,
-    chainId as WalletChainId,
+    chainId,
     recipient,
     currencyInInfo ? currencyAddress(currencyInInfo.currency) : undefined,
     currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
@@ -103,7 +102,7 @@ export function SendReviewDetails({
 
   const transferNFTCallback = useSendNFTCallback(
     txId,
-    chainId as WalletChainId,
+    chainId,
     recipient,
     nftIn?.nftContract?.address,
     nftIn?.tokenId,
@@ -186,17 +185,17 @@ export function SendReviewDetails({
       {transferWarning?.title && (
         <WarningModal
           caption={transferWarning.message}
-          rejectText={blockingWarning ? undefined : t('send.warning.modal.button.cta.cancel')}
-          acknowledgeText={
+          closeText={blockingWarning ? undefined : t('send.warning.modal.button.cta.cancel')}
+          confirmText={
             blockingWarning ? t('send.warning.modal.button.cta.blocking') : t('send.warning.modal.button.cta.confirm')
           }
           isOpen={showWarningModal}
           modalName={ModalName.SendWarning}
           severity={transferWarning.severity}
           title={transferWarning.title}
-          onReject={onCloseWarning}
+          onCancel={onCloseWarning}
           onClose={onCloseWarning}
-          onAcknowledge={onCloseWarning}
+          onConfirm={onCloseWarning}
         />
       )}
       <Flex gap="$spacing16" px="$spacing8">
@@ -272,7 +271,7 @@ export function SendReviewDetails({
             />
           </Flex>
         }
-        chainId={chainId as WalletChainId}
+        chainId={chainId}
         gasFee={gasFee}
         showWarning={Boolean(transferWarning)}
         warning={transferWarning}

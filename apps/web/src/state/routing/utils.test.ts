@@ -43,8 +43,6 @@ function constructArgs(currencyIn: Currency, currencyOut: Currency, isXv2?: bool
     forceOpenOrders: false,
     deadlineBufferSecs: 30,
     arbitrumXV2SlippageTolerance: '0.5',
-    isPriorityOrder: false,
-    isUniswapXSupportedChain: true,
   }
 }
 

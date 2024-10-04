@@ -4,7 +4,7 @@ import { Contract, providers } from 'ethers'
 import { call, select } from 'typed-redux-saga'
 import PERMIT2_ABI from 'uniswap/src/abis/permit2.json'
 import { Permit2 } from 'uniswap/src/abis/types'
-import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails, UniswapXOrderDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -21,9 +21,9 @@ export function* attemptCancelTransaction(
   transaction: TransactionDetails,
   cancelRequest: providers.TransactionRequest,
 ) {
-  if (isClassic(transaction) || isBridge(transaction)) {
+  if (isClassic(transaction)) {
     yield* call(attemptReplaceTransaction, transaction, cancelRequest, true)
-  } else if (isUniswapX(transaction)) {
+  } else {
     yield* call(cancelOrder, transaction, cancelRequest)
   }
 }
@@ -41,7 +41,7 @@ export async function getCancelOrderTxRequest(
   } else {
     const { encodedOrder } = (await getOrders([orderHash])).orders[0] ?? {}
     if (!encodedOrder) {
-      return undefined
+      return
     }
 
     const nonce = CosignedV2DutchOrder.parse(encodedOrder, chainId).info.nonce

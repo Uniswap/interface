@@ -2,7 +2,7 @@ import dayjs from 'dayjs'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Button, ContextMenu, Flex, Separator, Text, TouchableArea, isWeb } from 'ui/src'
-import { AnglesDownUp, Ellipsis, SortVertical, UniswapX } from 'ui/src/components/icons'
+import { AnglesDownUp, SortVertical, TripleDots, UniswapX } from 'ui/src/components/icons'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
@@ -80,12 +80,12 @@ export function TransactionDetailsHeader({
       {isWeb ? (
         <ContextMenu closeOnClick itemId={transactionDetails.id} menuOptions={menuItems} onLeftClick>
           <TouchableArea hoverable borderRadius="$roundedFull" p="$spacing4">
-            <Ellipsis color="$neutral2" size="$icon.20" />
+            <TripleDots color="$neutral2" size="$icon.20" />
           </TouchableArea>
         </ContextMenu>
       ) : (
         <TouchableArea onPress={openActionsModal}>
-          <Ellipsis color="$neutral2" size="$icon.20" />
+          <TripleDots color="$neutral2" size="$icon.20" />
         </TouchableArea>
       )}
     </Flex>

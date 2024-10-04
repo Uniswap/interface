@@ -17,7 +17,7 @@ export function useCurrencyInfo(
 
   return useMemo(() => {
     if (!data?.token || !_currencyId) {
-      return undefined
+      return
     }
 
     return gqlTokenToCurrencyInfo(data.token)

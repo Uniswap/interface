@@ -241,7 +241,7 @@ export const migrations = {
   17: (state: any) => {
     const accounts: Record<Address, Account> | undefined = state?.wallet?.accounts
     if (!accounts) {
-      return undefined
+      return
     }
 
     for (const account of Object.values(accounts)) {

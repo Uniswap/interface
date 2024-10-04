@@ -9,13 +9,7 @@ import {
   Routing,
 } from 'uniswap/src/data/tradingApi/__generated__'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import {
-  ApprovalAction,
-  ClassicTrade,
-  TokenApprovalInfo,
-  TradeWithStatus,
-  UniswapXTrade,
-} from 'uniswap/src/features/transactions/swap/types/trade'
+import { ClassicTrade, TradeWithStatus, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { createGasFeeEstimates } from 'uniswap/src/test/fixtures/tradingApi'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -69,7 +63,6 @@ export const createMockDerivedSwapInfo = (
   outputCurrency: Token,
   inputAmount: string,
   outputAmount: string,
-  overrides: Partial<DerivedSwapInfo> = {},
 ): DerivedSwapInfo => ({
   chainId: UniverseChainId.Mainnet,
   currencies: {
@@ -106,7 +99,6 @@ export const createMockDerivedSwapInfo = (
   wrapType: WrapType.NotApplicable,
   exactAmountToken: CurrencyField.INPUT,
   exactCurrencyField: CurrencyField.INPUT,
-  ...overrides,
 })
 
 const createMockUniswapXOrder = (token: string): DutchOrderInfoV2 => ({
@@ -233,10 +225,3 @@ export const createMockUniswapXTrade = (inputCurrency: Token, outputCurrency: To
     },
   })
 }
-
-export const createMockTokenApprovalInfo = (overrides = {}): TokenApprovalInfo => ({
-  action: ApprovalAction.None,
-  txRequest: null,
-  cancelTxRequest: null,
-  ...overrides,
-})

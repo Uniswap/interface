@@ -12,7 +12,6 @@ function parseUrl(url?: string): URL | undefined {
       tags: { file: 'dappRequests/utils', function: 'extractBaseUrl' },
       extra: { url },
     })
-    return undefined
   }
 }
 

@@ -24,16 +24,12 @@ import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapC
 export interface SwapFlowProps extends Omit<TransactionModalProps, 'fullscreen' | 'modalName'> {
   prefilledState?: SwapFormState
   customSettings?: SwapSettingConfig[]
-  hideHeader?: boolean
-  hideFooter?: boolean
   swapCallback: SwapCallback
   wrapCallback: WrapCallback
 }
 
 export function SwapFlow({
   prefilledState,
-  hideHeader,
-  hideFooter,
   customSettings = [],
   swapCallback,
   wrapCallback,
@@ -41,7 +37,7 @@ export function SwapFlow({
 }: SwapFlowProps): JSX.Element {
   return (
     <TransactionModal modalName={ModalName.Swap} {...transactionModalProps}>
-      <SwapFormContextProvider prefilledState={prefilledState} hideSettings={hideHeader} hideFooter={hideFooter}>
+      <SwapFormContextProvider prefilledState={prefilledState}>
         <SwapTxContextProviderTradingApi>
           <CurrentScreen customSettings={customSettings} swapCallback={swapCallback} wrapCallback={wrapCallback} />
         </SwapTxContextProviderTradingApi>

@@ -1780,7 +1780,7 @@ exports[`SwapLineItem.tsx exact input 1`] = `
 }
 
 .c38 img {
-  width: 9px;
+  width: 10px;
   height: 20px;
   object-fit: cover;
 }
@@ -2779,7 +2779,7 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
 }
 
 .c38 img {
-  width: 9px;
+  width: 10px;
   height: 20px;
   object-fit: cover;
 }
@@ -3778,7 +3778,7 @@ exports[`SwapLineItem.tsx exact output 1`] = `
 }
 
 .c38 img {
-  width: 9px;
+  width: 10px;
   height: 20px;
   object-fit: cover;
 }
@@ -4818,7 +4818,7 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
 }
 
 .c38 img {
-  width: 9px;
+  width: 10px;
   height: 20px;
   object-fit: cover;
 }
@@ -5871,7 +5871,7 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
 }
 
 .c38 img {
-  width: 9px;
+  width: 10px;
   height: 20px;
   object-fit: cover;
 }

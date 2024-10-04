@@ -6,10 +6,7 @@ import {
   DutchOrderInfo,
   DutchOrderInfoJSON,
   DutchOrderTrade as IDutchOrderTrade,
-  PriorityOrderTrade as IPriorityOrderTrade,
   V2DutchOrderTrade as IV2DutchOrderTrade,
-  UnsignedPriorityOrderInfo,
-  UnsignedPriorityOrderInfoJSON,
   UnsignedV2DutchOrderInfo,
   UnsignedV2DutchOrderInfoJSON,
 } from '@uniswap/uniswapx-sdk'
@@ -74,8 +71,6 @@ export interface GetQuoteArgs {
   forceOpenOrders: boolean
   deadlineBufferSecs: number
   arbitrumXV2SlippageTolerance: string
-  isPriorityOrder: boolean
-  isUniswapXSupportedChain: boolean
 }
 
 export type GetQuickQuoteArgs = {
@@ -192,24 +187,6 @@ export type URADutchOrderV2QuoteData = {
   portionRecipient?: string
 }
 
-// from `PriorityQuoteDataJSON` in https://github.com/Uniswap/backend/blob/main/packages/services/unified-routing-api/lib/entities/quote/PriorityQuote.ts
-export type URAPriorityOrderQuoteData = {
-  orderInfo: UnsignedPriorityOrderInfoJSON
-  startTimeBufferSecs: number // ignore for priority order
-  deadlineBufferSecs: number // ignore for priority order
-  amountInMpsPerPriorityFeeWei: number
-  amountOutMpsPerPriorityFeeWei: number
-  permitData: PermitTransferFromData
-  quoteId: string
-  requestId: string
-  encodedOrder: string
-  orderHash: string
-  slippageTolerance: string
-  portionBips?: number
-  portionAmount?: string
-  portionRecipient?: string
-}
-
 type URADutchOrderQuoteResponse = {
   routing: URAQuoteType.DUTCH_V1
   quote: URADutchOrderQuoteData
@@ -225,16 +202,7 @@ type URAClassicQuoteResponse = {
   quote: ClassicQuoteData
   allQuotes: Array<URAQuoteResponse>
 }
-type URAPriorityOrderQuoteResponse = {
-  routing: URAQuoteType.PRIORITY
-  quote: URAPriorityOrderQuoteData
-  allQuotes: Array<URAQuoteResponse>
-}
-export type URAQuoteResponse =
-  | URAClassicQuoteResponse
-  | URADutchOrderQuoteResponse
-  | URADutchOrderV2QuoteResponse
-  | URAPriorityOrderQuoteResponse
+export type URAQuoteResponse = URAClassicQuoteResponse | URADutchOrderQuoteResponse | URADutchOrderV2QuoteResponse
 
 export type QuickRouteResponse = {
   tokenIn: {
@@ -365,7 +333,6 @@ export enum OffchainOrderType {
   DUTCH_V2_AUCTION = 'Dutch_V2',
   LIMIT_ORDER = 'Limit',
   DUTCH_V1_AND_V2 = 'Dutch_V1_V2', // Only used for GET /orders queries. Returns both Dutch V1 and V2 orders.
-  PRIORITY_ORDER = 'Priority',
 }
 
 export class DutchOrderTrade extends IDutchOrderTrade<Currency, Currency, TradeType> {
@@ -512,81 +479,6 @@ export class V2DutchOrderTrade extends IV2DutchOrderTrade<Currency, Currency, Tr
     this.slippageTolerance = slippageTolerance
     this.swapFee = swapFee
     this.forceOpenOrder = forceOpenOrder
-  }
-
-  public get totalGasUseEstimateUSD(): number {
-    if (this.wrapInfo.needsWrap && this.approveInfo.needsApprove) {
-      return this.wrapInfo.wrapGasEstimateUSD + this.approveInfo.approveGasEstimateUSD
-    }
-
-    if (this.wrapInfo.needsWrap) {
-      return this.wrapInfo.wrapGasEstimateUSD
-    }
-    if (this.approveInfo.needsApprove) {
-      return this.approveInfo.approveGasEstimateUSD
-    }
-
-    return 0
-  }
-}
-
-export class PriorityOrderTrade extends IPriorityOrderTrade<Currency, Currency, TradeType> {
-  public readonly fillType = TradeFillType.UniswapX
-  public readonly offchainOrderType = OffchainOrderType.PRIORITY_ORDER
-
-  quoteId?: string
-  requestId?: string
-  wrapInfo: WrapInfo
-  approveInfo: ApproveInfo
-  // The gas estimate of the reference classic trade, if there is one.
-  classicGasUseEstimateUSD?: number
-  startTimeBufferSecs: number
-  deadlineBufferSecs: number
-  slippageTolerance: Percent
-
-  inputTax = ZERO_PERCENT
-  outputTax = ZERO_PERCENT
-  swapFee: SwapFeeInfo | undefined
-
-  constructor({
-    currencyIn,
-    currenciesOut,
-    orderInfo,
-    tradeType,
-    quoteId,
-    requestId,
-    wrapInfo,
-    approveInfo,
-    classicGasUseEstimateUSD,
-    startTimeBufferSecs,
-    deadlineBufferSecs,
-    slippageTolerance,
-    swapFee,
-  }: {
-    currencyIn: Currency
-    currenciesOut: Currency[]
-    orderInfo: UnsignedPriorityOrderInfo
-    tradeType: TradeType
-    quoteId?: string
-    requestId?: string
-    approveInfo: ApproveInfo
-    wrapInfo: WrapInfo
-    classicGasUseEstimateUSD?: number
-    startTimeBufferSecs: number
-    deadlineBufferSecs: number
-    slippageTolerance: Percent
-    swapFee?: SwapFeeInfo
-  }) {
-    super({ currencyIn, currenciesOut, orderInfo, tradeType })
-    this.quoteId = quoteId
-    this.requestId = requestId
-    this.approveInfo = approveInfo
-    this.wrapInfo = wrapInfo
-    this.classicGasUseEstimateUSD = classicGasUseEstimateUSD
-    this.deadlineBufferSecs = deadlineBufferSecs
-    this.slippageTolerance = slippageTolerance
-    this.startTimeBufferSecs = startTimeBufferSecs
-    this.swapFee = swapFee
   }
 
   public get totalGasUseEstimateUSD(): number {
@@ -853,7 +745,7 @@ export class LimitOrderTrade {
   }
 }
 
-export type SubmittableTrade = ClassicTrade | DutchOrderTrade | V2DutchOrderTrade | LimitOrderTrade | PriorityOrderTrade
+export type SubmittableTrade = ClassicTrade | DutchOrderTrade | V2DutchOrderTrade | LimitOrderTrade
 export type InterfaceTrade = SubmittableTrade | PreviewTrade
 
 export enum QuoteState {
@@ -914,10 +806,9 @@ export enum URAQuoteType {
   CLASSIC = 'CLASSIC',
   DUTCH_V1 = 'DUTCH_LIMIT', // "dutch limit" refers to dutch. Fully separate from "limit orders"
   DUTCH_V2 = 'DUTCH_V2',
-  PRIORITY = 'PRIORITY',
 }
 
-/* Config types should match URA config schemas https://github.com/Uniswap/backend/blob/main/packages/services/unified-routing-api/lib/util/validator.ts */
+/* Config types should match URA config schemas `classicConfig`, `dutchLimitConfig`, and `dutchV2Config` at https://github.com/Uniswap/unified-routing-api/blob/main/lib/util/validator.ts */
 
 export type ClassicAPIConfig = {
   routingType: URAQuoteType.CLASSIC
@@ -962,13 +853,4 @@ export type UniswapXv2Config = {
   slippageTolerance?: string
 }
 
-export type UniswapXPriorityOrdersConfig = {
-  routingType: URAQuoteType.PRIORITY
-  swapper?: string
-  mpsPerPriorityFeeWei?: number
-  baselinePriorityFeeWei?: number
-  startTimeBufferSecs?: number
-  deadlineBufferSecs?: number
-}
-
-export type RoutingConfig = (UniswapXConfig | UniswapXv2Config | ClassicAPIConfig | UniswapXPriorityOrdersConfig)[]
+export type RoutingConfig = (UniswapXConfig | UniswapXv2Config | ClassicAPIConfig)[]

@@ -88,7 +88,7 @@ export const useSendTransaction = create<TxState>()(
             })
             set({ state: TxStateType.Invalid })
           }
-          return undefined
+          return
         }
       },
     }),

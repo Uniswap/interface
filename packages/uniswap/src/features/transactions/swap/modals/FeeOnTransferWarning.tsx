@@ -26,7 +26,7 @@ export function FeeOnTransferWarning({ children }: PropsWithChildren): JSX.Eleme
       modalProps={{
         backgroundIconColor: colors.DEP_magentaDark.val,
         caption,
-        rejectText: t('common.button.close'),
+        closeText: t('common.button.close'),
         icon: (
           <MoneyBillSend
             color="$magentaVibrant"

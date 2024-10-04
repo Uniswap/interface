@@ -5,7 +5,7 @@ import { Button, Flex, SpinningLoader, Text, isWeb, useHapticFeedback, useIsShor
 import { BackArrow } from 'ui/src/components/icons/BackArrow'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
-import { ProgressIndicator } from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
+import ProgressIndicator from 'uniswap/src/components/ConfirmSwapModal/ProgressIndicator'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
@@ -29,14 +29,13 @@ import { TransactionAmountsReview } from 'uniswap/src/features/transactions/swap
 import { SwapCallback } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
-import { TransactionStep } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+import { TransactionStep, generateSwapSteps } from 'uniswap/src/features/transactions/swap/utils/generateSwapSteps'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getActionName, isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
-import { isInterface } from 'utilities/src/platform'
 
 interface SwapReviewScreenProps {
   hideContent: boolean
@@ -58,9 +57,7 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
   const account = useAccountMeta()
   const { bottomSheetViewStyles, onClose, authTrigger, setScreen } = useTransactionModalContext()
 
-  const [steps, setSteps] = useState<TransactionStep[]>([])
-  const [currentStep, setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
-  const isShowingInterfaceReviewSteps = Boolean(isInterface && currentStep)
+  const [currentStep, _setCurrentStep] = useState<{ step: TransactionStep; accepted: boolean } | undefined>()
 
   const swapTxContext = useSwapTxContext()
   const { gasFee } = swapTxContext
@@ -74,17 +71,7 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     isSubmitting,
     updateSwapForm,
     isFiatMode,
-    resetSwapForm,
   } = useSwapFormContext()
-
-  const onSuccess = useCallback(() => {
-    // On interface, the swap component stays mounted; after swap we reset the form to avoid showing the previous values.
-    if (isInterface) {
-      resetSwapForm()
-      setScreen(TransactionScreen.Form)
-    }
-    onClose()
-  }, [onClose, resetSwapForm, setScreen])
 
   const {
     autoSlippageTolerance,
@@ -99,6 +86,8 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
   } = derivedSwapInfo
 
   const isWrap = isWrapAction(wrapType)
+
+  const steps = useMemo(() => generateSwapSteps(swapTxContext), [swapTxContext])
 
   const { blockingWarning, reviewScreenWarning } = useParsedSwapWarnings()
 
@@ -122,14 +111,6 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     setScreen(TransactionScreen.Form)
   }, [ctxExactCurrencyField, focusOnCurrencyField, setScreen, updateSwapForm])
 
-  const onSubmitTransactionFailed = useCallback(() => {
-    setScreen(TransactionScreen.Review)
-
-    // Create a new txId for the next transaction, as the existing one may be used in state to track the failed submission.
-    const newTxId = createTransactionId()
-    updateSwapForm({ isSubmitting: false, txId: newTxId })
-  }, [setScreen, updateSwapForm])
-
   const onWrap = useMemo(() => {
     const inputCurrencyAmount = currencyAmounts[CurrencyField.INPUT]
     const txRequest = isUniswapX(swapTxContext) ? undefined : swapTxContext.txRequest
@@ -138,28 +119,17 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     }
 
     return () => {
-      wrapCallback({
-        account,
-        inputCurrencyAmount,
-        onSuccess,
-        onFailure: onSubmitTransactionFailed,
-        txRequest,
-        txId,
-        wrapType,
-        gasEstimates: swapTxContext.gasFeeEstimation.wrapEstimates,
-      })
+      wrapCallback({ account, inputCurrencyAmount, onSuccess: onClose, txRequest, txId, wrapType })
     }
-  }, [
-    account,
-    currencyAmounts,
-    isWrap,
-    onSuccess,
-    onSubmitTransactionFailed,
-    swapTxContext,
-    txId,
-    wrapCallback,
-    wrapType,
-  ])
+  }, [account, currencyAmounts, isWrap, onClose, swapTxContext, txId, wrapCallback, wrapType])
+
+  const onSubmitTransactionFailed = useCallback(() => {
+    setScreen(TransactionScreen.Review)
+
+    // Create a new txId for the next transaction, as the existing one may be used in state to track the failed submission.
+    const newTxId = createTransactionId()
+    updateSwapForm({ isSubmitting: false, txId: newTxId })
+  }, [setScreen, updateSwapForm])
 
   const { onSwap, validSwap } = useMemo(() => {
     const isValidSwap = isValidSwapTxContext(swapTxContext)
@@ -173,12 +143,11 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
             currencyInAmountUSD: currencyAmountsUSDValue[CurrencyField.INPUT],
             currencyOutAmountUSD: currencyAmountsUSDValue[CurrencyField.OUTPUT],
             isAutoSlippage: !customSlippageTolerance,
-            onSuccess,
+            onSubmit: onClose,
+            steps,
             onFailure: onSubmitTransactionFailed,
             txId,
             isFiatInputMode: isFiatMode,
-            setCurrentStep,
-            setSteps,
           })
         },
         validSwap: true,
@@ -194,7 +163,8 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     currencyAmountsUSDValue,
     customSlippageTolerance,
     isFiatMode,
-    onSuccess,
+    onClose,
+    steps,
     onSubmitTransactionFailed,
     swapCallback,
     swapTxContext,
@@ -211,7 +181,7 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
     isWrap ? onWrap() : onSwap()
   }, [reviewScreenWarning, showWarningModal, warningAcknowledged, isWrap, onWrap, onSwap])
 
-  const onSwapButtonClick = useCallback(async () => {
+  const onSubmitTransaction = useCallback(async () => {
     updateSwapForm({ isSubmitting: true })
 
     await hapticFeedback.success()
@@ -291,15 +261,15 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
         {reviewScreenWarning?.warning.title && (
           <WarningModal
             caption={reviewScreenWarning.warning.message}
-            rejectText={blockingWarning ? undefined : t('common.button.cancel')}
-            acknowledgeText={blockingWarning ? t('common.button.ok') : t('common.button.confirm')}
+            closeText={blockingWarning ? undefined : t('common.button.cancel')}
+            confirmText={blockingWarning ? t('common.button.ok') : t('common.button.confirm')}
             isOpen={showWarningModal}
             modalName={ModalName.SwapWarning}
             severity={reviewScreenWarning.warning.severity}
             title={reviewScreenWarning.warning.title}
-            onReject={onCancelWarning}
+            onCancel={onCancelWarning}
             onClose={onCloseWarning}
-            onAcknowledge={onConfirmWarning}
+            onConfirm={onConfirmWarning}
           />
         )}
 
@@ -312,7 +282,9 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
             />
 
             {currentStep ? (
-              <ProgressIndicator currentStep={currentStep} steps={steps} />
+              acceptedTrade ? (
+                <ProgressIndicator currentStep={currentStep} steps={steps} trade={acceptedTrade} />
+              ) : null
             ) : isWrap ? (
               <TransactionDetails
                 chainId={chainId}
@@ -337,40 +309,38 @@ export function SwapReviewScreen(props: SwapReviewScreenProps): JSX.Element | nu
           </AnimatedFlex>
         </>
       </TransactionModalInnerContainer>
-      {!isShowingInterfaceReviewSteps && (
-        <TransactionModalFooterContainer>
-          <Flex row gap="$spacing8">
-            {!isWeb && !showUniswapXSubmittingUI && (
-              <Button
-                icon={<BackArrow />}
-                size={isShortMobileDevice ? 'medium' : 'large'}
-                theme="tertiary"
-                onPress={onPrev}
-              />
-            )}
-            <SubmitButton
-              indicative={Boolean(!trade && indicativeTrade)}
-              showUniswapXSubmittingUI={showUniswapXSubmittingUI}
-              submitButtonDisabled={submitButtonDisabled}
-              wrapType={wrapType}
-              onSwapButtonClick={onSwapButtonClick}
+      <TransactionModalFooterContainer>
+        <Flex row gap="$spacing8">
+          {!isWeb && !showUniswapXSubmittingUI && (
+            <Button
+              icon={<BackArrow />}
+              size={isShortMobileDevice ? 'medium' : 'large'}
+              theme="tertiary"
+              onPress={onPrev}
             />
-          </Flex>
-        </TransactionModalFooterContainer>
-      )}
+          )}
+          <SubmitButton
+            indicative={Boolean(!trade && indicativeTrade)}
+            showUniswapXSubmittingUI={showUniswapXSubmittingUI}
+            submitButtonDisabled={submitButtonDisabled}
+            wrapType={wrapType}
+            onSubmitTransaction={onSubmitTransaction}
+          />
+        </Flex>
+      </TransactionModalFooterContainer>
     </>
   )
 }
 
 function SubmitButton({
   submitButtonDisabled,
-  onSwapButtonClick,
+  onSubmitTransaction,
   showUniswapXSubmittingUI,
   indicative,
   wrapType,
 }: {
   submitButtonDisabled: boolean
-  onSwapButtonClick: () => void
+  onSubmitTransaction: () => void
   showUniswapXSubmittingUI: boolean
   indicative: boolean
   wrapType: WrapType
@@ -422,7 +392,7 @@ function SubmitButton({
           icon={BiometricsIcon}
           size={size}
           testID={TestID.Swap}
-          onPress={onSwapButtonClick}
+          onPress={onSubmitTransaction}
         >
           <Text color="$white" variant={SWAP_BUTTON_TEXT_VARIANT}>
             {actionText}

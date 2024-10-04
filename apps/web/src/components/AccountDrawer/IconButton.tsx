@@ -168,10 +168,10 @@ export const IconWithConfirmTextButton = ({
   // keyboard action to cancel
   useEffect(() => {
     if (typeof window === 'undefined') {
-      return undefined
+      return
     }
     if (!showText || !frame) {
-      return undefined
+      return
     }
 
     const closeAndPrevent = (e: Event) => {

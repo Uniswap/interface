@@ -88,8 +88,6 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
         </Flex>
       ))
     }
-
-    return undefined
   }
 
   return (

@@ -12,10 +12,6 @@ import {
 } from 'wallet/src/components/CurrencyLogo/LogoWithTxStatus'
 import { render } from 'wallet/src/test/test-utils'
 
-jest.mock('ui/src/components/UniversalImage/internal/PlainImage', () => ({
-  ...jest.requireActual('ui/src/components/UniversalImage/internal/PlainImage.web'),
-}))
-
 const currencyLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
   assetType: AssetType.Currency,
   txType: TransactionType.Send,

@@ -1,11 +1,11 @@
 import { createContext, ReactNode, useContext } from 'react'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
-import { getSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getSendPrefilledState } from 'wallet/src/features/transactions/send/getSendPrefilledState'
+import { getSwapPrefilledState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
 
 type NavigateToTransactionFlowTransactionState = {
   initialState: TransactionState

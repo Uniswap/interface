@@ -59,7 +59,6 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { FiatOnRampScreens } from 'uniswap/src/types/screens/mobile'
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { truncateToMaxDecimals } from 'utilities/src/format/truncateToMaxDecimals'
-import { isIOS } from 'utilities/src/platform'
 import { usePrevious } from 'utilities/src/react/hooks'
 import { DEFAULT_DELAY, useDebounce } from 'utilities/src/time/timing'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
@@ -238,6 +237,9 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
       decimalPadRef.current?.updateDisabledKeys()
     }
 
+  // we only show loading when there are no errors and quote value is not empty
+  const buttonDisabled = selectTokenLoading || !!quotesError || !selectedQuote?.destinationAmount
+
   const onContinue = (): void => {
     if (quotes && quoteCurrency?.currencyInfo?.currency) {
       setBaseCurrencyInfo(meldSupportedFiatCurrency)
@@ -336,10 +338,6 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
     })
   }
 
-  // we only show loading when there are no errors and quote value is not empty
-  const buttonDisabled =
-    notAvailableInThisRegion || selectTokenLoading || !!quotesError || !selectedQuote?.destinationAmount
-
   return (
     <Screen edges={['top']}>
       <HandleBar backgroundColor="none" />
@@ -406,8 +404,7 @@ export function FiatOnRampScreen({ navigation }: Props): JSX.Element {
               gap={isShortMobileDevice ? 0 : '$spacing8'}
               left={0}
               opacity={decimalPadReady ? 1 : 0}
-              // android devices require more bottom padding
-              pb={isShortMobileDevice && isIOS ? '$spacing4' : '$spacing24'}
+              pb={isShortMobileDevice ? '$spacing4' : '$spacing24'}
               position="absolute"
               px="$spacing24"
               right={0}

@@ -3,7 +3,6 @@ import { SearchResult, SearchResultType } from 'uniswap/src/features/search/Sear
 
 const SEARCH_HISTORY_LENGTH = 5
 
-// eslint-disable-next-line consistent-return
 export function searchResultId(searchResult: SearchResult): string {
   switch (searchResult.type) {
     case SearchResultType.Token:

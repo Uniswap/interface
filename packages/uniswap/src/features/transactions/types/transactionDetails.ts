@@ -4,8 +4,7 @@ import { providers } from 'ethers/lib/ethers'
 import { GeneratedIcon } from 'ui/src'
 import { Warning, WarningColor } from 'uniswap/src/components/modals/WarningModal/types'
 import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
-import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
+import { GasEstimate, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { DappInfo } from 'uniswap/src/types/walletConnect'
@@ -109,14 +108,7 @@ export interface ClassicTransactionDetails extends BaseTransactionDetails {
   options: TransactionOptions
 }
 
-export interface BridgeTransactionDetails extends BaseTransactionDetails {
-  routing: Routing.BRIDGE
-
-  // Info for submitting the tx
-  options: TransactionOptions
-}
-
-export type TransactionDetails = UniswapXOrderDetails | ClassicTransactionDetails | BridgeTransactionDetails
+export type TransactionDetails = UniswapXOrderDetails | ClassicTransactionDetails
 
 export enum TransactionStatus {
   Canceled = 'cancelled',
@@ -165,7 +157,7 @@ export type FinalizedTransactionDetails = TransactionDetails &
 
 export type TransactionOptions = {
   request: providers.TransactionRequest
-  timeoutTimestampMs?: number
+  timeoutMs?: number
   submitViaPrivateRpc?: boolean
 }
 
@@ -199,7 +191,6 @@ export enum NFTTradeType {
 export enum TransactionType {
   // Token Specific
   Approve = 'approve',
-  Bridge = 'bridge',
   Swap = 'swap',
   Wrap = 'wrap',
 
@@ -251,16 +242,6 @@ export interface BaseSwapTransactionInfo extends BaseTransactionInfo {
   routeString?: string
   gasUseEstimate?: string
   protocol?: Protocol
-}
-
-export interface BridgeTransactionInfo extends BaseTransactionInfo {
-  type: TransactionType.Bridge
-  inputCurrencyId: string
-  inputCurrencyAmountRaw: string
-  outputCurrencyId: string
-  outputCurrencyAmountRaw: string
-  quoteId?: string
-  gasUseEstimate?: string
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {
@@ -392,7 +373,6 @@ export interface UnknownTransactionInfo extends BaseTransactionInfo {
 
 export type TransactionTypeInfo =
   | ApproveTransactionInfo
-  | BridgeTransactionInfo
   | ExactOutputSwapTransactionInfo
   | ExactInputSwapTransactionInfo
   | ConfirmedSwapTransactionInfo
@@ -413,10 +393,6 @@ export function isConfirmedSwapTypeInfo(typeInfo: TransactionTypeInfo): typeInfo
     (typeInfo as ConfirmedSwapTransactionInfo).inputCurrencyAmountRaw &&
       (typeInfo as ConfirmedSwapTransactionInfo).outputCurrencyAmountRaw,
   )
-}
-
-export function isBridgeTypeInfo(typeInfo: TransactionTypeInfo): typeInfo is BridgeTransactionInfo {
-  return typeInfo.type === TransactionType.Bridge
 }
 
 export function isFinalizedTxStatus(status: TransactionStatus): status is FinalizedTransactionStatus {

@@ -3,10 +3,6 @@ import { ARBITRUM_DAI_CURRENCY_INFO, UNI_CURRENCY_INFO, arbitrumDaiCurrencyInfo 
 import { renderWithProviders } from 'uniswap/src/test/render'
 import { render } from 'uniswap/src/test/test-utils'
 
-jest.mock('ui/src/components/UniversalImage/internal/PlainImage', () => ({
-  ...jest.requireActual('ui/src/components/UniversalImage/internal/PlainImage.web'),
-}))
-
 describe(CurrencyLogo, () => {
   it('renders without error', () => {
     const tree = render(<CurrencyLogo currencyInfo={UNI_CURRENCY_INFO} />)

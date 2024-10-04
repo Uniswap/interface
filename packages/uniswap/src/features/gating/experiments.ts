@@ -10,11 +10,6 @@ export enum Experiments {
   AccountCTAs = 'signin_login_connect_ctas',
 }
 
-export enum ArbitrumXV2ExperimentGroup {
-  Test = 'Test',
-  Control = 'Control',
-}
-
 export enum ArbitrumXV2OpenOrderProperties {
   PriceImprovementBps = 'priceImprovementBps',
   ForceOpenOrders = 'forceOpenOrders',

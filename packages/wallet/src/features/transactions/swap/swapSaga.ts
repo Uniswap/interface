@@ -6,6 +6,7 @@ import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/fl
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { ValidatedSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
+import { TransactionStep } from 'uniswap/src/features/transactions/swap/utils/generateSwapSteps'
 import { tradeToTransactionInfo } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
   ApproveTransactionInfo,
@@ -18,7 +19,7 @@ import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { sendTransaction, tryGetNonce } from 'wallet/src/features/transactions/sendTransactionSaga'
-import { SubmitUniswapXOrderParams, submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
+import { submitUniswapXOrder } from 'wallet/src/features/transactions/swap/submitOrderSaga'
 import { wrap } from 'wallet/src/features/transactions/swap/wrapSaga'
 import { selectWalletSwapProtectionSetting } from 'wallet/src/features/wallet/selectors'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -29,23 +30,23 @@ export type SwapParams = {
   account: SignerMnemonicAccountMeta
   analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
   swapTxContext: ValidatedSwapTxContext
-  onSuccess: () => void
+  steps: TransactionStep[]
+  onSubmit: () => void
   onFailure: () => void
 }
 
 export function* approveAndSwap(params: SwapParams) {
   try {
-    const { swapTxContext, account, txId, analytics, onSuccess, onFailure } = params
-    const { routing, approveTxRequest } = swapTxContext
+    const { swapTxContext, account, txId, analytics, onSubmit, onFailure } = params
+    const { trade, routing, approveTxRequest } = swapTxContext
     const isUniswapX = routing === Routing.DUTCH_V2
-    const isBridge = routing === Routing.BRIDGE
 
     const chainId = swapTxContext.trade.inputAmount.currency.chainId
 
     // For classic swaps, trigger UI changes immediately after click
     if (!isUniswapX) {
-      // onSuccess does not need to be wrapped in yield* call() here, but doing so makes it easier to test call ordering in swapSaga.test.ts
-      yield* call(onSuccess)
+      // onSubmit does not need to be wrapped in yield* call() here, but doing so makes it easier to test call ordering in swapSaga.test.ts
+      yield* call(onSubmit)
     }
 
     // MEV protection is not needed for UniswapX approval and/or wrap transactions.
@@ -54,7 +55,7 @@ export function* approveAndSwap(params: SwapParams) {
     // otherwise for some L2s the Provider might fetch the same nonce for both transactions.
     let nonce = yield* call(tryGetNonce, account, chainId)
 
-    const gasFeeEstimation = swapTxContext.gasFeeEstimation
+    const gasFeeEstimation = swapTxContext.routing === Routing.CLASSIC ? swapTxContext.gasFeeEstimation : undefined
 
     let approveTxHash: string | undefined
     // Approval Logic
@@ -89,8 +90,7 @@ export function* approveAndSwap(params: SwapParams) {
     const typeInfo = tradeToTransactionInfo(swapTxContext.trade, transactedUSDValue, gasFeeEstimation?.swapEstimates)
     // Swap Logic - UniswapX
     if (isUniswapX) {
-      const { trade, wrapTxRequest, permit } = swapTxContext
-      const quote = trade.quote.quote
+      const { orderParams, wrapTxRequest } = swapTxContext
 
       let wrapTxHash: string | undefined
       // Wrap Logic - UniswapX Eth-input
@@ -102,39 +102,26 @@ export function* approveAndSwap(params: SwapParams) {
           inputCurrencyAmount,
           swapTxId: txId,
           skipPushNotification: true, // wrap is abstracted away in UX; we avoid showing a wrap notification
-          gasEstimates: gasFeeEstimation?.wrapEstimates,
         })
         wrapTxHash = wrapResponse?.transactionResponse.hash
       }
 
-      const submitOrderParams: SubmitUniswapXOrderParams = {
-        account,
-        analytics,
+      const submitOrderParams = {
+        txId,
+        chainId,
+        orderParams,
         approveTxHash,
         wrapTxHash,
-        permit,
-        quote,
+        account,
         typeInfo,
-        chainId,
-        txId,
-        onSuccess,
+        analytics,
+        onSubmit,
         onFailure,
       }
       yield* call(submitUniswapXOrder, submitOrderParams)
-    } else if (isBridge) {
-      const options = { request: { ...swapTxContext.txRequest, nonce }, submitViaPrivateRpc }
-      const sendTransactionParams = {
-        txId,
-        chainId,
-        account,
-        options,
-        typeInfo,
-        analytics,
-        transactionOriginType: TransactionOriginType.Internal,
-      }
-      yield* call(sendTransaction, sendTransactionParams)
-      yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
-    } else {
+    }
+    // Swap Logic - Classic
+    else {
       const options = { request: { ...swapTxContext.txRequest, nonce }, submitViaPrivateRpc }
       const sendTransactionParams = {
         txId,

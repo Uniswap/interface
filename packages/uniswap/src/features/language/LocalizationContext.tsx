@@ -5,7 +5,6 @@ import { useFiatConverter } from 'uniswap/src/features/fiatCurrency/conversion'
 import { useLocalizedFormatter } from 'uniswap/src/features/language/formatter'
 
 export type LocalizationContextState = {
-  conversionRate: ReturnType<typeof useFiatConverter>['conversionRate']
   convertFiatAmount: ReturnType<typeof useFiatConverter>['convertFiatAmount']
   convertFiatAmountFormatted: ReturnType<typeof useFiatConverter>['convertFiatAmountFormatted']
   formatNumberOrString: ReturnType<typeof useLocalizedFormatter>['formatNumberOrString']
@@ -19,13 +18,12 @@ export const LocalizationContext = createContext<LocalizationContextState | unde
 export function LocalizationContextProvider({ children }: { children: ReactNode }): JSX.Element {
   const { formatNumberOrString, formatCurrencyAmount, formatPercent, addFiatSymbolToNumber } = useLocalizedFormatter()
 
-  const { convertFiatAmount, convertFiatAmountFormatted, conversionRate } = useFiatConverter({
+  const { convertFiatAmount, convertFiatAmountFormatted } = useFiatConverter({
     formatNumberOrString,
   })
 
   const state = useMemo<LocalizationContextState>(
     (): LocalizationContextState => ({
-      conversionRate,
       convertFiatAmount,
       convertFiatAmountFormatted,
       formatNumberOrString,
@@ -35,7 +33,6 @@ export function LocalizationContextProvider({ children }: { children: ReactNode 
     }),
     [
       addFiatSymbolToNumber,
-      conversionRate,
       convertFiatAmount,
       convertFiatAmountFormatted,
       formatCurrencyAmount,

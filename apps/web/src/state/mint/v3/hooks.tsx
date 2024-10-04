@@ -10,7 +10,6 @@ import {
   priceToClosestTick,
   tickToPrice,
 } from '@uniswap/v3-sdk'
-import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { BIG_INT_ZERO } from 'constants/misc'
 import { useAccount } from 'hooks/useAccount'
 import { PoolState, usePool } from 'hooks/usePools'
@@ -32,6 +31,8 @@ import {
 } from 'state/mint/v3/actions'
 import { tryParseTick } from 'state/mint/v3/utils'
 import { InterfaceState } from 'state/webReducer'
+import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
+import { useExperimentGroupName } from 'uniswap/src/features/gating/hooks'
 import { Trans } from 'uniswap/src/i18n'
 import { getTickToPrice } from 'utils/getTickToPrice'
 
@@ -449,9 +450,19 @@ export function useV3DerivedMintInfo(
     tickUpper,
   ])
 
+  const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
+  const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
+  const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
+
   let errorMessage: ReactNode | undefined
   if (!account.isConnected) {
-    errorMessage = <ConnectWalletButtonText />
+    errorMessage = isSignIn ? (
+      <Trans i18nKey="nav.signIn.button" />
+    ) : isLogIn ? (
+      <Trans i18nKey="nav.logIn.button" />
+    ) : (
+      <Trans i18nKey="common.connectWallet.button" />
+    )
   }
 
   if (poolState === PoolState.INVALID) {

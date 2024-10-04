@@ -13,11 +13,10 @@ import styled, { css } from 'lib/styled-components'
 import { useEffect, useRef, useState } from 'react'
 import { ChevronsRight } from 'react-feather'
 import { useGesture } from 'react-use-gesture'
-import { BREAKPOINTS } from 'theme'
+import { BREAKPOINTS, NAV_HEIGHT } from 'theme'
 import { ClickableStyle } from 'theme/components'
 import { Z_INDEX } from 'theme/zIndex'
 import Trace from 'uniswap/src/features/telemetry/Trace'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { isMobileWeb } from 'utilities/src/platform'
 
 const DRAWER_WIDTH_XL = '390px'
@@ -100,9 +99,9 @@ const Container = styled.div<{ isUniExtensionAvailable?: boolean; $open?: boolea
 
 const ExtensionContainerStyles = css`
   height: auto;
-  max-height: calc(100% - ${INTERFACE_NAV_HEIGHT + 16}px);
+  max-height: calc(100% - ${NAV_HEIGHT + 16}px);
   right: 12px;
-  top: ${INTERFACE_NAV_HEIGHT}px;
+  top: ${NAV_HEIGHT}px;
   ${ScrollBarStyles}
 `
 
@@ -116,8 +115,8 @@ const AccountDrawerWrapper = styled.div<{ open: boolean; isUniExtensionAvailable
     z-index: ${Z_INDEX.modal};
     position: absolute;
     margin-right: 0;
-    top: ${({ open }) => (open ? `calc(-1 * (100% - ${INTERFACE_NAV_HEIGHT}px))` : 0)};
-    height: calc(100% - ${INTERFACE_NAV_HEIGHT}px);
+    top: ${({ open }) => (open ? `calc(-1 * (100% - ${NAV_HEIGHT}px))` : 0)};
+    height: calc(100% - ${NAV_HEIGHT}px);
 
     width: 100%;
     max-width: 100%;

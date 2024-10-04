@@ -3,15 +3,8 @@ import { BigNumber } from '@ethersproject/bignumber'
 import { CustomUserProperties, SwapEventName } from '@uniswap/analytics-events'
 import { PermitTransferFrom } from '@uniswap/permit2-sdk'
 import { Percent } from '@uniswap/sdk-core'
-import {
-  DutchOrder,
-  DutchOrderBuilder,
-  PriorityOrderBuilder,
-  UnsignedPriorityOrder,
-  UnsignedV2DutchOrder,
-  V2DutchOrderBuilder,
-} from '@uniswap/uniswapx-sdk'
-import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBalancesUsdForAnalytics'
+import { DutchOrder, DutchOrderBuilder, UnsignedV2DutchOrder, V2DutchOrderBuilder } from '@uniswap/uniswapx-sdk'
+import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
 import { useAccount } from 'hooks/useAccount'
 import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
@@ -20,7 +13,6 @@ import {
   DutchOrderTrade,
   LimitOrderTrade,
   OffchainOrderType,
-  PriorityOrderTrade,
   TradeFillType,
   V2DutchOrderTrade,
 } from 'state/routing/types'
@@ -85,7 +77,7 @@ export function useUniswapXSwapCallback({
   allowedSlippage,
   fiatValues,
 }: {
-  trade?: DutchOrderTrade | V2DutchOrderTrade | LimitOrderTrade | PriorityOrderTrade
+  trade?: DutchOrderTrade | V2DutchOrderTrade | LimitOrderTrade
   fiatValues: { amountIn?: number; amountOut?: number; feeUsd?: number }
   allowedSlippage: Percent
 }) {
@@ -139,24 +131,13 @@ export function useUniswapXSwapCallback({
           let domain: TypedDataDomain
           let types: Record<string, TypedDataField[]>
           let values: PermitTransferFrom
-          let updatedOrder: DutchOrder | UnsignedV2DutchOrder | UnsignedPriorityOrder
+          let updatedOrder: DutchOrder | UnsignedV2DutchOrder
 
           if (trade instanceof V2DutchOrderTrade) {
             deadline = now + trade.deadlineBufferSecs
 
             const order: UnsignedV2DutchOrder = trade.order
             updatedOrder = V2DutchOrderBuilder.fromOrder(order)
-              .deadline(deadline)
-              .nonFeeRecipient(account.address, trade.swapFee?.recipient)
-              // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
-              .nonce(updatedNonce ?? order.info.nonce)
-              .buildPartial()
-            ;({ domain, types, values } = updatedOrder.permitData())
-          } else if (trade instanceof PriorityOrderTrade) {
-            deadline = now + trade.deadlineBufferSecs
-
-            const order = trade.order
-            updatedOrder = PriorityOrderBuilder.fromOrder(order)
               .deadline(deadline)
               .nonFeeRecipient(account.address, trade.swapFee?.recipient)
               // if fetching the nonce fails for any reason, default to existing nonce from the Swap quote.
@@ -182,6 +163,7 @@ export function useUniswapXSwapCallback({
             trace.setData('startTime', startTime)
             trace.setData('endTime', endTime)
           }
+
           trace.setData('deadline', deadline)
 
           const signature = await trace.child({ name: 'Sign', op: 'wallet.sign' }, async (walletTrace) => {
@@ -255,7 +237,6 @@ export function useUniswapXSwapCallback({
               signature,
               chainId: updatedOrder.chainId,
               quoteId: trade.quoteId,
-              requestId: trade.requestId,
             }
           }
 

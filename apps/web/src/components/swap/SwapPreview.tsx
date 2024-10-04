@@ -1,13 +1,13 @@
 import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import { SwapModalHeaderAmount } from 'components/swap/SwapModalHeaderAmount'
+import { Field } from 'components/swap/constants'
 import { useUSDPrice } from 'hooks/useUSDPrice'
 import styled from 'lib/styled-components'
 import { InterfaceTrade } from 'state/routing/types'
 import { isPreviewTrade } from 'state/routing/utils'
 import { ThemedText } from 'theme/components'
 import { Trans } from 'uniswap/src/i18n'
-import { CurrencyField } from 'uniswap/src/types/currency'
 
 const HeaderContainer = styled(AutoColumn)`
   margin-top: 0px;
@@ -29,7 +29,7 @@ export function SwapPreview({
     <HeaderContainer gap="sm">
       <Column gap="lg">
         <SwapModalHeaderAmount
-          field={CurrencyField.INPUT}
+          field={Field.INPUT}
           label={<Trans i18nKey="common.sell.label" />}
           amount={trade.inputAmount}
           currency={inputCurrency ?? trade.inputAmount.currency}
@@ -37,7 +37,7 @@ export function SwapPreview({
           isLoading={isPreviewTrade(trade) && trade.tradeType === TradeType.EXACT_OUTPUT}
         />
         <SwapModalHeaderAmount
-          field={CurrencyField.OUTPUT}
+          field={Field.OUTPUT}
           label={<Trans i18nKey="common.buy.label" />}
           amount={trade.outputAmount}
           currency={trade.outputAmount.currency}

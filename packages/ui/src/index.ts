@@ -36,7 +36,6 @@ export type {
   Adapt,
   CircleProps,
   ColorTokens,
-  GetProps,
   GetRef,
   InputProps,
   PopperProps,

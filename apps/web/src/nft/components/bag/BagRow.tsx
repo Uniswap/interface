@@ -280,7 +280,7 @@ export const UnavailableAssetsHeaderRow = ({
         clearUnavailableAssets()
         setDidOpenUnavailableAssets(false)
       }
-      return undefined
+      return
     }
 
     const intervalId = setInterval(() => {

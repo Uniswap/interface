@@ -63,7 +63,7 @@ export function useUSDCPrice(currency?: Currency): Price<Currency, Currency> | u
 
   return useMemo(() => {
     if (!stablecoin) {
-      return undefined
+      return
     }
 
     if (currencyIsStablecoin) {
@@ -72,7 +72,7 @@ export function useUSDCPrice(currency?: Currency): Price<Currency, Currency> | u
     }
 
     if (!trade || !isClassic(trade) || !trade.routes?.[0] || !quoteAmount || !currency) {
-      return undefined
+      return
     }
 
     const { numerator, denominator } = trade.routes[0].midPrice

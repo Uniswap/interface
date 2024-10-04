@@ -58,11 +58,9 @@ export function AddressQRModal({ accountAddress }: { accountAddress: Address }) 
             </ThemedText.SubHeader>
           </Flex>
           <QRCodeDisplay
-            ecl="M"
             color={addressColor}
             containerBackgroundColor={colors.surface1.val}
             size={QR_CODE_SIZE}
-            eyeSize={180}
             encodedValue={accountAddress!}
           >
             <Flex

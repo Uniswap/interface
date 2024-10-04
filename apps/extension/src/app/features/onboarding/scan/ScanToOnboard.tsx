@@ -156,7 +156,7 @@ export function ScanToOnboard(): JSX.Element {
   useEffect(() => {
     if (!isLoadingUUID) {
       qrScale.value = UNISWAP_LOGO_SCALE_DEFAULT
-      return undefined
+      return
     }
 
     const springConfig: SpringConfig = {

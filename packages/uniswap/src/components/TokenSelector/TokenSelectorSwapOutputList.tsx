@@ -1,7 +1,6 @@
 import { memo, useCallback, useMemo } from 'react'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import {
-  useBridgingTokensOptions,
   useCommonTokensOptionsWithFallback,
   useFavoriteTokensOptions,
   usePopularTokensOptions,
@@ -20,18 +19,13 @@ import {
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
 import { GqlResult } from 'uniswap/src/data/types'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isMobileApp } from 'utilities/src/platform'
 
 function useTokenSectionsForSwapOutput({
   activeAccountAddress,
   chainFilter,
-  input,
 }: TokenSectionsHookProps): GqlResult<TokenSection[]> {
-  const isBridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
-
   const {
     data: portfolioTokenOptions,
     error: portfolioTokenOptionsError,
@@ -62,42 +56,26 @@ function useTokenSectionsForSwapOutput({
     // if there is no chain filter then we show mainnet tokens
   } = useCommonTokensOptionsWithFallback(activeAccountAddress, chainFilter ?? UniverseChainId.Mainnet)
 
-  const {
-    data: bridgingTokenOptions,
-    error: bridgingTokenOptionsError,
-    refetch: refetchBridgingTokenOptions,
-    loading: bridgingTokenOptionsLoading,
-  } = useBridgingTokensOptions({ input, walletAddress: activeAccountAddress, chainFilter })
-
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
 
   const error =
     (!portfolioTokenOptions && portfolioTokenOptionsError) ||
     (!popularTokenOptions && popularTokenOptionsError) ||
     (!favoriteTokenOptions && favoriteTokenOptionsError) ||
-    (!commonTokenOptions && commonTokenOptionsError) ||
-    (!bridgingTokenOptions && bridgingTokenOptionsError)
+    (!commonTokenOptions && commonTokenOptionsError)
 
   const loading =
     portfolioTokenOptionsLoading ||
     popularTokenOptionsLoading ||
     favoriteTokenOptionsLoading ||
-    commonTokenOptionsLoading ||
-    bridgingTokenOptionsLoading
+    commonTokenOptionsLoading
 
   const refetchAll = useCallback(() => {
     refetchPortfolioTokenOptions?.()
     refetchPopularTokenOptions?.()
     refetchFavoriteTokenOptions?.()
     refetchCommonTokenOptions?.()
-    refetchBridgingTokenOptions?.()
-  }, [
-    refetchBridgingTokenOptions,
-    refetchCommonTokenOptions,
-    refetchFavoriteTokenOptions,
-    refetchPopularTokenOptions,
-    refetchPortfolioTokenOptions,
-  ])
+  }, [refetchCommonTokenOptions, refetchFavoriteTokenOptions, refetchPopularTokenOptions, refetchPortfolioTokenOptions])
 
   // we draw the Suggested pills as a single item of a section list, so `data` is TokenOption[][]
   const suggestedSection = useTokenOptionsSection(TokenOptionSection.SuggestedTokens, [commonTokenOptions ?? []])
@@ -107,16 +85,14 @@ function useTokenSectionsForSwapOutput({
 
   const popularMinusPortfolioTokens = tokenOptionDifference(popularTokenOptions, portfolioTokenOptions)
   const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularMinusPortfolioTokens)
-  const bridgingSection = useTokenOptionsSection(TokenOptionSection.BridgingTokens, [bridgingTokenOptions ?? []])
 
   const sections = useMemo(() => {
     if (isSwapListLoading(loading, portfolioSection, popularSection)) {
-      return undefined
+      return
     }
 
     return [
       ...(suggestedSection ?? []),
-      ...(isBridgingEnabled ? bridgingSection ?? [] : []),
       ...(portfolioSection ?? []),
       ...(recentSection ?? []),
       // TODO(WEB-3061): Favorited wallets/tokens
@@ -124,16 +100,7 @@ function useTokenSectionsForSwapOutput({
       ...(isMobileApp ? favoriteSection ?? [] : []),
       ...(popularSection ?? []),
     ]
-  }, [
-    loading,
-    portfolioSection,
-    popularSection,
-    suggestedSection,
-    isBridgingEnabled,
-    bridgingSection,
-    recentSection,
-    favoriteSection,
-  ])
+  }, [favoriteSection, loading, popularSection, portfolioSection, recentSection, suggestedSection])
 
   return useMemo(
     () => ({
@@ -151,7 +118,6 @@ function _TokenSelectorSwapOutputList({
   activeAccountAddress,
   chainFilter,
   isKeyboardOpen,
-  input,
 }: TokenSectionsHookProps & {
   onSelectCurrency: OnSelectCurrency
   chainFilter: UniverseChainId | null
@@ -164,7 +130,6 @@ function _TokenSelectorSwapOutputList({
   } = useTokenSectionsForSwapOutput({
     activeAccountAddress,
     chainFilter,
-    input,
   })
   return (
     <TokenSelectorList

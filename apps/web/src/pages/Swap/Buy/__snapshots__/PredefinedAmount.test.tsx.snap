@@ -69,7 +69,7 @@ exports[`PredefinedAmount renders correctly with amount= 300 , currentAmount= "1
         <span
           class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016109"
           data-disable-theme="true"
-          style="color: rgb(191, 191, 191); padding-top: 1px;"
+          style="color: rgb(206, 206, 206); padding-top: 1px;"
         >
           $300
         </span>
@@ -148,7 +148,7 @@ exports[`PredefinedAmount renders correctly with amount= 1000 , currentAmount= "
         <span
           class="font_button _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016109"
           data-disable-theme="true"
-          style="color: rgb(191, 191, 191); padding-top: 1px;"
+          style="color: rgb(206, 206, 206); padding-top: 1px;"
         >
           $1000
         </span>

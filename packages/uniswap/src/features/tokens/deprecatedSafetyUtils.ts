@@ -14,7 +14,5 @@ export function getTokenSafetyHeaderText(safetyLevel: Maybe<SafetyLevel>, t: App
       return t('token.safetyLevel.strong.header')
     case SafetyLevel.Blocked:
       return t('token.safetyLevel.blocked.header')
-    default:
-      return undefined
   }
 }

@@ -62,7 +62,7 @@ export function useFormattedTransactionDataForFeed(
 
   const transactions = useMemo(() => {
     if (!data) {
-      return undefined
+      return
     }
 
     return parseDataResponseToFeedTransactionDetails(data, hideSpamTokens)
@@ -90,7 +90,7 @@ export function useFormattedTransactionDataForFeed(
     }
 
     if (!hasTransactions) {
-      return undefined
+      return
     }
 
     return [
@@ -169,7 +169,7 @@ export function useFormattedTransactionDataForActivity(
 
   const formattedTransactions = useMemo(() => {
     if (!data) {
-      return undefined
+      return
     }
 
     return parseDataResponseToTransactionDetails(data, hideSpamTokens, nftVisibility, tokenVisibilityOverrides)
@@ -199,7 +199,7 @@ export function useFormattedTransactionDataForActivity(
     }
 
     if (!hasTransactions) {
-      return undefined
+      return
     }
 
     return [

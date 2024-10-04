@@ -43,14 +43,14 @@ export function BackupWarningModal(): JSX.Element {
     <WarningModal
       isOpen
       caption={t('onboarding.backup.reminder.warning.description')}
-      rejectText={t('common.button.back')}
-      acknowledgeText={t('common.button.understand')}
+      closeText={t('common.button.back')}
+      confirmText={t('common.button.understand')}
       modalName={ModalName.BackupReminderWarning}
       severity={WarningSeverity.High}
       title={t('onboarding.backup.reminder.warning.title')}
-      onReject={openBackupReminderModal}
+      onCancel={openBackupReminderModal}
       onClose={checkForSwipeToDismiss}
-      onAcknowledge={onConfirm}
+      onConfirm={onConfirm}
     />
   )
 }

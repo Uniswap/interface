@@ -15,7 +15,7 @@ export function dismissInAppBrowser(): void {
 
 export async function openTransactionLink(hash: string | undefined, chainId: WalletChainId): Promise<void> {
   if (!hash) {
-    return undefined
+    return
   }
   const explorerUrl = getExplorerLink(chainId, hash, ExplorerDataType.TRANSACTION)
   return openUri(explorerUrl)
@@ -61,7 +61,7 @@ const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
 export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = false): string | undefined {
   const chainId = currencyIdToChain(currencyId) as WalletChainId
   if (!chainId) {
-    return undefined
+    return
   }
   const network = toUniswapWebAppLink(chainId)
   try {
@@ -74,7 +74,7 @@ export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = fals
     const tokenUrl = `${uniswapUrls.webInterfaceTokensUrl}/${network}/${tokenAddress}`
     return addMobileUTMTags ? tokenUrl + `?${UTM_TAGS_MOBILE}` : tokenUrl
   } catch (_) {
-    return undefined
+    return
   }
 }
 

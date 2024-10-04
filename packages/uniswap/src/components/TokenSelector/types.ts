@@ -1,4 +1,3 @@
-import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { FiatNumberType } from 'utilities/src/format/types'
@@ -20,20 +19,17 @@ export enum TokenOptionSection {
   SearchResults = 'searchResults',
   SuggestedTokens = 'suggestedTokens',
   BridgingTokens = 'bridgingTokens',
-  SearchResultsByNetwork = 'searchResultsByNetwork',
 }
 
 export type TokenSection = {
   data: TokenOption[] | TokenOption[][]
   sectionKey: TokenOptionSection
-  name?: string
   rightElement?: JSX.Element
 }
 
 export type TokenSectionsHookProps = {
   activeAccountAddress?: string
   chainFilter: UniverseChainId | null
-  input?: TradeableAsset
   isKeyboardOpen?: boolean
 }
 

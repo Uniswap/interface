@@ -43,7 +43,7 @@ export function SwapFormSettings({ customSettings }: { customSettings: SwapSetti
   const rightAlignment = isMobileApp ? 24 : 4
 
   return (
-    <Flex row gap="$spacing4" position="absolute" top={topAlignment} right={rightAlignment} zIndex="$default">
+    <Flex row gap="$spacing4" position="absolute" top={topAlignment} right={rightAlignment} zIndex="$fixed">
       <SwapSettingsModal
         customSettings={customSettings}
         isOpen={showSwapSettingsModal}

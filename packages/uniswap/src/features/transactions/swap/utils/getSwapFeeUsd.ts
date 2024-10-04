@@ -14,7 +14,7 @@ export function getSwapFeeUsd({
   outputAmountUsd: CurrencyAmount<Currency>
 }): number | undefined {
   if (!trade.swapFee) {
-    return undefined
+    return
   }
 
   const outputCurrencyPricePerUnitExact = (
@@ -28,7 +28,7 @@ export function getSwapFeeUsd({
   })
 
   if (!currencyAmount) {
-    return undefined
+    return
   }
 
   const feeUsd = parseFloat(outputCurrencyPricePerUnitExact) * parseFloat(currencyAmount.toExact())

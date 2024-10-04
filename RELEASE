@@ -1,24 +1,10 @@
-IPFS hash of the deployment:
-- CIDv0: `QmZNKQNeHGqEJfGMyWbH1zYCgs8pazXe2FajiS4KVzxfPL`
-- CIDv1: `bafybeifd3xryjkpe4lqgqfonwz7pdfzjtdlspryilb44sn7utv26mpxab4`
+We are back with some new updates! Here’s the latest:
 
-The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
+Report Spam NFTs - You can now report spam NFTs and hide them from your feed and activity. 
 
-You can also access the Uniswap Interface from an IPFS gateway.
-**BEWARE**: The Uniswap interface uses [`localStorage`](https://developer.mozilla.org/en-US/docs/Web/API/Window/localStorage) to remember your settings, such as which tokens you have imported.
-**You should always use an IPFS gateway that enforces origin separation**, or our hosted deployment of the latest release at [app.uniswap.org](https://app.uniswap.org).
-Your Uniswap settings are never remembered across different URLs.
+Other changes: 
 
-IPFS gateways:
-- https://bafybeifd3xryjkpe4lqgqfonwz7pdfzjtdlspryilb44sn7utv26mpxab4.ipfs.dweb.link/
-- https://bafybeifd3xryjkpe4lqgqfonwz7pdfzjtdlspryilb44sn7utv26mpxab4.ipfs.cf-ipfs.com/
-- [ipfs://QmZNKQNeHGqEJfGMyWbH1zYCgs8pazXe2FajiS4KVzxfPL/](ipfs://QmZNKQNeHGqEJfGMyWbH1zYCgs8pazXe2FajiS4KVzxfPL/)
-
-### 5.49.2 (2024-10-03)
-
-
-### Bug Fixes
-
-* **web:** dont respect url flag overrides on prod - prod (#12548) a2b2517
-
-
+- Added explainers for hidden tokens, popular tokens, and hidden NFTs
+- Removed activity feed items related to any hidden NFTs
+- More optimized keyboard functionality across the app
+- Various bug fixes and performance improvements

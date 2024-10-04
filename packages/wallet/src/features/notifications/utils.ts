@@ -11,7 +11,6 @@ import { getCurrencyDisplayText, getFormattedCurrencyAmount, getSymbolDisplayTex
 import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 import { WalletConnectNotification } from 'wallet/src/features/notifications/types'
 
-// eslint-disable-next-line consistent-return
 export const formWCNotificationTitle = (appNotification: WalletConnectNotification): string => {
   const { event, dappName, chainId } = appNotification
 

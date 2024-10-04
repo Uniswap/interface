@@ -212,7 +212,7 @@ export default function useMultiChainPositions(
   // Fetches positions when existing positions are stale and the document has focus
   useEffect(() => {
     if (positionsFetching.current || cachedPositions?.stale === false) {
-      return undefined
+      return
     } else if (document.hasFocus()) {
       fetchAllPositions()
     } else {
@@ -226,7 +226,7 @@ export default function useMultiChainPositions(
         window.removeEventListener('focus', onFocus)
       }
     }
-    return undefined
+    return
   }, [fetchAllPositions, positionsFetching, cachedPositions?.stale])
 
   const positionsWithFeesAndPrices: PositionInfo[] | undefined = useMemo(

@@ -13,7 +13,7 @@ exports[`PortfolioLogo renders with L2 icon 1`] = `
 }
 
 .c1 img {
-  width: 19px;
+  width: 20px;
   height: 40px;
   object-fit: cover;
 }
@@ -136,7 +136,7 @@ exports[`PortfolioLogo renders without L2 icon 1`] = `
 }
 
 .c1 img {
-  width: 19px;
+  width: 20px;
   height: 40px;
   object-fit: cover;
 }

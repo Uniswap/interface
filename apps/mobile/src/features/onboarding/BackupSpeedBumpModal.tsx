@@ -19,7 +19,6 @@ export function BackupSpeedBumpModal({ backupType, onContinue, onClose }: Backup
   const { t } = useTranslation()
   const [checked, setChecked] = useState(false)
 
-  // eslint-disable-next-line consistent-return
   const { preview, title, description, disclaimer } = useMemo(() => {
     switch (backupType) {
       case BackupType.Cloud:

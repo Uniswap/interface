@@ -7,8 +7,8 @@ import { selectModalState } from 'src/features/modals/selectModalState'
 import { useWalletRestore } from 'src/features/wallet/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
-import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { WalletSwapFlow } from 'wallet/src/features/transactions/swap/WalletSwapFlow'
+import { useSwapPrefilledState } from 'wallet/src/features/transactions/swap/hooks/useSwapPrefilledState'
 
 export function SwapModal(): JSX.Element {
   const appDispatch = useDispatch()

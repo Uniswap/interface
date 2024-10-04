@@ -13,13 +13,12 @@ import { TokenSelectorSwapInputList } from 'uniswap/src/components/TokenSelector
 import { TokenSelectorSwapOutputList } from 'uniswap/src/components/TokenSelector/TokenSelectorSwapOutputList'
 import { flowToModalName } from 'uniswap/src/components/TokenSelector/flowToModalName'
 import { useFilterCallbacks } from 'uniswap/src/components/TokenSelector/hooks'
-import { TokenOptionSection, TokenSection, TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
+import { TokenSection, TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import PasteButton from 'uniswap/src/components/buttons/PasteButton'
 import { useBottomSheetContext } from 'uniswap/src/components/modals/BottomSheetContext'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { NetworkFilter } from 'uniswap/src/components/network/NetworkFilter'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
-import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
@@ -37,7 +36,6 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 import { useDebounce } from 'utilities/src/time/timing'
 
 export const TOKEN_SELECTOR_WEB_MAX_WIDTH = 400
-export const TOKEN_SELECTOR_WEB_MAX_HEIGHT = 700
 
 export enum TokenSelectorVariation {
   // used for Send flow, only show currencies with a balance
@@ -56,24 +54,17 @@ export interface TokenSelectorProps {
   activeAccountAddress?: string
   chainId?: UniverseChainId
   chainIds?: UniverseChainId[]
-  input?: TradeableAsset
   isSurfaceReady?: boolean
   isLimits?: boolean
   onClose: () => void
   onSelectChain?: (chainId: UniverseChainId | null) => void
-  onSelectCurrency: (
-    currency: Currency,
-    currencyField: CurrencyField,
-    context: SearchContext,
-    isBridgePair: boolean,
-  ) => void
+  onSelectCurrency: (currency: Currency, currencyField: CurrencyField, context: SearchContext) => void
 }
 
 export function TokenSelectorContent({
   currencyField,
   flow,
   variation,
-  input,
   activeAccountAddress,
   chainId,
   chainIds = WALLET_SUPPORTED_CHAIN_IDS,
@@ -149,8 +140,7 @@ export function TokenSelectorContent({
         query: searchContext.query,
       })
 
-      const isBridgePair = section.sectionKey === TokenOptionSection.BridgingTokens
-      onSelectCurrency(currencyInfo.currency, currencyField, searchContext, isBridgePair)
+      onSelectCurrency(currencyInfo.currency, currencyField, searchContext)
     },
     [flow, page, currencyField, onSelectCurrency, debouncedSearchFilter],
   )
@@ -202,7 +192,6 @@ export function TokenSelectorContent({
           isKeyboardOpen={isKeyboardOpen}
           parsedChainFilter={parsedChainFilter}
           searchFilter={searchFilter}
-          input={input}
           onSelectCurrency={onSelectCurrencyCallback}
         />
       )
@@ -231,7 +220,6 @@ export function TokenSelectorContent({
       case TokenSelectorVariation.SwapOutput:
         return (
           <TokenSelectorSwapOutputList
-            input={input}
             activeAccountAddress={activeAccountAddress}
             chainFilter={chainFilter}
             isKeyboardOpen={isKeyboardOpen}
@@ -239,8 +227,6 @@ export function TokenSelectorContent({
           />
         )
     }
-
-    return undefined
   }, [
     searchInFocus,
     searchFilter,
@@ -253,7 +239,6 @@ export function TokenSelectorContent({
     debouncedSearchFilter,
     parsedChainFilter,
     onSendEmptyActionPress,
-    input,
   ])
 
   return (
@@ -344,7 +329,6 @@ function _TokenSelectorModal(props: TokenSelectorProps): JSX.Element {
       backgroundColor={colors.surface1.val}
       isModalOpen={isModalOpen}
       maxWidth={isWeb ? TOKEN_SELECTOR_WEB_MAX_WIDTH : undefined}
-      maxHeight={isInterface ? TOKEN_SELECTOR_WEB_MAX_HEIGHT : undefined}
       name={ModalName.TokenSelector}
       padding="$none"
       snapPoints={['65%', '100%']}

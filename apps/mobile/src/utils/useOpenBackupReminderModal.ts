@@ -41,7 +41,7 @@ export function useOpenBackupReminderModal(activeAccount: Account): void {
 
   useEffect(() => {
     if (!enableReminder) {
-      return undefined
+      return
     }
 
     if (shouldOpenBackupReminderModal && onboardingBackupExperimentEnabled && backupReminderLastSeenTs === undefined) {
@@ -55,8 +55,6 @@ export function useOpenBackupReminderModal(activeAccount: Account): void {
 
       return () => clearTimeout(timeoutId)
     }
-
-    return undefined
   }, [
     dispatch,
     shouldOpenBackupReminderModal,

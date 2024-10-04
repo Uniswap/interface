@@ -3,18 +3,18 @@ import { NumericalInputFontStyle } from 'pages/Swap/common/shared'
 import React, { forwardRef } from 'react'
 // eslint-disable-next-line @typescript-eslint/no-restricted-imports
 import styled from 'styled-components'
+import { escapeRegExp } from 'utilities/src/primitives/string'
 import { useFormatterLocales } from 'utils/formatNumbers'
 
-const inputRegex = RegExp(`^\\d*(\\.\\d{0,2})?$`)
+const inputRegex = RegExp(`^\\d*$`)
 
 const PercentInput = forwardRef<HTMLInputElement, InputProps>(
   ({ value, onUserInput, placeholder, testId, ...rest }: InputProps, ref) => {
     const { formatterLocale } = useFormatterLocales()
 
     const enforcer = (nextUserInput: string) => {
-      const sanitizedInput = nextUserInput.replace(/,/g, '.') // Normalize the input
-      if (sanitizedInput === '' || inputRegex.test(sanitizedInput)) {
-        onUserInput(sanitizedInput)
+      if (nextUserInput === '' || inputRegex.test(escapeRegExp(nextUserInput))) {
+        onUserInput(nextUserInput)
       }
     }
 
@@ -27,14 +27,12 @@ const PercentInput = forwardRef<HTMLInputElement, InputProps>(
 
     return (
       <StyledInput
-        minLength={1}
-        maxLength={2}
         {...rest}
         ref={ref}
         value={valueFormattedWithLocale}
         data-testid={testId}
         onChange={(event) => {
-          enforcer(event.target.value)
+          enforcer(event.target.value.replace(/,/g, '.'))
         }}
         // universal input options
         inputMode="numeric"
@@ -42,8 +40,10 @@ const PercentInput = forwardRef<HTMLInputElement, InputProps>(
         autoCorrect="off"
         // text-specific options
         type="text"
-        pattern="^\\d*(\\.\\d{0,2})?$"
+        pattern="^[0-9]*$"
         placeholder={placeholder || '0'}
+        minLength={1}
+        maxLength={2}
         spellCheck="false"
       />
     )

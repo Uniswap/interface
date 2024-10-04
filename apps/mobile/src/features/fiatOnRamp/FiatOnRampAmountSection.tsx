@@ -38,11 +38,13 @@ const PREDEFINED_AMOUNTS = [100, 300, 1000]
 
 type OnChangeAmount = (amount: string) => void
 
-function OnRampError({ errorText, color }: { errorText?: string; color: ColorTokens }): JSX.Element {
+function OnRampError({ errorText, color }: { errorText: string; color: ColorTokens }): JSX.Element {
   return (
-    <Text color={color} lineHeight={spacing.spacing32} textAlign="center" variant="body3">
-      {errorText}
-    </Text>
+    <Flex centered>
+      <Text color={color} variant="body3">
+        {errorText}
+      </Text>
+    </Flex>
   )
 }
 
@@ -174,13 +176,9 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
         onLayout={onInputLayout}
       >
         <Flex minHeight={spacing.spacing32}>
-          {notAvailableInThisRegion ? (
-            <OnRampError color="$neutral2" errorText={t('fiatOnRamp.error.unavailable')} />
-          ) : debouncedErrorText ? (
-            <OnRampError color="$statusCritical" errorText={debouncedErrorText} />
-          ) : !appFiatCurrencySupported ? (
-            <OnRampError color="$neutral3" errorText={t('fiatOnRamp.error.usd')} />
-          ) : null}
+          <Text color="$statusCritical" lineHeight={spacing.spacing32} textAlign="center" variant="body3">
+            {debouncedErrorText}
+          </Text>
         </Flex>
         <AnimatedFlex style={inputAnimatedStyle} width="100%">
           <Flex row alignItems="center" justifyContent="center">
@@ -255,6 +253,11 @@ export const FiatOnRampAmountSection = forwardRef<FiatOnRampAmountSectionRef, Fi
             </Flex>
           </TouchableArea>
         )}
+        {notAvailableInThisRegion ? (
+          <OnRampError color="$neutral2" errorText={t('fiatOnRamp.error.unavailable')} />
+        ) : !appFiatCurrencySupported ? (
+          <OnRampError color="$neutral3" errorText={t('fiatOnRamp.error.usd')} />
+        ) : null}
       </Flex>
     )
   },

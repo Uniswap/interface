@@ -63,7 +63,6 @@ const ON_SELECTION_CHANGE_WAIT_TIME_MS = 500
 
 interface SwapFormScreenProps {
   hideContent: boolean
-  hideFooter?: boolean
   customSettings: SwapSettingConfig[]
 }
 
@@ -73,14 +72,14 @@ interface SwapFormScreenProps {
  */
 export function SwapFormScreen({ hideContent, customSettings }: SwapFormScreenProps): JSX.Element {
   const { bottomSheetViewStyles } = useTransactionModalContext()
-  const { selectingCurrencyField, hideSettings } = useSwapFormContext()
+  const { selectingCurrencyField } = useSwapFormContext()
 
   const showTokenSelector = !hideContent && !!selectingCurrencyField
 
   return (
     <TransactionModalInnerContainer fullscreen bottomSheetViewStyles={bottomSheetViewStyles}>
       {!isInterface && <SwapFormHeader /> /* Interface renders its own header with multiple tabs */}
-      {!hideSettings && <SwapFormSettings customSettings={customSettings} />}
+      <SwapFormSettings customSettings={customSettings} />
 
       {!hideContent && <SwapFormContent />}
 
@@ -108,7 +107,6 @@ function SwapFormContent(): JSX.Element {
     input,
     isFiatMode,
     output,
-    hideFooter,
     updateSwapForm,
   } = useSwapFormContext()
 
@@ -439,11 +437,6 @@ function SwapFormContent(): JSX.Element {
 
   const decimalPadValueRef = decimalPadControlledField === exactCurrencyField ? exactValueRef : formattedDerivedValueRef
 
-  // If exact output will fail due to FoT tokens, the field should be disabled and un-focusable.
-  // Also, for bridging, the output field should be disabled since Across does not have exact in vs. exact out.
-  const isBridge = input && output && input?.chainId !== output?.chainId
-  const exactOutputDisabled = isBridge || exactOutputWillFail
-
   const [showWarning, setShowWarning] = useState(false)
   const timeoutRef = useRef<NodeJS.Timeout | null>(null)
   const showTemporaryFoTWarning = (): void => {
@@ -512,7 +505,7 @@ function SwapFormContent(): JSX.Element {
               currencyBalance={currencyBalances[CurrencyField.OUTPUT]}
               currencyField={CurrencyField.OUTPUT}
               currencyInfo={currencies[CurrencyField.OUTPUT]}
-              disabled={exactOutputDisabled}
+              disabled={exactOutputWillFail} // If exact output will fail due to FoT tokens, the input field should be disabled and un-focusable
               focus={focusOnCurrencyField === CurrencyField.OUTPUT}
               isFiatMode={isFiatMode && exactFieldIsOutput}
               isLoading={!exactFieldIsOutput && isSwapDataLoading}
@@ -521,7 +514,7 @@ function SwapFormContent(): JSX.Element {
               usdValue={currencyAmountsUSDValue[CurrencyField.OUTPUT]}
               value={exactFieldIsOutput ? exactValue : formattedDerivedValue}
               valueIsIndicative={!exactFieldIsOutput && trade.indicativeTrade && !trade.trade}
-              onPressDisabled={isBridge ? undefined : showTemporaryFoTWarning}
+              onPressDisabled={showTemporaryFoTWarning}
               onPressIn={onFocusOutput}
               onSelectionChange={onOutputSelectionChange}
               onSetExactAmount={onSetExactAmountOutput}
@@ -560,14 +553,12 @@ function SwapFormContent(): JSX.Element {
               <SwapFormButton />
             </Flex>
           )}
-          {!hideFooter && (
-            <Flex pt={isShortMobileDevice ? '$spacing8' : '$spacing12'}>
-              <AnimatePresence>
-                {showWarning && <FoTWarningRow currencies={currencies} outputTokenHasBuyTax={outputTokenHasBuyTax} />}
-              </AnimatePresence>
-              {!showWarning && <GasAndWarningRows />}
-            </Flex>
-          )}
+          <Flex pt={isShortMobileDevice ? '$spacing8' : '$spacing12'}>
+            <AnimatePresence>
+              {showWarning && <FoTWarningRow currencies={currencies} outputTokenHasBuyTax={outputTokenHasBuyTax} />}
+            </AnimatePresence>
+            {!showWarning && <GasAndWarningRows />}
+          </Flex>
         </Flex>
       </Flex>
       {!isWeb && (

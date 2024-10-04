@@ -101,7 +101,6 @@ export function RestoreCloudBackupPasswordScreen({ navigation, route: { params }
 
         return () => clearTimeout(timer)
       }
-      return undefined
     }, [isLockedOut, lockoutMessage, remainingLockoutTime, dispatch]),
   )
 

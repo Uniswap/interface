@@ -41,7 +41,7 @@ export default function parseTradeTransaction(
 
   const chainId = fromGraphQLChain(transaction.chain)
   if (!chainId) {
-    return undefined
+    return
   }
 
   const txAssetChanges =
@@ -83,14 +83,14 @@ export default function parseTradeTransaction(
 
   // Invalid input/output info
   if (!sent || !received) {
-    return undefined
+    return
   }
 
   const onlyERC20Tokens = sent.__typename === 'TokenTransfer' && received.__typename === 'TokenTransfer'
   const containsNFT = sent.__typename === 'NftTransfer' || received.__typename === 'NftTransfer'
 
   if (!(onlyERC20Tokens || containsNFT)) {
-    return undefined
+    return
   }
 
   // Token swap
@@ -152,7 +152,7 @@ export default function parseTradeTransaction(
     }
 
     if (!inputCurrencyId || !outputCurrencyId) {
-      return undefined
+      return
     }
 
     return {
@@ -222,6 +222,4 @@ export default function parseTradeTransaction(
       transactedUSDValue,
     }
   }
-
-  return undefined
 }

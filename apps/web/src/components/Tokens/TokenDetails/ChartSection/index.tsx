@@ -84,7 +84,6 @@ export function useCreateTDPChartState(tokenDBAddress: string | undefined, curre
 
   return useMemo(() => {
     const { disableCandlestickUI } = priceQuery
-    // eslint-disable-next-line consistent-return
     const activeQuery = (() => {
       switch (chartType) {
         case ChartType.PRICE:
@@ -111,36 +110,38 @@ export function useCreateTDPChartState(tokenDBAddress: string | undefined, curre
 export default function ChartSection() {
   const { activeQuery, timePeriod, priceChartType } = useTDPContext().chartState
 
-  // eslint-disable-next-line consistent-return
-  const getSection = () => {
-    if (activeQuery.dataQuality === DataQuality.INVALID) {
-      return (
-        <ChartSkeleton
-          type={activeQuery.chartType}
-          height={TDP_CHART_HEIGHT_PX}
-          errorText={activeQuery.loading ? undefined : <InvalidChartMessage />}
-        />
-      )
-    }
-
-    const stale = activeQuery.dataQuality === DataQuality.STALE
-    switch (activeQuery.chartType) {
-      case ChartType.PRICE:
-        return (
-          <PriceChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} type={priceChartType} stale={stale} />
-        )
-      case ChartType.VOLUME:
-        return (
-          <VolumeChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} timePeriod={timePeriod} stale={stale} />
-        )
-      case ChartType.TVL:
-        return <LineChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} stale={stale} />
-    }
-  }
-
   return (
     <div data-cy={`tdp-${activeQuery.chartType}-chart-container`}>
-      {getSection()}
+      {(() => {
+        if (activeQuery.dataQuality === DataQuality.INVALID) {
+          return (
+            <ChartSkeleton
+              type={activeQuery.chartType}
+              height={TDP_CHART_HEIGHT_PX}
+              errorText={activeQuery.loading ? undefined : <InvalidChartMessage />}
+            />
+          )
+        }
+
+        const stale = activeQuery.dataQuality === DataQuality.STALE
+        switch (activeQuery.chartType) {
+          case ChartType.PRICE:
+            return (
+              <PriceChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} type={priceChartType} stale={stale} />
+            )
+          case ChartType.VOLUME:
+            return (
+              <VolumeChart
+                data={activeQuery.entries}
+                height={TDP_CHART_HEIGHT_PX}
+                timePeriod={timePeriod}
+                stale={stale}
+              />
+            )
+          case ChartType.TVL:
+            return <LineChart data={activeQuery.entries} height={TDP_CHART_HEIGHT_PX} stale={stale} />
+        }
+      })()}
       <ChartControls />
     </div>
   )

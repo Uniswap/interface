@@ -35,12 +35,9 @@ export function useOrder(orderHash: string): UniswapXOrderDetails | undefined {
     const order = signatures[orderHash]
     if (
       !order ||
-      ![
-        SignatureType.SIGN_UNISWAPX_ORDER,
-        SignatureType.SIGN_UNISWAPX_V2_ORDER,
-        SignatureType.SIGN_LIMIT,
-        SignatureType.SIGN_PRIORITY_ORDER,
-      ].includes(order.type as SignatureType)
+      ![SignatureType.SIGN_UNISWAPX_ORDER, SignatureType.SIGN_UNISWAPX_V2_ORDER, SignatureType.SIGN_LIMIT].includes(
+        order.type as SignatureType,
+      )
     ) {
       return undefined
     }
@@ -105,8 +102,7 @@ function isPendingOrder(signature: SignatureDetails): signature is UniswapXOrder
     ].includes(signature.status)
   } else if (
     signature.type === SignatureType.SIGN_UNISWAPX_ORDER ||
-    signature.type === SignatureType.SIGN_UNISWAPX_V2_ORDER ||
-    signature.type === SignatureType.SIGN_PRIORITY_ORDER
+    signature.type === SignatureType.SIGN_UNISWAPX_V2_ORDER
   ) {
     return [
       UniswapXOrderStatus.OPEN,

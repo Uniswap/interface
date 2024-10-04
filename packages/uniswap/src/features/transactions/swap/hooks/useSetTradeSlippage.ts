@@ -5,7 +5,6 @@ import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/confi
 import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trade, TradeWithStatus } from 'uniswap/src/features/transactions/swap/types/trade'
-import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   getClassicQuoteFromResponse,
   transformTradingApiResponseToTrade,
@@ -19,10 +18,6 @@ export function useSetTradeSlippage(
   const autoSlippageTolerance = useCalculateAutoSlippage(trade?.trade)
 
   return useMemo(() => {
-    if (trade.trade && isBridge(trade.trade)) {
-      // Bridge trades don't have slippage
-      return { trade, autoSlippageTolerance: 0 }
-    }
     // If the user has set a custom slippage, use that in the trade instead of the auto-slippage
     if (!trade.trade || userSetSlippage) {
       return { trade, autoSlippageTolerance }

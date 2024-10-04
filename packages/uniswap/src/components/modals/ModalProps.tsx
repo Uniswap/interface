@@ -33,6 +33,5 @@ export type ModalProps = PropsWithChildren<{
   alignment?: 'center' | 'top'
   hideScrim?: boolean
   maxWidth?: number
-  maxHeight?: number
   padding?: SpaceTokens
 }>

@@ -13,7 +13,8 @@ function gqlTokenToTokenSearchResult(token: Maybe<TopToken>): TokenSearchResult 
     return null
   }
 
-  const { name, chain, address, symbol, project, protectionInfo } = token
+  const { chain, address, symbol, project, protectionInfo } = token
+  const { name } = project
   const chainId = fromGraphQLChain(chain)
   if (!chainId || !symbol || !name) {
     return null

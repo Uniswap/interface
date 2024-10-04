@@ -7,7 +7,6 @@ import Badge from 'components/Badge/Badge'
 import RangeBadge from 'components/Badge/RangeBadge'
 import { ButtonConfirmed, ButtonGray, ButtonPrimary, SmallButtonPrimary } from 'components/Button/buttons'
 import { DarkCard, LightCard } from 'components/Card/cards'
-import { PositionNFT } from 'components/Liquidity/PositionNFT'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import { DoubleCurrencyLogo } from 'components/Logo/DoubleLogo'
@@ -39,7 +38,7 @@ import { useSingleCallResult } from 'lib/hooks/multicall'
 import useNativeCurrency from 'lib/hooks/useNativeCurrency'
 import styled, { useTheme } from 'lib/styled-components'
 import { LoadingRows } from 'pages/LegacyPool/styled'
-import { PropsWithChildren, useCallback, useMemo, useState } from 'react'
+import { PropsWithChildren, useCallback, useMemo, useRef, useState } from 'react'
 import { Helmet } from 'react-helmet-async/lib/index'
 import { Link, useParams } from 'react-router-dom'
 import { Bound } from 'state/mint/v3/actions'
@@ -158,6 +157,23 @@ const ResponsiveButtonConfirmed = styled(ButtonConfirmed)`
   }
 `
 
+const NFTGrid = styled.div`
+  display: grid;
+  grid-template: 'overlap';
+  min-height: 400px;
+`
+
+const NFTCanvas = styled.canvas`
+  grid-area: overlap;
+`
+
+const NFTImage = styled.img`
+  grid-area: overlap;
+  height: 400px;
+  /* Ensures SVG appears on top of canvas. */
+  z-index: 1;
+`
+
 const StyledPoolLink = styled(Link)`
   text-decoration: none;
   ${ClickableStyle}
@@ -260,6 +276,65 @@ function getRatio(
   }
 }
 
+// snapshots a src img into a canvas
+function getSnapshot(src: HTMLImageElement, canvas: HTMLCanvasElement, targetHeight: number) {
+  const context = canvas.getContext('2d')
+
+  if (context) {
+    let { width, height } = src
+
+    // src may be hidden and not have the target dimensions
+    const ratio = width / height
+    height = targetHeight
+    width = Math.round(ratio * targetHeight)
+
+    // Ensure crispness at high DPIs
+    canvas.width = width * devicePixelRatio
+    canvas.height = height * devicePixelRatio
+    canvas.style.width = width + 'px'
+    canvas.style.height = height + 'px'
+    context.scale(devicePixelRatio, devicePixelRatio)
+
+    context.clearRect(0, 0, width, height)
+    context.drawImage(src, 0, 0, width, height)
+  }
+}
+
+function NFT({ image, height: targetHeight }: { image: string; height: number }) {
+  const [animate, setAnimate] = useState(false)
+
+  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const imageRef = useRef<HTMLImageElement>(null)
+
+  return (
+    <NFTGrid
+      onMouseEnter={() => {
+        setAnimate(true)
+      }}
+      onMouseLeave={() => {
+        // snapshot the current frame so the transition to the canvas is smooth
+        if (imageRef.current && canvasRef.current) {
+          getSnapshot(imageRef.current, canvasRef.current, targetHeight)
+        }
+        setAnimate(false)
+      }}
+    >
+      <NFTCanvas ref={canvasRef} />
+      <NFTImage
+        ref={imageRef}
+        src={image}
+        hidden={!animate}
+        onLoad={() => {
+          // snapshot for the canvas
+          if (imageRef.current && canvasRef.current) {
+            getSnapshot(imageRef.current, canvasRef.current, targetHeight)
+          }
+        }}
+      />
+    </NFTGrid>
+  )
+}
+
 const useInverter = ({
   priceLower,
   priceUpper,
@@ -321,12 +396,12 @@ const PositionLabelRow = styled(RowFixed)({
 
 function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
   if (!tokenId) {
-    return undefined
+    return
   }
   try {
     return BigNumber.from(tokenId)
   } catch (error) {
-    return undefined
+    return
   }
 }
 
@@ -722,7 +797,7 @@ function PositionPageContent() {
                       minWidth: '340px',
                     }}
                   >
-                    <PositionNFT image={metadata.result.image} height={400} />
+                    <NFT image={metadata.result.image} height={400} />
                     {typeof account.chainId === 'number' && owner && !ownsNFT ? (
                       <ExternalLink href={getExplorerLink(account.chainId, owner, ExplorerDataType.ADDRESS)}>
                         <Trans i18nKey="pool.owner" />

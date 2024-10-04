@@ -88,7 +88,6 @@ export const uniswapUrls = {
     swap: '/v1/swap',
     order: '/v1/order',
     orders: '/v1/orders',
-    swaps: '/v1/swaps',
     swappableTokens: '/v1/swappable_tokens',
     checkLpApproval: '/v1/check_approval_lp',
     createLp: '/v1/create_lp_position',

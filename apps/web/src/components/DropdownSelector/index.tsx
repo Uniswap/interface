@@ -2,6 +2,7 @@ import FilterButton from 'components/DropdownSelector/FilterButton'
 import { MouseoverTooltip, TooltipSize } from 'components/Tooltip'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
 import { useRef } from 'react'
+import { NAV_HEIGHT } from 'theme'
 import {
   AnimatePresence,
   Flex,
@@ -16,7 +17,6 @@ import {
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { zIndices } from 'ui/src/theme'
 import { iconSizes } from 'ui/src/theme/iconSizes'
-import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 
 export const InternalMenuItem = styled(Text, {
   display: 'flex',
@@ -156,7 +156,7 @@ export function DropdownSelector({
         isOpen={isOpen && isSheet}
         onClose={() => toggleOpen(false)}
         {...dropdownStyle}
-        maxHeight={`calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`}
+        maxHeight={`calc(100dvh - ${NAV_HEIGHT}px)`}
       >
         {internalMenuItems}
       </WebBottomSheet>

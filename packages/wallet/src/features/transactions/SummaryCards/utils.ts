@@ -76,7 +76,6 @@ export function generateActivityItemRenderer(
       case TransactionType.Send:
         SummaryItem = SendSummaryItem
         break
-      case TransactionType.Bridge: // TODO: Add bridge summary item in next PR
       case TransactionType.Swap:
         SummaryItem = SwapSummaryItem
         break

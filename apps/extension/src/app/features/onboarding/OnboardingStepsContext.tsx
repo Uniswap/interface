@@ -2,7 +2,6 @@ import { createContext, useContext } from 'react'
 import { OnboardingScreenProps } from 'src/app/features/onboarding/OnboardingScreenProps'
 
 export enum CreateOnboardingSteps {
-  ClaimUnitag = 'claimUnitag',
   Password = 'password',
   ViewMnemonic = 'mnemonic',
   TestMnemonic = 'testMnemonic',

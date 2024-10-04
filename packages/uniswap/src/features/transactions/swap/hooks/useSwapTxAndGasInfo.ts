@@ -13,9 +13,8 @@ import {
 import { ApprovalAction, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { sumGasFees } from 'uniswap/src/features/transactions/swap/utils/gas'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { validatePermit, validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
+import { validateTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { isInterface } from 'utilities/src/platform'
 
 export function useSwapTxAndGasInfo({
   derivedSwapInfo,
@@ -36,7 +35,6 @@ export function useSwapTxAndGasInfo({
     chainId,
     wrapType,
     currencyInAmount: currencyAmounts[CurrencyField.INPUT],
-    currencyOutAmount: currencyAmounts[CurrencyField.OUTPUT],
     routing: trade?.routing,
   })
 
@@ -53,7 +51,7 @@ export function useSwapTxAndGasInfo({
     const approvalError = tokenApprovalInfo?.action === ApprovalAction.Unknown
 
     const gasFeeEstimation: SwapGasFeeEstimation = {
-      ...swapTxInfo.gasEstimate,
+      swapEstimates: swapTxInfo.gasEstimates,
       approvalEstimates: tokenApprovalInfo?.gasEstimates,
     }
 
@@ -62,8 +60,6 @@ export function useSwapTxAndGasInfo({
     const approveTxRequest = validateTransactionRequest(tokenApprovalInfo?.txRequest)
     const revocationTxRequest = validateTransactionRequest(tokenApprovalInfo?.cancelTxRequest)
     const txRequest = validateTransactionRequest(swapTxInfo.transactionRequest)
-    const permit = validatePermit(swapTxInfo.permitData)
-    const unsigned = Boolean(isInterface && swapTxInfo.permitData)
 
     if (trade?.routing === Routing.DUTCH_V2) {
       const signature = swapTxInfo.permitSignature
@@ -84,25 +80,12 @@ export function useSwapTxAndGasInfo({
         revocationTxRequest,
         orderParams,
         gasFee,
-        gasFeeEstimation,
         gasFeeBreakdown,
         approvalError,
-        permit,
-      }
-    } else if (trade?.routing === Routing.BRIDGE) {
-      return {
-        routing: Routing.BRIDGE,
-        trade,
-        indicativeTrade: undefined, // Bridge trades don't have indicative trades
-        txRequest,
-        approveTxRequest,
-        revocationTxRequest,
-        gasFee,
-        gasFeeEstimation,
-        approvalError,
+        permitData: swapTxInfo.permitData,
+        permitDataLoading: swapTxInfo.permitDataLoading,
         swapRequestArgs: swapTxInfo.swapRequestArgs,
-        permit,
-        unsigned,
+        permitSignature: swapTxInfo.permitSignature,
       }
     } else {
       return {
@@ -115,18 +98,20 @@ export function useSwapTxAndGasInfo({
         gasFee,
         gasFeeEstimation,
         approvalError,
+        permitData: swapTxInfo.permitData,
+        permitDataLoading: swapTxInfo.permitDataLoading,
         swapRequestArgs: swapTxInfo.swapRequestArgs,
-        permit,
-        unsigned,
+        permitSignature: swapTxInfo.permitSignature,
       }
     }
   }, [
     indicativeTrade,
-    swapTxInfo.gasEstimate,
+    swapTxInfo.gasEstimates,
     swapTxInfo.gasFeeResult,
     swapTxInfo.permitSignature,
     swapTxInfo.transactionRequest,
     swapTxInfo.permitData,
+    swapTxInfo.permitDataLoading,
     swapTxInfo.swapRequestArgs,
     tokenApprovalInfo,
     trade,

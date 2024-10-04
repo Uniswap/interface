@@ -1,7 +1,4 @@
 import { TokenOption, TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
-import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
-import { SafetyLevel as GqlSafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { GetSwappableTokensResponse, SafetyLevel } from 'uniswap/src/data/tradingApi/__generated__'
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { areCurrencyIdsEqual } from 'uniswap/src/utils/currencyId'
 import { differenceWith } from 'utilities/src/primitives/array'
@@ -11,37 +8,6 @@ export function createEmptyBalanceOption(currencyInfo: CurrencyInfo): TokenOptio
     currencyInfo,
     balanceUSD: null,
     quantity: null,
-  }
-}
-
-export function createEmptyTokenOptionFromSwappableToken(
-  token: GetSwappableTokensResponse['tokens'][0],
-): TokenOption | undefined {
-  const currencyInfo = tradingApiSwappableTokenToCurrencyInfo(token)
-
-  if (!currencyInfo) {
-    return undefined
-  }
-
-  return {
-    currencyInfo,
-    balanceUSD: null,
-    quantity: null,
-  }
-}
-
-export function toGqlSafetyLevel(safetyLevel: SafetyLevel): GqlSafetyLevel | null {
-  switch (safetyLevel) {
-    case SafetyLevel.BLOCKED:
-      return GqlSafetyLevel.Blocked
-    case SafetyLevel.MEDIUM_WARNING:
-      return GqlSafetyLevel.MediumWarning
-    case SafetyLevel.STRONG_WARNING:
-      return GqlSafetyLevel.StrongWarning
-    case SafetyLevel.VERIFIED:
-      return GqlSafetyLevel.Verified
-    default:
-      return null
   }
 }
 
@@ -67,7 +33,7 @@ export function formatSearchResults(
   searchFilter: string | null,
 ): TokenOption[] | undefined {
   if (!searchResultCurrencies) {
-    return undefined
+    return
   }
 
   const formattedOptions = searchResultCurrencies.map((currencyInfo): TokenOption => {
@@ -93,69 +59,6 @@ export function formatSearchResults(
   return formattedOptions
 }
 
-/**
- * Utility to merge the search results with the bridging tokens.
- * Also updates the search results section name accordingly
- */
-export function mergeSearchResultsWithBridgingTokens(
-  searchResults: TokenSection[] | undefined,
-  bridgingTokens: TokenOption[] | undefined,
-  sectionHeaderString: string | undefined,
-): TokenSection[] | undefined {
-  if (!searchResults || !bridgingTokens || bridgingTokens.length === 0) {
-    return searchResults
-  }
-
-  const extractedBridgingTokens: TokenOption[] = []
-
-  const extractedSearchResults = searchResults.map((section) => {
-    const sectionResults2D: TokenOption[][] = []
-    const sectionResults: TokenOption[] = []
-    section.data.forEach((token) => {
-      if (isTokenOptionArray(token)) {
-        // 2D array is for horizontal token list sections, which is not applicable for search results
-        sectionResults2D.push(token)
-        return
-      }
-
-      const isBridgingToken = bridgingTokens.some((bridgingToken) =>
-        areCurrencyIdsEqual(token.currencyInfo.currencyId, bridgingToken.currencyInfo.currencyId),
-      )
-
-      if (isBridgingToken) {
-        extractedBridgingTokens.push(token)
-      } else {
-        sectionResults.push(token)
-      }
-    })
-
-    return {
-      ...section,
-      data: sectionResults2D.length > 0 ? sectionResults2D : sectionResults,
-    }
-  })
-
-  const bridgingSection: TokenSection = {
-    sectionKey: TokenOptionSection.BridgingTokens,
-    data: extractedBridgingTokens,
-  }
-
-  // Update the search results section name to "Other tokens on {{network}}" if there is a valid bridging section
-  const searchResultsSection = extractedSearchResults.find(
-    (section) => section.sectionKey === TokenOptionSection.SearchResults,
-  )
-  if (bridgingSection.data.length > 0 && searchResultsSection && sectionHeaderString) {
-    searchResultsSection.name = sectionHeaderString
-  }
-
-  // Remove empty sections
-  return [bridgingSection, ...extractedSearchResults].filter((section) => section.data.length > 0)
-}
-
-export function isTokenOptionArray(option: TokenOption | TokenOption[]): option is TokenOption[] {
-  return Array.isArray(option)
-}
-
 function isExactTokenOptionMatch(searchResult: TokenOption, query: string): boolean {
   return (
     searchResult.currencyInfo.currency.name?.toLowerCase() === query.toLowerCase() ||
@@ -167,25 +70,12 @@ export function useTokenOptionsSection(
   sectionKey: TokenOptionSection,
   tokenOptions?: TokenOption[] | TokenOption[][],
   rightElement?: JSX.Element,
-  name?: string,
 ): TokenSection[] | undefined {
-  if (!tokenOptions) {
-    return undefined
-  }
-
-  // If it is a 2D array, check if any of the inner arrays are not empty
-  // Otherwise, check if the array is not empty
-  const is2DArray = tokenOptions?.length > 0 && Array.isArray(tokenOptions[0])
-  const hasData = is2DArray
-    ? tokenOptions.some((item) => isTokenOptionArray(item) && item.length > 0)
-    : tokenOptions.length > 0
-
-  return hasData
+  return tokenOptions?.length
     ? [
         {
           sectionKey,
           data: tokenOptions,
-          name,
           rightElement,
         },
       ]

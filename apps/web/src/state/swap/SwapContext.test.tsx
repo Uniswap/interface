@@ -1,4 +1,5 @@
 import { Percent } from '@uniswap/sdk-core'
+import { Field } from 'components/swap/constants'
 import { SwapForm } from 'pages/Swap/SwapForm'
 import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/SwapContext'
 import { SwapAndLimitContext, SwapInfo } from 'state/swap/types'
@@ -6,7 +7,6 @@ import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContex
 import { render, screen } from 'test-utils/render'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
-import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 jest.mock('hooks/useContract', () => ({
@@ -33,12 +33,12 @@ describe('Swap Context', () => {
         allowedSlippage: new Percent(5, 1000),
         autoSlippage: new Percent(5, 1000),
         currencies: {
-          input: undefined,
-          output: undefined,
+          INPUT: undefined,
+          OUTPUT: undefined,
         },
         currencyBalances: {
-          input: undefined,
-          output: undefined,
+          INPUT: undefined,
+          OUTPUT: undefined,
         },
         inputError: expect.any(Object),
         inputTax: new Percent(0),
@@ -54,7 +54,7 @@ describe('Swap Context', () => {
       },
       setSwapState: expect.any(Function),
       swapState: {
-        independentField: 'input',
+        independentField: 'INPUT',
         typedValue: '',
       },
     })
@@ -160,8 +160,8 @@ describe('Combined contexts', () => {
 
     // @ts-ignore rendering TestComponent sets derivedSwapInfo value
     expect(derivedSwapInfo?.currencies).toEqual({
-      [CurrencyField.INPUT]: nativeOnChain(UniverseChainId.Mainnet),
-      [CurrencyField.OUTPUT]: undefined,
+      [Field.INPUT]: nativeOnChain(UniverseChainId.Mainnet),
+      [Field.OUTPUT]: undefined,
     })
   })
 })

@@ -1,13 +1,11 @@
 import { call, put, take } from 'typed-redux-saga'
 import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { DutchQuoteV2, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { signTypedData } from 'uniswap/src/features/transactions/signing'
 import { finalizeTransaction, transactionActions } from 'uniswap/src/features/transactions/slice'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
-import { ValidatedPermit } from 'uniswap/src/features/transactions/swap/utils/trade'
 import {
   QueuedOrderStatus,
   TransactionOriginType,
@@ -22,7 +20,6 @@ import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
-import { getSignerManager } from 'wallet/src/features/wallet/context'
 
 // If the app is closed during the waiting period and then reopened, the saga will resume;
 // the order should not be submitted if too much time has passed as it may be stale.
@@ -31,39 +28,26 @@ export const ORDER_STALENESS_THRESHOLD = 45 * ONE_SECOND_MS
 export interface SubmitUniswapXOrderParams {
   // internal id used for tracking transactions before they're submitted
   txId?: string
-  quote: DutchQuoteV2
-  permit: ValidatedPermit
   chainId: WalletChainId
+  orderParams: OrderRequest
   account: AccountMeta
   typeInfo: TransactionTypeInfo
   analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
   approveTxHash?: string
   wrapTxHash?: string
-  onSuccess: () => void
+  onSubmit: () => void
   onFailure: () => void
 }
 
 export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
-  const {
-    quote,
-    permit,
-    approveTxHash,
-    wrapTxHash,
-    txId,
-    chainId,
-    typeInfo,
-    account,
-    analytics,
-    onSuccess,
-    onFailure,
-  } = params
-
-  const orderHash = quote.orderId
+  const { orderParams, approveTxHash, wrapTxHash, txId, chainId, typeInfo, account, analytics, onSubmit, onFailure } =
+    params
 
   // Wait for approval and/or wrap transactions to confirm, otherwise order submission will fail.
   let waitingForApproval = Boolean(approveTxHash)
   let waitingForWrap = Boolean(wrapTxHash)
 
+  const orderHash = orderParams.quote.orderId
   const order = {
     routing: Routing.DUTCH_V2,
     orderHash,
@@ -113,13 +97,7 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
   try {
     const addedTime = Date.now() // refresh the addedTime to match the actual submission time
     yield* put(transactionActions.updateTransaction({ ...order, queueStatus: QueuedOrderStatus.Submitted, addedTime }))
-
-    const signerManager = yield* call(getSignerManager)
-    const signer = yield* call([signerManager, 'getSignerForAccount'], account)
-
-    const signature = yield* call(signTypedData, permit.domain, permit.types, permit.values, signer)
-
-    yield* call(submitOrder, { signature, quote, routing: Routing.DUTCH_V2 })
+    yield* call(submitOrder, orderParams)
   } catch {
     // In the rare event that submission fails, we update the order status to prompt the user.
     // If the app is closed before this catch block is reached, orderWatcherSaga will handle the failure upon reopening.
@@ -132,6 +110,6 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
   yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, properties)
 
   yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
-  // onSuccess does not need to be wrapped in yield* call() here, but doing so makes it easier to test call ordering in submitOrder.test.ts
-  yield* call(onSuccess)
+  // onSubmit does not need to be wrapped in yield* call() here, but doing so makes it easier to test call ordering in submitOrder.test.ts
+  yield* call(onSubmit)
 }

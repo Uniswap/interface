@@ -2,11 +2,12 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useConfig } from 'statsig-react'
 import { isWeb } from 'ui/src'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
-import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
+import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import {
   FormattedUniswapXGasFeeInfo,
@@ -17,7 +18,7 @@ import {
 } from 'uniswap/src/features/gas/types'
 import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { DynamicConfigs, GasStrategies, GasStrategyType } from 'uniswap/src/features/gating/configs'
-import { Statsig, useConfig } from 'uniswap/src/features/gating/sdk/statsig'
+import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
@@ -228,7 +229,7 @@ export function useTransactionGasWarning({
   return useMemo(() => {
     // if balance is already insufficient, dont need to show warning about network fee
     if (gasFee === undefined || balanceInsufficient || !nativeCurrencyBalance || hasGasFunds) {
-      return undefined
+      return
     }
 
     return {

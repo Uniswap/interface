@@ -5,28 +5,7 @@ import Row, { RowBetween } from 'components/deprecated/Row'
 import styled, { Keyframes, keyframes } from 'lib/styled-components'
 import { ReactElement, useEffect, useState } from 'react'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { StepStatus } from 'uniswap/src/components/ConfirmSwapModal/types'
-
-export interface StepDetails {
-  // Left-justified icon representing the step and grayed out when step is not active
-  icon: ReactElement
-  // Ripple animation around the icon of the currently active step (use color extraction to select)
-  rippleColor?: string
-  // Text shown before the step becomes active
-  previewTitle: string
-  // Text shown when the step is active and awaiting user input
-  actionRequiredTitle: string | ReactElement
-  // Text shown when user input has been accepted and step has yet to complete
-  inProgressTitle?: string
-  // Amount of time in seconds the user has to take action on a step (e.g. UniswapX exclusivity window)
-  timeToStart?: number
-  // Text shown when timeToStart is exceeded (countdown reaches zero)
-  delayedStartTitle?: string
-  // Anchor text displayed for the Learn-More link
-  learnMoreLinkText?: string
-  // URL for Learn-More link (opened in new tab)
-  learnMoreLinkHref?: string
-}
+import { StepDetails, StepStatus } from 'uniswap/src/components/ConfirmSwapModal/Step'
 
 const ringAnimation = keyframes`
   0% {
@@ -135,7 +114,7 @@ export function Step({ stepStatus, stepDetails }: { stepStatus: StepStatus; step
       setSecondsRemaining(stepDetails.timeToStart)
     } else {
       setSecondsRemaining(null)
-      return undefined
+      return
     }
 
     const timer = setInterval(() => {

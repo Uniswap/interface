@@ -119,6 +119,22 @@ export const BUSD_BSC = new Token(UniverseChainId.Bnb, '0xe9e7CEA3DedcA5984780Ba
 
 export const DAI_BSC = new Token(UniverseChainId.Bnb, '0x1AF3F329e8BE154074D8769D1FFa4eE058B1DBc3', 18, 'DAI', 'DAI')
 
+export const MATIC_POLYGON = new Token(
+  UniverseChainId.Polygon,
+  '0x0000000000000000000000000000000000001010',
+  18,
+  'MATIC',
+  'Matic',
+)
+
+export const POL_POLYGON = new Token(
+  UniverseChainId.Polygon,
+  '0x0000000000000000000000000000000000001010',
+  18,
+  'POL',
+  'POL',
+)
+
 export const DAI_POLYGON = new Token(
   UniverseChainId.Polygon,
   '0x8f3Cf7ad23Cd3CaDbD9735AFf958023239c6A063',
@@ -554,8 +570,6 @@ export function isCelo(chainId: number): chainId is UniverseChainId.Celo | Unive
   return chainId === UniverseChainId.CeloAlfajores || chainId === UniverseChainId.Celo
 }
 
-// Celo has a precompile for its native asset that is fully-compliant with ERC20 interface
-// so we can treat it as an ERC20 token. (i.e. $CELO pools are created with its ERC20 precompile)
 function getCeloNativeCurrency(chainId: number): Token {
   switch (chainId) {
     case UniverseChainId.CeloAlfajores:
@@ -571,8 +585,6 @@ export function isPolygon(chainId: number): chainId is UniverseChainId.Polygon |
   return chainId === UniverseChainId.PolygonMumbai || chainId === UniverseChainId.Polygon
 }
 
-// Polygon also has a precompile, but its precompile is not fully erc20-compatible.
-// So we treat Polygon's native asset as NativeCurrency since we can't treat it like an ERC20 token.
 class PolygonNativeCurrency extends NativeCurrency {
   equals(other: Currency): boolean {
     return other.isNative && other.chainId === this.chainId
@@ -591,7 +603,7 @@ class PolygonNativeCurrency extends NativeCurrency {
     if (!isPolygon(chainId)) {
       throw new Error('Not Polygon')
     }
-    super(chainId, 18, 'POL', 'Polygon Ecosystem Token')
+    super(chainId, 18, 'MATIC', 'Matic')
   }
 }
 

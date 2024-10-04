@@ -73,29 +73,29 @@ export function SeedPhraseDisplay({ mnemonicId, onDismiss, walletNeedsRestore }:
         <WarningModal
           hideHandlebar
           caption={t('setting.recoveryPhrase.warning.view.message')}
-          rejectText={t('common.button.close')}
-          acknowledgeText={t('common.button.view')}
+          closeText={t('common.button.close')}
+          confirmText={t('common.button.view')}
           isDismissible={false}
           isOpen={showSeedPhraseViewWarningModal}
           modalName={ModalName.ViewSeedPhraseWarning}
           severity={WarningSeverity.High}
           title={t('setting.recoveryPhrase.warning.view.title')}
-          onReject={(): void => {
+          onCancel={(): void => {
             setShowSeedPhraseViewWarningModal(false)
             if (!showSeedPhrase) {
               onDismiss?.()
             }
           }}
-          onAcknowledge={onConfirmWarning}
+          onConfirm={onConfirmWarning}
         />
       )}
       <WarningModal
         caption={t('setting.recoveryPhrase.warning.screenshot.message')}
-        acknowledgeText={t('common.button.close')}
+        confirmText={t('common.button.close')}
         isOpen={showScreenShotWarningModal}
         modalName={ModalName.ScreenshotWarning}
         title={t('setting.recoveryPhrase.warning.screenshot.title')}
-        onAcknowledge={(): void => setShowScreenShotWarningModal(false)}
+        onConfirm={(): void => setShowScreenShotWarningModal(false)}
       />
     </>
   )

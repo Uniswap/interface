@@ -11,9 +11,9 @@ import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTimeout } from 'utilities/src/time/timing'
-import { ElementAfterText } from 'wallet/src/features/images/ElementAfterText'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
 import { popNotification, setNotificationViewed } from 'wallet/src/features/notifications/slice'
+import { usePostTextElementPositionProps } from 'wallet/src/utils/layout'
 
 const NOTIFICATION_HEIGHT = 64
 
@@ -205,6 +205,7 @@ function NotificationContent({
   onPress,
   onPressIn,
 }: NotificationContentProps): JSX.Element {
+  const { postTextElementPositionProps, onTextLayout } = usePostTextElementPositionProps()
   return (
     <TouchableArea
       alignItems="center"
@@ -228,22 +229,24 @@ function NotificationContent({
         >
           {icon}
           <Flex shrink alignItems="flex-start" flexDirection="column">
-            <ElementAfterText
-              textProps={{
-                adjustsFontSizeToFit: true,
-                numberOfLines: subtitle ? 1 : 2,
-                testID: TestID.NotificationToastTitle,
-                variant: 'subheading2',
-              }}
-              caption={title}
-              image={postCaptionElement}
-            />
+            <Flex row pr={postTextElementPositionProps ? '$spacing24' : undefined}>
+              <Text
+                adjustsFontSizeToFit
+                numberOfLines={subtitle ? 1 : 2}
+                testID={TestID.NotificationToastTitle}
+                variant="subheading2"
+                onTextLayout={onTextLayout}
+              >
+                {title}
+              </Text>
+              <Flex {...postTextElementPositionProps}>{postCaptionElement}</Flex>
+            </Flex>
+            {subtitle && (
+              <Text adjustsFontSizeToFit color="$neutral2" numberOfLines={1} variant="body3">
+                {subtitle}
+              </Text>
+            )}
           </Flex>
-          {subtitle && (
-            <Text adjustsFontSizeToFit color="$neutral2" numberOfLines={1} variant="body3">
-              {subtitle}
-            </Text>
-          )}
         </Flex>
         {actionButton && (
           <Flex shrink alignItems="flex-end" flexBasis="25%" gap="$spacing4">

@@ -1,17 +1,11 @@
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
-import { PositionInfo, usePositionInfo } from 'components/Liquidity/utils'
+import { usePositionInfo } from 'components/Liquidity/utils'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
-import { PriceRangeContextProvider, useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
-import { CreatePositionContextProvider } from 'pages/Pool/Positions/create/CreatePositionContextProvider'
-import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
-import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
-import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
-import { PositionFlowStep } from 'pages/Pool/Positions/create/types'
+import { useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useParams } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components'
-import { PositionField } from 'types/position'
 import { Flex, Main, Text, styled } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
@@ -32,12 +26,29 @@ const BodyWrapper = styled(Main, {
   p: 24,
 })
 
-function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
+enum MigrateStep {
+  SELECT_FEE_TIER,
+  SET_PRICE_RANGE,
+}
+
+/**
+ * The page for migrating any v3 LP position to v4.
+ */
+export default function MigrateV3() {
   const { positionId } = useParams<{ positionId: string }>()
   const { t } = useTranslation()
-
-  const { step, setStep } = useCreatePositionContext()
+  const [step, setStep] = useState(MigrateStep.SELECT_FEE_TIER)
   const { value: v4Enabled, isLoading: isV4GateLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
+
+  // TODO(WEB-4920): replace this with real data fetching
+  const { data } = useGetPositionsQuery()
+  const position = data?.positions[2]
+  const positionInfo = usePositionInfo(position)
+
+  if (!position || !positionInfo) {
+    // TODO(WEB-4920): handle loading/error states (including if the position is for v2)
+    return null
+  }
 
   const { currency0Amount, currency1Amount } = positionInfo
 
@@ -69,8 +80,8 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
         <PoolProgressIndicator
           mt="$spacing32"
           steps={[
-            { label: t('migrate.selectFeeTier'), active: step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER },
-            { label: t('migrate.setRange'), active: step === PositionFlowStep.PRICE_RANGE },
+            { label: t('migrate.selectFeeTier'), active: step === MigrateStep.SELECT_FEE_TIER },
+            { label: t('migrate.setRange'), active: step === MigrateStep.SET_PRICE_RANGE },
           ]}
         />
       </Flex>
@@ -88,7 +99,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
             px="$padding12"
             {...ClickableTamaguiStyle}
             onPress={() => {
-              setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
+              setStep(MigrateStep.SELECT_FEE_TIER)
               // reset any other state here.
             }}
           >
@@ -98,65 +109,15 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
             </Text>
           </Flex>
         </Flex>
-        <LiquidityPositionCard liquidityPosition={positionInfo.restPosition} mt="$spacing24" />
+        <LiquidityPositionCard liquidityPosition={position} mt="$spacing24" />
         <Flex justifyContent="center" alignItems="center">
           <Flex shrink backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
             <ArrowDown size={20} color="$neutral1" />
           </Flex>
         </Flex>
-
-        {step === PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER ? (
-          <SelectTokensStep
-            width="100%"
-            maxWidth="unset"
-            tokensLocked
-            onContinue={() => {
-              setStep(PositionFlowStep.PRICE_RANGE)
-            }}
-          />
-        ) : (
-          <EditSelectTokensStep width="100%" maxWidth="unset" />
-        )}
-        {step === PositionFlowStep.PRICE_RANGE && (
-          <SelectPriceRangeStep
-            width="100%"
-            maxWidth="unset"
-            onContinue={() => {
-              // TODO (WEB-4920): submit the migration transaction.
-            }}
-          />
-        )}
       </Flex>
+      {/* TODO: fee tier selection component. collapse if step === SET_PRICE_RANGE */}
+      {/* TODO: price range component. hide if step === SELECT_FEE_TIER */}
     </BodyWrapper>
-  )
-}
-
-/**
- * The page for migrating any v3 LP position to v4.
- */
-export default function MigrateV3() {
-  // TODO(WEB-4920): replace this with real data fetching
-  const { data } = useGetPositionsQuery()
-  const position = data?.positions[1]
-  const positionInfo = usePositionInfo(position)
-
-  if (!position || !positionInfo) {
-    // TODO(WEB-4920): handle loading/error states (including if the position is for v2)
-    return null
-  }
-  const { currency0Amount, currency1Amount } = positionInfo
-  return (
-    <CreatePositionContextProvider
-      initialState={{
-        tokenInputs: {
-          [PositionField.TOKEN0]: currency0Amount.currency,
-          [PositionField.TOKEN1]: currency1Amount.currency,
-        },
-      }}
-    >
-      <PriceRangeContextProvider>
-        <MigrateV3Inner positionInfo={positionInfo} />
-      </PriceRangeContextProvider>
-    </CreatePositionContextProvider>
   )
 }

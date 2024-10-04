@@ -65,7 +65,6 @@ export enum TimePeriod {
   YEAR = 'Y',
 }
 
-// eslint-disable-next-line consistent-return
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
     case TimePeriod.HOUR:
@@ -112,14 +111,14 @@ export function gqlToCurrency(token: DeepPartial<GqlToken | TokenStat>): Currenc
       token.address,
       token.decimals ?? 18,
       token.symbol ?? undefined,
-      token.name ?? token.project?.name ?? undefined,
+      token.project?.name ?? token.name ?? undefined,
     )
   }
 }
 
 export function fiatOnRampToCurrency(forCurrency: FORSupportedToken): Currency | undefined {
   if (!isSupportedChainId(Number(forCurrency.chainId))) {
-    return undefined
+    return
   }
   const supportedChainId = Number(forCurrency.chainId) as SupportedInterfaceChainId
 

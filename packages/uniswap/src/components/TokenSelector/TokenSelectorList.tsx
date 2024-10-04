@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { AnimateTransition, Flex, Loader, Skeleton, Text } from 'ui/src'
 import { fonts } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { HorizontalTokenList } from 'uniswap/src/components/TokenSelector/HorizontalTokenList/HorizontalTokenList'
 import { TokenOptionItem } from 'uniswap/src/components/TokenSelector/TokenOptionItem'
 import {
   TokenSectionBaseList,
@@ -11,6 +10,8 @@ import {
 } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
 import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList.web'
 import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/TokenSectionHeader'
+import { renderSuggestedTokenItem } from 'uniswap/src/components/TokenSelector/renderSuggestedTokenItem'
+import { suggestedTokensKeyExtractor } from 'uniswap/src/components/TokenSelector/suggestedTokensKeyExtractor'
 import {
   OnSelectCurrency,
   TokenOption,
@@ -24,21 +25,11 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 
-function isHorizontalListTokenItem(
-  data: TokenOption | TokenOption[],
-  section?: TokenSection,
-  chainFilter?: UniverseChainId | null,
-): data is TokenOption[] {
-  if (section?.sectionKey === TokenOptionSection.BridgingTokens) {
-    return !chainFilter && Array.isArray(data)
-  }
+function isSuggestedTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
   return Array.isArray(data)
 }
 
-export function isHorizontalListSection(section: TokenSection, chainFilter?: UniverseChainId | null): boolean {
-  if (section.sectionKey === TokenOptionSection.BridgingTokens) {
-    return !chainFilter
-  }
+export function isSuggestedTokenSection(section: TokenSection): boolean {
   return section.sectionKey === TokenOptionSection.SuggestedTokens
 }
 
@@ -141,11 +132,11 @@ function _TokenSelectorList({
 
   const renderItem = useCallback(
     ({ item, section, index }: { item: TokenOption | TokenOption[]; section: TokenSection; index: number }) => {
-      if (isHorizontalListTokenItem(item, section, chainFilter) && isHorizontalListSection(section)) {
-        return <HorizontalTokenList tokens={item} section={section} index={index} onSelectCurrency={onSelectCurrency} />
+      if (isSuggestedTokenItem(item) && isSuggestedTokenSection(section)) {
+        return renderSuggestedTokenItem({ item, section, index, onSelectCurrency })
       }
 
-      if (!isHorizontalListTokenItem(item, section, chainFilter)) {
+      if (!isSuggestedTokenItem(item) && !isSuggestedTokenSection(section)) {
         return (
           <TokenOptionItemWrapper
             index={index}
@@ -161,12 +152,12 @@ function _TokenSelectorList({
 
       return null
     },
-    [onSelectCurrency, showTokenAddress, showTokenWarnings, isKeyboardOpen, chainFilter],
+    [onSelectCurrency, showTokenAddress, showTokenWarnings, isKeyboardOpen],
   )
 
   const renderSectionHeader = useCallback(
     ({ section }: { section: TokenSectionHeaderProps }): JSX.Element => (
-      <SectionHeader rightElement={section.rightElement} sectionKey={section.sectionKey} name={section.name} />
+      <SectionHeader rightElement={section.rightElement} sectionKey={section.sectionKey} />
     ),
     [],
   )
@@ -214,8 +205,8 @@ function _TokenSelectorList({
 }
 
 function key(item: TokenOption | TokenOption[]): CurrencyId {
-  if (isHorizontalListTokenItem(item)) {
-    return item.map((token) => token.currencyInfo.currencyId).join('-')
+  if (isSuggestedTokenItem(item)) {
+    return suggestedTokensKeyExtractor(item)
   }
 
   return item.currencyInfo.currencyId

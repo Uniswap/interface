@@ -5,6 +5,7 @@ import { BackupReminderModal } from 'src/app/modals/BackupReminderModal'
 import { BackupWarningModal } from 'src/app/modals/BackupWarningModal'
 import { ExperimentsModal } from 'src/app/modals/ExperimentsModal'
 import { ExploreModal } from 'src/app/modals/ExploreModal'
+import { HiddenTokenInfoModal } from 'src/app/modals/HiddenTokenInfoModal'
 import { KoreaCexTransferInfoModal } from 'src/app/modals/KoreaCexTransferInfoModal'
 import { LazyModalRenderer } from 'src/app/modals/LazyModalRenderer'
 import { SendTokenModal } from 'src/app/modals/SendTokenModal'
@@ -35,6 +36,10 @@ export function AppModals(): JSX.Element {
 
   return (
     <>
+      <LazyModalRenderer name={ModalName.HiddenTokenInfoModal}>
+        <HiddenTokenInfoModal />
+      </LazyModalRenderer>
+
       <LazyModalRenderer name={ModalName.KoreaCexTransferInfoModal}>
         <KoreaCexTransferInfoModal />
       </LazyModalRenderer>

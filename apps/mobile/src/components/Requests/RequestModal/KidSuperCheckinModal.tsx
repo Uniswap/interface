@@ -44,7 +44,7 @@ function useUniswapCafeLogo(): string | undefined {
   const logos = uwuLinkContractAllowlist.tokenRecipients.find((recipient) => recipient.name === 'Uniswap Cafe')?.logo
 
   if (!logos) {
-    return undefined
+    return
   }
 
   return isDarkMode ? logos.dark : logos.light

@@ -5,7 +5,6 @@ import { AppearanceSettingType } from 'wallet/src/features/appearance/slice'
 import { TextEncoder, TextDecoder } from 'util'
 import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/mockSharedPersistQueryClientProvider'
 import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
-import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 
 process.env.IS_UNISWAP_EXTENSION = true
 
@@ -72,8 +71,6 @@ jest.mock('wallet/src/features/appearance/hooks', () => {
     useSelectedColorScheme: () => 'light',
   }
 })
-
-jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 
 jest.mock('uniswap/src/data/apiClients/SharedPersistQueryClientProvider', () => mockSharedPersistQueryClientProvider)
 

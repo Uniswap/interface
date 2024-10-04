@@ -8,9 +8,6 @@ import TokenSafety, { TokenSafetyProps } from '.'
 
 interface TokenSafetyModalProps extends TokenSafetyProps {
   isOpen: boolean
-  onReject?: () => void
-  onToken0BlockAcknowledged: () => void
-  onToken1BlockAcknowledged?: () => void
 }
 
 /* TODO(WALL-4625): Clean up and remove this file; is duplicate of packages/uniswap TokenWarningModal.tsx */
@@ -18,11 +15,9 @@ export default function TokenSafetyModal({
   isOpen,
   token0,
   token1,
-  onAcknowledge,
-  closeModalOnly,
-  onReject,
-  onToken0BlockAcknowledged,
-  onToken1BlockAcknowledged,
+  onContinue,
+  onCancel,
+  onBlocked,
   showCancel,
 }: TokenSafetyModalProps) {
   const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
@@ -40,24 +35,17 @@ export default function TokenSafetyModal({
       isVisible={isOpen}
       currencyInfo0={currencyInfo0}
       currencyInfo1={currencyInfo1 ?? undefined}
-      onReject={onReject}
-      onAcknowledge={onAcknowledge}
-      closeModalOnly={closeModalOnly}
-      onToken0BlockAcknowledged={onToken0BlockAcknowledged}
-      onToken1BlockAcknowledged={onToken1BlockAcknowledged}
+      onClose={onBlocked ?? onCancel}
+      onAccept={onContinue}
     />
   ) : (
-    <Modal isOpen={isOpen} onDismiss={closeModalOnly} maxHeight={400}>
+    <Modal isOpen={isOpen} onDismiss={onCancel} maxHeight={400}>
       <TokenSafety
         token0={token0}
         token1={token1}
-        onAcknowledge={onAcknowledge}
-        onBlocked={() => {
-          onToken0BlockAcknowledged()
-          onToken1BlockAcknowledged?.()
-          closeModalOnly()
-        }}
-        closeModalOnly={closeModalOnly}
+        onContinue={onContinue}
+        onBlocked={onBlocked}
+        onCancel={onCancel}
         showCancel={showCancel}
       />
     </Modal>

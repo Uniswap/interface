@@ -1,5 +1,4 @@
 import {
-  BridgeTransactionInfo,
   ConfirmedSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
@@ -65,10 +64,6 @@ export function isSendTokenTransactionInfo(typeInfo: TransactionTypeInfo): typeI
 
 export function isSwapTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is SwapTypeTransactionInfo {
   return typeInfo.type === TransactionType.Swap
-}
-
-export function isBridgeTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is BridgeTransactionInfo {
-  return typeInfo.type === TransactionType.Bridge
 }
 
 export function isWCConfirmTransactionInfo(typeInfo: TransactionTypeInfo): typeInfo is WCConfirmInfo {

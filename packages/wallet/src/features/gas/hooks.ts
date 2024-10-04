@@ -1,7 +1,7 @@
 import { BigNumber, providers } from 'ethers'
 import { useCallback, useMemo } from 'react'
 import { TRANSACTION_CANCELLATION_GAS_FACTOR } from 'uniswap/src/constants/transactions'
-import { FeeType } from 'uniswap/src/data/tradingApi/types'
+import { FeeType } from 'uniswap/src/data/tradingApi/__generated__'
 import { useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -38,13 +38,13 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
   return useMemo(() => {
     if (isUniswapXTx) {
       if (!uniswapXCancelRequest.data || !uniswapXGasFee.value) {
-        return undefined
+        return
       }
       return { cancelRequest: uniswapXCancelRequest.data, cancelationGasFee: uniswapXGasFee.value }
     }
 
     if (!baseTxGasFee.params) {
-      return undefined
+      return
     }
 
     let adjustedFeeDetails: FeeDetails | undefined
@@ -59,7 +59,7 @@ export function useCancelationGasFeeInfo(transaction: TransactionDetails): Cance
         tags: { file: 'features/gas/hooks.ts', function: 'getAdjustedGasFeeDetails' },
         extra: { request: transaction.options.request, currentGasFeeParams: baseTxGasFee.params },
       })
-      return undefined
+      return
     }
 
     const cancelRequest = {

@@ -1,11 +1,7 @@
 import { Currency, TradeType } from '@uniswap/sdk-core'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import {
-  TransactionDetails,
-  TransactionType,
-  isBridgeTypeInfo,
-} from 'uniswap/src/features/transactions/types/transactionDetails'
+import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress, currencyIdToAddress } from 'uniswap/src/utils/currencyId'
@@ -35,9 +31,8 @@ export function createSwapFormFromTxDetails({
 
   try {
     const { typeInfo } = transactionDetails
-    const isBridging = isBridgeTypeInfo(typeInfo)
 
-    if (typeInfo.type !== TransactionType.Swap && !isBridging) {
+    if (typeInfo.type !== TransactionType.Swap) {
       throw new Error(`Tx hash ${txHash} does not correspond to a swap tx. It is of type ${typeInfo.type}`)
     }
 
@@ -57,11 +52,8 @@ export function createSwapFormFromTxDetails({
       type: AssetType.Currency,
     }
 
-    const exactCurrencyField = isBridging
-      ? CurrencyField.INPUT
-      : typeInfo.tradeType === TradeType.EXACT_OUTPUT
-        ? CurrencyField.OUTPUT
-        : CurrencyField.INPUT
+    const exactCurrencyField =
+      typeInfo.tradeType === TradeType.EXACT_OUTPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
 
     const { value, currency } =
       exactCurrencyField === CurrencyField.INPUT
@@ -82,7 +74,6 @@ export function createSwapFormFromTxDetails({
     logger.error(error, {
       tags: { file: 'createSwapFormFromTxDetails', function: 'createSwapFormFromTxDetails' },
     })
-    return undefined
   }
 }
 
@@ -143,6 +134,5 @@ export function createWrapFormFromTxDetails({
     logger.error(error, {
       tags: { file: 'createSwapFormFromTxDetails', function: 'createWrapFormFromTxDetails' },
     })
-    return undefined
   }
 }

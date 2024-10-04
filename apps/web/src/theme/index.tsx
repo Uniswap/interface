@@ -9,6 +9,8 @@ import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import { darkDeprecatedTheme, lightDeprecatedTheme } from 'theme/deprecatedColors'
 import { getAccent2, getNeutralContrast } from 'theme/utils'
 
+export const NAV_HEIGHT = 72
+
 export const MEDIA_WIDTHS = {
   deprecated_upToExtraSmall: 500,
   deprecated_upToSmall: 720,

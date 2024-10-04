@@ -15,7 +15,6 @@ import { Readable } from 'stream'
 import { toBeVisible } from 'test-utils/matchers'
 import { mocked } from 'test-utils/mocked'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { mockLocalizationContext } from 'uniswap/src/test/mocks/locale'
 import { TextDecoder, TextEncoder } from 'util'
 
 setupi18n()
@@ -82,8 +81,6 @@ jest.mock('@popperjs/core', () => {
     },
   }
 })
-
-jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 
 jest.mock('@web3-react/core', () => {
   const web3React = jest.requireActual('@web3-react/core')

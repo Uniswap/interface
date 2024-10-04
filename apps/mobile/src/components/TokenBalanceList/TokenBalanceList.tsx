@@ -5,23 +5,21 @@ import { forwardRef, memo, useCallback, useEffect, useMemo, useRef, useState } f
 import { useTranslation } from 'react-i18next'
 import { FlatList, RefreshControl } from 'react-native'
 import Animated, { FadeInDown, FadeOut } from 'react-native-reanimated'
+import { useDispatch } from 'react-redux'
 import { useAppStackNavigation } from 'src/app/navigation/types'
 import { TokenBalanceItemContextMenu } from 'src/components/TokenBalanceList/TokenBalanceItemContextMenu'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TAB_VIEW_SCROLL_THROTTLE, TabProps } from 'src/components/layout/TabHelpers'
+import { openModal } from 'src/features/modals/modalSlice'
 import { Flex, Loader, useDeviceInsets, useSporeColors } from 'ui/src'
-import { ShieldCheck } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { zIndices } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { ModalName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
 import { InformationBanner } from 'wallet/src/components/banners/InformationBanner'
-import { InfoLinkModal } from 'wallet/src/components/modals/InfoLinkModal'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
 import { HiddenTokensRow } from 'wallet/src/features/portfolio/HiddenTokensRow'
 import { TokenBalanceItem } from 'wallet/src/features/portfolio/TokenBalanceItem'
@@ -247,27 +245,22 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
     setHiddenTokensExpanded,
   } = useTokenBalanceListContext()
 
+  const dispatch = useDispatch()
   const { t } = useTranslation()
-  const [isModalVisible, setModalVisible] = useState(false)
 
-  const handlePressToken = (): void => {
-    setModalVisible(true)
-  }
-
-  const closeModal = (): void => {
-    setModalVisible(false)
-  }
-
-  const handleAnalytics = (): void => {
-    sendAnalyticsEvent(WalletEventName.ExternalLinkOpened, {
-      url: uniswapUrls.helpArticleUrls.hiddenTokenInfo,
-    })
-  }
+  const onPressInfo = useCallback(() => {
+    dispatch(
+      openModal({
+        name: ModalName.HiddenTokenInfoModal,
+      }),
+    )
+  }, [dispatch])
 
   if (item === HIDDEN_TOKEN_BALANCES_ROW) {
     return (
-      <Flex grow>
+      <Flex>
         <HiddenTokensRow
+          padded
           isExpanded={hiddenTokensExpanded}
           numHidden={hiddenTokensCount}
           onPress={(): void => {
@@ -276,29 +269,9 @@ const TokenBalanceItemRow = memo(function TokenBalanceItemRow({
         />
         {hiddenTokensExpanded && (
           <Flex mx="$spacing12">
-            <InformationBanner infoText={t('hidden.tokens.info.banner.text')} onPress={handlePressToken} />
+            <InformationBanner infoText={t('hidden.tokens.info.banner.text')} onPress={onPressInfo} />
           </Flex>
         )}
-
-        <InfoLinkModal
-          showCloseButton
-          buttonText={t('common.button.close')}
-          buttonTheme="tertiary"
-          description={t('hidden.tokens.info.text.info')}
-          icon={
-            <Flex centered backgroundColor="$surface3" borderRadius="$rounded12" p="$spacing12">
-              <ShieldCheck color="$neutral1" size="$icon.24" />
-            </Flex>
-          }
-          isOpen={isModalVisible}
-          linkText={t('common.button.learn')}
-          linkUrl={uniswapUrls.helpArticleUrls.hiddenTokenInfo}
-          name={ModalName.HiddenTokenInfoModal}
-          title={t('hidden.tokens.info.text.title')}
-          onAnalyticsEvent={handleAnalytics}
-          onButtonPress={closeModal}
-          onDismiss={closeModal}
-        />
       </Flex>
     )
   }

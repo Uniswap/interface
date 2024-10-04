@@ -89,7 +89,6 @@ export function useDerivedSwapInfo({
         currency: otherCurrency,
       })
     }
-    return undefined
   }, [exactAmountToken, isWrap, otherCurrency])
 
   const sendPortionEnabled = useFeatureFlag(FeatureFlags.PortionFields)

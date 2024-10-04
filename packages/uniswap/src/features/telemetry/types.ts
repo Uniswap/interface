@@ -18,7 +18,6 @@ import {
   NavBarSearchTypes,
   SharedEventName,
   SwapEventName,
-  SwapPriceImpactUserResponse,
   SwapPriceUpdateUserResponse,
   WalletConnectionResult,
 } from '@uniswap/analytics-events'
@@ -68,8 +67,6 @@ export type GasEstimateAccuracyProperties = {
   private_rpc?: boolean
   is_shadow?: boolean
   name?: string
-  out_of_gas: boolean
-  timed_out: boolean
 }
 
 export type AssetDetailsBaseProperties = {
@@ -96,7 +93,6 @@ type OnboardingCompletedProps = {
 }
 
 export type SwapTradeBaseProperties = {
-  total_balances_usd?: number
   transactionOriginType: string
   // We have both `allowed_slippage` (percentage) and `allowed_slippage_basis_points` because web and wallet used to track this in different ways.
   // We should eventually standardize on one or the other.
@@ -162,10 +158,6 @@ type UniswapXTransactionResultProperties = BaseSwapTransactionResultProperties &
   order_hash: string
 }
 
-type BridgeSwapTransactionResultProperties = BaseSwapTransactionResultProperties & {
-  routing: 'BRIDGE'
-}
-
 type FailedUniswapXOrderResultProperties = Omit<UniswapXTransactionResultProperties, 'hash'>
 
 type TransferProperties = {
@@ -194,10 +186,6 @@ export type SwapPriceUpdateActionProperties = {
   token_in_symbol?: string
   token_out_symbol?: string
   price_update_basis_points?: number
-}
-
-export type SwapPriceImpactActionProperties = {
-  response: SwapPriceImpactUserResponse
 }
 
 export type InterfaceSearchResultSelectionProperties = {
@@ -630,16 +618,11 @@ export type UniverseEventProperties = {
   }
   [SharedEventName.NAVBAR_CLICKED]: undefined
   [SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED]: undefined
-  [SwapEventName.SWAP_PRICE_IMPACT_ACKNOWLEDGED]: SwapPriceImpactActionProperties
   [SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED]: SwapPriceUpdateActionProperties
   [SwapEventName.SWAP_TRANSACTION_COMPLETED]:
     | ClassicSwapTransactionResultProperties
     | UniswapXTransactionResultProperties
-    | BridgeSwapTransactionResultProperties
-  [SwapEventName.SWAP_TRANSACTION_FAILED]:
-    | ClassicSwapTransactionResultProperties
-    | FailedUniswapXOrderResultProperties
-    | BridgeSwapTransactionResultProperties
+  [SwapEventName.SWAP_TRANSACTION_FAILED]: ClassicSwapTransactionResultProperties | FailedUniswapXOrderResultProperties
   [SwapEventName.SWAP_DETAILS_EXPANDED]: ITraceContext | undefined
   [SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED]: ITraceContext
   [SwapEventName.SWAP_QUOTE_RECEIVED]: {
@@ -763,7 +746,7 @@ export type UniverseEventProperties = {
   }
   [WalletEventName.SwapSubmitted]: (
     | {
-        routing: 'CLASSIC' | 'BRIDGE'
+        routing: 'CLASSIC'
         transaction_hash: string
       }
     | {

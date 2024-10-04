@@ -93,7 +93,7 @@ export function ActionSheetDropdown({
 
   useEffect(() => {
     if (!isWeb) {
-      return undefined
+      return
     }
 
     function resizeListener(): void {
@@ -245,7 +245,7 @@ function DropdownContent({
   const [windowScrollY, setWindowScrollY] = useState(0)
   useEffect(() => {
     if (!isWeb) {
-      return undefined
+      return
     }
 
     function scrollListener(): void {

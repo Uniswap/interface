@@ -34,7 +34,7 @@ export function useAcceptedTrade({
 
   const onAcceptTrade = (): undefined => {
     if (!trade) {
-      return
+      return undefined
     }
 
     setAcceptedDerivedSwapInfo(derivedSwapInfo)

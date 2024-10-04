@@ -82,7 +82,6 @@ async function generateSVGComponent(svg: string, fileName: string): Promise<stri
     return await prettierFormat(element)
   } catch (err) {
     console.log(`Error converting icon: ${fileName}: ${(err as any).message}`)
-    return undefined
   }
 }
 

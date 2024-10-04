@@ -7,7 +7,7 @@ export function OnboardingScreen(props: OnboardingScreenProps): null {
 
   useLayoutEffect(() => {
     if (!context) {
-      return undefined
+      return
     }
     context.setOnboardingScreen(props)
     return () => {

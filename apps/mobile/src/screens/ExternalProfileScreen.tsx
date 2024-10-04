@@ -117,7 +117,7 @@ export function ExternalProfileScreen({
           {...sceneProps}
           indicatorStyle={TAB_STYLES.activeTabIndicator}
           navigationState={{ index: tabIndex, routes: tabs }}
-          pressColor="transparent" // Android only
+          pressColor={colors.surface3.val} // Android only
           renderLabel={({ route, focused }): JSX.Element => (
             <TabLabel isExternalProfile focused={focused} route={route} />
           )}

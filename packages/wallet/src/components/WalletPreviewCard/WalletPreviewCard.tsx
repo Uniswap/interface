@@ -53,7 +53,7 @@ export default function WalletPreviewCard({
               {balanceFormatted}
             </Text>
           )}
-          {!hideSelectionCircle && selected && <Check strokeWidth={6} color="$accent1" size={iconSizes.icon20} />}
+          {!hideSelectionCircle && selected && <Check color="$accent1" size={iconSizes.icon20} />}
         </Flex>
       </Flex>
     </TouchableArea>

@@ -737,7 +737,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                       "borderWidth": 0,
                     },
                     {
-                      "color": "#BFBFBF",
+                      "color": "#CECECE",
                       "height": 20,
                       "width": 20,
                     },
@@ -748,7 +748,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                     },
                   ]
                 }
-                tintColor="#BFBFBF"
+                tintColor="#CECECE"
                 vbHeight={24}
                 vbWidth={24}
               >
@@ -782,7 +782,7 @@ exports[`BackupScreen renders backup options when none are completed 1`] = `
                 maxFontSizeMultiplier={1.4}
                 style={
                   {
-                    "color": "#BFBFBF",
+                    "color": "#CECECE",
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
                     "fontWeight": "400",
@@ -1539,7 +1539,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                       "borderWidth": 0,
                     },
                     {
-                      "color": "#BFBFBF",
+                      "color": "#CECECE",
                       "height": 20,
                       "width": 20,
                     },
@@ -1550,7 +1550,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                     },
                   ]
                 }
-                tintColor="#BFBFBF"
+                tintColor="#CECECE"
                 vbHeight={24}
                 vbWidth={24}
               >
@@ -1584,7 +1584,7 @@ exports[`BackupScreen renders backup options when some are completed 1`] = `
                 maxFontSizeMultiplier={1.4}
                 style={
                   {
-                    "color": "#BFBFBF",
+                    "color": "#CECECE",
                     "fontFamily": "Basel Grotesk",
                     "fontSize": 17,
                     "fontWeight": "400",

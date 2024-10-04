@@ -65,7 +65,7 @@ export function ContextMenu({
   // Note: Overlay needs to be rendered in portal since parent transforms don't let fixed elements target the viewport
   // see: https://stackoverflow.com/a/15256339
   return (
-    <Popover allowFlip offset={offset} open={showMenu} placement="bottom-end" {...rest}>
+    <Popover offset={offset} open={showMenu} placement="bottom-end" {...rest}>
       {/* OVERLAY */}
       {/* Conditional rendering needs to be used here instead of CSS so that portals aren't duplicated */}
       {showMenu && (

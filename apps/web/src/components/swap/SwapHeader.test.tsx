@@ -1,9 +1,9 @@
 import SwapHeader from 'components/swap/SwapHeader'
+import { Field } from 'components/swap/constants'
 import { Dispatch, PropsWithChildren, SetStateAction } from 'react'
 import { CurrencyState, EMPTY_DERIVED_SWAP_INFO, SwapAndLimitContext, SwapContext } from 'state/swap/types'
 import { act, render, screen } from 'test-utils/render'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
-import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 interface WrapperProps {
@@ -37,7 +37,7 @@ function Wrapper(props: PropsWithChildren<WrapperProps>) {
           derivedSwapInfo: EMPTY_DERIVED_SWAP_INFO,
           setSwapState: jest.fn(),
           swapState: {
-            independentField: CurrencyField.INPUT,
+            independentField: Field.INPUT,
             typedValue: '',
           },
         }}

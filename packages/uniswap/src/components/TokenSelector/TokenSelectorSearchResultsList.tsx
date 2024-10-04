@@ -5,7 +5,6 @@ import { SectionHeader } from 'uniswap/src/components/TokenSelector/TokenSection
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import { useAddToSearchHistory, useTokenSectionsForSearchResults } from 'uniswap/src/components/TokenSelector/hooks'
 import { OnSelectCurrency, TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
-import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 function EmptyResults({ searchFilter }: { searchFilter: string }): JSX.Element {
@@ -33,7 +32,6 @@ function _TokenSelectorSearchResultsList({
   debouncedParsedSearchFilter,
   isBalancesOnlySearch,
   isKeyboardOpen,
-  input,
 }: {
   onSelectCurrency: OnSelectCurrency
   activeAccountAddress?: string
@@ -44,7 +42,6 @@ function _TokenSelectorSearchResultsList({
   debouncedParsedSearchFilter: string | null
   isBalancesOnlySearch: boolean
   isKeyboardOpen?: boolean
-  input: TradeableAsset | undefined
 }): JSX.Element {
   const { t } = useTranslation()
   const { registerSearch } = useAddToSearchHistory()
@@ -58,7 +55,6 @@ function _TokenSelectorSearchResultsList({
     chainFilter ?? parsedChainFilter,
     debouncedParsedSearchFilter ?? debouncedSearchFilter,
     isBalancesOnlySearch,
-    input,
   )
 
   const onSelectCurrency: OnSelectCurrency = (currencyInfo, section, index) => {

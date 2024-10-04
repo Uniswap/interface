@@ -8,7 +8,7 @@ import MenuButton from 'components/Settings/MenuButton'
 import MultipleRoutingOptions from 'components/Settings/MultipleRoutingOptions'
 import RouterPreferenceSettings from 'components/Settings/RouterPreferenceSettings'
 import TransactionDeadlineSettings from 'components/Settings/TransactionDeadlineSettings'
-import { useIsSupportedChainId, useIsUniswapXSupportedChain } from 'constants/chains'
+import { isUniswapXSupportedChain, useIsSupportedChainId } from 'constants/chains'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
 import useDisableScrolling from 'hooks/useDisableScrolling'
 import { useOnClickOutside } from 'hooks/useOnClickOutside'
@@ -136,7 +136,7 @@ export default function SettingsTab({
   useDisableScrolling(isOpen)
 
   const multipleRoutingOptionsEnabled = useFeatureFlag(FeatureFlags.MultipleRoutingOptions)
-  const uniswapXEnabled = useIsUniswapXSupportedChain(chainId)
+  const uniswapXEnabled = chainId && isUniswapXSupportedChain(chainId)
   const showRoutingSettings = Boolean(uniswapXEnabled && !hideRoutingSettings && !multipleRoutingOptionsEnabled)
 
   const isChainSupported = useIsSupportedChainId(chainId)

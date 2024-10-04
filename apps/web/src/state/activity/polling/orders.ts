@@ -41,14 +41,6 @@ async function fetchLimitStatuses(account: string, orders: UniswapXOrderDetails[
   )
 }
 
-async function fetchPriorityStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<UniswapXBackendOrder[]> {
-  return fetchStatuses(
-    orders,
-    (order) => order.type === SignatureType.SIGN_PRIORITY_ORDER,
-    (hashes) => `/orders?swapper=${account}&orderHashes=${hashes}&orderType=${OffchainOrderType.PRIORITY_ORDER}`,
-  )
-}
-
 async function fetchOrderStatuses(account: string, orders: UniswapXOrderDetails[]): Promise<UniswapXBackendOrder[]> {
   return fetchStatuses(
     orders,
@@ -85,7 +77,6 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
           await Promise.all([
             fetchOrderStatuses(account.address, pendingOrders),
             fetchLimitStatuses(account.address, pendingOrders),
-            fetchPriorityStatuses(account.address, pendingOrders),
           ])
         ).flat()
 
@@ -135,7 +126,7 @@ export function usePollPendingOrders(onActivityUpdate: OnActivityUpdate) {
       timeout = setTimeout(getOrderStatuses, currentDelay)
       return () => clearTimeout(timeout)
     }
-    return undefined
+    return
   }, [account.address, currentDelay, onActivityUpdate, pendingOrders, provider, realtimeEnabled])
 
   return null

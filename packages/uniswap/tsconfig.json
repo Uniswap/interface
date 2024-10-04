@@ -4,8 +4,7 @@
     "src/**/*.ts",
     "src/**/*.d.ts",
     "src/**/*.tsx",
-    "src/**/*.json",
-    "src/**/*.mts"
+    "src/**/*.json"
   ],
   "references": [
     {

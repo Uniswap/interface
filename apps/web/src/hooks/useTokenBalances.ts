@@ -1,4 +1,4 @@
-import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
+import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
 import { PortfolioBalance } from 'graphql/data/portfolios'
 import { useAccount } from 'hooks/useAccount'
 import { TokenBalances } from 'lib/hooks/useTokenList/sorting'

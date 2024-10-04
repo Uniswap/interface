@@ -1,7 +1,7 @@
 import { TransactionRequest } from '@ethersproject/abstract-provider'
 import { Web3Provider } from '@ethersproject/providers'
 import { permit2Address } from '@uniswap/permit2-sdk'
-import { CosignedPriorityOrder, CosignedV2DutchOrder, DutchOrder, getCancelMultipleParams } from '@uniswap/uniswapx-sdk'
+import { CosignedV2DutchOrder, DutchOrder, getCancelMultipleParams } from '@uniswap/uniswapx-sdk'
 import { Activity } from 'components/AccountDrawer/MiniPortfolio/Activity/types'
 import { getYear, isSameDay, isSameMonth, isSameWeek, isSameYear } from 'date-fns'
 import { ContractTransaction } from 'ethers/lib/ethers'
@@ -100,9 +100,7 @@ function getCancelMultipleUniswapXOrdersParams(
     .map(({ encodedOrder, type }) =>
       type === SignatureType.SIGN_UNISWAPX_V2_ORDER
         ? CosignedV2DutchOrder.parse(encodedOrder, chainId)
-        : type === SignatureType.SIGN_PRIORITY_ORDER
-          ? CosignedPriorityOrder.parse(encodedOrder, chainId)
-          : DutchOrder.parse(encodedOrder, chainId),
+        : DutchOrder.parse(encodedOrder, chainId),
     )
     .map((order) => order.info.nonce)
   return getCancelMultipleParams(nonces)
@@ -155,7 +153,7 @@ async function cancelMultipleUniswapXOrders({
 }) {
   const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
   if (!permit2 || !provider) {
-    return undefined
+    return
   }
   try {
     const transactions: ContractTransaction[] = []
@@ -179,7 +177,7 @@ async function getCancelMultipleUniswapXOrdersTransaction(
 ): Promise<TransactionRequest | undefined> {
   const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
   if (!permit2 || cancelParams.length === 0) {
-    return undefined
+    return
   }
   try {
     const tx = await permit2.populateTransaction.invalidateUnorderedNonces(cancelParams[0].word, cancelParams[0].mask)
@@ -213,7 +211,7 @@ export function useCreateCancelTransactionRequest(
       params.orders.filter(({ encodedOrder }) => Boolean(encodedOrder)).length === 0 ||
       !permit2
     ) {
-      return undefined
+      return
     }
     return getCancelMultipleUniswapXOrdersTransaction(params.orders, params.chainId, permit2)
   }, [params, permit2])

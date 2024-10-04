@@ -10,8 +10,7 @@ import {
   SectionRowInfo,
   TokenSectionBaseListProps,
 } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
-import { isHorizontalListSection } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
-import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
+import { isSuggestedTokenSection } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 
 export const ITEM_SECTION_HEADER_ROW_HEIGHT = 40
 const ITEM_ROW_HEIGHT = 68
@@ -28,9 +27,9 @@ function isSectionHeader(rowInfo: BaseListData): rowInfo is BaseListSectionRowIn
   return !('renderItem' in rowInfo)
 }
 
-function isHorizontalTokenRowInfo(rowInfo: BaseListData): boolean {
+function isSuggestedTokenRowInfo(rowInfo: BaseListData): boolean {
   const isHeader = isSectionHeader(rowInfo)
-  return !isHeader && isHorizontalListSection(rowInfo.section)
+  return !isHeader && isSuggestedTokenSection(rowInfo.section)
 }
 
 export function TokenSectionBaseList({
@@ -70,7 +69,7 @@ export function TokenSectionBaseList({
         key: section.sectionKey,
         renderSectionHeader,
       }
-      if (section.sectionKey !== TokenOptionSection.SuggestedTokens) {
+      if (!isSuggestedTokenSection(section)) {
         acc.push(sectionInfo)
       }
 
@@ -114,7 +113,7 @@ export function TokenSectionBaseList({
         return 0
       }
 
-      if (isHorizontalTokenRowInfo(item)) {
+      if (isSuggestedTokenRowInfo(item)) {
         if (!isSectionHeader(item)) {
           if (isArray(item.item) && !item.item.length) {
             return 0

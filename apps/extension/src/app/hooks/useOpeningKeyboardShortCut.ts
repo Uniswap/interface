@@ -15,7 +15,6 @@ export enum State {
 type ReducerAction = { type: 'keyUp' | 'keyDown' | 'highlight'; key: string } | { type: 'highlight' }
 
 export const useOpeningKeyboardShortCut = (shortCutPressed: boolean): KeyboardKeyProps[] => {
-  // eslint-disable-next-line consistent-return
   const reducer = (state: KeyboardKeyProps[], action: ReducerAction): KeyboardKeyProps[] => {
     switch (action.type) {
       case 'keyDown':

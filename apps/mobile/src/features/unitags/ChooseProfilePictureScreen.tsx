@@ -89,7 +89,6 @@ export function ChooseProfilePictureScreen({
           entryPoint: OnboardingEntryPoint.FreshInstallOrReplace,
         },
       })
-      return Promise.resolve()
     } else {
       return attemptClaimUnitag()
     }

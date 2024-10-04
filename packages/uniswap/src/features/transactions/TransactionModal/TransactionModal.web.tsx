@@ -18,7 +18,6 @@ export function TransactionModal({
   onClose,
   openWalletRestoreModal,
   walletNeedsRestore,
-  swapRedirectCallback,
   modalName,
 }: TransactionModalProps): JSX.Element {
   const [screen, setScreen] = useState<TransactionScreen>(TransactionScreen.Form)
@@ -31,7 +30,6 @@ export function TransactionModal({
         walletNeedsRestore={walletNeedsRestore}
         screen={screen}
         setScreen={setScreen}
-        swapRedirectCallback={swapRedirectCallback}
         onClose={onClose}
       >
         {children}
