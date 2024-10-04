@@ -31,7 +31,7 @@ export function ExplorerView({ currency, modalName }: { currency: Currency; moda
       <WarningModalInfoContainer row height={40} gap="$spacing8">
         <Flex flex={1}>
           <Anchor href={explorerLink} rel="noopener noreferrer" target="_blank" textDecorationLine="none">
-            <Flex row gap="$spacing8" flexWrap="nowrap" width="100%">
+            <Flex row gap="$spacing8" flexWrap="nowrap" width="100%" alignItems="center">
               <Text variant="body3" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">
                 {explorerLink}
               </Text>

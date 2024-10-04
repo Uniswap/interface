@@ -61,7 +61,7 @@ function getFormScreenWarning(warnings: Warning[]): ParsedWarnings['reviewScreen
       warning: insufficientBalanceWarning,
       color: getAlertColor(WarningSeverity.Medium),
       Icon: null,
-      displayedInline: !isWeb,
+      displayedInline: false,
     }
   }
 

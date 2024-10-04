@@ -51,7 +51,7 @@ describe(tokenProjectToCurrencyInfos, () => {
         address: token.address,
         decimals: token.decimals,
         symbol: token.symbol,
-        name: project.name,
+        name: token.name ?? project.name,
       }),
     }) as CurrencyInfo
 
@@ -145,7 +145,7 @@ describe(gqlTokenToCurrencyInfo, () => {
         address: token.address,
         decimals: token.decimals,
         symbol: token.symbol,
-        name: token.project?.name,
+        name: token.name,
       }),
       currencyId: `${fromGraphQLChain(token.chain)}-${token.address}`,
       logoUrl: token.project?.logoUrl,

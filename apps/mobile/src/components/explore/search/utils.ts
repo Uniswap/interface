@@ -20,7 +20,7 @@ export function formatTokenSearchResults(
   searchQuery: string,
 ): TokenSearchResult[] | undefined {
   if (!data) {
-    return
+    return undefined
   }
 
   // Prevent showing "duplicate" token search results for tokens that are on multiple chains
@@ -31,14 +31,14 @@ export function formatTokenSearchResults(
       return tokensMap
     }
 
-    const { chain, address, symbol, project, market, protectionInfo } = token
+    const { name, chain, address, symbol, project, market, protectionInfo } = token
     const chainId = fromGraphQLChain(chain)
 
     if (!chainId || !project) {
       return tokensMap
     }
 
-    const { name, safetyLevel, logoUrl } = project
+    const { safetyLevel, logoUrl } = project
 
     const tokenResult: TokenSearchResult & { volume1D: number } = {
       type: SearchResultType.Token,
@@ -87,7 +87,7 @@ export function formatNFTCollectionSearchResults(
   data: ExploreSearchResult['nftCollections'],
 ): NFTCollectionSearchResult[] | undefined {
   if (!data) {
-    return
+    return undefined
   }
 
   return data.edges.reduce<NFTCollectionSearchResult[]>((accum, { node }) => {

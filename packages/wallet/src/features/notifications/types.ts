@@ -3,7 +3,7 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FinalizedTransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 
 export enum AppNotificationType {
@@ -17,6 +17,7 @@ export enum AppNotificationType {
   CopyFailed,
   Success,
   NetworkChanged,
+  NetworkChangedBridge,
   ChooseCountry,
   AssetVisibility, // could be token or NFT
   SwapPending,
@@ -65,6 +66,14 @@ export interface ApproveTxNotification extends TransactionNotificationBase {
   txType: TransactionType.Approve
   tokenAddress: string
   spender: string
+}
+
+export interface BridgeTxNotification extends TransactionNotificationBase {
+  txType: TransactionType.Bridge
+  inputCurrencyId: string
+  outputCurrencyId: string
+  inputCurrencyAmountRaw: string
+  outputCurrencyAmountRaw: string
 }
 
 export interface SwapTxNotification extends TransactionNotificationBase {
@@ -126,6 +135,7 @@ export type TransferNFTTxNotification = SendNFTNotification | ReceiveNFTNotifica
 
 export type TransactionNotification =
   | ApproveTxNotification
+  | BridgeTxNotification
   | SwapTxNotification
   | WrapTxNotification
   | TransferCurrencyTxNotification
@@ -160,8 +170,14 @@ export interface SuccessNotification extends AppNotificationBase {
 
 export interface NetworkChangedNotification extends AppNotificationBase {
   type: AppNotificationType.NetworkChanged
-  chainId: WalletChainId
+  chainId: UniverseChainId
   flow?: 'swap' | 'send'
+}
+
+export interface NetworkChangedBridgeNotification extends AppNotificationBase {
+  type: AppNotificationType.NetworkChangedBridge
+  fromChainId: UniverseChainId
+  toChainId: UniverseChainId
 }
 
 export interface ChooseCountryNotification extends AppNotificationBase {
@@ -221,6 +237,7 @@ export type AppNotification =
   | WalletConnectNotification
   | TransactionNotification
   | NetworkChangedNotification
+  | NetworkChangedBridgeNotification
   | ChooseCountryNotification
   | ChangeAssetVisibilityNotification
   | SuccessNotification

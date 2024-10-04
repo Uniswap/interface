@@ -59,4 +59,5 @@ export interface Warning {
   message?: string
   icon?: GeneratedIcon
   currency?: Currency
+  link?: string
 }

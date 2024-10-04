@@ -10,13 +10,10 @@ import {
   isConfirmedSwapTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
-import { TXN_HISTORY_ICON_SIZE } from 'wallet/src/features/transactions/SummaryCards/utils'
+import { TXN_HISTORY_ICON_SIZE, useOnRetrySwap } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
-
-const MAX_SHOW_RETRY_TIME = 15 * ONE_MINUTE_MS
 
 export function SwapSummaryItem({
   transaction,
@@ -31,6 +28,7 @@ export function SwapSummaryItem({
   const inputCurrencyInfo = useCurrencyInfo(typeInfo.inputCurrencyId)
   const outputCurrencyInfo = useCurrencyInfo(typeInfo.outputCurrencyId)
   const formatter = useLocalizationContext()
+  const onRetry = useOnRetrySwap(transaction, swapCallbacks)
 
   const caption = useMemo(() => {
     if (!inputCurrencyInfo || !outputCurrencyInfo) {
@@ -59,21 +57,6 @@ export function SwapSummaryItem({
     )} → ${otherCurrencyAmount}${getSymbolDisplayText(outputCurrency.symbol)}`
   }, [inputCurrencyInfo, outputCurrencyInfo, formatter, typeInfo])
 
-  // For retrying failed, locally submitted swaps
-  const swapFormState = swapCallbacks?.useSwapFormTransactionState(
-    transaction.from,
-    transaction.chainId,
-    transaction.id,
-  )
-
-  const latestSwapTx = swapCallbacks?.useLatestSwapTransaction(transaction.from)
-  const isTheLatestSwap = latestSwapTx && latestSwapTx.id === transaction.id
-  // if this is the latest tx or it was added within the last 15 minutes, show the retry button
-  const shouldShowRetry =
-    isTheLatestSwap || (Date.now() - transaction.addedTime < MAX_SHOW_RETRY_TIME && swapCallbacks?.onRetryGenerator)
-
-  const onRetry = swapCallbacks?.onRetryGenerator?.(swapFormState)
-
   return (
     <TransactionSummaryLayout
       caption={caption}
@@ -87,7 +70,7 @@ export function SwapSummaryItem({
       }
       index={index}
       transaction={transaction}
-      onRetry={swapFormState && shouldShowRetry ? onRetry : undefined}
+      onRetry={onRetry}
     />
   )
 }

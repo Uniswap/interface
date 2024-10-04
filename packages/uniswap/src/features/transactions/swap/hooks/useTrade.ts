@@ -1,5 +1,5 @@
 import { TradeType } from '@uniswap/sdk-core'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { useTradingApiQuoteQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiQuoteQuery'
 import { QuoteRequest, TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
@@ -11,10 +11,10 @@ import { useIndicativeTrade } from 'uniswap/src/features/transactions/swap/hooks
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
 import { TradeWithStatus, UseTradeArgs } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
-  getRoutingPreferenceForSwapRequest,
   getTokenAddressForApi,
   toTradingApiSupportedChainId,
   transformTradingApiResponseToTrade,
+  useQuoteRoutingParams,
   validateTrade,
 } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -52,12 +52,10 @@ export function useTrade({
   customSlippageTolerance,
   isUSDQuote,
   skip,
-  tradeProtocolPreference,
+  selectedProtocols,
   isDebouncing,
 }: UseTradeArgs): TradeWithStatus {
   const activeAccountAddress = account?.address
-
-  const uniswapXEnabled = useFeatureFlag(FeatureFlags.UniswapX)
 
   /***** Format request arguments ******/
 
@@ -73,7 +71,7 @@ export function useTrade({
   const activeGasStrategy = useActiveGasStrategy(tokenInChainId, 'swap')
   const shadowGasStrategies = useShadowGasStrategies(tokenInChainId, 'swap')
 
-  const routingPreference = getRoutingPreferenceForSwapRequest(tradeProtocolPreference, uniswapXEnabled, isUSDQuote)
+  const routingParams = useQuoteRoutingParams(selectedProtocols, currencyIn?.chainId, currencyOut?.chainId, isUSDQuote)
 
   const requestTradeType =
     tradeType === TradeType.EXACT_INPUT ? TradingApiTradeType.EXACT_INPUT : TradingApiTradeType.EXACT_OUTPUT
@@ -101,7 +99,7 @@ export function useTrade({
       tokenIn: tokenInAddress,
       tokenOut: tokenOutAddress,
       slippageTolerance: customSlippageTolerance,
-      routingPreference,
+      ...routingParams,
       gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
     }
 
@@ -113,7 +111,7 @@ export function useTrade({
     activeGasStrategy,
     shadowGasStrategies,
     requestTradeType,
-    routingPreference,
+    routingParams,
     skipQuery,
     tokenInAddress,
     tokenInChainId,
@@ -136,7 +134,17 @@ export function useTrade({
     immediateGcTime: internalPollInterval + ONE_SECOND_MS * 15,
   })
 
-  const { error, data, isLoading: queryIsLoading, isFetching } = response
+  const { error, data, isLoading: queryIsLoading, isFetching, errorUpdatedAt, dataUpdatedAt } = response
+
+  const errorRef = useRef<Error | null>(error)
+
+  // We want to keep the error while react-query is refetching, so that the error message doesn't go in and out while it's polling.
+  if (errorUpdatedAt > dataUpdatedAt) {
+    // If there's a new error, save the new one. If there's no error (we're re-fetching), keep the old one.
+    errorRef.current = error ?? errorRef.current
+  } else {
+    errorRef.current = error
+  }
 
   const isLoading = (amount && isDebouncing) || queryIsLoading
 
@@ -188,7 +196,7 @@ export function useTrade({
         trade: null,
         indicativeTrade: isLoading ? indicative.trade : undefined,
         isIndicativeLoading: isDebouncing || indicative.isLoading,
-        error,
+        error: errorRef.current,
         gasEstimates,
       }
     }

@@ -56,8 +56,8 @@ export function RecipientSelectSpeedBumps({
         isOpen
         backgroundIconColor={colors.surface2.val}
         caption={t('send.recipient.warning.viewOnly.message')}
-        closeText={t('common.button.goBack')}
-        confirmText={t('common.button.understand')}
+        rejectText={t('common.button.goBack')}
+        acknowledgeText={t('common.button.understand')}
         icon={<Eye color="$neutral2" size={iconSizes.icon24} />}
         modalName={ModalName.RecipientSelectViewOnlyWarning}
         severity={WarningSeverity.High}
@@ -78,8 +78,8 @@ export function RecipientSelectSpeedBumps({
       <WarningModal
         isOpen
         caption={t('send.warning.self.message')}
-        closeText={t('common.button.cancel')}
-        confirmText={t('common.button.understand')}
+        rejectText={t('common.button.cancel')}
+        acknowledgeText={t('common.button.understand')}
         modalName={ModalName.RecipientSelectSelfSendWarning}
         severity={WarningSeverity.High}
         title={t('send.warning.self.title')}
@@ -94,8 +94,8 @@ export function RecipientSelectSpeedBumps({
       <WarningModal
         isOpen
         caption={t('send.warning.erc20.message')}
-        closeText={t('common.button.cancel')}
-        confirmText={t('common.button.understand')}
+        rejectText={t('common.button.cancel')}
+        acknowledgeText={t('common.button.understand')}
         modalName={ModalName.RecipientSelectErc20Warning}
         severity={WarningSeverity.High}
         title={t('send.warning.erc20.title')}
@@ -110,8 +110,8 @@ export function RecipientSelectSpeedBumps({
       <WarningModal
         isOpen
         caption={t('send.warning.smartContract.message')}
-        closeText={t('common.button.cancel')}
-        confirmText={t('common.button.understand')}
+        rejectText={t('common.button.cancel')}
+        acknowledgeText={t('common.button.understand')}
         modalName={ModalName.RecipientSelectSmartContractWarning}
         severity={WarningSeverity.None}
         title={t('send.warning.smartContract.title')}

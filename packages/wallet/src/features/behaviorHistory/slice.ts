@@ -12,6 +12,7 @@ export interface BehaviorHistoryState {
   hasUsedExplore: boolean
   backupReminderLastSeenTs?: number
   hasViewedOffRampTooltip: boolean
+  hasDismissedBridgingWarning?: boolean
 }
 
 export const initialBehaviorHistoryState: BehaviorHistoryState = {
@@ -51,7 +52,7 @@ const slice = createSlice({
     },
 
     // Should only be used for testing
-    resetBehaviorHistory: (state, _action: PayloadAction) => {
+    resetWalletBehaviorHistory: (state, _action: PayloadAction) => {
       return {
         ...initialBehaviorHistoryState,
 
@@ -70,7 +71,7 @@ export const {
   setHasUsedExplore,
   setBackupReminderLastSeenTs,
   setHasViewedOffRampTooltip,
-  resetBehaviorHistory,
+  resetWalletBehaviorHistory,
 } = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

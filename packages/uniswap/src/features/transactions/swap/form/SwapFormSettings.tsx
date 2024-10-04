@@ -1,6 +1,6 @@
 import { useCallback, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Flex, Popover, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
 import { Eye } from 'ui/src/components/icons/Eye'
 import { Settings } from 'ui/src/components/icons/Settings'
 import { iconSizes } from 'ui/src/theme'
@@ -39,16 +39,11 @@ export function SwapFormSettings({ customSettings }: { customSettings: SwapSetti
 
   const isViewOnlyWallet = account?.type === AccountType.Readonly
 
-  const topAlignment = isInterface ? -38 : 6
+  const topAlignment = isInterface ? -34 : 6
   const rightAlignment = isMobileApp ? 24 : 4
 
   return (
-    <Flex row gap="$spacing4" position="absolute" top={topAlignment} right={rightAlignment} zIndex="$fixed">
-      <SwapSettingsModal
-        customSettings={customSettings}
-        isOpen={showSwapSettingsModal}
-        onClose={onCloseSettingsModal}
-      />
+    <Flex row gap="$spacing4" position="absolute" top={topAlignment} right={rightAlignment} zIndex="$default">
       <ViewOnlyModal isOpen={showViewOnlyModal} onDismiss={(): void => setShowViewOnlyModal(false)} />
       {isViewOnlyWallet && (
         <TouchableArea
@@ -69,24 +64,44 @@ export function SwapFormSettings({ customSettings }: { customSettings: SwapSetti
       )}
 
       {!isViewOnlyWallet && (
-        <TouchableArea hapticFeedback testID={TestID.SwapSettings} onPress={onPressSwapSettings}>
-          <Flex
-            centered
-            row
-            backgroundColor={customSlippageTolerance ? '$surface2' : '$transparent'}
-            borderRadius="$roundedFull"
-            gap="$spacing4"
-            px={customSlippageTolerance ? '$spacing8' : '$spacing4'}
-            py="$spacing4"
-          >
-            {customSlippageTolerance ? (
-              <Text color="$neutral2" variant="buttonLabel3">
-                {formatPercent(customSlippageTolerance)}
-              </Text>
-            ) : null}
-            <Settings color={colors.neutral2.get()} size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />
-          </Flex>
-        </TouchableArea>
+        <Popover
+          placement="bottom-end"
+          open={showSwapSettingsModal}
+          onOpenChange={(open) => {
+            // Only close on interface because SwapSettings are rendered in a modal on mobile/extension
+            // and when click is triggered inside extension Modal it causes onOpenChange to trigger
+            if (!open && isInterface) {
+              setShowSettingsModal(false)
+            }
+          }}
+        >
+          <TouchableArea hapticFeedback testID={TestID.SwapSettings}>
+            <Flex
+              centered
+              row
+              backgroundColor={customSlippageTolerance ? '$surface2' : '$transparent'}
+              borderRadius="$roundedFull"
+              gap="$spacing4"
+              px={customSlippageTolerance ? '$spacing8' : '$spacing4'}
+              py="$spacing4"
+            >
+              {customSlippageTolerance ? (
+                <Text color="$neutral2" variant="buttonLabel3">
+                  {formatPercent(customSlippageTolerance)}
+                </Text>
+              ) : null}
+              <Popover.Trigger onPress={onPressSwapSettings}>
+                <Settings color={colors.neutral2.get()} size={isWeb ? iconSizes.icon20 : iconSizes.icon24} />
+              </Popover.Trigger>
+            </Flex>
+          </TouchableArea>
+
+          <SwapSettingsModal
+            customSettings={customSettings}
+            isOpen={showSwapSettingsModal}
+            onClose={onCloseSettingsModal}
+          />
+        </Popover>
       )}
     </Flex>
   )

@@ -66,7 +66,7 @@ export function getSortedPortfolioTokens(
         address,
         tokenBalance.token?.decimals,
         tokenBalance.token?.symbol,
-        tokenBalance.token?.project?.name ?? tokenBalance.token?.name,
+        tokenBalance.token?.name ?? tokenBalance.token?.project?.name,
       )
 
       return portfolioToken

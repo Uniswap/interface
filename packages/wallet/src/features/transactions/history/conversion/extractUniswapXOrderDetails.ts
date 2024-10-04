@@ -24,6 +24,7 @@ export function extractUniswapXOrderDetails(transaction: TransactionListQueryRes
   }
 
   const typeInfo = parseUniswapXOrderTransaction(transaction)
+  // TODO: does not support parsing priority orders yet since priority orders are not supported in the trading API
   const routing = transaction.details.swapOrderType === SwapOrderType.Limit ? Routing.DUTCH_LIMIT : Routing.DUTCH_V2
 
   // TODO (MOB-3609): Parse and show pending limit orders in Activity feed
@@ -44,6 +45,7 @@ export function extractUniswapXOrderDetails(transaction: TransactionListQueryRes
   }
 }
 
+// eslint-disable-next-line consistent-return
 function remoteOrderStatusToLocalTxStatus(orderStatus: SwapOrderStatus): TransactionStatus {
   switch (orderStatus) {
     case SwapOrderStatus.Open:

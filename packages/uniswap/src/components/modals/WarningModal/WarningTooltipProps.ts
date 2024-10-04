@@ -8,4 +8,5 @@ export type WarningTooltipProps = {
   button: ReactNode
   trigger: ReactNode
   triggerPlacement?: 'start' | 'end'
+  maxWidth?: number
 } & Pick<PopperProps, 'placement'>

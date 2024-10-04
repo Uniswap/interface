@@ -7,14 +7,11 @@ import { navigate } from 'src/app/navigation/rootNavigation'
 import { UnitagStackScreenProp } from 'src/app/navigation/types'
 import { BackHeader } from 'src/components/layout/BackHeader'
 import { Screen } from 'src/components/layout/Screen'
-import { useAvatarSelectionHandler } from 'src/components/unitags/AvatarSelection'
 import { ChangeUnitagModal } from 'src/components/unitags/ChangeUnitagModal'
-import { ChoosePhotoOptionsModal } from 'src/components/unitags/ChoosePhotoOptionsModal'
 import { DeleteUnitagModal } from 'src/components/unitags/DeleteUnitagModal'
-import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
 import { HeaderRadial, solidHeaderProps } from 'src/features/externalProfile/ProfileHeader'
 import { Button, Flex, LinearGradient, ScrollView, Text, getUniconColors, useIsDarkMode, useSporeColors } from 'ui/src'
-import { Pen, TripleDots } from 'ui/src/components/icons'
+import { Ellipsis, Pen } from 'ui/src/components/icons'
 import { borderRadii, fonts, iconSizes, imageSizes, spacing } from 'ui/src/theme'
 import { useExtractedColors } from 'ui/src/utils/colors'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
@@ -34,6 +31,9 @@ import { normalizeTwitterUsername } from 'utilities/src/primitives/string'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { useAvatarSelectionHandler } from 'wallet/src/features/unitags/AvatarSelection'
+import { ChoosePhotoOptionsModal } from 'wallet/src/features/unitags/ChoosePhotoOptionsModal'
+import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
 import { updateUnitagMetadata } from 'wallet/src/features/unitags/api'
 import { tryUploadAvatar } from 'wallet/src/features/unitags/avatars'
 import { useAvatarUploadCredsWithRefresh } from 'wallet/src/features/unitags/hooks'
@@ -271,7 +271,7 @@ export function EditUnitagProfileScreen({ route }: UnitagStackScreenProp<UnitagS
                 }}
               >
                 <Flex pr="$spacing8">
-                  <TripleDots color="$neutral2" size={iconSizes.icon24} />
+                  <Ellipsis color="$neutral2" size={iconSizes.icon24} />
                 </Flex>
               </ContextMenu>
             ) : undefined

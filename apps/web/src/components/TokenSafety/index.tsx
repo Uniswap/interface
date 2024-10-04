@@ -130,13 +130,20 @@ const StyledExternalLink = styled(ExternalLink)`
 export interface TokenSafetyProps {
   token0: Token
   token1?: Token
-  onContinue: () => void
-  onCancel: () => void
+  onAcknowledge: () => void
+  closeModalOnly: () => void
   onBlocked?: () => void
   showCancel?: boolean
 }
 
-export default function TokenSafety({ token0, token1, onContinue, onCancel, onBlocked, showCancel }: TokenSafetyProps) {
+export default function TokenSafety({
+  token0,
+  token1,
+  onAcknowledge,
+  closeModalOnly: onClose,
+  onBlocked,
+  showCancel,
+}: TokenSafetyProps) {
   const logos = []
   const urls = []
 
@@ -169,7 +176,7 @@ export default function TokenSafety({ token0, token1, onContinue, onCancel, onBl
   const acknowledge = () => {
     onDismissToken0()
     onDismissToken1()
-    onContinue()
+    onAcknowledge()
   }
 
   const { heading, description } = getWarningCopy(displayWarning, plural)
@@ -199,7 +206,7 @@ export default function TokenSafety({ token0, token1, onContinue, onCancel, onBl
         <Buttons
           warning={displayWarning}
           onContinue={acknowledge}
-          onCancel={onCancel}
+          onCancel={onClose}
           onBlocked={onBlocked}
           showCancel={showCancel}
         />
@@ -216,7 +223,7 @@ export default function TokenSafety({ token0, token1, onContinue, onCancel, onBl
             {heading} {description} {learnMoreUrl}
           </InfoText>
         </ShortColumn>
-        <Buttons warning={StrongWarning} onCancel={onCancel} showCancel={true} />
+        <Buttons warning={StrongWarning} onCancel={onClose} showCancel={true} />
       </Container>
     </Wrapper>
   )

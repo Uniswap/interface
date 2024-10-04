@@ -2011,7 +2011,7 @@ PODS:
     - RNFBApp
   - RNFlashList (1.6.3):
     - React-Core
-  - RNGestureHandler (2.15.0):
+  - RNGestureHandler (2.19.0):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -2568,7 +2568,7 @@ SPEC CHECKSUMS:
   RNFBAuth: 553c6e66d3c70e086799104dad4a554c2663c337
   RNFBFirestore: a60e6005e071b31360a5bf651eb403b36c7db7de
   RNFlashList: 4b4b6b093afc0df60ae08f9cbf6ccd4c836c667a
-  RNGestureHandler: 67fb54b3e6ca338a8044e85cd6f340265aa41091
+  RNGestureHandler: 75e2ebf4e8ac521f2b3c9afdc048fcbc2e2c9ea4
   RNImageColors: 9ac05083b52d5c350e6972650ae3ba0e556466c1
   RNLocalize: d4b8af4e442d4bcca54e68fc687a2129b4d71a81
   RNPermissions: de7b7c3fe1680d974ac7a85e3e97aa539c0e68ea

@@ -282,8 +282,11 @@ function extractCurrencyIdFromTx(transaction: TransactionDetails | null): Curren
     // We only care about output currency because that's the net new asset
     return transaction.typeInfo.outputCurrencyId
   }
+
+  return undefined
 }
 
+// eslint-disable-next-line consistent-return
 export function remoteTxStatusToLocalTxStatus(
   type: RemoteTransactionType,
   status: RemoteTransactionStatus,

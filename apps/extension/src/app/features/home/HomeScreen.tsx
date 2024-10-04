@@ -8,6 +8,7 @@ import { NftsTab } from 'src/app/components/tabs/NftsTab'
 import { PortfolioActionButtons } from 'src/app/features/home/PortfolioActionButtons'
 import { PortfolioHeader } from 'src/app/features/home/PortfolioHeader'
 import { TokenBalanceList } from 'src/app/features/home/TokenBalanceList'
+import { HomeIntroCardStack } from 'src/app/features/home/introCards/HomeIntroCardStack'
 import { PinReminder } from 'src/app/features/onboarding/PinReminder'
 import { selectAlertsState } from 'src/app/features/onboarding/alerts/selectors'
 import { AlertName, closeAlert } from 'src/app/features/onboarding/alerts/slice'
@@ -128,6 +129,8 @@ export const HomeScreen = memo(function _HomeScreen(): JSX.Element {
             </Flex>
 
             <PortfolioActionButtons />
+
+            <HomeIntroCardStack />
 
             <Flex flex={1} width="100%">
               <Flex row gap="$spacing16" px="$spacing4" py="$spacing8">

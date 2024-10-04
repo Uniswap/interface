@@ -18,6 +18,7 @@ import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { useInterval } from 'utilities/src/time/timing'
 import { LoadingItem, SectionHeader, isLoadingItem, isSectionHeader } from 'wallet/src/features/activity/utils'
 import { ApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/ApproveSummaryItem'
+import { BridgeSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/BridgeSummaryItem'
 import { NFTApproveSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTApproveSummaryItem'
 import { NFTMintSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTMintSummaryItem'
 import { NFTTradeSummaryItem } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/NFTTradeSummaryItem'
@@ -32,6 +33,8 @@ import { SummaryItemProps, SwapSummaryCallbacks } from 'wallet/src/features/tran
 
 export const TXN_HISTORY_ICON_SIZE = TXN_HISTORY_LOADER_ICON_SIZE
 export const TXN_STATUS_ICON_SIZE = iconSizes.icon16
+
+const MAX_SHOW_RETRY_TIME = 15 * ONE_MINUTE_MS
 
 export type ActivityItem = TransactionDetails | SectionHeader | LoadingItem
 export type ActivityItemRenderer = ({ item, index }: { item: ActivityItem; index: number }) => JSX.Element
@@ -75,6 +78,9 @@ export function generateActivityItemRenderer(
         break
       case TransactionType.Send:
         SummaryItem = SendSummaryItem
+        break
+      case TransactionType.Bridge:
+        SummaryItem = BridgeSummaryItem
         break
       case TransactionType.Swap:
         SummaryItem = SwapSummaryItem
@@ -121,6 +127,7 @@ function getTransactionTypeVerbs(
   const externalDappName = typeInfo.externalDappInfo?.name
 
   switch (typeInfo.type) {
+    case TransactionType.Bridge:
     case TransactionType.Swap:
       return {
         success: externalDappName
@@ -320,4 +327,25 @@ export function useFormattedTime(time: number): string {
         : wrappedAddedTime.format(FORMAT_DATE_MONTH_DAY) // current year
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [time, unixTime, localizedDayjs])
+}
+
+export function useOnRetrySwap(
+  transaction: TransactionDetails,
+  swapCallbacks: SwapSummaryCallbacks | undefined,
+): (() => void) | undefined {
+  // For retrying failed, locally submitted swaps
+  const swapFormState = swapCallbacks?.useSwapFormTransactionState(
+    transaction.from,
+    transaction.chainId,
+    transaction.id,
+  )
+
+  const latestSwapTx = swapCallbacks?.useLatestSwapTransaction(transaction.from)
+  const isTheLatestSwap = latestSwapTx && latestSwapTx.id === transaction.id
+  // if this is the latest tx or it was added within the last 15 minutes, show the retry button
+  const shouldShowRetry =
+    isTheLatestSwap || (Date.now() - transaction.addedTime < MAX_SHOW_RETRY_TIME && swapCallbacks?.onRetryGenerator)
+
+  const onRetry = swapCallbacks?.onRetryGenerator?.(swapFormState)
+  return swapFormState && shouldShowRetry ? onRetry : undefined
 }

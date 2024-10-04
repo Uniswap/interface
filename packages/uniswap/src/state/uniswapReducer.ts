@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux'
+import { uniswapBehaviorHistoryReducer } from 'uniswap/src/features/behaviorHistory/slice'
 import { favoritesReducer } from 'uniswap/src/features/favorites/slice'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { searchHistoryReducer } from 'uniswap/src/features/search/searchHistorySlice'
@@ -14,6 +15,7 @@ export const uniswapReducers = {
   timing: timingReducer,
   tokens: tokensReducer,
   transactions: transactionReducer,
+  uniswapBehaviorHistory: uniswapBehaviorHistoryReducer,
   userSettings: userSettingsReducer,
 } as const
 
@@ -25,6 +27,7 @@ export const uniswapPersistedStateList: Array<keyof typeof uniswapReducers> = [
   'searchHistory',
   'tokens',
   'transactions',
+  'uniswapBehaviorHistory',
   'userSettings',
 ]
 

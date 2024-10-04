@@ -1,6 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { Field } from 'components/swap/constants'
-import { useReportTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useReportTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useReportTotalBalancesUsdForAnalytics'
 import { useAccount } from 'hooks/useAccount'
 import usePrevious from 'hooks/usePrevious'
 import { useUpdateAtom } from 'jotai/utils'
@@ -10,6 +9,7 @@ import { useDerivedSwapInfo } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext, SwapContext, SwapState, initialSwapState } from 'state/swap/types'
 import { useSwapAndLimitContext } from 'state/swap/useSwapContext'
 import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 
@@ -135,7 +135,7 @@ export function SwapContextProvider({
   children,
 }: {
   initialTypedValue?: string
-  initialIndependentField?: Field
+  initialIndependentField?: CurrencyField
   multichainUXEnabled?: boolean
   children: React.ReactNode
 }) {

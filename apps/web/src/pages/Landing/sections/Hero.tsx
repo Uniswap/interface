@@ -4,11 +4,14 @@ import { useScroll } from 'hooks/useScroll'
 import { TokenCloud } from 'pages/Landing/components/TokenCloud'
 import { Hover, RiseIn, RiseInText } from 'pages/Landing/components/animations'
 import { Swap } from 'pages/Swap'
-import { Fragment } from 'react'
+import { Fragment, useCallback } from 'react'
 import { ChevronDown } from 'react-feather'
-import { NAV_HEIGHT } from 'theme'
+import { useNavigate } from 'react-router-dom'
+import { serializeSwapStateToURLParameters } from 'state/swap/hooks'
 import { Flex, Text } from 'ui/src'
+import { SwapRedirectFn } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 interface HeroProps {
@@ -19,10 +22,26 @@ interface HeroProps {
 export function Hero({ scrollToRef, transition }: HeroProps) {
   const { height: scrollPosition } = useScroll()
   const initialInputCurrency = useCurrency('ETH')
+  const navigate = useNavigate()
   const { t } = useTranslation()
 
   const translateY = -scrollPosition / 7
   const opacityY = 1 - scrollPosition / 1000
+
+  const swapRedirectCallback = useCallback(
+    ({ inputCurrency, outputCurrency, typedValue, independentField, chainId }: Parameters<SwapRedirectFn>[0]) => {
+      navigate(
+        `/swap${serializeSwapStateToURLParameters({
+          inputCurrency,
+          outputCurrency,
+          typedValue,
+          independentField,
+          chainId,
+        })}`,
+      )
+    },
+    [navigate],
+  )
 
   return (
     <Flex
@@ -33,7 +52,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
       minWidth="100%"
       minHeight="100vh"
       height="min-content"
-      pt={NAV_HEIGHT}
+      pt={INTERFACE_NAV_HEIGHT}
       pointerEvents="none"
     >
       <TokenCloud transition={transition} />
@@ -89,11 +108,12 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
             maxWidth="100%"
           >
             <Swap
-              syncTabToUrl={false}
               hideHeader
+              hideFooter
+              syncTabToUrl={false}
               chainId={initialInputCurrency?.chainId ?? UniverseChainId.Mainnet}
               initialInputCurrency={initialInputCurrency}
-              multichainUXEnabled
+              swapRedirectCallback={swapRedirectCallback}
             />
           </Flex>
         </RiseIn>

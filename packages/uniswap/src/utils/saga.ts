@@ -40,3 +40,10 @@ export function createSaga<SagaParams, SagaYieldType, SagaResultType>(
     },
   }
 }
+
+// Below are global, stateless transaction flow actions that are not specific to any one saga.
+// This allows cross-platform code to generically interrupt or cancel an active transaction flow
+// without being coupled to a specific package's transaction flow implementation.
+
+/** Transaction flow 'interruption' actions are handled gracefully within a saga, see the `watchForInterruption` util. */
+export const interruptTransactionFlow = createAction<void>(`interruptTransactionFlow`)

@@ -9,12 +9,15 @@ import { USE_DISCONNECTED_ACCOUNT } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { useMultiChainPositionsReturnValue, validBEPoolToken0, validBEPoolToken1 } from 'test-utils/pools/fixtures'
 import { act, render, screen } from 'test-utils/render'
+import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { dismissTokenWarning } from 'uniswap/src/features/tokens/slice/slice'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions')
 
 jest.mock('hooks/useAccount')
+
+jest.mock('uniswap/src/contexts/UniswapContext')
 
 describe('PoolDetailsStatsButton', () => {
   const mockProps = {
@@ -30,9 +33,19 @@ describe('PoolDetailsStatsButton', () => {
     token1: validBEPoolToken0,
   }
 
+  const useUniswapContextReturnValue = {
+    navigateToFiatOnRamp: () => {},
+    onSwapChainsChanged: () => {},
+    isSwapTokenSelectorOpen: false,
+    setIsSwapTokenSelectorOpen: () => {},
+    signer: undefined,
+    useProviderHook: () => undefined,
+  }
+
   beforeEach(() => {
     mocked(useAccount).mockReturnValue(USE_DISCONNECTED_ACCOUNT)
     mocked(useMultiChainPositions).mockReturnValue(useMultiChainPositionsReturnValue)
+    mocked(useUniswapContext).mockReturnValue(useUniswapContextReturnValue)
     store.dispatch(
       dismissTokenWarning({
         token: {

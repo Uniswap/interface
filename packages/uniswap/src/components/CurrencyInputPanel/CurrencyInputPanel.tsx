@@ -1,4 +1,5 @@
 /* eslint-disable complexity */
+/* eslint-disable max-lines */
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import {
   RefObject,
@@ -19,11 +20,12 @@ import { errorShakeAnimation } from 'ui/src/animations/errorShakeAnimation'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDynamicFontSizing } from 'ui/src/hooks/useDynamicFontSizing'
-import { fonts } from 'ui/src/theme'
+import { fonts, spacing } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { MaxAmountButton } from 'uniswap/src/components/CurrencyInputPanel/MaxAmountButton'
 import { SelectTokenButton } from 'uniswap/src/components/CurrencyInputPanel/SelectTokenButton'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -104,13 +106,16 @@ export const CurrencyInputPanel = memo(
       } = props
 
       const colors = useSporeColors()
+      const account = useAccountMeta()
       const isShortMobileDevice = useIsShortMobileDevice()
       const { formatCurrencyAmount } = useLocalizationContext()
 
       const indicativeQuotesEnabled = useFeatureFlag(FeatureFlags.IndicativeSwapQuotes)
+      const indicativeDisplay = useIndicativeTextDisplay(props)
+      const legacyDisplay = useLegacyTextDisplay(props)
 
-      const useDisplay = indicativeQuotesEnabled ? useIndicativeTextDisplay : useLegacyTextDisplay
-      const { value, color, usdValue } = useDisplay(props)
+      const display = indicativeQuotesEnabled ? indicativeDisplay : legacyDisplay
+      const { value, color, usdValue } = display
 
       const inputRef = useRef<TextInput>(null)
 
@@ -164,6 +169,8 @@ export const CurrencyInputPanel = memo(
         MIN_INPUT_FONT_SIZE,
       )
 
+      const lineHeight = fontSize * 1.2
+
       // This is needed to ensure that the text resizes when modified from outside the component (e.g. custom numpad)
       useEffect(() => {
         if (value) {
@@ -184,9 +191,9 @@ export const CurrencyInputPanel = memo(
       )
 
       // Hide balance if panel is output, and no balance
-      const hideCurrencyBalance = isOutput && currencyBalance?.equalTo(0)
+      const hideCurrencyBalance = (isOutput && currencyBalance?.equalTo(0)) || !account
 
-      const showMaxButton = !isOutput
+      const showMaxButton = !isOutput && account
 
       // In fiat mode, show equivalent token amount. In token mode, show equivalent fiat amount
       const inputPanelFormattedValue = useTokenAndFiatDisplayAmounts({
@@ -233,6 +240,7 @@ export const CurrencyInputPanel = memo(
               alignItems="center"
               justifyContent={!currencyInfo ? 'flex-end' : 'space-between'}
               py="$spacing8"
+              minHeight={MAX_INPUT_FONT_SIZE * 1.2 + 2 * spacing.spacing8}
               style={shakeStyle}
             >
               {isFiatMode && (
@@ -240,8 +248,7 @@ export const CurrencyInputPanel = memo(
                   allowFontScaling
                   color={showInsufficientBalanceWarning ? '$statusCritical' : color}
                   fontSize={fontSize}
-                  height={fontSize}
-                  lineHeight={fontSize}
+                  lineHeight={lineHeight}
                   mr="$spacing4"
                 >
                   {fiatCurrencySymbol}
@@ -272,7 +279,7 @@ export const CurrencyInputPanel = memo(
                       autoFocus={autoFocus ?? focus}
                       backgroundColor="$transparent"
                       borderWidth={0}
-                      color={showInsufficientBalanceWarning ? '$statusCritical' : color}
+                      color={color}
                       disabled={disabled || !currencyInfo}
                       flex={1}
                       focusable={!disabled && Boolean(currencyInfo)}
@@ -281,10 +288,11 @@ export const CurrencyInputPanel = memo(
                       // (the text input height is greater than the font size and the input is
                       // centered vertically, so the caret is cut off but the text is not)
                       fontSize={fontSize}
+                      lineHeight={lineHeight}
                       fontWeight="$book"
                       maxDecimals={isFiatMode ? MAX_FIAT_INPUT_DECIMALS : currencyInfo.currency.decimals}
                       maxFontSizeMultiplier={fonts.heading2.maxFontSizeMultiplier}
-                      minHeight={2 * MAX_INPUT_FONT_SIZE}
+                      minHeight={lineHeight}
                       overflow="visible"
                       placeholder="0"
                       placeholderTextColor={colors.neutral3.val}
@@ -327,7 +335,7 @@ export const CurrencyInputPanel = memo(
                     </Text>
                   </Flex>
                 </TouchableArea>
-                <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-end">
+                <Flex row centered gap="$spacing4" justifyContent="flex-end">
                   {showInsufficientBalanceWarning && <AlertTriangleFilled color="$neutral2" size="$icon.16" />}
                   {!hideCurrencyBalance && (
                     <Text color="$neutral2" variant="body3">
@@ -380,6 +388,8 @@ function useIndicativeTextDisplay({
   const [display, setDisplay] = useState<PanelTextDisplay>({ value, color: '$neutral1' })
   const [displayUsdValue, setDisplayUsdValue] = useState<Maybe<CurrencyAmount<Currency>>>(usdValue)
 
+  const prevDisplay = usePrevious(display)
+
   /** Show interim state (old value in neutral2) for 200ms before showing the final state. */
   const handleIndicativeTransition = useCallback((interimState: PanelTextDisplay, finalState: PanelTextDisplay) => {
     // If the value has changed again since the delay, this timeout should no-op
@@ -391,24 +401,33 @@ function useIndicativeTextDisplay({
   const valueWasIndicative = usePrevious(valueIsIndicative)
   useEffect(() => {
     // Display should only be updated if the value has changed and it's not undefined awaiting a new quote.
-    if (!valueChanged || (!value && hasInput)) {
+    if (!valueChanged) {
+      return
+    }
+
+    if (!value && hasInput) {
+      setDisplay({ value, color: '$neutral1' })
       return
     }
 
     // Handle transition from indicative to full quote.
     if (valueWasIndicative && !valueIsIndicative) {
-      setDisplay((prev) => {
-        const interimState = { ...prev, color: '$neutral2' } as const
-        const finalState = { value, color: '$neutral1' } as const
-        handleIndicativeTransition(interimState, finalState)
-
-        return interimState
-      })
+      setDisplay((prev) => ({ ...prev, color: '$neutral2' }))
+      handleIndicativeTransition({ value: prevDisplay?.value, color: '$neutral2' }, display)
     } else {
       // Update display w/ latest value, if indicative -> full transition is not happening.
       setDisplay({ value, color: '$neutral1' })
     }
-  }, [handleIndicativeTransition, hasInput, value, valueChanged, valueIsIndicative, valueWasIndicative])
+  }, [
+    handleIndicativeTransition,
+    hasInput,
+    value,
+    valueChanged,
+    valueIsIndicative,
+    valueWasIndicative,
+    prevDisplay,
+    display,
+  ])
 
   // `usdValue` is not directly synced with `value` changes, so it is handled separately.
   // Only update the displayed USD value when it's defined, or it's undefined and not loading.

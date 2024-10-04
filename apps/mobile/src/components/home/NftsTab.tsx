@@ -2,7 +2,6 @@ import { FlashList } from '@shopify/flash-list'
 import React, { forwardRef, memo, useCallback, useMemo } from 'react'
 import { RefreshControl } from 'react-native'
 import { useAppStackNavigation } from 'src/app/navigation/types'
-import { NftView } from 'src/components/NFT/NftView'
 import { useAdaptiveFooter } from 'src/components/home/hooks'
 import { TAB_BAR_HEIGHT, TabProps } from 'src/components/layout/TabHelpers'
 import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
@@ -10,6 +9,7 @@ import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { isAndroid } from 'utilities/src/platform'
+import { NftViewWithContextMenu } from 'wallet/src/components/nfts/NftViewWithContextMenu'
 import { NftsList } from 'wallet/src/components/nfts/NftsList'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 
@@ -49,7 +49,11 @@ export const NftsTab = memo(
           })
         }
 
-        return <NftView index={index} item={item} owner={owner} onPress={onPressNft} />
+        return (
+          <Flex fill m="$spacing4">
+            <NftViewWithContextMenu index={index} item={item} owner={owner} onPress={onPressNft} />
+          </Flex>
+        )
       },
       [owner, navigation],
     )

@@ -1,17 +1,23 @@
+import { BigNumber } from '@ethersproject/bignumber'
 // eslint-disable-next-line no-restricted-imports
 import {
   Position,
   PositionStatus,
   ProtocolVersion,
+  Pool as RestPool,
   Token as RestToken,
 } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { Position as V3PositionSDK } from '@uniswap/v3-sdk'
+import { Currency, CurrencyAmount, Percent, Token } from '@uniswap/sdk-core'
+import { FeeAmount, Pool, Position as V3SDKPosition } from '@uniswap/v3-sdk'
+import { getPriceOrderingFromPositionForUI } from 'components/PositionListItem'
 import { usePool } from 'hooks/usePools'
+import { useV3PositionFees } from 'hooks/useV3PositionFees'
+import JSBI from 'jsbi'
 import { useMemo } from 'react'
 import { useAppSelector } from 'state/hooks'
 import { AppTFunction } from 'ui/src/i18n/types'
-import { shortenAddress } from 'utilities/src/addresses'
+import { ProtocolItems } from 'uniswap/src/data/tradingApi/__generated__'
+import { useUSDCPrice, useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 
 export function getProtocolVersionLabel(version: ProtocolVersion): string | undefined {
   switch (version) {
@@ -21,6 +27,18 @@ export function getProtocolVersionLabel(version: ProtocolVersion): string | unde
       return 'V3'
     case ProtocolVersion.V4:
       return 'V4'
+  }
+  return undefined
+}
+
+export function getProtocolItems(version: ProtocolVersion | undefined): ProtocolItems | undefined {
+  switch (version) {
+    case ProtocolVersion.V2:
+      return ProtocolItems.V2
+    case ProtocolVersion.V3:
+      return ProtocolItems.V3
+    case ProtocolVersion.V4:
+      return ProtocolItems.V4
   }
   return undefined
 }
@@ -37,7 +55,45 @@ export function getProtocolStatusLabel(status: PositionStatus, t: AppTFunction):
   return undefined
 }
 
-function parseRestToken(token: RestToken): Currency {
+export function parseProtocolVersion(version: string | undefined): ProtocolVersion | undefined {
+  switch (version?.toLowerCase()) {
+    case 'v2':
+      return ProtocolVersion.V2
+    case 'v3':
+      return ProtocolVersion.V3
+    case 'v4':
+      return ProtocolVersion.V4
+    default:
+      return undefined
+  }
+}
+
+export function parseV3FeeTier(feeTier: string | undefined): FeeAmount | undefined {
+  const parsedFee = parseInt(feeTier || '')
+
+  return parsedFee in FeeAmount ? parsedFee : undefined
+}
+
+export function getPoolFromRest({
+  pool,
+  token0,
+  token1,
+}: {
+  pool?: RestPool
+  token0?: Token
+  token1?: Token
+}): Pool | undefined {
+  if (!pool || !token0 || !token1) {
+    return undefined
+  }
+
+  return new Pool(token0, token1, pool.fee, pool.sqrtPriceX96, pool.liquidity, pool.tick)
+}
+
+function parseRestToken(token?: RestToken): Token | undefined {
+  if (!token) {
+    return undefined
+  }
   return new Token(token.chainId, token.address, token.decimals, token.symbol)
 }
 
@@ -49,91 +105,91 @@ export type PositionInfo = {
   currency1Amount: CurrencyAmount<Currency>
   feeTier?: string
   v4hook?: string
+  tokenId?: string
+  tickLower?: string
+  tickUpper?: string
+  tickSpacing?: number
+  liquidity?: string
+  liquidityToken?: Token
+  totalSupply?: CurrencyAmount<Currency>
+  liquidityAmount?: CurrencyAmount<Currency>
+  token0UncollectedFees?: string
+  token1UncollectedFees?: string
 }
 
-export function usePositionInfo(position?: Position): PositionInfo | undefined {
-  // TODO(WEB-4920): remove this as the API should return the needed information - make this function a synchronous non-hook.
-  // Optimistically fetch the v3Pool, which should be undefined for non-v3 positions
-  const [, v3Pool] = usePool(
-    (position as any)?.v3Position?.token0 ? parseRestToken((position as any).v3Position.token0) : undefined,
-    (position as any)?.v3Position?.token1 ? parseRestToken((position as any).v3Position.token1) : undefined,
-    parseInt((position as any)?.v3Position?.feeTier),
-  )
-  return useMemo(() => {
-    if (!position) {
+/**
+ * @param position REST position with unknown version / fields.
+ * @returns PositionInfo with the available fields parsed.
+ */
+export function parseRestPosition(position?: Position): PositionInfo | undefined {
+  if (!position?.position) {
+    return undefined
+  } else if (position.position.case === 'v2Pair') {
+    const v2PairPosition = position.position.value
+    const token0 = parseRestToken(v2PairPosition.token0)
+    const token1 = parseRestToken(v2PairPosition.token1)
+    const liquidityToken = parseRestToken(v2PairPosition.liquidityToken)
+    if (!token0 || !token1 || !liquidityToken) {
       return undefined
-    } else if ((position as any).v2Pair) {
-      const v2Pair = (position as any).v2Pair
-      if (!v2Pair.token0 || !v2Pair.token1) {
-        return undefined
-      }
-
-      const token0 = parseRestToken(v2Pair.token0)
-      const token1 = parseRestToken(v2Pair.token1)
-
-      return {
-        status: position.status,
-        feeTier: undefined,
-        v4hook: undefined,
-        version: position.protocolVersion,
-        restPosition: position,
-        // TODO(WEB-4920): test this with a real position and verify the decimals are correct here
-        currency0Amount: CurrencyAmount.fromRawAmount(token0, v2Pair.reserve0.toString()),
-        currency1Amount: CurrencyAmount.fromRawAmount(token1, v2Pair.reserve1.toString()),
-      }
-    } else if ((position as any).v3Position) {
-      const v3Position = (position as any).v3Position
-      if (!v3Position.token0 || !v3Position.token1 || !v3Pool) {
-        return undefined
-      }
-
-      const token0 = parseRestToken(v3Position.token0)
-      const token1 = parseRestToken(v3Position.token1)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      const v3PositionSDK = new V3PositionSDK({
-        pool: v3Pool,
-        liquidity: v3Position.liquidity,
-        tickLower: v3Position.tickLower,
-        tickUpper: v3Position.tickUpper,
-      })
-      return {
-        status: position.status,
-        feeTier: v3Position.feeTier,
-        version: position.protocolVersion,
-        v4hook: undefined,
-        restPosition: position,
-        // TODO(WEB-4920): test this with a real position and use instead of the hardcoded amounts
-        // currency0Amount: v3PositionSDK.amount0,
-        // currency1Amount: v3PositionSDK.amount1,
-        currency0Amount: CurrencyAmount.fromRawAmount(token0, '1'),
-        currency1Amount: CurrencyAmount.fromRawAmount(token1, '1'),
-      }
-    } else {
-      const v4Position = (position as any).v4Position
-      if (!v4Position.poolPosition?.token0 || !v4Position.poolPosition?.token1) {
-        return undefined
-      }
-
-      const token0 = parseRestToken(v4Position.poolPosition.token0)
-      const token1 = parseRestToken(v4Position.poolPosition.token1)
-
-      return {
-        status: position.status,
-        feeTier: undefined,
-        version: position.protocolVersion,
-        v4hook: v4Position.hooks[0]?.address ? shortenAddress(v4Position.hooks[0].address) : undefined,
-        restPosition: position,
-        currency0Amount: CurrencyAmount.fromRawAmount(
-          token0,
-          '1', // TODO(WEB-4920): how to get the amount for a v4 position?
-        ),
-        currency1Amount: CurrencyAmount.fromRawAmount(
-          token1,
-          '1', // TODO(WEB-4920): how to get the amount for a v4 position?
-        ),
-      }
     }
-  }, [position, v3Pool])
+
+    return {
+      status: position.status,
+      version: position.protocolVersion,
+      restPosition: position,
+      liquidityToken,
+      currency0Amount: CurrencyAmount.fromRawAmount(token0, v2PairPosition.liquidity0),
+      currency1Amount: CurrencyAmount.fromRawAmount(token1, v2PairPosition.liquidity1),
+      totalSupply: CurrencyAmount.fromRawAmount(liquidityToken, v2PairPosition.totalSupply),
+      liquidityAmount: CurrencyAmount.fromRawAmount(liquidityToken, v2PairPosition.liquidity),
+    }
+  } else if (position.position.case === 'v3Position') {
+    const v3Position = position.position.value
+
+    const token0 = parseRestToken(v3Position.token0)
+    const token1 = parseRestToken(v3Position.token1)
+    if (!token0 || !token1) {
+      return undefined
+    }
+    return {
+      status: position.status,
+      feeTier: v3Position.feeTier,
+      version: position.protocolVersion,
+      restPosition: position,
+      tickLower: v3Position.tickLower,
+      tickUpper: v3Position.tickUpper,
+      tickSpacing: Number(v3Position.tickSpacing),
+      liquidity: v3Position.liquidity,
+      tokenId: v3Position.tokenId,
+      token0UncollectedFees: v3Position.token0UncollectedFees,
+      token1UncollectedFees: v3Position.token1UncollectedFees,
+      currency0Amount: CurrencyAmount.fromRawAmount(token0, v3Position.amount0),
+      currency1Amount: CurrencyAmount.fromRawAmount(token1, v3Position.amount1),
+    }
+  } else if (position.position.case === 'v4Position' && position.position.value?.poolPosition) {
+    const v4Position = position.position.value.poolPosition
+    const token0 = parseRestToken(v4Position?.token0)
+    const token1 = parseRestToken(v4Position?.token1)
+    if (!token0 || !token1) {
+      return undefined
+    }
+
+    return {
+      status: position.status,
+      feeTier: v4Position.feeTier,
+      version: position.protocolVersion,
+      v4hook: position.position.value.hooks[0]?.address,
+      tokenId: v4Position?.tokenId,
+      tickLower: v4Position?.tickLower,
+      tickUpper: v4Position?.tickUpper,
+      tickSpacing: Number(v4Position?.tickSpacing),
+      restPosition: position,
+      currency0Amount: CurrencyAmount.fromRawAmount(token0, v4Position?.amount0 ?? 0),
+      currency1Amount: CurrencyAmount.fromRawAmount(token1, v4Position?.amount1 ?? 0),
+    }
+  } else {
+    return undefined
+  }
 }
 
 /**
@@ -142,5 +198,101 @@ export function usePositionInfo(position?: Position): PositionInfo | undefined {
 export function useModalLiquidityPositionInfo(): PositionInfo | undefined {
   const modalState = useAppSelector((state) => state.application.openModal)
   const position = modalState?.initialState
-  return usePositionInfo(position)
+  return useMemo(() => parseRestPosition(position), [position])
+}
+
+/**
+ * V2-specific hooks for a position parsed using parseRestPosition.
+ */
+export function useV2PositionDerivedInfo(positionInfo?: PositionInfo) {
+  const { currency0Amount, currency1Amount, totalSupply, liquidityAmount } = positionInfo ?? {}
+
+  const poolTokenPercentage = useMemo(() => {
+    return !!liquidityAmount && !!totalSupply && JSBI.greaterThanOrEqual(totalSupply.quotient, liquidityAmount.quotient)
+      ? new Percent(liquidityAmount.quotient, totalSupply.quotient)
+      : undefined
+  }, [liquidityAmount, totalSupply])
+
+  const token0USDValue = useUSDCValue(currency0Amount)
+  const token1USDValue = useUSDCValue(currency1Amount)
+
+  return useMemo(
+    () => ({
+      poolTokenPercentage,
+      token0USDValue,
+      token1USDValue,
+    }),
+    [poolTokenPercentage, token0USDValue, token1USDValue],
+  )
+}
+
+/**
+ * V3-specific hooks for a position parsed using parseRestPosition.
+ */
+export function useV3PositionDerivedInfo(positionInfo?: PositionInfo, tokenId?: string, collectAsWeth?: boolean) {
+  const { currency0Amount, currency1Amount, feeTier, liquidity, tickLower, tickUpper } = positionInfo ?? {}
+  // TODO(WEB-4920): construct Pool object from backend data rather than using multicall
+  const [, pool] = usePool(currency0Amount?.currency, currency1Amount?.currency, parseV3FeeTier(feeTier))
+  const price0 = useUSDCPrice(currency0Amount?.currency)
+  const price1 = useUSDCPrice(currency1Amount?.currency)
+
+  // TODO(WEB-4920): use fees from REST response instead once they are included.
+  const [feeValue0, feeValue1] = useV3PositionFees(pool ?? undefined, BigNumber.from(tokenId), collectAsWeth)
+  const { fiatFeeValue0, fiatFeeValue1 } = useMemo(() => {
+    if (!price0 || !price1 || !feeValue0 || !feeValue1) {
+      return {}
+    }
+
+    const feeValue0Wrapped = feeValue0?.wrapped
+    const feeValue1Wrapped = feeValue1?.wrapped
+
+    if (!feeValue0Wrapped || !feeValue1Wrapped) {
+      return {}
+    }
+
+    const amount0 = price0.quote(feeValue0Wrapped)
+    const amount1 = price1.quote(feeValue1Wrapped)
+    return {
+      fiatFeeValue0: amount0,
+      fiatFeeValue1: amount1,
+    }
+  }, [price0, price1, feeValue0, feeValue1])
+
+  const { fiatValue0, fiatValue1 } = useMemo(() => {
+    if (!price0 || !price1 || !currency0Amount || !currency1Amount) {
+      return {}
+    }
+    const amount0 = price0.quote(currency0Amount)
+    const amount1 = price1.quote(currency1Amount)
+    return {
+      fiatValue0: amount0,
+      fiatValue1: amount1,
+    }
+  }, [price0, price1, currency0Amount, currency1Amount])
+  const { priceLower, priceUpper } = useMemo(() => {
+    if (!pool || !liquidity || !tickLower || !tickUpper) {
+      return {}
+    }
+    const sdkPosition = new V3SDKPosition({
+      pool,
+      liquidity,
+      tickLower: Number(tickLower),
+      tickUpper: Number(tickUpper),
+    })
+    return getPriceOrderingFromPositionForUI(sdkPosition)
+  }, [liquidity, pool, tickLower, tickUpper])
+  return useMemo(
+    () => ({
+      fiatFeeValue0,
+      fiatFeeValue1,
+      fiatValue0,
+      fiatValue1,
+      priceLower,
+      priceUpper,
+      feeValue0,
+      feeValue1,
+      currentPrice: pool?.token1Price,
+    }),
+    [feeValue0, feeValue1, fiatFeeValue0, fiatFeeValue1, fiatValue0, fiatValue1, priceLower, priceUpper, pool],
+  )
 }

@@ -9,8 +9,7 @@ import {
 export type TransactionActivity = AssetActivityPartsFragment & { details: TransactionDetailsPartsFragment }
 
 /**
- * Be careful adding to this enum, always assign a unique value (typescript will not prevent duplicate values).
- * These values is persisted in state and if you change the value it will cause errors
+ * Always add to the bottom of this enum because these values is persisted in state and if you change the value it will cause errors
  */
 export enum TransactionType {
   APPROVAL = 0,
@@ -40,6 +39,8 @@ export enum TransactionType {
   DEPLOY,
   CANCEL,
   LIMIT,
+  INCREASE_LIQUIDITY,
+  // Always add to the bottom of this enum
 }
 
 interface BaseTransactionInfo {
@@ -131,6 +132,14 @@ export interface CreateV3PoolTransactionInfo {
   quoteCurrencyId: string
 }
 
+export interface IncreaseLiquidityTransactionInfo {
+  type: TransactionType.INCREASE_LIQUIDITY
+  token0CurrencyId: string
+  token1CurrencyId: string
+  token0CurrencyAmountRaw: string
+  token1CurrencyAmountRaw: string
+}
+
 export interface AddLiquidityV3PoolTransactionInfo {
   type: TransactionType.ADD_LIQUIDITY_V3_POOL
   createPool: boolean
@@ -203,6 +212,7 @@ export type TransactionInfo =
   | RemoveLiquidityV3TransactionInfo
   | SubmitProposalTransactionInfo
   | SendTransactionInfo
+  | IncreaseLiquidityTransactionInfo
 
 interface BaseTransactionDetails {
   status: TransactionStatus

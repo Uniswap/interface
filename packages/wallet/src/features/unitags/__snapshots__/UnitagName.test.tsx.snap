@@ -13,9 +13,10 @@ exports[`renders UnitagName with a name 1`] = `
   }
   style={
     {
+      "alignItems": "center",
       "alignSelf": "center",
       "flexDirection": "row",
-      "gap": 20,
+      "gap": 4,
       "opacity": 0,
     }
   }
@@ -90,9 +91,10 @@ exports[`renders UnitagName without a name 1`] = `
   }
   style={
     {
+      "alignItems": "center",
       "alignSelf": "center",
       "flexDirection": "row",
-      "gap": 20,
+      "gap": 4,
       "opacity": 0,
     }
   }

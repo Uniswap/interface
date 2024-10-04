@@ -3,6 +3,7 @@ import { RecipientSelect } from 'src/components/RecipientSelect/RecipientSelect'
 import { SEND_CONTENT_RENDER_DELAY_MS } from 'src/features/send/constants'
 import { TransactionModalInnerContainer } from 'uniswap/src/features/transactions/TransactionModal/TransactionModal'
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
+import { WalletChainId } from 'uniswap/src/types/chains'
 import { useSendContext } from 'wallet/src/features/transactions/contexts/SendContext'
 
 // We add a short hardcoded delay to allow the sheet to animate quickly both on first render and when going back from Review -> Form.
@@ -34,7 +35,7 @@ function SendRecipientSelectFullScreenContent({ hideContent }: { hideContent: bo
     <TransactionModalInnerContainer fullscreen bottomSheetViewStyles={[bottomSheetViewStyles]}>
       {!hideContent && (
         <RecipientSelect
-          chainId={derivedSendInfo.chainId}
+          chainId={derivedSendInfo.chainId as WalletChainId}
           focusInput={showRecipientSelector}
           recipient={recipient}
           onHideRecipientSelector={onHideRecipientSelector}

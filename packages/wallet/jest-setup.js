@@ -8,7 +8,7 @@ import { mockSharedPersistQueryClientProvider } from 'uniswap/src/test/mocks/moc
 import { mockUIAssets } from 'ui/src/test/mocks/mockUIAssets'
 
 jest.mock('react-native-localize', () => mockRNLocalize)
-jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext)
+jest.mock('uniswap/src/features/language/LocalizationContext', () => mockLocalizationContext({}))
 
 // Mock the appearance hook for all tests
 const mockAppearanceSetting = AppearanceSettingType.System
@@ -53,6 +53,11 @@ jest.mock('ui/src/components/Unicon', () => {
 // Use native modal
 jest.mock('uniswap/src/components/modals/Modal', () => {
   return jest.requireActual('uniswap/src/components/modals/Modal.native.tsx')
+})
+
+// Use native clickable
+jest.mock('ui/src/components/swipeablecards/ClickableWithinGesture', () => {
+  return jest.requireActual('ui/src/components/swipeablecards/ClickableWithinGesture.native.tsx')
 })
 
 import crypto from "crypto"

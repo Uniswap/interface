@@ -38,7 +38,7 @@ const getStoreReview = async () => {
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Store Review import error'
     logger.warn('appRating/saga.ts', 'getStoreReview', message)
-    return
+    return undefined
   }
 }
 

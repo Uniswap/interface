@@ -3,10 +3,13 @@ import { TFunction } from 'i18next'
 import isEqual from 'lodash/isEqual'
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { useSelector } from 'react-redux'
 import { isWeb } from 'ui/src'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { FetchError, isRateLimitFetchError } from 'uniswap/src/data/apiClients/FetchError'
+import { selectHasDismissedBridgingWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import {
@@ -17,6 +20,7 @@ import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/conte
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { NoRoutesError, SWAP_QUOTE_ERROR } from 'uniswap/src/features/transactions/swap/hooks/useTrade'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
+import { isBridge } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { ParsedWarnings } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
@@ -54,8 +58,8 @@ export function getSwapWarnings(
         currencySymbol: currencyAmountIn.currency?.symbol,
       }),
       buttonText: isWeb
-        ? t('swap.warning.insufficientBalance.button', {
-            currencySymbol: currencyAmountIn.currency?.symbol,
+        ? t('common.insufficientTokenBalance.error.simple', {
+            tokenSymbol: currencyAmountIn.currency?.symbol,
           })
         : undefined,
       currency: currencyAmountIn.currency,
@@ -108,19 +112,27 @@ export function getSwapWarnings(
 
   // price impact warning
   const priceImpact = trade.trade?.priceImpact
+  const priceImpactValue = priceImpact ? formatPercent(normalizePriceImpact(priceImpact)) : undefined
   if (priceImpact?.greaterThan(PRICE_IMPACT_THRESHOLD_MEDIUM)) {
     const highImpact = !priceImpact.lessThan(PRICE_IMPACT_THRESHOLD_HIGH)
     warnings.push({
       type: highImpact ? WarningLabel.PriceImpactHigh : WarningLabel.PriceImpactMedium,
       severity: highImpact ? WarningSeverity.High : WarningSeverity.Medium,
       action: WarningAction.WarnBeforeSubmit,
-      title: t('swap.warning.priceImpact.title', {
-        priceImpactValue: formatPercent(normalizePriceImpact(priceImpact)),
-      }),
-      message: t('swap.warning.priceImpact.message', {
-        outputCurrencySymbol: currencies[CurrencyField.OUTPUT]?.currency.symbol,
-        inputCurrencySymbol: currencies[CurrencyField.INPUT]?.currency.symbol,
-      }),
+      title: highImpact
+        ? t('swap.warning.priceImpact.title.veryHigh', {
+            priceImpactValue,
+          })
+        : t('swap.warning.priceImpact.title', {
+            priceImpactValue,
+          }),
+      message: highImpact
+        ? t('swap.warning.priceImpact.message.veryHigh', { priceImpactValue })
+        : t('swap.warning.priceImpact.message', {
+            outputCurrencySymbol: currencies[CurrencyField.OUTPUT]?.currency.symbol,
+            inputCurrencySymbol: currencies[CurrencyField.INPUT]?.currency.symbol,
+          }),
+      link: uniswapUrls.helpArticleUrls.priceImpact,
     })
   }
 
@@ -148,6 +160,12 @@ const formIncomplete = (derivedSwapInfo: DerivedSwapInfo): boolean => {
   }
 
   return false
+}
+
+export function useNeedsBridgingWarning(derivedSwapInfo: DerivedSwapInfo): boolean {
+  const isBridgeTrade = derivedSwapInfo.trade.trade !== null && isBridge(derivedSwapInfo.trade.trade)
+  const hasDismissedBridgingWarning = useSelector(selectHasDismissedBridgingWarning)
+  return isBridgeTrade && !hasDismissedBridgingWarning
 }
 
 export function useParsedSwapWarnings(): ParsedWarnings {

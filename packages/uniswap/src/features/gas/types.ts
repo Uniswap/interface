@@ -1,6 +1,6 @@
 import { SerializedError } from '@reduxjs/toolkit'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
-import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/__generated__'
+import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { GasFeeEstimates } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export type TransactionLegacyFeeParams = {
@@ -43,6 +43,14 @@ export type GasFeeResult = {
   error: SerializedError | FetchError | Error | null
   params?: TransactionLegacyFeeParams | TransactionEip1559FeeParams
   gasEstimates?: GasFeeEstimates
+}
+
+export type ValidatedGasFeeResult = GasFeeResult & { value: string; error: null }
+export function validateGasFeeResult(gasFee: GasFeeResult): ValidatedGasFeeResult | undefined {
+  if (gasFee.value === undefined || gasFee.error) {
+    return undefined
+  }
+  return { ...gasFee, value: gasFee.value, error: null }
 }
 
 export type FormattedUniswapXGasFeeInfo = {

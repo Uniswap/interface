@@ -43,7 +43,7 @@ export const getSessionNamespaces = (
  */
 export const getSupportedWalletConnectChains = (chains?: string[]): WalletChainId[] | undefined => {
   if (!chains) {
-    return
+    return undefined
   }
 
   return chains.map((chain) => getChainIdFromEIP155String(chain)).filter((c): c is WalletChainId => Boolean(c))
@@ -166,6 +166,7 @@ export const parseTransactionRequest = (
  * `signTypedData` params are ordered as [account, message]
  * See https://docs.walletconnect.com/2.0/advanced/rpc-reference/ethereum-rpc#personal_sign
  */
+// eslint-disable-next-line consistent-return
 export function getAddressAndMessageToSign(
   ethMethod: EthSignMethod,
   params: Web3WalletTypes.SessionRequest['params']['request']['params'],

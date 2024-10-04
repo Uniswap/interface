@@ -1,13 +1,15 @@
 /* eslint-disable-next-line no-restricted-imports */
-import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Position, PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
 import { useAccount } from 'hooks/useAccount'
 import { PositionsHeader } from 'pages/Pool/Positions/PositionsHeader'
-import { useState } from 'react'
+import { useCallback, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex } from 'ui/src'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { logger } from 'utilities/src/logger/logger'
 
 export default function Positions() {
   const [chainFilter, setChainFilter] = useState<UniverseChainId | null>(null)
@@ -22,15 +24,30 @@ export default function Positions() {
     PositionStatus.CLOSED,
   ])
 
+  const navigate = useNavigate()
   const account = useAccount()
   const { address } = account
 
   const { data } = useGetPositionsQuery({
-    chainIds: chainFilter ? [chainFilter] : undefined,
-    protocolVersions: versionFilter,
-    positionStatuses: statusFilter,
     address,
   })
+
+  const onNavigateToPosition = useCallback(
+    (position: Position) => {
+      if (position.position.case === 'v2Pair' && position.position.value.token0 && position.position.value.token1) {
+        navigate(`/positions/v2/${position.position.value.token0.address}/${position.position.value.token1.address}`)
+      } else if (position.position.case === 'v3Position') {
+        navigate(`/positions/v3/${position.position.value.tokenId}`)
+      } else if (position.position.case === 'v4Position') {
+        navigate(`/positions/v4/${position.position.value.poolPosition?.tokenId}`)
+      } else {
+        logger.error('Invalid position', {
+          tags: { file: 'Positions/index.tsx', function: 'onPress' },
+        })
+      }
+    },
+    [navigate],
+  )
 
   // TODO(WEB-4920): implement pagination w/ max 8 positions per page.
 
@@ -58,16 +75,14 @@ export default function Positions() {
           }
         }}
       />
-      <Flex gap="$gap16">
+      <Flex gap="$gap16" mb="$spacing20">
         {data?.positions.map((position, index) => {
           return (
             <LiquidityPositionCard
               key={index}
               liquidityPosition={position}
               {...ClickableTamaguiStyle}
-              onPress={() => {
-                // TODO(WEB-4920): navigate to the PosDP for this position
-              }}
+              onPress={() => onNavigateToPosition(position)}
             />
           )
         })}

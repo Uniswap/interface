@@ -3,6 +3,7 @@ import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pool
 import { getProtocolStatusLabel, getProtocolVersionLabel } from 'components/Liquidity/utils'
 import { useSupportedChainIds } from 'hooks/useSupportedChainIds'
 import { useMemo } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, LabeledCheckbox, Text } from 'ui/src'
 import { ExternalLink } from 'ui/src/components/icons/ExternalLink'
@@ -33,6 +34,7 @@ export function PositionsHeader({
 }: PositionsHeaderProps) {
   const { t } = useTranslation()
   const { supported: supportedChains } = useSupportedChainIds()
+  const navigate = useNavigate()
 
   const filterOptions = useMemo(() => {
     const statusOptions = [PositionStatus.IN_RANGE, PositionStatus.OUT_OF_RANGE, PositionStatus.CLOSED].map(
@@ -98,7 +100,7 @@ export function PositionsHeader({
       {
         key: 'PositionsHeader-create-v4',
         onPress: () => {
-          // TODO(WEB-4920): navigate to v4 create position page
+          navigate('/positions/create/v4')
         },
         render: () => (
           <Flex row gap="$gap4" alignItems="center">
@@ -112,7 +114,7 @@ export function PositionsHeader({
       {
         key: 'PositionsHeader-create-v3',
         onPress: () => {
-          // TODO(WEB-4920): navigate to v3 create position page
+          navigate('/positions/create/v3')
         },
         render: () => (
           <Flex row gap="$gap4" alignItems="center">
@@ -126,7 +128,7 @@ export function PositionsHeader({
       {
         key: 'PositionsHeader-create-v2',
         onPress: () => {
-          // TODO(WEB-4920): navigate to v2 create position page
+          navigate('/positions/create/v2')
         },
         render: () => (
           <Flex row gap="$gap4" alignItems="center">
@@ -138,7 +140,7 @@ export function PositionsHeader({
         ),
       },
     ]
-  }, [t])
+  }, [t, navigate])
 
   return (
     <Flex gap={20}>
@@ -156,7 +158,7 @@ export function PositionsHeader({
             my="$spacing8"
             {...ClickableTamaguiStyle}
             onPress={() => {
-              // TODO(WEB-4920): navigate to v4 create position page
+              navigate('/positions/create/v4')
             }}
           >
             <Plus size={24} color="$neutral1" />

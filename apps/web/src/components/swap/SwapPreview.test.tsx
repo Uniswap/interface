@@ -20,8 +20,8 @@ describe('SwapPreview.tsx', () => {
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Output is estimated. You will receive at least /i)).toBeInTheDocument()
-    expect(screen.getByTestId('INPUT-amount')).toHaveTextContent(`<0.00001 ABC`)
-    expect(screen.getByTestId('OUTPUT-amount')).toHaveTextContent(`<0.00001 DEF`)
+    expect(screen.getByTestId('input-amount')).toHaveTextContent(`<0.00001 ABC`)
+    expect(screen.getByTestId('output-amount')).toHaveTextContent(`<0.00001 DEF`)
   })
 
   it('renders ETH input token for an ETH input UniswapX swap', () => {
@@ -34,8 +34,8 @@ describe('SwapPreview.tsx', () => {
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Output is estimated. You will receive at least /i)).toBeInTheDocument()
-    expect(screen.getByTestId('INPUT-amount')).toHaveTextContent(`<0.00001 ETH`)
-    expect(screen.getByTestId('OUTPUT-amount')).toHaveTextContent(`<0.00001 DEF`)
+    expect(screen.getByTestId('input-amount')).toHaveTextContent(`<0.00001 ETH`)
+    expect(screen.getByTestId('output-amount')).toHaveTextContent(`<0.00001 DEF`)
   })
 
   it('renders ETH input token for an ETH input UniswapX v2 swap', () => {
@@ -48,8 +48,8 @@ describe('SwapPreview.tsx', () => {
     )
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Output is estimated. You will receive at least /i)).toBeInTheDocument()
-    expect(screen.getByTestId('INPUT-amount')).toHaveTextContent(`<0.00001 ETH`)
-    expect(screen.getByTestId('OUTPUT-amount')).toHaveTextContent(`<0.00001 DEF`)
+    expect(screen.getByTestId('input-amount')).toHaveTextContent(`<0.00001 ETH`)
+    expect(screen.getByTestId('output-amount')).toHaveTextContent(`<0.00001 DEF`)
   })
 
   it('test trade exact output, no recipient', () => {
@@ -59,8 +59,8 @@ describe('SwapPreview.tsx', () => {
     expect(asFragment()).toMatchSnapshot()
     expect(screen.getByText(/Input is estimated. You will sell at most/i)).toBeInTheDocument()
 
-    expect(screen.getByTestId('INPUT-amount')).toHaveTextContent(`<0.00001 ABC`)
-    expect(screen.getByTestId('OUTPUT-amount')).toHaveTextContent(`<0.00001 GHI`)
+    expect(screen.getByTestId('input-amount')).toHaveTextContent(`<0.00001 ABC`)
+    expect(screen.getByTestId('output-amount')).toHaveTextContent(`<0.00001 GHI`)
   })
 
   it('renders preview trades with loading states', () => {

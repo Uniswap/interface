@@ -36,7 +36,10 @@ export function useTokenAndFiatDisplayAmounts({
     ? formatCurrencyAmount({ value: currencyAmount, type: NumberType.TokenTx })
     : ''
 
-  const formattedFiatValue: string = convertFiatAmountFormatted(usdValue?.toExact() || 0, NumberType.FiatTokenQuantity)
+  // show a placeholder if we have no valid USD amount
+  const formattedFiatValue: string = !usdValue
+    ? '-'
+    : convertFiatAmountFormatted(usdValue.toExact(), NumberType.FiatTokenQuantity)
 
   // In fiat mode, show equivalent token amount. In token mode, show equivalent fiat amount
   return useMemo((): string => {

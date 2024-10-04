@@ -36,6 +36,7 @@ export type {
   Adapt,
   CircleProps,
   ColorTokens,
+  GetProps,
   GetRef,
   InputProps,
   PopperProps,
@@ -67,6 +68,8 @@ export { MenuContent } from './components/menu/MenuContent'
 export type { MenuContentItem } from './components/menu/types'
 export { AdaptiveWebModal, WebBottomSheet } from './components/modal/AdaptiveWebModal'
 export * from './components/radio/Radio'
+export { ClickableWithinGesture } from './components/swipeablecards/ClickableWithinGesture'
+export { SwipeableCardStack } from './components/swipeablecards/SwipeableCardStack'
 export { Switch, type SwitchProps } from './components/switch/Switch'
 export * from './components/text'
 export { Tooltip } from './components/tooltip/Tooltip'

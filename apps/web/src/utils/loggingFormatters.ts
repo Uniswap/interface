@@ -12,7 +12,7 @@ import { InterfaceTrade, TradeFillType } from 'state/routing/types'
 import { isClassicTrade, isUniswapXTradeType } from 'state/routing/utils'
 import { SwapPriceUpdateActionProperties } from 'uniswap/src/features/telemetry/types'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { RoutingDiagramEntry } from 'utils/getRoutingDiagramEntries'
+import { RoutingDiagramEntry } from 'uniswap/src/utils/getRoutingDiagramEntries'
 import { computeRealizedPriceImpact } from 'utils/prices'
 
 const formatRoutesEventProperties = (routes?: RoutingDiagramEntry[]) => {

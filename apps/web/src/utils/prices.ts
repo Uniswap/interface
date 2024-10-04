@@ -112,7 +112,7 @@ export function getPriceImpactWarning(priceImpact: Percent): 'warning' | 'error'
   if (priceImpact.greaterThan(ALLOWED_PRICE_IMPACT_MEDIUM)) {
     return 'warning'
   }
-  return
+  return undefined
 }
 
 export function getPriceImpactColor(priceImpact: Percent): keyof DefaultTheme | undefined {

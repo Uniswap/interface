@@ -92,6 +92,7 @@ import { initialModalsState } from 'src/features/modals/modalSlice'
 import { initialTweaksState } from 'src/features/tweaks/slice'
 import { initialWalletConnectState } from 'src/features/walletConnect/walletConnectSlice'
 import { AccountType } from 'uniswap/src/features/accounts/types'
+import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
@@ -194,6 +195,7 @@ describe('Redux state migrations', () => {
       tokens: initialTokensState,
       transactions: initialTransactionsState,
       tweaks: initialTweaksState,
+      uniswapBehaviorHistory: initialUniswapBehaviorHistoryState,
       userSettings: initialUserSettingsState,
       wallet: initialWalletState,
       walletConnect: initialWalletConnectState,
@@ -221,9 +223,9 @@ describe('Redux state migrations', () => {
       initialStateKeys.delete(key)
     }
 
-    expect(migratedSchemaKeys.size).toBe(0)
-    expect(latestSchemaKeys.size).toBe(0)
-    expect(initialStateKeys.size).toBe(0)
+    expect(Array.from(migratedSchemaKeys)).toEqual([])
+    expect(Array.from(latestSchemaKeys)).toEqual([])
+    expect(Array.from(initialStateKeys)).toEqual([])
   })
 
   // This is a precaution to ensure we do not attempt to access undefined properties during migrations

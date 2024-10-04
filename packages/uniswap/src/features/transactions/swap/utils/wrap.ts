@@ -1,5 +1,4 @@
 import { Currency } from '@uniswap/sdk-core'
-import { AppTFunction } from 'ui/src/i18n/types'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { areCurrencyIdsEqual, buildWrappedNativeCurrencyId, currencyId } from 'uniswap/src/utils/currencyId'
@@ -26,15 +25,4 @@ export function getWrapType(
 
 export function isWrapAction(wrapType: WrapType): wrapType is WrapType.Unwrap | WrapType.Wrap {
   return wrapType === WrapType.Unwrap || wrapType === WrapType.Wrap
-}
-
-export const getActionName = (t: AppTFunction, wrapType: WrapType): string => {
-  switch (wrapType) {
-    case WrapType.Unwrap:
-      return t('swap.button.unwrap')
-    case WrapType.Wrap:
-      return t('swap.button.wrap')
-    default:
-      return t('swap.button.swap')
-  }
 }

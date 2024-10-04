@@ -1,15 +1,21 @@
 import { TradeType } from '@uniswap/sdk-core'
 import {
+  BridgeTransactionInfo,
   ConfirmedSwapTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  isBridgeTypeInfo,
   isConfirmedSwapTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 
 export function getAmountsFromTrade(
-  typeInfo: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo | ConfirmedSwapTransactionInfo,
+  typeInfo:
+    | ExactInputSwapTransactionInfo
+    | ExactOutputSwapTransactionInfo
+    | ConfirmedSwapTransactionInfo
+    | BridgeTransactionInfo,
 ): { inputCurrencyAmountRaw: string; outputCurrencyAmountRaw: string } {
-  if (isConfirmedSwapTypeInfo(typeInfo)) {
+  if (isConfirmedSwapTypeInfo(typeInfo) || isBridgeTypeInfo(typeInfo)) {
     const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = typeInfo
     return { inputCurrencyAmountRaw, outputCurrencyAmountRaw }
   }

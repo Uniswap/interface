@@ -1,17 +1,19 @@
 // eslint-disable-next-line no-restricted-imports
 import { Position } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
+import { BadgeData, LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { LiquidityPositionStatusIndicator } from 'components/Liquidity/LiquidityPositionStatusIndicator'
-import { getProtocolVersionLabel, usePositionInfo } from 'components/Liquidity/utils'
+import { getProtocolVersionLabel, parseRestPosition } from 'components/Liquidity/utils'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { useMemo } from 'react'
 import { Flex, Text } from 'ui/src'
+import { DocumentList } from 'ui/src/components/icons/DocumentList'
 
 interface LiquidityPositionInfoProps {
   position: Position
 }
 
 export function LiquidityPositionInfo({ position }: LiquidityPositionInfoProps) {
-  const positionInfo = usePositionInfo(position)
+  const positionInfo = useMemo(() => parseRestPosition(position), [position])
   if (!positionInfo) {
     return null
   }
@@ -32,7 +34,15 @@ export function LiquidityPositionInfo({ position }: LiquidityPositionInfoProps) 
           <Flex row gap={2} alignItems="center">
             <LiquidityPositionInfoBadges
               size="small"
-              labels={[versionLabel, v4hook, feeTier].filter(Boolean) as string[]}
+              badges={
+                [
+                  versionLabel ? { label: versionLabel } : undefined,
+                  v4hook
+                    ? { label: v4hook, copyable: true, icon: <DocumentList color="$neutral2" size={16} /> }
+                    : undefined,
+                  feeTier ? { label: `${Number(feeTier) / 10000}%` } : undefined,
+                ].filter(Boolean) as BadgeData[]
+              }
             />
           </Flex>
         </Flex>

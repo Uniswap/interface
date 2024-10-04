@@ -1,10 +1,8 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { memo, useCallback, useRef } from 'react'
+import { ComponentProps, memo, useCallback, useMemo, useRef } from 'react'
 import { useTranslation } from 'react-i18next'
-// eslint-disable-next-line no-restricted-imports -- types are safe to import
-import type { GestureResponderEvent } from 'react-native'
-import { Text, TouchableArea } from 'ui/src'
+import { Text, TouchableArea, TouchableAreaEvent } from 'ui/src'
 import { useMaxAmountSpend } from 'uniswap/src/features/gas/useMaxAmountSpend'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
@@ -37,7 +35,7 @@ export function MaxAmountButton({
   maxInputAmountRef.current = maxInputAmount
 
   const onPress = useCallback(
-    (event: GestureResponderEvent): void => {
+    (event: TouchableAreaEvent): void => {
       event.stopPropagation()
 
       if (!disableMaxButton && maxInputAmountRef.current) {
@@ -60,10 +58,14 @@ const MaxButtonContent = memo(function _MaxButtonContent({
   currencyField,
 }: {
   disabled: boolean
-  onPress: (event: GestureResponderEvent) => void
+  onPress: (event: TouchableAreaEvent) => void
   currencyField: CurrencyField
 }): JSX.Element {
   const { t } = useTranslation()
+
+  const hoverStyle: {
+    backgroundColor: ComponentProps<typeof TouchableArea>['backgroundColor']
+  } = useMemo(() => ({ backgroundColor: disabled ? '$surface3' : '$accent2Hovered' }), [disabled])
 
   return (
     <Trace
@@ -79,6 +81,8 @@ const MaxButtonContent = memo(function _MaxButtonContent({
         px="$spacing6"
         py="$spacing4"
         testID={currencyField === CurrencyField.INPUT ? TestID.SetMaxInput : TestID.SetMaxOutput}
+        scaleTo={0.98}
+        hoverStyle={hoverStyle}
         onPress={onPress}
       >
         <Text color={disabled ? '$neutral2' : '$accent1'} variant="buttonLabel4">

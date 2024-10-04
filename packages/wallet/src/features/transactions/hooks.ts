@@ -34,7 +34,7 @@ export function usePendingTransactions(
   const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
     if (!transactions) {
-      return
+      return undefined
     }
     return transactions.filter(
       (tx: { status: TransactionStatus; typeInfo: { type: TransactionType } }) =>
@@ -69,7 +69,7 @@ export function useErroredQueuedOrders(address: Address | null): ErroredQueuedOr
   const transactions = useSelectAddressTransactions(address)
   return useMemo(() => {
     if (!transactions) {
-      return
+      return undefined
     }
     const erroredQueuedOrders: ErroredQueuedOrder[] = []
     for (const tx of transactions) {
@@ -86,7 +86,7 @@ export function useSortedPendingTransactions(address: Address | null): Transacti
   const transactions = usePendingTransactions(address)
   return useMemo(() => {
     if (!transactions) {
-      return
+      return undefined
     }
     return transactions.sort((a: TransactionDetails, b: TransactionDetails) => a.addedTime - b.addedTime)
   }, [transactions])
@@ -109,10 +109,14 @@ export function useCreateSwapFormState(
   const transaction = useSelectTransaction(address, chainId, txId)
 
   const inputCurrencyId =
-    transaction?.typeInfo.type === TransactionType.Swap ? transaction.typeInfo.inputCurrencyId : undefined
+    transaction?.typeInfo.type === TransactionType.Swap || transaction?.typeInfo.type === TransactionType.Bridge
+      ? transaction.typeInfo.inputCurrencyId
+      : undefined
 
   const outputCurrencyId =
-    transaction?.typeInfo.type === TransactionType.Swap ? transaction.typeInfo.outputCurrencyId : undefined
+    transaction?.typeInfo.type === TransactionType.Swap || transaction?.typeInfo.type === TransactionType.Bridge
+      ? transaction.typeInfo.outputCurrencyId
+      : undefined
 
   const inputCurrencyInfo = useCurrencyInfo(inputCurrencyId)
   const outputCurrencyInfo = useCurrencyInfo(outputCurrencyId)
@@ -192,6 +196,7 @@ export function useMergeLocalAndRemoteTransactions(
         const orderHash = ensureLeading0x(tx.orderHash.toLowerCase())
         return orderHashToTxHashMap.get(orderHash) ?? orderHash
       }
+      return undefined
     }
 
     const hashes = new Set<string>()
@@ -292,7 +297,7 @@ function useLowestPendingNonce(): BigNumberish | undefined {
   return useMemo(() => {
     let min: BigNumberish | undefined
     if (!pending) {
-      return
+      return undefined
     }
     pending.map((txn: TransactionDetails) => {
       if (isClassic(txn)) {

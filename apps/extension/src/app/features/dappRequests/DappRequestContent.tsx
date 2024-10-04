@@ -237,14 +237,14 @@ export function DappRequestFooter({
           px="$spacing8"
         />
         <Flex row gap="$spacing12" pt="$spacing8">
-          <Button flex={1} flexBasis={1} size="small" theme="secondary" onPress={handleOnCancel}>
+          <Button flex={1} flexBasis={1} size="medium" theme="secondary" onPress={handleOnCancel}>
             {t('common.button.cancel')}
           </Button>
           <Button
             disabled={isConfirmDisabled}
             flex={1}
             flexBasis={1}
-            size="small"
+            size="medium"
             theme="primary"
             onPress={handleOnConfirm}
           >

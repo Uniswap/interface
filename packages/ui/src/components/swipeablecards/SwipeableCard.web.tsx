@@ -1,6 +1,19 @@
+import { BaseCard } from 'ui/src/components/swipeablecards/BaseCard'
 import { SwipeableCardProps } from 'ui/src/components/swipeablecards/props'
-import { NotImplementedError } from 'utilities/src/errors'
+import { TouchableArea } from 'ui/src/components/touchable'
 
-export function SwipeableCard(_props: SwipeableCardProps): JSX.Element {
-  throw new NotImplementedError('SwipeableCard')
+export function SwipeableCard({
+  children,
+  stackIndex,
+  cardHeight,
+  onPress,
+  onLayout,
+}: SwipeableCardProps): JSX.Element {
+  return (
+    <TouchableArea onPress={onPress}>
+      <BaseCard stackIndex={stackIndex} cardHeight={cardHeight} onLayout={onLayout}>
+        {children}
+      </BaseCard>
+    </TouchableArea>
+  )
 }

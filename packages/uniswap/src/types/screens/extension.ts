@@ -25,6 +25,7 @@ export enum ExtensionOnboardingScreens {
   SetPassword = 'SetPassword',
 
   // New Wallet Flow
+  ClaimUnitag = 'ClaimUnitag',
   NameWallet = 'NameWallet',
   ViewSeedPhrase = 'ViewSeedPhrase',
   ConfirmSeedPhrase = 'ConfirmSeedPhrase',
@@ -38,4 +39,9 @@ export enum ExtensionOnboardingScreens {
   EnterOTP = 'EnterOTP',
 }
 
-export type ExtensionScreen = HomeTabs | ExtensionScreens | ExtensionOnboardingScreens
+export enum ExtensionUnitagClaimScreens {
+  Intro = 'Intro',
+  CreateUsername = 'CreateUsername',
+}
+
+export type ExtensionScreen = HomeTabs | ExtensionScreens | ExtensionOnboardingScreens | ExtensionUnitagClaimScreens

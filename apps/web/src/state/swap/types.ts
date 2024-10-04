@@ -1,13 +1,13 @@
 import { Currency, CurrencyAmount, Percent } from '@uniswap/sdk-core'
-import { Field } from 'components/swap/constants'
 import { Dispatch, ReactNode, SetStateAction, createContext } from 'react'
 import { InterfaceTrade, RouterPreference, TradeState } from 'state/routing/types'
 import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 
 export type SwapInfo = {
-  currencies: { [field in Field]?: Currency }
-  currencyBalances: { [field in Field]?: CurrencyAmount<Currency> }
+  currencies: { [field in CurrencyField]?: Currency }
+  currencyBalances: { [field in CurrencyField]?: CurrencyAmount<Currency> }
   inputTax: Percent
   outputTax: Percent
   outputFeeFiatValue?: number
@@ -44,7 +44,7 @@ export const EMPTY_DERIVED_SWAP_INFO: SwapInfo = Object.freeze({
 
 export const initialSwapState: SwapState = {
   typedValue: '',
-  independentField: Field.INPUT,
+  independentField: CurrencyField.INPUT,
 }
 
 export const SwapContext = createContext<SwapContextType>({
@@ -113,7 +113,7 @@ export interface CurrencyState {
 }
 
 export interface SwapState {
-  readonly independentField: Field
+  readonly independentField: CurrencyField
   readonly typedValue: string
   routerPreferenceOverride?: RouterPreference.API
 }

@@ -35,7 +35,7 @@ export const portfolioBalance = createFixture<PortfolioBalance, PortfolioBalance
     address: balance.token.address,
     decimals: balance.token.decimals,
     symbol: balance.token.symbol,
-    name: balance.token.project?.name,
+    name: balance.token.name,
   })
 
   if (!currency) {
@@ -76,6 +76,7 @@ export const portfolioBalances = createFixture<PortfolioBalance[], PortfolioBala
             fromBalance: balance as RequireNonNullable<TokenBalance, 'quantity' | 'token'>,
           })
         }
+        return undefined
       })
       .filter(Boolean) as PortfolioBalance[]) ?? [],
 )

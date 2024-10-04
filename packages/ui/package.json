@@ -21,7 +21,7 @@
     "react": "18.2.0",
     "react-native": "0.73.6",
     "react-native-fast-image": "8.6.3",
-    "react-native-gesture-handler": "2.15.0",
+    "react-native-gesture-handler": "2.19.0",
     "react-native-image-colors": "1.5.2",
     "react-native-reanimated": "3.15.0",
     "react-native-safe-area-context": "4.9.0",

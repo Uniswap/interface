@@ -43,7 +43,7 @@ exports[`TokenDescription no description or social buttons shown when not availa
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="_gap-_xl_24px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1316331261 _width-10037"
+          class="_gap-_xl_24px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1316331292 _width-10037"
           data-testid="token-details-info-section"
         >
           <span
@@ -53,14 +53,14 @@ exports[`TokenDescription no description or social buttons shown when not availa
             Info
           </span>
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _width-10037 _flexWrap-wrap"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331230 _width-10037 _flexWrap-wrap"
             data-testid="token-details-info-links"
           >
             <div
               class="c0"
             >
               <span
-                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331230 _pt-1316330393 _pb-1316330393 _pr-1316331075 _pl-1316331075 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
                 data-disable-theme="true"
               >
                 <svg
@@ -96,7 +96,7 @@ exports[`TokenDescription no description or social buttons shown when not availa
               target="_blank"
             >
               <span
-                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331230 _pt-1316330393 _pb-1316330393 _pr-1316331075 _pl-1316331075 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
                 data-disable-theme="true"
               >
                 <svg
@@ -187,7 +187,7 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="_gap-_xl_24px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1316331261 _width-10037"
+          class="_gap-_xl_24px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1316331292 _width-10037"
           data-testid="token-details-info-section"
         >
           <span
@@ -197,14 +197,14 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
             Info
           </span>
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _width-10037 _flexWrap-wrap"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331230 _width-10037 _flexWrap-wrap"
             data-testid="token-details-info-links"
           >
             <div
               class="c0"
             >
               <span
-                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331230 _pt-1316330393 _pb-1316330393 _pr-1316331075 _pl-1316331075 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
                 data-disable-theme="true"
               >
                 <svg
@@ -240,7 +240,7 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
               target="_blank"
             >
               <span
-                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331230 _pt-1316330393 _pb-1316330393 _pr-1316331075 _pl-1316331075 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
                 data-disable-theme="true"
               >
                 <svg
@@ -270,7 +270,7 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
               target="_blank"
             >
               <span
-                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331230 _pt-1316330393 _pb-1316330393 _pr-1316331075 _pl-1316331075 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
                 data-disable-theme="true"
               >
                 <svg
@@ -296,7 +296,7 @@ exports[`TokenDescription renders token information correctly with defaults 1`] 
               target="_blank"
             >
               <span
-                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331230 _pt-1316330393 _pb-1316330393 _pr-1316331075 _pl-1316331075 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
                 data-disable-theme="true"
               >
                 <svg
@@ -396,7 +396,7 @@ exports[`TokenDescription truncates description and shows more 1`] = `
         class=" t_light _dsp_contents is_Theme"
       >
         <div
-          class="_gap-_xl_24px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1316331261 _width-10037"
+          class="_gap-_xl_24px _display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1316331292 _width-10037"
           data-testid="token-details-info-section"
         >
           <span
@@ -406,14 +406,14 @@ exports[`TokenDescription truncates description and shows more 1`] = `
             Info
           </span>
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _width-10037 _flexWrap-wrap"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331230 _width-10037 _flexWrap-wrap"
             data-testid="token-details-info-links"
           >
             <div
               class="c0"
             >
               <span
-                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331230 _pt-1316330393 _pb-1316330393 _pr-1316331075 _pl-1316331075 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
                 data-disable-theme="true"
               >
                 <svg
@@ -449,7 +449,7 @@ exports[`TokenDescription truncates description and shows more 1`] = `
               target="_blank"
             >
               <span
-                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331230 _pt-1316330393 _pb-1316330393 _pr-1316331075 _pl-1316331075 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
                 data-disable-theme="true"
               >
                 <svg
@@ -479,7 +479,7 @@ exports[`TokenDescription truncates description and shows more 1`] = `
               target="_blank"
             >
               <span
-                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331230 _pt-1316330393 _pb-1316330393 _pr-1316331075 _pl-1316331075 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
                 data-disable-theme="true"
               >
                 <svg
@@ -505,7 +505,7 @@ exports[`TokenDescription truncates description and shows more 1`] = `
               target="_blank"
             >
               <span
-                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331199 _pt-1316330362 _pb-1316330362 _pr-1316330393 _pl-1316330393 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
+                class="font_button _textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016109 _display-flex _flexDirection-row _gap-1316331230 _pt-1316330393 _pb-1316330393 _pr-1316331075 _pl-1316331075 _borderTopLeftRadius-1307610060 _borderTopRightRadius-1307610060 _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 _backgroundColor-568007293 _width-258729712 _cursor-pointer"
                 data-disable-theme="true"
               >
                 <svg

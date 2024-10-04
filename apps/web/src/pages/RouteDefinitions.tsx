@@ -8,7 +8,7 @@ import { t } from 'uniswap/src/i18n'
 import { isBrowserRouterEnabled } from 'utils/env'
 // High-traffic pages (index and /swap) should not be lazy-loaded.
 import Landing from 'pages/Landing'
-import { NewPosition } from 'pages/LegacyPool/NewPosition'
+import { CreatePosition } from 'pages/Pool/Positions/create/CreatePosition'
 import Swap from 'pages/Swap'
 
 const NftExplore = lazy(() => import('nft/pages/explore'))
@@ -25,6 +25,8 @@ const NotFound = lazy(() => import('pages/NotFound'))
 const Pool = lazy(() => import('pages/Pool'))
 const LegacyPool = lazy(() => import('pages/LegacyPool'))
 const LegacyPositionPage = lazy(() => import('pages/LegacyPool/PositionPage'))
+const PositionPage = lazy(() => import('pages/Pool/Positions/PositionPage'))
+const V2PositionPage = lazy(() => import('pages/Pool/Positions/V2PositionPage'))
 const LegacyPoolV2 = lazy(() => import('pages/LegacyPool/v2'))
 const PoolDetails = lazy(() => import('pages/PoolDetails'))
 const PoolFinder = lazy(() => import('pages/PoolFinder'))
@@ -202,8 +204,14 @@ export const routes: RouteDefinition[] = [
   }),
   // Refreshed pool routes
   createRouteDefinition({
-    path: '/positions/new',
-    getElement: () => <NewPosition />,
+    path: '/positions/create',
+    getElement: () => <CreatePosition />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
+    path: '/positions/create/:protocolVersion',
+    getElement: () => <CreatePosition />,
     getTitle: getPositionPageTitle,
     getDescription: getPositionPageDescription,
   }),
@@ -214,7 +222,25 @@ export const routes: RouteDefinition[] = [
     getDescription: getPositionPageDescription,
   }),
   createRouteDefinition({
-    path: '/migrate/v3/:positionId', // Position token ID (v3)
+    path: '/positions/v2/:currencyIdA/:currencyIdB',
+    getElement: () => <V2PositionPage />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
+    path: '/positions/v3/:tokenId',
+    getElement: () => <PositionPage />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
+    path: '/positions/v4/:tokenId',
+    getElement: () => <PositionPage />,
+    getTitle: getPositionPageTitle,
+    getDescription: getPositionPageDescription,
+  }),
+  createRouteDefinition({
+    path: '/migrate/v3/:tokenId',
     getElement: () => <MigrateV3 />,
     getTitle: () => StaticTitlesAndDescriptions.MigrateTitleV3,
     getDescription: () => StaticTitlesAndDescriptions.MigrateDescriptionV4,

@@ -11,7 +11,7 @@ export function useShowSendNetworkNotification({ chainId }: { chainId?: WalletCh
   const prevChainId = usePrevious(chainId)
 
   useEffect(() => {
-    if (!chainId || prevChainId === chainId) {
+    if (!chainId || !prevChainId || prevChainId === chainId) {
       return
     }
 

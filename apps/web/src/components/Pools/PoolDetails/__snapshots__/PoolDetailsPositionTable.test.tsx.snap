@@ -14,7 +14,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Closed 1`] = `
 }
 
 .c5 img {
-  width: 8px;
+  width: 7px;
   height: 16px;
   object-fit: cover;
 }
@@ -325,7 +325,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus In Range 1`] = `
 }
 
 .c5 img {
-  width: 8px;
+  width: 7px;
   height: 16px;
   object-fit: cover;
 }
@@ -611,7 +611,7 @@ exports[`PoolDetailsPositionsTable renders with PositionStatus Out Of Range 1`] 
 }
 
 .c5 img {
-  width: 8px;
+  width: 7px;
   height: 16px;
   object-fit: cover;
 }

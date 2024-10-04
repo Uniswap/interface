@@ -12,6 +12,7 @@ export enum TooltipSize {
   Max = 'max-content',
 }
 
+// eslint-disable-next-line consistent-return
 const getPaddingForSize = (size: TooltipSize) => {
   switch (size) {
     case TooltipSize.ExtraSmall:
@@ -102,7 +103,7 @@ export const MouseoverTooltip = memo(function MouseoverTooltip(props: MouseoverT
         clearTimeout(tooltipTimer)
       }
     }
-    return
+    return undefined
   }, [timeout, show])
 
   return (

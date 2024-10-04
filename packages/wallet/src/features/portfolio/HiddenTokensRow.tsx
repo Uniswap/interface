@@ -1,10 +1,9 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, ImpactFeedbackStyle, Separator, Text, TouchableArea } from 'ui/src'
 import { AnglesDownUp, SortVertical } from 'ui/src/components/icons'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
+import { isMobileApp } from 'utilities/src/platform'
 
 export function HiddenTokensRow({
-  padded = false,
   numHidden,
   isExpanded,
   onPress,
@@ -21,30 +20,29 @@ export function HiddenTokensRow({
       hapticFeedback
       activeOpacity={1}
       hapticStyle={ImpactFeedbackStyle.Light}
-      mx="$spacing12"
+      mx={isMobileApp && '$spacing16'}
       onPress={onPress}
     >
-      <Flex row alignItems="center" justifyContent="space-between" px={padded ? '$spacing12' : '$none'} py="$spacing12">
-        <Separator />
-        {/* just used for opacity styling, the parent TouchableArea handles event */}
-        <TouchableArea
-          hapticFeedback
-          hapticStyle={ImpactFeedbackStyle.Light}
-          testID={TestID.ShowHiddenTokens}
-          onPress={onPress}
-        >
-          <Flex centered row gap="$spacing4">
-            <Text color="$neutral3" variant="body4">
+      <Flex row alignItems="center" justifyContent="space-between" py="$spacing8">
+        <Flex centered grow row gap="$spacing12">
+          <Separator />
+
+          <Flex centered row gap="$gap4">
+            <Text color="$neutral3" textAlign="center" variant="body3">
               {t('hidden.tokens.info.text.button', { numHidden })}
             </Text>
-            {isExpanded ? (
-              <AnglesDownUp color="$neutral3" size="$icon.16" />
-            ) : (
-              <SortVertical color="$neutral3" size="$icon.16" />
-            )}
+
+            <Flex centered justifyContent="center">
+              {isExpanded ? (
+                <AnglesDownUp color="$neutral3" size="$icon.16" />
+              ) : (
+                <SortVertical color="$neutral3" size="$icon.16" />
+              )}
+            </Flex>
           </Flex>
-        </TouchableArea>
-        <Separator />
+
+          <Separator />
+        </Flex>
       </Flex>
     </TouchableArea>
   )

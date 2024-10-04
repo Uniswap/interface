@@ -4,9 +4,9 @@ import TokenSafety from 'components/TokenSafety'
 import useLast from 'hooks/useLast'
 import { memo, useCallback, useEffect, useState } from 'react'
 import { useUserAddedTokens } from 'state/user/userAddedTokens'
-import { NAV_HEIGHT } from 'theme'
 import { AdaptiveWebModal } from 'ui/src'
 import { TOKEN_SELECTOR_WEB_MAX_WIDTH } from 'uniswap/src/components/TokenSelector/TokenSelector'
+import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
 import { CurrencyField } from 'uniswap/src/types/currency'
 
 interface CurrencySearchModalProps {
@@ -72,8 +72,8 @@ export default memo(function CurrencySearchModal({
         content = (
           <TokenSafety
             token0={warningToken}
-            onContinue={() => handleCurrencySelect(warningToken)}
-            onCancel={() => setModalView(CurrencyModalView.search)}
+            onAcknowledge={() => handleCurrencySelect(warningToken)}
+            closeModalOnly={() => setModalView(CurrencyModalView.search)}
             showCancel={true}
           />
         )
@@ -89,7 +89,7 @@ export default memo(function CurrencySearchModal({
       px={0}
       py={0}
       flex={1}
-      $sm={{ height: `calc(100dvh - ${NAV_HEIGHT}px)` }}
+      $sm={{ height: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)` }}
     >
       {content}
     </AdaptiveWebModal>

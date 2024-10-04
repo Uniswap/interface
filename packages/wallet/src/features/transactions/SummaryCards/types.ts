@@ -7,8 +7,7 @@ export interface TransactionSummaryLayoutProps {
   authTrigger?: AuthTrigger
   transaction: TransactionDetails
   title?: string
-  caption: string
-  postCaptionElement?: JSX.Element
+  caption: string | JSX.Element
   icon?: JSX.Element
   index?: number
   onRetry?: () => void

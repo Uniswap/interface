@@ -90,6 +90,12 @@ exports[`should have a correct configuration for a Cypress e2e file 1`] = `
         "ignoreMiddleExtensions": true,
       },
     ],
+    "consistent-return": [
+      "error",
+      {
+        "treatUndefinedAsUnspecified": false,
+      },
+    ],
     "constructor-super": [
       "off",
     ],
@@ -446,6 +452,12 @@ exports[`should have a correct configuration for a Jest file 1`] = `
       "error",
       {
         "ignoreMiddleExtensions": true,
+      },
+    ],
+    "consistent-return": [
+      "error",
+      {
+        "treatUndefinedAsUnspecified": false,
       },
     ],
     "constructor-super": [
@@ -866,6 +878,9 @@ exports[`should have a correct configuration for a React file 1`] = `
             "name": "uniswap/src/features/fiatCurrency/conversion",
           },
           {
+            "importNames": [
+              "useLocalizedFormatter",
+            ],
             "message": "Use via \`useLocalizationContext\` instead.",
             "name": "uniswap/src/features/language/formatter",
           },
@@ -928,6 +943,12 @@ exports[`should have a correct configuration for a React file 1`] = `
       "error",
       {
         "ignoreMiddleExtensions": true,
+      },
+    ],
+    "consistent-return": [
+      "error",
+      {
+        "treatUndefinedAsUnspecified": false,
       },
     ],
     "constructor-super": [
@@ -1353,6 +1374,12 @@ exports[`should have a correct configuration for a TypeScript file 1`] = `
       "error",
       {
         "ignoreMiddleExtensions": true,
+      },
+    ],
+    "consistent-return": [
+      "error",
+      {
+        "treatUndefinedAsUnspecified": false,
       },
     ],
     "constructor-super": [

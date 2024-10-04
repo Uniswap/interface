@@ -3,7 +3,7 @@ import { parse } from 'qs'
 import { queryParametersToCurrencyState, useInitialCurrencyState } from 'state/swap/hooks'
 import { ETH_MAINNET } from 'test-utils/constants'
 import { renderHook, waitFor } from 'test-utils/render'
-import { MATIC_POLYGON, UNI } from 'uniswap/src/constants/tokens'
+import { UNI, nativeOnChain } from 'uniswap/src/constants/tokens'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
 jest.mock('uniswap/src/features/gating/hooks', () => {
@@ -186,7 +186,7 @@ describe('hooks', () => {
               {
                 tokenBalances: [
                   {
-                    token: MATIC_POLYGON,
+                    token: nativeOnChain(UniverseChainId.Polygon),
                     denominatedValue: {
                       value: 1000,
                     },

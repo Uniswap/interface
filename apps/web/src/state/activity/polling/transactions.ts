@@ -9,9 +9,10 @@ import { useCallback, useEffect, useMemo } from 'react'
 import { CanceledError, RetryableError, retry } from 'state/activity/polling/retry'
 import { OnActivityUpdate } from 'state/activity/types'
 import { useAppDispatch } from 'state/hooks'
-import { isPendingTx, useMultichainTransactions, useTransactionRemover } from 'state/transactions/hooks'
+import { useMultichainTransactions, useTransactionRemover } from 'state/transactions/hooks'
 import { checkedTransaction } from 'state/transactions/reducer'
 import { PendingTransactionDetails } from 'state/transactions/types'
+import { isPendingTx } from 'state/transactions/utils'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
@@ -120,7 +121,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
 
   useEffect(() => {
     if (!account.chainId || !provider || !lastBlockNumber || !hasPending) {
-      return
+      return undefined
     }
 
     const cancels = pendingTransactions

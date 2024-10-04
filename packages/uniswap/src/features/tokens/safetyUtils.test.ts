@@ -1,10 +1,10 @@
 import { Currency, NativeCurrency, Token } from '@uniswap/sdk-core'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { AttackType, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
+import { AttackType, CurrencyInfo, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import {
-  TokenWarningDesignTreatment,
-  getShouldHavePluralTreatment,
-  getTokenWarningDesignTreatment,
+  getShouldHaveCombinedPluralTreatment,
+  getTokenWarningSeverity,
   useModalHeaderText,
   useModalSubtitleText,
 } from 'uniswap/src/features/tokens/safetyUtils'
@@ -30,105 +30,145 @@ describe('safetyUtils', () => {
     protectionResult: ProtectionResult.Benign,
     attackType: AttackType.Other,
   }
-  describe('getTokenWarningDesignTreatment', () => {
-    it('should return undefined when currency or safetyInfo is not provided', () => {
-      expect(getTokenWarningDesignTreatment(undefined, mockSafetyInfo)).toBeUndefined()
-      expect(getTokenWarningDesignTreatment(mockCurrency, undefined)).toBeUndefined()
+  const mockCurrencyInfo = {
+    currency: mockCurrency,
+    safetyInfo: mockSafetyInfo,
+  } as CurrencyInfo
+  const mockNativeCurrencyInfo = {
+    currency: mockNativeCurrency,
+    safetyInfo: mockSafetyInfo,
+  } as CurrencyInfo
+
+  describe('getTokenWarningSeverity', () => {
+    it('should return undefined when currencyInfo is not provided', () => {
+      expect(getTokenWarningSeverity(undefined)).toBeUndefined()
+      expect(getTokenWarningSeverity({ ...mockCurrencyInfo, safetyInfo: undefined })).toBeUndefined()
     })
 
     it('should return Low for non-default token', () => {
-      const nonDefaultSafetyInfo = { ...mockSafetyInfo, tokenList: TokenList.NonDefault }
-      expect(getTokenWarningDesignTreatment(mockCurrency, nonDefaultSafetyInfo)).toBe(TokenWarningDesignTreatment.Low)
+      const nonDefaultCurrencyInfo = {
+        ...mockCurrencyInfo,
+        safetyInfo: { ...mockSafetyInfo, tokenList: TokenList.NonDefault },
+      }
+      expect(getTokenWarningSeverity(nonDefaultCurrencyInfo)).toBe(WarningSeverity.Low)
     })
 
     it('should return Medium for spam airdrop', () => {
-      const airdropSafetyInfo = {
-        ...mockSafetyInfo,
-        protectionResult: ProtectionResult.Spam,
-        attackType: AttackType.Airdrop,
+      const airdropCurrencyInfo = {
+        ...mockCurrencyInfo,
+        safetyInfo: {
+          ...mockSafetyInfo,
+          protectionResult: ProtectionResult.Spam,
+          attackType: AttackType.Airdrop,
+        },
       }
-      expect(getTokenWarningDesignTreatment(mockCurrency, airdropSafetyInfo)).toBe(TokenWarningDesignTreatment.Medium)
+      expect(getTokenWarningSeverity(airdropCurrencyInfo)).toBe(WarningSeverity.Medium)
     })
 
     it('should return Medium for low fee on transfer', () => {
-      const lowFeeCurrency = {
-        ...mockCurrency,
-        sellFeeBps: { toNumber: () => 100 }, // 1%
-        buyFeeBps: { toNumber: () => 100 },
-      } as Currency
-      expect(getTokenWarningDesignTreatment(lowFeeCurrency, mockSafetyInfo)).toBe(TokenWarningDesignTreatment.Medium)
+      const lowFeeCurrencyInfo = {
+        ...mockCurrencyInfo,
+        currency: {
+          ...mockCurrency,
+          sellFeeBps: { toNumber: () => 100 }, // 1%
+          buyFeeBps: { toNumber: () => 100 },
+        } as Currency,
+      }
+      expect(getTokenWarningSeverity(lowFeeCurrencyInfo)).toBe(WarningSeverity.Medium)
     })
 
     it('should return High for malicious impersonator', () => {
-      const impersonatorSafetyInfo = {
-        ...mockSafetyInfo,
-        protectionResult: ProtectionResult.Malicious,
-        attackType: AttackType.Impersonator,
+      const impersonatorCurrencyInfo = {
+        ...mockCurrencyInfo,
+        safetyInfo: {
+          ...mockSafetyInfo,
+          protectionResult: ProtectionResult.Malicious,
+          attackType: AttackType.Impersonator,
+        },
       }
-      expect(getTokenWarningDesignTreatment(mockCurrency, impersonatorSafetyInfo)).toBe(
-        TokenWarningDesignTreatment.High,
-      )
+      expect(getTokenWarningSeverity(impersonatorCurrencyInfo)).toBe(WarningSeverity.High)
     })
 
     it('should return High for very high fee on transfer', () => {
-      const highFeeCurrency = {
-        ...mockCurrency,
-        sellFeeBps: { toNumber: () => 8100 }, // 81%
-        buyFeeBps: { toNumber: () => 8100 },
-      } as Currency
-      expect(getTokenWarningDesignTreatment(highFeeCurrency, mockSafetyInfo)).toBe(TokenWarningDesignTreatment.High)
+      const highFeeCurrencyInfo = {
+        ...mockCurrencyInfo,
+        currency: {
+          ...mockCurrency,
+          sellFeeBps: { toNumber: () => 8100 }, // 81%
+          buyFeeBps: { toNumber: () => 8100 },
+        } as Currency,
+      }
+      expect(getTokenWarningSeverity(highFeeCurrencyInfo)).toBe(WarningSeverity.High)
     })
 
     it('should return None for default token with no warnings', () => {
-      expect(getTokenWarningDesignTreatment(mockCurrency, mockSafetyInfo)).toBe(TokenWarningDesignTreatment.None)
+      expect(getTokenWarningSeverity(mockCurrencyInfo)).toBe(WarningSeverity.None)
     })
 
     it('should return None for native currency', () => {
-      expect(getTokenWarningDesignTreatment(mockNativeCurrency, mockSafetyInfo)).toBe(TokenWarningDesignTreatment.None)
+      expect(getTokenWarningSeverity(mockNativeCurrencyInfo)).toBe(WarningSeverity.None)
     })
 
     it('should return Blocked when tokenList is Blocked', () => {
-      const blockedSafetyInfo = { ...mockSafetyInfo, tokenList: TokenList.Blocked }
-      expect(getTokenWarningDesignTreatment(mockCurrency, blockedSafetyInfo)).toBe(TokenWarningDesignTreatment.Blocked)
+      const blockedCurrencyInfo = {
+        ...mockCurrencyInfo,
+        safetyInfo: { ...mockSafetyInfo, tokenList: TokenList.Blocked },
+      }
+      expect(getTokenWarningSeverity(blockedCurrencyInfo)).toBe(WarningSeverity.Blocked)
     })
   })
 
-  describe('getShouldHavePluralTreatment', () => {
-    it('should return false when only one currency is provided', () => {
-      expect(getShouldHavePluralTreatment(mockCurrency, mockSafetyInfo)).toBe(false)
+  describe('getShouldHaveCombinedPluralTreatment', () => {
+    it('should return false when only one currencyInfo is provided', () => {
+      expect(getShouldHaveCombinedPluralTreatment(mockCurrencyInfo)).toBe(false)
     })
 
-    it('should return true when both currencies have Low warning', () => {
-      const lowSafetyInfo = { ...mockSafetyInfo, tokenList: TokenList.NonDefault }
-      expect(getShouldHavePluralTreatment(mockCurrency, lowSafetyInfo, mockCurrency, lowSafetyInfo)).toBe(true)
+    it('should return true when both currencyInfos have Low warning', () => {
+      const lowCurrencyInfo = {
+        ...mockCurrencyInfo,
+        safetyInfo: { ...mockSafetyInfo, tokenList: TokenList.NonDefault },
+      }
+      expect(getShouldHaveCombinedPluralTreatment(lowCurrencyInfo, lowCurrencyInfo)).toBe(true)
     })
 
     it('should return false when one has low warning and the other has high warning', () => {
-      const lowSafetyInfo = { ...mockSafetyInfo, tokenList: TokenList.NonDefault }
-      const highSafetyInfo = { ...mockSafetyInfo, protectionResult: ProtectionResult.Malicious }
-      expect(getShouldHavePluralTreatment(mockCurrency, lowSafetyInfo, mockCurrency, highSafetyInfo)).toBe(false)
+      const lowCurrencyInfo = {
+        ...mockCurrencyInfo,
+        safetyInfo: { ...mockSafetyInfo, tokenList: TokenList.NonDefault },
+      }
+      const highCurrencyInfo = {
+        ...mockCurrencyInfo,
+        safetyInfo: { ...mockSafetyInfo, protectionResult: ProtectionResult.Malicious },
+      }
+      expect(getShouldHaveCombinedPluralTreatment(lowCurrencyInfo, highCurrencyInfo)).toBe(false)
     })
   })
 
   describe('useModalHeaderText', () => {
     it('should return null for default token with no warnings', () => {
-      expect(useModalHeaderText(mockCurrency, mockSafetyInfo)).toBeNull()
+      expect(useModalHeaderText(mockCurrencyInfo)).toBeNull()
     })
 
     it('should return appropriate text for blocked token', () => {
-      const blockedSafetyInfo = { ...mockSafetyInfo, tokenList: TokenList.Blocked }
-      expect(useModalHeaderText(mockCurrency, blockedSafetyInfo)).toBe('token.safety.blocked.title.tokenNotAvailable')
+      const blockedCurrencyInfo = {
+        ...mockCurrencyInfo,
+        safetyInfo: { ...mockSafetyInfo, tokenList: TokenList.Blocked },
+      }
+      expect(useModalHeaderText(blockedCurrencyInfo)).toBe('token.safety.blocked.title.tokenNotAvailable')
     })
   })
 
   describe('useModalSubtitleText', () => {
     it('should return null for default token with no warnings', () => {
-      expect(useModalSubtitleText(mockCurrency, mockSafetyInfo)).toBeNull()
+      expect(useModalSubtitleText(mockCurrencyInfo)).toBeNull()
     })
 
     it('should return appropriate text for non-default token', () => {
-      const nonDefaultSafetyInfo = { ...mockSafetyInfo, tokenList: TokenList.NonDefault }
-      expect(useModalSubtitleText(mockCurrency, nonDefaultSafetyInfo)).toBe('token.safetyLevel.medium.message')
+      const nonDefaultCurrencyInfo = {
+        ...mockCurrencyInfo,
+        safetyInfo: { ...mockSafetyInfo, tokenList: TokenList.NonDefault },
+      }
+      expect(useModalSubtitleText(nonDefaultCurrencyInfo)).toBe('token.safetyLevel.medium.message')
     })
   })
 })

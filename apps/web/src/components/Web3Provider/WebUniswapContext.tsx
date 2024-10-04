@@ -42,7 +42,7 @@ export function WebUniswapProvider({ children }: PropsWithChildren) {
       account={account}
       signer={signer}
       useProviderHook={useWebProvider}
-      onShowSwapNetworkNotification={showSwapNetworkNotification}
+      onSwapChainsChanged={showSwapNetworkNotification}
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       onConnectWallet={accountDrawer.open}
     >

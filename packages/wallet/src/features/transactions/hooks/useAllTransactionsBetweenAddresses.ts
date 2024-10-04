@@ -14,7 +14,7 @@ export function useAllTransactionsBetweenAddresses(
   const txnsToSearch = useSelectAddressTransactions(sender)
   return useMemo(() => {
     if (!sender || !recipient || !txnsToSearch) {
-      return
+      return undefined
     }
     return txnsToSearch.filter(
       (tx: TransactionDetails) => tx.typeInfo.type === TransactionType.Send && tx.typeInfo.recipient === recipient,

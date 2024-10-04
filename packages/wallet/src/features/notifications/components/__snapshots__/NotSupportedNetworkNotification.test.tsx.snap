@@ -22,10 +22,10 @@ exports[`NotSupportedNetworkNotification renders without error 1`] = `
   style={
     {
       "alignItems": "center",
-      "borderBottomLeftRadius": 16,
-      "borderBottomRightRadius": 16,
-      "borderTopLeftRadius": 16,
-      "borderTopRightRadius": 16,
+      "borderBottomLeftRadius": 24,
+      "borderBottomRightRadius": 24,
+      "borderTopLeftRadius": 24,
+      "borderTopRightRadius": 24,
       "flexDirection": "column",
       "justifyContent": "center",
       "position": "absolute",

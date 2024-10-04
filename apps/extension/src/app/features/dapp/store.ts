@@ -1,3 +1,4 @@
+import { cloneDeep } from '@apollo/client/utilities'
 import EventEmitter from 'eventemitter3'
 import { getOrderedConnectedAddresses, isConnectedAccount } from 'src/app/features/dapp/utils'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
@@ -223,31 +224,28 @@ function removeAccountDappConnections(account: Account): void {
  * @returns the updated state
  */
 function removeDappConnectionHelper(initialState: DappState, dappUrl: string, account?: Account): DappState {
-  const dappUrlState = initialState[dappUrl]
+  const newState = cloneDeep(initialState)
+  const dappInfo = newState[dappUrl]
 
-  if (!dappUrlState) {
+  if (!dappInfo) {
     return initialState
   }
 
-  const updatedAccounts = account
-    ? dappUrlState.connectedAccounts?.filter((existingAccount) => existingAccount.address !== account.address)
-    : []
+  dappInfo.connectedAccounts = dappInfo.connectedAccounts.filter(
+    (existingAccount) => existingAccount.address !== account?.address,
+  )
 
-  const activeConnected = updatedAccounts[0]
-  if (activeConnected) {
-    return {
-      ...initialState,
-      [dappUrl]: {
-        ...dappUrlState,
-        connectedAccounts: updatedAccounts,
-        activeConnectedAddress: activeConnected.address,
-      },
-    }
-  } else {
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    const { [dappUrl]: _, ...restState } = initialState
-    return restState
+  const nextConnectedAccount = dappInfo.connectedAccounts[0]
+
+  if (!nextConnectedAccount || !account) {
+    delete newState[dappUrl]
+    return newState
   }
+
+  if (dappInfo.activeConnectedAddress === account.address) {
+    dappInfo.activeConnectedAddress = nextConnectedAccount.address
+  }
+  return newState
 }
 
 function removeAllDappConnections(): void {

@@ -179,7 +179,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; overflow-y: auto; width: 100%; opacity: 1;"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558152"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1316330114"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558307"
@@ -228,7 +228,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
                           <svg
                             fill="none"
                             stroke-width="8"
-                            style="color: rgb(206, 206, 206); width: 16px; height: 16px;"
+                            style="color: rgb(191, 191, 191); width: 16px; height: 16px;"
                             viewBox="0 0 16 16"
                           >
                             <path
@@ -249,7 +249,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
                   class="c3"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331199"
                   >
                     <div
                       class="c4"
@@ -292,7 +292,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
                   class="c3"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331199"
                   >
                     <div
                       class="c4"
@@ -335,7 +335,7 @@ exports[`disable nft on searchbar dropdown should not render popular nft collect
                   class="c3"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331199"
                   >
                     <div
                       class="c4"
@@ -563,7 +563,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
           style="display: flex; align-items: stretch; flex-basis: auto; box-sizing: border-box; position: relative; min-height: 0px; min-width: 0px; flex-shrink: 0; flex-direction: column; overflow-y: auto; width: 100%; opacity: 1;"
         >
           <div
-            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558152"
+            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1316330114"
           >
             <div
               class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _gap-1481558307"
@@ -612,7 +612,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                           <svg
                             fill="none"
                             stroke-width="8"
-                            style="color: rgb(206, 206, 206); width: 16px; height: 16px;"
+                            style="color: rgb(191, 191, 191); width: 16px; height: 16px;"
                             viewBox="0 0 16 16"
                           >
                             <path
@@ -633,7 +633,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                   class="c3"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331199"
                   >
                     <div
                       class="c4"
@@ -676,7 +676,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                   class="c3"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331199"
                   >
                     <div
                       class="c4"
@@ -719,7 +719,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                   class="c3"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331199"
                   >
                     <div
                       class="c4"
@@ -807,7 +807,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                           <svg
                             fill="none"
                             stroke-width="8"
-                            style="color: rgb(206, 206, 206); width: 16px; height: 16px;"
+                            style="color: rgb(191, 191, 191); width: 16px; height: 16px;"
                             viewBox="0 0 16 16"
                           >
                             <path
@@ -828,7 +828,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                   class="c3"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331199"
                   >
                     <div
                       class="c4"
@@ -871,7 +871,7 @@ exports[`disable nft on searchbar dropdown should render popular nft collections
                   class="c3"
                 >
                   <div
-                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331168"
+                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _width-10037 _gap-1316331199"
                   >
                     <div
                       class="c4"

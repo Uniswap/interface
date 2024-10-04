@@ -1,5 +1,6 @@
 import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
+import { ElementAfterText } from 'ui/src'
 import { Unitag } from 'ui/src/components/icons'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { useENS } from 'uniswap/src/features/ens/useENS'
@@ -105,10 +106,18 @@ export function TransferTokenSummaryItem({
 
   return (
     <TransactionSummaryLayout
-      caption={caption}
+      caption={
+        <ElementAfterText
+          wrapperProps={{
+            grow: true,
+            shrink: true,
+          }}
+          element={unitag?.username ? <Unitag size="$icon.24" /> : undefined}
+          text={caption}
+        />
+      }
       icon={icon}
       index={index}
-      postCaptionElement={unitag?.username ? <Unitag size="$icon.24" /> : undefined}
       transaction={transaction}
     />
   )

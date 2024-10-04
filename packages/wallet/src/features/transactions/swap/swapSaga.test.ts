@@ -8,7 +8,7 @@ import JSBI from 'jsbi'
 import { expectSaga, testSaga } from 'redux-saga-test-plan'
 import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
 import { DAI, USDC } from 'uniswap/src/constants/tokens'
-import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -20,6 +20,7 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { WETH } from 'uniswap/src/test/fixtures'
+import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -80,7 +81,7 @@ const mockUniswapXTrade = {
   routing: Routing.DUTCH_V2,
   inputAmount: { currency: new NativeCurrency(CHAIN_ID), quotient: JSBI.BigInt(1000) },
   outputAmount: { currency: USDC },
-  quote: { amount: MaxUint256 },
+  quote: { amount: MaxUint256, routing: Routing.DUTCH_V2 },
   slippageTolerance: 0.5,
 } as unknown as UniswapXTrade
 
@@ -124,14 +125,11 @@ const classicSwapParams = {
     indicativeTrade: undefined,
     gasFee: { value: '5', isLoading: false, error: null },
     gasFeeEstimation: {},
-    approvalError: false,
-    permitData: undefined,
-    permitDataLoading: false,
-    permitSignature: undefined,
+    permit: undefined,
     swapRequestArgs: undefined,
+    unsigned: false,
   },
-  steps: [],
-  onSubmit: jest.fn(),
+  onSuccess: jest.fn(),
   onFailure: jest.fn(),
 } satisfies SwapParams
 
@@ -147,16 +145,13 @@ const uniswapXSwapParams = {
     revocationTxRequest: mockRevocationTxRequest,
     trade: mockUniswapXTrade,
     indicativeTrade: undefined,
-    orderParams: { quote: { orderId: '0xMockOrderHash' } } as unknown as OrderRequest,
+    permit: mockPermit,
     wrapTxRequest: undefined,
     gasFee: { value: '5', isLoading: false, error: null },
+    gasFeeEstimation: {},
     gasFeeBreakdown: { classicGasUseEstimateUSD: '5', approvalCost: '5', wrapCost: '0' },
-    approvalError: false,
-    permitData: undefined,
-    permitDataLoading: false,
   },
-  steps: [],
-  onSubmit: jest.fn(),
+  onSuccess: jest.fn(),
   onFailure: jest.fn(),
 } satisfies SwapParams
 
@@ -223,7 +218,7 @@ describe(approveAndSwap, () => {
     // Requires manually providing return values for each effect in `.next()`.
     testSaga(approveAndSwap, classicSwapParamsWithoutApprove)
       .next()
-      .call(classicSwapParams.onSubmit)
+      .call(classicSwapParams.onSuccess)
       .next()
       .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequest.chainId)
       .next(false)
@@ -262,7 +257,7 @@ describe(approveAndSwap, () => {
       .silentRun()
     testSaga(approveAndSwap, classicSwapParams)
       .next()
-      .call(classicSwapParams.onSubmit)
+      .call(classicSwapParams.onSuccess)
       .next()
       .call(shouldSubmitViaPrivateRpc, classicSwapParams.swapTxContext.txRequest.chainId)
       .next(false)
@@ -286,8 +281,10 @@ describe(approveAndSwap, () => {
       approveTxHash: '0xMockApprovalTxHash',
       wrapTxHash: undefined,
       txId: uniswapXSwapParams.txId,
-      orderParams: uniswapXSwapParams.swapTxContext.orderParams,
-      onSubmit: uniswapXSwapParams.onSubmit,
+      permit: mockPermit,
+      routing: uniswapXSwapParams.swapTxContext.trade.quote.routing,
+      quote: uniswapXSwapParams.swapTxContext.trade.quote.quote,
+      onSuccess: uniswapXSwapParams.onSuccess,
       onFailure: uniswapXSwapParams.onFailure,
     }
 
@@ -320,7 +317,8 @@ describe(approveAndSwap, () => {
       swapTxContext: {
         ...uniswapXSwapParams.swapTxContext,
         wrapTxRequest: mockWrapTxRequest,
-        permitDataLoading: false,
+        permit: mockPermit,
+        gasFeeEstimation: {},
       },
     } satisfies SwapParams
 
@@ -333,6 +331,7 @@ describe(approveAndSwap, () => {
         unwrapped: false,
         currencyAmountRaw: '1000',
         swapTxId: '1',
+        gasEstimates: undefined,
       },
       txId: undefined,
       transactionOriginType: TransactionOriginType.Internal,
@@ -346,9 +345,11 @@ describe(approveAndSwap, () => {
       approveTxHash: '0xMockApprovalTxHash',
       wrapTxHash: '0xMockWrapTxHash',
       txId: uniswapXSwapParams.txId,
-      orderParams: uniswapXSwapParams.swapTxContext.orderParams,
-      onSubmit: uniswapXSwapParams.onSubmit,
+      permit: mockPermit,
+      onSuccess: uniswapXSwapParams.onSuccess,
       onFailure: uniswapXSwapParams.onFailure,
+      routing: uniswapXSwapParams.swapTxContext.trade.quote.routing,
+      quote: uniswapXSwapParams.swapTxContext.trade.quote.quote,
     }
 
     await expectSaga(approveAndSwap, uniswapXSwapEthInputParams)

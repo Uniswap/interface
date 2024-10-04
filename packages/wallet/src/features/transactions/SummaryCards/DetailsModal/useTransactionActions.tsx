@@ -1,12 +1,10 @@
 import { providers } from 'ethers'
-import { useCallback, useEffect, useMemo, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
-import { MenuContentItem, useIsDarkMode } from 'ui/src'
+import { MenuContentItem } from 'ui/src'
 import { CopySheets, HelpCenter } from 'ui/src/components/icons'
-import { UNIVERSE_CHAIN_LOGO } from 'uniswap/src/assets/chainLogos'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -22,7 +20,6 @@ import TransactionActionsModal, {
 } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionActionsModal'
 import { getIsCancelable } from 'wallet/src/features/transactions/utils'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
-import { openTransactionLink } from 'wallet/src/utils/linking'
 
 export const useTransactionActions = ({
   authTrigger,
@@ -37,7 +34,6 @@ export const useTransactionActions = ({
   menuItems: MenuContentItem[]
 } => {
   const { t } = useTranslation()
-  const isDarkMode = useIsDarkMode()
 
   const { type } = useActiveAccountWithThrow()
   const readonly = type === AccountType.Readonly
@@ -46,7 +42,7 @@ export const useTransactionActions = ({
   const [showCancelModal, setShowCancelModal] = useState(false)
   const dispatch = useDispatch()
 
-  const { status, addedTime, hash, chainId } = transaction
+  const { status, addedTime } = transaction
 
   const isCancelable = !readonly && getIsCancelable(transaction)
 
@@ -72,11 +68,6 @@ export const useTransactionActions = ({
   const handleActionsModalClose = (): void => {
     setShowActionsModal(false)
   }
-
-  const handleExplore = useCallback((): Promise<void> => {
-    setShowActionsModal(false)
-    return openTransactionLink(hash, chainId)
-  }, [chainId, hash])
 
   const handleCancelConfirmationBack = (): void => {
     setShowCancelModal(false)
@@ -108,7 +99,6 @@ export const useTransactionActions = ({
             setShowCancelModal(true)
           }}
           onClose={handleActionsModalClose}
-          onExplore={handleExplore}
         />
       )}
       {showCancelModal && (
@@ -126,20 +116,8 @@ export const useTransactionActions = ({
     </>
   )
 
-  const chainInfo = UNIVERSE_CHAIN_INFO[chainId]
-  const chainLogo = UNIVERSE_CHAIN_LOGO[chainId].explorer
-
   const menuItems = useMemo(() => {
     const items: MenuContentItem[] = []
-
-    if (hash) {
-      items.push({
-        label: t('transaction.action.viewEtherscan', { blockExplorerName: chainInfo.explorer.name }),
-        textProps: { variant: 'body2' },
-        onPress: handleExplore,
-        Icon: isDarkMode ? chainLogo.logoDark : chainLogo.logoLight,
-      })
-    }
 
     const transactionId = getTransactionId(transaction)
     if (transactionId) {
@@ -169,17 +147,7 @@ export const useTransactionActions = ({
     }
 
     return items
-  }, [
-    hash,
-    transaction,
-    t,
-    chainInfo.explorer.name,
-    handleExplore,
-    isDarkMode,
-    chainLogo.logoDark,
-    chainLogo.logoLight,
-    dispatch,
-  ])
+  }, [transaction, t, dispatch])
 
   return {
     openActionsModal,

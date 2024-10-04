@@ -1,17 +1,14 @@
-import { SharedEventName } from '@uniswap/analytics-events'
 import { TradeType } from '@uniswap/sdk-core'
-import { Flex, Loader, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { Flex, Loader, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { fonts, iconSizes } from 'ui/src/theme'
 import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
-import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { isConfirmedSwapTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
+import { useTokenDetailsNavigation } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/hooks'
 import { SwapTypeTransactionInfo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/types'
 import { useFormattedCurrencyAmountAndUSDValue } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/utils'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
@@ -66,7 +63,6 @@ export function SwapTransactionContent({
 }): JSX.Element {
   const colors = useSporeColors()
   const formatter = useLocalizationContext()
-  const { navigateToTokenDetails } = useWalletNavigation()
 
   const {
     tilde: inputTilde,
@@ -91,33 +87,8 @@ export function SwapTransactionContent({
   const inputSymbol = getSymbolDisplayText(inputCurrency?.currency.symbol)
   const outputSymbol = getSymbolDisplayText(outputCurrency?.currency.symbol)
 
-  const onPressInputToken = (): void => {
-    if (inputCurrency) {
-      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-        element: ElementName.TokenItem,
-        modal: ModalName.TransactionDetails,
-      })
-
-      navigateToTokenDetails(inputCurrency.currencyId)
-      if (!isWeb) {
-        onClose?.()
-      }
-    }
-  }
-
-  const onPressOutputToken = (): void => {
-    if (outputCurrency) {
-      sendAnalyticsEvent(SharedEventName.ELEMENT_CLICKED, {
-        element: ElementName.TokenItem,
-        modal: ModalName.TransactionDetails,
-      })
-
-      navigateToTokenDetails(outputCurrency.currencyId)
-      if (!isWeb) {
-        onClose?.()
-      }
-    }
-  }
+  const onPressInputToken = useTokenDetailsNavigation(inputCurrency, onClose)
+  const onPressOutputToken = useTokenDetailsNavigation(outputCurrency, onClose)
 
   return (
     <Flex gap="$spacing16" px="$spacing8" py="$spacing12">
@@ -155,7 +126,7 @@ export function SwapTransactionContent({
   )
 }
 
-function ValueText({ value }: { value: string }): JSX.Element {
+export function ValueText({ value }: { value: string }): JSX.Element {
   const isLoading = value === '-'
   return isLoading ? (
     <Loader.Box height={fonts.body3.lineHeight} width={iconSizes.icon36} />

@@ -20,7 +20,7 @@ export function usePopularTokens(): {
 
   const popularTokens = useMemo(() => {
     if (!data || !data.topTokens) {
-      return
+      return undefined
     }
 
     // special case to replace weth with eth because the backend does not return eth data
@@ -32,7 +32,7 @@ export function usePopularTokens(): {
     return data.topTokens
       .map((token) => {
         if (!token) {
-          return
+          return undefined
         }
 
         const isWeth = areAddressesEqual(token.address, wethAddress) && token?.chain === Chain.Ethereum

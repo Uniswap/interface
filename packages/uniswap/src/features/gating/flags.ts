@@ -11,6 +11,8 @@ export enum FeatureFlags {
   IndicativeSwapQuotes,
   TokenProtection,
   SelfReportSpamNFTs,
+  UniswapXPriorityOrders,
+  SharedSwapArbitrumUniswapXExperiment,
 
   // Wallet
   FlashbotsPrivateRpc,
@@ -32,6 +34,7 @@ export enum FeatureFlags {
 
   // Extension
   ExtensionAutoConnect,
+  ExtensionClaimUnitag,
 
   // Web
   AATestWeb,
@@ -68,6 +71,8 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.PortionFields, 'portion-fields'],
   [FeatureFlags.UniswapX, 'uniswapx'],
   [FeatureFlags.Datadog, 'datadog'],
+  [FeatureFlags.UniswapXPriorityOrders, 'uniswapx_priority_orders'],
+  [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
 
   // Web Specific
   [FeatureFlags.UniversalSwap, 'universal_swap'],
@@ -103,6 +108,8 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.IndicativeSwapQuotes, 'indicative-quotes'],
   [FeatureFlags.TokenProtection, 'token_protection'],
   [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
+  [FeatureFlags.UniswapXPriorityOrders, 'uniswapx_priority_orders'],
+  [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
 
   // Wallet Specific
   [FeatureFlags.Datadog, 'datadog'],
@@ -120,6 +127,7 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.FiatOffRamp, 'fiat-offramp'],
   // Extension Specific
   [FeatureFlags.ExtensionAutoConnect, 'extension-auto-connect'],
+  [FeatureFlags.ExtensionClaimUnitag, 'extension-claim-unitag'],
 ])
 
 export enum FeatureFlagClient {

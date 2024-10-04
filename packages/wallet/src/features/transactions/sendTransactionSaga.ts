@@ -7,6 +7,7 @@ import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/fl
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { UniverseEventProperties } from 'uniswap/src/features/telemetry/types'
 import { makeSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { transactionActions } from 'uniswap/src/features/transactions/slice'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
@@ -18,15 +19,25 @@ import {
   TransactionStatus,
   TransactionType,
   TransactionTypeInfo,
+  isBridgeTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
+import { ONE_MINUTE_MS } from 'utilities/src/time/time'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import { getSerializableTransactionRequest } from 'wallet/src/features/transactions/utils'
 import { getPrivateProvider, getProvider, getSignerManager } from 'wallet/src/features/wallet/context'
 import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
+
+// This timeout is used to trigger a log event if the transaction is pending for too long
+const getTransactionTimeoutMs = (chainId: WalletChainId) => {
+  if (chainId === UniverseChainId.Mainnet) {
+    return 10 * ONE_MINUTE_MS
+  }
+  return ONE_MINUTE_MS
+}
 
 export interface SendTransactionParams {
   // internal id used for tracking transactions before they're submitted
@@ -112,9 +123,10 @@ function* addTransaction(
 ) {
   const id = txId ?? createTransactionId()
   const request = getSerializableTransactionRequest(populatedRequest, chainId)
+  const timeoutTimestampMs = typeInfo.gasEstimates ? Date.now() + getTransactionTimeoutMs(chainId) : undefined
 
   const transaction: TransactionDetails = {
-    routing: Routing.CLASSIC,
+    routing: isBridgeTypeInfo(typeInfo) ? Routing.BRIDGE : Routing.CLASSIC,
     id,
     chainId,
     hash,
@@ -125,11 +137,12 @@ function* addTransaction(
     options: {
       ...options,
       request,
+      timeoutTimestampMs,
     },
     transactionOriginType,
   }
 
-  if (transaction.typeInfo.type === TransactionType.Swap) {
+  if (transaction.typeInfo.type === TransactionType.Swap || transaction.typeInfo.type === TransactionType.Bridge) {
     if (!analytics) {
       // Don't expect swaps from WC or Dapps to always provide analytics object
       if (transactionOriginType === TransactionOriginType.Internal) {
@@ -139,11 +152,11 @@ function* addTransaction(
         })
       }
     } else {
-      yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-        routing: transaction.routing,
+      const event: UniverseEventProperties[WalletEventName.SwapSubmitted] = {
         transaction_hash: hash,
         ...analytics,
-      })
+      }
+      yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, event)
     }
   }
   yield* put(transactionActions.addTransaction(transaction))

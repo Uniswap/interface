@@ -45,8 +45,8 @@ export function LabeledCheckbox({
       <Flex row alignItems="center" gap={gap} px={px}>
         {checkboxPosition === 'start' && <Checkbox checked={checked} size={size} variant={variant} onPress={onPress} />}
         {text && (
-          <Flex grow>
-            <Flex shrink>{textElement}</Flex>
+          <Flex grow shrink>
+            {textElement}
           </Flex>
         )}
         {checkboxPosition === 'end' && <Checkbox checked={checked} variant={variant} onPress={onPress} />}

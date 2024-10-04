@@ -21,7 +21,6 @@ import {
 } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { useIsQueuedTransaction } from 'wallet/src/features/transactions/hooks'
 import { useActiveAccountWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
-import { usePostTextElementPositionProps } from 'wallet/src/utils/layout'
 import { openTransactionLink } from 'wallet/src/utils/linking'
 
 const LOADING_SPINNER_SIZE = 20
@@ -31,7 +30,6 @@ function TransactionSummaryLayout({
   transaction,
   title,
   caption,
-  postCaptionElement,
   icon,
   index,
   onRetry,
@@ -73,8 +71,6 @@ function TransactionSummaryLayout({
       }
     }
   }
-
-  const { postTextElementPositionProps, onTextLayout } = usePostTextElementPositionProps()
 
   const formattedAddedTime = useFormattedTime(transaction.addedTime)
 
@@ -121,7 +117,7 @@ function TransactionSummaryLayout({
             </Flex>
           )}
           <Flex grow shrink>
-            <Flex grow>
+            <Flex grow gap="$spacing2">
               <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
                 <Flex row shrink alignItems="center" gap="$spacing4">
                   {walletDisplayName ? (
@@ -138,12 +134,7 @@ function TransactionSummaryLayout({
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row gap="$spacing16">
-                <Flex grow row shrink pr={postTextElementPositionProps ? '$spacing24' : undefined}>
-                  <Text color="$neutral1" variant="body2" onTextLayout={onTextLayout}>
-                    {caption}
-                  </Text>
-                  <Flex {...postTextElementPositionProps}>{postCaptionElement}</Flex>
-                </Flex>
+                {typeof caption === 'string' ? <Text>{caption}</Text> : caption}
                 {status === TransactionStatus.Failed && onRetry && (
                   <Flex flexShrink={0}>
                     <Text color="$accent1" variant="buttonLabel2" onPress={onRetry}>

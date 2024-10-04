@@ -1,5 +1,5 @@
 // shamelessly stolen from https://stackoverflow.com/a/3809435
-const URL_WITH_TLD_PATTERN = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/u
+const URL_WITH_TLD_PATTERN = /[-a-zA-Z0-9@:%._+~#=]{1,256}\.[a-zA-Z0-9()]{1,63}\b([-a-zA-Z0-9()@:%_+.~#?&//=]*)/u
 
 function removeScheme(url: string): string {
   const splitUrl = url.split('://')

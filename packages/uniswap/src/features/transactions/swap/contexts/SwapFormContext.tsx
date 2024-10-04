@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useContext, useMemo, useRef, useState } from 'react'
+import { createContext, ReactNode, useCallback, useContext, useEffect, useMemo, useRef, useState } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
@@ -6,10 +6,15 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useSwapAnalytics } from 'uniswap/src/features/transactions/swap/analytics'
 import { useDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/hooks/useDerivedSwapInfo'
 import { DEFAULT_CUSTOM_DEADLINE } from 'uniswap/src/features/transactions/swap/settings/useDeadlineSettings'
-import { TradeProtocolPreference } from 'uniswap/src/features/transactions/types/transactionState'
+import {
+  DEFAULT_PROTOCOL_OPTIONS,
+  FrontendSupportedProtocol,
+} from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
+import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logContextUpdate } from 'utilities/src/logger/contextEnhancer'
+import { usePrevious } from 'utilities/src/react/hooks'
 import { useDebounceWithStatus } from 'utilities/src/time/timing'
 
 const SWAP_FORM_DEBOUNCE_TIME_MS = 250
@@ -21,14 +26,16 @@ export type SwapFormState = {
   exactAmountToken?: string
   exactCurrencyField: CurrencyField
   focusOnCurrencyField?: CurrencyField
-  filteredChainId?: UniverseChainId
+  filteredChainIds: { [key in CurrencyField]?: UniverseChainId }
   input?: TradeableAsset
   output?: TradeableAsset
   selectingCurrencyField?: CurrencyField
   txId?: string
   isFiatMode: boolean
   isSubmitting: boolean
-  tradeProtocolPreference: TradeProtocolPreference
+  hideFooter?: boolean
+  hideSettings?: boolean
+  selectedProtocols: FrontendSupportedProtocol[]
 }
 
 type DerivedSwapFormState = {
@@ -43,10 +50,12 @@ type SwapFormContextState = {
 } & SwapFormState &
   DerivedSwapFormState
 
-const ETH_TRADEABLE_ASSET: Readonly<TradeableAsset> = {
-  address: getNativeAddress(UniverseChainId.Mainnet),
-  chainId: UniverseChainId.Mainnet,
-  type: AssetType.Currency,
+function getDefaultInputCurrency(chainId: UniverseChainId): TradeableAsset {
+  return {
+    address: getNativeAddress(chainId),
+    chainId,
+    type: AssetType.Currency,
+  }
 }
 
 const DEFAULT_STATE: Readonly<Omit<SwapFormState, 'account'>> = {
@@ -54,12 +63,12 @@ const DEFAULT_STATE: Readonly<Omit<SwapFormState, 'account'>> = {
   exactAmountToken: '',
   exactCurrencyField: CurrencyField.INPUT,
   focusOnCurrencyField: CurrencyField.INPUT,
-  filteredChainId: undefined,
-  input: ETH_TRADEABLE_ASSET,
+  filteredChainIds: {},
+  input: getDefaultInputCurrency(UniverseChainId.Mainnet),
   output: undefined,
   isFiatMode: false,
   isSubmitting: false,
-  tradeProtocolPreference: TradeProtocolPreference.Default,
+  selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
   customDeadline: DEFAULT_CUSTOM_DEADLINE,
 }
 
@@ -67,9 +76,13 @@ export const SwapFormContext = createContext<SwapFormContextState | undefined>(u
 
 export function SwapFormContextProvider({
   children,
+  hideFooter,
+  hideSettings,
   prefilledState,
 }: {
   children: ReactNode
+  hideFooter?: boolean
+  hideSettings?: boolean
   prefilledState?: SwapFormState
 }): JSX.Element {
   const amountUpdatedTimeRef = useRef<number>(0)
@@ -77,6 +90,34 @@ export function SwapFormContextProvider({
   const exactAmountTokenRef = useRef<string>('')
   const [swapForm, setSwapForm] = useState<SwapFormState>(prefilledState ?? DEFAULT_STATE)
   const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
+
+  // prefilled state may load in -- i.e. `outputCurrency` URL param pulling from gql
+  const previousInitialInputCurrency = usePrevious(prefilledState?.input)
+  const previousInitialOutputCurrency = usePrevious(prefilledState?.output)
+  useEffect(() => {
+    const previousInputCurrencyId = previousInitialInputCurrency && currencyId(previousInitialInputCurrency)
+    const previousOutputCurrencyId = previousInitialOutputCurrency && currencyId(previousInitialOutputCurrency)
+
+    if (
+      previousInputCurrencyId !== (prefilledState?.input && currencyId(prefilledState.input)) ||
+      previousOutputCurrencyId !== (prefilledState?.output && currencyId(prefilledState.output))
+    ) {
+      setSwapForm(prefilledState ?? DEFAULT_STATE)
+    }
+  }, [prefilledState, previousInitialInputCurrency, previousInitialOutputCurrency])
+
+  // Enable launching the output token selector through a change to the prefilled state
+  useEffect(() => {
+    // Only rerender the swap form value when true, not when false/undefined
+    if (prefilledState?.selectingCurrencyField) {
+      setSwapForm((oldVal) => {
+        return {
+          ...oldVal,
+          selectingCurrencyField: prefilledState?.selectingCurrencyField,
+        }
+      })
+    }
+  }, [prefilledState?.selectingCurrencyField])
 
   const updateSwapForm = useCallback(
     (newState: Parameters<SwapFormContextState['updateSwapForm']>[0]): void => {
@@ -113,8 +154,8 @@ export function SwapFormContextProvider({
 
   const derivedSwapInfo = useDerivedSwapInfo({
     txId: swapForm.txId,
-    input: swapForm.input ?? null,
-    output: swapForm.output ?? null,
+    [CurrencyField.INPUT]: swapForm.input ?? null,
+    [CurrencyField.OUTPUT]: swapForm.output ?? null,
     exactCurrencyField: swapForm.exactCurrencyField,
     exactAmountToken: debouncedExactAmountToken ?? '',
     exactAmountFiat: debouncedExactAmountFiat,
@@ -122,7 +163,7 @@ export function SwapFormContextProvider({
     selectingCurrencyField: swapForm.selectingCurrencyField,
     customSlippageTolerance: swapForm.customSlippageTolerance,
     customDeadline: swapForm.customDeadline,
-    tradeProtocolPreference: swapForm.tradeProtocolPreference,
+    selectedProtocols: swapForm.selectedProtocols,
     isDebouncing: isDebouncingExactAmountToken || isDebouncingExactAmountFiat,
   })
 
@@ -140,14 +181,16 @@ export function SwapFormContextProvider({
       exactAmountTokenRef,
       exactCurrencyField: swapForm.exactCurrencyField,
       focusOnCurrencyField: swapForm.focusOnCurrencyField,
-      filteredChainId: swapForm.filteredChainId,
+      filteredChainIds: swapForm.filteredChainIds,
       input: swapForm.input,
       isFiatMode: swapForm.isFiatMode,
       isSubmitting: swapForm.isSubmitting,
       output: swapForm.output,
-      tradeProtocolPreference: swapForm.tradeProtocolPreference,
+      selectedProtocols: swapForm.selectedProtocols,
       selectingCurrencyField: swapForm.selectingCurrencyField,
       txId: swapForm.txId,
+      hideFooter,
+      hideSettings,
       updateSwapForm,
     }),
     [
@@ -157,15 +200,17 @@ export function SwapFormContextProvider({
       swapForm.exactAmountToken,
       swapForm.exactCurrencyField,
       swapForm.focusOnCurrencyField,
-      swapForm.filteredChainId,
+      swapForm.filteredChainIds,
       swapForm.input,
       swapForm.isFiatMode,
       swapForm.isSubmitting,
       swapForm.output,
-      swapForm.tradeProtocolPreference,
+      swapForm.selectedProtocols,
       swapForm.selectingCurrencyField,
       swapForm.txId,
       derivedSwapInfo,
+      hideSettings,
+      hideFooter,
       updateSwapForm,
     ],
   )

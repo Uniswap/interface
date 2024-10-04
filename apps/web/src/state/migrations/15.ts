@@ -47,7 +47,7 @@ function webResultToUniswapResult(webItem: TokenSearchResultWeb): SearchResult |
  */
 export const migration15 = (state: PersistAppStateV15 | undefined) => {
   if (!state) {
-    return
+    return undefined
   }
 
   const newState: any = { ...state }

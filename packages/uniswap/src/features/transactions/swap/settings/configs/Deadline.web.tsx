@@ -1,25 +1,26 @@
-import { useState } from 'react'
-// eslint-disable-next-line no-restricted-imports -- type imports are safe
-import type { LayoutChangeEvent } from 'react-native'
+import { useEffect, useRef, useState } from 'react'
 import { Flex, Input, Text } from 'ui/src'
 import { SwapSettingConfig } from 'uniswap/src/features/transactions/swap/settings/configs/types'
 import { useDeadlineSettings } from 'uniswap/src/features/transactions/swap/settings/useDeadlineSettings'
 
-const INPUT_MIN_WIDTH = 32
+const INPUT_MIN_WIDTH = 44
 
 export const Deadline: SwapSettingConfig = {
   renderTitle: (t) => t('swap.deadline.settings.title'),
   Control() {
-    const [inputWidth, setInputWidth] = useState(0)
+    const [inputWidth] = useState(INPUT_MIN_WIDTH)
     const { isEditingDeadline, inputDeadline, onChangeDeadlineInput, onFocusDeadlineInput, onBlurDeadlineInput } =
       useDeadlineSettings()
-
-    function onInputTextLayout(event: LayoutChangeEvent): void {
-      setInputWidth(event.nativeEvent.layout.width)
-    }
+    const inputRef = useRef<Input>(null)
 
     const backgroundColor = isEditingDeadline ? '$surface2' : '$surface1'
     const inputValue = inputDeadline
+
+    useEffect(() => {
+      if (isEditingDeadline) {
+        inputRef.current?.focus()
+      }
+    }, [isEditingDeadline])
 
     return (
       <Flex row alignItems="center" justifyContent="space-between">
@@ -31,10 +32,12 @@ export const Deadline: SwapSettingConfig = {
           borderWidth={1}
           gap="$spacing8"
           p="$spacing4"
+          onPress={onFocusDeadlineInput}
         >
           <Flex row pr="$spacing8" gap="$spacing4">
             <Flex style={{ position: 'relative' }}>
               <Input
+                ref={inputRef}
                 backgroundColor={backgroundColor}
                 color="$neutral1"
                 editable={true}
@@ -58,7 +61,6 @@ export const Deadline: SwapSettingConfig = {
                 style={{ position: 'absolute' }}
                 variant="subheading2"
                 zIndex={-1}
-                onLayout={onInputTextLayout}
               >
                 {inputValue}
               </Text>

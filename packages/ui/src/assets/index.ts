@@ -23,10 +23,13 @@ export const APP_SCREENSHOT_LIGHT = require('./misc/app-screenshot-light.png')
 export const APP_SCREENSHOT_DARK = require('./misc/app-screenshot-dark.png')
 export const CHROME_LOGO = require('./logos/png/chrome-logo.png')
 export const DOT_GRID = require('./misc/dot-grid.png')
+
 export const UNITAGS_BANNER_VERTICAL_LIGHT = require('./graphics/unitags-banner-v-light.png')
 export const UNITAGS_BANNER_VERTICAL_DARK = require('./graphics/unitags-banner-v-dark.png')
 export const UNITAGS_INTRO_BANNER_LIGHT = require('./graphics/unitags-intro-banner-light.png')
 export const UNITAGS_INTRO_BANNER_DARK = require('./graphics/unitags-intro-banner-dark.png')
+
+export const BRIDGING_BANNER = require('./graphics/bridging-banner.png')
 
 export const DAI_LOGO = require('./logos/png/dai-logo.png')
 export const USDC_LOGO = require('./logos/png/usdc-logo.png')
@@ -34,6 +37,7 @@ export const ETH_LOGO = require('./logos/png/eth-logo.png')
 export const OPENSEA_LOGO = require('./logos/png/opensea-logo.png')
 export const ENS_LOGO = require('./logos/png/ens-logo.png')
 export const FROGGY = require('./graphics/froggy.png')
+export const ACROSS_LOGO = require('./logos/png/across-logo.png')
 
 export const CEX_TRANSFER_MODAL_BG_LIGHT = require('./graphics/cex-transfer-modal-bg-light.png')
 export const CEX_TRANSFER_MODAL_BG_DARK = require('./graphics/cex-transfer-modal-bg-dark.png')
@@ -43,16 +47,6 @@ export const UNITAG_LIGHT = require('./graphics/unitag-light.png')
 
 export const UNITAG_DARK_SMALL = require('./graphics/unitag-dark-small.png')
 export const UNITAG_LIGHT_SMALL = require('./graphics/unitag-light-small.png')
-
-export const ONBOARDING_LANDING_LIGHT = {
-  ios: require(`./backgrounds/onboarding-landing-static-light.png`),
-  android: require(`./backgrounds/onboarding-landing-static-light.png`),
-}
-
-export const ONBOARDING_LANDING_DARK = {
-  ios: require(`./backgrounds/onboarding-landing-static-dark.png`),
-  android: require(`./backgrounds/onboarding-landing-static-dark.png`),
-}
 
 export const ONBOARDING_NOTIFICATIONS_DARK = {
   ios: require(`./backgrounds/ios/notifications-dark.png`),

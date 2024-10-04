@@ -41,7 +41,7 @@ export function useDeadlineSettings(): {
         return
       }
 
-      const parsedValue = parseFloat(value)
+      const parsedValue = Number(value)
 
       // Validate input
       const overMaxDeadline = parsedValue > MAX_CUSTOM_DEADLINE
@@ -50,6 +50,11 @@ export function useDeadlineSettings(): {
       if (isZero) {
         setInputDeadline('0')
         updateSwapForm({ customDeadline: DEFAULT_CUSTOM_DEADLINE })
+        return
+      }
+
+      if (isNaN(parsedValue)) {
+        setInputDeadline('')
         return
       }
 

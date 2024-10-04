@@ -214,12 +214,12 @@ export function getReceiveNotificationFromData(
   hideSpamTokens = false,
 ): ReceiveCurrencyTxNotification | ReceiveNFTNotification | undefined {
   if (!data || !lastTxNotificationUpdateTimestamp) {
-    return
+    return undefined
   }
 
   const parsedTxHistory = parseDataResponseToTransactionDetails(data, hideSpamTokens)
   if (!parsedTxHistory) {
-    return
+    return undefined
   }
 
   const latestReceivedTx = parsedTxHistory
@@ -232,13 +232,9 @@ export function getReceiveNotificationFromData(
         tx.status === TransactionStatus.Success,
     )
 
-  if (!latestReceivedTx) {
-    return
-  }
-
   // Suppress notification if rules apply
-  if (shouldSuppressNotification(latestReceivedTx)) {
-    return
+  if (!latestReceivedTx || shouldSuppressNotification(latestReceivedTx)) {
+    return undefined
   }
 
   return buildReceiveNotification(latestReceivedTx, address)

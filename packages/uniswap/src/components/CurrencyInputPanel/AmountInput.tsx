@@ -151,7 +151,7 @@ export const AmountInput = forwardRef<Input, Props>(function _AmountInput(
     () => ({
       ref,
       color: !value || dimTextColor ? '$neutral3' : '$neutral1',
-      keyboardType: 'numeric',
+      keyboardType: 'decimal-pad',
       value: formattedValue,
       onChangeText: handleChange,
       ...rest,

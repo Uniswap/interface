@@ -1,48 +1,33 @@
+// eslint-disable-next-line no-restricted-imports
+import { CurrencyAmount } from '@uniswap/sdk-core'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityModalHeader } from 'components/Liquidity/LiquidityModalHeader'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { useModalLiquidityPositionInfo } from 'components/Liquidity/utils'
 import { StyledPercentInput } from 'components/PercentInput'
-import { useAccount } from 'hooks/useAccount'
+import {
+  RemoveLiquidityModalContextProvider,
+  useLiquidityModalContext,
+} from 'pages/RemoveLiquidity/RemoveLiquidityModalContext'
+import {
+  RemoveLiquidityTxContextProvider,
+  useRemoveLiquidityTxContext,
+} from 'pages/RemoveLiquidity/RemoveLiquidityTxContext'
 import { ClickablePill } from 'pages/Swap/Buy/PredefinedAmount'
 import { NumericalInputMimic, NumericalInputSymbolContainer, NumericalInputWrapper } from 'pages/Swap/common/shared'
-import { useMemo, useState } from 'react'
 import { useCloseModal } from 'state/application/hooks'
 import { Button, Flex, Text, useSporeColors } from 'ui/src'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { useReduceLpPositionCalldataQuery } from 'uniswap/src/data/apiClients/tradingApi/useReduceLpPositionCalldataQuery'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import useResizeObserver from 'use-resize-observer'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
-export function RemoveLiquidityModal() {
-  const positionInfo = useModalLiquidityPositionInfo()
+function RemoveLiquidityModalInner() {
   const closeModal = useCloseModal(ModalName.RemoveLiquidity)
   const hiddenObserver = useResizeObserver<HTMLElement>()
   const { t } = useTranslation()
   const colors = useSporeColors()
-  const account = useAccount()
-  const { address } = account
-
-  const [percent, setPercent] = useState<string>('')
-
-  const reduceCalldataQueryParams = useMemo(() => {
-    if (!positionInfo?.restPosition || !address) {
-      return undefined
-    }
-    // TODO(WEB-4920): build the params object
-    return {
-      walletAddress: address,
-      collectAsWeth: false,
-    }
-  }, [address, positionInfo?.restPosition])
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const { data: reduceCalldata } = useReduceLpPositionCalldataQuery({
-    params: reduceCalldataQueryParams,
-    staleTime: 5 * ONE_SECOND_MS,
-  })
+  const { percent, positionInfo, setPercent, percentInvalid } = useLiquidityModalContext()
+  const { decreaseGasFeeUsd, v2ApprovalGasFeeUSD } = useRemoveLiquidityTxContext()
 
   if (!positionInfo) {
     throw new Error('RemoveLiquidityModal must have an initial state when opening')
@@ -100,12 +85,19 @@ export function RemoveLiquidityModal() {
           </Flex>
         </Flex>
         {/* Detail rows */}
-        <LiquidityModalDetailRows currency0Amount={currency0Amount} currency1Amount={currency1Amount} />
+        <LiquidityModalDetailRows
+          currency0Amount={currency0Amount}
+          currency1Amount={currency1Amount}
+          networkCost={decreaseGasFeeUsd?.add(
+            v2ApprovalGasFeeUSD ?? CurrencyAmount.fromRawAmount(decreaseGasFeeUsd.currency, 0),
+          )}
+        />
         <Button
           size="large"
-          disabled={!percent || percent === '0' || percent === ''}
+          disabled={percentInvalid}
           onPress={() => {
-            // TODO: implement remove liquidity. use Trading API for all protocol versions
+            // TODO: if v2 position and needs approval, submit approval transaction
+            // TODO: submit reduce position transaction
           }}
         >
           <Flex row alignItems="center" gap="$spacing8">
@@ -116,5 +108,15 @@ export function RemoveLiquidityModal() {
         </Button>
       </Flex>
     </Modal>
+  )
+}
+
+export function RemoveLiquidityModal() {
+  return (
+    <RemoveLiquidityModalContextProvider>
+      <RemoveLiquidityTxContextProvider>
+        <RemoveLiquidityModalInner />
+      </RemoveLiquidityTxContextProvider>
+    </RemoveLiquidityModalContextProvider>
   )
 }

@@ -96,7 +96,7 @@ export function extractFiatOnRampTransactionDetails(
         function: 'extractFiatOnRampTransactionDetails',
       },
     })
-    return
+    return undefined
   }
 }
 

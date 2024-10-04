@@ -38,7 +38,7 @@ export function useNoYoloParser(
     const parseResult = async (): Promise<TransactionDescription | undefined> => {
       // no-yolo-parser library expects these fields to be defined
       if (!from || !to || !data) {
-        return
+        return undefined
       }
       return parser.parseAsResult(transaction as Transaction).then((result) => {
         if (!result.transactionDescription.ok) {

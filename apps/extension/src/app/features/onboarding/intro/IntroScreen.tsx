@@ -9,15 +9,17 @@ import { navigate } from 'src/app/navigation/state'
 import { checksIfSupportsSidePanel } from 'src/app/utils/chrome'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import { Button, Flex, Text } from 'ui/src'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionOnboardingScreens } from 'uniswap/src/types/screens/extension'
 import { useTimeout } from 'utilities/src/time/timing'
 
 export function IntroScreen(): JSX.Element {
   const { t } = useTranslation()
+  const isClaimUnitagEnabled = useFeatureFlag(FeatureFlags.ExtensionClaimUnitag)
 
   const isOnboarded = useSelector(isOnboardedSelector)
-
   // Detections for some unsupported browsers may not work until stylesheet is loaded
   useTimeout(() => {
     if (!checksIfSupportsSidePanel()) {
@@ -44,7 +46,11 @@ export function IntroScreen(): JSX.Element {
               <Button
                 flexGrow={1}
                 theme="primary"
-                onPress={(): void => navigate(`/${TopLevelRoutes.Onboarding}/${OnboardingRoutes.Create}`)}
+                onPress={(): void =>
+                  navigate(
+                    `/${TopLevelRoutes.Onboarding}/${isClaimUnitagEnabled ? OnboardingRoutes.Claim : OnboardingRoutes.Create}`,
+                  )
+                }
               >
                 {t('onboarding.landing.button.create')}
               </Button>

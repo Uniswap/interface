@@ -45,12 +45,12 @@ export const makeSelectAddressTransactions = (): Selector<
     (_: UniswapState, address: Address | null) => address,
     (transactions, address) => {
       if (!address) {
-        return
+        return undefined
       }
 
       const addressTransactions = transactions[address]
       if (!addressTransactions) {
-        return
+        return undefined
       }
 
       return unique(flattenObjectOfObjects(addressTransactions), (tx, _, self) => {
@@ -175,6 +175,7 @@ export const makeSelectUniswapXOrder = (): Selector<
           }
         }
       }
+      return undefined
     },
   )
 // Returns a list of past recipients ordered from most to least recent

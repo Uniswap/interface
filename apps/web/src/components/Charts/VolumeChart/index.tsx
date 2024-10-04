@@ -7,11 +7,11 @@ import {
 import { SingleHistogramData } from 'components/Charts/VolumeChart/renderer'
 import { getCumulativeVolume } from 'components/Charts/VolumeChart/utils'
 import { useHeaderDateFormatter } from 'components/Charts/hooks'
-import { BIPS_BASE } from 'constants/misc'
 import { TimePeriod, toHistoryDuration } from 'graphql/data/util'
 import { useTheme } from 'lib/styled-components'
 import { useMemo } from 'react'
 import { ThemedText } from 'theme/components'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import { HistoryDuration } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { t } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -47,6 +47,7 @@ class VolumeChartModel extends CustomVolumeChartModel<SingleHistogramData> {
   }
 }
 
+// eslint-disable-next-line consistent-return
 export function formatHistoryDuration(duration: HistoryDuration): string {
   switch (duration) {
     case HistoryDuration.FiveMinute:

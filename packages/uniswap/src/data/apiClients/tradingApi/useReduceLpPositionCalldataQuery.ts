@@ -1,21 +1,21 @@
 import { UseQueryResult, skipToken, useQuery } from '@tanstack/react-query'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { TRADING_API_CACHE_KEY, reduceLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import { TRADING_API_CACHE_KEY, decreaseLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
-import { ReduceLPPositionRequest, ReduceLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
+import { DecreaseLPPositionRequest, DecreaseLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
 
 export function useReduceLpPositionCalldataQuery({
   params,
   ...rest
 }: UseQueryApiHelperHookArgs<
-  ReduceLPPositionRequest,
-  ReduceLPPositionResponse
->): UseQueryResult<ReduceLPPositionResponse> {
-  const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.reduceLp, params]
+  DecreaseLPPositionRequest,
+  DecreaseLPPositionResponse
+>): UseQueryResult<DecreaseLPPositionResponse> {
+  const queryKey = [TRADING_API_CACHE_KEY, uniswapUrls.tradingApiPaths.decreaseLp, params]
 
-  return useQuery<ReduceLPPositionResponse>({
+  return useQuery<DecreaseLPPositionResponse>({
     queryKey,
-    queryFn: params ? async (): ReturnType<typeof reduceLpPosition> => await reduceLpPosition(params) : skipToken,
+    queryFn: params ? async (): ReturnType<typeof decreaseLpPosition> => await decreaseLpPosition(params) : skipToken,
     ...rest,
   })
 }

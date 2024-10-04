@@ -218,10 +218,19 @@ export default function FeatureFlagModal() {
         </Header>
         <FlagsColumn>
           <FeatureFlagOption flag={FeatureFlags.UniversalSwap} label="Enable swap flow from the Uniswap Package" />
+          <FeatureFlagOption flag={FeatureFlags.Bridging} label="Bridging" />
           <FeatureFlagOption flag={FeatureFlags.UniswapX} label="[Universal Swap Flow Only] Enable UniswapX" />
           <FeatureFlagOption
             flag={FeatureFlags.IndicativeSwapQuotes}
             label="[Universal Swap Flow Only] Enable Quick Routes"
+          />
+          <FeatureFlagOption
+            flag={FeatureFlags.UniswapXPriorityOrders}
+            label="UniswapX Priority Orders (on Base only)"
+          />
+          <FeatureFlagOption
+            flag={FeatureFlags.SharedSwapArbitrumUniswapXExperiment}
+            label="[Universal Swap Flow Only] Enables receiving UniswapX orders on Arbitrum in the shared swap flow"
           />
           <FeatureFlagOption
             flag={FeatureFlags.Eip6936Enabled}

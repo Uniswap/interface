@@ -20,6 +20,7 @@ import {
   v8Schema,
   v9Schema,
 } from 'src/store/schema'
+import { initialUniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { initialFavoritesState } from 'uniswap/src/features/favorites/slice'
 import { FiatCurrency } from 'uniswap/src/features/fiatCurrency/constants'
 import { initialSearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
@@ -94,6 +95,7 @@ describe('Redux state migrations', () => {
       tokenLists: {},
       tokens: initialTokensState,
       transactions: initialTransactionsState,
+      uniswapBehaviorHistory: initialUniswapBehaviorHistoryState,
       userSettings: initialUserSettingsState,
       wallet: initialWalletState,
       _persist: {

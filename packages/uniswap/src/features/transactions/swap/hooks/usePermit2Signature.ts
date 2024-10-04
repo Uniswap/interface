@@ -24,7 +24,7 @@ export function usePermit2SignatureWithData({ permitData, skip }: { permitData: 
 
   const permitSignatureFetcher = useCallback(async () => {
     if (skip || !signer || !domain || !types || !values) {
-      return
+      return undefined
     }
 
     return await signTypedData(

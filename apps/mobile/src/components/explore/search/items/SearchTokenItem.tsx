@@ -7,12 +7,14 @@ import { disableOnPress } from 'src/utils/disableOnPress'
 import { Flex, ImpactFeedbackStyle, Text, TouchableArea, useIsDarkMode } from 'ui/src'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
-import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { getWarningIconColorOverride } from 'uniswap/src/components/warnings/utils'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { MobileEventName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
+import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
@@ -30,6 +32,9 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
 
   const { chainId, address, name, symbol, logoUrl, safetyLevel, safetyInfo } = token
   const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId as WalletChainId)
+  const currencyInfo = useCurrencyInfo(currencyId)
+  const severity = getTokenWarningSeverity(currencyInfo)
+  const warningIconColor = getWarningIconColorOverride(severity)
 
   const onPress = (): void => {
     tokenDetailsNavigation.preload(currencyId)
@@ -86,8 +91,8 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
                   {name}
                 </Text>
               </Flex>
-              {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
-                <WarningIcon safetyLevel={safetyLevel} size="$icon.16" strokeColorOverride="$neutral3" />
+              {warningIconColor && (
+                <WarningIcon severity={severity} size="$icon.16" strokeColorOverride={warningIconColor} />
               )}
             </Flex>
             <Flex centered row gap="$spacing8">

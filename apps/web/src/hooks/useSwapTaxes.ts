@@ -94,6 +94,7 @@ async function getSwapTaxes(
   return { inputTax, outputTax }
 }
 
+// Use the buyFeeBps/sellFeeBps fields from Token GQL query where possible instead of this hook
 export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: string, tokenChainId?: InterfaceChainId) {
   const account = useAccount()
   const chainId = tokenChainId ?? account.chainId

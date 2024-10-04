@@ -35,6 +35,7 @@ import {
 } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
 import { FiatCurrency, ORDERED_CURRENCIES } from 'uniswap/src/features/fiatCurrency/constants'
 import { getFiatCurrencyName, useAppFiatCurrencyInfo } from 'uniswap/src/features/fiatCurrency/hooks'
 import { useCurrentLanguageInfo } from 'uniswap/src/features/language/hooks'
@@ -45,6 +46,7 @@ import noop from 'utilities/src/react/noop'
 import { SettingsLanguageModal } from 'wallet/src/components/settings/language/SettingsLanguageModal'
 import { authActions } from 'wallet/src/features/auth/saga'
 import { AuthActionType } from 'wallet/src/features/auth/types'
+import { resetWalletBehaviorHistory } from 'wallet/src/features/behaviorHistory/slice'
 
 const manifestVersion = chrome.runtime.getManifest().version
 
@@ -85,6 +87,19 @@ export function SettingsScreen(): JSX.Element {
                   Icon={Settings}
                   title="Developer Settings"
                   onPress={(): void => navigateTo(`${AppRoutes.Settings}/${SettingsRoutes.DevMenu}`)}
+                />
+              )}
+            </>
+            <>
+              {isDevEnv() && (
+                <SettingsItem
+                  hideChevron
+                  Icon={Settings}
+                  title="Clear behavior history"
+                  onPress={() => {
+                    dispatch(resetWalletBehaviorHistory())
+                    dispatch(resetUniswapBehaviorHistory())
+                  }}
                 />
               )}
             </>
@@ -175,9 +190,11 @@ function SettingsItem({
   iconProps,
   themeProps,
   url,
+  hideChevron = false,
 }: {
   Icon: GeneratedIcon
   title: string
+  hideChevron?: boolean
   onPress?: () => void
   iconProps?: { strokeWidth?: number }
   // TODO: do this with a wrapping Theme, "detrimental" wasn't working
@@ -212,7 +229,9 @@ function SettingsItem({
           {title}
         </Text>
       </Flex>
-      <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon20} width={iconSizes.icon20} />
+      {!hideChevron && (
+        <RotatableChevron color="$neutral3" direction="end" height={iconSizes.icon20} width={iconSizes.icon20} />
+      )}
     </TouchableArea>
   )
 

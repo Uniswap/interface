@@ -1,8 +1,9 @@
 import { renderHook } from '@testing-library/react-hooks'
 import { CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { DAI } from 'uniswap/src/constants/tokens'
+import { DAI, USDC } from 'uniswap/src/constants/tokens'
 import { useCheckApprovalQuery } from 'uniswap/src/data/apiClients/tradingApi/useCheckApprovalQuery'
-import { FeeType, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { FeeType } from 'uniswap/src/data/tradingApi/types'
 import { AccountMeta, AccountType } from 'uniswap/src/features/accounts/types'
 import { DEFAULT_GAS_STRATEGY } from 'uniswap/src/features/gas/hooks'
 import {
@@ -27,13 +28,16 @@ describe('useTokenApprovalInfo', () => {
   const mockAccount: AccountMeta = { address: '0x123', type: AccountType.SignerMnemonic }
 
   const mockTokenIn = new Token(UniverseChainId.Mainnet, DAI.address, DAI.decimals, DAI.symbol, DAI.name)
+  const mockTokenOut = new Token(UniverseChainId.Mainnet, USDC.address, USDC.decimals, USDC.symbol, USDC.name)
 
   const mockCurrencyInAmount = CurrencyAmount.fromRawAmount(mockTokenIn, '1000000000000000000') // 1 TKIN
+  const mockCurrencyOutAmount = CurrencyAmount.fromRawAmount(mockTokenOut, '2000000000000000000') // 2 TKOUT
 
   const mockParams: TokenApprovalInfoParams = {
     chainId: UniverseChainId.Mainnet,
     wrapType: WrapType.NotApplicable,
     currencyInAmount: mockCurrencyInAmount,
+    currencyOutAmount: mockCurrencyOutAmount,
     routing: Routing.CLASSIC,
     account: mockAccount,
     skip: false,

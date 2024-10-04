@@ -82,7 +82,7 @@ function useTokenSectionsForSwapInput({
 
   const sections = useMemo(() => {
     if (isSwapListLoading(loading, portfolioSection, popularSection)) {
-      return
+      return undefined
     }
 
     return [

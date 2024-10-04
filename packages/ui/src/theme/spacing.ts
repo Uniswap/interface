@@ -10,6 +10,7 @@ export const spacing = {
   spacing8: 8,
   spacing12: 12,
   spacing16: 16,
+  spacing18: 18,
   spacing20: 20,
   spacing24: 24,
   spacing28: 28,

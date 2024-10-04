@@ -9,7 +9,7 @@ export function BlockedAddressModal({ isOpen, onClose }: { isOpen: boolean; onCl
   return (
     <WarningModal
       caption={t('send.warning.blocked.modal.message')}
-      closeText={t('common.button.understand')}
+      rejectText={t('common.button.understand')}
       isOpen={isOpen}
       modalName={ModalName.BlockedAddress}
       severity={WarningSeverity.None}

@@ -1,21 +1,22 @@
-import { Currency, TradeType } from '@uniswap/sdk-core'
+import { TradeType } from '@uniswap/sdk-core'
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
-import { AlertTriangle } from 'ui/src/components/icons/AlertTriangle'
+import { Flex, isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
+import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Settings } from 'ui/src/components/icons/Settings'
 import { IndicativeLoadingWrapper } from 'uniswap/src/components/misc/IndicativeLoadingWrapper'
-import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
-import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { BridgeTrade, IndicativeTrade, TradeWithSlippage } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
 import { NumberType } from 'utilities/src/format/types'
+import { isMobileApp } from 'utilities/src/platform'
 
 interface MaxSlippageRowProps {
   acceptedDerivedSwapInfo: DerivedSwapInfo<CurrencyInfo, CurrencyInfo>
@@ -36,7 +37,11 @@ export function MaxSlippageRow({
   const acceptedTrade = acceptedDerivedSwapInfo.trade.trade ?? acceptedDerivedSwapInfo.trade.indicativeTrade
 
   if (!acceptedTrade) {
-    throw new Error('Invalid render of `MaxSlippageInfo` with no `acceptedTrade`')
+    throw new Error('Invalid render of `MaxSlippageInfo` with no `trade`')
+  }
+
+  if (acceptedTrade instanceof BridgeTrade) {
+    throw new Error('Invalid render of `MaxSlippageInfo` for bridge trade')
   }
 
   // If we don't have a custom slippage tolerance set, we won't have a tolerance to display for an indicative quote,
@@ -83,11 +88,12 @@ export function MaxSlippageRow({
 }
 
 type SlippageWarningContentProps = PropsWithChildren<{
-  trade: Trade<Currency, Currency, TradeType> | IndicativeTrade
+  trade: TradeWithSlippage | IndicativeTrade
   isCustomSlippage: boolean
   autoSlippageTolerance?: number
 }>
 
+// eslint-disable-next-line complexity
 export function SlippageWarningContent({
   children,
   trade,
@@ -119,51 +125,70 @@ export function SlippageWarningContent({
 
   const captionContent = (
     <Flex gap="$spacing12" width="100%">
-      <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={isWeb ? 'buttonLabel1' : 'body2'}>
+      <Text color="$neutral2" textAlign={isWeb ? 'left' : 'center'} variant={isWeb ? 'body4' : 'body2'}>
         {tradeType === TradeType.EXACT_INPUT
           ? t('swap.settings.slippage.input.message')
-          : t('swap.settings.slippage.output.message')}
+          : t('swap.settings.slippage.output.message')}{' '}
+        {isWeb && (
+          <Flex display="inline-flex">
+            <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} textVariant="body4" textColor="white" />
+          </Flex>
+        )}
       </Text>
+
+      {showSlippageWarning && isWeb ? (
+        <Flex centered row gap="$spacing8">
+          <AlertTriangleFilled color="$statusWarning" size="$icon.16" />
+          <Text color="$statusWarning" variant="body4">
+            {t('swap.settings.slippage.warning.message')}
+          </Text>
+        </Flex>
+      ) : null}
+
       <Flex
         backgroundColor="$surface2"
-        borderRadius="$rounded20"
+        borderRadius={isWeb ? '$rounded8' : '$rounded20'}
         gap="$spacing8"
-        px="$spacing16"
-        py="$spacing12"
+        px={isWeb ? '$spacing8' : '$spacing16'}
+        py={isWeb ? '$spacing8' : '$spacing12'}
         width="100%"
       >
-        <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-          <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant={isWeb ? 'buttonLabel1' : 'body2'}>
-            {t('swap.slippage.settings.title')}
-          </Text>
-          <Flex row gap="$spacing8">
-            {!isCustomSlippage ? (
-              <Flex centered backgroundColor="$accent2" borderRadius="$roundedFull" px="$spacing8">
-                <Text color="$accent1" variant="buttonLabel3">
-                  {t('swap.settings.slippage.control.auto')}
-                </Text>
-              </Flex>
-            ) : null}
-            <Text color={showSlippageWarning ? '$DEP_accentWarning' : '$neutral1'} variant="subheading2">
-              {formatPercent(slippageTolerance)}
+        {isMobileApp && (
+          <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
+            <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant={isWeb ? 'buttonLabel1' : 'body2'}>
+              {t('swap.slippage.settings.title')}
             </Text>
+
+            <Flex row gap="$spacing8">
+              {!isCustomSlippage ? (
+                <Flex centered backgroundColor="$accent2" borderRadius="$roundedFull" px="$spacing8">
+                  <Text color="$accent1" variant="buttonLabel3">
+                    {t('swap.settings.slippage.control.auto')}
+                  </Text>
+                </Flex>
+              ) : null}
+              <Text color={showSlippageWarning ? '$statusWarning' : '$neutral1'} variant="subheading2">
+                {formatPercent(slippageTolerance)}
+              </Text>
+            </Flex>
           </Flex>
-        </Flex>
-        <Flex row alignItems="center" gap="$spacing12" justifyContent="space-between">
-          <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant={isWeb ? 'buttonLabel2' : 'body2'}>
+        )}
+
+        <Flex row alignItems="center" gap={isWeb ? '$spacing8' : '$spacing12'} justifyContent="space-between">
+          <Text color="$neutral2" flexShrink={1} numberOfLines={3} variant={isWeb ? 'body4' : 'body2'}>
             {tradeType === TradeType.EXACT_INPUT
               ? t('swap.settings.slippage.input.receive.title')
               : t('swap.settings.slippage.output.spend.title')}
           </Text>
-          <Text color="$neutral1" textAlign="center" variant="subheading2">
+          <Text color="$neutral1" textAlign="center" variant={isWeb ? 'body4' : 'subheading2'}>
             {amount} {tokenSymbol}
           </Text>
         </Flex>
       </Flex>
-      {showSlippageWarning ? (
+      {showSlippageWarning && isMobileApp ? (
         <Flex centered row gap="$spacing8">
-          {!isWeb && <AlertTriangle color="DEP_accentWarning" size="$icon.16" />}
-          <Text color="$DEP_accentWarning" variant={isWeb ? 'buttonLabel2' : 'body2'}>
+          {!isWeb && <AlertTriangleFilled color="$statusWarning" size="$icon.16" />}
+          <Text color="$statusWarning" variant={isWeb ? 'buttonLabel2' : 'body2'}>
             {t('swap.settings.slippage.warning.message')}
           </Text>
         </Flex>
@@ -173,16 +198,11 @@ export function SlippageWarningContent({
 
   return (
     <WarningInfo
-      infoButton={
-        <LearnMoreLink
-          textVariant={isWeb ? 'buttonLabel3' : undefined}
-          url={uniswapUrls.helpArticleUrls.swapSlippage}
-        />
-      }
+      infoButton={isMobileApp ? <LearnMoreLink url={uniswapUrls.helpArticleUrls.swapSlippage} /> : null}
       modalProps={{
         backgroundIconColor: colors.surface2.get(),
         captionComponent: captionContent,
-        closeText: t('common.button.close'),
+        rejectText: t('common.button.close'),
         icon: <Settings color="$neutral2" size="$icon.28" />,
         modalName: ModalName.SlippageInfo,
         severity: WarningSeverity.None,
@@ -190,6 +210,7 @@ export function SlippageWarningContent({
       }}
       tooltipProps={{
         text: captionContent,
+        maxWidth: 272,
         placement: 'top',
       }}
     >

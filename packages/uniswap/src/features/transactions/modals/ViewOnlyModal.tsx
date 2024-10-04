@@ -16,14 +16,14 @@ export function ViewOnlyModal({ isOpen, onDismiss }: ViewOnlyModalProps): JSX.El
   return (
     <WarningModal
       caption={t('swap.warning.viewOnly.message')}
-      confirmText={t('common.button.dismiss')}
+      acknowledgeText={t('common.button.dismiss')}
       icon={<Eye color="$neutral2" size={iconSizes.icon24} />}
       isOpen={isOpen}
       modalName={ModalName.SwapWarning}
       severity={WarningSeverity.Low}
       title={t('account.wallet.viewOnly.title')}
       onClose={onDismiss}
-      onConfirm={onDismiss}
+      onAcknowledge={onDismiss}
     />
   )
 }

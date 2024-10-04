@@ -1,25 +1,40 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
 
-export function useShowSwapNetworkNotification(): (chainId?: WalletChainId, prevChainId?: WalletChainId) => void {
+const HIDE_DELAY = ONE_SECOND_MS * 2
+
+/**
+ * Shows a network notification for a swap.
+ * Depending on chain inputs passed, shows a bridging or non-bridging notification.
+ */
+export function useShowSwapNetworkNotification(): (chainId: UniverseChainId, outputChainId?: UniverseChainId) => void {
   const appDispatch = useDispatch()
   return useCallback(
-    (chainId?: WalletChainId, prevChainId?: WalletChainId) => {
-      // don't fire notification toast for first network selection
-      if (!prevChainId || !chainId || prevChainId === chainId) {
-        return
+    (chainId: UniverseChainId, outputChainId?: UniverseChainId) => {
+      // Output chain should only be passed when bridging
+      if (outputChainId && chainId !== outputChainId) {
+        appDispatch(
+          pushNotification({
+            type: AppNotificationType.NetworkChangedBridge,
+            fromChainId: chainId,
+            toChainId: outputChainId,
+            hideDelay: HIDE_DELAY,
+          }),
+        )
+      } else {
+        appDispatch(
+          pushNotification({
+            type: AppNotificationType.NetworkChanged,
+            chainId,
+            flow: 'swap',
+            hideDelay: HIDE_DELAY,
+          }),
+        )
       }
-      appDispatch(
-        pushNotification({
-          type: AppNotificationType.NetworkChanged,
-          chainId,
-          flow: 'swap',
-          hideDelay: 2000,
-        }),
-      )
     },
     [appDispatch],
   )

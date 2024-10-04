@@ -62,10 +62,10 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
         onChangeText={[Function]}
         onFocus={[Function]}
         onSubmitEditing={[Function]}
-        placeholderTextColor="#CECECE"
+        placeholderTextColor="#BFBFBF"
         returnKeyType="done"
         scrollEnabled={false}
-        selectionColor="#CECECE"
+        selectionColor="#BFBFBF"
         spellCheck={false}
         style={
           {
@@ -89,7 +89,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "fontSize": 17,
             "fontWeight": "500",
             "height": "auto",
-            "lineHeight": 17,
+            "lineHeight": 20.4,
             "minWidth": 0,
             "paddingBottom": 0,
             "paddingLeft": 0,
@@ -99,7 +99,6 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
           }
         }
         testID="import-account-input"
-        textAlignVertical="bottom"
       />
     </View>
     <View
@@ -126,7 +125,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "fontFamily": "Basel Grotesk",
             "fontSize": 17,
             "fontWeight": "400",
-            "lineHeight": 24,
+            "lineHeight": 20.4,
           }
         }
         suppressHighlighting={true}

@@ -56,6 +56,7 @@ export function WebBottomSheet({ isOpen, onClose, children, ...rest }: ModalProp
             pb="$spacing16"
             pt="$spacing8"
             width="100%"
+            backgroundColor="$transparent"
             onMouseDown={() => setHandlePressed(true)}
             onMouseUp={() => setHandlePressed(false)}
           >

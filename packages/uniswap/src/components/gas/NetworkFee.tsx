@@ -14,7 +14,7 @@ import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NetworkFeeWarning } from 'uniswap/src/features/transactions/swap/modals/NetworkFeeWarning'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 
 export function NetworkFee({
@@ -24,7 +24,7 @@ export function NetworkFee({
   transactionUSDValue,
   indicative,
 }: {
-  chainId: WalletChainId
+  chainId: UniverseChainId
   gasFee: GasFeeResult
   uniswapXGasBreakdown?: UniswapXGasBreakdown
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
@@ -75,9 +75,11 @@ export function NetworkFee({
 type UniswapXFeeProps = { gasFee: string; preSavingsGasFee?: string; smaller?: boolean }
 export function UniswapXFee({ gasFee, preSavingsGasFee, smaller = false }: UniswapXFeeProps): JSX.Element {
   return (
-    <Flex centered row gap="$spacing4">
+    <Flex centered row>
       <UniswapX marginEnd="$spacing2" size={smaller ? '$icon.12' : '$icon.16'} />
-      <UniswapXText variant={smaller ? 'body4' : 'body3'}>{gasFee}</UniswapXText>
+      <UniswapXText mr="$spacing6" variant={smaller ? 'body4' : 'body3'}>
+        {gasFee}
+      </UniswapXText>
       {preSavingsGasFee && (
         <Text color="$neutral2" textDecorationLine="line-through" variant={smaller ? 'body4' : 'body3'}>
           {preSavingsGasFee}

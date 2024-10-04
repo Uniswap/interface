@@ -32,7 +32,7 @@ export function useDerivedSwapInfo({
     txId,
     customSlippageTolerance,
     customDeadline,
-    tradeProtocolPreference,
+    selectedProtocols,
   } = state
 
   const account = useAccountMeta()
@@ -89,6 +89,7 @@ export function useDerivedSwapInfo({
         currency: otherCurrency,
       })
     }
+    return undefined
   }, [exactAmountToken, isWrap, otherCurrency])
 
   const sendPortionEnabled = useFeatureFlag(FeatureFlags.PortionFields)
@@ -101,7 +102,7 @@ export function useDerivedSwapInfo({
     customSlippageTolerance,
     customDeadline,
     sendPortionEnabled,
-    tradeProtocolPreference,
+    selectedProtocols,
     isDebouncing,
   }
 

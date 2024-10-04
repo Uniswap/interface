@@ -37,6 +37,19 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
         spender: typeInfo.spender,
       }),
     )
+  } else if (typeInfo.type === TransactionType.Bridge) {
+    const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
+    yield* put(
+      pushNotification({
+        ...baseNotificationData,
+        type: AppNotificationType.Transaction,
+        txType: TransactionType.Bridge,
+        inputCurrencyId: typeInfo.inputCurrencyId,
+        outputCurrencyId: typeInfo.outputCurrencyId,
+        inputCurrencyAmountRaw,
+        outputCurrencyAmountRaw,
+      }),
+    )
   } else if (typeInfo.type === TransactionType.Swap) {
     const { inputCurrencyAmountRaw, outputCurrencyAmountRaw } = getAmountsFromTrade(typeInfo)
     yield* put(

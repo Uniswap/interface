@@ -14,6 +14,7 @@ export default function InputWithSuffix({
   multiline = true,
   textAlign,
   textInputRef,
+  lineHeight,
   ...inputProps
 }: InputWithSuffixProps): JSX.Element {
   const isInputEmpty = !value?.length
@@ -31,7 +32,7 @@ export default function InputWithSuffix({
         color="$neutral1"
         flexShrink={1}
         fontSize={inputFontSize}
-        lineHeight={inputFontSize}
+        lineHeight={lineHeight}
         maxFontSizeMultiplier={inputMaxFontSizeMultiplier}
         multiline={multiline}
         px="$none"
@@ -41,7 +42,6 @@ export default function InputWithSuffix({
         spellCheck={false}
         testID={TestID.ImportAccountInput}
         textAlign={isInputEmpty ? 'left' : textInputAlignment}
-        textAlignVertical="bottom"
         value={value}
         {...inputProps}
       />
@@ -51,13 +51,12 @@ export default function InputWithSuffix({
           color={inputSuffixColor ?? '$neutral2'}
           editable={false}
           fontSize={inputFontSize}
-          lineHeight={inputFontSize}
+          lineHeight={lineHeight}
           maxFontSizeMultiplier={inputMaxFontSizeMultiplier}
           multiline={multiline}
           px="$none"
           py="$none"
           scrollEnabled={false}
-          textAlignVertical="bottom"
           value={inputSuffix}
         />
       ) : null}

@@ -424,12 +424,13 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
   const promoBanner = useMemo(
     () => (
       <OnboardingIntroCardStack
-        isLoading={areBalancesLoading}
+        isLoading={areBalancesLoading && balancesById === undefined}
+        hasTokens={!accountHasNoTokens}
         onboardingRedesignBackupEnabled={isOnboardingRedesignAccount}
         onboardingRedesignHomeEnabled={showOnboardingHomeRedesign}
       />
     ),
-    [areBalancesLoading, isOnboardingRedesignAccount, showOnboardingHomeRedesign],
+    [accountHasNoTokens, areBalancesLoading, balancesById, isOnboardingRedesignAccount, showOnboardingHomeRedesign],
   )
 
   const contentHeader = useMemo(() => {
@@ -550,7 +551,7 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
                 {...sceneProps}
                 indicatorStyle={TAB_STYLES.activeTabIndicator}
                 navigationState={{ index: tabIndex, routes }}
-                pressColor={colors.surface3.val} // Android only
+                pressColor="transparent" // Android only
                 renderLabel={renderTabLabel}
                 style={[
                   TAB_STYLES.tabBar,

@@ -1,4 +1,4 @@
-import { GasStrategy } from 'uniswap/src/data/tradingApi/__generated__'
+import { GasStrategy } from 'uniswap/src/data/tradingApi/types'
 
 /**
  * Dynamic Configs
@@ -75,11 +75,13 @@ export enum QuickRouteChainsConfigKey {
 }
 
 export type DynamicConfigKeys = {
+  // Shared
+  [DynamicConfigs.Swap]: SwapConfigKey
+
   // Wallet
   [DynamicConfigs.MobileForceUpgrade]: ForceUpgradeConfigKey
   [DynamicConfigs.OnDeviceRecovery]: OnDeviceRecoveryConfigKey
   [DynamicConfigs.UwuLink]: UwuLinkConfigKey
-  [DynamicConfigs.Swap]: SwapConfigKey
 
   // Web
   [DynamicConfigs.QuickRouteChains]: QuickRouteChainsConfigKey

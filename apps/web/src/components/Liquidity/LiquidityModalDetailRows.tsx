@@ -1,17 +1,20 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { DetailLineItem } from 'components/swap/DetailLineItem'
 import { Flex, Text } from 'ui/src'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Trans } from 'uniswap/src/i18n'
-import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 
 export function LiquidityModalDetailRows({
   currency0Amount,
   currency1Amount,
+  networkCost,
 }: {
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
+  networkCost?: CurrencyAmount<Currency>
 }) {
-  const { formatCurrencyAmount } = useFormatter()
+  const { formatCurrencyAmount } = useLocalizationContext()
 
   return (
     <Flex py="$padding12" px="$padding16" gap="$gap8">
@@ -24,7 +27,7 @@ export function LiquidityModalDetailRows({
           ),
           Value: () => (
             <Text variant="body3" color="$neutral1">
-              {formatCurrencyAmount({ amount: currency0Amount, type: NumberType.SwapDetailsAmount })}{' '}
+              {formatCurrencyAmount({ value: currency0Amount, type: NumberType.TokenNonTx })}{' '}
               {currency0Amount?.currency.symbol}
             </Text>
           ),
@@ -39,7 +42,7 @@ export function LiquidityModalDetailRows({
           ),
           Value: () => (
             <Text variant="body3" color="$neutral1">
-              {formatCurrencyAmount({ amount: currency1Amount, type: NumberType.SwapDetailsAmount })}{' '}
+              {formatCurrencyAmount({ value: currency1Amount, type: NumberType.TokenNonTx })}{' '}
               {currency1Amount?.currency.symbol}
             </Text>
           ),
@@ -52,10 +55,9 @@ export function LiquidityModalDetailRows({
               <Trans i18nKey="common.networkCost" />
             </Text>
           ),
-          // TODO(WEB-4920): calculate estimated network cost in USD
           Value: () => (
             <Text variant="body3" color="$neutral1">
-              $0
+              {formatCurrencyAmount({ value: networkCost, type: NumberType.FiatGasPrice })}
             </Text>
           ),
         }}

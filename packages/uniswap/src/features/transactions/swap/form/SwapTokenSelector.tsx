@@ -6,17 +6,21 @@ import {
   TokenSelectorVariation,
 } from 'uniswap/src/components/TokenSelector/TokenSelector'
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
-import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
 import { SwapFormState, useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
+import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { areCurrencyIdsEqual, buildCurrencyId, currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
+import { areCurrencyIdsEqual, currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
+import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JSX.Element {
+  const trace = useTrace()
   const account = useAccountMeta()
   const swapContext = useSwapFormContext()
-  const { updateSwapForm, exactCurrencyField, selectingCurrencyField, output, input, filteredChainId } = swapContext
+  const { setIsSwapTokenSelectorOpen } = useUniswapContext()
+  const { updateSwapForm, exactCurrencyField, selectingCurrencyField, output, input, filteredChainIds } = swapContext
   const activeAccountAddress = account?.address
 
   if (isModalOpen && !selectingCurrencyField) {
@@ -25,13 +29,14 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
 
   const onHideTokenSelector = useCallback(() => {
     updateSwapForm({ selectingCurrencyField: undefined })
-  }, [updateSwapForm])
+    setIsSwapTokenSelectorOpen(false) // resets force flag for web on close as cleanup
+  }, [setIsSwapTokenSelectorOpen, updateSwapForm])
 
-  const inputTokenProjects = useTokenProjects(input ? [buildCurrencyId(input.chainId, input.address)] : [])
-  const outputTokenProjects = useTokenProjects(output ? [buildCurrencyId(output.chainId, output.address)] : [])
+  const inputTokenProjects = useTokenProjects(input ? [currencyId(input)] : [])
+  const outputTokenProjects = useTokenProjects(output ? [currencyId(output)] : [])
 
   const onSelectCurrency = useCallback(
-    (currency: Currency, field: CurrencyField) => {
+    (currency: Currency, field: CurrencyField, isBridgePair: boolean) => {
       const tradeableAsset: TradeableAsset = {
         address: currencyAddress(currency),
         chainId: currency.chainId,
@@ -43,19 +48,15 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
       const otherField = field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
       const otherFieldTradeableAsset = field === CurrencyField.INPUT ? output : input
 
-      // We need to parse this, because one value is 'Currency' type, other is 'TradeableAsset', so shallowCompare on objects wont work
-      const chainsAreEqual = currency.chainId === otherFieldTradeableAsset?.chainId
-      const addressesAreEqual = currencyAddress(currency) === otherFieldTradeableAsset?.address
-
       // swap order if tokens are the same
-      if (chainsAreEqual && addressesAreEqual) {
+      if (otherFieldTradeableAsset && currencyId(currency) === currencyId(otherFieldTradeableAsset)) {
         const previouslySelectedTradableAsset = field === CurrencyField.INPUT ? input : output
         // Given that we're swapping the order of tokens, we should also swap the `exactCurrencyField` and update the `focusOnCurrencyField` to make sure the correct input field is focused.
         newState.exactCurrencyField =
           exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
         newState.focusOnCurrencyField = newState.exactCurrencyField
         newState[otherField] = previouslySelectedTradableAsset
-      } else if (!chainsAreEqual) {
+      } else if (currency.chainId !== otherFieldTradeableAsset?.chainId && !isBridgePair) {
         // if new token chain changes, try to find the other token's match on the new chain
         const otherFieldTokenProjects = otherField === CurrencyField.INPUT ? inputTokenProjects : outputTokenProjects
         const otherCurrency = otherFieldTokenProjects?.data?.find(
@@ -73,21 +74,47 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
             : undefined
       }
 
-      newState.filteredChainId = currency.chainId
+      if (!isBridgePair) {
+        // If selecting output, set the input and output chainIds
+        // If selecting input and output is already selected, also set the input chainId
+        if (field === CurrencyField.OUTPUT || !!output) {
+          filteredChainIds[CurrencyField.INPUT] = currency.chainId
+          filteredChainIds[CurrencyField.OUTPUT] = currency.chainId
+          // If selecting input, only set the output chainId
+        } else {
+          filteredChainIds[CurrencyField.OUTPUT] = currency.chainId
+        }
+
+        newState.filteredChainIds = filteredChainIds
+      }
+
       newState[field] = tradeableAsset
 
       updateSwapForm(newState)
 
       // Hide screen when done selecting.
       onHideTokenSelector()
+
+      maybeLogFirstSwapAction(trace)
     },
-    [exactCurrencyField, input, inputTokenProjects, onHideTokenSelector, output, outputTokenProjects, updateSwapForm],
+    [
+      output,
+      input,
+      updateSwapForm,
+      onHideTokenSelector,
+      trace,
+      exactCurrencyField,
+      inputTokenProjects,
+      outputTokenProjects,
+      filteredChainIds,
+    ],
   )
 
   const props: TokenSelectorProps = {
     isModalOpen,
     activeAccountAddress,
-    chainId: filteredChainId,
+    chainId: filteredChainIds[selectingCurrencyField ?? CurrencyField.INPUT],
+    input,
     // token selector modal will only open on currency field selection; casting to satisfy typecheck here - we should consider refactoring the types here to avoid casting
     currencyField: selectingCurrencyField as CurrencyField,
     flow: TokenSelectorFlow.Swap,

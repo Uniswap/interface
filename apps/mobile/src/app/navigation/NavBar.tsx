@@ -1,8 +1,8 @@
 import { SharedEventName } from '@uniswap/analytics-events'
 import { BlurView } from 'expo-blur'
-import React, { memo, useCallback } from 'react'
+import React, { memo, useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { StyleSheet } from 'react-native'
+import { LayoutChangeEvent, LayoutRectangle, StyleSheet } from 'react-native'
 import { TapGestureHandler, TapGestureHandlerGestureEvent } from 'react-native-gesture-handler'
 import {
   cancelAnimation,
@@ -11,6 +11,7 @@ import {
   useAnimatedStyle,
   useSharedValue,
 } from 'react-native-reanimated'
+import { useSafeAreaFrame } from 'react-native-safe-area-context'
 import { useDispatch } from 'react-redux'
 import { pulseAnimation } from 'src/components/buttons/utils'
 import { openModal } from 'src/features/modals/modalSlice'
@@ -41,6 +42,9 @@ import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hoo
 export const NAV_BAR_HEIGHT_XS = 52
 export const NAV_BAR_HEIGHT_SM = 72
 
+const NAV_BAR_MARGIN_SIDES = 24
+const NAV_BAR_GAP = 12
+
 export const SWAP_BUTTON_HEIGHT = 56
 const SWAP_BUTTON_SHADOW_OFFSET = { width: 0, height: 4 }
 
@@ -53,8 +57,28 @@ function sendSwapPressAnalyticsEvent(): void {
 
 export function NavBar(): JSX.Element {
   const insets = useDeviceInsets()
+  const { width: screenWidth } = useSafeAreaFrame()
+  const [isNarrow, setIsNarrow] = useState(false)
+  const [exploreButtonLayout, setExploreButtonLayout] = useState<LayoutRectangle | null>(null)
+  const [swapButtonLayout, setSwapButtonLayout] = useState<LayoutRectangle | null>(null)
+
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
+
+  useEffect(() => {
+    if (isNarrow || !exploreButtonLayout?.width || !swapButtonLayout?.width) {
+      return
+    }
+
+    // When the 2 buttons overflow, we set `isNarrow` to true and adjust the design accordingly.
+    // To test this, you can use an iPhone Mini set to Spanish.
+    setIsNarrow(exploreButtonLayout.width + swapButtonLayout.width + NAV_BAR_GAP + NAV_BAR_MARGIN_SIDES > screenWidth)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exploreButtonLayout?.width, swapButtonLayout?.width, screenWidth])
+
+  const onExploreLayout = useCallback((e: LayoutChangeEvent) => setExploreButtonLayout(e.nativeEvent.layout), [])
+
+  const onSwapLayout = useCallback((e: LayoutChangeEvent) => setSwapButtonLayout(e.nativeEvent.layout), [])
 
   return (
     <>
@@ -82,14 +106,14 @@ export function NavBar(): JSX.Element {
           fill
           row
           alignItems="center"
-          gap="$spacing12"
+          gap={NAV_BAR_GAP}
           justifyContent="space-between"
           mb={isAndroid ? '$spacing8' : '$none'}
-          mx="$spacing24"
+          mx={NAV_BAR_MARGIN_SIDES}
           pointerEvents="auto"
         >
-          <ExploreTabBarButton />
-          <SwapFAB />
+          <ExploreTabBarButton isNarrow={isNarrow} onLayout={onExploreLayout} />
+          <SwapFAB onSwapLayout={onSwapLayout} />
         </Flex>
       </Flex>
     </>
@@ -102,9 +126,10 @@ type SwapTabBarButtonProps = {
    * @default 0.96
    */
   activeScale?: number
+  onSwapLayout: (event: LayoutChangeEvent) => void
 }
 
-const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonProps) {
+const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96, onSwapLayout }: SwapTabBarButtonProps) {
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const { hapticFeedback } = useHapticFeedback()
@@ -138,7 +163,7 @@ const SwapFAB = memo(function _SwapFAB({ activeScale = 0.96 }: SwapTabBarButtonP
   })
 
   return (
-    <Flex centered height={SWAP_BUTTON_HEIGHT} pointerEvents="box-none" position="relative">
+    <Flex centered height={SWAP_BUTTON_HEIGHT} pointerEvents="box-none" position="relative" onLayout={onSwapLayout}>
       <TapGestureHandler testID={ElementName.Swap} onGestureEvent={onGestureEvent}>
         <AnimatedFlex
           centered
@@ -179,9 +204,11 @@ type ExploreTabBarButtonProps = {
    * @default 0.98
    */
   activeScale?: number
+  isNarrow: boolean
+  onLayout: (event: LayoutChangeEvent) => void
 }
 
-function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): JSX.Element {
+function ExploreTabBarButton({ activeScale = 0.98, onLayout, isNarrow }: ExploreTabBarButtonProps): JSX.Element {
   const dispatch = useDispatch()
   const colors = useSporeColors()
   const isDarkMode = useIsDarkMode()
@@ -217,6 +244,13 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
         },
       }
 
+  const [height, setHeight] = useState<number | undefined>(undefined)
+
+  const internalOnLayout = (e: LayoutChangeEvent): void => {
+    setHeight(e.nativeEvent.layout.height)
+    onLayout(e)
+  }
+
   return (
     <TouchableArea
       hapticFeedback
@@ -225,7 +259,13 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
       onPress={onPress}
     >
       <TapGestureHandler testID={TestID.SearchTokensAndWallets} onGestureEvent={onGestureEvent}>
-        <AnimatedFlex borderRadius="$roundedFull" overflow="hidden" style={animatedStyle}>
+        <AnimatedFlex
+          borderRadius="$roundedFull"
+          overflow="hidden"
+          style={animatedStyle}
+          width={isNarrow ? height : undefined}
+          onLayout={internalOnLayout}
+        >
           <BlurView intensity={isIOS ? 100 : 0}>
             <Flex
               {...contentProps}
@@ -243,16 +283,18 @@ function ExploreTabBarButton({ activeScale = 0.98 }: ExploreTabBarButtonProps): 
               shadowRadius={borderRadii.rounded20}
             >
               <Search color="$neutral2" size="$icon.24" />
-              <Text
-                allowFontScaling={false}
-                color="$neutral2"
-                numberOfLines={1}
-                pr="$spacing48"
-                style={{ lineHeight: fonts.body1.lineHeight }}
-                variant="body1"
-              >
-                {t('common.input.search')}
-              </Text>
+              {isNarrow ? undefined : (
+                <Text
+                  allowFontScaling={false}
+                  color="$neutral2"
+                  numberOfLines={1}
+                  pr="$spacing48"
+                  style={{ lineHeight: fonts.body1.lineHeight }}
+                  variant="body1"
+                >
+                  {t('common.input.search')}
+                </Text>
+              )}
             </Flex>
           </BlurView>
         </AnimatedFlex>

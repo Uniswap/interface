@@ -18,6 +18,7 @@ import {
   NavBarSearchTypes,
   SharedEventName,
   SwapEventName,
+  SwapPriceImpactUserResponse,
   SwapPriceUpdateUserResponse,
   WalletConnectionResult,
 } from '@uniswap/analytics-events'
@@ -67,6 +68,8 @@ export type GasEstimateAccuracyProperties = {
   private_rpc?: boolean
   is_shadow?: boolean
   name?: string
+  out_of_gas: boolean
+  timed_out: boolean
 }
 
 export type AssetDetailsBaseProperties = {
@@ -92,7 +95,18 @@ type OnboardingCompletedProps = {
   cloud_backup_used: boolean
 }
 
+export type SwapRouting =
+  | 'classic'
+  | 'uniswap_x'
+  | 'uniswap_x_v2'
+  | 'priority_order'
+  | 'bridge'
+  | 'limit_order'
+  | 'none'
+
 export type SwapTradeBaseProperties = {
+  routing?: SwapRouting
+  total_balances_usd?: number
   transactionOriginType: string
   // We have both `allowed_slippage` (percentage) and `allowed_slippage_basis_points` because web and wallet used to track this in different ways.
   // We should eventually standardize on one or the other.
@@ -119,13 +133,19 @@ export type SwapTradeBaseProperties = {
   requestId?: string
   ura_request_id?: string
   ura_block_number?: string
+  ura_quote_id?: string
+  ura_quote_block_number?: string
   quoteId?: string
   swap_quote_block_number?: string
   fee_usd?: number
   type?: TradeType
+  // Legacy props only used on web. We might be able to delete these after we delete the old swap flow.
+  method?: 'ROUTING_API' | 'QUICK_ROUTE' | 'CLIENT_SIDE_FALLBACK'
+  offchain_order_type?: 'Dutch' | 'Dutch_V2' | 'Limit' | 'Dutch_V1_V2' | 'Priority'
 } & ITraceContext
 
 type BaseSwapTransactionResultProperties = {
+  routing: SwapTradeBaseProperties['routing']
   transactionOriginType: string
   time_to_swap?: number
   time_to_swap_since_first_input?: number
@@ -148,15 +168,13 @@ type BaseSwapTransactionResultProperties = {
   transactedUSDValue?: number
 }
 
-// TODO(WEB-4345): Update to use trading api enum rather than hardcoded strings
-type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties & {
-  routing: 'CLASSIC'
-}
+type ClassicSwapTransactionResultProperties = BaseSwapTransactionResultProperties
 
 type UniswapXTransactionResultProperties = BaseSwapTransactionResultProperties & {
-  routing: 'DUTCH_V2' | 'DUTCH_LIMIT'
   order_hash: string
 }
+
+type BridgeSwapTransactionResultProperties = BaseSwapTransactionResultProperties
 
 type FailedUniswapXOrderResultProperties = Omit<UniswapXTransactionResultProperties, 'hash'>
 
@@ -186,6 +204,10 @@ export type SwapPriceUpdateActionProperties = {
   token_in_symbol?: string
   token_out_symbol?: string
   price_update_basis_points?: number
+}
+
+export type SwapPriceImpactActionProperties = {
+  response: SwapPriceImpactUserResponse
 }
 
 export type InterfaceSearchResultSelectionProperties = {
@@ -231,6 +253,7 @@ export enum OnboardingCardLoggingName {
   FundWallet = 'fund_wallet',
   RecoveryBackup = 'recovery_backup',
   ClaimUnitag = 'claim_unitag',
+  BridgingBanner = 'bridging_banner',
 }
 
 export type FORAmountEnteredProperties = ITraceContext & {
@@ -254,6 +277,10 @@ export type FORWidgetOpenedProperties = ITraceContext & {
   fiatCurrency: string
   preselectedServiceProvider?: string
   serviceProvider: string
+}
+
+type OnboardingCardEventProperties = ITraceContext & {
+  card_name: OnboardingCardLoggingName
 }
 
 // Please sort new values by EventName type!
@@ -498,9 +525,6 @@ export type UniverseEventProperties = {
     enabled: boolean
   }
   [MobileEventName.OnboardingCompleted]: OnboardingCompletedProps & ITraceContext
-  [MobileEventName.OnboardingIntroCardSwiped]: ITraceContext & {
-    card_name: OnboardingCardLoggingName
-  }
   [MobileEventName.PerformanceReport]: RenderPassReport
   [MobileEventName.ShareLinkOpened]: {
     entity: ShareableEntity
@@ -618,11 +642,16 @@ export type UniverseEventProperties = {
   }
   [SharedEventName.NAVBAR_CLICKED]: undefined
   [SwapEventName.SWAP_MAX_TOKEN_AMOUNT_SELECTED]: undefined
+  [SwapEventName.SWAP_PRICE_IMPACT_ACKNOWLEDGED]: SwapPriceImpactActionProperties
   [SwapEventName.SWAP_PRICE_UPDATE_ACKNOWLEDGED]: SwapPriceUpdateActionProperties
   [SwapEventName.SWAP_TRANSACTION_COMPLETED]:
     | ClassicSwapTransactionResultProperties
     | UniswapXTransactionResultProperties
-  [SwapEventName.SWAP_TRANSACTION_FAILED]: ClassicSwapTransactionResultProperties | FailedUniswapXOrderResultProperties
+    | BridgeSwapTransactionResultProperties
+  [SwapEventName.SWAP_TRANSACTION_FAILED]:
+    | ClassicSwapTransactionResultProperties
+    | FailedUniswapXOrderResultProperties
+    | BridgeSwapTransactionResultProperties
   [SwapEventName.SWAP_DETAILS_EXPANDED]: ITraceContext | undefined
   [SwapEventName.SWAP_AUTOROUTER_VISUALIZATION_EXPANDED]: ITraceContext
   [SwapEventName.SWAP_QUOTE_RECEIVED]: {
@@ -727,6 +756,9 @@ export type UniverseEventProperties = {
     shown: number
     hidden: number
   }
+  [WalletEventName.OnboardingIntroCardSwiped]: OnboardingCardEventProperties
+  [WalletEventName.OnboardingIntroCardPressed]: OnboardingCardEventProperties
+  [WalletEventName.OnboardingIntroCardClosed]: OnboardingCardEventProperties
   [WalletEventName.PerformanceGraphql]: {
     dataSize: number
     duration: number
@@ -746,11 +778,9 @@ export type UniverseEventProperties = {
   }
   [WalletEventName.SwapSubmitted]: (
     | {
-        routing: 'CLASSIC'
         transaction_hash: string
       }
     | {
-        routing: 'DUTCH_V2'
         order_hash: string
       }
   ) &

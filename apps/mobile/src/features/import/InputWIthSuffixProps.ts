@@ -13,6 +13,7 @@ export interface InputWithSuffixProps {
   inputSuffixColor?: ColorTokens
   multiline?: boolean
   textAlign?: 'left' | 'right' | 'center'
+  lineHeight?: number
   textInputRef: React.RefObject<NativeTextInput>
   onBlur?: () => void
   onFocus?: () => void

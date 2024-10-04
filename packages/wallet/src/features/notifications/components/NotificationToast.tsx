@@ -6,14 +6,22 @@ import { useCallback, useEffect } from 'react'
 import { Directions, FlingGestureHandler, FlingGestureHandlerGestureEvent, State } from 'react-native-gesture-handler'
 import { useAnimatedStyle, useSharedValue, withDelay, withSpring } from 'react-native-reanimated'
 import { useDispatch, useSelector } from 'react-redux'
-import { Flex, Text, TouchableArea, isWeb, styled, useDeviceInsets, useShadowPropsShort } from 'ui/src'
+import {
+  ElementAfterText,
+  Flex,
+  Text,
+  TouchableArea,
+  isWeb,
+  styled,
+  useDeviceInsets,
+  useShadowPropsShort,
+} from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { borderRadii, spacing } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { useTimeout } from 'utilities/src/time/timing'
 import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
 import { popNotification, setNotificationViewed } from 'wallet/src/features/notifications/slice'
-import { usePostTextElementPositionProps } from 'wallet/src/utils/layout'
 
 const NOTIFICATION_HEIGHT = 64
 
@@ -22,7 +30,7 @@ const HIDE_OFFSET_Y = -150
 const SPRING_ANIMATION = { damping: 30, stiffness: 150 }
 
 const TOAST_BORDER_WIDTH = spacing.spacing1
-const LARGE_TOAST_RADIUS = borderRadii.rounded16
+const LARGE_TOAST_RADIUS = borderRadii.rounded24
 const SMALL_TOAST_RADIUS = borderRadii.roundedFull
 
 export interface NotificationContentProps {
@@ -36,6 +44,7 @@ export interface NotificationContentProps {
   }
   onPress?: () => void
   onPressIn?: () => void
+  contentOverride?: JSX.Element
 }
 
 export interface NotificationToastProps extends NotificationContentProps {
@@ -75,6 +84,7 @@ export function NotificationToast({
   actionButton,
   address,
   smallToast,
+  contentOverride,
 }: NotificationToastProps): JSX.Element {
   const shadowProps = useShadowPropsShort()
   const dispatch = useDispatch()
@@ -159,6 +169,7 @@ export function NotificationToast({
           icon={icon}
           postCaptionElement={postCaptionElement}
           title={title}
+          contentOverride={contentOverride}
           onPress={onNotificationPress}
           onPressIn={onPressIn}
         />
@@ -169,6 +180,7 @@ export function NotificationToast({
           postCaptionElement={postCaptionElement}
           subtitle={subtitle}
           title={title}
+          contentOverride={contentOverride}
           onPress={onNotificationPress}
           onPressIn={onPressIn}
         />
@@ -204,8 +216,8 @@ function NotificationContent({
   actionButton,
   onPress,
   onPressIn,
+  contentOverride,
 }: NotificationContentProps): JSX.Element {
-  const { postTextElementPositionProps, onTextLayout } = usePostTextElementPositionProps()
   return (
     <TouchableArea
       alignItems="center"
@@ -218,28 +230,30 @@ function NotificationContent({
       onPress={onPress}
       onPressIn={onPressIn}
     >
-      <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" width="100%">
-        <Flex
-          row
-          shrink
-          alignItems="center"
-          flexBasis={actionButton ? '75%' : '100%'}
-          gap="$spacing12"
-          justifyContent="flex-start"
-        >
-          {icon}
-          <Flex shrink alignItems="flex-start" flexDirection="column">
-            <Flex row pr={postTextElementPositionProps ? '$spacing24' : undefined}>
-              <Text
-                adjustsFontSizeToFit
-                numberOfLines={subtitle ? 1 : 2}
-                testID={TestID.NotificationToastTitle}
-                variant="subheading2"
-                onTextLayout={onTextLayout}
-              >
-                {title}
-              </Text>
-              <Flex {...postTextElementPositionProps}>{postCaptionElement}</Flex>
+      {contentOverride ? (
+        contentOverride
+      ) : (
+        <Flex row alignItems="center" gap="$spacing8" justifyContent="space-between" width="100%">
+          <Flex
+            row
+            shrink
+            alignItems="center"
+            flexBasis={actionButton ? '75%' : '100%'}
+            gap="$spacing12"
+            justifyContent="flex-start"
+          >
+            {icon}
+            <Flex shrink alignItems="flex-start" flexDirection="column">
+              <ElementAfterText
+                textProps={{
+                  adjustsFontSizeToFit: true,
+                  numberOfLines: subtitle ? 1 : 2,
+                  testID: TestID.NotificationToastTitle,
+                  variant: 'subheading2',
+                }}
+                text={title}
+                element={postCaptionElement}
+              />
             </Flex>
             {subtitle && (
               <Text adjustsFontSizeToFit color="$neutral2" numberOfLines={1} variant="body3">
@@ -247,17 +261,17 @@ function NotificationContent({
               </Text>
             )}
           </Flex>
+          {actionButton && (
+            <Flex shrink alignItems="flex-end" flexBasis="25%" gap="$spacing4">
+              <TouchableArea p="$spacing8" onPress={actionButton.onPress}>
+                <Text adjustsFontSizeToFit color="$accent1" numberOfLines={1}>
+                  {actionButton.title}
+                </Text>
+              </TouchableArea>
+            </Flex>
+          )}
         </Flex>
-        {actionButton && (
-          <Flex shrink alignItems="flex-end" flexBasis="25%" gap="$spacing4">
-            <TouchableArea p="$spacing8" onPress={actionButton.onPress}>
-              <Text adjustsFontSizeToFit color="$accent1" numberOfLines={1}>
-                {actionButton.title}
-              </Text>
-            </TouchableArea>
-          </Flex>
-        )}
-      </Flex>
+      )}
     </TouchableArea>
   )
 }
@@ -268,6 +282,7 @@ function NotificationContentSmall({
   postCaptionElement,
   onPress,
   onPressIn,
+  contentOverride: overrideContent,
 }: NotificationContentProps): JSX.Element {
   return (
     <Flex centered row shrink pointerEvents="box-none">
@@ -278,13 +293,17 @@ function NotificationContentSmall({
         onPress={onPress}
         onPressIn={onPressIn}
       >
-        <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" pr="$spacing4">
-          {icon && <Flex>{icon}</Flex>}
-          <Text adjustsFontSizeToFit numberOfLines={1} testID={TestID.NotificationToastTitle} variant="body2">
-            {title}
-          </Text>
-          {postCaptionElement && <Flex>{postCaptionElement}</Flex>}
-        </Flex>
+        {overrideContent ? (
+          overrideContent
+        ) : (
+          <Flex row alignItems="center" gap="$spacing8" justifyContent="flex-start" pr="$spacing4">
+            {icon && <Flex>{icon}</Flex>}
+            <Text adjustsFontSizeToFit numberOfLines={1} testID={TestID.NotificationToastTitle} variant="body2">
+              {title}
+            </Text>
+            {postCaptionElement && <Flex>{postCaptionElement}</Flex>}
+          </Flex>
+        )}
       </TouchableArea>
     </Flex>
   )

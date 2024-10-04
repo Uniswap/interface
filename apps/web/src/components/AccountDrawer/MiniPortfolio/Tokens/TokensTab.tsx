@@ -8,7 +8,7 @@ import PortfolioRow, {
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
 import Row from 'components/deprecated/Row'
-import { useTokenBalancesQuery } from 'graphql/data/apollo/TokenBalancesProvider'
+import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { PortfolioBalance, PortfolioToken } from 'graphql/data/portfolios'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import styled from 'lib/styled-components'
@@ -106,13 +106,13 @@ function TokenRow({
       element={InterfaceElementName.MINI_PORTFOLIO_TOKEN_ROW}
       properties={{
         chain_id: currency.chainId,
-        token_name: token?.project?.name ?? token?.name,
+        token_name: token?.name ?? token?.project?.name,
         address: token?.address,
       }}
     >
       <PortfolioRow
         left={<PortfolioLogo chainId={currency.chainId} currencies={[currency]} size={40} />}
-        title={<TokenNameText>{token?.project?.name ?? token?.name}</TokenNameText>}
+        title={<TokenNameText>{token?.name ?? token?.project?.name}</TokenNameText>}
         descriptor={
           <TokenBalanceText>
             {formatNumber({

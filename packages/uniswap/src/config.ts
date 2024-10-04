@@ -29,6 +29,16 @@ import {
 } from 'react-native-dotenv'
 import { isNonJestDev } from 'utilities/src/environment/constants'
 
+/**
+ * Naming requirements for different environments:
+ * - Web ENV vars: must have process.env.REACT_APP_<var_name>
+ * - Extension ENV vars: must have process.env.<var_name>
+ * - Mobile ENV vars: must have BOTH process.env.<var_name> and <var_name>
+ *
+ *  The CI requires web vars to have the required 'REACT_APP_' prefix. The react-dot-env library doesnt integrate with CI correctly,
+ *  so we pull from github secrets directly with process.env.<var_name> for both extension and mobile. <var_name> is used for local mobile builds.
+ */
+
 export interface Config {
   appsflyerApiKey: string
   appsflyerAppId: string
@@ -87,14 +97,22 @@ const _config: Config = {
     process.env.REACT_APP_QUICKNODE_ARBITRUM_RPC_URL ||
     process.env.QUICKNODE_ARBITRUM_RPC_URL ||
     QUICKNODE_ARBITRUM_RPC_URL,
-  quicknodeAvaxRpcUrl: process.env.QUICKNODE_AVAX_RPC_URL || QUICKNODE_AVAX_RPC_URL,
-  quicknodeBaseRpcUrl: process.env.QUICKNODE_BASE_RPC_URL || QUICKNODE_BASE_RPC_URL,
-  quicknodeBlastRpcUrl: process.env.QUICKNODE_BLAST_RPC_URL || QUICKNODE_BLAST_RPC_URL,
+  quicknodeAvaxRpcUrl:
+    process.env.REACT_APP_QUICKNODE_AVAX_RPC_URL || process.env.QUICKNODE_AVAX_RPC_URL || QUICKNODE_AVAX_RPC_URL,
+  quicknodeBaseRpcUrl:
+    process.env.REACT_APP_QUICKNODE_BASE_RPC_URL || process.env.QUICKNODE_BASE_RPC_URL || QUICKNODE_BASE_RPC_URL,
+  quicknodeBlastRpcUrl:
+    process.env.REACT_APP_QUICKNODE_BLAST_RPC_URL || process.env.QUICKNODE_BLAST_RPC_URL || QUICKNODE_BLAST_RPC_URL,
   quicknodeBnbRpcUrl:
     process.env.REACT_APP_QUICKNODE_BNB_RPC_URL || process.env.QUICKNODE_BNB_RPC_URL || QUICKNODE_BNB_RPC_URL,
-  quicknodeCeloRpcUrl: process.env.QUICKNODE_CELO_RPC_URL || QUICKNODE_CELO_RPC_URL,
-  quicknodeOpRpcUrl: process.env.QUICKNODE_OP_RPC_URL || QUICKNODE_OP_RPC_URL,
-  quicknodePolygonRpcUrl: process.env.QUICKNODE_POLYGON_RPC_URL || QUICKNODE_POLYGON_RPC_URL,
+  quicknodeCeloRpcUrl:
+    process.env.REACT_APP_QUICKNODE_CELO_RPC_URL || process.env.QUICKNODE_CELO_RPC_URL || QUICKNODE_CELO_RPC_URL,
+  quicknodeOpRpcUrl:
+    process.env.REACT_APP_QUICKNODE_OP_RPC_URL || process.env.QUICKNODE_OP_RPC_URL || QUICKNODE_OP_RPC_URL,
+  quicknodePolygonRpcUrl:
+    process.env.REACT_APP_QUICKNODE_POLYGON_RPC_URL ||
+    process.env.QUICKNODE_POLYGON_RPC_URL ||
+    QUICKNODE_POLYGON_RPC_URL,
   quicknodeZoraRpcUrl:
     process.env.REACT_APP_QUICKNODE_ZORA_RPC_URL || process.env.QUICKNODE_ZORA_RPC_URL || QUICKNODE_ZORA_RPC_URL,
   quicknodeZkSyncRpcUrl:
@@ -103,7 +121,7 @@ const _config: Config = {
     process.env.REACT_APP_QUICKNODE_MAINNET_RPC_URL ||
     process.env.QUICKNODE_MAINNET_RPC_URL ||
     QUICKNODE_MAINNET_RPC_URL,
-  tradingApiKey: process.env.TRADING_API_KEY || TRADING_API_KEY,
+  tradingApiKey: process.env.REACT_APP_TRADING_API_KEY || process.env.TRADING_API_KEY || TRADING_API_KEY,
   firebaseAppCheckDebugToken: process.env.FIREBASE_APP_CHECK_DEBUG_TOKEN || FIREBASE_APP_CHECK_DEBUG_TOKEN,
 }
 

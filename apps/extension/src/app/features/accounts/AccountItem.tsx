@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 import { EditLabelModal } from 'src/app/features/accounts/EditLabelModal'
 import { removeAllDappConnectionsForAccount } from 'src/app/features/dapp/actions'
 import { ContextMenu, Flex, MenuContentItem, Text, TouchableArea } from 'ui/src'
-import { CopySheets, Edit, TrashFilled, TripleDots } from 'ui/src/components/icons'
+import { CopySheets, Edit, Ellipsis, TrashFilled } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
@@ -131,15 +131,15 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
         caption={t('account.recoveryPhrase.remove.mnemonic.description', {
           walletNames: [activeAccountDisplayName?.name ?? ''],
         })}
-        closeText={t('common.button.cancel')}
-        confirmText={t('common.button.continue')}
+        rejectText={t('common.button.cancel')}
+        acknowledgeText={t('common.button.continue')}
         icon={<TrashFilled color="$statusCritical" size="$icon.24" strokeWidth="$spacing1" />}
         isOpen={showRemoveWalletModal}
         modalName={ModalName.RemoveWallet}
         severity={WarningSeverity.High}
         title={t('account.wallet.remove.title', { name: displayName?.name ?? '' })}
         onClose={() => setShowRemoveWalletModal(false)}
-        onConfirm={onRemoveWallet}
+        onAcknowledge={onRemoveWallet}
       />
       <EditLabelModal address={address} isOpen={showEditLabelModal} onClose={() => setShowEditLabelModal(false)} />
       <TouchableArea
@@ -179,7 +179,7 @@ export function AccountItem({ address, onAccountSelect, balanceUSD }: AccountIte
                 opacity={0}
                 p="$spacing4"
               >
-                <TripleDots color="$neutral2" size="$icon.16" />
+                <Ellipsis color="$neutral2" size="$icon.16" />
               </Flex>
             </ContextMenu>
           </Flex>

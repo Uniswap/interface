@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 import {
   Currency,
+  ProtectionResult,
   SafetyLevel,
   SwapOrderStatus,
   TransactionStatus,
@@ -31,6 +32,8 @@ export const mocks = {
     chain: () => randomChoice(GQL_CHAINS),
     decimals: () => 6,
     symbol: () => faker.lorem.word(),
+    protectionInfo: () => ({ result: randomEnumValue(ProtectionResult), attackTypes: [] }),
+    feeData: () => ({ buyFeeBps: '', sellFeeBps: '' }),
   },
   Amount: {
     id: () => faker.datatype.uuid(),

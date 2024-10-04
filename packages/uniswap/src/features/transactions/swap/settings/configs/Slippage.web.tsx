@@ -56,12 +56,12 @@ export const Slippage: SwapSettingConfig = {
         >
           <Flex
             centered
-            backgroundColor="$accent2"
+            backgroundColor={autoSlippageEnabled ? '$accent2' : '$surface3'}
             borderRadius="$roundedFull"
             px="$spacing8"
             onPress={onPressAutoSlippage}
           >
-            <Text color="$accent1" variant="buttonLabel3">
+            <Text color={autoSlippageEnabled ? '$accent1' : '$neutral2'} variant="buttonLabel3">
               {t('swap.settings.slippage.control.auto')}
             </Text>
           </Flex>
@@ -77,6 +77,7 @@ export const Slippage: SwapSettingConfig = {
                 height="100%"
                 outlineColor="$transparent"
                 p="$none"
+                paddingEnd="$spacing4"
                 textAlign="right"
                 value={inputValue}
                 width={inputWidth}

@@ -30,11 +30,31 @@ exports[`SplitLogo renders without error 1`] = `
           "flexDirection": "column",
           "height": 10,
           "justifyContent": "center",
+          "position": "relative",
           "width": 10,
         }
       }
       testID="token-logo"
     >
+      <View
+        style={
+          {
+            "backgroundColor": "#FFFFFF",
+            "borderBottomLeftRadius": 5,
+            "borderBottomRightRadius": 5,
+            "borderTopLeftRadius": 5,
+            "borderTopRightRadius": 5,
+            "flexDirection": "column",
+            "height": "96%",
+            "left": "2%",
+            "opacity": 0,
+            "position": "absolute",
+            "top": "2%",
+            "width": "96%",
+            "zIndex": -1,
+          }
+        }
+      />
       <View
         style={
           {
@@ -46,11 +66,11 @@ exports[`SplitLogo renders without error 1`] = `
         <img
           height={10}
           onError={[Function]}
+          onLoad={[Function]}
           src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x6B175474E89094C44Da98b954EedeAC495271d0F/logo.png"
           style={
             {
               "aspectRatio": undefined,
-              "backgroundColor": "#FFFFFF",
               "borderRadius": 5,
               "objectFit": "contain",
             }
@@ -80,11 +100,31 @@ exports[`SplitLogo renders without error 1`] = `
           "flexDirection": "column",
           "height": 10,
           "justifyContent": "center",
+          "position": "relative",
           "width": 10,
         }
       }
       testID="token-logo"
     >
+      <View
+        style={
+          {
+            "backgroundColor": "#FFFFFF",
+            "borderBottomLeftRadius": 5,
+            "borderBottomRightRadius": 5,
+            "borderTopLeftRadius": 5,
+            "borderTopRightRadius": 5,
+            "flexDirection": "column",
+            "height": "96%",
+            "left": "2%",
+            "opacity": 0,
+            "position": "absolute",
+            "top": "2%",
+            "width": "96%",
+            "zIndex": -1,
+          }
+        }
+      />
       <View
         style={
           {
@@ -96,11 +136,11 @@ exports[`SplitLogo renders without error 1`] = `
         <img
           height={10}
           onError={[Function]}
+          onLoad={[Function]}
           src="https://token-icons.s3.amazonaws.com/eth.png"
           style={
             {
               "aspectRatio": undefined,
-              "backgroundColor": "#FFFFFF",
               "borderRadius": 5,
               "objectFit": "contain",
             }
@@ -134,19 +174,19 @@ exports[`SplitLogo renders without error 1`] = `
         style={
           {
             "borderBottomColor": "rgba(19,19,19,1.00)",
-            "borderBottomLeftRadius": "2.4px",
-            "borderBottomRightRadius": "2.4px",
-            "borderBottomWidth": "1.5px",
+            "borderBottomLeftRadius": "2.1px",
+            "borderBottomRightRadius": "2.1px",
+            "borderBottomWidth": "1px",
             "borderLeftColor": "rgba(19,19,19,1.00)",
-            "borderLeftWidth": "1.5px",
+            "borderLeftWidth": "1px",
             "borderRightColor": "rgba(19,19,19,1.00)",
-            "borderRightWidth": "1.5px",
+            "borderRightWidth": "1px",
             "borderTopColor": "rgba(19,19,19,1.00)",
-            "borderTopLeftRadius": "2.4px",
-            "borderTopRightRadius": "2.4px",
-            "borderTopWidth": "1.5px",
-            "height": "8px",
-            "width": "8px",
+            "borderTopLeftRadius": "2.1px",
+            "borderTopRightRadius": "2.1px",
+            "borderTopWidth": "1px",
+            "height": "7px",
+            "width": "7px",
           }
         }
       >

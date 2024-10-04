@@ -3,6 +3,7 @@ import { LimitsExpiry } from 'uniswap/src/types/limits'
 
 const DAY_SECS = ms('1d') / 1000
 
+// eslint-disable-next-line consistent-return
 export function expiryToDeadlineSeconds(expiry: LimitsExpiry): number {
   switch (expiry) {
     case LimitsExpiry.Day:

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { ElementAfterText, Flex, Text } from 'ui/src'
 import { Clock } from 'ui/src/components/icons/Clock'
 import { Coins } from 'ui/src/components/icons/Coins'
 import { Pin } from 'ui/src/components/icons/Pin'
@@ -11,10 +11,11 @@ import { TokenOptionSection } from 'uniswap/src/components/TokenSelector/types'
 export type TokenSectionHeaderProps = {
   sectionKey: TokenOptionSection
   rightElement?: JSX.Element
+  name?: string
 }
 
-export function SectionHeader({ sectionKey, rightElement }: TokenSectionHeaderProps): JSX.Element | null {
-  const title = useTokenOptionsSectionTitle(sectionKey)
+export function SectionHeader({ sectionKey, rightElement, name }: TokenSectionHeaderProps): JSX.Element | null {
+  const title = useTokenOptionsSectionTitle(sectionKey, name)
   const icon = getTokenOptionsSectionIcon(sectionKey)
   if (sectionKey === TokenOptionSection.SuggestedTokens) {
     return null
@@ -24,15 +25,14 @@ export function SectionHeader({ sectionKey, rightElement }: TokenSectionHeaderPr
       <Text color="$neutral2" variant="subheading2">
         <Flex row alignItems="center" gap="$spacing8">
           {icon}
-          <Text color="$neutral2">{title}</Text>
+          <ElementAfterText text={title} textProps={{ color: '$neutral2' }} element={rightElement} />
         </Flex>
       </Text>
-      {rightElement}
     </Flex>
   )
 }
 
-export function useTokenOptionsSectionTitle(section: TokenOptionSection): string {
+export function useTokenOptionsSectionTitle(section: TokenOptionSection, name?: string): string {
   const { t } = useTranslation()
   switch (section) {
     case TokenOptionSection.BridgingTokens:
@@ -49,8 +49,10 @@ export function useTokenOptionsSectionTitle(section: TokenOptionSection): string
       return t('tokens.selector.section.search')
     case TokenOptionSection.SuggestedTokens:
       return '' // no suggested tokens header
+    case TokenOptionSection.SearchResultsByNetwork:
+      return name ?? ''
     default:
-      return ''
+      return section
   }
 }
 

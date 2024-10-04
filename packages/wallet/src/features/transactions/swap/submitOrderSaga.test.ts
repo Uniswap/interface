@@ -2,10 +2,11 @@ import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
 import { testSaga } from 'redux-saga-test-plan'
 import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { DutchOrderInfo, DutchQuoteV2, OrderRequest, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
+import { signTypedData } from 'uniswap/src/features/transactions/signing'
 import { addTransaction, finalizeTransaction, updateTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   QueuedOrderStatus,
@@ -15,6 +16,7 @@ import {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
+import { mockPermit } from 'uniswap/src/test/fixtures/permit'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { pushNotification } from 'wallet/src/features/notifications/slice'
@@ -24,7 +26,14 @@ import {
   SubmitUniswapXOrderParams,
   submitUniswapXOrder,
 } from 'wallet/src/features/transactions/swap/submitOrderSaga'
+import { getSignerManager } from 'wallet/src/features/wallet/context'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
+
+const mockSignature = '0xMockSignature'
+const mockSigner = {}
+const mockSignerManager = {
+  getSignerForAccount: jest.fn(),
+}
 
 const baseSubmitOrderParams = {
   chainId: UniverseChainId.Mainnet,
@@ -40,17 +49,24 @@ const baseSubmitOrderParams = {
     protocol: Protocol.V3,
   },
   analytics: {
+    routing: 'uniswap_x_v2',
     transactionOriginType: TransactionOriginType.Internal,
   },
   txId: '1',
-  orderParams: { quote: { orderId: '0xMockOrderHash' } } as unknown as OrderRequest,
-  onSubmit: jest.fn(),
+  onSuccess: jest.fn(),
   onFailure: jest.fn(),
+  routing: Routing.DUTCH_V2,
+  quote: {
+    orderId: '0xMockOrderHash',
+    encodedOrder: '0xMockEncodedOrder',
+    orderInfo: {} as DutchOrderInfo,
+  } as unknown as DutchQuoteV2,
+  permit: mockPermit,
 } satisfies SubmitUniswapXOrderParams
 
 const baseExpectedInitialOrderDetails: UniswapXOrderDetails = {
   routing: Routing.DUTCH_V2,
-  orderHash: baseSubmitOrderParams.orderParams.quote.orderId,
+  orderHash: '0xMockOrderHash',
   id: baseSubmitOrderParams.txId,
   chainId: baseSubmitOrderParams.chainId,
   typeInfo: baseSubmitOrderParams.typeInfo,
@@ -59,6 +75,12 @@ const baseExpectedInitialOrderDetails: UniswapXOrderDetails = {
   status: TransactionStatus.Pending,
   queueStatus: QueuedOrderStatus.Waiting,
   transactionOriginType: TransactionOriginType.Internal,
+}
+
+const expectedOrderRequest: OrderRequest = {
+  signature: mockSignature,
+  quote: baseSubmitOrderParams.quote,
+  routing: Routing.DUTCH_V2,
 }
 
 describe(submitUniswapXOrder, () => {
@@ -80,17 +102,23 @@ describe(submitUniswapXOrder, () => {
       .next()
       .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
       .next()
-      .call(submitOrder, baseSubmitOrderParams.orderParams)
+      .call(getSignerManager)
+      .next(mockSignerManager)
+      .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
+      .next(mockSigner)
+      .call(signTypedData, mockPermit.domain, mockPermit.types, mockPermit.values, mockSigner)
+      .next(mockSignature)
+      .call(submitOrder, expectedOrderRequest)
       .next()
       .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-        routing: Routing.DUTCH_V2,
+        routing: 'uniswap_x_v2',
         order_hash: baseExpectedInitialOrderDetails.orderHash,
         transactionOriginType: TransactionOriginType.Internal,
       })
       .next()
       .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
       .next()
-      .call(baseSubmitOrderParams.onSubmit)
+      .call(baseSubmitOrderParams.onSuccess)
       .next()
       .isDone()
   })
@@ -108,7 +136,13 @@ describe(submitUniswapXOrder, () => {
       .next()
       .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
       .next()
-      .call(submitOrder, baseSubmitOrderParams.orderParams)
+      .call(getSignerManager)
+      .next(mockSignerManager)
+      .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
+      .next(mockSigner)
+      .call(signTypedData, mockPermit.domain, mockPermit.types, mockPermit.values, mockSigner)
+      .next(mockSignature)
+      .call(submitOrder, expectedOrderRequest)
       .throw(new Error('pretend the order endpoint failed'))
       .put({
         type: updateTransaction.type,
@@ -144,17 +178,23 @@ describe(submitUniswapXOrder, () => {
         .next({ payload: { hash: approveTxHash, status: TransactionStatus.Success } })
         .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
         .next()
-        .call(submitOrder, baseSubmitOrderParams.orderParams)
+        .call(getSignerManager)
+        .next(mockSignerManager)
+        .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
+        .next(mockSigner)
+        .call(signTypedData, mockPermit.domain, mockPermit.types, mockPermit.values, mockSigner)
+        .next(mockSignature)
+        .call(submitOrder, expectedOrderRequest)
         .next()
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-          routing: Routing.DUTCH_V2,
+          routing: 'uniswap_x_v2',
           order_hash: baseExpectedInitialOrderDetails.orderHash,
           transactionOriginType: TransactionOriginType.Internal,
         })
         .next()
         .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
         .next()
-        .call(baseSubmitOrderParams.onSubmit)
+        .call(baseSubmitOrderParams.onSuccess)
         .next()
         .isDone()
     })
@@ -176,17 +216,23 @@ describe(submitUniswapXOrder, () => {
         .next({ payload: { hash: wrapTxHash, status: TransactionStatus.Success } })
         .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
         .next()
-        .call(submitOrder, baseSubmitOrderParams.orderParams)
+        .call(getSignerManager)
+        .next(mockSignerManager)
+        .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
+        .next(mockSigner)
+        .call(signTypedData, mockPermit.domain, mockPermit.types, mockPermit.values, mockSigner)
+        .next(mockSignature)
+        .call(submitOrder, expectedOrderRequest)
         .next()
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-          routing: Routing.DUTCH_V2,
+          routing: 'uniswap_x_v2',
           order_hash: baseExpectedInitialOrderDetails.orderHash,
           transactionOriginType: TransactionOriginType.Internal,
         })
         .next()
         .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
         .next()
-        .call(baseSubmitOrderParams.onSubmit)
+        .call(baseSubmitOrderParams.onSuccess)
         .next()
         .isDone()
     })
@@ -208,17 +254,23 @@ describe(submitUniswapXOrder, () => {
         .next({ payload: { hash: approveTxHash, status: TransactionStatus.Success } })
         .put({ type: updateTransaction.type, payload: expectedSubmittedOrderDetails })
         .next()
-        .call(submitOrder, baseSubmitOrderParams.orderParams)
+        .call(getSignerManager)
+        .next(mockSignerManager)
+        .call([mockSignerManager, 'getSignerForAccount'], baseSubmitOrderParams.account)
+        .next(mockSigner)
+        .call(signTypedData, mockPermit.domain, mockPermit.types, mockPermit.values, mockSigner)
+        .next(mockSignature)
+        .call(submitOrder, expectedOrderRequest)
         .next()
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-          routing: Routing.DUTCH_V2,
+          routing: 'uniswap_x_v2',
           order_hash: baseExpectedInitialOrderDetails.orderHash,
           transactionOriginType: TransactionOriginType.Internal,
         })
         .next()
         .put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
         .next()
-        .call(baseSubmitOrderParams.onSubmit)
+        .call(baseSubmitOrderParams.onSuccess)
         .next()
         .isDone()
     })

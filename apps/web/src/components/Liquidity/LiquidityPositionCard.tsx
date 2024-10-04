@@ -3,11 +3,12 @@ import { Position } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Price } from '@uniswap/sdk-core'
 import { LiquidityPositionFeeStats } from 'components/Liquidity/LiquidityPositionFeeStats'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { usePositionInfo } from 'components/Liquidity/utils'
+import { parseRestPosition } from 'components/Liquidity/utils'
+import { useMemo } from 'react'
 import { Flex, FlexProps } from 'ui/src'
 
 export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidityPosition: Position } & FlexProps) {
-  const positionInfo = usePositionInfo(liquidityPosition)
+  const positionInfo = useMemo(() => parseRestPosition(liquidityPosition), [liquidityPosition])
   if (!liquidityPosition || !positionInfo) {
     return null
   }
@@ -21,6 +22,7 @@ export function LiquidityPositionCard({ liquidityPosition, ...rest }: { liquidit
       borderRadius="$rounded20"
       borderColor="$surface3"
       width="100%"
+      overflow="hidden"
       {...rest}
     >
       <Flex row alignItems="center" justifyContent="space-between">

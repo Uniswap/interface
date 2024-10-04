@@ -1,4 +1,5 @@
 /* eslint-disable max-lines */
+import { ApolloError } from '@apollo/client/errors'
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch, useSelector } from 'react-redux'
@@ -14,6 +15,7 @@ import {
 import {
   createEmptyBalanceOption,
   formatSearchResults,
+  mergeSearchResultsWithBridgingTokens,
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
 import { BRIDGED_BASE_ADDRESSES, getNativeAddress } from 'uniswap/src/constants/addresses'
@@ -22,6 +24,8 @@ import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { DAI, USDC, USDT, WBTC } from 'uniswap/src/constants/tokens'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GqlResult } from 'uniswap/src/data/types'
+import { TradeableAsset } from 'uniswap/src/entities/assets'
+import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import {
   sortPortfolioBalances,
   usePortfolioBalances,
@@ -33,6 +37,8 @@ import { usePopularTokens as usePopularTokensGql } from 'uniswap/src/features/da
 import { CurrencyInfo, PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { buildCurrency, gqlTokenToCurrencyInfo, usePersistedError } from 'uniswap/src/features/dataApi/utils'
 import { selectFavoriteTokens } from 'uniswap/src/features/favorites/selectors'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { SearchResultType, TokenSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { addToSearchHistory, clearSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
 import { selectSearchHistory } from 'uniswap/src/features/search/selectSearchHistory'
@@ -127,7 +133,7 @@ export function useAllCommonBaseCurrencies(): GqlResult<CurrencyInfo[]> {
 
 export function useCurrencies(currencyIds: string[]): GqlResult<CurrencyInfo[]> {
   const { data: baseCurrencyInfos, loading, error, refetch } = useTokenProjects(currencyIds)
-  const persistedError = usePersistedError(loading, error)
+  const persistedError = usePersistedError(loading, error instanceof ApolloError ? error : undefined)
 
   // TokenProjects returns tokens on every network, so filter out native assets that have a
   // bridged version on other networks
@@ -176,7 +182,7 @@ export function useFavoriteCurrencies(): GqlResult<CurrencyInfo[]> {
   const favoriteCurrencyIds = useSelector(selectFavoriteTokens)
   const { data: favoriteTokensOnAllChains, loading, error, refetch } = useTokenProjects(favoriteCurrencyIds)
 
-  const persistedError = usePersistedError(loading, error)
+  const persistedError = usePersistedError(loading, error instanceof ApolloError ? error : undefined)
 
   // useTokenProjects returns each token on Arbitrum, Optimism, Polygon,
   // so we need to filter out the tokens which user has actually favorited
@@ -345,7 +351,7 @@ export function useCurrencyInfosToTokenOptions({
   }, [currencyInfos, portfolioBalancesById, sortAlphabetically])
 }
 
-function useCommonTokensOptions(
+export function useCommonTokensOptions(
   address: Address | undefined,
   chainFilter: UniverseChainId | null,
 ): GqlResult<TokenOption[] | undefined> {
@@ -559,7 +565,11 @@ export function useTokenSectionsForSearchResults(
   chainFilter: UniverseChainId | null,
   searchFilter: string | null,
   isBalancesOnlySearch: boolean,
+  input: TradeableAsset | undefined,
 ): GqlResult<TokenSection[]> {
+  const { t } = useTranslation()
+  const isBridgingEnabled = useFeatureFlag(FeatureFlags.Bridging)
+
   const {
     data: portfolioBalancesById,
     error: portfolioBalancesByIdError,
@@ -574,6 +584,14 @@ export function useTokenSectionsForSearchResults(
     loading: portfolioTokenOptionsLoading,
   } = usePortfolioTokenOptions(address, chainFilter, searchFilter ?? undefined)
 
+  // Bridging tokens are only shown if input is provided
+  const {
+    data: bridgingTokenOptions,
+    error: bridgingTokenOptionsError,
+    refetch: refetchBridgingTokenOptions,
+    loading: bridgingTokenOptionsLoading,
+  } = useBridgingTokensOptions({ input, walletAddress: address, chainFilter })
+
   // Only call search endpoint if isBalancesOnlySearch is false
   const {
     data: searchResultCurrencies,
@@ -587,15 +605,29 @@ export function useTokenSectionsForSearchResults(
   }, [searchResultCurrencies, portfolioBalancesById, searchFilter])
 
   const loading =
-    portfolioTokenOptionsLoading || portfolioBalancesByIdLoading || (!isBalancesOnlySearch && searchTokensLoading)
+    portfolioTokenOptionsLoading ||
+    portfolioBalancesByIdLoading ||
+    (!isBalancesOnlySearch && searchTokensLoading) ||
+    bridgingTokenOptionsLoading
 
-  const sections = useTokenOptionsSection(
+  const searchResultsSections = useTokenOptionsSection(
     TokenOptionSection.SearchResults,
     // Use local search when only searching balances
     isBalancesOnlySearch ? portfolioTokenOptions : searchResults,
   )
 
+  // If there are bridging options, we need to extract them from the search results and then prepend them as a new section above.
+  // The remaining non-bridging search results will be shown in a section with a different name
+  const networkName = chainFilter ? UNIVERSE_CHAIN_INFO[chainFilter].label : undefined
+  const searchResultsSectionHeader = networkName
+    ? t('tokens.selector.section.otherSearchResults', { network: networkName })
+    : undefined
+  const sections = isBridgingEnabled
+    ? mergeSearchResultsWithBridgingTokens(searchResultsSections, bridgingTokenOptions, searchResultsSectionHeader)
+    : searchResultsSections
+
   const error =
+    (!bridgingTokenOptions && bridgingTokenOptionsError) ||
     (!portfolioBalancesById && portfolioBalancesByIdError) ||
     (!portfolioTokenOptions && portfolioTokenOptionsError) ||
     (!isBalancesOnlySearch && !searchResults && searchTokensError)
@@ -604,7 +636,16 @@ export function useTokenSectionsForSearchResults(
     refetchPortfolioBalances?.()
     refetchSearchTokens?.()
     refetchPortfolioTokenOptions?.()
-  }, [refetchPortfolioBalances, refetchPortfolioTokenOptions, refetchSearchTokens])
+    if (isBridgingEnabled) {
+      refetchBridgingTokenOptions?.()
+    }
+  }, [
+    isBridgingEnabled,
+    refetchBridgingTokenOptions,
+    refetchPortfolioBalances,
+    refetchPortfolioTokenOptions,
+    refetchSearchTokens,
+  ])
 
   return useMemo(
     () => ({
