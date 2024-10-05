@@ -752,23 +752,13 @@ export default function FarmV3() {
                       properties={{ received_swap_quote: false }}
                       element={InterfaceElementName.NEW_POSITION_BUTTON}
                     >
-                      {poolAddress == '0x3efc8d831b754d3ed58a2b4c37818f2e69dadd19' ? (
-                        <ButtonPrimary
-                          style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
-                          as={Link}
-                          to="/add/0x471EcE3750Da237f93B8E339c536989b8978a438/0x71e26d0E519D14591b9dE9a0fE9513A398101490/100?minPrice=49.914100&maxPrice=165.92642"
-                        >
-                          + <Trans>Create New Position</Trans>
-                        </ButtonPrimary>
-                      ) : (
-                        <ButtonPrimary
-                          style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
-                          as={Link}
-                          to={`/add/${poolToken0}/${poolToken1}/${poolFee}`}
-                        >
-                          + <Trans>Create New Position</Trans>
-                        </ButtonPrimary>
-                      )}
+                      <ButtonPrimary
+                        style={{ marginTop: '2em', marginBottom: '2em', padding: '8px 16px' }}
+                        as={Link}
+                        to={`/add/${poolToken0}/${poolToken1}/${poolFee}`}
+                      >
+                        + <Trans>Create New Position</Trans>
+                      </ButtonPrimary>
                     </TraceEvent>
                   )}
                 </ErrorContainer>

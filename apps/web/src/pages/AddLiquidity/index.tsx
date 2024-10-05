@@ -1,8 +1,15 @@
 import { BigNumber } from '@ethersproject/bignumber'
 import type { TransactionResponse } from '@ethersproject/providers'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName, LiquidityEventName } from '@ubeswap/analytics-events'
-import { ChainId, Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@ubeswap/sdk-core'
-import { FeeAmount, NonfungiblePositionManager } from '@uniswap/v3-sdk'
+import {
+  ChainId,
+  Currency,
+  CurrencyAmount,
+  NONFUNGIBLE_POSITION_MANAGER_ADDRESSES,
+  Percent,
+  Rounding,
+} from '@ubeswap/sdk-core'
+import { FeeAmount, NonfungiblePositionManager, tickToPrice } from '@uniswap/v3-sdk'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent, sendAnalyticsEvent, useTrace } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
@@ -71,6 +78,38 @@ import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { Dots } from '../Pool/styled'
 import { Review } from './Review'
 import { DynamicSection, MediumOnly, ResponsiveTwoColumns, ScrollablePage, StyledInput, Wrapper } from './styled'
+
+enum PresetType {
+  FULL,
+  SAFE,
+  COMMON,
+  EXPERT,
+}
+function calculatePresetTickRange(type: PresetType, token0Symbol: string, token1Symbol: string, feeAmount: number) {
+  if (type == PresetType.FULL) {
+    throw new Error('invalid PresetType')
+  }
+  const stableUsdSymbols = ['USDT', 'USDC', 'cUSD', 'CUSD', 'USDGLO', 'mcUSD']
+  const isBothStable = stableUsdSymbols.includes(token0Symbol) && stableUsdSymbols.includes(token1Symbol)
+  if (isBothStable) {
+    switch (type) {
+      case PresetType.SAFE:
+        return feeAmount == 100 ? 300 : 600
+      case PresetType.COMMON:
+        return feeAmount == 100 ? 150 : 600
+      case PresetType.EXPERT:
+        return feeAmount == 100 ? 100 : 600
+    }
+  }
+  switch (type) {
+    case PresetType.SAFE:
+      return 9000
+    case PresetType.COMMON:
+      return feeAmount == 100 ? 4000 : 4200
+    case PresetType.EXPERT:
+      return feeAmount == 100 ? 1000 : 1200
+  }
+}
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
 const blastRebasingAlertAtom = atomWithStorage<boolean>('shouldShowBlastRebasingAlert', true)
@@ -443,6 +482,24 @@ function AddLiquidity() {
 
   const [searchParams, setSearchParams] = useSearchParams()
 
+  useEffect(() => {
+    if (pool && baseCurrency && quoteCurrency && !searchParams.get('maxPrice') && !searchParams.get('minPrice')) {
+      const current = pool.tickCurrent
+      const baseToken = baseCurrency.wrapped
+      const quoteToken = quoteCurrency.wrapped
+      const tickRange = calculatePresetTickRange(PresetType.SAFE, baseToken.symbol!, quoteToken.symbol!, pool.fee)
+      let lower = tickToPrice(baseToken, quoteToken, current - tickRange)
+      let upper = tickToPrice(baseToken, quoteToken, current + tickRange)
+      if (baseCurrency.symbol == pool.token1.symbol) {
+        lower = tickToPrice(baseToken, quoteToken, current + tickRange)
+        upper = tickToPrice(baseToken, quoteToken, current - tickRange)
+      }
+
+      onLeftRangeInput(lower.toSignificant(5, undefined, Rounding.ROUND_UP))
+      onRightRangeInput(upper.toSignificant(5, undefined, Rounding.ROUND_UP))
+    }
+  }, [pool, baseCurrency, quoteCurrency, searchParams, setSearchParams, onLeftRangeInput, onRightRangeInput])
+
   const handleSetFullRange = useCallback(() => {
     getSetFullRange()
 
@@ -452,6 +509,41 @@ function AddLiquidity() {
     if (maxPrice) searchParams.set('maxPrice', maxPrice.toSignificant(5))
     setSearchParams(searchParams)
   }, [getSetFullRange, pricesAtLimit, searchParams, setSearchParams])
+
+  const calculatePriceRange = useCallback(
+    (type: PresetType) => {
+      if (pool && baseCurrency && quoteCurrency) {
+        const current = pool.tickCurrent
+        const baseToken = baseCurrency.wrapped
+        const quoteToken = quoteCurrency.wrapped
+        const tickRange = calculatePresetTickRange(type, baseToken.symbol!, quoteToken.symbol!, pool.fee)
+        let lower = tickToPrice(baseToken, quoteToken, current - tickRange)
+        let upper = tickToPrice(baseToken, quoteToken, current + tickRange)
+        if (baseCurrency.symbol == pool.token1.symbol) {
+          lower = tickToPrice(baseToken, quoteToken, current + tickRange)
+          upper = tickToPrice(baseToken, quoteToken, current - tickRange)
+        }
+        searchParams.set('minPrice', lower.toSignificant(5, undefined, Rounding.ROUND_UP))
+        searchParams.set('maxPrice', upper.toSignificant(5, undefined, Rounding.ROUND_UP))
+        onLeftRangeInput(lower.toSignificant(5, undefined, Rounding.ROUND_UP))
+        onRightRangeInput(upper.toSignificant(5, undefined, Rounding.ROUND_UP))
+        setSearchParams(searchParams)
+      }
+    },
+    [pool, baseCurrency, quoteCurrency, searchParams, setSearchParams, onLeftRangeInput, onRightRangeInput]
+  )
+
+  const handleSetSafeRange = useCallback(() => {
+    calculatePriceRange(PresetType.SAFE)
+  }, [calculatePriceRange])
+
+  const handleSetCommonRange = useCallback(() => {
+    calculatePriceRange(PresetType.COMMON)
+  }, [calculatePriceRange])
+
+  const handleSetExpertRange = useCallback(() => {
+    calculatePriceRange(PresetType.EXPERT)
+  }, [calculatePriceRange])
 
   // START: sync values with query string
   const oldSearchParams = usePrevious(searchParams)
@@ -717,14 +809,20 @@ function AddLiquidity() {
               {!hasExistingPosition && (
                 <>
                   <DynamicSection gap="md" disabled={!feeAmount || invalidPool}>
-                    <RowBetween>
+                    <RowFixed>
                       <ThemedText.DeprecatedLabel>
                         <Trans>Set price range</Trans>
                       </ThemedText.DeprecatedLabel>
-
+                    </RowFixed>
+                    <RowBetween>
+                      <PresetsButtons
+                        onSetFullRange={handleSetFullRange}
+                        onSetSafeRange={handleSetSafeRange}
+                        onSetCommonRange={handleSetCommonRange}
+                        onSetExpertRange={handleSetExpertRange}
+                      />
                       {Boolean(baseCurrency && quoteCurrency) && (
                         <RowFixed gap="8px">
-                          <PresetsButtons onSetFullRange={handleSetFullRange} />
                           <RateToggle
                             currencyA={baseCurrency as Currency}
                             currencyB={quoteCurrency as Currency}
