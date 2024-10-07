@@ -33,7 +33,13 @@ export enum ScanOnboardingSteps {
   Complete = 'complete',
 }
 
-export type Step = CreateOnboardingSteps | ImportOnboardingSteps | ResetSteps | ScanOnboardingSteps
+export enum ClaimUnitagSteps {
+  Intro = 'intro',
+  CreateUsername = 'createUsername',
+  ChooseProfilePic = 'chooseProfilePic',
+}
+
+export type Step = CreateOnboardingSteps | ImportOnboardingSteps | ResetSteps | ScanOnboardingSteps | ClaimUnitagSteps
 
 export type OnboardingStepsContextState = {
   step: Step

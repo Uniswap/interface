@@ -15,6 +15,7 @@ import {
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   ExecuteTransactionInfo,
+  IncreaseLiquidityTransactionInfo,
   MigrateV2LiquidityToV3TransactionInfo,
   QueueTransactionInfo,
   RemoveLiquidityV3TransactionInfo,
@@ -375,6 +376,24 @@ function SwapSummary({ info }: { info: ExactInputSwapTransactionInfo | ExactOutp
     )
   }
 }
+
+function IncreaseLiquiditySummary({ info }: { info: IncreaseLiquidityTransactionInfo }) {
+  const { token0CurrencyId, token1CurrencyId } = info
+  const token0Currency = useCurrency(token0CurrencyId)
+  const token1Currency = useCurrency(token1CurrencyId)
+
+  // TODO(WEB-5081): update to match mocks
+  return (
+    <Trans
+      i18nKey="account.transactionSummary.addLiquidity"
+      values={{
+        baseSymbol: token0Currency?.symbol,
+        quoteSymbol: token1Currency?.symbol,
+      }}
+    />
+  )
+}
+
 export function TransactionSummary({ info }: { info: TransactionInfo }) {
   switch (info.type) {
     case TransactionType.ADD_LIQUIDITY_V3_POOL:
@@ -430,5 +449,8 @@ export function TransactionSummary({ info }: { info: TransactionInfo }) {
 
     case TransactionType.SEND:
       return <SendSummary info={info} />
+
+    case TransactionType.INCREASE_LIQUIDITY:
+      return <IncreaseLiquiditySummary info={info} />
   }
 }

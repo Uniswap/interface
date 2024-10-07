@@ -12,6 +12,7 @@ export enum FeatureFlags {
   TokenProtection,
   SelfReportSpamNFTs,
   UniswapXPriorityOrders,
+  SharedSwapArbitrumUniswapXExperiment,
 
   // Wallet
   FlashbotsPrivateRpc,
@@ -71,6 +72,7 @@ export const WEB_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.UniswapX, 'uniswapx'],
   [FeatureFlags.Datadog, 'datadog'],
   [FeatureFlags.UniswapXPriorityOrders, 'uniswapx_priority_orders'],
+  [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
 
   // Web Specific
   [FeatureFlags.UniversalSwap, 'universal_swap'],
@@ -107,6 +109,7 @@ export const WALLET_FEATURE_FLAG_NAMES = new Map<FeatureFlags, string>([
   [FeatureFlags.TokenProtection, 'token_protection'],
   [FeatureFlags.SelfReportSpamNFTs, 'self-report-spam-nfts'],
   [FeatureFlags.UniswapXPriorityOrders, 'uniswapx_priority_orders'],
+  [FeatureFlags.SharedSwapArbitrumUniswapXExperiment, 'shared_swap_arbitrum_uniswapx_experiment'],
 
   // Wallet Specific
   [FeatureFlags.Datadog, 'datadog'],

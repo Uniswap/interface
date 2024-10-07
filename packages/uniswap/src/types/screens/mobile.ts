@@ -1,4 +1,4 @@
-import { ExtensionOnboardingFlow } from "uniswap/src/types/screens/extension";
+import { ExtensionOnboardingFlow, ExtensionScreens } from "uniswap/src/types/screens/extension";
 
 export enum MobileScreens {
   Dev = 'Dev',
@@ -62,7 +62,12 @@ export enum UnitagScreens {
   EditProfile = 'EditProfile',
 }
 
-export type UnitagEntryPoint = OnboardingScreens.Landing | MobileScreens.Home | MobileScreens.Settings | ExtensionOnboardingFlow.New
+export type UnitagEntryPoint = 
+  OnboardingScreens.Landing | 
+  MobileScreens.Home | 
+  MobileScreens.Settings | 
+  ExtensionOnboardingFlow.New | 
+  ExtensionScreens.Home
 
 export type UnitagStackParamList = SharedUnitagScreenParams & {
   [UnitagScreens.UnitagConfirmation]: {

@@ -1,16 +1,6 @@
-import { useCallback, useState } from 'react'
-import { Flex } from 'ui/src/components/layout'
-import { SwipeableCard } from 'ui/src/components/swipeablecards/SwipeableCard'
-import {
-  SWIPEABLE_CARD_Y_OFFSET,
-  SwipeableCardProps,
-  SwipeableCardStackProps,
-} from 'ui/src/components/swipeablecards/props'
-import { usePrevious } from 'utilities/src/react/hooks'
+import { BaseSwipeableCardStack } from 'ui/src/components/swipeablecards/BaseSwipeableCardStack'
+import { PickedCardProps, SwipeableCardStackProps } from 'ui/src/components/swipeablecards/props'
 
-type PickedCardProps = Pick<SwipeableCardProps, 'onPress'>
-
-// TODO WALL-4684 After figuring out swipe for web, clean up duplicate code with the native version
 export function SwipeableCardStack<T extends PickedCardProps>({
   cards,
   minCardHeight = 0,
@@ -18,59 +8,13 @@ export function SwipeableCardStack<T extends PickedCardProps>({
   keyExtractor,
   onSwiped,
 }: SwipeableCardStackProps<T>): JSX.Element {
-  const firstCard = cards[0]
-  const [activeKey, setActiveKey] = useState(firstCard ? keyExtractor(firstCard) : '')
-
-  const [containerHeight, setContainerHeight] = useState(minCardHeight + (cards.length - 1) * SWIPEABLE_CARD_Y_OFFSET)
-  const [cardHeight, setCardHeight] = useState(minCardHeight)
-
-  // Uses active key to track first card for when cards are removed
-  // If the active card is removed, the next card becomes active or will default to the first card
-  const keyIndex = cards.findIndex((card) => keyExtractor(card) === activeKey)
-  const prevIndex = usePrevious(keyIndex)
-  const activeIndex = keyIndex >= 0 ? keyIndex : prevIndex ? prevIndex + 1 : 0
-
-  const handleSwiped = useCallback(
-    (card: T, index: number) => {
-      const nextIndex = activeIndex === cards.length - 1 ? 0 : activeIndex + 1
-      const nextCard = cards[nextIndex]
-      const nextKey = nextCard ? keyExtractor(nextCard) : ''
-
-      setActiveKey(nextKey)
-
-      onSwiped?.(card, index)
-    },
-    [activeIndex, cards, keyExtractor, onSwiped],
-  )
-
-  const handleLayout = useCallback(
-    ({ height, yOffset }: { height: number; yOffset: number }) => {
-      setContainerHeight(Math.max(containerHeight, height + yOffset))
-      setCardHeight(Math.max(cardHeight, height))
-    },
-    [cardHeight, containerHeight],
-  )
-
   return (
-    <Flex position="relative" style={{ height: containerHeight }}>
-      {cards.map((card, index) => {
-        const stackIndex = (index - activeIndex + cards.length) % cards.length
-
-        return (
-          <Flex key={index} position="absolute" width="100%" zIndex={cards.length - stackIndex}>
-            <SwipeableCard
-              cardHeight={cardHeight}
-              disableSwipe={cards.length <= 1 || activeIndex !== index}
-              stackIndex={stackIndex}
-              onLayout={handleLayout}
-              onPress={card.onPress}
-              onSwiped={() => handleSwiped(card, index)}
-            >
-              {renderCard(card, stackIndex)}
-            </SwipeableCard>
-          </Flex>
-        )
-      })}
-    </Flex>
+    <BaseSwipeableCardStack
+      cards={cards}
+      keyExtractor={keyExtractor}
+      renderCard={renderCard}
+      minCardHeight={minCardHeight}
+      onSwiped={onSwiped}
+    />
   )
 }

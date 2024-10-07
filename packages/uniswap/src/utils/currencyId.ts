@@ -1,13 +1,21 @@
 import { Currency } from '@uniswap/sdk-core'
 import { getNativeAddress, getWrappedNativeAddress } from 'uniswap/src/constants/addresses'
 import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
+import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
-export function currencyId(currency: Currency): CurrencyId {
-  return buildCurrencyId(currency.chainId, currencyAddress(currency))
+export function currencyId(tradeableAsset: TradeableAsset): CurrencyId
+export function currencyId(currency: Currency): CurrencyId
+export function currencyId(currencyOrTradeableAsset: Currency | TradeableAsset): CurrencyId {
+  return buildCurrencyId(
+    currencyOrTradeableAsset.chainId,
+    'isNative' in currencyOrTradeableAsset
+      ? currencyAddress(currencyOrTradeableAsset)
+      : currencyOrTradeableAsset.address,
+  )
 }
 
 export function buildCurrencyId(chainId: UniverseChainId, address: string): string {

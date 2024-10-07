@@ -6,7 +6,7 @@ import {
   PriceRangeContextType,
   PriceRangeState,
 } from 'pages/Pool/Positions/create/types'
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 
 export const CreatePositionContext = React.createContext<CreatePositionContextType>({
   step: PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER,
@@ -31,19 +31,15 @@ export const DEFAULT_PRICE_RANGE_STATE: PriceRangeState = {
   maxPrice: 'INF',
 }
 
-const PriceRangeContext = React.createContext<PriceRangeContextType>({
+export const PriceRangeContext = React.createContext<PriceRangeContextType>({
   priceRangeState: DEFAULT_PRICE_RANGE_STATE,
   setPriceRangeState: () => undefined,
+  derivedPriceRangeInfo: {
+    isSorted: false,
+    ticksAtLimit: [true, true],
+  },
 })
 
 export const usePriceRangeContext = () => {
   return useContext(PriceRangeContext)
-}
-
-export function PriceRangeContextProvider({ children }: { children: React.ReactNode }) {
-  const [priceRangeState, setPriceRangeState] = useState<PriceRangeState>(DEFAULT_PRICE_RANGE_STATE)
-
-  return (
-    <PriceRangeContext.Provider value={{ priceRangeState, setPriceRangeState }}>{children}</PriceRangeContext.Provider>
-  )
 }

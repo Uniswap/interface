@@ -30,11 +30,10 @@ interface TokenApprovalGasInfo {
   gasFee?: string
   cancelGasFee?: string
   gasEstimates?: GasFeeEstimates
+  isLoading: boolean
 }
 
-export function useTokenApprovalInfo(
-  params: TokenApprovalInfoParams,
-): (TokenApprovalInfo & TokenApprovalGasInfo) | undefined {
+export function useTokenApprovalInfo(params: TokenApprovalInfoParams): TokenApprovalInfo & TokenApprovalGasInfo {
   const { account, chainId, wrapType, currencyInAmount, currencyOutAmount, routing, skip } = params
 
   const isWrap = wrapType !== WrapType.NotApplicable
@@ -77,7 +76,7 @@ export function useTokenApprovalInfo(
   const activeGasStrategy = useActiveGasStrategy(chainId, 'general')
   const shadowGasStrategies = useShadowGasStrategies(chainId, 'general')
 
-  const { data, error } = useCheckApprovalQuery({
+  const { data, isLoading, error } = useCheckApprovalQuery({
     params: shouldSkip
       ? undefined
       : { ...approvalRequestArgs, gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])] },
@@ -100,6 +99,7 @@ export function useTokenApprovalInfo(
         action: ApprovalAction.None,
         txRequest: null,
         cancelTxRequest: null,
+        isLoading,
       }
     }
 
@@ -110,6 +110,7 @@ export function useTokenApprovalInfo(
           action: ApprovalAction.None,
           txRequest: null,
           cancelTxRequest: null,
+          isLoading,
         }
       }
       if (data.approval && data.cancel) {
@@ -119,6 +120,7 @@ export function useTokenApprovalInfo(
           gasFee: data.gasFee,
           cancelTxRequest: data.cancel,
           cancelGasFee: data.cancelGasFee,
+          isLoading,
         }
       }
       if (data.approval) {
@@ -138,6 +140,7 @@ export function useTokenApprovalInfo(
           gasFee: data.gasFee,
           gasEstimates,
           cancelTxRequest: null,
+          isLoading,
         }
       }
     }
@@ -147,6 +150,7 @@ export function useTokenApprovalInfo(
       action: ApprovalAction.Unknown,
       txRequest: null,
       cancelTxRequest: null,
+      isLoading,
     }
-  }, [activeGasStrategy, approvalRequestArgs, data, error, isWrap])
+  }, [activeGasStrategy, approvalRequestArgs, data, error, isWrap, isLoading])
 }

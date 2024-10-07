@@ -8,10 +8,11 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
 type InlineWarningCardProps = {
   severity: WarningSeverity
-  heading: string
+  heading?: string
   description: string
   heroIcon?: boolean
   checkboxLabel?: string
+  onPressCtaButton?: () => void
 }
 
 export function InlineWarningCard({
@@ -20,11 +21,13 @@ export function InlineWarningCard({
   description,
   checkboxLabel,
   heroIcon,
+  onPressCtaButton,
 }: InlineWarningCardProps): JSX.Element {
   const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
   const [checked, setChecked] = useState(false)
   const { color, textColor, backgroundColor } = getWarningIconColors(severity)
   const WarningIcon = getWarningIcon(severity, tokenProtectionEnabled)
+  const shouldShowCtaIcon = severity !== WarningSeverity.Low && severity !== WarningSeverity.None
 
   const onCheckPressed = (isChecked: boolean): void => {
     setChecked(!isChecked)
@@ -47,7 +50,7 @@ export function InlineWarningCard({
 
   return (
     <InlineCard
-      CtaButtonIcon={InfoCircleFilled}
+      CtaButtonIcon={shouldShowCtaIcon ? InfoCircleFilled : undefined}
       Icon={WarningIcon}
       color={textColor}
       description={
@@ -61,6 +64,7 @@ export function InlineWarningCard({
       heading={heading}
       iconBackgroundColor={heroIcon ? backgroundColor : undefined}
       iconColor={color}
+      onPressCtaButton={onPressCtaButton}
     />
   )
 }

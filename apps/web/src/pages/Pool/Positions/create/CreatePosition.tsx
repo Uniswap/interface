@@ -1,22 +1,22 @@
 /* eslint-disable-next-line no-restricted-imports */
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { getProtocolVersionFromString, getProtocolVersionLabel } from 'components/Liquidity/utils'
+import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
+import { getProtocolVersionLabel, parseProtocolVersion } from 'components/Liquidity/utils'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
+import { CreatePositionContextProvider, PriceRangeContextProvider } from 'pages/Pool/Positions/create/ContextProviders'
 import {
   DEFAULT_PRICE_RANGE_STATE,
-  PriceRangeContextProvider,
   useCreatePositionContext,
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
-import { CreatePositionContextProvider } from 'pages/Pool/Positions/create/CreatePositionContextProvider'
 import { EditRangeSelectionStep, EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
 import { DEFAULT_POSITION_STATE, PositionFlowStep } from 'pages/Pool/Positions/create/types'
 import { useCallback, useMemo } from 'react'
+import { ChevronRight } from 'react-feather'
 import { Navigate, useParams } from 'react-router-dom'
 import { Button, Flex, Text } from 'ui/src'
-import { AngleRightSmall } from 'ui/src/components/icons/AngleRightSmall'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
 import { Settings } from 'ui/src/components/icons/Settings'
@@ -86,12 +86,11 @@ const Sidebar = () => {
   return (
     <Flex gap={32} width={360}>
       <Flex gap="$gap20">
-        <Flex row alignItems="center">
-          <Text variant="body3" color="$neutral2">
-            <Trans i18nKey="pool.positions.title" />
-          </Text>
-          <AngleRightSmall color="$neutral2" size={iconSizes.icon24} />
-        </Flex>
+        <BreadcrumbNavContainer aria-label="breadcrumb-nav">
+          <BreadcrumbNavLink to="/positions">
+            <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
+          </BreadcrumbNavLink>
+        </BreadcrumbNavContainer>
         <Text variant="heading2">
           <Trans i18nKey="position.new" />
         </Text>
@@ -117,8 +116,9 @@ const Toolbar = () => {
 
   const handleVersionChange = useCallback(
     (version: ProtocolVersion) => {
-      setPositionState(() => ({
+      setPositionState((prevState) => ({
         ...DEFAULT_POSITION_STATE,
+        currencyInputs: prevState.currencyInputs,
         protocolVersion: version,
       }))
       setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
@@ -225,7 +225,7 @@ export function CreatePosition() {
   return (
     <CreatePositionContextProvider
       initialState={{
-        protocolVersion: getProtocolVersionFromString(protocolVersion),
+        protocolVersion: parseProtocolVersion(protocolVersion),
       }}
     >
       <PriceRangeContextProvider>

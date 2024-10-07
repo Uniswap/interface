@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import { Flex, Text, Tooltip } from 'ui/src'
+import { Flex, Text, Tooltip, isWeb } from 'ui/src'
 import { WarningTooltipProps } from 'uniswap/src/components/modals/WarningModal/WarningTooltipProps'
 
 const TOOLTIP_REST_MS = 20
@@ -13,6 +13,7 @@ export function WarningTooltip({
   trigger,
   triggerPlacement = 'end',
   children,
+  maxWidth,
   placement,
 }: PropsWithChildren<WarningTooltipProps>): JSX.Element {
   return (
@@ -20,16 +21,16 @@ export function WarningTooltip({
       {triggerPlacement === 'end' && children}
       <Tooltip delay={{ close: TOOLTIP_CLOSE_MS, open: 0 }} placement={placement} restMs={TOOLTIP_REST_MS}>
         <Tooltip.Trigger>{trigger}</Tooltip.Trigger>
-        <Tooltip.Content maxWidth="100%" mx="$spacing24">
+        <Tooltip.Content maxWidth={maxWidth ?? (isWeb ? 280 : '100%')} mx="$spacing24">
           <Flex row alignItems="center" gap="$spacing8">
             <Flex grow>{icon}</Flex>
             <Flex shrink gap="$spacing4">
               {title && (
-                <Text alignSelf="flex-start" variant="body3">
+                <Text alignSelf="flex-start" variant="body4">
                   {title}
                 </Text>
               )}
-              <Text color="$neutral2" variant="body3">
+              <Text color="$neutral2" variant="body4">
                 {text}
               </Text>
               <Flex alignSelf="flex-start" width="100%">

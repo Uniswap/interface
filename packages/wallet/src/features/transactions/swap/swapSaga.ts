@@ -37,9 +37,7 @@ export function* approveAndSwap(params: SwapParams) {
   try {
     const { swapTxContext, account, txId, analytics, onSuccess, onFailure } = params
     const { routing, approveTxRequest } = swapTxContext
-    const isUniswapX = routing === Routing.DUTCH_V2
-    const isBridge = routing === Routing.BRIDGE
-
+    const isUniswapX = routing === Routing.DUTCH_V2 || routing === Routing.PRIORITY
     const chainId = swapTxContext.trade.inputAmount.currency.chainId
 
     // For classic swaps, trigger UI changes immediately after click
@@ -90,7 +88,7 @@ export function* approveAndSwap(params: SwapParams) {
     // Swap Logic - UniswapX
     if (isUniswapX) {
       const { trade, wrapTxRequest, permit } = swapTxContext
-      const quote = trade.quote.quote
+      const { quote } = trade.quote
 
       let wrapTxHash: string | undefined
       // Wrap Logic - UniswapX Eth-input
@@ -114,6 +112,7 @@ export function* approveAndSwap(params: SwapParams) {
         wrapTxHash,
         permit,
         quote,
+        routing,
         typeInfo,
         chainId,
         txId,
@@ -121,7 +120,7 @@ export function* approveAndSwap(params: SwapParams) {
         onFailure,
       }
       yield* call(submitUniswapXOrder, submitOrderParams)
-    } else if (isBridge) {
+    } else if (routing === Routing.BRIDGE) {
       const options = { request: { ...swapTxContext.txRequest, nonce }, submitViaPrivateRpc }
       const sendTransactionParams = {
         txId,
@@ -134,7 +133,7 @@ export function* approveAndSwap(params: SwapParams) {
       }
       yield* call(sendTransaction, sendTransactionParams)
       yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))
-    } else {
+    } else if (routing === Routing.CLASSIC) {
       const options = { request: { ...swapTxContext.txRequest, nonce }, submitViaPrivateRpc }
       const sendTransactionParams = {
         txId,

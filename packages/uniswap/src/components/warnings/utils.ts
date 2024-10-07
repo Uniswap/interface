@@ -85,3 +85,17 @@ export function getWarningButtonProps(severity?: WarningSeverity): { theme: Them
       }
   }
 }
+
+export function getWarningIconColorOverride(severity?: WarningSeverity): ColorTokens | undefined {
+  switch (severity) {
+    case WarningSeverity.High:
+      return '$statusCritical'
+    case WarningSeverity.Medium:
+    case WarningSeverity.Blocked:
+      return '$neutral2'
+    case WarningSeverity.Low:
+    case WarningSeverity.None:
+    default:
+      return undefined
+  }
+}

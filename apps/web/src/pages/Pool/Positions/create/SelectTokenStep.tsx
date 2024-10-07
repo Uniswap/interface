@@ -116,7 +116,7 @@ export function SelectTokensStep({
 
   const {
     positionState: {
-      tokenInputs: { TOKEN0: token0, TOKEN1: token1 },
+      currencyInputs: { TOKEN0: token0, TOKEN1: token1 },
       fee,
       protocolVersion,
     },
@@ -136,7 +136,7 @@ export function SelectTokensStep({
         case PositionField.TOKEN1:
           setPositionState((prevState) => ({
             ...prevState,
-            tokenInputs: { ...prevState.tokenInputs, [currencySearchInputState]: currency },
+            currencyInputs: { ...prevState.currencyInputs, [currencySearchInputState]: currency },
           }))
           break
         default:
@@ -211,24 +211,24 @@ export function SelectTokensStep({
               borderWidth={1}
               borderColor="$surface3"
             >
-              <Flex>
-                <Flex row>
+              <Flex gap="$gap4">
+                <Flex row gap="$gap8">
                   <Text variant="subheading2" color="$neutral1">
                     <Trans i18nKey="fee.tierExact" values={{ fee: formatPercent(new Percent(fee, 10_000)) }} />
                   </Text>
+                  {fee === FeeAmount.MEDIUM ? (
+                    <PositionInfoBadge placement="only" size="small">
+                      <Trans i18nKey="fee.tier.recommended" />
+                    </PositionInfoBadge>
+                  ) : feeTiers.find((tier) => tier.value === fee) ? null : (
+                    <PositionInfoBadge placement="only" size="small">
+                      <Trans i18nKey="fee.tier.new" />
+                    </PositionInfoBadge>
+                  )}
                 </Flex>
                 <Text variant="body3" color="$neutral2">
                   <Trans i18nKey="fee.tier.label" />
                 </Text>
-                {fee === FeeAmount.MEDIUM ? (
-                  <PositionInfoBadge placement="only" size="small">
-                    <Trans i18nKey="fee.tier.recommended" />
-                  </PositionInfoBadge>
-                ) : feeTiers.find((tier) => tier.value === fee) ? null : (
-                  <PositionInfoBadge placement="only" size="small">
-                    <Trans i18nKey="fee.tier.new" />
-                  </PositionInfoBadge>
-                )}
               </Flex>
               <Button
                 py="$spacing8"

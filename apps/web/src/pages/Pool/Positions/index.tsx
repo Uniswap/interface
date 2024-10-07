@@ -75,7 +75,7 @@ export default function Positions() {
           }
         }}
       />
-      <Flex gap="$gap16">
+      <Flex gap="$gap16" mb="$spacing20">
         {data?.positions.map((position, index) => {
           return (
             <LiquidityPositionCard

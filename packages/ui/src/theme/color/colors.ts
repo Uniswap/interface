@@ -161,18 +161,18 @@ const sporeLight = {
   neutral3Hovered: '#ADADAD',
 
   surface1: colors.white,
-  surface1Hovered: '#F5F5F5',
+  surface1Hovered: '#F9F9F9',
   surface2: '#F9F9F9',
-  surface2Hovered: '#F2F2F2',
+  surface2Hovered: '#F5F5F5',
   surface3: 'rgba(34,34,34,0.05)',
   surface3Hovered: 'rgba(34,34,34,0.09)',
   surface4: 'rgba(255,255,255,0.64)',
   surface5: 'rgba(0,0,0,0.04)',
 
   accent1: '#FC72FF',
-  accent1Hovered: '#FA5BEC',
+  accent1Hovered: '#FD3CFE',
   accent2: '#FEF4FF',
-  accent2Hovered: '#FFE6FA',
+  accent2Hovered: '#FEEBFC',
   accent3: '#222222',
   accent3Hovered: colors.black,
 
@@ -278,6 +278,7 @@ export const colorsLight = {
   statusCriticalHovered: sporeLight.statusCriticalHovered,
   statusCritical2: sporeLight.statusCritical2,
   statusCritical2Hovered: sporeLight.statusCritical2Hovered,
+  statusWarning: sporeLight.statusWarning,
 
   DEP_backgroundBranded: '#FCF7FF',
   DEP_backgroundOverlay: opacifyRaw(60, colors.white),
@@ -296,7 +297,7 @@ export const colorsLight = {
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
-  chain_1: networkColors.ethereum.light,
+  chain_1: sporeLight.neutral1,
   chain_10: networkColors.optimism.light,
   chain_137: networkColors.polygon.light,
   chain_42161: networkColors.arbitrum.light,
@@ -357,6 +358,7 @@ export const colorsDark = {
   statusCriticalHovered: sporeDark.statusCriticalHovered,
   statusCritical2: sporeDark.statusCritical2,
   statusCritical2Hovered: sporeDark.statusCritical2Hovered,
+  statusWarning: sporeDark.statusWarning,
 
   DEP_backgroundBranded: '#100D1C',
   DEP_backgroundOverlay: opacifyRaw(10, colors.white),
@@ -376,7 +378,7 @@ export const colorsDark = {
 
   DEP_fiatBanner: colors.fiatOnRampBanner,
 
-  chain_1: networkColors.ethereum.dark,
+  chain_1: sporeDark.neutral1,
   chain_10: networkColors.optimism.dark,
   chain_137: networkColors.polygon.dark,
   chain_42161: networkColors.arbitrum.dark,

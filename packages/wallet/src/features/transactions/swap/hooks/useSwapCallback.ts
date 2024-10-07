@@ -1,7 +1,9 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
@@ -18,6 +20,13 @@ export function useSwapCallback(): SwapCallback {
   const appDispatch = useDispatch()
   const formatter = useLocalizationContext()
   const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
+
+  const accountMeta = useAccountMeta()
+
+  const { data: portfolioData } = usePortfolioTotalValue({
+    address: accountMeta?.address,
+    fetchPolicy: 'cache-first',
+  })
 
   return useCallback(
     (args: SwapCallbackParams) => {
@@ -39,7 +48,13 @@ export function useSwapCallback(): SwapCallback {
         throw new Error('Swaps with async signatures are not implemented for wallet')
       }
 
-      const analytics = getBaseTradeAnalyticsProperties({ formatter, trade, currencyInAmountUSD, currencyOutAmountUSD })
+      const analytics = getBaseTradeAnalyticsProperties({
+        formatter,
+        trade,
+        currencyInAmountUSD,
+        currencyOutAmountUSD,
+        portfolioBalanceUsd: portfolioData?.balanceUSD,
+      })
       appDispatch(swapActions.trigger({ swapTxContext, txId, account, analytics, onSuccess, onFailure }))
 
       const blockNumber = getClassicQuoteFromResponse(trade?.quote)?.blockNumber?.toString()
@@ -58,6 +73,6 @@ export function useSwapCallback(): SwapCallback {
       // Reset swap start timestamp now that the swap has been submitted
       appDispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [appDispatch, formatter, swapStartTimestamp],
+    [appDispatch, formatter, portfolioData?.balanceUSD, swapStartTimestamp],
   )
 }

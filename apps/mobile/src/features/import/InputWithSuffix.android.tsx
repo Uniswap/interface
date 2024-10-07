@@ -4,7 +4,6 @@ import { InputWithSuffixProps } from 'src/features/import/InputWIthSuffixProps'
 import { Flex } from 'ui/src'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { isIOS } from 'utilities/src/platform'
 
 const EPS = 1
 
@@ -19,6 +18,7 @@ export default function InputWithSuffix({
   multiline = true,
   textAlign,
   textInputRef,
+  lineHeight,
   ...inputProps
 }: InputWithSuffixProps): JSX.Element {
   const textInputWidth = useRef<number>(0)
@@ -45,7 +45,7 @@ export default function InputWithSuffix({
   // On iOS use just the multiline prop to determine if the input should wrap
   // On Android, wrap the input only if it's content doesn't fit in a single line
   // and the input is multiline
-  const isMultiline = multiline && (isIOS || shouldWrapLine)
+  const isMultiline = multiline && shouldWrapLine
 
   const fallbackTextInputAlignment = inputAlignmentProp === 'flex-start' ? 'left' : 'center'
   const textInputAlignment = textAlign ?? fallbackTextInputAlignment
@@ -57,7 +57,8 @@ export default function InputWithSuffix({
         color={inputSuffixColor ?? '$neutral2'}
         editable={false}
         fontSize={inputFontSize}
-        lineHeight={inputFontSize}
+        lineHeight={lineHeight}
+        height={inputFontSize * 1.3}
         maxFontSizeMultiplier={inputMaxFontSizeMultiplier}
         px="$none"
         py="$none"
@@ -67,7 +68,7 @@ export default function InputWithSuffix({
     ) : null
 
   return (
-    <Flex row alignItems="flex-end" justifyContent={inputAlignmentProp}>
+    <Flex row alignItems={isMultiline ? 'flex-end' : 'center'} justifyContent={inputAlignmentProp} overflow="hidden">
       {/* 
         Helper Flex to measure the max width of the input and switch to multiline if needed
         (multiline input behavior on Android is weird and the input flickers when the width
@@ -86,7 +87,7 @@ export default function InputWithSuffix({
         backgroundColor="$transparent"
         color="$neutral1"
         fontSize={inputFontSize}
-        lineHeight={inputFontSize}
+        lineHeight={lineHeight}
         maxFontSizeMultiplier={inputMaxFontSizeMultiplier}
         multiline={isMultiline}
         px="$none"
@@ -98,6 +99,7 @@ export default function InputWithSuffix({
         textAlign={isInputEmpty ? 'left' : textInputAlignment}
         value={value}
         verticalAlign="center"
+        style={{ flexShrink: 1 }}
         onLayout={measureInputWidth}
         {...inputProps}
       />

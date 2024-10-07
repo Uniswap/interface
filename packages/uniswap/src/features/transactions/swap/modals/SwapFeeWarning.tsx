@@ -1,6 +1,8 @@
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Text, TouchableArea, isWeb, useSporeColors } from 'ui/src'
+import { AlertCircleFilled } from 'ui/src/components/icons/AlertCircleFilled'
+import { iconSizes } from 'ui/src/theme'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
@@ -21,13 +23,13 @@ export function SwapFeeWarning({ noFee, children }: PropsWithChildren<{ noFee: b
     <WarningInfo
       infoButton={
         <TouchableArea onPress={onPressLearnMore}>
-          <Text color="$accent1" variant={isWeb ? 'buttonLabel3' : 'buttonLabel2'}>
+          <Text color="$accent1" variant={isWeb ? 'body4' : 'buttonLabel2'}>
             {t('common.button.learn')}
           </Text>
         </TouchableArea>
       }
       modalProps={{
-        hideIcon: true,
+        icon: <AlertCircleFilled color="$neutral1" size={iconSizes.icon20} />,
         backgroundIconColor: colors.surface2.get(),
         caption,
         rejectText: t('common.button.close'),

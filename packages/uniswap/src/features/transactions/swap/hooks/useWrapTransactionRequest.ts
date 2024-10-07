@@ -41,7 +41,7 @@ const getWrapTransactionRequest = async (
   wrapType: WrapType,
   currencyAmountIn: Maybe<CurrencyAmount<Currency>>,
 ): Promise<providers.TransactionRequest | undefined> => {
-  if (!address || !currencyAmountIn || !provider || (wrapType === WrapType.NotApplicable && !isUniswapXWrap)) {
+  if (!currencyAmountIn || !provider || (wrapType === WrapType.NotApplicable && !isUniswapXWrap)) {
     return undefined
   }
 

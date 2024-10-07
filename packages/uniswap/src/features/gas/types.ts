@@ -45,6 +45,14 @@ export type GasFeeResult = {
   gasEstimates?: GasFeeEstimates
 }
 
+export type ValidatedGasFeeResult = GasFeeResult & { value: string; error: null }
+export function validateGasFeeResult(gasFee: GasFeeResult): ValidatedGasFeeResult | undefined {
+  if (gasFee.value === undefined || gasFee.error) {
+    return undefined
+  }
+  return { ...gasFee, value: gasFee.value, error: null }
+}
+
 export type FormattedUniswapXGasFeeInfo = {
   approvalFeeFormatted?: string
   wrapFeeFormatted?: string

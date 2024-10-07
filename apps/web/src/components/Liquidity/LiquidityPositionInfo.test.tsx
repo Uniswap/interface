@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { getProtocolVersionLabel, usePositionInfo } from 'components/Liquidity/utils'
+import { getProtocolVersionLabel, parseRestPosition } from 'components/Liquidity/utils'
 import { TEST_TOKEN_1, TEST_TOKEN_2, toCurrencyAmount } from 'test-utils/constants'
 import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
@@ -14,7 +14,7 @@ describe('LiquidityPositionInfo', () => {
   })
 
   it('should render in range', () => {
-    mocked(usePositionInfo).mockReturnValue({
+    mocked(parseRestPosition).mockReturnValue({
       currency0Amount: toCurrencyAmount(TEST_TOKEN_1, 1),
       currency1Amount: toCurrencyAmount(TEST_TOKEN_2, 1),
       status: PositionStatus.IN_RANGE,
@@ -26,7 +26,7 @@ describe('LiquidityPositionInfo', () => {
   })
 
   it('should render out of range', () => {
-    mocked(usePositionInfo).mockReturnValue({
+    mocked(parseRestPosition).mockReturnValue({
       currency0Amount: toCurrencyAmount(TEST_TOKEN_1, 1),
       currency1Amount: toCurrencyAmount(TEST_TOKEN_2, 1),
       status: PositionStatus.OUT_OF_RANGE,
@@ -38,7 +38,7 @@ describe('LiquidityPositionInfo', () => {
   })
 
   it('should render closed', () => {
-    mocked(usePositionInfo).mockReturnValue({
+    mocked(parseRestPosition).mockReturnValue({
       currency0Amount: toCurrencyAmount(TEST_TOKEN_1, 1),
       currency1Amount: toCurrencyAmount(TEST_TOKEN_2, 1),
       status: PositionStatus.CLOSED,

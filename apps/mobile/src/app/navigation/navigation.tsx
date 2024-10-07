@@ -15,9 +15,9 @@ import {
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { useBiometricCheck } from 'src/features/biometrics/useBiometricCheck'
 import { FiatOnRampProvider } from 'src/features/fiatOnRamp/FiatOnRampContext'
-import { ChooseProfilePictureScreen } from 'src/features/unitags/ChooseProfilePictureScreen'
 import { ClaimUnitagScreen } from 'src/features/unitags/ClaimUnitagScreen'
 import { EditUnitagProfileScreen } from 'src/features/unitags/EditUnitagProfileScreen'
+import { UnitagChooseProfilePicScreen } from 'src/features/unitags/UnitagChooseProfilePicScreen'
 import { UnitagConfirmationScreen } from 'src/features/unitags/UnitagConfirmationScreen'
 import { AppLoadingScreen } from 'src/screens/AppLoadingScreen'
 import { DevScreen } from 'src/screens/DevScreen'
@@ -237,7 +237,7 @@ export function OnboardingStackNavigator(): JSX.Element {
           />
           <OnboardingStack.Screen component={ClaimUnitagScreen} name={UnitagScreens.ClaimUnitag} />
           <OnboardingStack.Screen
-            component={ChooseProfilePictureScreen}
+            component={UnitagChooseProfilePicScreen}
             name={UnitagScreens.ChooseProfilePicture}
             options={{ animation: 'fade' }}
           />
@@ -309,7 +309,7 @@ export function UnitagStackNavigator(): JSX.Element {
       >
         <UnitagStack.Screen component={ClaimUnitagScreen} name={UnitagScreens.ClaimUnitag} />
         <UnitagStack.Screen
-          component={ChooseProfilePictureScreen}
+          component={UnitagChooseProfilePicScreen}
           name={UnitagScreens.ChooseProfilePicture}
           options={{ ...TransitionPresets.ModalFadeTransition }}
         />

@@ -7,12 +7,12 @@ import ERC20_ABI from 'uniswap/src/abis/erc20.json'
 import { Erc20, Weth } from 'uniswap/src/abis/types'
 import WETH_ABI from 'uniswap/src/abis/weth.json'
 import { WRAPPED_NATIVE_CURRENCY } from 'uniswap/src/constants/tokens'
+import { WRAP_FALLBACK_GAS_LIMIT_IN_GWEI } from 'uniswap/src/features/transactions/swap/hooks/useTransactionRequestInfo'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getContract } from 'utilities/src/contracts/getContract'
 
 // TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
-const WRAP_FALLBACK_GAS_LIMIT = 45_000
-const APPROVE_FALLBACK_GAS_LIMIT = 65_000
+const APPROVE_FALLBACK_GAS_LIMIT_IN_GWEI = 65_000
 
 export async function getApproveInfo(
   account: string | undefined,
@@ -55,7 +55,7 @@ export async function getApproveInfo(
     approveGasUseEstimate = (await provider.estimateGas({ from: account, ...approveTx })).toNumber()
   } catch (_) {
     // estimateGas will error if the account doesn't have sufficient token balance, but we should show an estimated cost anyway
-    approveGasUseEstimate = APPROVE_FALLBACK_GAS_LIMIT
+    approveGasUseEstimate = APPROVE_FALLBACK_GAS_LIMIT_IN_GWEI
   }
 
   return { needsApprove: true, approveGasEstimateUSD: approveGasUseEstimate * usdCostPerGas }
@@ -87,7 +87,7 @@ export async function getWrapInfo(
     // estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway
     wrapGasUseEstimate = (await provider.estimateGas({ from: account, ...wethTx })).toNumber()
   } catch (_) {
-    wrapGasUseEstimate = WRAP_FALLBACK_GAS_LIMIT
+    wrapGasUseEstimate = WRAP_FALLBACK_GAS_LIMIT_IN_GWEI
   }
 
   return { needsWrap: true, wrapGasEstimateUSD: wrapGasUseEstimate * usdCostPerGas }

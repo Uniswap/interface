@@ -3,6 +3,7 @@ import { config } from 'uniswap/src/config'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { createApiClient } from 'uniswap/src/data/apiClients/createApiClient'
 import { GasFeeResponse } from 'uniswap/src/features/gas/types'
+import { isInterface } from 'utilities/src/platform'
 
 export const UNISWAP_API_CACHE_KEY = 'UniswapApi'
 
@@ -11,6 +12,7 @@ const UniswapApiClient = createApiClient({
   additionalHeaders: {
     'x-api-key': config.uniswapApiKey,
   },
+  includeBaseUniswapHeaders: !isInterface,
 })
 
 export async function fetchGasFee(params: TransactionRequest): Promise<GasFeeResponse> {

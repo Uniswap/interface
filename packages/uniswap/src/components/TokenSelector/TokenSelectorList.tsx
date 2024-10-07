@@ -11,12 +11,7 @@ import {
 } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
 import { ITEM_SECTION_HEADER_ROW_HEIGHT } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList.web'
 import { SectionHeader, TokenSectionHeaderProps } from 'uniswap/src/components/TokenSelector/TokenSectionHeader'
-import {
-  OnSelectCurrency,
-  TokenOption,
-  TokenOptionSection,
-  TokenSection,
-} from 'uniswap/src/components/TokenSelector/types'
+import { OnSelectCurrency, TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { useBottomSheetFocusHook } from 'uniswap/src/components/modals/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
@@ -24,22 +19,8 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyId } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
 
-function isHorizontalListTokenItem(
-  data: TokenOption | TokenOption[],
-  section?: TokenSection,
-  chainFilter?: UniverseChainId | null,
-): data is TokenOption[] {
-  if (section?.sectionKey === TokenOptionSection.BridgingTokens) {
-    return !chainFilter && Array.isArray(data)
-  }
+function isHorizontalListTokenItem(data: TokenOption | TokenOption[]): data is TokenOption[] {
   return Array.isArray(data)
-}
-
-export function isHorizontalListSection(section: TokenSection, chainFilter?: UniverseChainId | null): boolean {
-  if (section.sectionKey === TokenOptionSection.BridgingTokens) {
-    return !chainFilter
-  }
-  return section.sectionKey === TokenOptionSection.SuggestedTokens
 }
 
 function TokenOptionItemWrapper({
@@ -141,27 +122,22 @@ function _TokenSelectorList({
 
   const renderItem = useCallback(
     ({ item, section, index }: { item: TokenOption | TokenOption[]; section: TokenSection; index: number }) => {
-      if (isHorizontalListTokenItem(item, section, chainFilter) && isHorizontalListSection(section)) {
+      if (isHorizontalListTokenItem(item)) {
         return <HorizontalTokenList tokens={item} section={section} index={index} onSelectCurrency={onSelectCurrency} />
       }
-
-      if (!isHorizontalListTokenItem(item, section, chainFilter)) {
-        return (
-          <TokenOptionItemWrapper
-            index={index}
-            isKeyboardOpen={isKeyboardOpen}
-            section={section}
-            showTokenAddress={showTokenAddress}
-            showWarnings={showTokenWarnings}
-            tokenOption={item}
-            onSelectCurrency={onSelectCurrency}
-          />
-        )
-      }
-
-      return null
+      return (
+        <TokenOptionItemWrapper
+          index={index}
+          isKeyboardOpen={isKeyboardOpen}
+          section={section}
+          showTokenAddress={showTokenAddress}
+          showWarnings={showTokenWarnings}
+          tokenOption={item}
+          onSelectCurrency={onSelectCurrency}
+        />
+      )
     },
-    [onSelectCurrency, showTokenAddress, showTokenWarnings, isKeyboardOpen, chainFilter],
+    [onSelectCurrency, showTokenAddress, showTokenWarnings, isKeyboardOpen],
   )
 
   const renderSectionHeader = useCallback(

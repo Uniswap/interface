@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmZNKQNeHGqEJfGMyWbH1zYCgs8pazXe2FajiS4KVzxfPL`
-- CIDv1: `bafybeifd3xryjkpe4lqgqfonwz7pdfzjtdlspryilb44sn7utv26mpxab4`
+- CIDv0: `QmNhWv1wsYtTeENpAN7Niquy4TMJ6JzEh8ZZqPGCoeYcGH`
+- CIDv1: `bafybeiaflbrdbl3olcods3uy3feg64eaepg736m7aoiwuw3ctsyla36iri`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,63 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeifd3xryjkpe4lqgqfonwz7pdfzjtdlspryilb44sn7utv26mpxab4.ipfs.dweb.link/
-- https://bafybeifd3xryjkpe4lqgqfonwz7pdfzjtdlspryilb44sn7utv26mpxab4.ipfs.cf-ipfs.com/
-- [ipfs://QmZNKQNeHGqEJfGMyWbH1zYCgs8pazXe2FajiS4KVzxfPL/](ipfs://QmZNKQNeHGqEJfGMyWbH1zYCgs8pazXe2FajiS4KVzxfPL/)
+- https://bafybeiaflbrdbl3olcods3uy3feg64eaepg736m7aoiwuw3ctsyla36iri.ipfs.dweb.link/
+- https://bafybeiaflbrdbl3olcods3uy3feg64eaepg736m7aoiwuw3ctsyla36iri.ipfs.cf-ipfs.com/
+- [ipfs://QmNhWv1wsYtTeENpAN7Niquy4TMJ6JzEh8ZZqPGCoeYcGH/](ipfs://QmNhWv1wsYtTeENpAN7Niquy4TMJ6JzEh8ZZqPGCoeYcGH/)
 
-### 5.49.2 (2024-10-03)
+## 5.50.0 (2024-10-04)
+
+
+### Features
+
+* **web:** add the review screen modal to the add liquidity flow (#12210) a43a6cd
+* **web:** avoid duplicate swap steps upon closing/reopening review modal (#12232) 7613047
+* **web:** call Trading API for increase/decrease/create LP actions (#12280) b563835
+* **web:** generate steps for increasing position (#12339) 08fddec
+* **web:** handle swap saga cancellation / interruption (#12115) e78fe1f
+* **web:** move routing diagram to uniswap (#12244) 7cc63c4
+* **web:** move web swap settings to popover (#12118) 0be1d91
+* **web:** setting up backend for create position range (#12193) 0ddb961
+* **web:** single swap step UI state (#12410) 6132c6c
+* **web:** step-specific swap review button text (#12117) 1327c62
+* **web:** swap detail line items (#12169) 1eb5c93
+* **web:** universal swap bridge link banners + across bridging promo banner (#12378) d3d2641
+* **web:** v2 position details data (#12216) 67f8087
+* **web:** v3 position detail page API integration (#12217) 4328bdf
+* **web:** v4 PosDP improvements (#12255) 83e7a77
 
 
 ### Bug Fixes
 
-* **web:** dont respect url flag overrides on prod - prod (#12548) a2b2517
+* **web:** add requestId and quoteId to post /order request (#12614) 562361b
+* **web:** deadline input field focus (#12405) 9ace591
+* **web:** disabled button states (#12509) 0dc3f11
+* **web:** disallow non numerical input on deadline (#12265) 36d1d33
+* **web:** dont respect url flag overrides on prod - staging (#12549) 69f3780
+* **web:** fix token warnings on URL query prefill (#12329) e951732
+* **web:** Fix/top tokens cache staging (#12570) 70ac444
+* **web:** only clear amount input on swap success in shared flow (#12231) 1f28931
+* **web:** priority orders only enabled on base (#12437) 4902650
+* **web:** remove hardcoded web saga var (#12520) 8d87977
+* **web:** reset inputs after trade, no rogue data (#12335) b2a2710
+* **web:** rm prod arb+eth quicknode urls [staging] (#12647) 9d2d765
+* **web:** segmented control flashing and off by 1px (#12319) 2d88b56
+* **web:** suggested tokens height (#12454) 64ffee3
+* **web:** swap review screen ux/ui fixes (#12267) b76218d
+* **web:** swap tabs from pathname (#12126) 1c25507
+* **web:** swap UI nits  (#12448) 3777948
+* **web:** swap warning tooltip width (#12125) 89130ab
+* **web:** switch chain in wrap saga (#12263) 7f81f76
+* **web:** testlio polish - limit form button color + hidden header should not prevent clicks (#12413) 4bb70f9
+* **web:** ui fixes part 1 (#12279) 8b3abdc
+* **web:** uniswapx toasts/polling [staging] (#12659) 7a14094
+* **web:** universal swap flow on tdp and pdp (#12257) c296cd1
+* **web:** update simulation param for async swap step (#12490) 06dc81d
+* **web:** use proper arb+eth urls [staging] (#12674) dd4b6b5
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 1f57186
 
 

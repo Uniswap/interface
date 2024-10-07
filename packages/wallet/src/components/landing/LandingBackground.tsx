@@ -1,6 +1,6 @@
 import { EventConsumer, EventMapBase } from '@react-navigation/core'
 import { ReactElement, useCallback, useEffect, useMemo, useState } from 'react'
-import { LayoutChangeEvent, Platform } from 'react-native'
+import { LayoutChangeEvent } from 'react-native'
 import Animated, {
   Easing,
   SharedValue,
@@ -15,11 +15,9 @@ import Animated, {
 import { Circle, Defs, Svg } from 'react-native-svg'
 import { Flex, FlexProps, Image, isWeb, useIsDarkMode } from 'ui/src'
 import { Jiggly } from 'ui/src/animations'
-import { ONBOARDING_LANDING_DARK, ONBOARDING_LANDING_LIGHT, UNISWAP_LOGO } from 'ui/src/assets'
+import { UNISWAP_LOGO } from 'ui/src/assets'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { imageSizes } from 'ui/src/theme'
-import { isAndroid } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import {
@@ -347,33 +345,11 @@ export const LandingBackground = ({
     return null
   }
 
-  // TODO: In Gradle there is a  minSdkVersion = 28 requirement, but in the conditional statement below the comment we check if SDK is smaller than 30, we can remove it after we bump the minimal SDK version to at least 30
-  // Android 9 and 10 have issues with Rive, so we fallback on image
-  if (
-    // Android Platform.Version is always a number
-    isAndroid &&
-    typeof Platform.Version === 'number' &&
-    Platform.Version < 30
-  ) {
-    return <OnboardingStaticImage />
-  }
-
   return (
     <OnboardingAnimation
       elementsStyle={elementsStyle}
       innerCircleSize={innerCircleSize}
       outerCircleSize={outerCircleSize}
-    />
-  )
-}
-
-const OnboardingStaticImage = (): JSX.Element => {
-  const isDarkMode = useIsDarkMode()
-  const { fullHeight, fullWidth } = useDeviceDimensions()
-  return (
-    <Image
-      source={isDarkMode ? Platform.select(ONBOARDING_LANDING_DARK) : Platform.select(ONBOARDING_LANDING_LIGHT)}
-      style={{ height: fullHeight, width: fullWidth }}
     />
   )
 }

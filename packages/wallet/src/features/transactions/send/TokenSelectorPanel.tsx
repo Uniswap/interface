@@ -10,7 +10,6 @@ import { TokenSelectorModal, TokenSelectorVariation } from 'uniswap/src/componen
 import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
@@ -21,7 +20,7 @@ interface TokenSelectorPanelProps {
   currencyBalance: Maybe<CurrencyAmount<Currency>>
   currencyAmount: Maybe<CurrencyAmount<Currency>>
   showTokenSelector: boolean
-  onSelectCurrency: (currency: Currency, field: CurrencyField, context: SearchContext) => void
+  onSelectCurrency: (currency: Currency, field: CurrencyField, isBridgePair: boolean) => void
   onHideTokenSelector: () => void
   onShowTokenSelector: () => void
   onSetMax: (amount: string) => void

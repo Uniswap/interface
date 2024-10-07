@@ -14,7 +14,7 @@ export function createEmptyBalanceOption(currencyInfo: CurrencyInfo): TokenOptio
   }
 }
 
-export function createEmptyTokenOptionFromSwappableToken(
+export function createEmptyTokenOptionFromBridgingToken(
   token: GetSwappableTokensResponse['tokens'][0],
 ): TokenOption | undefined {
   const currencyInfo = tradingApiSwappableTokenToCurrencyInfo(token)

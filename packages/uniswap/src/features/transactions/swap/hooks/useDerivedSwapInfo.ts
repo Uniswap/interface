@@ -32,7 +32,7 @@ export function useDerivedSwapInfo({
     txId,
     customSlippageTolerance,
     customDeadline,
-    tradeProtocolPreference,
+    selectedProtocols,
   } = state
 
   const account = useAccountMeta()
@@ -102,7 +102,7 @@ export function useDerivedSwapInfo({
     customSlippageTolerance,
     customDeadline,
     sendPortionEnabled,
-    tradeProtocolPreference,
+    selectedProtocols,
     isDebouncing,
   }
 

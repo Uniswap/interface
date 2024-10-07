@@ -36,6 +36,9 @@ import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const UNKNOWN_SIM_ERROR = 'Unknown gas simulation error'
 
+// TODO(UniswapX): add fallback gas limits per chain? l2s have higher costs
+export const WRAP_FALLBACK_GAS_LIMIT_IN_GWEI = 45_000
+
 const FALLBACK_SWAP_REQUEST_POLL_INTERVAL_MS = 1000
 export interface TransactionRequestInfo {
   transactionRequest: providers.TransactionRequest | undefined
@@ -132,11 +135,18 @@ export function useTransactionRequestInfo({
   const isUniswapXWrap = trade && isUniswapX(trade) && trade.needsWrap
   const isWrapApplicable = derivedSwapInfo.wrapType !== WrapType.NotApplicable || isUniswapXWrap
   const wrapTxRequest = useWrapTransactionRequest(derivedSwapInfo, account)
-  const currentWrapGasFee = useTransactionGasFee(wrapTxRequest, !isWrapApplicable)
+  const currentWrapGasFee = useTransactionGasFee(
+    wrapTxRequest,
+    !isWrapApplicable,
+    undefined,
+    WRAP_FALLBACK_GAS_LIMIT_IN_GWEI * 10e9,
+  ) // Skip Gas Fee API call on transactions that don't need wrapping
+
   const wrapGasFeeRef = useRef(currentWrapGasFee)
   if (currentWrapGasFee.value) {
     wrapGasFeeRef.current = currentWrapGasFee
   }
+
   // Wrap gas cost should not change significantly between trades, so we can use the last value if current is unavailable.
   const wrapGasFee: GasFeeResult = useMemo(
     () => ({ ...currentWrapGasFee, value: currentWrapGasFee.value ?? wrapGasFeeRef.current.value }),

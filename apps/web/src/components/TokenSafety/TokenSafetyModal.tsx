@@ -47,7 +47,7 @@ export default function TokenSafetyModal({
       onToken1BlockAcknowledged={onToken1BlockAcknowledged}
     />
   ) : (
-    <Modal isOpen={isOpen} onDismiss={closeModalOnly} maxHeight={400}>
+    <Modal isOpen={isOpen} onDismiss={onReject ?? closeModalOnly} maxHeight={400}>
       <TokenSafety
         token0={token0}
         token1={token1}
@@ -57,7 +57,7 @@ export default function TokenSafetyModal({
           onToken1BlockAcknowledged?.()
           closeModalOnly()
         }}
-        closeModalOnly={closeModalOnly}
+        closeModalOnly={onReject ?? closeModalOnly}
         showCancel={showCancel}
       />
     </Modal>

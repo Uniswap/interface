@@ -40,10 +40,7 @@ export function AcrossRoutingInfo(): JSX.Element {
       }
       infoButton={
         isMobileApp ? (
-          <LearnMoreLink
-            textVariant="buttonLabel3"
-            url={uniswapUrls.helpArticleUrls.feeOnTransferHelp} // TODO (WALL-4867): Add Across help article URL
-          />
+          <LearnMoreLink textVariant="buttonLabel3" url={uniswapUrls.helpArticleUrls.acrossRoutingInfo} />
         ) : undefined
       }
       modalProps={{

@@ -48,13 +48,13 @@ import { serializeSwapStateToURLParameters, useSwapActionHandlers } from 'state/
 import { CurrencyState } from 'state/swap/types'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
 import { ExternalLink, ThemedText } from 'theme/components'
-import { maybeLogFirstSwapAction } from 'tracing/swapFlowLoggers'
 import { Text } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
+import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { Trans } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -99,18 +99,15 @@ export function SwapForm({
   }, [])
 
   // dismiss warning if all imported tokens are in active lists
-  const urlTokensNotInDefault = useMemo(
-    () =>
-      prefilledInputCurrencyInfo || prefilledOutputCurrencyInfo
-        ? [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
-            .filter(
-              (token): token is CurrencyInfo =>
-                (token?.currency.isToken && token.safetyLevel !== SafetyLevel.Verified) ?? false,
-            )
-            .map((token: CurrencyInfo) => token.currency as Token)
-        : [],
-    [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo],
-  )
+  const urlTokensNotInDefault = useMemo(() => {
+    return prefilledInputCurrencyInfo || prefilledOutputCurrencyInfo
+      ? [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo]
+          .filter((token): token is CurrencyInfo => {
+            return (token?.currency.isToken && token.safetyLevel !== SafetyLevel.Verified) ?? false
+          })
+          .map((token: CurrencyInfo) => token.currency as Token)
+      : []
+  }, [prefilledInputCurrencyInfo, prefilledOutputCurrencyInfo])
 
   const theme = useTheme()
 

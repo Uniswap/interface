@@ -16,7 +16,7 @@ import { useAccount } from 'hooks/useAccount'
 import useAccountRiskCheck from 'hooks/useAccountRiskCheck'
 import Bag from 'nft/components/bag/Bag'
 import TransactionCompleteModal from 'nft/components/collection/TransactionCompleteModal'
-import { AddLiquidityModal } from 'pages/AddLiquidity/AddLiquidityModal'
+import { IncreaseLiquidityModal } from 'pages/IncreaseLiquidity/IncreaseLiquidityModal'
 import { RemoveLiquidityModal } from 'pages/RemoveLiquidity/RemoveLiquidityModal'
 import { useModalIsOpen, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
@@ -56,7 +56,7 @@ export default function TopLevelModals() {
       {shouldShowDevFlags && <DevFlagsBox />}
       <ExtensionLaunchModal />
 
-      {isAddLiquidityModalOpen && <AddLiquidityModal />}
+      {isAddLiquidityModalOpen && <IncreaseLiquidityModal />}
       {isRemoveLiquidityModalOpen && <RemoveLiquidityModal />}
     </>
   )

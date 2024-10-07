@@ -12,13 +12,14 @@ type NetworkLogoProps = FlexProps & {
   size?: number
   shape?: 'circle' | 'square'
   borderWidth?: number
+  borderRadius?: number
 }
 
 export function TransactionSummaryNetworkLogo({
   chainId,
   size = iconSizes.icon20,
 }: Pick<NetworkLogoProps, 'chainId' | 'size'>): JSX.Element {
-  return <NetworkLogo borderWidth={1.5} chainId={chainId} shape="square" size={size} />
+  return <NetworkLogo borderWidth={1} chainId={chainId} shape="square" size={size} />
 }
 
 function _NetworkLogo({
@@ -26,9 +27,10 @@ function _NetworkLogo({
   shape,
   size: sizeWithoutBorder = iconSizes.icon20,
   borderWidth = 0,
+  borderRadius,
 }: NetworkLogoProps): JSX.Element | null {
   const size = sizeWithoutBorder + 2 * borderWidth
-  const borderRadius = shape === 'circle' ? size / 2 : size * SQUIRCLE_BORDER_RADIUS_RATIO
+  const shapeBorderRadius = shape === 'circle' ? size / 2 : size * SQUIRCLE_BORDER_RADIUS_RATIO
   const colors = useSporeColors()
 
   if (chainId === null) {
@@ -40,7 +42,7 @@ function _NetworkLogo({
           style={{
             width: size,
             height: size,
-            borderRadius,
+            borderRadius: borderRadius ?? shapeBorderRadius,
             borderWidth,
             borderColor: colors.surface1.val,
           }}
@@ -57,7 +59,7 @@ function _NetworkLogo({
         style={{
           width: size,
           height: size,
-          borderRadius,
+          borderRadius: borderRadius ?? shapeBorderRadius,
           borderWidth,
           borderColor: colors.surface1.val,
         }}

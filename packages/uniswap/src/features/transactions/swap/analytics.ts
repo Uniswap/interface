@@ -1,9 +1,12 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, TradeType } from '@uniswap/sdk-core'
 import { useEffect } from 'react'
+import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
+import { usePortfolioTotalValue } from 'uniswap/src/features/dataApi/balances'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { SwapRouting, SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { Trade } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -25,12 +28,28 @@ export function useSwapAnalytics(derivedSwapInfo: DerivedSwapInfo): void {
 
   const quoteId = trade?.quote?.requestId
 
+  const account = useAccountMeta()
+
+  const { data: portfolioData } = usePortfolioTotalValue({
+    address: account?.address,
+    fetchPolicy: 'cache-first',
+  })
+
   useEffect(() => {
     if (!trade) {
       return
     }
 
-    sendAnalyticsEvent(SwapEventName.SWAP_QUOTE_RECEIVED, getBaseTradeAnalyticsProperties({ formatter, trade }))
+    sendAnalyticsEvent(
+      SwapEventName.SWAP_QUOTE_RECEIVED,
+      getBaseTradeAnalyticsProperties({
+        formatter,
+        trade,
+        currencyInAmountUSD: derivedSwapInfo.currencyAmountsUSDValue.input,
+        currencyOutAmountUSD: derivedSwapInfo.currencyAmountsUSDValue.output,
+        portfolioBalanceUsd: portfolioData?.balanceUSD,
+      }),
+    )
     // We only want to re-run this when we get a new `quoteId`.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [quoteId])
@@ -66,6 +85,7 @@ export function getBaseTradeAnalyticsProperties({
   const slippagePercent = percentFromFloat(trade.slippageTolerance ?? 0)
 
   return {
+    routing: tradeRoutingToFillType(trade),
     total_balances_usd: portfolioBalanceUsd,
     token_in_symbol: trade.inputAmount.currency.symbol,
     token_out_symbol: trade.outputAmount.currency.symbol,
@@ -156,5 +176,33 @@ export function getBaseTradeAnalyticsPropertiesFromSwapInfo({
     allowed_slippage_basis_points: slippageTolerance ? slippageTolerance * 100 : undefined,
     fee_amount: portionAmount,
     transactionOriginType: TransactionOriginType.Internal,
+  }
+}
+
+// eslint-disable-next-line consistent-return
+export function tradeRoutingToFillType({
+  routing,
+  indicative,
+}: {
+  routing: Routing
+  indicative: boolean
+}): SwapRouting {
+  if (indicative) {
+    return 'none'
+  }
+
+  switch (routing) {
+    case Routing.DUTCH_V2:
+      return 'uniswap_x_v2'
+    case Routing.DUTCH_LIMIT:
+      return 'uniswap_x'
+    case Routing.PRIORITY:
+      return 'priority_order'
+    case Routing.LIMIT_ORDER:
+      return 'limit_order'
+    case Routing.CLASSIC:
+      return 'classic'
+    case Routing.BRIDGE:
+      return 'bridge'
   }
 }

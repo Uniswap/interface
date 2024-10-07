@@ -13,7 +13,7 @@ import {
 import { SupportedInterfaceChainId } from 'constants/chains'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
-import { isConfirmedTx, useMultichainTransactions } from 'state/transactions/hooks'
+import { useMultichainTransactions } from 'state/transactions/hooks'
 import {
   AddLiquidityV2PoolTransactionInfo,
   AddLiquidityV3PoolTransactionInfo,
@@ -29,6 +29,7 @@ import {
   TransactionType,
   WrapTransactionInfo,
 } from 'state/transactions/types'
+import { isConfirmedTx } from 'state/transactions/utils'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { t } from 'uniswap/src/i18n'

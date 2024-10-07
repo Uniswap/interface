@@ -1,23 +1,23 @@
-import { Percent } from '@uniswap/sdk-core'
+// eslint-disable-next-line no-restricted-imports
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { usePositionInfo } from 'components/Liquidity/utils'
+import { parseRestPosition, useV2PositionDerivedInfo } from 'components/Liquidity/utils'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
-import { useTotalSupply } from 'hooks/useTotalSupply'
-import JSBI from 'jsbi'
-import { useTokenBalance } from 'lib/hooks/useCurrencyBalance'
 import { HeaderButton } from 'pages/Pool/Positions/PositionPage'
+import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
-import { Navigate, useNavigate } from 'react-router-dom'
+import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { Flex, Main, Text, styled } from 'ui/src'
 import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
-import { useFormatter } from 'utils/formatNumbers'
+import { NumberType } from 'utilities/src/format/types'
 import { useAccount } from 'wagmi'
 
 const BodyWrapper = styled(Main, {
@@ -32,38 +32,39 @@ const BodyWrapper = styled(Main, {
 })
 
 export default function V2PositionPage() {
-  // const { currencyIdA, currencyIdB } = useParams<{ positionId: string }>()
-  // TODO(WEB-4920): replace this with real query fetching the position by the params above
-  const { data } = useGetPositionsQuery()
+  const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
+  const account = useAccount()
+
+  const { data } = useGetPositionsQuery(
+    account.address
+      ? {
+          token0: currencyIdA,
+          token1: currencyIdB,
+          address: account.address,
+          protocolVersions: [ProtocolVersion.V2],
+        }
+      : undefined,
+  )
+  // TODO(WEB-4920): select the right position from the list, or use an endpoint that returns one position
   const position = data?.positions[0]
-  const positionInfo = usePositionInfo(position)
+  const positionInfo = useMemo(() => parseRestPosition(position), [position])
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
-  const account = useAccount()
-  const { formatPercent } = useFormatter()
-
-  const userDefaultPoolBalance = useTokenBalance(account.address, positionInfo?.liquidityToken)
-  const totalPoolTokens = useTotalSupply(positionInfo?.liquidityToken)
-
-  const poolTokenPercentage =
-    !!userDefaultPoolBalance &&
-    !!totalPoolTokens &&
-    JSBI.greaterThanOrEqual(totalPoolTokens.quotient, userDefaultPoolBalance.quotient)
-      ? new Percent(userDefaultPoolBalance.quotient, totalPoolTokens.quotient)
-      : undefined
+  const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
 
   const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
+
+  const { currency0Amount, currency1Amount, status, liquidityAmount } = positionInfo ?? {}
+  const { poolTokenPercentage, token0USDValue, token1USDValue } = useV2PositionDerivedInfo(positionInfo)
 
   if (!isLoading && !v4Enabled) {
     return <Navigate to="/pools" replace />
   }
 
-  if (!position || !positionInfo) {
+  if (!position || !positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount) {
     // TODO(WEB-4920): handle loading/error states
     return null
   }
-
-  const { currency0Amount, currency1Amount } = positionInfo
 
   return (
     <BodyWrapper>
@@ -77,54 +78,61 @@ export default function V2PositionPage() {
         </Flex>
 
         <LiquidityPositionInfo position={position} />
-        <Flex row gap="$gap12" alignItems="center">
-          <HeaderButton
-            emphasis="secondary"
-            onPress={() => {
-              navigate('/migrate/v2')
-            }}
-          >
-            <Text variant="buttonLabel2" color="$neutral1">
-              <Trans i18nKey="common.migrate" />
-            </Text>
-          </HeaderButton>
-          <HeaderButton
-            emphasis="secondary"
-            onPress={() => {
-              dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: position }))
-            }}
-          >
-            <Text variant="buttonLabel2" color="$neutral1">
-              <Trans i18nKey="common.addLiquidity" />
-            </Text>
-          </HeaderButton>
-          <HeaderButton
-            emphasis="primary"
-            onPress={() => {
-              dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: position }))
-            }}
-          >
-            <Text variant="buttonLabel2" color="$surface1">
-              <Trans i18nKey="pool.removeLiquidity" />
-            </Text>
-          </HeaderButton>
-        </Flex>
+        {status === PositionStatus.IN_RANGE && (
+          <Flex row gap="$gap12" alignItems="center">
+            <HeaderButton
+              emphasis="secondary"
+              onPress={() => {
+                navigate('/migrate/v2')
+              }}
+            >
+              <Text variant="buttonLabel2" color="$neutral1">
+                <Trans i18nKey="common.migrate" />
+              </Text>
+            </HeaderButton>
+            <HeaderButton
+              emphasis="secondary"
+              onPress={() => {
+                dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: position }))
+              }}
+            >
+              <Text variant="buttonLabel2" color="$neutral1">
+                <Trans i18nKey="common.addLiquidity" />
+              </Text>
+            </HeaderButton>
+            <HeaderButton
+              emphasis="primary"
+              onPress={() => {
+                dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: position }))
+              }}
+            >
+              <Text variant="buttonLabel2" color="$surface1">
+                <Trans i18nKey="pool.removeLiquidity" />
+              </Text>
+            </HeaderButton>
+          </Flex>
+        )}
         <Flex borderColor="$surface3" borderWidth={1} p="$spacing24" gap="$gap12" borderRadius="$rounded20">
           <Flex row width="100%" justifyContent="space-between">
             <Text variant="subheading2" color="$neutral2">
               <Trans i18nKey="position.currentValue" />
             </Text>
-            {/* TODO(WEB-4920): get real USD position value */}
-            <Text variant="body2">$1482.21</Text>
+            <Text variant="body2">
+              {token0USDValue && token1USDValue
+                ? formatCurrencyAmount({ value: token0USDValue.add(token1USDValue), type: NumberType.FiatStandard })
+                : '-'}
+            </Text>
           </Flex>
           <Flex row width="100%" justifyContent="space-between">
             <Text variant="subheading2" color="$neutral2">
               <Trans i18nKey="pool.totalTokens" />
             </Text>
             <Flex row gap="$gap8">
-              <Text variant="body2">{userDefaultPoolBalance ? userDefaultPoolBalance.toSignificant(4) : '-'}</Text>
+              <Text variant="body2">
+                {formatCurrencyAmount({ value: liquidityAmount, type: NumberType.TokenNonTx })}
+              </Text>
               <DoubleCurrencyAndChainLogo
-                chainId={currency0Amount?.currency.chainId}
+                chainId={currency0Amount.currency.chainId}
                 currencies={[currency0Amount?.currency, currency1Amount?.currency]}
                 size={24}
               />
@@ -138,7 +146,9 @@ export default function V2PositionPage() {
               />
             </Text>
             <Flex row gap="$gap8">
-              <Text variant="body2">{currency0Amount.toSignificant(4)}</Text>
+              <Text variant="body2">
+                {formatCurrencyAmount({ value: currency0Amount, type: NumberType.TokenNonTx })}
+              </Text>
               <DoubleCurrencyAndChainLogo
                 chainId={currency0Amount?.currency.chainId}
                 currencies={[currency0Amount?.currency]}
@@ -154,7 +164,9 @@ export default function V2PositionPage() {
               />
             </Text>
             <Flex row gap="$gap8">
-              <Text variant="body2">{currency1Amount.toSignificant(4)}</Text>
+              <Text variant="body2">
+                {formatCurrencyAmount({ value: currency1Amount, type: NumberType.TokenNonTx })}
+              </Text>
               <DoubleCurrencyAndChainLogo
                 chainId={currency1Amount?.currency.chainId}
                 currencies={[currency1Amount?.currency]}
@@ -166,7 +178,7 @@ export default function V2PositionPage() {
             <Text variant="subheading2" color="$neutral2">
               <Trans i18nKey="addLiquidity.shareOfPool" />
             </Text>
-            <Text variant="body2">{formatPercent(poolTokenPercentage)}</Text>
+            <Text variant="body2">{formatPercent(poolTokenPercentage?.toFixed(6))}</Text>
           </Flex>
         </Flex>
       </Flex>

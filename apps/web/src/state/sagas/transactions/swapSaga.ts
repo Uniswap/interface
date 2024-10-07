@@ -19,12 +19,19 @@ import {
 import { handleWrapStep } from 'state/sagas/transactions/wrapSaga'
 import invariant from 'tiny-invariant'
 import { call, put } from 'typed-redux-saga'
+import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
 import { updateSwapStartTimestamp } from 'uniswap/src/features/timing/slice'
+import {
+  HandledTransactionInterrupt,
+  TransactionError,
+  TransactionStepFailedError,
+  UnexpectedTransactionStateError,
+} from 'uniswap/src/features/transactions/errors'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import {
   SetCurrentStepFn,
@@ -49,14 +56,7 @@ import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/s
 import { createSaga } from 'uniswap/src/utils/saga'
 import { percentFromFloat } from 'utilities/src/format/percent'
 import { logger } from 'utilities/src/logger/logger'
-
-// TODO(WEB-4921): Move errors to uniswap package and handle them in UI
-class UnexpectedSwapStateError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'UnexpectedSwapStateError'
-  }
-}
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
   step: SwapTransactionStep | SwapTransactionStepAsync
@@ -79,7 +79,14 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
 
   // Now that we have the txRequest, we can create a definitive SwapTransactionStep, incase we started with an async step.
   const onChainStep = { ...step, txRequest }
-  const hash = yield* call(handleOnChainStep, { ...params, info, step: onChainStep, onModification })
+  const hash = yield* call(handleOnChainStep, {
+    ...params,
+    info,
+    step: onChainStep,
+    ignoreInterrupt: true, // We avoid interruption during the swap step, since it is too late to give user a new trade once the swap is submitted.
+    shouldWaitForConfirmation: false,
+    onModification,
+  })
 
   sendAnalyticsEvent(
     SwapEventName.SWAP_SIGNED,
@@ -107,17 +114,13 @@ function* getSwapTxRequest(step: SwapTransactionStep | SwapTransactionStepAsync,
   }
 
   if (!signature) {
-    throw new UnexpectedSwapStateError('Signature required for async swap transaction step')
+    throw new UnexpectedTransactionStateError('Signature required for async swap transaction step')
   }
 
-  try {
-    const txRequest = yield* call(step.getTxRequest, signature)
-    invariant(txRequest !== undefined)
+  const txRequest = yield* call(step.getTxRequest, signature)
+  invariant(txRequest !== undefined)
 
-    return txRequest
-  } catch {
-    throw new UnexpectedSwapStateError('Failed to get transaction request')
-  }
+  return txRequest
 }
 
 type SwapParams = {
@@ -129,37 +132,39 @@ type SwapParams = {
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void
   onSuccess: () => void
-  onFailure: () => void
+  onFailure: (error?: Error) => void
 }
 
 // eslint-disable-next-line consistent-return
 function* swap(params: SwapParams) {
-  const { analytics, swapTxContext, selectChain, startChainId, onFailure } = params
-  const steps = yield* call(generateTransactionSteps, swapTxContext)
-  params.setSteps(steps)
+  const { swapTxContext, setSteps, selectChain, startChainId, onFailure } = params
 
-  // Switch chains if needed
-  const swapChainId = swapTxContext.trade.inputAmount.currency.chainId
-  if (swapChainId !== startChainId) {
-    const chainSwitched = yield* call(selectChain, swapChainId)
-    if (!chainSwitched) {
-      onFailure()
-      return undefined
+  try {
+    const steps = yield* call(generateTransactionSteps, swapTxContext)
+    setSteps(steps)
+
+    // Switch chains if needed
+    const swapChainId = swapTxContext.trade.inputAmount.currency.chainId
+    if (swapChainId !== startChainId) {
+      const chainSwitched = yield* call(selectChain, swapChainId)
+      if (!chainSwitched) {
+        onFailure()
+        return undefined
+      }
     }
-  }
 
-  switch (swapTxContext.routing) {
-    case Routing.CLASSIC:
-      return yield* classicSwap({
-        ...params,
-        swapTxContext,
-        steps,
-        analytics,
-      })
-    case Routing.DUTCH_V2:
-      return yield* uniswapXSwap({ ...params, swapTxContext, steps })
-    // case Routing.BRIDGE:
-    //   return yield* bridgingSaga({ ...params, swapTxContext })
+    switch (swapTxContext.routing) {
+      case Routing.CLASSIC:
+        return yield* classicSwap({ ...params, swapTxContext, steps })
+      case Routing.DUTCH_V2:
+      case Routing.PRIORITY:
+        return yield* uniswapXSwap({ ...params, swapTxContext, steps })
+      // case Routing.BRIDGE:
+      //   return yield* bridgingSaga({ ...params, swapTxContext })
+    }
+  } catch (error) {
+    logger.error(error, { tags: { file: 'swapSaga', function: 'swap' } })
+    onFailure(error)
   }
 }
 
@@ -172,12 +177,14 @@ function* classicSwap(
     steps,
     swapTxContext: { trade },
     analytics,
+    onSuccess,
+    onFailure,
   } = params
 
   let signature: string | undefined
 
-  try {
-    for (const step of steps) {
+  for (const step of steps) {
+    try {
       switch (step.type) {
         case TransactionStepType.TokenRevocationTransaction:
         case TransactionStepType.TokenApprovalTransaction: {
@@ -194,16 +201,20 @@ function* classicSwap(
           break
         }
         default: {
-          throw new UnexpectedSwapStateError('Unexpected step type')
+          throw new UnexpectedTransactionStateError(`Unexpected step type: ${step.type}`)
         }
       }
+    } catch (error) {
+      const displayableError = getDisplayableError(error, step)
+      if (displayableError) {
+        logger.error(displayableError, { tags: { file: 'swapSaga', function: 'classicSwap' } })
+      }
+      onFailure(displayableError)
+      return
     }
-  } catch (e) {
-    // TODO(WEB-4921): pass errors to onFailure and to handle in UI
-    logger.error(e, { tags: { file: 'swapSaga', function: 'classicSwap' } })
   }
 
-  yield* call(params.onSuccess)
+  yield* call(onSuccess)
 }
 
 function* uniswapXSwap(
@@ -219,10 +230,12 @@ function* uniswapXSwap(
     steps,
     swapTxContext: { trade },
     analytics,
+    onFailure,
+    onSuccess,
   } = params
 
-  try {
-    for (const step of steps) {
+  for (const step of steps) {
+    try {
       switch (step.type) {
         case TransactionStepType.WrapTransaction: {
           yield* call(handleWrapStep, { account, step, setCurrentStep })
@@ -238,16 +251,37 @@ function* uniswapXSwap(
           break
         }
         default: {
-          throw new UnexpectedSwapStateError('Unexpected step type')
+          throw new UnexpectedTransactionStateError(`Unexpected step type: ${step.type}`)
         }
       }
+    } catch (error) {
+      const displayableError = getDisplayableError(error, step)
+      if (displayableError) {
+        logger.error(displayableError, { tags: { file: 'swapSaga', function: 'uniswapXSwap' } })
+      }
+      onFailure(displayableError)
+      return
     }
-  } catch (e) {
-    // TODO(WEB-4921): pass errors to onFailure and to handle in UI
-    logger.error(e, { tags: { file: 'swapSaga', function: 'uniswapXSwap' } })
   }
 
-  yield* call(params.onSuccess)
+  yield* call(onSuccess)
+}
+
+function getDisplayableError(error: Error, step: TransactionStep): TransactionError | undefined {
+  // If the user rejects a request, or it's a known interruption e.g. trade update, we handle gracefully / do not show error UI
+  if (didUserReject(error) || error instanceof HandledTransactionInterrupt) {
+    return undefined
+  } else if (error instanceof TransactionError) {
+    return error // If the error was already formatted as a TransactionError, we just propagate
+  } else {
+    const isBackendRejection = error instanceof FetchError
+    return new TransactionStepFailedError({
+      message: `Swap ${step.type} failed during swap`,
+      step,
+      isBackendRejection,
+      originalError: error,
+    })
+  }
 }
 
 export const swapSaga = createSaga(swap, 'swapSaga')

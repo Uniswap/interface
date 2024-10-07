@@ -90,6 +90,7 @@ export function GenericImportForm({
 
   const INPUT_MIN_HEIGHT = 120
   const INPUT_MIN_HEIGHT_SHORT = 90
+  const LINE_HEIGHT = INPUT_FONT_SIZE * 1.2
 
   const showError = errorMessage && value && (liveCheck || !focused)
 
@@ -135,6 +136,7 @@ export function GenericImportForm({
             inputFontSize={INPUT_FONT_SIZE}
             inputMaxFontSizeMultiplier={INPUT_MAX_FONT_SIZE_MULTIPLIER}
             inputSuffix={inputSuffix}
+            lineHeight={LINE_HEIGHT}
             textAlign={textAlign}
             textInputRef={textInputRef}
             value={value}
@@ -152,13 +154,7 @@ export function GenericImportForm({
               py="$spacing16"
               top={0}
             >
-              <Text
-                color="$neutral2"
-                fontSize={INPUT_FONT_SIZE}
-                lineHeight={INPUT_FONT_SIZE}
-                verticalAlign="bottom"
-                pointerEvents="none"
-              >
+              <Text color="$neutral2" fontSize={INPUT_FONT_SIZE} lineHeight={LINE_HEIGHT} pointerEvents="none">
                 {placeholderLabel}
               </Text>
             </Flex>

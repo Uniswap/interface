@@ -2,7 +2,7 @@ import { SwapEventName } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { PropsWithChildren, ReactNode, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Flex, Separator, Text, TouchableArea } from 'ui/src'
+import { AnimatePresence, Flex, Separator, Text, TouchableArea } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { AnglesMaximize } from 'ui/src/components/icons/AnglesMaximize'
 import { AnglesMinimize } from 'ui/src/components/icons/AnglesMinimize'
@@ -19,25 +19,32 @@ import { SwapFee } from 'uniswap/src/features/transactions/TransactionDetails/Sw
 import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/modals/AcrossRoutingInfo'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { SwapFeeInfo } from 'uniswap/src/features/transactions/swap/types/trade'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
+import { UniverseChainId } from 'uniswap/src/types/chains'
+import { openUri } from 'uniswap/src/utils/linking'
 
 interface TransactionDetailsProps {
   banner?: ReactNode
-  chainId: WalletChainId
+  chainId: UniverseChainId
   gasFee: GasFeeResult
+  swapFee?: SwapFeeType
+  swapFeeUsd?: number
   uniswapXGasBreakdown?: UniswapXGasBreakdown
   showExpandedChildren?: boolean
-  swapFeeInfo?: SwapFeeInfo
+  showGasFeeError?: boolean
   showWarning?: boolean
+  showSeparatorToggle?: boolean
   warning?: Warning
   feeOnTransferProps?: FeeOnTransferFeeGroupProps
+  outputCurrency?: Currency
   onShowWarning?: () => void
   indicative?: boolean
   isSwap?: boolean
   isBridgeTrade?: boolean
   estimatedBridgingTime?: number
   AccountDetails?: JSX.Element
+  RoutingInfo?: JSX.Element
+  RateInfo?: JSX.Element
   transactionUSDValue?: Maybe<CurrencyAmount<Currency>>
 }
 
@@ -47,8 +54,12 @@ export function TransactionDetails({
   showExpandedChildren,
   chainId,
   gasFee,
+  outputCurrency,
   uniswapXGasBreakdown,
-  swapFeeInfo,
+  swapFee,
+  swapFeeUsd,
+  showGasFeeError = true,
+  showSeparatorToggle = true,
   showWarning,
   warning,
   feeOnTransferProps,
@@ -59,9 +70,10 @@ export function TransactionDetails({
   isBridgeTrade,
   AccountDetails,
   estimatedBridgingTime,
+  RoutingInfo,
+  RateInfo,
 }: PropsWithChildren<TransactionDetailsProps>): JSX.Element {
   const { t } = useTranslation()
-  const warningColor = getAlertColor(warning?.severity)
 
   const [showChildren, setShowChildren] = useState(showExpandedChildren)
 
@@ -74,33 +86,9 @@ export function TransactionDetails({
 
   return (
     <Flex>
-      {showWarning && warning && onShowWarning && (
-        <TouchableArea mb="$spacing8" onPress={onShowWarning}>
-          <Flex
-            row
-            alignItems="center"
-            backgroundColor={warningColor.background}
-            borderRadius="$rounded16"
-            gap="$spacing8"
-            px="$spacing16"
-            py="$spacing8"
-          >
-            <AlertTriangleFilled color={warningColor?.text} size="$icon.16" />
-            <Flex fill py="$spacing2">
-              <Text color={warningColor.text} variant="body3">
-                {warning.title}
-              </Text>
-            </Flex>
-          </Flex>
-        </TouchableArea>
-      )}
-      {gasFee.error && (
-        <Flex backgroundColor="$DEP_accentCriticalSoft" borderRadius="$rounded16" mb="$spacing12" p="$spacing12">
-          <Text color="$statusCritical">{t('swap.warning.expectedFailure')}</Text>
-        </Flex>
-      )}
+      {showGasFeeError && gasFee.error && <GasFeeError warning={warning} />}
       {!showWarning && banner && <Flex py="$spacing16">{banner}</Flex>}
-      {children ? (
+      {children && showSeparatorToggle ? (
         <ListSeparatorToggle
           closedText={t('common.button.showMore')}
           isOpen={showChildren}
@@ -108,11 +96,13 @@ export function TransactionDetails({
           onPress={onPressToggleShowChildren}
         />
       ) : null}
-      <Flex gap="$spacing8" pb="$spacing8" px="$spacing12">
-        {showChildren ? <Flex gap="$spacing12">{children}</Flex> : null}
+      <Flex gap="$spacing8" pb="$spacing8" px="$spacing8">
+        {RateInfo}
         {feeOnTransferProps && <FeeOnTransferFeeGroup {...feeOnTransferProps} />}
-        {isSwap && isBridgeTrade && <EstimatedTime showOnlyIfLong timeMs={estimatedBridgingTime} />}
-        {isSwap && <SwapFee loading={indicative} swapFeeInfo={swapFeeInfo} />}
+        {isSwap && isBridgeTrade && <EstimatedTime visibleIfLong={true} timeMs={estimatedBridgingTime} />}
+        {isSwap && outputCurrency && (
+          <SwapFee currency={outputCurrency} loading={indicative} swapFee={swapFee} swapFeeUsd={swapFeeUsd} />
+        )}
         <NetworkFee
           chainId={chainId}
           gasFee={gasFee}
@@ -121,8 +111,19 @@ export function TransactionDetails({
           uniswapXGasBreakdown={uniswapXGasBreakdown}
         />
         {isSwap && isBridgeTrade && <AcrossRoutingInfo />}
+        {isSwap && !isBridgeTrade && RoutingInfo}
         {AccountDetails}
+        {showChildren ? (
+          <AnimatePresence>
+            <Flex animation="fast" exitStyle={{ opacity: 0 }} enterStyle={{ opacity: 0 }} gap="$spacing8">
+              {children}
+            </Flex>
+          </AnimatePresence>
+        ) : null}
       </Flex>
+      {showWarning && warning && onShowWarning && (
+        <TransactionWarning warning={warning} onShowWarning={onShowWarning} />
+      )}
     </Flex>
   )
 }
@@ -159,6 +160,77 @@ export const ListSeparatorToggle = ({
         )}
       </TouchableArea>
       <Separator />
+    </Flex>
+  )
+}
+
+const TransactionWarning = ({
+  warning,
+  onShowWarning,
+}: {
+  warning: Warning
+  onShowWarning: () => void
+}): JSX.Element => {
+  const { t } = useTranslation()
+  const warningColor = getAlertColor(warning?.severity)
+
+  return (
+    <TouchableArea mt="$spacing6" onPress={onShowWarning}>
+      <Flex
+        row
+        alignItems="flex-start"
+        p="$spacing12"
+        borderRadius="$rounded16"
+        backgroundColor="$surface2"
+        gap="$spacing12"
+      >
+        <Flex centered p="$spacing8" borderRadius="$rounded12" backgroundColor={warningColor.background}>
+          <AlertTriangleFilled color={warningColor.text} size="$icon.16" />
+        </Flex>
+        <Flex gap="$spacing4" flex={1}>
+          <Text color={warningColor.text} variant="body3">
+            {warning.title}
+          </Text>
+          <Text color="$neutral2" variant="body3">
+            {warning.message}
+          </Text>
+          <TouchableArea
+            onPress={async (e) => {
+              const link = warning.link
+              if (link) {
+                e.stopPropagation()
+                await openUri(link)
+              }
+            }}
+          >
+            <Text color="$neutral1" variant="body3">
+              {t('common.button.learn')}
+            </Text>
+          </TouchableArea>
+        </Flex>
+      </Flex>
+    </TouchableArea>
+  )
+}
+
+const GasFeeError = ({ warning }: { warning?: Warning }): JSX.Element => {
+  const { t } = useTranslation()
+  const warningColor = getAlertColor(warning?.severity)
+
+  return (
+    <Flex
+      row
+      alignItems="center"
+      backgroundColor={warningColor.background}
+      borderRadius="$rounded16"
+      gap="$spacing8"
+      px="$spacing16"
+      py="$spacing8"
+    >
+      <AlertTriangleFilled color={warningColor?.text} size="$icon.16" />
+      <Text color="$statusCritical" variant="body3">
+        {t('swap.warning.expectedFailure')}
+      </Text>
     </Flex>
   )
 }

@@ -25,6 +25,7 @@ export const uniswapUrls = {
   helpUrl,
   helpRequestUrl: `${helpUrl}/requests/new`,
   helpArticleUrls: {
+    acrossRoutingInfo: `${helpUrl}/articles/30677918339341`,
     approvalsExplainer: `${helpUrl}/articles/8120520483085-What-is-an-approval-transaction`,
     cexTransferKorea: `${helpUrl}/articles/29425131525901-How-to-transfer-crypto-to-a-Uniswap-Wallet-in-Korea`,
     extensionHelp: `${helpUrl}/categories/25219141467405`,
@@ -41,6 +42,7 @@ export const uniswapUrls = {
     transferCryptoHelp: `${helpUrl}/articles/27103878635661-How-to-transfer-crypto-from-a-Robinhood-or-Coinbase-account-to-the-Uniswap-Wallet`,
     moonpayRegionalAvailability: `${helpUrl}/articles/11306664890381-Why-isn-t-MoonPay-available-in-my-region-`,
     networkFeeInfo: `${helpUrl}/articles/8370337377805-What-is-a-network-fee-`,
+    priceImpact: `${helpUrl}/articles/8671539602317-What-is-Price-Impact`,
     recoveryPhraseHowToImport: `${helpUrl}/articles/11380692567949-How-to-import-a-recovery-phrase-into-the-Uniswap-Wallet`,
     recoveryPhraseHowToFind: `${helpUrl}/articles/11306360177677-How-to-find-my-recovery-phrase-in-the-Uniswap-Wallet`,
     recoveryPhraseForgotten: `${helpUrl}/articles/11306367118349`,
@@ -90,11 +92,11 @@ export const uniswapUrls = {
     orders: '/v1/orders',
     swaps: '/v1/swaps',
     swappableTokens: '/v1/swappable_tokens',
-    checkLpApproval: '/v1/check_approval_lp',
-    createLp: '/v1/create_lp_position',
-    increaseLp: '/v1/increase_lp_position',
-    reduceLp: '/v1/reduce_lp_position',
-    claimLpFees: '/v1/claim_lp_fees',
+    createLp: '/v1/lp/create',
+    increaseLp: '/v1/lp/increase',
+    decreaseLp: '/v1/lp/decrease',
+    claimLpFees: '/v1/lp/claim',
+    lpApproval: '/v1/lp/approve',
   },
 
   // App and Redirect URL's

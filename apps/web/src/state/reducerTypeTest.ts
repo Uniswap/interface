@@ -25,6 +25,7 @@ import { ConnectedWalletsState } from 'state/wallets/reducer'
 import { Wallet } from 'state/wallets/types'
 import { InterfaceState } from 'state/webReducer'
 import { Equals, assert } from 'tsafe'
+import { UniswapBehaviorHistoryState } from 'uniswap/src/features/behaviorHistory/slice'
 import { FavoritesState } from 'uniswap/src/features/favorites/slice'
 import { fiatOnRampAggregatorApi } from 'uniswap/src/features/fiatOnRamp/api'
 import { SearchHistoryState } from 'uniswap/src/features/search/searchHistorySlice'
@@ -73,6 +74,7 @@ type ExpectedAppState = CombinedState<{
 
   // Uniswap State
   readonly [fiatOnRampAggregatorApi.reducerPath]: ReturnType<typeof fiatOnRampAggregatorApi.reducer>
+  readonly uniswapBehaviorHistory: UniswapBehaviorHistoryState
   readonly favorites: FavoritesState
   readonly searchHistory: Readonly<SearchHistoryState>
   readonly timing: TimingState

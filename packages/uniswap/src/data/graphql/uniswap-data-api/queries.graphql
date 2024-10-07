@@ -523,6 +523,7 @@ query TransactionHistoryUpdater(
         ZKSYNC
       ]
       onRampTransactionsAuth: $onRampAuth
+      includeBridging: true
     ) {
       id
       timestamp
@@ -681,6 +682,7 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
       pageSize: 100
       page: 1
       includeOffChain: true
+      includeBridging: true
       chains: [
         ETHEREUM
         POLYGON
@@ -908,6 +910,7 @@ query FeedTransactionList($addresses: [String!]!) {
     ownerAddress
     assetActivities(
       pageSize: 30
+      includeBridging: true
       page: 1
       chains: [
         ETHEREUM
@@ -1035,6 +1038,14 @@ query TopTokens(
       safetyLevel
       logoUrl
       isSpam
+    }
+    feeData {
+      buyFeeBps
+      sellFeeBps
+    }
+    protectionInfo {
+      result
+      attackTypes
     }
   }
 }

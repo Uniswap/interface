@@ -95,7 +95,7 @@ exports[`PoolTable renders data filled state 1`] = `
                   style="height: 12px;"
                 />
                 <div
-                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none scrollbar-hidden"
+                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none scrollbar-hidden"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -136,7 +136,7 @@ exports[`PoolTable renders data filled state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <svg
                               class="c1"
@@ -183,7 +183,7 @@ exports[`PoolTable renders data filled state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
@@ -207,7 +207,7 @@ exports[`PoolTable renders data filled state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
@@ -231,7 +231,7 @@ exports[`PoolTable renders data filled state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
@@ -255,7 +255,7 @@ exports[`PoolTable renders data filled state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
@@ -278,7 +278,7 @@ exports[`PoolTable renders data filled state 1`] = `
                   href="/explore/pools/ethereum/0x123"
                 >
                   <div
-                    class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                    class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                   >
                     <div
                       class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -301,7 +301,7 @@ exports[`PoolTable renders data filled state 1`] = `
                         class="_fontVariantNumeric-_platformweb_1476258860 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _overflowX-hidden _overflowY-hidden _justifyContent-flex-start _pr-8px _pl-8px _pt-12px _pb-12px _alignItems-center _width-240px _flexGrow-1"
                       >
                         <div
-                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331199 _alignItems-center"
+                          class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _gap-1316331230 _alignItems-center"
                         >
                           <div
                             class="c3"
@@ -544,7 +544,7 @@ exports[`PoolTable renders error state 1`] = `
                   style="height: 12px;"
                 />
                 <div
-                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none _opacity-0d0t446 scrollbar-hidden"
+                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none _opacity-0d0t446 scrollbar-hidden"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -585,7 +585,7 @@ exports[`PoolTable renders error state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <svg
                               class="c1"
@@ -632,7 +632,7 @@ exports[`PoolTable renders error state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
@@ -656,7 +656,7 @@ exports[`PoolTable renders error state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
@@ -680,7 +680,7 @@ exports[`PoolTable renders error state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
@@ -704,7 +704,7 @@ exports[`PoolTable renders error state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
@@ -723,7 +723,7 @@ exports[`PoolTable renders error state 1`] = `
                 class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_scroll _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _width-10037 _position-relative _justifyContent-flex-start _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopWidth-0px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 scrollbar-hidden"
               >
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -811,7 +811,7 @@ exports[`PoolTable renders error state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -899,7 +899,7 @@ exports[`PoolTable renders error state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -987,7 +987,7 @@ exports[`PoolTable renders error state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1075,7 +1075,7 @@ exports[`PoolTable renders error state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1163,7 +1163,7 @@ exports[`PoolTable renders error state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1251,7 +1251,7 @@ exports[`PoolTable renders error state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1457,7 +1457,7 @@ exports[`PoolTable renders loading state 1`] = `
                   style="height: 12px;"
                 />
                 <div
-                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none scrollbar-hidden"
+                  class="_overscrollX-_platformweb_none _overscrollY-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_auto _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _minWidth-10037 _borderTopWidth-1px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopRightRadius-1307610060 _borderTopLeftRadius-1307610060 _minHeight-52px _backgroundColor-568007293 _scrollbarWidth-none scrollbar-hidden"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1498,7 +1498,7 @@ exports[`PoolTable renders loading state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <svg
                               class="c1"
@@ -1545,7 +1545,7 @@ exports[`PoolTable renders loading state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
@@ -1569,7 +1569,7 @@ exports[`PoolTable renders loading state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
@@ -1593,7 +1593,7 @@ exports[`PoolTable renders loading state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
@@ -1617,7 +1617,7 @@ exports[`PoolTable renders loading state 1`] = `
                       >
                         <div>
                           <div
-                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331168 _cursor-pointer _justifyContent-flex-end"
+                            class="_textDecoration-_platformweb_none _transitionDuration-_platformweb_0d0t2s46 _opacity-0hover-0d0t846 _opacity-0active-0d0t646 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _alignItems-center _width-10037 _gap-1316331199 _cursor-pointer _justifyContent-flex-end"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441189 _lineHeight-222976542 _fontWeight-233016202"
@@ -1636,7 +1636,7 @@ exports[`PoolTable renders loading state 1`] = `
                 class="_overscrollBehaviorX-_platformweb_none _overflowX-_platformweb_auto _overflowY-_platformweb_scroll _display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _width-10037 _position-relative _justifyContent-flex-start _borderTopColor-568007262 _borderRightColor-568007262 _borderBottomColor-568007262 _borderLeftColor-568007262 _borderTopStyle-solid _borderRightStyle-solid _borderBottomStyle-solid _borderLeftStyle-solid _borderTopWidth-0px _borderRightWidth-1px _borderBottomWidth-1px _borderLeftWidth-1px _borderBottomRightRadius-1307610060 _borderBottomLeftRadius-1307610060 scrollbar-hidden"
               >
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1724,7 +1724,7 @@ exports[`PoolTable renders loading state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1812,7 +1812,7 @@ exports[`PoolTable renders loading state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1900,7 +1900,7 @@ exports[`PoolTable renders loading state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -1988,7 +1988,7 @@ exports[`PoolTable renders loading state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -2076,7 +2076,7 @@ exports[`PoolTable renders loading state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"
@@ -2164,7 +2164,7 @@ exports[`PoolTable renders loading state 1`] = `
                   </div>
                 </div>
                 <div
-                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316330393 _pl-1316330393 _width-797770429 _minWidth-10037 _minHeight-64px"
+                  class="_backgroundColor-0hover-568007262 _display-flex _flexBasis-auto _boxSizing-border-box _position-relative _flexShrink-0 _flexDirection-row _alignItems-center _pr-1316331075 _pl-1316331075 _width-797770429 _minWidth-10037 _minHeight-64px"
                 >
                   <div
                     class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _flexGrow-1 first-child-flex-grow-0 last-child-justify-end"

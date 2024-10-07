@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-restricted-imports
-import { Pool, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency } from '@uniswap/sdk-core'
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import { Currency, Price, Token } from '@uniswap/sdk-core'
+import { Pool } from '@uniswap/v3-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
 
@@ -12,20 +13,22 @@ export enum PositionFlowStep {
 
 export interface PositionState {
   protocolVersion: ProtocolVersion
-  tokenInputs: { [field in PositionField]?: Currency }
+  currencyInputs: { [field in PositionField]?: Currency }
   fee: number
   hook?: string
 }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
-  tokenInputs: {},
+  currencyInputs: {},
   fee: 3000,
   hook: undefined,
-  protocolVersion: ProtocolVersion.UNSPECIFIED,
+  protocolVersion: ProtocolVersion.V4,
 }
 
 export interface PositionInfo {
   pool?: Pool
+  tokens?: Token[]
+  sortedTokens?: Token[]
 }
 
 export type CreatePositionContextType = {
@@ -45,7 +48,19 @@ export interface PriceRangeState {
   maxPrice: string
 }
 
+export interface PriceRangeInfo {
+  ticks?: (number | undefined)[]
+  ticksAtLimit: boolean[]
+  isSorted: boolean
+  price?: Price<Token, Token>
+  prices?: (Price<Token, Token> | undefined)[]
+  pricesAtLimit?: (Price<Token, Token> | undefined)[]
+  pricesAtTicks?: (Price<Token, Token> | undefined)[]
+  baseAndQuoteTokens?: Token[]
+}
+
 export type PriceRangeContextType = {
   priceRangeState: PriceRangeState
   setPriceRangeState: Dispatch<SetStateAction<PriceRangeState>>
+  derivedPriceRangeInfo: PriceRangeInfo
 }

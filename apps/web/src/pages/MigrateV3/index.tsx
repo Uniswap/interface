@@ -1,13 +1,16 @@
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
-import { PositionInfo, usePositionInfo } from 'components/Liquidity/utils'
+import { PositionInfo, parseRestPosition } from 'components/Liquidity/utils'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
-import { PriceRangeContextProvider, useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
-import { CreatePositionContextProvider } from 'pages/Pool/Positions/create/CreatePositionContextProvider'
+import { CreatePositionContextProvider, PriceRangeContextProvider } from 'pages/Pool/Positions/create/ContextProviders'
+import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
 import { PositionFlowStep } from 'pages/Pool/Positions/create/types'
+import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useParams } from 'react-router-dom'
 import { ClickableTamaguiStyle } from 'theme/components'
@@ -19,6 +22,7 @@ import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { useAccount } from 'wagmi'
 
 const BodyWrapper = styled(Main, {
   backgroundColor: '$surface1',
@@ -55,7 +59,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
         {/* nav breadcrumbs */}
         <Flex width="100%">
           <BreadcrumbNavContainer aria-label="breadcrumb-nav">
-            <BreadcrumbNavLink to="/pool">
+            <BreadcrumbNavLink to="/positions">
               <Trans i18nKey="pool.positions.title" /> <ChevronRight size={14} />
             </BreadcrumbNavLink>
             <BreadcrumbNavLink to={`/explore/position/${positionId}`}>
@@ -135,10 +139,20 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
  * The page for migrating any v3 LP position to v4.
  */
 export default function MigrateV3() {
-  // TODO(WEB-4920): replace this with real data fetching
-  const { data } = useGetPositionsQuery()
-  const position = data?.positions[1]
-  const positionInfo = usePositionInfo(position)
+  const { tokenId } = useParams<{ tokenId: string }>()
+  const account = useAccount()
+  const { data } = useGetPositionsQuery(
+    account.address
+      ? {
+          poolId: tokenId,
+          address: account.address,
+          protocolVersions: [ProtocolVersion.V3],
+        }
+      : undefined,
+  )
+  // TODO(WEB-4920): select the right position from the list, or use an endpoint that returns one position
+  const position = data?.positions[0]
+  const positionInfo = useMemo(() => parseRestPosition(position), [position])
 
   if (!position || !positionInfo) {
     // TODO(WEB-4920): handle loading/error states (including if the position is for v2)
@@ -148,7 +162,7 @@ export default function MigrateV3() {
   return (
     <CreatePositionContextProvider
       initialState={{
-        tokenInputs: {
+        currencyInputs: {
           [PositionField.TOKEN0]: currency0Amount.currency,
           [PositionField.TOKEN1]: currency1Amount.currency,
         },

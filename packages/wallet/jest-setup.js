@@ -55,6 +55,11 @@ jest.mock('uniswap/src/components/modals/Modal', () => {
   return jest.requireActual('uniswap/src/components/modals/Modal.native.tsx')
 })
 
+// Use native clickable
+jest.mock('ui/src/components/swipeablecards/ClickableWithinGesture', () => {
+  return jest.requireActual('ui/src/components/swipeablecards/ClickableWithinGesture.native.tsx')
+})
+
 import crypto from "crypto"
 Object.defineProperty(global, "crypto", {
   value: {

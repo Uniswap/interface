@@ -43,14 +43,18 @@ export function InlineCard({
       description
     )
 
+  const headingElement = heading ? (
+    <Text color={color} variant="body3">
+      {heading}
+    </Text>
+  ) : null
+
   return (
     <Flex fill grow row backgroundColor="$surface3" borderRadius="$rounded16" gap="$spacing12" p="$spacing12">
       <Flex>{iconElement}</Flex>
       <Flex fill grow row gap="$spacing4" justifyContent="space-between">
         <Flex fill grow gap="$spacing2">
-          <Text color={color} variant="body3">
-            {heading}
-          </Text>
+          {headingElement}
           {descriptionElement}
         </Flex>
         {CtaButtonIcon && (

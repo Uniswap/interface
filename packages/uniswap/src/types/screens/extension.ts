@@ -39,4 +39,9 @@ export enum ExtensionOnboardingScreens {
   EnterOTP = 'EnterOTP',
 }
 
-export type ExtensionScreen = HomeTabs | ExtensionScreens | ExtensionOnboardingScreens
+export enum ExtensionUnitagClaimScreens {
+  Intro = 'Intro',
+  CreateUsername = 'CreateUsername',
+}
+
+export type ExtensionScreen = HomeTabs | ExtensionScreens | ExtensionOnboardingScreens | ExtensionUnitagClaimScreens

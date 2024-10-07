@@ -23,7 +23,6 @@ export const initialBehaviorHistoryState: BehaviorHistoryState = {
   hasUsedExplore: false,
   backupReminderLastSeenTs: undefined,
   hasViewedOffRampTooltip: false,
-  hasDismissedBridgingWarning: false,
 }
 
 const slice = createSlice({
@@ -51,12 +50,9 @@ const slice = createSlice({
     setHasViewedOffRampTooltip: (state, action: PayloadAction<boolean>) => {
       state.hasViewedOffRampTooltip = action.payload
     },
-    setHasDismissedBridgingWarning: (state, action: PayloadAction<boolean>) => {
-      state.hasDismissedBridgingWarning = action.payload
-    },
 
     // Should only be used for testing
-    resetBehaviorHistory: (state, _action: PayloadAction) => {
+    resetWalletBehaviorHistory: (state, _action: PayloadAction) => {
       return {
         ...initialBehaviorHistoryState,
 
@@ -75,8 +71,7 @@ export const {
   setHasUsedExplore,
   setBackupReminderLastSeenTs,
   setHasViewedOffRampTooltip,
-  setHasDismissedBridgingWarning,
-  resetBehaviorHistory,
+  resetWalletBehaviorHistory,
 } = slice.actions
 
 export const behaviorHistoryReducer = slice.reducer

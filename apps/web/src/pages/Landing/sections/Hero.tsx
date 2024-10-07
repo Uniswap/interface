@@ -113,7 +113,6 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
               syncTabToUrl={false}
               chainId={initialInputCurrency?.chainId ?? UniverseChainId.Mainnet}
               initialInputCurrency={initialInputCurrency}
-              multichainUXEnabled
               swapRedirectCallback={swapRedirectCallback}
             />
           </Flex>

@@ -36,14 +36,9 @@ export function SwapRateRatio({
 
   return (
     <Flex pressStyle={{ opacity: 0.2 }} onPress={(): void => setShowInverseRate(!showInverseRate)}>
-      <Text
-        adjustsFontSizeToFit
-        color={isPrimary ? '$neutral1' : '$neutral2'}
-        numberOfLines={1}
-        variant={isPrimary ? 'body3' : 'body4'}
-      >
+      <Text adjustsFontSizeToFit color={isPrimary ? '$neutral1' : '$neutral2'} numberOfLines={1} variant="body3">
         {latestRate}
-        <Text color={isPrimary ? '$neutral1' : '$neutral3'} variant={isPrimary ? 'body3' : 'body4'}>
+        <Text color={isPrimary ? '$neutral1' : '$neutral3'} variant="body3">
           {latestUSDPrice && ` (${latestFiatPriceFormatted})`}
         </Text>
       </Text>

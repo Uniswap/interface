@@ -7,6 +7,8 @@ import { defaultHitslopInset } from 'ui/src/theme'
 import { useHapticFeedback } from 'ui/src/utils/haptics/useHapticFeedback'
 import { isTestEnv } from 'utilities/src/environment/env'
 
+export type TouchableAreaEvent = GestureResponderEvent
+
 /**
  * If you are trying to implement a standard button DO NOT USE this component. Use the Button component instead with the desired size and emphasis.
  * Examples of when to use this are:
@@ -70,7 +72,7 @@ export const TouchableArea = forwardRef<TamaguiElement, TouchableAreaProps>(func
       ref={ref}
       // TODO(MOB-2826): tests are picking up weird animationStyle on snapshots...
       {...(!isTestEnv() && {
-        animation: '100ms',
+        animation: 'simple',
         // TODO(MOB-3059): fixes crash caused by animating shadowOffset, should be fixed in tamagui
         animateOnly: ['transform', 'opacity'],
       })}

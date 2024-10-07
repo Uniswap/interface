@@ -16,6 +16,7 @@ import {
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ApproveTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/ApproveTransactionDetails'
+import { BridgeTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/BridgeTransactionDetails'
 import { HeaderLogo } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/HeaderLogo'
 import { NftTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/NftTransactionDetails'
 import { OnRampTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/OnRampTransactionDetails'
@@ -25,6 +26,7 @@ import { TransferTransactionDetails } from 'wallet/src/features/transactions/Sum
 import { WrapTransactionDetails } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/WrapTransactionDetails'
 import {
   isApproveTransactionInfo,
+  isBridgeTransactionInfo,
   isNFTApproveTransactionInfo,
   isNFTMintTransactionInfo,
   isNFTTradeTransactionInfo,
@@ -114,6 +116,8 @@ export function TransactionDetailsContent({
       return (
         <TransferTransactionDetails transactionDetails={transactionDetails} typeInfo={typeInfo} onClose={onClose} />
       )
+    } else if (isBridgeTransactionInfo(typeInfo)) {
+      return <BridgeTransactionDetails typeInfo={typeInfo} onClose={onClose} />
     } else if (isSwapTransactionInfo(typeInfo)) {
       return <SwapTransactionDetails typeInfo={typeInfo} onClose={onClose} />
     } else if (isWCConfirmTransactionInfo(typeInfo)) {
@@ -154,7 +158,7 @@ export function TransactionDetailsModal({
   const { t } = useTranslation()
   const { typeInfo } = transactionDetails
   const [isShowingMore, setIsShowingMore] = useState(false)
-  const hasMoreInfoRows = transactionDetails.typeInfo.type === TransactionType.Swap
+  const hasMoreInfoRows = [TransactionType.Swap, TransactionType.Bridge].includes(transactionDetails.typeInfo.type)
 
   // Hide both separators if it's an Nft transaction. Hide top separator if it's an unknown type transaction.
   const isNftTransaction = isNFTActivity(typeInfo)

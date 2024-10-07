@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import { PropsWithChildren } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
@@ -19,7 +20,11 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import {
+  BridgeTransactionInfo,
+  TransactionDetails,
+  TransactionType,
+} from 'uniswap/src/features/transactions/types/transactionDetails'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
@@ -40,6 +45,7 @@ import {
 import { ContentRow } from 'wallet/src/features/transactions/TransactionRequest/ContentRow'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
 import { UNITAG_SUFFIX } from 'wallet/src/features/unitags/constants'
+import { openTransactionLink } from 'wallet/src/utils/linking'
 
 const UNISWAP_FEE = 0.0025
 
@@ -82,11 +88,25 @@ export function useTransactionDetailsInfoRows(
     case TransactionType.NFTApprove:
     case TransactionType.NFTMint:
       if (typeInfo.dappInfo && typeInfo.dappInfo.name) {
-        specificRows.push(<DappInfoRow key="dappInfo" iconUrl={typeInfo.dappInfo.icon} name={typeInfo.dappInfo.name} />)
+        specificRows.push(
+          <DappInfoRow
+            key="dappInfo"
+            label={t('transaction.details.dappName')}
+            iconUrl={typeInfo.dappInfo.icon}
+            name={typeInfo.dappInfo.name}
+          />,
+        )
       }
       break
     case TransactionType.WCConfirm:
-      specificRows.push(<DappInfoRow key="dappInfo" iconUrl={typeInfo.dapp.icon} name={typeInfo.dapp.name} />)
+      specificRows.push(
+        <DappInfoRow
+          key="dappInfo"
+          label={t('transaction.details.dappName')}
+          iconUrl={typeInfo.dapp.icon}
+          name={typeInfo.dapp.name}
+        />,
+      )
       break
     case TransactionType.Receive:
       specificRows.push(<TransactionParticipantRow key="txnParticipant" address={typeInfo.sender} onClose={onClose} />)
@@ -117,6 +137,23 @@ export function useTransactionDetailsInfoRows(
         </InfoRow>,
       )
       break
+    case TransactionType.Bridge:
+      if (typeInfo.routingDappInfo && typeInfo.routingDappInfo.name) {
+        const dappInfo = (
+          <DappInfoRow
+            key="dappInfo"
+            label={t('swap.details.orderRouting')}
+            iconUrl={typeInfo.routingDappInfo.icon}
+            name={typeInfo.routingDappInfo.name}
+          />
+        )
+        defaultRows.splice(1, 0, dappInfo)
+      }
+
+      if (isShowingMore) {
+        specificRows.push(<SwapRateRow key="swapRate" typeInfo={typeInfo} />)
+      }
+      break
     case TransactionType.Swap:
       if (isShowingMore) {
         specificRows.push(<SwapRateRow key="swapRate" typeInfo={typeInfo} />)
@@ -139,7 +176,12 @@ export function useTransactionDetailsInfoRows(
       if (typeInfo.dappInfo) {
         if (typeInfo.dappInfo.name) {
           specificRows.push(
-            <DappInfoRow key="dappInfo" iconUrl={typeInfo.dappInfo.icon} name={typeInfo.dappInfo.name} />,
+            <DappInfoRow
+              key="dappInfo"
+              label={t('transaction.details.dappName')}
+              iconUrl={typeInfo.dappInfo.icon}
+              name={typeInfo.dappInfo.name}
+            />,
           )
         }
         specificRows.push(
@@ -189,33 +231,24 @@ function NetworkFeeRow({ transactionDetails }: { transactionDetails: Transaction
 }
 
 function TransactionHashRow({ transactionDetails }: { transactionDetails: TransactionDetails }): JSX.Element | null {
-  const { hash } = transactionDetails
+  const { hash, chainId } = transactionDetails
   const { t } = useTranslation()
-  const dispatch = useDispatch()
 
   if (!hash && isUniswapX(transactionDetails)) {
     return null
   }
 
-  const onPressCopy = async (): Promise<void> => {
-    if (!hash) {
-      return
-    }
-
-    await setClipboard(hash)
-    dispatch(
-      pushNotification({
-        type: AppNotificationType.Copied,
-        copyType: CopyNotificationType.TransactionId,
-      }),
-    )
-  }
-
   return (
-    <InfoRow key="transactionId" label={t('transaction.details.transactionId')}>
-      <Text variant="body3">{shortenHash(hash)}</Text>
-      <TouchableArea onPress={onPressCopy}>
-        <CopyAlt color="$neutral3" size="$icon.16" />
+    <InfoRow key="transactionId" label={t('transaction.details.transaction')}>
+      <TouchableArea
+        alignItems="center"
+        flexDirection="row"
+        gap="$spacing6"
+        justifyContent="center"
+        onPress={() => openTransactionLink(hash, chainId)}
+      >
+        <Text variant="body3">{shortenHash(hash)}</Text>
+        <ExternalLink color="$neutral3" size="$icon.16" />
       </TouchableArea>
     </InfoRow>
   )
@@ -236,10 +269,9 @@ function InfoRow({
   )
 }
 
-function DappInfoRow({ name, iconUrl }: { name: string; iconUrl?: string | null }): JSX.Element {
-  const { t } = useTranslation()
+function DappInfoRow({ label, name, iconUrl }: { label: string; name: string; iconUrl?: string | null }): JSX.Element {
   return (
-    <InfoRow label={t('transaction.details.dappName')}>
+    <InfoRow label={label}>
       {iconUrl && (
         <UniversalImage
           size={{
@@ -310,7 +342,7 @@ function TransactionParticipantRow({
   )
 }
 
-function SwapRateRow({ typeInfo }: { typeInfo: SwapTypeTransactionInfo }): JSX.Element {
+function SwapRateRow({ typeInfo }: { typeInfo: SwapTypeTransactionInfo | BridgeTransactionInfo }): JSX.Element {
   const { t } = useTranslation()
   const formatter = useLocalizationContext()
 

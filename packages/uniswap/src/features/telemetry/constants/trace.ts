@@ -177,6 +177,7 @@ export const ElementName = {
   SwapReview: 'swap-review',
   SendReview: 'send-review',
   SwapRoutingPreferenceDefault: 'swap-routing-preference-default',
+  SwapRoutingPreferenceUniswapX: 'swap-routing-preference-UniswapX',
   SwapRoutingPreferenceV2: 'swap-routing-preference-v2',
   SwapRoutingPreferenceV3: 'swap-routing-preference-v3',
   SwitchCurrenciesButton: 'switch-currencies-button',

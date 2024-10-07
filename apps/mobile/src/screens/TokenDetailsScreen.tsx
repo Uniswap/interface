@@ -1,8 +1,7 @@
+/* eslint-disable complexity */
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
-import React, { useCallback, useEffect, useMemo, useState } from 'react'
-import { useTranslation } from 'react-i18next'
-import ContextMenu from 'react-native-context-menu-view'
-import { FadeIn, FadeInDown, FadeOutDown } from 'react-native-reanimated'
+import React, { useCallback, useMemo, useState } from 'react'
+import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
 import { AppStackScreenProp } from 'src/app/navigation/types'
 import { PriceExplorer } from 'src/components/PriceExplorer/PriceExplorer'
@@ -10,7 +9,6 @@ import { useTokenPriceHistory } from 'src/components/PriceExplorer/usePriceHisto
 import { BuyNativeTokenModal } from 'src/components/TokenDetails/BuyNativeTokenModal'
 import { TokenBalances } from 'src/components/TokenDetails/TokenBalances'
 import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDetailsActionButtons'
-import { TokenDetailsFavoriteButton } from 'src/components/TokenDetails/TokenDetailsFavoriteButton'
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
@@ -18,15 +16,13 @@ import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loader } from 'src/components/loading/loaders'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { disableOnPress } from 'src/utils/disableOnPress'
+import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsHeaders'
 import { useSkeletonLoading } from 'src/utils/useSkeletonLoading'
-import { Flex, Separator, Text, TouchableArea, useDeviceInsets, useIsDarkMode, useSporeColors } from 'ui/src'
-import EllipsisIcon from 'ui/src/assets/icons/ellipsis.svg'
+import { Flex, Separator, useDeviceInsets, useIsDarkMode, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { fonts, iconSizes, spacing } from 'ui/src/theme'
+import { fonts } from 'ui/src/theme'
 import { useExtractedTokenColor } from 'ui/src/utils/colors'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
@@ -35,21 +31,21 @@ import {
   useTokenDetailsScreenQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { useSwappableTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/useSwappableTokenWithHighestBalance'
-import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
-import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
+import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
+import { TokenList } from 'uniswap/src/features/dataApi/types'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Language } from 'uniswap/src/features/language/constants'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
@@ -59,51 +55,9 @@ import {
   currencyIdToChain,
   isNativeCurrencyAddress,
 } from 'uniswap/src/utils/currencyId'
-import { NumberType } from 'utilities/src/format/types'
 import { useWalletNavigation } from 'wallet/src/contexts/WalletNavigationContext'
 import { isError, isNonPollingRequestInFlight } from 'wallet/src/data/utils'
-import { useTokenContextMenu } from 'wallet/src/features/portfolio/useTokenContextMenu'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
-
-function HeaderTitleElement({
-  data,
-  ellipsisMenuVisible,
-}: {
-  data: TokenDetailsScreenQuery | undefined
-  ellipsisMenuVisible?: boolean
-}): JSX.Element {
-  const { t } = useTranslation()
-  const { convertFiatAmountFormatted } = useLocalizationContext()
-
-  const onChainData = data?.token
-  const offChainData = onChainData?.project
-
-  const price = offChainData?.markets?.[0]?.price?.value ?? onChainData?.market?.price?.value
-  const logo = offChainData?.logoUrl ?? undefined
-  const symbol = onChainData?.symbol
-  const name = onChainData?.name
-  const chain = onChainData?.chain
-
-  return (
-    <Flex alignItems="center" justifyContent="space-between" ml={ellipsisMenuVisible ? '$spacing32' : '$none'}>
-      <Text color="$neutral1" variant="body1">
-        {convertFiatAmountFormatted(price, NumberType.FiatTokenPrice)}
-      </Text>
-      <Flex centered row gap="$spacing4">
-        <TokenLogo
-          chainId={fromGraphQLChain(chain) ?? undefined}
-          name={name}
-          size={iconSizes.icon16}
-          symbol={symbol ?? undefined}
-          url={logo}
-        />
-        <Text color="$neutral2" numberOfLines={1} variant="buttonLabel3">
-          {symbol ?? t('token.error.unknown')}
-        </Text>
-      </Flex>
-    </Flex>
-  )
-}
 
 export function TokenDetailsScreen({ route }: AppStackScreenProp<MobileScreens.TokenDetails>): JSX.Element {
   const { currencyId: _currencyId } = route.params
@@ -182,6 +136,7 @@ function TokenDetails({
   const colors = useSporeColors()
   const insets = useDeviceInsets()
   const isDarkMode = useIsDarkMode()
+  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
 
   const currencyChainId = (currencyIdToChain(_currencyId) as WalletChainId) ?? UniverseChainId.Mainnet
   const currencyAddress = currencyIdToAddress(_currencyId)
@@ -237,8 +192,9 @@ function TokenDetails({
   )
 
   const safetyLevel = token?.project?.safetyLevel
+  const isBlocked = safetyLevel === SafetyLevel.Blocked || currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
-  const swappableTokenWithHighestBalance = useSwappableTokenWithHighestBalance({
+  const bridgingTokenWithHighestBalance = useBridgingTokenWithHighestBalance({
     currencyAddress,
     currencyChainId,
     otherChainBalances,
@@ -251,21 +207,21 @@ function TokenDetails({
 
   const onPressSwap = useCallback(
     (currencyField: CurrencyField) => {
-      if (safetyLevel === SafetyLevel.Blocked) {
+      if (isBlocked) {
         setShowWarningModal(true)
         // show warning modal speed bump if token has a warning level and user has not dismissed
       } else if (safetyLevel !== SafetyLevel.Verified && !tokenWarningDismissed) {
         setActiveTransactionType(currencyField)
         setShowWarningModal(true)
-      } else if (swappableTokenWithHighestBalance && currencyField === CurrencyField.OUTPUT) {
-        // When clicking "Buy", if the user has a balance in another chain, we prepopulate the input token with that token.
+      } else if (bridgingTokenWithHighestBalance && currencyField === CurrencyField.OUTPUT) {
+        // When clicking "Buy", if the user has a balance in another chain, we pre-populate the input token with that token.
         setActiveTransactionType(undefined)
         navigateToSwapFlow({
           initialState: {
             exactCurrencyField: CurrencyField.INPUT,
             input: {
-              address: currencyIdToAddress(swappableTokenWithHighestBalance.currencyInfo.currencyId),
-              chainId: swappableTokenWithHighestBalance.currencyInfo.currency.chainId,
+              address: currencyIdToAddress(bridgingTokenWithHighestBalance.currencyInfo.currencyId),
+              chainId: bridgingTokenWithHighestBalance.currencyInfo.currency.chainId,
               type: AssetType.Currency,
             },
             output: {
@@ -284,9 +240,10 @@ function TokenDetails({
     [
       currencyAddress,
       currencyChainId,
+      isBlocked,
       navigateToSwapFlow,
       safetyLevel,
-      swappableTokenWithHighestBalance,
+      bridgingTokenWithHighestBalance,
       tokenWarningDismissed,
     ],
   )
@@ -323,6 +280,10 @@ function TokenDetails({
     }
   }, [activeTransactionType, currencyAddress, currencyChainId, onDismissTokenWarning, navigateToSwapFlow])
 
+  const openTokenWarningModal = (): void => {
+    setShowWarningModal(true)
+  }
+
   const inModal = useSelector(selectModalState(ModalName.Explore)).isOpen
 
   const loadingColor = isDarkMode ? colors.neutral3.val : colors.surface3.val
@@ -340,7 +301,7 @@ function TokenDetails({
               currencyId={_currencyId}
               currentChainBalance={currentChainBalance}
               data={data}
-              isBlocked={safetyLevel === SafetyLevel.Blocked}
+              isBlocked={isBlocked}
               setEllipsisMenuVisible={setEllipsisMenuVisible}
             />
           )
@@ -349,11 +310,7 @@ function TokenDetails({
       >
         <Flex gap="$spacing16" pb="$spacing16">
           <Flex gap="$spacing4">
-            <TokenDetailsHeader
-              data={data}
-              loading={loading}
-              onPressWarningIcon={(): void => setShowWarningModal(true)}
-            />
+            <TokenDetailsHeader data={data} loading={loading} onPressWarningIcon={openTokenWarningModal} />
             <PriceExplorer
               currencyId={_currencyId}
               forcePlaceholder={showSkeleton}
@@ -367,6 +324,9 @@ function TokenDetails({
             </AnimatedFlex>
           ) : null}
           <Flex gap="$spacing16" mb="$spacing8" px="$spacing16">
+            {tokenProtectionEnabled && (
+              <TokenWarningCard currencyInfo={currencyInfo} onPressCtaButton={openTokenWarningModal} />
+            )}
             <TokenBalances
               currentChainBalance={currentChainBalance}
               otherChainBalances={otherChainBalances}
@@ -390,10 +350,12 @@ function TokenDetails({
       {!loading && !tokenColorLoading ? (
         <AnimatedFlex backgroundColor="$surface1" entering={FadeInDown} style={{ marginBottom: insets.bottom }}>
           <TokenDetailsActionButtons
+            disabled={isBlocked}
             tokenColor={tokenColor}
             userHasBalance={hasTokenBalance}
             onPressBuy={onPressBuy}
             onPressSell={(): void => onPressSwap(CurrencyField.INPUT)}
+            onPressDisabled={openTokenWarningModal}
           />
         </AnimatedFlex>
       ) : null}
@@ -401,7 +363,7 @@ function TokenDetails({
       {currencyInfo && (
         <TokenWarningModal
           currencyInfo0={currencyInfo}
-          isInfoOnlyWarning={activeTransactionType === undefined}
+          isInfoOnlyWarning={!activeTransactionType}
           isVisible={showWarningModal}
           closeModalOnly={(): void => {
             setActiveTransactionType(undefined)
@@ -439,58 +401,5 @@ function TokenDetailsTextPlaceholders(): JSX.Element {
         </Flex>
       </Flex>
     </>
-  )
-}
-
-function HeaderRightElement({
-  currencyId,
-  currentChainBalance,
-  isBlocked,
-  data,
-  setEllipsisMenuVisible,
-}: {
-  currencyId: string
-  currentChainBalance: PortfolioBalance | null
-  isBlocked: boolean
-  data?: TokenDetailsScreenQuery
-  setEllipsisMenuVisible: (visible: boolean) => void
-}): JSX.Element {
-  const colors = useSporeColors()
-  const isDarkMode = useIsDarkMode()
-
-  const { menuActions, onContextMenuPress } = useTokenContextMenu({
-    currencyId,
-    isBlocked,
-    tokenSymbolForNotification: data?.token?.symbol,
-    portfolioBalance: currentChainBalance,
-  })
-
-  // Should be the same color as heart icon in not favorited state next to it
-  const ellipsisColor = isDarkMode ? colors.neutral2.get() : colors.neutral2.get()
-
-  const ellipsisMenuVisible = menuActions.length > 0
-
-  useEffect(() => {
-    setEllipsisMenuVisible(ellipsisMenuVisible)
-  }, [ellipsisMenuVisible, setEllipsisMenuVisible])
-
-  return (
-    <AnimatedFlex row alignItems="center" entering={FadeIn} gap="$spacing16">
-      {ellipsisMenuVisible && (
-        <ContextMenu dropdownMenuMode actions={menuActions} onPress={onContextMenuPress}>
-          <TouchableArea
-            hapticFeedback
-            hitSlop={{ right: 5, left: 20, top: 20, bottom: 20 }}
-            style={{ padding: spacing.spacing8, marginRight: -spacing.spacing8 }}
-            testID={TestID.TokenDetailsMoreButton}
-            onLongPress={disableOnPress}
-            onPress={disableOnPress}
-          >
-            <EllipsisIcon color={ellipsisColor} height={iconSizes.icon16} width={iconSizes.icon16} />
-          </TouchableArea>
-        </ContextMenu>
-      )}
-      <TokenDetailsFavoriteButton currencyId={currencyId} />
-    </AnimatedFlex>
   )
 }

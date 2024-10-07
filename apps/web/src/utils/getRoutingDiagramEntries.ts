@@ -1,14 +1,7 @@
-import { Protocol } from '@uniswap/router-sdk'
-import { Currency, Percent, TradeType } from '@uniswap/sdk-core'
+import { Percent, TradeType } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount } from '@uniswap/v3-sdk'
 import { ClassicTrade } from 'state/routing/types'
-
-export interface RoutingDiagramEntry {
-  percent: Percent
-  path: [Currency, Currency, FeeAmount][]
-  protocol: Protocol
-}
+import { RoutingDiagramEntry } from 'uniswap/src/utils/getRoutingDiagramEntries'
 
 const V2_DEFAULT_FEE_TIER = 3000
 

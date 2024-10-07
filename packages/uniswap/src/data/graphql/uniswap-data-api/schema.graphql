@@ -1,6 +1,11 @@
 """This directive allows results to be deferred during execution"""
 directive @defer on FIELD
 
+"""
+Tells the service this field/object has access authorized by an API key.
+"""
+directive @aws_api_key on OBJECT | FIELD_DEFINITION
+
 """Directs the schema to enforce authorization on a field"""
 directive @aws_auth(
   """List of cognito user pool groups which have access on this field"""
@@ -8,30 +13,14 @@ directive @aws_auth(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by sigv4 signing.
+Tells the service this field/object has access authorized by a Lambda Authorizer.
 """
-directive @aws_iam on OBJECT | FIELD_DEFINITION
-
-"""
-Tells the service this field/object has access authorized by a Cognito User Pools token.
-"""
-directive @aws_cognito_user_pools(
-  """List of cognito user pool groups which have access on this field"""
-  cognito_groups: [String]
-) on OBJECT | FIELD_DEFINITION
+directive @aws_lambda on OBJECT | FIELD_DEFINITION
 
 """
 Tells the service this field/object has access authorized by an OIDC token.
 """
 directive @aws_oidc on OBJECT | FIELD_DEFINITION
-
-"""Tells the service which mutation triggers this subscription."""
-directive @aws_subscribe(
-  """
-  List of mutations which will trigger this subscription when they are called.
-  """
-  mutations: [String]
-) on FIELD_DEFINITION
 
 """
 Tells the service which subscriptions will be published to when this mutation is
@@ -45,14 +34,25 @@ directive @aws_publish(
 ) on FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by a Lambda Authorizer.
+Tells the service this field/object has access authorized by a Cognito User Pools token.
 """
-directive @aws_lambda on OBJECT | FIELD_DEFINITION
+directive @aws_cognito_user_pools(
+  """List of cognito user pool groups which have access on this field"""
+  cognito_groups: [String]
+) on OBJECT | FIELD_DEFINITION
 
 """
-Tells the service this field/object has access authorized by an API key.
+Tells the service this field/object has access authorized by sigv4 signing.
 """
-directive @aws_api_key on OBJECT | FIELD_DEFINITION
+directive @aws_iam on OBJECT | FIELD_DEFINITION
+
+"""Tells the service which mutation triggers this subscription."""
+directive @aws_subscribe(
+  """
+  List of mutations which will trigger this subscription when they are called.
+  """
+  mutations: [String]
+) on FIELD_DEFINITION
 
 """
   Types, unions, and inputs (alphabetized):
@@ -927,7 +927,7 @@ type Portfolio {
 
   """  TODO: (michael.zhang) replace with paginated query"""
   nftBalances: [NftBalance]
-  assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, onRampTransactionsAuth: OnRampTransactionsAuth, onRampTransactionIDs: [String!], chains: [Chain!], _fs: AssetActivitySwitch): [AssetActivity]
+  assetActivities(page: Int, pageSize: Int, includeOffChain: Boolean, onRampTransactionsAuth: OnRampTransactionsAuth, onRampTransactionIDs: [String!], chains: [Chain!], includeBridging: Boolean, _fs: AssetActivitySwitch): [AssetActivity]
 }
 
 """  Specify how the portfolio value should be calculated for each `ownerAddress`.
@@ -938,6 +938,7 @@ input PortfolioValueModifier {
   tokenExcludeOverrides: [ContractInput!]
   includeSmallBalances: Boolean
   includeSpamTokens: Boolean
+  tokenBalancesLimit: Int
 }
 
 enum PriceSource {
@@ -957,6 +958,7 @@ enum ProtectionAttackType {
   IMPERSONATOR
   UNSTABLE_TOKEN_PRICE
   RUGPULL
+  HIGH_FEES
 }
 
 type ProtectionInfo {
@@ -1025,7 +1027,7 @@ type Query {
   nftRoute(chain: Chain, senderAddress: String!, nftTrades: [NftTradeInput!]!, tokenTrades: [TokenTradeInput!]): NftRouteResponse
   nftActivity(chain: Chain, filter: NftActivityFilterInput, after: String, first: Int): NftActivityConnection
   nftCollectionBalances(chain: Chain, ownerAddress: String!, after: String, first: Int, before: String, last: Int): NftCollectionBalanceConnection
-  transactionNotification(chain: Chain!, address: String!, transactionHash: String!): TransactionNotification
+  transactionNotification(chain: Chain!, address: String!, transactionHash: String!, isBridging: Boolean): TransactionNotification
 }
 
 enum SafetyLevel {
@@ -1359,9 +1361,11 @@ enum TransactionStatus {
 enum TransactionType {
   APPROVE
   BORROW
+  BRIDGING
   CANCEL
   CLAIM
   DEPLOYMENT
+  EXECUTE
   LEND
   MINT
   RECEIVE

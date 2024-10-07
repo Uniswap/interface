@@ -14,7 +14,7 @@ import {
   ClassicTrade,
   TokenApprovalInfo,
   TradeWithStatus,
-  UniswapXTrade,
+  UniswapXV2Trade,
 } from 'uniswap/src/features/transactions/swap/types/trade'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { createGasFeeEstimates } from 'uniswap/src/test/fixtures/tradingApi'
@@ -220,8 +220,8 @@ const createMockPermitData = (token: string): NullablePermit => ({
   },
 })
 
-export const createMockUniswapXTrade = (inputCurrency: Token, outputCurrency: Token): UniswapXTrade => {
-  return new UniswapXTrade({
+export const createMockUniswapXTrade = (inputCurrency: Token, outputCurrency: Token): UniswapXV2Trade => {
+  return new UniswapXV2Trade({
     currencyIn: inputCurrency,
     currencyOut: outputCurrency,
     tradeType: TradeType.EXACT_INPUT,

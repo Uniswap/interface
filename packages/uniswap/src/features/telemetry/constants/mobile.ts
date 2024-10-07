@@ -15,7 +15,6 @@ export enum MobileEventName {
   HomeExploreTokenItemSelected = 'Home Explore Token Item Selected',
   NotificationsToggled = 'Notifications Toggled',
   OnboardingCompleted = 'Onboarding Completed',
-  OnboardingIntroCardSwiped = 'Onboarding Intro Card Swiped',
   PerformanceReport = 'Performance Report',
   ShareLinkOpened = 'Share Link Opened',
   TokenDetailsOtherChainButtonPressed = 'Token Details Other Chain Button Pressed',

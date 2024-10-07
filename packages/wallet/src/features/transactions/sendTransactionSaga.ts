@@ -153,7 +153,6 @@ function* addTransaction(
       }
     } else {
       const event: UniverseEventProperties[WalletEventName.SwapSubmitted] = {
-        routing: transaction.routing === Routing.BRIDGE ? 'BRIDGE' : 'CLASSIC',
         transaction_hash: hash,
         ...analytics,
       }

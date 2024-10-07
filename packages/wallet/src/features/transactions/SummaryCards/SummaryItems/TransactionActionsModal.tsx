@@ -5,7 +5,6 @@ import { useDispatch } from 'react-redux'
 import { ColorTokens, Flex, Separator, Text, isWeb } from 'ui/src'
 import { ActionSheetModalContent, MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
 import { Modal } from 'uniswap/src/components/modals/Modal'
-import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FORMAT_DATE_LONG, useFormattedDate } from 'uniswap/src/features/language/localizedDayjs'
 import { ElementName, ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -31,7 +30,6 @@ function renderOptionItem(label: string, textColorOverride?: ColorTokens): () =>
 }
 
 interface TransactionActionModalProps {
-  onExplore: () => void
   onClose: () => void
   onCancel: () => void
   msTimestampAdded: number
@@ -44,7 +42,6 @@ export default function TransactionActionsModal({
   msTimestampAdded,
   onCancel,
   onClose,
-  onExplore,
   showCancelButton,
   transactionDetails,
 }: TransactionActionModalProps): JSX.Element {
@@ -58,22 +55,6 @@ export default function TransactionActionsModal({
   }, [onClose])
 
   const options = useMemo(() => {
-    const chainInfo = UNIVERSE_CHAIN_INFO[transactionDetails.chainId]
-
-    const maybeViewOnEtherscanOption = transactionDetails.hash
-      ? [
-          {
-            key: ElementName.EtherscanView,
-            onPress: onExplore,
-            render: renderOptionItem(
-              t('transaction.action.viewEtherscan', {
-                blockExplorerName: chainInfo.explorer.name,
-              }),
-            ),
-          },
-        ]
-      : []
-
     const transactionId = getTransactionId(transactionDetails)
 
     const onRampProviderName =
@@ -108,7 +89,6 @@ export default function TransactionActionsModal({
       : []
 
     const transactionActionOptions: MenuItemProp[] = [
-      ...maybeViewOnEtherscanOption,
       ...maybeCopyTransactionIdOption,
       {
         key: ElementName.GetHelp,
@@ -127,7 +107,7 @@ export default function TransactionActionsModal({
       })
     }
     return transactionActionOptions
-  }, [transactionDetails, t, onExplore, showCancelButton, dispatch, handleClose, onCancel])
+  }, [transactionDetails, t, showCancelButton, dispatch, handleClose, onCancel])
 
   return (
     <Modal

@@ -112,7 +112,8 @@ const RollNumber = ({
         style={[
           animatedFontStyle,
           AnimatedFontStyles.fontStyle,
-          { height: DIGIT_HEIGHT, fontFamily: fonts.heading2.family },
+          // fontFamily set to button style because android "Book" version of the font looks noticeably thinner
+          { height: DIGIT_HEIGHT, fontFamily: fonts.buttonLabel1.family },
         ]}
       >
         {char}
@@ -159,7 +160,11 @@ const RollNumber = ({
     ) : (
       <Animated.Text
         allowFontScaling={false}
-        style={[animatedFontStyle, AnimatedFontStyles.fontStyle, { height: DIGIT_HEIGHT }]}
+        style={[
+          animatedFontStyle,
+          AnimatedFontStyles.fontStyle,
+          { height: DIGIT_HEIGHT, fontFamily: fonts.buttonLabel1.family },
+        ]}
       >
         {digit}
       </Animated.Text>

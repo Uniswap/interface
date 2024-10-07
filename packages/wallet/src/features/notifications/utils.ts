@@ -60,6 +60,17 @@ export const formApproveNotificationTitle = (
         })
 }
 
+export const formBridgeNotificationTitle = (txStatus: TransactionStatus): string => {
+  switch (txStatus) {
+    case TransactionStatus.Success:
+      return i18n.t('transaction.status.swap.success')
+    case TransactionStatus.Canceled:
+      return i18n.t('transaction.status.swap.canceled')
+    default:
+      return i18n.t('transaction.status.swap.failed')
+  }
+}
+
 export const formSwapNotificationTitle = (
   formatter: LocalizationContextState,
   txStatus: TransactionStatus,

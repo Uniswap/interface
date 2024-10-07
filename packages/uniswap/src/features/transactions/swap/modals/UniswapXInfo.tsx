@@ -23,10 +23,7 @@ export function UniswapXInfo({
   return (
     <WarningInfo
       infoButton={
-        <LearnMoreLink
-          textVariant={isWeb ? 'buttonLabel3' : undefined}
-          url={uniswapUrls.helpArticleUrls.uniswapXInfo}
-        />
+        <LearnMoreLink textVariant={isWeb ? 'body4' : undefined} url={uniswapUrls.helpArticleUrls.uniswapXInfo} />
       }
       modalProps={{
         backgroundIconColor: opacify(16, colors.uniswapXPurple),

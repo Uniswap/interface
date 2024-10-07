@@ -9,12 +9,12 @@ import { useAppDispatch, useAppSelector } from 'state/hooks'
 import { TradeFillType } from 'state/routing/types'
 import { addTransaction, cancelTransaction, removeTransaction } from 'state/transactions/reducer'
 import {
-  ConfirmedTransactionDetails,
   PendingTransactionDetails,
   TransactionDetails,
   TransactionInfo,
   TransactionType,
 } from 'state/transactions/types'
+import { isConfirmedTx, isPendingTx } from 'state/transactions/utils'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
@@ -161,14 +161,6 @@ export function useHasPendingApproval(token?: Token, spender?: string): boolean 
 
 export function useHasPendingRevocation(token?: Token, spender?: string): boolean {
   return usePendingApprovalAmount(token, spender)?.eq(0) ?? false
-}
-
-export function isPendingTx(tx: TransactionDetails): tx is PendingTransactionDetails {
-  return tx.status === TransactionStatus.Pending && !tx.cancelled
-}
-
-export function isConfirmedTx(tx: TransactionDetails): tx is ConfirmedTransactionDetails {
-  return tx.status === TransactionStatus.Confirmed || tx.status === TransactionStatus.Failed
 }
 
 export function usePendingTransactions(): PendingTransactionDetails[] {

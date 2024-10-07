@@ -39,7 +39,6 @@ const mockTxRequest = {
 const baseSwapTxContext: SwapTxAndGasInfo = {
   approveTxRequest: undefined,
   revocationTxRequest: undefined,
-  approvalError: false,
   gasFee: { error: null, isLoading: false, value: '1000000000000000000' },
   gasFeeEstimation: { swapEstimates: undefined, approvalEstimates: undefined },
   indicativeTrade: undefined,

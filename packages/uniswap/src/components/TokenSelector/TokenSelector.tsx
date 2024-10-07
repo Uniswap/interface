@@ -61,12 +61,7 @@ export interface TokenSelectorProps {
   isLimits?: boolean
   onClose: () => void
   onSelectChain?: (chainId: UniverseChainId | null) => void
-  onSelectCurrency: (
-    currency: Currency,
-    currencyField: CurrencyField,
-    context: SearchContext,
-    isBridgePair: boolean,
-  ) => void
+  onSelectCurrency: (currency: Currency, currencyField: CurrencyField, isBridgePair: boolean) => void
 }
 
 export function TokenSelectorContent({
@@ -150,7 +145,7 @@ export function TokenSelectorContent({
       })
 
       const isBridgePair = section.sectionKey === TokenOptionSection.BridgingTokens
-      onSelectCurrency(currencyInfo.currency, currencyField, searchContext, isBridgePair)
+      onSelectCurrency(currencyInfo.currency, currencyField, isBridgePair)
     },
     [flow, page, currencyField, onSelectCurrency, debouncedSearchFilter],
   )

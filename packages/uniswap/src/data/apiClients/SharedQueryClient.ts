@@ -1,4 +1,5 @@
 import { QueryClient } from '@tanstack/react-query'
+import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { ONE_DAY_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
 export const SharedQueryClient = new QueryClient({
@@ -9,6 +10,14 @@ export const SharedQueryClient = new QueryClient({
       // and how important it is to keep the data fresh every time a component mounts.
       staleTime: 15 * ONE_SECOND_MS,
       gcTime: ONE_DAY_MS,
+      // Retry once, only if the error is a 500 fetch error.
+      retry: (failureCount, error): boolean => {
+        if (failureCount < 2 && error instanceof FetchError && error.response.status === 500) {
+          return true
+        }
+
+        return false
+      },
     },
   },
 })

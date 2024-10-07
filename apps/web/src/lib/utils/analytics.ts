@@ -1,9 +1,16 @@
 import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
-import { InterfaceTrade, OffchainOrderType, QuoteMethod, SubmittableTrade, TradeFillType } from 'state/routing/types'
+import { InterfaceTrade, OffchainOrderType, QuoteMethod, SubmittableTrade } from 'state/routing/types'
 import { isClassicTrade, isSubmittableTrade, isUniswapXTrade } from 'state/routing/utils'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
-import { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { SwapTradeBaseProperties } from 'uniswap/src/features/telemetry/types'
+import { tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
+import {
+  ClassicTrade,
+  PriorityOrderTrade,
+  UniswapXTrade,
+  UniswapXV2Trade,
+} from 'uniswap/src/features/transactions/swap/types/trade'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { computeRealizedPriceImpact } from 'utils/prices'
@@ -45,30 +52,6 @@ function getEstimatedNetworkFee(trade: InterfaceTrade) {
   return undefined
 }
 
-// eslint-disable-next-line consistent-return
-function tradeRoutingToFillType({
-  routing,
-  indicative,
-}: {
-  routing: Routing
-  indicative: boolean
-}): TradeFillType | 'bridge' {
-  if (indicative) {
-    return TradeFillType.None
-  }
-
-  switch (routing) {
-    case Routing.DUTCH_V2:
-    case Routing.DUTCH_LIMIT:
-    case Routing.LIMIT_ORDER:
-      return TradeFillType.UniswapXv2
-    case Routing.CLASSIC:
-      return TradeFillType.Classic
-    case Routing.BRIDGE:
-      return 'bridge'
-  }
-}
-
 function tradeRoutingToOffchainOrderType(routing: Routing): OffchainOrderType | undefined {
   switch (routing) {
     case Routing.DUTCH_V2:
@@ -85,8 +68,9 @@ export function formatCommonPropertiesForTrade(
   trade: InterfaceTrade | ClassicTrade | UniswapXTrade,
   allowedSlippage: Percent,
   outputFeeFiatValue?: number,
-) {
-  const isUniversalSwapFlow = trade instanceof ClassicTrade || trade instanceof UniswapXTrade
+): SwapTradeBaseProperties {
+  const isUniversalSwapFlow =
+    trade instanceof ClassicTrade || trade instanceof UniswapXV2Trade || trade instanceof PriorityOrderTrade
 
   return {
     routing: isUniversalSwapFlow ? tradeRoutingToFillType(trade) : trade.fillType,
@@ -102,7 +86,7 @@ export function formatCommonPropertiesForTrade(
         ? trade.quote?.quote.blockNumber
         : undefined
       : isClassicTrade(trade)
-        ? trade.blockNumber
+        ? trade.blockNumber ?? undefined
         : undefined,
     token_in_address: getTokenAddress(trade.inputAmount.currency),
     token_out_address: getTokenAddress(trade.outputAmount.currency),

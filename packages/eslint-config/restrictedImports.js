@@ -35,6 +35,7 @@ exports.shared = {
     },
     {
       name: 'uniswap/src/features/language/formatter',
+      importNames: ['useLocalizedFormatter'],
       message: 'Use via `useLocalizationContext` instead.',
     },
   ],

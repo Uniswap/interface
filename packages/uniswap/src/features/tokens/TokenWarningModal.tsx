@@ -20,10 +20,9 @@ import { useLocalizationContext } from 'uniswap/src/features/language/Localizati
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import DeprecatedTokenWarningModal from 'uniswap/src/features/tokens/DeprecatedTokenWarningModal'
 import {
-  TokenWarningDesignTreatment,
   getIsFeeRelatedWarning,
   getShouldHaveCombinedPluralTreatment,
-  getTokenWarningDesignTreatment,
+  getTokenWarningSeverity,
   useModalHeaderText,
   useModalSubtitleText,
 } from 'uniswap/src/features/tokens/safetyUtils'
@@ -65,34 +64,22 @@ function TokenWarningModalContent({
   const { t } = useTranslation()
   const [dontShowAgain, setDontShowAgain] = useState<boolean>(false) // TODO(WALL-4596): implement dismissedTokenWarnings redux
 
-  const designTreatment = getTokenWarningDesignTreatment(currencyInfo0.currency, currencyInfo0.safetyInfo)
-  const isFeeRelatedWarning = getIsFeeRelatedWarning(currencyInfo0.currency, currencyInfo0.safetyInfo)
+  const severity = getTokenWarningSeverity(currencyInfo0)
+  const isFeeRelatedWarning = getIsFeeRelatedWarning(currencyInfo0)
 
-  const mockWarningSeverity = WarningSeverity.Medium // FIXME(WALL-4686): temp mock var; need to dedupe warning severity usage with TokenWarningDesignTreatment
+  const titleText = useModalHeaderText(currencyInfo0, shouldBeCombinedPlural ? currencyInfo1 : undefined)
+  const subtitleText = useModalSubtitleText(currencyInfo0, shouldBeCombinedPlural ? currencyInfo1 : undefined)
 
-  const titleText = useModalHeaderText(
-    currencyInfo0.currency,
-    currencyInfo0.safetyInfo,
-    shouldBeCombinedPlural ? currencyInfo1?.currency : undefined,
-    shouldBeCombinedPlural ? currencyInfo1?.safetyInfo : undefined,
-  )
-  const subtitleText = useModalSubtitleText(
-    currencyInfo0.currency,
-    currencyInfo0.safetyInfo,
-    shouldBeCombinedPlural ? currencyInfo1?.currency : undefined,
-    shouldBeCombinedPlural ? currencyInfo1?.safetyInfo : undefined,
-  )
-
-  if (designTreatment === TokenWarningDesignTreatment.None) {
+  if (severity === WarningSeverity.None) {
     return null
   }
 
-  const { background: backgroundIconColor, text: titleTextColor } = getAlertColor(mockWarningSeverity)
+  const { text: titleTextColor } = getAlertColor(severity)
 
   return (
     <Flex>
       <WarningModalContent
-        backgroundIconColor={backgroundIconColor}
+        rejectButtonTheme="tertiary"
         captionComponent={
           <Flex centered gap="$spacing12">
             <Text color="$neutral2" textAlign="center" variant="body2">
@@ -104,7 +91,7 @@ function TokenWarningModalContent({
         rejectText={
           // if this is an informational-only warning or a 2-token warning, we should always show the Reject / back button
           // or, if a token is blocked, it should not have a Reject button, only an Acknowledge button
-          isInfoOnlyWarning || hasSecondWarning || designTreatment !== TokenWarningDesignTreatment.Blocked
+          isInfoOnlyWarning || hasSecondWarning || severity !== WarningSeverity.Blocked
             ? t('common.button.back')
             : undefined
         }
@@ -113,13 +100,13 @@ function TokenWarningModalContent({
           isInfoOnlyWarning
             ? undefined
             : // if a token is blocked & is not part of a 2-token warning, the Acknowledge button should say "Close"
-              designTreatment === TokenWarningDesignTreatment.Blocked && !hasSecondWarning
+              severity === WarningSeverity.Blocked && !hasSecondWarning
               ? t('common.button.close')
               : // otherwise, Acknowledge button should say "Continue"
                 t('common.button.continue')
         }
-        icon={<WarningIcon safetyLevel={currencyInfo0.safetyLevel} size="$icon.24" />} // TODO(WEB-4883): re-work WarningIcon according to severity, not safety level
-        severity={mockWarningSeverity}
+        icon={<WarningIcon severity={severity} size="$icon.24" />}
+        severity={severity}
         titleComponent={
           <Text color={titleTextColor} variant="subheading1">
             {titleText}
@@ -154,7 +141,7 @@ function TokenWarningModalContent({
           </Flex>
         )}
 
-        {!isInfoOnlyWarning && designTreatment === TokenWarningDesignTreatment.Low && (
+        {!isInfoOnlyWarning && severity === WarningSeverity.Low && (
           // only show "Don't show this warning again" checkbox if this is an actionable modal & the token is low-severity
           <LabeledCheckbox
             checked={dontShowAgain}
@@ -192,18 +179,9 @@ export default function TokenWarningModal({
   const colors = useSporeColors()
 
   // If BOTH tokens are blocked or BOTH are low-severity, they'll be combined into one plural modal
-  const combinedPlural = getShouldHaveCombinedPluralTreatment(
-    currencyInfo0.currency,
-    currencyInfo0.safetyInfo,
-    currencyInfo1?.currency,
-    currencyInfo1?.safetyInfo,
-  )
-  const isBlocked0 =
-    getTokenWarningDesignTreatment(currencyInfo0.currency, currencyInfo0.safetyInfo) ===
-    TokenWarningDesignTreatment.Blocked
-  const isBlocked1 =
-    getTokenWarningDesignTreatment(currencyInfo1?.currency, currencyInfo1?.safetyInfo) ===
-    TokenWarningDesignTreatment.Blocked
+  const combinedPlural = getShouldHaveCombinedPluralTreatment(currencyInfo0, currencyInfo1)
+  const isBlocked0 = getTokenWarningSeverity(currencyInfo0) === WarningSeverity.Blocked
+  const isBlocked1 = getTokenWarningSeverity(currencyInfo1) === WarningSeverity.Blocked
 
   const [warningIndex, setWarningIndex] = useState<0 | 1>(0)
   const hasSecondWarning = Boolean(!combinedPlural && currencyInfo1)
@@ -245,8 +223,6 @@ export default function TokenWarningModal({
             } else if (isBlocked0) {
               // If both tokens are blocked, they'll be combined into one plural modal. See `getShouldHaveCombinedPluralTreatment`.
               combinedPlural && isBlocked1 && onToken1BlockAcknowledged?.()
-              onToken0BlockAcknowledged?.()
-              closeModalOnly()
             } else {
               onAcknowledge()
             }
@@ -299,7 +275,7 @@ export const WarningModalInfoContainer = styled(Flex, {
 
 function FeeRow({ feeType, feeBps }: { feeType: 'buy' | 'sell'; feeBps?: BigNumber }): JSX.Element {
   const { t } = useTranslation()
-  const textColor = getAlertColor(WarningSeverity.Medium) // FIXME(WALL-4686): need to dedupe warning severity usage with TokenWarningDesignTreatment
+  const textColor = getAlertColor(WarningSeverity.Medium)
   const { formatNumberOrString } = useLocalizationContext()
   const fee: string = feeBps
     ? formatNumberOrString({ value: feeBps.toNumber() / 10_000, type: NumberType.Percentage })

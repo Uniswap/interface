@@ -1,12 +1,14 @@
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { Container } from 'pages/Pool/Positions/create/shared'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { Minus, Plus } from 'react-feather'
+import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
 import { Button, Flex, FlexProps, SegmentedControl, Text, useSporeColors } from 'ui/src'
 import { SwapActionButton } from 'ui/src/components/icons/SwapActionButton'
 import { fonts } from 'ui/src/theme'
 import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 enum RangeSelectionInput {
   MIN,
@@ -26,33 +28,52 @@ function RangeControl({ value, active }: { value: string; active: boolean }) {
   )
 }
 
-function RangeInput({ input }: { input: RangeSelectionInput }) {
+function RangeInput({
+  value,
+  input,
+  decrement,
+  increment,
+}: {
+  value: string
+  input: RangeSelectionInput
+  decrement: () => string
+  increment: () => string
+}) {
   const colors = useSporeColors()
   const { t } = useTranslation()
 
   const {
-    positionState: {
-      tokenInputs: { TOKEN0: token0, TOKEN1: token1 },
-    },
-  } = useCreatePositionContext()
-  const {
-    priceRangeState: { minPrice, maxPrice, priceInverted },
     setPriceRangeState,
+    derivedPriceRangeInfo: { baseAndQuoteTokens },
   } = usePriceRangeContext()
 
-  const baseCurrency = priceInverted ? token1 : token0
-  const quoteCurrency = priceInverted ? token0 : token1
+  const [typedValue, setTypedValue] = useState('')
+  const [baseToken, quoteToken] = baseAndQuoteTokens ?? [undefined, undefined]
+  const [displayUserTypedValue, setDisplayUserTypedValue] = useState(false)
 
   const handlePriceRangeInput = useCallback(
     (input: RangeSelectionInput, value: string) => {
       if (input === RangeSelectionInput.MIN) {
-        setPriceRangeState((prev) => ({ ...prev, minPrice: value }))
+        setPriceRangeState((prev) => ({ ...prev, minPrice: value, fullRange: false }))
       } else {
-        setPriceRangeState((prev) => ({ ...prev, maxPrice: value }))
+        setPriceRangeState((prev) => ({ ...prev, maxPrice: value, fullRange: false }))
       }
+
+      setTypedValue(value)
+      setDisplayUserTypedValue(true)
     },
     [setPriceRangeState],
   )
+
+  const handleDecrement = useCallback(() => {
+    handlePriceRangeInput(input, decrement())
+    setDisplayUserTypedValue(false)
+  }, [decrement, handlePriceRangeInput, input])
+
+  const handleIncrement = useCallback(() => {
+    handlePriceRangeInput(input, increment())
+    setDisplayUserTypedValue(false)
+  }, [handlePriceRangeInput, increment, input])
 
   return (
     <Flex
@@ -78,30 +99,31 @@ function RangeInput({ input }: { input: RangeSelectionInput }) {
           fontFamily="$heading"
           fontSize={fonts.heading3.fontSize}
           fontWeight={fonts.heading3.fontWeight}
-          maxDecimals={quoteCurrency?.decimals ?? 18}
+          maxDecimals={quoteToken?.decimals ?? 18}
           overflow="visible"
           placeholder="0"
           placeholderTextColor={colors.neutral3.val}
           px="$none"
           py="$none"
-          value={input === RangeSelectionInput.MIN ? minPrice : maxPrice}
+          value={displayUserTypedValue ? typedValue : value}
           onChangeText={(text) => handlePriceRangeInput(input, text)}
+          onBlur={() => setDisplayUserTypedValue(false)}
         />
         <Text variant="body3" color="$neutral2">
           <Trans
             i18nKey="common.feesEarnedPerBase"
             values={{
-              symbolA: quoteCurrency?.symbol,
-              symbolB: baseCurrency?.symbol,
+              symbolA: quoteToken?.symbol,
+              symbolB: baseToken?.symbol,
             }}
           />
         </Text>
       </Flex>
       <Flex gap={10}>
-        <Button theme="secondary" p="$spacing8" borderRadius="$roundedFull">
+        <Button theme="secondary" p="$spacing8" borderRadius="$roundedFull" onPress={handleIncrement}>
           <Plus size="16px" color={colors.neutral1.val} />
         </Button>
-        <Button theme="secondary" p="$spacing8" borderRadius="$roundedFull" color="$neutral1">
+        <Button theme="secondary" p="$spacing8" borderRadius="$roundedFull" color="$neutral1" onPress={handleDecrement}>
           <Minus size="16px" color={colors.neutral1.val} />
         </Button>
       </Flex>
@@ -111,19 +133,22 @@ function RangeInput({ input }: { input: RangeSelectionInput }) {
 
 export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () => void } & FlexProps) => {
   const { t } = useTranslation()
+  const { formatPrice } = useFormatter()
 
   const {
     positionState: {
-      tokenInputs: { TOKEN0: token0, TOKEN1: token1 },
+      currencyInputs: { TOKEN0: token0, TOKEN1: token1 },
+      fee,
     },
+    derivedPositionInfo: { pool },
   } = useCreatePositionContext()
   const {
-    priceRangeState: { priceInverted, fullRange },
+    priceRangeState: { fullRange },
     setPriceRangeState,
+    derivedPriceRangeInfo: { baseAndQuoteTokens, price, prices, ticks, isSorted, ticksAtLimit },
   } = usePriceRangeContext()
 
-  const baseCurrency = priceInverted ? token1 : token0
-  const quoteCurrency = priceInverted ? token0 : token1
+  const [baseToken, quoteToken] = baseAndQuoteTokens ?? [undefined, undefined]
 
   const controlOptions = useMemo(() => {
     return [{ value: token0?.symbol ?? '' }, { value: token1?.symbol ?? '' }]
@@ -140,10 +165,22 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
     [token0?.symbol, setPriceRangeState],
   )
 
+  const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks(
+    baseToken ?? undefined,
+    quoteToken ?? undefined,
+    fee,
+    ticks?.[0],
+    ticks?.[1],
+    pool,
+  )
+
   const handleSelectRange = useCallback(
     (option: RangeSelection) => {
       if (option === RangeSelection.FULL) {
-        setPriceRangeState((prevState) => ({ ...prevState, fullRange: true }))
+        setPriceRangeState((prevState) => ({
+          ...prevState,
+          fullRange: true,
+        }))
       } else {
         setPriceRangeState((prevState) => ({ ...prevState, fullRange: false }))
       }
@@ -156,6 +193,13 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
     { display: <RangeControl value={t(`common.customRange`)} active={!fullRange} />, value: RangeSelection.CUSTOM },
   ]
 
+  const rangeSelectionInputValues = useMemo(() => {
+    return [
+      ticksAtLimit[isSorted ? 0 : 1] ? '0' : prices?.[0]?.toSignificant(8) ?? '',
+      ticksAtLimit[isSorted ? 1 : 0] ? '∞' : prices?.[1]?.toSignificant(8) ?? '',
+    ]
+  }, [isSorted, prices, ticksAtLimit])
+
   return (
     <Container {...rest}>
       <Flex gap="$gap20">
@@ -165,7 +209,7 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
           </Text>
           <SegmentedControl
             options={controlOptions}
-            selectedOption={baseCurrency?.symbol ?? ''}
+            selectedOption={baseToken?.symbol ?? ''}
             onSelectOption={handleSelectToken}
           />
         </Flex>
@@ -194,11 +238,10 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
               <Text variant="body3" color="$neutral1">
                 <Trans
                   i18nKey="common.amountPerBase"
-                  // TODO: update values after WEB-4920
                   values={{
-                    amount: '329,394,000.00',
-                    symbolA: quoteCurrency?.symbol,
-                    symbolB: baseCurrency?.symbol,
+                    amount: formatPrice({ price, type: NumberType.TokenTx }),
+                    symbolA: quoteToken?.symbol,
+                    symbolB: baseToken?.symbol,
                   }}
                 />
               </Text>
@@ -206,8 +249,18 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
             </Flex>
           </Flex>
           <Flex row gap="$gap4">
-            <RangeInput input={RangeSelectionInput.MIN} />
-            <RangeInput input={RangeSelectionInput.MAX} />
+            <RangeInput
+              input={RangeSelectionInput.MIN}
+              decrement={isSorted ? getDecrementLower : getIncrementUpper}
+              increment={isSorted ? getIncrementLower : getDecrementUpper}
+              value={rangeSelectionInputValues[0]}
+            />
+            <RangeInput
+              input={RangeSelectionInput.MAX}
+              decrement={isSorted ? getDecrementUpper : getIncrementLower}
+              increment={isSorted ? getIncrementUpper : getDecrementLower}
+              value={rangeSelectionInputValues[1]}
+            />
           </Flex>
         </Flex>
       </Flex>

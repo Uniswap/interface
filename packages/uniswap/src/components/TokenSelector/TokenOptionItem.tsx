@@ -4,9 +4,15 @@ import { Check } from 'ui/src/components/icons/Check'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { TokenOption } from 'uniswap/src/components/TokenSelector/types'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import WarningIcon from 'uniswap/src/components/warnings/WarningIcon'
+import { getWarningIconColorOverride } from 'uniswap/src/components/warnings/utils'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
+import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
@@ -29,6 +35,29 @@ interface OptionProps {
   isSelected?: boolean
 }
 
+function getTokenWarningDetails(currencyInfo: CurrencyInfo): {
+  severity: WarningSeverity | undefined
+  isWarningSevere: boolean
+  isNonDefaultList: boolean
+  isBlocked: boolean
+} {
+  const { safetyLevel, safetyInfo } = currencyInfo
+  const severity = getTokenWarningSeverity(currencyInfo)
+  const isWarningSevere =
+    severity === WarningSeverity.Blocked || severity === WarningSeverity.High || severity === WarningSeverity.Medium
+  const isNonDefaultList =
+    safetyLevel === SafetyLevel.MediumWarning ||
+    safetyLevel === SafetyLevel.StrongWarning ||
+    safetyInfo?.tokenList === TokenList.NonDefault
+  const isBlocked = severity === WarningSeverity.Blocked || safetyLevel === SafetyLevel.Blocked
+  return {
+    severity,
+    isWarningSevere,
+    isNonDefaultList,
+    isBlocked,
+  }
+}
+
 function _TokenOptionItem({
   option,
   showWarnings,
@@ -43,8 +72,15 @@ function _TokenOptionItem({
   isSelected,
 }: OptionProps): JSX.Element {
   const { currencyInfo, isUnsupported } = option
-  const { currency, safetyLevel } = currencyInfo
+  const { currency } = currencyInfo
   const [showWarningModal, setShowWarningModal] = useState(false)
+  const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
+
+  const { severity, isBlocked, isNonDefaultList, isWarningSevere } = getTokenWarningDetails(currencyInfo)
+  const warningIconColor = getWarningIconColorOverride(severity)
+  const shouldShowWarningModalOnPress = !tokenProtectionEnabled
+    ? isBlocked || (isNonDefaultList && !tokenWarningDismissed)
+    : isWarningSevere && !tokenWarningDismissed
 
   const handleShowWarningModal = useCallback((): void => {
     dismissNativeKeyboard()
@@ -52,12 +88,7 @@ function _TokenOptionItem({
   }, [setShowWarningModal])
 
   const onPressTokenOption = useCallback(() => {
-    if (
-      showWarnings &&
-      (safetyLevel === SafetyLevel.Blocked ||
-        ((safetyLevel === SafetyLevel.MediumWarning || safetyLevel === SafetyLevel.StrongWarning) &&
-          !tokenWarningDismissed))
-    ) {
+    if (showWarnings && shouldShowWarningModalOnPress) {
       // On mobile web we need to wait for the keyboard to hide
       // before showing the modal to avoid height issues
       if (isKeyboardOpen && isInterface) {
@@ -71,7 +102,7 @@ function _TokenOptionItem({
     }
 
     onPress()
-  }, [showWarnings, safetyLevel, isKeyboardOpen, tokenWarningDismissed, handleShowWarningModal, onPress])
+  }, [showWarnings, shouldShowWarningModalOnPress, onPress, isKeyboardOpen, handleShowWarningModal])
 
   const onAcceptTokenWarning = useCallback(() => {
     dismissWarningCallback()
@@ -86,7 +117,7 @@ function _TokenOptionItem({
         animation="300ms"
         hapticStyle={ImpactFeedbackStyle.Light}
         hoverStyle={{ backgroundColor: '$surface1Hovered' }}
-        opacity={(showWarnings && safetyLevel === SafetyLevel.Blocked) || isUnsupported ? 0.5 : 1}
+        opacity={(showWarnings && severity === WarningSeverity.Blocked) || isUnsupported ? 0.5 : 1}
         width="100%"
         onPress={onPressTokenOption}
       >
@@ -114,9 +145,9 @@ function _TokenOptionItem({
                 <Text color="$neutral1" numberOfLines={1} variant="body1">
                   {currency.name}
                 </Text>
-                {(safetyLevel === SafetyLevel.Blocked || safetyLevel === SafetyLevel.StrongWarning) && (
+                {warningIconColor && (
                   <Flex>
-                    <WarningIcon safetyLevel={safetyLevel} size="$icon.16" strokeColorOverride="$neutral3" />
+                    <WarningIcon severity={severity} size="$icon.16" strokeColorOverride={warningIconColor} />
                   </Flex>
                 )}
               </Flex>

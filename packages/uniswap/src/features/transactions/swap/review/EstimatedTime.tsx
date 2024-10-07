@@ -5,10 +5,10 @@ import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 
 interface EstimatedTimeProps {
   timeMs?: number
-  showOnlyIfLong?: boolean
+  visibleIfLong?: boolean
 }
 
-export function EstimatedTime({ timeMs, showOnlyIfLong }: EstimatedTimeProps): JSX.Element | null {
+export function EstimatedTime({ timeMs, visibleIfLong }: EstimatedTimeProps): JSX.Element | null {
   const { t } = useTranslation()
 
   const estimatedBridgingTime = useMemo(() => {
@@ -31,7 +31,12 @@ export function EstimatedTime({ timeMs, showOnlyIfLong }: EstimatedTimeProps): J
     }
   }, [timeMs, t])
 
-  if (!timeMs || !estimatedBridgingTime || (showOnlyIfLong && timeMs < ONE_MINUTE_MS)) {
+  if (
+    !timeMs ||
+    !estimatedBridgingTime ||
+    (visibleIfLong && timeMs < ONE_MINUTE_MS) ||
+    (!visibleIfLong && timeMs >= ONE_MINUTE_MS)
+  ) {
     return null
   }
 

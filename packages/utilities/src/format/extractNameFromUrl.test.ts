@@ -6,6 +6,7 @@ describe('extractNameFromUrl', () => {
     expect(extractNameFromUrl('http://app.example.com')).toBe('example')
     expect(extractNameFromUrl('https://example.co.uk')).toBe('example')
     expect(extractNameFromUrl('https://example.org')).toBe('example')
+    expect(extractNameFromUrl('https://example.reallylongtld')).toBe('example')
     expect(extractNameFromUrl('ftp://example.com')).toBe('example')
   })
 

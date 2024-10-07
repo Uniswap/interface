@@ -6,7 +6,9 @@ import { useCallback } from 'react'
 import { Button, Flex, FlexProps, Text } from 'ui/src'
 import { Edit } from 'ui/src/components/icons/Edit'
 import { iconSizes } from 'ui/src/theme'
+import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { Trans } from 'uniswap/src/i18n'
+import { NumberType } from 'utilities/src/format/types'
 
 const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onClick: () => void } & FlexProps) => {
   return (
@@ -25,7 +27,7 @@ const EditStep = ({ children, onClick, ...rest }: { children: JSX.Element; onCli
 export const EditSelectTokensStep = (props?: FlexProps) => {
   const {
     positionState: {
-      tokenInputs: { TOKEN0: token0, TOKEN1: token1 },
+      currencyInputs: { TOKEN0: token0, TOKEN1: token1 },
     },
     setStep,
   } = useCreatePositionContext()
@@ -50,18 +52,13 @@ export const EditSelectTokensStep = (props?: FlexProps) => {
 }
 
 export const EditRangeSelectionStep = (props?: FlexProps) => {
+  const { setStep } = useCreatePositionContext()
   const {
-    positionState: {
-      tokenInputs: { TOKEN0: token0, TOKEN1: token1 },
-    },
-    setStep,
-  } = useCreatePositionContext()
-  const {
-    priceRangeState: { priceInverted },
+    derivedPriceRangeInfo: { baseAndQuoteTokens, prices },
   } = usePriceRangeContext()
 
-  const baseCurrency = priceInverted ? token1 : token0
-  const quoteCurrency = priceInverted ? token0 : token1
+  const { formatNumberOrString } = useLocalizationContext()
+  const [baseCurrency, quoteCurrency] = baseAndQuoteTokens ?? [undefined, undefined]
 
   const handleEdit = useCallback(() => {
     setStep(PositionFlowStep.PRICE_RANGE)
@@ -78,13 +75,13 @@ export const EditRangeSelectionStep = (props?: FlexProps) => {
             <Text variant="body2" color="$neutral2">
               <Trans i18nKey="chart.price.label.low" />
             </Text>
-            <Text variant="body2">{`283,923,000 ${baseCurrency?.symbol + '/' + quoteCurrency?.symbol}`}</Text>
+            <Text variant="body2">{`${formatNumberOrString({ value: prices?.[0]?.toSignificant(), type: NumberType.TokenTx })} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
           </Flex>
           <Flex row gap={10}>
             <Text variant="body2" color="$neutral2">
               <Trans i18nKey="chart.price.label.high" />
             </Text>
-            <Text variant="body2">{`481,848,481 ${baseCurrency?.symbol + '/' + quoteCurrency?.symbol}`}</Text>
+            <Text variant="body2">{`${formatNumberOrString({ value: prices?.[1]?.toSignificant(), type: NumberType.TokenTx })} ${quoteCurrency?.symbol + '/' + baseCurrency?.symbol}`}</Text>
           </Flex>
         </Flex>
       </Flex>

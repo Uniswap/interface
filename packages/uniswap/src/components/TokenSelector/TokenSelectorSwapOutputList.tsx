@@ -1,7 +1,6 @@
 import { memo, useCallback, useMemo } from 'react'
 import { TokenSelectorList } from 'uniswap/src/components/TokenSelector/TokenSelectorList'
 import {
-  useBridgingTokensOptions,
   useCommonTokensOptionsWithFallback,
   useFavoriteTokensOptions,
   usePopularTokensOptions,
@@ -19,7 +18,9 @@ import {
   tokenOptionDifference,
   useTokenOptionsSection,
 } from 'uniswap/src/components/TokenSelector/utils'
+import { NewTag } from 'uniswap/src/components/pill/NewTag'
 import { GqlResult } from 'uniswap/src/data/types'
+import { useBridgingTokensOptions } from 'uniswap/src/features/bridging/hooks/tokens'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -67,6 +68,7 @@ function useTokenSectionsForSwapOutput({
     error: bridgingTokenOptionsError,
     refetch: refetchBridgingTokenOptions,
     loading: bridgingTokenOptionsLoading,
+    shouldNest: shouldNestBridgingTokens,
   } = useBridgingTokensOptions({ input, walletAddress: activeAccountAddress, chainFilter })
 
   const recentlySearchedTokenOptions = useRecentlySearchedTokens(chainFilter)
@@ -107,7 +109,11 @@ function useTokenSectionsForSwapOutput({
 
   const popularMinusPortfolioTokens = tokenOptionDifference(popularTokenOptions, portfolioTokenOptions)
   const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularMinusPortfolioTokens)
-  const bridgingSection = useTokenOptionsSection(TokenOptionSection.BridgingTokens, [bridgingTokenOptions ?? []])
+  const bridgingSection = useTokenOptionsSection(
+    TokenOptionSection.BridgingTokens,
+    shouldNestBridgingTokens ? [bridgingTokenOptions ?? []] : bridgingTokenOptions ?? [],
+    <NewTag />,
+  )
 
   const sections = useMemo(() => {
     if (isSwapListLoading(loading, portfolioSection, popularSection)) {

@@ -2,8 +2,9 @@
 import { Position } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BadgeData, LiquidityPositionInfoBadges } from 'components/Liquidity/LiquidityPositionInfoBadges'
 import { LiquidityPositionStatusIndicator } from 'components/Liquidity/LiquidityPositionStatusIndicator'
-import { getProtocolVersionLabel, usePositionInfo } from 'components/Liquidity/utils'
+import { getProtocolVersionLabel, parseRestPosition } from 'components/Liquidity/utils'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { useMemo } from 'react'
 import { Flex, Text } from 'ui/src'
 import { DocumentList } from 'ui/src/components/icons/DocumentList'
 
@@ -12,7 +13,7 @@ interface LiquidityPositionInfoProps {
 }
 
 export function LiquidityPositionInfo({ position }: LiquidityPositionInfoProps) {
-  const positionInfo = usePositionInfo(position)
+  const positionInfo = useMemo(() => parseRestPosition(position), [position])
   if (!positionInfo) {
     return null
   }

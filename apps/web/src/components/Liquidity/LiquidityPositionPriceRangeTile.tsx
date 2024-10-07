@@ -16,7 +16,7 @@ const InnerTile = styled(Flex, {
 })
 
 interface LiquidityPositionPriceRangeTileProps {
-  status: PositionStatus
+  status?: PositionStatus
   minPrice: Price<Currency, Currency>
   maxPrice: Price<Currency, Currency>
   currentPrice: Price<Currency, Currency>
@@ -62,7 +62,7 @@ export function LiquidityPositionPriceRangeTile({
           <Text variant="subheading1">
             <Trans i18nKey="pool.priceRange" />
           </Text>
-          <LiquidityPositionStatusIndicator status={status} />
+          {status && <LiquidityPositionStatusIndicator status={status} />}
         </Flex>
         <SegmentedControl
           options={controlOptions}

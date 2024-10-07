@@ -1,8 +1,14 @@
 import { TypedDataDomain, TypedDataField } from '@ethersproject/abstract-signer'
 import { permit2Address } from '@uniswap/permit2-sdk'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { fetchSwap } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { CreateSwapRequest, DutchQuoteV2 } from 'uniswap/src/data/tradingApi/__generated__'
+import { fetchSwap, increaseLpPosition } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
+import {
+  CreateSwapRequest,
+  DutchQuoteV2,
+  IncreaseLPPositionRequest,
+  PriorityQuote,
+} from 'uniswap/src/data/tradingApi/__generated__'
+import { LiquidityTxAndGasInfo, isValidLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { SwapTxAndGasInfo, isValidSwapTxContext } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
@@ -20,6 +26,8 @@ export enum TransactionStepType {
   SwapTransactionAsync = 'SwapTransactionAsync',
   Permit2Signature = 'Permit2Signature',
   UniswapXSignature = 'UniswapXSignature',
+  IncreasePositionTransaction = 'IncreasePositionTransaction',
+  IncreasePositionTransactionAsync = 'IncreasePositionTransactionAsync',
 }
 
 type UniswapXSwapSteps =
@@ -35,8 +43,14 @@ type ClassicSwapSteps =
   | SwapTransactionStep
   | SwapTransactionStepAsync
 
+type IncreasePositionSteps =
+  | TokenApprovalTransactionStep
+  | Permit2SignatureStep
+  | IncreasePositionTransactionStep
+  | IncreasePositionTransactionStepAsync
+
 // TODO: add v4 lp flow
-export type TransactionStep = ClassicSwapSteps | UniswapXSwapSteps
+export type TransactionStep = ClassicSwapSteps | UniswapXSwapSteps | IncreasePositionSteps
 export type OnChainTransactionStep = TransactionStep & OnChainTransactionFields
 export type SignatureTransactionStep = TransactionStep & SignTypedDataStepFields
 
@@ -59,6 +73,7 @@ export interface TokenApprovalTransactionStep extends OnChainTransactionFields {
   type: TransactionStepType.TokenApprovalTransaction
   token: Token
   spender: string
+  // TODO(WEB-5083): this is used to distinguish a revoke from an approve. It can likely be replaced by a boolean because for LP stuff the amount isn't straight forward.
   amount: string
 }
 
@@ -70,7 +85,7 @@ export interface TokenRevocationTransactionStep extends Omit<TokenApprovalTransa
 // Classic Swap
 export interface Permit2SignatureStep extends SignTypedDataStepFields {
   type: TransactionStepType.Permit2Signature
-  token: Currency
+  token: Currency // Check if this needs to handle multiple tokens for LPing
 }
 export interface SwapTransactionStep extends OnChainTransactionFields {
   // Swaps that don't require permit
@@ -79,6 +94,17 @@ export interface SwapTransactionStep extends OnChainTransactionFields {
 export interface SwapTransactionStepAsync {
   // Swaps that require permit
   type: TransactionStepType.SwapTransactionAsync
+  getTxRequest(signature: string): Promise<ValidatedTransactionRequest | undefined> // fetches tx request from trading api with signature
+}
+
+export interface IncreasePositionTransactionStep extends OnChainTransactionFields {
+  // Doesn't require permit
+  type: TransactionStepType.IncreasePositionTransaction
+}
+
+export interface IncreasePositionTransactionStepAsync {
+  // Requires permit
+  type: TransactionStepType.IncreasePositionTransactionAsync
   getTxRequest(signature: string): Promise<ValidatedTransactionRequest | undefined> // fetches tx request from trading api with signature
 }
 
@@ -94,6 +120,22 @@ type ClassicSwapFlow =
       approval?: TokenApprovalTransactionStep
       permit: Permit2SignatureStep
       swap: SwapTransactionStepAsync
+    }
+
+type IncreasePositionFlow =
+  | {
+      approvalToken0?: TokenApprovalTransactionStep
+      approvalToken1?: TokenApprovalTransactionStep
+      approvalPositionToken?: TokenApprovalTransactionStep
+      permit: undefined
+      increasePosition: IncreasePositionTransactionStep
+    }
+  | {
+      approvalToken0?: TokenApprovalTransactionStep
+      approvalToken1?: TokenApprovalTransactionStep
+      approvalPositionToken?: TokenApprovalTransactionStep
+      permit: Permit2SignatureStep
+      increasePosition: IncreasePositionTransactionStepAsync
     }
 
 function orderSwapSteps(flow: ClassicSwapFlow): ClassicSwapSteps[] {
@@ -116,11 +158,34 @@ function orderSwapSteps(flow: ClassicSwapFlow): ClassicSwapSteps[] {
   return steps
 }
 
+function orderLiquiditySteps(flow: IncreasePositionFlow): IncreasePositionSteps[] {
+  const steps: IncreasePositionSteps[] = []
+  if (flow.approvalToken0) {
+    steps.push(flow.approvalToken0)
+  }
+
+  if (flow.approvalToken1) {
+    steps.push(flow.approvalToken1)
+  }
+
+  if (flow.approvalPositionToken) {
+    steps.push(flow.approvalPositionToken)
+  }
+
+  if (flow.permit) {
+    steps.push(flow.permit)
+  }
+
+  steps.push(flow.increasePosition)
+
+  return steps
+}
+
 // UniswapX
 export interface UniswapXSignatureStep extends SignTypedDataStepFields {
   type: TransactionStepType.UniswapXSignature
   deadline: number
-  quote: DutchQuoteV2
+  quote: DutchQuoteV2 | PriorityQuote
 }
 
 type UniswapXSwapFlow = {
@@ -172,7 +237,7 @@ function createRevocationTransactionStep(
   trade: UniswapXTrade | ClassicTrade | BridgeTrade | null,
 ): TokenRevocationTransactionStep | undefined {
   // Revocation can copy the approval step aside from type and amount.
-  const approvalStep = createApprovalTransactionStep(txRequest, trade)
+  const approvalStep = createSwapApprovalTransactionStep(txRequest, trade)
 
   return approvalStep
     ? {
@@ -183,7 +248,7 @@ function createRevocationTransactionStep(
     : undefined
 }
 
-function createApprovalTransactionStep(
+function createSwapApprovalTransactionStep(
   txRequest: ValidatedTransactionRequest | undefined,
   trade: UniswapXTrade | ClassicTrade | BridgeTrade | null,
 ): TokenApprovalTransactionStep | undefined {
@@ -204,7 +269,29 @@ function createApprovalTransactionStep(
     : undefined
 }
 
-function createSignOrderUniswapXStep(permitData: ValidatedPermit, quote: DutchQuoteV2): UniswapXSignatureStep {
+function createLPApprovalTransactionStep(
+  txRequest: ValidatedTransactionRequest | undefined,
+  currency: Currency | undefined,
+): TokenApprovalTransactionStep | undefined {
+  if (!txRequest || !currency) {
+    return undefined
+  }
+
+  const token = currency.wrapped
+
+  return {
+    txRequest,
+    type: TransactionStepType.TokenApprovalTransaction,
+    token,
+    amount: '1', // to distinguish a revoke from an approve. the value doesn't matter
+    spender: permit2Address(token.chainId),
+  }
+}
+
+function createSignOrderUniswapXStep(
+  permitData: ValidatedPermit,
+  quote: DutchQuoteV2 | PriorityQuote,
+): UniswapXSignatureStep {
   return {
     type: TransactionStepType.UniswapXSignature,
     deadline: quote.orderInfo.deadline,
@@ -213,16 +300,13 @@ function createSignOrderUniswapXStep(permitData: ValidatedPermit, quote: DutchQu
   }
 }
 
-function createPermit2SignatureStep(
-  permitData: ValidatedPermit,
-  trade: UniswapXTrade | ClassicTrade | BridgeTrade,
-): Permit2SignatureStep {
+function createPermit2SignatureStep(permitData: ValidatedPermit, token: Currency): Permit2SignatureStep {
   return {
     type: TransactionStepType.Permit2Signature,
     domain: permitData?.domain as TypedDataDomain,
     types: permitData?.types as Record<string, TypedDataField[]>,
     values: permitData?.values as Record<string, unknown>,
-    token: trade.inputAmount.currency,
+    token,
   }
 }
 
@@ -241,64 +325,127 @@ function createSwapTransactionAsyncStep(swapRequestArgs: CreateSwapRequest | und
         return undefined
       }
 
-      const { swap } = await fetchSwap({ ...swapRequestArgs, signature })
+      const { swap } = await fetchSwap({
+        ...swapRequestArgs,
+        signature,
+        /* simulating transaction provides a more accurate gas limit, and the simulation will succeed because async swap step will only occur after approval has been confirmed. */
+        simulateTransaction: true,
+      })
 
       return validateTransactionRequest(swap)
     },
   }
 }
 
-export function generateTransactionSteps(swapTxContext: SwapTxAndGasInfo): TransactionStep[] {
-  const isValidSwap = isValidSwapTxContext(swapTxContext)
-
-  if (!isValidSwap) {
-    return []
+function createIncreasePositionStep(txRequest: ValidatedTransactionRequest): IncreasePositionTransactionStep {
+  return {
+    type: TransactionStepType.IncreasePositionTransaction,
+    txRequest,
   }
+}
 
-  const { trade, approveTxRequest, revocationTxRequest } = swapTxContext
+function createIncreasePositionAsyncStep(
+  increasePositionRequestArgs: IncreaseLPPositionRequest | undefined,
+): IncreasePositionTransactionStepAsync {
+  return {
+    type: TransactionStepType.IncreasePositionTransactionAsync,
 
-  if (isClassic(swapTxContext)) {
-    const { swapRequestArgs } = swapTxContext
+    getTxRequest: async (/* TODO(WEB-5084): accept the signature here*/): Promise<
+      ValidatedTransactionRequest | undefined
+    > => {
+      if (!increasePositionRequestArgs) {
+        return undefined
+      }
+
+      const { increase } = await increaseLpPosition({
+        ...increasePositionRequestArgs /** TODO(WEB-5084): add the signature here */,
+      })
+
+      return validateTransactionRequest(increase)
+    },
+  }
+}
+
+export function generateTransactionSteps(swapTxContext: SwapTxAndGasInfo | LiquidityTxAndGasInfo): TransactionStep[] {
+  const isValidSwap = isValidSwapTxContext(swapTxContext)
+  const isValidLP = isValidLiquidityTxContext(swapTxContext)
+
+  if (isValidLP) {
+    const {
+      action,
+      approveToken0Request,
+      approveToken1Request,
+      approvePositionTokenRequest,
+      increasePositionRequestArgs,
+    } = swapTxContext
+
+    const approvalToken0 = createLPApprovalTransactionStep(approveToken0Request, action.currency0Amount.currency)
+    const approvalToken1 = createLPApprovalTransactionStep(approveToken1Request, action.currency1Amount.currency)
+    const approvalPositionToken = createLPApprovalTransactionStep(approvePositionTokenRequest, action.liquidityToken)
 
     if (swapTxContext.unsigned) {
-      return orderSwapSteps({
-        revocation: createRevocationTransactionStep(revocationTxRequest, trade),
-        approval: createApprovalTransactionStep(approveTxRequest, trade),
-        permit: createPermit2SignatureStep(swapTxContext.permit, trade),
-        swap: createSwapTransactionAsyncStep(swapRequestArgs),
+      return orderLiquiditySteps({
+        approvalToken0,
+        approvalToken1,
+        approvalPositionToken,
+        permit: createPermit2SignatureStep(swapTxContext.permit, action.currency0Amount.currency), // TODO: what about for multiple tokens
+        increasePosition: createIncreasePositionAsyncStep(increasePositionRequestArgs),
       })
     }
 
-    return orderSwapSteps({
-      revocation: createRevocationTransactionStep(revocationTxRequest, trade),
-      approval: createApprovalTransactionStep(approveTxRequest, trade),
+    return orderLiquiditySteps({
+      approvalToken0,
+      approvalToken1,
+      approvalPositionToken,
       permit: undefined,
-      swap: createSwapTransactionStep(swapTxContext.txRequest),
+      increasePosition: createIncreasePositionStep(swapTxContext.txRequest),
     })
-  } else if (isUniswapX(swapTxContext)) {
-    return orderUniswapXSteps({
-      revocation: createRevocationTransactionStep(revocationTxRequest, trade),
-      wrap: createWrapTransactionStep(swapTxContext.wrapTxRequest, trade),
-      approval: createApprovalTransactionStep(approveTxRequest, trade),
-      signOrder: createSignOrderUniswapXStep(swapTxContext.permit, swapTxContext.trade.quote.quote),
-    })
-  } else if (isBridge(swapTxContext)) {
-    const { swapRequestArgs } = swapTxContext
+  } else if (isValidSwap) {
+    const { trade, approveTxRequest, revocationTxRequest } = swapTxContext
 
-    if (swapTxContext.unsigned) {
+    if (isClassic(swapTxContext)) {
+      const { swapRequestArgs } = swapTxContext
+
+      if (swapTxContext.unsigned) {
+        return orderSwapSteps({
+          revocation: createRevocationTransactionStep(revocationTxRequest, trade),
+          approval: createSwapApprovalTransactionStep(approveTxRequest, trade),
+          permit: createPermit2SignatureStep(swapTxContext.permit, trade.inputAmount.currency),
+          swap: createSwapTransactionAsyncStep(swapRequestArgs),
+        })
+      }
+
       return orderSwapSteps({
         revocation: createRevocationTransactionStep(revocationTxRequest, trade),
-        approval: createApprovalTransactionStep(approveTxRequest, trade),
-        permit: createPermit2SignatureStep(swapTxContext.permit, trade),
-        swap: createSwapTransactionAsyncStep(swapRequestArgs),
+        approval: createSwapApprovalTransactionStep(approveTxRequest, trade),
+        permit: undefined,
+        swap: createSwapTransactionStep(swapTxContext.txRequest),
+      })
+    } else if (isUniswapX(swapTxContext)) {
+      return orderUniswapXSteps({
+        revocation: createRevocationTransactionStep(revocationTxRequest, trade),
+        wrap: createWrapTransactionStep(swapTxContext.wrapTxRequest, trade),
+        approval: createSwapApprovalTransactionStep(approveTxRequest, trade),
+        signOrder: createSignOrderUniswapXStep(swapTxContext.permit, swapTxContext.trade.quote.quote),
+      })
+    } else if (isBridge(swapTxContext)) {
+      const { swapRequestArgs } = swapTxContext
+
+      if (swapTxContext.unsigned) {
+        return orderSwapSteps({
+          revocation: createRevocationTransactionStep(revocationTxRequest, trade),
+          approval: createSwapApprovalTransactionStep(approveTxRequest, trade),
+          permit: createPermit2SignatureStep(swapTxContext.permit, trade.inputAmount.currency),
+          swap: createSwapTransactionAsyncStep(swapRequestArgs),
+        })
+      }
+      return orderSwapSteps({
+        revocation: createRevocationTransactionStep(revocationTxRequest, trade),
+        approval: createSwapApprovalTransactionStep(approveTxRequest, trade),
+        permit: undefined,
+        swap: createSwapTransactionStep(swapTxContext.txRequest),
       })
     }
-    return orderSwapSteps({
-      revocation: createRevocationTransactionStep(revocationTxRequest, trade),
-      approval: createApprovalTransactionStep(approveTxRequest, trade),
-      permit: undefined,
-      swap: createSwapTransactionStep(swapTxContext.txRequest),
-    })
   }
 
   return []

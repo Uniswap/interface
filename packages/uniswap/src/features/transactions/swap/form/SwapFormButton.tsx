@@ -1,7 +1,7 @@
 /* eslint-disable complexity */
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { AnimatePresence, Button, ColorTokens, Flex, Text, isWeb, useIsShortMobileDevice } from 'ui/src'
+import { Button, ColorTokens, Flex, Text, useIsShortMobileDevice } from 'ui/src'
 import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AccountType } from 'uniswap/src/features/accounts/types'
 import { AccountCTAsExperimentGroup, Experiments } from 'uniswap/src/features/gating/experiments'
@@ -15,18 +15,26 @@ import {
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { ViewOnlyModal } from 'uniswap/src/features/transactions/modals/ViewOnlyModal'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
+import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
+import {
+  useNeedsBridgingWarning,
+  useParsedSwapWarnings,
+} from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
+import { BridgingModal } from 'uniswap/src/features/transactions/swap/modals/BridgingModal'
+import { getActionName } from 'uniswap/src/features/transactions/swap/review/SubmitSwapButton'
+import { WrapCallback } from 'uniswap/src/features/transactions/swap/types/wrapCallback'
+import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { isWrapAction } from 'uniswap/src/features/transactions/swap/utils/wrap'
+import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { useIsBlocked } from 'uniswap/src/features/trm/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
-import { ONE_SECOND_MS } from 'utilities/src/time/time'
+import { isInterface } from 'utilities/src/platform'
 
-const KEEP_OPEN_MSG_DELAY = 3 * ONE_SECOND_MS
 export const SWAP_BUTTON_TEXT_VARIANT = 'buttonLabel1'
 
-export function SwapFormButton(): JSX.Element {
+export function SwapFormButton({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX.Element {
   const { t } = useTranslation()
   const isShortMobileDevice = useIsShortMobileDevice()
 
@@ -34,6 +42,9 @@ export function SwapFormButton(): JSX.Element {
   const { walletNeedsRestore, setScreen, swapRedirectCallback } = useTransactionModalContext()
   const { derivedSwapInfo, isSubmitting, updateSwapForm, exactAmountFiat, exactAmountToken } = useSwapFormContext()
   const { blockingWarning, insufficientBalanceWarning, insufficientGasFundsWarning } = useParsedSwapWarnings()
+
+  const needsBridgingWarning = useNeedsBridgingWarning(derivedSwapInfo)
+  const [showBridgingWarningModal, setShowBridgingWarningModal] = useState(false)
 
   const [showViewOnlyModal, setShowViewOnlyModal] = useState(false)
 
@@ -52,36 +63,59 @@ export function SwapFormButton(): JSX.Element {
 
   const { onConnectWallet } = useUniswapContext()
 
-  const onReviewPress = useCallback(() => {
-    if (swapRedirectCallback) {
-      swapRedirectCallback({
-        inputCurrency: currencies[CurrencyField.INPUT]?.currency,
-        outputCurrency: currencies[CurrencyField.OUTPUT]?.currency,
-        typedValue: exactAmountToken,
-        independentField: exactCurrencyField,
-        chainId,
-      })
-      // Active account will only ever be undefined on web
-    } else if (!activeAccount && onConnectWallet) {
-      onConnectWallet()
-    } else if (isViewOnlyWallet) {
-      setShowViewOnlyModal(true)
-    } else {
-      updateSwapForm({ txId: createTransactionId() })
-      setScreen(TransactionScreen.Review)
-    }
-  }, [
-    activeAccount,
-    currencies,
-    onConnectWallet,
-    exactAmountToken,
-    exactCurrencyField,
-    chainId,
-    isViewOnlyWallet,
-    setScreen,
-    swapRedirectCallback,
-    updateSwapForm,
-  ])
+  const { isInterfaceWrap, onInterfaceWrap } = useInterfaceWrap(wrapCallback)
+
+  const onReviewPress = useCallback(
+    ({ skipBridgingWarning }: { skipBridgingWarning: boolean }) => {
+      if (swapRedirectCallback) {
+        swapRedirectCallback({
+          inputCurrency: currencies[CurrencyField.INPUT]?.currency,
+          outputCurrency: currencies[CurrencyField.OUTPUT]?.currency,
+          typedValue: exactAmountToken,
+          independentField: exactCurrencyField,
+          chainId,
+        })
+        // Active account will only ever be undefined on web
+      } else if (!activeAccount && onConnectWallet) {
+        onConnectWallet()
+      } else if (isViewOnlyWallet) {
+        setShowViewOnlyModal(true)
+      } else if (isInterfaceWrap) {
+        // TODO(WEB-5012): Align interface wrap UX into SwapReviewScreen
+        onInterfaceWrap?.()
+      } else if (needsBridgingWarning && !skipBridgingWarning) {
+        setShowBridgingWarningModal(true)
+      } else {
+        updateSwapForm({ txId: createTransactionId() })
+        setScreen(TransactionScreen.Review)
+      }
+    },
+    [
+      swapRedirectCallback,
+      activeAccount,
+      onConnectWallet,
+      isViewOnlyWallet,
+      isInterfaceWrap,
+      needsBridgingWarning,
+      currencies,
+      exactAmountToken,
+      exactCurrencyField,
+      chainId,
+      onInterfaceWrap,
+      updateSwapForm,
+      setScreen,
+    ],
+  )
+
+  const bridgingModalActionCallback = useCallback(
+    (accepted: boolean) => {
+      setShowBridgingWarningModal(false)
+      if (accepted) {
+        onReviewPress({ skipBridgingWarning: true })
+      }
+    },
+    [onReviewPress],
+  )
 
   const invalidTokenSelection = Object.values(currencies).some((currency) => !currency)
   const invalidAmountSelection = !exactAmountFiat && !exactAmountToken
@@ -92,6 +126,9 @@ export function SwapFormButton(): JSX.Element {
   const accountsCTAExperimentGroup = useExperimentGroupName(Experiments.AccountCTAs)
   const isSignIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.SignInSignUp
   const isLogIn = accountsCTAExperimentGroup === AccountCTAsExperimentGroup.LogInCreateAccount
+
+  // TODO(WEB-5090): Simplify logic, deduplicate disabled vs reviewButtonDisabled
+  const disabled = !!activeAccount && reviewButtonDisabled && !isViewOnlyWallet && !swapRedirectCallback
 
   const getButtonText = (): string => {
     if (swapRedirectCallback) {
@@ -117,27 +154,52 @@ export function SwapFormButton(): JSX.Element {
     if (insufficientGasFundsWarning) {
       return t('common.insufficientTokenBalance.error.simple', { tokenSymbol: nativeCurrency.symbol ?? '' })
     }
+    if (isInterfaceWrap) {
+      return getActionName(t, wrapType)
+    }
 
     return t('swap.button.review')
   }
 
+  const getButtonOpacity = (): number | undefined => {
+    switch (true) {
+      case isViewOnlyWallet:
+        return 0.4
+      case !!isBlockingWithCustomMessage:
+      case !!disabled:
+        // use opacity 1 for blocking states, because surface2 is hard to read with default disabled opacity
+        return 1
+      default:
+        return 1
+    }
+  }
+
   const buttonProps: {
     backgroundColor: ColorTokens
+    hoverBackgroundColor: ColorTokens
     buttonTextColor: ColorTokens
     buttonText: string
+    opacity: number | undefined
   } = {
     backgroundColor:
       !activeAccount || isSubmitting
         ? '$accent2'
-        : isBlockingWithCustomMessage && !swapRedirectCallback
+        : (isBlockingWithCustomMessage || disabled) && !swapRedirectCallback
           ? '$surface2'
           : '$accent1',
+    hoverBackgroundColor:
+      !activeAccount || isSubmitting
+        ? '$accent2Hovered'
+        : (isBlockingWithCustomMessage || disabled) && !swapRedirectCallback
+          ? '$surface2'
+          : '$accent1Hovered',
     buttonTextColor: !activeAccount
       ? '$accent1'
-      : isBlockingWithCustomMessage && !swapRedirectCallback
+      : (isBlockingWithCustomMessage || disabled) && !swapRedirectCallback
         ? '$neutral2'
         : '$white',
     buttonText: getButtonText(),
+    opacity: getButtonOpacity(),
   }
 
   return (
@@ -145,17 +207,17 @@ export function SwapFormButton(): JSX.Element {
       <Trace logPress element={ElementName.SwapReview}>
         <Button
           hapticFeedback
+          animation="fast"
           // Custom styles are matched with our theme hover opacities - can remove this when we implement full theme support in Button
-          pressStyle={{ backgroundColor: buttonProps.backgroundColor, opacity: 0.7 }}
-          hoverStyle={{ backgroundColor: buttonProps.backgroundColor, opacity: 0.9 }}
+          pressStyle={{ backgroundColor: buttonProps.backgroundColor, scale: 0.98 }}
+          hoverStyle={{ backgroundColor: buttonProps.hoverBackgroundColor }}
           backgroundColor={buttonProps.backgroundColor}
-          disabled={!!activeAccount && reviewButtonDisabled && !isViewOnlyWallet && !swapRedirectCallback}
-          // use opacity 1 for states with error text, because surface2 is hard to read with default disabled opacity
-          opacity={isViewOnlyWallet ? 0.4 : isBlockingWithCustomMessage ? 1 : undefined}
-          size={isShortMobileDevice ? 'small' : isWeb ? 'medium' : 'large'}
+          disabled={disabled}
+          opacity={buttonProps.opacity}
+          size={isShortMobileDevice ? 'small' : 'large'}
           testID={TestID.ReviewSwap}
           width="100%"
-          onPress={onReviewPress}
+          onPress={() => onReviewPress({ skipBridgingWarning: false })}
         >
           <Text color={buttonProps.buttonTextColor} variant={SWAP_BUTTON_TEXT_VARIANT}>
             {buttonProps.buttonText}
@@ -163,29 +225,53 @@ export function SwapFormButton(): JSX.Element {
         </Button>
       </Trace>
       <ViewOnlyModal isOpen={showViewOnlyModal} onDismiss={(): void => setShowViewOnlyModal(false)} />
+      <BridgingModal
+        isOpen={showBridgingWarningModal}
+        derivedSwapInfo={derivedSwapInfo}
+        onContinue={() => bridgingModalActionCallback(true)}
+        onClose={() => bridgingModalActionCallback(false)}
+      />
     </Flex>
   )
 }
 
-export function SubmittingText(): JSX.Element {
-  const { t } = useTranslation()
-  const [showKeepOpenMessage, setShowKeepOpenMessage] = useState(false)
+// TODO(WEB-5012): Align interface wrap UX into SwapReviewScreen
+function useInterfaceWrap(wrapCallback?: WrapCallback): {
+  isInterfaceWrap: boolean
+  onInterfaceWrap?: () => void
+} {
+  const account = useAccountMeta()
+  const { derivedSwapInfo, updateSwapForm } = useSwapFormContext()
+  const swapTxContext = useSwapTxContext()
 
-  useEffect(() => {
-    const timeout = setTimeout(() => setShowKeepOpenMessage(true), KEEP_OPEN_MSG_DELAY)
-    return () => clearTimeout(timeout)
-  }, [])
+  const { currencyAmounts, txId, wrapType } = derivedSwapInfo
+  const isInterfaceWrap = isInterface && wrapType !== WrapType.NotApplicable
 
-  // Use different key to re-trigger animation when message changes
-  const key = showKeepOpenMessage ? 'submitting-text-msg1' : 'submitting-text-msg2'
+  const onInterfaceWrap = useMemo(() => {
+    const inputCurrencyAmount = currencyAmounts[CurrencyField.INPUT]
+    const txRequest = isUniswapX(swapTxContext) ? undefined : swapTxContext.txRequest
+    if (!wrapCallback || !txRequest || !isInterfaceWrap || !account || !inputCurrencyAmount) {
+      return undefined
+    }
 
-  return (
-    <AnimatePresence key={key}>
-      <Flex animateEnterExit="fadeInDownOutDown" animation="quicker">
-        <Text color="$accent1" flex={1} textAlign="center" variant={SWAP_BUTTON_TEXT_VARIANT}>
-          {showKeepOpenMessage ? t('swap.button.submitting.keep.open') : t('swap.button.submitting')}
-        </Text>
-      </Flex>
-    </AnimatePresence>
-  )
+    const onSuccess = (): void =>
+      updateSwapForm({ exactAmountFiat: undefined, exactAmountToken: '', isSubmitting: false })
+    const onFailure = (): void => updateSwapForm({ isSubmitting: false })
+
+    return () => {
+      updateSwapForm({ isSubmitting: true })
+      wrapCallback({
+        account,
+        inputCurrencyAmount,
+        onSuccess,
+        onFailure,
+        txRequest,
+        txId,
+        wrapType,
+        gasEstimates: swapTxContext.gasFeeEstimation.wrapEstimates,
+      })
+    }
+  }, [account, currencyAmounts, isInterfaceWrap, swapTxContext, txId, updateSwapForm, wrapCallback, wrapType])
+
+  return { isInterfaceWrap, onInterfaceWrap }
 }

@@ -1,4 +1,4 @@
-import { memo } from 'react'
+import { ComponentProps, memo, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea, isWeb } from 'ui/src'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -21,6 +21,11 @@ export const SelectTokenButton = memo(function _SelectTokenButton({
   testID,
 }: SelectTokenButtonProps): JSX.Element {
   const { t } = useTranslation()
+
+  const hoverStyle: { backgroundColor: ComponentProps<typeof Flex>['backgroundColor'] } = useMemo(
+    () => ({ backgroundColor: selectedCurrencyInfo ? '$surface1Hovered' : '$accent1Hovered' }),
+    [selectedCurrencyInfo],
+  )
 
   const isCompact = !isInterface || isMobileWeb
 
@@ -49,6 +54,9 @@ export const SelectTokenButton = memo(function _SelectTokenButton({
       shadowColor="$surface3"
       shadowRadius={10}
       shadowOpacity={0.04}
+      scaleTo={0.98}
+      hoverable={!!selectedCurrencyInfo}
+      hoverStyle={hoverStyle}
       onPress={onPress}
     >
       <Flex centered row gap="$spacing6" px="$spacing12" height="$spacing36">

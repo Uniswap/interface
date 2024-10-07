@@ -3,6 +3,7 @@ import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
 import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
 import { BigNumber } from 'ethers/lib/ethers'
+import { useMemo } from 'react'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { MAX_AUTO_SLIPPAGE_TOLERANCE } from 'uniswap/src/constants/transactions'
 import { DiscriminatedQuoteResponse } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
@@ -10,6 +11,7 @@ import {
   BridgeQuote,
   ClassicQuote,
   Quote,
+  QuoteRequest,
   QuoteResponse,
   Routing,
   RoutingPreference,
@@ -20,8 +22,18 @@ import {
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
-import { BridgeTrade, ClassicTrade, Trade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { TradeProtocolPreference } from 'uniswap/src/features/transactions/types/transactionState'
+import {
+  BridgeTrade,
+  ClassicTrade,
+  PriorityOrderTrade,
+  Trade,
+  UniswapXV2Trade,
+} from 'uniswap/src/features/transactions/swap/types/trade'
+import {
+  DEFAULT_PROTOCOL_OPTIONS,
+  FrontendSupportedProtocol,
+  useProtocolsForChain,
+} from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -60,6 +72,7 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
         tradeType,
       })
     }
+    case Routing.PRIORITY:
     case Routing.DUTCH_V2: {
       const { quote } = data
       // UniswapX backend response does not include decimals; local currencies must be passed to UniswapXTrade rather than tokens parsed from the api response.
@@ -71,7 +84,12 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
         return null
       }
 
-      return new UniswapXTrade({ quote: data, currencyIn, currencyOut, tradeType })
+      const isPriority = data.routing === Routing.PRIORITY
+      if (isPriority) {
+        return new PriorityOrderTrade({ quote: data, currencyIn, currencyOut, tradeType })
+      } else {
+        return new UniswapXV2Trade({ quote: data, currencyIn, currencyOut, tradeType })
+      }
     }
     case Routing.BRIDGE: {
       return new BridgeTrade({ quote: data, currencyIn, currencyOut, tradeType })
@@ -340,29 +358,26 @@ export function validateTrade({
   return trade
 }
 
-// Converts routing preference type to expected type for trading api
-export function getRoutingPreferenceForSwapRequest(
-  protocolPreference: TradeProtocolPreference | undefined,
-  uniswapXEnabled: boolean,
-  isBridging: boolean,
+export function useQuoteRoutingParams(
+  selectedProtocols: FrontendSupportedProtocol[] | undefined,
+  tokenInChainId: UniverseChainId | undefined,
+  tokenOutChainId: UniverseChainId | undefined,
   isUSDQuote?: boolean,
-): RoutingPreference {
-  if (isUSDQuote) {
-    return RoutingPreference.CLASSIC
-  }
+): Pick<QuoteRequest, 'routingPreference' | 'protocols'> {
+  const protocols = useProtocolsForChain(selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS, tokenInChainId)
 
-  if (isBridging) {
-    return RoutingPreference.BEST_PRICE
-  }
+  return useMemo(() => {
+    // for USD quotes, we avoid routing through UniswapX
+    if (isUSDQuote) {
+      return { routingPreference: RoutingPreference.CLASSIC }
+    }
 
-  switch (protocolPreference) {
-    case TradeProtocolPreference.Default:
-      return uniswapXEnabled ? RoutingPreference.BEST_PRICE_V2 : RoutingPreference.CLASSIC
-    case TradeProtocolPreference.V2Only:
-      return RoutingPreference.V2_ONLY
-    case TradeProtocolPreference.V3Only:
-      return RoutingPreference.V3_ONLY
-    default:
-      return RoutingPreference.CLASSIC
-  }
+    // for bridging, we want to only return BEST_PRICE
+    if (tokenInChainId !== tokenOutChainId) {
+      return { routingPreference: RoutingPreference.BEST_PRICE }
+    }
+
+    // For normal quotes, we only need to specify protocols
+    return { protocols }
+  }, [isUSDQuote, tokenInChainId, tokenOutChainId, protocols])
 }

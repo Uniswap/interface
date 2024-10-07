@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { AdaptiveWebModal, isWeb } from 'ui/src'
+import { AdaptiveWebModal } from 'ui/src'
 import { ModalProps } from 'uniswap/src/components/modals/ModalProps'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { INTERFACE_NAV_HEIGHT } from 'uniswap/src/theme/heights'
@@ -41,7 +41,7 @@ export function Modal({
   }, [isModalOpen])
 
   const isTopAligned = alignment === 'top'
-  const justifyContent = isTopAligned ? 'flex-start' : isWeb ? undefined : 'center'
+  const justifyContent = isTopAligned ? 'flex-start' : undefined
 
   return (
     <Trace logImpression={isModalOpen} modal={name}>
@@ -57,11 +57,15 @@ export function Modal({
         m="$none"
         maxWidth={maxWidth}
         maxHeight={maxHeight}
-        $sm={{
-          '$platform-web': {
-            height: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
-          },
-        }}
+        $sm={
+          isInterface
+            ? {
+                '$platform-web': {
+                  height: `calc(100dvh - ${INTERFACE_NAV_HEIGHT}px)`,
+                },
+              }
+            : undefined
+        }
         p={padding}
         position={isTopAligned ? 'absolute' : undefined}
         top={isTopAligned ? '$spacing16' : undefined}

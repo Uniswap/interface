@@ -9,7 +9,6 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
-import { ElementAfterText } from 'wallet/src/features/images/ElementAfterText'
 import { TransactionDetailsModal } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/TransactionDetailsModal'
 import { useTransactionActions } from 'wallet/src/features/transactions/SummaryCards/DetailsModal/useTransactionActions'
 import { TransactionSummaryTitle } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryTitle'
@@ -31,7 +30,6 @@ function TransactionSummaryLayout({
   transaction,
   title,
   caption,
-  postCaptionElement,
   icon,
   index,
   onRetry,
@@ -119,7 +117,7 @@ function TransactionSummaryLayout({
             </Flex>
           )}
           <Flex grow shrink>
-            <Flex grow>
+            <Flex grow gap="$spacing2">
               <Flex grow row alignItems="center" gap="$spacing4" justifyContent="space-between">
                 <Flex row shrink alignItems="center" gap="$spacing4">
                   {walletDisplayName ? (
@@ -136,14 +134,7 @@ function TransactionSummaryLayout({
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row gap="$spacing16">
-                <ElementAfterText
-                  wrapperProps={{
-                    grow: true,
-                    shrink: true,
-                  }}
-                  image={postCaptionElement}
-                  caption={caption}
-                />
+                {typeof caption === 'string' ? <Text>{caption}</Text> : caption}
                 {status === TransactionStatus.Failed && onRetry && (
                   <Flex flexShrink={0}>
                     <Text color="$accent1" variant="buttonLabel2" onPress={onRetry}>

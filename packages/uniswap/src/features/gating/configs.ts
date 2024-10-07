@@ -75,11 +75,13 @@ export enum QuickRouteChainsConfigKey {
 }
 
 export type DynamicConfigKeys = {
+  // Shared
+  [DynamicConfigs.Swap]: SwapConfigKey
+
   // Wallet
   [DynamicConfigs.MobileForceUpgrade]: ForceUpgradeConfigKey
   [DynamicConfigs.OnDeviceRecovery]: OnDeviceRecoveryConfigKey
   [DynamicConfigs.UwuLink]: UwuLinkConfigKey
-  [DynamicConfigs.Swap]: SwapConfigKey
 
   // Web
   [DynamicConfigs.QuickRouteChains]: QuickRouteChainsConfigKey

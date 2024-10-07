@@ -15,6 +15,13 @@ jest.mock('uniswap/src/components/modals/Modal', () => {
   return jest.requireActual('uniswap/src/components/modals/Modal.native.tsx')
 })
 
+// Mock the browser's performance API
+global.performance = require('perf_hooks').performance
+
+jest.mock('utilities/src/telemetry/trace/utils/calculateElapsedTimeWithPerformanceMarkMs', () => {
+  return jest.requireActual('utilities/src/telemetry/trace/utils/calculateElapsedTimeWithPerformanceMarkMs.web.ts')
+})
+
 jest.mock('utilities/src/environment/env', () => ({
   isTestEnv: jest.fn(() => true),
   isDevEnv: jest.fn(() => false),

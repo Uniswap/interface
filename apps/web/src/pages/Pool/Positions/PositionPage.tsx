@@ -1,15 +1,17 @@
-import { Price } from '@uniswap/sdk-core'
+import { BigNumber } from '@ethersproject/bignumber'
+/* eslint-disable-next-line no-restricted-imports */
+import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionAmountsTile } from 'components/Liquidity/LiquidityPositionAmountsTile'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionPriceRangeTile } from 'components/Liquidity/LiquidityPositionPriceRangeTile'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { usePositionInfo } from 'components/Liquidity/utils'
+import { parseRestPosition, useV3PositionDerivedInfo } from 'components/Liquidity/utils'
 import { LoadingFullscreen } from 'components/Loader/styled'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
-import { Navigate, useParams } from 'react-router-dom'
+import { Navigate, useLocation, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
@@ -19,6 +21,8 @@ import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { Trans } from 'uniswap/src/i18n'
+import { NumberType, useFormatter } from 'utils/formatNumbers'
+import { useAccount } from 'wagmi'
 
 const BodyWrapper = styled(Main, {
   backgroundColor: '$surface1',
@@ -55,29 +59,55 @@ export const HeaderButton = styled(Flex, {
 })
 
 export default function PositionPage() {
-  const { positionId } = useParams<{ positionId: string }>()
-  // const { t } = useTranslation()
-  // TODO(WEB-4920): replace this with real query fetching the position by ID
-  const { data } = useGetPositionsQuery()
-  const position = data?.positions[1]
-  const positionInfo = usePositionInfo(position)
-  const metadata = usePositionTokenURI(positionId ? parseInt(positionId) : undefined)
+  const { tokenId } = useParams<{ tokenId: string }>()
+  const account = useAccount()
+  const { pathname } = useLocation()
+  const { data } = useGetPositionsQuery(
+    account.address
+      ? {
+          address: account.address,
+          protocolVersions: [
+            pathname.includes('v3')
+              ? ProtocolVersion.V3
+              : pathname.includes('v4')
+                ? ProtocolVersion.V4
+                : ProtocolVersion.UNSPECIFIED,
+          ],
+        }
+      : undefined,
+  )
+  // TODO(WEB-4920): select the right position from the list, or use an endpoint that returns one position
+  const position = data?.positions[0]
+  const positionInfo = useMemo(() => parseRestPosition(position), [position])
+  const metadata = usePositionTokenURI(tokenId ? BigNumber.from(tokenId) : undefined)
 
   const dispatch = useAppDispatch()
   const [collectAsWeth, setCollectAsWeth] = useState(false)
 
   const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
+  const { formatCurrencyAmount } = useFormatter()
+
+  const { currency0Amount, currency1Amount, status } = positionInfo ?? {}
+  const {
+    feeValue0,
+    feeValue1,
+    fiatFeeValue0,
+    fiatFeeValue1,
+    currentPrice,
+    fiatValue0,
+    fiatValue1,
+    priceLower,
+    priceUpper,
+  } = useV3PositionDerivedInfo(positionInfo, tokenId, collectAsWeth)
 
   if (!isLoading && !v4Enabled) {
     return <Navigate to="/pools" replace />
   }
 
-  if (!position || !positionInfo) {
+  if (!position || !positionInfo || !currency0Amount || !currency1Amount) {
     // TODO(WEB-4920): handle loading/error states
     return null
   }
-
-  const { currency0Amount, currency1Amount, status } = positionInfo
 
   return (
     <BodyWrapper>
@@ -91,34 +121,36 @@ export default function PositionPage() {
         </Flex>
         <Flex row justifyContent="space-between" alignItems="center">
           <LiquidityPositionInfo position={position} />
-          <Flex row gap="$gap12" alignItems="center">
-            <HeaderButton
-              emphasis="secondary"
-              onPress={() => {
-                dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: position }))
-              }}
-            >
-              <Text variant="buttonLabel2" color="$neutral1">
-                <Trans i18nKey="common.addLiquidity" />
-              </Text>
-            </HeaderButton>
-            <HeaderButton
-              emphasis="primary"
-              onPress={() => {
-                dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: position }))
-              }}
-            >
-              <Text variant="buttonLabel2" color="$surface1">
-                <Trans i18nKey="pool.removeLiquidity" />
-              </Text>
-            </HeaderButton>
-          </Flex>
+          {status !== PositionStatus.CLOSED && (
+            <Flex row gap="$gap12" alignItems="center">
+              <HeaderButton
+                emphasis="secondary"
+                onPress={() => {
+                  dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: position }))
+                }}
+              >
+                <Text variant="buttonLabel2" color="$neutral1">
+                  <Trans i18nKey="common.addLiquidity" />
+                </Text>
+              </HeaderButton>
+              <HeaderButton
+                emphasis="primary"
+                onPress={() => {
+                  dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: position }))
+                }}
+              >
+                <Text variant="buttonLabel2" color="$surface1">
+                  <Trans i18nKey="pool.removeLiquidity" />
+                </Text>
+              </HeaderButton>
+            </Flex>
+          )}
         </Flex>
       </Flex>
       <Flex row width="100%" gap="$gap16">
-        <Flex grow backgroundColor="$surface2" borderRadius="$rounded12">
+        <Flex grow backgroundColor="$surface2" borderRadius="$rounded12" justifyContent="center" alignItems="center">
           {'result' in metadata ? (
-            <PositionNFT image={metadata.result.image} height={500} />
+            <PositionNFT image={metadata.result.image} height={400} />
           ) : (
             <LoadingFullscreen style={{ borderRadius: 12, backgroundColor: 'transparent' }} />
           )}
@@ -129,10 +161,21 @@ export default function PositionPage() {
               <Text variant="subheading1">
                 <Trans i18nKey="common.liquidity" />
               </Text>
-              {/* TODO(WEB-4920): get est. USD value of position */}
-              <Text variant="heading2">$5678.90</Text>
+              <Text variant="heading2">
+                {fiatValue0 && fiatValue1
+                  ? formatCurrencyAmount({
+                      amount: fiatValue0.add(fiatValue1),
+                      type: NumberType.FiatTokenPrice,
+                    })
+                  : '-'}
+              </Text>
             </Flex>
-            <LiquidityPositionAmountsTile currency0Amount={currency0Amount} currency1Amount={currency1Amount} />
+            <LiquidityPositionAmountsTile
+              currency0Amount={currency0Amount}
+              currency1Amount={currency1Amount}
+              fiatValue0={fiatValue0}
+              fiatValue1={fiatValue1}
+            />
           </Flex>
           <Flex p="$padding12" backgroundColor="$surface2" borderRadius="$rounded16">
             <Flex row width="100%" justifyContent="space-between" alignItems="center">
@@ -151,9 +194,21 @@ export default function PositionPage() {
               </HeaderButton>
             </Flex>
             <Text variant="heading2" mt="$spacing8" mb="$spacing16" color="$statusSuccess">
-              $1,084.61
+              {fiatFeeValue0 && fiatFeeValue1
+                ? formatCurrencyAmount({
+                    amount: fiatFeeValue0.add(fiatFeeValue1),
+                    type: NumberType.FiatTokenPrice,
+                  })
+                : '-'}
             </Text>
-            <LiquidityPositionAmountsTile currency0Amount={currency0Amount} currency1Amount={currency1Amount} />
+            {feeValue0 && feeValue1 && (
+              <LiquidityPositionAmountsTile
+                currency0Amount={feeValue0}
+                currency1Amount={feeValue1}
+                fiatValue0={fiatFeeValue0}
+                fiatValue1={fiatFeeValue1}
+              />
+            )}
             <Flex row width="100%" justifyContent="space-between" mt="$spacing16">
               <Text variant="body1">
                 <Trans i18nKey="pool.collectAs" values={{ nativeWrappedSymbol: 'WETH' }} />
@@ -169,28 +224,14 @@ export default function PositionPage() {
           </Flex>
         </Flex>
       </Flex>
-      <LiquidityPositionPriceRangeTile
-        status={status}
-        // TODO(WEB-4920): replace with real prices
-        minPrice={
-          new Price({
-            baseAmount: currency0Amount,
-            quoteAmount: currency1Amount,
-          })
-        }
-        maxPrice={
-          new Price({
-            baseAmount: currency0Amount,
-            quoteAmount: currency1Amount,
-          })
-        }
-        currentPrice={
-          new Price({
-            baseAmount: currency0Amount,
-            quoteAmount: currency1Amount,
-          })
-        }
-      />
+      {priceLower && priceUpper && currentPrice && (
+        <LiquidityPositionPriceRangeTile
+          status={status}
+          minPrice={priceLower}
+          maxPrice={priceUpper}
+          currentPrice={currentPrice}
+        />
+      )}
     </BodyWrapper>
   )
 }

@@ -2,13 +2,15 @@ import { SvgProps } from 'react-native-svg'
 import { useDispatch } from 'react-redux'
 import { Flex, Text, TouchableArea } from 'ui/src'
 import UniswapIcon from 'ui/src/assets/icons/uniswap-logo.svg'
-import { resetBehaviorHistory } from 'wallet/src/features/behaviorHistory/slice'
+import { resetUniswapBehaviorHistory } from 'uniswap/src/features/behaviorHistory/slice'
+import { resetWalletBehaviorHistory } from 'wallet/src/features/behaviorHistory/slice'
 
 export function ResetBehaviorHistoryRow({ iconProps }: { iconProps: SvgProps }): JSX.Element {
   const dispatch = useDispatch()
 
   const onPressReset = (): void => {
-    dispatch(resetBehaviorHistory())
+    dispatch(resetWalletBehaviorHistory())
+    dispatch(resetUniswapBehaviorHistory())
   }
 
   return (

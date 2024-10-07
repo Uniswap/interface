@@ -2,7 +2,7 @@ import { EventConsumer, EventMapBase } from '@react-navigation/core'
 import { ADDRESS_ZERO } from '@uniswap/v3-sdk'
 import { useCallback, useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, LayoutChangeEvent } from 'react-native'
 import { useAnimatedStyle, useSharedValue, withDelay, withTiming } from 'react-native-reanimated'
 import { AnimatePresence, Button, Flex, FlexProps, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons'
@@ -42,6 +42,15 @@ const UNITAG_SUFFIX_CHARS_ONLY = UNITAG_SUFFIX.replaceAll('.', '')
 // Accounts for height of image, gap between image and name, and spacing from top of titles
 const UNITAG_NAME_ANIMATE_DISTANCE_Y = imageSizes.image100 + spacing.spacing48 + spacing.spacing24
 
+export type ClaimUnitagContentProps = {
+  unitagAddress?: string
+  entryPoint: UnitagEntryPoint
+  animateY?: boolean
+  navigationEventConsumer?: EventConsumer<EventMapBase>
+  onNavigateContinue?: (params: SharedUnitagScreenParams[UnitagScreens.ChooseProfilePicture]) => void
+  onComplete?: () => void
+}
+
 export function ClaimUnitagContent({
   unitagAddress,
   entryPoint,
@@ -49,14 +58,7 @@ export function ClaimUnitagContent({
   navigationEventConsumer,
   onNavigateContinue,
   onComplete,
-}: {
-  unitagAddress?: string
-  entryPoint: UnitagEntryPoint
-  animateY?: boolean
-  navigationEventConsumer?: EventConsumer<EventMapBase>
-  onNavigateContinue?: (params: SharedUnitagScreenParams[UnitagScreens.ChooseProfilePicture]) => void
-  onComplete?: () => void
-}): JSX.Element {
+}: ClaimUnitagContentProps): JSX.Element {
   const { t } = useTranslation()
   const colors = useSporeColors()
 
@@ -69,6 +71,7 @@ export function ClaimUnitagContent({
   const [isCheckingUnitag, setIsCheckingUnitag] = useState(false)
   const [shouldBlockContinue, setShouldBlockContinue] = useState(false)
   const [unitagToCheck, setUnitagToCheck] = useState<string | undefined>(undefined)
+  const [unitagNameinputMinWidth, setUnitagNameInputMinWidth] = useState<number | undefined>(undefined)
 
   const addressViewOpacity = useSharedValue(1)
   const unitagInputContainerTranslateY = useSharedValue(0)
@@ -227,6 +230,16 @@ export function ClaimUnitagContent({
       }
     : {}
 
+  const getInitialUnitagNameInputWidth = (event: LayoutChangeEvent): void => {
+    if (unitagNameinputMinWidth) {
+      return
+    }
+
+    // Fix from WALL-4822 for Android
+    // Sets input minWidth to initial input width + 1 point. Initial width is not sufficent after clearing the input.
+    setUnitagNameInputMinWidth(event.nativeEvent.layout.width + 1)
+  }
+
   return (
     <>
       <Flex
@@ -278,7 +291,9 @@ export function ClaimUnitagContent({
                   testID={TestID.WalletNameInput}
                   textAlign="left"
                   value={unitagInputValue}
+                  minWidth={unitagNameinputMinWidth}
                   onChangeText={onChangeTextInput}
+                  onLayout={getInitialUnitagNameInputWidth}
                 />
                 <Text
                   key={UNITAG_SUFFIX}

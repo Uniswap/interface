@@ -47,7 +47,7 @@ export function WalletUniswapProvider({ children }: PropsWithChildren): JSX.Elem
       navigateToFiatOnRamp={navigateToFiatOnRamp}
       signer={signer}
       useProviderHook={useWalletProvider}
-      onShowSwapNetworkNotification={showSwapNetworkNotification}
+      onSwapChainsChanged={showSwapNetworkNotification}
     >
       {children}
     </UniswapProvider>

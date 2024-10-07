@@ -1,14 +1,40 @@
+import { Currency } from '@uniswap/sdk-core'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text } from 'ui/src'
 import { IndicativeLoadingWrapper } from 'uniswap/src/components/misc/IndicativeLoadingWrapper'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { SwapFeeWarning } from 'uniswap/src/features/transactions/swap/modals/SwapFeeWarning'
-import { SwapFeeInfo } from 'uniswap/src/features/transactions/swap/types/trade'
+import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
+import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 
-export function SwapFee({ swapFeeInfo, loading }: { swapFeeInfo?: SwapFeeInfo; loading: boolean }): JSX.Element | null {
+export function SwapFee({
+  currency,
+  swapFee,
+  swapFeeUsd,
+  loading,
+}: {
+  currency: Currency
+  swapFee?: SwapFeeType
+  swapFeeUsd?: number
+  loading: boolean
+}): JSX.Element | null {
   const { t } = useTranslation()
-  const { formatNumberOrString } = useLocalizationContext()
+  const formatter = useLocalizationContext()
+  const { convertFiatAmountFormatted, formatPercent, formatNumberOrString } = formatter
+
+  const formattedAmountFiat =
+    swapFeeUsd && !isNaN(swapFeeUsd) ? convertFiatAmountFormatted(swapFeeUsd, NumberType.FiatGasPrice) : undefined
+
+  const swapFeeInfo = swapFee
+    ? {
+        noFeeCharged: swapFee.percent.equalTo(0),
+        formattedPercent: formatPercent(swapFee.percent.toFixed()),
+        formattedAmount:
+          getFormattedCurrencyAmount(currency, swapFee.amount, formatter) + getSymbolDisplayText(currency.symbol),
+        formattedAmountFiat,
+      }
+    : undefined
 
   if (!swapFeeInfo && !loading) {
     return null

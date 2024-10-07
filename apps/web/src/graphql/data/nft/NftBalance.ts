@@ -1,8 +1,8 @@
-import { BIPS_BASE } from 'constants/misc'
 import { parseEther } from 'ethers/lib/utils'
 import { GenieCollection, WalletAsset } from 'nft/types'
 import { wrapScientificNotation } from 'nft/utils'
 import { useCallback, useMemo } from 'react'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import {
   Chain,
   NftAsset,

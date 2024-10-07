@@ -89,7 +89,7 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "fontSize": 17,
             "fontWeight": "500",
             "height": "auto",
-            "lineHeight": 17,
+            "lineHeight": 20.4,
             "minWidth": 0,
             "paddingBottom": 0,
             "paddingLeft": 0,
@@ -125,11 +125,10 @@ exports[`GenericImportForm renders a placeholder when there is no value 1`] = `
             "fontFamily": "Basel Grotesk",
             "fontSize": 17,
             "fontWeight": "400",
-            "lineHeight": 17,
+            "lineHeight": 20.4,
           }
         }
         suppressHighlighting={true}
-        textAlignVertical="bottom"
       >
         seed phrase
       </Text>

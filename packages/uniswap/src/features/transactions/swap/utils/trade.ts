@@ -5,7 +5,7 @@ import { NullablePermit, Permit } from 'uniswap/src/data/tradingApi/__generated_
 import { LocalizationContextState } from 'uniswap/src/features/language/LocalizationContext'
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { slippageToleranceToPercent } from 'uniswap/src/features/transactions/swap/utils/format'
-import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { ACROSS_DAPP_INFO, isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
   BaseSwapTransactionInfo,
@@ -39,6 +39,7 @@ export function tradeToTransactionInfo(
       inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
       outputCurrencyId: currencyId(outputCurrency),
       outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+      routingDappInfo: ACROSS_DAPP_INFO,
       quoteId,
       gasUseEstimate,
       transactedUSDValue,

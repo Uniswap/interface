@@ -81,7 +81,7 @@ const mockUniswapXTrade = {
   routing: Routing.DUTCH_V2,
   inputAmount: { currency: new NativeCurrency(CHAIN_ID), quotient: JSBI.BigInt(1000) },
   outputAmount: { currency: USDC },
-  quote: { amount: MaxUint256 },
+  quote: { amount: MaxUint256, routing: Routing.DUTCH_V2 },
   slippageTolerance: 0.5,
 } as unknown as UniswapXTrade
 
@@ -125,7 +125,6 @@ const classicSwapParams = {
     indicativeTrade: undefined,
     gasFee: { value: '5', isLoading: false, error: null },
     gasFeeEstimation: {},
-    approvalError: false,
     permit: undefined,
     swapRequestArgs: undefined,
     unsigned: false,
@@ -151,7 +150,6 @@ const uniswapXSwapParams = {
     gasFee: { value: '5', isLoading: false, error: null },
     gasFeeEstimation: {},
     gasFeeBreakdown: { classicGasUseEstimateUSD: '5', approvalCost: '5', wrapCost: '0' },
-    approvalError: false,
   },
   onSuccess: jest.fn(),
   onFailure: jest.fn(),
@@ -284,6 +282,7 @@ describe(approveAndSwap, () => {
       wrapTxHash: undefined,
       txId: uniswapXSwapParams.txId,
       permit: mockPermit,
+      routing: uniswapXSwapParams.swapTxContext.trade.quote.routing,
       quote: uniswapXSwapParams.swapTxContext.trade.quote.quote,
       onSuccess: uniswapXSwapParams.onSuccess,
       onFailure: uniswapXSwapParams.onFailure,
@@ -349,6 +348,7 @@ describe(approveAndSwap, () => {
       permit: mockPermit,
       onSuccess: uniswapXSwapParams.onSuccess,
       onFailure: uniswapXSwapParams.onFailure,
+      routing: uniswapXSwapParams.swapTxContext.trade.quote.routing,
       quote: uniswapXSwapParams.swapTxContext.trade.quote.quote,
     }
 

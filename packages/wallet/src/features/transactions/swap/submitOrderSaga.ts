@@ -1,6 +1,6 @@
 import { call, put, take } from 'typed-redux-saga'
 import { submitOrder } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
-import { DutchQuoteV2, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
+import { DutchQuoteV2, PriorityQuote, Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -31,7 +31,8 @@ export const ORDER_STALENESS_THRESHOLD = 45 * ONE_SECOND_MS
 export interface SubmitUniswapXOrderParams {
   // internal id used for tracking transactions before they're submitted
   txId?: string
-  quote: DutchQuoteV2
+  quote: DutchQuoteV2 | PriorityQuote
+  routing: Routing.DUTCH_V2 | Routing.PRIORITY
   permit: ValidatedPermit
   chainId: WalletChainId
   account: AccountMeta
@@ -46,6 +47,7 @@ export interface SubmitUniswapXOrderParams {
 export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
   const {
     quote,
+    routing,
     permit,
     approveTxHash,
     wrapTxHash,
@@ -119,7 +121,7 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
 
     const signature = yield* call(signTypedData, permit.domain, permit.types, permit.values, signer)
 
-    yield* call(submitOrder, { signature, quote, routing: Routing.DUTCH_V2 })
+    yield* call(submitOrder, { signature, quote, routing })
   } catch {
     // In the rare event that submission fails, we update the order status to prompt the user.
     // If the app is closed before this catch block is reached, orderWatcherSaga will handle the failure upon reopening.
@@ -128,7 +130,7 @@ export function* submitUniswapXOrder(params: SubmitUniswapXOrderParams) {
     return
   }
 
-  const properties = { routing: order.routing, order_hash: orderHash, ...analytics }
+  const properties = { order_hash: orderHash, ...analytics }
   yield* call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, properties)
 
   yield* put(pushNotification({ type: AppNotificationType.SwapPending, wrapType: WrapType.NotApplicable }))

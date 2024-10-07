@@ -2,7 +2,8 @@ import { useMemo } from 'react'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
 import { SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { TradeProtocolPreference, TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
+import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
+import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
@@ -24,7 +25,7 @@ export function useSwapPrefilledState(initialState: TransactionState | undefined
             txId: initialState.txId,
             isFiatMode: false,
             isSubmitting: false,
-            tradeProtocolPreference: TradeProtocolPreference.Default,
+            selectedProtocols: initialState.selectedProtocols ?? DEFAULT_PROTOCOL_OPTIONS,
           }
         : undefined,
     [initialState],
@@ -84,6 +85,7 @@ export function getSwapPrefilledState({
     exactAmountToken: '',
     [CurrencyField.INPUT]: currencyField === CurrencyField.INPUT ? chosenToken : opposedToken,
     [CurrencyField.OUTPUT]: currencyField === CurrencyField.OUTPUT ? chosenToken : opposedToken,
+    selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
   }
 
   return swapFormState

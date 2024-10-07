@@ -1,14 +1,19 @@
 import { Wallet } from 'ui/src/components/icons'
-import { CardType, IntroCard, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
+import { OnboardingCardLoggingName } from 'uniswap/src/features/telemetry/types'
+import { CardType, IntroCard, IntroCardGraphicType, IntroCardProps } from 'wallet/src/components/introCards/IntroCard'
 import { render, screen } from 'wallet/src/test/test-utils'
 
 describe(IntroCard, () => {
   it('should render the passed values', () => {
     const props = {
-      Icon: Wallet,
+      graphic: {
+        type: IntroCardGraphicType.Icon,
+        Icon: Wallet,
+      },
       title: 'Test title',
       description: 'Test description',
       cardType: CardType.Required,
+      loggingName: OnboardingCardLoggingName.BridgingBanner,
     } satisfies IntroCardProps
 
     render(<IntroCard {...props} />)

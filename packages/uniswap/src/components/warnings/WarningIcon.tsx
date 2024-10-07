@@ -1,4 +1,4 @@
-import { IconProps } from 'ui/src'
+import { ColorTokens, IconProps } from 'ui/src'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import {
   getWarningIcon,
@@ -14,7 +14,7 @@ interface Props {
   safetyLevel?: Maybe<SafetyLevel>
   severity?: WarningSeverity
   // To override the normally associated safetyLevel<->color mapping
-  strokeColorOverride?: '$DEP_accentWarning' | '$statusCritical' | '$neutral3'
+  strokeColorOverride?: ColorTokens
 }
 
 export default function WarningIcon({

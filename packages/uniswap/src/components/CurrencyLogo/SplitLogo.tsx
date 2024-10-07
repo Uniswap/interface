@@ -1,6 +1,12 @@
+import { ReactNode } from 'react'
 import { Flex } from 'ui/src'
+import { Shuffle } from 'ui/src/components/icons/Shuffle'
+import { iconSizes } from 'ui/src/theme'
 import { CurrencyLogo, STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
-import { TransactionSummaryNetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
+import {
+  SQUIRCLE_BORDER_RADIUS_RATIO,
+  TransactionSummaryNetworkLogo,
+} from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 
@@ -9,16 +15,16 @@ interface Props {
   outputCurrencyInfo: Maybe<CurrencyInfo>
   size: number
   chainId: WalletChainId | null
+  customIcon?: ReactNode
 }
 
 /*
  * Logo, where left 50% of width is taken from one icon (its left 50%)
  * and right side is taken from another icon (its right 50%)
  */
-export function SplitLogo({ size, inputCurrencyInfo, outputCurrencyInfo, chainId }: Props): JSX.Element {
+export function SplitLogo({ size, inputCurrencyInfo, outputCurrencyInfo, chainId, customIcon }: Props): JSX.Element {
   const iconSize = size / 2
-
-  const icon =
+  const networkLogo =
     chainId && chainId !== UniverseChainId.Mainnet ? (
       <TransactionSummaryNetworkLogo chainId={chainId} size={size * STATUS_RATIO} />
     ) : undefined
@@ -46,11 +52,23 @@ export function SplitLogo({ size, inputCurrencyInfo, outputCurrencyInfo, chainId
       >
         <CurrencyLogo hideNetworkLogo currencyInfo={outputCurrencyInfo} size={size} />
       </Flex>
-      {icon && (
+      {(customIcon || networkLogo) && (
         <Flex bottom={-4} position="absolute" right={-4}>
-          {icon}
+          {customIcon ?? networkLogo}
         </Flex>
       )}
     </Flex>
   )
 }
+
+export const BridgeIcon = (
+  <Flex
+    testID="bridge-icon"
+    borderColor="$surface1"
+    borderWidth={1}
+    borderRadius={(iconSizes.icon20 + 2) * SQUIRCLE_BORDER_RADIUS_RATIO}
+    overflow="hidden"
+  >
+    <Shuffle size={iconSizes.icon20} color="white" backgroundColor="black" />
+  </Flex>
+)

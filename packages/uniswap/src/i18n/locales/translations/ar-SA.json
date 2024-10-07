@@ -168,6 +168,7 @@
   "common.amountDeposited.label": "{{amount}} مودع",
   "common.amountInput.placeholder": "كمية الإدخال",
   "common.amountPerBase": "{{amount}} {{symbolA}} لكل {{symbolB}}",
+  "common.and": "و",
   "common.app": "برنامج",
   "common.approval.cancelled": "تم إلغاء الموافقة",
   "common.approval.failed": "فشلت الموافقة",
@@ -301,6 +302,7 @@
   "common.custom": "مخصص",
   "common.customRange": "مجموعة مخصصة",
   "common.dataOutdated": "قد تكون البيانات قديمة",
+  "common.default": "تقصير",
   "common.defaultTradeOptions": "خيارات التجارة الافتراضية",
   "common.delegate.cancelled": "تم إلغاء المندوب",
   "common.delegate.failed": "فشل المندوب",
@@ -1225,6 +1227,8 @@
   "onboarding.extension.unsupported.title": "هذا المتصفح غير مدعوم (حتى الآن)",
   "onboarding.home.intro.backup.description": "قم بإعداد خطة استرداد إذا فقدت هاتفك أو حصلت على هاتف جديد.",
   "onboarding.home.intro.backup.title": "قم بعمل نسخة احتياطية من محفظتك",
+  "onboarding.home.intro.bridging.description_one": "انقل ETH وUSDC والمزيد عبر شبكات {{count}}+.",
+  "onboarding.home.intro.bridging.description_other": "انقل ETH وUSDC والمزيد عبر شبكات {{count}}+.",
   "onboarding.home.intro.fund.description": "قم بتمويل محفظتك عن طريق شراء العملات المشفرة أو التحويل من حساب آخر.",
   "onboarding.home.intro.fund.title": "احصل على أول رمز مميز لك",
   "onboarding.home.intro.label.required": "مطلوب",
@@ -1367,6 +1371,7 @@
   "pool.minPrice": "سعر دقيقة",
   "pool.mustBeInitialized": "يجب تهيئة هذا التجمع قبل أن تتمكن من إضافة السيولة. للتهيئة، حدد سعر البداية للمجمع. ثم أدخل النطاق السعري للسيولة ومبلغ الإيداع. ستكون رسوم الغاز أعلى من المعتاد بسبب معاملة التهيئة.",
   "pool.newPosition.plus": "+ مركز جديد",
+  "pool.newSpecificPosition": "موضع جديد {{symbol}}",
   "pool.noLiquidity": "لم يتم العثور على السيولة.",
   "pool.onceHappyReview": "بمجرد رضاك عن السعر، انقر فوق العرض للمراجعة.",
   "pool.openToStart": "افتح مركزًا جديدًا أو أنشئ مجموعة للبدء.",
@@ -1472,6 +1477,7 @@
   "removeLiquidity.removing": "إزالة {{amt1}} {{symbol1}} و {{amt2}} {{symbol2}}",
   "removeLiquidity.removingTokensTip": "نصيحة: تؤدي إزالة الرموز المميزة للمجمع إلى تحويل مركزك مرة أخرى إلى الرموز الأساسية بالسعر الحالي، بما يتناسب مع حصتك في المجمع. يتم تضمين الرسوم المستحقة في المبالغ التي تتلقاها.",
   "removeLiquidity.uniBurned": "UNI {{a}}/{{b}} محترق",
+  "revoke.failed.message": "يتيح هذا لبروتوكول Uniswap الوصول إلى الرمز الخاص بك للتداول.",
   "routing.aggregateLiquidity": "عند توفرها، يتم تجميع مصادر السيولة للحصول على أسعار أفضل ومقايضات خالية من الغاز.",
   "routing.cheapest": "يقوم عميل Uniswap باختيار أرخص سعر لخيارات التداول وتكاليف الشبكة.",
   "scantastic.code.expired": "منتهي الصلاحية",
@@ -1695,12 +1701,13 @@
   "swap.bestRoute.cost": "أفضل سعر لتكاليف الطريق ~{{gasPrice}} بالغاز. ",
   "swap.bridging.estimatedTime": "الوقت المقدر",
   "swap.bridging.title": "التبديل عبر الشبكات",
-  "swap.bridging.warning.description": "أنت تقوم بالتبديل من {{fromNetwork}} إلى {{toNetwork}}.",
+  "swap.bridging.warning.description": "أنت تقوم بالتبديل من {{fromNetwork}} إلى {{toNetwork}}. يُعرف هذا أيضًا باسم \"الربط\"، والذي ينقل رموزك من شبكة إلى أخرى.",
   "swap.button.max": "الأعلى",
   "swap.button.review": "مراجعة",
   "swap.button.submitting": "جاري ارسال المبادلة...",
   "swap.button.submitting.keep.open": "أبقِ محفظتك مفتوحة...",
   "swap.button.swap": "تبديل",
+  "swap.button.swapAnyways": "تبادل على أية حال",
   "swap.button.unwrap": "بسط",
   "swap.button.wrap": "طَوّق",
   "swap.buy.countryModal.placeholder": "البحث حسب البلد أو المنطقة",
@@ -1777,7 +1784,6 @@
   "swap.settings.protection.subtitle.unavailable": "غير متوفر على {{chainName}}",
   "swap.settings.protection.title": "حماية المبادلة",
   "swap.settings.routingPreference.option.default.description": "يقوم عميل Uniswap باختيار أرخص سعر لخيارات التداول وتكاليف الشبكة.",
-  "swap.settings.routingPreference.option.default.title": "تقصير",
   "swap.settings.routingPreference.option.v2.title": "حمامات v2",
   "swap.settings.routingPreference.option.v3.title": "حمامات v3",
   "swap.settings.routingPreference.title": "خيارات التجارة",
@@ -1810,7 +1816,6 @@
   "swap.warning.expectedFailure": "من المتوقع أن تفشل هذه المعاملة",
   "swap.warning.feeOnTransfer.message": "تأخذ بعض الرموز المميزة رسومًا عند شرائها أو بيعها، والتي يحددها مصدر الرمز المميز. لا يحصل Uniswap على أي حصة من هذه الرسوم.",
   "swap.warning.feeOnTransfer.title": "لماذا هناك رسوم إضافية؟",
-  "swap.warning.insufficientBalance.button": "لا يكفي {{currencySymbol}}",
   "swap.warning.insufficientBalance.title": "ليس لديك ما يكفي {{currencySymbol}}",
   "swap.warning.insufficientGas.button": "لا يكفي {{currencySymbol}}",
   "swap.warning.insufficientGas.button.buy": "شراء {{ tokenSymbol }}",
@@ -1828,7 +1833,9 @@
   "swap.warning.offline.title": "أنت غير متصل بالإنترنت",
   "swap.warning.priceImpact": "ستؤدي هذه الصفقة إلى تأثير سعر <impact /> على سعر السوق لهذا المجمع. هل ترغب في الاستمرار؟",
   "swap.warning.priceImpact.message": "نظرًا لكمية {{outputCurrencySymbol}} السيولة المتاحة حاليًا، كلما حاولت المبادلة {{inputCurrencySymbol}} أكثر، كلما قلت {{outputCurrencySymbol}} التي ستحصل عليها.",
+  "swap.warning.priceImpact.message.veryHigh": "ستؤدي هذه الصفقة إلى تأثير سعري بنسبة {{priceImpactValue}} على سعر السوق لهذا المجمع وسوف تؤدي إلى خسارة الأموال.",
   "swap.warning.priceImpact.title": "تأثير ارتفاع الأسعار ({{priceImpactValue}})",
+  "swap.warning.priceImpact.title.veryHigh": "تأثير سعر مرتفع جدًا ({{priceImpactValue}})",
   "swap.warning.queuedOrder.appClosed": "لم يتم إرسال معاملتك لأنك أغلقت التطبيق.",
   "swap.warning.queuedOrder.approvalFailed": "لم يتم إرسال معاملتك بسبب فشل الموافقة على الرمز المميز.",
   "swap.warning.queuedOrder.stale": "لم يتم إرسال معاملتك لأنك أغلقت التطبيق أو لأن الموافقة استغرقت وقتًا طويلاً.",
@@ -2001,7 +2008,6 @@
   "transaction.action.cancel.title": "هل تريد إلغاء هذه الصفقة؟",
   "transaction.action.copy": "نسخ معرف المعاملة",
   "transaction.action.copyProvider": "انسخ {{providerName}} معرف المعاملة",
-  "transaction.action.viewEtherscan": "عرض على {{blockExplorerName}}",
   "transaction.amount.unlimited": "غير محدود",
   "transaction.confirmation.completionTime_one": "اكتملت المعاملة خلال <highlight>{{count}}</highlight> الثانية 🎉",
   "transaction.confirmation.completionTime_other": "اكتملت المعاملة خلال <highlight>{{count}}</highlight> ثواني 🎉",
@@ -2014,14 +2020,14 @@
   "transaction.details.from": "من",
   "transaction.details.networkFee": "تكلفة الشبكة",
   "transaction.details.swapRate": "معدل",
-  "transaction.details.transactionId": "رقم المعاملة",
+  "transaction.details.transaction": "عملية",
   "transaction.details.uniswapFee": "الرسوم ({{ feePercent }}%)",
   "transaction.insufficientLiquidity": "عدم كفاية السيولة المجمعة لإتمام الصفقة",
   "transaction.network.all": "جميع الشبكات",
   "transaction.networkCost.label": "تكلفة الشبكة",
+  "transaction.networkCost.veryHigh.label": "تكلفة الشبكة عالية جدًا",
   "transaction.notification.error.cancel": "غير قادر على إلغاء المعاملة",
   "transaction.notification.error.replace": "غير قادر على استبدال المعاملة",
-  "transaction.priceImpact.label": "تأثير السعر",
   "transaction.status.approve.canceled": "تم إلغاء الموافقة",
   "transaction.status.approve.canceling": "إلغاء الموافقة",
   "transaction.status.approve.failed": "فشلت الموافقة",
@@ -2106,6 +2112,7 @@
   "uniswapX.aggregatesLiquidity": "<logo /> تجميع مصادر السيولة للحصول على أسعار أفضل ومقايضات خالية من الغاز.",
   "uniswapx.description": "يقوم UniswapX بتجميع مصادر السيولة للحصول على أسعار أفضل ومقايضات خالية من الغاز.",
   "uniswapx.included": "يتضمن <icon /> <gradient>UniswapX</gradient> <info />",
+  "uniswapx.item": "<icon /> <gradient>يوني سواب إكس</gradient> <info />",
   "uniswapx.label": "UniswapX",
   "uniswapX.learnMore": "تعرف على المزيد حول المبادلة باستخدام UniswapX",
   "uniswapx.v2QuoteFailed": "فشل الاقتباس الثابت UniswapX v2. أعد المحاولة باستخدام المبادلة الكلاسيكية.",
@@ -2138,6 +2145,12 @@
   "unitags.editUsername.title": "تحرير اسم المستخدم",
   "unitags.editUsername.warning.default": "بمجرد تغيير اسم المستخدم الخاص بك، لا يمكنك المطالبة به مرة أخرى أبدًا. يمكنك تغييره مرتين فقط.",
   "unitags.editUsername.warning.max": "لقد وصلت إلى الحد الأقصى لعدد تغييري اسم مستخدم.",
+  "unitags.extension.intro.buttton": "المطالبة باسم المستخدم",
+  "unitags.extension.intro.description": "قل وداعًا للعناوين 0x. أسماء المستخدمين هي أسماء قابلة للقراءة تسهل إرسال واستقبال العملات المشفرة.",
+  "unitags.extension.intro.title": "إدخال أسماء المستخدمين",
+  "unitags.extension.intro.upsell.customizable": "ملفات تعريف قابلة للتخصيص",
+  "unitags.extension.intro.upsell.ens": "مدعوم من نطاقات ENS الفرعية",
+  "unitags.extension.intro.upsell.free": "حرية المطالبة",
   "unitags.intro.features.ens": "مدعوم من نطاقات ENS الفرعية",
   "unitags.intro.features.free": "حرية المطالبة",
   "unitags.intro.features.profile": "ملفات تعريف قابلة للتخصيص",

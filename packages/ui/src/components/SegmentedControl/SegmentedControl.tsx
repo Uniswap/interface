@@ -91,27 +91,13 @@ const OptionButton = styled(Tabs.Tab, {
   backgroundColor: 'transparent',
   borderRadius: '$roundedFull',
   cursor: 'pointer',
-  animation: 'fast',
+  borderColor: 'transparent',
+  outlineColor: 'transparent',
   px: '$spacing8',
-  pressStyle: {
-    backgroundColor: '$surface3',
-  },
   variants: {
     fullWidth: {
       true: {
         flex: 1,
-      },
-    },
-    active: {
-      true: {
-        focusStyle: {
-          outlineColor: '$surface1',
-        },
-      },
-      false: {
-        focusStyle: {
-          outlineColor: '$surface3',
-        },
       },
     },
     size: {
@@ -281,7 +267,7 @@ export function SegmentedControl<T extends string = string>({
               height={activeAt.height}
               width={activeAt.width}
               x={activeAt.x - TOGGLE_PADDING + activeIndicatorXAdjustment}
-              y={activeAt.y - TOGGLE_PADDING + activeIndicatorYAdjustment}
+              y={activeAt.y - TOGGLE_PADDING + activeIndicatorYAdjustment - (!outlined ? 1 : 0)}
             />
           )}
         </AnimatePresence>

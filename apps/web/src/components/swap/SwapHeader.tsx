@@ -28,7 +28,7 @@ const HeaderButtonContainer = styled(RowFixed)<{ compact: boolean }>`
   }
 `
 
-const PathnameToTab: { [key: string]: SwapTab } = {
+export const PathnameToTab: { [key: string]: SwapTab } = {
   '/swap': SwapTab.Swap,
   '/send': SwapTab.Send,
   '/limit': SwapTab.Limit,

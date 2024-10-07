@@ -91,7 +91,7 @@ export type GasFeeEstimates = {
 }
 
 export interface UniswapXOrderDetails extends BaseTransactionDetails {
-  routing: Routing.DUTCH_V2 | Routing.DUTCH_LIMIT
+  routing: Routing.DUTCH_V2 | Routing.DUTCH_LIMIT | Routing.PRIORITY
 
   // Note: `orderHash` is an off-chain value used to track orders before they're filled on-chain.
   // UniswapX orders will also have a transaction `hash` if they become filled.
@@ -261,6 +261,7 @@ export interface BridgeTransactionInfo extends BaseTransactionInfo {
   outputCurrencyAmountRaw: string
   quoteId?: string
   gasUseEstimate?: string
+  routingDappInfo?: DappInfoTransactionDetails
 }
 
 export interface ExactInputSwapTransactionInfo extends BaseSwapTransactionInfo {

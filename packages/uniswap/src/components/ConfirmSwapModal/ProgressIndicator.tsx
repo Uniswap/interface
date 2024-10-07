@@ -3,6 +3,7 @@ import {
   TokenApprovalTransactionStepRow,
   TokenRevocationTransactionStepRow,
 } from 'uniswap/src/components/ConfirmSwapModal/steps/Approve'
+import { LPTransactionStepRow } from 'uniswap/src/components/ConfirmSwapModal/steps/LP'
 import { Permit2SignatureStepRow } from 'uniswap/src/components/ConfirmSwapModal/steps/Permit'
 import { SwapTransactionStepRow } from 'uniswap/src/components/ConfirmSwapModal/steps/Swap'
 import { WrapTransactionStepRow } from 'uniswap/src/components/ConfirmSwapModal/steps/Wrap'
@@ -35,7 +36,7 @@ export function ProgressIndicator({ currentStep, steps }: ProgressIndicatorProps
   }
 
   return (
-    <Flex px="$spacing12">
+    <Flex px="$spacing12" enterStyle={{ opacity: 0 }} animation="quicker">
       <Separator my="$spacing12" />
       {steps.map((step, i) => (
         <Flex key={`progress-indicator-step-${i}`}>
@@ -61,5 +62,8 @@ function Step({ step, status }: { step: TransactionStep; status: StepStatus }): 
     case TransactionStepType.SwapTransactionAsync:
     case TransactionStepType.UniswapXSignature:
       return <SwapTransactionStepRow step={step} status={status} />
+    case TransactionStepType.IncreasePositionTransaction:
+    case TransactionStepType.IncreasePositionTransactionAsync:
+      return <LPTransactionStepRow step={step} status={status} />
   }
 }

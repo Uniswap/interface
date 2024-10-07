@@ -12,7 +12,11 @@ import { findGasStrategyName } from 'uniswap/src/features/gas/hooks'
 import { getGasPrice } from 'uniswap/src/features/gas/types'
 import { MobileAppsFlyerEvents, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent, sendAppsFlyerEvent } from 'uniswap/src/features/telemetry/send'
-import { selectIncompleteTransactions, selectSwapTransactionsCount } from 'uniswap/src/features/transactions/selectors'
+import {
+  makeSelectTransaction,
+  selectIncompleteTransactions,
+  selectSwapTransactionsCount,
+} from 'uniswap/src/features/transactions/selectors'
 import {
   addTransaction,
   cancelTransaction,
@@ -22,6 +26,8 @@ import {
   updateTransaction,
   upsertFiatOnRampTransaction,
 } from 'uniswap/src/features/transactions/slice'
+import { tradeRoutingToFillType } from 'uniswap/src/features/transactions/swap/analytics'
+import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactions/swap/utils/SwapEventTimestampTracker'
 import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
@@ -37,6 +43,7 @@ import {
 import i18n from 'uniswap/src/i18n/i18n'
 import { WalletChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
+import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
 import { pushNotification, setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { AppNotificationType } from 'wallet/src/features/notifications/types'
@@ -62,6 +69,9 @@ export const SWAP_STATUS_TO_TX_STATUS: { [key in SwapStatus]: TransactionStatus 
 }
 
 const FINALIZED_BRIDGE_SWAP_STATUS = [SwapStatus.SUCCESS, SwapStatus.FAILED, SwapStatus.EXPIRED]
+const MIN_BRIDGE_WAIT_TIME = ONE_SECOND_MS * 3
+
+const selectTransactionById = makeSelectTransaction()
 
 export function* transactionWatcher({ apolloClient }: { apolloClient: ApolloClient<NormalizedCacheObject> }) {
   logger.debug('transactionWatcherSaga', 'transactionWatcher', 'Starting tx watcher')
@@ -345,12 +355,17 @@ function* waitForBridgingStatus(transaction: TransactionDetails) {
 
   let swapStatus: SwapStatus | undefined
   const initialPollIntervalMs = 500
-  const maxRetries = 5
+  const maxRetries = 10 // 500 ms, 1 second, 2 seconds...
   const backoffFactor = 2 // Each retry will double the wait time
 
   let pollIndex = 0
+  yield* delay(MIN_BRIDGE_WAIT_TIME) // Wait minimum of 3 seconds before polling
   while (pollIndex < maxRetries) {
     const currentPollInterval = initialPollIntervalMs * Math.pow(backoffFactor, pollIndex)
+    logger.debug('transactionWatcherSaga', `[${txHash}] waitForBridgingStatus`, 'polling for status', {
+      pollIndex,
+      currentPollInterval,
+    })
     yield* delay(currentPollInterval)
 
     const data = yield* call(fetchSwaps, {
@@ -359,13 +374,36 @@ function* waitForBridgingStatus(transaction: TransactionDetails) {
     })
 
     const currentSwapStatus = data.swaps?.[0]?.status
+    logger.debug('transactionWatcherSaga', `[${txHash}] waitForBridgingStatus`, 'currentSwapStatus:', currentSwapStatus)
     if (currentSwapStatus && FINALIZED_BRIDGE_SWAP_STATUS.includes(currentSwapStatus)) {
       swapStatus = currentSwapStatus
       break
     }
 
+    // Check if the redux store has been updated with a new status
+    const updatedTransaction = yield* select(selectTransactionById, {
+      address: transaction.from,
+      chainId: transaction.chainId,
+      txId: transaction.id,
+    })
+
+    if (
+      updatedTransaction &&
+      updatedTransaction.status !== TransactionStatus.Pending &&
+      updatedTransaction.typeInfo.type === TransactionType.Bridge
+    ) {
+      logger.debug(
+        'transactionWatcherSaga',
+        `[${transaction.id}] waitForBridgingStatus`,
+        'Local update found: ',
+        updatedTransaction.status,
+      )
+      return updatedTransaction?.status
+    }
+
     pollIndex++
   }
+  logger.debug('transactionWatcherSaga', `[${transaction.id}] waitForBridgingStatus`, 'final swapStatus:', swapStatus)
   // If we didn't get a status after polling, assume it's failed
   return swapStatus ? SWAP_STATUS_TO_TX_STATUS[swapStatus] : TransactionStatus.Failed
 }
@@ -432,6 +470,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
     } = typeInfo as BaseSwapTransactionInfo
 
     const baseProperties = {
+      routing: tradeRoutingToFillType({ routing: payload.routing, indicative: false }),
       hash,
       transactionOriginType,
       address: from,
@@ -453,7 +492,7 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
     }
 
     if (isUniswapX(payload)) {
-      const { orderHash, routing } = payload
+      const { orderHash } = payload
       // All local uniswapx swaps should be tracked in redux with an orderHash .
       if (!orderHash) {
         logger.error(new Error('Attempting to log uniswapx swap event without a orderHash'), {
@@ -466,14 +505,13 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
         return
       }
       if (status === TransactionStatus.Success) {
-        const properties = { ...baseProperties, routing, order_hash: orderHash, hash }
-        sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, properties)
+        const properties = { ...baseProperties, order_hash: orderHash, hash }
+        logSwapSuccess(properties)
       } else {
-        const properties = { ...baseProperties, routing, order_hash: orderHash }
+        const properties = { ...baseProperties, order_hash: orderHash }
         sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, properties)
       }
     } else {
-      const { routing } = payload
       // All classic swaps should be tracked in redux with a tx hash.
       if (!hash) {
         logger.error(new Error('Attempting to log swap event without a hash'), {
@@ -485,9 +523,9 @@ export function logTransactionEvent(actionData: ReturnType<typeof transactionAct
         })
         return
       }
-      const properties = { ...baseProperties, routing, hash }
+      const properties = { ...baseProperties, hash }
       if (status === TransactionStatus.Success) {
-        sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, properties)
+        logSwapSuccess(properties)
       } else {
         sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_FAILED, properties)
       }
@@ -598,4 +636,21 @@ export function* deleteTransaction(transaction: TransactionDetails) {
 export function* watchTransactionEvents() {
   // Watch for finalized transactions to send analytics events
   yield* takeEvery(transactionActions.finalizeTransaction.type, logTransactionEvent)
+}
+
+export function logSwapSuccess(
+  analyticsProps: Parameters<typeof sendAnalyticsEvent<SwapEventName.SWAP_TRANSACTION_COMPLETED>>[1],
+) {
+  const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
+  const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
+
+  sendAnalyticsEvent(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
+    ...analyticsProps,
+    // We only log the time-to-swap metric for the first swap of a session,
+    // so if it was previously set we log undefined here.
+    time_to_swap: hasSetSwapSuccess ? undefined : elapsedTime,
+    time_to_swap_since_first_input: hasSetSwapSuccess
+      ? undefined
+      : timestampTracker.getElapsedTime(SwapEventType.FirstSwapSuccess, SwapEventType.FirstSwapAction),
+  })
 }

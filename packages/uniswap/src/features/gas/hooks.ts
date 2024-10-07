@@ -1,10 +1,11 @@
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers/lib/ethers'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { isWeb } from 'ui/src'
 import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { useAccountMeta, useProvider } from 'uniswap/src/contexts/UniswapContext'
 import { useGasFeeQuery } from 'uniswap/src/data/apiClients/uniswapApi/useGasFeeQuery'
 import { GasEstimate, GasStrategy } from 'uniswap/src/data/tradingApi/types'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
@@ -27,9 +28,11 @@ import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swa
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NumberType } from 'utilities/src/format/types'
+import { logger } from 'utilities/src/logger/logger'
+import { isInterface } from 'utilities/src/platform'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 
 // The default "Urgent" strategy that was previously hardcoded in the gas service
@@ -105,6 +108,7 @@ export function useTransactionGasFee(
   tx: providers.TransactionRequest | undefined,
   skip?: boolean,
   refetchInterval?: PollingInterval,
+  fallbackGasLimit?: number,
 ): GasFeeResult {
   const pollingIntervalForChain = usePollingIntervalByChain(tx?.chainId)
   const activeGasStrategy = useActiveGasStrategy(tx?.chainId, 'general')
@@ -117,7 +121,58 @@ export function useTransactionGasFee(
     immediateGcTime: pollingIntervalForChain + 15 * ONE_SECOND_MS,
   })
 
+  // Gas Fee API currently errors on gas estimations on disconnected state & insufficient funds
+  // Fallback to clientside estimate using provider.estimateGas
+  const [clientsideGasEstimate, setClientsideGasEstimate] = useState<GasFeeResult>({
+    isLoading: true,
+    error: null,
+  })
+  const account = useAccountMeta()
+  const provider = useProvider(tx?.chainId ?? UniverseChainId.Mainnet)
+  useEffect(() => {
+    async function calculateClientsideGasEstimate(): Promise<void> {
+      if (skip || !tx) {
+        setClientsideGasEstimate({
+          isLoading: false,
+          error: null,
+        })
+      }
+      try {
+        if (!provider) {
+          throw new Error('No provider for clientside gas estimation')
+        }
+        const gasUseEstimate = (await provider.estimateGas({ from: account?.address, ...tx })).toNumber() * 10e9
+        setClientsideGasEstimate({
+          value: gasUseEstimate.toString(),
+          isLoading: false,
+          error: null,
+        })
+      } catch (e) {
+        // provider.estimateGas will error if the account doesn't have sufficient ETH balance, but we should show an estimated cost anyway
+        setClientsideGasEstimate({
+          value: fallbackGasLimit?.toString(),
+          isLoading: false,
+          error: fallbackGasLimit ? null : (e as Error),
+        })
+      }
+    }
+
+    calculateClientsideGasEstimate().catch(() => undefined)
+  }, [account?.address, fallbackGasLimit, provider, skip, tx])
+
   return useMemo(() => {
+    if (error && isInterface) {
+      // TODO(WEB-5086): Remove clientside fallback when Gas Fee API fixes errors
+      // Not currently necessary to run this fallback logic on mob/ext since they have workarounds for failing Gas Fee API (will never be disconnected + just hides gas fee display entirely when insufficient funds)
+      logger.debug(
+        'features/gas/hooks.ts',
+        'useTransactionGasFee',
+        'Error estimating gas from Gas Fee API, falling back to clientside estimate',
+        error,
+      )
+      return clientsideGasEstimate
+    }
+
     if (!data) {
       return { error: error ?? null, isLoading }
     }
@@ -138,7 +193,7 @@ export function useTransactionGasFee(
         shadowEstimates: data.gasEstimates?.filter((e) => e !== activeEstimate),
       },
     }
-  }, [data, error, isLoading, activeGasStrategy])
+  }, [clientsideGasEstimate, data, error, isLoading, activeGasStrategy])
 }
 
 export function useUSDValue(chainId?: UniverseChainId, ethValueInWei?: string): string | undefined {
@@ -153,7 +208,7 @@ export function useUSDValue(chainId?: UniverseChainId, ethValueInWei?: string): 
 
 export function useFormattedUniswapXGasFeeInfo(
   uniswapXGasBreakdown: UniswapXGasBreakdown | undefined,
-  chainId: WalletChainId,
+  chainId: UniverseChainId,
 ): FormattedUniswapXGasFeeInfo | undefined {
   const { convertFiatAmountFormatted } = useLocalizationContext()
 

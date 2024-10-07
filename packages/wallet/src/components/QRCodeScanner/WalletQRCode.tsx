@@ -7,6 +7,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { useAddressColorProps } from 'uniswap/src/features/address/color'
 import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { isExtension } from 'utilities/src/platform'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
 
@@ -18,6 +19,7 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
   const addressColor = useAddressColorProps(address)
 
   const QR_CODE_SIZE = media.short ? 220 : 240
+  const QR_CODE_EYE_SIZE = isExtension ? 140 : 160
   const UNICON_SIZE = QR_CODE_SIZE / 4
 
   return (
@@ -36,6 +38,7 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
         <AddressDisplay
           includeUnitagSuffix
           showCopy
+          disableForcedWidth
           address={address}
           captionVariant="body2"
           showAccountIcon={false}
@@ -46,6 +49,7 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
         color={addressColor}
         containerBackgroundColor={colors.surface1.val}
         encodedValue={address}
+        eyeSize={QR_CODE_EYE_SIZE}
         size={QR_CODE_SIZE}
       >
         <AccountIcon

@@ -4,7 +4,6 @@ import React from 'react'
 import { useTranslation } from 'react-i18next'
 import { AppStackParamList, OnboardingStackParamList } from 'src/app/navigation/types'
 import { Screen } from 'src/components/layout/Screen'
-import { UnitagProfilePicture } from 'src/components/unitags/UnitagProfilePicture'
 import { useNavigationHeader } from 'src/utils/useNavigationHeader'
 import { Button, Flex, Loader, Text, useMedia, useSporeColors } from 'ui/src'
 import LockIcon from 'ui/src/assets/icons/lock.svg'
@@ -26,6 +25,7 @@ import {
   useOnboardingContext,
 } from 'wallet/src/features/onboarding/OnboardingContext'
 import AnimatedNumber from 'wallet/src/features/portfolio/AnimatedNumber'
+import { UnitagProfilePicture } from 'wallet/src/features/unitags/UnitagProfilePicture'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 

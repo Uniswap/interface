@@ -1,6 +1,6 @@
-import { Web3Provider } from '@ethersproject/providers'
 import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
-import { useEthersWeb3Provider } from 'hooks/useEthersProvider'
+import { useAccount } from 'hooks/useAccount'
+import useSelectChain from 'hooks/useSelectChain'
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
 import { PopupType, addPopup } from 'state/application/reducer'
@@ -15,6 +15,7 @@ import {
 import { createSaga } from 'uniswap/src/utils/saga'
 import { logger } from 'utilities/src/logger/logger'
 import noop from 'utilities/src/react/noop'
+import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 interface HandleWrapStepParams extends Omit<HandleOnChainStepParams<WrapTransactionStep>, 'info'> {}
 export function* handleWrapStep(params: HandleWrapStepParams) {
@@ -22,27 +23,38 @@ export function* handleWrapStep(params: HandleWrapStepParams) {
   return yield* call(handleOnChainStep, { ...params, info })
 }
 
-type WrapParams = WrapCallbackParams & { provider: Web3Provider }
+type WrapParams = WrapCallbackParams & { selectChain: (chainId: number) => Promise<boolean>; startChainId?: number }
 
 function* wrap(params: WrapParams) {
   try {
-    const { account, inputCurrencyAmount, txRequest, provider } = params
+    const { account, inputCurrencyAmount, selectChain, txRequest, startChainId, onFailure } = params
+
+    // Switch chains if needed
+    if (txRequest.chainId !== startChainId) {
+      const chainSwitched = yield* call(selectChain, txRequest.chainId)
+      if (!chainSwitched) {
+        onFailure()
+        return
+      }
+    }
 
     const step = { type: TransactionStepType.WrapTransaction, txRequest, amount: inputCurrencyAmount } as const
 
     const hash = yield* call(handleWrapStep, {
       step,
       account,
-      provider,
       setCurrentStep: noop,
       shouldWaitForConfirmation: false,
+      allowDuplicativeTx: true, // Compared to UniswapX wraps, the user should not be stopped from wrapping in quick succession
     })
 
     yield* put(addPopup({ content: { type: PopupType.Transaction, hash }, key: hash }))
 
     params.onSuccess()
   } catch (error) {
-    logger.error(error, { tags: { file: 'wrapSaga', function: 'wrap' } })
+    if (!didUserReject(error)) {
+      logger.error(error, { tags: { file: 'wrapSaga', function: 'wrap' } })
+    }
     params.onFailure()
   }
 }
@@ -65,16 +77,13 @@ export const wrapSaga = createSaga(wrap, 'wrap')
 
 export function useWrapCallback(): WrapCallback {
   const appDispatch = useDispatch()
-  const provider = useEthersWeb3Provider()
+  const selectChain = useSelectChain()
+  const startChainId = useAccount().chainId
 
   return useCallback(
     (params: WrapCallbackParams) => {
-      if (!provider) {
-        throw new Error('Provider not found')
-      }
-
-      appDispatch(wrapSaga.actions.trigger({ ...params, provider }))
+      appDispatch(wrapSaga.actions.trigger({ ...params, selectChain, startChainId }))
     },
-    [appDispatch, provider],
+    [appDispatch, selectChain, startChainId],
   )
 }

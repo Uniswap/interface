@@ -1,8 +1,10 @@
 import { createContext, ReactNode, useContext } from 'react'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { FiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/types'
 import { getSwapPrefilledState } from 'uniswap/src/features/transactions/swap/hooks/useSwapPrefilledState'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { NFTItem } from 'wallet/src/features/nfts/types'
 import { getSendPrefilledState } from 'wallet/src/features/transactions/send/getSendPrefilledState'
@@ -17,6 +19,10 @@ type NavigateToSwapFlowPartialState = {
   currencyChainId: WalletChainId
 }
 
+type NavigateToSwapFlowWithActions = {
+  openTokenSelector: CurrencyField
+}
+
 type NavigateToSendFlowPartialState = {
   chainId: WalletChainId
   currencyAddress?: Address
@@ -24,7 +30,7 @@ type NavigateToSendFlowPartialState = {
 
 export type NavigateToSwapFlowArgs =
   // Depending on how much control you need, you can either pass a complete `TransactionState` object or just the currency, address and chain.
-  NavigateToTransactionFlowTransactionState | NavigateToSwapFlowPartialState | undefined
+  NavigateToTransactionFlowTransactionState | NavigateToSwapFlowPartialState | NavigateToSwapFlowWithActions | undefined
 
 // Same as above, but for send flow
 export type NavigateToSendFlowArgs =
@@ -42,16 +48,34 @@ function isNavigateToSwapFlowArgsPartialState(args: NavigateToSwapFlowArgs): arg
   return Boolean(args && (args as NavigateToSwapFlowPartialState).currencyAddress !== undefined)
 }
 
+function isNavigateToSwapFlowWithActions(args: NavigateToSwapFlowArgs): args is NavigateToSwapFlowWithActions {
+  return Boolean(args && (args as NavigateToSwapFlowWithActions).openTokenSelector !== undefined)
+}
+
 function isNavigateToSendFlowArgsPartialState(args: NavigateToSendFlowArgs): args is NavigateToSendFlowPartialState {
   return Boolean(args && (args as NavigateToSendFlowPartialState).chainId !== undefined)
 }
 
 export function getNavigateToSwapFlowArgsInitialState(args: NavigateToSwapFlowArgs): TransactionState | undefined {
-  return isNavigateToTransactionFlowArgsInitialState(args)
-    ? args.initialState
-    : isNavigateToSwapFlowArgsPartialState(args)
-      ? getSwapPrefilledState(args)
-      : undefined
+  if (isNavigateToTransactionFlowArgsInitialState(args)) {
+    return args.initialState
+  } else if (isNavigateToSwapFlowArgsPartialState(args)) {
+    return getSwapPrefilledState(args) as TransactionState
+  } else if (isNavigateToSwapFlowWithActions(args)) {
+    return {
+      [CurrencyField.INPUT]: {
+        address: DEFAULT_NATIVE_ADDRESS,
+        chainId: UniverseChainId.Mainnet,
+        type: AssetType.Currency,
+      },
+      [CurrencyField.OUTPUT]: null,
+      exactCurrencyField: CurrencyField.INPUT,
+      exactAmountToken: '',
+      selectingCurrencyField: CurrencyField.OUTPUT,
+    }
+  } else {
+    return undefined
+  }
 }
 
 export function getNavigateToSendFlowArgsInitialState(args: NavigateToSendFlowArgs): TransactionState | undefined {

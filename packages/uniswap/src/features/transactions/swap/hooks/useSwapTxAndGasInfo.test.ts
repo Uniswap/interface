@@ -61,6 +61,7 @@ describe('useSwapTxAndGasInfo', () => {
           strategy: DEFAULT_GAS_STRATEGY,
         },
       },
+      isLoading: false,
     }
     const mockSwapTxInfo: TransactionRequestInfo = {
       transactionRequest: { to: '0x456', chainId: 1 },
@@ -117,7 +118,6 @@ describe('useSwapTxAndGasInfo', () => {
           },
         },
       },
-      approvalError: false,
       indicativeTrade: undefined,
       permit: undefined,
       swapRequestArgs: undefined,

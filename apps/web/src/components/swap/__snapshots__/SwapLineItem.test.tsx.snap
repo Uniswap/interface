@@ -1428,13 +1428,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   min-width: 0;
 }
 
-.c34 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  width: 100%;
-}
-
 .c1 {
   width: 100%;
   display: -webkit-box;
@@ -1488,40 +1481,11 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   gap: 8px;
 }
 
-.c35 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 1px;
-}
-
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-}
-
-.c36 {
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin: -1px;
-}
-
-.c36 > * {
-  margin: 1px !important;
 }
 
 .c9 {
@@ -1679,23 +1643,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c39 {
-  max-width: 200px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 8px;
-  pointer-events: auto;
-  color: #222222;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #22222212;
-  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
-}
-
 .c4 {
   cursor: help;
   color: #7D7D7D;
@@ -1728,183 +1675,6 @@ exports[`SwapLineItem.tsx exact input 1`] = `
 
 .c10 > * {
   fill: #CECECE;
-}
-
-.c30 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: #F9F9F9;
-  border: unset;
-  border-radius: 0.5rem;
-  color: #7D7D7D;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  padding: 4px 6px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-weight: 535;
-}
-
-.c25 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c25 img {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c38 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c38 img {
-  width: 9px;
-  height: 20px;
-  object-fit: cover;
-}
-
-.c38 img:first-child {
-  border-radius: 10px 0 0 10px;
-  object-position: 0 0;
-}
-
-.c38 img:last-child {
-  border-radius: 0 10px 10px 0;
-  object-position: 100% 0;
-}
-
-.c26 {
-  width: 10px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c21 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 100%;
-}
-
-.c22 {
-  display: grid;
-  grid-template-columns: 24px 1fr 24px;
-}
-
-.c27 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  padding: 0.1rem 0.5rem;
-  position: relative;
-}
-
-.c37 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 4px 4px;
-}
-
-.c28 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: absolute;
-  width: calc(100%);
-  z-index: 1;
-  opacity: 0.5;
-}
-
-.c29 path {
-  stroke: #22222212;
-}
-
-.c31 {
-  background-color: #F9F9F9;
-  border-radius: 8px;
-  display: grid;
-  grid-gap: 4px;
-  grid-auto-flow: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: start;
-  -ms-flex-pack: start;
-  justify-content: start;
-  padding: 4px 6px;
-  z-index: 1020;
-}
-
-.c32 {
-  background-color: #F9F9F9;
-  border-radius: 4px;
-  color: #7D7D7D;
-  font-size: 10px;
-  padding: 2px 4px;
-  z-index: 1021;
-}
-
-.c33 {
-  word-break: normal;
 }
 
 .c17 {
@@ -2249,141 +2019,89 @@ exports[`SwapLineItem.tsx exact input 1`] = `
                     class="c20"
                   >
                     <div
-                      class="c21 css-vurnku"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                     >
                       <div
-                        class="c0 c1 c22"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center"
+                        style="display: grid; grid-template-columns: 24px 1fr 24px;"
                       >
                         <div
-                          class="c23"
-                          style="height: 20px; width: 20px;"
+                          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
+                          style="padding: 0.1rem 0.5rem;"
                         >
                           <div
-                            class="c24"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
-                            >
-                              <div
-                                class="c25"
-                                size="20"
-                              >
-                                 
-                                <img
-                                  class="c26"
-                                  size="20"
-                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="c0 c1 c27"
-                        >
-                          <div
-                            class="c28"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0d0t546"
                           >
                             <svg
-                              class="c29"
+                              stroke-width="8"
+                              style="color: currentColor; width: 8px; height: 8px; min-width: 100%; min-height: 35px;"
+                              viewBox="850 0 300 200"
+                              width="100%"
                             >
-                              dot_line.svg
+                              <line
+                                stroke="currentColor"
+                                stroke-dasharray="1, 45"
+                                stroke-linecap="round"
+                                stroke-width="20"
+                                x1="0"
+                                x2="3000"
+                                y1="100"
+                                y2="100"
+                              />
                             </svg>
                           </div>
                           <div
-                            class="c30 c31"
+                            class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                           >
-                            <div
-                              class="c30 c32"
+                            <span
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                              data-disable-theme="true"
                             >
-                              <div
-                                class="c3 c33 css-1m65e73"
-                              >
-                                V3
-                              </div>
-                            </div>
-                            <div
-                              class="c11 c33 css-1m65e73"
+                              V3
+                            </span>
+                            <span
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                              data-disable-theme="true"
                               style="min-width: auto;"
                             >
                               100%
-                            </div>
+                            </span>
                           </div>
                           <div
-                            class="c34 c35 c36"
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _mt--32px _mr--32px _mb--32px _ml--32px _gap-1px _width-10037"
                             style="justify-content: space-evenly; z-index: 2;"
-                            width="100%"
                           >
                             <div
-                              class="c5"
+                              aria-expanded="false"
+                              aria-haspopup="dialog"
+                              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                              data-state="closed"
                             >
-                              <div>
+                              <div
+                                class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
+                              >
                                 <div
-                                  class="c30 c37"
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
                                 >
                                   <div
-                                    class="css-mbnpt3"
+                                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
                                   >
                                     <div
-                                      class="c38"
-                                      size="20"
-                                    >
-                                      <img
-                                        class="c26"
-                                        size="20"
-                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                      />
-                                      <img
-                                        class="c26"
-                                        size="20"
-                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                      />
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="c11 c33 css-1m65e73"
-                                  >
-                                    1%
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-9px"
+                                      data-testid="input-currency-logo-container"
+                                    />
+                                    <div
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-1448970769 _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
+                                      data-testid="output-currency-logo-container"
+                                    />
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                            <div
-                              class="c13"
-                              style="position: fixed; left: 0px; top: 0px;"
-                            >
-                              <div
-                                class="c39"
-                              >
-                                ABC/DEF 1% pool
-                              </div>
-                              <div
-                                class="c16 arrow-"
-                                style="position: absolute;"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="c23"
-                          style="height: 20px; width: 20px;"
-                        >
-                          <div
-                            class="c24"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
-                            >
-                              <div
-                                class="c25"
-                                size="20"
-                              >
-                                 
-                                <img
-                                  class="c26"
-                                  size="20"
-                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                />
+                                <span
+                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                                  data-disable-theme="true"
+                                >
+                                  1%
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -2425,13 +2143,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-}
-
-.c34 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  width: 100%;
 }
 
 .c1 {
@@ -2487,40 +2198,11 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   gap: 8px;
 }
 
-.c35 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 1px;
-}
-
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-}
-
-.c36 {
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin: -1px;
-}
-
-.c36 > * {
-  margin: 1px !important;
 }
 
 .c9 {
@@ -2678,23 +2360,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c39 {
-  max-width: 200px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 8px;
-  pointer-events: auto;
-  color: #222222;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #22222212;
-  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
-}
-
 .c4 {
   cursor: help;
   color: #7D7D7D;
@@ -2727,183 +2392,6 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
 
 .c10 > * {
   fill: #CECECE;
-}
-
-.c30 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: #F9F9F9;
-  border: unset;
-  border-radius: 0.5rem;
-  color: #7D7D7D;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  padding: 4px 6px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-weight: 535;
-}
-
-.c25 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c25 img {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c38 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c38 img {
-  width: 9px;
-  height: 20px;
-  object-fit: cover;
-}
-
-.c38 img:first-child {
-  border-radius: 10px 0 0 10px;
-  object-position: 0 0;
-}
-
-.c38 img:last-child {
-  border-radius: 0 10px 10px 0;
-  object-position: 100% 0;
-}
-
-.c26 {
-  width: 10px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c21 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 100%;
-}
-
-.c22 {
-  display: grid;
-  grid-template-columns: 24px 1fr 24px;
-}
-
-.c27 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  padding: 0.1rem 0.5rem;
-  position: relative;
-}
-
-.c37 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 4px 4px;
-}
-
-.c28 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: absolute;
-  width: calc(100%);
-  z-index: 1;
-  opacity: 0.5;
-}
-
-.c29 path {
-  stroke: #22222212;
-}
-
-.c31 {
-  background-color: #F9F9F9;
-  border-radius: 8px;
-  display: grid;
-  grid-gap: 4px;
-  grid-auto-flow: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: start;
-  -ms-flex-pack: start;
-  justify-content: start;
-  padding: 4px 6px;
-  z-index: 1020;
-}
-
-.c32 {
-  background-color: #F9F9F9;
-  border-radius: 4px;
-  color: #7D7D7D;
-  font-size: 10px;
-  padding: 2px 4px;
-  z-index: 1021;
-}
-
-.c33 {
-  word-break: normal;
 }
 
 .c17 {
@@ -3248,141 +2736,89 @@ exports[`SwapLineItem.tsx exact input api 1`] = `
                     class="c20"
                   >
                     <div
-                      class="c21 css-vurnku"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                     >
                       <div
-                        class="c0 c1 c22"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center"
+                        style="display: grid; grid-template-columns: 24px 1fr 24px;"
                       >
                         <div
-                          class="c23"
-                          style="height: 20px; width: 20px;"
+                          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
+                          style="padding: 0.1rem 0.5rem;"
                         >
                           <div
-                            class="c24"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
-                            >
-                              <div
-                                class="c25"
-                                size="20"
-                              >
-                                 
-                                <img
-                                  class="c26"
-                                  size="20"
-                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="c0 c1 c27"
-                        >
-                          <div
-                            class="c28"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0d0t546"
                           >
                             <svg
-                              class="c29"
+                              stroke-width="8"
+                              style="color: currentColor; width: 8px; height: 8px; min-width: 100%; min-height: 35px;"
+                              viewBox="850 0 300 200"
+                              width="100%"
                             >
-                              dot_line.svg
+                              <line
+                                stroke="currentColor"
+                                stroke-dasharray="1, 45"
+                                stroke-linecap="round"
+                                stroke-width="20"
+                                x1="0"
+                                x2="3000"
+                                y1="100"
+                                y2="100"
+                              />
                             </svg>
                           </div>
                           <div
-                            class="c30 c31"
+                            class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                           >
-                            <div
-                              class="c30 c32"
+                            <span
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                              data-disable-theme="true"
                             >
-                              <div
-                                class="c3 c33 css-1m65e73"
-                              >
-                                V3
-                              </div>
-                            </div>
-                            <div
-                              class="c11 c33 css-1m65e73"
+                              V3
+                            </span>
+                            <span
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                              data-disable-theme="true"
                               style="min-width: auto;"
                             >
                               100%
-                            </div>
+                            </span>
                           </div>
                           <div
-                            class="c34 c35 c36"
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _mt--32px _mr--32px _mb--32px _ml--32px _gap-1px _width-10037"
                             style="justify-content: space-evenly; z-index: 2;"
-                            width="100%"
                           >
                             <div
-                              class="c5"
+                              aria-expanded="false"
+                              aria-haspopup="dialog"
+                              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                              data-state="closed"
                             >
-                              <div>
+                              <div
+                                class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
+                              >
                                 <div
-                                  class="c30 c37"
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
                                 >
                                   <div
-                                    class="css-mbnpt3"
+                                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
                                   >
                                     <div
-                                      class="c38"
-                                      size="20"
-                                    >
-                                      <img
-                                        class="c26"
-                                        size="20"
-                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                      />
-                                      <img
-                                        class="c26"
-                                        size="20"
-                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                      />
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="c11 c33 css-1m65e73"
-                                  >
-                                    1%
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-9px"
+                                      data-testid="input-currency-logo-container"
+                                    />
+                                    <div
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-1448970769 _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
+                                      data-testid="output-currency-logo-container"
+                                    />
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                            <div
-                              class="c13"
-                              style="position: fixed; left: 0px; top: 0px;"
-                            >
-                              <div
-                                class="c39"
-                              >
-                                ABC/DEF 1% pool
-                              </div>
-                              <div
-                                class="c16 arrow-"
-                                style="position: absolute;"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="c23"
-                          style="height: 20px; width: 20px;"
-                        >
-                          <div
-                            class="c24"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
-                            >
-                              <div
-                                class="c25"
-                                size="20"
-                              >
-                                 
-                                <img
-                                  class="c26"
-                                  size="20"
-                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                />
+                                <span
+                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                                  data-disable-theme="true"
+                                >
+                                  1%
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -3424,13 +2860,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-}
-
-.c34 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  width: 100%;
 }
 
 .c1 {
@@ -3486,40 +2915,11 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   gap: 8px;
 }
 
-.c35 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 1px;
-}
-
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-}
-
-.c36 {
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin: -1px;
-}
-
-.c36 > * {
-  margin: 1px !important;
 }
 
 .c9 {
@@ -3677,23 +3077,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c39 {
-  max-width: 200px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 8px;
-  pointer-events: auto;
-  color: #222222;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #22222212;
-  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
-}
-
 .c4 {
   cursor: help;
   color: #7D7D7D;
@@ -3726,183 +3109,6 @@ exports[`SwapLineItem.tsx exact output 1`] = `
 
 .c10 > * {
   fill: #CECECE;
-}
-
-.c30 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: #F9F9F9;
-  border: unset;
-  border-radius: 0.5rem;
-  color: #7D7D7D;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  padding: 4px 6px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-weight: 535;
-}
-
-.c25 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c25 img {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c38 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c38 img {
-  width: 9px;
-  height: 20px;
-  object-fit: cover;
-}
-
-.c38 img:first-child {
-  border-radius: 10px 0 0 10px;
-  object-position: 0 0;
-}
-
-.c38 img:last-child {
-  border-radius: 0 10px 10px 0;
-  object-position: 100% 0;
-}
-
-.c26 {
-  width: 10px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c21 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 100%;
-}
-
-.c22 {
-  display: grid;
-  grid-template-columns: 24px 1fr 24px;
-}
-
-.c27 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  padding: 0.1rem 0.5rem;
-  position: relative;
-}
-
-.c37 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 4px 4px;
-}
-
-.c28 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: absolute;
-  width: calc(100%);
-  z-index: 1;
-  opacity: 0.5;
-}
-
-.c29 path {
-  stroke: #22222212;
-}
-
-.c31 {
-  background-color: #F9F9F9;
-  border-radius: 8px;
-  display: grid;
-  grid-gap: 4px;
-  grid-auto-flow: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: start;
-  -ms-flex-pack: start;
-  justify-content: start;
-  padding: 4px 6px;
-  z-index: 1020;
-}
-
-.c32 {
-  background-color: #F9F9F9;
-  border-radius: 4px;
-  color: #7D7D7D;
-  font-size: 10px;
-  padding: 2px 4px;
-  z-index: 1021;
-}
-
-.c33 {
-  word-break: normal;
 }
 
 .c17 {
@@ -4288,141 +3494,89 @@ exports[`SwapLineItem.tsx exact output 1`] = `
                     class="c20"
                   >
                     <div
-                      class="c21 css-vurnku"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                     >
                       <div
-                        class="c0 c1 c22"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center"
+                        style="display: grid; grid-template-columns: 24px 1fr 24px;"
                       >
                         <div
-                          class="c23"
-                          style="height: 20px; width: 20px;"
+                          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
+                          style="padding: 0.1rem 0.5rem;"
                         >
                           <div
-                            class="c24"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
-                            >
-                              <div
-                                class="c25"
-                                size="20"
-                              >
-                                 
-                                <img
-                                  class="c26"
-                                  size="20"
-                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="c0 c1 c27"
-                        >
-                          <div
-                            class="c28"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0d0t546"
                           >
                             <svg
-                              class="c29"
+                              stroke-width="8"
+                              style="color: currentColor; width: 8px; height: 8px; min-width: 100%; min-height: 35px;"
+                              viewBox="850 0 300 200"
+                              width="100%"
                             >
-                              dot_line.svg
+                              <line
+                                stroke="currentColor"
+                                stroke-dasharray="1, 45"
+                                stroke-linecap="round"
+                                stroke-width="20"
+                                x1="0"
+                                x2="3000"
+                                y1="100"
+                                y2="100"
+                              />
                             </svg>
                           </div>
                           <div
-                            class="c30 c31"
+                            class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                           >
-                            <div
-                              class="c30 c32"
+                            <span
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                              data-disable-theme="true"
                             >
-                              <div
-                                class="c3 c33 css-1m65e73"
-                              >
-                                V3
-                              </div>
-                            </div>
-                            <div
-                              class="c11 c33 css-1m65e73"
+                              V3
+                            </span>
+                            <span
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                              data-disable-theme="true"
                               style="min-width: auto;"
                             >
                               100%
-                            </div>
+                            </span>
                           </div>
                           <div
-                            class="c34 c35 c36"
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _mt--32px _mr--32px _mb--32px _ml--32px _gap-1px _width-10037"
                             style="justify-content: space-evenly; z-index: 2;"
-                            width="100%"
                           >
                             <div
-                              class="c5"
+                              aria-expanded="false"
+                              aria-haspopup="dialog"
+                              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                              data-state="closed"
                             >
-                              <div>
+                              <div
+                                class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
+                              >
                                 <div
-                                  class="c30 c37"
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
                                 >
                                   <div
-                                    class="css-mbnpt3"
+                                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
                                   >
                                     <div
-                                      class="c38"
-                                      size="20"
-                                    >
-                                      <img
-                                        class="c26"
-                                        size="20"
-                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                      />
-                                      <img
-                                        class="c26"
-                                        size="20"
-                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
-                                      />
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="c11 c33 css-1m65e73"
-                                  >
-                                    0.3%
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-9px"
+                                      data-testid="input-currency-logo-container"
+                                    />
+                                    <div
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-1448970769 _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
+                                      data-testid="output-currency-logo-container"
+                                    />
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                            <div
-                              class="c13"
-                              style="position: fixed; left: 0px; top: 0px;"
-                            >
-                              <div
-                                class="c39"
-                              >
-                                ABC/GHI 0.3% pool
-                              </div>
-                              <div
-                                class="c16 arrow-"
-                                style="position: absolute;"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="c23"
-                          style="height: 20px; width: 20px;"
-                        >
-                          <div
-                            class="c24"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
-                            >
-                              <div
-                                class="c25"
-                                size="20"
-                              >
-                                 
-                                <img
-                                  class="c26"
-                                  size="20"
-                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000003/logo.png"
-                                />
+                                <span
+                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                                  data-disable-theme="true"
+                                >
+                                  0.3%
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -4464,13 +3618,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-}
-
-.c34 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  width: 100%;
 }
 
 .c1 {
@@ -4526,40 +3673,11 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   gap: 8px;
 }
 
-.c35 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 1px;
-}
-
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-}
-
-.c36 {
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin: -1px;
-}
-
-.c36 > * {
-  margin: 1px !important;
 }
 
 .c9 {
@@ -4717,23 +3835,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c39 {
-  max-width: 200px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 8px;
-  pointer-events: auto;
-  color: #222222;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #22222212;
-  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
-}
-
 .c4 {
   cursor: help;
   color: #7D7D7D;
@@ -4766,183 +3867,6 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
 
 .c10 > * {
   fill: #CECECE;
-}
-
-.c30 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: #F9F9F9;
-  border: unset;
-  border-radius: 0.5rem;
-  color: #7D7D7D;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  padding: 4px 6px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-weight: 535;
-}
-
-.c25 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c25 img {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c38 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c38 img {
-  width: 9px;
-  height: 20px;
-  object-fit: cover;
-}
-
-.c38 img:first-child {
-  border-radius: 10px 0 0 10px;
-  object-position: 0 0;
-}
-
-.c38 img:last-child {
-  border-radius: 0 10px 10px 0;
-  object-position: 100% 0;
-}
-
-.c26 {
-  width: 10px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c21 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 100%;
-}
-
-.c22 {
-  display: grid;
-  grid-template-columns: 24px 1fr 24px;
-}
-
-.c27 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  padding: 0.1rem 0.5rem;
-  position: relative;
-}
-
-.c37 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 4px 4px;
-}
-
-.c28 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: absolute;
-  width: calc(100%);
-  z-index: 1;
-  opacity: 0.5;
-}
-
-.c29 path {
-  stroke: #22222212;
-}
-
-.c31 {
-  background-color: #F9F9F9;
-  border-radius: 8px;
-  display: grid;
-  grid-gap: 4px;
-  grid-auto-flow: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: start;
-  -ms-flex-pack: start;
-  justify-content: start;
-  padding: 4px 6px;
-  z-index: 1020;
-}
-
-.c32 {
-  background-color: #F9F9F9;
-  border-radius: 4px;
-  color: #7D7D7D;
-  font-size: 10px;
-  padding: 2px 4px;
-  z-index: 1021;
-}
-
-.c33 {
-  word-break: normal;
 }
 
 .c17 {
@@ -5341,141 +4265,89 @@ exports[`SwapLineItem.tsx fee on buy 1`] = `
                     class="c20"
                   >
                     <div
-                      class="c21 css-vurnku"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                     >
                       <div
-                        class="c0 c1 c22"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center"
+                        style="display: grid; grid-template-columns: 24px 1fr 24px;"
                       >
                         <div
-                          class="c23"
-                          style="height: 20px; width: 20px;"
+                          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
+                          style="padding: 0.1rem 0.5rem;"
                         >
                           <div
-                            class="c24"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
-                            >
-                              <div
-                                class="c25"
-                                size="20"
-                              >
-                                 
-                                <img
-                                  class="c26"
-                                  size="20"
-                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="c0 c1 c27"
-                        >
-                          <div
-                            class="c28"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0d0t546"
                           >
                             <svg
-                              class="c29"
+                              stroke-width="8"
+                              style="color: currentColor; width: 8px; height: 8px; min-width: 100%; min-height: 35px;"
+                              viewBox="850 0 300 200"
+                              width="100%"
                             >
-                              dot_line.svg
+                              <line
+                                stroke="currentColor"
+                                stroke-dasharray="1, 45"
+                                stroke-linecap="round"
+                                stroke-width="20"
+                                x1="0"
+                                x2="3000"
+                                y1="100"
+                                y2="100"
+                              />
                             </svg>
                           </div>
                           <div
-                            class="c30 c31"
+                            class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                           >
-                            <div
-                              class="c30 c32"
+                            <span
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                              data-disable-theme="true"
                             >
-                              <div
-                                class="c3 c33 css-1m65e73"
-                              >
-                                V3
-                              </div>
-                            </div>
-                            <div
-                              class="c11 c33 css-1m65e73"
+                              V3
+                            </span>
+                            <span
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                              data-disable-theme="true"
                               style="min-width: auto;"
                             >
                               100%
-                            </div>
+                            </span>
                           </div>
                           <div
-                            class="c34 c35 c36"
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _mt--32px _mr--32px _mb--32px _ml--32px _gap-1px _width-10037"
                             style="justify-content: space-evenly; z-index: 2;"
-                            width="100%"
                           >
                             <div
-                              class="c5"
+                              aria-expanded="false"
+                              aria-haspopup="dialog"
+                              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                              data-state="closed"
                             >
-                              <div>
+                              <div
+                                class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
+                              >
                                 <div
-                                  class="c30 c37"
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
                                 >
                                   <div
-                                    class="css-mbnpt3"
+                                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
                                   >
                                     <div
-                                      class="c38"
-                                      size="20"
-                                    >
-                                      <img
-                                        class="c26"
-                                        size="20"
-                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                      />
-                                      <img
-                                        class="c26"
-                                        size="20"
-                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                      />
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="c11 c33 css-1m65e73"
-                                  >
-                                    1%
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-9px"
+                                      data-testid="input-currency-logo-container"
+                                    />
+                                    <div
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-1448970769 _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
+                                      data-testid="output-currency-logo-container"
+                                    />
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                            <div
-                              class="c13"
-                              style="position: fixed; left: 0px; top: 0px;"
-                            >
-                              <div
-                                class="c39"
-                              >
-                                ABC/DEF 1% pool
-                              </div>
-                              <div
-                                class="c16 arrow-"
-                                style="position: absolute;"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="c23"
-                          style="height: 20px; width: 20px;"
-                        >
-                          <div
-                            class="c24"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
-                            >
-                              <div
-                                class="c25"
-                                size="20"
-                              >
-                                 
-                                <img
-                                  class="c26"
-                                  size="20"
-                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                />
+                                <span
+                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                                  data-disable-theme="true"
+                                >
+                                  1%
+                                </span>
                               </div>
                             </div>
                           </div>
@@ -5517,13 +4389,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   box-sizing: border-box;
   margin: 0;
   min-width: 0;
-}
-
-.c34 {
-  box-sizing: border-box;
-  margin: 0;
-  min-width: 0;
-  width: 100%;
 }
 
 .c1 {
@@ -5579,40 +4444,11 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   gap: 8px;
 }
 
-.c35 {
-  width: 100%;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 0;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  -webkit-box-pack: start;
-  -webkit-justify-content: flex-start;
-  -ms-flex-pack: start;
-  justify-content: flex-start;
-  gap: 1px;
-}
-
 .c2 {
   -webkit-box-pack: justify;
   -webkit-justify-content: space-between;
   -ms-flex-pack: justify;
   justify-content: space-between;
-}
-
-.c36 {
-  -webkit-flex-wrap: wrap;
-  -ms-flex-wrap: wrap;
-  flex-wrap: wrap;
-  margin: -1px;
-}
-
-.c36 > * {
-  margin: 1px !important;
 }
 
 .c9 {
@@ -5770,23 +4606,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
   box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
 }
 
-.c39 {
-  max-width: 200px;
-  width: calc(100vw - 16px);
-  cursor: default;
-  padding: 8px;
-  pointer-events: auto;
-  color: #222222;
-  font-weight: 485;
-  font-size: 12px;
-  line-height: 16px;
-  word-break: break-word;
-  background: #FFFFFF;
-  border-radius: 12px;
-  border: 1px solid #22222212;
-  box-shadow: 0 4px 8px 0 rgba(47,128,237,0.1);
-}
-
 .c4 {
   cursor: help;
   color: #7D7D7D;
@@ -5819,183 +4638,6 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
 
 .c10 > * {
   fill: #CECECE;
-}
-
-.c30 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  background: #F9F9F9;
-  border: unset;
-  border-radius: 0.5rem;
-  color: #7D7D7D;
-  display: -webkit-inline-box;
-  display: -webkit-inline-flex;
-  display: -ms-inline-flexbox;
-  display: inline-flex;
-  padding: 4px 6px;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  font-weight: 535;
-}
-
-.c25 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c25 img {
-  width: 20px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c38 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  gap: 2px;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c38 img {
-  width: 9px;
-  height: 20px;
-  object-fit: cover;
-}
-
-.c38 img:first-child {
-  border-radius: 10px 0 0 10px;
-  object-position: 0 0;
-}
-
-.c38 img:last-child {
-  border-radius: 0 10px 10px 0;
-  object-position: 100% 0;
-}
-
-.c26 {
-  width: 10px;
-  height: 20px;
-  border-radius: 50%;
-}
-
-.c24 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: relative;
-  top: 0;
-  left: 0;
-}
-
-.c23 {
-  position: relative;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-}
-
-.c21 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  width: 100%;
-}
-
-.c22 {
-  display: grid;
-  grid-template-columns: 24px 1fr 24px;
-}
-
-.c27 {
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-pack: center;
-  -webkit-justify-content: center;
-  -ms-flex-pack: center;
-  justify-content: center;
-  padding: 0.1rem 0.5rem;
-  position: relative;
-}
-
-.c37 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  padding: 4px 4px;
-}
-
-.c28 {
-  display: -webkit-box;
-  display: -webkit-flex;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-align-items: center;
-  -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
-  position: absolute;
-  width: calc(100%);
-  z-index: 1;
-  opacity: 0.5;
-}
-
-.c29 path {
-  stroke: #22222212;
-}
-
-.c31 {
-  background-color: #F9F9F9;
-  border-radius: 8px;
-  display: grid;
-  grid-gap: 4px;
-  grid-auto-flow: column;
-  -webkit-box-pack: start;
-  -webkit-justify-content: start;
-  -ms-flex-pack: start;
-  justify-content: start;
-  padding: 4px 6px;
-  z-index: 1020;
-}
-
-.c32 {
-  background-color: #F9F9F9;
-  border-radius: 4px;
-  color: #7D7D7D;
-  font-size: 10px;
-  padding: 2px 4px;
-  z-index: 1021;
-}
-
-.c33 {
-  word-break: normal;
 }
 
 .c17 {
@@ -6394,141 +5036,89 @@ exports[`SwapLineItem.tsx fee on sell 1`] = `
                     class="c20"
                   >
                     <div
-                      class="c21 css-vurnku"
+                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column"
                     >
                       <div
-                        class="c0 c1 c22"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center"
+                        style="display: grid; grid-template-columns: 24px 1fr 24px;"
                       >
                         <div
-                          class="c23"
-                          style="height: 20px; width: 20px;"
+                          class="_display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-center _width-10037"
+                          style="padding: 0.1rem 0.5rem;"
                         >
                           <div
-                            class="c24"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
-                            >
-                              <div
-                                class="c25"
-                                size="20"
-                              >
-                                 
-                                <img
-                                  class="c26"
-                                  size="20"
-                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                />
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="c0 c1 c27"
-                        >
-                          <div
-                            class="c28"
+                            class="_display-flex _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _alignItems-center _position-absolute _width-10037 _zIndex-1 _opacity-0d0t546"
                           >
                             <svg
-                              class="c29"
+                              stroke-width="8"
+                              style="color: currentColor; width: 8px; height: 8px; min-width: 100%; min-height: 35px;"
+                              viewBox="850 0 300 200"
+                              width="100%"
                             >
-                              dot_line.svg
+                              <line
+                                stroke="currentColor"
+                                stroke-dasharray="1, 45"
+                                stroke-linecap="round"
+                                stroke-width="20"
+                                x1="0"
+                                x2="3000"
+                                y1="100"
+                                y2="100"
+                              />
                             </svg>
                           </div>
                           <div
-                            class="c30 c31"
+                            class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
                           >
-                            <div
-                              class="c30 c32"
+                            <span
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                              data-disable-theme="true"
                             >
-                              <div
-                                class="c3 c33 css-1m65e73"
-                              >
-                                V3
-                              </div>
-                            </div>
-                            <div
-                              class="c11 c33 css-1m65e73"
+                              V3
+                            </span>
+                            <span
+                              class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                              data-disable-theme="true"
                               style="min-width: auto;"
                             >
                               100%
-                            </div>
+                            </span>
                           </div>
                           <div
-                            class="c34 c35 c36"
+                            class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _flexWrap-wrap _mt--32px _mr--32px _mb--32px _ml--32px _gap-1px _width-10037"
                             style="justify-content: space-evenly; z-index: 2;"
-                            width="100%"
                           >
                             <div
-                              class="c5"
+                              aria-expanded="false"
+                              aria-haspopup="dialog"
+                              class="_display-flex _alignItems-stretch _flexDirection-column _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0"
+                              data-state="closed"
                             >
-                              <div>
+                              <div
+                                class="_display-_platformweb_grid _gridGap-_platformweb_1481558307 _gridAutoFlow-_platformweb_column _display-flex _alignItems-center _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-flex-start _backgroundColor-568007293 _borderTopLeftRadius-1307609967 _borderTopRightRadius-1307609967 _borderBottomRightRadius-1307609967 _borderBottomLeftRadius-1307609967 _pt-1481558307 _pr-1481558307 _pb-1481558307 _pl-1481558307 _zIndex-1020"
+                              >
                                 <div
-                                  class="c30 c37"
+                                  class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _mr-4px _ml-12px"
                                 >
                                   <div
-                                    class="css-mbnpt3"
+                                    class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _height-20px _width-20px"
                                   >
                                     <div
-                                      class="c38"
-                                      size="20"
-                                    >
-                                      <img
-                                        class="c26"
-                                        size="20"
-                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000001/logo.png"
-                                      />
-                                      <img
-                                        class="c26"
-                                        size="20"
-                                        src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                      />
-                                    </div>
-                                  </div>
-                                  <div
-                                    class="c11 c33 css-1m65e73"
-                                  >
-                                    1%
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _left-0px _overflowX-hidden _overflowY-hidden _position-absolute _top-0px _width-9px"
+                                      data-testid="input-currency-logo-container"
+                                    />
+                                    <div
+                                      class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-1448970769 _overflowX-hidden _overflowY-hidden _position-absolute _right-0px _top-0px _width-9px"
+                                      data-testid="output-currency-logo-container"
+                                    />
                                   </div>
                                 </div>
-                              </div>
-                            </div>
-                            <div
-                              class="c13"
-                              style="position: fixed; left: 0px; top: 0px;"
-                            >
-                              <div
-                                class="c39"
-                              >
-                                ABC/DEF 1% pool
-                              </div>
-                              <div
-                                class="c16 arrow-"
-                                style="position: absolute;"
-                              />
-                            </div>
-                          </div>
-                        </div>
-                        <div
-                          class="c23"
-                          style="height: 20px; width: 20px;"
-                        >
-                          <div
-                            class="c24"
-                          >
-                            <div
-                              class="_display-flex _alignItems-stretch _flexBasis-auto _boxSizing-border-box _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-column _position-relative"
-                            >
-                              <div
-                                class="c25"
-                                size="20"
-                              >
-                                 
-                                <img
-                                  class="c26"
-                                  size="20"
-                                  src="https://raw.githubusercontent.com/Uniswap/assets/master/blockchains/ethereum/assets/0x0000000000000000000000000000000000000002/logo.png"
-                                />
+                                <span
+                                  class="font_body _wordBreak-_platformweb_normal _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441127 _lineHeight-222976480 _fontWeight-233016202"
+                                  data-disable-theme="true"
+                                >
+                                  1%
+                                </span>
                               </div>
                             </div>
                           </div>

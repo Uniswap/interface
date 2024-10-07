@@ -1,5 +1,5 @@
 import { PropsWithChildren, useCallback, useState } from 'react'
-import { Flex, Separator, Text, TouchableArea } from 'ui/src'
+import { Flex, Text, TouchableArea } from 'ui/src'
 import { InfoCircleFilled } from 'ui/src/components/icons/InfoCircleFilled'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
@@ -11,10 +11,9 @@ import { useTranslation } from 'uniswap/src/i18n'
 interface SwapSettingRowProps {
   setting: SwapSettingConfig
   setSelectedSetting: (setting: SwapSettingConfig) => void
-  index: number
 }
 
-export function SwapSettingRow({ setting, setSelectedSetting, index }: SwapSettingRowProps): JSX.Element | null {
+export function SwapSettingRow({ setting, setSelectedSetting }: SwapSettingRowProps): JSX.Element | null {
   const { renderTitle, Control, Description, Screen, InfoModal, featureFlag } = setting
   const { t } = useTranslation()
   const [showInfoModal, setShowInfoModal] = useState(false)
@@ -28,8 +27,7 @@ export function SwapSettingRow({ setting, setSelectedSetting, index }: SwapSetti
 
   const row = (
     <>
-      {index > 0 && <Separator backgroundColor="$surface3" />}
-      <Flex>
+      <Flex py="$spacing4">
         <Flex centered row gap="$spacing16" justifyContent="space-between">
           <TouchableArea onPress={(): void => setShowInfoModal(true)}>
             <Flex gap="$spacing4">

@@ -61,7 +61,7 @@ const migrator = createMigrate(
   { debug: false },
 )
 
-describe('migration to v19', () => {
+describe('migration to v20', () => {
   it('should set currency to default value when unset', async () => {
     const result: any = await migrator(previousState, 20)
     expect(result.userSettings.currentCurrency).toEqual(FiatCurrency.UnitedStatesDollar)

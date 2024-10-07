@@ -582,7 +582,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                       style="box-sizing: border-box; font-family: Basel,-apple-system,system-ui,BlinkMacSystemFont,\\"Segoe UI\\",Roboto,Helvetica,Arial,sans-serif; word-wrap: break-word; flex-direction: row; margin: 0px 0px 0px 0px; padding: 8px 12px 8px 12px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; white-space: nowrap; display: flex; align-items: center; justify-content: flex-start; text-decoration: none; cursor: pointer; color: rgb(34, 34, 34); font-size: 16px; line-height: 24px; font-weight: 485; height: 100%; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); background-color: rgb(249, 249, 249); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;"
                     >
                       <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761 _alignItems-center _gap-1316331199 _width-10037"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761 _alignItems-center _gap-1316331230 _width-10037"
                       >
                         <svg
                           fill="#222222"
@@ -627,7 +627,7 @@ exports[`PoolDetailsHeader renders header text correctly 1`] = `
                       style="box-sizing: border-box; font-family: Basel,-apple-system,system-ui,BlinkMacSystemFont,\\"Segoe UI\\",Roboto,Helvetica,Arial,sans-serif; word-wrap: break-word; flex-direction: row; margin: 0px 0px 0px 0px; padding: 8px 12px 8px 12px; border-top-style: solid; border-right-style: solid; border-bottom-style: solid; border-left-style: solid; white-space: nowrap; display: flex; align-items: center; justify-content: flex-start; text-decoration: none; cursor: pointer; color: rgb(34, 34, 34); font-size: 16px; line-height: 24px; font-weight: 485; height: 100%; border-top-color: rgba(34,34,34,0.05); border-right-color: rgba(34,34,34,0.05); border-bottom-color: rgba(34,34,34,0.05); border-left-color: rgba(34,34,34,0.05); background-color: rgb(249, 249, 249); border-top-left-radius: 20px; border-top-right-radius: 20px; border-bottom-right-radius: 20px; border-bottom-left-radius: 20px; border-top-width: 0px; border-right-width: 0px; border-bottom-width: 0px; border-left-width: 0px;"
                     >
                       <div
-                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761 _alignItems-center _gap-1316331199 _width-10037"
+                        class="_display-flex _flexBasis-auto _boxSizing-border-box _position-relative _minHeight-0px _minWidth-0px _flexShrink-0 _flexDirection-row _justifyContent-441309761 _alignItems-center _gap-1316331230 _width-10037"
                       >
                         <svg
                           fill="#222222"

@@ -49,11 +49,13 @@ const baseSubmitOrderParams = {
     protocol: Protocol.V3,
   },
   analytics: {
+    routing: 'uniswap_x_v2',
     transactionOriginType: TransactionOriginType.Internal,
   },
   txId: '1',
   onSuccess: jest.fn(),
   onFailure: jest.fn(),
+  routing: Routing.DUTCH_V2,
   quote: {
     orderId: '0xMockOrderHash',
     encodedOrder: '0xMockEncodedOrder',
@@ -109,7 +111,7 @@ describe(submitUniswapXOrder, () => {
       .call(submitOrder, expectedOrderRequest)
       .next()
       .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-        routing: Routing.DUTCH_V2,
+        routing: 'uniswap_x_v2',
         order_hash: baseExpectedInitialOrderDetails.orderHash,
         transactionOriginType: TransactionOriginType.Internal,
       })
@@ -185,7 +187,7 @@ describe(submitUniswapXOrder, () => {
         .call(submitOrder, expectedOrderRequest)
         .next()
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-          routing: Routing.DUTCH_V2,
+          routing: 'uniswap_x_v2',
           order_hash: baseExpectedInitialOrderDetails.orderHash,
           transactionOriginType: TransactionOriginType.Internal,
         })
@@ -223,7 +225,7 @@ describe(submitUniswapXOrder, () => {
         .call(submitOrder, expectedOrderRequest)
         .next()
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-          routing: Routing.DUTCH_V2,
+          routing: 'uniswap_x_v2',
           order_hash: baseExpectedInitialOrderDetails.orderHash,
           transactionOriginType: TransactionOriginType.Internal,
         })
@@ -261,7 +263,7 @@ describe(submitUniswapXOrder, () => {
         .call(submitOrder, expectedOrderRequest)
         .next()
         .call(sendAnalyticsEvent, WalletEventName.SwapSubmitted, {
-          routing: Routing.DUTCH_V2,
+          routing: 'uniswap_x_v2',
           order_hash: baseExpectedInitialOrderDetails.orderHash,
           transactionOriginType: TransactionOriginType.Internal,
         })

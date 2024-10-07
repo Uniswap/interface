@@ -1,18 +1,14 @@
+/* eslint-disable consistent-return */
 import { Currency, NativeCurrency } from '@uniswap/sdk-core'
+import { TFunction } from 'i18next'
 import { useTranslation } from 'react-i18next'
+import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
 import { ProtectionResult } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { AttackType, SafetyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
+import { AttackType, CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { FormatNumberOrStringInput } from 'uniswap/src/features/language/formatter'
 import { NumberType } from 'utilities/src/format/types'
-
-// only used for design treatment theming for the TokenWarningModal
-export enum TokenWarningDesignTreatment {
-  None = 0,
-  Low = 1,
-  Medium = 2,
-  High = 3,
-  Blocked = 4,
-}
+import { isInterface } from 'utilities/src/platform'
 
 enum TokenProtectionWarning {
   MaliciousHoneypot = 'malicious-honeypot', // 100% fot
@@ -25,8 +21,8 @@ enum TokenProtectionWarning {
   None = 'none',
 }
 
-function getFeeOnTransfer(currency: Currency): number {
-  if (currency.isNative) {
+function getFeeOnTransfer(currency?: Currency): number {
+  if (!currency || currency.isNative) {
     return 0
   }
   const sellFeeBps = currency.sellFeeBps?.toNumber() ?? 0
@@ -34,13 +30,11 @@ function getFeeOnTransfer(currency: Currency): number {
   return Math.max(sellFeeBps, buyFeeBps) / 100
 }
 
-function getTokenProtectionWarning(
-  currency?: Currency,
-  safetyInfo?: Maybe<SafetyInfo>,
-): TokenProtectionWarning | undefined {
-  if (!currency || !safetyInfo) {
+function getTokenProtectionWarning(currencyInfo?: Maybe<CurrencyInfo>): TokenProtectionWarning | undefined {
+  if (!currencyInfo?.currency || !currencyInfo?.safetyInfo) {
     return undefined
   }
+  const { currency, safetyInfo } = currencyInfo
 
   const { protectionResult, attackType } = safetyInfo
   if (currency instanceof NativeCurrency) {
@@ -79,8 +73,8 @@ function getTokenProtectionWarning(
   return TokenProtectionWarning.None
 }
 
-export function getIsFeeRelatedWarning(currency?: Currency, safetyInfo?: Maybe<SafetyInfo>): boolean {
-  const warning = getTokenProtectionWarning(currency, safetyInfo)
+export function getIsFeeRelatedWarning(currencyInfo?: CurrencyInfo): boolean {
+  const warning = getTokenProtectionWarning(currencyInfo)
   return (
     warning === TokenProtectionWarning.MaliciousHoneypot ||
     warning === TokenProtectionWarning.FotVeryHigh ||
@@ -89,20 +83,16 @@ export function getIsFeeRelatedWarning(currency?: Currency, safetyInfo?: Maybe<S
   )
 }
 
-// eslint-disable-next-line consistent-return
-export function getTokenWarningDesignTreatment(
-  currency?: Currency,
-  safetyInfo?: Maybe<SafetyInfo>,
-): TokenWarningDesignTreatment | undefined {
-  const tokenProtectionWarning = getTokenProtectionWarning(currency, safetyInfo)
-  if (!currency || !safetyInfo || tokenProtectionWarning === undefined) {
+export function getTokenWarningSeverity(currencyInfo: Maybe<CurrencyInfo>): WarningSeverity | undefined {
+  const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo)
+  if (!currencyInfo || tokenProtectionWarning === undefined) {
     return undefined
   }
 
-  const tokenList = safetyInfo.tokenList
+  const tokenList = currencyInfo.safetyInfo?.tokenList
 
   if (tokenList === TokenList.Blocked) {
-    return TokenWarningDesignTreatment.Blocked
+    return WarningSeverity.Blocked
   }
 
   switch (tokenProtectionWarning) {
@@ -111,67 +101,56 @@ export function getTokenWarningDesignTreatment(
     case TokenProtectionWarning.MaliciousGeneral:
     case TokenProtectionWarning.FotVeryHigh:
     case TokenProtectionWarning.FotHigh:
-      return TokenWarningDesignTreatment.High
+      return WarningSeverity.High
     case TokenProtectionWarning.SpamAirdrop:
     case TokenProtectionWarning.FotLow:
-      return TokenWarningDesignTreatment.Medium
+      return WarningSeverity.Medium
     case TokenProtectionWarning.None:
       if (tokenList === TokenList.NonDefault) {
-        return TokenWarningDesignTreatment.Low
+        return WarningSeverity.Low
       }
-      return TokenWarningDesignTreatment.None
+      return WarningSeverity.None
   }
 }
 
 // Only combine into one plural-languaged modal if there are two tokens prefilled at the same time, and BOTH are low or BOTH are blocked
 // i.e. interface PDP, or interface prefilled via URL `?inputCurrency=0x...&outputCurrency=0x...`
 export function getShouldHaveCombinedPluralTreatment(
-  currency0: Currency,
-  safetyInfo0?: Maybe<SafetyInfo>,
-  currency1?: Currency,
-  safetyInfo1?: Maybe<SafetyInfo>,
+  currencyInfo0: CurrencyInfo,
+  currencyInfo1?: CurrencyInfo,
 ): boolean {
-  const designTreatment0 = getTokenWarningDesignTreatment(currency0, safetyInfo0)
-  const designTreatment1 = getTokenWarningDesignTreatment(currency1, safetyInfo1)
+  const designTreatment0 = getTokenWarningSeverity(currencyInfo0)
+  const designTreatment1 = getTokenWarningSeverity(currencyInfo1)
   const pluralLowWarnings =
-    currency1 &&
-    designTreatment0 === TokenWarningDesignTreatment.Low &&
-    designTreatment1 === TokenWarningDesignTreatment.Low
+    currencyInfo1 && designTreatment0 === WarningSeverity.Low && designTreatment1 === WarningSeverity.Low
   const pluralBlockedWarnings =
-    currency1 &&
-    designTreatment0 === TokenWarningDesignTreatment.Blocked &&
-    designTreatment1 === TokenWarningDesignTreatment.Blocked
+    currencyInfo1 && designTreatment0 === WarningSeverity.Blocked && designTreatment1 === WarningSeverity.Blocked
   const plural = pluralLowWarnings || pluralBlockedWarnings
   return plural ?? false
 }
 
-// eslint-disable-next-line consistent-return
-export function useModalHeaderText(
-  currency0: Currency,
-  safetyInfo0?: Maybe<SafetyInfo>,
-  currency1?: Currency,
-  safetyInfo1?: Maybe<SafetyInfo>,
-): string | null {
-  const shouldHavePluralTreatment = getShouldHaveCombinedPluralTreatment(currency0, safetyInfo0, currency1, safetyInfo1)
-  if (!shouldHavePluralTreatment && (currency1 || safetyInfo1)) {
+export function useModalHeaderText(currencyInfo0: CurrencyInfo, currencyInfo1?: CurrencyInfo): string | null {
+  const shouldHavePluralTreatment = getShouldHaveCombinedPluralTreatment(currencyInfo0, currencyInfo1)
+  if (!shouldHavePluralTreatment && currencyInfo1) {
     throw new Error('Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked')
   }
 
   const { t } = useTranslation()
-  const tokenProtectionWarning = getTokenProtectionWarning(currency0, safetyInfo0)
-  const tokenList = safetyInfo0?.tokenList
+  const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo0)
+  const tokenList = currencyInfo0?.safetyInfo?.tokenList
 
   if (!tokenProtectionWarning) {
     return null
   }
 
+  const tokenSymbol0 = currencyInfo0.currency?.symbol
   if (tokenList === TokenList.Blocked) {
     return shouldHavePluralTreatment
       ? t('token.safety.blocked.title.tokensNotAvailable', {
-          tokenSymbol0: currency0.symbol,
-          tokenSymbol1: currency1?.symbol,
+          tokenSymbol0,
+          tokenSymbol1: currencyInfo1?.currency?.symbol,
         })
-      : t('token.safety.blocked.title.tokenNotAvailable', { tokenSymbol: currency0.symbol })
+      : t('token.safety.blocked.title.tokenNotAvailable', { tokenSymbol: tokenSymbol0 })
   }
   switch (tokenProtectionWarning) {
     case TokenProtectionWarning.MaliciousHoneypot:
@@ -183,9 +162,9 @@ export function useModalHeaderText(
     case TokenProtectionWarning.SpamAirdrop:
       return t('token.safety.warning.spam.title')
     case TokenProtectionWarning.FotHigh:
-      return t('token.safety.warning.tokenChargesHighFee.title', { tokenSymbol: currency0.symbol })
+      return t('token.safety.warning.tokenChargesHighFee.title', { tokenSymbol: tokenSymbol0 })
     case TokenProtectionWarning.FotLow:
-      return t('token.safety.warning.tokenChargesFee.title', { tokenSymbol: currency0.symbol })
+      return t('token.safety.warning.tokenChargesFee.title', { tokenSymbol: tokenSymbol0 })
     case TokenProtectionWarning.None:
       if (tokenList === TokenList.NonDefault) {
         return t('token.safety.warning.alwaysDoYourResearch')
@@ -194,55 +173,16 @@ export function useModalHeaderText(
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, consistent-return
-function useCardHeaderText(currency: Currency, safetyInfo?: Maybe<SafetyInfo>): string | null {
-  const { t } = useTranslation()
-  const tokenProtectionWarning = getTokenProtectionWarning(currency, safetyInfo)
-  const tokenList = safetyInfo?.tokenList
-
-  if (!tokenProtectionWarning) {
-    return null
-  }
-
-  if (tokenList === TokenList.Blocked) {
-    return t('token.safety.warning.notAvailableToTrade')
-  }
-  switch (tokenProtectionWarning) {
-    case TokenProtectionWarning.MaliciousHoneypot:
-      return t('token.safety.warning.honeypot.title')
-    case TokenProtectionWarning.MaliciousImpersonator:
-    case TokenProtectionWarning.MaliciousGeneral:
-    case TokenProtectionWarning.FotVeryHigh:
-      return t('token.safety.warning.malicious.title')
-    case TokenProtectionWarning.SpamAirdrop:
-      return t('token.safety.warning.spam.title')
-    case TokenProtectionWarning.FotHigh:
-      return t('token.safety.warning.highFeeDetected.title')
-    case TokenProtectionWarning.FotLow:
-      return t('token.safety.warning.feeDetected.title')
-    case TokenProtectionWarning.None:
-      if (tokenList === TokenList.NonDefault) {
-        return t('token.safety.warning.medium.heading.default_one')
-      }
-      return null
-  }
-}
-
-export function useModalSubtitleText(
-  currency0: Currency,
-  safetyInfo0?: Maybe<SafetyInfo>,
-  currency1?: Currency,
-  safetyInfo1?: Maybe<SafetyInfo>,
-): string | null {
-  const shouldHavePluralTreatment = getShouldHaveCombinedPluralTreatment(currency0, safetyInfo0, currency1, safetyInfo1)
-  if (!shouldHavePluralTreatment && (currency1 || safetyInfo1)) {
+export function useModalSubtitleText(currencyInfo0: CurrencyInfo, currencyInfo1?: CurrencyInfo): string | null {
+  const shouldHavePluralTreatment = getShouldHaveCombinedPluralTreatment(currencyInfo0, currencyInfo1)
+  if (!shouldHavePluralTreatment && currencyInfo1) {
     throw new Error('Should only combine into one plural-languaged modal if BOTH are low or BOTH are blocked')
   }
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
 
-  const tokenProtectionWarning = getTokenProtectionWarning(currency0, safetyInfo0)
-  const tokenList = safetyInfo0?.tokenList
+  const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo0)
+  const tokenList = currencyInfo0.safetyInfo?.tokenList
 
   if (!tokenProtectionWarning) {
     return null
@@ -253,43 +193,41 @@ export function useModalSubtitleText(
   }
 
   const feePercent: string = formatNumberOrString({
-    value: getFeeOnTransfer(currency0) / 100,
+    value: getFeeOnTransfer(currencyInfo0.currency) / 100,
     type: NumberType.Percentage,
   })
 
-  // eslint-disable-next-line consistent-return
+  const tokenSymbol = currencyInfo0.currency?.symbol
   const warningCopy = ((): string | null => {
     switch (tokenProtectionWarning) {
       case TokenProtectionWarning.MaliciousHoneypot:
-        return t('token.safety.warning.honeypot.message', { tokenSymbol: currency0.symbol })
+        return t('token.safety.warning.honeypot.message', { tokenSymbol })
       case TokenProtectionWarning.MaliciousImpersonator:
         return (
-          t('token.safety.warning.malicious.impersonator.message', { tokenSymbol: currency0.symbol }) +
+          t('token.safety.warning.malicious.impersonator.message', { tokenSymbol }) +
           ' ' +
           t('token.safety.warning.doYourOwnResearch')
         )
       case TokenProtectionWarning.SpamAirdrop:
         return (
-          t('token.safety.warning.spam.message', { tokenSymbol: currency0.symbol }) +
-          ' ' +
-          t('token.safety.warning.doYourOwnResearch')
+          t('token.safety.warning.spam.message', { tokenSymbol }) + ' ' + t('token.safety.warning.doYourOwnResearch')
         )
       case TokenProtectionWarning.MaliciousGeneral:
         return (
-          t('token.safety.warning.malicious.general.message', { tokenSymbol: currency0.symbol }) +
+          t('token.safety.warning.malicious.general.message', { tokenSymbol }) +
           ' ' +
           t('token.safety.warning.doYourOwnResearch')
         )
       case TokenProtectionWarning.FotVeryHigh:
       case TokenProtectionWarning.FotHigh:
         return (
-          t('token.safety.warning.tokenChargesFee.percent.message', { tokenSymbol: currency0.symbol, feePercent }) +
+          t('token.safety.warning.tokenChargesFee.percent.message', { tokenSymbol, feePercent }) +
           ' ' +
           t('token.safety.fees.uniswapLabsDoesNotReceive')
         )
       case TokenProtectionWarning.FotLow:
         return (
-          t('token.safety.warning.tokenChargesFee.message', { tokenSymbol: currency0.symbol }) +
+          t('token.safety.warning.tokenChargesFee.message', { tokenSymbol }) +
           ' ' +
           t('token.safety.fees.uniswapLabsDoesNotReceive')
         )
@@ -316,40 +254,92 @@ export function useModalSubtitleText(
   return warningCopy
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars, consistent-return
-function useCardSubtitleText(currency: Currency, safetyInfo?: Maybe<SafetyInfo>): string | null {
+export function useTokenWarningCardText(currencyInfo: Maybe<CurrencyInfo>): {
+  heading?: string
+  description: string | null
+} {
   const { t } = useTranslation()
   const { formatNumberOrString } = useLocalizationContext()
-
-  const tokenProtectionWarning = getTokenProtectionWarning(currency, safetyInfo)
-  const tokenList = safetyInfo?.tokenList
-
-  if (!tokenProtectionWarning) {
-    return null
+  const tokenProtectionWarning = getTokenProtectionWarning(currencyInfo)
+  const tokenList = currencyInfo?.safetyInfo?.tokenList
+  return {
+    heading: getCardHeaderText({ t, tokenProtectionWarning, tokenList }),
+    description: getCardSubtitleText({ t, currencyInfo, tokenProtectionWarning, tokenList, formatNumberOrString }),
   }
+}
 
+function getCardHeaderText({
+  t,
+  tokenProtectionWarning,
+  tokenList,
+}: {
+  t: TFunction
+  tokenProtectionWarning?: TokenProtectionWarning
+  tokenList?: TokenList
+}): string | undefined {
   if (tokenList === TokenList.Blocked) {
-    return t('token.safety.warning.notAvailableToTrade')
+    return t('token.safetyLevel.blocked.header')
+  }
+  switch (tokenProtectionWarning) {
+    case TokenProtectionWarning.MaliciousHoneypot:
+      return t('token.safety.warning.honeypot.title')
+    case TokenProtectionWarning.MaliciousImpersonator:
+    case TokenProtectionWarning.MaliciousGeneral:
+    case TokenProtectionWarning.FotVeryHigh:
+      return t('token.safety.warning.malicious.title')
+    case TokenProtectionWarning.SpamAirdrop:
+      return t('token.safety.warning.spam.title')
+    case TokenProtectionWarning.FotHigh:
+      return t('token.safety.warning.highFeeDetected.title')
+    case TokenProtectionWarning.FotLow:
+      return t('token.safety.warning.feeDetected.title')
+    case TokenProtectionWarning.None:
+    default:
+      return undefined
+  }
+}
+
+function getCardSubtitleText({
+  currencyInfo,
+  tokenProtectionWarning,
+  tokenList,
+  t,
+  formatNumberOrString,
+}: {
+  t: TFunction
+  currencyInfo: Maybe<CurrencyInfo>
+  tokenProtectionWarning?: TokenProtectionWarning
+  tokenList?: TokenList
+  formatNumberOrString: (input: FormatNumberOrStringInput) => string
+}): string | null {
+  if (tokenList === TokenList.Blocked) {
+    return isInterface
+      ? t('token.safety.warning.blocked.description.default_one')
+      : t('token.safetyLevel.blocked.message')
   }
   const feePercent: string = formatNumberOrString({
-    value: getFeeOnTransfer(currency) / 100,
+    value: getFeeOnTransfer(currencyInfo?.currency) / 100,
     type: NumberType.Percentage,
   })
-
+  const tokenSymbol = currencyInfo?.currency?.symbol
   switch (tokenProtectionWarning) {
     case TokenProtectionWarning.MaliciousHoneypot:
     case TokenProtectionWarning.MaliciousGeneral:
-      return t('token.safety.warning.malicious.general.message', { tokenSymbol: currency.symbol })
+      return t('token.safety.warning.malicious.general.message', { tokenSymbol })
     case TokenProtectionWarning.MaliciousImpersonator:
-      return t('token.safety.warning.malicious.impersonator.message.short', { tokenSymbol: currency.symbol })
+      return t('token.safety.warning.malicious.impersonator.message.short', { tokenSymbol })
     case TokenProtectionWarning.SpamAirdrop:
-      return t('token.safety.warning.spam.message', { tokenSymbol: currency.symbol })
+      return t('token.safety.warning.spam.message', { tokenSymbol })
     case TokenProtectionWarning.FotVeryHigh:
     case TokenProtectionWarning.FotHigh:
-      return t('token.safety.warning.tokenChargesFee.percent.message', { tokenSymbol: currency.symbol, feePercent })
+      return t('token.safety.warning.tokenChargesFee.percent.message', { tokenSymbol, feePercent })
     case TokenProtectionWarning.FotLow:
       return t('token.safety.warning.tokenChargesFee.message')
     case TokenProtectionWarning.None:
+      if (tokenList === TokenList.NonDefault) {
+        return t('token.safety.warning.medium.heading.default_one')
+      }
       return null
   }
+  return null
 }

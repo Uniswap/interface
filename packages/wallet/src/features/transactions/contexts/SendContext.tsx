@@ -8,7 +8,6 @@ import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { useTransactionGasFee, useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { useFormattedWarnings } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { ParsedWarnings } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -44,7 +43,7 @@ type SendContextState = {
   gasFee: GasFeeResult
   warnings: ParsedWarnings
   txRequest: TransactionRequest | undefined
-  onSelectCurrency: (currency: Currency, _: CurrencyField, context: SearchContext) => void
+  onSelectCurrency: (currency: Currency, _currencyField: CurrencyField, _isBridgePair: boolean) => void
   updateSendForm: (newState: Partial<TransactionState>) => void
 } & TransactionState
 
@@ -93,7 +92,7 @@ export function SendContextProvider({
 
   // helper function for currency selection
   const onSelectCurrency = useCallback(
-    (currency: Currency, _: CurrencyField) => {
+    (currency: Currency, _currencyField: CurrencyField, _isBridgePair: boolean) => {
       updateSendForm({
         [CurrencyField.INPUT]: {
           address: currencyAddress(currency),
@@ -125,8 +124,8 @@ export function SendContextProvider({
       isFiatInput: sendForm.isFiatInput,
       selectingCurrencyField: sendForm.selectingCurrencyField,
       showRecipientSelector: sendForm.showRecipientSelector,
+      selectedProtocols: sendForm.selectedProtocols,
       customSlippageTolerance: sendForm.customSlippageTolerance,
-      tradeProtocolPreference: sendForm.tradeProtocolPreference,
     }
   }, [
     derivedSendInfo,
@@ -143,7 +142,7 @@ export function SendContextProvider({
     sendForm.recipient,
     sendForm.selectingCurrencyField,
     sendForm.showRecipientSelector,
-    sendForm.tradeProtocolPreference,
+    sendForm.selectedProtocols,
     sendForm.txId,
     txRequestWithGasSettings,
     onSelectCurrency,

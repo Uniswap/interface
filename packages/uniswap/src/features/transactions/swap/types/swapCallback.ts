@@ -12,7 +12,7 @@ export interface SwapCallbackParams {
   currencyOutAmountUSD: Maybe<CurrencyAmount<Currency>>
   isAutoSlippage: boolean
   onSuccess: () => void
-  onFailure: () => void
+  onFailure: (error?: Error) => void
   txId?: string
   setCurrentStep: SetCurrentStepFn
   setSteps: (steps: TransactionStep[]) => void

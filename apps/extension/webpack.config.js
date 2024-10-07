@@ -27,6 +27,7 @@ const compileNodeModules = [
   // the build proess (to the appropriate loader) and don't exclude them with other node_modules
   'expo-clipboard',
   'expo-linear-gradient',
+  'react-native-image-picker',
 ]
 
 // This is needed for webpack to compile JavaScript.
@@ -171,12 +172,13 @@ module.exports = (env) => {
     mode: NODE_ENV,
     entry: {
       background: './src/background/background.ts',
-      onboarding: './src/onboarding/onboarding.tsx',
-      loadSidebar: './src/sidebar/loadSidebar.ts',
-      sidebar: './src/sidebar/sidebar.tsx',
+      onboarding: './src/entry/onboarding.tsx',
+      loadSidebar: './src/entry/loadSidebar.ts',
+      sidebar: './src/entry/sidebar.tsx',
       injected: './src/contentScript/injected.ts',
       ethereum: './src/contentScript/ethereum.ts',
-      popup: './src/popup/popup.tsx',
+      popup: './src/entry/popup.tsx',
+      unitagClaim: './src/entry/unitagClaim.tsx',
     },
     output: {
       filename: '[name].js',

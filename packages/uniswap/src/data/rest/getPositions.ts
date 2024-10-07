@@ -14,5 +14,5 @@ export const getPositionsTestTransport = createConnectTransport({
 export function useGetPositionsQuery(
   input?: PartialMessage<ListPositionsRequest>,
 ): UseQueryResult<ListPositionsResponse, ConnectError> {
-  return useQuery(listPositions, input, { transport: getPositionsTestTransport })
+  return useQuery(listPositions, input, { transport: getPositionsTestTransport, enabled: !!input })
 }

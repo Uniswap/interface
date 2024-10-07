@@ -47,22 +47,24 @@ let clearScreenTimeout: NodeJS.Timeout
 export function OnboardingStepsProvider({
   steps,
   isResetting = false,
+  disableRedirect = false,
   ContainerComponent = React.Fragment,
 }: {
   steps: ComponentByStep
   isResetting?: boolean
+  disableRedirect?: boolean
   ContainerComponent?: React.ComponentType<React.PropsWithChildren>
 }): JSX.Element {
   const isOnboarded = useSelector(isOnboardedSelector)
   const wasAlreadyOnboardedWhenPageLoaded = useRef(isOnboarded)
 
   useEffect(() => {
-    if (!isResetting && wasAlreadyOnboardedWhenPageLoaded.current) {
+    if (!isResetting && wasAlreadyOnboardedWhenPageLoaded.current && !disableRedirect) {
       // Redirect to the intro screen screen if user is already onboarded.
       // We only want to redirect when the page is first loaded but not immediately after the user completes onboarding.
       navigate(`/${TopLevelRoutes.Onboarding}`, { replace: true })
     }
-  }, [isOnboarded, isResetting])
+  }, [disableRedirect, isOnboarded, isResetting])
 
   const initialStep = Object.keys(steps)[0] as Step
 

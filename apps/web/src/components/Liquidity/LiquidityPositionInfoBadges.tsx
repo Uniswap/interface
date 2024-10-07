@@ -5,6 +5,7 @@ import { isAddress, shortenAddress } from 'utilities/src/addresses'
 export const PositionInfoBadge = styled(Text, {
   display: 'flex',
   flexDirection: 'row',
+  alignItems: 'center',
   gap: '$spacing2',
   variant: 'body3',
   color: '$neutral2',

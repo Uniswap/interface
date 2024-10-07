@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Flex, Text } from 'ui/src'
+import { ElementAfterText, Flex, Text } from 'ui/src'
 import { Clock } from 'ui/src/components/icons/Clock'
 import { Coins } from 'ui/src/components/icons/Coins'
 import { Pin } from 'ui/src/components/icons/Pin'
@@ -25,10 +25,9 @@ export function SectionHeader({ sectionKey, rightElement, name }: TokenSectionHe
       <Text color="$neutral2" variant="subheading2">
         <Flex row alignItems="center" gap="$spacing8">
           {icon}
-          <Text color="$neutral2">{title}</Text>
+          <ElementAfterText text={title} textProps={{ color: '$neutral2' }} element={rightElement} />
         </Flex>
       </Text>
-      {rightElement}
     </Flex>
   )
 }

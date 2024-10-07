@@ -1,7 +1,7 @@
 import { Flex, useSporeColors } from 'ui/src'
 import { ContractInteraction } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
+import { BridgeIcon, SplitLogo } from 'uniswap/src/components/CurrencyLogo/SplitLogo'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import {
@@ -11,6 +11,7 @@ import {
 } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import {
   ApproveTransactionInfo,
+  BridgeTransactionInfo,
   NFTApproveTransactionInfo,
   NFTMintTransactionInfo,
   NFTTradeTransactionInfo,
@@ -95,7 +96,7 @@ export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element
     } else if (isSwapTransactionInfo(typeInfo)) {
       return <SwapHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else if (isBridgeTransactionInfo(typeInfo)) {
-      return null // TODO: Update when bridge logo is added
+      return <BridgeHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else if (isWCConfirmTransactionInfo(typeInfo)) {
       return <WCConfirmHeaderLogo transactionDetails={transactionDetails} typeInfo={typeInfo} />
     } else if (isWrapTransactionInfo(typeInfo)) {
@@ -114,6 +115,24 @@ export function HeaderLogo({ transactionDetails }: HeaderLogoProps): JSX.Element
 
 interface SpecificHeaderLogoProps<T> extends HeaderLogoProps {
   typeInfo: T
+}
+
+function BridgeHeaderLogo({
+  transactionDetails,
+  typeInfo,
+}: SpecificHeaderLogoProps<BridgeTransactionInfo>): JSX.Element {
+  const inputCurrency = useCurrencyInfo(typeInfo.inputCurrencyId)
+  const outputCurrency = useCurrencyInfo(typeInfo.outputCurrencyId)
+
+  return (
+    <SplitLogo
+      inputCurrencyInfo={inputCurrency}
+      outputCurrencyInfo={outputCurrency}
+      size={TXN_DETAILS_ICON_SIZE}
+      chainId={transactionDetails.chainId}
+      customIcon={BridgeIcon}
+    />
+  )
 }
 
 function SwapHeaderLogo({

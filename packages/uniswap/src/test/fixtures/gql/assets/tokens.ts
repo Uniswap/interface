@@ -3,6 +3,7 @@ import {
   Currency,
   HistoryDuration,
   PriceSource,
+  ProtectionResult,
   SafetyLevel,
   TimestampedAmount,
   Token,
@@ -49,6 +50,10 @@ export const token = createFixture<Token, TokenOptions>({ sdkToken: null })(({ s
   feeData: {
     buyFeeBps: '',
     sellFeeBps: '',
+  },
+  protectionInfo: {
+    result: randomEnumValue(ProtectionResult),
+    attackTypes: [],
   },
 }))
 

@@ -2,17 +2,27 @@ import { JsonRpcSigner, TransactionResponse, Web3Provider } from '@ethersproject
 import { TradeType } from '@uniswap/sdk-core'
 import { wagmiConfig } from 'components/Web3Provider/wagmiConfig'
 import { clientToProvider } from 'hooks/useEthersProvider'
+import ms from 'ms'
+import { Action } from 'redux'
 import { addTransaction, finalizeTransaction } from 'state/transactions/reducer'
 import {
   ApproveTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
+  TransactionDetails,
   TransactionInfo,
   TransactionType,
 } from 'state/transactions/types'
-import { call, put, take } from 'typed-redux-saga'
+import { isPendingTx } from 'state/transactions/utils'
+import { InterfaceState } from 'state/webReducer'
+import { SagaGenerator, call, cancel, fork, put, race, select, take } from 'typed-redux-saga'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import {
+  HandledTransactionInterrupt,
+  TransactionStepFailedError,
+  UnexpectedTransactionStateError,
+} from 'uniswap/src/features/transactions/errors'
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
@@ -23,36 +33,30 @@ import {
   TransactionStep,
 } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
-import { currencyId } from 'uniswap/src/utils/currencyId'
+import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
+import { isSameAddress } from 'utilities/src/addresses'
 import { percentFromFloat } from 'utilities/src/format/percent'
+import noop from 'utilities/src/react/noop'
+import { currencyId } from 'utils/currencyId'
+import { signTypedData } from 'utils/signing'
 import { getConnectorClient } from 'wagmi/actions'
-
-class MissingProviderError extends Error {
-  constructor(message: string) {
-    super(message)
-    this.name = 'MissingProviderError'
-  }
-}
-class TransactionFailureError extends Error {
-  step: TransactionStep
-
-  constructor(message: string, step: TransactionStep) {
-    super(message)
-    this.name = 'TransactionFailureError'
-    this.step = step
-  }
-}
 
 export interface HandleSignatureStepParams<T extends SignatureTransactionStep = SignatureTransactionStep> {
   step: T
   setCurrentStep: SetCurrentStepFn
+  ignoreInterrupt?: boolean
 }
-export function* handleSignatureStep({ setCurrentStep, step }: HandleSignatureStepParams) {
+export function* handleSignatureStep({ setCurrentStep, step, ignoreInterrupt }: HandleSignatureStepParams) {
+  // Add a watcher to check if the transaction flow is interrupted during this step
+  const { throwIfInterrupted } = yield* watchForInterruption(ignoreInterrupt)
+
   // Trigger UI prompting user to accept
   setCurrentStep({ step, accepted: false })
 
   const signer = yield* call(getSigner)
-  const signature = yield* call([signer, '_signTypedData'], step.domain, step.types, step.values)
+  const signature = yield* call(signTypedData, signer, step.domain, step.types, step.values) // TODO(WEB-5077): look into removing / simplifying signTypedData
+  // If the transaction flow was interrupted, throw an error after the step has completed
+  yield* call(throwIfInterrupted)
 
   return signature
 }
@@ -62,16 +66,38 @@ export interface HandleOnChainStepParams<T extends OnChainTransactionStep = OnCh
   info: TransactionInfo
   step: T
   setCurrentStep: SetCurrentStepFn
+  /** Controls whether the function allow submitting a duplicate tx (a tx w/ identical `info` to another recent/pending tx). Defaults to false. */
+  allowDuplicativeTx?: boolean
+  /** Controls whether the function should throw an error upon interrupt or not, defaults to `false`. */
+  ignoreInterrupt?: boolean
+  /** Controls whether the function should wait to return until after the transaction has confirmed. Defaults to `true`. */
   shouldWaitForConfirmation?: boolean
+  /** Called when data returned from a submitted transaction differs from data originally sent to the wallet. */
   onModification?: (response: TransactionResponse) => void
 }
 export function* handleOnChainStep<T extends OnChainTransactionStep>(params: HandleOnChainStepParams<T>) {
-  const { account, step, setCurrentStep, info, shouldWaitForConfirmation = true, onModification } = params
+  const { account, step, setCurrentStep, info, allowDuplicativeTx, ignoreInterrupt, onModification } = params
+  const { chainId } = step.txRequest
   const signer = yield* call(getSigner)
+
+  // Avoid sending prompting a transaction if the user already submitted an equivalent tx, e.g. by closing and reopening a transaction flow
+  const duplicativeTx = yield* findDuplicativeTx(info, account, chainId, allowDuplicativeTx)
+  if (duplicativeTx) {
+    if (duplicativeTx.status === TransactionStatus.Confirmed) {
+      return duplicativeTx.hash
+    } else {
+      setCurrentStep({ step, accepted: true })
+      return yield* handleOnChainConfirmation(params, duplicativeTx.hash)
+    }
+  }
+
+  // Add a watcher to check if the transaction flow during user input
+  const { throwIfInterrupted } = yield* watchForInterruption(ignoreInterrupt)
 
   // Trigger UI prompting user to accept
   setCurrentStep({ step, accepted: false })
 
+  // Prompt wallet to submit transaction
   const response = yield* call([signer, 'sendTransaction'], step.txRequest)
   const { hash, nonce, data } = response
 
@@ -79,17 +105,39 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   setCurrentStep({ step, accepted: true })
 
   // Add transaction to local state to start polling for status
-  yield* put(addTransaction({ from: account.address, info, hash, nonce, chainId: step.txRequest.chainId }))
+  yield* put(addTransaction({ from: account.address, info, hash, nonce, chainId }))
 
   if (step.txRequest.data !== data) {
     onModification?.(response)
   }
 
-  if (shouldWaitForConfirmation) {
-    // Delay returning until transaction is confirmed
-    yield* call(waitForTransaction, hash, step)
+  // If the transaction flow was interrupted while awaiting input, throw an error after input is received
+  yield* call(throwIfInterrupted)
+
+  return yield* handleOnChainConfirmation(params, hash)
+}
+
+/** Waits for a transaction to complete, or immediately throws if interrupted. */
+function* handleOnChainConfirmation(params: HandleOnChainStepParams, hash: string): SagaGenerator<string> {
+  const { step, shouldWaitForConfirmation = true, ignoreInterrupt } = params
+  if (!shouldWaitForConfirmation) {
+    return hash
   }
 
+  // Delay returning until transaction is confirmed
+  if (ignoreInterrupt) {
+    yield* call(waitForTransaction, hash, step)
+    return hash
+  }
+
+  const { interrupt }: { interrupt?: Action } = yield* race({
+    transactionFinished: call(waitForTransaction, hash, step),
+    interrupt: take(interruptTransactionFlow.type),
+  })
+
+  if (interrupt) {
+    throw new HandledTransactionInterrupt('Transaction flow was interrupted')
+  }
   return hash
 }
 
@@ -112,6 +160,57 @@ function getApprovalTransactionInfo(
   }
 }
 
+function isRecentTx(tx: TransactionDetails) {
+  const currentTime = Date.now()
+  const failed = tx.status === TransactionStatus.Failed
+  return !failed && currentTime - tx.addedTime < ms('30s') // 30s is an arbitrary upper limit to combat e.g. a duplicative approval to be included in tx steps, caused by polling intervals.
+}
+
+function* findDuplicativeTx(
+  info: TransactionInfo,
+  account: AccountMeta,
+  chainId: number,
+  allowDuplicativeTx?: boolean,
+) {
+  if (allowDuplicativeTx) {
+    return undefined
+  }
+
+  const transactionMap = (yield* select((state: InterfaceState) => state.localWebTransactions[chainId])) ?? {}
+  const transactionsForAccount = Object.values(transactionMap).filter((tx) => isSameAddress(tx.from, account.address))
+
+  // Check all pending and recent transactions
+  return transactionsForAccount.find(
+    (tx) => (isPendingTx(tx) || isRecentTx(tx)) && JSON.stringify(tx.info) === JSON.stringify(info),
+  )
+}
+
+// Saga to wait for the specific action while asyncTask is running
+function* watchForInterruption(ignoreInterrupt = false) {
+  if (ignoreInterrupt) {
+    return { throwIfInterrupted: noop }
+  }
+
+  let wasInterrupted = false
+  // In parallel to execution of the current step, we watch for an interrupt
+  const watchForInterruptionTask = yield* fork(function* () {
+    yield* take(interruptTransactionFlow.type)
+    // If the `take` above returns, the interrupt action was dispatched.
+    wasInterrupted = true
+  })
+
+  function* throwIfInterrupted() {
+    // Wait for step to complete before checking if the flow was interrupted.
+    if (wasInterrupted) {
+      throw new HandledTransactionInterrupt('Transaction flow was interrupted')
+    }
+
+    yield* cancel(watchForInterruptionTask)
+  }
+
+  return { throwIfInterrupted }
+}
+
 /** Returns when a transaction is confirmed in local state. Throws an error if the transaction fails. */
 function* waitForTransaction(hash: string, step: TransactionStep) {
   while (true) {
@@ -120,7 +219,7 @@ function* waitForTransaction(hash: string, step: TransactionStep) {
       if (payload.status === TransactionStatus.Confirmed) {
         return
       } else {
-        throw new TransactionFailureError('Transaction not successful', step)
+        throw new TransactionStepFailedError({ message: `${step.type} failed during swap`, step })
       }
     }
   }
@@ -131,7 +230,7 @@ async function getProvider(): Promise<Web3Provider> {
   const provider = clientToProvider(client)
 
   if (!provider) {
-    throw new MissingProviderError(`Failed to get provider during transaction flow`)
+    throw new UnexpectedTransactionStateError(`Failed to get provider during transaction flow`)
   }
 
   return provider

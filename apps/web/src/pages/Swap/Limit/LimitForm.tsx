@@ -74,7 +74,7 @@ const LimitDisclaimerContainer = styled(Row)`
 `
 
 const LearnMore = tamaguiStyled(Text, {
-  variant: 'buttonLabel2',
+  variant: 'body3',
   color: '$accent1',
   animation: '100ms',
   hoverStyle: {

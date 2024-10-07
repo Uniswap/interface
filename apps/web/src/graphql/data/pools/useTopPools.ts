@@ -1,11 +1,11 @@
 import { Percent } from '@uniswap/sdk-core'
 import { exploreSearchStringAtom } from 'components/Tokens/state'
 import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
-import { BIPS_BASE } from 'constants/misc'
 import { OrderDirection } from 'graphql/data/util'
 import useIsWindowVisible from 'hooks/useIsWindowVisible'
 import { useAtomValue } from 'jotai/utils'
 import { useMemo } from 'react'
+import { BIPS_BASE } from 'uniswap/src/constants/misc'
 import {
   ProtocolVersion,
   Token,
