@@ -354,7 +354,7 @@ export function useLocalActivities(account: string): ActivityMap {
   const { formatNumber } = useFormatter()
 
   const { data } = useQuery({
-    queryKey: ['localActivities', account],
+    queryKey: ['localActivities', account, allTransactions, allSignatures],
     queryFn: async () => {
       const transactions = Object.values(allTransactions)
         .filter(([transaction]) => transaction.from === account)
