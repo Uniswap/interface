@@ -66,11 +66,13 @@ const AddRemoveTitleText = styled(ThemedText.H1Small)<{ $center: boolean }>`
 
 export function AddRemoveTabs({
   adding,
+  singleSided = false,
   creating,
   autoSlippage,
   children,
 }: {
   adding: boolean
+  singleSided?: boolean
   creating: boolean
   autoSlippage: Percent
   showBackLink?: boolean
@@ -104,6 +106,8 @@ export function AddRemoveTabs({
         <AddRemoveTitleText $center={!children}>
           {creating ? (
             <Trans>Create a pair</Trans>
+          ) : singleSided ? (
+            <Trans>Add single token liquidty</Trans>
           ) : adding ? (
             <Trans>Add liquidity</Trans>
           ) : (

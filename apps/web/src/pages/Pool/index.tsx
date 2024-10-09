@@ -15,8 +15,7 @@ import { useV3Positions } from 'hooks/useV3Positions'
 import { Trans } from 'i18n'
 import { PoolVersionMenu } from 'pages/Pool/shared'
 import { useMemo } from 'react'
-import { AlertTriangle, ChevronDown, ChevronsRight, Inbox, Layers } from 'react-feather'
-import { Link } from 'react-router-dom'
+import { AlertTriangle, ChevronDown, ChevronsRight, Circle, Crosshair, Inbox, Layers } from 'react-feather'
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHideClosedPositions } from 'state/user/hooks'
 import styled, { css, useTheme } from 'styled-components'
@@ -253,6 +252,29 @@ export default function Pool() {
     // },
   ]
 
+  const newPoolMenuItems = [
+    {
+      content: (
+        <PoolMenuItem>
+          <Trans>V3 Liquidity</Trans>
+          <Crosshair size={16} />
+        </PoolMenuItem>
+      ),
+      link: '/add/0x71e26d0E519D14591b9dE9a0fE9513A398101490',
+      external: false,
+    },
+    {
+      content: (
+        <PoolMenuItem>
+          <Trans>Single Sided</Trans>
+          <Circle size={16} />
+        </PoolMenuItem>
+      ),
+      link: '/add/single/0x471EcE3750Da237f93B8E339c536989b8978a438',
+      external: false,
+    },
+  ]
+
   return (
     <Trace page={InterfacePageName.POOL_PAGE} shouldLogImpression>
       <PageWrapper>
@@ -281,14 +303,16 @@ export default function Pool() {
                     )}
                   />
                 )}
-                <ResponsiveButtonPrimary
-                  data-cy="join-pool-button"
-                  id="join-pool-button"
-                  as={Link}
-                  to="/add/0x71e26d0E519D14591b9dE9a0fE9513A398101490"
-                >
-                  + <Trans>New position</Trans>
-                </ResponsiveButtonPrimary>
+                <PoolMenu
+                  modal={ApplicationModal.NEW_POOL_OPTIONS}
+                  menuItems={newPoolMenuItems}
+                  flyoutAlignment={FlyoutAlignment.RIGHT}
+                  ToggleUI={(props: any) => (
+                    <ResponsiveButtonPrimary {...props} data-cy="join-pool-button">
+                      + <Trans>New position</Trans>
+                    </ResponsiveButtonPrimary>
+                  )}
+                />
               </ButtonRow>
             </TitleRow>
 

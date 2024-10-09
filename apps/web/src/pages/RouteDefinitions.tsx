@@ -17,6 +17,7 @@ const Collection = lazy(() => import('nft/pages/collection'))
 const Profile = lazy(() => import('nft/pages/profile'))
 const Asset = lazy(() => import('nft/pages/asset/Asset'))
 const AddLiquidityWithTokenRedirects = lazy(() => import('pages/AddLiquidity/redirects'))
+const AddSingleSidedWithTokenRedirects = lazy(() => import('pages/AddSingleSided/redirects'))
 const AddLiquidityV2WithTokenRedirects = lazy(() => import('pages/AddLiquidityV2/redirects'))
 const RedirectExplore = lazy(() => import('pages/Explore/redirects'))
 const MigrateV2 = lazy(() => import('pages/MigrateV2'))
@@ -221,6 +222,12 @@ export const routes: RouteDefinition[] = [
     nestedPaths: [':currencyIdA', ':currencyIdA/:currencyIdB'],
     getElement: () => <AddLiquidityV2WithTokenRedirects />,
     getTitle: () => t`Provide liquidity to pools (v2) on Ubeswap`,
+  }),
+  createRouteDefinition({
+    path: '/add/single',
+    nestedPaths: [':currencyIdA', ':currencyIdA/:currencyIdB'],
+    getElement: () => <AddSingleSidedWithTokenRedirects />,
+    getTitle: () => t`Provide liquidity to Single Sided Vaults on Ubeswap`,
   }),
   createRouteDefinition({
     path: '/add',

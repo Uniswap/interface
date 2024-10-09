@@ -14,6 +14,7 @@ import { ThemedText } from 'theme/components'
 import { flexColumnNoWrap, flexRowNoWrap } from 'theme/styles'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
+import CurrencySelectModal from 'components/CurrencySelectModal/CurrencySelectModal'
 import { CurrencySearchFilters } from 'components/SearchModal/CurrencySearch'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/TokenBalancesProvider'
 import { ReactComponent as DropDown } from '../../assets/images/dropdown.svg'
@@ -191,6 +192,7 @@ interface CurrencyInputPanelProps {
   locked?: boolean
   loading?: boolean
   currencySearchFilters?: CurrencySearchFilters
+  currencies?: Maybe<Currency>[]
 }
 
 export default function CurrencyInputPanel({
@@ -206,6 +208,7 @@ export default function CurrencyInputPanel({
   showCurrencyAmount,
   renderBalance,
   fiatValue,
+  currencies,
   hideBalance = false,
   pair = null, // used for double token logo
   hideInput = false,
@@ -334,7 +337,7 @@ export default function CurrencyInputPanel({
           </Container>
         </>
       )}
-      {onCurrencySelect && (
+      {onCurrencySelect && !currencies && (
         <CurrencySearchModal
           isOpen={modalOpen}
           onDismiss={handleDismissSearch}
@@ -343,6 +346,17 @@ export default function CurrencyInputPanel({
           otherSelectedCurrency={otherCurrency}
           showCurrencyAmount={showCurrencyAmount}
           currencySearchFilters={currencySearchFilters}
+        />
+      )}
+      {onCurrencySelect && currencies && (
+        <CurrencySelectModal
+          isOpen={modalOpen}
+          currencies={currencies}
+          onDismiss={handleDismissSearch}
+          onCurrencySelect={onCurrencySelect}
+          selectedCurrency={currency}
+          otherSelectedCurrency={otherCurrency}
+          showCurrencyAmount={showCurrencyAmount}
         />
       )}
     </InputPanel>
