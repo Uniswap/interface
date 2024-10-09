@@ -327,19 +327,10 @@ export function validateTrade({
   const inputsMatch = areAddressesEqual(currencyIn.wrapped.address, trade?.inputAmount.currency.wrapped.address)
   const outputsMatch = areAddressesEqual(currencyOut.wrapped.address, trade.outputAmount.currency.wrapped.address)
 
-  // TODO(MOB-3028): check if this logic needs any adjustments once we add UniswapX support.
-  // Verify the amount specified in the quote response matches the exact amount from input state
-  const exactAmountFromQuote = isClassicQuote(trade.quote?.quote)
-    ? exactCurrencyField === CurrencyField.INPUT
-      ? trade.quote.quote.input?.amount
-      : trade.quote.quote.output?.amount
-    : undefined
-
   const tokenAddressesMatch = inputsMatch && outputsMatch
-  const exactAmountsMatch = exactAmount?.toExact() !== exactAmountFromQuote
-
-  if (!(tokenAddressesMatch && exactAmountsMatch)) {
-    logger.error(new Error(`Mismatched ${!tokenAddressesMatch ? 'address' : 'exact amount'} in swap trade`), {
+  // TODO(WEB-5132): Add validation checking that exact amount from response matches exact amount from user input
+  if (!tokenAddressesMatch) {
+    logger.error(new Error(`Mismatched address in swap trade`), {
       tags: { file: 'tradingApi/utils', function: 'validateTrade' },
       extra: {
         formState: {
