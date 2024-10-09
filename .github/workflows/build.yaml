@@ -100,7 +100,7 @@ jobs:
         with:
           path: gitops
           repository: roll-network/gitops
-          ref: roll-apps
+          ref: trunk
           token: ${{ secrets.FLUXCD_PAT }}
 
       - name: Update values.yaml 
