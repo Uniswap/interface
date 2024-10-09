@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
@@ -25,11 +26,14 @@ export const WrapTransactionDetails = ({
 
   const chainId = useDappLastChainId(dappUrl) || UniverseChainId.Mainnet
 
-  const networkFee = useTransactionGasFee({
-    chainId,
-    ...sendTransactionRequest.transaction,
-  }).value
-  const gasFeeUSD = useUSDValue(chainId, networkFee)
+  const txRequest = useMemo(
+    () => ({ ...sendTransactionRequest.transaction, chainId }),
+    [sendTransactionRequest, chainId],
+  )
+
+  const networkFee = useTransactionGasFee(txRequest)
+
+  const gasFeeUSD = useUSDValue(chainId, networkFee.value)
 
   return (
     <Flex>

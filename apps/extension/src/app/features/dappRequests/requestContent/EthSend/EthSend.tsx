@@ -24,7 +24,10 @@ export function EthSendRequestContent({ request }: EthSendRequestContentProps): 
   const chainId = useDappLastChainId(dappUrl)
 
   // Gas service requires a chain id
-  const formattedTxnForGasQuery = { ...dappRequest.transaction, chainId }
+  const formattedTxnForGasQuery = useMemo(
+    () => ({ ...dappRequest.transaction, chainId }),
+    [dappRequest.transaction, chainId],
+  )
 
   const transactionGasFeeResult = useTransactionGasFee(
     formattedTxnForGasQuery,

@@ -114,8 +114,13 @@ export function useTransactionGasFee(
   const activeGasStrategy = useActiveGasStrategy(tx?.chainId, 'general')
   const shadowGasStrategies = useShadowGasStrategies(tx?.chainId, 'general')
 
+  const txWithGasStrategies = useMemo(
+    () => ({ ...tx, gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])] }),
+    [tx, activeGasStrategy, shadowGasStrategies],
+  )
+
   const { data, error, isLoading } = useGasFeeQuery({
-    params: skip || !tx ? undefined : { ...tx, gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])] },
+    params: skip || !tx ? undefined : txWithGasStrategies,
     refetchInterval,
     staleTime: pollingIntervalForChain,
     immediateGcTime: pollingIntervalForChain + 15 * ONE_SECOND_MS,
