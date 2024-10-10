@@ -1,5 +1,6 @@
+import { SupportedDex, deposit } from '@ichidao/ichi-vaults-sdk'
 import { BrowserEvent, InterfaceElementName, InterfaceEventName } from '@ubeswap/analytics-events'
-import { Currency, CurrencyAmount, NONFUNGIBLE_POSITION_MANAGER_ADDRESSES, Percent } from '@ubeswap/sdk-core'
+import { Currency, CurrencyAmount, Percent } from '@ubeswap/sdk-core'
 import { useWeb3React } from '@web3-react/core'
 import { TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
@@ -10,9 +11,10 @@ import useCurrencyBalance from 'lib/hooks/useCurrencyBalance'
 import { BodyWrapper } from 'pages/AppBody'
 import { PositionPageUnsupportedContent } from 'pages/Pool/PositionPage'
 import { ReactNode, useCallback, useMemo, useState } from 'react'
-import { AlertTriangle } from 'react-feather'
+import { AlertTriangle, BarChart2 } from 'react-feather'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Text } from 'rebass'
+import { TransactionType } from 'state/transactions/types'
 import styled, { useTheme } from 'styled-components'
 import { ThemedText } from 'theme/components'
 
@@ -24,24 +26,33 @@ import CurrencyInputPanel from '../../components/CurrencyInputPanel'
 import { AddRemoveTabs } from '../../components/NavigationTabs'
 import Row, { RowBetween } from '../../components/Row'
 import { SwitchLocaleLink } from '../../components/SwitchLocaleLink'
-import TransactionConfirmationModal, { ConfirmationModalContent } from '../../components/TransactionConfirmationModal'
+import TransactionConfirmationModal from '../../components/TransactionConfirmationModal'
 import { useCurrency } from '../../hooks/Tokens'
 import { ApprovalState, useApproveCallback } from '../../hooks/useApproveCallback'
-import { useV3NFTPositionManagerContract } from '../../hooks/useContract'
 import { useStablecoinValue } from '../../hooks/useStablecoinPrice'
 import { Field } from '../../state/mint/v3/actions'
 import { useTransactionAdder } from '../../state/transactions/hooks'
 import { maxAmountSpend } from '../../utils/maxAmountSpend'
 import { Dots } from '../Pool/styled'
-import { Review } from './Review'
 import { DynamicSection, MediumOnly, ResponsiveTwoColumns, ScrollablePage, Wrapper } from './styled'
 
 const DEFAULT_ADD_IN_RANGE_SLIPPAGE_TOLERANCE = new Percent(50, 10_000)
+const DEPOSIT_GUARD_ADDRESS = '0x238394541dE407Fd494e455eF17C9D991F4FBEd8'
 
 const StyledBodyWrapper = styled(BodyWrapper)`
   padding: 0;
   width: 100%;
   max-width: 600px;
+`
+const CircleLink = styled(ExternalLink)<{ size: number }>`
+  width: ${({ size }) => size}px;
+  height: ${({ size }) => size}px;
+  border-radius: 50%;
+  background-color: ${({ theme }) => theme.bg3};
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
 `
 
 export default function AddSingleSidedWrapper() {
@@ -63,9 +74,8 @@ function AddSingleSided() {
   const theme = useTheme()
 
   const toggleWalletDrawer = useToggleAccountDrawer() // toggle wallet when disconnected
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+
   const addTransaction = useTransactionAdder()
-  const positionManager = useV3NFTPositionManagerContract()
 
   const hasExistingPosition = false
 
@@ -100,6 +110,32 @@ function AddSingleSided() {
   const quoteCurrency =
     baseCurrency && currencyB && baseCurrency.wrapped.equals(currencyB.wrapped) ? undefined : currencyB
 
+  const vaultAddress = useMemo(() => {
+    // cUSD-CELO-0.01% 0xA4574B53c18192B5DC37e7428e7BD66C04cA9410
+    // CELO-cUSD-0.01% 0xd85a949433c1F373eF3C3fA6f7c26edb10F136Eb
+    // CELO-USDT-0.01% 0x91a954a8dC372b49E2A4227556Dcc23f7fb16353
+    // USDT-CELO-0.01% 0xa6e80fAb39506317F5246f200B0AF3aa828Da40c
+    // CELO-UBE-0.01% 0x982dbFb3141852A828837c33CA899D4C748B2827
+    if (baseCurrency?.symbol == 'CELO') {
+      if (quoteCurrency?.symbol == 'cUSD') {
+        return '0xd85a949433c1F373eF3C3fA6f7c26edb10F136Eb'
+      }
+      if (quoteCurrency?.symbol == 'USDT') {
+        return '0x91a954a8dC372b49E2A4227556Dcc23f7fb16353'
+      }
+      if (quoteCurrency?.symbol == 'UBE') {
+        return '0x982dbFb3141852A828837c33CA899D4C748B2827'
+      }
+    }
+    if (baseCurrency?.symbol == 'cUSD' && quoteCurrency?.symbol == 'CELO') {
+      return '0xA4574B53c18192B5DC37e7428e7BD66C04cA9410'
+    }
+    if (baseCurrency?.symbol == 'USDT' && quoteCurrency?.symbol == 'CELO') {
+      return '0xa6e80fAb39506317F5246f200B0AF3aa828Da40c'
+    }
+    return undefined
+  }, [baseCurrency, quoteCurrency])
+
   const depositInputDisabled = false
 
   const depositCurrencyAmount =
@@ -112,7 +148,7 @@ function AddSingleSided() {
     errorMessage = <Trans>Connect wallet</Trans>
   }
 
-  if (!depositCurrencyAmount && !depositInputDisabled) {
+  if ((!depositCurrencyAmount || !depositCurrencyAmount.greaterThan(0)) && !depositInputDisabled) {
     errorMessage = errorMessage ?? <Trans>Enter an amount</Trans>
   }
 
@@ -122,11 +158,7 @@ function AddSingleSided() {
 
   const isValid = !errorMessage
 
-  // modal and loading
-  const [showConfirm, setShowConfirm] = useState<boolean>(false)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [attemptingTxn, setAttemptingTxn] = useState<boolean>(false) // clicked confirm
-
   const [txHash, setTxHash] = useState<string>('')
 
   // get the max amounts user can add
@@ -141,16 +173,38 @@ function AddSingleSided() {
   )
 
   // check whether the user has approved the router on the tokens
-  const [approvalA, approveACallback] = useApproveCallback(
-    depositCurrencyAmount,
-    chainId ? NONFUNGIBLE_POSITION_MANAGER_ADDRESSES[chainId] : undefined
-  )
+  const [approvalA, approveACallback] = useApproveCallback(depositCurrencyAmount, DEPOSIT_GUARD_ADDRESS)
 
   async function onAdd() {
     if (!chainId || !provider || !account) return
 
-    if (!positionManager || !baseCurrency || !quoteCurrency) {
+    if (!baseCurrency || !quoteCurrency || !vaultAddress || !depositCurrencyAmount) {
       return
+    }
+
+    try {
+      setAttemptingTxn(true)
+      const dex = SupportedDex.Ubeswap
+      const txnDetails = await deposit(
+        account,
+        parseUnits(depositAmount, baseCurrency.decimals), // can be 0 when only depositing amount1
+        0, // can be 0 when only depositing amount0
+        vaultAddress,
+        provider,
+        dex,
+        1 // acceptable slippage (percents)
+      )
+      setTxHash(txnDetails.hash)
+      addTransaction(txnDetails, {
+        type: TransactionType.CUSTOM,
+        summary: 'Add single token liquidty',
+      })
+      await txnDetails.wait(2)
+    } catch (err) {
+      console.log(err)
+    } finally {
+      setTxHash('')
+      setAttemptingTxn(false)
     }
   }
 
@@ -196,7 +250,6 @@ function AddSingleSided() {
   )
 
   const handleDismissConfirmation = useCallback(() => {
-    setShowConfirm(false)
     // if there was a tx hash, we want to clear the input
     if (txHash) {
       setDepositAmount('')
@@ -245,13 +298,11 @@ function AddSingleSided() {
           </RowBetween>
         )}
         <ButtonError
-          onClick={() => {
-            setShowConfirm(true)
-          }}
+          onClick={onAdd}
           disabled={!isValid || (approvalA !== ApprovalState.APPROVED && !depositInputDisabled)}
           error={!isValid && !!depositCurrencyAmount}
         >
-          <Text fontWeight={535}>{errorMessage ? errorMessage : <Trans>Preview</Trans>}</Text>
+          <Text fontWeight={535}>{errorMessage ? errorMessage : <Trans>Supply {baseCurrency?.symbol}</Trans>}</Text>
         </ButtonError>
       </AutoColumn>
     )
@@ -269,24 +320,11 @@ function AddSingleSided() {
     <>
       <ScrollablePage>
         <TransactionConfirmationModal
-          isOpen={showConfirm}
+          isOpen={attemptingTxn}
           onDismiss={handleDismissConfirmation}
           attemptingTxn={attemptingTxn}
           hash={txHash}
-          reviewContent={() => (
-            <ConfirmationModalContent
-              title={<Trans>Add Single TokenLiquidity</Trans>}
-              onDismiss={handleDismissConfirmation}
-              topContent={() => <Review parsedAmounts={{}} outOfRange={false} ticksAtLimit={{}} />}
-              bottomContent={() => (
-                <ButtonPrimary style={{ marginTop: '1rem' }} onClick={onAdd}>
-                  <Text fontWeight={535} fontSize={20}>
-                    <Trans>Add</Trans>
-                  </Text>
-                </ButtonPrimary>
-              )}
-            />
-          )}
+          reviewContent={() => <div></div>}
           pendingText={pendingText}
         />
         <StyledBodyWrapper>
@@ -319,6 +357,14 @@ function AddSingleSided() {
                         <ThemedText.DeprecatedLabel>
                           <Trans>Select tokens</Trans>
                         </ThemedText.DeprecatedLabel>
+                        {vaultAddress && (
+                          <CircleLink
+                            size={30}
+                            href={`https://vaultmetrics.io/?vault_address=${vaultAddress}&chain_id=42220`}
+                          >
+                            <BarChart2 size={20} color={theme.primary1} />
+                          </CircleLink>
+                        )}
                       </RowBetween>
                       <RowBetween gap="md">
                         <CurrencyInputPanel

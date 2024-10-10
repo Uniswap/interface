@@ -170,6 +170,7 @@
     "@graphql-codegen/typescript-operations": "^3.0.2",
     "@graphql-codegen/typescript-react-apollo": "^3.3.7",
     "@graphql-codegen/typescript-resolvers": "^3.2.1",
+    "@ichidao/ichi-vaults-sdk": "0.0.84",
     "@juggle/resize-observer": "3.4.0",
     "@looksrare/sdk": "0.10.4",
     "@metamask/jazzicon": "2.0.0",
