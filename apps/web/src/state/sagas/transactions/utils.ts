@@ -42,18 +42,19 @@ import { signTypedData } from 'utils/signing'
 import { getConnectorClient } from 'wagmi/actions'
 
 export interface HandleSignatureStepParams<T extends SignatureTransactionStep = SignatureTransactionStep> {
+  account: AccountMeta
   step: T
   setCurrentStep: SetCurrentStepFn
   ignoreInterrupt?: boolean
 }
-export function* handleSignatureStep({ setCurrentStep, step, ignoreInterrupt }: HandleSignatureStepParams) {
+export function* handleSignatureStep({ setCurrentStep, step, ignoreInterrupt, account }: HandleSignatureStepParams) {
   // Add a watcher to check if the transaction flow is interrupted during this step
   const { throwIfInterrupted } = yield* watchForInterruption(ignoreInterrupt)
 
   // Trigger UI prompting user to accept
   setCurrentStep({ step, accepted: false })
 
-  const signer = yield* call(getSigner)
+  const signer = yield* call(getSigner, account.address)
   const signature = yield* call(signTypedData, signer, step.domain, step.types, step.values) // TODO(WEB-5077): look into removing / simplifying signTypedData
   // If the transaction flow was interrupted, throw an error after the step has completed
   yield* call(throwIfInterrupted)
@@ -78,7 +79,7 @@ export interface HandleOnChainStepParams<T extends OnChainTransactionStep = OnCh
 export function* handleOnChainStep<T extends OnChainTransactionStep>(params: HandleOnChainStepParams<T>) {
   const { account, step, setCurrentStep, info, allowDuplicativeTx, ignoreInterrupt, onModification } = params
   const { chainId } = step.txRequest
-  const signer = yield* call(getSigner)
+  const signer = yield* call(getSigner, account.address)
 
   // Avoid sending prompting a transaction if the user already submitted an equivalent tx, e.g. by closing and reopening a transaction flow
   const duplicativeTx = yield* findDuplicativeTx(info, account, chainId, allowDuplicativeTx)
@@ -236,8 +237,8 @@ async function getProvider(): Promise<Web3Provider> {
   return provider
 }
 
-async function getSigner(): Promise<JsonRpcSigner> {
-  return (await getProvider()).getSigner()
+async function getSigner(account: string): Promise<JsonRpcSigner> {
+  return (await getProvider()).getSigner(account)
 }
 
 type SwapInfo = ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo

@@ -21,6 +21,7 @@ export class TransactionStepFailedError extends TransactionError {
   step: TransactionStep
   isBackendRejection: boolean
   originalError?: Error
+  stringified?: string
 
   constructor({
     message,
@@ -38,6 +39,10 @@ export class TransactionStepFailedError extends TransactionError {
     this.step = step
     this.isBackendRejection = isBackendRejection
     this.originalError = originalError
+
+    try {
+      this.stringified = JSON.stringify(this, null, 2) // provides more insight to sentry logs
+    } catch {}
   }
 }
 

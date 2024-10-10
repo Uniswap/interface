@@ -54,10 +54,8 @@ import {
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { createSaga } from 'uniswap/src/utils/saga'
-import { errorToString } from 'utilities/src/errors'
 import { percentFromFloat } from 'utilities/src/format/percent'
 import { logger } from 'utilities/src/logger/logger'
-import { LoggerErrorContext } from 'utilities/src/logger/types'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 
 interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
@@ -208,7 +206,9 @@ function* classicSwap(
       }
     } catch (error) {
       const displayableError = getDisplayableError(error, step)
-      logSwapError(displayableError, { tags: { file: 'swapSaga', function: 'classicSwap' } })
+      if (displayableError) {
+        logger.error(displayableError, { tags: { file: 'swapSaga', function: 'classicSwap' } })
+      }
       onFailure(displayableError)
       return
     }
@@ -256,28 +256,15 @@ function* uniswapXSwap(
       }
     } catch (error) {
       const displayableError = getDisplayableError(error, step)
-      logSwapError(displayableError, { tags: { file: 'swapSaga', function: 'uniswapXSwap' } })
+      if (displayableError) {
+        logger.error(displayableError, { tags: { file: 'swapSaga', function: 'uniswapXSwap' } })
+      }
       onFailure(displayableError)
       return
     }
   }
 
   yield* call(onSuccess)
-}
-
-function logSwapError(error: TransactionError | undefined, captureContext: LoggerErrorContext) {
-  if (error instanceof TransactionStepFailedError) {
-    logger.error(
-      {
-        ...error,
-        step: JSON.stringify(error.step),
-        originalError: errorToString(error.originalError),
-      },
-      captureContext,
-    )
-  } else if (error) {
-    logger.error(error, captureContext)
-  }
 }
 
 function getDisplayableError(error: Error, step: TransactionStep): TransactionError | undefined {
