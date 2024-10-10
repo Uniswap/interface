@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmX5dHDvYJwU2rZoLSCyZLiE8E3iSDEeyMRvbZxCAN6PJ9`
-- CIDv1: `bafybeieb37nluv6rhyctnziiqxybgimkhxcaz7dpm3efb4xgqes6tftk6i`
+- CIDv0: `QmYL6y6Rw6FpUGdycyASv3KGf54bpmPeZQKn6Bxq4JakEF`
+- CIDv1: `bafybeieuod5jwzai74wxpuokl3bwl2jsf2kcbohjjllbc3lkwftkumlduq`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeieb37nluv6rhyctnziiqxybgimkhxcaz7dpm3efb4xgqes6tftk6i.ipfs.dweb.link/
-- https://bafybeieb37nluv6rhyctnziiqxybgimkhxcaz7dpm3efb4xgqes6tftk6i.ipfs.cf-ipfs.com/
-- [ipfs://QmX5dHDvYJwU2rZoLSCyZLiE8E3iSDEeyMRvbZxCAN6PJ9/](ipfs://QmX5dHDvYJwU2rZoLSCyZLiE8E3iSDEeyMRvbZxCAN6PJ9/)
+- https://bafybeieuod5jwzai74wxpuokl3bwl2jsf2kcbohjjllbc3lkwftkumlduq.ipfs.dweb.link/
+- https://bafybeieuod5jwzai74wxpuokl3bwl2jsf2kcbohjjllbc3lkwftkumlduq.ipfs.cf-ipfs.com/
+- [ipfs://QmYL6y6Rw6FpUGdycyASv3KGf54bpmPeZQKn6Bxq4JakEF/](ipfs://QmYL6y6Rw6FpUGdycyASv3KGf54bpmPeZQKn6Bxq4JakEF/)
 
-### 5.51.3 (2024-10-10)
+### 5.51.4 (2024-10-10)
 
 
 ### Bug Fixes
 
-* **web:** fix network filter on explore (#12894) b29b04a
+* **web:** enable token swap on non mainnet tdp for legacy swap - prod (#12900) cb91f9e
 
 
