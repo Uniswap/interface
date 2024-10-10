@@ -1,58 +1,59 @@
-import ErrorBoundary from 'components/ErrorBoundary'
-import { useFeatureFlagURLOverrides } from 'featureFlags'
-import { useAtom } from 'jotai'
-import { AppLayout } from 'pages/App/Layout'
-import { ResetPageScrollEffect } from 'pages/App/utils/ResetPageScroll'
-import { UserPropertyUpdater } from 'pages/App/utils/UserPropertyUpdater'
-import { findRouteByPath } from 'pages/RouteDefinitions'
-import { useDynamicMetatags } from 'pages/metatags'
-import { useEffect, useLayoutEffect } from 'react'
-import { Helmet } from 'react-helmet-async/lib/index'
-import { Navigate, useLocation, useSearchParams } from 'react-router-dom'
-import { shouldDisableNFTRoutesAtom } from 'state/application/atoms'
-import DarkModeQueryParamReader from 'theme/components/DarkModeQueryParamReader'
-import Trace from 'uniswap/src/features/telemetry/Trace'
-import { isPathBlocked } from 'utils/blockedPaths'
-import { MICROSITE_LINK } from 'utils/openDownloadApp'
-import { getCurrentPageFromLocation } from 'utils/urlRoutes'
+import ErrorBoundary from "components/ErrorBoundary";
+import { useFeatureFlagURLOverrides } from "featureFlags";
+import { useAtom } from "jotai";
+import { AppLayout } from "pages/App/Layout";
+import { ResetPageScrollEffect } from "pages/App/utils/ResetPageScroll";
+import { UserPropertyUpdater } from "pages/App/utils/UserPropertyUpdater";
+import { findRouteByPath } from "pages/RouteDefinitions";
+import { useDynamicMetatags } from "pages/metatags";
+import { useEffect, useLayoutEffect } from "react";
+import { Helmet } from "react-helmet-async/lib/index";
+import { Navigate, useLocation, useSearchParams } from "react-router-dom";
+import { shouldDisableNFTRoutesAtom } from "state/application/atoms";
+import DarkModeQueryParamReader from "theme/components/DarkModeQueryParamReader";
+import Trace from "uniswap/src/features/telemetry/Trace";
+import { isPathBlocked } from "utils/blockedPaths";
+import { MICROSITE_LINK } from "utils/openDownloadApp";
+import { getCurrentPageFromLocation } from "utils/urlRoutes";
 
 export default function App() {
-  const [, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom)
+  const [, setShouldDisableNFTRoutes] = useAtom(shouldDisableNFTRoutesAtom);
 
-  const location = useLocation()
-  const { pathname } = location
-  const currentPage = getCurrentPageFromLocation(pathname)
+  const location = useLocation();
+  const { pathname } = location;
+  const currentPage = getCurrentPageFromLocation(pathname);
 
-  const [searchParams] = useSearchParams()
+  const [searchParams] = useSearchParams();
   useEffect(() => {
-    if (searchParams.get('disableNFTs') === 'true') {
-      setShouldDisableNFTRoutes(true)
-    } else if (searchParams.get('disableNFTs') === 'false') {
-      setShouldDisableNFTRoutes(false)
+    if (searchParams.get("disableNFTs") === "true") {
+      setShouldDisableNFTRoutes(true);
+    } else if (searchParams.get("disableNFTs") === "false") {
+      setShouldDisableNFTRoutes(false);
     }
-  }, [searchParams, setShouldDisableNFTRoutes])
+  }, [searchParams, setShouldDisableNFTRoutes]);
 
-  useFeatureFlagURLOverrides()
+  useFeatureFlagURLOverrides();
 
-  const metaTags = useDynamicMetatags()
-  const staticTitle = findRouteByPath(pathname)?.getTitle(pathname) ?? 'Uniswap Interface'
-  const staticDescription = findRouteByPath(pathname)?.getDescription(pathname)
+  const metaTags = useDynamicMetatags();
+  const staticTitle =
+    findRouteByPath(pathname)?.getTitle(pathname) ?? "Taraswap Interface";
+  const staticDescription = findRouteByPath(pathname)?.getDescription(pathname);
 
   // redirect address to landing pages until implemented
-  const shouldRedirectToAppInstall = pathname?.startsWith('/address/')
+  const shouldRedirectToAppInstall = pathname?.startsWith("/address/");
   useLayoutEffect(() => {
     if (shouldRedirectToAppInstall) {
-      window.location.href = MICROSITE_LINK
+      window.location.href = MICROSITE_LINK;
     }
-  }, [shouldRedirectToAppInstall])
+  }, [shouldRedirectToAppInstall]);
 
   if (shouldRedirectToAppInstall) {
-    return null
+    return null;
   }
 
-  const shouldBlockPath = isPathBlocked(pathname)
-  if (shouldBlockPath && pathname !== '/swap') {
-    return <Navigate to="/swap" replace />
+  const shouldBlockPath = isPathBlocked(pathname);
+  if (shouldBlockPath && pathname !== "/swap") {
+    return <Navigate to="/swap" replace />;
   }
   return (
     <ErrorBoundary>
@@ -65,8 +66,12 @@ export default function App() {
         */}
         <Helmet>
           <title>{staticTitle}</title>
-          {staticDescription && <meta name="description" content={staticDescription} />}
-          {staticDescription && <meta property="og:description" content={staticDescription} />}
+          {staticDescription && (
+            <meta name="description" content={staticDescription} />
+          )}
+          {staticDescription && (
+            <meta property="og:description" content={staticDescription} />
+          )}
           {metaTags.map((tag, index) => (
             <meta key={index} {...tag} />
           ))}
@@ -76,5 +81,5 @@ export default function App() {
         <AppLayout />
       </Trace>
     </ErrorBoundary>
-  )
+  );
 }

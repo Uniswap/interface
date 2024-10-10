@@ -1249,7 +1249,7 @@ export const UNIVERSE_CHAIN_INFO = {
       10_000e6
     ),
     stablecoins: [USDT_TARAXA],
-    supportsClientSideRouting: false,
+    supportsClientSideRouting: true,
     supportsGasEstimates: false,
     wrappedNativeCurrency: {
       name: "Wrapped TARA",

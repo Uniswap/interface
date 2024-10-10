@@ -1,7 +1,13 @@
-import { OperationVariables, QueryResult } from '@apollo/client'
-import { DeepPartial } from '@apollo/client/utilities'
-import { DataTag, DefaultError, QueryKey, UndefinedInitialDataOptions, queryOptions } from '@tanstack/react-query'
-import { ChainId, Currency, Token } from '@taraswap/sdk-core'
+import { OperationVariables, QueryResult } from "@apollo/client";
+import { DeepPartial } from "@apollo/client/utilities";
+import {
+  DataTag,
+  DefaultError,
+  QueryKey,
+  UndefinedInitialDataOptions,
+  queryOptions,
+} from "@tanstack/react-query";
+import { ChainId, Currency, Token } from "@taraswap/sdk-core";
 import {
   AVERAGE_L1_BLOCK_TIME,
   BACKEND_SUPPORTED_CHAINS,
@@ -13,13 +19,17 @@ import {
   SupportedInterfaceChainId,
   UX_SUPPORTED_GQL_CHAINS,
   chainIdToBackendChain,
-} from 'constants/chains'
-import { NATIVE_CHAIN_ID, WRAPPED_NATIVE_CURRENCY, nativeOnChain } from 'constants/tokens'
-import ms from 'ms'
-import { ExploreTab } from 'pages/Explore'
-import { useEffect } from 'react'
-import { DefaultTheme } from 'styled-components'
-import { ThemeColors } from 'theme/colors'
+} from "constants/chains";
+import {
+  NATIVE_CHAIN_ID,
+  WRAPPED_NATIVE_CURRENCY,
+  nativeOnChain,
+} from "constants/tokens";
+import ms from "ms";
+import { ExploreTab } from "pages/Explore";
+import { useEffect } from "react";
+import { DefaultTheme } from "styled-components";
+import { ThemeColors } from "theme/colors";
 import {
   Chain,
   ContractInput,
@@ -27,8 +37,8 @@ import {
   HistoryDuration,
   PriceSource,
   TokenStandard,
-} from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { getNativeTokenDBAddress } from 'utils/nativeTokens'
+} from "uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks";
+import { getNativeTokenDBAddress } from "utils/nativeTokens";
 
 export enum PollingInterval {
   Slow = ms(`5m`),
@@ -42,14 +52,14 @@ export function usePollQueryWhileMounted<T, K extends OperationVariables>(
   queryResult: QueryResult<T, K>,
   interval: PollingInterval
 ) {
-  const { startPolling, stopPolling } = queryResult
+  const { startPolling, stopPolling } = queryResult;
 
   useEffect(() => {
-    startPolling(interval)
-    return stopPolling
-  }, [interval, startPolling, stopPolling])
+    startPolling(interval);
+    return stopPolling;
+  }, [interval, startPolling, stopPolling]);
 
-  return queryResult
+  return queryResult;
 }
 
 export enum TimePeriod {
@@ -63,46 +73,62 @@ export enum TimePeriod {
 export function toHistoryDuration(timePeriod: TimePeriod): HistoryDuration {
   switch (timePeriod) {
     case TimePeriod.HOUR:
-      return HistoryDuration.Hour
+      return HistoryDuration.Hour;
     case TimePeriod.DAY:
-      return HistoryDuration.Day
+      return HistoryDuration.Day;
     case TimePeriod.WEEK:
-      return HistoryDuration.Week
+      return HistoryDuration.Week;
     case TimePeriod.MONTH:
-      return HistoryDuration.Month
+      return HistoryDuration.Month;
     case TimePeriod.YEAR:
-      return HistoryDuration.Year
+      return HistoryDuration.Year;
   }
 }
 
-export type PricePoint = { timestamp: number; value: number }
+export type PricePoint = { timestamp: number; value: number };
 
 export function isPricePoint(p: PricePoint | undefined): p is PricePoint {
-  return p !== undefined
+  return p !== undefined;
 }
 
 /** Used for making graphql queries to all chains supported by the graphql backend. Must be mutable for some apollo typechecking. */
-export const GQL_MAINNET_CHAINS_MUTABLE = GQL_MAINNET_CHAINS.map((c) => c)
+export const GQL_MAINNET_CHAINS_MUTABLE = GQL_MAINNET_CHAINS.map((c) => c);
 
 export function isGqlSupportedChain(chainId?: SupportedInterfaceChainId) {
-  return !!chainId && GQL_MAINNET_CHAINS.includes(CHAIN_INFO[chainId].backendChain.chain)
+  return (
+    !!chainId &&
+    GQL_MAINNET_CHAINS.includes(CHAIN_INFO[chainId].backendChain.chain)
+  );
 }
 
 export function toContractInput(currency: Currency): ContractInput {
-  const chain = chainIdToBackendChain({ chainId: currency.chainId as SupportedInterfaceChainId })
-  return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
+  const chain = chainIdToBackendChain({
+    chainId: currency.chainId as SupportedInterfaceChainId,
+  });
+  return {
+    chain,
+    address: currency.isToken
+      ? currency.address
+      : getNativeTokenDBAddress(chain),
+  };
 }
 
-export function gqlToCurrency(token: DeepPartial<GqlToken>): Currency | undefined {
+export function gqlToCurrency(
+  token: DeepPartial<GqlToken>
+): Currency | undefined {
   if (!token.chain) {
-    return undefined
+    return undefined;
   }
-  const chainId = supportedChainIdFromGQLChain(token.chain)
+  const chainId = supportedChainIdFromGQLChain(token.chain);
   if (!chainId) {
-    return undefined
+    return undefined;
   }
-  if (token.standard === TokenStandard.Native || token.address === NATIVE_CHAIN_ID || !token.address) {
-    return nativeOnChain(chainId)
+  if (
+    token.standard === TokenStandard.Native ||
+    token.address === NATIVE_CHAIN_ID ||
+    !token.address
+  ) {
+    return nativeOnChain(chainId);
   } else {
     return new Token(
       chainId,
@@ -110,44 +136,59 @@ export function gqlToCurrency(token: DeepPartial<GqlToken>): Currency | undefine
       token.decimals ?? 18,
       token.symbol ?? undefined,
       token.project?.name ?? token.name ?? undefined
-    )
+    );
   }
 }
 
 export function getSupportedGraphQlChain(
   chain: SupportedInterfaceChain | undefined,
   options?: undefined
-): SupportedInterfaceChain | undefined
+): SupportedInterfaceChain | undefined;
 export function getSupportedGraphQlChain(
   chain: SupportedInterfaceChain | undefined,
   options: { fallbackToEthereum: true }
-): SupportedInterfaceChain
+): SupportedInterfaceChain;
 export function getSupportedGraphQlChain(
   chain: SupportedInterfaceChain | undefined,
   options?: { fallbackToEthereum?: boolean }
 ): SupportedInterfaceChain | undefined {
-  const fallbackChain = options?.fallbackToEthereum ? CHAIN_INFO[ChainId.MAINNET] : undefined
-  return chain?.backendChain.backendSupported ? chain : fallbackChain
+  const fallbackChain = options?.fallbackToEthereum
+    ? CHAIN_INFO[ChainId.MAINNET]
+    : undefined;
+  return chain?.backendChain.backendSupported ? chain : fallbackChain;
 }
 
 export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
-  const chains: ReadonlyArray<Chain> = UX_SUPPORTED_GQL_CHAINS
-  return chains.includes(chain)
+  const chains: ReadonlyArray<Chain> = UX_SUPPORTED_GQL_CHAINS;
+  return chains.includes(chain);
 }
 
-export function supportedChainIdFromGQLChain(chain: InterfaceGqlChain): SupportedInterfaceChainId
-export function supportedChainIdFromGQLChain(chain: Chain): SupportedInterfaceChainId | undefined
-export function supportedChainIdFromGQLChain(chain: Chain): SupportedInterfaceChainId | undefined {
-  return isSupportedGQLChain(chain) ? CHAIN_NAME_TO_CHAIN_ID[chain] : undefined
+export function supportedChainIdFromGQLChain(
+  chain: InterfaceGqlChain
+): SupportedInterfaceChainId;
+export function supportedChainIdFromGQLChain(
+  chain: Chain
+): SupportedInterfaceChainId | undefined;
+export function supportedChainIdFromGQLChain(
+  chain: Chain
+): SupportedInterfaceChainId | undefined {
+  return isSupportedGQLChain(chain) ? CHAIN_NAME_TO_CHAIN_ID[chain] : undefined;
 }
 
-export function isBackendSupportedChain(chain: Chain): chain is InterfaceGqlChain {
-  return (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(chain)
+export function isBackendSupportedChain(
+  chain: Chain
+): chain is InterfaceGqlChain {
+  return (BACKEND_SUPPORTED_CHAINS as ReadonlyArray<Chain>).includes(chain);
 }
 
-export function getTokenExploreURL({ tab, chain }: { tab: ExploreTab; chain: Chain }) {
-  const chainName = chain.toLowerCase()
-  return `/explore/${tab}/${chainName}`
+export function getTokenExploreURL({
+  tab,
+  chain,
+}: {
+  tab: ExploreTab;
+  chain: Chain;
+}) {
+  return `${process.env.REACT_APP_INFO_ROOT}/#`;
 }
 
 export function getTokenDetailsURL({
@@ -155,40 +196,42 @@ export function getTokenDetailsURL({
   chain,
   inputAddress,
 }: {
-  address?: string | null
-  chain: Chain
-  inputAddress?: string | null
+  address?: string | null;
+  chain: Chain;
+  inputAddress?: string | null;
 }) {
-  const chainName = chain.toLowerCase()
-  const tokenAddress = address ?? NATIVE_CHAIN_ID
-  const inputAddressSuffix = inputAddress ? `?inputCurrency=${inputAddress}` : ''
-  return `/explore/tokens/${chainName}/${tokenAddress}${inputAddressSuffix}`
+  const chainName = chain.toLowerCase();
+  const tokenAddress = address ?? NATIVE_CHAIN_ID;
+  const inputAddressSuffix = inputAddress
+    ? `?inputCurrency=${inputAddress}`
+    : "";
+  return `${process.env.REACT_APP_INFO_ROOT}/#/tokens/${tokenAddress}${inputAddressSuffix}`;
 }
 
 export function getPoolDetailsURL(address: string, chain: Chain) {
-  const chainName = chain.toLowerCase()
-  return `/explore/pools/${chainName}/${address}`
+  const chainName = chain.toLowerCase();
+  return `${process.env.REACT_APP_INFO_ROOT}/#/pools/${address}`;
 }
 
 export function unwrapToken<
   T extends
     | {
-        address?: string | null
-        project?: { name?: string | null }
+        address?: string | null;
+        project?: { name?: string | null };
       }
     | undefined
 >(chainId: number, token: T): T {
   if (!token?.address) {
-    return token
+    return token;
   }
 
-  const address = token.address.toLowerCase()
-  const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase()
+  const address = token.address.toLowerCase();
+  const nativeAddress = WRAPPED_NATIVE_CURRENCY[chainId]?.address.toLowerCase();
   if (address !== nativeAddress) {
-    return token
+    return token;
   }
 
-  const nativeToken = nativeOnChain(chainId)
+  const nativeToken = nativeOnChain(chainId);
 
   return {
     ...token,
@@ -199,27 +242,30 @@ export function unwrapToken<
     },
     address: NATIVE_CHAIN_ID,
     extensions: undefined, // prevents marking cross-chain wrapped tokens as native
-  }
+  };
 }
 
-type ProtocolMeta = { name: string; color: keyof ThemeColors }
+type ProtocolMeta = { name: string; color: keyof ThemeColors };
 const PROTOCOL_META: { [source in PriceSource]: ProtocolMeta } = {
-  [PriceSource.SubgraphV2]: { name: 'v2', color: 'accent3' },
-  [PriceSource.SubgraphV3]: { name: 'v3', color: 'accent1' },
+  [PriceSource.SubgraphV2]: { name: "v2", color: "accent3" },
+  [PriceSource.SubgraphV3]: { name: "v3", color: "accent1" },
   /* [PriceSource.UniswapX]: { name: 'UniswapX', color: purple } */
-}
+};
 
-export function getProtocolColor(priceSource: PriceSource, theme: DefaultTheme): string {
-  return theme[PROTOCOL_META[priceSource].color]
+export function getProtocolColor(
+  priceSource: PriceSource,
+  theme: DefaultTheme
+): string {
+  return theme[PROTOCOL_META[priceSource].color];
 }
 
 export function getProtocolName(priceSource: PriceSource): string {
-  return PROTOCOL_META[priceSource].name
+  return PROTOCOL_META[priceSource].name;
 }
 
 export enum OrderDirection {
-  Asc = 'asc',
-  Desc = 'desc',
+  Asc = "asc",
+  Desc = "desc",
 }
 
 /**
@@ -233,15 +279,18 @@ export function apolloQueryOptions<
   TData = TQueryFnData,
   TQueryKey extends QueryKey = QueryKey
 >(
-  options: Pick<UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey>, 'queryKey' | 'queryFn'>
+  options: Pick<
+    UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey>,
+    "queryKey" | "queryFn"
+  >
 ): Pick<
   UndefinedInitialDataOptions<TQueryFnData, TError, TData, TQueryKey> & {
-    queryKey: DataTag<TQueryKey, TQueryFnData>
+    queryKey: DataTag<TQueryKey, TQueryFnData>;
   },
-  'queryKey' | 'queryFn'
+  "queryKey" | "queryFn"
 > {
   return queryOptions({
     ...options,
     staleTime: 0,
-  })
+  });
 }

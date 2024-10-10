@@ -147,9 +147,9 @@ export function Footer() {
                 <Body1>
                   <Trans i18nKey="common.company" />
                 </Body1>
-                <StyledExternalLink href="https://boards.greenhouse.io/uniswaplabs">
+                {/* <StyledExternalLink href="https://boards.greenhouse.io/uniswaplabs">
                   <Trans i18nKey="common.careers" />
-                </StyledExternalLink>
+                </StyledExternalLink> */}
                 <StyledExternalLink href="https://blog.uniswap.org/">
                   <Trans i18nKey="common.blog" />
                 </StyledExternalLink>

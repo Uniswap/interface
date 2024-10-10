@@ -82,18 +82,12 @@ const Pages: Array<Page> = [
     component: Tokens,
     loggingElementName: InterfaceElementName.MINI_PORTFOLIO_TOKENS_TAB,
   },
-  // {
-  //   title: <Trans i18nKey="common.nfts" />,
-  //   key: 'nfts',
-  //   component: NFTs,
-  //   loggingElementName: InterfaceElementName.MINI_PORTFOLIO_NFT_TAB,
-  // },
-  // {
-  //   title: <Trans i18nKey="common.pools" />,
-  //   key: 'pools',
-  //   component: Pools,
-  //   loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB,
-  // },
+  {
+    title: <Trans i18nKey="common.pools" />,
+    key: "pools",
+    component: Pools,
+    loggingElementName: InterfaceElementName.MINI_PORTFOLIO_POOLS_TAB,
+  },
   {
     title: <Trans i18nKey="common.activity" />,
     key: "activity",
@@ -127,59 +121,55 @@ export default function MiniPortfolio({ account }: { account: string }) {
     <Trace section={InterfaceSectionName.MINI_PORTFOLIO}>
       <Wrapper>
         <Nav data-testid="mini-portfolio-navbar">
-          {Pages.length > 0 &&
-            Pages.map(({ title, loggingElementName, key }, index) => {
-              if (
-                shouldDisableNFTRoutes &&
-                loggingElementName.includes("nft")
-              ) {
-                return null;
+          {Pages.map(({ title, loggingElementName, key }, index) => {
+            if (shouldDisableNFTRoutes && loggingElementName.includes("nft")) {
+              return null;
+            }
+            const isUnselectedActivity =
+              key === "activity" && currentKey !== "activity";
+            const showActivityIndicator =
+              isUnselectedActivity && (hasPendingActivity || activityUnread);
+            const handleNavItemClick = () => {
+              setCurrentPage(index);
+              if (key === "activity") {
+                setActivityUnread(false);
               }
-              const isUnselectedActivity =
-                key === "activity" && currentKey !== "activity";
-              const showActivityIndicator =
-                isUnselectedActivity && (hasPendingActivity || activityUnread);
-              const handleNavItemClick = () => {
-                setCurrentPage(index);
-                if (key === "activity") {
-                  setActivityUnread(false);
-                }
-              };
-              return (
-                <Trace
-                  logPress
-                  eventOnTrigger={SharedEventName.NAVBAR_CLICKED}
-                  element={loggingElementName}
-                  key={index}
+            };
+            return (
+              <Trace
+                logPress
+                eventOnTrigger={SharedEventName.NAVBAR_CLICKED}
+                element={loggingElementName}
+                key={index}
+              >
+                <NavItem
+                  onClick={handleNavItemClick}
+                  active={currentPage === index}
+                  key={key}
                 >
-                  <NavItem
-                    onClick={handleNavItemClick}
-                    active={currentPage === index}
-                    key={key}
-                  >
-                    <span>{title}</span>
-                    {showActivityIndicator && (
-                      <>
-                        &nbsp;
-                        {hasPendingActivity ? (
-                          <LoaderV2 />
-                        ) : (
-                          <svg
-                            width="8"
-                            height="8"
-                            viewBox="0 0 8 8"
-                            fill="none"
-                            xmlns="http://www.w3.org/2000/svg"
-                          >
-                            <circle cx="4" cy="4" r="4" fill={theme.accent1} />
-                          </svg>
-                        )}
-                      </>
-                    )}
-                  </NavItem>
-                </Trace>
-              );
-            })}
+                  <span>{title}</span>
+                  {showActivityIndicator && (
+                    <>
+                      &nbsp;
+                      {hasPendingActivity ? (
+                        <LoaderV2 />
+                      ) : (
+                        <svg
+                          width="8"
+                          height="8"
+                          viewBox="0 0 8 8"
+                          fill="none"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <circle cx="4" cy="4" r="4" fill={theme.accent1} />
+                        </svg>
+                      )}
+                    </>
+                  )}
+                </NavItem>
+              </Trace>
+            );
+          })}
         </Nav>
         <PageWrapper data-testid="mini-portfolio-page">
           <Page account={account} />
