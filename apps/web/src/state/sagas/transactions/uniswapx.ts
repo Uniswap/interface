@@ -1,3 +1,4 @@
+import { SwapEventName } from '@uniswap/analytics-events'
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { PopupType, addPopup } from 'state/application/reducer'
 import {
@@ -55,6 +56,19 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   }
 
   addTransactionBreadcrumb({ step, data: { routing, ...signatureDetails.swapInfo }, status: 'in progress' })
+  sendAnalyticsEvent(
+    SwapEventName.SWAP_SIGNED,
+    formatSwapSignedAnalyticsEventProperties({
+      trade,
+      allowedSlippage: percentFromFloat(trade.slippageTolerance),
+      fiatValues: {
+        amountIn: analytics.token_in_amount_usd,
+        amountOut: analytics.token_out_amount_usd,
+        feeUsd: analytics.fee_usd,
+      },
+      portfolioBalanceUsd: analytics.total_balances_usd,
+    }),
+  )
 
   try {
     yield* call(submitOrder, { signature, quote, routing })
