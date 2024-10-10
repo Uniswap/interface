@@ -22,6 +22,8 @@ import { call, put } from 'typed-redux-saga'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { selectSwapStartTimestamp } from 'uniswap/src/features/timing/selectors'
@@ -133,14 +135,15 @@ type SwapParams = {
   setSteps: (steps: TransactionStep[]) => void
   onSuccess: () => void
   onFailure: (error?: Error) => void
+  v4Enabled: boolean
 }
 
 // eslint-disable-next-line consistent-return
 function* swap(params: SwapParams) {
-  const { swapTxContext, setSteps, selectChain, startChainId, onFailure } = params
+  const { swapTxContext, setSteps, selectChain, startChainId, v4Enabled, onFailure } = params
 
   try {
-    const steps = yield* call(generateTransactionSteps, swapTxContext)
+    const steps = yield* call(generateTransactionSteps, swapTxContext, v4Enabled)
     setSteps(steps)
 
     // Switch chains if needed
@@ -293,6 +296,7 @@ export function useSwapCallback(): SwapCallback {
   const swapStartTimestamp = useSelector(selectSwapStartTimestamp)
   const selectChain = useSelectChain()
   const startChainId = useAccount().chainId
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Everywhere)
 
   const portfolioBalanceUsd = useTotalBalancesUsdForAnalytics()
 
@@ -329,6 +333,7 @@ export function useSwapCallback(): SwapCallback {
         setSteps,
         selectChain,
         startChainId,
+        v4Enabled,
       }
       appDispatch(swapSaga.actions.trigger(swapParams))
 
@@ -348,6 +353,6 @@ export function useSwapCallback(): SwapCallback {
       // Reset swap start timestamp now that the swap has been submitted
       appDispatch(updateSwapStartTimestamp({ timestamp: undefined }))
     },
-    [formatter, portfolioBalanceUsd, selectChain, startChainId, appDispatch, swapStartTimestamp],
+    [formatter, portfolioBalanceUsd, selectChain, startChainId, appDispatch, swapStartTimestamp, v4Enabled],
   )
 }

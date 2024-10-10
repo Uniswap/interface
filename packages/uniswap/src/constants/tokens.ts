@@ -3,17 +3,17 @@ import { Currency, NativeCurrency, Token, UNI_ADDRESSES, WETH9 } from '@uniswap/
 import invariant from 'tiny-invariant'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 
-export const USDC_GOERLI = new Token(
-  UniverseChainId.Goerli,
-  '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
+export const USDC_SEPOLIA = new Token(
+  UniverseChainId.Sepolia,
+  '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5',
   6,
   'USDC',
   'USD//C',
 )
 
-export const USDC_SEPOLIA = new Token(
-  UniverseChainId.Sepolia,
-  '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5',
+export const USDC_ASTROCHAIN_SEPOLIA = new Token(
+  UniverseChainId.AstrochainSepolia,
+  '0x31d0220469e10c4E71834a79b1f276d740d3768F',
   6,
   'USDC',
   'USD//C',
@@ -38,6 +38,14 @@ export const USDT = new Token(
 export const USDC_MAINNET = new Token(
   UniverseChainId.Mainnet,
   '0xA0b86991c6218b36c1d19D4a2e9Eb0cE3606eB48',
+  6,
+  'USDC',
+  'USD//C',
+)
+
+export const USDC = new Token(
+  UniverseChainId.Mainnet,
+  '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
   6,
   'USDC',
   'USD//C',
@@ -73,14 +81,6 @@ export const WBTC_OPTIMISM = new Token(
   8,
   'WBTC',
   'Wrapped BTC',
-)
-
-export const USDC_OPTIMISM_GOERLI = new Token(
-  UniverseChainId.OptimismGoerli,
-  '0xe05606174bac4A6364B31bd0eCA4bf4dD368f8C6',
-  6,
-  'USDC',
-  'USD//C',
 )
 
 export const USDC_BASE = new Token(
@@ -142,6 +142,7 @@ export const USDT_POLYGON = new Token(
   'USDT',
   'Tether USD',
 )
+
 export const WBTC_POLYGON = new Token(
   UniverseChainId.Polygon,
   '0x1bfd67037b42cf73acf2047067bd4f2c47d9bfd6',
@@ -150,25 +151,9 @@ export const WBTC_POLYGON = new Token(
   'Wrapped BTC',
 )
 
-export const USDC_POLYGON_MUMBAI = new Token(
-  UniverseChainId.PolygonMumbai,
-  '0x0fa8781a83e46826621b3bc094ea2a0212e71b23',
-  6,
-  'USDC',
-  'USD Coin',
-)
-
 export const WETH_POLYGON = new Token(
   UniverseChainId.Polygon,
   '0x7ceb23fd6bc0add59e62ac25578270cff1b9f619',
-  18,
-  'WETH',
-  'Wrapped Ether',
-)
-
-export const WETH_POLYGON_MUMBAI = new Token(
-  UniverseChainId.PolygonMumbai,
-  '0xa6fa4fb5f76172d178d61b04b0ecd319c5d1c0aa',
   18,
   'WETH',
   'Wrapped Ether',
@@ -220,14 +205,6 @@ export const DAI_ARBITRUM_ONE = new Token(
   18,
   'DAI',
   'Dai stable coin',
-)
-
-export const USDC_ARBITRUM_GOERLI = new Token(
-  UniverseChainId.ArbitrumGoerli,
-  '0x8FB1E3fC51F3b789dED7557E680551d93Ea9d892',
-  6,
-  'USDC',
-  'USD//C',
 )
 
 export const USDC_AVALANCHE = new Token(
@@ -308,38 +285,6 @@ export const CUSD_CELO = new Token(
   'Celo Dollar',
 )
 
-export const CELO_CELO_ALFAJORES = new Token(
-  UniverseChainId.CeloAlfajores,
-  '0xF194afDf50B03e69Bd7D057c1Aa9e10c9954E4C9',
-  18,
-  'CELO',
-  'Celo',
-)
-
-export const CUSD_CELO_ALFAJORES = new Token(
-  UniverseChainId.CeloAlfajores,
-  '0x874069Fa1Eb16D44d622F2e0Ca25eeA172369bC1',
-  18,
-  'CUSD',
-  'Celo Dollar',
-)
-
-export const CEUR_CELO_ALFAJORES = new Token(
-  UniverseChainId.CeloAlfajores,
-  '0x10c892A6EC43a53E45D0B916B4b7D383B1b78C0F',
-  18,
-  'CEUR',
-  'Celo Euro Stablecoin',
-)
-
-export const USDC_CELO_ALFAJORES = new Token(
-  UniverseChainId.CeloAlfajores,
-  '0x2F25deB3848C207fc8E0c34035B3Ba7fC157602B',
-  6,
-  'USDC',
-  'USDC CELO Testnet',
-)
-
 export const USDC_ZORA = new Token(
   UniverseChainId.Zora,
   '0xCccCCccc7021b32EBb4e8C08314bD62F7c653EC4',
@@ -348,12 +293,12 @@ export const USDC_ZORA = new Token(
   'USD Coin',
 )
 
-export const USDC = new Token(
-  UniverseChainId.Mainnet,
-  '0xa0b86991c6218b36c1d19d4a2e9eb0ce3606eb48',
+export const USDC_WORLD_CHAIN = new Token(
+  UniverseChainId.WorldChain,
+  '0x79A02482A880bCE3F13e09Da970dC34db4CD24d1',
   6,
-  'USDC',
-  'USD//C',
+  'USDC.e',
+  'Bridged USDC',
 )
 
 export const USDC_ZKSYNC = new Token(
@@ -391,13 +336,6 @@ export const UNI = {
   [UniverseChainId.Optimism]: new Token(
     UniverseChainId.Optimism,
     UNI_ADDRESSES[UniverseChainId.Optimism] as string,
-    18,
-    'UNI',
-    'Uniswap',
-  ),
-  [UniverseChainId.Goerli]: new Token(
-    UniverseChainId.Goerli,
-    UNI_ADDRESSES[UniverseChainId.Goerli] as string,
     18,
     'UNI',
     'Uniswap',
@@ -450,13 +388,6 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'WETH',
     'Wrapped Ether',
   ),
-  [UniverseChainId.OptimismGoerli]: new Token(
-    UniverseChainId.OptimismGoerli,
-    '0x4200000000000000000000000000000000000006',
-    18,
-    'WETH',
-    'Wrapped Ether',
-  ),
   [UniverseChainId.Base]: new Token(
     UniverseChainId.Base,
     '0x4200000000000000000000000000000000000006',
@@ -467,13 +398,6 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
   [UniverseChainId.ArbitrumOne]: new Token(
     UniverseChainId.ArbitrumOne,
     '0x82aF49447D8a07e3bd95BD0d56f35241523fBab1',
-    18,
-    'WETH',
-    'Wrapped Ether',
-  ),
-  [UniverseChainId.ArbitrumGoerli]: new Token(
-    UniverseChainId.ArbitrumGoerli,
-    '0xe39Ab88f8A4777030A534146A9Ca3B52bd5D43A3',
     18,
     'WETH',
     'Wrapped Ether',
@@ -492,23 +416,9 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'WMATIC',
     'Wrapped MATIC',
   ),
-  [UniverseChainId.PolygonMumbai]: new Token(
-    UniverseChainId.PolygonMumbai,
-    '0x9c3C9283D3e44854697Cd22D3Faa240Cfb032889',
-    18,
-    'WMATIC',
-    'Wrapped MATIC',
-  ),
   [UniverseChainId.Celo]: new Token(
     UniverseChainId.Celo,
     '0x471ece3750da237f93b8e339c536989b8978a438',
-    18,
-    'CELO',
-    'Celo native asset',
-  ),
-  [UniverseChainId.CeloAlfajores]: new Token(
-    UniverseChainId.CeloAlfajores,
-    '0xf194afdf50b03e69bd7d057c1aa9e10c9954e4c9',
     18,
     'CELO',
     'Celo native asset',
@@ -534,6 +444,13 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'WETH',
     'Wrapped Ether',
   ),
+  [UniverseChainId.WorldChain]: new Token(
+    UniverseChainId.WorldChain,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether',
+  ),
   [UniverseChainId.Zora]: new Token(
     UniverseChainId.Zora,
     '0x4200000000000000000000000000000000000006',
@@ -548,18 +465,23 @@ export const WRAPPED_NATIVE_CURRENCY: { [chainId: number]: Token } = {
     'WETH',
     'Wrapped Ether',
   ),
+  [UniverseChainId.AstrochainSepolia]: new Token(
+    UniverseChainId.AstrochainSepolia,
+    '0x4200000000000000000000000000000000000006',
+    18,
+    'WETH',
+    'Wrapped Ether',
+  ),
 }
 
-export function isCelo(chainId: number): chainId is UniverseChainId.Celo | UniverseChainId.CeloAlfajores {
-  return chainId === UniverseChainId.CeloAlfajores || chainId === UniverseChainId.Celo
+export function isCelo(chainId: number): chainId is UniverseChainId.Celo {
+  return chainId === UniverseChainId.Celo
 }
 
 // Celo has a precompile for its native asset that is fully-compliant with ERC20 interface
 // so we can treat it as an ERC20 token. (i.e. $CELO pools are created with its ERC20 precompile)
 function getCeloNativeCurrency(chainId: number): Token {
   switch (chainId) {
-    case UniverseChainId.CeloAlfajores:
-      return CELO_CELO_ALFAJORES
     case UniverseChainId.Celo:
       return CELO_CELO
     default:
@@ -567,8 +489,8 @@ function getCeloNativeCurrency(chainId: number): Token {
   }
 }
 
-export function isPolygon(chainId: number): chainId is UniverseChainId.Polygon | UniverseChainId.PolygonMumbai {
-  return chainId === UniverseChainId.PolygonMumbai || chainId === UniverseChainId.Polygon
+export function isPolygon(chainId: number): chainId is UniverseChainId.Polygon {
+  return chainId === UniverseChainId.Polygon
 }
 
 // Polygon also has a precompile, but its precompile is not fully erc20-compatible.

@@ -9,6 +9,7 @@ import { Warning, WarningAction, WarningLabel, WarningSeverity } from 'uniswap/s
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useAccountMeta } from 'uniswap/src/contexts/UniswapContext'
 import { FetchError, isRateLimitFetchError } from 'uniswap/src/data/apiClients/FetchError'
+import { Err404 } from 'uniswap/src/data/tradingApi/__generated__'
 import { selectHasDismissedBridgingWarning } from 'uniswap/src/features/behaviorHistory/selectors'
 import { useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import { LocalizationContextState, useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
@@ -88,6 +89,14 @@ export function getSwapWarnings(
         action: WarningAction.DisableReview,
         title: t('swap.warning.rateLimit.title'),
         message: t('swap.warning.rateLimit.message'),
+      })
+    } else if (error instanceof FetchError && error?.data?.errorCode === Err404.errorCode.QUOTE_AMOUNT_TOO_LOW_ERROR) {
+      warnings.push({
+        type: WarningLabel.EnterLargerAmount,
+        severity: WarningSeverity.Low,
+        action: WarningAction.DisableReview,
+        title: t('swap.warning.enterLargerAmount.title'),
+        message: '',
       })
     } else {
       // catch all other router errors in a generic swap router error message

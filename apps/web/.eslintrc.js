@@ -164,7 +164,7 @@ module.exports = {
           },
           {
             selector: `ImportDeclaration[source.value='@uniswap/sdk-core'] > ImportSpecifier[imported.name='ChainId']`,
-            message: "Don't use ChainId from @uniswap/sdk-core. Use the InterfaceChainId from universe/uniswap.",
+            message: "Don't use ChainId from @uniswap/sdk-core. Use the UniverseChainId from universe/uniswap.",
           },
           // TODO(WEB-4251) - remove useWeb3React rules once web3 react is removed
           {

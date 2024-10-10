@@ -22,7 +22,7 @@ export function useSyncFiatAndTokenAmountUpdater({ skip = false }: { skip?: bool
 
   const exactCurrency = derivedSwapInfo.currencies[exactCurrencyField]
 
-  const usdPriceOfCurrency = useUSDCPrice(skip ? undefined : exactCurrency?.currency ?? undefined)
+  const { price: usdPriceOfCurrency } = useUSDCPrice(skip ? undefined : exactCurrency?.currency ?? undefined)
   const { convertFiatAmount } = useLocalizationContext()
   const conversionRate = convertFiatAmount(1).amount
   const chainId = currencyIdToChain(exactCurrency?.currencyId ?? '')

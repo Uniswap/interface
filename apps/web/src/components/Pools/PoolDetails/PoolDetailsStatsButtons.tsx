@@ -8,7 +8,7 @@ import { ReverseArrow } from 'components/Icons/ReverseArrow'
 import { SwapWrapperOuter } from 'components/swap/styled'
 import { LoadingBubble } from 'components/Tokens/loading'
 import TokenSafetyMessage from 'components/TokenSafety/TokenSafetyMessage'
-import { chainIdToBackendChain, SupportedInterfaceChainId } from 'constants/chains'
+import { chainIdToBackendChain } from 'constants/chains'
 import { getPriorityWarning, StrongWarning, useTokenWarning } from 'constants/deprecatedTokenSafety'
 import { useTokenBalancesQuery } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { gqlToCurrency } from 'graphql/data/util'
@@ -26,6 +26,7 @@ import { opacify } from 'theme/utils'
 import { Z_INDEX } from 'theme/zIndex'
 import { Token } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyId } from 'utils/currencyId'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -133,7 +134,7 @@ const MobileBalance = styled(Column)`
 `
 
 interface PoolDetailsStatsButtonsProps {
-  chainId?: SupportedInterfaceChainId
+  chainId?: UniverseChainId
   token0?: Token
   token1?: Token
   feeTier?: number
@@ -154,10 +155,7 @@ function findMatchingPosition(positions: PositionInfo[], token0?: Token, token1?
 
 export function PoolDetailsStatsButtons({ chainId, token0, token1, feeTier, loading }: PoolDetailsStatsButtonsProps) {
   const account = useAccount()
-  const { positions: userOwnedPositions } = useMultiChainPositions(
-    account.address ?? '',
-    chainId ? [chainId] : undefined,
-  )
+  const { positions: userOwnedPositions } = useMultiChainPositions(account.address ?? '')
   const position = userOwnedPositions && findMatchingPosition(userOwnedPositions, token0, token1, feeTier)
   const tokenId = position?.details.tokenId
   const switchChain = useSwitchChain()

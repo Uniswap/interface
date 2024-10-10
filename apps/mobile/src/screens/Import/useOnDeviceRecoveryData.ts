@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from 'react'
 import { useMultiplePortfolioBalancesQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 // eslint-disable-next-line no-restricted-imports
 import { usePortfolioValueModifiers } from 'uniswap/src/features/dataApi/balances'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { logger } from 'utilities/src/logger/logger'
@@ -85,11 +86,14 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
     [addressesWithIndex],
   )
 
+  const { gqlChains } = useEnabledChains()
+
   const valueModifiers = usePortfolioValueModifiers(addresses)
   const { data: balancesData, loading: balancesLoading } = useMultiplePortfolioBalancesQuery({
     variables: {
       ownerAddresses: addresses,
       valueModifiers,
+      chains: gqlChains,
     },
     skip: !addresses.length,
   })
@@ -98,7 +102,7 @@ export function useOnDeviceRecoveryData(mnemonicId: string | undefined): {
 
   const { loading: ensLoading, ensMap } = useAddressesEnsNames(addresses)
 
-  // Need to fetch unitags for each deriviation index and cannot use a fetch due (see comment at top of func)
+  // Need to fetch unitags for each derivation index and cannot use a fetch due (see comment at top of func)
   const unitagStates: Array<ReturnType<typeof useUnitagByAddress>> = Array(NUMBER_OF_WALLETS_TO_GENERATE)
 
   unitagStates[0] = useUnitagByAddress(addresses[0])

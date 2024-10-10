@@ -1,5 +1,6 @@
 import { ImageLibraryOptions, launchImageLibrary } from 'react-native-image-picker'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { NUM_FIRST_NFTS } from 'wallet/src/components/nfts/NftsList'
 import { formatNftItems } from 'wallet/src/features/nfts/utils'
 
@@ -33,8 +34,15 @@ export function useAvatarSelectionHandler({
   setAvatarImageUri: (uri: string) => void
   showModal: () => void
 }): { avatarSelectionHandler: () => Promise<void>; hasNFTs: boolean } {
+  const { gqlChains } = useEnabledChains()
+
   const { data: nftsData } = useNftsTabQuery({
-    variables: { ownerAddress: address, first: NUM_FIRST_NFTS, filter: { filterSpam: false } },
+    variables: {
+      ownerAddress: address,
+      first: NUM_FIRST_NFTS,
+      filter: { filterSpam: false },
+      chains: gqlChains,
+    },
   })
   const nftItems = formatNftItems(nftsData)
 

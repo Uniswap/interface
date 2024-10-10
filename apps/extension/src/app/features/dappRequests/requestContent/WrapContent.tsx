@@ -4,10 +4,8 @@ import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { SendTransactionRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { Flex, Text } from 'ui/src'
-import { useTransactionGasFee, useUSDValue } from 'uniswap/src/features/gas/hooks'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
-import { UniverseChainId } from 'uniswap/src/types/chains'
-import { NumberType } from 'utilities/src/format/types'
+import { useGasFeeFormattedAmounts, useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useActiveAccountAddressWithThrow, useDisplayName } from 'wallet/src/features/wallet/hooks'
 
 export const WrapTransactionDetails = ({
@@ -18,13 +16,13 @@ export const WrapTransactionDetails = ({
   dappUrl: string
 }): JSX.Element => {
   const { t } = useTranslation()
-  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const { defaultChainId } = useEnabledChains()
   const activeAddress = useActiveAccountAddressWithThrow()
   const displayName = useDisplayName(activeAddress)
 
   const sendTransactionRequest = request.dappRequest as SendTransactionRequest
 
-  const chainId = useDappLastChainId(dappUrl) || UniverseChainId.Mainnet
+  const chainId = useDappLastChainId(dappUrl) || defaultChainId
 
   const txRequest = useMemo(
     () => ({ ...sendTransactionRequest.transaction, chainId }),
@@ -33,7 +31,11 @@ export const WrapTransactionDetails = ({
 
   const networkFee = useTransactionGasFee(txRequest)
 
-  const gasFeeUSD = useUSDValue(chainId, networkFee.value)
+  const { gasFeeFormatted } = useGasFeeFormattedAmounts({
+    gasFee: networkFee,
+    chainId,
+    placeholder: undefined,
+  })
 
   return (
     <Flex>
@@ -84,7 +86,7 @@ export const WrapTransactionDetails = ({
             {t('transaction.networkCost.label')}
           </Text>
           <Text color="$neutral2" textAlign="right" variant="body2">
-            {convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)}
+            {gasFeeFormatted}
           </Text>
         </Flex>
       </Flex>

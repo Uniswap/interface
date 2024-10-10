@@ -13,6 +13,7 @@ export const OPTIMISM_CURRENCY = NativeCurrency.onChain(UniverseChainId.Optimism
 export const POLYGON_CURRENCY = NativeCurrency.onChain(UniverseChainId.Polygon)
 export const CELO_CURRENCY = NativeCurrency.onChain(UniverseChainId.Celo)
 export const AVALANCHE_CURRENCY = NativeCurrency.onChain(UniverseChainId.Avalanche)
+export const WORLD_CHAIN_CURRENCY = NativeCurrency.onChain(UniverseChainId.WorldChain)
 export const ZORA_CURRENCY = NativeCurrency.onChain(UniverseChainId.Zora)
 export const ZKSYNC_CURRENCY = NativeCurrency.onChain(UniverseChainId.Zksync)
 

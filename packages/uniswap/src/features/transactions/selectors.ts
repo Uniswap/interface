@@ -6,7 +6,7 @@ import { uniqueAddressesOnly } from 'uniswap/src/features/address/utils'
 import { selectTokensVisibility } from 'uniswap/src/features/favorites/selectors'
 import { CurrencyIdToVisibility } from 'uniswap/src/features/favorites/slice'
 import { TransactionsState } from 'uniswap/src/features/transactions/slice'
-import { isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   isFinalizedTx,
   SendTokenTransactionInfo,
@@ -15,7 +15,7 @@ import {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { UniswapState } from 'uniswap/src/state/uniswapReducer'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { unique } from 'utilities/src/primitives/array'
 import { flattenObjectOfObjects } from 'utilities/src/primitives/objects'
@@ -65,8 +65,8 @@ export const makeSelectAddressTransactions = (): Selector<
         const duplicate = self.find(
           (tx2) =>
             tx2.id !== tx.id &&
-            isClassic(tx) &&
-            isClassic(tx2) &&
+            (isClassic(tx) || isBridge(tx)) &&
+            (isClassic(tx2) || isBridge(tx2)) &&
             tx2.options.request.chainId &&
             tx2.options.request.chainId === tx.options.request.chainId &&
             tx.options.request.nonce &&
@@ -129,7 +129,7 @@ const makeSelectTokenVisibilityFromLocalTxs = (): Selector<UniswapState, Currenc
 
 interface MakeSelectParams {
   address: Address | undefined
-  chainId: WalletChainId | undefined
+  chainId: UniverseChainId | undefined
   txId: string | undefined
 }
 

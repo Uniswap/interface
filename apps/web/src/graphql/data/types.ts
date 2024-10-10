@@ -1,4 +1,4 @@
-import { SupportedInterfaceChainId, isSupportedChainId } from 'constants/chains'
+import { isSupportedChainId } from 'constants/chains'
 import { fiatOnRampToCurrency, gqlToCurrency } from 'graphql/data/util'
 import { COMMON_BASES, buildCurrencyInfo } from 'uniswap/src/constants/routing'
 import { USDC_OPTIMISM } from 'uniswap/src/constants/tokens'
@@ -10,6 +10,7 @@ import {
 import { CurrencyInfo, TokenList } from 'uniswap/src/features/dataApi/types'
 import { getCurrencySafetyInfo } from 'uniswap/src/features/dataApi/utils'
 import { FORSupportedToken } from 'uniswap/src/features/fiatOnRamp/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 import { currencyId } from 'utils/currencyId'
 
@@ -43,7 +44,7 @@ export function meldSupportedCurrencyToCurrencyInfo(forCurrency: FORSupportedTok
     return undefined
   }
 
-  const supportedChainId = Number(forCurrency.chainId) as SupportedInterfaceChainId
+  const supportedChainId = Number(forCurrency.chainId) as UniverseChainId
   const commonBases = COMMON_BASES[supportedChainId]
 
   const currencyInfo = commonBases.find((base) => {

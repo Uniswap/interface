@@ -90,3 +90,7 @@ export function logErrorToDatadog(error: Error, context?: LoggerErrorContext): v
 export function attachUnhandledRejectionHandler(): void {
   throw new NotImplementedError('attachUnhandledRejectionHandler')
 }
+
+export async function setAttributesToDatadog(_attributes: { [key: string]: unknown }): Promise<void> {
+  throw new NotImplementedError('setAttributes')
+}

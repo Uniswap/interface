@@ -20,7 +20,6 @@ export enum TokenOptionSection {
   SearchResults = 'searchResults',
   SuggestedTokens = 'suggestedTokens',
   BridgingTokens = 'bridgingTokens',
-  SearchResultsByNetwork = 'searchResultsByNetwork',
 }
 
 export type TokenSection = {

@@ -22,7 +22,10 @@ export function SwapRateRatio({
   const [showInverseRate, setShowInverseRate] = useState(initialInverse)
 
   const latestPrice = trade?.executionPrice
-  const latestUSDPrice = useUSDCPrice(showInverseRate ? latestPrice?.quoteCurrency : latestPrice?.baseCurrency)
+  const { price: latestUSDPrice } = useUSDCPrice(
+    showInverseRate ? latestPrice?.quoteCurrency : latestPrice?.baseCurrency,
+  )
+
   const latestFiatPriceFormatted = convertFiatAmountFormatted(
     latestUSDPrice?.toSignificant(),
     NumberType.FiatTokenPrice,

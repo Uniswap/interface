@@ -1,4 +1,3 @@
-import { SupportedInterfaceChainId } from 'constants/chains'
 import { OffchainOrderType } from 'state/routing/types'
 import { ExactInputSwapTransactionInfo, ExactOutputSwapTransactionInfo } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
@@ -6,6 +5,7 @@ import {
   AssetActivityPartsFragment,
   SwapOrderDetailsPartsFragment,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { Prettify } from 'viem/chains'
 
 export type OrderActivity = AssetActivityPartsFragment & { details: SwapOrderDetailsPartsFragment }
@@ -28,7 +28,7 @@ interface BaseSignatureFields {
   type?: SignatureType
   id: string
   addedTime: number
-  chainId: SupportedInterfaceChainId
+  chainId: UniverseChainId
   expiry?: number
   offerer: string
 }

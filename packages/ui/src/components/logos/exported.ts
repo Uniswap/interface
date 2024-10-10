@@ -1,3 +1,4 @@
+export * from './AcrossLogoFull'
 export * from './ArbiscanLogoDark'
 export * from './ArbiscanLogoLight'
 export * from './BlockaidLogo'

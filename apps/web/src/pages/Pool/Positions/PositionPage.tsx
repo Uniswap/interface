@@ -6,17 +6,20 @@ import { LiquidityPositionAmountsTile } from 'components/Liquidity/LiquidityPosi
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionPriceRangeTile } from 'components/Liquidity/LiquidityPositionPriceRangeTile'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { parseRestPosition, useV3PositionDerivedInfo } from 'components/Liquidity/utils'
-import { LoadingFullscreen } from 'components/Loader/styled'
+import { parseRestPosition, parseV3FeeTier, useV3PositionDerivedInfo } from 'components/Liquidity/utils'
+import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
+import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
+import { ClaimFeeModal } from 'pages/Pool/Positions/ClaimFeeModal'
+import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
-import { Navigate, useLocation, useParams } from 'react-router-dom'
+import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { ClickableTamaguiStyle } from 'theme/components'
 import { Flex, Main, Switch, Text, styled } from 'ui/src'
-import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
+import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -62,30 +65,31 @@ export default function PositionPage() {
   const { tokenId } = useParams<{ tokenId: string }>()
   const account = useAccount()
   const { pathname } = useLocation()
-  const { data } = useGetPositionsQuery(
+  const { data, isLoading: positionLoading } = useGetPositionQuery(
     account.address
       ? {
-          address: account.address,
-          protocolVersions: [
-            pathname.includes('v3')
-              ? ProtocolVersion.V3
-              : pathname.includes('v4')
-                ? ProtocolVersion.V4
-                : ProtocolVersion.UNSPECIFIED,
-          ],
+          owner: account.address,
+          protocolVersion: pathname.includes('v3')
+            ? ProtocolVersion.V3
+            : pathname.includes('v4')
+              ? ProtocolVersion.V4
+              : ProtocolVersion.UNSPECIFIED,
+          tokenId,
+          chainId: account.chainId,
         }
       : undefined,
   )
-  // TODO(WEB-4920): select the right position from the list, or use an endpoint that returns one position
-  const position = data?.positions[0]
+  const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
   const metadata = usePositionTokenURI(tokenId ? BigNumber.from(tokenId) : undefined)
 
   const dispatch = useAppDispatch()
   const [collectAsWeth, setCollectAsWeth] = useState(false)
+  const [claimFeeModalOpen, setClaimFeeModalOpen] = useState(false)
 
   const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
   const { formatCurrencyAmount } = useFormatter()
+  const navigate = useNavigate()
 
   const { currency0Amount, currency1Amount, status } = positionInfo ?? {}
   const {
@@ -93,20 +97,40 @@ export default function PositionPage() {
     feeValue1,
     fiatFeeValue0,
     fiatFeeValue1,
-    currentPrice,
+    token0CurrentPrice,
+    token1CurrentPrice,
     fiatValue0,
     fiatValue1,
-    priceLower,
-    priceUpper,
-  } = useV3PositionDerivedInfo(positionInfo, tokenId, collectAsWeth)
+    priceOrdering,
+  } = useV3PositionDerivedInfo(positionInfo)
+  const isTickAtLimit = useIsTickAtLimit(
+    parseV3FeeTier(positionInfo?.feeTier?.toString()),
+    Number(positionInfo?.tickLower),
+    Number(positionInfo?.tickUpper),
+  )
 
   if (!isLoading && !v4Enabled) {
     return <Navigate to="/pools" replace />
   }
 
-  if (!position || !positionInfo || !currency0Amount || !currency1Amount) {
-    // TODO(WEB-4920): handle loading/error states
-    return null
+  if (positionLoading || !position || !positionInfo || !currency0Amount || !currency1Amount) {
+    return (
+      <BodyWrapper>
+        <LoadingRows>
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+        </LoadingRows>
+      </BodyWrapper>
+    )
   }
 
   return (
@@ -120,13 +144,23 @@ export default function PositionPage() {
           </BreadcrumbNavContainer>
         </Flex>
         <Flex row justifyContent="space-between" alignItems="center">
-          <LiquidityPositionInfo position={position} />
+          <LiquidityPositionInfo positionInfo={positionInfo} />
           {status !== PositionStatus.CLOSED && (
             <Flex row gap="$gap12" alignItems="center">
               <HeaderButton
                 emphasis="secondary"
                 onPress={() => {
-                  dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: position }))
+                  navigate(`/migrate/v3/${tokenId}`)
+                }}
+              >
+                <Text variant="buttonLabel2" color="$neutral1">
+                  <Trans i18nKey="pool.migrateToV4" />
+                </Text>
+              </HeaderButton>
+              <HeaderButton
+                emphasis="secondary"
+                onPress={() => {
+                  dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
                 }}
               >
                 <Text variant="buttonLabel2" color="$neutral1">
@@ -136,7 +170,7 @@ export default function PositionPage() {
               <HeaderButton
                 emphasis="primary"
                 onPress={() => {
-                  dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: position }))
+                  dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
                 }}
               >
                 <Text variant="buttonLabel2" color="$surface1">
@@ -185,7 +219,7 @@ export default function PositionPage() {
               <HeaderButton
                 emphasis="primary"
                 onPress={() => {
-                  // TODO(WEB-4920): open claim fees modal
+                  setClaimFeeModalOpen(true)
                 }}
               >
                 <Text variant="buttonLabel4" color="$surface1">
@@ -224,14 +258,24 @@ export default function PositionPage() {
           </Flex>
         </Flex>
       </Flex>
-      {priceLower && priceUpper && currentPrice && (
+      {priceOrdering && token0CurrentPrice && token1CurrentPrice && (
         <LiquidityPositionPriceRangeTile
           status={status}
-          minPrice={priceLower}
-          maxPrice={priceUpper}
-          currentPrice={currentPrice}
+          priceOrdering={priceOrdering}
+          isTickAtLimit={isTickAtLimit}
+          token0CurrentPrice={token0CurrentPrice}
+          token1CurrentPrice={token1CurrentPrice}
         />
       )}
+      <ClaimFeeModal
+        positionInfo={positionInfo}
+        isOpen={claimFeeModalOpen}
+        onClose={() => setClaimFeeModalOpen(false)}
+        token0Fees={feeValue0}
+        token1Fees={feeValue1}
+        token0FeesUsd={fiatFeeValue0}
+        token1FeesUsd={fiatFeeValue1}
+      />
     </BodyWrapper>
   )
 }

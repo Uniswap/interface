@@ -12,7 +12,6 @@ import {
   TimestampCell,
   TokenLinkCell,
 } from 'components/Table/styled'
-import { SupportedInterfaceChainId } from 'constants/chains'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { TokenTransactionType, useTokenTransactions } from 'graphql/data/useTokenTransactions'
 import { OrderDirection, unwrapToken } from 'graphql/data/util'
@@ -22,6 +21,7 @@ import { EllipsisTamaguiStyle } from 'theme/components'
 import { Flex, Text, styled } from 'ui/src'
 import { Token as GQLToken } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { shortenAddress } from 'utilities/src/addresses'
 import { useFormatter } from 'utils/formatNumbers'
@@ -55,13 +55,7 @@ interface SwapLeg {
   token: GQLToken
 }
 
-export function TransactionsTable({
-  chainId,
-  referenceToken,
-}: {
-  chainId: SupportedInterfaceChainId
-  referenceToken: Token
-}) {
+export function TransactionsTable({ chainId, referenceToken }: { chainId: UniverseChainId; referenceToken: Token }) {
   const activeLocalCurrency = useActiveLocalCurrency()
   const { formatNumber, formatFiatPrice } = useFormatter()
   const [filterModalIsOpen, toggleFilterModal] = useReducer((s) => !s, false)

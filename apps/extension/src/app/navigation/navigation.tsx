@@ -14,6 +14,7 @@ import { useRouterState } from 'src/app/navigation/state'
 import { focusOrCreateOnboardingTab } from 'src/app/navigation/utils'
 import { isOnboardedSelector } from 'src/app/utils/isOnboardedSelector'
 import { AnimatePresence, Flex, SpinningLoader, styled } from 'ui/src'
+import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { useIsChromeWindowFocusedWithTimeout } from 'uniswap/src/extension/useIsChromeWindowFocused'
 import { useAsyncData, usePrevious } from 'utilities/src/react/hooks'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -110,6 +111,7 @@ export function WebNavigation(): JSX.Element {
           ]}
         >
           <Flex fill grow overflow="visible">
+            <TestnetModeBanner />
             {isLoggedIn === null ? (
               <Loading />
             ) : isLoggedIn === true ? (

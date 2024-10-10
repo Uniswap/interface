@@ -19,7 +19,7 @@ import {
   TransactionTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { finalizedTransactionAction } from 'uniswap/src/test/fixtures'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const finalizedTxAction = finalizedTransactionAction()
 
@@ -144,7 +144,7 @@ describe('transaction reducer', () => {
 
     it('updates a transaction that was previoulsy added', () => {
       const id = '19'
-      const chainId = UniverseChainId.Polygon as WalletChainId
+      const chainId = UniverseChainId.Polygon as UniverseChainId
       const transaction = {
         routing: Routing.CLASSIC,
         chainId,
@@ -206,7 +206,7 @@ describe('transaction reducer', () => {
         store.dispatch(
           cancelTransaction({
             address: '0xaddress',
-            chainId: UniverseChainId.Goerli,
+            chainId: UniverseChainId.Optimism,
             cancelRequest: {},
             id,
           }),
@@ -250,7 +250,7 @@ describe('transaction reducer', () => {
         store.dispatch(
           replaceTransaction({
             address: '0xaddress',
-            chainId: UniverseChainId.Goerli,
+            chainId: UniverseChainId.Optimism,
             id,
             newTxParams,
           }),
@@ -263,7 +263,7 @@ describe('transaction reducer', () => {
 
     it('replaces a transaction that was previously added', () => {
       const id = '101'
-      const chainId = UniverseChainId.Optimism as WalletChainId
+      const chainId = UniverseChainId.Optimism as UniverseChainId
       const transaction = {
         routing: Routing.CLASSIC,
         chainId,
@@ -289,7 +289,7 @@ describe('transaction reducer', () => {
       const address1 = '0x123'
       const address2 = '0xabc'
       const chainId1 = UniverseChainId.Mainnet
-      const chainId2 = UniverseChainId.Goerli
+      const chainId2 = UniverseChainId.Optimism
       store.dispatch(
         addTransaction({
           routing: Routing.CLASSIC,

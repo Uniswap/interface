@@ -7,6 +7,7 @@ import SwapHeader, { PathnameToTab } from 'components/swap/SwapHeader'
 import { PageWrapper, SwapWrapper } from 'components/swap/styled'
 import { PrefetchBalancesWrapper } from 'graphql/data/apollo/AdaptiveTokenBalancesProvider'
 import { useScreenSize } from 'hooks/screenSize/useScreenSize'
+import { useIsExplorePage } from 'hooks/useIsExplorePage'
 import { BuyForm } from 'pages/Swap/Buy/BuyForm'
 import { LimitFormWrapper } from 'pages/Swap/Limit/LimitForm'
 import { SendForm } from 'pages/Swap/Send/SendForm'
@@ -21,13 +22,15 @@ import { SwapAndLimitContextProvider, SwapContextProvider } from 'state/swap/Swa
 import { useInitialCurrencyState } from 'state/swap/hooks'
 import { CurrencyState, SwapAndLimitContext } from 'state/swap/types'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
-import { Flex, SegmentedControl, Text } from 'ui/src'
+import { Flex, SegmentedControl, Text, Tooltip, styled } from 'ui/src'
 import { AppTFunction } from 'ui/src/i18n/types'
+import { zIndices } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -43,7 +46,7 @@ import { useSwapPrefilledState } from 'uniswap/src/features/transactions/swap/ho
 import { Deadline } from 'uniswap/src/features/transactions/swap/settings/configs/Deadline'
 import { currencyToAsset } from 'uniswap/src/features/transactions/swap/utils/asset'
 import { useTranslation } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
 import { currencyId } from 'uniswap/src/utils/currencyId'
@@ -124,7 +127,7 @@ export function Swap({
   swapRedirectCallback,
 }: {
   className?: string
-  chainId?: InterfaceChainId
+  chainId?: UniverseChainId
   onCurrencyChange?: (selected: CurrencyState) => void
   disableTokenInputs?: boolean
   initialInputCurrency?: Currency
@@ -141,9 +144,12 @@ export function Swap({
 }) {
   const isDark = useIsDarkMode()
   const screenSize = useScreenSize()
+  const isExplore = useIsExplorePage()
   const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   const universalSwapFlow = useFeatureFlag(FeatureFlags.UniversalSwap)
+  const { isTestnetModeEnabled } = useEnabledChains()
+  const isSharedSwapDisabled = isTestnetModeEnabled && isExplore
 
   const input = currencyToAsset(initialInputCurrency)
   const output = currencyToAsset(initialOutputCurrency)
@@ -158,7 +164,7 @@ export function Swap({
     selectingCurrencyField: isSwapTokenSelectorOpen ? CurrencyField.OUTPUT : undefined,
   })
 
-  if (universalSwapFlow) {
+  if (universalSwapFlow || isTestnetModeEnabled) {
     return (
       <SwapAndLimitContextProvider
         initialChainId={chainId}
@@ -168,7 +174,8 @@ export function Swap({
       >
         <PrefetchBalancesWrapper>
           <SwapFormContextProvider prefilledState={prefilledState} hideSettings={hideHeader} hideFooter={hideFooter}>
-            <Flex gap="$spacing16">
+            <Flex position="relative" gap="$spacing16" opacity={isSharedSwapDisabled ? 0.6 : 1}>
+              {isSharedSwapDisabled && <DisabledSwapOverlay />}
               <UniversalSwapFlow
                 hideHeader={hideHeader}
                 hideFooter={hideFooter}
@@ -387,5 +394,30 @@ function UniversalSwapFlow({
         {currentTab === SwapTab.Buy && forAggregatorEnabled && <BuyForm disabled={disableTokenInputs} />}
       </Flex>
     </>
+  )
+}
+
+const DisabledOverlay = styled(Flex, {
+  position: 'absolute',
+  width: '100%',
+  height: '100%',
+  zIndex: zIndices.overlay,
+})
+
+const DisabledSwapOverlay = () => {
+  const { t } = useTranslation()
+
+  return (
+    <DisabledOverlay cursor="not-allowed">
+      <Tooltip placement="left-start">
+        <Tooltip.Content>
+          <Tooltip.Arrow />
+          <Text variant="body4">{t('testnet.unsupported')}</Text>
+        </Tooltip.Content>
+        <Tooltip.Trigger position="relative" width="100%" height="100%">
+          <DisabledOverlay />
+        </Tooltip.Trigger>
+      </Tooltip>
+    </DisabledOverlay>
   )
 }

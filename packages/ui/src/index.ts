@@ -38,6 +38,7 @@ export type {
   ColorTokens,
   GetProps,
   GetRef,
+  ImageProps,
   InputProps,
   PopperProps,
   SpaceTokens,
@@ -74,7 +75,6 @@ export { Switch, type SwitchProps } from './components/switch/Switch'
 export * from './components/text'
 export { Tooltip } from './components/tooltip/Tooltip'
 export * from './components/touchable'
-export { useDeviceInsets } from './hooks/useDeviceInsets'
 export { useIsDarkMode } from './hooks/useIsDarkMode'
 export { useIsShortMobileDevice } from './hooks/useIsShortMobileDevice'
 export { useSporeColors, type DynamicColor } from './hooks/useSporeColors'

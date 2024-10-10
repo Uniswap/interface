@@ -40,6 +40,7 @@ export enum TransactionType {
   CANCEL,
   LIMIT,
   INCREASE_LIQUIDITY,
+  DECREASE_LIQUIDITY,
   // Always add to the bottom of this enum
 }
 
@@ -140,6 +141,14 @@ export interface IncreaseLiquidityTransactionInfo {
   token1CurrencyAmountRaw: string
 }
 
+export interface DecreaseLiquidityTransactionInfo {
+  type: TransactionType.DECREASE_LIQUIDITY
+  token0CurrencyId: string
+  token1CurrencyId: string
+  token0CurrencyAmountRaw: string
+  token1CurrencyAmountRaw: string
+}
+
 export interface AddLiquidityV3PoolTransactionInfo {
   type: TransactionType.ADD_LIQUIDITY_V3_POOL
   createPool: boolean
@@ -213,6 +222,7 @@ export type TransactionInfo =
   | SubmitProposalTransactionInfo
   | SendTransactionInfo
   | IncreaseLiquidityTransactionInfo
+  | DecreaseLiquidityTransactionInfo
 
 interface BaseTransactionDetails {
   status: TransactionStatus

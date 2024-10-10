@@ -1,15 +1,16 @@
 import React from 'react'
 import { Image, StyleSheet } from 'react-native'
-import { Flex, useDeviceInsets, useIsDarkMode } from 'ui/src'
+import { Flex, useIsDarkMode } from 'ui/src'
 import { UNISWAP_LOGO_LARGE } from 'ui/src/assets'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { isAndroid } from 'utilities/src/platform'
 
 export const SPLASH_SCREEN = { uri: 'SplashScreen' }
 
 export function SplashScreen(): JSX.Element {
   const dimensions = useDeviceDimensions()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const isDarkMode = useIsDarkMode()
 
   return (

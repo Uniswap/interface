@@ -7,13 +7,11 @@ import {
   BACKEND_SUPPORTED_CHAINS,
   CHAIN_NAME_TO_CHAIN_ID,
   InterfaceGqlChain,
-  SupportedInterfaceChainId,
   UX_SUPPORTED_GQL_CHAINS,
   chainIdToBackendChain,
   getChainFromChainUrlParam,
   isSupportedChainId,
 } from 'constants/chains'
-
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { DefaultTheme } from 'lib/styled-components'
 import ms from 'ms'
@@ -87,12 +85,12 @@ export function isPricePoint(p: PricePoint | undefined): p is PricePoint {
   return p !== undefined
 }
 
-export function isGqlSupportedChain(chainId?: SupportedInterfaceChainId) {
+export function isGqlSupportedChain(chainId?: UniverseChainId) {
   return !!chainId && GQL_MAINNET_CHAINS.includes(UNIVERSE_CHAIN_INFO[chainId].backendChain.chain)
 }
 
 export function toContractInput(currency: Currency): ContractInput {
-  const chain = chainIdToBackendChain({ chainId: currency.chainId as SupportedInterfaceChainId })
+  const chain = chainIdToBackendChain({ chainId: currency.chainId as UniverseChainId })
   return { chain, address: currency.isToken ? currency.address : getNativeTokenDBAddress(chain) }
 }
 
@@ -121,7 +119,7 @@ export function fiatOnRampToCurrency(forCurrency: FORSupportedToken): Currency |
   if (!isSupportedChainId(Number(forCurrency.chainId))) {
     return undefined
   }
-  const supportedChainId = Number(forCurrency.chainId) as SupportedInterfaceChainId
+  const supportedChainId = Number(forCurrency.chainId) as UniverseChainId
 
   if (!forCurrency.address) {
     return nativeOnChain(supportedChainId)
@@ -152,9 +150,9 @@ export function isSupportedGQLChain(chain: Chain): chain is InterfaceGqlChain {
   return chains.includes(chain)
 }
 
-export function supportedChainIdFromGQLChain(chain: InterfaceGqlChain): SupportedInterfaceChainId
-export function supportedChainIdFromGQLChain(chain: Chain): SupportedInterfaceChainId | undefined
-export function supportedChainIdFromGQLChain(chain: Chain): SupportedInterfaceChainId | undefined {
+export function supportedChainIdFromGQLChain(chain: InterfaceGqlChain): UniverseChainId
+export function supportedChainIdFromGQLChain(chain: Chain): UniverseChainId | undefined
+export function supportedChainIdFromGQLChain(chain: Chain): UniverseChainId | undefined {
   return isSupportedGQLChain(chain) ? CHAIN_NAME_TO_CHAIN_ID[chain] : undefined
 }
 

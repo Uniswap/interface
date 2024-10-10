@@ -113,11 +113,11 @@ createRoot(container).render(
             <LanguageProvider>
               <Web3Provider>
                 <StatsigProvider>
-                  <GraphqlProviders>
-                    <LocalizationContextProvider>
-                      <BlockNumberProvider>
-                        <UnitagUpdaterContextProvider>
-                          <WebUniswapProvider>
+                  <WebUniswapProvider>
+                    <GraphqlProviders>
+                      <LocalizationContextProvider>
+                        <BlockNumberProvider>
+                          <UnitagUpdaterContextProvider>
                             <Updaters />
                             <ThemeProvider>
                               <TamaguiProvider>
@@ -127,11 +127,11 @@ createRoot(container).render(
                                 </PortalProvider>
                               </TamaguiProvider>
                             </ThemeProvider>
-                          </WebUniswapProvider>
-                        </UnitagUpdaterContextProvider>
-                      </BlockNumberProvider>
-                    </LocalizationContextProvider>
-                  </GraphqlProviders>
+                          </UnitagUpdaterContextProvider>
+                        </BlockNumberProvider>
+                      </LocalizationContextProvider>
+                    </GraphqlProviders>
+                  </WebUniswapProvider>
                 </StatsigProvider>
               </Web3Provider>
             </LanguageProvider>

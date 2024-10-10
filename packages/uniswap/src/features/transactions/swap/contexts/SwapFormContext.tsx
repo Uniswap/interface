@@ -3,6 +3,7 @@ import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useSwapAnalytics } from 'uniswap/src/features/transactions/swap/analytics'
 import { useDerivedSwapInfo } from 'uniswap/src/features/transactions/swap/hooks/useDerivedSwapInfo'
 import { DEFAULT_CUSTOM_DEADLINE } from 'uniswap/src/features/transactions/swap/settings/useDeadlineSettings'
@@ -58,19 +59,19 @@ function getDefaultInputCurrency(chainId: UniverseChainId): TradeableAsset {
   }
 }
 
-const DEFAULT_STATE: Readonly<Omit<SwapFormState, 'account'>> = {
+export const getDefaultState = (defaultChainId: UniverseChainId): Readonly<Omit<SwapFormState, 'account'>> => ({
   exactAmountFiat: undefined,
   exactAmountToken: '',
   exactCurrencyField: CurrencyField.INPUT,
   focusOnCurrencyField: CurrencyField.INPUT,
   filteredChainIds: {},
-  input: getDefaultInputCurrency(UniverseChainId.Mainnet),
+  input: getDefaultInputCurrency(defaultChainId),
   output: undefined,
   isFiatMode: false,
   isSubmitting: false,
   selectedProtocols: DEFAULT_PROTOCOL_OPTIONS,
   customDeadline: DEFAULT_CUSTOM_DEADLINE,
-}
+})
 
 export const SwapFormContext = createContext<SwapFormContextState | undefined>(undefined)
 
@@ -88,7 +89,9 @@ export function SwapFormContextProvider({
   const amountUpdatedTimeRef = useRef<number>(0)
   const exactAmountFiatRef = useRef<string>('')
   const exactAmountTokenRef = useRef<string>('')
-  const [swapForm, setSwapForm] = useState<SwapFormState>(prefilledState ?? DEFAULT_STATE)
+  const { defaultChainId } = useEnabledChains()
+  const defaultState = useMemo(() => getDefaultState(defaultChainId), [defaultChainId])
+  const [swapForm, setSwapForm] = useState<SwapFormState>(prefilledState ?? defaultState)
   const datadogEnabled = useFeatureFlag(FeatureFlags.Datadog)
 
   // prefilled state may load in -- i.e. `outputCurrency` URL param pulling from gql
@@ -102,9 +105,9 @@ export function SwapFormContextProvider({
       previousInputCurrencyId !== (prefilledState?.input && currencyId(prefilledState.input)) ||
       previousOutputCurrencyId !== (prefilledState?.output && currencyId(prefilledState.output))
     ) {
-      setSwapForm(prefilledState ?? DEFAULT_STATE)
+      setSwapForm(prefilledState ?? defaultState)
     }
-  }, [prefilledState, previousInitialInputCurrency, previousInitialOutputCurrency])
+  }, [prefilledState, previousInitialInputCurrency, previousInitialOutputCurrency, defaultState])
 
   // Enable launching the output token selector through a change to the prefilled state
   useEffect(() => {

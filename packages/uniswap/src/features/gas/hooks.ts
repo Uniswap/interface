@@ -21,11 +21,12 @@ import { DynamicConfigs, GasStrategies, GasStrategyType } from 'uniswap/src/feat
 import { Statsig, useConfig } from 'uniswap/src/features/gating/sdk/statsig'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
 import { usePollingIntervalByChain } from 'uniswap/src/features/transactions/swap/hooks/usePollingIntervalByChain'
-import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { useUSDCValueWithStatus } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { UniverseChainId } from 'uniswap/src/types/chains'
@@ -113,6 +114,7 @@ export function useTransactionGasFee(
   const pollingIntervalForChain = usePollingIntervalByChain(tx?.chainId)
   const activeGasStrategy = useActiveGasStrategy(tx?.chainId, 'general')
   const shadowGasStrategies = useShadowGasStrategies(tx?.chainId, 'general')
+  const { defaultChainId } = useEnabledChains()
 
   const txWithGasStrategies = useMemo(
     () => ({ ...tx, gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])] }),
@@ -133,7 +135,7 @@ export function useTransactionGasFee(
     error: null,
   })
   const account = useAccountMeta()
-  const provider = useProvider(tx?.chainId ?? UniverseChainId.Mainnet)
+  const provider = useProvider(tx?.chainId ?? defaultChainId)
   useEffect(() => {
     async function calculateClientsideGasEstimate(): Promise<void> {
       if (skip || !tx) {
@@ -201,14 +203,31 @@ export function useTransactionGasFee(
   }, [clientsideGasEstimate, data, error, isLoading, activeGasStrategy])
 }
 
-export function useUSDValue(chainId?: UniverseChainId, ethValueInWei?: string): string | undefined {
+export function useUSDValueOfGasFee(
+  chainId?: UniverseChainId,
+  feeValueInWei?: string,
+): { isLoading: boolean; value: string | undefined } {
   const currencyAmount = getCurrencyAmount({
-    value: ethValueInWei,
+    value: feeValueInWei,
     valueType: ValueType.Raw,
     currency: chainId ? NativeCurrency.onChain(chainId) : undefined,
   })
+  const { value, isLoading } = useUSDCValueWithStatus(currencyAmount)
+  return { isLoading, value: value?.toExact() }
+}
 
-  return useUSDCValue(currencyAmount)?.toExact()
+// Same as useUSDValueOfGasFee, but returns a CurrencyAmount<Currency> instead of a string
+export function useUSDCurrencyAmountOfGasFee(
+  chainId?: UniverseChainId,
+  feeValueInWei?: string,
+): CurrencyAmount<Currency> | null {
+  const currencyAmount = getCurrencyAmount({
+    value: feeValueInWei,
+    valueType: ValueType.Raw,
+    currency: chainId ? NativeCurrency.onChain(chainId) : undefined,
+  })
+  const { value } = useUSDCValueWithStatus(currencyAmount)
+  return value
 }
 
 export function useFormattedUniswapXGasFeeInfo(
@@ -217,8 +236,8 @@ export function useFormattedUniswapXGasFeeInfo(
 ): FormattedUniswapXGasFeeInfo | undefined {
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
-  const approvalCostUsd = useUSDValue(chainId, uniswapXGasBreakdown?.approvalCost)
-  const wrapCostUsd = useUSDValue(chainId, uniswapXGasBreakdown?.wrapCost)
+  const { value: approvalCostUsd } = useUSDValueOfGasFee(chainId, uniswapXGasBreakdown?.approvalCost)
+  const { value: wrapCostUsd } = useUSDValueOfGasFee(chainId, uniswapXGasBreakdown?.wrapCost)
 
   return useMemo(() => {
     if (!uniswapXGasBreakdown) {
@@ -322,4 +341,77 @@ function extractGasFeeParams(estimate: GasEstimate): TransactionLegacyFeeParams 
       gasLimit: estimate.gasLimit,
     }
   }
+}
+
+type GasFeeFormattedAmounts<T extends string | undefined> = T extends string
+  ? { gasFeeUSD: string | undefined; gasFeeFormatted: string }
+  : { gasFeeUSD: string | undefined; gasFeeFormatted: string | null }
+
+/**
+ * Returns formatted fiat amounts based on a gas fee. Will format a USD price if a quote
+ * is available, otherwise will return a formatted native currency amount.
+ *
+ * If no placeholder is defined, the response can be null. If a placeholder is defined,
+ * the gas fee amount will always be a string.
+ */
+export function useGasFeeFormattedAmounts<T extends string | undefined>({
+  gasFee,
+  chainId,
+  placeholder,
+}: {
+  gasFee: GasFeeResult | undefined
+  chainId: UniverseChainId
+  placeholder: T
+}): GasFeeFormattedAmounts<T> {
+  const { convertFiatAmountFormatted, formatNumberOrString } = useLocalizationContext()
+  const { value: gasFeeUSD, isLoading: gasFeeUSDIsLoading } = useUSDValueOfGasFee(chainId, gasFee?.value)
+
+  // In testnet mode, use native currency values as USD pricing may be unreliable
+  const { isTestnetModeEnabled } = useEnabledChains()
+
+  const nativeCurrency = NativeCurrency.onChain(chainId)
+  const nativeCurrencyAmount = getCurrencyAmount({
+    currency: nativeCurrency,
+    value: gasFee?.value,
+    valueType: ValueType.Raw,
+  })
+
+  const fiatAmountFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
+
+  const nativeAmountFormatted = formatNumberOrString({
+    value: nativeCurrencyAmount?.toExact(),
+    type: NumberType.TokenNonTx,
+  })
+
+  const emptyState = placeholder ?? null
+
+  const gasFeeFormatted = useMemo(() => {
+    // Gas fee not available
+    if (!gasFee?.value) {
+      return emptyState
+    }
+
+    // Gas fee available, USD not available - return native currency amount (always do this in testnet mode)
+    if (!gasFeeUSD || isTestnetModeEnabled) {
+      return gasFee.isLoading || gasFeeUSDIsLoading ? emptyState : `${nativeAmountFormatted} ${nativeCurrency.symbol}`
+    }
+
+    // Gas fee and USD both available
+    return fiatAmountFormatted
+  }, [
+    emptyState,
+    fiatAmountFormatted,
+    gasFee?.isLoading,
+    gasFee?.value,
+    gasFeeUSD,
+    gasFeeUSDIsLoading,
+    isTestnetModeEnabled,
+    nativeAmountFormatted,
+    nativeCurrency.symbol,
+  ])
+
+  return {
+    gasFeeUSD,
+    gasFeeFormatted,
+  } as GasFeeFormattedAmounts<T>
 }

@@ -8,13 +8,13 @@ import ms from 'ms'
 import { useCallback } from 'react'
 import { PositionDetails } from 'types/position'
 import { SerializedToken } from 'uniswap/src/features/tokens/slice/types'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { deserializeToken, serializeToken } from 'uniswap/src/utils/currency'
 import { buildCurrencyKey, currencyKey } from 'utils/currencyKey'
 
 export type PositionInfo = {
   owner: string
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
   position: Position
   pool: Pool
   details: PositionDetails
@@ -57,7 +57,7 @@ export function useCachedPositions(account: string): UseCachedPositionsReturnTyp
   return [cachedPositions[account], setPositionsAndStaleTimeout]
 }
 
-const poolAddressKey = (details: PositionDetails, chainId: InterfaceChainId) =>
+const poolAddressKey = (details: PositionDetails, chainId: UniverseChainId) =>
   `${chainId}-${details.token0}-${details.token1}-${details.fee}`
 
 type PoolAddressMap = { [key: string]: string | undefined }
@@ -69,11 +69,11 @@ const poolAddressCacheAtom = atomWithStorage<PoolAddressMap>('poolCache', {})
 export function usePoolAddressCache() {
   const [cache, updateCache] = useAtom(poolAddressCacheAtom)
   const get = useCallback(
-    (details: PositionDetails, chainId: InterfaceChainId) => cache[poolAddressKey(details, chainId)],
+    (details: PositionDetails, chainId: UniverseChainId) => cache[poolAddressKey(details, chainId)],
     [cache],
   )
   const set = useCallback(
-    (details: PositionDetails, chainId: InterfaceChainId, address: string) =>
+    (details: PositionDetails, chainId: UniverseChainId, address: string) =>
       updateCache((c) => ({ ...c, [poolAddressKey(details, chainId)]: address })),
     [updateCache],
   )
@@ -102,8 +102,8 @@ function useTokenCache() {
   return { get, set }
 }
 
-type TokenGetterFn = (addresses: string[], chainId: InterfaceChainId) => Promise<{ [key: string]: Token | undefined }>
-export function useGetCachedTokens(chains: InterfaceChainId[]): TokenGetterFn {
+type TokenGetterFn = (addresses: string[], chainId: UniverseChainId) => Promise<{ [key: string]: Token | undefined }>
+export function useGetCachedTokens(chains: UniverseChainId[]): TokenGetterFn {
   const multicallContracts = useInterfaceMulticallContracts(chains)
   const tokenCache = useTokenCache()
 

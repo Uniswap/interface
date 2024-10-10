@@ -1,6 +1,7 @@
 import { TradeType } from '@uniswap/sdk-core'
 import { useMemo, useRef } from 'react'
 import { FetchError } from 'uniswap/src/data/apiClients/FetchError'
+import { WithV4Flag } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { useTradingApiQuoteQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiQuoteQuery'
 import { QuoteRequest, TradeType as TradingApiTradeType } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { useActiveGasStrategy, useShadowGasStrategies } from 'uniswap/src/features/gas/hooks'
@@ -85,12 +86,13 @@ export function useTrade({
     !amount ||
     currencyInEqualsCurrencyOut
 
-  const quoteRequestArgs: QuoteRequest | undefined = useMemo(() => {
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+
+  const quoteRequestArgs = useMemo((): WithV4Flag<QuoteRequest> | undefined => {
     if (skipQuery) {
       return undefined
     }
-
-    const quoteArgs: QuoteRequest = {
+    return {
       type: requestTradeType,
       amount: amount.quotient.toString(),
       swapper: activeAccountAddress ?? UNCONNECTED_ADDRESS,
@@ -101,9 +103,8 @@ export function useTrade({
       slippageTolerance: customSlippageTolerance,
       ...routingParams,
       gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
+      v4Enabled,
     }
-
-    return quoteArgs
   }, [
     activeAccountAddress,
     amount,
@@ -117,6 +118,7 @@ export function useTrade({
     tokenInChainId,
     tokenOutAddress,
     tokenOutChainId,
+    v4Enabled,
   ])
 
   /***** Fetch quote from trading API  ******/

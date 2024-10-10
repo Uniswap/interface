@@ -10,10 +10,10 @@ import { Flex, TouchableArea, useHapticFeedback } from 'ui/src'
 import { iconSizes } from 'ui/src/theme'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName, WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { ShareableEntity } from 'uniswap/src/types/sharing'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
@@ -34,6 +34,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   const dispatch = useDispatch()
   const { unitag } = useUnitagByAddress(address)
   const { hapticFeedback } = useHapticFeedback()
+  const { defaultChainId } = useEnabledChains()
 
   const onPressCopyAddress = useCallback(async () => {
     if (!address) {
@@ -49,8 +50,8 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
   }, [address, dispatch, hapticFeedback])
 
   const openExplorerLink = useCallback(async () => {
-    await openUri(getExplorerLink(UniverseChainId.Mainnet, address, ExplorerDataType.ADDRESS))
-  }, [address])
+    await openUri(getExplorerLink(defaultChainId, address, ExplorerDataType.ADDRESS))
+  }, [address, defaultChainId])
 
   const onReportProfile = useCallback(async () => {
     const params = new URLSearchParams()
@@ -84,7 +85,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
     const options: MenuAction[] = [
       {
         title: t('account.wallet.action.viewExplorer', {
-          blockExplorerName: UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].explorer.name,
+          blockExplorerName: UNIVERSE_CHAIN_INFO[defaultChainId].explorer.name,
         }),
         action: openExplorerLink,
         systemIcon: 'link',
@@ -108,7 +109,7 @@ export function ProfileContextMenu({ address }: { address: Address }): JSX.Eleme
       })
     }
     return options
-  }, [onPressCopyAddress, onPressShare, onReportProfile, openExplorerLink, t, unitag])
+  }, [onPressCopyAddress, onPressShare, onReportProfile, openExplorerLink, t, unitag, defaultChainId])
 
   return (
     <ContextMenu

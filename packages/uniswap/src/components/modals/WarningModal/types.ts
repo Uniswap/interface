@@ -34,6 +34,7 @@ export enum WarningAction {
 }
 
 export enum WarningLabel {
+  EnterLargerAmount = 'enter_larger_amount',
   InsufficientFunds = 'insufficient_funds',
   InsufficientGasFunds = 'insufficient_gas_funds',
   FormIncomplete = 'form_incomplete',

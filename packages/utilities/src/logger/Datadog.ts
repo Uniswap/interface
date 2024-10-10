@@ -48,3 +48,7 @@ export function logErrorToDatadog(_error: Error, _context?: LoggerErrorContext):
 export function attachUnhandledRejectionHandler(): void {
   throw new PlatformSplitStubError('attachUnhandledRejectionHandler')
 }
+
+export async function setAttributesToDatadog(_attributes: { [key: string]: unknown }): Promise<void> {
+  throw new PlatformSplitStubError('setAttributes')
+}

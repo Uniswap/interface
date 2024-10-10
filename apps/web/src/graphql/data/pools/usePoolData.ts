@@ -1,4 +1,4 @@
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { chainIdToBackendChain } from 'constants/chains'
 import { V2_BIPS } from 'graphql/data/pools/useTopPools'
 import ms from 'ms'
 import { useMemo } from 'react'
@@ -8,6 +8,7 @@ import {
   useV2PairQuery,
   useV3PoolQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export interface PoolData {
   // basic pool info
@@ -67,7 +68,7 @@ function calc24HVolChange(historicalVolume?: (VolumeChange | undefined)[]) {
  */
 export function usePoolData(
   poolAddress: string,
-  chainId?: SupportedInterfaceChainId,
+  chainId?: UniverseChainId,
 ): {
   loading: boolean
   error: boolean

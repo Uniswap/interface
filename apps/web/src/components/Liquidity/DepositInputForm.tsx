@@ -1,5 +1,5 @@
 import { Currency } from '@uniswap/sdk-core'
-import { IncreaseLiquidityInfo } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
+import { DepositInfo } from 'components/Liquidity/types'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useState } from 'react'
 import { PositionField } from 'types/position'
@@ -12,7 +12,7 @@ type InputFormProps = {
   token1: Currency
   onUserInput: (field: PositionField, newValue: string) => void
   onSetMax: (field: PositionField, amount: string) => void
-} & IncreaseLiquidityInfo
+} & DepositInfo
 
 export function DepositInputForm({
   token0,

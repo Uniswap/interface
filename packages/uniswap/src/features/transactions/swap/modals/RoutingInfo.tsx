@@ -5,7 +5,7 @@ import { Flex, Text, TouchableArea, UniswapXText, isWeb } from 'ui/src'
 import RoutingDiagram from 'uniswap/src/components/RoutingDiagram/RoutingDiagram'
 import { WarningInfo } from 'uniswap/src/components/modals/WarningModal/WarningInfo'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
-import { useUSDValue } from 'uniswap/src/features/gas/hooks'
+import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
@@ -27,7 +27,7 @@ export function RoutingInfo({
 }>): JSX.Element | null {
   const { trade } = useSwapTxContext()
   const { convertFiatAmountFormatted } = useLocalizationContext()
-  const gasFeeUSD = useUSDValue(chainId, gasFee.value ?? undefined)
+  const { value: gasFeeUSD } = useUSDValueOfGasFee(chainId, gasFee.value ?? undefined)
   const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
   const routes = useMemo(() => (trade && isClassic(trade) ? getRoutingDiagramEntries(trade) : []), [trade])

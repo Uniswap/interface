@@ -9,7 +9,7 @@ import {
   useDerivedValue,
   useSharedValue,
 } from 'react-native-reanimated'
-import { Flex, LinearGradient, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, LinearGradient, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { borderRadii, opacify } from 'ui/src/theme'
@@ -25,6 +25,7 @@ import {
   TransactionModalProps,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalProps'
 import { TransactionModalUpdateLogger } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalUpdateLogger'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 const HANLDEBAR_HEIGHT = 32
 
@@ -38,7 +39,7 @@ export function TransactionModal({
   const fullscreen = screen === TransactionScreen.Form
 
   const colors = useSporeColors()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const dimensions = useDeviceDimensions()
 
   const backgroundColorValue = colors.surface1.get()
@@ -103,7 +104,7 @@ export function TransactionModalInnerContainer({
   fullscreen,
   children,
 }: TransactionModalInnerContainerProps): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
 
   const { animatedFooterHeight } = useBottomSheetInternal()
 
@@ -129,7 +130,7 @@ export function TransactionModalInnerContainer({
 }
 
 export function TransactionModalFooterContainer({ children }: TransactionModalFooterContainerProps): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const colors = useSporeColors()
 
   // Most of this logic is based on the `BottomSheetFooterContainer` component from `@gorhom/bottom-sheet`.

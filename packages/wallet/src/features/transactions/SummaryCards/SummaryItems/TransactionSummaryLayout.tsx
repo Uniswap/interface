@@ -134,7 +134,7 @@ function TransactionSummaryLayout({
                 {!inProgress && rightBlock}
               </Flex>
               <Flex grow row gap="$spacing16">
-                {typeof caption === 'string' ? <Text>{caption}</Text> : caption}
+                {typeof caption === 'string' ? <Text flex={1}>{caption}</Text> : caption}
                 {status === TransactionStatus.Failed && onRetry && (
                   <Flex flexShrink={0}>
                     <Text color="$accent1" variant="buttonLabel2" onPress={onRetry}>

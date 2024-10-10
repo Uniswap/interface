@@ -1,17 +1,24 @@
 import { useTranslation } from 'react-i18next'
-import { Button, Flex, Text, isWeb } from 'ui/src'
+import { Button, isWeb } from 'ui/src'
 import { opacify, validColor } from 'ui/src/theme'
 import { useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { useIsSupportedFiatOnRampCurrency } from 'uniswap/src/features/fiatOnRamp/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useNetworkColors } from 'uniswap/src/utils/colors'
 
-export function BuyNativeTokenButton({ nativeCurrencyInfo }: { nativeCurrencyInfo: CurrencyInfo }): JSX.Element {
+export function BuyNativeTokenButton({
+  nativeCurrencyInfo,
+  canBridge,
+}: {
+  nativeCurrencyInfo: CurrencyInfo
+  canBridge: boolean
+}): JSX.Element {
   const { t } = useTranslation()
-  const { foreground, background } = useNetworkColors(nativeCurrencyInfo.currency?.chainId ?? UniverseChainId.Mainnet)
+  const { defaultChainId } = useEnabledChains()
+  const { foreground, background } = useNetworkColors(nativeCurrencyInfo.currency?.chainId ?? defaultChainId)
   const primaryColor = validColor(foreground)
   const backgroundColor = validColor(background)
   const onPressColor = validColor(opacify(50, foreground))
@@ -25,33 +32,23 @@ export function BuyNativeTokenButton({ nativeCurrencyInfo }: { nativeCurrencyInf
 
   return (
     <Trace logPress element={ElementName.BuyNativeTokenButton}>
-      {isWeb ? (
-        <Flex
-          backgroundColor={backgroundColor}
-          borderRadius="$rounded12"
-          cursor="pointer"
-          hoverStyle={{ backgroundColor: onPressColor }}
-          px="$spacing16"
-          py="$spacing8"
-          onPress={onPressBuyFiatOnRamp}
-        >
-          <Text color={primaryColor} variant="buttonLabel3">
-            {t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol })}
-          </Text>
-        </Flex>
-      ) : (
-        <Button
-          backgroundColor={backgroundColor}
-          color={primaryColor}
-          pressStyle={{ backgroundColor: onPressColor }}
-          size="medium"
-          theme="primary"
-          width="100%"
-          onPress={onPressBuyFiatOnRamp}
-        >
-          {t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol })}
-        </Button>
-      )}
+      <Button
+        {...(canBridge
+          ? undefined
+          : {
+              backgroundColor,
+              color: primaryColor,
+              pressStyle: { backgroundColor: onPressColor },
+            })}
+        size={isWeb ? 'small' : 'medium'}
+        theme={canBridge ? 'secondary' : 'primary'}
+        width="100%"
+        onPress={onPressBuyFiatOnRamp}
+      >
+        {canBridge
+          ? t('swap.warning.insufficientGas.button.buyWithCard')
+          : t('swap.warning.insufficientGas.button.buy', { tokenSymbol: nativeCurrencyInfo.currency.symbol })}
+      </Button>
     </Trace>
   )
 }

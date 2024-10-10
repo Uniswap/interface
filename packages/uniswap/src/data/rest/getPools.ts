@@ -9,6 +9,7 @@ import { getPositionsTestTransport } from 'uniswap/src/data/rest/getPositions'
 
 export function useGetPoolsByTokens(
   input?: PartialMessage<ListPoolsRequest>,
+  enabled = true,
 ): UseQueryResult<ListPoolsResponse, ConnectError> {
-  return useQuery(listPools, input, { transport: getPositionsTestTransport })
+  return useQuery(listPools, input, { transport: getPositionsTestTransport, enabled })
 }

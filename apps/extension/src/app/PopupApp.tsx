@@ -27,6 +27,7 @@ import i18n from 'uniswap/src/i18n/i18n'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { logger } from 'utilities/src/logger/logger'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 getLocalUserId()
@@ -54,6 +55,7 @@ function PopupContent(): JSX.Element {
   useEffect(() => {
     dispatch(syncAppWithDeviceLanguage())
   }, [dispatch])
+  useTestnetModeForLoggingAndAnalytics()
 
   const searchParams = new URLSearchParams(window.location.search)
   const tabId = searchParams.get('tabId')

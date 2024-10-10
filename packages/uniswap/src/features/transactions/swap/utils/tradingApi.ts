@@ -1,7 +1,8 @@
 import { MixedRouteSDK } from '@uniswap/router-sdk'
 import { Currency, CurrencyAmount, Token, TradeType } from '@uniswap/sdk-core'
 import { Pair, Route as V2Route } from '@uniswap/v2-sdk'
-import { FeeAmount, Pool, Route as V3Route } from '@uniswap/v3-sdk'
+import { FeeAmount, Pool as V3Pool, Route as V3Route } from '@uniswap/v3-sdk'
+import { Pool as V4Pool, Route as V4Route } from '@uniswap/v4-sdk'
 import { BigNumber } from 'ethers/lib/ethers'
 import { useMemo } from 'react'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
@@ -19,6 +20,8 @@ import {
   TokenInRoute as TradingApiTokenInRoute,
   V2PoolInRoute as TradingApiV2PoolInRoute,
   V3PoolInRoute as TradingApiV3PoolInRoute,
+  V4PoolInRoute as TradingApiV4PoolInRoute,
+  V4PoolInRoute,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
@@ -68,6 +71,7 @@ export function transformTradingApiResponseToTrade(params: TradingApiResponseToT
         slippageTolerance: slippageTolerance ?? MAX_AUTO_SLIPPAGE_TOLERANCE,
         v2Routes: routes?.flatMap((r) => (r?.routev2 ? { ...r, routev2: r.routev2 } : [])) ?? [],
         v3Routes: routes?.flatMap((r) => (r?.routev3 ? { ...r, routev3: r.routev3 } : [])) ?? [],
+        v4Routes: routes?.flatMap((r) => (r?.routev4 ? { ...r, routev4: r.routev4 } : [])) ?? [],
         mixedRoutes: routes?.flatMap((r) => (r?.mixedRoute ? { ...r, mixedRoute: r.mixedRoute } : [])) ?? [],
         tradeType,
       })
@@ -110,6 +114,7 @@ export function computeRoutes(
   quoteResponse?: QuoteResponse,
 ):
   | {
+      routev4: V4Route<Currency, Currency> | null
       routev3: V3Route<Currency, Currency> | null
       routev2: V2Route<Currency, Currency> | null
       mixedRoute: MixedRouteSDK<Currency, Currency> | null
@@ -172,12 +177,22 @@ export function computeRoutes(
 
       const isOnlyV2 = isV2OnlyRouteApi(route)
       const isOnlyV3 = isV3OnlyRouteApi(route)
+      const isOnlyV4 = isV4OnlyRouteApi(route)
+
+      const v4Routes = route.filter((r): r is V4PoolInRoute => r.type === 'v4-pool')
 
       return {
+        routev4: isOnlyV4
+          ? new V4Route(
+              v4Routes.map((r) => parseV4PoolApi(r, parsedCurrencyIn, parsedCurrencyOut)),
+              parsedCurrencyIn,
+              parsedCurrencyOut,
+            )
+          : null,
         routev3: isOnlyV3 ? new V3Route(route.map(parseV3PoolApi), parsedCurrencyIn, parsedCurrencyOut) : null,
         routev2: isOnlyV2 ? new V2Route(route.map(parseV2PairApi), parsedCurrencyIn, parsedCurrencyOut) : null,
         mixedRoute:
-          !isOnlyV3 && !isOnlyV2
+          !isOnlyV3 && !isOnlyV2 && !isOnlyV4
             ? new MixedRouteSDK(route.map(parseMixedRouteApi), parsedCurrencyIn, parsedCurrencyOut)
             : null,
         inputAmount,
@@ -206,6 +221,23 @@ function parseTokenApi(token: TradingApiTokenInRoute): Token {
   )
 }
 
+function parseV4PoolApi(
+  { fee, sqrtRatioX96, liquidity, tickCurrent, tickSpacing, hooks }: TradingApiV4PoolInRoute,
+  tokenIn: Currency,
+  tokenOut: Currency,
+): V4Pool {
+  return new V4Pool(
+    tokenIn,
+    tokenOut,
+    Number(fee),
+    Number(tickSpacing),
+    hooks,
+    sqrtRatioX96,
+    liquidity,
+    Number(tickCurrent),
+  )
+}
+
 function parseV3PoolApi({
   fee,
   sqrtRatioX96,
@@ -213,11 +245,11 @@ function parseV3PoolApi({
   tickCurrent,
   tokenIn,
   tokenOut,
-}: TradingApiV3PoolInRoute): Pool {
+}: TradingApiV3PoolInRoute): V3Pool {
   if (!tokenIn || !tokenOut || !fee || !sqrtRatioX96 || !liquidity || !tickCurrent) {
     throw new Error('Expected pool values to be present')
   }
-  return new Pool(
+  return new V3Pool(
     parseTokenApi(tokenIn),
     parseTokenApi(tokenOut),
     parseInt(fee, 10) as FeeAmount,
@@ -237,16 +269,21 @@ function parseV2PairApi({ reserve0, reserve1 }: TradingApiV2PoolInRoute): Pair {
   )
 }
 
-function parseMixedRouteApi(pool: TradingApiV2PoolInRoute | TradingApiV3PoolInRoute): Pair | Pool {
+type ClassicPoolInRoute = TradingApiV2PoolInRoute | TradingApiV3PoolInRoute | TradingApiV4PoolInRoute
+function parseMixedRouteApi(pool: ClassicPoolInRoute): Pair | V3Pool {
   return pool.type === 'v2-pool' ? parseV2PairApi(pool) : parseV3PoolApi(pool)
 }
 
-function isV2OnlyRouteApi(route: (TradingApiV2PoolInRoute | TradingApiV3PoolInRoute)[]): boolean {
+function isV2OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
   return route.every((pool) => pool.type === 'v2-pool')
 }
 
-function isV3OnlyRouteApi(route: (TradingApiV2PoolInRoute | TradingApiV3PoolInRoute)[]): boolean {
+function isV3OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
   return route.every((pool) => pool.type === 'v3-pool')
+}
+
+function isV4OnlyRouteApi(route: ClassicPoolInRoute[]): boolean {
+  return route.every((pool) => pool.type === 'v4-pool')
 }
 
 export function getTokenAddressFromChainForTradingApi(address: Address, chainId: UniverseChainId): string {

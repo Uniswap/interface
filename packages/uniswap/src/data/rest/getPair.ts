@@ -7,6 +7,9 @@ import { getPair } from '@uniswap/client-pools/dist/pools/v1/api-PoolsService_co
 import { GetPairRequest, GetPairResponse } from '@uniswap/client-pools/dist/pools/v1/api_pb'
 import { getPositionsTestTransport } from 'uniswap/src/data/rest/getPositions'
 
-export function useGetPair(input?: PartialMessage<GetPairRequest>): UseQueryResult<GetPairResponse, ConnectError> {
-  return useQuery(getPair, input, { transport: getPositionsTestTransport })
+export function useGetPair(
+  input?: PartialMessage<GetPairRequest>,
+  enabled = true,
+): UseQueryResult<GetPairResponse, ConnectError> {
+  return useQuery(getPair, input, { transport: getPositionsTestTransport, enabled })
 }

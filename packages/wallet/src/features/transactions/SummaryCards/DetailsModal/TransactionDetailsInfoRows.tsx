@@ -138,19 +138,18 @@ export function useTransactionDetailsInfoRows(
       )
       break
     case TransactionType.Bridge:
-      if (typeInfo.routingDappInfo && typeInfo.routingDappInfo.name) {
-        const dappInfo = (
-          <DappInfoRow
-            key="dappInfo"
-            label={t('swap.details.orderRouting')}
-            iconUrl={typeInfo.routingDappInfo.icon}
-            name={typeInfo.routingDappInfo.name}
-          />
-        )
-        defaultRows.splice(1, 0, dappInfo)
-      }
-
       if (isShowingMore) {
+        if (typeInfo.routingDappInfo && typeInfo.routingDappInfo.name) {
+          const dappInfo = (
+            <DappInfoRow
+              key="dappInfo"
+              label={t('swap.details.orderRouting')}
+              iconUrl={typeInfo.routingDappInfo.icon}
+              name={typeInfo.routingDappInfo.name}
+            />
+          )
+          specificRows.splice(1, 0, dappInfo)
+        }
         specificRows.push(<SwapRateRow key="swapRate" typeInfo={typeInfo} />)
       }
       break

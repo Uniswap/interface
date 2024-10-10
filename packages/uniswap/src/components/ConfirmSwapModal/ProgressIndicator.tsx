@@ -18,9 +18,24 @@ interface ProgressIndicatorProps {
   currentStep?: { step: TransactionStep; accepted: boolean }
 }
 
+function areStepsEqual(currentStep: TransactionStep | undefined): (step: TransactionStep) => boolean {
+  return (step: TransactionStep) => {
+    if (step.type !== currentStep?.type) {
+      return false
+    }
+
+    // There can be multiple approval steps with different tokens so both the type and the approval has to match
+    if (currentStep.type === TransactionStepType.TokenApprovalTransaction) {
+      return step.type === TransactionStepType.TokenApprovalTransaction && step.token === currentStep.token
+    }
+
+    return true
+  }
+}
+
 export function ProgressIndicator({ currentStep, steps }: ProgressIndicatorProps): JSX.Element | null {
   function getStatus(targetStep: TransactionStep): StepStatus {
-    const currentIndex = steps.findIndex((step) => step.type === currentStep?.step.type)
+    const currentIndex = steps.findIndex(areStepsEqual(currentStep?.step))
     const targetIndex = steps.indexOf(targetStep)
     if (currentIndex < targetIndex) {
       return StepStatus.Preview
@@ -64,6 +79,7 @@ function Step({ step, status }: { step: TransactionStep; status: StepStatus }): 
       return <SwapTransactionStepRow step={step} status={status} />
     case TransactionStepType.IncreasePositionTransaction:
     case TransactionStepType.IncreasePositionTransactionAsync:
+    case TransactionStepType.DecreasePositionTransaction:
       return <LPTransactionStepRow step={step} status={status} />
   }
 }

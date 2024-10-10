@@ -8,11 +8,11 @@ import { useEffect, useState } from 'react'
 import FOT_DETECTOR_ABI from 'uniswap/src/abis/fee-on-transfer-detector.json'
 import { FeeOnTransferDetector } from 'uniswap/src/abis/types'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 
 // TODO(WEB-4058): Move all of these contract addresses into the top-level wagmi config
-function getFeeOnTransferAddress(chainId?: InterfaceChainId) {
+function getFeeOnTransferAddress(chainId?: UniverseChainId) {
   switch (chainId) {
     case UniverseChainId.Mainnet:
       return '0x19C97dc2a25845C7f9d1d519c8C2d4809c58b43f'
@@ -35,7 +35,7 @@ function getFeeOnTransferAddress(chainId?: InterfaceChainId) {
   }
 }
 
-function useFeeOnTransferDetectorContract(chainId?: InterfaceChainId): FeeOnTransferDetector | null {
+function useFeeOnTransferDetectorContract(chainId?: UniverseChainId): FeeOnTransferDetector | null {
   const account = useAccount()
   const contract = useContract<FeeOnTransferDetector>(getFeeOnTransferAddress(chainId), FOT_DETECTOR_ABI, true, chainId)
 
@@ -61,7 +61,7 @@ async function getSwapTaxes(
   fotDetector: FeeOnTransferDetector,
   inputTokenAddress: string | undefined,
   outputTokenAddress: string | undefined,
-  chainId: InterfaceChainId,
+  chainId: UniverseChainId,
 ) {
   const addresses = []
   if (inputTokenAddress && FEE_CACHE[inputTokenAddress] === undefined) {
@@ -95,7 +95,7 @@ async function getSwapTaxes(
 }
 
 // Use the buyFeeBps/sellFeeBps fields from Token GQL query where possible instead of this hook
-export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: string, tokenChainId?: InterfaceChainId) {
+export function useSwapTaxes(inputTokenAddress?: string, outputTokenAddress?: string, tokenChainId?: UniverseChainId) {
   const account = useAccount()
   const chainId = tokenChainId ?? account.chainId
   const fotDetector = useFeeOnTransferDetectorContract(chainId)

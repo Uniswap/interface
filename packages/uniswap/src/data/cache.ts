@@ -1,5 +1,5 @@
-import { InMemoryCache } from '@apollo/client'
-import { Reference, relayStylePagination } from '@apollo/client/utilities'
+import { FieldFunctionOptions, InMemoryCache } from '@apollo/client'
+import { Reference, StoreObject, relayStylePagination } from '@apollo/client/utilities'
 import { isTestEnv } from 'utilities/src/environment/env'
 
 export function setupWalletCache(): InMemoryCache {
@@ -63,6 +63,18 @@ export function setupWalletCache(): InMemoryCache {
               return address?.toLowerCase() ?? null
             },
           },
+          feeData: {
+            // TODO(API-482): remove this once the backend bug is fixed.
+            // There's a bug in our graphql backend where `feeData` can incorrectly be `null` for certain queries (`topTokens`).
+            // This field policy ensures that the cache doesn't get overwritten with `null` values triggering unnecessary re-renders.
+            merge: ignoreIncomingNullValue,
+          },
+          protectionInfo: {
+            // TODO(API-482): remove this once the backend bug is fixed.
+            // There's a bug in our graphql backend where `protectionInfo` can incorrectly be `null` for certain queries (`topTokens`).
+            // This field policy ensures that the cache doesn't get overwritten with `null` values triggering unnecessary re-renders.
+            merge: ignoreIncomingNullValue,
+          },
         },
       },
       // Disable normalizaton for these types.
@@ -73,4 +85,15 @@ export function setupWalletCache(): InMemoryCache {
       TimestampedAmount: { keyFields: false },
     },
   })
+}
+
+function ignoreIncomingNullValue(
+  existing: Reference | StoreObject,
+  incoming: Reference | StoreObject,
+  { mergeObjects }: FieldFunctionOptions<Record<string, unknown>, Record<string, unknown>>,
+): Reference | StoreObject {
+  if (existing && !incoming) {
+    return existing
+  }
+  return mergeObjects(existing, incoming)
 }

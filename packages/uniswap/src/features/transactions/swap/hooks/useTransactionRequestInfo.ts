@@ -1,6 +1,7 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { providers } from 'ethers/lib/ethers'
 import { useEffect, useMemo, useRef } from 'react'
+import { WithV4Flag } from 'uniswap/src/data/apiClients/tradingApi/TradingApiClient'
 import { useTradingApiSwapQuery } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwapQuery'
 import {
   CreateSwapRequest,
@@ -12,7 +13,8 @@ import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { useActiveGasStrategy, useShadowGasStrategies, useTransactionGasFee } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult, areEqualGasStrategies } from 'uniswap/src/features/gas/types'
 import { DynamicConfigs, SwapConfigKey } from 'uniswap/src/features/gating/configs'
-import { useDynamicConfigValue } from 'uniswap/src/features/gating/hooks'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useDynamicConfigValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getBaseTradeAnalyticsPropertiesFromSwapInfo } from 'uniswap/src/features/transactions/swap/analytics'
@@ -64,6 +66,7 @@ export function useTransactionRequestInfo({
   const formatter = useLocalizationContext()
   const activeGasStrategy = useActiveGasStrategy(derivedSwapInfo.chainId, 'general')
   const shadowGasStrategies = useShadowGasStrategies(derivedSwapInfo.chainId, 'general')
+  const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
 
   const { trade: tradeWithStatus, customDeadline } = derivedSwapInfo
   const { trade } = tradeWithStatus || { trade: undefined }
@@ -88,7 +91,7 @@ export function useTransactionRequestInfo({
   const missingSig = requiresPermit2Sig && !signatureInfo.signature
 
   // Format request args
-  const swapRequestArgs: CreateSwapRequest | undefined = useMemo(() => {
+  const swapRequestArgs: WithV4Flag<CreateSwapRequest> | undefined = useMemo(() => {
     // TODO: MOB(2438) https://linear.app/uniswap/issue/MOB-2438/uniswap-x-clean-old-trading-api-code
     if (!swapQuote) {
       return undefined
@@ -108,7 +111,7 @@ export function useTransactionRequestInfo({
     const deadlineSeconds = (customDeadline ?? 0) * 60
     const deadline = customDeadline ? Math.floor(Date.now() / 1000) + deadlineSeconds : undefined
 
-    const swapArgs: CreateSwapRequest = {
+    const swapArgs: WithV4Flag<CreateSwapRequest> = {
       quote,
       permitData: permitData ?? undefined,
       signature: signatureInfo.signature,
@@ -116,6 +119,7 @@ export function useTransactionRequestInfo({
       deadline,
       refreshGasPrice: true,
       gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
+      v4Enabled,
     }
 
     return swapArgs
@@ -129,6 +133,7 @@ export function useTransactionRequestInfo({
     signatureInfo.signature,
     swapQuote,
     tradeWithStatus,
+    v4Enabled,
   ])
 
   // Wrap transaction request

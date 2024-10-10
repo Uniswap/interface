@@ -5,10 +5,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { navigate } from 'src/app/navigation/rootNavigation'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { Screen } from 'src/components/layout/Screen'
-import { Flex, Switch, Text, TouchableArea, useDeviceInsets } from 'ui/src'
+import { Flex, Switch, Text, TouchableArea } from 'ui/src'
 import { CheckmarkCircle, CopyAlt } from 'ui/src/components/icons'
 import { iconSizes, spacing } from 'ui/src/theme'
 import { resetDismissedWarnings } from 'uniswap/src/features/tokens/slice/slice'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { logger } from 'utilities/src/logger/logger'
@@ -24,7 +25,7 @@ import { selectSortedSignerMnemonicAccounts } from 'wallet/src/features/wallet/s
 import { resetWallet } from 'wallet/src/features/wallet/slice'
 
 export function DevScreen(): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const dispatch = useDispatch()
   const activeAccount = useActiveAccount()
   const [rtlEnabled, setRTLEnabled] = useState(I18nManager.isRTL)

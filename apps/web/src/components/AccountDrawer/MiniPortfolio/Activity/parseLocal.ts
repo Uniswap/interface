@@ -10,7 +10,6 @@ import {
   OrderTextTable,
   getActivityTitle,
 } from 'components/AccountDrawer/MiniPortfolio/constants'
-import { SupportedInterfaceChainId } from 'constants/chains'
 import { isOnChainOrder, useAllSignatures } from 'state/signatures/hooks'
 import { SignatureDetails, SignatureType } from 'state/signatures/types'
 import { useMultichainTransactions } from 'state/transactions/hooks'
@@ -32,8 +31,9 @@ import {
 import { isConfirmedTx } from 'state/transactions/utils'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { t } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 import { logger } from 'utilities/src/logger/logger'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
@@ -79,7 +79,7 @@ function buildCurrencyDescriptor(
 
 async function parseSwap(
   swap: ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo,
-  chainId: SupportedInterfaceChainId,
+  chainId: UniverseChainId,
   formatNumber: FormatNumberFunctionType,
 ): Promise<Partial<Activity>> {
   const [tokenIn, tokenOut] = await Promise.all([
@@ -100,7 +100,7 @@ async function parseSwap(
 
 function parseWrap(
   wrap: WrapTransactionInfo,
-  chainId: InterfaceChainId,
+  chainId: UniverseChainId,
   status: TransactionStatus,
   formatNumber: FormatNumberFunctionType,
 ): Partial<Activity> {
@@ -124,7 +124,7 @@ function parseWrap(
 
 async function parseApproval(
   approval: ApproveTransactionInfo,
-  chainId: SupportedInterfaceChainId,
+  chainId: UniverseChainId,
   status: TransactionStatus,
 ): Promise<Partial<Activity>> {
   const currency = await getCurrency(approval.tokenAddress, chainId)
@@ -146,7 +146,7 @@ type GenericLPInfo = Omit<
 >
 async function parseLP(
   lp: GenericLPInfo,
-  chainId: SupportedInterfaceChainId,
+  chainId: UniverseChainId,
   formatNumber: FormatNumberFunctionType,
 ): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
@@ -161,7 +161,7 @@ async function parseLP(
 
 async function parseCollectFees(
   collect: CollectFeesTransactionInfo,
-  chainId: SupportedInterfaceChainId,
+  chainId: UniverseChainId,
   formatNumber: FormatNumberFunctionType,
 ): Promise<Partial<Activity>> {
   // Adapts CollectFeesTransactionInfo to generic LP type
@@ -180,7 +180,7 @@ async function parseCollectFees(
 
 async function parseMigrateCreateV3(
   lp: MigrateV2LiquidityToV3TransactionInfo | CreateV3PoolTransactionInfo,
-  chainId: SupportedInterfaceChainId,
+  chainId: UniverseChainId,
 ): Promise<Partial<Activity>> {
   const [baseCurrency, quoteCurrency] = await Promise.all([
     getCurrency(lp.baseCurrencyId, chainId),
@@ -198,7 +198,7 @@ async function parseMigrateCreateV3(
 
 async function parseSend(
   send: SendTransactionInfo,
-  chainId: SupportedInterfaceChainId,
+  chainId: UniverseChainId,
   formatNumber: FormatNumberFunctionType,
 ): Promise<Partial<Activity>> {
   const { currencyId, amount, recipient } = send
@@ -223,7 +223,7 @@ async function parseSend(
 
 export async function transactionToActivity(
   details: TransactionDetails | undefined,
-  chainId: SupportedInterfaceChainId,
+  chainId: UniverseChainId,
   formatNumber: FormatNumberFunctionType,
 ): Promise<Activity | undefined> {
   if (!details) {
@@ -279,7 +279,7 @@ export async function transactionToActivity(
 
 export function getTransactionToActivityQueryOptions(
   transaction: TransactionDetails | undefined,
-  chainId: SupportedInterfaceChainId,
+  chainId: UniverseChainId,
   formatNumber: FormatNumberFunctionType,
 ) {
   return queryOptions({
@@ -352,12 +352,14 @@ export function useLocalActivities(account: string): ActivityMap {
   const allTransactions = useMultichainTransactions()
   const allSignatures = useAllSignatures()
   const { formatNumber } = useFormatter()
+  const { chains } = useEnabledChains()
 
   const { data } = useQuery({
     queryKey: ['localActivities', account, allTransactions, allSignatures],
     queryFn: async () => {
       const transactions = Object.values(allTransactions)
         .filter(([transaction]) => transaction.from === account)
+        .filter(([, chainId]) => chains.includes(chainId))
         .map(([transaction, chainId]) => transactionToActivity(transaction, chainId, formatNumber))
       const signatures = Object.values(allSignatures)
         .filter((signature) => signature.offerer === account)

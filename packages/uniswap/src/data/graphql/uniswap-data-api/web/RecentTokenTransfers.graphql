@@ -1,14 +1,14 @@
-query RecentTokenTransfers($address: String!) {
+query RecentTokenTransfers($address: String!, $chains: [Chain!]) {
   portfolios(
     ownerAddresses: [$address]
-    chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+    chains: $chains
   ) {
     id
     ownerAddress
     assetActivities(
       pageSize: 100
       page: 1
-      chains: [ETHEREUM, POLYGON, ARBITRUM, OPTIMISM, BASE, BNB]
+      chains: $chains
     ) {
       id
       timestamp

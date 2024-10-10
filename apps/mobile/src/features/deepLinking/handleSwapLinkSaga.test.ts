@@ -6,7 +6,7 @@ import { DAI, UNI } from 'uniswap/src/constants/tokens'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
@@ -14,7 +14,7 @@ const account = signerMnemonicAccount()
 
 const formSwapUrl = (
   userAddress?: Address,
-  chain?: WalletChainId | number,
+  chain?: UniverseChainId | number,
   inputAddress?: string,
   outputAddress?: string,
   currencyField?: string,
@@ -30,7 +30,7 @@ const formSwapUrl = (
   )
 
 const formTransactionState = (
-  chain?: WalletChainId,
+  chain?: UniverseChainId,
   inputAddress?: string,
   outputAddress?: string,
   currencyField?: string,
@@ -38,12 +38,12 @@ const formTransactionState = (
 ): {
   input: {
     address: string | undefined
-    chainId: WalletChainId | undefined
+    chainId: UniverseChainId | undefined
     type: AssetType
   }
   output: {
     address: string | undefined
-    chainId: WalletChainId | undefined
+    chainId: UniverseChainId | undefined
     type: AssetType
   }
   exactCurrencyField: string | undefined

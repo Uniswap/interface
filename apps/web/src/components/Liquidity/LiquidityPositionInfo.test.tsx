@@ -1,51 +1,49 @@
 // eslint-disable-next-line no-restricted-imports
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { getProtocolVersionLabel, parseRestPosition } from 'components/Liquidity/utils'
+import { PositionInfo } from 'components/Liquidity/types'
 import { TEST_TOKEN_1, TEST_TOKEN_2, toCurrencyAmount } from 'test-utils/constants'
-import { mocked } from 'test-utils/mocked'
 import { render } from 'test-utils/render'
 
 jest.mock('components/Liquidity/utils')
 
 describe('LiquidityPositionInfo', () => {
-  beforeEach(() => {
-    mocked(getProtocolVersionLabel).mockReturnValue('V3')
-  })
-
   it('should render in range', () => {
-    mocked(parseRestPosition).mockReturnValue({
+    const positionInfo: PositionInfo = {
       currency0Amount: toCurrencyAmount(TEST_TOKEN_1, 1),
       currency1Amount: toCurrencyAmount(TEST_TOKEN_2, 1),
       status: PositionStatus.IN_RANGE,
-      restPosition: {} as any,
       version: ProtocolVersion.V3,
-    })
-    const { getByText } = render(<LiquidityPositionInfo position={{} as any} />)
+      tokenId: '1',
+      v4hook: undefined,
+    }
+    const { getByText } = render(<LiquidityPositionInfo positionInfo={positionInfo} />)
     expect(getByText('In range')).toBeInTheDocument()
   })
 
   it('should render out of range', () => {
-    mocked(parseRestPosition).mockReturnValue({
+    const positionInfo: PositionInfo = {
       currency0Amount: toCurrencyAmount(TEST_TOKEN_1, 1),
       currency1Amount: toCurrencyAmount(TEST_TOKEN_2, 1),
       status: PositionStatus.OUT_OF_RANGE,
-      restPosition: {} as any,
       version: ProtocolVersion.V3,
-    })
-    const { getByText } = render(<LiquidityPositionInfo position={{} as any} />)
+      tokenId: '4',
+      v4hook: undefined,
+    }
+    const { getByText } = render(<LiquidityPositionInfo positionInfo={positionInfo} />)
     expect(getByText('Out of range')).toBeInTheDocument()
   })
 
   it('should render closed', () => {
-    mocked(parseRestPosition).mockReturnValue({
+    const positionInfo: PositionInfo = {
       currency0Amount: toCurrencyAmount(TEST_TOKEN_1, 1),
       currency1Amount: toCurrencyAmount(TEST_TOKEN_2, 1),
       status: PositionStatus.CLOSED,
-      restPosition: {} as any,
       version: ProtocolVersion.V3,
-    })
-    const { getByText } = render(<LiquidityPositionInfo position={{} as any} />)
+      tokenId: '1',
+      v4hook: undefined,
+    }
+    const { getByText } = render(<LiquidityPositionInfo positionInfo={positionInfo} />)
     expect(getByText('Closed')).toBeInTheDocument()
   })
 })

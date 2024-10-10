@@ -2,7 +2,7 @@ import { AssetType } from 'uniswap/src/entities/assets'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ETH_CURRENCY_INFO, ethCurrencyInfo } from 'uniswap/src/test/fixtures/wallet/currencies'
 import { createFixture, randomChoice, randomEnumValue } from 'uniswap/src/test/utils'
-import { UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS, WalletChainId } from 'uniswap/src/types/chains'
+import { SUPPORTED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import {
   DappLogoWithTxStatus,
@@ -22,7 +22,7 @@ const currencyLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
   currencyInfo: ethCurrencyInfo(),
   txStatus: randomEnumValue(TransactionStatus),
   size: 40,
-  chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
+  chainId: randomChoice(SUPPORTED_CHAIN_IDS),
 }))
 
 const nftLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
@@ -30,7 +30,7 @@ const nftLogoProps = createFixture<LogoWithTxStatusProps>()(() => ({
   txType: TransactionType.NFTMint,
   txStatus: randomEnumValue(TransactionStatus),
   size: 40,
-  chainId: randomChoice(WALLET_SUPPORTED_CHAIN_IDS),
+  chainId: randomChoice(SUPPORTED_CHAIN_IDS),
 }))
 
 describe(LogoWithTxStatus, () => {
@@ -191,7 +191,7 @@ describe(DappLogoWithTxStatus, () => {
   const props = {
     event: WalletConnectEvent.Connected,
     size: 40,
-    chainId: UniverseChainId.ArbitrumOne as WalletChainId,
+    chainId: UniverseChainId.ArbitrumOne as UniverseChainId,
     dappImageUrl: 'https://example.com/dapp.png',
     dappName: 'Dapp',
   }
@@ -259,7 +259,7 @@ describe(DappLogoWithTxStatus, () => {
 describe(DappLogoWithWCBadge, () => {
   const props = {
     size: 40,
-    chainId: UniverseChainId.ArbitrumOne as WalletChainId,
+    chainId: UniverseChainId.ArbitrumOne as UniverseChainId,
     dappImageUrl: 'https://example.com/dapp.png',
     dappName: 'Dapp',
   }

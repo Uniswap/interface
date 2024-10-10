@@ -11,6 +11,7 @@ import { useDeviceDimensions } from 'ui/src/hooks/useDeviceDimensions'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { useNftsTabQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { HiddenNftsRow } from 'wallet/src/components/nfts/NFTHiddenRow'
@@ -71,11 +72,17 @@ export const NftsList = forwardRef<FlashList<unknown>, NftsListProps>(function _
 ) {
   const { t } = useTranslation()
   const { fullHeight } = useDeviceDimensions()
+  const { gqlChains } = useEnabledChains()
 
   const [hiddenNftsExpanded, setHiddenNftsExpanded] = useState(false)
 
   const { data, fetchMore, refetch, networkStatus } = useNftsTabQuery({
-    variables: { ownerAddress: owner, first: NUM_FIRST_NFTS, filter: { filterSpam: false } },
+    variables: {
+      ownerAddress: owner,
+      first: NUM_FIRST_NFTS,
+      filter: { filterSpam: false },
+      chains: gqlChains,
+    },
     notifyOnNetworkStatusChange: true, // Used to trigger network state / loading on refetch or fetchMore
     errorPolicy: 'all', // Suppress non-null image.url fields from backend
   })

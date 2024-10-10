@@ -33,8 +33,13 @@ function addBreadCrumb(breadCrumb: BreadCrumb): void {
   SentryReact.addBreadcrumb(breadCrumb)
 }
 
+function setTag(key: string, value: Primitive): void {
+  SentryReact.setTag(key, value)
+}
+
 export const Sentry: ISentry = {
   captureException,
   captureMessage,
   addBreadCrumb,
+  setTag,
 } as ISentry

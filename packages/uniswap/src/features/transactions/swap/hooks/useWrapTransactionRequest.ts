@@ -9,10 +9,10 @@ import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import { DerivedSwapInfo } from 'uniswap/src/features/transactions/swap/types/derivedSwapInfo'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { useAsyncData } from 'utilities/src/react/hooks'
 
-export async function getWethContract(chainId: WalletChainId, provider: providers.Provider): Promise<Weth> {
+export async function getWethContract(chainId: UniverseChainId, provider: providers.Provider): Promise<Weth> {
   return new Contract(getWrappedNativeAddress(chainId), WETH_ABI, provider) as Weth
 }
 
@@ -36,7 +36,7 @@ export function useWrapTransactionRequest(
 const getWrapTransactionRequest = async (
   provider: providers.Provider | undefined,
   isUniswapXWrap: boolean,
-  chainId: WalletChainId,
+  chainId: UniverseChainId,
   address: Address | undefined,
   wrapType: WrapType,
   currencyAmountIn: Maybe<CurrencyAmount<Currency>>,

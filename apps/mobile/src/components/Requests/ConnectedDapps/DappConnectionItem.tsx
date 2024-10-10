@@ -128,14 +128,7 @@ export function DappConnectionItem({
           onLongPress={disableOnPress}
           onPress={(): void => onPressChangeNetwork(session)}
         >
-          <NetworkLogos
-            showFirstChainLabel
-            backgroundColor="$surface2"
-            borderRadius="$roundedFull"
-            chains={session.chains}
-            p="$spacing8"
-            size={iconSizes.icon16}
-          />
+          <NetworkLogos chains={session.chains} />
         </TouchableArea>
       </Flex>
     </ContextMenu>

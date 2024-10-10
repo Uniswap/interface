@@ -9,11 +9,11 @@ import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAle
 import { Warning } from 'uniswap/src/components/modals/WarningModal/types'
 import {
   useFormattedUniswapXGasFeeInfo,
+  useGasFeeFormattedAmounts,
   useGasFeeHighRelativeToValue,
-  useUSDValue,
 } from 'uniswap/src/features/gas/hooks'
 import { FormattedUniswapXGasFeeInfo, GasFeeResult } from 'uniswap/src/features/gas/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { useSwapTxContext } from 'uniswap/src/features/transactions/swap/contexts/SwapTxContext'
 import { NetworkFeeWarning } from 'uniswap/src/features/transactions/swap/modals/NetworkFeeWarning'
@@ -22,7 +22,6 @@ import { SwapRateRatio } from 'uniswap/src/features/transactions/swap/review/Swa
 import { IndicativeTrade, Trade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { CurrencyField } from 'uniswap/src/types/currency'
-import { NumberType } from 'utilities/src/format/types'
 import { isInterface, isMobileApp } from 'utilities/src/platform'
 import { usePrevious } from 'utilities/src/react/hooks'
 
@@ -35,7 +34,6 @@ type DebouncedGasInfo = {
 }
 
 export function useDebouncedGasInfo(): DebouncedGasInfo {
-  const { convertFiatAmountFormatted } = useLocalizationContext()
   const {
     derivedSwapInfo: { chainId, currencyAmountsUSDValue, trade, currencyAmounts, exactCurrencyField },
   } = useSwapFormContext()
@@ -49,14 +47,19 @@ export function useDebouncedGasInfo(): DebouncedGasInfo {
     chainId,
   )
 
-  const usdPrice = useUSDValue(chainId, gasFee?.value)
-  const isHighRelativeToValue = useGasFeeHighRelativeToValue(usdPrice, outputUSDValue ?? inputUSDValue)
+  const { gasFeeFormatted, gasFeeUSD } = useGasFeeFormattedAmounts({
+    gasFee,
+    chainId,
+    placeholder: undefined,
+  })
+
+  const isHighRelativeToValue = useGasFeeHighRelativeToValue(gasFeeUSD, outputUSDValue ?? inputUSDValue)
 
   const amountChanged = usePrevious(currencyAmounts[exactCurrencyField]) !== currencyAmounts[exactCurrencyField]
   const tradeChanged = usePrevious(trade.trade) !== trade.trade && Boolean(trade.trade)
 
   const tradeLoadingOrRefetching = Boolean(trade.isLoading || trade.isFetching)
-  const gasLoading = Boolean(gasFee.isLoading || (gasFee.value && !usdPrice))
+  const gasLoading = Boolean(gasFee.isLoading || (gasFee.value && !gasFeeUSD))
 
   const isLoading = tradeLoadingOrRefetching || gasLoading || amountChanged || tradeChanged
 
@@ -66,10 +69,15 @@ export function useDebouncedGasInfo(): DebouncedGasInfo {
     if (isLoading) {
       setInfo((prev) => ({ ...prev, isLoading }))
     } else {
-      const fiatPriceFormatted = usdPrice ? convertFiatAmountFormatted(usdPrice, NumberType.FiatGasPrice) : undefined
-      setInfo({ gasFee, fiatPriceFormatted, isHighRelativeToValue, uniswapXGasFeeInfo, isLoading })
+      setInfo({
+        gasFee,
+        fiatPriceFormatted: gasFeeFormatted ?? undefined,
+        isHighRelativeToValue,
+        uniswapXGasFeeInfo,
+        isLoading,
+      })
     }
-  }, [convertFiatAmountFormatted, gasFee, isHighRelativeToValue, isLoading, uniswapXGasFeeInfo, usdPrice])
+  }, [gasFee, gasFeeFormatted, isHighRelativeToValue, isLoading, uniswapXGasFeeInfo])
 
   return info
 }
@@ -143,10 +151,15 @@ export function GasTradeRow({
   gasInfo: DebouncedGasInfo
   showPriceImpactWarning?: boolean
   priceImpactWarning?: Warning
-}): JSX.Element {
+}): JSX.Element | null {
   // Debounce the trade to prevent flickering on input
   const debouncedTrade = useDebouncedTrade()
   const warningColor = getAlertColor(priceImpactWarning?.severity)
+  const { isTestnetModeEnabled } = useEnabledChains()
+
+  if (isTestnetModeEnabled) {
+    return null
+  }
 
   if (isMobileApp) {
     return <GasRow gasInfo={gasInfo} />

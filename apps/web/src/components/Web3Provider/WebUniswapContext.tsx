@@ -32,6 +32,7 @@ function useWagmiAccount(): AccountMeta | undefined {
 export function WebUniswapProvider({ children }: PropsWithChildren) {
   const account = useWagmiAccount()
   const signer = useEthersSigner()
+  const { connector } = useAccount()
   const showSwapNetworkNotification = useShowSwapNetworkNotification()
   const navigate = useNavigate()
   const navigateToFiatOnRamp = useCallback(() => navigate(`/buy`, { replace: true }), [navigate])
@@ -41,6 +42,7 @@ export function WebUniswapProvider({ children }: PropsWithChildren) {
     <UniswapProvider
       account={account}
       signer={signer}
+      connector={connector}
       useProviderHook={useWebProvider}
       onSwapChainsChanged={showSwapNetworkNotification}
       navigateToFiatOnRamp={navigateToFiatOnRamp}

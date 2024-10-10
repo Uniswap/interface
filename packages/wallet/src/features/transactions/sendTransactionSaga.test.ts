@@ -8,7 +8,7 @@ import { AccountType } from 'uniswap/src/features/accounts/types'
 import { addTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionOriginType, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getTxFixtures } from 'uniswap/src/test/fixtures'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { noOpFunction } from 'utilities/src/test/utils'
 import { isPrivateRpcSupportedOnChain } from 'wallet/src/features/providers/utils'
 import {
@@ -42,7 +42,7 @@ const { txRequest, txResponse, txTypeInfo } = getTxFixtures()
 
 const sendParams = {
   txId: '0',
-  chainId: UniverseChainId.Mainnet as WalletChainId,
+  chainId: UniverseChainId.Mainnet as UniverseChainId,
   account,
   options: { request: txRequest },
   typeInfo: txTypeInfo,

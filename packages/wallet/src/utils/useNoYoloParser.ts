@@ -2,13 +2,13 @@ import { JsonRpcProvider } from '@ethersproject/providers'
 import { ExplorerAbiFetcher, Parser, ProxyAbiFetcher, Transaction, TransactionDescription } from 'no-yolo-signatures'
 import { useEffect, useMemo, useState } from 'react'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { RPCType, WalletChainId } from 'uniswap/src/types/chains'
+import { RPCType, UniverseChainId } from 'uniswap/src/types/chains'
 import { EthTransaction } from 'uniswap/src/types/walletConnect'
 import { logger } from 'utilities/src/logger/logger'
 
 export function useNoYoloParser(
   transaction: EthTransaction,
-  chainId?: WalletChainId,
+  chainId?: UniverseChainId,
 ): { parsedTransactionData: TransactionDescription | undefined; isLoading: boolean } {
   const [isLoading, setIsLoading] = useState(true)
   const [parsedTransactionData, setParsedTransactionData] = useState<TransactionDescription | undefined>(undefined)

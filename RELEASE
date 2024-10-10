@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmdrE1xXozbrZCb5iS5iGpjWkdJh4y7iBGHqSC1rGPcH6i`
-- CIDv1: `bafybeihgolhp73f4twnioaonb2dvdyu2t44mxjdqx7pvnxfb7ibcosxcam`
+- CIDv0: `QmbKgKkW8gPc6Fc4CCbruxzdbgE968pGuSMwaFPPS57kdg`
+- CIDv1: `bafybeiga5awmbukdwmpf4jskzekpy76rzhk4blbqcmzvr745un6k6qulvm`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,63 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeihgolhp73f4twnioaonb2dvdyu2t44mxjdqx7pvnxfb7ibcosxcam.ipfs.dweb.link/
-- https://bafybeihgolhp73f4twnioaonb2dvdyu2t44mxjdqx7pvnxfb7ibcosxcam.ipfs.cf-ipfs.com/
-- [ipfs://QmdrE1xXozbrZCb5iS5iGpjWkdJh4y7iBGHqSC1rGPcH6i/](ipfs://QmdrE1xXozbrZCb5iS5iGpjWkdJh4y7iBGHqSC1rGPcH6i/)
+- https://bafybeiga5awmbukdwmpf4jskzekpy76rzhk4blbqcmzvr745un6k6qulvm.ipfs.dweb.link/
+- https://bafybeiga5awmbukdwmpf4jskzekpy76rzhk4blbqcmzvr745un6k6qulvm.ipfs.cf-ipfs.com/
+- [ipfs://QmbKgKkW8gPc6Fc4CCbruxzdbgE968pGuSMwaFPPS57kdg/](ipfs://QmbKgKkW8gPc6Fc4CCbruxzdbgE968pGuSMwaFPPS57kdg/)
 
-### 5.50.4 (2024-10-10)
+## 5.51.0 (2024-10-10)
+
+
+### Features
+
+* **web:** add network costs to the addliquidity modal (#12557) 9beb5ce
+* **web:** add steps to the modal (#12431) 65639b4
+* **web:** add support for permit (#12575) b9d9579
+* **web:** add testnet modal (#12636) 350d97e
+* **web:** adding create modal (#12441) 3150f48
+* **web:** balance fetch switch on testnet mode (#12576) dfa44bd
+* **web:** call TradingAPI claim fees endpoint for v3/v4 (#12444) 8acafa7
+* **web:** deposit tokens step (#12377) 4c747d8
+* **web:** disable testnet on disconnect (#12750) 9f0bdbb
+* **web:** disable tx flows on explore pages (#12656) 6ed0b42
+* **web:** enable testnet mode on web with flag (#12505) dd7f272
+* **web:** hook up LP saga + confirm steps to the decrease flow (#12508) 3f0ff49
+* **web:** integrate with trading API for create flow (v2,v3) (#12434) 7283d2e
+* **web:** loading state for new PosDP (#12634) 688ea88
+* **web:** LP migrate page - update query and loading state (#12652) 88b336e
+* **web:** positions pagination and claim fees modal (#12341) 5f1eba2
+* **web:** testnet mode (#12566) abe823d
+* **web:** testnet portfolio row (#12616) ae5e5f5
+* **web:** unichain intro modal (#12554) 16fdb94
+* **web:** use single position query for PosDP (#12517) e242d90
+* **web:** use universe currency logo for testnets (#12607) d0767bd
+* **web:** use v3 uncollected fee values from Data API (#12555) 2a376be
+* **web:** v4 create position v2 (#12419) be27df2
+* **web:** v4 price range charts (#12525) cf9f515
 
 
 ### Bug Fixes
 
-* **web:** pass account to getSigner instead of using default [prod] (#12883) 688582d
+* **web:** 10 08 fix web log step and original error on web staging (#12825) c895745
+* **web:** add requestId and quoteId to post /order request (#12612) e08233f
+* **web:** astro chain ui info (#12671) 6923e48
+* **web:** default to crypto in send when on testnet (#12758) 5839f86
+* **web:** dont respect url flag overrides on prod (#12545) 3a68877
+* **web:** fix tick formatting + position details page (#12648) b606211
+* **web:** fixing v4 create bugs (#12514) 9da665d
+* **web:** hide gas for testnet unichain eth (#12759) 2dfd2d5
+* **web:** invalidate local activity cache for updates to transaction or signature state (#12650) f119f63
+* **web:** move connected wallet chain logic to universe (#12717) 5f78d74
+* **web:** native currency logo fetching on web (#12387) 81eb2ac
+* **web:** pass account to getSigner instead of using default [staging] (#12884) a11364b
+* **web:** rm prod arb+eth quicknode urls (#12646) d36d711
+* **web:** simplify/combine the liquidity saga logic (#12540) 5b72b61
+* **web:** ui nits and bugs (#12718) 6330bd4
+* **web:** uniswapx toasts/polling (#12658) 53dc7b1
+
+
+### Continuous Integration
+
+* **web:** update sitemaps 82367d7
 
 

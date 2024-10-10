@@ -5,7 +5,7 @@ import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { GQLNftAsset } from 'uniswap/src/features/nfts/types'
 import { getNetworkWarning } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { useIsOffline } from 'utilities/src/connection/useIsOffline'
@@ -25,7 +25,7 @@ export function getSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo, 
   const isMissingRequiredParams = checkIsMissingRequiredParams(
     currencyInInfo,
     nftIn,
-    chainId as WalletChainId,
+    chainId as UniverseChainId,
     recipient,
     !!currencyAmountIn,
     !!currencyBalanceIn,
@@ -67,7 +67,7 @@ export function useSendWarnings(t: TFunction, derivedSendInfo: DerivedSendInfo):
 const checkIsMissingRequiredParams = (
   currencyInInfo: Maybe<CurrencyInfo>,
   nftIn: GQLNftAsset | undefined,
-  chainId: WalletChainId | undefined,
+  chainId: UniverseChainId | undefined,
   recipient: Address | undefined,
   hasCurrencyAmount: boolean,
   hasCurrencyBalance: boolean,

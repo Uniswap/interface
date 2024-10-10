@@ -23,7 +23,7 @@ import {
   useTransactionModalContext,
 } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
 import { NumberType } from 'utilities/src/format/types'
@@ -91,7 +91,7 @@ export function SendReviewDetails({
 
   const transferERC20Callback = useSendERC20Callback(
     txId,
-    chainId as WalletChainId,
+    chainId as UniverseChainId,
     recipient,
     currencyInInfo ? currencyAddress(currencyInInfo.currency) : undefined,
     currencyAmounts[CurrencyField.INPUT]?.quotient.toString(),
@@ -103,7 +103,7 @@ export function SendReviewDetails({
 
   const transferNFTCallback = useSendNFTCallback(
     txId,
-    chainId as WalletChainId,
+    chainId as UniverseChainId,
     recipient,
     nftIn?.nftContract?.address,
     nftIn?.tokenId,
@@ -272,7 +272,7 @@ export function SendReviewDetails({
             />
           </Flex>
         }
-        chainId={chainId as WalletChainId}
+        chainId={chainId as UniverseChainId}
         gasFee={gasFee}
         showWarning={Boolean(transferWarning)}
         warning={transferWarning}

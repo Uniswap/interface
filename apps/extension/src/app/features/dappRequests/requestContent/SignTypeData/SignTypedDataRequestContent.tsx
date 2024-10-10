@@ -4,9 +4,9 @@ import { UniswapXSwapRequestContent } from 'src/app/features/dappRequests/reques
 import { DomainContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/DomainContent'
 import { MaybeExplorerLinkedAddress } from 'src/app/features/dappRequests/requestContent/SignTypeData/MaybeExplorerLinkedAddress'
 import { Permit2RequestContent } from 'src/app/features/dappRequests/requestContent/SignTypeData/Permit2/Permit2RequestContent'
-import { SignTypedDataRequest, isUniswapXSwapRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
+import { SignTypedDataRequest } from 'src/app/features/dappRequests/types/DappRequestTypes'
 import { EIP712Message, isEIP712TypedData } from 'src/app/features/dappRequests/types/EIP712Types'
-import { isPermit2 } from 'src/app/features/dappRequests/types/Permit2Types'
+import { isPermit2, isUniswapXSwapRequest } from 'src/app/features/dappRequests/types/Permit2Types'
 import { Flex, Text } from 'ui/src'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
@@ -53,7 +53,7 @@ export function SignTypedDataRequestContent({ dappRequest }: SignTypedDataReques
   const chainId = toSupportedChainId(domainChainId)
 
   // this check needs to happen before isPermit2 since uniswapX requests are Permit2 requests
-  if (isUniswapXSwapRequest(dappRequest, chainId || undefined)) {
+  if (isUniswapXSwapRequest(parsedTypedData)) {
     return <UniswapXSwapRequestContent dappRequest={dappRequest} />
   }
 

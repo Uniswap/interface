@@ -2,7 +2,9 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionCard } from 'components/Liquidity/LiquidityPositionCard'
-import { PositionInfo, parseRestPosition } from 'components/Liquidity/utils'
+import { PositionInfo } from 'components/Liquidity/types'
+import { parseRestPosition } from 'components/Liquidity/utils'
+import { LoadingRows } from 'components/Loader/styled'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
 import { CreatePositionContextProvider, PriceRangeContextProvider } from 'pages/Pool/Positions/create/ContextProviders'
 import { useCreatePositionContext } from 'pages/Pool/Positions/create/CreatePositionContext'
@@ -10,6 +12,7 @@ import { EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
 import { PositionFlowStep } from 'pages/Pool/Positions/create/types'
+import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useParams } from 'react-router-dom'
@@ -18,7 +21,7 @@ import { PositionField } from 'types/position'
 import { Flex, Main, Text, styled } from 'ui/src'
 import { ArrowDown } from 'ui/src/components/icons/ArrowDown'
 import { RotateLeft } from 'ui/src/components/icons/RotateLeft'
-import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
+import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
@@ -102,7 +105,7 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
             </Text>
           </Flex>
         </Flex>
-        <LiquidityPositionCard liquidityPosition={positionInfo.restPosition} mt="$spacing24" />
+        <LiquidityPositionCard liquidityPosition={positionInfo} mt="$spacing24" />
         <Flex justifyContent="center" alignItems="center">
           <Flex shrink backgroundColor="$surface2" borderRadius="$rounded12" p="$padding12">
             <ArrowDown size={20} color="$neutral1" />
@@ -141,23 +144,39 @@ function MigrateV3Inner({ positionInfo }: { positionInfo: PositionInfo }) {
 export default function MigrateV3() {
   const { tokenId } = useParams<{ tokenId: string }>()
   const account = useAccount()
-  const { data } = useGetPositionsQuery(
+  const { data, isLoading: positionLoading } = useGetPositionQuery(
     account.address
       ? {
-          poolId: tokenId,
-          address: account.address,
-          protocolVersions: [ProtocolVersion.V3],
+          owner: account.address,
+          protocolVersion: ProtocolVersion.V3,
+          tokenId,
+          chainId: account.chainId,
         }
       : undefined,
   )
-  // TODO(WEB-4920): select the right position from the list, or use an endpoint that returns one position
-  const position = data?.positions[0]
+  const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
 
-  if (!position || !positionInfo) {
-    // TODO(WEB-4920): handle loading/error states (including if the position is for v2)
-    return null
+  if (positionLoading || !position || !positionInfo) {
+    return (
+      <BodyWrapper>
+        <LoadingRows>
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+        </LoadingRows>
+      </BodyWrapper>
+    )
   }
+
   const { currency0Amount, currency1Amount } = positionInfo
   return (
     <CreatePositionContextProvider

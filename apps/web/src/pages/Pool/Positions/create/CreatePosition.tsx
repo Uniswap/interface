@@ -3,12 +3,20 @@ import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { getProtocolVersionLabel, parseProtocolVersion } from 'components/Liquidity/utils'
 import { PoolProgressIndicator } from 'components/PoolProgressIndicator/PoolProgressIndicator'
-import { CreatePositionContextProvider, PriceRangeContextProvider } from 'pages/Pool/Positions/create/ContextProviders'
 import {
+  CreatePositionContextProvider,
+  CreateTxContextProvider,
+  DepositContextProvider,
+  PriceRangeContextProvider,
+} from 'pages/Pool/Positions/create/ContextProviders'
+import {
+  DEFAULT_DEPOSIT_STATE,
   DEFAULT_PRICE_RANGE_STATE,
   useCreatePositionContext,
+  useDepositContext,
   usePriceRangeContext,
 } from 'pages/Pool/Positions/create/CreatePositionContext'
+import { DepositStep } from 'pages/Pool/Positions/create/Deposit'
 import { EditRangeSelectionStep, EditSelectTokensStep } from 'pages/Pool/Positions/create/EditStep'
 import { SelectPriceRangeStep } from 'pages/Pool/Positions/create/RangeSelectionStep'
 import { SelectTokensStep } from 'pages/Pool/Positions/create/SelectTokenStep'
@@ -55,6 +63,7 @@ function CreatePositionInner() {
         <>
           <EditSelectTokensStep />
           {!v2Selected && <EditRangeSelectionStep />}
+          <DepositStep />
         </>
       )}
     </Flex>
@@ -107,12 +116,14 @@ const Toolbar = () => {
     setStep,
   } = useCreatePositionContext()
   const { setPriceRangeState } = usePriceRangeContext()
+  const { setDepositState } = useDepositContext()
 
   const handleReset = useCallback(() => {
     setPositionState(DEFAULT_POSITION_STATE)
     setPriceRangeState(DEFAULT_PRICE_RANGE_STATE)
+    setDepositState(DEFAULT_DEPOSIT_STATE)
     setStep(PositionFlowStep.SELECT_TOKENS_AND_FEE_TIER)
-  }, [setPositionState, setPriceRangeState, setStep])
+  }, [setDepositState, setPositionState, setPriceRangeState, setStep])
 
   const handleVersionChange = useCallback(
     (version: ProtocolVersion) => {
@@ -225,17 +236,21 @@ export function CreatePosition() {
   return (
     <CreatePositionContextProvider
       initialState={{
-        protocolVersion: parseProtocolVersion(protocolVersion),
+        protocolVersion: parseProtocolVersion(protocolVersion) ?? ProtocolVersion.V4,
       }}
     >
       <PriceRangeContextProvider>
-        <Flex row gap={60} justifyContent="space-around" mt="$spacing48">
-          <Sidebar />
-          <Flex gap={32} width="100%" maxWidth={580}>
-            <Toolbar />
-            <CreatePositionInner />
-          </Flex>
-        </Flex>
+        <DepositContextProvider>
+          <CreateTxContextProvider>
+            <Flex row gap={60} justifyContent="space-around" mt="$spacing48">
+              <Sidebar />
+              <Flex gap={32} width="100%" maxWidth={580}>
+                <Toolbar />
+                <CreatePositionInner />
+              </Flex>
+            </Flex>
+          </CreateTxContextProvider>
+        </DepositContextProvider>
       </PriceRangeContextProvider>
     </CreatePositionContextProvider>
   )

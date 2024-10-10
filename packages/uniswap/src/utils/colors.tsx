@@ -1,18 +1,18 @@
 import { useMemo } from 'react'
 import { useExtractedColors, useSporeColors } from 'ui/src'
 import { GlobalColorNames, colors as GlobalColors, GlobalPalette, colorsLight, opacify } from 'ui/src/theme'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { assert } from 'utilities/src/errors'
 import { hex } from 'wcag-contrast'
 
 export const MIN_COLOR_CONTRAST_THRESHOLD = 3
 
-export function getNetworkColorKey(chainId: WalletChainId): `chain_${WalletChainId}` {
+export function getNetworkColorKey(chainId: UniverseChainId): `chain_${UniverseChainId}` {
   return `chain_${chainId}`
 }
 
 /** Helper to retrieve foreground and background colors for a given chain */
-export function useNetworkColors(chainId: WalletChainId): {
+export function useNetworkColors(chainId: UniverseChainId): {
   foreground: string
   background: string
 } {

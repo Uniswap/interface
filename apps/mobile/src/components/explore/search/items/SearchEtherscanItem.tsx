@@ -6,8 +6,8 @@ import { Arrow } from 'ui/src/components/arrow/Arrow'
 import { iconSizes } from 'ui/src/theme'
 import { EtherscanSearchResult } from 'uniswap/src/features/search/SearchResult'
 import { addToSearchHistory } from 'uniswap/src/features/search/searchHistorySlice'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 
@@ -18,11 +18,12 @@ type SearchEtherscanItemProps = {
 export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProps): JSX.Element {
   const colors = useSporeColors()
   const dispatch = useDispatch()
+  const { defaultChainId } = useEnabledChains()
 
   const { address } = etherscanResult
 
   const onPressViewEtherscan = async (): Promise<void> => {
-    const explorerLink = getExplorerLink(UniverseChainId.Mainnet, address, ExplorerDataType.ADDRESS)
+    const explorerLink = getExplorerLink(defaultChainId, address, ExplorerDataType.ADDRESS)
     await openUri(explorerLink)
     dispatch(
       addToSearchHistory({
@@ -31,7 +32,7 @@ export function SearchEtherscanItem({ etherscanResult }: SearchEtherscanItemProp
     )
   }
 
-  const EtherscanIcon = getBlockExplorerIcon(UniverseChainId.Mainnet)
+  const EtherscanIcon = getBlockExplorerIcon(defaultChainId)
 
   return (
     <TouchableArea

@@ -1,4 +1,4 @@
-import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer/DefaultMenu'
+import { MenuState, miniPortfolioMenuStateAtom } from 'components/AccountDrawer'
 import { useOpenLimitOrders, usePendingActivity } from 'components/AccountDrawer/MiniPortfolio/Activity/hooks'
 import { useFilterPossiblyMaliciousPositionInfo } from 'components/AccountDrawer/MiniPortfolio/Pools/PoolsTab'
 import useMultiChainPositions from 'components/AccountDrawer/MiniPortfolio/Pools/useMultiChainPositions'

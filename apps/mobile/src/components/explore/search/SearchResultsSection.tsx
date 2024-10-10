@@ -30,6 +30,7 @@ import {
   SearchResultType,
   TokenSearchResult,
 } from 'uniswap/src/features/search/SearchResult'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import i18n from 'uniswap/src/i18n/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getValidAddress } from 'uniswap/src/utils/addresses'
@@ -53,17 +54,18 @@ const NFTHeaderItem: SearchResultOrHeader = {
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.section.nft'),
 }
-const EtherscanHeaderItem: SearchResultOrHeader = {
+const EtherscanHeaderItem: (chainId: UniverseChainId) => SearchResultOrHeader = (chainId: UniverseChainId) => ({
   type: SEARCH_RESULT_HEADER_KEY,
   title: i18n.t('explore.search.action.viewEtherscan', {
-    blockExplorerName: UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet].explorer.name,
+    blockExplorerName: UNIVERSE_CHAIN_INFO[chainId].explorer.name,
   }),
-}
+})
 
 const IGNORED_ERRORS = ['Subgraph provider undefined not supported']
 
 export function SearchResultsSection({ searchQuery }: { searchQuery: string }): JSX.Element {
   const { t } = useTranslation()
+  const { defaultChainId } = useEnabledChains()
 
   // Search for matching tokens
   const {
@@ -143,7 +145,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
 
     // Add etherscan items at end
     if (validAddress) {
-      searchResultItems.push(EtherscanHeaderItem, {
+      searchResultItems.push(EtherscanHeaderItem(defaultChainId), {
         type: SearchResultType.Etherscan,
         address: validAddress,
       })
@@ -157,6 +159,7 @@ export function SearchResultsSection({ searchQuery }: { searchQuery: string }): 
     tokenResults,
     validAddress,
     walletSearchResults,
+    defaultChainId,
   ])
 
   // Don't wait for wallet search results if there are already token search results, do wait for token results

@@ -53,6 +53,7 @@ import {
 import { dappResponseMessageChannel } from 'src/background/messagePassing/messageChannels'
 import { ExtensionState } from 'src/store/extensionReducer'
 import { call, put, select, takeEvery } from 'typed-redux-saga'
+import { getEnabledChainIdsSaga } from 'uniswap/src/features/settings/saga'
 import { logger } from 'utilities/src/logger/logger'
 
 function* dappRequestApproval({
@@ -203,7 +204,8 @@ function* dappRequestApproval({
         }
         case DappRequestType.GetChainId: {
           const validatedRequest: GetChainIdRequest = GetChainIdRequestSchema.parse(confirmedRequest.dappRequest)
-          yield* call(getChainIdNoDappInfo, validatedRequest, confirmedRequest.senderTabInfo)
+          const { defaultChainId } = yield getEnabledChainIdsSaga()
+          yield* call(getChainIdNoDappInfo, validatedRequest, confirmedRequest.senderTabInfo, defaultChainId)
           break
         }
         case DappRequestType.UniswapOpenSidebar: {

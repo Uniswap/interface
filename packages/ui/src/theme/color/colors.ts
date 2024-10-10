@@ -138,6 +138,14 @@ export const networkColors = {
     light: '#222222',
     dark: '#FCFF52',
   },
+  worldchain: {
+    light: '#222222',
+    dark: '#FFFFFF',
+  },
+  astrochain: {
+    light: '#fc0fa4',
+    dark: '#fc0fa4',
+  },
   zora: {
     light: '#222222',
     dark: '#FFFFFF',
@@ -182,8 +190,8 @@ const sporeLight = {
   statusSuccess: '#21C95E',
   statusSuccessHovered: '#15863C',
   statusSuccess2: '#EEFBF1',
-  statusWarning: '#FFBF17',
-  statusWarningHovered: '#FFDD0D',
+  statusWarning: '#996F01',
+  statusWarningHovered: '#7A5801',
   statusWarning2: '#FFFBEB',
   statusWarning2Hovered: '#FFFBD7',
   statusCritical: '#FF5F52',
@@ -309,11 +317,11 @@ export const colorsLight = {
   chain_42220: networkColors.celo.light,
   chain_43114: networkColors.avalanche.light,
   chain_324: networkColors.zksync.light,
+  chain_480: networkColors.worldchain.light,
 
   // Testnets
-  chain_3: colors.yellowVibrant,
-  chain_4: colors.pinkVibrant,
-  chain_5: colors.greenVibrant,
+  chain_11155111: networkColors.ethereum.light,
+  chain_1301: networkColors.astrochain.light,
 }
 
 export type ColorKeys = keyof typeof colorsLight
@@ -390,9 +398,9 @@ export const colorsDark = {
   chain_42220: networkColors.celo.dark,
   chain_43114: networkColors.avalanche.dark,
   chain_324: networkColors.zksync.dark,
+  chain_480: networkColors.worldchain.dark,
 
   // Testnets
-  chain_3: colors.yellowVibrant,
-  chain_4: colors.pinkVibrant,
-  chain_5: colors.greenVibrant,
+  chain_11155111: networkColors.ethereum.dark,
+  chain_1301: networkColors.astrochain.dark,
 }

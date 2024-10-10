@@ -13,6 +13,7 @@ import { Button, Flex, Text } from 'ui/src'
 import { Eye, GraduationCap } from 'ui/src/components/icons'
 import { usePortfolioBalances } from 'uniswap/src/features/dataApi/balances'
 import { useENS } from 'uniswap/src/features/ens/useENS'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -74,6 +75,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   const dispatch = useDispatch()
   const accounts = useAccounts()
   const initialAccounts = useRef(accounts)
+  const { defaultChainId } = useEnabledChains()
 
   useNavigationHeader(navigation)
 
@@ -88,7 +90,7 @@ export function WatchWalletScreen({ navigation, route: { params } }: Props): JSX
   const validAddress = getValidAddress(normalizedValue, true, false)
   const { isSmartContractAddress, loading } = useIsSmartContractAddress(
     (validAddress || resolvedAddress) ?? undefined,
-    UniverseChainId.Mainnet,
+    defaultChainId,
   )
   const address = isSmartContractAddress ? (validAddress || resolvedAddress) ?? undefined : undefined
   // Allow smart contracts with non-null balances

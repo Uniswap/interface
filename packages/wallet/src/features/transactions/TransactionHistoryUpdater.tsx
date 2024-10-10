@@ -11,7 +11,7 @@ import {
   useTransactionListLazyQuery,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { GQLQueries } from 'uniswap/src/data/graphql/uniswap-data-api/queries'
-import { useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
+import { useEnabledChains, useHideSpamTokensSetting } from 'uniswap/src/features/settings/hooks'
 import { useSelectAddressTransactions } from 'uniswap/src/features/transactions/selectors'
 import { TransactionStatus, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -46,17 +46,19 @@ export function TransactionHistoryUpdater(): JSX.Element | null {
     return Object.keys(allAccounts).filter((address) => address !== activeAccountAddress)
   }, [activeAccountAddress, allAccounts])
 
+  const { gqlChains } = useEnabledChains()
+
   // Poll at different intervals to reduce requests made for non active accounts.
 
   const { data: activeAccountData } = useTransactionHistoryUpdaterQuery({
-    variables: { addresses: activeAccountAddress ?? [] },
+    variables: { addresses: activeAccountAddress ?? [], chains: gqlChains },
     pollInterval: PollingInterval.KindaFast,
     fetchPolicy: 'network-only', // Ensure latest data.
     skip: !activeAccountAddress,
   })
 
   const { data: nonActiveAccountData } = useTransactionHistoryUpdaterQuery({
-    variables: { addresses: nonActiveAccountAddresses },
+    variables: { addresses: nonActiveAccountAddresses, chains: gqlChains },
     pollInterval: PollingInterval.Normal,
     fetchPolicy: 'network-only', // Ensure latest data.
     skip: nonActiveAccountAddresses.length === 0,
@@ -182,6 +184,7 @@ export function useFetchAndDispatchReceiveNotification(): (
 ) => Promise<void> {
   const [fetchFullTransactionData] = useTransactionListLazyQuery()
   const dispatch = useDispatch()
+  const { gqlChains } = useEnabledChains()
 
   return async (
     address: string,
@@ -190,7 +193,7 @@ export function useFetchAndDispatchReceiveNotification(): (
   ): Promise<void> => {
     // Fetch full transaction history for user address.
     const { data: fullTransactionData } = await fetchFullTransactionData({
-      variables: { address },
+      variables: { address, chains: gqlChains },
       fetchPolicy: 'network-only', // Ensure latest data.
     })
 

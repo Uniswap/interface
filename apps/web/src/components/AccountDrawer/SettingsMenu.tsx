@@ -13,6 +13,8 @@ import { ReactNode } from 'react'
 import { ChevronRight } from 'react-feather'
 import { ClickableStyle, ThemedText } from 'theme/components'
 import ThemeToggle from 'theme/components/ThemeToggle'
+import { FeatureFlags } from 'uniswap/src/features/gating/flags'
+import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { useLanguageInfo } from 'uniswap/src/features/language/hooks'
 import { Trans } from 'uniswap/src/i18n'
 
@@ -73,6 +75,7 @@ export default function SettingsMenu({
   const activeLanguage = useActiveLanguage()
   const activeLocalCurrency = useActiveLocalCurrency()
   const languageInfo = useLanguageInfo(activeLanguage)
+  const isTestnetFeatureFlagOn = useFeatureFlag(FeatureFlags.TestnetMode)
 
   return (
     <SlideOutMenu title={<Trans i18nKey="common.settings" />} onClose={onClose}>
@@ -83,7 +86,7 @@ export default function SettingsMenu({
             <SmallBalanceToggle />
             <SpamToggle />
             <AnalyticsToggle />
-            <TestnetsToggle />
+            {isTestnetFeatureFlagOn && <TestnetsToggle />}
           </ToggleWrapper>
 
           <Column>

@@ -11,7 +11,7 @@ import AlertTriangleFilled from 'components/Icons/AlertTriangleFilled'
 import { LoaderV3 } from 'components/Icons/LoadingSpinner'
 import Column, { AutoColumn } from 'components/deprecated/Column'
 import { AutoRow } from 'components/deprecated/Row'
-import { SupportedInterfaceChainId, useIsSupportedChainId } from 'constants/chains'
+import { useIsSupportedChainId } from 'constants/chains'
 import styled from 'lib/styled-components'
 import { X } from 'react-feather'
 import { useOrder } from 'state/signatures/hooks'
@@ -21,7 +21,7 @@ import { Flex, useSporeColors } from 'ui/src'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 import { useFormatter } from 'utils/formatNumbers'
 
@@ -70,7 +70,7 @@ const PopupAlertTriangle = styled(AlertTriangleFilled)`
   height: 32px;
 `
 
-export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: InterfaceChainId; onClose: () => void }) {
+export function FailedNetworkSwitchPopup({ chainId, onClose }: { chainId: UniverseChainId; onClose: () => void }) {
   const isSupportedChain = useIsSupportedChainId(chainId)
   const chainInfo = isSupportedChain ? UNIVERSE_CHAIN_INFO[chainId] : undefined
 
@@ -146,7 +146,7 @@ export function TransactionPopupContent({
   hash,
   onClose,
 }: {
-  chainId: SupportedInterfaceChainId
+  chainId: UniverseChainId
   hash: string
   onClose: () => void
 }) {

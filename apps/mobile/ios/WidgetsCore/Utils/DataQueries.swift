@@ -97,9 +97,10 @@ public class DataQueries {
     }
   }
 
-  public static func fetchWalletsTokensData(addresses: [String], maxLength: Int = 25) async throws -> [TokenResponse] {
+  public static func fetchWalletsTokensData(addresses: [String], chains: [String], maxLength: Int = 25) async throws -> [TokenResponse] {
+    let gqlChains = chains.map { GraphQLEnum(MobileSchema.Chain(rawValue: $0)!) }
     return try await withCheckedThrowingContinuation { continuation in
-      Network.shared.apollo.fetch(query: MobileSchema.MultiplePortfolioBalancesQuery(ownerAddresses: addresses, valueModifiers: GraphQLNullable.null)){ result in
+      Network.shared.apollo.fetch(query: MobileSchema.MultiplePortfolioBalancesQuery(ownerAddresses: addresses, valueModifiers: GraphQLNullable.null, chains: gqlChains)){ result in
         switch result {
         case .success(let graphQLResult):
           // Takes all the signer accounts and sums up the balances of the tokens, then sorts them by descending order, ignoring spam
@@ -124,16 +125,16 @@ public class DataQueries {
       }
     }
   }
-  
+
   public static func fetchCurrencyConversion(toCurrency: String) async throws -> CurrencyConversionResponse {
     return try await withCheckedThrowingContinuation { continuation in
       let usdResponse = CurrencyConversionResponse(conversionRate: 1, currency: WidgetConstants.currencyUsd)
-      
+
       // Assuming all server currency amounts are in USD
       if (toCurrency == WidgetConstants.currencyUsd) {
         return continuation.resume(returning: usdResponse)
       }
-      
+
       Network.shared.apollo.fetch(
         query: MobileSchema.ConvertQuery(
           fromCurrency: GraphQLEnum(MobileSchema.Currency.usd),
@@ -144,7 +145,7 @@ public class DataQueries {
         case .success(let graphQLResult):
           let conversionRate = graphQLResult.data?.convert?.value
           let currency = graphQLResult.data?.convert?.currency?.rawValue
-          
+
           continuation.resume(
             returning: conversionRate == nil || currency == nil ? usdResponse :
               CurrencyConversionResponse(

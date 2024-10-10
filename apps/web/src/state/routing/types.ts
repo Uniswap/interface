@@ -17,7 +17,7 @@ import { Route as V2Route } from '@uniswap/v2-sdk'
 import { Route as V3Route } from '@uniswap/v3-sdk'
 import { ZERO_PERCENT } from 'constants/misc'
 import { BigNumber } from 'ethers/lib/ethers'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export enum TradeState {
   LOADING = 'loading',
@@ -53,11 +53,11 @@ export enum QuoteIntent {
 
 export interface GetQuoteArgs {
   tokenInAddress: string
-  tokenInChainId: InterfaceChainId
+  tokenInChainId: UniverseChainId
   tokenInDecimals: number
   tokenInSymbol?: string
   tokenOutAddress: string
-  tokenOutChainId: InterfaceChainId
+  tokenOutChainId: UniverseChainId
   tokenOutDecimals: number
   tokenOutSymbol?: string
   amount: string
@@ -81,11 +81,11 @@ export interface GetQuoteArgs {
 export type GetQuickQuoteArgs = {
   amount: string
   tokenInAddress: string
-  tokenInChainId: InterfaceChainId
+  tokenInChainId: UniverseChainId
   tokenInDecimals: number
   tokenInSymbol?: string
   tokenOutAddress: string
-  tokenOutChainId: InterfaceChainId
+  tokenOutChainId: UniverseChainId
   tokenOutDecimals: number
   tokenOutSymbol?: string
   tradeType: TradeType

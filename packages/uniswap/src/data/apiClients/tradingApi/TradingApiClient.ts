@@ -9,6 +9,8 @@ import {
   ChainId,
   CheckApprovalLPRequest,
   CheckApprovalLPResponse,
+  ClaimLPFeesRequest,
+  ClaimLPFeesResponse,
   ClassicQuote,
   CreateLPPositionRequest,
   CreateLPPositionResponse,
@@ -31,6 +33,7 @@ import {
   QuoteResponse,
   Routing,
   TransactionHash,
+  UniversalRouterVersion,
 } from 'uniswap/src/data/tradingApi/__generated__'
 
 // TradingAPI team is looking into updating type generation to produce the following types for it's current QuoteResponse type:
@@ -70,9 +73,17 @@ const TradingApiClient = createApiClient({
   },
 })
 
-export async function fetchQuote(params: QuoteRequest): Promise<DiscriminatedQuoteResponse> {
+export type WithV4Flag<T> = T & { v4Enabled: boolean }
+
+export async function fetchQuote({
+  v4Enabled,
+  ...params
+}: WithV4Flag<QuoteRequest>): Promise<DiscriminatedQuoteResponse> {
   return await TradingApiClient.post<DiscriminatedQuoteResponse>(uniswapUrls.tradingApiPaths.quote, {
     body: JSON.stringify(params),
+    headers: {
+      'x-universal-router-version': v4Enabled ? UniversalRouterVersion._2_0 : UniversalRouterVersion._1_2,
+    },
   })
 }
 
@@ -82,9 +93,12 @@ export async function fetchIndicativeQuote(params: IndicativeQuoteRequest): Prom
   })
 }
 
-export async function fetchSwap(params: CreateSwapRequest): Promise<CreateSwapResponse> {
+export async function fetchSwap({ v4Enabled, ...params }: WithV4Flag<CreateSwapRequest>): Promise<CreateSwapResponse> {
   return await TradingApiClient.post<CreateSwapResponse>(uniswapUrls.tradingApiPaths.swap, {
     body: JSON.stringify(params),
+    headers: {
+      'x-universal-router-version': v4Enabled ? '2.0' : '1.2',
+    },
   })
 }
 
@@ -126,7 +140,6 @@ export async function createLpPosition(params: CreateLPPositionRequest): Promise
     }),
   })
 }
-
 export async function decreaseLpPosition(params: DecreaseLPPositionRequest): Promise<DecreaseLPPositionResponse> {
   return await TradingApiClient.post<DecreaseLPPositionResponse>(uniswapUrls.tradingApiPaths.decreaseLp, {
     body: JSON.stringify({
@@ -134,7 +147,6 @@ export async function decreaseLpPosition(params: DecreaseLPPositionRequest): Pro
     }),
   })
 }
-
 export async function increaseLpPosition(params: IncreaseLPPositionRequest): Promise<IncreaseLPPositionResponse> {
   return await TradingApiClient.post<IncreaseLPPositionResponse>(uniswapUrls.tradingApiPaths.increaseLp, {
     body: JSON.stringify({
@@ -142,9 +154,16 @@ export async function increaseLpPosition(params: IncreaseLPPositionRequest): Pro
     }),
   })
 }
-
 export async function checkLpApproval(params: CheckApprovalLPRequest): Promise<CheckApprovalLPResponse> {
   return await TradingApiClient.post<CheckApprovalLPResponse>(uniswapUrls.tradingApiPaths.lpApproval, {
+    body: JSON.stringify({
+      ...params,
+    }),
+  })
+}
+
+export async function claimLpFees(params: ClaimLPFeesRequest): Promise<ClaimLPFeesResponse> {
+  return await TradingApiClient.post<ClaimLPFeesResponse>(uniswapUrls.tradingApiPaths.claimLpFees, {
     body: JSON.stringify({
       ...params,
     }),

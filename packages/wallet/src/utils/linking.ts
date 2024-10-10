@@ -5,7 +5,7 @@ import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { toUniswapWebAppLink } from 'uniswap/src/features/chains/utils'
 import { BACKEND_NATIVE_CHAIN_ADDRESS_STRING } from 'uniswap/src/features/search/utils'
 import { ServiceProviderInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { currencyIdToChain, currencyIdToGraphQLAddress } from 'uniswap/src/utils/currencyId'
 import { ExplorerDataType, getExplorerLink, openUri } from 'uniswap/src/utils/linking'
 
@@ -13,7 +13,7 @@ export function dismissInAppBrowser(): void {
   WebBrowser.dismissBrowser()
 }
 
-export async function openTransactionLink(hash: string | undefined, chainId: WalletChainId): Promise<void> {
+export async function openTransactionLink(hash: string | undefined, chainId: UniverseChainId): Promise<void> {
   if (!hash) {
     return undefined
   }
@@ -59,7 +59,7 @@ export function getProfileUrl(walletAddress: string): string {
 const UTM_TAGS_MOBILE = 'utm_medium=mobile&utm_source=share-tdp'
 
 export function getTokenUrl(currencyId: string, addMobileUTMTags: boolean = false): string | undefined {
-  const chainId = currencyIdToChain(currencyId) as WalletChainId
+  const chainId = currencyIdToChain(currencyId) as UniverseChainId
   if (!chainId) {
     return undefined
   }

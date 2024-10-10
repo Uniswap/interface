@@ -4,8 +4,8 @@ import { createFixture } from 'uniswap/src/test/utils'
 
 export const GQL_CHAINS = [
   Chain.Ethereum,
+  Chain.EthereumSepolia,
   Chain.Arbitrum,
-  Chain.EthereumGoerli,
   Chain.Optimism,
   Chain.Polygon,
   Chain.Base,

@@ -1,5 +1,6 @@
 /* eslint-disable complexity */
 import { ReactNavigationPerformanceView } from '@shopify/react-native-performance-navigation'
+import { t } from 'i18next'
 import React, { useCallback, useMemo, useState } from 'react'
 import { FadeInDown, FadeOutDown } from 'react-native-reanimated'
 import { useSelector } from 'react-redux'
@@ -12,19 +13,19 @@ import { TokenDetailsActionButtons } from 'src/components/TokenDetails/TokenDeta
 import { TokenDetailsHeader } from 'src/components/TokenDetails/TokenDetailsHeader'
 import { TokenDetailsLinks } from 'src/components/TokenDetails/TokenDetailsLinks'
 import { TokenDetailsStats } from 'src/components/TokenDetails/TokenDetailsStats'
-import { useCrossChainBalances } from 'src/components/TokenDetails/hooks'
 import { HeaderScrollScreen } from 'src/components/layout/screens/HeaderScrollScreen'
 import { Loader } from 'src/components/loading/loaders'
 import { selectModalState } from 'src/features/modals/selectModalState'
 import { HeaderRightElement, HeaderTitleElement } from 'src/screens/TokenDetailsHeaders'
 import { useSkeletonLoading } from 'src/utils/useSkeletonLoading'
-import { Flex, Separator, useDeviceInsets, useIsDarkMode, useSporeColors } from 'ui/src'
+import { Flex, Separator, useIsDarkMode, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { fonts } from 'ui/src/theme'
 import { useExtractedTokenColor } from 'ui/src/utils/colors'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { PollingInterval } from 'uniswap/src/constants/misc'
+import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
 import {
   SafetyLevel,
   TokenDetailsScreenQuery,
@@ -40,13 +41,16 @@ import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { Language } from 'uniswap/src/features/language/constants'
 import { useCurrentLanguage } from 'uniswap/src/features/language/hooks'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { TestnetModeModal } from 'uniswap/src/features/testnets/TestnetModeModal'
 import { TokenWarningCard } from 'uniswap/src/features/tokens/TokenWarningCard'
 import TokenWarningModal from 'uniswap/src/features/tokens/TokenWarningModal'
 import { useDismissedTokenWarnings } from 'uniswap/src/features/tokens/slice/hooks'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import {
@@ -134,11 +138,16 @@ function TokenDetails({
   showSkeleton: boolean
 }): JSX.Element {
   const colors = useSporeColors()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const isDarkMode = useIsDarkMode()
   const tokenProtectionEnabled = useFeatureFlag(FeatureFlags.TokenProtection)
+  const { defaultChainId } = useEnabledChains()
 
-  const currencyChainId = (currencyIdToChain(_currencyId) as WalletChainId) ?? UniverseChainId.Mainnet
+  const address = useActiveAccountAddressWithThrow()
+  const { isTestnetModeEnabled, chains: enabledChains } = useEnabledChains()
+
+  const currencyChainId = (currencyIdToChain(_currencyId) as UniverseChainId) ?? defaultChainId
+  const isChainEnabled = !!enabledChains.find((chain) => chain === currencyIdToChain(_currencyId))
   const currencyAddress = currencyIdToAddress(_currencyId)
 
   const token = data?.token
@@ -148,7 +157,11 @@ function TokenDetails({
   const currencyInfo = useCurrencyInfo(_currencyId)
 
   const crossChainTokens = token?.project?.tokens
-  const { currentChainBalance, otherChainBalances } = useCrossChainBalances(_currencyId, crossChainTokens)
+  const { currentChainBalance, otherChainBalances } = useCrossChainBalances({
+    address,
+    currencyId: _currencyId,
+    crossChainTokens,
+  })
   const hasTokenBalance = Boolean(currentChainBalance)
   const isNativeCurrency = isNativeCurrencyAddress(currencyChainId, currencyAddress)
 
@@ -195,10 +208,18 @@ function TokenDetails({
   const isBlocked = safetyLevel === SafetyLevel.Blocked || currencyInfo?.safetyInfo?.tokenList === TokenList.Blocked
 
   const bridgingTokenWithHighestBalance = useBridgingTokenWithHighestBalance({
+    address,
     currencyAddress,
     currencyChainId,
-    otherChainBalances,
   })
+
+  const [isTestnetWarningModalOpen, setIsTestnetWarningModalOpen] = useState(false)
+  const closeTestnetWarningModalClose = useCallback(() => {
+    setIsTestnetWarningModalOpen(false)
+  }, [])
+  const openTestnetWarningModal = useCallback(() => {
+    setIsTestnetWarningModalOpen(true)
+  }, [])
 
   const onPressSend = useCallback(() => {
     // Do not show warning modal speedbump if user is trying to send tokens they own
@@ -327,11 +348,13 @@ function TokenDetails({
             {tokenProtectionEnabled && (
               <TokenWarningCard currencyInfo={currencyInfo} onPressCtaButton={openTokenWarningModal} />
             )}
-            <TokenBalances
-              currentChainBalance={currentChainBalance}
-              otherChainBalances={otherChainBalances}
-              onPressSend={onPressSend}
-            />
+            {isChainEnabled && (
+              <TokenBalances
+                currentChainBalance={currentChainBalance}
+                otherChainBalances={otherChainBalances}
+                onPressSend={onPressSend}
+              />
+            )}
             <Separator />
             {showSkeleton ? (
               <TokenDetailsTextPlaceholders />
@@ -350,12 +373,12 @@ function TokenDetails({
       {!loading && !tokenColorLoading ? (
         <AnimatedFlex backgroundColor="$surface1" entering={FadeInDown} style={{ marginBottom: insets.bottom }}>
           <TokenDetailsActionButtons
-            disabled={isBlocked}
+            disabled={isBlocked || !isChainEnabled}
             tokenColor={tokenColor}
             userHasBalance={hasTokenBalance}
             onPressBuy={onPressBuy}
             onPressSell={(): void => onPressSwap(CurrencyField.INPUT)}
-            onPressDisabled={openTokenWarningModal}
+            onPressDisabled={isTestnetModeEnabled ? openTestnetWarningModal : openTokenWarningModal}
           />
         </AnimatedFlex>
       ) : null}
@@ -372,6 +395,13 @@ function TokenDetails({
           onAcknowledge={onAcceptWarning}
         />
       )}
+
+      <TestnetModeModal
+        unsupported
+        isOpen={isTestnetWarningModalOpen}
+        descriptionCopy={t('tdp.noTestnetSupportDescription')}
+        onClose={closeTestnetWarningModalClose}
+      />
 
       {showBuyNativeTokenModal && (
         <BuyNativeTokenModal

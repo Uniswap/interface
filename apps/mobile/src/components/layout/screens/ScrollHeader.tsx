@@ -4,9 +4,10 @@ import { StyleProp, ViewStyle } from 'react-native'
 import Animated, { Extrapolate, SharedValue, interpolate, useAnimatedStyle } from 'react-native-reanimated'
 import { BackButton } from 'src/components/buttons/BackButton'
 import { WithScrollToTop } from 'src/components/layout/screens/WithScrollToTop'
-import { ColorTokens, Flex, useDeviceInsets } from 'ui/src'
+import { ColorTokens, Flex } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes, zIndices } from 'ui/src/theme'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 type ScrollHeaderProps = {
   scrollY: SharedValue<number>
@@ -49,7 +50,7 @@ export function ScrollHeader({
     }
   })
 
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const headerRowStyles = useMemo(() => {
     return fullScreen
       ? {

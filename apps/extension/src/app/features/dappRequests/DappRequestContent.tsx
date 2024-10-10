@@ -2,16 +2,16 @@ import { PropsWithChildren, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRequestQueueContext'
-import { NetworksFooter } from 'src/app/features/dappRequests/requestContent/NetworksFooter'
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { Anchor, AnimatePresence, Button, Flex, Text, UniversalImage, UniversalImageResizeMode, styled } from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
-import { useUSDValue } from 'uniswap/src/features/gas/hooks'
+import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { TransactionTypeInfo } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { extractNameFromUrl } from 'utilities/src/format/extractNameFromUrl'
 import { formatDappURL } from 'utilities/src/format/urls'
 import { logger } from 'utilities/src/logger/logger'
@@ -26,7 +26,7 @@ interface DappRequestHeaderProps {
 }
 
 interface DappRequestFooterProps {
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
   connectedAccountAddress?: string
   confirmText: string
   maybeCloseOnConfirm?: boolean
@@ -150,13 +150,13 @@ export function DappRequestFooter({
   maybeCloseOnConfirm,
   onCancel,
   onConfirm,
-  showAllNetworks,
   showNetworkCost,
   transactionGasFeeResult,
   isUniswapX,
 }: DappRequestFooterProps): JSX.Element {
   const { t } = useTranslation()
   const activeAccount = useActiveAccountWithThrow()
+  const { defaultChainId } = useEnabledChains()
   const {
     dappUrl,
     currentAccount,
@@ -174,8 +174,8 @@ export function DappRequestFooter({
     throw error
   }
 
-  const currentChainId = chainId || activeChain || UniverseChainId.Mainnet
-  const gasFeeUSD = useUSDValue(currentChainId, transactionGasFeeResult?.value)
+  const currentChainId = chainId || activeChain || defaultChainId
+  const { value: gasFeeUSD } = useUSDValueOfGasFee(currentChainId, transactionGasFeeResult?.value)
   const { balance: nativeBalance } = useOnChainNativeCurrencyBalance(currentChainId, currentAccount.address)
 
   const hasSufficientGas = hasSufficientFundsIncludingGas({
@@ -225,12 +225,11 @@ export function DappRequestFooter({
         {showNetworkCost && (
           <NetworkFeeFooter
             chainId={currentChainId}
-            gasFeeUSD={transactionGasFeeResult ? gasFeeUSD : '0'}
+            gasFee={transactionGasFeeResult}
             isUniswapX={isUniswapX}
             showNetworkLogo={!!transactionGasFeeResult}
           />
         )}
-        {showAllNetworks && <NetworksFooter />}
         <AddressFooter
           activeAccountAddress={activeAccount.address}
           connectedAccountAddress={connectedAccountAddress || currentAccount.address}

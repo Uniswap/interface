@@ -5,7 +5,7 @@ import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { DetailBubble, SmallDetailBubble } from 'components/Pools/PoolDetails/shared'
 import Tooltip, { TooltipSize } from 'components/Tooltip'
 import Row from 'components/deprecated/Row'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL, gqlToCurrency } from 'graphql/data/util'
 import useCopyClipboard from 'hooks/useCopyClipboard'
@@ -80,7 +80,7 @@ const ButtonsRow = styled(Row)`
 
 interface PoolDetailsLinkProps {
   address?: string
-  chainId?: SupportedInterfaceChainId
+  chainId?: UniverseChainId
   tokens: (Token | undefined)[]
   loading?: boolean
 }

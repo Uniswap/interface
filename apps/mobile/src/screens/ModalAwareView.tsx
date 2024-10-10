@@ -4,9 +4,10 @@ import { View } from 'react-native'
 import { useSelector } from 'react-redux'
 import { HorizontalEdgeGestureTarget } from 'src/components/layout/screens/EdgeGestureTarget'
 import { selectModalState } from 'src/features/modals/selectModalState'
-import { Flex, flexStyles, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, flexStyles, useSporeColors } from 'ui/src'
 import { HandleBar } from 'uniswap/src/components/modals/HandleBar'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 /**
  * Wrapper view to correctly render screens within Modal as needed. This is required
  * to enable both full screen, and bottom sheet drag gestures on a screen within a modal.
@@ -19,7 +20,7 @@ import { ModalName } from 'uniswap/src/features/telemetry/constants'
 export function ExploreModalAwareView({ children }: { children: JSX.Element }): JSX.Element {
   const inModal = useSelector(selectModalState(ModalName.Explore)).isOpen
   const colors = useSporeColors()
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
 
   if (inModal) {
     return (

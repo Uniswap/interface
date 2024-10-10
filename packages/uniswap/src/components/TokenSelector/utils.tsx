@@ -1,3 +1,4 @@
+import { useMemo } from 'react'
 import { TokenOption, TokenOptionSection, TokenSection } from 'uniswap/src/components/TokenSelector/types'
 import { tradingApiSwappableTokenToCurrencyInfo } from 'uniswap/src/data/apiClients/tradingApi/utils/tradingApiSwappableTokenToCurrencyInfo'
 import { SafetyLevel as GqlSafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -169,27 +170,29 @@ export function useTokenOptionsSection(
   rightElement?: JSX.Element,
   name?: string,
 ): TokenSection[] | undefined {
-  if (!tokenOptions) {
-    return undefined
-  }
+  return useMemo(() => {
+    if (!tokenOptions) {
+      return undefined
+    }
 
-  // If it is a 2D array, check if any of the inner arrays are not empty
-  // Otherwise, check if the array is not empty
-  const is2DArray = tokenOptions?.length > 0 && Array.isArray(tokenOptions[0])
-  const hasData = is2DArray
-    ? tokenOptions.some((item) => isTokenOptionArray(item) && item.length > 0)
-    : tokenOptions.length > 0
+    // If it is a 2D array, check if any of the inner arrays are not empty
+    // Otherwise, check if the array is not empty
+    const is2DArray = tokenOptions?.length > 0 && Array.isArray(tokenOptions[0])
+    const hasData = is2DArray
+      ? tokenOptions.some((item) => isTokenOptionArray(item) && item.length > 0)
+      : tokenOptions.length > 0
 
-  return hasData
-    ? [
-        {
-          sectionKey,
-          data: tokenOptions,
-          name,
-          rightElement,
-        },
-      ]
-    : undefined
+    return hasData
+      ? [
+          {
+            sectionKey,
+            data: tokenOptions,
+            name,
+            rightElement,
+          },
+        ]
+      : undefined
+  }, [name, rightElement, sectionKey, tokenOptions])
 }
 
 export function isSwapListLoading(

@@ -26,6 +26,7 @@ import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/conte
 import i18n from 'uniswap/src/i18n/i18n'
 import { logger } from 'utilities/src/logger/logger'
 import { ErrorBoundary } from 'wallet/src/components/ErrorBoundary/ErrorBoundary'
+import { useTestnetModeForLoggingAndAnalytics } from 'wallet/src/features/testnetMode/hooks'
 import { SharedWalletProvider } from 'wallet/src/providers/SharedWalletProvider'
 
 getLocalUserId()
@@ -58,6 +59,7 @@ router.subscribe((state) => {
 setRouter(router)
 
 function UnitagClaimAppInner(): JSX.Element {
+  useTestnetModeForLoggingAndAnalytics()
   return (
     <Flex alignItems="center" justifyContent="center" minHeight="100vh" width="100%">
       <OnboardingStepsProvider

@@ -2,6 +2,7 @@ import {
   IncreaseLiquidityStep,
   useIncreaseLiquidityContext,
 } from 'components/IncreaseLiquidity/IncreaseLiquidityContext'
+import { useIncreaseLiquidityTxContext } from 'components/IncreaseLiquidity/IncreaseLiquidityTxContext'
 import { DepositInputForm } from 'components/Liquidity/DepositInputForm'
 import { LiquidityModalDetailRows } from 'components/Liquidity/LiquidityModalDetailRows'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
@@ -20,12 +21,13 @@ export function IncreaseLiquidityForm() {
   } = useIncreaseLiquidityContext()
   const { formattedAmounts, currencyAmounts, currencyAmountsUSDValue, currencyBalances } = derivedAddLiquidityInfo
   const { position } = addLiquidityState
+  const { gasFeeEstimateUSD } = useIncreaseLiquidityTxContext()
 
   if (!position) {
     throw new Error('AddLiquidityModal must have an initial state when opening')
   }
 
-  const { restPosition, currency0Amount, currency1Amount } = position
+  const { currency0Amount, currency1Amount } = position
   const token0 = currency0Amount.currency
   const token1 = currency1Amount.currency
 
@@ -63,7 +65,7 @@ export function IncreaseLiquidityForm() {
   return (
     <>
       <Flex px="$padding16">
-        <LiquidityPositionInfo position={restPosition} />
+        <LiquidityPositionInfo positionInfo={position} />
         <DepositInputForm
           token0={token0}
           token1={token1}
@@ -75,7 +77,11 @@ export function IncreaseLiquidityForm() {
           onSetMax={handleOnSetMax}
         />
       </Flex>
-      <LiquidityModalDetailRows currency0Amount={currency0Amount} currency1Amount={currency1Amount} />
+      <LiquidityModalDetailRows
+        currency0Amount={currency0Amount}
+        currency1Amount={currency1Amount}
+        networkCost={gasFeeEstimateUSD}
+      />
       <Button disabled={disableContinue} onPress={handleOnContinue}>
         {t('common.add.label')}
       </Button>

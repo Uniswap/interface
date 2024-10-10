@@ -3,7 +3,7 @@ import { call, select } from '@redux-saga/core/effects'
 import { permit2Address } from '@uniswap/permit2-sdk'
 import { Protocol } from '@uniswap/router-sdk'
 import { TradeType } from '@uniswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
 import JSBI from 'jsbi'
 import { expectSaga, testSaga } from 'redux-saga-test-plan'
 import { EffectProviders, StaticProvider } from 'redux-saga-test-plan/providers'
@@ -47,7 +47,7 @@ jest.mock('uniswap/src/features/gating/sdk/statsig', () => ({
 const account = signerMnemonicAccount()
 
 const CHAIN_ID = UniverseChainId.Mainnet
-const universalRouterAddress = UNIVERSAL_ROUTER_ADDRESS(CHAIN_ID)
+const universalRouterAddress = UNIVERSAL_ROUTER_ADDRESS(UniversalRouterVersion.V1_2, CHAIN_ID)
 
 const { mockProvider } = getTxProvidersMocks()
 

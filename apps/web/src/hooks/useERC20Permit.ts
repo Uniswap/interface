@@ -9,7 +9,7 @@ import JSBI from 'jsbi'
 import { useSingleCallResult } from 'lib/hooks/multicall'
 import { useMemo, useState } from 'react'
 import { DAI, UNI, USDC_MAINNET } from 'uniswap/src/constants/tokens'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export enum PermitType {
   AMOUNT = 1,
@@ -36,9 +36,6 @@ const PERMITTABLE_TOKENS: {
     [USDC_MAINNET.address]: { type: PermitType.AMOUNT, name: 'USD Coin', version: '2' },
     [DAI.address]: { type: PermitType.ALLOWED, name: 'Dai Stablecoin', version: '1' },
     [UNI[UniverseChainId.Mainnet].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
-  },
-  [UniverseChainId.Goerli]: {
-    [UNI[UniverseChainId.Goerli].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
   },
   [UniverseChainId.Sepolia]: {
     [UNI[UniverseChainId.Sepolia].address]: { type: PermitType.AMOUNT, name: 'Uniswap' },
@@ -226,7 +223,7 @@ export function useERC20Permit(
               deadline: signatureDeadline,
               ...(allowed ? { allowed } : { amount: value }),
               nonce: nonceNumber,
-              chainId: account.chainId as InterfaceChainId,
+              chainId: account.chainId as UniverseChainId,
               owner: account.address as string,
               spender,
               tokenAddress,

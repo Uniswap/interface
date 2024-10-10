@@ -19,6 +19,7 @@ import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
 import { iconSizes } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
+import { areCurrenciesEqual } from 'uniswap/src/utils/currencyId'
 import { useFormatter } from 'utils/formatNumbers'
 
 const CurrencySelector = ({ currency, onPress }: { currency?: Currency; onPress: () => void }) => {
@@ -92,10 +93,12 @@ const FeeTier = ({
   selected: boolean
   onSelect: (value: number) => void
 }) => {
+  const { formatPercent } = useFormatter()
+
   return (
     <FeeTierContainer onPress={() => onSelect(feeTier.value)} background={selected ? '$surface3' : '$surface1'}>
       <Flex row gap={10} justifyContent="space-between" alignItems="center">
-        <Text variant="buttonLabel3">{feeTier.value / 10000}%</Text>
+        <Text variant="buttonLabel3">{formatPercent(new Percent(feeTier.value, 1000000))}</Text>
         {selected && <CheckCircleFilled size={iconSizes.icon20} />}
       </Flex>
       <Text variant="body4">{feeTier.title}</Text>
@@ -115,22 +118,46 @@ export function SelectTokensStep({
   const { t } = useTranslation()
 
   const {
-    positionState: {
-      currencyInputs: { TOKEN0: token0, TOKEN1: token1 },
-      fee,
-      protocolVersion,
-    },
+    positionState: { currencyInputs, fee, protocolVersion },
     setPositionState,
     derivedPositionInfo,
     setFeeTierSearchModalOpen,
   } = useCreatePositionContext()
+  const { TOKEN0: token0, TOKEN1: token1 } = derivedPositionInfo.currencies
 
   const [currencySearchInputState, setCurrencySearchInputState] = useState<PositionField | undefined>(undefined)
   const [isShowMoreFeeTiersEnabled, toggleShowMoreFeeTiersEnabled] = useReducer((state) => !state, false)
-  const continueButtonEnabled = !!derivedPositionInfo.pool
+  const continueButtonEnabled =
+    derivedPositionInfo.protocolVersion !== ProtocolVersion.UNSPECIFIED &&
+    ((derivedPositionInfo.protocolVersion === ProtocolVersion.V2 && derivedPositionInfo.pair) ||
+      ((derivedPositionInfo.protocolVersion === ProtocolVersion.V3 ||
+        derivedPositionInfo.protocolVersion === ProtocolVersion.V4) &&
+        derivedPositionInfo.pool))
 
   const handleCurrencySelect = useCallback(
     (currency: Currency) => {
+      if (currencySearchInputState === undefined) {
+        return
+      }
+
+      const otherInputState =
+        currencySearchInputState === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
+      const otherCurrency = currencyInputs[otherInputState]
+      const wrappedCurrencyNew = currency.isNative ? currency.wrapped : currency
+      const wrappedCurrencyOther = otherCurrency?.isNative ? otherCurrency.wrapped : otherCurrency
+
+      if (areCurrenciesEqual(currency, otherCurrency) || areCurrenciesEqual(wrappedCurrencyNew, wrappedCurrencyOther)) {
+        setPositionState((prevState) => ({
+          ...prevState,
+          currencyInputs: {
+            ...prevState.currencyInputs,
+            [otherInputState]: undefined,
+            [currencySearchInputState]: currency,
+          },
+        }))
+        return
+      }
+
       switch (currencySearchInputState) {
         case PositionField.TOKEN0:
         case PositionField.TOKEN1:
@@ -143,7 +170,7 @@ export function SelectTokensStep({
           break
       }
     },
-    [currencySearchInputState, setPositionState],
+    [currencyInputs, currencySearchInputState, setPositionState],
   )
 
   const handleFeeTierSelect = useCallback(
@@ -214,7 +241,7 @@ export function SelectTokensStep({
               <Flex gap="$gap4">
                 <Flex row gap="$gap8">
                   <Text variant="subheading2" color="$neutral1">
-                    <Trans i18nKey="fee.tierExact" values={{ fee: formatPercent(new Percent(fee, 10_000)) }} />
+                    <Trans i18nKey="fee.tierExact" values={{ fee: formatPercent(new Percent(fee, 1000000)) }} />
                   </Text>
                   {fee === FeeAmount.MEDIUM ? (
                     <PositionInfoBadge placement="only" size="small">
@@ -260,7 +287,6 @@ export function SelectTokensStep({
             )}
             {protocolVersion === ProtocolVersion.V4 && (
               <AdvancedButton
-                tooltip={false}
                 title={t('fee.tier.search')}
                 Icon={Dollar}
                 onPress={() => {

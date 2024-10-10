@@ -4,7 +4,7 @@ import { AssetType, CurrencyAsset } from 'uniswap/src/entities/assets'
 import { SwapFormState } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { DEFAULT_PROTOCOL_OPTIONS } from 'uniswap/src/features/transactions/swap/utils/protocols'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 
@@ -61,7 +61,7 @@ export function getSwapPrefilledState({
   currencyField,
 }: {
   currencyAddress: Address
-  currencyChainId: WalletChainId
+  currencyChainId: UniverseChainId
   currencyField: CurrencyField
 }): TransactionState {
   const nativeTokenAddress = getNativeAddress(currencyChainId)

@@ -6,8 +6,9 @@ import { iconSizes } from 'ui/src/theme'
 import { PaginatedModalRenderer } from 'uniswap/src/components/modals/PaginatedModals'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { WarningSeverity } from 'uniswap/src/components/modals/WarningModal/types'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 import { NewAddressWarningModal } from 'wallet/src/components/RecipientSearch/modals/NewAddressWarningModal'
 import { ConditionalModalRenderer, SpeedBumps } from 'wallet/src/components/modals/SpeedBumps'
@@ -22,7 +23,7 @@ import {
 
 interface RecipientSelectSpeedBumpsProps {
   recipientAddress?: string
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
   checkSpeedBumps: boolean
   setCheckSpeedBumps: (value: boolean) => void
   onConfirm: () => void
@@ -36,6 +37,7 @@ export function RecipientSelectSpeedBumps({
 }: RecipientSelectSpeedBumpsProps): JSX.Element | null {
   const { t } = useTranslation()
   const colors = useSporeColors()
+  const { defaultChainId } = useEnabledChains()
 
   const activeAddress = useActiveAccountAddressWithThrow()
   const viewOnlyAccounts = useViewOnlyAccounts()
@@ -43,11 +45,11 @@ export function RecipientSelectSpeedBumps({
   const previousTransactions = useAllTransactionsBetweenAddresses(activeAddress, recipientAddress)
   const { isSmartContractAddress, loading: smartContractLoading } = useIsSmartContractAddress(
     recipientAddress,
-    chainId ?? UniverseChainId.Mainnet,
+    chainId ?? defaultChainId,
   )
   const { isERC20ContractAddress, loading: erc20ContractLoading } = useIsErc20Contract(
     recipientAddress,
-    chainId ?? UniverseChainId.Mainnet,
+    chainId ?? defaultChainId,
   )
 
   const renderViewOnlyWarning = useCallback<PaginatedModalRenderer>(

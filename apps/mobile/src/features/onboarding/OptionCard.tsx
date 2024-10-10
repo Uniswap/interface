@@ -52,20 +52,28 @@ export function OptionCard({
             height={iconSizes.icon28}
             justifyContent="center"
             width={iconSizes.icon28}
+            {...(badgeText && { mt: '$spacing4' })}
           >
             {icon}
           </Flex>
           <Flex row alignItems="center" gap="$spacing4" pr="$spacing60">
             <Flex fill alignItems="flex-start" gap="$spacing4" justifyContent="space-around">
               <Flex row gap="$spacing8">
-                <Flex fill>
+                <Flex fill {...(badgeText && { py: '$spacing4' })}>
                   <Text $short={{ variant: 'subheading2' }} allowFontScaling={false} variant="body2">
                     {title}
                   </Text>
                 </Flex>
                 {badgeText && (
-                  <Flex centered backgroundColor="$DEP_magentaDark" borderRadius="$rounded8" px="$spacing8">
-                    <Text color="$accent1" variant="buttonLabel3">
+                  <Flex
+                    centered
+                    backgroundColor="$DEP_magentaDark"
+                    borderRadius="$rounded8"
+                    p="$spacing8"
+                    alignSelf="flex-start"
+                    maxWidth="30%"
+                  >
+                    <Text textAlign="center" color="$accent1" variant="buttonLabel3">
                       {badgeText}
                     </Text>
                   </Flex>

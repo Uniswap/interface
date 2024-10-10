@@ -4,7 +4,7 @@ import { WC_PARAMS, uniswapWalletConnect } from 'components/Web3Provider/walletC
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { UNISWAP_WEB_URL } from 'uniswap/src/constants/urls'
-import { UniverseChainId, WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { COMBINED_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 import { createClient } from 'viem'
 import { createConfig, http } from 'wagmi'
 import { connect } from 'wagmi/actions'
@@ -19,7 +19,7 @@ declare module 'wagmi' {
 export const wagmiConfig = createConfig({
   chains: [
     UNIVERSE_CHAIN_INFO[UniverseChainId.Mainnet],
-    ...WEB_SUPPORTED_CHAIN_IDS.map((chainId) => UNIVERSE_CHAIN_INFO[chainId]),
+    ...COMBINED_CHAIN_IDS.map((chainId) => UNIVERSE_CHAIN_INFO[chainId]),
   ],
   connectors: [
     injectedWithFallback(),

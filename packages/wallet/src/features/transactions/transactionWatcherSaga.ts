@@ -32,6 +32,7 @@ import { isBridge, isClassic, isUniswapX } from 'uniswap/src/features/transactio
 import { toTradingApiSupportedChainId } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import {
   BaseSwapTransactionInfo,
+  BridgeTransactionDetails,
   FinalizedTransactionDetails,
   QueuedOrderStatus,
   SendTokenTransactionInfo,
@@ -41,7 +42,7 @@ import {
   isFinalizedTx,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import i18n from 'uniswap/src/i18n/i18n'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
 import { fetchFiatOnRampTransaction } from 'wallet/src/features/fiatOnRamp/api'
@@ -329,19 +330,25 @@ function* waitForRemoteUpdate(transaction: TransactionDetails, provider: provide
   const receipt = receiptFromEthersReceipt(ethersReceipt)
 
   if (isBridge(transaction)) {
-    // Bridge swaps become non-cancellable after the transaction is submitted to chain.
-    // Update should happen without watching to avoid an infinite re-watch loop.
-    const updatedTransaction = { ...transaction, cancellable: false }
-    yield* put(transactionActions.updateTransactionWithoutWatch(updatedTransaction))
+    status = getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
+    if (status === TransactionStatus.Success) {
+      // Only the send part was successful, wait for receive part to be confirmed on chain.
+      // Bridge swaps become non-cancellable after the send transaction is confirmed on chain.
+      if (!transaction.sendConfirmed) {
+        const updatedTransaction: BridgeTransactionDetails = { ...transaction, sendConfirmed: true }
+        yield* put(transactionActions.updateTransaction(updatedTransaction))
+      }
 
-    // Poll for bridging status from BE
-    status = yield* call(waitForBridgingStatus, transaction)
+      // Poll for bridging status from BE
+      status = yield* call(waitForBridgingStatus, transaction)
+    }
   }
 
   // Classic transaction status is based on receipt, while UniswapX status is based backend response.
   if (isClassic(transaction)) {
     status = getFinalizedTransactionStatus(transaction.status, ethersReceipt?.status)
   }
+
   return { ...transaction, status, receipt, hash }
 }
 
@@ -408,7 +415,7 @@ function* waitForBridgingStatus(transaction: TransactionDetails) {
   return swapStatus ? SWAP_STATUS_TO_TX_STATUS[swapStatus] : TransactionStatus.Failed
 }
 
-function* waitForCancellation(chainId: WalletChainId, id: string) {
+function* waitForCancellation(chainId: UniverseChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof cancelTransaction>>(cancelTransaction.type)
     if (payload.cancelRequest && payload.chainId === chainId && payload.id === id) {
@@ -417,7 +424,7 @@ function* waitForCancellation(chainId: WalletChainId, id: string) {
   }
 }
 
-function* waitForReplacement(chainId: WalletChainId, id: string) {
+function* waitForReplacement(chainId: UniverseChainId, id: string) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof replaceTransaction>>(replaceTransaction.type)
     if (payload.chainId === chainId && payload.id === id) {
@@ -425,11 +432,21 @@ function* waitForReplacement(chainId: WalletChainId, id: string) {
     }
   }
 }
+
 /**
  * Monitor for transactions with the same nonce as the current transaction. If any duplicate is finalized, it means
  * the current transaction has been invalidated and wont be picked up on chain.
  */
-export function* waitForTxnInvalidated(chainId: WalletChainId, id: string, nonce: BigNumberish | undefined) {
+export function* waitForTxnInvalidated(chainId: UniverseChainId, id: string, nonce: BigNumberish | undefined) {
+  yield* race({
+    sameNonceFinalized: call(waitForSameNonceFinalized, chainId, id, nonce),
+    bridgeSendCompleted: call(waitForBridgeSendCompleted, chainId, id, nonce),
+  })
+
+  return true
+}
+
+export function* waitForSameNonceFinalized(chainId: UniverseChainId, id: string, nonce: BigNumberish | undefined) {
   while (true) {
     const { payload } = yield* take<ReturnType<typeof transactionActions.finalizeTransaction>>(
       transactionActions.finalizeTransaction.type,
@@ -437,6 +454,28 @@ export function* waitForTxnInvalidated(chainId: WalletChainId, id: string, nonce
 
     if (
       !isUniswapX(payload) && // UniswapX transactions are submitted by a filler, so they cannot invalidate a transaction sent by a user.
+      payload.chainId === chainId &&
+      payload.id !== id &&
+      payload.options.request.nonce === nonce
+    ) {
+      return true
+    }
+  }
+}
+
+/**
+ * When we're canceling a bridge tx, we should invalidate the cancel tx as soon as the send part
+ * of the bridge is confirmed on chain, instead of waiting for the full completion of the bridge.
+ */
+export function* waitForBridgeSendCompleted(chainId: UniverseChainId, id: string, nonce: BigNumberish | undefined) {
+  while (true) {
+    const { payload } = yield* take<ReturnType<typeof transactionActions.updateTransaction>>(
+      transactionActions.updateTransaction.type,
+    )
+
+    if (
+      isBridge(payload) &&
+      payload.sendConfirmed &&
       payload.chainId === chainId &&
       payload.id !== id &&
       payload.options.request.nonce === nonce

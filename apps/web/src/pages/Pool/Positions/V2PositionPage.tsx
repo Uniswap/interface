@@ -2,20 +2,23 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { BreadcrumbNavContainer, BreadcrumbNavLink } from 'components/BreadcrumbNav'
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
-import { parseRestPosition, useV2PositionDerivedInfo } from 'components/Liquidity/utils'
+import { parseRestPosition, useGetPoolTokenPercentage } from 'components/Liquidity/utils'
+import { LoadingRows } from 'components/Loader/styled'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
 import { HeaderButton } from 'pages/Pool/Positions/PositionPage'
+import { LoadingRow } from 'pages/Pool/Positions/shared'
 import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
 import { setOpenModal } from 'state/application/reducer'
 import { useAppDispatch } from 'state/hooks'
 import { Flex, Main, Text, styled } from 'ui/src'
-import { useGetPositionsQuery } from 'uniswap/src/data/rest/getPositions'
+import { useGetPositionQuery } from 'uniswap/src/data/rest/getPosition'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithLoading } from 'uniswap/src/features/gating/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
 import { Trans } from 'uniswap/src/i18n'
 import { NumberType } from 'utilities/src/format/types'
 import { useAccount } from 'wagmi'
@@ -32,21 +35,20 @@ const BodyWrapper = styled(Main, {
 })
 
 export default function V2PositionPage() {
-  const { currencyIdA, currencyIdB } = useParams<{ currencyIdA: string; currencyIdB: string }>()
+  const { pairAddress } = useParams<{ pairAddress: string }>()
   const account = useAccount()
 
-  const { data } = useGetPositionsQuery(
+  const { data, isLoading: positionLoading } = useGetPositionQuery(
     account.address
       ? {
-          token0: currencyIdA,
-          token1: currencyIdB,
-          address: account.address,
-          protocolVersions: [ProtocolVersion.V2],
+          owner: account.address,
+          protocolVersion: ProtocolVersion.V2,
+          pairAddress,
+          chainId: account.chainId,
         }
       : undefined,
   )
-  // TODO(WEB-4920): select the right position from the list, or use an endpoint that returns one position
-  const position = data?.positions[0]
+  const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
@@ -55,15 +57,34 @@ export default function V2PositionPage() {
   const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
 
   const { currency0Amount, currency1Amount, status, liquidityAmount } = positionInfo ?? {}
-  const { poolTokenPercentage, token0USDValue, token1USDValue } = useV2PositionDerivedInfo(positionInfo)
+
+  const token0USDValue = useUSDCValue(currency0Amount)
+  const token1USDValue = useUSDCValue(currency1Amount)
+  const poolTokenPercentage = useGetPoolTokenPercentage(positionInfo)
 
   if (!isLoading && !v4Enabled) {
     return <Navigate to="/pools" replace />
   }
 
-  if (!position || !positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount) {
-    // TODO(WEB-4920): handle loading/error states
-    return null
+  if (positionLoading || !positionInfo || !liquidityAmount || !currency0Amount || !currency1Amount) {
+    return (
+      <BodyWrapper>
+        <LoadingRows>
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+          <LoadingRow />
+        </LoadingRows>
+      </BodyWrapper>
+    )
   }
 
   return (
@@ -77,7 +98,7 @@ export default function V2PositionPage() {
           </BreadcrumbNavContainer>
         </Flex>
 
-        <LiquidityPositionInfo position={position} />
+        <LiquidityPositionInfo positionInfo={positionInfo} />
         {status === PositionStatus.IN_RANGE && (
           <Flex row gap="$gap12" alignItems="center">
             <HeaderButton
@@ -93,7 +114,7 @@ export default function V2PositionPage() {
             <HeaderButton
               emphasis="secondary"
               onPress={() => {
-                dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: position }))
+                dispatch(setOpenModal({ name: ModalName.AddLiquidity, initialState: positionInfo }))
               }}
             >
               <Text variant="buttonLabel2" color="$neutral1">
@@ -103,7 +124,7 @@ export default function V2PositionPage() {
             <HeaderButton
               emphasis="primary"
               onPress={() => {
-                dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: position }))
+                dispatch(setOpenModal({ name: ModalName.RemoveLiquidity, initialState: positionInfo }))
               }}
             >
               <Text variant="buttonLabel2" color="$surface1">

@@ -885,6 +885,13 @@ exports[`should have a correct configuration for a React file 1`] = `
             "name": "uniswap/src/features/language/formatter",
           },
           {
+            "importNames": [
+              "useDeviceInsets",
+            ],
+            "message": "Use \`useAppInsets\` instead.",
+            "name": "ui/src/hooks/useDeviceInsets",
+          },
+          {
             "message": "Please import from '@ethersproject/module' directly to support tree-shaking.",
             "name": "ethers",
           },

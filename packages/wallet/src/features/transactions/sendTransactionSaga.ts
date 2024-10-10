@@ -21,7 +21,7 @@ import {
   TransactionTypeInfo,
   isBridgeTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS } from 'utilities/src/time/time'
@@ -32,7 +32,7 @@ import { SignerManager } from 'wallet/src/features/wallet/signing/SignerManager'
 import { hexlifyTransaction } from 'wallet/src/utils/transaction'
 
 // This timeout is used to trigger a log event if the transaction is pending for too long
-const getTransactionTimeoutMs = (chainId: WalletChainId) => {
+const getTransactionTimeoutMs = (chainId: UniverseChainId) => {
   if (chainId === UniverseChainId.Mainnet) {
     return 10 * ONE_MINUTE_MS
   }
@@ -43,7 +43,7 @@ export interface SendTransactionParams {
   // internal id used for tracking transactions before they're submitted
   // this is optional as an override in txDetail.id calculation
   txId?: string
-  chainId: WalletChainId
+  chainId: UniverseChainId
   account: AccountMeta
   options: TransactionOptions
   typeInfo: TransactionTypeInfo
@@ -171,7 +171,7 @@ function* addTransaction(
  * @param chainId - The chain ID to fetch the nonce for.
  * @returns The nonce if it was successfully fetched, otherwise undefined.
  */
-export function* tryGetNonce(account: SignerMnemonicAccountMeta, chainId: WalletChainId) {
+export function* tryGetNonce(account: SignerMnemonicAccountMeta, chainId: UniverseChainId) {
   try {
     const isPrivateRpcEnabled = Statsig.checkGate(getFeatureFlagName(FeatureFlags.PrivateRpc))
     const shouldUseFlashbots =

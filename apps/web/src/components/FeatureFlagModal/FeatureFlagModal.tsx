@@ -13,7 +13,7 @@ import { DynamicConfigKeys, DynamicConfigs, QuickRouteChainsConfigKey } from 'un
 import { FeatureFlags, getFeatureFlagName } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlagWithExposureLoggingDisabled } from 'uniswap/src/features/gating/hooks'
 import { Statsig } from 'uniswap/src/features/gating/sdk/statsig'
-import { WEB_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 
 const Wrapper = styled(Column)`
   padding: 20px 16px;
@@ -217,6 +217,7 @@ export default function FeatureFlagModal() {
           </CloseButton>
         </Header>
         <FlagsColumn>
+          <FeatureFlagOption flag={FeatureFlags.V4Swap} label="Enable v4 in the shared swap flow" />
           <FeatureFlagOption flag={FeatureFlags.UniversalSwap} label="Enable swap flow from the Uniswap Package" />
           <FeatureFlagOption flag={FeatureFlags.Bridging} label="Bridging" />
           <FeatureFlagOption flag={FeatureFlags.UniswapX} label="[Universal Swap Flow Only] Enable UniswapX" />
@@ -224,6 +225,7 @@ export default function FeatureFlagModal() {
             flag={FeatureFlags.IndicativeSwapQuotes}
             label="[Universal Swap Flow Only] Enable Quick Routes"
           />
+          <FeatureFlagOption flag={FeatureFlags.TestnetMode} label="Testnet Mode" />
           <FeatureFlagOption
             flag={FeatureFlags.UniswapXPriorityOrders}
             label="UniswapX Priority Orders (on Base only)"
@@ -256,7 +258,7 @@ export default function FeatureFlagModal() {
             <FeatureFlagOption flag={FeatureFlags.QuickRouteMainnet} label="Enable quick routes for Mainnet" />
             <DynamicConfigDropdown
               selected={useQuickRouteChains()}
-              options={WEB_SUPPORTED_CHAIN_IDS}
+              options={SUPPORTED_CHAIN_IDS}
               parser={Number.parseInt}
               config={DynamicConfigs.QuickRouteChains}
               key={QuickRouteChainsConfigKey.Chains}

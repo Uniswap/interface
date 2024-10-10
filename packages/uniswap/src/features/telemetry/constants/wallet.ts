@@ -14,6 +14,7 @@ export enum WalletEventName {
   ShareButtonClicked = 'Share Button Clicked',
   SwapSubmitted = 'Swap Submitted to Provider',
   TokenVisibilityChanged = 'Token Visibility Changed',
+  TestnetModeToggled = 'Testnet Mode Toggled',
   TransferCompleted = 'Transfer Completed',
   TransferSubmitted = 'Transfer Submitted',
   ViewRecoveryPhrase = 'View Recovery Phrase',

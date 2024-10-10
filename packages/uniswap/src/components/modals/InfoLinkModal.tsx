@@ -1,6 +1,6 @@
 import { ReactNode } from 'react'
 import { Button, Flex, isWeb, Text, TouchableArea, useSporeColors } from 'ui/src'
-import { X } from 'ui/src/components/icons'
+import { X } from 'ui/src/components/icons/X'
 import { zIndices } from 'ui/src/theme'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalNameType } from 'uniswap/src/features/telemetry/constants'
@@ -11,15 +11,15 @@ export interface ModalProps {
   name: ModalNameType
   isOpen: boolean
   showCloseButton?: boolean
-  onDismiss?: () => void
   icon: ReactNode
   title: string
   description: string
   buttonText: string
   buttonTheme?: 'primary' | 'secondary' | 'tertiary'
-  onButtonPress?: () => void
   linkText?: string
   linkUrl?: string
+  onDismiss?: () => void
+  onButtonPress?: () => void
   onAnalyticsEvent?: () => void
 }
 
@@ -27,15 +27,15 @@ export function InfoLinkModal({
   name,
   isOpen,
   showCloseButton,
-  onDismiss,
   icon,
   title,
   description,
   buttonText,
   buttonTheme,
-  onButtonPress,
   linkText,
   linkUrl,
+  onDismiss,
+  onButtonPress,
   onAnalyticsEvent,
 }: React.PropsWithChildren<ModalProps>): JSX.Element {
   const colors = useSporeColors()

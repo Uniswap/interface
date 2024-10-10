@@ -76,8 +76,8 @@ export function currencyIdToAddress(_currencyId: string): Address {
   return currencyIdParts[1]
 }
 
-function isPolygonChain(chainId: number): chainId is UniverseChainId.Polygon | UniverseChainId.PolygonMumbai {
-  return chainId === UniverseChainId.PolygonMumbai || chainId === UniverseChainId.Polygon
+function isPolygonChain(chainId: number): chainId is UniverseChainId.Polygon {
+  return chainId === UniverseChainId.Polygon
 }
 
 function isCeloChain(chainId: number): chainId is UniverseChainId.Celo {

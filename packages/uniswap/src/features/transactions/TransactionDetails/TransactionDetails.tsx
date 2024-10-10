@@ -16,7 +16,6 @@ import {
   FeeOnTransferFeeGroupProps,
 } from 'uniswap/src/features/transactions/TransactionDetails/FeeOnTransferFee'
 import { SwapFee } from 'uniswap/src/features/transactions/TransactionDetails/SwapFee'
-import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/modals/AcrossRoutingInfo'
 import { EstimatedTime } from 'uniswap/src/features/transactions/swap/review/EstimatedTime'
 import { UniswapXGasBreakdown } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
 import { SwapFee as SwapFeeType } from 'uniswap/src/features/transactions/swap/types/trade'
@@ -110,8 +109,7 @@ export function TransactionDetails({
           transactionUSDValue={transactionUSDValue}
           uniswapXGasBreakdown={uniswapXGasBreakdown}
         />
-        {isSwap && isBridgeTrade && <AcrossRoutingInfo />}
-        {isSwap && !isBridgeTrade && RoutingInfo}
+        {isSwap && RoutingInfo}
         {AccountDetails}
         {showChildren ? (
           <AnimatePresence>

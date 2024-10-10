@@ -20,8 +20,8 @@ import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import { removeFavoriteToken } from 'uniswap/src/features/favorites/slice'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { SectionName } from 'uniswap/src/features/telemetry/constants'
-import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getSymbolDisplayText } from 'uniswap/src/utils/currency'
 import { NumberType } from 'utilities/src/format/types'
 import { RelativeChange } from 'wallet/src/components/text/RelativeChange'
@@ -46,6 +46,7 @@ function FavoriteTokenCard({
   ...rest
 }: FavoriteTokenCardProps): JSX.Element {
   const dispatch = useDispatch()
+  const { defaultChainId } = useEnabledChains()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
 
@@ -61,7 +62,7 @@ function FavoriteTokenCard({
   const token = data?.token
 
   // Mirror behavior in top tokens list, use first chain the token is on for the symbol
-  const chainId = fromGraphQLChain(token?.chain) ?? UniverseChainId.Mainnet
+  const chainId = fromGraphQLChain(token?.chain) ?? defaultChainId
 
   const price = convertFiatAmountFormatted(token?.market?.price?.value, NumberType.FiatTokenPrice)
   const pricePercentChange = token?.market?.pricePercentChange?.value

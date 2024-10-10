@@ -26,12 +26,12 @@ import {
 import { mocked } from 'test-utils/mocked'
 import { COMMON_BASES } from 'uniswap/src/constants/routing'
 import { DAI, DAI_ARBITRUM_ONE, USDC_ARBITRUM, USDC_MAINNET, USDT, WBTC } from 'uniswap/src/constants/tokens'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isSameAddress } from 'utilities/src/addresses'
 
 beforeEach(() => {
   // Global mocks for token lookups. To override in a test, use `mocked().mockImplementation(...)`.
-  mocked(getCurrency).mockImplementation(async (currencyId: string, chainId: InterfaceChainId) => {
+  mocked(getCurrency).mockImplementation(async (currencyId: string, chainId: UniverseChainId) => {
     if (currencyId?.toLowerCase() === 'eth') {
       return NATIVE_INFO?.currency
     }
@@ -69,7 +69,7 @@ beforeEach(() => {
       base.currency.isNative ? base.currency.symbol === 'ETH' : base.currency.address === currencyId,
     )?.currency
   })
-  mocked(useCurrency).mockImplementation((address?: string, chainId?: InterfaceChainId) => {
+  mocked(useCurrency).mockImplementation((address?: string, chainId?: UniverseChainId) => {
     if (address?.toLowerCase() === 'eth') {
       return NATIVE_INFO?.currency
     }

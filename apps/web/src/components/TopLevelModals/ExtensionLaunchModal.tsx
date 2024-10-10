@@ -1,8 +1,13 @@
 import { InterfaceElementName, InterfaceModalName } from '@uniswap/analytics-events'
 import { ButtonEmphasis, ButtonSize, ThemeButton } from 'components/Button/buttons'
 import Modal from 'components/Modal'
+import {
+  LAUNCH_MODAL_DESKTOP_MAX_HEIGHT,
+  LAUNCH_MODAL_DESKTOP_MAX_WIDTH,
+  LAUNCH_MODAL_MOBILE_MAX_HEIGHT,
+  LAUNCH_MODAL_MOBILE_MAX_IMAGE_HEIGHT,
+} from 'components/TopLevelModals/constants'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
-import { CONNECTION } from 'components/Web3Provider/constants'
 import Column from 'components/deprecated/Column'
 import Row from 'components/deprecated/Row'
 import { useIsMobile } from 'hooks/screenSize/useIsMobile'
@@ -17,6 +22,7 @@ import { Image } from 'ui/src'
 import { UNISWAP_LOGO } from 'ui/src/assets'
 import { iconSizes } from 'ui/src/theme'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { Trans } from 'uniswap/src/i18n'
 
@@ -48,7 +54,7 @@ const PromoImage = styled.img`
     background: url('/images/extension_promo/announcement_modal_mobile.png');
     background-size: cover;
     background-position: 50%;
-    height: 392px;
+    height: ${LAUNCH_MODAL_MOBILE_MAX_IMAGE_HEIGHT}px;
     width: 100%;
     flex: unset;
   }
@@ -105,14 +111,14 @@ const showExtensionLaunchAtom = atomWithStorage('showUniswapExtensionLaunchAtom'
 export function ExtensionLaunchModal() {
   const [showExtensionLaunch, setShowExtensionLaunch] = useAtom(showExtensionLaunchAtom)
   const isOnLandingPage = useIsLandingPage()
-  const uniswapExtensionConnector = useConnectorWithId(CONNECTION.UNISWAP_EXTENSION_RDNS)
+  const uniswapExtensionConnector = useConnectorWithId(CONNECTION_PROVIDER_IDS.UNISWAP_EXTENSION_RDNS)
   const isMobile = useIsMobile()
 
   return (
     <Trace modal={InterfaceModalName.EXTENSION_LAUNCH_PROMOTIONAL_MODAL}>
       <Modal
-        maxWidth={isMobile ? undefined : 520}
-        height={isMobile ? 564 : 320}
+        maxWidth={isMobile ? undefined : LAUNCH_MODAL_DESKTOP_MAX_WIDTH}
+        height={isMobile ? LAUNCH_MODAL_MOBILE_MAX_HEIGHT : LAUNCH_MODAL_DESKTOP_MAX_HEIGHT}
         isOpen={showExtensionLaunch && !isOnLandingPage && !uniswapExtensionConnector}
         hideBorder
         onDismiss={() => setShowExtensionLaunch(false)}

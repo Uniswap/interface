@@ -2,11 +2,11 @@ import { InterfaceElementName, InterfaceEventName } from '@uniswap/analytics-eve
 import MobileAppLogo from 'assets/svg/uniswap_app_logo.svg'
 import Modal from 'components/Modal'
 import { useConnectorWithId } from 'components/WalletModal/useOrderedConnections'
-import { CONNECTION } from 'components/Web3Provider/constants'
 import { useConnect } from 'hooks/useConnect'
 import { useCallback, useEffect, useState } from 'react'
 import { CloseIcon } from 'theme/components'
 import { Button, Flex, Image, QRCodeDisplay, Separator, Text, useSporeColors } from 'ui/src'
+import { CONNECTION_PROVIDER_IDS } from 'uniswap/src/constants/web3'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useTranslation } from 'uniswap/src/i18n'
 import { isWebAndroid, isWebIOS } from 'utilities/src/platform'
@@ -21,9 +21,12 @@ export default function UniwalletModal() {
   const onLaunchedMobilePlatform = isWebIOS || isWebAndroid
   const open = !onLaunchedMobilePlatform && !!uri && connection.isPending
 
-  const uniswapWalletConnectConnector = useConnectorWithId(CONNECTION.UNISWAP_WALLET_CONNECT_CONNECTOR_ID, {
-    shouldThrow: true,
-  })
+  const uniswapWalletConnectConnector = useConnectorWithId(
+    CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID,
+    {
+      shouldThrow: true,
+    },
+  )
 
   useEffect(() => {
     function listener({ type, data }: { type: string; data?: unknown }) {

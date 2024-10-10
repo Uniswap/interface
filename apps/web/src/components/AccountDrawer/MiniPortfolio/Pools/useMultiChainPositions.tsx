@@ -13,7 +13,6 @@ import {
   usePoolPriceMap,
   useV3ManagerContracts,
 } from 'components/AccountDrawer/MiniPortfolio/Pools/hooks'
-import { PRODUCTION_CHAIN_IDS } from 'constants/chains'
 import { BigNumber } from 'ethers/lib/ethers'
 import { Interface } from 'ethers/lib/utils'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
@@ -21,14 +20,15 @@ import { PositionDetails } from 'types/position'
 import { NonfungiblePositionManager, UniswapInterfaceMulticall } from 'uniswap/src/abis/types/v3'
 import { UniswapV3PoolInterface } from 'uniswap/src/abis/types/v3/UniswapV3Pool'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { DEFAULT_ERC20_DECIMALS } from 'utilities/src/tokens/constants'
 import { currencyKey } from 'utils/currencyKey'
 
 function createPositionInfo(
   owner: string,
-  chainId: InterfaceChainId,
+  chainId: UniverseChainId,
   details: PositionDetails,
   slot0: any,
   tokenA: Token,
@@ -62,10 +62,9 @@ type UseMultiChainPositionsData = { positions?: PositionInfo[]; loading: boolean
  * @param chains - chains to fetch positions from
  * @returns positions, fees
  */
-export default function useMultiChainPositions(
-  account: string,
-  chains = PRODUCTION_CHAIN_IDS,
-): UseMultiChainPositionsData {
+export default function useMultiChainPositions(account: string): UseMultiChainPositionsData {
+  const { chains } = useEnabledChains()
+
   const pms = useV3ManagerContracts(chains)
   const multicalls = useInterfaceMulticallContracts(chains)
 
@@ -125,7 +124,7 @@ export default function useMultiChainPositions(
 
   // Combines PositionDetails with Pool data to build our return type
   const fetchPositionInfo = useCallback(
-    async (positionDetails: PositionDetails[], chainId: InterfaceChainId, multicall: UniswapInterfaceMulticall) => {
+    async (positionDetails: PositionDetails[], chainId: UniverseChainId, multicall: UniswapInterfaceMulticall) => {
       const poolInterface = new Interface(IUniswapV3PoolStateJSON.abi) as UniswapV3PoolInterface
       const tokens = await getTokens(
         positionDetails.flatMap((details) => [details.token0, details.token1]),
@@ -172,7 +171,7 @@ export default function useMultiChainPositions(
   )
 
   const fetchPositionsForChain = useCallback(
-    async (chainId: InterfaceChainId): Promise<PositionInfo[]> => {
+    async (chainId: UniverseChainId): Promise<PositionInfo[]> => {
       if (!account || account.length === 0) {
         return []
       }

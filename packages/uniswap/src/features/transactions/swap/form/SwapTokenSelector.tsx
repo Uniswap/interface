@@ -9,8 +9,10 @@ import { TokenSelectorFlow } from 'uniswap/src/components/TokenSelector/types'
 import { useAccountMeta, useUniswapContext } from 'uniswap/src/contexts/UniswapContext'
 import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
 import { useTokenProjects } from 'uniswap/src/features/dataApi/tokenProjects'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { SwapFormState, useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
 import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/utils/maybeLogFirstSwapAction'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
@@ -18,6 +20,7 @@ import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JSX.Element {
   const trace = useTrace()
   const account = useAccountMeta()
+  const { isTestnetModeEnabled, defaultChainId } = useEnabledChains()
   const swapContext = useSwapFormContext()
   const { setIsSwapTokenSelectorOpen } = useUniswapContext()
   const { updateSwapForm, exactCurrencyField, selectingCurrencyField, output, input, filteredChainIds } = swapContext
@@ -110,10 +113,22 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
     ],
   )
 
+  const getChainId = (): UniverseChainId | undefined => {
+    const selectedChainId = filteredChainIds[selectingCurrencyField ?? CurrencyField.INPUT]
+
+    // allow undefined for prod networks
+    if (selectedChainId || !isTestnetModeEnabled) {
+      return selectedChainId
+    }
+
+    // should never be undefined for testnets
+    return filteredChainIds[CurrencyField.INPUT] ?? input?.chainId ?? defaultChainId
+  }
+
   const props: TokenSelectorProps = {
     isModalOpen,
     activeAccountAddress,
-    chainId: filteredChainIds[selectingCurrencyField ?? CurrencyField.INPUT],
+    chainId: getChainId(),
     input,
     // token selector modal will only open on currency field selection; casting to satisfy typecheck here - we should consider refactoring the types here to avoid casting
     currencyField: selectingCurrencyField as CurrencyField,

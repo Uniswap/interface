@@ -10,7 +10,7 @@ import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { ValueType, getCurrencyAmount } from 'uniswap/src/features/tokens/getCurrencyAmount'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { NumberType } from 'utilities/src/format/types'
 
 export function SwapDisplay({
@@ -28,7 +28,7 @@ export function SwapDisplay({
   outputAmount: string
   inputCurrencyInfo: Maybe<CurrencyInfo>
   outputCurrencyInfo: Maybe<CurrencyInfo>
-  chainId: WalletChainId | null
+  chainId: UniverseChainId | null
   transactionGasFeeResult?: GasFeeResult
   onCancel?: () => Promise<void>
   onConfirm?: () => Promise<void>

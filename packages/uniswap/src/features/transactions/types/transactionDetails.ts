@@ -7,7 +7,7 @@ import { TransactionListQuery } from 'uniswap/src/data/graphql/uniswap-data-api/
 import { Routing } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { GasEstimate } from 'uniswap/src/data/tradingApi/types'
 import { AssetType } from 'uniswap/src/entities/assets'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { DappInfo } from 'uniswap/src/types/walletConnect'
 
 export type WarningWithStyle = {
@@ -27,11 +27,11 @@ export type ParsedWarnings = {
   warnings: Warning[]
 }
 
-export type ChainIdToTxIdToDetails = Partial<Record<WalletChainId, { [txId: string]: TransactionDetails }>>
+export type ChainIdToTxIdToDetails = Partial<Record<UniverseChainId, { [txId: string]: TransactionDetails }>>
 
 // Basic identifying info for a transaction
 export interface TransactionId {
-  chainId: WalletChainId
+  chainId: UniverseChainId
   // moonpay externalTransactionId
   id: string
 }
@@ -81,7 +81,7 @@ export type TransactionNetworkFee = {
   quantity: string
   tokenSymbol: string
   tokenAddress: string
-  chainId: WalletChainId
+  chainId: UniverseChainId
 }
 
 export type GasFeeEstimates = {
@@ -114,6 +114,8 @@ export interface BridgeTransactionDetails extends BaseTransactionDetails {
 
   // Info for submitting the tx
   options: TransactionOptions
+
+  sendConfirmed?: boolean
 }
 
 export type TransactionDetails = UniswapXOrderDetails | ClassicTransactionDetails | BridgeTransactionDetails

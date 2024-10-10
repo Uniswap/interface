@@ -1,6 +1,6 @@
 import { PortfolioLogo } from 'components/AccountDrawer/MiniPortfolio/PortfolioLogo'
 import { DeltaArrow } from 'components/Tokens/TokenDetails/Delta'
-import { SupportedInterfaceChainId, chainIdToBackendChain } from 'constants/chains'
+import { chainIdToBackendChain } from 'constants/chains'
 import { NATIVE_CHAIN_ID } from 'constants/tokens'
 import { getTokenDetailsURL } from 'graphql/data/util'
 import { useCurrency } from 'hooks/Tokens'
@@ -18,7 +18,7 @@ import { NumberType, useFormatter } from 'utils/formatNumbers'
 
 const primary = '#2ABDFF'
 
-const tokens: { chainId: SupportedInterfaceChainId; address: string }[] = [
+const tokens: { chainId: UniverseChainId; address: string }[] = [
   {
     chainId: UniverseChainId.Mainnet,
     address: 'ETH',
@@ -37,7 +37,7 @@ const tokens: { chainId: SupportedInterfaceChainId; address: string }[] = [
   },
 ]
 
-function Token({ chainId, address }: { chainId: SupportedInterfaceChainId; address: string }) {
+function Token({ chainId, address }: { chainId: UniverseChainId; address: string }) {
   const screenIsSmall = useScreenSize()['sm']
   const navigate = useNavigate()
   const { formatFiatPrice, formatDelta } = useFormatter()

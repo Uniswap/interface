@@ -4,7 +4,7 @@ import { TRADING_API_CACHE_KEY, decreaseLpPosition } from 'uniswap/src/data/apiC
 import { UseQueryApiHelperHookArgs } from 'uniswap/src/data/apiClients/types'
 import { DecreaseLPPositionRequest, DecreaseLPPositionResponse } from 'uniswap/src/data/tradingApi/__generated__'
 
-export function useReduceLpPositionCalldataQuery({
+export function useDecreaseLpPositionCalldataQuery({
   params,
   ...rest
 }: UseQueryApiHelperHookArgs<

@@ -1,8 +1,9 @@
-import { SupportedInterfaceChainId, getChain, useIsSupportedChainId } from 'constants/chains'
+import { getChain, useIsSupportedChainId } from 'constants/chains'
 import { CSSProperties } from 'react'
 import { useIsDarkMode } from 'theme/components/ThemeToggle'
 import {
   ARBITRUM_LOGO,
+  ASTROCHAIN_SEPOLIA_LOGO,
   AVALANCHE_LOGO,
   BASE_LOGO,
   BLAST_LOGO,
@@ -11,18 +12,18 @@ import {
   ETHEREUM_LOGO,
   OPTIMISM_LOGO,
   POLYGON_LOGO,
+  WORLD_CHAIN_LOGO,
   ZKSYNC_LOGO,
   ZORA_LOGO,
 } from 'ui/src/assets'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 type ChainUI = { symbol: string; bgColor: string; textColor: string }
 
-export function getChainUI(chainId: SupportedInterfaceChainId, darkMode: boolean): ChainUI
-export function getChainUI(chainId: InterfaceChainId, darkMode: boolean): ChainUI | undefined {
+export function getChainUI(chainId: UniverseChainId, darkMode: boolean): ChainUI
+export function getChainUI(chainId: UniverseChainId, darkMode: boolean): ChainUI | undefined {
   switch (chainId) {
     case UniverseChainId.Mainnet:
-    case UniverseChainId.Goerli:
     case UniverseChainId.Sepolia:
       return {
         symbol: ETHEREUM_LOGO,
@@ -30,28 +31,24 @@ export function getChainUI(chainId: InterfaceChainId, darkMode: boolean): ChainU
         textColor: '#6B8AFF',
       }
     case UniverseChainId.Polygon:
-    case UniverseChainId.PolygonMumbai:
       return {
         symbol: POLYGON_LOGO,
         bgColor: '#9558FF33',
         textColor: '#9558FF',
       }
     case UniverseChainId.ArbitrumOne:
-    case UniverseChainId.ArbitrumGoerli:
       return {
         symbol: ARBITRUM_LOGO,
         bgColor: '#00A3FF33',
         textColor: '#00A3FF',
       }
     case UniverseChainId.Optimism:
-    case UniverseChainId.OptimismGoerli:
       return {
         symbol: OPTIMISM_LOGO,
         bgColor: '#FF042033',
         textColor: '#FF0420',
       }
     case UniverseChainId.Celo:
-    case UniverseChainId.CeloAlfajores:
       return darkMode
         ? {
             symbol: CELO_LOGO,
@@ -117,6 +114,18 @@ export function getChainUI(chainId: InterfaceChainId, darkMode: boolean): ChainU
             bgColor: 'rgba(54, 103, 246, 0.12)',
             textColor: '#3667F6',
           }
+    case UniverseChainId.WorldChain:
+      return {
+        symbol: WORLD_CHAIN_LOGO,
+        bgColor: darkMode ? '#FFFFFF' : '#222222',
+        textColor: darkMode ? '#FFFFFF' : '#222222',
+      }
+    case UniverseChainId.AstrochainSepolia:
+      return {
+        symbol: ASTROCHAIN_SEPOLIA_LOGO,
+        bgColor: '#fc0fa4',
+        textColor: '#fc0fa4',
+      }
     default:
       return undefined
   }
@@ -125,7 +134,7 @@ export function getChainUI(chainId: InterfaceChainId, darkMode: boolean): ChainU
 const getDefaultBorderRadius = (size: number) => size / 2 - 4
 
 type ChainLogoProps = {
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
   className?: string
   size?: number
   borderRadius?: number

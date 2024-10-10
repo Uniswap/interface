@@ -5,9 +5,10 @@ import { ReactNode, createContext, useCallback, useContext, useMemo, useState } 
 import { useTranslation } from 'react-i18next'
 import { WarningAction } from 'uniswap/src/components/modals/WarningModal/types'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
-import { AssetType, TradeableAsset } from 'uniswap/src/entities/assets'
+import { AssetType } from 'uniswap/src/entities/assets'
 import { useTransactionGasFee, useTransactionGasWarning } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { useFormattedWarnings } from 'uniswap/src/features/transactions/hooks/useParsedTransactionWarnings'
 import { ParsedWarnings } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { TransactionState } from 'uniswap/src/features/transactions/types/transactionState'
@@ -19,14 +20,12 @@ import { useSendTransactionRequest } from 'wallet/src/features/transactions/send
 import { useSendWarnings } from 'wallet/src/features/transactions/send/hooks/useSendWarnings'
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
-const ETH_TRADEABLE_ASSET: TradeableAsset = {
-  address: getNativeAddress(UniverseChainId.Mainnet),
-  chainId: UniverseChainId.Mainnet,
-  type: AssetType.Currency,
-}
-
-export const DEFAULT_SEND_STATE: Readonly<TransactionState> = {
-  [CurrencyField.INPUT]: ETH_TRADEABLE_ASSET,
+export const getDefaultSendState = (defaultChainId: UniverseChainId): Readonly<TransactionState> => ({
+  [CurrencyField.INPUT]: {
+    address: getNativeAddress(defaultChainId),
+    chainId: defaultChainId,
+    type: AssetType.Currency,
+  },
   [CurrencyField.OUTPUT]: null,
   exactCurrencyField: CurrencyField.INPUT,
   focusOnCurrencyField: CurrencyField.INPUT,
@@ -36,7 +35,7 @@ export const DEFAULT_SEND_STATE: Readonly<TransactionState> = {
   selectingCurrencyField: undefined,
   showRecipientSelector: true,
   customSlippageTolerance: undefined,
-}
+})
 
 type SendContextState = {
   derivedSendInfo: ReturnType<typeof useDerivedSendInfo>
@@ -58,9 +57,11 @@ export function SendContextProvider({
 }): JSX.Element {
   const { t } = useTranslation()
   const account = useActiveAccountWithThrow()
+  const { defaultChainId } = useEnabledChains()
+  const defaultSendState = getDefaultSendState(defaultChainId)
 
   // state
-  const [sendForm, setSendForm] = useState<TransactionState>(prefilledTransactionState || DEFAULT_SEND_STATE)
+  const [sendForm, setSendForm] = useState<TransactionState>(prefilledTransactionState || defaultSendState)
   const updateSendForm = useCallback(
     (newState: Parameters<SendContextState['updateSendForm']>[0]): void => {
       setSendForm((prevState) => ({ ...prevState, ...newState }))

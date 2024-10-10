@@ -1,12 +1,10 @@
 import { useTranslation } from 'react-i18next'
 import { Flex, QRCodeDisplay, Text, isWeb, useMedia, useSporeColors } from 'ui/src'
-import { iconSizes, spacing } from 'ui/src/theme'
+import { spacing } from 'ui/src/theme'
 import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
-import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
-import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { useAddressColorProps } from 'uniswap/src/features/address/color'
-import { WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
 import { isExtension } from 'utilities/src/platform'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { AddressDisplay } from 'wallet/src/components/accounts/AddressDisplay'
@@ -62,17 +60,10 @@ export function WalletQRCode({ address }: { address: Address }): JSX.Element | n
           size={UNICON_SIZE}
         />
       </QRCodeDisplay>
-      <NetworkLogos
-        showFirstChainLabel
-        backgroundColor="$surface2"
-        borderRadius="$roundedFull"
-        chains={WALLET_SUPPORTED_CHAIN_IDS}
-        size={iconSizes.icon16}
-      />
       <Text color="$neutral2" lineHeight={20} textAlign="center" variant="body4">
-        {t('qrScanner.wallet.title')}
+        {t('qrScanner.wallet.title', { numOfNetworks: SUPPORTED_CHAIN_IDS.length })}
       </Text>
-      <LearnMoreLink url={uniswapUrls.helpArticleUrls.supportedNetworks} />
+      <NetworkLogos chains={SUPPORTED_CHAIN_IDS} />
     </Flex>
   )
 }

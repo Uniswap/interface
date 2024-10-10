@@ -45,6 +45,7 @@ export class NativeSigner extends Signer {
     const signature = await Keyring.signHashForAddress(
       this.address,
       _TypedDataEncoder.hash(domain, types, value).slice(2),
+      // TODO: WALL-4919: Remove hardcoded Mainnet
       toSupportedChainId(domain.chainId) || UniverseChainId.Mainnet,
     )
     return signature

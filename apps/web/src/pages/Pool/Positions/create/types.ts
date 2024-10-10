@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, Price, Token } from '@uniswap/sdk-core'
-import { Pool } from '@uniswap/v3-sdk'
+import { Pair } from '@uniswap/v2-sdk'
+import { FeeAmount, Pool } from '@uniswap/v3-sdk'
 import { Dispatch, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
 
@@ -14,29 +15,44 @@ export enum PositionFlowStep {
 export interface PositionState {
   protocolVersion: ProtocolVersion
   currencyInputs: { [field in PositionField]?: Currency }
-  fee: number
+  fee: number // Denoted in hundredths of bips
   hook?: string
 }
 
 export const DEFAULT_POSITION_STATE: PositionState = {
   currencyInputs: {},
-  fee: 3000,
+  fee: FeeAmount.MEDIUM,
   hook: undefined,
   protocolVersion: ProtocolVersion.V4,
 }
 
-export interface PositionInfo {
-  pool?: Pool
+export type CreatePositionInfo = {
+  protocolVersion: ProtocolVersion
+  currencies: { [field in PositionField]?: Currency }
   tokens?: Token[]
   sortedTokens?: Token[]
-}
+} & (
+  | {
+      protocolVersion: ProtocolVersion.V3 | ProtocolVersion.V4
+      pool?: Pool
+      tokens?: Token[]
+      sortedTokens?: Token[]
+    }
+  | {
+      protocolVersion: ProtocolVersion.V2
+      pair?: Pair
+    }
+  | {
+      protocolVersion: ProtocolVersion.UNSPECIFIED
+    }
+)
 
 export type CreatePositionContextType = {
   step: PositionFlowStep
   setStep: Dispatch<SetStateAction<PositionFlowStep>>
   positionState: PositionState
   setPositionState: Dispatch<SetStateAction<PositionState>>
-  derivedPositionInfo: PositionInfo
+  derivedPositionInfo: CreatePositionInfo
   feeTierSearchModalOpen: boolean
   setFeeTierSearchModalOpen: Dispatch<SetStateAction<boolean>>
 }
@@ -51,12 +67,14 @@ export interface PriceRangeState {
 export interface PriceRangeInfo {
   ticks?: (number | undefined)[]
   ticksAtLimit: boolean[]
+  tickSpaceLimits: (number | undefined)[]
   isSorted: boolean
   price?: Price<Token, Token>
   prices?: (Price<Token, Token> | undefined)[]
   pricesAtLimit?: (Price<Token, Token> | undefined)[]
   pricesAtTicks?: (Price<Token, Token> | undefined)[]
   baseAndQuoteTokens?: Token[]
+  invertPrice: boolean
 }
 
 export type PriceRangeContextType = {

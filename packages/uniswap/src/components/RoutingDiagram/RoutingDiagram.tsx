@@ -110,17 +110,18 @@ export default function RoutingDiagram({
 }
 
 function Route({ entry: { percent, path, protocol } }: { entry: RoutingDiagramEntry }): JSX.Element {
+  const badgeText =
+    protocol === Protocol.MIXED
+      ? [...new Set(path.map(([, , , p]) => p.toUpperCase()))].sort().join(' + ') // extract all protocols involved in mixed path
+      : protocol.toUpperCase()
+
   return (
     <Flex row centered style={{ padding: '0.1rem 0.5rem' }} width="100%">
       <Flex alignItems="center" position="absolute" width="100%" zIndex={1} opacity={0.5}>
         <DotLine minWidth="100%" minHeight={35} />
       </Flex>
       <OpaqueBadge>
-        {protocol === Protocol.MIXED ? (
-          <BadgeText>V3 + V2</BadgeText>
-        ) : (
-          <BadgeText color="$neutral1">{protocol.toUpperCase()}</BadgeText>
-        )}
+        <BadgeText>{badgeText}</BadgeText>
         <BadgeText style={{ minWidth: 'auto' }}>{percent.toSignificant(2)}%</BadgeText>
       </OpaqueBadge>
       <Flex row flexWrap="wrap" m={-32} gap={1} width="100%" style={{ justifyContent: 'space-evenly', zIndex: 2 }}>

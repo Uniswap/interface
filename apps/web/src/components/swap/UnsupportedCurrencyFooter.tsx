@@ -14,7 +14,7 @@ import { Z_INDEX } from 'theme/zIndex'
 import { Text } from 'ui/src'
 import { SafetyLevel } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { Trans } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExplorerDataType, getExplorerLink } from 'uniswap/src/utils/linking'
 
 const DetailsFooter = styled.div<{ show: boolean }>`
@@ -99,7 +99,7 @@ export default function UnsupportedCurrencyFooter({
   )
 }
 
-function UnsupportedTokenCard({ token, chainId }: { token?: Token; chainId?: InterfaceChainId }) {
+function UnsupportedTokenCard({ token, chainId }: { token?: Token; chainId?: UniverseChainId }) {
   const currencyInfo = useCurrencyInfo(token)
 
   if (!token || (!currencyInfo?.isSpam && currencyInfo?.safetyLevel === SafetyLevel.Verified)) {

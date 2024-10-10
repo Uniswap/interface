@@ -15,7 +15,7 @@ export type TokenSectionHeaderProps = {
 }
 
 export function SectionHeader({ sectionKey, rightElement, name }: TokenSectionHeaderProps): JSX.Element | null {
-  const title = useTokenOptionsSectionTitle(sectionKey, name)
+  const title = useTokenOptionsSectionTitle(sectionKey)
   const icon = getTokenOptionsSectionIcon(sectionKey)
   if (sectionKey === TokenOptionSection.SuggestedTokens) {
     return null
@@ -25,14 +25,14 @@ export function SectionHeader({ sectionKey, rightElement, name }: TokenSectionHe
       <Text color="$neutral2" variant="subheading2">
         <Flex row alignItems="center" gap="$spacing8">
           {icon}
-          <ElementAfterText text={title} textProps={{ color: '$neutral2' }} element={rightElement} />
+          <ElementAfterText text={name ?? title} textProps={{ color: '$neutral2' }} element={rightElement} />
         </Flex>
       </Text>
     </Flex>
   )
 }
 
-export function useTokenOptionsSectionTitle(section: TokenOptionSection, name?: string): string {
+export function useTokenOptionsSectionTitle(section: TokenOptionSection): string {
   const { t } = useTranslation()
   switch (section) {
     case TokenOptionSection.BridgingTokens:
@@ -49,8 +49,6 @@ export function useTokenOptionsSectionTitle(section: TokenOptionSection, name?: 
       return t('tokens.selector.section.search')
     case TokenOptionSection.SuggestedTokens:
       return '' // no suggested tokens header
-    case TokenOptionSection.SearchResultsByNetwork:
-      return name ?? ''
     default:
       return section
   }

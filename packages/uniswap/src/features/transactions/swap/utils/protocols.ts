@@ -6,7 +6,7 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const DEFAULT_PROTOCOL_OPTIONS = [
   // `as const` allows us to derive a type narrower than ProtocolItems, and the `...` spread removes readonly, allowing DEFAULT_PROTOCOL_OPTIONS to be passed around as an argument without `readonly`
-  ...([ProtocolItems.UNISWAPX_V2 /* ProtocolItems.V4 */, ProtocolItems.V3, ProtocolItems.V2] as const),
+  ...([ProtocolItems.UNISWAPX_V2, ProtocolItems.V4, ProtocolItems.V3, ProtocolItems.V2] as const),
 ]
 export type FrontendSupportedProtocol = (typeof DEFAULT_PROTOCOL_OPTIONS)[number]
 
@@ -24,7 +24,7 @@ export function useProtocolsForChain(
 
   const uniswapXAllowedForChain =
     (chainId && LAUNCHED_UNISWAPX_CHAINS.includes(chainId)) || priorityOrdersAllowed || arbUniswapXAllowed
-  // const v4SwapAllowed = useFeatureFlag(FeatureFlags.V4Swap)
+  const v4SwapAllowed = useFeatureFlag(FeatureFlags.V4Swap)
 
   return useMemo(() => {
     let protocols = [...userSelectedProtocols]
@@ -34,10 +34,10 @@ export function useProtocolsForChain(
       protocols = protocols.filter((protocol) => protocol !== ProtocolItems.UNISWAPX_V2)
     }
 
-    // if (!v4SwapAllowed) {
-    //   protocols = protocols.filter((protocol) => protocol !== ProtocolItems.V4)
-    // }
+    if (!v4SwapAllowed) {
+      protocols = protocols.filter((protocol) => protocol !== ProtocolItems.V4)
+    }
 
     return protocols
-  }, [uniswapXAllowedForChain, uniswapXEnabled, userSelectedProtocols])
+  }, [uniswapXAllowedForChain, uniswapXEnabled, userSelectedProtocols, v4SwapAllowed])
 }

@@ -147,6 +147,11 @@ const TransactionTitleTable: { [key in TransactionType]: { [state in Transaction
     [TransactionStatus.Confirmed]: t('common.added.liquidity'),
     [TransactionStatus.Failed]: t('common.add.liquidity.failed'),
   },
+  [TransactionType.DECREASE_LIQUIDITY]: {
+    [TransactionStatus.Pending]: t('common.removing.liquidity'),
+    [TransactionStatus.Confirmed]: t('common.removed.liquidity'),
+    [TransactionStatus.Failed]: t('common.remove.liquidity.failed'),
+  },
 }
 
 export const CancelledTransactionTitleTable: { [key in TransactionType]: string } = {
@@ -178,6 +183,7 @@ export const CancelledTransactionTitleTable: { [key in TransactionType]: string 
   [TransactionType.SUBMIT_PROPOSAL]: t('common.submit.proposal.cancelled'),
   [TransactionType.LIMIT]: t('common.limit.cancelled'),
   [TransactionType.INCREASE_LIQUIDITY]: t('common.add.liquidity.cancelled'),
+  [TransactionType.DECREASE_LIQUIDITY]: t('common.remove.liquidity.cancelled'),
 }
 
 const AlternateTransactionTitleTable: { [key in TransactionType]?: { [state in TransactionStatus]: string } } = {

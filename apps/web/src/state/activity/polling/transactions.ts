@@ -1,6 +1,6 @@
 import { NEVER_RELOAD } from '@uniswap/redux-multicall'
 import { useWeb3React } from '@web3-react/core'
-import { SupportedInterfaceChainId, getChain } from 'constants/chains'
+import { getChain } from 'constants/chains'
 import { useAccount } from 'hooks/useAccount'
 import useCurrentBlockTimestamp from 'hooks/useCurrentBlockTimestamp'
 import useBlockNumber from 'lib/hooks/useBlockNumber'
@@ -16,7 +16,7 @@ import { isPendingTx } from 'state/transactions/utils'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
-import { InterfaceChainId, RetryOptions } from 'uniswap/src/types/chains'
+import { RetryOptions, UniverseChainId } from 'uniswap/src/types/chains'
 import { SUBSCRIPTION_CHAINIDS } from 'utilities/src/apollo/constants'
 
 interface Transaction {
@@ -51,7 +51,7 @@ export function shouldCheck(lastBlockNumber: number, tx: Transaction): boolean {
 
 const DEFAULT_RETRY_OPTIONS: RetryOptions = { n: 1, minWait: 0, maxWait: 0 }
 
-function usePendingTransactions(chainId?: SupportedInterfaceChainId) {
+function usePendingTransactions(chainId?: UniverseChainId) {
   const multichainTransactions = useMultichainTransactions()
   return useMemo(() => {
     if (!chainId) {
@@ -76,7 +76,7 @@ export function usePollPendingTransactions(onActivityUpdate: OnActivityUpdate) {
     // We can skip polling when the app's current chain is supported by the subscription service.
     realtimeEnabled &&
       account.chainId &&
-      (SUBSCRIPTION_CHAINIDS as unknown as InterfaceChainId[]).includes(account.chainId)
+      (SUBSCRIPTION_CHAINIDS as unknown as UniverseChainId[]).includes(account.chainId)
       ? undefined
       : account.chainId,
   )

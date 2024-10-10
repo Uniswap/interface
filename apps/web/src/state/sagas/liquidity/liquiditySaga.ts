@@ -5,13 +5,18 @@ import {
   handleOnChainStep,
   handleSignatureStep,
 } from 'state/sagas/transactions/utils'
-import { IncreaseLiquidityTransactionInfo, TransactionType } from 'state/transactions/types'
+import {
+  DecreaseLiquidityTransactionInfo,
+  IncreaseLiquidityTransactionInfo,
+  TransactionType,
+} from 'state/transactions/types'
 import invariant from 'tiny-invariant'
 import { call, put } from 'typed-redux-saga'
 import { SignerMnemonicAccountMeta } from 'uniswap/src/features/accounts/types'
 import { LiquidityAction, ValidatedLiquidityTxContext } from 'uniswap/src/features/transactions/liquidity/types'
 import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import {
+  DecreasePositionTransactionStep,
   IncreasePositionTransactionStep,
   IncreasePositionTransactionStepAsync,
   TransactionStep,
@@ -34,10 +39,13 @@ type LiquidityParams = {
 }
 
 function* getLiquidityTxRequest(
-  step: IncreasePositionTransactionStep | IncreasePositionTransactionStepAsync,
+  step: IncreasePositionTransactionStep | IncreasePositionTransactionStepAsync | DecreasePositionTransactionStep,
   signature: string | undefined,
 ) {
-  if (step.type === TransactionStepType.IncreasePositionTransaction) {
+  if (
+    step.type === TransactionStepType.IncreasePositionTransaction ||
+    step.type === TransactionStepType.DecreasePositionTransaction
+  ) {
     return step.txRequest
   }
 
@@ -55,29 +63,31 @@ function* getLiquidityTxRequest(
   }
 }
 
-interface HandleIncreasePositionStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
-  step: IncreasePositionTransactionStep | IncreasePositionTransactionStepAsync
+interface HandlePositionStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
+  step: IncreasePositionTransactionStep | IncreasePositionTransactionStepAsync | DecreasePositionTransactionStep
   signature?: string
   action: LiquidityAction
 }
-function* handleIncreasePositionTransactionStep(params: HandleIncreasePositionStepParams) {
+function* handlePositionTransactionStep(params: HandlePositionStepParams) {
   const { action, step, signature } = params
-  const info = getIncreaseLiquidityTransactionInfo(action)
+  const info = getLiquidityTransactionInfo(action, step.type)
   const txRequest = yield* call(getLiquidityTxRequest, step, signature)
 
   // Now that we have the txRequest, we can create a definitive LiquidityTransactionStep, incase we started with an async step.
   const onChainStep = { ...step, txRequest }
-  const hash = yield* call(handleOnChainStep, { ...params, info, step: onChainStep })
+  const hash = yield* call(handleOnChainStep, { ...params, info, step: onChainStep, shouldWaitForConfirmation: false })
 
   yield* put(addPopup({ content: { type: PopupType.Transaction, hash }, key: hash }))
 }
 
-function* increaseLiquidity(params: LiquidityParams & { steps: TransactionStep[] }) {
+function* modifyLiquidity(params: LiquidityParams & { steps: TransactionStep[] }) {
   const {
     account,
     setCurrentStep,
     steps,
     liquidityTxContext: { action },
+    onSuccess,
+    onFailure,
   } = params
 
   let signature: string | undefined
@@ -95,7 +105,8 @@ function* increaseLiquidity(params: LiquidityParams & { steps: TransactionStep[]
         }
         case TransactionStepType.IncreasePositionTransaction:
         case TransactionStepType.IncreasePositionTransactionAsync:
-          yield* call(handleIncreasePositionTransactionStep, { account, signature, step, setCurrentStep, action })
+        case TransactionStepType.DecreasePositionTransaction:
+          yield* call(handlePositionTransactionStep, { account, step, setCurrentStep, action, signature })
           break
         default: {
           throw new Error('Unexpected step type')
@@ -103,9 +114,12 @@ function* increaseLiquidity(params: LiquidityParams & { steps: TransactionStep[]
       }
     }
   } catch (e) {
-    // TODO(5082): pass errors to onFailure and to handle in UI
-    logger.error(e, { tags: { file: 'liquiditySaga', function: 'increaseLiquidity' } })
+    logger.error(e, { tags: { file: 'liquiditySaga', function: 'modifyLiquidity' } })
+    onFailure()
+    return
   }
+
+  yield* call(onSuccess)
 }
 
 function* liquidity(params: LiquidityParams) {
@@ -126,7 +140,7 @@ function* liquidity(params: LiquidityParams) {
     }
   }
 
-  return yield* increaseLiquidity({
+  return yield* modifyLiquidity({
     ...params,
     steps,
   })
@@ -134,13 +148,19 @@ function* liquidity(params: LiquidityParams) {
 
 export const liquiditySaga = createSaga(liquidity, 'liquiditySaga')
 
-function getIncreaseLiquidityTransactionInfo(action: LiquidityAction): IncreaseLiquidityTransactionInfo {
+function getLiquidityTransactionInfo(
+  action: LiquidityAction,
+  type: TransactionStepType,
+): IncreaseLiquidityTransactionInfo | DecreaseLiquidityTransactionInfo {
   const {
     currency0Amount: { currency: currency0, quotient: quotient0 },
     currency1Amount: { currency: currency1, quotient: quotient1 },
   } = action
   return {
-    type: TransactionType.INCREASE_LIQUIDITY,
+    type:
+      type === TransactionStepType.DecreasePositionTransaction
+        ? TransactionType.DECREASE_LIQUIDITY
+        : TransactionType.INCREASE_LIQUIDITY,
     token0CurrencyId: currencyId(currency0),
     token1CurrencyId: currencyId(currency1),
     token0CurrencyAmountRaw: quotient0.toString(),

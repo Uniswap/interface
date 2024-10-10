@@ -131,7 +131,7 @@ describe(useExploreTokenContextMenu, () => {
     })
 
     it("dispatches add to favorites redux action when 'Favorite token' is pressed", async () => {
-      const store = mockStore({ favorites: { tokens: [] }, appearance: { theme: 'system' } })
+      const store = mockStore({ favorites: { tokens: [] }, appearance: { theme: 'system' }, userSettings: {} })
       const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
         resolvers,
         store,
@@ -158,6 +158,7 @@ describe(useExploreTokenContextMenu, () => {
       const store = mockStore({
         favorites: { tokens: [tokenMenuParams.currencyId.toLowerCase()] },
         appearance: { theme: 'system' },
+        userSettings: {},
       })
       const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
         resolvers,
@@ -186,6 +187,7 @@ describe(useExploreTokenContextMenu, () => {
     const store = mockStore({
       favorites: { tokens: [] },
       selectedAppearanceSettings: { theme: 'system' },
+      userSettings: {},
     })
     const { result } = renderHookWithProviders(() => useExploreTokenContextMenu(tokenMenuParams), {
       store,

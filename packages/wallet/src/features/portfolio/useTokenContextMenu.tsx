@@ -8,9 +8,10 @@ import { CoinConvert, Eye, EyeOff, ReceiveAlt, SendAction } from 'ui/src/compone
 import { usePortfolioCacheUpdater } from 'uniswap/src/features/dataApi/balances'
 import { PortfolioBalance } from 'uniswap/src/features/dataApi/types'
 import { toggleTokenVisibility } from 'uniswap/src/features/favorites/slice'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { WalletEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField, CurrencyId } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyIdToAddress, currencyIdToChain } from 'uniswap/src/utils/currencyId'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -40,6 +41,7 @@ export function useTokenContextMenu({
   const { t } = useTranslation()
   const dispatch = useDispatch()
   const activeAccountAddress = useActiveAccountAddressWithThrow()
+  const { defaultChainId } = useEnabledChains()
 
   const { navigateToSwapFlow, navigateToReceive, navigateToSend, handleShareToken } = useWalletNavigation()
 
@@ -48,7 +50,7 @@ export function useTokenContextMenu({
   const isHidden = !!portfolioBalance?.isHidden
 
   const currencyAddress = currencyIdToAddress(currencyId)
-  const currencyChainId = (currencyIdToChain(currencyId) as WalletChainId) ?? UniverseChainId.Mainnet
+  const currencyChainId = (currencyIdToChain(currencyId) as UniverseChainId) ?? defaultChainId
 
   const onPressSend = useCallback(() => {
     // Do not show warning modal speed-bump if user is trying to send tokens they own

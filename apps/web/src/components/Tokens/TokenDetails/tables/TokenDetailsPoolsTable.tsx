@@ -1,13 +1,13 @@
 import { ApolloError } from '@apollo/client'
 import { Token } from '@uniswap/sdk-core'
 import { PoolsTable, sortAscendingAtom, sortMethodAtom } from 'components/Pools/PoolTable/PoolTable'
-import { SupportedInterfaceChainId } from 'constants/chains'
 import { useUpdateManualOutage } from 'featureFlags/flags/outageBanner'
 import { usePoolsFromTokenAddress } from 'graphql/data/pools/usePoolsFromTokenAddress'
 import { PoolSortFields } from 'graphql/data/pools/useTopPools'
 import { OrderDirection } from 'graphql/data/util'
 import { useAtomValue, useResetAtom } from 'jotai/utils'
 import { useEffect, useMemo } from 'react'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const HIDDEN_COLUMNS = [PoolSortFields.VolOverTvl]
 
@@ -15,7 +15,7 @@ export function TokenDetailsPoolsTable({
   chainId,
   referenceToken,
 }: {
-  chainId: SupportedInterfaceChainId
+  chainId: UniverseChainId
   referenceToken: Token
 }) {
   const sortMethod = useAtomValue(sortMethodAtom)

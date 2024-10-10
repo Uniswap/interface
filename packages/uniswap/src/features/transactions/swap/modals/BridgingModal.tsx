@@ -45,10 +45,10 @@ export function BridgingModal({
   const toNetwork = toNetworkRaw ? toSupportedChainId(toNetworkRaw) : null
 
   const icon = (
-    <Flex row gap="$gap8">
-      <NetworkLogo chainId={fromNetwork} shape="square" size={iconSizes.icon20} />
+    <Flex row gap="$gap8" alignItems="center">
+      <NetworkLogo chainId={fromNetwork} shape="square" size={iconSizes.icon24} />
       <Shuffle color="$neutral2" size="$icon.20" />
-      <NetworkLogo chainId={toNetwork} shape="square" size={iconSizes.icon20} />
+      <NetworkLogo chainId={toNetwork} shape="square" size={iconSizes.icon24} />
     </Flex>
   )
 

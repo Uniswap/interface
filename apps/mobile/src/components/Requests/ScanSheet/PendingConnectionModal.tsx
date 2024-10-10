@@ -20,11 +20,9 @@ import {
 import { Flex, Text, TouchableArea, useSporeColors } from 'ui/src'
 import { Check, RotatableChevron, X } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
-import { NetworkLogos } from 'uniswap/src/components/network/NetworkLogos'
 import { MobileEventName, ModalName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { WalletChainId } from 'uniswap/src/types/chains'
 import { WCEventType, WCRequestOutcome, WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { formatDappURL } from 'utilities/src/format/urls'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -106,19 +104,6 @@ const SitePermissions = (): JSX.Element => {
           </Text>
         </Flex>
       </Flex>
-    </Flex>
-  )
-}
-
-const NetworksRow = ({ chains }: { chains: WalletChainId[] }): JSX.Element => {
-  const { t } = useTranslation()
-
-  return (
-    <Flex row shrink alignItems="center" justifyContent="space-between" px="$spacing8" py="$spacing8">
-      <Text $short={{ variant: 'body3' }} allowFontScaling={false} color="$neutral2" variant="body3">
-        {t('walletConnect.permissions.networks')}
-      </Text>
-      <NetworkLogos chains={chains} size={iconSizes.icon16} />
     </Flex>
   )
 }
@@ -297,7 +282,6 @@ function PendingConnectionModalContent({
       </Flex>
       <SitePermissions />
       <Flex pb="$spacing12" pt="$spacing16" px="$spacing8">
-        <NetworksRow chains={pendingSession.chains} />
         <SwitchAccountRow activeAddress={activeAddress} setModalState={setModalState} />
       </Flex>
       <Animated.View style={bottomSpacerStyle} />

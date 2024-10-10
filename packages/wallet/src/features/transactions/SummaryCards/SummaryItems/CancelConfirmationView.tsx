@@ -5,7 +5,7 @@ import { Button, Flex, FlexLoader, Separator, Skeleton, Text, isWeb, useHapticFe
 import { SlashCircle } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { AuthTrigger } from 'uniswap/src/features/auth/types'
-import { useUSDValue } from 'uniswap/src/features/gas/hooks'
+import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { TransactionDetails, TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
@@ -30,7 +30,7 @@ export function CancelConfirmationView({
   const { hapticFeedback } = useHapticFeedback()
 
   const cancelationGasFeeInfo = useCancelationGasFeeInfo(transactionDetails)
-  const gasFeeUSD = useUSDValue(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee)
+  const { value: gasFeeUSD } = useUSDValueOfGasFee(transactionDetails.chainId, cancelationGasFeeInfo?.cancelationGasFee)
   const gasFee = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatGasPrice)
 
   const onCancelConfirm = useCallback(() => {

@@ -27,7 +27,8 @@ import { attemptCancelTransaction } from 'wallet/src/features/transactions/cance
 import {
   deleteTransaction,
   transactionWatcher,
-  waitForTxnInvalidated,
+  waitForBridgeSendCompleted,
+  waitForSameNonceFinalized,
   watchFiatOnRampTransaction,
   watchTransaction,
 } from 'wallet/src/features/transactions/transactionWatcherSaga'
@@ -64,6 +65,7 @@ describe(transactionWatcher, () => {
           },
         },
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
+        userSettings: { isTestnetModeEnabled: false },
       })
       .provide([
         [call(getProvider, UniverseChainId.Mainnet), mockProvider],
@@ -108,6 +110,7 @@ describe(watchTransaction, () => {
     })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
+        userSettings: { isTestnetModeEnabled: false },
       })
       .provide([[call(getProvider, chainId), receiptProvider]])
       .put(finalizeTransaction(finalizedTxAction.payload))
@@ -128,6 +131,7 @@ describe(watchTransaction, () => {
     })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
+        userSettings: { isTestnetModeEnabled: false },
       })
       .provide([
         [call(getProvider, chainId), receiptProvider],
@@ -138,7 +142,7 @@ describe(watchTransaction, () => {
       .silentRun()
   })
 
-  it('Invalidates stale transaction', () => {
+  it('Invalidates stale transaction when another transaction with same nonce is finalized', () => {
     const receiptProvider = {
       waitForTransaction: jest.fn(async () => {
         await sleep(1000)
@@ -152,10 +156,36 @@ describe(watchTransaction, () => {
     })
       .withState({
         wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
+        userSettings: { isTestnetModeEnabled: false },
       })
       .provide([
         [call(getProvider, chainId), receiptProvider],
-        [call(waitForTxnInvalidated, chainId, id, options.request.nonce), true],
+        [call(waitForSameNonceFinalized, chainId, id, options.request.nonce), true],
+      ])
+      .call(deleteTransaction, txDetailsPending)
+      .dispatch(transactionActions.deleteTransaction({ address: from, id, chainId }))
+      .silentRun()
+  })
+
+  it('Invalidates stale transaction when bridge send is confirmed with same nonce', () => {
+    const receiptProvider = {
+      waitForTransaction: jest.fn(async () => {
+        await sleep(1000)
+        return null
+      }),
+    }
+
+    return expectSaga(watchTransaction, {
+      transaction: txDetailsPending,
+      apolloClient: mockApolloClient,
+    })
+      .withState({
+        wallet: { activeAccountAddress: ACTIVE_ACCOUNT_ADDRESS },
+        userSettings: { isTestnetModeEnabled: false },
+      })
+      .provide([
+        [call(getProvider, chainId), receiptProvider],
+        [call(waitForBridgeSendCompleted, chainId, id, options.request.nonce), true],
       ])
       .call(deleteTransaction, txDetailsPending)
       .dispatch(transactionActions.deleteTransaction({ address: from, id, chainId }))

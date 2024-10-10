@@ -6,7 +6,7 @@ import { DappResponseType } from 'src/app/features/dappRequests/types/DappReques
 import { chainIdToHexadecimalString } from 'uniswap/src/features/chains/utils'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 // Mock dependencies
 jest.mock('@ethersproject/providers')
@@ -18,7 +18,7 @@ jest.mock('uniswap/src/features/chains/utils')
 describe('changeChain', () => {
   const mockRequestId = 'test-request-id'
   const mockProviderUrl = 'http://localhost:8545'
-  const mockChainId = 1 as WalletChainId
+  const mockChainId = 1 as UniverseChainId
 
   let mockProvider: JsonRpcProvider
 

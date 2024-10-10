@@ -16,7 +16,6 @@ import { Flex, Text, useSporeColors } from 'ui/src'
 import AlertTriangleFilled from 'ui/src/assets/icons/alert-triangle-filled.svg'
 import { iconSizes } from 'ui/src/theme'
 import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
-import { useUSDValue } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
 import { BlockedAddressWarning } from 'uniswap/src/features/transactions/modals/BlockedAddressWarning'
@@ -86,7 +85,6 @@ export function WalletConnectRequestModalContent({
   }))
 
   const hasGasFee = methodCostsGas(request)
-  const gasFeeUSD = useUSDValue(chainId, gasFee?.value)
 
   return (
     <>
@@ -99,9 +97,21 @@ export function WalletConnectRequestModalContent({
             </SectionContainer>
           )}
         </Flex>
-
         <Flex gap="$spacing8" mb="$spacing12" pt="$spacing20" px="$spacing4">
-          <NetworkFeeFooter chainId={chainId} gasFeeUSD={hasGasFee ? gasFeeUSD : '0'} showNetworkLogo={hasGasFee} />
+          <NetworkFeeFooter
+            chainId={chainId}
+            gasFee={
+              hasGasFee
+                ? gasFee
+                : // Mock gas fee for non-transaction requests
+                  {
+                    value: '0',
+                    isLoading: false,
+                    error: null,
+                  }
+            }
+            showNetworkLogo={hasGasFee}
+          />
           <AddressFooter activeAccountAddress={request.account} px="$spacing8" />
         </Flex>
 

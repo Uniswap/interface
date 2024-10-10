@@ -12,10 +12,11 @@ import { Screen } from 'src/components/layout/Screen'
 import { TAB_STYLES, TabContentProps, TabLabel } from 'src/components/layout/TabHelpers'
 import { ProfileHeader } from 'src/features/externalProfile/ProfileHeader'
 import { ExploreModalAwareView } from 'src/screens/ModalAwareView'
-import { Flex, useDeviceInsets, useSporeColors } from 'ui/src'
+import { Flex, useSporeColors } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { SectionName, SectionNameType } from 'uniswap/src/features/telemetry/constants'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
@@ -33,7 +34,7 @@ export function ExternalProfileScreen({
   const { t } = useTranslation()
   const colors = useSporeColors()
   const [tabIndex, setIndex] = useState(0)
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
 
   const displayName = useDisplayName(address)
 

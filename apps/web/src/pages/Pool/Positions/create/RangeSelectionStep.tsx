@@ -1,3 +1,6 @@
+// eslint-disable-next-line no-restricted-imports
+import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
+import LiquidityChartRangeInput from 'components/LiquidityChartRangeInput'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
 import { Container } from 'pages/Pool/Positions/create/shared'
 import { useCallback, useMemo, useState } from 'react'
@@ -136,18 +139,16 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
   const { formatPrice } = useFormatter()
 
   const {
-    positionState: {
-      currencyInputs: { TOKEN0: token0, TOKEN1: token1 },
-      fee,
-    },
-    derivedPositionInfo: { pool },
+    positionState: { fee },
+    derivedPositionInfo,
   } = useCreatePositionContext()
   const {
     priceRangeState: { fullRange },
     setPriceRangeState,
-    derivedPriceRangeInfo: { baseAndQuoteTokens, price, prices, ticks, isSorted, ticksAtLimit },
+    derivedPriceRangeInfo: { baseAndQuoteTokens, price, prices, pricesAtTicks, ticks, isSorted, ticksAtLimit },
   } = usePriceRangeContext()
 
+  const { TOKEN0: token0, TOKEN1: token1 } = derivedPositionInfo.currencies
   const [baseToken, quoteToken] = baseAndQuoteTokens ?? [undefined, undefined]
 
   const controlOptions = useMemo(() => {
@@ -165,6 +166,7 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
     [token0?.symbol, setPriceRangeState],
   )
 
+  const pool = derivedPositionInfo.protocolVersion === ProtocolVersion.V3 ? derivedPositionInfo.pool : undefined
   const { getDecrementLower, getIncrementLower, getDecrementUpper, getIncrementUpper } = useRangeHopCallbacks(
     baseToken ?? undefined,
     quoteToken ?? undefined,
@@ -199,6 +201,17 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
       ticksAtLimit[isSorted ? 1 : 0] ? '∞' : prices?.[1]?.toSignificant(8) ?? '',
     ]
   }, [isSorted, prices, ticksAtLimit])
+
+  const handleChartRangeInput = useCallback(
+    (input: RangeSelectionInput, value: string) => {
+      if (input === RangeSelectionInput.MIN) {
+        setPriceRangeState((prev) => ({ ...prev, minPrice: value, fullRange: false }))
+      } else {
+        setPriceRangeState((prev) => ({ ...prev, maxPrice: value, fullRange: false }))
+      }
+    },
+    [setPriceRangeState],
+  )
 
   return (
     <Container {...rest}>
@@ -247,6 +260,21 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
               </Text>
               <SwapActionButton size="$icon.16" color="$neutral2" />
             </Flex>
+            <LiquidityChartRangeInput
+              currencyA={baseToken ?? undefined}
+              currencyB={quoteToken ?? undefined}
+              feeAmount={fee}
+              ticksAtLimit={{
+                LOWER: ticksAtLimit[0],
+                UPPER: ticksAtLimit[1],
+              }}
+              price={price ? parseFloat(price.toSignificant(8)) : undefined}
+              priceLower={pricesAtTicks?.[0]}
+              priceUpper={pricesAtTicks?.[1]}
+              onLeftRangeInput={(text) => handleChartRangeInput(RangeSelectionInput.MIN, text)}
+              onRightRangeInput={(text) => handleChartRangeInput(RangeSelectionInput.MAX, text)}
+              interactive={true}
+            />
           </Flex>
           <Flex row gap="$gap4">
             <RangeInput

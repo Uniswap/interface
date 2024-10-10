@@ -8,7 +8,7 @@ import ScanQRIcon from 'ui/src/assets/icons/scan.svg'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { dismissNativeKeyboard } from 'utilities/src/device/keyboard'
 import { RecipientList } from 'wallet/src/components/RecipientSearch/RecipientList'
 import { RecipientSelectSpeedBumps } from 'wallet/src/components/RecipientSearch/RecipientSelectSpeedBumps'
@@ -20,7 +20,7 @@ interface RecipientSelectProps {
   onHideRecipientSelector: () => void
   recipient?: string
   focusInput?: boolean
-  chainId?: WalletChainId
+  chainId?: UniverseChainId
   renderedInModal?: boolean
   hideBackButton?: boolean
 }

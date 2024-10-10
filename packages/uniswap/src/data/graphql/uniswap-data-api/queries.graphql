@@ -245,22 +245,11 @@ query NftsTab(
   $first: Int
   $after: String
   $filter: NftBalancesFilterInput
+  $chains: [Chain!]!
 ) {
   nftBalances(
     ownerAddress: $ownerAddress
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BLAST
-      BNB
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
     first: $first
     after: $after
     filter: $filter
@@ -312,19 +301,7 @@ query NftsTab(
 query PortfolioBalances(
   $ownerAddress: String!
   $valueModifiers: [PortfolioValueModifier!]
-  $chains: [Chain!] = [
-    ETHEREUM
-    POLYGON
-    ARBITRUM
-    OPTIMISM
-    BASE
-    BNB
-    BLAST
-    ZORA
-    CELO
-    AVALANCHE
-    ZKSYNC
-  ]
+  $chains: [Chain!]!
 ) {
   portfolios(
     ownerAddresses: [$ownerAddress]
@@ -391,22 +368,11 @@ query PortfolioBalances(
 query MultiplePortfolioBalances(
   $ownerAddresses: [String!]!
   $valueModifiers: [PortfolioValueModifier!]
+  $chains: [Chain!]!
 ) {
   portfolios(
     ownerAddresses: $ownerAddresses
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BNB
-      BLAST
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
     valueModifiers: $valueModifiers
   ) {
     id
@@ -458,22 +424,11 @@ query MultiplePortfolioBalances(
 query SelectWalletScreen(
   $ownerAddresses: [String!]!
   $valueModifiers: [PortfolioValueModifier!]
+  $chains: [Chain!]!
 ) {
   portfolios(
     ownerAddresses: $ownerAddresses
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BNB
-      BLAST
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
     valueModifiers: $valueModifiers
   ) {
     id
@@ -487,41 +442,18 @@ query SelectWalletScreen(
 query TransactionHistoryUpdater(
   $addresses: [String!]!
   $onRampAuth: OnRampTransactionsAuth
+  $chains: [Chain!]!
 ) {
   portfolios(
     ownerAddresses: $addresses
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BNB
-      BLAST
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
   ) {
     id
     ownerAddress
     assetActivities(
       pageSize: 1
       page: 1
-      chains: [
-        ETHEREUM
-        POLYGON
-        ARBITRUM
-        OPTIMISM
-        BASE
-        BNB
-        BLAST
-        ZORA
-        CELO
-        AVALANCHE
-        ZKSYNC
-      ]
+      chains: $chains
       onRampTransactionsAuth: $onRampAuth
       includeBridging: true
     ) {
@@ -660,22 +592,10 @@ query TokenProjects($contracts: [ContractInput!]!) {
   }
 }
 
-query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
+query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth, $chains: [Chain!]!) {
   portfolios(
     ownerAddresses: [$address]
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BNB
-      BLAST
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
   ) {
     id
     assetActivities(
@@ -683,19 +603,7 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
       page: 1
       includeOffChain: true
       includeBridging: true
-      chains: [
-        ETHEREUM
-        POLYGON
-        ARBITRUM
-        OPTIMISM
-        BASE
-        BNB
-        BLAST
-        ZORA
-        CELO
-        AVALANCHE
-        ZKSYNC
-      ]
+      chains: $chains
       onRampTransactionsAuth: $onRampAuth
     ) {
       id
@@ -889,22 +797,10 @@ query TransactionList($address: String!, $onRampAuth: OnRampTransactionsAuth) {
   }
 }
 
-query FeedTransactionList($addresses: [String!]!) {
+query FeedTransactionList($addresses: [String!]!, $chains: [Chain!]!) {
   portfolios(
     ownerAddresses: $addresses
-    chains: [
-      ETHEREUM
-      POLYGON
-      ARBITRUM
-      OPTIMISM
-      BASE
-      BNB
-      BLAST
-      ZORA
-      CELO
-      AVALANCHE
-      ZKSYNC
-    ]
+    chains: $chains
   ) {
     id
     ownerAddress
@@ -912,19 +808,7 @@ query FeedTransactionList($addresses: [String!]!) {
       pageSize: 30
       includeBridging: true
       page: 1
-      chains: [
-        ETHEREUM
-        POLYGON
-        ARBITRUM
-        OPTIMISM
-        BASE
-        BNB
-        BLAST
-        ZORA
-        CELO
-        AVALANCHE
-        ZKSYNC
-      ]
+      chains: $chains
     ) {
       id
       timestamp
@@ -1050,7 +934,7 @@ query TopTokens(
   }
 }
 
-query SearchTokens($searchQuery: String!, $chains: [Chain!]) {
+query SearchTokens($searchQuery: String!, $chains: [Chain!]!) {
   searchTokens(searchQuery: $searchQuery, chains: $chains) {
     id
     chain

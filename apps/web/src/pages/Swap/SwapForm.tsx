@@ -6,7 +6,7 @@ import {
   SwapPriceImpactUserResponse,
 } from '@uniswap/analytics-events'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
-import { UNIVERSAL_ROUTER_ADDRESS } from '@uniswap/universal-router-sdk'
+import { UNIVERSAL_ROUTER_ADDRESS, UniversalRouterVersion } from '@uniswap/universal-router-sdk'
 import { useAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonError, ButtonLight, ButtonPrimary } from 'components/Button/buttons'
 import { GrayCard } from 'components/Card/cards'
@@ -318,7 +318,7 @@ export function SwapForm({
       (parsedAmounts[CurrencyField.INPUT]?.currency.isToken
         ? (parsedAmounts[CurrencyField.INPUT] as CurrencyAmount<Token>)
         : undefined),
-    supportedChainId ? UNIVERSAL_ROUTER_ADDRESS(supportedChainId) : undefined,
+    supportedChainId ? UNIVERSAL_ROUTER_ADDRESS(UniversalRouterVersion.V1_2, supportedChainId) : undefined,
     trade?.fillType,
   )
 

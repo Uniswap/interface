@@ -3,6 +3,7 @@ import blankTokenUrl from 'assets/svg/blank_token.svg'
 import { ReactComponent as UnknownStatus } from 'assets/svg/contract-interaction.svg'
 import Identicon from 'components/Identicon'
 import { ChainLogo } from 'components/Logo/ChainLogo'
+import CurrencyLogo from 'components/Logo/CurrencyLogo'
 import {
   CircleLogoImage,
   DoubleCurrencyLogo,
@@ -10,10 +11,11 @@ import {
   L2LogoContainer,
   SingleLogoContainer,
 } from 'components/Logo/DoubleLogo'
+import { TESTNET_CHAIN_IDS } from 'constants/chains'
 import styled from 'lib/styled-components'
 import React, { memo } from 'react'
 import { Flex, SpinningLoader, styled as TamaguiStyled } from 'ui/src'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 const UnknownContract = styled(UnknownStatus)`
   color: ${({ theme }) => theme.neutral2};
@@ -28,7 +30,7 @@ const LogoContainer = styled.div`
 `
 
 interface PortfolioLogoProps {
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
   accountAddress?: string
   currencies?: Array<Currency | undefined>
   images?: Array<string | undefined>
@@ -37,7 +39,7 @@ interface PortfolioLogoProps {
   loading?: boolean
 }
 
-function SquareL2Logo({ chainId, size }: { chainId: InterfaceChainId; size: number }) {
+function SquareL2Logo({ chainId, size }: { chainId: UniverseChainId; size: number }) {
   if (chainId === UniverseChainId.Mainnet) {
     return null
   }
@@ -59,11 +61,15 @@ const AbsoluteCenteredElement = TamaguiStyled(Flex, {
   top: -4.5,
 })
 
-// TODO(WEB-2983)
+// TODO(WEB-5111): Replace currency logos on web with uniswap currency logos
 /**
  * Renders an image by prioritizing a list of sources, and then eventually a fallback contract icon
  */
 export const PortfolioLogo = memo(function PortfolioLogo(props: PortfolioLogoProps) {
+  if (TESTNET_CHAIN_IDS.includes(props.chainId)) {
+    return <CurrencyLogo currency={props.currencies?.[0]} size={props.size} />
+  }
+
   return (
     <LogoContainer style={props.style}>
       <Flex position="relative">

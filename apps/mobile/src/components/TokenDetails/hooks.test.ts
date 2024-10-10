@@ -1,9 +1,11 @@
-import { useCrossChainBalances, useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
+import { useTokenDetailsNavigation } from 'src/components/TokenDetails/hooks'
 import { preloadedMobileState } from 'src/test/fixtures'
 import { act, renderHook, waitFor } from 'src/test/test-utils'
+import { useCrossChainBalances } from 'uniswap/src/data/balances/hooks/useCrossChainBalances'
 import { currencyIdToContractInput } from 'uniswap/src/features/dataApi/utils'
 import {
   SAMPLE_CURRENCY_ID_1,
+  SAMPLE_SEED_ADDRESS_1,
   portfolio,
   portfolioBalances,
   tokenBalance,
@@ -32,9 +34,17 @@ jest.mock('@react-navigation/native', () => {
 describe(useCrossChainBalances, () => {
   describe('currentChainBalance', () => {
     it('returns null if there are no balances for the specified currency', async () => {
-      const { result } = renderHook(() => useCrossChainBalances(SAMPLE_CURRENCY_ID_1, null), {
-        preloadedState: preloadedMobileState(),
-      })
+      const { result } = renderHook(
+        () =>
+          useCrossChainBalances({
+            address: SAMPLE_SEED_ADDRESS_1,
+            currencyId: SAMPLE_CURRENCY_ID_1,
+            crossChainTokens: null,
+          }),
+        {
+          preloadedState: preloadedMobileState(),
+        },
+      )
 
       await act(() => undefined)
 
@@ -51,10 +61,18 @@ describe(useCrossChainBalances, () => {
       const { resolvers } = queryResolvers({
         portfolios: () => [Portfolio],
       })
-      const { result } = renderHook(() => useCrossChainBalances(currentChainBalance.currencyInfo.currencyId, null), {
-        preloadedState: preloadedMobileState(),
-        resolvers,
-      })
+      const { result } = renderHook(
+        () =>
+          useCrossChainBalances({
+            address: SAMPLE_SEED_ADDRESS_1,
+            currencyId: currentChainBalance.currencyInfo.currencyId,
+            crossChainTokens: null,
+          }),
+        {
+          preloadedState: preloadedMobileState(),
+          resolvers,
+        },
+      )
 
       await waitFor(() => {
         expect(result.current).toEqual(
@@ -68,9 +86,17 @@ describe(useCrossChainBalances, () => {
 
   describe('otherChainBalances', () => {
     it('returns null if there are no bridged currencies', async () => {
-      const { result } = renderHook(() => useCrossChainBalances(SAMPLE_CURRENCY_ID_1, null), {
-        preloadedState: preloadedMobileState(),
-      })
+      const { result } = renderHook(
+        () =>
+          useCrossChainBalances({
+            address: SAMPLE_SEED_ADDRESS_1,
+            currencyId: SAMPLE_CURRENCY_ID_1,
+            crossChainTokens: null,
+          }),
+        {
+          preloadedState: preloadedMobileState(),
+        },
+      )
 
       await act(() => undefined)
 
@@ -97,7 +123,12 @@ describe(useCrossChainBalances, () => {
       })
 
       const { result } = renderHook(
-        () => useCrossChainBalances(currentChainBalance!.currencyInfo.currencyId, bridgeInfo),
+        () =>
+          useCrossChainBalances({
+            address: SAMPLE_SEED_ADDRESS_1,
+            currencyId: currentChainBalance!.currencyInfo.currencyId,
+            crossChainTokens: bridgeInfo,
+          }),
         {
           preloadedState: preloadedMobileState(),
           resolvers,

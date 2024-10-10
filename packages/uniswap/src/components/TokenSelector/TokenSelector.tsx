@@ -23,11 +23,12 @@ import { TradeableAsset } from 'uniswap/src/entities/assets'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { SearchContext } from 'uniswap/src/features/search/SearchContext'
 import { SearchTextInput } from 'uniswap/src/features/search/SearchTextInput'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ElementName, ModalName, SectionName, UniswapEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import useIsKeyboardOpen from 'uniswap/src/hooks/useIsKeyboardOpen'
-import { UniverseChainId, WALLET_SUPPORTED_CHAIN_IDS } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { getClipboard } from 'uniswap/src/utils/clipboard'
 import { currencyAddress } from 'uniswap/src/utils/currencyId'
@@ -71,7 +72,7 @@ export function TokenSelectorContent({
   input,
   activeAccountAddress,
   chainId,
-  chainIds = WALLET_SUPPORTED_CHAIN_IDS,
+  chainIds,
   isSurfaceReady = true,
   isLimits,
   onClose,
@@ -90,6 +91,8 @@ export function TokenSelectorContent({
   const isSmallScreen = (media.sm && isInterface) || isMobileApp || isMobileWeb
 
   const [hasClipboardString, setHasClipboardString] = useState(false)
+
+  const { chains: enabledChains, isTestnetModeEnabled } = useEnabledChains()
 
   // Check if user clipboard has any text to show paste button
   useEffect(() => {
@@ -176,7 +179,7 @@ export function TokenSelectorContent({
   const shouldAutoFocusSearch = isWeb && !media.sm
 
   const tokenSelector = useMemo(() => {
-    if (searchInFocus && !searchFilter) {
+    if (searchInFocus && !searchFilter && !isTestnetModeEnabled) {
       return (
         <TokenSelectorEmptySearchList
           chainFilter={chainFilter}
@@ -239,6 +242,7 @@ export function TokenSelectorContent({
   }, [
     searchInFocus,
     searchFilter,
+    isTestnetModeEnabled,
     variation,
     chainFilter,
     isKeyboardOpen,
@@ -247,8 +251,8 @@ export function TokenSelectorContent({
     debouncedParsedSearchFilter,
     debouncedSearchFilter,
     parsedChainFilter,
-    onSendEmptyActionPress,
     input,
+    onSendEmptyActionPress,
   ])
 
   return (
@@ -271,8 +275,8 @@ export function TokenSelectorContent({
                 <Flex row alignItems="center">
                   {hasClipboardString && <PasteButton inline onPress={handlePaste} />}
                   <NetworkFilter
-                    includeAllNetworks
-                    chainIds={chainIds}
+                    includeAllNetworks={!isTestnetModeEnabled}
+                    chainIds={chainIds || enabledChains}
                     selectedChain={chainFilter}
                     styles={isExtension ? { dropdownZIndex: zIndices.overlay } : undefined}
                     onPressChain={(newChainId) => {

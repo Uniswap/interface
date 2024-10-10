@@ -6,15 +6,16 @@ import { Action } from 'redux'
 import { closeModal } from 'src/features/modals/modalSlice'
 import { selectCustomEndpoint } from 'src/features/tweaks/selectors'
 import { setCustomEndpoint } from 'src/features/tweaks/slice'
-import { Accordion, Button, Flex, Text, useDeviceInsets } from 'ui/src'
+import { Accordion, Button, Flex, Text } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { TextInput } from 'uniswap/src/components/input/TextInput'
 import { Modal } from 'uniswap/src/components/modals/Modal'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 import { AccordionHeader, GatingOverrides } from 'wallet/src/components/gating/GatingOverrides'
 
 export function ExperimentsModal(): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const dispatch = useDispatch()
   const customEndpoint = useSelector(selectCustomEndpoint)
 

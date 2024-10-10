@@ -6,12 +6,13 @@ import {
   fromGraphQLChain,
   fromMoonpayNetwork,
   fromUniswapWebAppLink,
+  getEnabledChains,
   getPollingIntervalByBlocktime,
   hexadecimalStringToInt,
   toSupportedChainId,
   toUniswapWebAppLink,
 } from 'uniswap/src/features/chains/utils'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { SUPPORTED_CHAIN_IDS, SUPPORTED_TESTNET_CHAIN_IDS, UniverseChainId } from 'uniswap/src/types/chains'
 
 describe(toSupportedChainId, () => {
   it('handles undefined input', () => {
@@ -125,5 +126,82 @@ describe('hexadecimalStringToInt', () => {
     expect(hexadecimalStringToInt('g')).toBeNaN()
     expect(hexadecimalStringToInt('0x')).toBeNaN()
     expect(hexadecimalStringToInt('0xg')).toBeNaN()
+  })
+})
+
+describe('getEnabledChains', () => {
+  it('returns all mainnet chains', () => {
+    const featureFlaggedChainIds = SUPPORTED_CHAIN_IDS.filter((chainId) => chainId !== UniverseChainId.WorldChain)
+
+    expect(getEnabledChains({ isTestnetModeEnabled: false, featureFlaggedChainIds })).toEqual({
+      chains: [
+        UniverseChainId.Mainnet,
+        UniverseChainId.Polygon,
+        UniverseChainId.ArbitrumOne,
+        UniverseChainId.Optimism,
+        UniverseChainId.Base,
+        UniverseChainId.Bnb,
+        UniverseChainId.Blast,
+        UniverseChainId.Avalanche,
+        UniverseChainId.Celo,
+        UniverseChainId.Zora,
+        UniverseChainId.Zksync,
+      ],
+      gqlChains: [
+        Chain.Ethereum,
+        Chain.Optimism,
+        Chain.Bnb,
+        Chain.Polygon,
+        Chain.Zksync,
+        Chain.Worldchain,
+        Chain.Base,
+        Chain.Arbitrum,
+        Chain.Celo,
+        Chain.Avalanche,
+        Chain.Blast,
+        Chain.Zora,
+      ],
+      defaultChainId: UniverseChainId.Mainnet,
+      isTestnetModeEnabled: false,
+    })
+  })
+  it('returns feature flagged chains', () => {
+    expect(
+      getEnabledChains({
+        isTestnetModeEnabled: false,
+        featureFlaggedChainIds: [UniverseChainId.Mainnet, UniverseChainId.Polygon],
+      }),
+    ).toEqual({
+      chains: [UniverseChainId.Mainnet, UniverseChainId.Polygon],
+      gqlChains: [
+        Chain.Ethereum,
+        Chain.Optimism,
+        Chain.Bnb,
+        Chain.Polygon,
+        Chain.Zksync,
+        Chain.Worldchain,
+        Chain.Base,
+        Chain.Arbitrum,
+        Chain.Celo,
+        Chain.Avalanche,
+        Chain.Blast,
+        Chain.Zora,
+      ],
+      defaultChainId: UniverseChainId.Mainnet,
+      isTestnetModeEnabled: false,
+    })
+  })
+  it('returns testnet chains', () => {
+    expect(
+      getEnabledChains({
+        isTestnetModeEnabled: true,
+        featureFlaggedChainIds: SUPPORTED_TESTNET_CHAIN_IDS,
+      }),
+    ).toEqual({
+      chains: [UniverseChainId.Sepolia, UniverseChainId.AstrochainSepolia],
+      gqlChains: [Chain.AstrochainSepolia, Chain.EthereumSepolia],
+      defaultChainId: UniverseChainId.Sepolia,
+      isTestnetModeEnabled: true,
+    })
   })
 })

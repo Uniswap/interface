@@ -2,7 +2,7 @@ import { useSelector } from 'react-redux'
 import { ContextMenu, Flex } from 'ui/src'
 import { fromGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { selectNftsVisibility } from 'uniswap/src/features/favorites/selectors'
-import { UniverseChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { NftView } from 'wallet/src/components/nfts/NftView'
 import { NftViewWithContextMenuProps } from 'wallet/src/components/nfts/NftViewProps'
 import { useNFTContextMenu } from 'wallet/src/features/nfts/useNftContextMenu'
@@ -10,6 +10,7 @@ import { getIsNftHidden } from 'wallet/src/features/nfts/utils'
 
 // WALL-4875 TODO try to combine web and mobile versions
 export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.Element {
+  const { defaultChainId } = useEnabledChains()
   const { owner, item } = props
 
   const { menuActions } = useNFTContextMenu({
@@ -17,7 +18,7 @@ export function NftViewWithContextMenu(props: NftViewWithContextMenuProps): JSX.
     tokenId: item.tokenId,
     owner,
     isSpam: item.isSpam,
-    chainId: fromGraphQLChain(item.chain) ?? UniverseChainId.Mainnet,
+    chainId: fromGraphQLChain(item.chain) ?? defaultChainId,
   })
 
   const menuOptions = menuActions.map((action) => ({

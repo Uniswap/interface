@@ -16,7 +16,7 @@ import {
   UniswapXOrderDetails,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { createTransactionId } from 'uniswap/src/utils/createTransactionId'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
@@ -34,7 +34,7 @@ export interface SubmitUniswapXOrderParams {
   quote: DutchQuoteV2 | PriorityQuote
   routing: Routing.DUTCH_V2 | Routing.PRIORITY
   permit: ValidatedPermit
-  chainId: WalletChainId
+  chainId: UniverseChainId
   account: AccountMeta
   typeInfo: TransactionTypeInfo
   analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>

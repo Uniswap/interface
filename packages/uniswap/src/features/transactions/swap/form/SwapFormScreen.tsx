@@ -21,6 +21,7 @@ import { CurrencyInputPanel, CurrencyInputPanelRef } from 'uniswap/src/component
 import { getAlertColor } from 'uniswap/src/components/modals/WarningModal/getAlertColor'
 import { RouterLabel } from 'uniswap/src/components/RouterLabel/RouterLabel'
 import { MAX_FIAT_INPUT_DECIMALS } from 'uniswap/src/constants/transactions'
+import { usePrefetchSwappableTokens } from 'uniswap/src/data/apiClients/tradingApi/useTradingApiSwappableTokensQuery'
 import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ElementName, SectionName } from 'uniswap/src/features/telemetry/constants'
 import Trace from 'uniswap/src/features/telemetry/Trace'
@@ -41,6 +42,7 @@ import { useExactOutputWillFail } from 'uniswap/src/features/transactions/swap/h
 import { useSwapNetworkNotification } from 'uniswap/src/features/transactions/swap/hooks/useSwapNetworkNotification'
 import { useParsedSwapWarnings } from 'uniswap/src/features/transactions/swap/hooks/useSwapWarnings'
 import { useSyncFiatAndTokenAmountUpdater } from 'uniswap/src/features/transactions/swap/hooks/useSyncFiatAndTokenAmountUpdater'
+import { AcrossRoutingInfo } from 'uniswap/src/features/transactions/swap/modals/AcrossRoutingInfo'
 import { MarketPriceImpactWarning } from 'uniswap/src/features/transactions/swap/modals/MarketPriceImpactWarning'
 import { RoutingInfo } from 'uniswap/src/features/transactions/swap/modals/RoutingInfo'
 import { MaxSlippageRow } from 'uniswap/src/features/transactions/swap/review/MaxSlippageRow'
@@ -150,6 +152,8 @@ function SwapFormContent({ wrapCallback }: { wrapCallback?: WrapCallback }): JSX
     inputChainId: input?.chainId,
     outputChainId: output?.chainId,
   })
+
+  usePrefetchSwappableTokens(input)
 
   const onRestorePress = (): void => {
     if (!openWalletRestoreModal) {
@@ -796,7 +800,9 @@ function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | nul
           transactionUSDValue={derivedSwapInfo.currencyAmountsUSDValue[CurrencyField.OUTPUT]}
           uniswapXGasBreakdown={uniswapXGasBreakdown}
           RoutingInfo={
-            isWeb ? (
+            isBridge ? (
+              <AcrossRoutingInfo />
+            ) : (
               <Flex row alignItems="center" justifyContent="space-between">
                 <RoutingInfo gasFee={gasFee} chainId={chainId}>
                   <Flex centered row gap="$spacing4">
@@ -811,7 +817,7 @@ function ExpandableRows({ isBridge }: { isBridge?: boolean }): JSX.Element | nul
                   </Text>
                 </Flex>
               </Flex>
-            ) : undefined
+            )
           }
           RateInfo={
             showPriceImpactWarning && trade.trade ? (

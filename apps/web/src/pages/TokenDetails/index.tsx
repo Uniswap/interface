@@ -21,11 +21,11 @@ import { formatTokenMetatagTitleName } from 'shared-cloud/metatags'
 import { ThemeProvider } from 'theme'
 import { nativeOnChain } from 'uniswap/src/constants/tokens'
 import { useTokenWebQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { InterfaceChainId, UniverseChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isAddress } from 'utilities/src/addresses'
 import { getNativeTokenDBAddress } from 'utils/nativeTokens'
 
-function useOnChainToken(address: string | undefined, chainId: InterfaceChainId, skip: boolean) {
+function useOnChainToken(address: string | undefined, chainId: UniverseChainId, skip: boolean) {
   const token = useCurrency(!skip ? address : undefined, chainId)
 
   if (skip || !address || (token && token?.symbol === UNKNOWN_TOKEN_SYMBOL)) {
@@ -39,7 +39,7 @@ function useOnChainToken(address: string | undefined, chainId: InterfaceChainId,
 function useTDPCurrency(
   tokenQuery: ReturnType<typeof useTokenWebQuery>,
   tokenAddress: string,
-  currencyChainId: InterfaceChainId,
+  currencyChainId: UniverseChainId,
   isNative: boolean,
 ) {
   const { chainId } = useAccount()

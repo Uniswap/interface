@@ -14,11 +14,12 @@ interface SettingsToggleProps {
   title: ReactNode
   description?: string
   dataid?: string
+  disabled?: boolean
   isActive: boolean
   toggle: () => void
 }
 
-export function SettingsToggle({ title, description, dataid, isActive, toggle }: SettingsToggleProps) {
+export function SettingsToggle({ title, description, dataid, isActive, toggle, disabled }: SettingsToggleProps) {
   return (
     <Row align="center">
       <StyledColumn>
@@ -33,7 +34,7 @@ export function SettingsToggle({ title, description, dataid, isActive, toggle }:
           </Row>
         )}
       </StyledColumn>
-      <Switch testID={dataid} variant="branded" checked={isActive} onCheckedChange={toggle} />
+      <Switch testID={dataid} variant="branded" checked={isActive} onCheckedChange={toggle} disabled={disabled} />
     </Row>
   )
 }

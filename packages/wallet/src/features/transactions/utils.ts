@@ -1,5 +1,5 @@
 import { BigNumber, providers } from 'ethers'
-import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
+import { isBridge, isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import {
   FinalizedTransactionStatus,
   TransactionDetails,
@@ -7,11 +7,11 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export function getSerializableTransactionRequest(
   request: providers.TransactionRequest,
-  chainId?: WalletChainId,
+  chainId?: UniverseChainId,
 ): providers.TransactionRequest {
   // prettier-ignore
   const { to, from, nonce, gasLimit, gasPrice, data, value, maxPriorityFeePerGas, maxFeePerGas, type } = request
@@ -52,6 +52,9 @@ export function getFinalizedTransactionStatus(
 }
 
 export function getIsCancelable(tx: TransactionDetails): boolean {
+  if (isBridge(tx) && tx.sendConfirmed) {
+    return false
+  }
   if (tx.status === TransactionStatus.Pending && (isUniswapX(tx) || Object.keys(tx.options?.request).length > 0)) {
     return true
   }

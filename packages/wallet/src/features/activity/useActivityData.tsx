@@ -13,7 +13,7 @@ import { useFormattedTransactionDataForActivity } from 'wallet/src/features/acti
 import { LoadingItem, SectionHeader } from 'wallet/src/features/activity/utils'
 import { SwapSummaryCallbacks } from 'wallet/src/features/transactions/SummaryCards/types'
 import { ActivityItemRenderer, generateActivityItemRenderer } from 'wallet/src/features/transactions/SummaryCards/utils'
-import { useCreateSwapFormState, useMergeLocalAndRemoteTransactions } from 'wallet/src/features/transactions/hooks'
+import { useCreateSwapFormState } from 'wallet/src/features/transactions/hooks'
 import { useMostRecentSwapTx } from 'wallet/src/features/transactions/swap/hooks/useMostRecentSwapTx'
 
 const SectionTitle = ({ title, index }: { title: string; index?: number }): JSX.Element => (
@@ -71,11 +71,7 @@ export function useActivityData({
     return generateActivityItemRenderer(<Loader.Transaction />, SectionTitle, swapCallbacks, authTrigger)
   }, [swapCallbacks, authTrigger])
 
-  const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(
-    owner,
-    hideSpamTokens,
-    useMergeLocalAndRemoteTransactions,
-  )
+  const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(owner, hideSpamTokens)
 
   const errorCard = (
     <Flex grow style={emptyComponentStyle}>

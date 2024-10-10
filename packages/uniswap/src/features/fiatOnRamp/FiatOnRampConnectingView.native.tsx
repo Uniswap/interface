@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { Image, ImageBackground, StyleSheet } from 'react-native'
 import { FadeIn, FadeOut } from 'react-native-reanimated'
-import { Flex, Text, useDeviceInsets, useIsDarkMode } from 'ui/src'
+import { Flex, Text, useIsDarkMode } from 'ui/src'
 import { FOR_CONNECTING_BACKGROUND_DARK, FOR_CONNECTING_BACKGROUND_LIGHT, UNISWAP_LOGO_LARGE } from 'ui/src/assets'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
@@ -9,6 +9,7 @@ import {
   SERVICE_PROVIDER_ICON_BORDER_RADIUS,
   ServiceProviderLogoStyles,
 } from 'uniswap/src/features/fiatOnRamp/constants'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 export function FiatOnRampConnectingView({
   isOffRamp,
@@ -23,7 +24,7 @@ export function FiatOnRampConnectingView({
   serviceProviderName: string
   serviceProviderLogo?: JSX.Element
 }): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const { t } = useTranslation()
 
   const isDarkMode = useIsDarkMode()

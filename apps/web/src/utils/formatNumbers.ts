@@ -513,6 +513,7 @@ interface FormatNumberOptions {
   locale?: Locale
   localCurrency?: FiatCurrency
   conversionRate?: number
+  forceShowCurrencySymbol?: boolean
 }
 
 function formatNumber({
@@ -522,8 +523,17 @@ function formatNumber({
   locale = DEFAULT_LOCALE,
   localCurrency = DEFAULT_LOCAL_CURRENCY,
   conversionRate,
+  forceShowCurrencySymbol = false,
 }: FormatNumberOptions): string {
   if (input === null || input === undefined) {
+    if (forceShowCurrencySymbol) {
+      const parts = new Intl.NumberFormat(locale, { style: 'currency', currency: localCurrency }).formatToParts(0)
+      const currencySymbol = parts.find((part) => part.type === 'currency')?.value
+      const isSymbolBeforeNumber = parts[0].type === 'currency'
+
+      return isSymbolBeforeNumber ? `${currencySymbol}${placeholder}` : `${placeholder}${currencySymbol}`
+    }
+
     return placeholder
   }
 

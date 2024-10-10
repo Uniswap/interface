@@ -130,19 +130,19 @@ exports[`DappLogoWithWCBadge renders without error 1`] = `
         style={
           {
             "borderBottomColor": "rgba(255,255,255,1.00)",
-            "borderBottomLeftRadius": "6.6px",
-            "borderBottomRightRadius": "6.6px",
-            "borderBottomWidth": "1px",
+            "borderBottomLeftRadius": "6.8999999999999995px",
+            "borderBottomRightRadius": "6.8999999999999995px",
+            "borderBottomWidth": "1.5px",
             "borderLeftColor": "rgba(255,255,255,1.00)",
-            "borderLeftWidth": "1px",
+            "borderLeftWidth": "1.5px",
             "borderRightColor": "rgba(255,255,255,1.00)",
-            "borderRightWidth": "1px",
+            "borderRightWidth": "1.5px",
             "borderTopColor": "rgba(255,255,255,1.00)",
-            "borderTopLeftRadius": "6.6px",
-            "borderTopRightRadius": "6.6px",
-            "borderTopWidth": "1px",
-            "height": "22px",
-            "width": "22px",
+            "borderTopLeftRadius": "6.8999999999999995px",
+            "borderTopRightRadius": "6.8999999999999995px",
+            "borderTopWidth": "1.5px",
+            "height": "23px",
+            "width": "23px",
           }
         }
       >

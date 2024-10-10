@@ -4,25 +4,24 @@ import { Flex, isWeb, SpinningLoader, Text } from 'ui/src'
 import { Gas } from 'ui/src/components/icons'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
 import { iconSizes } from 'ui/src/theme'
-import { useUSDValue } from 'uniswap/src/features/gas/hooks'
+import { useGasFeeFormattedAmounts } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
-import { useLocalizationContext } from 'uniswap/src/features/language/LocalizationContext'
 import { NetworkFeeWarning } from 'uniswap/src/features/transactions/swap/modals/NetworkFeeWarning'
-import { WalletChainId } from 'uniswap/src/types/chains'
-import { NumberType } from 'utilities/src/format/types'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 
 type GasFeeRowProps = {
   gasFee: GasFeeResult
-  chainId: WalletChainId
+  chainId: UniverseChainId
 }
 
 export function GasFeeRow({ gasFee, chainId }: GasFeeRowProps): JSX.Element | null {
-  const { convertFiatAmountFormatted } = useLocalizationContext()
+  const { gasFeeFormatted } = useGasFeeFormattedAmounts({
+    gasFee,
+    chainId,
+    placeholder: undefined,
+  })
 
-  const gasFeeUSD = useUSDValue(chainId, gasFee.value ?? undefined)
-  const gasFeeFormatted = convertFiatAmountFormatted(gasFeeUSD, NumberType.FiatTokenPrice)
-
-  if (!gasFeeUSD) {
+  if (!gasFeeFormatted) {
     return null
   }
 

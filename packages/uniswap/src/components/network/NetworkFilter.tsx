@@ -10,7 +10,8 @@ import {
   ActionSheetDropdownStyleProps,
 } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { useNetworkOptions } from 'uniswap/src/components/network/hooks'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { isMobileApp } from 'utilities/src/platform'
 
 const ELLIPSIS = 'ellipsis'
@@ -45,7 +46,7 @@ export function NetworksInSeries({
     ...(ellipsisPosition === 'start' ? [ELLIPSIS] : []),
     ...networks,
     ...(ellipsisPosition === 'end' ? [ELLIPSIS] : []),
-  ] as Array<WalletChainId | typeof ELLIPSIS>
+  ] as Array<UniverseChainId | typeof ELLIPSIS>
 
   const renderItem = useCallback(
     ({ item: chainId }: { item: ListItem }) => (
@@ -86,6 +87,7 @@ export function NetworkFilter({
   hideArrow = false,
 }: NetworkFilterProps): JSX.Element {
   const { hapticFeedback } = useHapticFeedback()
+  const { defaultChainId } = useEnabledChains()
   const onPress = useCallback(
     async (chainId: UniverseChainId | null) => {
       // Ensures smooth animation on mobile
@@ -119,10 +121,7 @@ export function NetworkFilter({
       {showUnsupportedConnectedChainWarning ? (
         <AlertTriangle color="$neutral2" size={20} />
       ) : (
-        <NetworkLogo
-          chainId={selectedChain ?? (includeAllNetworks ? null : UniverseChainId.Mainnet)}
-          size={NETWORK_ICON_SIZE}
-        />
+        <NetworkLogo chainId={selectedChain ?? (includeAllNetworks ? null : defaultChainId)} size={NETWORK_ICON_SIZE} />
       )}
     </ActionSheetDropdown>
   )

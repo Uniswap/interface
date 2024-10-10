@@ -1,10 +1,9 @@
 import { createSlice, nanoid, PayloadAction } from '@reduxjs/toolkit'
+import { PositionInfo } from 'components/Liquidity/types'
 import { DEFAULT_TXN_DISMISS_MS } from 'constants/misc'
 import { ModalName, ModalNameType } from 'uniswap/src/features/telemetry/constants'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { SwapTab } from 'uniswap/src/types/screens/interface'
-/* eslint-disable-next-line no-restricted-imports */
-import { Position } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 
 export enum PopupType {
   Transaction = 'transaction',
@@ -24,11 +23,11 @@ export type PopupContent =
     }
   | {
       type: PopupType.FailedSwitchNetwork
-      failedSwitchNetwork: InterfaceChainId
+      failedSwitchNetwork: UniverseChainId
     }
   | {
       type: PopupType.SwitchNetwork
-      chainId: InterfaceChainId
+      chainId: UniverseChainId
       action: SwapTab
     }
 
@@ -55,16 +54,16 @@ export enum ApplicationModal {
 
 type AddLiquidityModalParams = {
   name: typeof ModalName.AddLiquidity
-  initialState: Position
+  initialState: PositionInfo
 }
 
 type RemoveLiquidityModalParams = {
   name: typeof ModalName.RemoveLiquidity
-  initialState: Position
+  initialState: PositionInfo
 }
 
 export type OpenModalParams =
-  | { name: ApplicationModal; initialState?: undefined }
+  | { name: ModalNameType | ApplicationModal; initialState?: undefined }
   | AddLiquidityModalParams
   | RemoveLiquidityModalParams
 

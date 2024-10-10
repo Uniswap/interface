@@ -23,19 +23,7 @@ export const UNIVERSE_CHAIN_LOGO = {
       logoDark: EtherscanLogoDark,
     },
   } as const satisfies UniverseChainLogoInfo,
-  [UniverseChainId.Goerli]: {
-    explorer: {
-      logoLight: EtherscanLogoLight,
-      logoDark: EtherscanLogoDark,
-    },
-  } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.ArbitrumOne]: {
-    explorer: {
-      logoLight: ArbiscanLogoLight,
-      logoDark: ArbiscanLogoDark,
-    },
-  } as const satisfies UniverseChainLogoInfo,
-  [UniverseChainId.ArbitrumGoerli]: {
     explorer: {
       logoLight: ArbiscanLogoLight,
       logoDark: ArbiscanLogoDark,
@@ -53,12 +41,6 @@ export const UNIVERSE_CHAIN_LOGO = {
       logoDark: EtherscanLogoDark,
     },
   } as const satisfies UniverseChainLogoInfo,
-  [UniverseChainId.OptimismGoerli]: {
-    explorer: {
-      logoLight: OpEtherscanLogoLight,
-      logoDark: OpEtherscanLogoDark,
-    },
-  } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.Bnb]: {
     explorer: {
       logoLight: EtherscanLogoLight,
@@ -66,12 +48,6 @@ export const UNIVERSE_CHAIN_LOGO = {
     },
   } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.Polygon]: {
-    explorer: {
-      logoLight: PolygonscanLogoLight,
-      logoDark: PolygonscanLogoDark,
-    },
-  } as const satisfies UniverseChainLogoInfo,
-  [UniverseChainId.PolygonMumbai]: {
     explorer: {
       logoLight: PolygonscanLogoLight,
       logoDark: PolygonscanLogoDark,
@@ -95,7 +71,7 @@ export const UNIVERSE_CHAIN_LOGO = {
       logoDark: BlockExplorer,
     },
   } as const satisfies UniverseChainLogoInfo,
-  [UniverseChainId.CeloAlfajores]: {
+  [UniverseChainId.WorldChain]: {
     explorer: {
       logoLight: BlockExplorer,
       logoDark: BlockExplorer,
@@ -108,6 +84,12 @@ export const UNIVERSE_CHAIN_LOGO = {
     },
   } as const satisfies UniverseChainLogoInfo,
   [UniverseChainId.Zksync]: {
+    explorer: {
+      logoLight: BlockExplorer,
+      logoDark: BlockExplorer,
+    },
+  } as const satisfies UniverseChainLogoInfo,
+  [UniverseChainId.AstrochainSepolia]: {
     explorer: {
       logoLight: BlockExplorer,
       logoDark: BlockExplorer,

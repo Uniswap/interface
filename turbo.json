@@ -74,7 +74,8 @@
       "outputs": [
         "schema.graphql"
       ],
-      "dependsOn": []
+      "dependsOn": [],
+      "cache": false
     },
     "graphql:generate": {
       "inputs": [

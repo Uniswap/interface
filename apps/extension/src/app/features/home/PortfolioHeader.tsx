@@ -18,7 +18,7 @@ import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ExtensionScreens } from 'uniswap/src/types/screens/extension'
 import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses'
 import { setClipboard } from 'uniswap/src/utils/clipboard'
@@ -240,7 +240,7 @@ function ConnectionStatusIcon({
   dappUrl,
 }: {
   isConnected: boolean
-  lastChainId?: WalletChainId
+  lastChainId?: UniverseChainId
   dappIconUrl?: string
   dappUrl?: string
 }): JSX.Element {

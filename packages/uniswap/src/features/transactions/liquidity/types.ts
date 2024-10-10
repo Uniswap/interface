@@ -7,11 +7,17 @@ import { ValidatedPermit, ValidatedTransactionRequest } from 'uniswap/src/featur
 export interface LiquidityAction {
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
-  liquidityToken: Token
+  liquidityToken?: Token
 }
 
-export type LiquidityTxAndGasInfo = IncreasePositionTxAndGasInfo
-export type ValidatedLiquidityTxContext = ValidatedIncreasePositionTxAndGasInfo
+export type LiquidityTxAndGasInfo =
+  | IncreasePositionTxAndGasInfo
+  | DecreasePositionTxAndGasInfo
+  | CreatePositionTxAndGasInfo
+export type ValidatedLiquidityTxContext =
+  | ValidatedIncreasePositionTxAndGasInfo
+  | ValidatedDecreasePositionTxAndGasInfo
+  | ValidatedCreatePositionTxAndGasInfo
 
 export function isValidLiquidityTxContext(
   liquidityTxContext: LiquidityTxAndGasInfo | unknown,
@@ -20,29 +26,52 @@ export function isValidLiquidityTxContext(
   return validateLiquidityTxContext(liquidityTxContext) !== undefined
 }
 
-interface BaseRequiredLiquidityTxContextFields {
-  approvalError: false
-}
-
 interface BaseLiquidityTxAndGasInfo {
   protocolVersion: ProtocolVersion
   action: LiquidityAction
-  approvalError: boolean
   approveToken0Request: ValidatedTransactionRequest | undefined
   approveToken1Request: ValidatedTransactionRequest | undefined
   approvePositionTokenRequest: ValidatedTransactionRequest | undefined
   permit: ValidatedPermit | undefined
   revocationTxRequest: ValidatedTransactionRequest | undefined
-}
-
-export interface IncreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
-  unsigned: boolean
-  increasePositionRequestArgs: IncreaseLPPositionRequest | undefined
   txRequest: ValidatedTransactionRequest | undefined
 }
 
+export interface IncreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
+  type: 'increase'
+  unsigned: boolean
+  increasePositionRequestArgs: IncreaseLPPositionRequest | undefined
+}
+
+export interface DecreasePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
+  type: 'decrease'
+}
+
+export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
+  type: 'create'
+  unsigned: boolean
+  createPositionRequestArgs: IncreaseLPPositionRequest | undefined
+}
+
 export type ValidatedIncreasePositionTxAndGasInfo = Required<IncreasePositionTxAndGasInfo> &
-  BaseRequiredLiquidityTxContextFields &
+  (
+    | {
+        unsigned: true
+        permit: ValidatedPermit
+        txRequest: undefined
+      }
+    | {
+        unsigned: false
+        permit: undefined
+        txRequest: ValidatedTransactionRequest
+      }
+  )
+
+export type ValidatedDecreasePositionTxAndGasInfo = Required<DecreasePositionTxAndGasInfo> & {
+  txRequest: ValidatedTransactionRequest
+}
+
+export type ValidatedCreatePositionTxAndGasInfo = Required<CreatePositionTxAndGasInfo> &
   (
     | {
         unsigned: true
@@ -63,17 +92,17 @@ function validateLiquidityTxContext(
     return undefined
   }
 
-  if (!liquidityTxContext.approvalError && liquidityTxContext.action) {
-    const { approvalError } = liquidityTxContext
-    const { action, txRequest, unsigned, permit } = liquidityTxContext
-
+  if (liquidityTxContext.action) {
+    const { action, txRequest, permit } = liquidityTxContext
+    const unsigned =
+      (liquidityTxContext.type === 'increase' || liquidityTxContext.type === 'create') && liquidityTxContext.unsigned
     if (unsigned) {
       if (!permit) {
         return undefined
       }
-      return { ...liquidityTxContext, action, approvalError, unsigned, txRequest: undefined, permit }
+      return { ...liquidityTxContext, action, unsigned, txRequest: undefined, permit }
     } else if (txRequest) {
-      return { ...liquidityTxContext, action, approvalError, unsigned, txRequest, permit: undefined }
+      return { ...liquidityTxContext, action, unsigned, txRequest, permit: undefined }
     }
   }
 

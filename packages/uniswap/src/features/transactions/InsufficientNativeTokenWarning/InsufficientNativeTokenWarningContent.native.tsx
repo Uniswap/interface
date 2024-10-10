@@ -1,3 +1,4 @@
+import { Currency } from '@uniswap/sdk-core'
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Flex, Text, TouchableArea } from 'ui/src'
@@ -5,33 +6,39 @@ import { CurrencyLogo } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { WarningModal } from 'uniswap/src/components/modals/WarningModal/WarningModal'
 import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
+import { useBridgingTokenWithHighestBalance } from 'uniswap/src/features/bridging/hooks/tokens'
+import { CurrencyInfo } from 'uniswap/src/features/dataApi/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
+import { BridgeTokenButton } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/BridgeTokenButton'
 import { BuyNativeTokenButton } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/BuyNativeTokenButton'
 import { InsufficientNativeTokenBaseComponent } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenBaseComponent'
-import type { InsufficientNativeTokenWarningProps } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/InsufficientNativeTokenWarning'
 import { useInsufficientNativeTokenWarning } from 'uniswap/src/features/transactions/InsufficientNativeTokenWarning/useInsufficientNativeTokenWarning'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { currencyIdToAddress } from 'uniswap/src/utils/currencyId'
 
-export function InsufficientNativeTokenWarning({
-  warnings,
-  flow,
-  gasFee,
-}: InsufficientNativeTokenWarningProps): JSX.Element | null {
+export function InsufficientNativeTokenWarningContent({
+  address,
+  parsedInsufficentNativeTokenWarning,
+  nativeCurrencyInfo,
+  nativeCurrency,
+}: {
+  address: Address
+  parsedInsufficentNativeTokenWarning: NonNullable<ReturnType<typeof useInsufficientNativeTokenWarning>>
+  nativeCurrencyInfo: CurrencyInfo
+  nativeCurrency: Currency
+}): JSX.Element {
   const { t } = useTranslation()
   const [showModal, setShowModal] = useState(false)
 
-  const parsedInsufficentNativeTokenWarning = useInsufficientNativeTokenWarning({
-    warnings,
-    flow,
-    gasFee,
+  const { networkName, modalOrTooltipMainMessage } = parsedInsufficentNativeTokenWarning
+
+  const currencyAddress = currencyIdToAddress(nativeCurrencyInfo.currencyId)
+
+  const bridgingTokenWithHighestBalance = useBridgingTokenWithHighestBalance({
+    address,
+    currencyAddress,
+    currencyChainId: nativeCurrencyInfo.currency.chainId,
   })
-
-  const { modalOrTooltipMainMessage, nativeCurrency, nativeCurrencyInfo, networkName } =
-    parsedInsufficentNativeTokenWarning ?? {}
-
-  if (!parsedInsufficentNativeTokenWarning || !nativeCurrencyInfo || !nativeCurrency) {
-    return null
-  }
 
   const shouldShowNetworkName = nativeCurrency.symbol === 'ETH' && nativeCurrency.chainId !== UniverseChainId.Mainnet
 
@@ -66,7 +73,19 @@ export function InsufficientNativeTokenWarning({
               {modalOrTooltipMainMessage}
             </Text>
 
-            <BuyNativeTokenButton nativeCurrencyInfo={nativeCurrencyInfo} />
+            {bridgingTokenWithHighestBalance && (
+              <BridgeTokenButton
+                inputToken={bridgingTokenWithHighestBalance.currencyInfo}
+                outputToken={nativeCurrencyInfo}
+                outputNetworkName={networkName}
+              />
+            )}
+
+            <BuyNativeTokenButton
+              nativeCurrencyInfo={nativeCurrencyInfo}
+              canBridge={!!bridgingTokenWithHighestBalance}
+            />
+
             <LearnMoreLink
               textColor="$neutral2"
               textVariant="buttonLabel2"

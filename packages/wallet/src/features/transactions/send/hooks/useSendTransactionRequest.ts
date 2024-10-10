@@ -6,8 +6,9 @@ import ERC721_ABI from 'uniswap/src/abis/erc721.json'
 import { Erc1155, Erc20, Erc721 } from 'uniswap/src/abis/types'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { toSupportedChainId } from 'uniswap/src/features/chains/utils'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import { DerivedSendInfo } from 'uniswap/src/features/transactions/send/types'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { currencyAddress, isNativeCurrencyAddress } from 'uniswap/src/utils/currencyId'
 import { useAsyncData } from 'utilities/src/react/hooks'
@@ -18,9 +19,10 @@ import { useContractManager, useProvider } from 'wallet/src/features/wallet/cont
 import { useActiveAccountWithThrow } from 'wallet/src/features/wallet/hooks'
 
 export function useSendTransactionRequest(derivedSendInfo: DerivedSendInfo): providers.TransactionRequest | undefined {
+  const { defaultChainId } = useEnabledChains()
   const account = useActiveAccountWithThrow()
   const chainId = toSupportedChainId(derivedSendInfo.chainId)
-  const provider = useProvider(chainId ?? UniverseChainId.Mainnet)
+  const provider = useProvider(chainId ?? defaultChainId)
   const contractManager = useContractManager()
 
   const transactionFetcher = useCallback(() => {
@@ -79,7 +81,7 @@ function getSendParams(account: Account, derivedSendInfo: DerivedSendInfo): Send
 
       return {
         account,
-        chainId: chainId as WalletChainId,
+        chainId: chainId as UniverseChainId,
         toAddress: recipient,
         tokenAddress,
         type: assetType,
@@ -94,7 +96,7 @@ function getSendParams(account: Account, derivedSendInfo: DerivedSendInfo): Send
 
       return {
         account,
-        chainId: chainId as WalletChainId,
+        chainId: chainId as UniverseChainId,
         toAddress: recipient,
         tokenAddress,
         type: AssetType.Currency,

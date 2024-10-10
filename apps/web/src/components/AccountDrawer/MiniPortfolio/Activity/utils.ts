@@ -18,7 +18,7 @@ import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__g
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { t } from 'uniswap/src/i18n'
-import { InterfaceChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { logger } from 'utilities/src/logger/logger'
 import { useAsyncData } from 'utilities/src/react/hooks'
 import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
@@ -94,7 +94,7 @@ export const createGroups = (activities: Array<Activity> = [], hideSpam = false)
 
 function getCancelMultipleUniswapXOrdersParams(
   orders: Array<{ encodedOrder: string; type: SignatureType }>,
-  chainId: InterfaceChainId,
+  chainId: UniverseChainId,
 ) {
   const nonces = orders
     .map(({ encodedOrder, type }) =>
@@ -149,7 +149,7 @@ async function cancelMultipleUniswapXOrders({
   provider,
 }: {
   orders: Array<{ encodedOrder: string; type: SignatureType }>
-  chainId: InterfaceChainId
+  chainId: UniverseChainId
   permit2: Permit2 | null
   provider?: Web3Provider
 }) {
@@ -174,7 +174,7 @@ async function cancelMultipleUniswapXOrders({
 
 async function getCancelMultipleUniswapXOrdersTransaction(
   orders: Array<{ encodedOrder: string; type: SignatureType }>,
-  chainId: InterfaceChainId,
+  chainId: UniverseChainId,
   permit2: Permit2,
 ): Promise<TransactionRequest | undefined> {
   const cancelParams = getCancelMultipleUniswapXOrdersParams(orders, chainId)
@@ -201,7 +201,7 @@ export function useCreateCancelTransactionRequest(
   params:
     | {
         orders: Array<{ encodedOrder: string; type: SignatureType }>
-        chainId: InterfaceChainId
+        chainId: UniverseChainId
       }
     | undefined,
 ): TransactionRequest | undefined {

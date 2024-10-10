@@ -15,7 +15,7 @@ import {
   TransactionStatus,
   TransactionType,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { UniverseChainId, WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getNFTAssetKey } from 'wallet/src/features/nfts/utils'
 import { Account } from 'wallet/src/features/wallet/accounts/types'
 import { SwapProtectionSetting } from 'wallet/src/features/wallet/slice'
@@ -264,11 +264,11 @@ export const migrations = {
 
     const chainState:
       | {
-          byChainId: Partial<Record<WalletChainId, { isActive: boolean }>>
+          byChainId: Partial<Record<UniverseChainId, { isActive: boolean }>>
         }
       | undefined = newState?.chains
     const newChainState = Object.keys(chainState?.byChainId ?? {}).reduce<{
-      byChainId: Partial<Record<WalletChainId, { isActive: boolean }>>
+      byChainId: Partial<Record<UniverseChainId, { isActive: boolean }>>
     }>(
       (tempState, chainIdString) => {
         const chainId = toSupportedChainId(chainIdString)

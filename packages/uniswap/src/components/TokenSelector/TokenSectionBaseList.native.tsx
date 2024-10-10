@@ -1,9 +1,9 @@
 import { BottomSheetSectionList } from '@gorhom/bottom-sheet'
 import { useEffect, useRef } from 'react'
 import { SectionList } from 'react-native'
-import { useDeviceInsets } from 'ui/src'
 import { TokenSectionBaseListProps } from 'uniswap/src/components/TokenSelector/TokenSectionBaseList'
 import { TokenOption, TokenSection } from 'uniswap/src/components/TokenSelector/types'
+import { useAppInsets } from 'uniswap/src/hooks/useAppInsets'
 
 export function TokenSectionBaseList({
   sectionListRef,
@@ -14,7 +14,7 @@ export function TokenSectionBaseList({
   renderSectionHeader,
   sections,
 }: TokenSectionBaseListProps): JSX.Element {
-  const insets = useDeviceInsets()
+  const insets = useAppInsets()
   const ref = useRef<SectionList<TokenOption>>(null)
 
   useEffect(() => {

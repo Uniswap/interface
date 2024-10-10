@@ -58,6 +58,8 @@ export const ProtocolPreference: SwapSettingConfig = {
       [updateSwapForm, selectedProtocols],
     )
 
+    const v4Enabled = useFeatureFlag(FeatureFlags.V4Swap)
+
     const toggleDefault = useCallback(() => {
       setIsDefault(!isDefault)
       if (!isDefault) {
@@ -86,6 +88,15 @@ export const ProtocolPreference: SwapSettingConfig = {
                 onSelect={() => toggleProtocol(ProtocolItems.UNISWAPX_V2)}
               />
             )}
+            {v4Enabled && (
+              <OptionRow
+                active={selectedProtocols.includes(ProtocolItems.V4)}
+                elementName={ElementName.SwapRoutingPreferenceV4}
+                title={getProtocolTitle(ProtocolItems.V4, t)}
+                cantDisable={onlyOneProtocolSelected}
+                onSelect={() => toggleProtocol(ProtocolItems.V4)}
+              />
+            )}
             <OptionRow
               active={selectedProtocols.includes(ProtocolItems.V3)}
               elementName={ElementName.SwapRoutingPreferenceV3}
@@ -107,7 +118,7 @@ export const ProtocolPreference: SwapSettingConfig = {
   },
 }
 
-export function getProtocolTitle(preference: FrontendSupportedProtocol, t: TFunction): JSX.Element {
+export function getProtocolTitle(preference: FrontendSupportedProtocol, t: TFunction): JSX.Element | string {
   switch (preference) {
     case ProtocolItems.UNISWAPX_V2:
       return (
@@ -136,6 +147,8 @@ export function getProtocolTitle(preference: FrontendSupportedProtocol, t: TFunc
       return t('swap.settings.routingPreference.option.v2.title')
     case ProtocolItems.V3:
       return t('swap.settings.routingPreference.option.v3.title')
+    case ProtocolItems.V4:
+      return t('swap.settings.routingPreference.option.v4.title')
     default:
       return <></>
   }
@@ -149,7 +162,7 @@ function OptionRow({
   cantDisable,
   onSelect,
 }: {
-  title: JSX.Element
+  title: JSX.Element | string
   active: boolean
   elementName: ElementNameType
   cantDisable: boolean

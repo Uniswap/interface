@@ -26,14 +26,18 @@ import styled from 'lib/styled-components'
 import { useProfilePageState, useSellAsset, useWalletCollections } from 'nft/hooks'
 import { ProfilePageStateType } from 'nft/types'
 import { useCallback, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import { useCloseModal, useFiatOnrampAvailability, useOpenModal, useToggleModal } from 'state/application/hooks'
 import { ApplicationModal } from 'state/application/reducer'
 import { useUserHasAvailableClaim, useUserUnclaimedAmount } from 'state/claim/hooks'
 import { ThemedText } from 'theme/components'
 import { ArrowDownCircleFilled } from 'ui/src/components/icons/ArrowDownCircleFilled'
+import { TestnetModeBanner } from 'uniswap/src/components/banners/TestnetModeBanner'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
+import { setIsTestnetModeEnabled } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { useUnitagByAddress } from 'uniswap/src/features/unitags/hooks'
@@ -111,6 +115,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const shouldShowBuyFiatButton = !isPathBlocked('/buy')
   const { formatNumber, formatDelta } = useFormatter()
   const isUniExtensionAvailable = useIsUniExtensionAvailable()
+  const { isTestnetModeEnabled } = useEnabledChains()
 
   const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
   const shouldDisableNFTRoutes = useDisableNFTRoutes()
@@ -120,6 +125,12 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const openClaimModal = useToggleModal(ApplicationModal.ADDRESS_CLAIM)
 
   const accountDrawer = useAccountDrawer()
+  const dispatch = useDispatch()
+
+  const handleDisconnect = useCallback(() => {
+    dispatch(setIsTestnetModeEnabled(false))
+    disconnect()
+  }, [disconnect, dispatch])
 
   const navigateToProfile = useCallback(() => {
     accountDrawer.close()
@@ -172,7 +183,9 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
   const { data: portfolioBalances } = useTokenBalancesQuery({ cacheOnly: !accountDrawer.isOpen })
   const portfolio = portfolioBalances?.portfolios?.[0]
   const totalBalance = portfolio?.tokensTotalDenominatedValue?.value
-  const isEmptyWallet = totalBalance === 0 && forAggregatorEnabled
+  // denominated portfolio balance on testnet is always 0
+  const isPortfolioZero = !isTestnetModeEnabled && totalBalance === 0
+  const isEmptyWallet = isPortfolioZero && forAggregatorEnabled
   const absoluteChange = portfolio?.tokensTotalDenominatedValueChange?.absolute?.value
   const percentChange = portfolio?.tokensTotalDenominatedValueChange?.percentage?.value
   const [showDisconnectConfirm, setShowDisconnectConfirm] = useState(false)
@@ -182,6 +195,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
 
   return (
     <AuthenticatedHeaderWrapper isUniExtensionAvailable={isUniExtensionAvailable}>
+      <TestnetModeBanner mt={isUniExtensionAvailable ? -16 : -20} mx={-24} mb="$spacing16" />
       <HeaderWrapper>
         <Status account={account} ensUsername={ENSName} uniswapUsername={unitag?.username} />
         <IconContainer>
@@ -194,7 +208,7 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
           <Trace logPress element={InterfaceElementName.DISCONNECT_WALLET_BUTTON}>
             <IconWithConfirmTextButton
               data-testid="wallet-disconnect"
-              onConfirm={disconnect}
+              onConfirm={handleDisconnect}
               onShowConfirm={setShowDisconnectConfirm}
               Icon={Power}
               text="Disconnect"
@@ -206,14 +220,20 @@ export default function AuthenticatedHeader({ account, openSettings }: { account
       <PortfolioDrawerContainer>
         {totalBalance !== undefined ? (
           <FadeInColumn gap="xs">
-            <ThemedText.HeadlineLarge fontWeight={535} data-testid="portfolio-total-balance">
+            <ThemedText.HeadlineLarge
+              fontWeight={535}
+              color={isTestnetModeEnabled ? 'neutral3' : 'neutral1'}
+              data-testid="portfolio-total-balance"
+            >
               {formatNumber({
-                input: totalBalance,
+                input: isTestnetModeEnabled ? null : totalBalance,
+                placeholder: '--',
+                forceShowCurrencySymbol: true,
                 type: NumberType.PortfolioBalance,
               })}
             </ThemedText.HeadlineLarge>
             <AutoRow marginBottom="20px">
-              {absoluteChange !== 0 && percentChange && (
+              {absoluteChange !== 0 && percentChange && !isTestnetModeEnabled && (
                 <>
                   <DeltaArrow delta={absoluteChange} />
                   <ThemedText.BodySecondary>

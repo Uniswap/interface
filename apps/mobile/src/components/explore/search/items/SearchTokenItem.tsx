@@ -16,7 +16,7 @@ import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { getTokenWarningSeverity } from 'uniswap/src/features/tokens/safetyUtils'
 import { useCurrencyInfo } from 'uniswap/src/features/tokens/useCurrencyInfo'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
-import { WalletChainId } from 'uniswap/src/types/chains'
+import { UniverseChainId } from 'uniswap/src/types/chains'
 import { shortenAddress } from 'uniswap/src/utils/addresses'
 import { buildCurrencyId, buildNativeCurrencyId } from 'uniswap/src/utils/currencyId'
 
@@ -31,7 +31,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
   const tokenDetailsNavigation = useTokenDetailsNavigation()
 
   const { chainId, address, name, symbol, logoUrl, safetyLevel, safetyInfo } = token
-  const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId as WalletChainId)
+  const currencyId = address ? buildCurrencyId(chainId, address) : buildNativeCurrencyId(chainId as UniverseChainId)
   const currencyInfo = useCurrencyInfo(currencyId)
   const severity = getTokenWarningSeverity(currencyInfo)
   const warningIconColor = getWarningIconColorOverride(severity)
@@ -68,7 +68,7 @@ export function SearchTokenItem({ token, searchContext }: SearchTokenItemProps):
   }
 
   const { menuActions, onContextMenuPress } = useExploreTokenContextMenu({
-    chainId: chainId as WalletChainId,
+    chainId: chainId as UniverseChainId,
     currencyId,
     analyticsSection: SectionName.ExploreSearch,
   })
