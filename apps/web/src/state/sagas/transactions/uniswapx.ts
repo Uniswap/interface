@@ -1,6 +1,11 @@
 import { formatSwapSignedAnalyticsEventProperties } from 'lib/utils/analytics'
 import { PopupType, addPopup } from 'state/application/reducer'
-import { HandleSignatureStepParams, getSwapTransactionInfo, handleSignatureStep } from 'state/sagas/transactions/utils'
+import {
+  HandleSignatureStepParams,
+  addTransactionBreadcrumb,
+  getSwapTransactionInfo,
+  handleSignatureStep,
+} from 'state/sagas/transactions/utils'
 import { addSignature } from 'state/signatures/reducer'
 import { SignatureType, UnfilledUniswapXOrderDetails } from 'state/signatures/types'
 import { call, put } from 'typed-redux-saga'
@@ -48,6 +53,8 @@ export function* handleUniswapXSignatureStep(params: HandleUniswapXSignatureStep
   if (Date.now() / 1000 > step.deadline) {
     throw new HandledTransactionInterrupt('User signed after deadline')
   }
+
+  addTransactionBreadcrumb({ step, data: { routing, ...signatureDetails.swapInfo }, status: 'in progress' })
 
   try {
     yield* call(submitOrder, { signature, quote, routing })

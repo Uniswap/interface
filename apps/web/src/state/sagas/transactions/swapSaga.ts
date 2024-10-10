@@ -11,6 +11,7 @@ import { PopupType, addPopup } from 'state/application/reducer'
 import { handleUniswapXSignatureStep } from 'state/sagas/transactions/uniswapx'
 import {
   HandleOnChainStepParams,
+  addTransactionBreadcrumb,
   getSwapTransactionInfo,
   handleApprovalTransactionStep,
   handleOnChainStep,
@@ -271,8 +272,11 @@ function* uniswapXSwap(
 }
 
 function getDisplayableError(error: Error, step: TransactionStep): TransactionError | undefined {
+  const userRejected = didUserReject(error)
   // If the user rejects a request, or it's a known interruption e.g. trade update, we handle gracefully / do not show error UI
-  if (didUserReject(error) || error instanceof HandledTransactionInterrupt) {
+  if (userRejected || error instanceof HandledTransactionInterrupt) {
+    const loggableMessage = userRejected ? 'user rejected request' : error.message // for user rejections, avoid logging redundant/long message
+    addTransactionBreadcrumb({ step, status: 'interrupted', data: { message: loggableMessage } })
     return undefined
   } else if (error instanceof TransactionError) {
     return error // If the error was already formatted as a TransactionError, we just propagate

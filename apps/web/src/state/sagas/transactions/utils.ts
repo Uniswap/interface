@@ -36,6 +36,7 @@ import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isSameAddress } from 'utilities/src/addresses'
 import { percentFromFloat } from 'utilities/src/format/percent'
+import { Sentry } from 'utilities/src/logger/Sentry'
 import noop from 'utilities/src/react/noop'
 import { currencyId } from 'utils/currencyId'
 import { signTypedData } from 'utils/signing'
@@ -51,6 +52,15 @@ export function* handleSignatureStep({ setCurrentStep, step, ignoreInterrupt, ac
   // Add a watcher to check if the transaction flow is interrupted during this step
   const { throwIfInterrupted } = yield* watchForInterruption(ignoreInterrupt)
 
+  addTransactionBreadcrumb({
+    step,
+    data: {
+      domain: JSON.stringify(step.domain),
+      values: JSON.stringify(step.values),
+      types: JSON.stringify(step.types),
+    },
+  })
+
   // Trigger UI prompting user to accept
   setCurrentStep({ step, accepted: false })
 
@@ -58,6 +68,8 @@ export function* handleSignatureStep({ setCurrentStep, step, ignoreInterrupt, ac
   const signature = yield* call(signTypedData, signer, step.domain, step.types, step.values) // TODO(WEB-5077): look into removing / simplifying signTypedData
   // If the transaction flow was interrupted, throw an error after the step has completed
   yield* call(throwIfInterrupted)
+
+  addTransactionBreadcrumb({ step, data: { signature }, status: 'complete' })
 
   return signature
 }
@@ -81,12 +93,16 @@ export function* handleOnChainStep<T extends OnChainTransactionStep>(params: Han
   const { chainId } = step.txRequest
   const signer = yield* call(getSigner, account.address)
 
+  addTransactionBreadcrumb({ step, data: { ...info } })
+
   // Avoid sending prompting a transaction if the user already submitted an equivalent tx, e.g. by closing and reopening a transaction flow
   const duplicativeTx = yield* findDuplicativeTx(info, account, chainId, allowDuplicativeTx)
   if (duplicativeTx) {
     if (duplicativeTx.status === TransactionStatus.Confirmed) {
+      addTransactionBreadcrumb({ step, data: { duplicativeTx: true, hash: duplicativeTx.hash }, status: 'complete' })
       return duplicativeTx.hash
     } else {
+      addTransactionBreadcrumb({ step, data: { duplicativeTx: true, hash: duplicativeTx.hash }, status: 'in progress' })
       setCurrentStep({ step, accepted: true })
       return yield* handleOnChainConfirmation(params, duplicativeTx.hash)
     }
@@ -139,6 +155,9 @@ function* handleOnChainConfirmation(params: HandleOnChainStepParams, hash: strin
   if (interrupt) {
     throw new HandledTransactionInterrupt('Transaction flow was interrupted')
   }
+
+  addTransactionBreadcrumb({ step, data: { txHash: hash }, status: 'complete' })
+
   return hash
 }
 
@@ -266,4 +285,23 @@ export function getSwapTransactionInfo(trade: ClassicTrade | UniswapXTrade): Swa
           expectedInputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
         }),
   }
+}
+
+export function addTransactionBreadcrumb({
+  step,
+  data = {},
+  status = 'initiated',
+}: {
+  step: TransactionStep
+  data?: {
+    [key: string]: string | number | boolean | undefined
+  }
+  status?: 'initiated' | 'complete' | 'in progress' | 'interrupted'
+}) {
+  Sentry.addBreadCrumb({
+    level: 'info',
+    category: 'transaction',
+    message: `${step.type} ${status}`,
+    data,
+  })
 }

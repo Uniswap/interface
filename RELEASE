@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmWXkZCZCVea5C5dkKAgH2jR3a8LWCFmJGedqiEaK21wHj`
-- CIDv1: `bafybeidzwv7ldnoexuakxu7nxwvkvh7bcku5kxdixe7jdgal36mcur7doi`
+- CIDv0: `QmZ2woTrzL5shcw9Ek6jqsLnHAMh1KGWGPkbeoMw3toRfC`
+- CIDv1: `bafybeie645wzgpsz5isxptb3bdyo67rhtc4dfxjekenod6jvf6jxi7yqe4`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,10 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeidzwv7ldnoexuakxu7nxwvkvh7bcku5kxdixe7jdgal36mcur7doi.ipfs.dweb.link/
-- https://bafybeidzwv7ldnoexuakxu7nxwvkvh7bcku5kxdixe7jdgal36mcur7doi.ipfs.cf-ipfs.com/
-- [ipfs://QmWXkZCZCVea5C5dkKAgH2jR3a8LWCFmJGedqiEaK21wHj/](ipfs://QmWXkZCZCVea5C5dkKAgH2jR3a8LWCFmJGedqiEaK21wHj/)
+- https://bafybeie645wzgpsz5isxptb3bdyo67rhtc4dfxjekenod6jvf6jxi7yqe4.ipfs.dweb.link/
+- https://bafybeie645wzgpsz5isxptb3bdyo67rhtc4dfxjekenod6jvf6jxi7yqe4.ipfs.cf-ipfs.com/
+- [ipfs://QmZ2woTrzL5shcw9Ek6jqsLnHAMh1KGWGPkbeoMw3toRfC/](ipfs://QmZ2woTrzL5shcw9Ek6jqsLnHAMh1KGWGPkbeoMw3toRfC/)
 
-### 5.51.1 (2024-10-10)
-
-
-### Bug Fixes
-
-* **web:** Cab/web 5130 remove extension launch modal prod (#12891) 07a5a21
+### 5.51.2 (2024-10-10)
 
 
