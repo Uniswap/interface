@@ -1,4 +1,12 @@
 import { BigNumber } from '@ethersproject/bignumber'
+import {
+  IchiVault,
+  SupportedDex,
+  UserAmountsInVault,
+  getAllUserAmounts,
+  getIchiVaultInfo,
+} from '@ichidao/ichi-vaults-sdk'
+import { useWeb3React } from '@web3-react/core'
 import { CallStateResult, useSingleCallResult, useSingleContractMultipleData } from 'lib/hooks/multicall'
 import { useEffect, useMemo, useState } from 'react'
 import { usePendingTransactions } from 'state/transactions/hooks'
@@ -164,5 +172,57 @@ export function useV3StakedPositions(
   return {
     loading: tokenIdsLoading || positionsLoading,
     positions,
+  }
+}
+
+interface UseIchiVaultsResults {
+  loading: boolean
+  amounts?: (UserAmountsInVault & { vaultInfo: IchiVault })[]
+}
+export function useIchiVaults(account: string | null | undefined): UseIchiVaultsResults {
+  const [data, setData] = useState<(UserAmountsInVault & { vaultInfo: IchiVault })[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+  const { provider } = useWeb3React()
+
+  const pendingTxs = JSON.stringify(usePendingTransactions())
+
+  useEffect(() => {
+    let active = true
+    if (account && account.length > 0 && provider) {
+      setIsLoading(true)
+      ;(async () => {
+        try {
+          const dex = SupportedDex.Ubeswap
+          const amounts: (UserAmountsInVault & { vaultInfo?: IchiVault })[] = await getAllUserAmounts(
+            account,
+            provider,
+            dex
+          )
+          for (const amountInfo of amounts) {
+            amountInfo.vaultInfo = await getIchiVaultInfo(42220, dex, amountInfo.vaultAddress)
+          }
+
+          if (active) {
+            setData(amounts as unknown as (UserAmountsInVault & { vaultInfo: IchiVault })[])
+          }
+        } catch (e) {
+          console.error(e)
+        } finally {
+          if (active) {
+            setIsLoading(false)
+          }
+        }
+      })()
+    } else {
+      setIsLoading(false)
+    }
+    return () => {
+      active = false
+    }
+  }, [account, pendingTxs, provider])
+
+  return {
+    loading: isLoading,
+    amounts: data,
   }
 }

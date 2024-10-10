@@ -4,6 +4,7 @@ import { Trace, TraceEvent } from 'analytics'
 import { useToggleAccountDrawer } from 'components/AccountDrawer/MiniPortfolio/hooks'
 import { ButtonGray, ButtonPrimary, ButtonText } from 'components/Button'
 import { AutoColumn } from 'components/Column'
+import IchiPositionList from 'components/IchiPositionList'
 import { FlyoutAlignment, Menu } from 'components/Menu'
 import PositionList from 'components/PositionList'
 import Row, { RowBetween, RowFixed } from 'components/Row'
@@ -11,7 +12,7 @@ import { SwitchLocaleLink } from 'components/SwitchLocaleLink'
 import { isSupportedChain } from 'constants/chains'
 import { useFilterPossiblyMaliciousPositions } from 'hooks/useFilterPossiblyMaliciousPositions'
 import { useNetworkSupportsV2 } from 'hooks/useNetworkSupportsV2'
-import { useV3Positions } from 'hooks/useV3Positions'
+import { useIchiVaults, useV3Positions } from 'hooks/useV3Positions'
 import { Trans } from 'i18n'
 import { PoolVersionMenu } from 'pages/Pool/shared'
 import { useMemo } from 'react'
@@ -213,6 +214,12 @@ export default function Pool() {
 
   const filteredPositions = useFilterPossiblyMaliciousPositions(userSelectedPositionSet)
 
+  const { loading: ichiVaultsLoading, amounts: ichiVaults } = useIchiVaults(account)
+  console.log({ ichiVaultsLoading })
+  if (ichiVaults) {
+    console.log(ichiVaults)
+  }
+
   if (!isSupportedChain(chainId)) {
     return <WrongNetworkCard />
   }
@@ -357,6 +364,16 @@ export default function Pool() {
                     </TraceEvent>
                   )}
                 </ErrorContainer>
+              )}
+            </MainContentWrapper>
+
+            <MainContentWrapper>
+              {ichiVaultsLoading ? (
+                <PositionsLoadingPlaceholder />
+              ) : ichiVaults && ichiVaults.length > 0 ? (
+                <IchiPositionList positions={ichiVaults} />
+              ) : (
+                <div></div>
               )}
             </MainContentWrapper>
             {/* <HideSmall>

@@ -395,8 +395,6 @@ export default function FarmV3() {
     )
   }, [userTokenDatas])
 
-  console.log('userTokenDatas', userTokenDatas)
-
   let userShare = new Percent(0)
   if (activeTvlNative > 0) {
     userShare = new Percent(Math.round(activeUserTvlNative * 1_000_000), Math.round(activeTvlNative * 1_000_000))
