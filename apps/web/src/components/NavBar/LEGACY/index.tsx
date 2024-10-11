@@ -76,12 +76,12 @@ const MenuItem = ({
 export const PageTabs = () => {
   const { pathname } = useLocation();
   const { chainId } = useAccount();
-  const chainName = chainIdToBackendChain({ chainId, withFallback: true });
+  // const chainName = chainIdToBackendChain({ chainId, withFallback: true });
 
   const isPoolActive = useIsPoolsPage();
   const isNftPage = useIsNftPage();
 
-  const shouldDisableNFTRoutes = useDisableNFTRoutes();
+  // const shouldDisableNFTRoutes = useDisableNFTRoutes();
 
   return (
     <>
@@ -89,19 +89,16 @@ export const PageTabs = () => {
         <Trans i18nKey="common.swap" />
       </MenuItem>
       <MenuItem
-        href={
-          "/explore" +
-          (chainName !== Chain.Ethereum ? `/${chainName.toLowerCase()}` : "")
-        }
+        href={`${process.env.REACT_APP_INFO_ROOT}/#`}
         isActive={pathname.startsWith("/explore")}
       >
         <Trans i18nKey="common.explore" />
       </MenuItem>
-      {!shouldDisableNFTRoutes && (
-        <MenuItem dataTestId="nft-nav" href="/nfts" isActive={isNftPage}>
-          <Trans i18nKey="common.nfts" />
-        </MenuItem>
-      )}
+      {/* {!shouldDisableNFTRoutes && ( */}
+      <MenuItem dataTestId="nft-nav" href="/farms" isActive={isNftPage}>
+        <Trans i18nKey="common.farms" />
+      </MenuItem>
+      {/* )} */}
       <Box display={{ sm: "flex", lg: "none", xxl: "flex" }} width="full">
         <MenuItem
           href="/pool"

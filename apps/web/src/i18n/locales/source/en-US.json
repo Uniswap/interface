@@ -137,6 +137,8 @@
   "common.collection": "collection",
   "common.collections": "collections",
   "common.company": "Company",
+  "common.docs": "Documentation",
+  "common.whitepaper": "Whitepaper",
   "common.confirm": "Confirm",
   "common.confirmCancellation": "Confirm cancellation",
   "common.confirmSend.button": "Confirm send",
