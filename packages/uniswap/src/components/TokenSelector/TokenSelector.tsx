@@ -1,3 +1,4 @@
+import { InterfaceEventName, InterfaceModalName } from '@uniswap/analytics-events'
 import { Currency } from '@uniswap/sdk-core'
 import { hasStringAsync } from 'expo-clipboard'
 import { memo, useCallback, useEffect, useMemo, useState } from 'react'
@@ -256,7 +257,11 @@ export function TokenSelectorContent({
   ])
 
   return (
-    <>
+    <Trace
+      logImpression={isInterface} // TODO(WEB-5161): Deduplicate shared vs interface-only trace event
+      eventOnTrigger={InterfaceEventName.TOKEN_SELECTOR_OPENED}
+      modal={InterfaceModalName.TOKEN_SELECTOR}
+    >
       <Trace logImpression element={currencyFieldName} section={SectionName.TokenSelector}>
         <Flex grow gap="$spacing8" style={scrollbarStyles}>
           {!isSmallScreen && (
@@ -311,7 +316,7 @@ export function TokenSelectorContent({
           {isSurfaceReady && <Flex grow>{tokenSelector}</Flex>}
         </Flex>
       </Trace>
-    </>
+    </Trace>
   )
 }
 

@@ -11,7 +11,7 @@ import { LearnMoreLink } from 'uniswap/src/components/text/LearnMoreLink'
 import { uniswapUrls } from 'uniswap/src/constants/urls'
 import { FormattedUniswapXGasFeeInfo } from 'uniswap/src/features/gas/types'
 import { ModalName } from 'uniswap/src/features/telemetry/constants'
-import { isMobileApp } from 'utilities/src/platform'
+import { isInterface, isMobileApp } from 'utilities/src/platform'
 
 export function NetworkFeeWarning({
   gasFeeHighRelativeToValue,
@@ -28,7 +28,7 @@ export function NetworkFeeWarning({
   const colors = useSporeColors()
   const { t } = useTranslation()
 
-  const showHighGasFeeUI = gasFeeHighRelativeToValue && !uniswapXGasFeeInfo
+  const showHighGasFeeUI = gasFeeHighRelativeToValue && !uniswapXGasFeeInfo && !isInterface // Avoid high gas UI on interface
 
   return (
     <WarningInfo

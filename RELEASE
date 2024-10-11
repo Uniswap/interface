@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmQRJ4TzV1zYobbsNLsA4WvSVSvpSxdRAMzWcyHjVyP5FK`
-- CIDv1: `bafybeia647xbmz33dcdo7fwhybp54imlqc2hwkdnl53lbnurjajwiofaxy`
+- CIDv0: `QmYjLCs2fp85NtK5CYeZBisiUZdf9ZLWBfaQ4CSG67qUyq`
+- CIDv1: `bafybeie2mrhbxzypdlpnuhuxdtlhsdvuxtdmrawrp3hl6oufdrwyybhs5q`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeia647xbmz33dcdo7fwhybp54imlqc2hwkdnl53lbnurjajwiofaxy.ipfs.dweb.link/
-- https://bafybeia647xbmz33dcdo7fwhybp54imlqc2hwkdnl53lbnurjajwiofaxy.ipfs.cf-ipfs.com/
-- [ipfs://QmQRJ4TzV1zYobbsNLsA4WvSVSvpSxdRAMzWcyHjVyP5FK/](ipfs://QmQRJ4TzV1zYobbsNLsA4WvSVSvpSxdRAMzWcyHjVyP5FK/)
+- https://bafybeie2mrhbxzypdlpnuhuxdtlhsdvuxtdmrawrp3hl6oufdrwyybhs5q.ipfs.dweb.link/
+- https://bafybeie2mrhbxzypdlpnuhuxdtlhsdvuxtdmrawrp3hl6oufdrwyybhs5q.ipfs.cf-ipfs.com/
+- [ipfs://QmYjLCs2fp85NtK5CYeZBisiUZdf9ZLWBfaQ4CSG67qUyq/](ipfs://QmYjLCs2fp85NtK5CYeZBisiUZdf9ZLWBfaQ4CSG67qUyq/)
 
-### 5.51.6 (2024-10-11)
+## 5.52.0 (2024-10-11)
 
 
-### Bug Fixes
+### Features
 
-* **web:** hide astrochain usdc (#12963) acd6d55
+* **web:** remove red gas UI on web shared swap [prod] + 2 other hotfixes (#12948) 18013a2
 
 

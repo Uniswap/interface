@@ -21,6 +21,7 @@ import {
   V2PoolInRoute as TradingApiV2PoolInRoute,
   V3PoolInRoute as TradingApiV3PoolInRoute,
   V4PoolInRoute as TradingApiV4PoolInRoute,
+  Urgency,
   V4PoolInRoute,
 } from 'uniswap/src/data/tradingApi/__generated__/index'
 import { NativeCurrency } from 'uniswap/src/features/tokens/NativeCurrency'
@@ -42,8 +43,10 @@ import { CurrencyField } from 'uniswap/src/types/currency'
 import { areAddressesEqual } from 'uniswap/src/utils/addresses'
 import { currencyId } from 'uniswap/src/utils/currencyId'
 import { logger } from 'utilities/src/logger/logger'
+import { isInterface } from 'utilities/src/platform'
 
 export const NATIVE_ADDRESS_FOR_TRADING_API = '0x0000000000000000000000000000000000000000'
+export const SWAP_GAS_URGENCY_OVERRIDE = isInterface ? Urgency.NORMAL : undefined // on Interface, use a normal urgency, else use TradingAPI default
 
 interface TradingApiResponseToTradeArgs {
   currencyIn: Currency

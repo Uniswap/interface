@@ -103,7 +103,7 @@ function useDebouncedTrade(): Trade | IndicativeTrade | undefined {
 
 function GasRow({ gasInfo, hidden }: { gasInfo: DebouncedGasInfo; hidden?: boolean }): JSX.Element | null {
   if (gasInfo.fiatPriceFormatted) {
-    const color = gasInfo.isHighRelativeToValue ? '$statusCritical' : '$neutral2'
+    const color = gasInfo.isHighRelativeToValue && !isInterface ? '$statusCritical' : '$neutral2' // Avoid high gas UI on interface
     const uniswapXSavings = gasInfo.uniswapXGasFeeInfo?.preSavingsGasFeeFormatted
     const body = uniswapXSavings ? (
       <UniswapXFee gasFee={gasInfo.fiatPriceFormatted} preSavingsGasFee={uniswapXSavings} smaller={isWeb} />

@@ -11,9 +11,8 @@ import { updateSignature } from 'state/signatures/reducer'
 import { SignatureType } from 'state/signatures/types'
 import { addTransaction, finalizeTransaction } from 'state/transactions/reducer'
 import { TransactionType } from 'state/transactions/types'
-import { logSwapSuccess, logUniswapXSwapSuccess } from 'tracing/swapFlowLoggers'
+import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
 import { UniswapXOrderStatus } from 'types/uniswapx'
-import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { isL2ChainId } from 'uniswap/src/features/chains/utils'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
@@ -52,8 +51,8 @@ function useOnActivityUpdate(): OnActivityUpdate {
         const hash = original.hash
         dispatch(finalizeTransaction({ chainId, hash, ...update }))
 
-        if (original.info.type === TransactionType.SWAP && update.status === TransactionStatus.Confirmed) {
-          logSwapSuccess(hash, chainId, analyticsContext)
+        if (original.info.type === TransactionType.SWAP) {
+          logSwapFinalized(hash, chainId, analyticsContext, update.status)
         }
 
         addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
@@ -68,6 +67,9 @@ function useOnActivityUpdate(): OnActivityUpdate {
         const updatedOrder = { ...original, ...update }
         dispatch(updateSignature(updatedOrder))
 
+        // SignatureDetails.type should not be typed as optional, but this will be fixed when we merge activity for uniswap. The default value appeases the typechecker.
+        const signatureType = updatedOrder.type ?? SignatureType.SIGN_UNISWAPX_V2_ORDER
+
         if (updatedOrder.status === UniswapXOrderStatus.FILLED) {
           const hash = updatedOrder.txHash
           const from = original.offerer
@@ -75,13 +77,34 @@ function useOnActivityUpdate(): OnActivityUpdate {
           dispatch(addTransaction({ chainId, from, hash, info: updatedOrder.swapInfo }))
           addPopup({ type: PopupType.Transaction, hash }, hash, popupDismissalTime)
 
-          // Only track swap success for Dutch orders; limit order fill-time will throw off time tracking analytics
+          // Only track swap success for non-limit orders; limit order fill-time will throw off time tracking analytics
           if (original.type !== SignatureType.SIGN_LIMIT) {
-            logUniswapXSwapSuccess(hash, updatedOrder.orderHash, chainId, analyticsContext)
+            logUniswapXSwapFinalized(
+              hash,
+              updatedOrder.orderHash,
+              chainId,
+              analyticsContext,
+              signatureType,
+              UniswapXOrderStatus.FILLED,
+            )
           }
         } else if (original.status !== updatedOrder.status) {
           const orderHash = original.orderHash
           addPopup({ type: PopupType.Order, orderHash }, orderHash, popupDismissalTime)
+
+          if (
+            updatedOrder.status === UniswapXOrderStatus.CANCELLED ||
+            updatedOrder.status === UniswapXOrderStatus.EXPIRED
+          ) {
+            logUniswapXSwapFinalized(
+              undefined,
+              updatedOrder.orderHash,
+              chainId,
+              analyticsContext,
+              signatureType,
+              updatedOrder.status,
+            )
+          }
         }
       }
     },
