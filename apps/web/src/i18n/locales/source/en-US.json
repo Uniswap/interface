@@ -214,7 +214,7 @@
   "common.extension": "Taraswap Extension",
   "common.failed.error": "Failed",
   "common.failedSwitchNetwork": "Failed to switch networks",
-  "common.farms": "Liquidity Farms",
+  "common.farms": "Farms",
   "common.faq": "FAQ",
   "common.faq.difference.title": "What are the different between this and the canonical v3 staker contract?",
   "common.faq.difference.description": "This fork adds a vesting period to the incentives program. The vesting period's purpose is to prevent the use of ultra-concentrated automated strategies that have dominated previous liquidity incentive programs in Taraswap v3 based AMMs.",
