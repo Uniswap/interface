@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmYjLCs2fp85NtK5CYeZBisiUZdf9ZLWBfaQ4CSG67qUyq`
-- CIDv1: `bafybeie2mrhbxzypdlpnuhuxdtlhsdvuxtdmrawrp3hl6oufdrwyybhs5q`
+- CIDv0: `QmZ5GePYVnqnekAczBnSNAm8msBT3xzqgkJFwukVQZ1hBf`
+- CIDv1: `bafybeie7p7swozshq4rt5lc2uzdtauviqpr2xhr5rghmyyuqoiggsgpv5i`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,15 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeie2mrhbxzypdlpnuhuxdtlhsdvuxtdmrawrp3hl6oufdrwyybhs5q.ipfs.dweb.link/
-- https://bafybeie2mrhbxzypdlpnuhuxdtlhsdvuxtdmrawrp3hl6oufdrwyybhs5q.ipfs.cf-ipfs.com/
-- [ipfs://QmYjLCs2fp85NtK5CYeZBisiUZdf9ZLWBfaQ4CSG67qUyq/](ipfs://QmYjLCs2fp85NtK5CYeZBisiUZdf9ZLWBfaQ4CSG67qUyq/)
+- https://bafybeie7p7swozshq4rt5lc2uzdtauviqpr2xhr5rghmyyuqoiggsgpv5i.ipfs.dweb.link/
+- https://bafybeie7p7swozshq4rt5lc2uzdtauviqpr2xhr5rghmyyuqoiggsgpv5i.ipfs.cf-ipfs.com/
+- [ipfs://QmZ5GePYVnqnekAczBnSNAm8msBT3xzqgkJFwukVQZ1hBf/](ipfs://QmZ5GePYVnqnekAczBnSNAm8msBT3xzqgkJFwukVQZ1hBf/)
 
-## 5.52.0 (2024-10-11)
+### 5.52.1 (2024-10-15)
 
 
-### Features
+### Bug Fixes
 
-* **web:** remove red gas UI on web shared swap [prod] + 2 other hotfixes (#12948) 18013a2
+* **web:** allow pool creation on testnets (#13011) 74160b1
 
 
