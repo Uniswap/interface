@@ -98,6 +98,22 @@ export function findTokenByAddress(
 export const indexerTaraswap = process.env.REACT_APP_INDEXER_SUBGRAPH_TARASWAP;
 export const indexerLara = process.env.REACT_APP_INDEXER_SUBGRAPH_LARA;
 
+export const EXACT_INCENTIVE_QUERY = `
+query incentive($id: String!) {
+  incentive(subgraphError: deny, id : $id){
+    id
+    rewardToken {
+      id
+    }
+    pool
+    startTime
+    endTime
+    vestingPeriod
+    refundee
+    }
+  }
+`;
+
 export const INCENTIVES_QUERY = `
   query incentives {
     incentives(subgraphError: deny) {

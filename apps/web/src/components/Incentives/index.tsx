@@ -244,6 +244,7 @@ export default function Incentives() {
       rawIncentivesData.length > 0 &&
       tokenList?.length > 0
     ) {
+      console.log("userPositions", userPositions);
       processIncentives(userPositions).then((data) => {
         if (data) {
           let displayedTotalDeposit: string = "";

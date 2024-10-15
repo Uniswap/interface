@@ -94,6 +94,8 @@ import { TransactionType } from "../../state/transactions/types";
 import { calculateGasMargin } from "../../utils/calculateGasMargin";
 import { ExplorerDataType, getExplorerLink } from "../../utils/getExplorerLink";
 import { LoadingRows } from "./styled";
+import { STAKER_ADDRESS, useV3StakerContract } from "hooks/useV3StakerContract";
+import usePosition from "hooks/usePosition";
 
 const PositionPageButtonPrimary = styled(ButtonPrimary)`
   width: 228px;
@@ -228,14 +230,16 @@ const PairHeader = styled(ThemedText.H1Medium)`
   margin-right: 10px;
 `;
 
-function UserDetailsCard(props: { incentiveId: string }) {
+function UserDetailsCard(props: { tokenId: number; incentiveId: string }) {
   const account = useAccount();
-  console.log("🚀 ~ UserDetailsCard ~ account:", account);
-  console.log("🚀 ~ UserDetailsCard ~ incentiveId:", props.incentiveId);
   const [userDetails, setUserDetails] = useState({
-    totalDeposit: 0,
+    hasDeposited: false,
+    hasStaked: false,
     pendingRewards: 0,
   });
+
+  const [isApproved, setIsApproved] = useState(false);
+  const [refetch, setRefetch] = useState(1);
 
   const formatNumber = (number: number): string => {
     return new Intl.NumberFormat(navigator.language, {
@@ -244,49 +248,86 @@ function UserDetailsCard(props: { incentiveId: string }) {
       maximumFractionDigits: 2,
     }).format(number);
   };
-  const formattedTotalDeposit = useMemo(
-    () => formatNumber(userDetails.totalDeposit),
-    [userDetails.totalDeposit]
-  );
   const formattedPendingRewards = useMemo(
     () => formatNumber(userDetails.pendingRewards),
     [userDetails.pendingRewards]
   );
 
+  const {
+    getDepositData,
+    getRewardInfo,
+    approve,
+    transfer,
+    withdrawPosition,
+    stakePosition,
+    unstakePosition,
+    claim,
+    isDeposited,
+    isApprovedForTransfer,
+    isLoading,
+  } = usePosition(props.tokenId, props.incentiveId);
+
   const fetchDepositAndRewards = async () => {
-    const totalDeposit = 1123;
-    const pendingRewards = 54132;
-    return { totalDeposit, pendingRewards };
+    const depositData = await getDepositData();
+    const hasDeposited = await isDeposited();
+    const rewardInfo = await getRewardInfo();
+    const pendingRewards = rewardInfo?.pendingRewards ?? 0;
+    const hasStaked = (depositData?.numberOfStakes ?? 0) > 0;
+    return { hasDeposited, pendingRewards, hasStaked };
   };
 
   useEffect(() => {
+    isApprovedForTransfer().then((isApproved) => {
+      setIsApproved(isApproved);
+    });
+  }, [isApprovedForTransfer]);
+
+  useEffect(() => {
     fetchDepositAndRewards().then((data) => {
-      console.log(data);
       if (data) {
         setUserDetails(data);
       }
     });
-  }, []);
+  }, [refetch]);
 
-  const deposit = () => {
-    console.log("deposit");
-  };
+  const approveAndTransfer = useCallback(async () => {
+    if (isApproved) {
+      transfer(() => {
+        setRefetch(refetch + 1);
+      });
+    } else {
+      await approve(() => {
+        setIsApproved(true);
+        transfer(() => {
+          setRefetch(refetch + 1);
+        });
+      });
+    }
+  }, [approve, transfer, refetch, isApproved]);
 
-  const withdraw = () => {
-    console.log("withdraw");
-  };
+  const withdraw = useCallback(async () => {
+    await withdrawPosition(() => {
+      setRefetch(refetch + 1);
+    });
+  }, [withdrawPosition, refetch]);
 
-  const stake = () => {
-    console.log("stake");
-  };
+  const unstake = useCallback(async () => {
+    await unstakePosition(() => {
+      setRefetch(refetch + 1);
+    });
+  }, [unstakePosition, refetch]);
 
-  const unstake = () => {
-    console.log("unstake");
-  };
+  const claimReward = useCallback(async () => {
+    await claim(() => {
+      setRefetch(refetch + 1);
+    });
+  }, [claim, refetch]);
 
-  const claimReward = () => {
-    console.log("claimReward");
-  };
+  const stake = useCallback(async () => {
+    await stakePosition(() => {
+      setRefetch(refetch + 1);
+    });
+  }, [stakePosition, refetch]);
 
   return (
     <AutoColumn gap="md" justify="center">
@@ -294,10 +335,10 @@ function UserDetailsCard(props: { incentiveId: string }) {
         <LightCard padding="12px" width="100%">
           <AutoColumn gap="md" justify="center">
             <ExtentsText>
-              <Trans i18nKey="common.incentives.total.deposits" />
+              <Trans i18nKey="common.incentives.hasDeposited" />
             </ExtentsText>
             <ThemedText.DeprecatedMediumHeader textAlign="center">
-              {formattedTotalDeposit}
+              {userDetails.hasDeposited ? "Yes" : "No"}
             </ThemedText.DeprecatedMediumHeader>
           </AutoColumn>
         </LightCard>
@@ -317,18 +358,48 @@ function UserDetailsCard(props: { incentiveId: string }) {
           <ExtentsText>
             <Trans i18nKey="common.incentives.lp.deposit" />
           </ExtentsText>
-          <ButtonPrimary onClick={deposit}>Deposit LP Token</ButtonPrimary>
-          <ButtonPrimary onClick={withdraw}>Withdraw LP Token</ButtonPrimary>
+          <ButtonPrimary
+            onClick={approveAndTransfer}
+            disabled={userDetails.hasDeposited}
+          >
+            Deposit LP Token
+          </ButtonPrimary>
+          <ButtonPrimary
+            onClick={withdraw}
+            disabled={!userDetails.hasDeposited}
+          >
+            Withdraw LP Token
+          </ButtonPrimary>
         </AutoColumn>
       </LightCard>
       <LightCard padding="12px" width="100%">
         <AutoColumn gap="md" justify="center">
-          <ExtentsText>
-            <Trans i18nKey="common.incentives.lp.stake" />
-          </ExtentsText>
-          <ButtonPrimary onClick={stake}>Stake</ButtonPrimary>
-          <ButtonPrimary onClick={claimReward}>Claim Reward</ButtonPrimary>
-          <ButtonPrimary onClick={unstake}>Unstake</ButtonPrimary>
+          {userDetails.hasDeposited ? (
+            <>
+              <ExtentsText>
+                <Trans i18nKey="common.incentives.lp.stake" />
+              </ExtentsText>
+              <ButtonPrimary onClick={stake} disabled={userDetails.hasStaked}>
+                Stake
+              </ButtonPrimary>
+              <ButtonPrimary
+                onClick={claimReward}
+                disabled={!userDetails.hasStaked}
+              >
+                Claim Reward
+              </ButtonPrimary>
+              <ButtonPrimary
+                onClick={unstake}
+                disabled={!userDetails.hasStaked}
+              >
+                Unstake
+              </ButtonPrimary>
+            </>
+          ) : (
+            <ExtentsText>
+              <Trans i18nKey="common.incentives.lp.depositFirst" />
+            </ExtentsText>
+          )}
         </AutoColumn>
       </LightCard>
     </AutoColumn>
@@ -621,7 +692,6 @@ function PositionPageContent() {
   const queryParams = new URLSearchParams(location.search);
 
   const incentiveId = queryParams.get("incentive");
-  console.log("incentiveIdFromUrl", incentiveId);
   const account = useAccount();
   const supportedChain = useSupportedChainId(account.chainId);
   const signer = useEthersSigner();
@@ -662,8 +732,6 @@ function PositionPageContent() {
     token0 && token1 && feeAmount
       ? Pool.getAddress(token0, token1, feeAmount)
       : undefined;
-
-  console.log("pool address", poolAddress);
 
   // construct Position from details returned
   const [poolState, pool] = usePool(
@@ -1484,7 +1552,10 @@ function PositionPageContent() {
                     </Label>
                   </RowFixed>
                 </RowBetween>
-                <UserDetailsCard incentiveId={incentiveId ?? ""} />
+                <UserDetailsCard
+                  tokenId={Number(tokenId?.toString() ?? 0)}
+                  incentiveId={incentiveId ?? ""}
+                />
               </AutoColumn>
             </DarkCard>
           </AutoColumn>
