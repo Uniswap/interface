@@ -31,6 +31,7 @@ import { Dots } from "components/swap/styled";
 import {
   SupportedInterfaceChainId,
   chainIdToBackendChain,
+  useChainFromUrlParam,
   useIsSupportedChainId,
   useSupportedChainId,
 } from "constants/chains";
@@ -60,7 +61,7 @@ import {
   useState,
 } from "react";
 import { Helmet } from "react-helmet-async/lib/index";
-import { Link, useParams } from "react-router-dom";
+import { Link, useLocation, useParams } from "react-router-dom";
 import { Bound } from "state/mint/v3/actions";
 import {
   useIsTransactionPending,
@@ -227,9 +228,10 @@ const PairHeader = styled(ThemedText.H1Medium)`
   margin-right: 10px;
 `;
 
-function UserDetailsCard() {
+function UserDetailsCard(props: { incentiveId: string }) {
   const account = useAccount();
   console.log("🚀 ~ UserDetailsCard ~ account:", account);
+  console.log("🚀 ~ UserDetailsCard ~ incentiveId:", props.incentiveId);
   const [userDetails, setUserDetails] = useState({
     totalDeposit: 0,
     pendingRewards: 0,
@@ -270,12 +272,20 @@ function UserDetailsCard() {
     console.log("deposit");
   };
 
+  const withdraw = () => {
+    console.log("withdraw");
+  };
+
   const stake = () => {
     console.log("stake");
   };
 
   const unstake = () => {
     console.log("unstake");
+  };
+
+  const claimReward = () => {
+    console.log("claimReward");
   };
 
   return (
@@ -304,8 +314,21 @@ function UserDetailsCard() {
       </RowBetween>
       <LightCard padding="12px" width="100%">
         <AutoColumn gap="md" justify="center">
-          <ButtonPrimary onClick={deposit}>Deposit</ButtonPrimary>
+          <ExtentsText>
+            <Trans i18nKey="common.incentives.lp.deposit" />
+          </ExtentsText>
+          <ButtonPrimary onClick={deposit}>Deposit LP Token</ButtonPrimary>
+          <ButtonPrimary onClick={withdraw}>Withdraw LP Token</ButtonPrimary>
+        </AutoColumn>
+      </LightCard>
+      <LightCard padding="12px" width="100%">
+        <AutoColumn gap="md" justify="center">
+          <ExtentsText>
+            <Trans i18nKey="common.incentives.lp.stake" />
+          </ExtentsText>
           <ButtonPrimary onClick={stake}>Stake</ButtonPrimary>
+          <ButtonPrimary onClick={claimReward}>Claim Reward</ButtonPrimary>
+          <ButtonPrimary onClick={unstake}>Unstake</ButtonPrimary>
         </AutoColumn>
       </LightCard>
     </AutoColumn>
@@ -594,6 +617,11 @@ function parseTokenId(tokenId: string | undefined): BigNumber | undefined {
 
 function PositionPageContent() {
   const { tokenId: tokenIdFromUrl } = useParams<{ tokenId?: string }>();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+
+  const incentiveId = queryParams.get("incentive");
+  console.log("incentiveIdFromUrl", incentiveId);
   const account = useAccount();
   const supportedChain = useSupportedChainId(account.chainId);
   const signer = useEthersSigner();
@@ -1456,7 +1484,7 @@ function PositionPageContent() {
                     </Label>
                   </RowFixed>
                 </RowBetween>
-                <UserDetailsCard />
+                <UserDetailsCard incentiveId={incentiveId ?? ""} />
               </AutoColumn>
             </DarkCard>
           </AutoColumn>

@@ -223,7 +223,7 @@ export default function Incentives() {
               apy: annualRewardPerStandardLiquidity,
               link:
                 poolPosition[0] && poolPosition[0].tokenId
-                  ? `/pool/${poolPosition[0].tokenId}`
+                  ? `/pool/${poolPosition[0].tokenId}?incentive=${incentive.id}`
                   : `/add/${poolDetails.token0.id}/${poolDetails.token1.id}`,
               pendingRewards,
             } as unknown as PoolInfo;

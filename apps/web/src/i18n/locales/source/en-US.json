@@ -264,6 +264,8 @@
   "common.incentives.total.deposits": "Total deposits",
   "common.incentives.token.reward": "Token reward",
   "common.incentives.pending.reward": "Pending rewards",
+  "common.incentives.lp.deposit": "Deposit or withdraw your position NFT to the V3-staker contract",
+  "common.incentives.lp.stake": "Stake your position NFT to start earning incentive yield",
   "common.incentives.create.button": "Create incentive",
   "common.incentives.approve.button": "Approve {{tokenSymbol}}",
   "common.incentives.noresults": "No results",
