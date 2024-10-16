@@ -90,7 +90,7 @@
     "@uniswap/analytics-events": "2.38.0",
     "@uniswap/client-explore": "0.0.10",
     "@uniswap/ethers-rs-mobile": "0.0.5",
-    "@uniswap/sdk-core": "5.8.3",
+    "@uniswap/sdk-core": "5.8.4",
     "@walletconnect/core": "2.17.1",
     "@walletconnect/react-native-compat": "2.17.1",
     "@walletconnect/utils": "2.17.1",

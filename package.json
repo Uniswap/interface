@@ -47,7 +47,7 @@
     "@uniswap/v2-sdk": "4.6.0",
     "@uniswap/router-sdk": "1.14.2",
     "@apollo/client": "3.10.4",
-    "@uniswap/sdk-core": "5.8.2",
+    "@uniswap/sdk-core": "5.8.4",
     "@react-navigation/routers": "6.1.9",
     "@react-navigation/core": "6.2.2",
     "@sideway/formula": "3.0.1",
