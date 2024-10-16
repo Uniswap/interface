@@ -98,6 +98,10 @@ export function usePollPendingBridgeTransactions(onActivityUpdate: OnActivityUpd
     let timeoutId: NodeJS.Timeout
 
     const poll = async () => {
+      // Do not poll if there are no pending bridge transactions
+      if (!pendingDepositedBridgeTransactions.length) {
+        return
+      }
       if (attempts >= 10) {
         logger.error(new Error('Max attempts reached polling for bridge txs, giving up'), {
           tags: {
