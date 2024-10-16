@@ -24,7 +24,6 @@ const StyledTabButton = styled(TabButton)`
 `
 
 export default function NFTs({ account }: { account: string }) {
-  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
   const accountDrawer = useAccountDrawer()
   const navigate = useNavigate()
   const setSellPageState = useProfilePageState((state) => state.setProfilePageState)
@@ -64,13 +63,11 @@ export default function NFTs({ account }: { account: string }) {
 
   return (
     <>
-      {forAggregatorEnabled && (
-        <StyledTabButton
-          text={t('nfts.viewAndSell')}
-          icon={<Gallery color="$neutral2" size="$icon.20" />}
-          onClick={navigateToProfile}
-        />
-      )}
+      <StyledTabButton
+        text={t('nfts.viewAndSell')}
+        icon={<Gallery color="$neutral2" size="$icon.20" />}
+        onClick={navigateToProfile}
+      />
       <InfiniteScroll
         next={loadMore}
         hasMore={hasNext ?? false}

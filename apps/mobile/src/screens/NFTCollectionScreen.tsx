@@ -113,14 +113,17 @@ export function NFTCollectionScreen({
   const listRef = useRef<any>(null)
   useScrollToTop(listRef)
   const scrollY = useSharedValue(0)
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scrollY.value = event.contentOffset.y
+  const scrollHandler = useAnimatedScrollHandler(
+    {
+      onScroll: (event) => {
+        scrollY.value = event.contentOffset.y
+      },
+      onEndDrag: (event) => {
+        scrollY.value = withTiming(event.contentOffset.y > 0 ? NFT_BANNER_HEIGHT : 0)
+      },
     },
-    onEndDrag: (event) => {
-      scrollY.value = withTiming(event.contentOffset.y > 0 ? NFT_BANNER_HEIGHT : 0)
-    },
-  })
+    [scrollY],
+  )
 
   const onPressItem = (asset: NFTItem): void => {
     navigation.navigate(MobileScreens.NFTItem, {

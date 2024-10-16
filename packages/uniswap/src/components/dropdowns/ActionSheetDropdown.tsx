@@ -1,4 +1,4 @@
-import { PropsWithChildren, useEffect, useMemo, useRef, useState } from 'react'
+import { PropsWithChildren, memo, useEffect, useMemo, useRef, useState } from 'react'
 /* eslint-disable-next-line no-restricted-imports */
 import { type View } from 'react-native'
 import Animated, { useAnimatedScrollHandler, useSharedValue } from 'react-native-reanimated'
@@ -149,30 +149,57 @@ export function ActionSheetDropdown({
           )}
         </Flex>
       </TouchableArea>
-
-      <Portal zIndex={styles?.dropdownZIndex || zIndices.popover}>
-        <AnimatePresence custom={{ isOpen }}>
-          {isOpen && toggleMeasurements && (
-            <>
-              <Backdrop
-                handleClose={closeDropdown}
-                opacity={!isInterface || isTouchable ? styles?.backdropOpacity : 0}
-              />
-              <DropdownContent
-                {...contentProps}
-                alignment={styles?.alignment}
-                dropdownMaxHeight={styles?.dropdownMaxHeight}
-                handleClose={closeDropdown}
-                toggleMeasurements={toggleMeasurements}
-                closeOnSelect={closeOnSelect}
-              />
-            </>
-          )}
-        </AnimatePresence>
-      </Portal>
+      <ActionSheetBackdropWithContent
+        closeDropdown={closeDropdown}
+        styles={styles}
+        isOpen={isOpen}
+        toggleMeasurements={toggleMeasurements}
+        contentProps={contentProps}
+        closeOnSelect={closeOnSelect}
+      />
     </>
   )
 }
+
+const ActionSheetBackdropWithContent = memo(function ActionSheetBackdropWithContent({
+  closeDropdown,
+  styles,
+  isOpen,
+  toggleMeasurements,
+  contentProps,
+  closeOnSelect,
+}: {
+  closeDropdown: () => void
+  styles?: ActionSheetDropdownStyleProps & { backdropOpacity?: number }
+  isOpen: boolean
+  toggleMeasurements: DropdownState['toggleMeasurements']
+  contentProps: ActionSheetDropdownProps
+  closeOnSelect: boolean
+}): JSX.Element {
+  /*
+    We need to add key to Portal, becuase of a bug in tamagui.
+    Remove when https://linear.app/uniswap/issue/WALL-4817/tamaguis-portal-stops-reacting-to-re-renders is done
+  */
+  return (
+    <Portal key={Math.random()} zIndex={styles?.dropdownZIndex || zIndices.popover}>
+      <AnimatePresence custom={{ isOpen }}>
+        {isOpen && toggleMeasurements && (
+          <>
+            <Backdrop handleClose={closeDropdown} opacity={!isInterface || isTouchable ? styles?.backdropOpacity : 0} />
+            <DropdownContent
+              {...contentProps}
+              alignment={styles?.alignment}
+              dropdownMaxHeight={styles?.dropdownMaxHeight}
+              handleClose={closeDropdown}
+              toggleMeasurements={toggleMeasurements}
+              closeOnSelect={closeOnSelect}
+            />
+          </>
+        )}
+      </AnimatePresence>
+    </Portal>
+  )
+})
 
 type DropdownContentProps = FlexProps & {
   options: MenuItemProp[]
@@ -216,9 +243,13 @@ function DropdownContent({
   const scrollOffset = useSharedValue(0)
   const [contentHeight, setContentHeight] = useState(0)
 
-  const scrollHandler = useAnimatedScrollHandler((event) => {
-    scrollOffset.value = event.contentOffset.y
-  })
+  const scrollHandler = useAnimatedScrollHandler(
+    (event) => (scrollOffset.value = event.contentOffset.y),
+    // There seems to be a bug in `reanimated` that's causing the dependency array to not be automatically injected by the babel plugin,
+    // but it causes a crash when manually added on web. This is a workaround until the bug is fixed.
+    // The performance impact of not having the array is minimal on web, so this should be fine for now.
+    isWeb ? undefined : [scrollOffset],
+  )
 
   const containerProps = useMemo<FlexProps>(() => {
     if (alignment === 'left') {

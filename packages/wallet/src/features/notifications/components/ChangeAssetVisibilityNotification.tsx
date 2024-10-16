@@ -3,8 +3,8 @@ import { useSporeColors } from 'ui/src'
 import EyeOffIcon from 'ui/src/assets/icons/eye-off.svg'
 import EyeIcon from 'ui/src/assets/icons/eye.svg'
 import { iconSizes } from 'ui/src/theme'
+import { ChangeAssetVisibilityNotification as ChangeAssetVisibilityNotificationType } from 'uniswap/src/features/notifications/types'
 import { NotificationToast } from 'wallet/src/features/notifications/components/NotificationToast'
-import { ChangeAssetVisibilityNotification as ChangeAssetVisibilityNotificationType } from 'wallet/src/features/notifications/types'
 
 export function ChangeAssetVisibilityNotification({
   notification: { visible, hideDelay, assetName },

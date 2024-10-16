@@ -200,9 +200,15 @@ const KeyButton = memo(function KeyButton({
   }, [action, label, onLongPressEnd])
 
   // We use `onBegin` because we want to react as soon as the user touches the key, not when they release it.
-  const tap = Gesture.Tap().onBegin(handlePress).enabled(!disabled)
+  const tap = Gesture.Tap().runOnJS(true).onBegin(handlePress).enabled(!disabled)
+
   // We use `onStart` because we want to start reacting to this event when the long press is actually detected.
-  const longPress = Gesture.LongPress().onStart(handleLongPressStart).onEnd(handleLongPressEnd).enabled(!disabled)
+  const longPress = Gesture.LongPress()
+    .runOnJS(true)
+    .onStart(handleLongPressStart)
+    .onEnd(handleLongPressEnd)
+    .enabled(!disabled)
+
   const composedGesture = Gesture.Simultaneous(tap, longPress)
 
   const color = disabled ? '$neutral3' : '$neutral1'

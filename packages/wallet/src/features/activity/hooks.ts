@@ -1,5 +1,6 @@
 import { ApolloError, NetworkStatus } from '@apollo/client'
-import { useCallback, useMemo } from 'react'
+import isEqual from 'lodash/isEqual'
+import { useCallback, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import {
@@ -221,11 +222,34 @@ export function useFormattedTransactionDataForActivity(
     ]
   }, [showLoading, hasTransactions, pending, last24hTransactionList, priorByMonthTransactionList])
 
+  const memoizedSectionDataRef = useRef<typeof sectionData | undefined>(undefined)
+
+  // Each `transaction` object is recreated every time the query is refetched.
+  // To avoid re-rendering every single item (even the ones that didn't change), we go through the results and compare them with the previous results.
+  // If the `transaction` already exists in the previous results and is equal to the new one, we keep the reference to old one.
+  // This means that `TransactionSummaryLayout` won't re-render because the props will be exactly the same.
+  const memoizedSectionData = useMemo(() => {
+    if (!memoizedSectionDataRef.current || !sectionData) {
+      return sectionData
+    }
+
+    return sectionData.map((newItem) => {
+      const newItemKey = keyExtractor(newItem)
+      const oldItem = memoizedSectionDataRef.current?.find((_oldItem) => newItemKey === keyExtractor(_oldItem))
+      if (oldItem && isEqual(newItem, oldItem)) {
+        return oldItem
+      }
+      return newItem
+    })
+  }, [keyExtractor, sectionData])
+
+  memoizedSectionDataRef.current = memoizedSectionData
+
   const onRetry = useCallback(async () => {
     await refetch({
       address,
     })
   }, [address, refetch])
 
-  return { onRetry, sectionData, hasData, isError, isLoading, keyExtractor }
+  return { onRetry, sectionData: memoizedSectionData, hasData, isError, isLoading, keyExtractor }
 }

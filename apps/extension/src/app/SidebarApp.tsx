@@ -34,6 +34,7 @@ import { initExtensionAnalytics } from 'src/app/utils/analytics'
 import { getLocalUserId } from 'src/app/utils/storage'
 import {
   DappBackgroundPortChannel,
+  backgroundToSidePanelMessageChannel,
   createBackgroundToSidePanelMessagePort,
 } from 'src/background/messagePassing/messageChannels'
 import { BackgroundToSidePanelRequestType } from 'src/background/messagePassing/types/requests'
@@ -44,7 +45,7 @@ import { syncAppWithDeviceLanguage } from 'uniswap/src/features/settings/slice'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import { ExtensionEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
-import { UnitagUpdaterContextProvider } from 'uniswap/src/features/unitags/context'
+import { UnitagUpdaterContextProvider, useUnitagUpdater } from 'uniswap/src/features/unitags/context'
 import i18n from 'uniswap/src/i18n/i18n'
 import { isDevEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
@@ -205,9 +206,20 @@ function SidebarWrapper(): JSX.Element {
   useDappRequestPortListener()
   useTestnetModeForLoggingAndAnalytics()
 
+  const { triggerRefetchUnitags } = useUnitagUpdater()
+
   useEffect(() => {
     dispatch(syncAppWithDeviceLanguage())
   }, [dispatch])
+
+  useEffect(() => {
+    return backgroundToSidePanelMessageChannel.addMessageListener(
+      BackgroundToSidePanelRequestType.RefreshUnitags,
+      () => {
+        triggerRefetchUnitags()
+      },
+    )
+  }, [triggerRefetchUnitags])
 
   return (
     <>

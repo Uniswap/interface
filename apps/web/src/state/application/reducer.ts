@@ -10,6 +10,7 @@ export enum PopupType {
   Order = 'order',
   FailedSwitchNetwork = 'failedSwitchNetwork',
   SwitchNetwork = 'switchNetwork',
+  Bridge = 'bridge',
 }
 
 export type PopupContent =
@@ -29,6 +30,11 @@ export type PopupContent =
       type: PopupType.SwitchNetwork
       chainId: UniverseChainId
       action: SwapTab
+    }
+  | {
+      type: PopupType.Bridge
+      inputChainId: UniverseChainId
+      outputChainId: UniverseChainId
     }
 
 // TODO(WEB-4888): remove this type
@@ -73,14 +79,12 @@ export type PopupList = Array<{ key: string; show: boolean; content: PopupConten
 
 export interface ApplicationState {
   readonly chainId: number | null
-  readonly fiatOnramp: { available: boolean; availabilityChecked: boolean }
   readonly openModal: OpenModalParams | null
   readonly popupList: PopupList
   readonly suppressedPopups: PopupType[]
 }
 
 const initialState: ApplicationState = {
-  fiatOnramp: { available: false, availabilityChecked: false },
   chainId: null,
   openModal: null,
   popupList: [],
@@ -91,9 +95,6 @@ const applicationSlice = createSlice({
   name: 'application',
   initialState,
   reducers: {
-    setFiatOnrampAvailability(state, { payload: available }) {
-      state.fiatOnramp = { available, availabilityChecked: true }
-    },
     updateChainId(state, action) {
       const { chainId } = action.payload
       state.chainId = chainId
@@ -143,7 +144,6 @@ const applicationSlice = createSlice({
 
 export const {
   updateChainId,
-  setFiatOnrampAvailability,
   setOpenModal,
   setCloseModal,
   addPopup,

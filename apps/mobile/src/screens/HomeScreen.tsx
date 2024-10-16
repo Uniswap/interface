@@ -62,6 +62,8 @@ import { useCexTransferProviders } from 'uniswap/src/features/fiatOnRamp/useCexT
 import { Experiments, OnboardingRedesignHomeScreenProperties } from 'uniswap/src/features/gating/experiments'
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { getExperimentValue, useFeatureFlag } from 'uniswap/src/features/gating/hooks'
+import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
+import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { useEnabledChains } from 'uniswap/src/features/settings/hooks'
 import Trace from 'uniswap/src/features/telemetry/Trace'
 import {
@@ -79,8 +81,6 @@ import { MobileScreens } from 'uniswap/src/types/screens/mobile'
 import { useTimeout } from 'utilities/src/time/timing'
 import { ScannerModalState } from 'wallet/src/components/QRCodeScanner/constants'
 import { selectCreatedOnboardingRedesignAccount } from 'wallet/src/features/behaviorHistory/selectors'
-import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
-import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { TokenBalanceListRow } from 'wallet/src/features/portfolio/TokenBalanceListContext'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
@@ -205,21 +205,37 @@ export function HomeScreen(props?: AppStackScreenProp<MobileScreens.Home>): JSX.
     setIsLayoutReady(true)
   }, [])
 
+  // IMPORTANT: We must manually pass a dependency array to `useAnimatedScrollHandler`
+  //            because the reanimated babel plugin is not automatically injecting these.
+
   const tokensTabScrollValue = useSharedValue(0)
   const tokensTabScrollHandler = useAnimatedScrollHandler(
     (event) => (tokensTabScrollValue.value = event.contentOffset.y),
+    [tokensTabScrollValue],
   )
+
   const nftsTabScrollValue = useSharedValue(0)
-  const nftsTabScrollHandler = useAnimatedScrollHandler((event) => (nftsTabScrollValue.value = event.contentOffset.y))
+  const nftsTabScrollHandler = useAnimatedScrollHandler(
+    (event) => (nftsTabScrollValue.value = event.contentOffset.y),
+    [nftsTabScrollValue],
+  )
+
   const activityTabScrollValue = useSharedValue(0)
   const activityTabScrollHandler = useAnimatedScrollHandler(
     (event) => (activityTabScrollValue.value = event.contentOffset.y),
+    [activityTabScrollValue],
   )
+
   const feedTabScrollValue = useSharedValue(0)
-  const feedTabScrollHandler = useAnimatedScrollHandler((event) => (feedTabScrollValue.value = event.contentOffset.y))
+  const feedTabScrollHandler = useAnimatedScrollHandler(
+    (event) => (feedTabScrollValue.value = event.contentOffset.y),
+    [feedTabScrollValue],
+  )
+
   const exploreTabScrollValue = useSharedValue(0)
   const exploreTabScrollHandler = useAnimatedScrollHandler(
     (event) => (exploreTabScrollValue.value = event.contentOffset.y),
+    [exploreTabScrollValue],
   )
 
   const tokensTabScrollRef = useAnimatedRef<FlatList<TokenBalanceListRow>>()

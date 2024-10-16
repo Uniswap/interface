@@ -7,6 +7,7 @@ import { Action } from 'redux'
 import { addTransaction, finalizeTransaction } from 'state/transactions/reducer'
 import {
   ApproveTransactionInfo,
+  BridgeTransactionInfo,
   ExactInputSwapTransactionInfo,
   ExactOutputSwapTransactionInfo,
   TransactionDetails,
@@ -17,21 +18,22 @@ import { isPendingTx } from 'state/transactions/utils'
 import { InterfaceState } from 'state/webReducer'
 import { SagaGenerator, call, cancel, fork, put, race, select, take } from 'typed-redux-saga'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
+import { Routing } from 'uniswap/src/data/tradingApi/__generated__'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
 import {
   HandledTransactionInterrupt,
   TransactionStepFailedError,
   UnexpectedTransactionStateError,
 } from 'uniswap/src/features/transactions/errors'
-import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
-import { ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import {
   OnChainTransactionStep,
   SignatureTransactionStep,
   TokenApprovalTransactionStep,
   TokenRevocationTransactionStep,
   TransactionStep,
-} from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+} from 'uniswap/src/features/transactions/swap/types/steps'
+import { SetCurrentStepFn } from 'uniswap/src/features/transactions/swap/types/swapCallback'
+import { BridgeTrade, ClassicTrade, UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
 import { isUniswapX } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { interruptTransactionFlow } from 'uniswap/src/utils/saga'
 import { isSameAddress } from 'utilities/src/addresses'
@@ -239,7 +241,7 @@ function* waitForTransaction(hash: string, step: TransactionStep) {
       if (payload.status === TransactionStatus.Confirmed) {
         return
       } else {
-        throw new TransactionStepFailedError({ message: `${step.type} failed during swap`, step })
+        throw new TransactionStepFailedError({ message: `${step.type} failed on-chain`, step })
       }
     }
   }
@@ -261,9 +263,25 @@ async function getSigner(account: string): Promise<JsonRpcSigner> {
 }
 
 type SwapInfo = ExactInputSwapTransactionInfo | ExactOutputSwapTransactionInfo
-export function getSwapTransactionInfo(trade: ClassicTrade): SwapInfo
+export function getSwapTransactionInfo(trade: ClassicTrade | BridgeTrade): SwapInfo | BridgeTransactionInfo
 export function getSwapTransactionInfo(trade: UniswapXTrade): SwapInfo & { isUniswapXOrder: true }
-export function getSwapTransactionInfo(trade: ClassicTrade | UniswapXTrade): SwapInfo {
+export function getSwapTransactionInfo(
+  trade: ClassicTrade | BridgeTrade | UniswapXTrade,
+): SwapInfo | BridgeTransactionInfo {
+  if (trade.routing === Routing.BRIDGE) {
+    return {
+      type: TransactionType.BRIDGE,
+      inputCurrencyId: currencyId(trade.inputAmount.currency),
+      inputChainId: trade.inputAmount.currency.chainId,
+      outputCurrencyId: currencyId(trade.outputAmount.currency),
+      outputChainId: trade.outputAmount.currency.chainId,
+      inputCurrencyAmountRaw: trade.inputAmount.quotient.toString(),
+      outputCurrencyAmountRaw: trade.outputAmount.quotient.toString(),
+      quoteId: trade.quote.requestId,
+      depositConfirmed: false,
+    }
+  }
+
   const slippage = percentFromFloat(trade.slippageTolerance)
 
   return {

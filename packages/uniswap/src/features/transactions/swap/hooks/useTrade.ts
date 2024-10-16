@@ -101,10 +101,10 @@ export function useTrade({
       tokenIn: tokenInAddress,
       tokenOut: tokenOutAddress,
       slippageTolerance: customSlippageTolerance,
-      urgency: SWAP_GAS_URGENCY_OVERRIDE,
       gasStrategies: [activeGasStrategy, ...(shadowGasStrategies ?? [])],
       v4Enabled,
       isUSDQuote,
+      urgency: SWAP_GAS_URGENCY_OVERRIDE,
       ...routingParams,
     }
   }, [

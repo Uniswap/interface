@@ -1,13 +1,10 @@
 import SettingsTab from 'components/Settings'
 import { RowBetween, RowFixed } from 'components/deprecated/Row'
-import SwapBuyFiatButton from 'components/swap/SwapBuyFiatButton'
 import { SwapHeaderTabButton } from 'components/swap/styled'
 import styled from 'lib/styled-components'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import { useSwapAndLimitContext, useSwapContext } from 'state/swap/useSwapContext'
-import { FeatureFlags } from 'uniswap/src/features/gating/flags'
-import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { Trans } from 'uniswap/src/i18n'
@@ -42,12 +39,10 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
   } = useSwapContext()
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const [triggerBuyFlow, setTriggerBuyFlow] = useState(false)
-  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   useEffect(() => {
     if (pathname === '/buy') {
-      setCurrentTab(forAggregatorEnabled ? SwapTab.Buy : SwapTab.Swap)
+      setCurrentTab(SwapTab.Buy)
     } else if (pathname === '/send' && isIFramed()) {
       // Redirect to swap if send tab is iFramed (we do not allow the send tab to be iFramed due to clickjacking protections)
       // https://www.notion.so/uniswaplabs/What-is-not-allowed-to-be-iFramed-Clickjacking-protections-874f85f066c648afa0eb3480b3f47b5c#d0ebf1846c83475a86342a594f77eae5
@@ -55,10 +50,7 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
     } else {
       setCurrentTab(PathnameToTab[pathname] ?? SwapTab.Swap)
     }
-    if (pathname === '/buy' && !forAggregatorEnabled) {
-      setTriggerBuyFlow(true)
-    }
-  }, [forAggregatorEnabled, pathname, setCurrentTab])
+  }, [pathname, setCurrentTab])
 
   const onTabClick = useCallback(
     (tab: SwapTab) => {
@@ -104,18 +96,14 @@ export default function SwapHeader({ compact, syncTabToUrl }: { compact: boolean
             <Trans i18nKey="common.send.button" />
           </SwapHeaderTabButton>
         )}
-        {forAggregatorEnabled ? (
-          <SwapHeaderTabButton
-            $isActive={currentTab === SwapTab.Buy}
-            onClick={() => {
-              onTabClick(SwapTab.Buy)
-            }}
-          >
-            <Trans i18nKey="common.buy.label" />
-          </SwapHeaderTabButton>
-        ) : (
-          <SwapBuyFiatButton triggerBuyFlow={triggerBuyFlow} setTriggerBuyFlow={setTriggerBuyFlow} />
-        )}
+        <SwapHeaderTabButton
+          $isActive={currentTab === SwapTab.Buy}
+          onClick={() => {
+            onTabClick(SwapTab.Buy)
+          }}
+        >
+          <Trans i18nKey="common.buy.label" />
+        </SwapHeaderTabButton>
       </HeaderButtonContainer>
       {currentTab === SwapTab.Swap && (
         <RowFixed>

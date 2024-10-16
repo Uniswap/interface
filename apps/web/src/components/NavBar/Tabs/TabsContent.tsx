@@ -25,7 +25,6 @@ export type TabsItem = MenuItem & {
 
 export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSection[] => {
   const { t } = useTranslation()
-  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
   const isMultichainExploreEnabled = useFeatureFlag(FeatureFlags.MultichainExplore)
   const { pathname } = useLocation()
   const theme = useTheme()
@@ -58,17 +57,13 @@ export const useTabsContent = (props?: { includeNftsLink?: boolean }): TabsSecti
           href: '/send',
           internal: true,
         },
-        ...(forAggregatorEnabled
-          ? [
-              {
-                label: t('common.buy.label'),
-                icon: <CreditCardIcon fill={theme.neutral2} />,
-                quickKey: 'B',
-                href: '/buy',
-                internal: true,
-              },
-            ]
-          : []),
+        {
+          label: t('common.buy.label'),
+          icon: <CreditCardIcon fill={theme.neutral2} />,
+          quickKey: 'B',
+          href: '/buy',
+          internal: true,
+        },
       ],
     },
     {

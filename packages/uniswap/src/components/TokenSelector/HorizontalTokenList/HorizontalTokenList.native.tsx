@@ -1,5 +1,5 @@
-import { useCallback } from 'react'
-import { FlatList } from 'react-native'
+import { memo, useCallback } from 'react'
+import { FlatList } from 'react-native-gesture-handler'
 import { Flex } from 'ui/src'
 import { spacing } from 'ui/src/theme'
 import { HorizontalTokenListProps } from 'uniswap/src/components/TokenSelector/HorizontalTokenList/HorizontalTokenList'
@@ -7,7 +7,7 @@ import { SuggestedToken } from 'uniswap/src/components/TokenSelector/SuggestedTo
 import { FeatureFlags } from 'uniswap/src/features/gating/flags'
 import { useFeatureFlag } from 'uniswap/src/features/gating/hooks'
 
-export function HorizontalTokenList({
+export const HorizontalTokenList = memo(function _HorizontalTokenList({
   tokens: suggestedTokens,
   onSelectCurrency,
   index,
@@ -55,4 +55,4 @@ export function HorizontalTokenList({
       showsHorizontalScrollIndicator={false}
     />
   )
-}
+})

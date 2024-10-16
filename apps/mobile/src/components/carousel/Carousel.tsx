@@ -28,11 +28,7 @@ export function Carousel({ slides, ...flatListProps }: CarouselProps): JSX.Eleme
   const { fullWidth } = useDeviceDimensions()
   const myRef = useRef<Animated.FlatList<unknown>>(null)
 
-  const scrollHandler = useAnimatedScrollHandler({
-    onScroll: (event) => {
-      scroll.value = event.contentOffset.x
-    },
-  })
+  const scrollHandler = useAnimatedScrollHandler((event) => (scroll.value = event.contentOffset.x), [scroll])
 
   const goToNext = useCallback(() => {
     // @ts-expect-error https://github.com/software-mansion/react-native-reanimated/issues/2976

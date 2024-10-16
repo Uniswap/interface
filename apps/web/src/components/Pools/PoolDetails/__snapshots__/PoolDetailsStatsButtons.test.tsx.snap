@@ -412,7 +412,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   grid-row-gap: 4px;
 }
 
-.c25 {
+.c35 {
   display: inline-block;
   height: inherit;
 }
@@ -438,7 +438,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   pointer-events: none;
 }
 
-.c34 {
+.c33 {
   color: #222222;
   pointer-events: auto;
   width: 0;
@@ -459,36 +459,36 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   text-align: right;
 }
 
-.c34::-webkit-search-decoration {
+.c33::-webkit-search-decoration {
   -webkit-appearance: none;
 }
 
-.c34 [type='number'] {
+.c33 [type='number'] {
   -moz-appearance: textfield;
 }
 
-.c34::-webkit-outer-spin-button,
-.c34::-webkit-inner-spin-button {
+.c33::-webkit-outer-spin-button,
+.c33::-webkit-inner-spin-button {
   -webkit-appearance: none;
 }
 
-.c34::-webkit-input-placeholder {
+.c33::-webkit-input-placeholder {
   color: #CECECE;
 }
 
-.c34::-moz-placeholder {
+.c33::-moz-placeholder {
   color: #CECECE;
 }
 
-.c34:-ms-input-placeholder {
+.c33:-ms-input-placeholder {
   color: #CECECE;
 }
 
-.c34::placeholder {
+.c33::placeholder {
   color: #CECECE;
 }
 
-.c35 {
+.c34 {
   -webkit-filter: none;
   filter: none;
   opacity: 1;
@@ -500,7 +500,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   max-height: 44px;
 }
 
-.c31 {
+.c30 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -517,7 +517,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   will-change: height;
 }
 
-.c32 {
+.c31 {
   min-height: 44px;
   border-radius: 20px;
   width: initial;
@@ -580,7 +580,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   background-color: #B8C0DC3d;
 }
 
-.c33 {
+.c32 {
   display: -webkit-box;
   display: -webkit-flex;
   display: -ms-flexbox;
@@ -697,7 +697,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   opacity: 0.8;
 }
 
-.c30 {
+.c29 {
   background-color: #F9F9F9;
   border-radius: 16px;
   color: #7D7D7D;
@@ -709,7 +709,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   position: relative;
 }
 
-.c30:before {
+.c29:before {
   box-sizing: border-box;
   background-size: 100%;
   border-radius: inherit;
@@ -723,11 +723,11 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   border: 1px solid #F9F9F9;
 }
 
-.c30:hover:before {
+.c29:hover:before {
   border-color: #98A1C014;
 }
 
-.c30:focus-within:before {
+.c29:focus-within:before {
   border-color: #B8C0DC3d;
 }
 
@@ -789,16 +789,16 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   text-decoration: none;
 }
 
-.c29 {
+.c28 {
   height: 24px;
   width: 24px;
 }
 
-.c29 > * {
+.c28 > * {
   fill: #7D7D7D;
 }
 
-.c27 {
+.c26 {
   border: none;
   background-color: transparent;
   margin: 0;
@@ -807,16 +807,16 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
   outline: none;
 }
 
-.c27:not([disabled]):hover {
+.c26:not([disabled]):hover {
   opacity: 0.7;
 }
 
-.c28 {
+.c27 {
   padding: 6px 12px;
   border-radius: 16px;
 }
 
-.c26 {
+.c25 {
   position: relative;
 }
 
@@ -1130,36 +1130,29 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                       >
                         Send
                       </button>
-                      <div
-                        class="c25"
+                      <button
+                        class="c21 c22 c24"
                       >
-                        <div>
-                          <button
-                            class="c21 c22 c24"
-                            data-testid="buy-fiat-button"
-                          >
-                            Buy
-                          </button>
-                        </div>
-                      </div>
+                        Buy
+                      </button>
                     </div>
                     <div
                       class="c1 c2 c19"
                     >
                       <div
-                        class="c26"
+                        class="c25"
                       >
                         <button
                           aria-label="Transaction Settings"
-                          class="c27"
+                          class="c26"
                           data-testid="open-settings-dialog-button"
                           id="open-settings-dialog-button"
                         >
                           <div
-                            class="c1 c2 c28"
+                            class="c1 c2 c27"
                           >
                             <svg
-                              class="c29"
+                              class="c28"
                               fill="none"
                               height="24"
                               viewBox="0 0 24 24"
@@ -1180,14 +1173,14 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                     style="display: relative;"
                   >
                     <div
-                      class="c30"
+                      class="c29"
                     >
                       <div
-                        class="c31"
+                        class="c30"
                         id="swap-currency-input"
                       >
                         <div
-                          class="c32"
+                          class="c31"
                         >
                           <span
                             class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _userSelect-none"
@@ -1196,7 +1189,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                             Sell
                           </span>
                           <div
-                            class="c33"
+                            class="c32"
                           >
                             <div
                               style="display: flex; flex-grow: 1;"
@@ -1204,7 +1197,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                               <input
                                 autocomplete="off"
                                 autocorrect="off"
-                                class="c34 c35 token-amount-input"
+                                class="c33 c34 token-amount-input"
                                 id="swap-currency-input"
                                 inputmode="decimal"
                                 maxlength="79"
@@ -1218,7 +1211,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                             </div>
                             <div>
                               <div
-                                class="c25"
+                                class="c35"
                               >
                                 <button
                                   class="c36 c37 c38 c39 c40 open-currency-select-button"
@@ -1279,7 +1272,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                           <h2
                             class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _color-675002279 _fontFamily-299667014 _fontWeight-233016078 _fontSize-229441158 _lineHeight-222976511 _userSelect-auto _whiteSpace-normal _mt-0px _mr-0px _mb-0px _ml-0px"
                             data-disable-theme="true"
-                            id="title-:r5:"
+                            id="title-:r4:"
                             role="heading"
                           />
                         </span>
@@ -1322,14 +1315,14 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                   >
                     <div>
                       <div
-                        class="c30 c50"
+                        class="c29 c50"
                       >
                         <div
-                          class="c31"
+                          class="c30"
                           id="swap-currency-output"
                         >
                           <div
-                            class="c32"
+                            class="c31"
                           >
                             <span
                               class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202 _userSelect-none"
@@ -1338,7 +1331,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                               Buy
                             </span>
                             <div
-                              class="c33"
+                              class="c32"
                             >
                               <div
                                 style="display: flex; flex-grow: 1;"
@@ -1346,7 +1339,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                                 <input
                                   autocomplete="off"
                                   autocorrect="off"
-                                  class="c34 c35 token-amount-input"
+                                  class="c33 c34 token-amount-input"
                                   id="swap-currency-output"
                                   inputmode="decimal"
                                   maxlength="79"
@@ -1360,7 +1353,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                               </div>
                               <div>
                                 <div
-                                  class="c25"
+                                  class="c35"
                                 >
                                   <button
                                     class="c36 c37 c38 c39 c40 open-currency-select-button"
@@ -1421,7 +1414,7 @@ exports[`PoolDetailsStatsButton renders both buttons correctly 1`] = `
                             <h2
                               class="is_DialogTitle font_heading _display-inline _boxSizing-border-box _wordWrap-break-word _color-675002279 _fontFamily-299667014 _fontWeight-233016078 _fontSize-229441158 _lineHeight-222976511 _userSelect-auto _whiteSpace-normal _mt-0px _mr-0px _mb-0px _ml-0px"
                               data-disable-theme="true"
-                              id="title-:rc:"
+                              id="title-:rb:"
                               role="heading"
                             />
                           </span>

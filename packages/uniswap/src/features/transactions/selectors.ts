@@ -94,11 +94,14 @@ export function useCurrencyIdToVisibility(addresses: Address[]): CurrencyIdToVis
 
   const tokenVisibilityFromLocalTxs = useSelector((state: UniswapState) => selectLocalTxCurrencyIds(state, addresses))
 
-  return {
-    ...tokenVisibilityFromLocalTxs,
-    // Tokens the user has individually shown/hidden in the app should take preference over local txs
-    ...manuallySetTokenVisibility,
-  }
+  return useMemo(
+    () => ({
+      ...tokenVisibilityFromLocalTxs,
+      // Tokens the user has individually shown/hidden in the app should take preference over local txs
+      ...manuallySetTokenVisibility,
+    }),
+    [manuallySetTokenVisibility, tokenVisibilityFromLocalTxs],
+  )
 }
 
 const makeSelectTokenVisibilityFromLocalTxs = (): Selector<UniswapState, CurrencyIdToVisibility, [Address[]]> =>

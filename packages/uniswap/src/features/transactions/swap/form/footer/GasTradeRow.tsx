@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Accordion, Flex, Text, isWeb } from 'ui/src'
+import { Accordion, Flex, Text } from 'ui/src'
 import { AlertTriangleFilled } from 'ui/src/components/icons/AlertTriangleFilled'
 import { Gas } from 'ui/src/components/icons/Gas'
 import { RotatableChevron } from 'ui/src/components/icons/RotatableChevron'
@@ -106,7 +106,7 @@ function GasRow({ gasInfo, hidden }: { gasInfo: DebouncedGasInfo; hidden?: boole
     const color = gasInfo.isHighRelativeToValue && !isInterface ? '$statusCritical' : '$neutral2' // Avoid high gas UI on interface
     const uniswapXSavings = gasInfo.uniswapXGasFeeInfo?.preSavingsGasFeeFormatted
     const body = uniswapXSavings ? (
-      <UniswapXFee gasFee={gasInfo.fiatPriceFormatted} preSavingsGasFee={uniswapXSavings} smaller={isWeb} />
+      <UniswapXFee gasFee={gasInfo.fiatPriceFormatted} preSavingsGasFee={uniswapXSavings} />
     ) : (
       <>
         <Gas color={color} size="$icon.16" />
@@ -167,14 +167,12 @@ export function GasTradeRow({
 
   return (
     <Flex centered row>
-      {debouncedTrade && !showPriceImpactWarning && (
-        <Flex fill>
+      <Flex fill>
+        {debouncedTrade && !showPriceImpactWarning && (
           <SwapRateRatio initialInverse={true} styling="secondary" trade={debouncedTrade} />
-        </Flex>
-      )}
+        )}
 
-      {showPriceImpactWarning && priceImpactWarning && (
-        <Flex fill>
+        {showPriceImpactWarning && priceImpactWarning && (
           <PriceImpactWarning warning={priceImpactWarning}>
             <Flex row centered>
               <AlertTriangleFilled mr={2} color={warningColor.text} size="$icon.16" />
@@ -183,19 +181,19 @@ export function GasTradeRow({
               </Text>
             </Flex>
           </PriceImpactWarning>
-        </Flex>
-      )}
+        )}
+      </Flex>
 
-      <Accordion.Trigger
-        p="$none"
-        style={{ background: '$surface1' }}
-        focusStyle={{ background: '$surface1' }}
-        hoverStyle={{ background: '$surface1' }}
-      >
-        {({ open }: { open: boolean }) => (
-          <Flex row gap="$spacing4" alignItems="center">
-            <GasRow gasInfo={gasInfo} hidden={open} />
-            {debouncedTrade ? (
+      {debouncedTrade ? (
+        <Accordion.Trigger
+          p="$none"
+          style={{ background: '$surface1' }}
+          focusStyle={{ background: '$surface1' }}
+          hoverStyle={{ background: '$surface1' }}
+        >
+          {({ open }: { open: boolean }) => (
+            <Flex row gap="$spacing4" alignItems="center">
+              <GasRow gasInfo={gasInfo} hidden={open} />
               <RotatableChevron
                 animation="fast"
                 width={iconSizes.icon16}
@@ -203,10 +201,12 @@ export function GasTradeRow({
                 direction={open ? 'up' : 'down'}
                 color="$neutral3"
               />
-            ) : null}
-          </Flex>
-        )}
-      </Accordion.Trigger>
+            </Flex>
+          )}
+        </Accordion.Trigger>
+      ) : (
+        <GasRow gasInfo={gasInfo} />
+      )}
     </Flex>
   )
 }

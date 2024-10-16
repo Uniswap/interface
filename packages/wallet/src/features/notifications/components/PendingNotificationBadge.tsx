@@ -1,14 +1,15 @@
-import { useSelector } from 'react-redux'
 import { Flex, SpinningLoader, useSporeColors } from 'ui/src'
 import AlertCircle from 'ui/src/assets/icons/alert-circle.svg'
 import { CheckmarkCircle } from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
+import {
+  useSelectAddressHasNotifications,
+  useSelectAddressNotifications,
+} from 'uniswap/src/features/notifications/hooks'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { TransactionStatus } from 'uniswap/src/features/transactions/types/transactionDetails'
-import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
-import { selectActiveAccountNotifications } from 'wallet/src/features/notifications/selectors'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { useSortedPendingTransactions } from 'wallet/src/features/transactions/hooks'
-import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
+import { useActiveAccountAddress } from 'wallet/src/features/wallet/hooks'
 
 const PENDING_TX_TIME_LIMIT = 60_000 * 5 // 5 mins
 const LOADING_SPINNER_SIZE = iconSizes.icon20
@@ -19,10 +20,10 @@ interface Props {
 
 export function PendingNotificationBadge({ size = LOADING_SPINNER_SIZE }: Props): JSX.Element | null {
   const colors = useSporeColors()
-  const activeAccountAddress = useSelector(selectActiveAccountAddress)
-  const notifications = useSelector(selectActiveAccountNotifications)
+  const activeAccountAddress = useActiveAccountAddress()
   const sortedPendingTransactions = useSortedPendingTransactions(activeAccountAddress)
   const hasNotifications = useSelectAddressHasNotifications(activeAccountAddress)
+  const notifications = useSelectAddressNotifications(activeAccountAddress)
 
   /*************** In-app txn confirmed  **************/
 

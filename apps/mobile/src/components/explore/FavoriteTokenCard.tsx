@@ -9,10 +9,17 @@ import { useAnimatedCardDragStyle, useExploreTokenContextMenu } from 'src/compon
 import { Loader } from 'src/components/loading/loaders'
 import { disableOnPress } from 'src/utils/disableOnPress'
 import { usePollOnFocusOnly } from 'src/utils/hooks'
-import { AnimatedTouchableArea, Flex, ImpactFeedbackStyle, Text } from 'ui/src'
+import {
+  AnimatedTouchableArea,
+  Flex,
+  ImpactFeedbackStyle,
+  Text,
+  useIsDarkMode,
+  useShadowPropsShort,
+  useSporeColors,
+} from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { borderRadii, imageSizes } from 'ui/src/theme'
-import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { borderRadii, imageSizes, opacify } from 'ui/src/theme'
 import { TokenLogo } from 'uniswap/src/components/CurrencyLogo/TokenLogo'
 import { PollingInterval } from 'uniswap/src/constants/misc'
 import { useFavoriteTokenCardQuery } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -49,6 +56,9 @@ function FavoriteTokenCard({
   const { defaultChainId } = useEnabledChains()
   const tokenDetailsNavigation = useTokenDetailsNavigation()
   const { convertFiatAmountFormatted } = useLocalizationContext()
+
+  const colors = useSporeColors()
+  const isDarkMode = useIsDarkMode()
 
   const { data, networkStatus, startPolling, stopPolling } = useFavoriteTokenCardQuery({
     variables: currencyIdToContractInput(currencyId),
@@ -94,12 +104,14 @@ function FavoriteTokenCard({
 
   const animatedDragStyle = useAnimatedCardDragStyle(pressProgress, dragActivationProgress)
 
+  const shadowProps = useShadowPropsShort()
+
   if (isNonPollingRequestInFlight(networkStatus)) {
     return <Loader.Favorite height={FAVORITE_TOKEN_CARD_LOADER_HEIGHT} />
   }
 
   return (
-    <AnimatedFlex style={animatedDragStyle}>
+    <AnimatedFlex borderRadius="$rounded16" style={animatedDragStyle}>
       <ContextMenu
         actions={menuActions}
         disabled={isEditing}
@@ -109,8 +121,10 @@ function FavoriteTokenCard({
       >
         <AnimatedTouchableArea
           activeOpacity={isEditing ? 1 : undefined}
-          backgroundColor="$surface2"
+          backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
+          borderColor={opacify(0.05, colors.surface3.val)}
           borderRadius="$rounded16"
+          borderWidth={isDarkMode ? '$none' : '$spacing1'}
           entering={FadeIn}
           hapticFeedback={!isEditing}
           hapticStyle={ImpactFeedbackStyle.Light}
@@ -118,35 +132,34 @@ function FavoriteTokenCard({
           testID={`token-box-${token?.symbol}`}
           onLongPress={disableOnPress}
           onPress={onPress}
+          {...shadowProps}
         >
-          <BaseCard.Shadow>
-            <Flex alignItems="flex-start" gap="$spacing8">
-              <Flex row gap="$spacing4" justifyContent="space-between">
-                <Flex grow row alignItems="center" gap="$spacing8">
-                  <TokenLogo
-                    chainId={chainId ?? undefined}
-                    name={token?.name ?? undefined}
-                    size={imageSizes.image20}
-                    symbol={token?.symbol ?? undefined}
-                    url={token?.project?.logoUrl ?? undefined}
-                  />
-                  <Text variant="body1">{getSymbolDisplayText(token?.symbol)}</Text>
-                </Flex>
-                <RemoveButton visible={isEditing} onPress={onRemove} />
-              </Flex>
-              <Flex gap="$spacing2">
-                <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
-                  {price}
-                </Text>
-                <RelativeChange
-                  arrowSize="$icon.16"
-                  change={pricePercentChange ?? undefined}
-                  semanticColor={true}
-                  variant="subheading2"
+          <Flex alignItems="flex-start" gap="$spacing8" p="$spacing12">
+            <Flex row gap="$spacing4" justifyContent="space-between">
+              <Flex grow row alignItems="center" gap="$spacing8">
+                <TokenLogo
+                  chainId={chainId ?? undefined}
+                  name={token?.name ?? undefined}
+                  size={imageSizes.image20}
+                  symbol={token?.symbol ?? undefined}
+                  url={token?.project?.logoUrl ?? undefined}
                 />
+                <Text variant="body1">{getSymbolDisplayText(token?.symbol)}</Text>
               </Flex>
+              <RemoveButton visible={isEditing} onPress={onRemove} />
             </Flex>
-          </BaseCard.Shadow>
+            <Flex gap="$spacing2">
+              <Text adjustsFontSizeToFit numberOfLines={1} variant="heading3">
+                {price}
+              </Text>
+              <RelativeChange
+                arrowSize="$icon.16"
+                change={pricePercentChange ?? undefined}
+                semanticColor={true}
+                variant="subheading2"
+              />
+            </Flex>
+          </Flex>
         </AnimatedTouchableArea>
       </ContextMenu>
     </AnimatedFlex>

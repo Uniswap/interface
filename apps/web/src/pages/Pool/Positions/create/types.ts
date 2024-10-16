@@ -74,7 +74,14 @@ export interface PriceRangeInfo {
   pricesAtLimit?: (Price<Token, Token> | undefined)[]
   pricesAtTicks?: (Price<Token, Token> | undefined)[]
   baseAndQuoteTokens?: Token[]
-  invertPrice: boolean
+  invertPrice?: boolean
+  invalidPrice?: boolean
+  invalidRange?: boolean
+  outOfRange?: boolean
+  deposit0Disabled?: boolean
+  deposit1Disabled?: boolean
+  invalidPool?: boolean
+  isTaxed?: boolean
 }
 
 export type PriceRangeContextType = {

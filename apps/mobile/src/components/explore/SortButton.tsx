@@ -2,61 +2,85 @@ import React, { memo, useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useDispatch } from 'react-redux'
 import { getTokensOrderByMenuLabel, getTokensOrderBySelectedLabel } from 'src/features/explore/utils'
-import { Flex, Text, useIsDarkMode } from 'ui/src'
-import { RotatableChevron } from 'ui/src/components/icons'
+import { Flex, Text, useSporeColors } from 'ui/src'
+import {
+  Chart,
+  ChartPie,
+  ChartPyramid,
+  CheckCircleFilled,
+  RotatableChevron,
+  TrendDown,
+  TrendUp,
+} from 'ui/src/components/icons'
 import { iconSizes } from 'ui/src/theme'
 import { ActionSheetDropdown } from 'uniswap/src/components/dropdowns/ActionSheetDropdown'
 import { MenuItemProp } from 'uniswap/src/components/modals/ActionSheetModal'
-import { TokenSortableField } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { MobileEventName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { setTokensOrderBy } from 'wallet/src/features/wallet/slice'
-import { ClientTokensOrderBy, TokensOrderBy } from 'wallet/src/features/wallet/types'
+import { CustomRankingType, ExploreOrderBy, RankingType } from 'wallet/src/features/wallet/types'
+
+const MIN_MENU_ITEM_WIDTH = 220
 
 interface FilterGroupProps {
-  orderBy: TokensOrderBy
+  orderBy: ExploreOrderBy
 }
 
 function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
-  const isDarkMode = useIsDarkMode()
   const dispatch = useDispatch()
   const { t } = useTranslation()
+  const colors = useSporeColors()
 
   const menuActions = useMemo(() => {
     return [
       {
-        title: getTokensOrderByMenuLabel(TokenSortableField.Volume, t),
-        systemIcon: orderBy === TokenSortableField.Volume ? 'checkmark' : '',
-        orderBy: TokenSortableField.Volume,
+        title: getTokensOrderByMenuLabel(RankingType.Volume, t),
+        orderBy: RankingType.Volume,
+        icon: <Chart color={colors.neutral2.val} size={iconSizes.icon16} />,
+        active: orderBy === RankingType.Volume,
       },
       {
-        title: getTokensOrderByMenuLabel(TokenSortableField.TotalValueLocked, t),
-        systemIcon: orderBy === TokenSortableField.TotalValueLocked ? 'checkmark' : '',
-        orderBy: TokenSortableField.TotalValueLocked,
+        title: getTokensOrderByMenuLabel(RankingType.TotalValueLocked, t),
+        orderBy: RankingType.TotalValueLocked,
+        icon: <ChartPyramid color={colors.neutral2.val} size={iconSizes.icon16} />,
+        active: orderBy === RankingType.TotalValueLocked,
       },
       {
-        title: getTokensOrderByMenuLabel(TokenSortableField.MarketCap, t),
-        systemIcon: orderBy === TokenSortableField.MarketCap ? 'checkmark' : '',
-        orderBy: TokenSortableField.MarketCap,
+        title: getTokensOrderByMenuLabel(RankingType.MarketCap, t),
+        orderBy: RankingType.MarketCap,
+        icon: <ChartPie color={colors.neutral2.val} size={iconSizes.icon16} />,
+        active: orderBy === RankingType.MarketCap,
       },
       {
-        title: getTokensOrderByMenuLabel(ClientTokensOrderBy.PriceChangePercentage24hDesc, t),
-        systemIcon: orderBy === ClientTokensOrderBy.PriceChangePercentage24hDesc ? 'checkmark' : '',
-        orderBy: ClientTokensOrderBy.PriceChangePercentage24hDesc,
+        title: getTokensOrderByMenuLabel(CustomRankingType.PricePercentChange1DayDesc, t),
+        orderBy: CustomRankingType.PricePercentChange1DayDesc,
+        icon: <TrendUp color={colors.neutral2.val} size={iconSizes.icon16} />,
+        active: orderBy === CustomRankingType.PricePercentChange1DayDesc,
       },
       {
-        title: getTokensOrderByMenuLabel(ClientTokensOrderBy.PriceChangePercentage24hAsc, t),
-        systemIcon: orderBy === ClientTokensOrderBy.PriceChangePercentage24hAsc ? 'checkmark' : '',
-        orderBy: ClientTokensOrderBy.PriceChangePercentage24hAsc,
+        title: getTokensOrderByMenuLabel(CustomRankingType.PricePercentChange1DayAsc, t),
+        orderBy: CustomRankingType.PricePercentChange1DayAsc,
+        icon: <TrendDown color={colors.neutral2.val} size={iconSizes.icon16} />,
+        active: orderBy === CustomRankingType.PricePercentChange1DayAsc,
       },
     ]
-  }, [t, orderBy])
+  }, [t, colors.neutral2.val, orderBy])
 
-  const MenuItem = useCallback(({ label }: { label: string }) => {
+  const MenuItem = useCallback(({ label, icon, active }: { label: string; icon: JSX.Element; active: boolean }) => {
     return (
-      <Flex grow style={{ padding: 5 }}>
+      <Flex
+        grow
+        row
+        alignItems="center"
+        gap="$spacing8"
+        minWidth={MIN_MENU_ITEM_WIDTH}
+        py="$spacing8"
+        style={{ padding: 5 }}
+      >
+        {icon && icon}
         <Text>{label}</Text>
+        {active && <CheckCircleFilled color="$neutral1" size="$icon.16" />}
       </Flex>
     )
   }, [])
@@ -78,7 +102,7 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
             filter_type: selectedMenuAction.orderBy,
           })
         },
-        render: () => <MenuItem label={option.title} />,
+        render: () => <MenuItem active={option.active} icon={option.icon} label={option.title} />,
       }
     })
   }, [MenuItem, dispatch, menuActions])
@@ -91,17 +115,17 @@ function _SortButton({ orderBy }: FilterGroupProps): JSX.Element {
         alignment: 'right',
       }}
       testID="chain-selector"
-      onDismiss={() => {}}
     >
       <Flex
         row
-        backgroundColor={isDarkMode ? '$DEP_backgroundOverlay' : '$surface1'}
+        backgroundColor="$surface3"
         borderRadius="$rounded20"
         gap="$spacing4"
-        px="$spacing16"
+        pl="$spacing12"
+        pr="$spacing8"
         py="$spacing8"
       >
-        <Text ellipse color="$neutral2" flexShrink={1} numberOfLines={1} variant="buttonLabel2">
+        <Text ellipse color="$neutral1" flexShrink={1} numberOfLines={1} variant="buttonLabel2">
           {getTokensOrderBySelectedLabel(orderBy, t)}
         </Text>
         <RotatableChevron color="$neutral2" direction="down" height={iconSizes.icon20} width={iconSizes.icon20} />

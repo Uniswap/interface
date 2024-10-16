@@ -145,7 +145,6 @@ export function Swap({
   const isDark = useIsDarkMode()
   const screenSize = useScreenSize()
   const isExplore = useIsExplorePage()
-  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
 
   const universalSwapFlow = useFeatureFlag(FeatureFlags.UniversalSwap)
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -222,7 +221,7 @@ export function Swap({
                 {currentTab === SwapTab.Send && (
                   <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
                 )}
-                {currentTab === SwapTab.Buy && forAggregatorEnabled && <BuyForm disabled={disableTokenInputs} />}
+                {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} />}
               </SwapWrapper>
               <SwapBottomCard />
             </Flex>
@@ -267,7 +266,6 @@ function UniversalSwapFlow({
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { t } = useTranslation()
-  const forAggregatorEnabled = useFeatureFlag(FeatureFlags.ForAggregator)
   const swapCallback = useSwapCallback()
   const wrapCallback = useWrapCallback()
 
@@ -391,7 +389,7 @@ function UniversalSwapFlow({
         {currentTab === SwapTab.Send && (
           <SendForm disableTokenInputs={disableTokenInputs} onCurrencyChange={onCurrencyChange} />
         )}
-        {currentTab === SwapTab.Buy && forAggregatorEnabled && <BuyForm disabled={disableTokenInputs} />}
+        {currentTab === SwapTab.Buy && <BuyForm disabled={disableTokenInputs} />}
       </Flex>
     </>
   )

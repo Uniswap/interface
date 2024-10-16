@@ -8,7 +8,7 @@ import { TransactionModalInnerContainer } from 'uniswap/src/features/transaction
 import { useTransactionModalContext } from 'uniswap/src/features/transactions/TransactionModal/TransactionModalContext'
 import { TransactionStepFailedError, getErrorContent } from 'uniswap/src/features/transactions/errors'
 import { useSwapFormContext } from 'uniswap/src/features/transactions/swap/contexts/SwapFormContext'
-import { TransactionStepType } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+import { TransactionStepType } from 'uniswap/src/features/transactions/swap/types/steps'
 
 export function SwapErrorScreen({
   submissionError,

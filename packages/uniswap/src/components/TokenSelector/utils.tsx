@@ -164,12 +164,19 @@ function isExactTokenOptionMatch(searchResult: TokenOption, query: string): bool
   )
 }
 
-export function useTokenOptionsSection(
-  sectionKey: TokenOptionSection,
-  tokenOptions?: TokenOption[] | TokenOption[][],
-  rightElement?: JSX.Element,
-  name?: string,
-): TokenSection[] | undefined {
+export function useTokenOptionsSection({
+  sectionKey,
+  tokenOptions,
+  rightElement,
+  endElement,
+  name,
+}: {
+  sectionKey: TokenOptionSection
+  tokenOptions?: TokenOption[] | TokenOption[][]
+  rightElement?: JSX.Element
+  endElement?: JSX.Element
+  name?: string
+}): TokenSection[] | undefined {
   return useMemo(() => {
     if (!tokenOptions) {
       return undefined
@@ -189,10 +196,11 @@ export function useTokenOptionsSection(
             data: tokenOptions,
             name,
             rightElement,
+            endElement,
           },
         ]
       : undefined
-  }, [name, rightElement, sectionKey, tokenOptions])
+  }, [name, rightElement, endElement, sectionKey, tokenOptions])
 }
 
 export function isSwapListLoading(

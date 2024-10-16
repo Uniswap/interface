@@ -17,8 +17,8 @@ import { InterfaceEventNameLocal } from 'uniswap/src/features/telemetry/constant
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { HandledTransactionInterrupt } from 'uniswap/src/features/transactions/errors'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
+import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/types/steps'
 import { UniswapXTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import { UniswapXSignatureStep } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { percentFromFloat } from 'utilities/src/format/percent'
 

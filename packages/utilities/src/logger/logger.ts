@@ -1,7 +1,7 @@
 import { Extras } from '@sentry/types'
 import { logErrorToDatadog, logToDatadog, logWarningToDatadog } from 'utilities/src/logger/Datadog'
 import { Sentry } from 'utilities/src/logger/Sentry'
-import { LogLevel, LoggerErrorContext } from 'utilities/src/logger/types'
+import { LogLevel, LoggerErrorContext, OverridesSentryFingerprint } from 'utilities/src/logger/types'
 import { isInterface, isMobileApp, isWeb } from 'utilities/src/platform'
 
 // weird temp fix: the web app is complaining about __DEV__ being global
@@ -127,6 +127,8 @@ interface RNError {
 // Adds extra fields from errors provided by React Native
 export function addErrorExtras(error: unknown, captureContext: LoggerErrorContext): LoggerErrorContext {
   if (error instanceof Error) {
+    const updatedContext = { ...captureContext }
+
     const extras: Extras = {}
     const { nativeStackAndroid, userInfo } = error as RNError
 
@@ -138,9 +140,23 @@ export function addErrorExtras(error: unknown, captureContext: LoggerErrorContex
       extras.userInfo = userInfo
     }
 
-    return { ...captureContext, extra: { ...captureContext.extra, ...extras } }
+    updatedContext.extra = { ...updatedContext.extra, ...extras }
+
+    if (doesOverrideFingerprint(error)) {
+      updatedContext.fingerprint = ['{{ default }}', ...error.getFingerprint()]
+    }
+
+    return updatedContext
   }
   return captureContext
+}
+
+function doesOverrideFingerprint(error: unknown): error is OverridesSentryFingerprint {
+  return (
+    typeof error === 'object' &&
+    error !== null &&
+    typeof (error as OverridesSentryFingerprint).getFingerprint === 'function'
+  )
 }
 
 function pad(n: number, amount: number = 2): string {

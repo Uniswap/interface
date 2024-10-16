@@ -21,7 +21,7 @@ interface HeroProps {
 
 export function Hero({ scrollToRef, transition }: HeroProps) {
   const { height: scrollPosition } = useScroll()
-  const initialInputCurrency = useCurrency('ETH')
+  const initialInputCurrency = useCurrency('ETH', UniverseChainId.Mainnet)
   const navigate = useNavigate()
   const { t } = useTranslation()
 
@@ -111,7 +111,7 @@ export function Hero({ scrollToRef, transition }: HeroProps) {
               hideHeader
               hideFooter
               syncTabToUrl={false}
-              chainId={initialInputCurrency?.chainId ?? UniverseChainId.Mainnet}
+              chainId={UniverseChainId.Mainnet}
               initialInputCurrency={initialInputCurrency}
               swapRedirectCallback={swapRedirectCallback}
             />

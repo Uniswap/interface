@@ -99,7 +99,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         <circle
                           cx="28"
                           cy="28"
-                          fill="#4300B01F"
+                          fill="#FFBF171F"
                           r="28"
                         />
                         <g
@@ -107,8 +107,8 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         >
                           <path
                             clip-rule="evenodd"
-                            d="M13.2 6C9.22355 6 6 9.22355 6 13.2V34.8C6 38.7765 9.22355 42 13.2 42H34.8C38.7765 42 42 38.7765 42 34.8V13.2C42 9.22355 38.7765 6 34.8 6H13.2ZM26.1213 14.1213C24.9497 12.9497 23.0503 12.9497 21.8787 14.1213L14.1213 21.8787C12.9497 23.0503 12.9497 24.9497 14.1213 26.1213L21.8787 33.8787C23.0503 35.0503 24.9497 35.0503 26.1213 33.8787L33.8787 26.1213C35.0503 24.9497 35.0503 23.0503 33.8787 21.8787L26.1213 14.1213Z"
-                            fill="#4300B0"
+                            d="M28.541 24C28.541 23.6075 28.7998 23.264 29.1711 23.1367C35.8814 20.8368 40.9702 14.1754 41.9802 5.99363C42.1832 4.34926 40.8202 3 39.1634 3H8.8369C7.18005 3 5.81706 4.34926 6.02011 5.99363C7.03026 14.1742 12.1192 20.8349 18.8286 23.1357C19.2002 23.2632 19.4593 23.6071 19.4593 24C19.4593 24.3929 19.2002 24.7368 18.8286 24.8643C12.1192 27.1651 7.03026 33.8258 6.02011 42.0064C5.81706 43.6507 7.18005 45 8.8369 45H39.1634C40.8202 45 42.1832 43.6507 41.9802 42.0064C40.9702 33.8246 35.8814 27.1632 29.1711 24.8633C28.7998 24.736 28.541 24.3925 28.541 24Z"
+                            fill="#FFBF17"
                             fill-rule="evenodd"
                           />
                         </g>
@@ -127,9 +127,9 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         <span
                           class="font_heading _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _wordWrap-break-word _fontFamily-299667014 _fontSize-18px _lineHeight-24px _fontWeight-233016202 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _flexShrink-1"
                           data-disable-theme="true"
-                          data-testid="address-display/name/Jacob Haley"
+                          data-testid="address-display/name/Tamara Brekke"
                         >
-                          Jacob Haley
+                          Tamara Brekke
                         </span>
                       </div>
                     </div>
@@ -144,7 +144,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                           class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202"
                           data-disable-theme="true"
                         >
-                          0x​0fc6...be59
+                          0x​e0c6...ea11
                         </span>
                         <svg
                           fill="none"
@@ -325,7 +325,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                       <circle
                         cx="28"
                         cy="28"
-                        fill="#4300B01F"
+                        fill="#FFBF171F"
                         r="28"
                       />
                       <g
@@ -333,8 +333,8 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                       >
                         <path
                           clip-rule="evenodd"
-                          d="M13.2 6C9.22355 6 6 9.22355 6 13.2V34.8C6 38.7765 9.22355 42 13.2 42H34.8C38.7765 42 42 38.7765 42 34.8V13.2C42 9.22355 38.7765 6 34.8 6H13.2ZM26.1213 14.1213C24.9497 12.9497 23.0503 12.9497 21.8787 14.1213L14.1213 21.8787C12.9497 23.0503 12.9497 24.9497 14.1213 26.1213L21.8787 33.8787C23.0503 35.0503 24.9497 35.0503 26.1213 33.8787L33.8787 26.1213C35.0503 24.9497 35.0503 23.0503 33.8787 21.8787L26.1213 14.1213Z"
-                          fill="#4300B0"
+                          d="M28.541 24C28.541 23.6075 28.7998 23.264 29.1711 23.1367C35.8814 20.8368 40.9702 14.1754 41.9802 5.99363C42.1832 4.34926 40.8202 3 39.1634 3H8.8369C7.18005 3 5.81706 4.34926 6.02011 5.99363C7.03026 14.1742 12.1192 20.8349 18.8286 23.1357C19.2002 23.2632 19.4593 23.6071 19.4593 24C19.4593 24.3929 19.2002 24.7368 18.8286 24.8643C12.1192 27.1651 7.03026 33.8258 6.02011 42.0064C5.81706 43.6507 7.18005 45 8.8369 45H39.1634C40.8202 45 42.1832 43.6507 41.9802 42.0064C40.9702 33.8246 35.8814 27.1632 29.1711 24.8633C28.7998 24.736 28.541 24.3925 28.541 24Z"
+                          fill="#FFBF17"
                           fill-rule="evenodd"
                         />
                       </g>
@@ -353,9 +353,9 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                       <span
                         class="font_heading _display-inline _boxSizing-border-box _whiteSpace-nowrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843134974 _wordWrap-break-word _fontFamily-299667014 _fontSize-18px _lineHeight-24px _fontWeight-233016202 _maxWidth-10037 _overflowX-hidden _overflowY-hidden _textOverflow-ellipsis _textAlign-center _flexShrink-1"
                         data-disable-theme="true"
-                        data-testid="address-display/name/Jacob Haley"
+                        data-testid="address-display/name/Tamara Brekke"
                       >
-                        Jacob Haley
+                        Tamara Brekke
                       </span>
                     </div>
                   </div>
@@ -370,7 +370,7 @@ exports[`AccountSwitcherScreen renders correctly 1`] = `
                         class="font_body _display-inline _boxSizing-border-box _whiteSpace-pre-wrap _mt-0px _mr-0px _mb-0px _ml-0px _color-843135005 _fontFamily-299667014 _wordWrap-break-word _fontSize-229441158 _lineHeight-222976511 _fontWeight-233016202"
                         data-disable-theme="true"
                       >
-                        0x​0fc6...be59
+                        0x​e0c6...ea11
                       </span>
                       <svg
                         fill="none"

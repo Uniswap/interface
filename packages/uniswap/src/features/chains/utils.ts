@@ -1,5 +1,6 @@
 import { BigNumber, BigNumberish } from '@ethersproject/bignumber'
 import { ChainId } from '@uniswap/sdk-core'
+import { useMemo } from 'react'
 import {
   GQL_MAINNET_CHAINS_MUTABLE,
   GQL_TESTNET_CHAINS_MUTABLE,
@@ -79,7 +80,7 @@ export function isMainnetChainId(chainId?: UniverseChainId): boolean {
   return chainId === UniverseChainId.Mainnet || chainId === UniverseChainId.Sepolia
 }
 
-export function fromGraphQLChain(chain: Chain | undefined): UniverseChainId | null {
+export function fromGraphQLChain(chain: Chain | string | undefined): UniverseChainId | null {
   switch (chain) {
     case Chain.Ethereum:
       return UniverseChainId.Mainnet
@@ -116,32 +117,6 @@ export function fromGraphQLChain(chain: Chain | undefined): UniverseChainId | nu
 
 export function getPollingIntervalByBlocktime(chainId?: UniverseChainId): PollingInterval {
   return isMainnetChainId(chainId) ? PollingInterval.Fast : PollingInterval.LightningMcQueen
-}
-
-export function fromMoonpayNetwork(moonpayNetwork: string | undefined): UniverseChainId | undefined {
-  switch (moonpayNetwork) {
-    case Chain.Arbitrum.toLowerCase():
-      return UniverseChainId.ArbitrumOne
-    case Chain.Optimism.toLowerCase():
-      return UniverseChainId.Optimism
-    case Chain.Polygon.toLowerCase():
-      return UniverseChainId.Polygon
-    case Chain.Bnb.toLowerCase():
-      return UniverseChainId.Bnb
-    // Moonpay still refers to BNB chain as BSC so including both BNB and BSC cases
-    case 'bsc':
-      return UniverseChainId.Bnb
-    case Chain.Base.toLowerCase():
-      return UniverseChainId.Base
-    case Chain.Avalanche.toLowerCase():
-      return UniverseChainId.Avalanche
-    case Chain.Celo.toLowerCase():
-      return UniverseChainId.Celo
-    case undefined:
-      return UniverseChainId.Mainnet
-    default:
-      return undefined
-  }
 }
 
 export function fromUniswapWebAppLink(network: string | null): UniverseChainId | null {
@@ -232,9 +207,13 @@ export function useFeatureFlaggedChainIds(): UniverseChainId[] {
 
   const worldChainEnabled = useFeatureFlag(FeatureFlags.WorldChain)
 
-  return filterChainIdsByFeatureFlag({
-    [UniverseChainId.WorldChain]: worldChainEnabled,
-  })
+  return useMemo(
+    () =>
+      filterChainIdsByFeatureFlag({
+        [UniverseChainId.WorldChain]: worldChainEnabled,
+      }),
+    [worldChainEnabled],
+  )
 }
 
 export function getEnabledChains({
@@ -272,9 +251,14 @@ export function getEnabledChains({
       (connectedWalletChainIds ? connectedWalletChainIds.includes(chainId) : true),
   )
 
+  const supportedGqlChains = GQL_MAINNET_CHAINS_MUTABLE.filter((chain) => {
+    const chainId = fromGraphQLChain(chain)
+    return chainId && supportedChainIds.includes(chainId)
+  })
+
   return {
     chains: supportedChainIds,
-    gqlChains: GQL_MAINNET_CHAINS_MUTABLE,
+    gqlChains: supportedGqlChains,
     defaultChainId: UniverseChainId.Mainnet as UniverseChainId,
     isTestnetModeEnabled,
   }

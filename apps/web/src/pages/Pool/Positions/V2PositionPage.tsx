@@ -5,8 +5,9 @@ import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInf
 import { parseRestPosition, useGetPoolTokenPercentage } from 'components/Liquidity/utils'
 import { LoadingRows } from 'components/Loader/styled'
 import { DoubleCurrencyAndChainLogo } from 'components/Logo/DoubleLogo'
+import { useChainFromUrlParam } from 'constants/chains'
 import { HeaderButton } from 'pages/Pool/Positions/PositionPage'
-import { LoadingRow } from 'pages/Pool/Positions/shared'
+import { LoadingRow, useRefetchOnLpModalClose } from 'pages/Pool/Positions/shared'
 import { useMemo } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useNavigate, useParams } from 'react-router-dom'
@@ -36,15 +37,20 @@ const BodyWrapper = styled(Main, {
 
 export default function V2PositionPage() {
   const { pairAddress } = useParams<{ pairAddress: string }>()
+  const chainInfo = useChainFromUrlParam()
   const account = useAccount()
 
-  const { data, isLoading: positionLoading } = useGetPositionQuery(
+  const {
+    data,
+    isLoading: positionLoading,
+    refetch,
+  } = useGetPositionQuery(
     account.address
       ? {
           owner: account.address,
           protocolVersion: ProtocolVersion.V2,
           pairAddress,
-          chainId: account.chainId,
+          chainId: chainInfo?.id ?? account.chainId,
         }
       : undefined,
   )
@@ -53,6 +59,8 @@ export default function V2PositionPage() {
   const dispatch = useAppDispatch()
   const navigate = useNavigate()
   const { formatCurrencyAmount, formatPercent } = useLocalizationContext()
+
+  useRefetchOnLpModalClose(refetch)
 
   const { value: v4Enabled, isLoading } = useFeatureFlagWithLoading(FeatureFlags.V4Everywhere)
 

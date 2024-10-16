@@ -16,14 +16,14 @@ import { useOptimizedSearchParams } from 'src/app/hooks/useOptimizedSearchParams
 import { HomeQueryParams, HomeTabs } from 'src/app/navigation/constants'
 import { navigate } from 'src/app/navigation/state'
 import { Flex, Loader, Text, TouchableArea, styled } from 'ui/src'
+import { useSelectAddressHasNotifications } from 'uniswap/src/features/notifications/hooks'
+import { setNotificationStatus } from 'uniswap/src/features/notifications/slice'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { logger } from 'utilities/src/logger/logger'
 import { ONE_MINUTE_MS, ONE_SECOND_MS } from 'utilities/src/time/time'
 import { useTimeout } from 'utilities/src/time/timing'
 import { NFTS_TAB_DATA_DEPENDENCIES } from 'wallet/src/components/nfts/NftsList'
 import { PendingNotificationBadge } from 'wallet/src/features/notifications/components/PendingNotificationBadge'
-import { useSelectAddressHasNotifications } from 'wallet/src/features/notifications/hooks'
-import { setNotificationStatus } from 'wallet/src/features/notifications/slice'
 import { PortfolioBalance } from 'wallet/src/features/portfolio/PortfolioBalance'
 import { useHeartbeatReporter, useLastBalancesReporter } from 'wallet/src/features/telemetry/hooks'
 import { useActiveAccountAddressWithThrow } from 'wallet/src/features/wallet/hooks'
@@ -230,7 +230,7 @@ const AnimatedTab = styled(Flex, {
       true: {},
       false: {
         pointerEvents: 'none',
-        maxHeight: 300,
+        display: 'none',
       },
     },
 

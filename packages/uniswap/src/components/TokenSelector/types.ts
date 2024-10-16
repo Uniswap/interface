@@ -27,6 +27,7 @@ export type TokenSection = {
   sectionKey: TokenOptionSection
   name?: string
   rightElement?: JSX.Element
+  endElement?: JSX.Element
 }
 
 export type TokenSectionsHookProps = {

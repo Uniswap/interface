@@ -121,23 +121,42 @@ function useTokenSectionsForSwapOutput({
   // we draw the Suggested pills as a single item of a section list, so `data` is TokenOption[][]
 
   const suggestedSectionOptions = useMemo(() => [commonTokenOptions ?? []], [commonTokenOptions])
-  const suggestedSection = useTokenOptionsSection(TokenOptionSection.SuggestedTokens, suggestedSectionOptions)
+  const suggestedSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.SuggestedTokens,
+    tokenOptions: suggestedSectionOptions,
+  })
 
-  const portfolioSection = useTokenOptionsSection(TokenOptionSection.YourTokens, portfolioTokenOptions)
-  const recentSection = useTokenOptionsSection(TokenOptionSection.RecentTokens, recentlySearchedTokenOptions)
-  const favoriteSection = useTokenOptionsSection(TokenOptionSection.FavoriteTokens, favoriteTokenOptions)
+  const portfolioSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.YourTokens,
+    tokenOptions: portfolioTokenOptions,
+  })
+  const recentSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.RecentTokens,
+    tokenOptions: recentlySearchedTokenOptions,
+  })
+  const favoriteSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.FavoriteTokens,
+    tokenOptions: favoriteTokenOptions,
+  })
 
   const popularMinusPortfolioTokens = useMemo(
     () => tokenOptionDifference(popularTokenOptions, portfolioTokenOptions),
     [popularTokenOptions, portfolioTokenOptions],
   )
-  const popularSection = useTokenOptionsSection(TokenOptionSection.PopularTokens, popularMinusPortfolioTokens)
+  const popularSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.PopularTokens,
+    tokenOptions: popularMinusPortfolioTokens,
+  })
 
   const bridgingSectionTokenOptions = useMemo(
     () => (shouldNestBridgingTokens ? [bridgingTokenOptions ?? []] : bridgingTokenOptions ?? []),
     [bridgingTokenOptions, shouldNestBridgingTokens],
   )
-  const bridgingSection = useTokenOptionsSection(TokenOptionSection.BridgingTokens, bridgingSectionTokenOptions, newTag)
+  const bridgingSection = useTokenOptionsSection({
+    sectionKey: TokenOptionSection.BridgingTokens,
+    tokenOptions: bridgingSectionTokenOptions,
+    rightElement: newTag,
+  })
 
   const sections = useMemo(() => {
     if (isSwapListLoading(loading, portfolioSection, popularSection)) {

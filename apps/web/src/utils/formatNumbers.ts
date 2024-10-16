@@ -1,5 +1,5 @@
 import { formatEther as ethersFormatEther } from '@ethersproject/units'
-import { Currency, CurrencyAmount, Percent, Price, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, Percent, Price } from '@uniswap/sdk-core'
 import { getCurrencySymbolDisplayType } from 'constants/localCurrencies'
 import { useActiveLocalCurrency } from 'hooks/useActiveLocalCurrency'
 import { useActiveLocale } from 'hooks/useActiveLocale'
@@ -640,7 +640,7 @@ function formatPrice({
 }
 
 interface FormatTickPriceOptions {
-  price?: Price<Token, Token>
+  price?: Price<Currency, Currency>
   atLimit: { [bound in Bound]?: boolean | undefined }
   direction: Bound
   placeholder?: string

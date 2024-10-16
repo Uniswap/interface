@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { getProtocolItems, useV3PositionDerivedInfo } from 'components/Liquidity/utils'
+import { getProtocolItems, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/utils'
 import { ZERO_ADDRESS } from 'constants/misc'
 import JSBI from 'jsbi'
 import { useLiquidityModalContext } from 'pages/RemoveLiquidity/RemoveLiquidityModalContext'
@@ -48,7 +48,7 @@ export function useRemoveLiquidityTxAndGasInfo({ account }: { account?: string }
 
   const approvalsNeeded = Boolean(v2LpTokenApproval)
 
-  const { feeValue0, feeValue1 } = useV3PositionDerivedInfo(positionInfo)
+  const { feeValue0, feeValue1 } = useV3OrV4PositionDerivedInfo(positionInfo)
 
   const decreaseCalldataQueryParams: DecreaseLPPositionRequest | undefined = useMemo(() => {
     const apiProtocolItems = getProtocolItems(positionInfo?.version)

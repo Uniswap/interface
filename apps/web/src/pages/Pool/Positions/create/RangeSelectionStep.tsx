@@ -9,7 +9,7 @@ import { useRangeHopCallbacks } from 'state/mint/v3/hooks'
 import { Button, Flex, FlexProps, SegmentedControl, Text, useSporeColors } from 'ui/src'
 import { SwapActionButton } from 'ui/src/components/icons/SwapActionButton'
 import { fonts } from 'ui/src/theme'
-import { AmountInput } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
+import { AmountInput, numericInputRegex } from 'uniswap/src/components/CurrencyInputPanel/AmountInput'
 import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { NumberType, useFormatter } from 'utils/formatNumbers'
 
@@ -29,6 +29,10 @@ function RangeControl({ value, active }: { value: string; active: boolean }) {
       {value}
     </Text>
   )
+}
+
+function numericInputEnforcerWithInfinity(value?: string): boolean {
+  return !value || numericInputRegex.test(value) || value === '∞'
 }
 
 function RangeInput({
@@ -111,6 +115,7 @@ function RangeInput({
           value={displayUserTypedValue ? typedValue : value}
           onChangeText={(text) => handlePriceRangeInput(input, text)}
           onBlur={() => setDisplayUserTypedValue(false)}
+          inputEnforcer={numericInputEnforcerWithInfinity}
         />
         <Text variant="body3" color="$neutral2">
           <Trans
@@ -145,7 +150,17 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
   const {
     priceRangeState: { fullRange },
     setPriceRangeState,
-    derivedPriceRangeInfo: { baseAndQuoteTokens, price, prices, pricesAtTicks, ticks, isSorted, ticksAtLimit },
+    derivedPriceRangeInfo: {
+      baseAndQuoteTokens,
+      price,
+      prices,
+      pricesAtTicks,
+      ticks,
+      isSorted,
+      ticksAtLimit,
+      invalidPrice,
+      invalidRange,
+    },
   } = usePriceRangeContext()
 
   const { TOKEN0: token0, TOKEN1: token1 } = derivedPositionInfo.currencies
@@ -212,6 +227,8 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
     },
     [setPriceRangeState],
   )
+
+  const invalidState = invalidPrice || invalidRange
 
   return (
     <Container {...rest}>
@@ -305,9 +322,10 @@ export const SelectPriceRangeStep = ({ onContinue, ...rest }: { onContinue: () =
           backgroundColor: undefined,
         }}
         onPress={onContinue}
+        disabled={invalidState}
       >
         <Text variant="buttonLabel1" color="$surface1">
-          <Trans i18nKey="common.button.continue" />
+          {invalidState ? t(`mint.v3.input.invalidPrice.error`) : t(`common.button.continue`)}
         </Text>
       </Button>
     </Container>

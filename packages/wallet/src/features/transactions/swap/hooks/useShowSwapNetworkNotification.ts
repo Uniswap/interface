@@ -1,9 +1,9 @@
 import { useCallback } from 'react'
 import { useDispatch } from 'react-redux'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { ONE_SECOND_MS } from 'utilities/src/time/time'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 
 const HIDE_DELAY = ONE_SECOND_MS * 2
 

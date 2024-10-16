@@ -7,6 +7,8 @@ import { ColorTokens, Flex, SpaceTokens, Text, TextProps, TouchableArea, useHapt
 import { CopySheets } from 'ui/src/components/icons'
 import { fonts } from 'ui/src/theme'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType, CopyNotificationType } from 'uniswap/src/features/notifications/types'
 import { ElementName } from 'uniswap/src/features/telemetry/constants'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
 import { TestID } from 'uniswap/src/test/fixtures/testIDs'
@@ -14,8 +16,6 @@ import { sanitizeAddressText, shortenAddress } from 'uniswap/src/utils/addresses
 import { setClipboard } from 'uniswap/src/utils/clipboard'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
 import { DisplayNameText } from 'wallet/src/components/accounts/DisplayNameText'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType, CopyNotificationType } from 'wallet/src/features/notifications/types'
 import { useDisplayName } from 'wallet/src/features/wallet/hooks'
 import { DisplayNameType } from 'wallet/src/features/wallet/types'
 

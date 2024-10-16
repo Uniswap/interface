@@ -66,8 +66,8 @@ export const BridgeIcon = (
     borderRadius="$roundedFull"
     overflow="hidden"
     backgroundColor="$statusSuccess"
-    p="$spacing4"
+    p="$spacing1"
   >
-    <Shuffle size={iconSizes.icon12} color="black" backgroundColor="$statusSuccess" />
+    <Shuffle size={iconSizes.icon12} color="$surface1" backgroundColor="$statusSuccess" />
   </Flex>
 )

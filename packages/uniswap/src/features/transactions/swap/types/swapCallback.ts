@@ -1,7 +1,7 @@
 import { CurrencyAmount, Currency } from "@uniswap/sdk-core"
 import { SignerMnemonicAccountMeta } from "uniswap/src/features/accounts/types"
+import { TransactionStep } from "uniswap/src/features/transactions/swap/types/steps";
 import { ValidatedSwapTxContext } from "uniswap/src/features/transactions/swap/types/swapTxAndGasInfo"
-import { TransactionStep } from "uniswap/src/features/transactions/swap/utils/generateTransactionSteps"
 
 export type SetCurrentStepFn = (args: { step: TransactionStep; accepted: boolean }) => void
 

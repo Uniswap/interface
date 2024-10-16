@@ -15,16 +15,21 @@ import { maybeLogFirstSwapAction } from 'uniswap/src/features/transactions/swap/
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { CurrencyField } from 'uniswap/src/types/currency'
 import { areCurrencyIdsEqual, currencyAddress, currencyId } from 'uniswap/src/utils/currencyId'
+import { useValueAsRef } from 'utilities/src/react/useValueAsRef'
 import { useTrace } from 'utilities/src/telemetry/trace/TraceContext'
 
 export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JSX.Element {
-  const trace = useTrace()
-  const account = useAccountMeta()
-  const { isTestnetModeEnabled, defaultChainId } = useEnabledChains()
   const swapContext = useSwapFormContext()
+
+  const traceRef = useValueAsRef(useTrace())
+  const swapContextRef = useValueAsRef(swapContext)
+
+  const activeAccountAddress = useAccountMeta()?.address
+
+  const { isTestnetModeEnabled, defaultChainId } = useEnabledChains()
   const { setIsSwapTokenSelectorOpen } = useUniswapContext()
-  const { updateSwapForm, exactCurrencyField, selectingCurrencyField, output, input, filteredChainIds } = swapContext
-  const activeAccountAddress = account?.address
+
+  const { updateSwapForm, selectingCurrencyField, output, input, filteredChainIds } = swapContext
 
   if (isModalOpen && !selectingCurrencyField) {
     throw new Error('TokenSelector rendered without `selectingCurrencyField`')
@@ -40,6 +45,8 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
 
   const onSelectCurrency = useCallback(
     (currency: Currency, field: CurrencyField, isBridgePair: boolean) => {
+      const swapCtx = swapContextRef.current
+
       const tradeableAsset: TradeableAsset = {
         address: currencyAddress(currency),
         chainId: currency.chainId,
@@ -49,14 +56,14 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
       const newState: Partial<SwapFormState> = {}
 
       const otherField = field === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
-      const otherFieldTradeableAsset = field === CurrencyField.INPUT ? output : input
+      const otherFieldTradeableAsset = field === CurrencyField.INPUT ? swapCtx.output : swapCtx.input
 
       // swap order if tokens are the same
-      if (otherFieldTradeableAsset && currencyId(currency) === currencyId(otherFieldTradeableAsset)) {
-        const previouslySelectedTradableAsset = field === CurrencyField.INPUT ? input : output
+      if (otherFieldTradeableAsset && areCurrencyIdsEqual(currencyId(currency), currencyId(otherFieldTradeableAsset))) {
+        const previouslySelectedTradableAsset = field === CurrencyField.INPUT ? swapCtx.input : swapCtx.output
         // Given that we're swapping the order of tokens, we should also swap the `exactCurrencyField` and update the `focusOnCurrencyField` to make sure the correct input field is focused.
         newState.exactCurrencyField =
-          exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
+          swapCtx.exactCurrencyField === CurrencyField.INPUT ? CurrencyField.OUTPUT : CurrencyField.INPUT
         newState.focusOnCurrencyField = newState.exactCurrencyField
         newState[otherField] = previouslySelectedTradableAsset
       } else if (currency.chainId !== otherFieldTradeableAsset?.chainId && !isBridgePair) {
@@ -80,37 +87,27 @@ export function SwapTokenSelector({ isModalOpen }: { isModalOpen: boolean }): JS
       if (!isBridgePair) {
         // If selecting output, set the input and output chainIds
         // If selecting input and output is already selected, also set the input chainId
-        if (field === CurrencyField.OUTPUT || !!output) {
-          filteredChainIds[CurrencyField.INPUT] = currency.chainId
-          filteredChainIds[CurrencyField.OUTPUT] = currency.chainId
+        if (field === CurrencyField.OUTPUT || !!swapCtx.output) {
+          swapCtx.filteredChainIds[CurrencyField.INPUT] = currency.chainId
+          swapCtx.filteredChainIds[CurrencyField.OUTPUT] = currency.chainId
           // If selecting input, only set the output chainId
         } else {
-          filteredChainIds[CurrencyField.OUTPUT] = currency.chainId
+          swapCtx.filteredChainIds[CurrencyField.OUTPUT] = currency.chainId
         }
 
-        newState.filteredChainIds = filteredChainIds
+        newState.filteredChainIds = swapCtx.filteredChainIds
       }
 
       newState[field] = tradeableAsset
 
-      updateSwapForm(newState)
-
-      // Hide screen when done selecting.
       onHideTokenSelector()
-
-      maybeLogFirstSwapAction(trace)
+      updateSwapForm(newState)
+      maybeLogFirstSwapAction(traceRef.current)
     },
-    [
-      output,
-      input,
-      updateSwapForm,
-      onHideTokenSelector,
-      trace,
-      exactCurrencyField,
-      inputTokenProjects,
-      outputTokenProjects,
-      filteredChainIds,
-    ],
+    // We want to be very careful about how often this function is re-created because it causes the entire token selector list to re-render.
+    // This is why we use `swapContextRef` so that we can access the latest swap context without causing a re-render.
+    // Do not add new dependencies to this function unless you are sure this won't degrade perf.
+    [swapContextRef, onHideTokenSelector, updateSwapForm, traceRef, inputTokenProjects, outputTokenProjects],
   )
 
   const getChainId = (): UniverseChainId | undefined => {

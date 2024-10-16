@@ -4,7 +4,6 @@ import { Chain } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/t
 import {
   chainIdToHexadecimalString,
   fromGraphQLChain,
-  fromMoonpayNetwork,
   fromUniswapWebAppLink,
   getEnabledChains,
   getPollingIntervalByBlocktime,
@@ -39,20 +38,6 @@ describe(fromGraphQLChain, () => {
 
   it('handles unsupported chain', () => {
     expect(fromGraphQLChain(Chain.UnknownChain)).toEqual(null)
-  })
-})
-
-describe(fromMoonpayNetwork, () => {
-  it('handles supported chain', () => {
-    expect(fromMoonpayNetwork(undefined)).toEqual(UniverseChainId.Mainnet)
-    expect(fromMoonpayNetwork(Chain.Arbitrum.toLowerCase())).toEqual(UniverseChainId.ArbitrumOne)
-    expect(fromMoonpayNetwork(Chain.Optimism.toLowerCase())).toEqual(UniverseChainId.Optimism)
-    expect(fromMoonpayNetwork(Chain.Polygon.toLowerCase())).toEqual(UniverseChainId.Polygon)
-    expect(fromMoonpayNetwork(Chain.Base.toLowerCase())).toEqual(UniverseChainId.Base)
-  })
-
-  it('handle unsupported chain', () => {
-    expect(fromMoonpayNetwork('unknown')).toBeUndefined()
   })
 })
 
@@ -153,7 +138,6 @@ describe('getEnabledChains', () => {
         Chain.Bnb,
         Chain.Polygon,
         Chain.Zksync,
-        Chain.Worldchain,
         Chain.Base,
         Chain.Arbitrum,
         Chain.Celo,
@@ -173,20 +157,7 @@ describe('getEnabledChains', () => {
       }),
     ).toEqual({
       chains: [UniverseChainId.Mainnet, UniverseChainId.Polygon],
-      gqlChains: [
-        Chain.Ethereum,
-        Chain.Optimism,
-        Chain.Bnb,
-        Chain.Polygon,
-        Chain.Zksync,
-        Chain.Worldchain,
-        Chain.Base,
-        Chain.Arbitrum,
-        Chain.Celo,
-        Chain.Avalanche,
-        Chain.Blast,
-        Chain.Zora,
-      ],
+      gqlChains: [Chain.Ethereum, Chain.Polygon],
       defaultChainId: UniverseChainId.Mainnet,
       isTestnetModeEnabled: false,
     })

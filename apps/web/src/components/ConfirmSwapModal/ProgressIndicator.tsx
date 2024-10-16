@@ -116,7 +116,7 @@ export default function ProgressIndicator({
   const stepDetails: Record<ProgressIndicatorStep, StepDetails> = useMemo(
     () => ({
       [ConfirmModalState.WRAPPING]: {
-        icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
+        icon: <CurrencyLogo currency={trade?.inputAmount.currency} size={24} />,
         rippleColor: inputTokenColor,
         previewTitle: t('common.wrap', { symbol: nativeCurrency.symbol }),
         actionRequiredTitle: t('common.wrapIn', { symbol: nativeCurrency.symbol }),
@@ -125,14 +125,14 @@ export default function ProgressIndicator({
         learnMoreLinkHref: uniswapUrls.helpArticleUrls.wethExplainer,
       },
       [ConfirmModalState.RESETTING_TOKEN_ALLOWANCE]: {
-        icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
+        icon: <CurrencyLogo currency={trade?.inputAmount.currency} size={24} />,
         rippleColor: inputTokenColor,
         previewTitle: t('common.resetLimit', { symbol: trade?.inputAmount.currency.symbol }),
         actionRequiredTitle: t('common.resetLimitWallet', { symbol: trade?.inputAmount.currency.symbol }),
         inProgressTitle: t('common.resettingLimit', { symbol: trade?.inputAmount.currency.symbol }),
       },
       [ConfirmModalState.APPROVING_TOKEN]: {
-        icon: <CurrencyLogo currency={trade?.inputAmount.currency} />,
+        icon: <CurrencyLogo currency={trade?.inputAmount.currency} size={24} />,
         rippleColor: inputTokenColor,
         previewTitle: t('common.approveSpend', { symbol: trade?.inputAmount.currency.symbol }),
         actionRequiredTitle: t('common.wallet.approve'),

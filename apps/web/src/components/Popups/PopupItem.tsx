@@ -9,6 +9,8 @@ import { useAccount } from 'hooks/useAccount'
 import { useEffect } from 'react'
 import { useRemovePopup } from 'state/application/hooks'
 import { PopupContent, PopupType } from 'state/application/reducer'
+import { Flex, Text } from 'ui/src'
+import { Shuffle } from 'ui/src/components/icons/Shuffle'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { t } from 'uniswap/src/i18n'
@@ -65,6 +67,14 @@ export default function PopupItem({
         />
       )
     }
+    case PopupType.Bridge: {
+      return (
+        <ToastRegularSimple
+          onDismiss={onClose}
+          icon={<BridgeToast inputChainId={content.inputChainId} outputChainId={content.outputChainId} />}
+        />
+      )
+    }
   }
 }
 
@@ -79,4 +89,32 @@ function getSwitchNetworkTitle(action: SwapTab, chainId: UniverseChainId) {
     default:
       return ''
   }
+}
+
+function BridgeToast({
+  inputChainId,
+  outputChainId,
+}: {
+  inputChainId: UniverseChainId
+  outputChainId: UniverseChainId
+}): JSX.Element {
+  const originChain = UNIVERSE_CHAIN_INFO[inputChainId]
+  const targetChain = UNIVERSE_CHAIN_INFO[outputChainId]
+  return (
+    <Flex row gap="$gap8">
+      <Flex row gap="$gap4">
+        <NetworkLogo chainId={inputChainId} />
+        <Text variant="body2" lineHeight={20}>
+          {originChain.label}
+        </Text>
+      </Flex>
+      <Shuffle color="$neutral2" size="$icon.20" />
+      <Flex row gap="$gap4">
+        <NetworkLogo chainId={outputChainId} />
+        <Text variant="body2" lineHeight={20}>
+          {targetChain.label}
+        </Text>
+      </Flex>
+    </Flex>
+  )
 }

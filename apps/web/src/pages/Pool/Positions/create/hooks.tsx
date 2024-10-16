@@ -2,11 +2,14 @@
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, V2_FACTORY_ADDRESSES } from '@uniswap/sdk-core'
 import { Pair, computePairAddress } from '@uniswap/v2-sdk'
-import { Pool, Position, TICK_SPACINGS, TickMath, nearestUsableTick } from '@uniswap/v3-sdk'
+import { Pool, Position, TICK_SPACINGS, TickMath, encodeSqrtRatioX96, nearestUsableTick } from '@uniswap/v3-sdk'
 import { DepositInfo, DepositState } from 'components/Liquidity/types'
 import { getPairFromRest, getPoolFromRest, parseV3FeeTier } from 'components/Liquidity/utils'
+import { ConnectWalletButtonText } from 'components/NavBar/accountCTAsExperimentUtils'
 import { useCurrencyInfo } from 'hooks/Tokens'
 import { useAccount } from 'hooks/useAccount'
+import { useSwapTaxes } from 'hooks/useSwapTaxes'
+import JSBI from 'jsbi'
 import { useCurrencyBalances } from 'lib/hooks/useCurrencyBalance'
 import tryParseCurrencyAmount from 'lib/utils/tryParseCurrencyAmount'
 import { useCreatePositionContext, usePriceRangeContext } from 'pages/Pool/Positions/create/CreatePositionContext'
@@ -17,6 +20,7 @@ import { PositionField } from 'types/position'
 import { useGetPair } from 'uniswap/src/data/rest/getPair'
 import { useGetPoolsByTokens } from 'uniswap/src/data/rest/getPools'
 import { useUSDCValue } from 'uniswap/src/features/transactions/swap/hooks/useUSDCPrice'
+import { Trans, useTranslation } from 'uniswap/src/i18n'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { getTickToPrice } from 'utils/getTickToPrice'
 
@@ -38,6 +42,7 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
     [inputCurrencyInfo, outputCurrencyInfo],
   )
 
+  // TODO (WEB-4920): skip the following logic if creating a v4 position, because v4 allows native
   const { TOKEN0, TOKEN1 } = currencies
   const tokens = useMemo(
     () =>
@@ -61,7 +66,12 @@ export function useDerivedPositionInfo(state: PositionState): CreatePositionInfo
   )
 
   const pool = useMemo(() => {
-    return getPoolFromRest({ pool: poolData?.pools?.[0], token0: sortedTokens?.[0], token1: sortedTokens?.[1] })
+    return getPoolFromRest({
+      pool: poolData?.pools?.[0],
+      token0: sortedTokens?.[0],
+      token1: sortedTokens?.[1],
+      protocolVersion: ProtocolVersion.V3,
+    })
   }, [poolData?.pools, sortedTokens])
 
   const pairsQueryEnabled = protocolVersion === ProtocolVersion.V2
@@ -124,8 +134,9 @@ export function useDerivedPriceRangeInfo(state: PriceRangeState): PriceRangeInfo
     positionState: { fee },
     derivedPositionInfo,
   } = useCreatePositionContext()
+  const account = useAccount()
 
-  const { sortedTokens, tokens, protocolVersion } = derivedPositionInfo
+  const { sortedTokens, tokens, protocolVersion, currencies } = derivedPositionInfo
   const pool =
     protocolVersion === ProtocolVersion.V3 || protocolVersion === ProtocolVersion.V4
       ? derivedPositionInfo.pool
@@ -164,6 +175,7 @@ export function useDerivedPriceRangeInfo(state: PriceRangeState): PriceRangeInfo
         ? tryParseTick(sortedToken1, sortedToken0, fee, state.minPrice)
         : tryParseTick(sortedToken0, sortedToken1, fee, state.maxPrice)
   const ticks = useMemo(() => [lowerTick, upperTick], [lowerTick, upperTick])
+  const invalidRange = Boolean(lowerTick && upperTick && lowerTick >= upperTick)
 
   const ticksAtLimit = useMemo(
     () => (state.fullRange ? [true, true] : [lowerTick === tickSpaceLimits[0], upperTick === tickSpaceLimits[1]]),
@@ -219,6 +231,46 @@ export function useDerivedPriceRangeInfo(state: PriceRangeState): PriceRangeInfo
     return isSorted ? pool.token0Price : pool.token1Price
   }, [baseToken, pool, quoteToken])
 
+  const invalidPrice = useMemo(() => {
+    const sqrtRatioX96 = price ? encodeSqrtRatioX96(price.numerator, price.denominator) : undefined
+    return (
+      price &&
+      sqrtRatioX96 &&
+      !(
+        JSBI.greaterThanOrEqual(sqrtRatioX96, TickMath.MIN_SQRT_RATIO) &&
+        JSBI.lessThan(sqrtRatioX96, TickMath.MAX_SQRT_RATIO)
+      )
+    )
+  }, [price])
+
+  const outOfRange = Boolean(
+    !invalidRange && price && prices[0] && prices[1] && (price.lessThan(prices[0]) || price.greaterThan(prices[1])),
+  )
+
+  const deposit0Disabled = Boolean(upperTick && pool && pool.tickCurrent >= upperTick)
+  const deposit1Disabled = Boolean(lowerTick && pool && pool.tickCurrent <= lowerTick)
+
+  const depositADisabled =
+    invalidRange ||
+    Boolean(
+      (deposit0Disabled && pool && sortedTokens && sortedTokens[0] && pool.token0.equals(sortedTokens[0])) ||
+        (deposit1Disabled && pool && sortedTokens && sortedTokens[0] && pool.token1.equals(sortedTokens[0])),
+    )
+  const depositBDisabled =
+    invalidRange ||
+    Boolean(
+      (deposit0Disabled && pool && sortedTokens && sortedTokens[1] && pool.token0.equals(sortedTokens[1])) ||
+        (deposit1Disabled && pool && sortedTokens && sortedTokens[1] && pool.token1.equals(sortedTokens[1])),
+    )
+
+  const { inputTax: currencyATax, outputTax: currencyBTax } = useSwapTaxes(
+    currencies[PositionField.TOKEN0]?.isToken ? currencies[PositionField.TOKEN0].address : undefined,
+    currencies[PositionField.TOKEN1]?.isToken ? currencies[PositionField.TOKEN1].address : undefined,
+    account.chainId,
+  )
+
+  const isTaxed = currencyATax.greaterThan(0) || currencyBTax.greaterThan(0)
+
   return useMemo(
     () => ({
       ticks,
@@ -231,18 +283,30 @@ export function useDerivedPriceRangeInfo(state: PriceRangeState): PriceRangeInfo
       tickSpaceLimits,
       baseAndQuoteTokens,
       invertPrice,
+      invalidPrice,
+      invalidRange,
+      outOfRange,
+      deposit0Disabled: depositADisabled,
+      deposit1Disabled: depositBDisabled,
+      isTaxed,
     }),
     [
-      baseAndQuoteTokens,
+      tickSpaceLimits,
+      ticks,
+      ticksAtLimit,
       isSorted,
       price,
       prices,
-      pricesAtLimit,
       pricesAtTicks,
-      ticks,
-      ticksAtLimit,
+      pricesAtLimit,
+      baseAndQuoteTokens,
       invertPrice,
-      tickSpaceLimits,
+      invalidPrice,
+      invalidRange,
+      outOfRange,
+      depositADisabled,
+      depositBDisabled,
+      isTaxed,
     ],
   )
 }
@@ -254,6 +318,9 @@ export type UseDepositInfoProps = {
   token1?: Currency
   exactField: PositionField
   exactAmount?: string
+  skipDependentAmount?: boolean
+  deposit0Disabled?: boolean
+  deposit1Disabled?: boolean
 } & (
   | {
       protocolVersion: ProtocolVersion.V3 | ProtocolVersion.V4
@@ -274,7 +341,7 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
   const account = useAccount()
   const { derivedPositionInfo } = useCreatePositionContext()
   const {
-    derivedPriceRangeInfo: { ticks },
+    derivedPriceRangeInfo: { ticks, invalidRange, outOfRange, deposit0Disabled, deposit1Disabled },
   } = usePriceRangeContext()
   const { exactAmount, exactField } = state
   const { protocolVersion, sortedTokens } = derivedPositionInfo
@@ -320,20 +387,44 @@ export function useDerivedDepositInfo(state: DepositState): DepositInfo {
       token1,
       exactField,
       exactAmount,
+      skipDependentAmount: outOfRange || invalidRange,
+      deposit0Disabled,
+      deposit1Disabled,
     }
-  }, [account.address, exactAmount, exactField, pair, pool, protocolVersion, tickLower, tickUpper, token0, token1])
+  }, [
+    account.address,
+    deposit0Disabled,
+    deposit1Disabled,
+    exactAmount,
+    exactField,
+    invalidRange,
+    outOfRange,
+    pair,
+    pool,
+    protocolVersion,
+    tickLower,
+    tickUpper,
+    token0,
+    token1,
+  ])
 
   return useDepositInfo(depositInfoProps)
 }
 
 export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
-  const { protocolVersion, address, token0, token1, exactField, exactAmount } = state
+  const account = useAccount()
+  const { protocolVersion, address, token0, token1, exactField, exactAmount, deposit0Disabled, deposit1Disabled } =
+    state
   const [token0Balance, token1Balance] = useCurrencyBalances(address, [token0, token1])
 
   const [independentToken, dependentToken] = exactField === PositionField.TOKEN0 ? [token0, token1] : [token1, token0]
   const independentAmount = tryParseCurrencyAmount(exactAmount, independentToken)
 
   const dependentAmount: CurrencyAmount<Currency> | undefined = useMemo(() => {
+    if (state.skipDependentAmount) {
+      return undefined
+    }
+
     const wrappedIndependentAmount = independentAmount?.wrapped
 
     if (protocolVersion === ProtocolVersion.UNSPECIFIED) {
@@ -388,23 +479,84 @@ export function useDepositInfo(state: UseDepositInfoProps): DepositInfo {
   const dependentTokenUSDValue = useUSDCValue(dependentAmount) || undefined
 
   const dependentField = exactField === PositionField.TOKEN0 ? PositionField.TOKEN1 : PositionField.TOKEN0
+
+  const parsedAmounts: { [field in PositionField]: CurrencyAmount<Currency> | undefined } = useMemo(() => {
+    return {
+      [PositionField.TOKEN0]: exactField === PositionField.TOKEN0 ? independentAmount : dependentAmount,
+      [PositionField.TOKEN1]: exactField === PositionField.TOKEN0 ? dependentAmount : independentAmount,
+    }
+  }, [dependentAmount, independentAmount, exactField])
+  const { [PositionField.TOKEN0]: currency0Amount, [PositionField.TOKEN1]: currency1Amount } = parsedAmounts
+
+  const { t } = useTranslation()
+  const error = useMemo(() => {
+    if (!account.isConnected) {
+      return <ConnectWalletButtonText />
+    }
+
+    if (
+      (!parsedAmounts[PositionField.TOKEN0] && !deposit0Disabled) ||
+      (!parsedAmounts[PositionField.TOKEN1] && !deposit1Disabled)
+    ) {
+      return t('common.noAmount.error')
+    }
+
+    if (currency0Amount && token0Balance?.lessThan(currency0Amount)) {
+      return (
+        <Trans
+          i18nKey="common.insufficientTokenBalance.error"
+          values={{
+            tokenSymbol: token0?.symbol,
+          }}
+        />
+      )
+    }
+
+    if (currency1Amount && token1Balance?.lessThan(currency1Amount)) {
+      return (
+        <Trans
+          i18nKey="common.insufficientTokenBalance.error"
+          values={{
+            tokenSymbol: token1?.symbol,
+          }}
+        />
+      )
+    }
+
+    return undefined
+  }, [
+    account.isConnected,
+    parsedAmounts,
+    deposit0Disabled,
+    deposit1Disabled,
+    currency0Amount,
+    token0Balance,
+    currency1Amount,
+    token1Balance,
+    t,
+    token0?.symbol,
+    token1?.symbol,
+  ])
+
   return useMemo(
     () => ({
       currencyBalances: { [PositionField.TOKEN0]: token0Balance, [PositionField.TOKEN1]: token1Balance },
       formattedAmounts: { [exactField]: exactAmount, [dependentField]: dependentAmount?.toExact() },
       currencyAmounts: { [exactField]: independentAmount, [dependentField]: dependentAmount },
       currencyAmountsUSDValue: { [exactField]: independentTokenUSDValue, [dependentField]: dependentTokenUSDValue },
+      error,
     }),
     [
       token0Balance,
       token1Balance,
+      exactField,
       exactAmount,
+      dependentField,
       dependentAmount,
       independentAmount,
       independentTokenUSDValue,
       dependentTokenUSDValue,
-      exactField,
-      dependentField,
+      error,
     ],
   )
 }

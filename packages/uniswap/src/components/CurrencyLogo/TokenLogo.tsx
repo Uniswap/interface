@@ -5,6 +5,7 @@ import { STATUS_RATIO } from 'uniswap/src/components/CurrencyLogo/CurrencyLogo'
 import { NetworkLogo } from 'uniswap/src/components/CurrencyLogo/NetworkLogo'
 import { UNIVERSE_CHAIN_INFO } from 'uniswap/src/constants/chains'
 import { UniverseChainId } from 'uniswap/src/types/chains'
+import { isMobileApp } from 'utilities/src/platform'
 
 interface TokenLogoProps {
   url?: string | null
@@ -26,7 +27,7 @@ export const TokenLogo = memo(function _TokenLogo({
   chainId,
   size = iconSizes.icon40,
   hideNetworkLogo,
-  networkLogoBorderWidth = 1.5,
+  networkLogoBorderWidth = isMobileApp ? 2 : 1.5,
 }: TokenLogoProps): JSX.Element {
   const [showBackground, setShowBackground] = useState(false)
 

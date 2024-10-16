@@ -1,5 +1,6 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { SignatureType } from 'state/signatures/types'
+import { TransactionType } from 'state/transactions/types'
 import { logSwapFinalized, logUniswapXSwapFinalized } from 'tracing/swapFlowLoggers'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
@@ -30,7 +31,14 @@ describe('swapFlowLoggers', () => {
     const mockChainId = 1
     const mockAnalyticsContext = { page: 'mockContext' }
 
-    logSwapFinalized(mockHash, mockChainId, mockAnalyticsContext, TransactionStatus.Confirmed)
+    logSwapFinalized(
+      mockHash,
+      mockChainId,
+      mockChainId,
+      mockAnalyticsContext,
+      TransactionStatus.Confirmed,
+      TransactionType.SWAP,
+    )
 
     expect(sendAnalyticsEvent).toHaveBeenCalledWith(SwapEventName.SWAP_TRANSACTION_COMPLETED, {
       transactionOriginType: TransactionOriginType.Internal,
@@ -39,6 +47,8 @@ describe('swapFlowLoggers', () => {
       time_to_swap_since_first_input: 100,
       hash: mockHash,
       chain_id: mockChainId,
+      chain_id_in: mockChainId,
+      chain_id_out: mockChainId,
       ...mockAnalyticsContext,
     })
   })

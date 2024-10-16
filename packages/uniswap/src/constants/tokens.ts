@@ -5,7 +5,7 @@ import { UniverseChainId } from 'uniswap/src/types/chains'
 
 export const USDC_SEPOLIA = new Token(
   UniverseChainId.Sepolia,
-  '0x6f14C02Fc1F78322cFd7d707aB90f18baD3B54f5',
+  '0x1c7d4b196cb0c7b01d743fbc6116a902379c7238',
   6,
   'USDC',
   'USD//C',

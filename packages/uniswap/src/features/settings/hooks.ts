@@ -14,6 +14,8 @@ import { WalletConnectConnector } from 'uniswap/src/features/web3/walletConnect'
 import { COMBINED_CHAIN_IDS, InterfaceGqlChain, UniverseChainId } from 'uniswap/src/types/chains'
 import { isTestEnv } from 'utilities/src/environment/env'
 import { logger } from 'utilities/src/logger/logger'
+import { isInterface } from 'utilities/src/platform'
+import { Connector } from 'wagmi'
 
 export function useHideSmallBalancesSetting(): boolean {
   const { isTestnetModeEnabled } = useEnabledChains()
@@ -27,11 +29,27 @@ export function useHideSpamTokensSetting(): boolean {
   return useSelector(selectWalletHideSpamTokensSetting) && !isTestnetModeEnabled
 }
 
+// Note: only use this hook for useConnectedWalletSupportedChains
+// for wallet we expect useConnector to throw because there is no connector
+function useConnectorWithCatch(): Connector | undefined {
+  try {
+    return useConnector()
+  } catch (_e) {
+    if (isInterface && !isTestEnv()) {
+      logger.error(_e, {
+        tags: { file: 'src/features/settings/hooks', function: 'useConnectorWithCatch' },
+      })
+    }
+    return undefined
+  }
+}
+
 // Returns the chain ids supported by the user's connected wallet
 function useConnectedWalletSupportedChains(): UniverseChainId[] {
-  try {
-    const connector = useConnector()
-
+  const connector = useConnectorWithCatch()
+  // We need to memoize the connected wallet chain ids to avoid infinite loops
+  // caused by modifying the gqlChains returned by useEnabledChains
+  return useMemo(() => {
     switch (connector?.type) {
       case CONNECTION_PROVIDER_IDS.UNISWAP_WALLET_CONNECT_CONNECTOR_ID:
       case CONNECTION_PROVIDER_IDS.WALLET_CONNECT_CONNECTOR_ID:
@@ -42,15 +60,7 @@ function useConnectedWalletSupportedChains(): UniverseChainId[] {
       default:
         return COMBINED_CHAIN_IDS
     }
-  } catch (_e) {
-    if (!isTestEnv()) {
-      logger.error(_e, {
-        tags: { file: 'src/features/settings/hooks', function: 'useConnectedWalletSupportedChains' },
-      })
-    }
-    // We're outside the UniswapContext when this hook is used by wallet or extension, so return all chains
-    return COMBINED_CHAIN_IDS
-  }
+  }, [connector])
 }
 
 export function useEnabledChains(): {

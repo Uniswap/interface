@@ -72,10 +72,15 @@ export function useTransactionCanceller() {
 
 export function useMultichainTransactions(): [TransactionDetails, UniverseChainId][] {
   const state = useAppSelector((state) => state.localWebTransactions)
-  return COMBINED_CHAIN_IDS.flatMap((chainId) =>
-    state[chainId]
-      ? Object.values(state[chainId]).map((tx): [TransactionDetails, UniverseChainId] => [tx, chainId])
-      : [],
+
+  return useMemo(
+    () =>
+      COMBINED_CHAIN_IDS.flatMap((chainId) =>
+        state[chainId]
+          ? Object.values(state[chainId]).map((tx): [TransactionDetails, UniverseChainId] => [tx, chainId])
+          : [],
+      ),
+    [state],
   )
 }
 

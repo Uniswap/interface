@@ -5,7 +5,6 @@ import { useDappRequestQueueContext } from 'src/app/features/dappRequests/DappRe
 import { DappRequestStoreItem } from 'src/app/features/dappRequests/slice'
 import { Anchor, AnimatePresence, Button, Flex, Text, UniversalImage, UniversalImageResizeMode, styled } from 'ui/src'
 import { borderRadii, iconSizes } from 'ui/src/theme'
-import { useUSDValueOfGasFee } from 'uniswap/src/features/gas/hooks'
 import { GasFeeResult } from 'uniswap/src/features/gas/types'
 import { hasSufficientFundsIncludingGas } from 'uniswap/src/features/gas/utils'
 import { useOnChainNativeCurrencyBalance } from 'uniswap/src/features/portfolio/api'
@@ -175,7 +174,6 @@ export function DappRequestFooter({
   }
 
   const currentChainId = chainId || activeChain || defaultChainId
-  const { value: gasFeeUSD } = useUSDValueOfGasFee(currentChainId, transactionGasFeeResult?.value)
   const { balance: nativeBalance } = useOnChainNativeCurrencyBalance(currentChainId, currentAccount.address)
 
   const hasSufficientGas = hasSufficientFundsIncludingGas({
@@ -184,7 +182,9 @@ export function DappRequestFooter({
   })
 
   const shouldCloseSidebar = request.isSidebarClosed && totalRequestCount <= 1
-  const isConfirmDisabled = transactionGasFeeResult ? !gasFeeUSD || !hasSufficientGas : false
+
+  // Disable submission if no gas fee value
+  const isConfirmEnabled = transactionGasFeeResult?.value && hasSufficientGas
 
   const handleOnConfirm = useCallback(async () => {
     if (onConfirm) {
@@ -240,7 +240,7 @@ export function DappRequestFooter({
             {t('common.button.cancel')}
           </Button>
           <Button
-            disabled={isConfirmDisabled}
+            disabled={!isConfirmEnabled}
             flex={1}
             flexBasis={1}
             size="medium"

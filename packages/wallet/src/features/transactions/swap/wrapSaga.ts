@@ -2,6 +2,8 @@ import { Currency, CurrencyAmount } from '@uniswap/sdk-core'
 import { providers } from 'ethers'
 import { call, put } from 'typed-redux-saga'
 import { AccountMeta } from 'uniswap/src/features/accounts/types'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import {
   GasFeeEstimates,
   TransactionOptions,
@@ -11,8 +13,6 @@ import {
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { WrapType } from 'uniswap/src/features/transactions/types/wrap'
 import { logger } from 'utilities/src/logger/logger'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { sendTransaction } from 'wallet/src/features/transactions/sendTransactionSaga'
 import { createMonitoredSaga } from 'wallet/src/utils/saga'
 

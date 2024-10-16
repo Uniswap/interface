@@ -1,7 +1,6 @@
 import { SortButton } from 'src/components/explore/SortButton'
 import { render } from 'src/test/test-utils'
-import { TokenSortableField } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
-import { ClientTokensOrderBy } from 'wallet/src/features/wallet/types'
+import { CustomRankingType, ExploreOrderBy, RankingType } from 'wallet/src/features/wallet/types'
 
 jest.mock('react-native-context-menu-view', () => {
   // Use the actual implementation of `react-native-context-menu-view` as the mock implementation
@@ -11,23 +10,23 @@ jest.mock('react-native-context-menu-view', () => {
 
 describe('SortButton', () => {
   it('renders without error', () => {
-    const tree = render(<SortButton orderBy={TokenSortableField.Volume} />)
+    const tree = render(<SortButton orderBy={RankingType.Volume} />)
 
     expect(tree).toMatchSnapshot()
   })
 
-  const cases = [
-    { test: 'volume', orderBy: TokenSortableField.Volume, label: 'Volume' },
-    { test: 'total value locked', orderBy: TokenSortableField.TotalValueLocked, label: 'TVL' },
-    { test: 'market cap', orderBy: TokenSortableField.MarketCap, label: 'Market cap' },
+  const cases: Array<{ test: string; orderBy: ExploreOrderBy; label: string }> = [
+    { test: 'volume', orderBy: RankingType.Volume, label: 'Volume' },
+    { test: 'total value locked', orderBy: RankingType.TotalValueLocked, label: 'TVL' },
+    { test: 'market cap', orderBy: RankingType.MarketCap, label: 'Market cap' },
     {
       test: 'price increase',
-      orderBy: ClientTokensOrderBy.PriceChangePercentage24hDesc,
+      orderBy: CustomRankingType.PricePercentChange1DayDesc,
       label: 'Price increase',
     },
     {
       test: 'price decrease',
-      orderBy: ClientTokensOrderBy.PriceChangePercentage24hAsc,
+      orderBy: CustomRankingType.PricePercentChange1DayAsc,
       label: 'Price decrease',
     },
   ]

@@ -41,6 +41,13 @@ const AmountOutParamSchema = z.object({
 })
 export type AmountOutParam = z.infer<typeof AmountOutParamSchema>
 
+
+const AmountMinParamSchema = z.object({
+  name: z.literal('amountMin'),
+  value: BigNumberSchema,
+})
+export type AmountMinParam = z.infer<typeof AmountMinParamSchema>
+
 const FeeAmountSchema = z.nativeEnum(FeeAmountV3)
 export type FeeAmount = z.infer<typeof FeeAmountSchema>
 
@@ -188,6 +195,7 @@ export const ParamSchema = z.union([
   AmountInMaxParamSchema,
   AmountOutParamSchema,
   AmountOutMinParamSchema,
+  AmountMinParamSchema,
   V3PathParamSchema,
   PayerIsUserParamSchema,
   FallbackParamSchema,
@@ -229,6 +237,21 @@ const V3SwapExactOutCommandSchema = z.object({
 })
 export type V3SwapExactOutCommand = z.infer<typeof V3SwapExactOutCommandSchema>
 
+const SweepCommandSchema = z.object({
+  commandName: z.literal('SWEEP'),
+  commandType: z.literal(CommandType.SWEEP),
+  params: z.array(ParamSchema),
+})
+export type SweepCommand = z.infer<typeof SweepCommandSchema>
+
+const UnwrapWethCommandSchema = z.object({
+  commandName: z.literal('UNWRAP_WETH'),
+  commandType: z.literal(CommandType.UNWRAP_WETH),
+  params: z.array(ParamSchema),
+})
+export type UnwrapWethCommand = z.infer<typeof UnwrapWethCommandSchema>
+
+
 const V4SwapCommandSchema = z.object({
   commandName: z.literal('V4_SWAP'),
   commandType: z.literal(CommandType.V4_SWAP),
@@ -246,7 +269,7 @@ export const UniversalRouterSwapCommandSchema = z.union([
   V2SwapExactOutCommandSchema,
   V3SwapExactInCommandSchema,
   V3SwapExactOutCommandSchema,
-  V4SwapCommandSchema
+  V4SwapCommandSchema,
 ])
 export type UniversalRouterSwapCommand = z.infer<typeof UniversalRouterSwapCommandSchema>
 
@@ -256,7 +279,9 @@ const UniversalRouterCommandSchema = z.union([
   V2SwapExactOutCommandSchema,
   V3SwapExactInCommandSchema,
   V3SwapExactOutCommandSchema,
-  V4SwapCommandSchema
+  V4SwapCommandSchema,
+  SweepCommandSchema,
+  UnwrapWethCommandSchema
 ])
 export type UniversalRouterCommand = z.infer<typeof UniversalRouterCommandSchema>
 
@@ -270,6 +295,14 @@ export function isURCommandASwap(
   command: UniversalRouterCommand
 ): command is UniversalRouterSwapCommand {
   return UniversalRouterSwapCommandSchema.safeParse(command).success
+}
+
+export function isUrCommandSweep(command: UniversalRouterCommand): command is SweepCommand {
+  return SweepCommandSchema.safeParse(command).success
+}
+
+export function isUrCommandUnwrapWeth(command: UniversalRouterCommand): command is UnwrapWethCommand {
+  return UnwrapWethCommandSchema.safeParse(command).success
 }
 
 export function isAmountInParam(param: Param): param is AmountInParam {
@@ -286,4 +319,8 @@ export function isAmountOutMinParam(param: Param): param is AmountOutMinParam {
 
 export function isAmountOutParam(param: Param): param is AmountOutParam {
   return AmountOutParamSchema.safeParse(param).success
+}
+
+export function isAmountMinParam(param: Param): param is AmountMinParam {
+  return AmountMinParamSchema.safeParse(param).success
 }

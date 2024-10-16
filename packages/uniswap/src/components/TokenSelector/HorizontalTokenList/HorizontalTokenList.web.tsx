@@ -1,8 +1,9 @@
+import { memo } from 'react'
 import { Flex } from 'ui/src/'
 import { HorizontalTokenListProps } from 'uniswap/src/components/TokenSelector/HorizontalTokenList/HorizontalTokenList'
 import { SuggestedToken } from 'uniswap/src/components/TokenSelector/SuggestedToken'
 
-export function HorizontalTokenList({
+export const HorizontalTokenList = memo(function _HorizontalTokenList({
   tokens: suggestedTokens,
   onSelectCurrency,
   index,
@@ -21,4 +22,4 @@ export function HorizontalTokenList({
       ))}
     </Flex>
   )
-}
+})

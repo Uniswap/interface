@@ -11,6 +11,7 @@ import {
   TokenMarket,
   TokenProject,
   TokenProjectMarket,
+  TokenStandard,
 } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { toGraphQLChain } from 'uniswap/src/features/chains/utils'
 import { amounts } from 'uniswap/src/test/fixtures/gql/amounts'
@@ -45,6 +46,7 @@ export const token = createFixture<Token, TokenOptions>({ sdkToken: null })(({ s
   decimals: sdkToken?.decimals ?? faker.datatype.number({ min: 1, max: 18 }),
   chain: (sdkToken ? toGraphQLChain(sdkToken.chainId) : null) ?? randomChoice(GQL_CHAINS),
   address: sdkToken?.address.toLocaleLowerCase() ?? faker.finance.ethereumAddress(),
+  standard: sdkToken?.address ? TokenStandard.Erc20 : TokenStandard.Native,
   market: undefined,
   project: tokenProjectBase(),
   feeData: {
@@ -67,6 +69,7 @@ export const tokenBalance = createFixture<TokenBalance>()(() => ({
   ownerAddress: faker.finance.ethereumAddress(),
   quantity: faker.datatype.number({ min: 1, max: 1000 }),
   token: token(),
+  tokenProjectMarket: tokenProjectMarket(),
 }))
 
 type TokenMarketOptions = {
@@ -97,6 +100,7 @@ export const tokenProjectMarket = createFixture<TokenProjectMarket, TokenProject
   priceHistory: history,
   price: getLatestPrice(history),
   pricePercentChange24h: get24hPriceChange(history),
+  relativeChange24: get24hPriceChange(history),
   currency: randomEnumValue(Currency),
   tokenProject: tokenProjectBase(),
 }))

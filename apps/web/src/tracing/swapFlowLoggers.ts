@@ -1,6 +1,6 @@
 import { SwapEventName } from '@uniswap/analytics-events'
 import { SignatureType } from 'state/signatures/types'
-import { ConfirmedTransactionDetails } from 'state/transactions/types'
+import { ConfirmedTransactionDetails, TransactionType } from 'state/transactions/types'
 import { UniswapXOrderStatus } from 'types/uniswapx'
 import { TransactionStatus } from 'uniswap/src/data/graphql/uniswap-data-api/__generated__/types-and-hooks'
 import { sendAnalyticsEvent } from 'uniswap/src/features/telemetry/send'
@@ -9,11 +9,19 @@ import { SwapEventType, timestampTracker } from 'uniswap/src/features/transactio
 import { TransactionOriginType } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { ITraceContext } from 'utilities/src/telemetry/trace/TraceContext'
 
+type OnChainSwapTransactionType = TransactionType.SWAP | TransactionType.BRIDGE
+const TRANSACTION_TYPE_TO_SWAP_ROUTING: Record<OnChainSwapTransactionType, SwapRouting> = {
+  [TransactionType.SWAP]: 'classic',
+  [TransactionType.BRIDGE]: 'bridge',
+}
+
 export function logSwapFinalized(
   hash: string,
-  chainId: number,
+  chainInId: number,
+  chainOutId: number,
   analyticsContext: ITraceContext,
   status: ConfirmedTransactionDetails['status'],
+  type: OnChainSwapTransactionType,
 ) {
   const hasSetSwapSuccess = timestampTracker.hasTimestamp(SwapEventType.FirstSwapSuccess)
   const elapsedTime = timestampTracker.setElapsedTime(SwapEventType.FirstSwapSuccess)
@@ -24,7 +32,7 @@ export function logSwapFinalized(
       : SwapEventName.SWAP_TRANSACTION_FAILED
 
   sendAnalyticsEvent(event, {
-    routing: 'classic',
+    routing: TRANSACTION_TYPE_TO_SWAP_ROUTING[type],
     // We only log the time-to-swap metric for the first swap of a session,
     // so if it was previously set we log undefined here.
     time_to_swap: hasSetSwapSuccess ? undefined : elapsedTime,
@@ -32,7 +40,9 @@ export function logSwapFinalized(
       ? undefined
       : timestampTracker.getElapsedTime(SwapEventType.FirstSwapSuccess, SwapEventType.FirstSwapAction),
     hash,
-    chain_id: chainId,
+    chain_id: chainInId,
+    chain_id_in: chainInId,
+    chain_id_out: chainOutId,
     transactionOriginType: TransactionOriginType.Internal,
     ...analyticsContext,
   })

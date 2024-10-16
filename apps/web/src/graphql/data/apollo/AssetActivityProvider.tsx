@@ -77,7 +77,7 @@ export function AssetActivityProvider({ children }: PropsWithChildren) {
           ),
         },
       }),
-    [account.address, fiatOnRampTransactions, lazyFetch, gqlChains, isTestnetModeEnabled],
+    [lazyFetch, account.address, gqlChains, isTestnetModeEnabled, fiatOnRampTransactions],
   )
 
   useInterval(async () => {

@@ -2,6 +2,8 @@ import { TradeType } from '@uniswap/sdk-core'
 import { expectSaga } from 'redux-saga-test-plan'
 import { getNativeAddress } from 'uniswap/src/constants/addresses'
 import { AssetType } from 'uniswap/src/entities/assets'
+import { NotificationState, pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import {
   ApproveTransactionInfo,
@@ -16,10 +18,10 @@ import {
 import { finalizedTransactionAction } from 'uniswap/src/test/fixtures'
 import { UniverseChainId } from 'uniswap/src/types/chains'
 import { pushTransactionNotification } from 'wallet/src/features/notifications/notificationWatcherSaga'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
+import { signerMnemonicAccount } from 'wallet/src/test/fixtures'
 
 const finalizedTxAction = finalizedTransactionAction()
+const account = signerMnemonicAccount()
 
 const txId = 'uuid-4'
 
@@ -34,6 +36,12 @@ export const createFinalizedTxAction = (typeInfo: TransactionTypeInfo): ReturnTy
 })
 
 describe(pushTransactionNotification, () => {
+  const initialNotificationsState: NotificationState = {
+    notificationQueue: [],
+    notificationStatus: {},
+    lastTxNotificationUpdate: {},
+  }
+
   it('Handles approve transactions', () => {
     const approveTypeInfo: ApproveTransactionInfo = {
       type: TransactionType.Approve,
@@ -52,6 +60,10 @@ describe(pushTransactionNotification, () => {
               uuid2: { typeInfo: TransactionType.Swap, addedTime: Date.now() + 3000 },
             },
           },
+        },
+        notifications: initialNotificationsState,
+        wallet: {
+          activeAccountAddress: account.address,
         },
       })
       .put(
@@ -88,6 +100,10 @@ describe(pushTransactionNotification, () => {
             },
           },
         },
+        notifications: initialNotificationsState,
+        wallet: {
+          activeAccountAddress: account.address,
+        },
       })
       .silentRun()
   })
@@ -106,6 +122,12 @@ describe(pushTransactionNotification, () => {
     const { chainId, from } = finalizedSwapAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedSwapAction)
+      .withState({
+        notifications: initialNotificationsState,
+        wallet: {
+          activeAccountAddress: account.address,
+        },
+      })
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
@@ -136,6 +158,12 @@ describe(pushTransactionNotification, () => {
     const { chainId, from } = finalizedSendCurrencyAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedSendCurrencyAction)
+      .withState({
+        notifications: initialNotificationsState,
+        wallet: {
+          activeAccountAddress: account.address,
+        },
+      })
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
@@ -165,6 +193,12 @@ describe(pushTransactionNotification, () => {
     const { chainId, from } = finalizedSendNftAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedSendNftAction)
+      .withState({
+        notifications: initialNotificationsState,
+        wallet: {
+          activeAccountAddress: account.address,
+        },
+      })
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
@@ -194,6 +228,12 @@ describe(pushTransactionNotification, () => {
     const { chainId, from } = finalizedReceiveCurrencyAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedReceiveCurrencyAction)
+      .withState({
+        notifications: initialNotificationsState,
+        wallet: {
+          activeAccountAddress: account.address,
+        },
+      })
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
@@ -223,6 +263,12 @@ describe(pushTransactionNotification, () => {
     const { chainId, from } = finalizedReceiveNftAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedReceiveNftAction)
+      .withState({
+        notifications: initialNotificationsState,
+        wallet: {
+          activeAccountAddress: account.address,
+        },
+      })
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,
@@ -249,6 +295,12 @@ describe(pushTransactionNotification, () => {
     const { chainId, from } = finalizedUnknownAction.payload
 
     return expectSaga(pushTransactionNotification, finalizedUnknownAction)
+      .withState({
+        notifications: initialNotificationsState,
+        wallet: {
+          activeAccountAddress: account.address,
+        },
+      })
       .put(
         pushNotification({
           txStatus: TransactionStatus.Success,

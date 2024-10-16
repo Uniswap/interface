@@ -6,12 +6,12 @@ import { LiquidityPositionAmountsTile } from 'components/Liquidity/LiquidityPosi
 import { LiquidityPositionInfo } from 'components/Liquidity/LiquidityPositionInfo'
 import { LiquidityPositionPriceRangeTile } from 'components/Liquidity/LiquidityPositionPriceRangeTile'
 import { PositionNFT } from 'components/Liquidity/PositionNFT'
-import { parseRestPosition, parseV3FeeTier, useV3PositionDerivedInfo } from 'components/Liquidity/utils'
+import { parseRestPosition, useV3OrV4PositionDerivedInfo } from 'components/Liquidity/utils'
 import { LoadingFullscreen, LoadingRows } from 'components/Loader/styled'
-import useIsTickAtLimit from 'hooks/useIsTickAtLimit'
+import { useChainFromUrlParam } from 'constants/chains'
 import { usePositionTokenURI } from 'hooks/usePositionTokenURI'
 import { ClaimFeeModal } from 'pages/Pool/Positions/ClaimFeeModal'
-import { LoadingRow } from 'pages/Pool/Positions/shared'
+import { LoadingRow, useRefetchOnLpModalClose } from 'pages/Pool/Positions/shared'
 import { useMemo, useState } from 'react'
 import { ChevronRight } from 'react-feather'
 import { Navigate, useLocation, useNavigate, useParams } from 'react-router-dom'
@@ -63,9 +63,14 @@ export const HeaderButton = styled(Flex, {
 
 export default function PositionPage() {
   const { tokenId } = useParams<{ tokenId: string }>()
+  const chainInfo = useChainFromUrlParam()
   const account = useAccount()
   const { pathname } = useLocation()
-  const { data, isLoading: positionLoading } = useGetPositionQuery(
+  const {
+    data,
+    isLoading: positionLoading,
+    refetch,
+  } = useGetPositionQuery(
     account.address
       ? {
           owner: account.address,
@@ -75,13 +80,15 @@ export default function PositionPage() {
               ? ProtocolVersion.V4
               : ProtocolVersion.UNSPECIFIED,
           tokenId,
-          chainId: account.chainId,
+          chainId: chainInfo?.id ?? account.chainId,
         }
       : undefined,
   )
   const position = data?.position
   const positionInfo = useMemo(() => parseRestPosition(position), [position])
   const metadata = usePositionTokenURI(tokenId ? BigNumber.from(tokenId) : undefined)
+
+  useRefetchOnLpModalClose(refetch)
 
   const dispatch = useAppDispatch()
   const [collectAsWeth, setCollectAsWeth] = useState(false)
@@ -102,12 +109,7 @@ export default function PositionPage() {
     fiatValue0,
     fiatValue1,
     priceOrdering,
-  } = useV3PositionDerivedInfo(positionInfo)
-  const isTickAtLimit = useIsTickAtLimit(
-    parseV3FeeTier(positionInfo?.feeTier?.toString()),
-    Number(positionInfo?.tickLower),
-    Number(positionInfo?.tickUpper),
-  )
+  } = useV3OrV4PositionDerivedInfo(positionInfo)
 
   if (!isLoading && !v4Enabled) {
     return <Navigate to="/pools" replace />
@@ -262,7 +264,9 @@ export default function PositionPage() {
         <LiquidityPositionPriceRangeTile
           status={status}
           priceOrdering={priceOrdering}
-          isTickAtLimit={isTickAtLimit}
+          feeTier={positionInfo.feeTier?.toString()}
+          tickLower={positionInfo.tickLower}
+          tickUpper={positionInfo.tickUpper}
           token0CurrentPrice={token0CurrentPrice}
           token1CurrentPrice={token1CurrentPrice}
         />

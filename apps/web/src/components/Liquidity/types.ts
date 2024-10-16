@@ -2,8 +2,9 @@
 import { PositionStatus, ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
 import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
 import { Pair } from '@uniswap/v2-sdk'
-import { FeeAmount, Pool, Position } from '@uniswap/v3-sdk'
-import { Dispatch, SetStateAction } from 'react'
+import { FeeAmount, Pool as V3Pool, Position as V3Position } from '@uniswap/v3-sdk'
+import { Pool as V4Pool, Position as V4Position } from '@uniswap/v4-sdk'
+import { Dispatch, ReactNode, SetStateAction } from 'react'
 import { PositionField } from 'types/position'
 
 export interface DepositState {
@@ -22,6 +23,7 @@ export interface DepositInfo {
   currencyBalances?: { [field in PositionField]?: CurrencyAmount<Currency> }
   currencyAmounts?: { [field in PositionField]?: CurrencyAmount<Currency> }
   currencyAmountsUSDValue?: { [field in PositionField]?: CurrencyAmount<Currency> }
+  error?: ReactNode
 }
 
 interface BasePositionInfo {
@@ -52,16 +54,17 @@ type V2PairInfo = BasePositionInfo & {
 type V3PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V3
   tokenId: string
-  pool?: Pool
+  pool?: V3Pool
   feeTier?: FeeAmount
-  position?: Position
+  position?: V3Position
   v4hook: undefined
 }
 
 type V4PositionInfo = BasePositionInfo & {
   version: ProtocolVersion.V4
   tokenId: string
-  position?: Position
+  pool?: V4Pool
+  position?: V4Position
   feeTier?: string
   v4hook?: string
 }

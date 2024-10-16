@@ -1,4 +1,4 @@
-import { useMemo } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useTranslation } from 'react-i18next'
 import { StyleProp, ViewStyle } from 'react-native'
 import { Flex, Loader, Text, isWeb } from 'ui/src'
@@ -43,7 +43,6 @@ export function useActivityData({
   owner,
   authTrigger,
   isExternalProfile,
-  emptyComponentStyle,
   onPressEmptyState,
 }: ActivityDataProps): ActivityData {
   const { t } = useTranslation()
@@ -52,20 +51,25 @@ export function useActivityData({
   // Hide all spam transactions if active wallet has enabled setting.
   const hideSpamTokens = useHideSpamTokensSetting()
 
+  const onRetryGenerator = useCallback(
+    (swapFormState: TransactionState | undefined): (() => void) => {
+      if (!swapFormState) {
+        return () => {}
+      }
+      return () => {
+        navigateToSwapFlow({ initialState: swapFormState })
+      }
+    },
+    [navigateToSwapFlow],
+  )
+
   const swapCallbacks: SwapSummaryCallbacks = useMemo(() => {
     return {
       useLatestSwapTransaction: useMostRecentSwapTx,
       useSwapFormTransactionState: useCreateSwapFormState,
-      onRetryGenerator: (swapFormState: TransactionState | undefined): (() => void) => {
-        if (!swapFormState) {
-          return () => {}
-        }
-        return () => {
-          navigateToSwapFlow({ initialState: swapFormState })
-        }
-      },
+      onRetryGenerator,
     }
-  }, [navigateToSwapFlow])
+  }, [onRetryGenerator])
 
   const renderActivityItem = useMemo(() => {
     return generateActivityItemRenderer(<Loader.Transaction />, SectionTitle, swapCallbacks, authTrigger)
@@ -73,30 +77,36 @@ export function useActivityData({
 
   const { onRetry, isError, sectionData, keyExtractor } = useFormattedTransactionDataForActivity(owner, hideSpamTokens)
 
-  const errorCard = (
-    <Flex grow style={emptyComponentStyle}>
-      <BaseCard.ErrorState
-        retryButtonLabel={t('common.button.retry')}
-        title={t('home.activity.error.load')}
-        onRetry={onRetry}
-      />
-    </Flex>
+  const errorCard = useMemo(
+    () => (
+      <Flex grow>
+        <BaseCard.ErrorState
+          retryButtonLabel={t('common.button.retry')}
+          title={t('home.activity.error.load')}
+          onRetry={onRetry}
+        />
+      </Flex>
+    ),
+    [onRetry, t],
   )
 
-  const emptyListView = (
-    <Flex centered grow pt="$spacing48" px="$spacing36" style={emptyComponentStyle}>
-      <BaseCard.EmptyState
-        buttonLabel={isExternalProfile || !onPressEmptyState ? undefined : t('home.activity.empty.button')}
-        description={
-          isExternalProfile
-            ? t('home.activity.empty.description.external')
-            : t('home.activity.empty.description.default')
-        }
-        icon={<NoTransactions color="$neutral3" size="$icon.100" />}
-        title={t('home.activity.empty.title')}
-        onPress={onPressEmptyState}
-      />
-    </Flex>
+  const emptyListView = useMemo(
+    () => (
+      <Flex centered grow pt="$spacing48" px="$spacing36">
+        <BaseCard.EmptyState
+          buttonLabel={isExternalProfile || !onPressEmptyState ? undefined : t('home.activity.empty.button')}
+          description={
+            isExternalProfile
+              ? t('home.activity.empty.description.external')
+              : t('home.activity.empty.description.default')
+          }
+          icon={<NoTransactions color="$neutral3" size="$icon.100" />}
+          title={t('home.activity.empty.title')}
+          onPress={onPressEmptyState}
+        />
+      </Flex>
+    ),
+    [isExternalProfile, onPressEmptyState, t],
   )
 
   // We check `sectionData` instead of `hasData` because `sectionData` has either transactions or a loading skeleton.

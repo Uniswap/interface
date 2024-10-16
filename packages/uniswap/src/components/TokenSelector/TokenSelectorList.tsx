@@ -24,7 +24,7 @@ function isHorizontalListTokenItem(data: TokenOption | TokenOption[]): data is T
   return Array.isArray(data)
 }
 
-function TokenOptionItemWrapper({
+const TokenOptionItemWrapper = memo(function _TokenOptionItemWrapper({
   tokenOption,
   onSelectCurrency,
   section,
@@ -77,7 +77,7 @@ function TokenOptionItemWrapper({
       onPress={onPress}
     />
   )
-}
+})
 
 function EmptyResults(): JSX.Element {
   const { t } = useTranslation()
@@ -152,7 +152,12 @@ function _TokenSelectorList({
 
   const renderSectionHeader = useCallback(
     ({ section }: { section: TokenSectionHeaderProps }): JSX.Element => (
-      <SectionHeader rightElement={section.rightElement} sectionKey={section.sectionKey} name={section.name} />
+      <SectionHeader
+        rightElement={section.rightElement}
+        endElement={section.endElement}
+        sectionKey={section.sectionKey}
+        name={section.name}
+      />
     ),
     [],
   )

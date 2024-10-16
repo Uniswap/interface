@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-restricted-imports
 import { ProtocolVersion } from '@uniswap/client-pools/dist/pools/v1/types_pb'
-import { Currency, CurrencyAmount, Token } from '@uniswap/sdk-core'
+import { Currency, CurrencyAmount, NativeCurrency, Token } from '@uniswap/sdk-core'
 import { IncreaseLPPositionRequest } from 'uniswap/src/data/tradingApi/__generated__'
 import { ValidatedPermit, ValidatedTransactionRequest } from 'uniswap/src/features/transactions/swap/utils/trade'
 
@@ -8,6 +8,7 @@ export interface LiquidityAction {
   currency0Amount: CurrencyAmount<Currency>
   currency1Amount: CurrencyAmount<Currency>
   liquidityToken?: Token
+  nativeCurrencyAmount?: CurrencyAmount<NativeCurrency>
 }
 
 export type LiquidityTxAndGasInfo =
@@ -51,6 +52,7 @@ export interface CreatePositionTxAndGasInfo extends BaseLiquidityTxAndGasInfo {
   type: 'create'
   unsigned: boolean
   createPositionRequestArgs: IncreaseLPPositionRequest | undefined
+  wrapTxRequest: ValidatedTransactionRequest | undefined
 }
 
 export type ValidatedIncreasePositionTxAndGasInfo = Required<IncreasePositionTxAndGasInfo> &

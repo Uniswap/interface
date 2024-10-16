@@ -180,7 +180,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     pendingTransactionsRetryOptions: undefined,
     rpcUrls: {
       [RPCType.Public]: {
-        http: ['https://rpc.sepolia.org/'],
+        http: [config.quicknodeSepoliaRpcUrl],
       },
       default: {
         http: ['https://rpc.sepolia.org/'],
@@ -679,7 +679,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     },
     blockPerMainnetEpochForChainId: 1, // TODO: verify
     blockWaitMsBeforeWarning: undefined,
-    bridge: 'https://superbridge.app/world-chain',
+    bridge: 'https://world-chain.superbridge.app/app',
     chainPriority: 11,
     docs: 'https://docs.worldcoin.org/',
     elementName: ElementName.ChainWorldChain,
@@ -731,7 +731,7 @@ export const UNIVERSE_CHAIN_INFO: Record<UniverseChainId, UniverseChainInfo> = {
     assetRepoNetworkName: 'zora',
     backendChain: {
       chain: BackendChainId.Zora as InterfaceGqlChain,
-      backendSupported: false,
+      backendSupported: true,
       isSecondaryChain: false,
       nativeTokenBackendAddress: undefined,
     },

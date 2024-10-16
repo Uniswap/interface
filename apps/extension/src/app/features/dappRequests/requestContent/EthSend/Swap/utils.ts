@@ -6,6 +6,7 @@ import { formatUnits as formatUnitsEthers } from 'ethers/lib/utils'
 import { useDappLastChainId } from 'src/app/features/dapp/hooks'
 import {
   CONTRACT_BALANCE,
+  ETH_ADDRESS,
   MAX_UINT160,
   MAX_UINT256,
 } from 'src/app/features/dappRequests/requestContent/EthSend/Swap/constants'
@@ -24,10 +25,14 @@ import {
   V4SwapExactOutSingleParamSchema,
   isAmountInMaxParam,
   isAmountInParam,
+  isAmountMinParam,
   isAmountOutMinParam,
   isAmountOutParam,
   isURCommandASwap,
+  isUrCommandSweep,
+  isUrCommandUnwrapWeth,
 } from 'src/app/features/dappRequests/types/UniversalRouterTypes'
+import { DEFAULT_NATIVE_ADDRESS } from 'uniswap/src/constants/chains'
 import { buildCurrencyId } from 'uniswap/src/utils/currencyId'
 import { assert } from 'utilities/src/errors'
 
@@ -114,8 +119,8 @@ export function useSwapDetails(
   if (v4Command) {
     // Extract details using the V4 helper
     const v4Details = getTokenDetailsFromV4SwapCommands(v4Command)
-    inputAddress = v4Details.inputAddress
-    outputAddress = v4Details.outputAddress
+    inputAddress = v4Details.inputAddress === ETH_ADDRESS ? DEFAULT_NATIVE_ADDRESS : v4Details.inputAddress
+    outputAddress = v4Details.outputAddress === ETH_ADDRESS ? DEFAULT_NATIVE_ADDRESS : v4Details.outputAddress
     inputValue = v4Details.inputValue || '0'
     outputValue = v4Details.outputValue || '0'
   } else {
@@ -157,12 +162,28 @@ function extractTokenAddresses(commands: UniversalRouterCommand[]): {
   return { inputAddress, outputAddress }
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function isZeroBigNumber(bigNumberObj: any): boolean {
+  // The true type of bigNumberObj is { type: string; hex: string } but param.value is any type
+  try {
+    if (!bigNumberObj) {
+      return true
+    }
+    const bigNumber = BigNumber.from(bigNumberObj.hex)
+    return bigNumber.isZero()
+  } catch (error) {
+    return true // Treat as zero if there's any error
+  }
+}
+
 function getTokenAmounts(commands: UniversalRouterCommand[]): {
   inputValue: string
   outputValue: string
 } {
   const firstSwapCommand = commands.find(isURCommandASwap)
   const lastSwapCommand = commands.findLast(isURCommandASwap)
+  const sweepCommand = commands.find(isUrCommandSweep)
+  const unwrapWethCommand = commands.find(isUrCommandUnwrapWeth)
 
   assert(
     firstSwapCommand && lastSwapCommand,
@@ -171,15 +192,24 @@ function getTokenAmounts(commands: UniversalRouterCommand[]): {
 
   const firstAmountInParam = firstSwapCommand?.params.find(isAmountInOrMaxParam)
   const lastAmountOutParam = lastSwapCommand?.params.find(isAmountOutMinOrOutParam)
+  const sweepAmountOutParam = sweepCommand?.params.find(isAmountMinParam)
+  const unwrapWethAmountOutParam = unwrapWethCommand?.params.find(isAmountMinParam)
 
   assert(
     firstAmountInParam && lastAmountOutParam,
     'SwapRequestContent: All swaps must have a defined input and output amount parameter.',
   )
 
+  // There's a special case where V3_SWAP command's amountOutMin param is zero (0x00... some gas optimization slippage thing)
+  // In this case fallback to the amountMin from the SWEEP or UNWRAP_WETH command as the outputValue
+  const inputValue = firstAmountInParam?.value
+  const fallbackOutputValue = sweepAmountOutParam?.value || unwrapWethAmountOutParam?.value
+  const outputValue =
+    fallbackOutputValue && isZeroBigNumber(lastAmountOutParam?.value) ? fallbackOutputValue : lastAmountOutParam?.value
+
   return {
-    inputValue: firstAmountInParam?.value || '0', // Safe due to assert
-    outputValue: lastAmountOutParam?.value || '0', // Safe due to assert
+    inputValue: inputValue || '0', // Safe due to assert
+    outputValue: outputValue || '0', // Safe due to assert
   }
 }
 

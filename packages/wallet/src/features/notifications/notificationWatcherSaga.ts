@@ -1,20 +1,27 @@
-import { put, takeLatest } from 'typed-redux-saga'
+import { put, select, takeLatest } from 'typed-redux-saga'
 import { AssetType } from 'uniswap/src/entities/assets'
 import { STALE_TRANSACTION_TIME_MS } from 'uniswap/src/features/notifications/constants'
+import { makeSelectAddressNotifications } from 'uniswap/src/features/notifications/selectors'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotification, AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { finalizeTransaction } from 'uniswap/src/features/transactions/slice'
 import { TransactionDetails, TransactionType } from 'uniswap/src/features/transactions/types/transactionDetails'
+import { UniswapState } from 'uniswap/src/state/uniswapReducer'
 import { WalletConnectEvent } from 'uniswap/src/types/walletConnect'
 import { buildReceiveNotification } from 'wallet/src/features/notifications/buildReceiveNotification'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
+import { selectActiveAccountAddress } from 'wallet/src/features/wallet/selectors'
 
 export function* notificationWatcher() {
   yield* takeLatest(finalizeTransaction.type, pushTransactionNotification)
 }
 
 export function* pushTransactionNotification(action: ReturnType<typeof finalizeTransaction>) {
-  if (shouldSuppressNotification(action.payload)) {
+  const activeAddress = yield* select(selectActiveAccountAddress)
+  const existingNotifications = yield* select((state: UniswapState) =>
+    makeSelectAddressNotifications()(state, activeAddress),
+  )
+  if (shouldSuppressNotification({ tx: action.payload, existingNotifications })) {
     return
   }
 
@@ -130,9 +137,29 @@ export function* pushTransactionNotification(action: ReturnType<typeof finalizeT
   }
 }
 
-// If a wrap or approve tx is submitted with a swap, then suppress the notification.
-export function shouldSuppressNotification(tx: TransactionDetails) {
+export function shouldSuppressNotification({
+  tx,
+  existingNotifications,
+}: {
+  tx: TransactionDetails
+  existingNotifications?: AppNotification[]
+}) {
+  if (existingNotifications) {
+    // For bridging, we may update transaction details (such as sendConfirmed field), but this shouldn't trigger a new notification
+    const existingBridgeNotification = existingNotifications.find(
+      (notification) =>
+        notification.type === AppNotificationType.Transaction &&
+        notification.txType === TransactionType.Bridge &&
+        notification.txId === tx.id,
+    )
+    if (existingBridgeNotification) {
+      return true
+    }
+  }
+
   const staleTransaction = Date.now() > tx.addedTime + STALE_TRANSACTION_TIME_MS
+
+  // If a wrap or approve tx is submitted with a swap, then suppress the notification.
   const chainedTransaction =
     (tx.typeInfo.type === TransactionType.Approve || tx.typeInfo.type === TransactionType.Wrap) && tx.typeInfo.swapTxId
   return chainedTransaction || staleTransaction

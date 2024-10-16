@@ -7,10 +7,10 @@ import {
 } from '@reduxjs/toolkit'
 import { ReducerWithInitialState } from '@reduxjs/toolkit/dist/createReducer'
 import { call, delay, put, race, take } from 'typed-redux-saga'
+import { pushNotification } from 'uniswap/src/features/notifications/slice'
+import { AppNotificationType } from 'uniswap/src/features/notifications/types'
 import { errorToString } from 'utilities/src/errors'
 import { logger } from 'utilities/src/logger/logger'
-import { pushNotification } from 'wallet/src/features/notifications/slice'
-import { AppNotificationType } from 'wallet/src/features/notifications/types'
 
 const DEFAULT_TIMEOUT = 90 * 1000 // 1.5 minutes
 

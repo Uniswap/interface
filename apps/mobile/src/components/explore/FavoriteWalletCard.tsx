@@ -8,10 +8,9 @@ import { useEagerExternalProfileNavigation } from 'src/app/navigation/hooks'
 import RemoveButton from 'src/components/explore/RemoveButton'
 import { useAnimatedCardDragStyle } from 'src/components/explore/hooks'
 import { disableOnPress } from 'src/utils/disableOnPress'
-import { Flex, ImpactFeedbackStyle, TouchableArea } from 'ui/src'
+import { Flex, ImpactFeedbackStyle, TouchableArea, useIsDarkMode, useShadowPropsShort, useSporeColors } from 'ui/src'
 import { AnimatedFlex } from 'ui/src/components/layout/AnimatedFlex'
-import { borderRadii, iconSizes } from 'ui/src/theme'
-import { BaseCard } from 'uniswap/src/components/BaseCard/BaseCard'
+import { borderRadii, iconSizes, opacify } from 'ui/src/theme'
 import { useAvatar } from 'uniswap/src/features/address/avatar'
 import { removeWatchedAddress } from 'uniswap/src/features/favorites/slice'
 import { AccountIcon } from 'wallet/src/components/accounts/AccountIcon'
@@ -37,6 +36,9 @@ function FavoriteWalletCard({
 }: FavoriteWalletCardProps): JSX.Element {
   const { t } = useTranslation()
   const dispatch = useDispatch()
+  const colors = useSporeColors()
+  const isDarkMode = useIsDarkMode()
+
   const { preload, navigate } = useEagerExternalProfileNavigation()
 
   const displayName = useDisplayName(address)
@@ -60,6 +62,8 @@ function FavoriteWalletCard({
 
   const animatedDragStyle = useAnimatedCardDragStyle(pressProgress, dragActivationProgress)
 
+  const shadowProps = useShadowPropsShort()
+
   return (
     <AnimatedFlex style={animatedDragStyle}>
       <ContextMenu
@@ -82,8 +86,10 @@ function FavoriteWalletCard({
         <TouchableArea
           hapticFeedback
           activeOpacity={isEditing ? 1 : undefined}
-          backgroundColor="$surface2"
+          backgroundColor={isDarkMode ? '$surface2' : '$surface1'}
+          borderColor={opacify(0.05, colors.surface3.val)}
           borderRadius="$rounded16"
+          borderWidth={isDarkMode ? '$none' : '$spacing1'}
           disabled={isEditing}
           hapticStyle={ImpactFeedbackStyle.Light}
           m="$spacing4"
@@ -95,22 +101,21 @@ function FavoriteWalletCard({
           onPressIn={async (): Promise<void> => {
             await preload(address)
           }}
+          {...shadowProps}
         >
-          <BaseCard.Shadow>
-            <Flex row gap="$spacing4" justifyContent="space-between">
-              <Flex row shrink alignItems="center" gap="$spacing8">
-                {icon}
-                <DisplayNameText
-                  displayName={displayName}
-                  textProps={{
-                    adjustsFontSizeToFit: displayName?.type === DisplayNameType.Address,
-                    variant: 'body1',
-                  }}
-                />
-              </Flex>
-              <RemoveButton visible={isEditing} onPress={onRemove} />
+          <Flex row gap="$spacing4" justifyContent="space-between" p="$spacing12">
+            <Flex row shrink alignItems="center" gap="$spacing8">
+              {icon}
+              <DisplayNameText
+                displayName={displayName}
+                textProps={{
+                  adjustsFontSizeToFit: displayName?.type === DisplayNameType.Address,
+                  variant: 'body1',
+                }}
+              />
             </Flex>
-          </BaseCard.Shadow>
+            <RemoveButton visible={isEditing} onPress={onRemove} />
+          </Flex>
         </TouchableArea>
       </ContextMenu>
     </AnimatedFlex>

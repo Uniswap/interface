@@ -1777,7 +1777,7 @@ PODS:
   - react-native-appsflyer (6.13.1):
     - AppsFlyerFramework (= 6.13.1)
     - React
-  - react-native-compat (2.11.2):
+  - react-native-compat (2.17.1):
     - glog
     - RCT-Folly (= 2022.05.16.00)
     - React-Core
@@ -2523,7 +2523,7 @@ SPEC CHECKSUMS:
   React-logger: 3eb80a977f0d9669468ef641a5e1fabbc50a09ec
   React-Mapbuffer: 84ea43c6c6232049135b1550b8c60b2faac19fab
   react-native-appsflyer: 2cc1f96348065fc23e976fc7a27e371789fb349e
-  react-native-compat: 3af9add14d349701306d3d052638435f6795ac2c
+  react-native-compat: eddb3937dcc5dcf3a27ebc42564dc15a89415829
   react-native-context-menu-view: dcec18eb8882e20596dbb75802e7d19cb87dac02
   react-native-get-random-values: a6ea6a8a65dc93e96e24a11105b1a9c8cfe1d72a
   react-native-image-picker: 1569cfade34b3a011191ce262423e6ce2f8db5a1

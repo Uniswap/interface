@@ -10,7 +10,7 @@ import {
   isConfirmedSwapTypeInfo,
 } from 'uniswap/src/features/transactions/types/transactionDetails'
 import { getFormattedCurrencyAmount, getSymbolDisplayText } from 'uniswap/src/utils/currency'
-import TransactionSummaryLayout from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
+import { TransactionSummaryLayout } from 'wallet/src/features/transactions/SummaryCards/SummaryItems/TransactionSummaryLayout'
 import { SummaryItemProps } from 'wallet/src/features/transactions/SummaryCards/types'
 import { TXN_HISTORY_ICON_SIZE, useOnRetrySwap } from 'wallet/src/features/transactions/SummaryCards/utils'
 import { getAmountsFromTrade } from 'wallet/src/features/transactions/getAmountsFromTrade'
@@ -57,20 +57,19 @@ export function SwapSummaryItem({
     )} → ${otherCurrencyAmount}${getSymbolDisplayText(outputCurrency.symbol)}`
   }, [inputCurrencyInfo, outputCurrencyInfo, formatter, typeInfo])
 
+  const icon = useMemo(
+    () => (
+      <SplitLogo
+        chainId={transaction.chainId}
+        inputCurrencyInfo={inputCurrencyInfo}
+        outputCurrencyInfo={outputCurrencyInfo}
+        size={TXN_HISTORY_ICON_SIZE}
+      />
+    ),
+    [inputCurrencyInfo, outputCurrencyInfo, transaction.chainId],
+  )
+
   return (
-    <TransactionSummaryLayout
-      caption={caption}
-      icon={
-        <SplitLogo
-          chainId={transaction.chainId}
-          inputCurrencyInfo={inputCurrencyInfo}
-          outputCurrencyInfo={outputCurrencyInfo}
-          size={TXN_HISTORY_ICON_SIZE}
-        />
-      }
-      index={index}
-      transaction={transaction}
-      onRetry={onRetry}
-    />
+    <TransactionSummaryLayout caption={caption} icon={icon} index={index} transaction={transaction} onRetry={onRetry} />
   )
 }

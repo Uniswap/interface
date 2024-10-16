@@ -1,4 +1,3 @@
-import { ColorKeys } from 'ui/src/theme'
 import ImageColors from 'ui/src/utils/colors/rn-image-colors'
 
 export type ExtractedColors = {
@@ -10,7 +9,7 @@ export type ExtractedColors = {
 
 export async function getExtractedColors(
   imageUrl: Maybe<string>,
-  fallback: ColorKeys = 'accent1',
+  fallback?: string,
   cache = true,
 ): Promise<ExtractedColors | undefined> {
   if (!imageUrl) {

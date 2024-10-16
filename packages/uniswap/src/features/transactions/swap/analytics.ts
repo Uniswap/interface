@@ -93,7 +93,12 @@ export function getBaseTradeAnalyticsProperties({
     token_in_address: getCurrencyAddressForAnalytics(trade.inputAmount.currency),
     token_out_address: getCurrencyAddressForAnalytics(trade.outputAmount.currency),
     price_impact_basis_points: trade.priceImpact?.multiply(100).toSignificant(),
-    chain_id: trade.inputAmount.currency.chainId,
+    chain_id:
+      trade.inputAmount.currency.chainId === trade.outputAmount.currency.chainId
+        ? trade.inputAmount.currency.chainId
+        : undefined,
+    chain_id_in: trade.inputAmount.currency.chainId,
+    chain_id_out: trade.outputAmount.currency.chainId,
     token_in_amount: trade.inputAmount.toExact(),
     token_out_amount: formatter.formatCurrencyAmount({
       value: finalOutputAmount,

@@ -35,6 +35,7 @@ import {
   moveUserSettings,
   removeUniconV2BehaviorState,
   removeWalletIsUnlockedState,
+  updateExploreOrderByType,
 } from 'wallet/src/state/walletMigrations'
 
 export const OLD_DEMO_ACCOUNT_ADDRESS = '0xdd0E380579dF30E38524F9477808d9eE37E2dEa6'
@@ -948,6 +949,8 @@ export const migrations = {
   78: moveLanguageSetting,
 
   79: moveCurrencySetting,
+
+  80: updateExploreOrderByType,
 }
 
-export const MOBILE_STATE_VERSION = 79
+export const MOBILE_STATE_VERSION = 80

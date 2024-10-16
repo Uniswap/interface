@@ -1,6 +1,7 @@
 /* eslint-disable rulesdir/no-undefined-or */
 import { TransactionResponse } from '@ethersproject/providers'
 import { SwapEventName } from '@uniswap/analytics-events'
+import { ZERO_PERCENT } from 'constants/misc'
 import { useTotalBalancesUsdForAnalytics } from 'graphql/data/apollo/useTotalBalancesUsdForAnalytics'
 import { useAccount } from 'hooks/useAccount'
 import useSelectChain from 'hooks/useSelectChain'
@@ -37,23 +38,24 @@ import {
 } from 'uniswap/src/features/transactions/errors'
 import { getBaseTradeAnalyticsProperties } from 'uniswap/src/features/transactions/swap/analytics'
 import {
+  SwapTransactionStep,
+  SwapTransactionStepAsync,
+  TransactionStep,
+  TransactionStepType,
+} from 'uniswap/src/features/transactions/swap/types/steps'
+import {
   SetCurrentStepFn,
   SwapCallback,
   SwapCallbackParams,
 } from 'uniswap/src/features/transactions/swap/types/swapCallback'
 import {
+  ValidatedBridgeSwapTxAndGasInfo,
   ValidatedClassicSwapTxAndGasInfo,
   ValidatedSwapTxContext,
   ValidatedUniswapXSwapTxAndGasInfo,
 } from 'uniswap/src/features/transactions/swap/types/swapTxAndGasInfo'
-import { ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
-import {
-  SwapTransactionStep,
-  SwapTransactionStepAsync,
-  TransactionStep,
-  TransactionStepType,
-  generateTransactionSteps,
-} from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
+import { BridgeTrade, ClassicTrade } from 'uniswap/src/features/transactions/swap/types/trade'
+import { generateTransactionSteps } from 'uniswap/src/features/transactions/swap/utils/generateTransactionSteps'
 import { isClassic } from 'uniswap/src/features/transactions/swap/utils/routing'
 import { getClassicQuoteFromResponse } from 'uniswap/src/features/transactions/swap/utils/tradingApi'
 import { createSaga } from 'uniswap/src/utils/saga'
@@ -64,11 +66,12 @@ import { didUserReject } from 'utils/swapErrorToUserReadableMessage'
 interface HandleSwapStepParams extends Omit<HandleOnChainStepParams, 'step' | 'info'> {
   step: SwapTransactionStep | SwapTransactionStepAsync
   signature: string | undefined
-  trade: ClassicTrade
+  trade: ClassicTrade | BridgeTrade
   analytics: ReturnType<typeof getBaseTradeAnalyticsProperties>
 }
 function* handleSwapTransactionStep(params: HandleSwapStepParams) {
   const { trade, step, signature, analytics } = params
+
   const info = getSwapTransactionInfo(trade)
   const txRequest = yield* call(getSwapTxRequest, step, signature)
 
@@ -91,11 +94,12 @@ function* handleSwapTransactionStep(params: HandleSwapStepParams) {
     onModification,
   })
 
+  const allowedSlippage = trade.slippageTolerance ? percentFromFloat(trade.slippageTolerance) : ZERO_PERCENT
   sendAnalyticsEvent(
     SwapEventName.SWAP_SIGNED,
     formatSwapSignedAnalyticsEventProperties({
       trade,
-      allowedSlippage: percentFromFloat(trade.slippageTolerance),
+      allowedSlippage,
       fiatValues: {
         amountIn: analytics.token_in_amount_usd,
         amountOut: analytics.token_out_amount_usd,
@@ -159,12 +163,11 @@ function* swap(params: SwapParams) {
 
     switch (swapTxContext.routing) {
       case Routing.CLASSIC:
+      case Routing.BRIDGE:
         return yield* classicSwap({ ...params, swapTxContext, steps })
       case Routing.DUTCH_V2:
       case Routing.PRIORITY:
         return yield* uniswapXSwap({ ...params, swapTxContext, steps })
-      // case Routing.BRIDGE:
-      //   return yield* bridgingSaga({ ...params, swapTxContext })
     }
   } catch (error) {
     logger.error(error, { tags: { file: 'swapSaga', function: 'swap' } })
@@ -173,7 +176,10 @@ function* swap(params: SwapParams) {
 }
 
 function* classicSwap(
-  params: SwapParams & { swapTxContext: ValidatedClassicSwapTxAndGasInfo; steps: TransactionStep[] },
+  params: SwapParams & {
+    swapTxContext: ValidatedClassicSwapTxAndGasInfo | ValidatedBridgeSwapTxAndGasInfo
+    steps: TransactionStep[]
+  },
 ) {
   const {
     account,
@@ -283,7 +289,7 @@ function getDisplayableError(error: Error, step: TransactionStep): TransactionEr
   } else {
     const isBackendRejection = error instanceof FetchError
     return new TransactionStepFailedError({
-      message: `Swap ${step.type} failed during swap`,
+      message: `${step.type} failed during swap`,
       step,
       isBackendRejection,
       originalError: error,

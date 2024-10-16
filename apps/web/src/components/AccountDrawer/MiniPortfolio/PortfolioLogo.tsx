@@ -37,6 +37,7 @@ interface PortfolioLogoProps {
   size?: number
   style?: React.CSSProperties
   loading?: boolean
+  customIcon?: React.ReactNode
 }
 
 function SquareL2Logo({ chainId, size }: { chainId: UniverseChainId; size: number }) {
@@ -80,7 +81,13 @@ export const PortfolioLogo = memo(function PortfolioLogo(props: PortfolioLogoPro
         )}
         {getLogo(props)}
       </Flex>
-      <SquareL2Logo chainId={props.chainId} size={props.size ?? LOGO_DEFAULT_SIZE} />
+      {props.customIcon ? (
+        <Flex bottom={-4} position="absolute" right={-4}>
+          {props.customIcon}
+        </Flex>
+      ) : (
+        <SquareL2Logo chainId={props.chainId} size={props.size ?? LOGO_DEFAULT_SIZE} />
+      )}
     </LogoContainer>
   )
 })
