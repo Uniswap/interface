@@ -1,6 +1,6 @@
 IPFS hash of the deployment:
-- CIDv0: `QmR4bcDmfwJ5AzVy1ypYxhRHq82RAjo2k44zT1ZupBCo8v`
-- CIDv1: `bafybeibiozbm7r6yfdyfvjzkyxuopbbjhpfakucm2axx265hltuzjl357m`
+- CIDv0: `QmRaVjDqEutARKcor6EcFLKR1cx2VD5UqAidr4JTb1z4A2`
+- CIDv1: `bafybeibqd4ezvubo2zwfmqxuw4kfi6g7tzrtrqdps3lyvvwdhmld4lrvt4`
 
 The latest release is always mirrored at [app.uniswap.org](https://app.uniswap.org).
 
@@ -10,66 +10,15 @@ You can also access the Uniswap Interface from an IPFS gateway.
 Your Uniswap settings are never remembered across different URLs.
 
 IPFS gateways:
-- https://bafybeibiozbm7r6yfdyfvjzkyxuopbbjhpfakucm2axx265hltuzjl357m.ipfs.dweb.link/
-- https://bafybeibiozbm7r6yfdyfvjzkyxuopbbjhpfakucm2axx265hltuzjl357m.ipfs.cf-ipfs.com/
-- [ipfs://QmR4bcDmfwJ5AzVy1ypYxhRHq82RAjo2k44zT1ZupBCo8v/](ipfs://QmR4bcDmfwJ5AzVy1ypYxhRHq82RAjo2k44zT1ZupBCo8v/)
+- https://bafybeibqd4ezvubo2zwfmqxuw4kfi6g7tzrtrqdps3lyvvwdhmld4lrvt4.ipfs.dweb.link/
+- https://bafybeibqd4ezvubo2zwfmqxuw4kfi6g7tzrtrqdps3lyvvwdhmld4lrvt4.ipfs.cf-ipfs.com/
+- [ipfs://QmRaVjDqEutARKcor6EcFLKR1cx2VD5UqAidr4JTb1z4A2/](ipfs://QmRaVjDqEutARKcor6EcFLKR1cx2VD5UqAidr4JTb1z4A2/)
 
-## 5.53.0 (2024-10-16)
-
-
-### Features
-
-* **web:** add a popup to claim (#12801) 727178b
-* **web:** add bridge toast to web swaps (#12808) 91b3100
-* **web:** add chainName to PosDP URL params (#12749) c5caa75
-* **web:** bridge status polling (#12930) 1817b76
-* **web:** bridging saga (#12753) dd6c181
-* **web:** bridging tx status notification (#12932) 6e468ef
-* **web:** bridging types (#12748) a473031
-* **web:** Give bridge bottom card hover style (#12810) 7be278a
-* **web:** improve fingerprinting for swap errors [staging] (#13046) 7cc032c
-* **web:** LP create - wrapping native currency step for v2/v3 (#12769) 9c2b4bc
-* **web:** pull in completed bridging activity (#12874) 3ac9ca5
-* **web:** remove red gas UI on web shared swap (#12947) 8639947
-* **web:** remove uniswap extension launch announcement modal (#12791) e1397ce
-* **web:** v4 LP improvements (#12737) e111131
-* **web:** worldchain bridge banner + minikit provider (#12918) 2439960
-* **web:** Zora Explore pages (#12908) 6c0beaf
+### 5.53.1 (2024-10-16)
 
 
 ### Bug Fixes
 
-* **web:** 10 15 fix web allow pool creation on testnets staging (#13010) 78815dd
-* **web:** Align Continue button text - staging (#13025) 8576cc4
-* **web:** align web/mobile quicknode rpcs (#12976) 82adfe5
-* **web:** bug with color extraction (#12757) 8fbfa57
-* **web:** bump sdk-core for worldchain v2 lp (#12989) 44dd8f3
-* **web:** cherrypick bridging analytics [staging] (#13035) 6593430
-* **web:** conditionally add dependency array to useAnimatedScrollHandler (#12852) e523bfd
-* **web:** correct currency logos in LP Create modal (#12751) a350498
-* **web:** create v4 ui (#12638) 1c52b4e
-* **web:** default to eth mainnet on landing page (#12958) e81c5ad
-* **web:** display bridging options in unconnected state [staging] (#13047) 5a17a2f
-* **web:** enable token swap on non mainnet tdp for legacy swap (#12899) a214ab2
-* **web:** fix broken worldchain images (#13033) e31db30
-* **web:** fix range formatting on my positions page (#12754) 8b13723
-* **web:** hide astrochain usdc (#12961) 40ee988
-* **web:** limits issues (allow cancelling insufficient funds) (#12912) f630284
-* **web:** log missing swap analytics (#12967) 4c22de5
-* **web:** log SWAP_SIGNED from uniswapx saga [main] (#12907) 39ccb30
-* **web:** memoize connected chain ids (#12922) 3ed664d
-* **web:** pass account to getSigner instead of using default (#12885) f508f20
-* **web:** remove FOR feature flag and moonpay flow (#12547) b79e301
-* **web:** Switch chains before cancelling limits (#12752) 8d2c4f1
-* **web:** tapi key (#12866) bcc0529
-* **web:** track wallet connect external provider (#12360) ff2c6e7
-* **web:** update the toast for increase + decrease liquidity (#12786) c7c898e
-* **web:** worldchain rpc (#12946) b1b7528
-
-
-### Continuous Integration
-
-* **web:** break down web testing jobs to speed up CI (#12766) cb3c56f
-* **web:** update sitemaps 336fb63
+* **web:** fix network filter on explore (#13057) fe9283d
 
 
